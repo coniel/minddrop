@@ -1,0 +1,18 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "@nighttrax/eslint-config-tsx",
+    "plugin:prettier/recommended",
+    "plugin:import/electron"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "react/jsx-props-no-spreading": "off"
+  }
+}
