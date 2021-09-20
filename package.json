@@ -20,13 +20,21 @@
     "pub": "lerna publish",
     "test": "lerna run test",
     "lint": "eslint --ext js,ts,tsx .",
-    "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock"
+    "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {},
   "devDependencies": {
+    "@babel/core": "^7.15.5",
     "@jest/types": "^27.1.1",
     "@nighttrax/eslint-config-tsx": "~8.0.5",
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/react": "^6.3.8",
     "@types/node": "^16.9.4",
+    "babel-loader": "^8.2.2",
     "doctoc": "~2.0.1",
     "eslint": "~7.32.0",
     "eslint-config-prettier": "^8.3.0",
