@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "strict": true,
+    "jsx": "react-native",
+    "moduleResolution": "node"
+  }
+}

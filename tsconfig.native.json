@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.build.native.json",
+
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@braindrop/*": ["packages/*/src"]
+    },
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "types": ["jest"]
+  }
+}
