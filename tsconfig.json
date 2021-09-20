@@ -6,6 +6,8 @@
     "paths": {
       "@braindrop/*": ["packages/*/src"]
     },
-    "noEmit": true
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "types": ["jest"]
   }
 }
