@@ -21,8 +21,8 @@
     "test": "lerna run test",
     "lint": "eslint --ext js,ts,tsx .",
     "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook:dom": "yarn workspace @braindrop/storybook-dom start",
+    "storybook:build-dom": "yarn workspace @braindrop/storybook-dom build"
   },
   "dependencies": {},
   "devDependencies": {
