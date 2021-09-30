@@ -1,5 +1,5 @@
 const exclusionList = require('metro-config/src/defaults/exclusionList');
-const {getMetroConfig} = require('react-native-monorepo-tools');
+const { getMetroConfig } = require('react-native-monorepo-tools');
 
 const yarnWorkspacesMetroConfig = getMetroConfig();
 
