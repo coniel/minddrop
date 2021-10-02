@@ -16,9 +16,9 @@
   },
   "devDependencies": {
     "@braindrop/test-utils-native": "0.1.0",
+    "@types/react-native": "^0.65.3",
     "rimraf": "~3.0.2",
-    "typescript": "~4.4.3",
-    "@types/react-native": "^0.65.0"
+    "typescript": "~4.4.3"
   },
   "dependencies": {
     "@braindrop/ui-native": "0.1.0",

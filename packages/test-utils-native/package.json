@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@storybook/addons": "^6.3.8",
+    "@storybook/addons": "^6.3.9",
     "react": "17.0.2"
   },
   "devDependencies": {
