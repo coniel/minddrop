@@ -19,7 +19,6 @@
     "storybook": "yarn workspace @braindrop/storybook start",
     "storybook:build": "yarn workspace @braindrop/storybook build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@jest/types": "^27.1.1",
     "@nighttrax/eslint-config-tsx": "~8.0.5",
