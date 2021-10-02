@@ -1,5 +1,5 @@
 {
-  "name": "@braindrop/storybook",
+  "name": "@minddrop/storybook",
   "description": "Storybook for React DOM components",
   "version": "0.1.0",
   "scripts": {

@@ -1,6 +1,6 @@
 {
-  "name": "@braindrop/app-desktop",
-  "productName": "Braindrop",
+  "name": "@minddrop/app-desktop",
+  "productName": "MindDrop",
   "version": "0.1.0",
   "main": ".webpack/main",
   "scripts": {

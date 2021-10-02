@@ -1,5 +1,5 @@
 {
-  "name": "braindrop",
+  "name": "minddrop",
   "description": "A free, open source app for learning new topics.",
   "private": true,
   "workspaces": {
@@ -16,8 +16,8 @@
     "test": "lerna run test -- --passWithNoTests",
     "lint": "eslint --ext js,ts,tsx .",
     "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock",
-    "storybook": "yarn workspace @braindrop/storybook start",
-    "storybook:build": "yarn workspace @braindrop/storybook build"
+    "storybook": "yarn workspace @minddrop/storybook start",
+    "storybook:build": "yarn workspace @minddrop/storybook build"
   },
   "devDependencies": {
     "@jest/types": "^27.1.1",
