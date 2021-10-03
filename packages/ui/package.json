@@ -14,8 +14,15 @@
     "prepublishOnly": "yarn run build",
     "test": "jest"
   },
+  "dependencies": {
+    "@minddrop/i18n": "0.1.0",
+    "@minddrop/styles": "0.1.0"
+  },
   "devDependencies": {
+    "@minddrop/test-utils": "0.1.0",
+    "@jest/types": "^27.2.4",
     "rimraf": "~3.0.2",
+    "ts-jest": "^27.0.5",
     "typescript": "~4.4.3"
   },
   "peerDependencies": {

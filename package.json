@@ -14,6 +14,7 @@
     "build": "lerna run build",
     "pub": "lerna publish",
     "test": "lerna run test -- --passWithNoTests",
+    "test:watch": "lerna run test --parallel -- --passWithNoTests --watch",
     "lint": "eslint --ext js,ts,tsx .",
     "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock",
     "storybook": "yarn workspace @minddrop/storybook start",
