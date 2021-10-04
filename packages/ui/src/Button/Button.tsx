@@ -10,6 +10,7 @@ const BaseButton = styled('button', {
   background: '$gray400',
   borderRadius: 4,
   border: 'none',
+  padding: '5px 10px',
 });
 
 export const Button: React.FC<ButtonProps> = ({ label, ...other }) => {
