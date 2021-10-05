@@ -1,3 +1,6 @@
+/* eslint-disable global-require */
+// eslint-disable-next-line import/no-extraneous-dependencies
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const rules = require('./webpack.rules');
 const plugins = require('./webpack.plugins');
 
@@ -12,6 +15,7 @@ module.exports = {
   },
   plugins,
   resolve: {
+    plugins: [new TsconfigPathsPlugin()],
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
   },
 };
