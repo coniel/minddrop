@@ -63,6 +63,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@jest/types": "^27.2.4",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -74,7 +75,9 @@
     "eslint-plugin-import": "^2.20.0",
     "fork-ts-checker-webpack-plugin": "^6.3.3",
     "node-loader": "^2.0.0",
+    "spectron": "^15.0.0",
     "style-loader": "^3.3.0",
+    "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.2",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "typescript": "^4.0.2"
