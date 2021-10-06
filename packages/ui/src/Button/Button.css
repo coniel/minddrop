@@ -1,0 +1,49 @@
+.button {
+  margin: 12px;
+  color: var(--textPrimaryColor);
+  font-family: var(--defaultFontFamily);
+  border-radius: var(--buttonRadius);
+  padding: 5px 16px;
+  transition: var(--buttonTransition);
+  transition-property: color, background-color, border-color;
+  cursor: pointer;
+  background-color: var(--elementNeutralBackground);
+  border-width: 1px;
+  border-color: var(--elementNeutralBorder);
+  border-style: solid;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  box-shadow: var(--buttonShadow);
+}
+
+.button:hover {
+  background-color: var(--elementNeutralHoverBackground);
+  border-color: var(--elementNeutralHoverBorder);
+  transition-duration: 0.1s;
+}
+
+.button:active {
+  background-color: var(--elementNeutralActiveBackground);
+}
+
+.button.large {
+}
+
+/* Primary */
+
+.button.primary {
+  background-color: var(--primary3);
+}
+
+.button.primary:hover {
+  background-color: var(--primary4);
+}
+
+.button.primary:active {
+  background-color: var(--primary5);
+}
+
+.button:disabled {
+  background-color: red;
+}
