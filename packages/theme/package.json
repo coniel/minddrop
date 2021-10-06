@@ -1,0 +1,10 @@
+{
+  "name": "@minddrop/theme",
+  "version": "0.1.0",
+  "files": [
+    "base.css",
+    "dark.css",
+    "light.css",
+    "reset.css"
+  ]
+}

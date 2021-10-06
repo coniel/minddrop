@@ -1,0 +1,47 @@
+.light,
+.dark {
+  /* Typography */
+  --defaultFontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --textPrimaryColor: var(--gray12);
+  --textSecondaryColor: var(--gray11);
+
+  /* Backgrounds */
+  --appBackground: var(--gray1);
+  --subtleBackground: var(--gray2);
+
+  --elementNeutralBackground: var(--gray3);
+  --elementNeutralHoverBackground: var(--gray4);
+  --elementNeutralActiveBackground: var(--gray5);
+
+  --elementPrimaryBackground: var(--primary7);
+  --elementPrimaryHoverBackground: var(--primary8);
+  --elementPrimaryActiveBackground: var(--primary7);
+
+  /* Borders */
+  --border: var(--gray6);
+  --borderSubtle: var(--gray3);
+
+  --elementNeutralBorder: var(--gray7);
+  --elementNeutralHoverBorder: var(--gray8);
+
+  --elementPrimaryBorder: var(--primary7);
+  --elementPrimaryHoverBorder: var(--primary8);
+
+  /* Radii */
+  --popoverRadius: 3px; /* popovers, menus */
+  --badgeRadius: 4px; /* badges, tags */
+  --buttonRadius: 6px; /* buttons, nav items */
+  --cardRadius: 8px; /* cards, drops */
+
+  /* Transitions */
+  --buttonTransition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+
+  /* Shadows */
+  --buttonShadow: rgba(27, 31, 36, 0.04) 0px 1px 0px 0px;
+}
+
+body {
+  background: var(--gray1);
+  font-family: var(--defaultFontFamily);
+}

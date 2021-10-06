@@ -1,0 +1,29 @@
+.light {
+  --gray1: hsl(206 30% 98.8%);
+  --gray2: hsl(210 16.7% 97.6%);
+  --gray3: hsl(209 13.3% 95.3%);
+  --gray4: hsl(209 12.2% 93.2%);
+  --gray5: hsl(208 11.7% 91.1%);
+  --gray6: hsl(208 11.3% 88.9%);
+  --gray7: hsl(207 11.1% 85.9%);
+  --gray8: hsl(205 10.7% 78%);
+  --gray9: hsl(206 6% 56.1%);
+  --gray10: hsl(206 5.8% 52.3%);
+  --gray11: hsl(206 6% 43.5%);
+  --gray12: hsl(206 24% 9%);
+
+  --primary1: hsl(225 60% 99.4%);
+  --primary2: hsl(223 100% 98.6%);
+  --primary3: hsl(223 98.4% 97.1%);
+  --primary4: hsl(223 92.9% 95%);
+  --primary5: hsl(224 87.1% 92%);
+  --primary6: hsl(224 81.9% 87.8%);
+  --primary7: hsl(225 77.4% 82.1%);
+  --primary8: hsl(226 75.4% 74.5%);
+  --primary9: hsl(226 70% 55.5%);
+  --primary10: hsl(226 58.6% 51.3%);
+  --primary11: hsl(226 55% 45%);
+  --primary12: hsl(226 62% 17%);
+
+  --textContrastColor: #ffffff;
+}
