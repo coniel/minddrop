@@ -3,5 +3,19 @@
   "trailingComma": "all",
   "singleQuote": true,
   "printWidth": 80,
-  "bracketSpacing": true
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": "*.mdx",
+      "options": {
+        "printWidth": 70
+      }
+    },
+    {
+      "files": "data/**/*.mdx",
+      "options": {
+        "printWidth": 80
+      }
+    }
+  ]
 }

@@ -5,6 +5,10 @@
   "workspaces": {
     "packages": [
       "packages/*"
+    ],
+    "nohoist": [
+      "react-static-plugin-source-filesystem",
+      "react-static-plugin-source-filesystem/**"
     ]
   },
   "scripts": {

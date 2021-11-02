@@ -8,7 +8,6 @@
     "noEmitOnError": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
     "types": [],
     "jsx": "react"
   },

@@ -7,7 +7,6 @@
       "@minddrop/*": ["packages/*/src"]
     },
     "noEmit": true,
-    "resolveJsonModule": true,
     "types": ["jest"]
   }
 }
