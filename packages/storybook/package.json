@@ -12,20 +12,20 @@
     "@minddrop/theme": "0.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@storybook/addon-actions": "^6.3.10",
-    "@storybook/addon-essentials": "^6.3.10",
-    "@storybook/addon-links": "^6.3.10",
-    "@storybook/builder-webpack5": "^6.3.10",
-    "@storybook/core": "^6.3.10",
-    "@storybook/manager-webpack5": "^6.3.10",
-    "@storybook/react": "^6.3.10",
-    "babel-loader": "^8.2.2",
-    "chromatic": "^5.10.2",
+    "@babel/core": "^7.16.0",
+    "@storybook/addon-actions": "^6.3.12",
+    "@storybook/addon-essentials": "^6.3.12",
+    "@storybook/addon-links": "^6.3.12",
+    "@storybook/builder-webpack5": "^6.3.12",
+    "@storybook/core": "^6.3.12",
+    "@storybook/manager-webpack5": "^6.3.12",
+    "@storybook/react": "^6.3.12",
+    "babel-loader": "^8.2.3",
+    "chromatic": "^6.0.5",
     "react": "^17.0.2",
     "storybook-dark-mode": "^1.0.8",
-    "storybook-react-i18next": "^1.0.10",
-    "typescript": "~4.4.3",
-    "webpack": "^5.58.1"
+    "storybook-react-i18next": "^1.0.12",
+    "typescript": "~4.4.4",
+    "webpack": "^5.61.0"
   }
 }

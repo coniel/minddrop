@@ -3,7 +3,6 @@ import path from 'path';
 import glob from 'glob';
 import matter from 'gray-matter';
 import readingTime from 'reading-time';
-import compareVersions from 'compare-versions';
 import { bundleMDX } from 'mdx-bundler';
 import remarkSlug from 'remark-slug';
 import rehypeHighlightCode from '@lib/rehype-highlight-code';
@@ -85,13 +84,3 @@ export const getMdxBySlug = async (basePath, slug) => {
     code,
   };
 };
-
-export function getAllVersionsFromPath(fromPath) {
-  const PATH = path.join(DATA_PATH, fromPath);
-  if (!fs.existsSync(PATH)) return [];
-  return fs
-    .readdirSync(PATH)
-    .map((fileName) => fileName.replace('.mdx', ''))
-    .sort(compareVersions)
-    .reverse();
-}
