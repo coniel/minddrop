@@ -1,47 +1,57 @@
-.light,
-.dark {
+.light-theme,
+.dark-theme {
   /* Typography */
   --defaultFontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   --textPrimaryColor: var(--gray12);
   --textSecondaryColor: var(--gray11);
+  --textContrastColor: var(--contrastColor);
 
   /* Backgrounds */
-  --appBackground: var(--gray1);
-  --subtleBackground: var(--gray2);
+  --appBg: var(--gray1);
+  --subtleBg: var(--gray2);
 
-  --elementNeutralBackground: var(--gray3);
-  --elementNeutralHoverBackground: var(--gray4);
-  --elementNeutralActiveBackground: var(--gray5);
+  --bgNeutral: var(--gray3);
+  --bgNeutralHover: var(--gray4);
+  --bgNeutralActive: var(--gray5);
+  --bgSolidNeutral: var(--gray9);
 
-  --elementPrimaryBackground: var(--primary7);
-  --elementPrimaryHoverBackground: var(--primary8);
-  --elementPrimaryActiveBackground: var(--primary7);
+  --bgPrimary: var(--primary3);
+  --bgPrimaryHover: var(--primary4);
+  --bgPrimaryActive: var(--primary5);
+  --bgSolidPrimary: var(--primary9);
+  --bgSolidPrimaryHover: var(--primary10);
+  --bgSolidPrimaryHover: var(--primary10);
 
   /* Borders */
-  --border: var(--gray6);
-  --borderSubtle: var(--gray3);
+  --borderNeutralSubtle: var(--gray6);
+  --borderNeutral: var(--gray7);
+  --borderNeutralHover: var(--gray8);
 
-  --elementNeutralBorder: var(--gray7);
-  --elementNeutralHoverBorder: var(--gray8);
+  --borderPrimarySubtle: var(--primary6);
+  --borderPrimary: var(--primary7);
+  --borderPrimaryHover: var(--primary8);
 
-  --elementPrimaryBorder: var(--primary7);
-  --elementPrimaryHoverBorder: var(--primary8);
+  /* Text */
+  --textNeutralLight: var(--gray11);
+  --textNeutral: var(--gray12);
+
+  --textPrimaryLight: var(--primary11);
+  --textPrimary: var(--primary12);
 
   /* Radii */
-  --popoverRadius: 3px; /* popovers, menus */
-  --badgeRadius: 4px; /* badges, tags */
-  --buttonRadius: 6px; /* buttons, nav items */
-  --cardRadius: 8px; /* cards, drops */
+  --radiusXs: 3px; /* popovers, menus */
+  --radiusSm: 4px; /* badges, tags */
+  --radiusMd: 6px; /* buttons, nav items */
+  --radiusLg: 8px; /* cards, drops */
+  --radiusXl: 10px; /* dialogs */
 
   /* Transitions */
-  --buttonTransition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
-
-  /* Shadows */
-  --buttonShadow: rgba(27, 31, 36, 0.04) 0px 1px 0px 0px;
+  --transitionShort: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
 }
 
 body {
-  background: var(--gray1);
+  background: var(--appBg);
   font-family: var(--defaultFontFamily);
+  color: var(--textNeutral);
 }

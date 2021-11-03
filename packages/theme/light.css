@@ -1,4 +1,4 @@
-.light {
+.light-theme {
   --gray1: hsl(206 30% 98.8%);
   --gray2: hsl(210 16.7% 97.6%);
   --gray3: hsl(209 13.3% 95.3%);
@@ -25,5 +25,5 @@
   --primary11: hsl(226 55% 45%);
   --primary12: hsl(226 62% 17%);
 
-  --textContrastColor: #ffffff;
+  --contrastColor: #ffffff;
 }

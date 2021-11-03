@@ -1,4 +1,4 @@
-.dark {
+.dark-theme {
   --gray1: hsl(200 7% 8.8%);
   --gray2: hsl(195 7.1% 11%);
   --gray3: hsl(197 6.8% 13.6%);
@@ -25,5 +25,5 @@
   --primary11: hsl(228 100% 75.9%);
   --primary12: hsl(226 83% 96.3%);
 
-  --textContrastColor: #ffffff;
+  --contrastColor: #ffffff;
 }
