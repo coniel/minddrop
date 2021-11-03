@@ -23,6 +23,13 @@
   --bgSolidPrimaryHover: var(--primary10);
   --bgSolidPrimaryHover: var(--primary10);
 
+  --bgDanger: var(--danger3);
+  --bgDangerHover: var(--danger4);
+  --bgDangerActive: var(--danger5);
+  --bgSolidDanger: var(--danger9);
+  --bgSolidDangerHover: var(--danger10);
+  --bgSolidDangerHover: var(--danger10);
+
   /* Borders */
   --borderNeutralSubtle: var(--gray6);
   --borderNeutral: var(--gray7);
@@ -32,12 +39,20 @@
   --borderPrimary: var(--primary7);
   --borderPrimaryHover: var(--primary8);
 
+  --borderDangerSubtle: var(--danger6);
+  --borderDanger: var(--danger7);
+  --borderDangerHover: var(--danger8);
+
   /* Text */
+  --textNeutralDisabled: var(--gray9);
   --textNeutralLight: var(--gray11);
   --textNeutral: var(--gray12);
 
   --textPrimaryLight: var(--primary11);
   --textPrimary: var(--primary12);
+
+  --textDangerLight: var(--danger11);
+  --textDanger: var(--danger12);
 
   /* Radii */
   --radiusXs: 3px; /* popovers, menus */

@@ -25,5 +25,18 @@
   --primary11: hsl(226 55% 45%);
   --primary12: hsl(226 62% 17%);
 
+  --danger1: hsl(359 100% 99.4%);
+  --danger2: hsl(359 100% 98.6%);
+  --danger3: hsl(360 100% 96.8%);
+  --danger4: hsl(360 97.9% 94.8%);
+  --danger5: hsl(360 90.2% 91.9%);
+  --danger6: hsl(360 81.7% 87.8%);
+  --danger7: hsl(359 74.2% 81.7%);
+  --danger8: hsl(359 69.5% 74.3%);
+  --danger9: hsl(358 75% 59%);
+  --danger10: hsl(358 69.4% 55.2%);
+  --danger11: hsl(358 65% 48.7%);
+  --danger12: hsl(354 50% 14.6%);
+
   --contrastColor: #ffffff;
 }
