@@ -39,8 +39,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => (
   <button
     className={mapPropsToClasses(
-      { size, color, disabled },
-      className,
+      { className, size, color, disabled },
       'button',
     )}
   >
@@ -52,7 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
 A `Button` component with default props would render as:
 
 ```jsx
-<button class="button size-medium" />
+<button class="button medium" />
 ```
 
 A `Button` component with the following props:
@@ -69,20 +68,20 @@ A `Button` component with the following props:
 Would render as:
 
 ```jsx
-<button class="button size-small color-primary disabled custom-button" />
+<button class="button small primary disabled custom-button" />
 ```
 
 ## Class names
 
 Boolean props are mapped simply as the prop name. For example, a `disabled` prop would add a `disabled` class when `true`.
 
-String props are mapped as `propName-value`. For example, a `size` prop with a value of `"small"` would add a class of `size-small`.
+String props are mapped as the prop's value. For example, a `size` prop with a value of `"small"` would add a class of `small`.
+
+The `className` prop is appended to the generated class names.
 
 Falsy props do not generate any classes.
 
-The `className` value is appended to the prop based classes.
-
-The `rootClass` value is prepended to the prop based classes.
+The `rootClass` value is prepended to the generated class names.
 
 `class="rootClass [prop classes] className"`
 
@@ -91,7 +90,6 @@ The `rootClass` value is prepended to the prop based classes.
 ```ts
 mapPropsToClasses(
   props: Record<string, string | boolean>,
-  className?: string,
   rootClass?: string,
 );
 ```
@@ -103,14 +101,7 @@ mapPropsToClasses(
       required: true,
       type: 'object',
       description:
-        'The props you wish to map to class names. Supports string and boolean props.',
-    },
-    {
-      name: 'classNames',
-      required: false,
-      type: 'string',
-      description:
-        "Pass in the component's className prop to append it.",
+        'The props you wish to map to class names. Supports string and boolean props, as well as the className prop which is appended to the final className.',
     },
     {
       name: 'rootClass',
