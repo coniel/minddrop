@@ -1,7 +1,7 @@
 import '../../theme/reset.css';
-import '../../theme/base.css';
 import '../../theme/light.css';
 import '../../theme/dark.css';
+import '../../theme/base.css';
 import { initializeI18n } from '../../i18n';
 
 initializeI18n();
@@ -16,5 +16,7 @@ export const parameters = {
   },
   darkMode: {
     stylePreview: true,
+    lightClass: 'light-theme',
+    darkClass: 'dark-theme',
   },
 };
