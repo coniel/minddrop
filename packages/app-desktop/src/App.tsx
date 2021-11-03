@@ -5,7 +5,6 @@ import '@minddrop/theme/reset.css';
 import '@minddrop/theme/light.css';
 import '@minddrop/theme/dark.css';
 import '@minddrop/theme/base.css';
-import '@minddrop/ui/dist/styles.css';
 import { Button } from '@minddrop/ui';
 import { useEffect, useState } from 'react';
 
