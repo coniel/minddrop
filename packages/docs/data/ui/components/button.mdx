@@ -20,178 +20,154 @@ name: button
 ```
 
 <Highlights
-  features={['Two variants', 'Two colors', 'Three sizes']}
+  features={[
+    'Four variants',
+    'Three sizes',
+    'Start and end icons',
+    'Full width',
+    'i18n label',
+    'Render as link',
+  ]}
 />
 
-## Installation
+## Usage
 
-Install the component from your command line.
+Import the component from the `@minddrop/ui` package.
 
-```bash
-npm install @radix-ui/react-checkbox
-```
+### i18n label buttons
 
-## Anatomy
-
-Import all parts and piece them together.
+Buttons with an i18n label are labeled by passing the i18n key to the `label` prop.
 
 ```jsx
-import * as Checkbox from '@radix-ui/react-checkbox';
+import { Button } from '@minddrop/ui';
 
-export default () => (
-  <Checkbox.Root>
-    <Checkbox.Indicator />
-  </Checkbox.Root>
-);
-```
-
-## API Reference
-
-### Root
-
-Contains all the parts of a checkbox.
-
-<PropsTable
-  data={[
-    {
-      name: 'asChild',
-      required: false,
-      type: 'boolean',
-      default: 'false',
-      description:
-        'Change the component to the HTML tag or custom component of the only child. This will merge the original component props with the props of the supplied element/component and change the underlying DOM node.',
-    },
-    {
-      name: 'defaultChecked',
-      type: 'boolean',
-      description:
-        'The checked state of the checkbox when it is initially rendered. Use when you do not need to control its checked state.',
-    },
-    {
-      name: 'checked',
-      type: 'boolean',
-      description: (
-        <span>
-          The controlled checked state of the checkbox. Must be used
-          in conjunction with <Code>onCheckedChange</Code>.
-        </span>
-      ),
-    },
-    {
-      name: 'onCheckedChange',
-      type: `(checked: boolean | 'indeterminate') => void`,
-      typeSimple: 'function',
-      description:
-        'Event handler called when the checked state of the checkbox changes.',
-    },
-    {
-      name: 'disabled',
-      type: 'boolean',
-      description: (
-        <span>
-          When <Code>true</Code>, prevents the user from interacting
-          with the checkbox.
-        </span>
-      ),
-    },
-    {
-      name: 'required',
-      type: 'boolean',
-      description: (
-        <span>
-          When <Code>true</Code>, indicates that the user must check
-          the checkbox before the owning form can be submitted.
-        </span>
-      ),
-    },
-    {
-      name: 'name',
-      type: 'string',
-      description:
-        'The name of the checkbox. Submitted with its owning form as part of a name/value pair.',
-    },
-    {
-      name: 'value',
-      type: 'string',
-      default: 'on',
-      description: (
-        <span>
-          The value given as data when submitted with a{' '}
-          <Code>name</Code>.
-        </span>
-      ),
-    },
-  ]}
-/>
-
-### Indicator
-
-Renders when the checkbox is in a checked or indeterminate state. You can style this element directly, or you can use it as a wrapper to put an icon into, or both.
-
-<PropsTable
-  data={[
-    {
-      name: 'asChild',
-      required: false,
-      type: 'boolean',
-      default: 'false',
-      description:
-        'Change the component to the HTML tag or custom component of the only child. This will merge the original component props with the props of the supplied element/component and change the underlying DOM node.',
-    },
-    {
-      name: 'forceMount',
-      type: 'boolean',
-      description:
-        'Used to force mounting when more control is needed. Useful when controlling animation with React animation libraries.',
-    },
-  ]}
-/>
-
-## Examples
-
-### Indeterminate
-
-You can set the checkbox to `indeterminate` by taking control of its state.
-
-```jsx line=5,9-14,16
-import {
-  DividerHorizontalIcon,
-  CheckIcon,
-} from '@radix-ui/react-icons';
-import * as Checkbox from '@radix-ui/react-checkbox';
-
-export default () => {
-  const [checked, setChecked] = React.useState('indeterminate');
-
+export const SaveButton = ({ onClick }) => {
   return (
-    <>
-      <StyledCheckbox checked={checked} onCheckedChange={setChecked}>
-        <Checkbox.Indicator>
-          {checked === 'indeterminate' && <DividerHorizontalIcon />}
-          {checked === true && <CheckIcon />}
-        </Checkbox.Indicator>
-      </StyledCheckbox>
-
-      <button
-        type="button"
-        onClick={() =>
-          setChecked((prevIsChecked) =>
-            prevIsChecked === 'indeterminate'
-              ? false
-              : 'indeterminate',
-          )
-        }
-      >
-        Toggle indeterminate
-      </button>
-    </>
+    <Button label="save" variant="primary" onClick={onClick}>
   );
 };
 ```
 
+### Dynamic label buttons
+
+Buttons without an i18n label are labeled by passing the label directly as the button's `children`.
+
+```jsx
+import { Button } from '@minddrop/ui';
+import { Heart } from '@mindrop/icons';
+
+export const LikeButton = ({ onClick, count }) => {
+  return (
+    <Button startIcon={<Heart />} onClick={onClick}>
+      {count}
+    </Button>
+  );
+};
+```
+
+### Link buttons
+
+Buttons with an `href` prop are rendered using an `a` as the root element.
+
+```jsx
+import { Button } from '@minddrop/ui';
+
+export const DocsLink = ({ onClick, count }) => {
+  return (
+    <Button variant="text" href="https://developer.minddrop.app">
+      Developer Docs
+    </Button>
+  );
+};
+```
+
+## API Reference
+
+Standard buttons extend `HTMLButtonAttributes`. Link buttons extend `HTMLAnchorAttributes`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'node',
+      description:
+        'Children are only rendered when the label prop is not provided.',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: (
+        <span>
+          If <code>true</code>, the button will be disabled.
+        </span>
+      ),
+    },
+    {
+      name: 'endIcon',
+      type: 'node',
+      description: 'Icon placed after the children.',
+    },
+    {
+      name: 'fullWidth',
+      type: 'boolean',
+      default: 'false',
+      description: (
+        <span>
+          If <code>true</code>, the button will take up the full width
+          of its container.
+        </span>
+      ),
+    },
+    {
+      name: 'href',
+      type: 'string',
+      description: (
+        <span>
+          The URL to link to when the button is clicked. If defined,
+          an <code>a</code> element will be used as the root node.
+        </span>
+      ),
+    },
+    {
+      name: 'label',
+      type: 'string',
+      description: (
+        <span>
+          The i18n label key. If the button does not have an i18n
+          label, use <code>children</code> instead.
+        </span>
+      ),
+    },
+    {
+      name: 'size',
+      type: "'small' | 'medium' | 'large'",
+      default: "'medium'",
+      description: (
+        <span>
+          The size of the button, <code>'large'</code> is intended for
+          call to action buttons on marketing pages.
+        </span>
+      ),
+    },
+    {
+      name: 'endIcon',
+      type: 'node',
+      description: 'Icon placed before the children.',
+    },
+    {
+      name: 'variant',
+      type: "'neutral' | 'primary' | 'danger' | 'text'",
+      default: "'neutral'",
+      description:
+        'The variant of the button. This should be based on the action type.',
+    },
+  ]}
+/>
+
 ## Accessibility
 
-Adheres to the [tri-state Checkbox WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#checkbox).
+Adheres to the [Button WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#button).
 
 ### Keyboard Interactions
 
@@ -199,11 +175,11 @@ Adheres to the [tri-state Checkbox WAI-ARIA design pattern](https://www.w3.org/T
   data={[
     {
       keys: ['Space'],
-      description: 'Checks/unchecks the checkbox.',
+      description: 'Activates the button.',
     },
     {
       keys: ['Enter'],
-      description: 'Checks/unchecks the checkbox.',
+      description: 'Activates the button.',
     },
   ]}
 />
