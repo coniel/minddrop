@@ -21,14 +21,14 @@
   --bgPrimaryActive: var(--primary5);
   --bgSolidPrimary: var(--primary9);
   --bgSolidPrimaryHover: var(--primary10);
-  --bgSolidPrimaryHover: var(--primary10);
+  --bgSolidPrimaryActive: var(--primary11);
 
   --bgDanger: var(--danger3);
   --bgDangerHover: var(--danger4);
   --bgDangerActive: var(--danger5);
   --bgSolidDanger: var(--danger9);
   --bgSolidDangerHover: var(--danger10);
-  --bgSolidDangerHover: var(--danger10);
+  --bgSolidDangerActive: var(--danger11);
 
   /* Borders */
   --borderNeutralSubtle: var(--gray6);
@@ -66,7 +66,6 @@
 }
 
 body {
-  background: var(--appBg);
   font-family: var(--defaultFontFamily);
   color: var(--textNeutral);
 }
