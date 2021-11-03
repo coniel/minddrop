@@ -29,6 +29,10 @@ describe('mapPropsToClasses', () => {
     );
   });
 
+  it('should convert camelCase to kebab-case', () => {
+    expect(mapPropsToClasses({ fullWidth: true })).toBe('full-width');
+  });
+
   it('should work with all options', () => {
     expect(
       mapPropsToClasses(

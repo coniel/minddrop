@@ -1,3 +1,5 @@
+import { camelToKebab } from '../camelToKebab';
+
 /**
  * Maps a component's props to class names.
  *
@@ -5,6 +7,7 @@
  * String props are mapped as [value].
  * className prop is appended to the generated className.
  * rootClass is prepended to the generated className.
+ * camelCase prop names are converted into kebab-case.
  */
 export function mapPropsToClasses(
   props: Record<string, string | boolean>,
@@ -17,7 +20,7 @@ export function mapPropsToClasses(
       if (typeof props[key] === 'string') {
         className = `${className} ${props[key]}`;
       } else {
-        className = `${className} ${key}`;
+        className = `${className} ${camelToKebab(key)}`;
       }
     }
   });

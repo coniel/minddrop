@@ -73,9 +73,9 @@ Would render as:
 
 ## Class names
 
-Boolean props are mapped simply as the prop name. For example, a `disabled` prop would add a `disabled` class when `true`.
+Boolean props are mapped simply as the prop name, with `camelCase` names converted to `kebab-case`. For example, a `fullWidth` prop would add a `full-width`.
 
-String props are mapped as the prop's value. For example, a `size` prop with a value of `"small"` would add a class of `small`.
+String props are mapped as the prop's value. For example, a `size="small"` prop would add a class of `small`.
 
 The `className` prop is appended to the generated class names.
 
