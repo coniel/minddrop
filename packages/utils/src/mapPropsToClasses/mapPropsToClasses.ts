@@ -1,4 +1,4 @@
-import { camelToKebab } from '../camelToKebab';
+import { toKebabCase } from '../toKebabCase';
 
 /**
  * Maps a component's props to class names.
@@ -20,7 +20,7 @@ export function mapPropsToClasses(
       if (typeof props[key] === 'string') {
         className = `${className} ${props[key]}`;
       } else {
-        className = `${className} ${camelToKebab(key)}`;
+        className = `${className} ${toKebabCase(key)}`;
       }
     }
   });
