@@ -5,3 +5,4 @@ results
 *.tsbuildinfo
 .DS_Store
 .webpack
+.parcel-cache

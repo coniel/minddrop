@@ -1,0 +1,71 @@
+.light-theme,
+.dark-theme {
+  /* Typography */
+  --defaultFontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --textPrimaryColor: var(--gray12);
+  --textSecondaryColor: var(--gray11);
+  --textContrastColor: var(--contrastColor);
+
+  /* Backgrounds */
+  --appBg: var(--gray1);
+  --subtleBg: var(--gray2);
+
+  --bgNeutral: var(--gray3);
+  --bgNeutralHover: var(--gray4);
+  --bgNeutralActive: var(--gray5);
+  --bgSolidNeutral: var(--gray9);
+
+  --bgPrimary: var(--primary3);
+  --bgPrimaryHover: var(--primary4);
+  --bgPrimaryActive: var(--primary5);
+  --bgSolidPrimary: var(--primary9);
+  --bgSolidPrimaryHover: var(--primary10);
+  --bgSolidPrimaryActive: var(--primary11);
+
+  --bgDanger: var(--danger3);
+  --bgDangerHover: var(--danger4);
+  --bgDangerActive: var(--danger5);
+  --bgSolidDanger: var(--danger9);
+  --bgSolidDangerHover: var(--danger10);
+  --bgSolidDangerActive: var(--danger11);
+
+  /* Borders */
+  --borderNeutralSubtle: var(--gray6);
+  --borderNeutral: var(--gray7);
+  --borderNeutralHover: var(--gray8);
+
+  --borderPrimarySubtle: var(--primary6);
+  --borderPrimary: var(--primary7);
+  --borderPrimaryHover: var(--primary8);
+
+  --borderDangerSubtle: var(--danger6);
+  --borderDanger: var(--danger7);
+  --borderDangerHover: var(--danger8);
+
+  /* Text */
+  --textNeutralDisabled: var(--gray9);
+  --textNeutralLight: var(--gray11);
+  --textNeutral: var(--gray12);
+
+  --textPrimaryLight: var(--primary11);
+  --textPrimary: var(--primary12);
+
+  --textDangerLight: var(--danger11);
+  --textDanger: var(--danger12);
+
+  /* Radii */
+  --radiusXs: 3px; /* popovers, menus */
+  --radiusSm: 4px; /* badges, tags */
+  --radiusMd: 6px; /* buttons, nav items */
+  --radiusLg: 8px; /* cards, drops */
+  --radiusXl: 10px; /* dialogs */
+
+  /* Transitions */
+  --transitionShort: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+}
+
+body {
+  font-family: var(--defaultFontFamily);
+  color: var(--textNeutral);
+}

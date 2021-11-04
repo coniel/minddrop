@@ -1,25 +1,38 @@
 {
-  "name": "braindrop",
-  "description": "A free, open source app for learning new topics.",
+  "name": "minddrop",
+  "description": "A visual workspace to organise your projects, studies, research, and ideas.",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "react-static-plugin-source-filesystem",
+      "react-static-plugin-source-filesystem/**"
+    ]
+  },
   "scripts": {
     "docs": "doctoc --title '**Table of contents**' README.md",
+    "dev": "lerna run dev --parallel",
     "clean": "lerna run clean",
     "build": "lerna run build",
     "pub": "lerna publish",
-    "test": "lerna run test",
-    "lint": "eslint --ext js,ts,tsx ."
+    "test": "lerna run test -- --passWithNoTests",
+    "test:watch": "lerna run test --parallel -- --passWithNoTests --watch",
+    "lint": "eslint --ext js,ts,tsx .",
+    "reset": "find . -type dir -name node_modules | xargs rm -rf && rm -rf yarn.lock",
+    "storybook": "yarn workspace @minddrop/storybook start",
+    "storybook:build": "yarn workspace @minddrop/storybook build"
   },
   "devDependencies": {
-    "@nighttrax/eslint-config-tsx": "~8.0.5",
-    "doctoc": "~2.0.1",
-    "eslint": "~7.32.0",
-    "eslint-plugin-import": "~2.24.2",
+    "@nighttrax/eslint-config-tsx": "~9.0.0",
+    "doctoc": "~2.1.0",
+    "eslint": "~8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "~2.25.2",
+    "eslint-plugin-prettier": "^4.0.0",
     "lerna": "~4.0.0",
-    "react": "~17.0.0",
-    "typescript": "~4.4.3"
+    "prettier": "~2.4.0",
+    "typescript": "~4.4.4"
   }
 }

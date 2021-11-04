@@ -1,0 +1,42 @@
+.light-theme {
+  --gray1: hsl(206 30% 98.8%);
+  --gray2: hsl(210 16.7% 97.6%);
+  --gray3: hsl(209 13.3% 95.3%);
+  --gray4: hsl(209 12.2% 93.2%);
+  --gray5: hsl(208 11.7% 91.1%);
+  --gray6: hsl(208 11.3% 88.9%);
+  --gray7: hsl(207 11.1% 85.9%);
+  --gray8: hsl(205 10.7% 78%);
+  --gray9: hsl(206 6% 56.1%);
+  --gray10: hsl(206 5.8% 52.3%);
+  --gray11: hsl(206 6% 43.5%);
+  --gray12: hsl(206 24% 9%);
+
+  --primary1: hsl(225 60% 99.4%);
+  --primary2: hsl(223 100% 98.6%);
+  --primary3: hsl(223 98.4% 97.1%);
+  --primary4: hsl(223 92.9% 95%);
+  --primary5: hsl(224 87.1% 92%);
+  --primary6: hsl(224 81.9% 87.8%);
+  --primary7: hsl(225 77.4% 82.1%);
+  --primary8: hsl(226 75.4% 74.5%);
+  --primary9: hsl(226 70% 55.5%);
+  --primary10: hsl(226 58.6% 51.3%);
+  --primary11: hsl(226 55% 45%);
+  --primary12: hsl(226 62% 17%);
+
+  --danger1: hsl(359 100% 99.4%);
+  --danger2: hsl(359 100% 98.6%);
+  --danger3: hsl(360 100% 96.8%);
+  --danger4: hsl(360 97.9% 94.8%);
+  --danger5: hsl(360 90.2% 91.9%);
+  --danger6: hsl(360 81.7% 87.8%);
+  --danger7: hsl(359 74.2% 81.7%);
+  --danger8: hsl(359 69.5% 74.3%);
+  --danger9: hsl(358 75% 59%);
+  --danger10: hsl(358 69.4% 55.2%);
+  --danger11: hsl(358 65% 48.7%);
+  --danger12: hsl(354 50% 14.6%);
+
+  --contrastColor: #ffffff;
+}

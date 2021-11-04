@@ -4,8 +4,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@braindrop/*": ["packages/*/src"]
+      "@minddrop/*": ["packages/*/src"],
+      "*.css": ["jest/mocks/styleMock.js"]
     },
-    "noEmit": true
+    "noEmit": true,
+    "types": ["jest"]
   }
 }
