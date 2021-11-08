@@ -51,7 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
 A `Button` component with default props would render as:
 
 ```jsx
-<button class="button medium" />
+<button class="button size-medium" />
 ```
 
 A `Button` component with the following props:
@@ -68,14 +68,14 @@ A `Button` component with the following props:
 Would render as:
 
 ```jsx
-<button class="button small primary disabled custom-button" />
+<button class="button size-small color-primary disabled custom-button" />
 ```
 
 ## Class names
 
 Boolean props are mapped simply as the prop name, with `camelCase` names converted to `kebab-case`. For example, a `fullWidth` prop would add a `full-width`.
 
-String props are mapped as the prop's value. For example, a `size="small"` prop would add a class of `small`.
+String props are mapped as `[name]-[value]`. For example, a `size="small"` prop would add a class of `size-small`.
 
 The `className` prop is appended to the generated class names.
 

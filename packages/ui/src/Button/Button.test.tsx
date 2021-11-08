@@ -37,13 +37,13 @@ describe('Button', () => {
   it('supports variants', () => {
     render(<Button variant="primary" />);
 
-    expect(screen.getByRole('button')).toHaveClass('primary');
+    expect(screen.getByRole('button')).toHaveClass('variant-primary');
   });
 
   it('supports sizes', () => {
     render(<Button size="small" />);
 
-    expect(screen.getByRole('button')).toHaveClass('small');
+    expect(screen.getByRole('button')).toHaveClass('size-small');
   });
 
   it('can be disabled', () => {

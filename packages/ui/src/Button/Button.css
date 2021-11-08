@@ -38,71 +38,71 @@ a.button {
 
 /* Primary */
 
-.button.primary {
+.button.variant-primary {
   background-color: var(--bgSolidPrimary);
   border-color: var(--bgSolidPrimary);
   color: var(--contrastColor);
 }
 
-.button.primary:hover {
+.button.variant-primary:hover {
   background-color: var(--bgSolidPrimaryHover);
   border-color: var(--bgSolidPrimaryHover);
 }
 
-.button.primary:active {
+.button.variant-primary:active {
   background-color: var(--bgSolidPrimaryActive);
   border-color: var(--bgSolidPrimary);
 }
 
 /* Text */
 
-.button.text {
+.button.variant-text {
   background-color: transparent;
   border: none;
   color: var(--textPrimaryLight);
 }
 
-.button.text:hover {
+.button.variant-text:hover {
   background-color: var(--bgNeutralHover);
   transition-duration: 0.1s;
 }
 
-.button.text:active {
+.button.variant-text:active {
   background-color: var(--bgNeutralActive);
 }
 
 /* Danger */
 
-.button.danger {
+.button.variant-danger {
   background-color: var(--bgNeutral);
   border-color: var(--borderNeutral);
   color: var(--textDangerLight);
 }
 
-.button.danger:hover,
-.button.danger:active {
+.button.variant-danger:hover,
+.button.variant-danger:active {
   color: var(--contrastColor);
   transition-duration: 0.1s;
 }
 
-.button.danger:hover {
+.button.variant-danger:hover {
   background-color: var(--bgSolidDangerHover);
   border-color: var(--borderDangerHover);
 }
 
-.button.danger:active {
+.button.variant-danger:active {
   background-color: var(--bgSolidDangerActive);
   border-color: var(--borderDangerHover);
 }
 
 /* Sizes */
 
-.button.small {
+.button.size-small {
   padding: 3px 12px;
   font-size: 12px;
 }
 
-.button.large {
+.button.size-large {
   padding: 10px 24px;
   font-size: 16px;
 }
@@ -116,7 +116,7 @@ a.button {
   pointer-events: none;
 }
 
-.button.text:disabled {
+.button.variant-text:disabled {
   background-color: transparent;
   border-color: transparent;
 }
@@ -153,14 +153,14 @@ a.button {
   width: 1em;
 }
 
-.button.small > .start-icon,
-.button.small > .end-icon {
+.button.size-small > .start-icon,
+.button.size-small > .end-icon {
   height: 1.2em;
   line-height: 1.2em;
 }
 
-.button.small > .start-icon > svg,
-.button.small > .end-icon > svg {
+.button.size-small > .start-icon > svg,
+.button.size-small > .end-icon > svg {
   fill: currentColor;
   height: 1.2em;
   width: 1.2em;

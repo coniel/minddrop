@@ -7,9 +7,9 @@ describe('mapPropsToClasses', () => {
     );
   });
 
-  it('should return string props as the value', () => {
+  it('should return string props as [key]-[value]', () => {
     expect(mapPropsToClasses({ size: 'small', variant: 'contained' })).toBe(
-      'small contained',
+      'size-small variant-contained',
     );
   });
 
@@ -43,6 +43,6 @@ describe('mapPropsToClasses', () => {
         },
         'button',
       ),
-    ).toBe('button small disabled my-class');
+    ).toBe('button size-small disabled my-class');
   });
 });
