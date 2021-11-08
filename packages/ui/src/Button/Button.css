@@ -12,8 +12,8 @@
   border-width: 1px;
   border-color: var(--borderNeutral);
   border-style: solid;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: var(--fwSemibold);
+  font-size: var(--fsRegular);
   line-height: 20px;
 }
 
@@ -99,12 +99,12 @@ a.button {
 
 .button.size-small {
   padding: 3px 12px;
-  font-size: 12px;
+  font-size: var(--fsTiny);
 }
 
 .button.size-large {
   padding: 10px 24px;
-  font-size: 16px;
+  font-size: var(--fsLarge);
 }
 
 /* Disabled */

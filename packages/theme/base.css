@@ -3,9 +3,19 @@
   /* Typography */
   --defaultFontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  --textPrimaryColor: var(--gray12);
-  --textSecondaryColor: var(--gray11);
-  --textContrastColor: var(--contrastColor);
+
+  --fwLight: 300;
+  --fwRegular: 400;
+  --fwMedium: 500;
+  --fwSemibold: 600;
+  --fwBold: 700;
+  --fwHeavy: 800;
+
+  --fsTiny: 12px;
+  --fsSmall: 13px;
+  --fsRegular: 14px;
+  --fsLarge: 16px;
+  --fsTitle: 28px;
 
   /* Backgrounds */
   --appBg: var(--gray1);
@@ -47,6 +57,7 @@
   --textNeutralDisabled: var(--gray9);
   --textNeutralLight: var(--gray11);
   --textNeutral: var(--gray12);
+  --textContrast: var(--contrastColor);
 
   --textPrimaryLight: var(--primary11);
   --textPrimary: var(--primary12);
