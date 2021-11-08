@@ -17,6 +17,7 @@ export const uiRoutes = [
     pages: [
       { title: 'Button', slug: 'docs/ui/components/button' },
       { title: 'Text', slug: 'docs/ui/components/text' },
+      { title: 'IconButton', slug: 'docs/ui/components/icon-button' },
       // TEMPLATE_APPEND
     ],
   },

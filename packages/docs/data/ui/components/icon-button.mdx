@@ -1,0 +1,101 @@
+---
+metaTitle: IconButton
+metaDescription: A clickable icon.
+name: icon-button
+---
+
+# IconButton
+
+<Description>A clickable icon.</Description>
+
+<HeroContainer>
+  <IconButtonDemo />
+</HeroContainer>
+
+```jsx hero template=IconButtonDemo
+
+```
+
+<Highlights
+  features={['Two sizes', 'Three colors', 'Label for accessability']}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { IconButton } from '@minddrop/ui';
+import { Close } from '@minddrop/icons';
+
+export default () => {
+  return (
+    <IconButton label="Close">
+      <Close />
+    </IconButton>
+  );
+};
+```
+
+## API Reference
+
+IconButton extends `HTMLButtonAttributes`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      required: true,
+      type: 'node',
+      description: 'The icon.',
+    },
+    {
+      name: 'color',
+      required: true,
+      type: "'neutral' | 'light' | 'contrast'",
+      default: "'neutral'",
+      description: 'The color of the icon.',
+    },
+    {
+      name: 'disabled',
+      type: boolean,
+      description: 'Disables the button.',
+    },
+    {
+      name: 'label',
+      type: 'string',
+      description:
+        'Makes the button accessible by providing a meaningful label which is announced correctly by screen readers.',
+    },
+    {
+      name: 'size',
+      type: "'small' | 'medium'",
+      default: "'medium'",
+      description: (
+        <span>
+          The size of the button. <code>'medium'</code> should be used
+          for regular buttons.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Button WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#button).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Activates the button.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Activates the button.',
+    },
+  ]}
+/>
