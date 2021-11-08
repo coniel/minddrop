@@ -56,4 +56,14 @@ describe('<IconButton />', () => {
 
     expect(screen.getByRole('button')).toBeDisabled();
   });
+
+  it('supports custom components', () => {
+    render(
+      <IconButton component="span" label="span">
+        I
+      </IconButton>,
+    );
+
+    expect(screen.queryByRole('button')).toBe(null);
+  });
 });

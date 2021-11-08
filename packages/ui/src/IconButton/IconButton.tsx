@@ -15,6 +15,12 @@ export interface IconButtonProps
   color?: 'neutral' | 'light' | 'contrast';
 
   /**
+   * The component used for the root node. Either a string to use a
+   * HTML element or a component.
+   */
+  component?: React.ElementType;
+
+  /**
    * Disables the button.
    */
   disabled?: boolean;
@@ -34,13 +40,16 @@ export interface IconButtonProps
 export const IconButton: FC<IconButtonProps> = ({
   children,
   color,
+  component,
   className,
   label,
   size,
   ...other
 }) => {
+  const Component = component || 'button';
+
   return (
-    <button
+    <Component
       type="button"
       tabIndex={0}
       aria-label={label}
@@ -48,6 +57,6 @@ export const IconButton: FC<IconButtonProps> = ({
       {...other}
     >
       {children}
-    </button>
+    </Component>
   );
 };
