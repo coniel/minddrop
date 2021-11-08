@@ -1,0 +1,89 @@
+---
+metaTitle: Text
+metaDescription: A text element which supports a predefined set of sizes, wights, and colors.
+name: text
+---
+
+# Text
+
+<Description>
+  A text element which supports a predefined set of sizes, weights,
+  and colors.
+</Description>
+
+<HeroContainer>
+  <TextDemo />
+</HeroContainer>
+
+```jsx hero template=TextDemo
+
+```
+
+<Highlights
+  features={['Five sizes', 'Three colors', 'Six weights']}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Text } from '@minddrop/ui';
+
+export default () => {
+  return <Text size="title">MindDrop</Text>;
+};
+```
+
+## API Reference
+
+Text props extend `HTMLSpanAttributes`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'node',
+      description: 'The text itself',
+    },
+    {
+      name: 'color',
+      type: "'regular' | 'light' | 'contrast'",
+      description: (
+        <span>
+          The color of the text. <code>'regular'</code> is for
+          standard UI text.
+        </span>
+      ),
+      default: 'regular',
+    },
+    {
+      name: 'component',
+      type: 'React.ElementType',
+      description: 'The component used for the root node. Either a string to use a HTML element or a component.',
+      default: 'span',
+    }
+    {
+      name: 'size',
+      type: "'tiny' | 'small' | 'regular' | 'large' | 'title'",
+      description: (
+        <span>
+          The font size. <code>'regular'</code> is for standard UI
+          text.
+        </span>
+      ),
+      default: 'regular',
+    },
+    {
+      name: 'weight',
+      type: "'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'heavy'",
+      description: (
+        <span>
+          The font weight. <code>'regular'</code> is for standard UI
+          text.
+        </span>
+      ),
+      default: 'regular',
+    },
+  ]}
+/>

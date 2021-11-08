@@ -1,0 +1,62 @@
+.text {
+  font-family: var(--defaultFontFamily);
+  color: var(--textNeutral);
+}
+
+/* Color */
+
+.text.color-light {
+  color: var(--textNeutralLight);
+}
+
+.text.color-contrast {
+  color: var(--textContrast);
+}
+
+/* Weight */
+
+.text.weight-light {
+  font-weight: var(--fwLight);
+}
+
+.text.text.weight-regular {
+  font-weight: var(--fwRegular);
+}
+
+.text.weight-medium {
+  font-weight: var(--fwMedium);
+}
+
+.text.weight-semibold {
+  font-weight: var(--fwSemibold);
+}
+
+.text.weight-bold {
+  font-weight: var(--fwBold);
+}
+
+.text.weight-heavy {
+  font-weight: var(--fwHeavy);
+}
+
+/* Size */
+
+.text.size-tiny {
+  font-size: var(--fsTiny);
+}
+
+.text.size-small {
+  font-size: var(--fsSmall);
+}
+
+.text.size-regular {
+  font-size: var(--fsRegular);
+}
+
+.text.size-large {
+  font-size: var(--fsLarge);
+}
+
+.text.size-title {
+  font-size: var(--fsTitle);
+}
