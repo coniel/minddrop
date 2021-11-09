@@ -5,3 +5,4 @@ export { ToolbarDemo } from './ToolbarDemo';
 export { TooltipDemo } from './TooltipDemo';
 export { KeyboardShortcutDemo } from './KeyboardShortcutDemo';
 export { InvisibleTextFieldDemo } from './InvisibleTextFieldDemo';
+export { PopoverDemo } from './PopoverDemo';

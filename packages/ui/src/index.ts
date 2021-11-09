@@ -5,3 +5,4 @@ export * from './Toolbar';
 export * from './Tooltip';
 export * from './KeyboardShortcut';
 export * from './InvisibleTextField';
+export * from './Popover';

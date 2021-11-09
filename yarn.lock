@@ -3408,7 +3408,7 @@
     aria-hidden "^1.1.1"
     react-remove-scroll "^2.4.0"
 
-"@radix-ui/react-popover@0.1.1":
+"@radix-ui/react-popover@0.1.1", "@radix-ui/react-popover@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-popover/-/react-popover-0.1.1.tgz#99951e10d70c3855b7a7db52f7f15af684e47848"
   integrity sha512-kPcuzpB72MQMbnLg24NR4NgOLRL7so5/ApukDKGQqGXs/ZBtAUBTdtNSnQIyItT4rvoRbtUOOIH0jC7072yFMg==

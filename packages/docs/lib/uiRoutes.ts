@@ -24,7 +24,11 @@ export const uiRoutes = [
         title: 'KeyboardShortcut',
         slug: 'docs/ui/components/keyboard-shortcut',
       },
-      { title: 'InvisibleTextField', slug: 'docs/ui/components/invisible-text-field' },
+      {
+        title: 'InvisibleTextField',
+        slug: 'docs/ui/components/invisible-text-field',
+      },
+      { title: 'Popover', slug: 'docs/ui/components/popover' },
       // TEMPLATE_APPEND
     ],
   },
