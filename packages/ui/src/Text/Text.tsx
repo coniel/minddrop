@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
+import { TextColor, TextSize, TextWeight } from '../types';
 import './Text.css';
 
 export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -11,7 +12,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * The color of the text.
    */
-  color?: 'regular' | 'light' | 'contrast' | 'contrast-light';
+  color?: TextColor;
 
   /**
    * The component used for the root node. Either a string to use a
@@ -22,12 +23,12 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * The font size, regular is for standard UI text.
    */
-  size?: 'tiny' | 'small' | 'regular' | 'large' | 'title';
+  size?: TextSize;
 
   /**
    * The font weight.
    */
-  weight?: 'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'heavy';
+  weight?: TextWeight;
 }
 
 export const Text: FC<TextProps> = ({
