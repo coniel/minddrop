@@ -17,6 +17,7 @@ import { ApiPage } from '@components/ApiPage';
 import '@minddrop/theme/light.css';
 import '@minddrop/theme/dark.css';
 import '@minddrop/theme/base.css';
+import '@minddrop/theme/animations.css';
 import '@minddrop/ui/dist/styles.css';
 
 const globalStyles = globalCss({
