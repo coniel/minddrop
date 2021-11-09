@@ -18,8 +18,8 @@
   --fsTitle: 28px;
 
   /* Backgrounds */
-  --appBg: var(--gray1);
-  --subtleBg: var(--gray2);
+  --bgApp: var(--appBackground);
+  --bgSubtle: var(--gray2);
   --bgContrast: var(--gray12);
 
   --bgNeutral: var(--gray3);
