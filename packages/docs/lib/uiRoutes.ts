@@ -19,6 +19,10 @@ export const uiRoutes = [
       { title: 'Text', slug: 'docs/ui/components/text' },
       { title: 'IconButton', slug: 'docs/ui/components/icon-button' },
       { title: 'Toolbar', slug: 'docs/ui/components/toolbar' },
+      {
+        title: 'KeyboardShortcut',
+        slug: 'docs/ui/components/keyboard-shortcut',
+      },
       // TEMPLATE_APPEND
     ],
   },
