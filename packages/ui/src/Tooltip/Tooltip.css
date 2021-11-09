@@ -1,15 +1,3 @@
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .tooltip {
   background-color: var(--bgContrast);
   transform-origin: var(--radix-tooltip-content-transform-origin);
