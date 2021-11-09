@@ -11,7 +11,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * The color of the text.
    */
-  color?: 'regular' | 'light' | 'contrast';
+  color?: 'regular' | 'light' | 'contrast' | 'contrast-light';
 
   /**
    * The component used for the root node. Either a string to use a
