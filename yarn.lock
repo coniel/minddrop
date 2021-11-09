@@ -3574,6 +3574,19 @@
     "@radix-ui/react-use-callback-ref" "0.1.0"
     "@radix-ui/react-use-controllable-state" "0.1.0"
 
+"@radix-ui/react-toggle-group@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle-group/-/react-toggle-group-0.1.1.tgz#56f5c602f28ff749be659a045c7400643c79acf5"
+  integrity sha512-SQN0mA6se5g5shr9SDHL7V2dOYf4PUKXzw1pq+3fcXn3NfIG5BtGzIXRDrVLKj180LWzlw9VCoT7fELRIiknZw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "0.1.0"
+    "@radix-ui/react-context" "0.1.1"
+    "@radix-ui/react-primitive" "0.1.1"
+    "@radix-ui/react-roving-focus" "0.1.1"
+    "@radix-ui/react-toggle" "0.1.1"
+    "@radix-ui/react-use-controllable-state" "0.1.0"
+
 "@radix-ui/react-toggle@0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle/-/react-toggle-0.1.1.tgz#0ee89569e8e517593d47117a1d9c90ce05ed37ca"
@@ -3583,6 +3596,18 @@
     "@radix-ui/primitive" "0.1.0"
     "@radix-ui/react-primitive" "0.1.1"
     "@radix-ui/react-use-controllable-state" "0.1.0"
+
+"@radix-ui/react-toolbar@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-toolbar/-/react-toolbar-0.1.1.tgz#95e88c3f2c34264add2567bd64000013ec8535ba"
+  integrity sha512-+IEY2apIiUlAPSoBkv6Gn0oeViZ3o1W2bK5sHw0ceAbJaF9orHKJex7uB0h7INXOI8eExd7WB7jQngUMwuXllw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "0.1.0"
+    "@radix-ui/react-context" "0.1.1"
+    "@radix-ui/react-roving-focus" "0.1.1"
+    "@radix-ui/react-separator" "0.1.1"
+    "@radix-ui/react-toggle-group" "0.1.1"
 
 "@radix-ui/react-tooltip@0.1.1":
   version "0.1.1"
@@ -20183,18 +20208,6 @@ storybook-dark-mode@^1.0.8:
   dependencies:
     fast-deep-equal "^3.0.0"
     memoizerific "^1.11.3"
-
-storybook-i18n@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/storybook-i18n/-/storybook-i18n-1.0.6.tgz#9be91d3d2a3ca1ded127142f1015b51b9059de8c"
-  integrity sha512-nw09fhzaJX2rjSTlfy7r9PY/KUD6NXFOR3I5AOqHjEIoIe2tURCa/9gkpg77SvXVzzVj7o1pBZd8IDpSv3WAXw==
-
-storybook-react-i18next@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/storybook-react-i18next/-/storybook-react-i18next-1.0.12.tgz#216616252957f8cf940e33fec6b69c1b6b0ea965"
-  integrity sha512-Uqunovbe2CdahnLjJJudj/Laueu9p3Ce3sZlGFbhR3nqGnfvwJN8TL3/59x4F56OQobPTitf/7ling5ppi4Ufg==
-  dependencies:
-    storybook-i18n "^1.0.6"
 
 stream-browserify@3.0.0:
   version "3.0.0"
