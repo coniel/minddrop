@@ -20,6 +20,7 @@
   /* Backgrounds */
   --appBg: var(--gray1);
   --subtleBg: var(--gray2);
+  --bgContrast: var(--gray12);
 
   --bgNeutral: var(--gray3);
   --bgNeutralHover: var(--gray4);
@@ -57,7 +58,9 @@
   --textNeutralDisabled: var(--gray9);
   --textNeutralLight: var(--gray11);
   --textNeutral: var(--gray12);
+
   --textContrast: var(--contrastColor);
+  --textContrastLight: var(--contrastLightColor);
 
   --textPrimaryLight: var(--primary11);
   --textPrimary: var(--primary12);

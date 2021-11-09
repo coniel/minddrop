@@ -41,7 +41,7 @@ a.button {
 .button.variant-primary {
   background-color: var(--bgSolidPrimary);
   border-color: var(--bgSolidPrimary);
-  color: var(--contrastColor);
+  color: var(--white);
 }
 
 .button.variant-primary:hover {

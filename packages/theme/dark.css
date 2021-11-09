@@ -38,5 +38,7 @@
   --danger11: hsl(358 100% 69.5%);
   --danger12: hsl(351 89% 96%);
 
-  --contrastColor: #ffffff;
+  --white: #ffffff;
+  --contrastColor: #0f0f0f;
+  --contrastLightColor: #6d7174;
 }
