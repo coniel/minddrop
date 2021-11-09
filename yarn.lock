@@ -3609,7 +3609,7 @@
     "@radix-ui/react-separator" "0.1.1"
     "@radix-ui/react-toggle-group" "0.1.1"
 
-"@radix-ui/react-tooltip@0.1.1":
+"@radix-ui/react-tooltip@0.1.1", "@radix-ui/react-tooltip@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-tooltip/-/react-tooltip-0.1.1.tgz#cab234fb62740626794a8008c95cd02f3bcad904"
   integrity sha512-EVZoZ/268kJ/eo+iYN5iGdh5sYAkPMdqdTL51GhTdfG5pskgoeYJQFNP8peObcikKgoyKqkV+5iXGQGa9zzwYg==
