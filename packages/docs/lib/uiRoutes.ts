@@ -24,6 +24,7 @@ export const uiRoutes = [
         title: 'KeyboardShortcut',
         slug: 'docs/ui/components/keyboard-shortcut',
       },
+      { title: 'InvisibleTextField', slug: 'docs/ui/components/invisible-text-field' },
       // TEMPLATE_APPEND
     ],
   },

@@ -4,3 +4,4 @@ export { IconButtonDemo } from './IconButtonDemo';
 export { ToolbarDemo } from './ToolbarDemo';
 export { TooltipDemo } from './TooltipDemo';
 export { KeyboardShortcutDemo } from './KeyboardShortcutDemo';
+export { InvisibleTextFieldDemo } from './InvisibleTextFieldDemo';

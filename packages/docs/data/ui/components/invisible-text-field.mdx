@@ -1,0 +1,86 @@
+---
+metaTitle: InvisibleTextField
+metaDescription: An ivisible text input element for editable titles.
+name: invisible-text-field
+---
+
+# InvisibleTextField
+
+<Description>
+  An ivisible text input element for editable titles.
+</Description>
+
+<HeroContainer>
+  <InvisibleTextFieldDemo />
+</HeroContainer>
+
+```jsx hero template=InvisibleTextFieldDemo
+
+```
+
+<Highlights
+  features={[
+    'Supports Text colors, sizes, and weights',
+    'Hidden label for accessability',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { InvisibleTextField } from '@minddrop/ui';
+
+export default (props) => {
+  return <InvisibleTextField size="title" {...props} />;
+};
+```
+
+## API Reference
+
+InvisibleTextField extends `HTMLInputAttributes`.
+
+<PropsTable
+  data={[
+    {
+      name: 'label',
+      required: true,
+      type: 'string',
+      description: 'Hidden label for accessability',
+    },
+    {
+      name: 'placeholder',
+      required: true,
+      type: 'string',
+      description: 'Required for accessability',
+    },
+    {
+      name: 'size',
+      type: "'tiny' | 'small' | 'regular' | 'large' | 'title'",
+      description: 'The size of the text.',
+      default: 'regular',
+    },
+    {
+      name: 'color',
+      type: "'regular' | 'light' | 'contrast' | 'contrast-light'",
+      description: (
+        <span>
+          The color of the text. <code>'regular'</code> is for
+          standard UI text.
+        </span>
+      ),
+      default: 'regular',
+    },
+    {
+      name: 'weight',
+      type: "'light' | 'regular' | 'medium' | 'semibold' | 'bold' | 'heavy'",
+      description: 'The weight of the text.',
+      default: 'regular',
+    },
+  ]}
+/>
+
+## Accessibility
+
+Applies the `label` prop as the `aria-label`.

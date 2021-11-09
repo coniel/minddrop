@@ -4,3 +4,4 @@ export * from './IconButton';
 export * from './Toolbar';
 export * from './Tooltip';
 export * from './KeyboardShortcut';
+export * from './InvisibleTextField';
