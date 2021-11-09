@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './IconButton.css';
 
@@ -37,26 +37,21 @@ export interface IconButtonProps
   size?: 'small' | 'medium';
 }
 
-export const IconButton: FC<IconButtonProps> = ({
-  children,
-  color,
-  component,
-  className,
-  label,
-  size,
-  ...other
-}) => {
-  const Component = component || 'button';
+export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  ({ children, color, component, className, label, size, ...other }, ref) => {
+    const Component = component || 'button';
 
-  return (
-    <Component
-      type="button"
-      tabIndex={0}
-      aria-label={label}
-      className={mapPropsToClasses({ className, color, size }, 'icon-button')}
-      {...other}
-    >
-      {children}
-    </Component>
-  );
-};
+    return (
+      <Component
+        type="button"
+        ref={ref}
+        tabIndex={0}
+        aria-label={label}
+        className={mapPropsToClasses({ className, color, size }, 'icon-button')}
+        {...other}
+      >
+        {children}
+      </Component>
+    );
+  },
+);
