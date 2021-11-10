@@ -39,7 +39,7 @@
   --danger12: hsl(351 89% 96%);
 
   --white: #ffffff;
-  --appBackground: var(--gray2);
+  --appBackground: var(--gray1);
   --contrastColor: #0f0f0f;
   --contrastLightColor: #6d7174;
 }

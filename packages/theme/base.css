@@ -83,4 +83,5 @@
 body {
   font-family: var(--defaultFontFamily);
   color: var(--textNeutral);
+  background-color: var(--bgApp);
 }
