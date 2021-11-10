@@ -5,9 +5,9 @@
   color: var(--textContrast);
   padding: 8px;
   animation-name: scaleIn;
-  animation-duration: 0.1s;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 10px 20px hsla(0, 0%, 0%, 0.15), 0 3px 6px hsla(0, 0%, 0%, 0.1);
+  animation-duration: var(--adScale);
+  animation-timing-function: var(--atfScale);
+  box-shadow: var(--el2Shadow);
 }
 
 .tooltip > .keyboard-shortcut,

@@ -42,4 +42,9 @@
   --appBackground: var(--gray1);
   --contrastColor: #0f0f0f;
   --contrastLightColor: #6d7174;
+
+  /* Elevation */
+  --el2Background: var(--gray3);
+  --el2Shadow: none;
+  --el2ShadowBordered: rgba(220, 220, 220, 0.05) 0px 0px 0px 1px;
 }

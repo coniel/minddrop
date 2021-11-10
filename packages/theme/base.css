@@ -78,6 +78,12 @@
 
   /* Transitions */
   --transitionShort: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+
+  --adPop: 0.1s;
+  --atfPop: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --adScale: 0.1s;
+  --atfScale: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
