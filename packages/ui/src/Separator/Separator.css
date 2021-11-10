@@ -15,8 +15,8 @@
 /* Margin */
 
 .separator.margin-small[data-orientation='vertical'] {
-  margin-left: 1px;
-  margin-right: 1px;
+  margin-left: 6px;
+  margin-right: 6px;
 }
 
 .separator.margin-medium[data-orientation='vertical'] {
@@ -30,8 +30,8 @@
 }
 
 .separator.margin-small[data-orientation='horizontal'] {
-  margin-top: 1px;
-  margin-bottom: 1px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .separator.margin-medium[data-orientation='horizontal'] {
