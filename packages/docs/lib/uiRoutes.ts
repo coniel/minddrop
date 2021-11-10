@@ -30,6 +30,7 @@ export const uiRoutes = [
       },
       { title: 'Popover', slug: 'docs/ui/components/popover' },
       { title: 'Separator', slug: 'docs/ui/components/separator' },
+      { title: 'Menu', slug: 'docs/ui/components/menu' },
       // TEMPLATE_APPEND
     ],
   },

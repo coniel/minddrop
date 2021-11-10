@@ -1,0 +1,7 @@
+.menu {
+  animation-name: popIn;
+  border-radius: var(--radiusXs);
+  box-shadow: var(--el2ShadowBordered);
+  background-color: var(--el2Background);
+  padding: 6px 0;
+}

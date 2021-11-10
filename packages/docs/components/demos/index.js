@@ -7,3 +7,4 @@ export { KeyboardShortcutDemo } from './KeyboardShortcutDemo';
 export { InvisibleTextFieldDemo } from './InvisibleTextFieldDemo';
 export { PopoverDemo } from './PopoverDemo';
 export { SeparatorDemo } from './SeparatorDemo';
+export { MenuDemo } from './MenuDemo';
