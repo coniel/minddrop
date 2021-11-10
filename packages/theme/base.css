@@ -59,6 +59,7 @@
   --textNeutralLight: var(--gray11);
   --textNeutral: var(--gray12);
 
+  --textWhite: var(--white);
   --textContrast: var(--contrastColor);
   --textContrastLight: var(--contrastLightColor);
 

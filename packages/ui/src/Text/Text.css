@@ -5,6 +5,10 @@
 
 /* Color */
 
+.text.text.color-white {
+  color: var(--textWhite);
+}
+
 .text.color-light {
   color: var(--textNeutralLight);
 }
