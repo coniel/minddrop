@@ -16,7 +16,9 @@ export interface KeyboardShortcutProps extends Omit<TextProps, 'children'> {
 export function printKeyboardShortcut(keys: string[]): string {
   let shortcut = keys.join('+');
 
-  const isMac = navigator.platform.toLowerCase().indexOf('mac') === 0;
+  const isMac =
+    typeof navigator !== 'undefined' &&
+    navigator.platform.toLowerCase().indexOf('mac') === 0;
 
   if (isMac) {
     shortcut = shortcut.replace('Ctrl', '⌘');
