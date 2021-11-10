@@ -29,6 +29,7 @@ export const uiRoutes = [
         slug: 'docs/ui/components/invisible-text-field',
       },
       { title: 'Popover', slug: 'docs/ui/components/popover' },
+      { title: 'Separator', slug: 'docs/ui/components/separator' },
       // TEMPLATE_APPEND
     ],
   },

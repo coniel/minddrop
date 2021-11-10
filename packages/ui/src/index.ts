@@ -6,3 +6,4 @@ export * from './Tooltip';
 export * from './KeyboardShortcut';
 export * from './InvisibleTextField';
 export * from './Popover';
+export * from './Separator';
