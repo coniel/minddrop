@@ -32,6 +32,7 @@ export const uiRoutes = [
       { title: 'Separator', slug: 'docs/ui/components/separator' },
       { title: 'ContextMenu', slug: 'docs/ui/components/context-menu' },
       { title: 'Menu', slug: 'docs/ui/components/menu' },
+      { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
       // TEMPLATE_APPEND
     ],
   },
