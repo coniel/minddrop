@@ -8,9 +8,14 @@
   animation-duration: var(--adScale);
   animation-timing-function: var(--atfScale);
   box-shadow: var(--el2Shadow);
+  max-width: 200px;
 }
 
 .tooltip > .keyboard-shortcut,
 .tooltip > .description {
   margin-top: 6px;
+}
+
+.tooltip > .description {
+  line-height: 130%;
 }
