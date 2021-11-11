@@ -84,7 +84,7 @@ export default () => (
 
 ### Origin-aware animations
 
-We expose a CSS custom property `--radix-tooltip-content-transform-origin`. Use it to animate the content from its computed origin based on `side`, `sideOffset`, `align`, `alignOffset` and any collisions.
+Radix exposes a CSS custom property `--radix-tooltip-content-transform-origin`. Use it to animate the content from its computed origin based on `side`, `sideOffset`, `align`, `alignOffset` and any collisions.
 
 ```css line=14
 @keyframes scaleIn {
@@ -107,7 +107,7 @@ We expose a CSS custom property `--radix-tooltip-content-transform-origin`. Use 
 
 ### Collision-aware animations
 
-We expose `data-side` and `data-align` attributes. Their values will change at runtime to reflect collisions. Use them to create collision and direction-aware animations.
+Radix exposes `data-side` and `data-align` attributes. Their values will change at runtime to reflect collisions. Use them to create collision and direction-aware animations.
 
 ```css line=30-32,34-36
 @keyframes slideDown {
