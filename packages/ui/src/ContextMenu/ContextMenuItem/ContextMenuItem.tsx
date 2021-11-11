@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
-import { MenuItem } from '../Menu';
-import { MenuItemProps } from '../types';
+import { Tooltip } from '../../Tooltip';
+import { MenuItem } from '../../Menu';
+import { MenuItemProps } from '../../types';
 
 export interface ContextMenuItemProps
   extends Omit<
@@ -29,6 +30,21 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = ({
       />
     </ContextMenuPrimitives.Item>
   );
+
+  if (tooltipTitle) {
+    return (
+      <Tooltip
+        side="right"
+        sideOffset={6}
+        skipDelayDuration={0}
+        delayDuration={8000}
+        title={tooltipTitle}
+        description={tooltipDescription}
+      >
+        {item}
+      </Tooltip>
+    );
+  }
 
   return item;
 };
