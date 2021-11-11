@@ -1,7 +1,10 @@
 .menu {
-  animation-name: popIn;
   border-radius: var(--radiusXs);
   box-shadow: var(--el2ShadowBordered);
   background-color: var(--el2Background);
   padding: 6px 0;
+  animation-name: fadeIn;
+  animation-duration: var(--adFade);
+  animation-timing-function: var(--atfFade);
+  transform-origin: var(--radix-context-menu-content-transform-origin);
 }

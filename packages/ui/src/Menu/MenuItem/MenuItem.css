@@ -5,13 +5,14 @@
   color: var(--textPrimary);
   padding: 5px 14px;
   cursor: pointer;
+  outline: none;
 }
 
-.menu-item:hover {
+.menu-item:focus {
   background-color: var(--bgNeutralHover);
 }
 
-.menu-item:hover {
+.menu-item:active {
   background-color: var(--bgNeutralActive);
 }
 

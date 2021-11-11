@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Menu.css';
 
@@ -9,14 +9,17 @@ export interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
-export const Menu: FC<MenuProps> = ({ children, className, ...other }) => {
-  return (
-    <div
-      role="menu"
-      className={mapPropsToClasses({ className }, 'menu')}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-};
+export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
+  ({ children, className, ...other }, ref) => {
+    return (
+      <div
+        ref={ref}
+        role="menu"
+        className={mapPropsToClasses({ className }, 'menu')}
+        {...other}
+      >
+        {children}
+      </div>
+    );
+  },
+);

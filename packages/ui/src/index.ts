@@ -7,4 +7,5 @@ export * from './KeyboardShortcut';
 export * from './InvisibleTextField';
 export * from './Popover';
 export * from './Separator';
+export * from './ContextMenu';
 export * from './Menu';
