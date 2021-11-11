@@ -33,6 +33,7 @@ export const uiRoutes = [
       { title: 'ContextMenu', slug: 'docs/ui/components/context-menu' },
       { title: 'Menu', slug: 'docs/ui/components/menu' },
       { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
+      { title: 'Sidebar', slug: 'docs/ui/components/sidebar' },
       // TEMPLATE_APPEND
     ],
   },
