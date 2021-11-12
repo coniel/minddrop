@@ -27,7 +27,8 @@
     "react": "17.0.2"
   },
   "dependencies": {
-    "i18next": "^21.4.0",
-    "react-i18next": "^11.13.0"
+    "i18next": "^21.4.2",
+    "i18next-intervalplural-postprocessor": "^3.0.0",
+    "react-i18next": "^11.14.2"
   }
 }
