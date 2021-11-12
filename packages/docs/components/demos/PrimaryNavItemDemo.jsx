@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PrimaryNavItem } from '@minddrop/ui';
-import { Settings, Search, Drop } from '@minddrop/icons';
+import { Drop, Search, Settings } from '@minddrop/icons';
 
-export const PrimaryNavItemDemo = () => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
+export const PrimaryNavItemDemo = () => {
+  const [active, setActive] = useState('daily-drops');
+
+  return (
     <div
       style={{
         width: 260,
@@ -15,11 +17,26 @@ export const PrimaryNavItemDemo = () => (
         backgroundColor: 'var(--bgApp)',
       }}
     >
-      <PrimaryNavItem label="Daily drops" icon={<Drop />} />
-      <PrimaryNavItem label="Search" icon={<Search />} />
-      <PrimaryNavItem label="Settings" icon={<Settings />} />
+      <PrimaryNavItem
+        label="Daily drops"
+        icon={<Drop />}
+        active={active === 'daily-drops'}
+        onClick={() => setActive('daily-drops')}
+      />
+      <PrimaryNavItem
+        label="Search"
+        icon={<Search />}
+        active={active === 'search'}
+        onClick={() => setActive('search')}
+      />
+      <PrimaryNavItem
+        label="Settings"
+        icon={<Settings />}
+        active={active === 'settings'}
+        onClick={() => setActive('settings')}
+      />
     </div>
-  </div>
-);
+  );
+};
 
 export default PrimaryNavItemDemo;
