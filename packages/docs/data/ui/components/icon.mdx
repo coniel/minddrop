@@ -1,0 +1,66 @@
+---
+metaTitle: Icon
+metaDescription: Renders icons from a provided icon-set which can be customized at runtime.
+name: icon
+---
+
+# Icon
+
+<Description>
+  Renders icons from a provided icon-set which can be customized at
+  runtime.
+</Description>
+
+<HeroContainer>
+  <IconDemo />
+</HeroContainer>
+
+```jsx hero template=IconDemo
+
+```
+
+<Highlights features={['Allows runtime customization of icons.']} />
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Icon } from '@minddrop/ui';
+
+export default () => {
+  return <Icon name="edit" label="Edit description" />;
+};
+```
+
+## API Reference
+
+### Icon
+
+Renders icons provided by `IconProvider`;
+
+`IconProps` extends `React.HTMLAttributes<HTMLSvgElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'The name of the icon.',
+    },
+    {
+      name: 'color',
+      typeSimple: "'current-color' | TextColor",
+      type: "'regular' | 'light' | 'white' | 'contrast' | 'contrast-light'",
+      description: (
+        <span>
+          The color of the icon, matching <Code>Text</Code> colors.{' '}
+          <code>'current-color'</code> will use the color of the
+          surrounding text.
+        </span>
+      ),
+      default: 'current-color',
+    },
+  ]}
+/>

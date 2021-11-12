@@ -16,3 +16,4 @@ export { TopicNavItemDemo } from './TopicNavItemDemo';
 export { PrimaryNavItemDemo } from './PrimaryNavItemDemo';
 export { SecondaryNavItemDemo } from './SecondaryNavItemDemo';
 export { NavGroupDemo } from './NavGroupDemo';
+export { IconDemo } from './IconDemo';

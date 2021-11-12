@@ -39,6 +39,7 @@ export const uiRoutes = [
       { title: 'PrimaryNavItem', slug: 'docs/ui/components/primary-nav-item' },
       { title: 'SecondaryNavItem', slug: 'docs/ui/components/secondary-nav-item' },
       { title: 'NavGroup', slug: 'docs/ui/components/nav-group' },
+      { title: 'Icon', slug: 'docs/ui/components/icon' },
       // TEMPLATE_APPEND
     ],
   },
