@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-export const ExpandFilled: FC<React.HTMLAttributes<SVGElement>> = (props) => (
+export const ToggleFilled: FC<React.HTMLAttributes<SVGElement>> = (props) => (
   <svg
     width="24"
     height="24"
