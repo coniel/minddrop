@@ -15,3 +15,4 @@ export { CollapsibleDemo } from './CollapsibleDemo';
 export { TopicNavItemDemo } from './TopicNavItemDemo';
 export { PrimaryNavItemDemo } from './PrimaryNavItemDemo';
 export { SecondaryNavItemDemo } from './SecondaryNavItemDemo';
+export { NavGroupDemo } from './NavGroupDemo';

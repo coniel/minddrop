@@ -38,6 +38,7 @@ export const uiRoutes = [
       { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
       { title: 'PrimaryNavItem', slug: 'docs/ui/components/primary-nav-item' },
       { title: 'SecondaryNavItem', slug: 'docs/ui/components/secondary-nav-item' },
+      { title: 'NavGroup', slug: 'docs/ui/components/nav-group' },
       // TEMPLATE_APPEND
     ],
   },
