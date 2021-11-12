@@ -12,3 +12,4 @@ export * from './Menu';
 export * from './DropdownMenu';
 export * from './Sidebar';
 export * from './Collapsible';
+export * from './TopicNavItem';

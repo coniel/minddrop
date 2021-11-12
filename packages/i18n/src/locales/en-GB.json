@@ -1,3 +1,11 @@
 {
-  "test": "Test-en-GB"
+  "test": "Test-en-GB-s",
+
+  "noSubtopics": "No subtopics",
+  "subtopicCount_one": "{{count}} subtopic",
+  "subtopicCount_other": "{{count}} subtopics",
+  "subtopicCount_interval": "(0)[No subtopics];(1)[1 subtopic];(2-inf)[{{count}} subtopics];",
+  "untitled": "Untitled",
+  "openTopic": "Open {{topic}}",
+  "expandSubtopics": "Expand subtopics"
 }

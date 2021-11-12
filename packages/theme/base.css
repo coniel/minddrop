@@ -25,6 +25,7 @@
   --bgNeutral: var(--gray3);
   --bgNeutralHover: var(--gray4);
   --bgNeutralActive: var(--gray5);
+  --bgNeutralActiveHover: var(--gray6);
   --bgSolidNeutral: var(--gray9);
 
   --bgPrimary: var(--primary3);

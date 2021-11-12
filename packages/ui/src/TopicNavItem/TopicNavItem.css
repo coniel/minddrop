@@ -1,0 +1,68 @@
+.topic-nav-item .item {
+  border-radius: var(--radiusMd);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+}
+
+.topic-nav-item .item:hover {
+  background-color: var(--bgNeutralHover);
+}
+
+.topic-nav-item .item:active,
+.topic-nav-item .item.active {
+  background-color: var(--bgNeutralActive);
+}
+
+.topic-nav-item > .item.active:hover {
+  background-color: var(--bgNeutralActiveHover);
+}
+
+/* Toggle button */
+
+.topic-nav-item .toggle-button {
+  height: 24px;
+}
+
+.topic-nav-item .toggle-icon {
+  fill: var(--textNeutralLight);
+}
+
+.topic-nav-item .toggle-button[data-state='open'] .toggle-icon {
+  transform: rotate(90deg);
+}
+
+/* Label */
+
+.topic-nav-item .label-button {
+  flex: 1;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.topic-nav-item .label {
+  padding-right: 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 24px;
+}
+
+.topic-nav-item .item.active .label {
+  font-weight: var(--fwMedium);
+}
+
+/* No subtopics helper text */
+
+.topic-nav-item .helper-text {
+  margin-left: 24px;
+  margin-bottom: 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 24px;
+}

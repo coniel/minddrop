@@ -1,0 +1,110 @@
+---
+metaTitle: TopicNavItem
+metaDescription: A topic navigation list element with collapsible subtopics list.
+name: topic-nav-item
+---
+
+# TopicNavItem
+
+<Description>
+  A topic navigation list element with collapsible subtopics list.
+</Description>
+
+<HeroContainer>
+  <TopicNavItemDemo />
+</HeroContainer>
+
+```jsx hero template=TopicNavItemDemo
+
+```
+
+<Highlights
+  features={[
+    'Expanded state can be controlled or unconrtolled.',
+    'Renders subtopics with appropriate level of padding.',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { TopicNavItem } from '@minddrop/ui';
+
+export default () => {
+  return (
+    <TopicNavItem label="Sailing">
+      <TopicNavItem label="Sailboats" />
+      <TopicNavItem label="Sails" />
+      <TopicNavItem label="Navigation">
+        <TopicNavItem label="Coastal navigation" />
+        <TopicNavItem label="Offshore navigation" />
+      </TopicNavItem>
+      <TopicNavItem label="Anchoring" />
+    </TopicNavItem>
+  );
+};
+```
+
+## API Reference
+
+`TopicNavItemProps` extends `React.HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      description: 'The topic name.',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactElement<TopicNavItemProps>[]',
+      description: (
+        <span>
+          The topic's subtopics. Must be <Code>TopicNavItem</Code>{' '}
+          components.
+        </span>
+      ),
+    },
+    {
+      name: 'active',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the item will have active styling.
+        </span>
+      ),
+    },
+    {
+      name: 'onClick',
+      type: '(event: React.MouseEvent) => void',
+      typeSimple: 'function',
+      description: 'Callback fired when the nav item is clicked.',
+    },
+    {
+      name: 'defaultExpanded',
+      type: 'boolean',
+      description:
+        'The expanded state of the subtopics list when it is initially rendered. Use when you do not need to control its expanded state.',
+    },
+    {
+      name: 'expanded',
+      type: 'boolean',
+      description: (
+        <span>
+          The controlled expanded state of the subtopics list. Must be
+          used in conjunction with <Code>onExpandedChange</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onExpandedChange',
+      type: '(expanded: boolean) => void',
+      typeSimple: 'function',
+      description:
+        'Event handler called when the expanded state of the collapsible subtopics list changes.',
+    },
+  ]}
+/>

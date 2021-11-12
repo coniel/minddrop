@@ -1,27 +1,21 @@
 import React, { useState } from 'react';
-import { Sidebar } from './Sidebar';
-import { TopicNavItem } from '../TopicNavItem';
+import { TopicNavItem } from '@minddrop/ui';
 
-export default {
-  title: 'ui/Sidebar',
-  component: Sidebar,
-};
-
-export const Default: React.FC = () => {
-  const [width, setWidth] = useState(300);
+export const TopicNavItemDemo = () => {
   const [active, setActive] = useState('');
-
   return (
-    <div
-      style={{ width: '100%', height: '100%', marginTop: -16, marginLeft: -16 }}
-    >
-      <Sidebar
-        initialWidth={width}
-        onResized={setWidth}
-        style={{ padding: '24px 8px' }}
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div
+        style={{
+          width: 260,
+          padding: 16,
+          backgroundColor: 'var(--bgApp)',
+          borderRadius: 'var(--radiusLg)',
+        }}
       >
         <TopicNavItem
           label="Sailing"
+          defaultExpanded
           active={active === 'sailing'}
           onClick={() => setActive('sailing')}
         >
@@ -57,7 +51,9 @@ export const Default: React.FC = () => {
             onClick={() => setActive('anchoring')}
           />
         </TopicNavItem>
-      </Sidebar>
+      </div>
     </div>
   );
 };
+
+export default TopicNavItemDemo;
