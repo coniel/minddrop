@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { ToggleFilled, ToggleEmpty } from '@minddrop/icons';
 import { useTranslation } from '@minddrop/i18n';
+import { Icon } from '../Icon';
 import { Text } from '../Text';
 import { Tooltip } from '../Tooltip';
 import {
@@ -121,9 +121,15 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
                 aria-label={t('expandSubtopics')}
               >
                 {childCount ? (
-                  <ToggleFilled className="toggle-icon has-subtopics" />
+                  <Icon
+                    name="toggle-filled"
+                    className="toggle-icon has-subtopics"
+                  />
                 ) : (
-                  <ToggleEmpty className="toggle-icon no-subtopics" />
+                  <Icon
+                    name="toggle-empty"
+                    className="toggle-icon no-subtopics"
+                  />
                 )}
               </div>
             </CollapsibleTrigger>
