@@ -123,11 +123,13 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
                 {childCount ? (
                   <Icon
                     name="toggle-filled"
+                    color="light"
                     className="toggle-icon has-subtopics"
                   />
                 ) : (
                   <Icon
                     name="toggle-empty"
+                    color="light"
                     className="toggle-icon no-subtopics"
                   />
                 )}

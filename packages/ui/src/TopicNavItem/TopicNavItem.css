@@ -26,10 +26,6 @@
   height: 24px;
 }
 
-.topic-nav-item .toggle-icon {
-  fill: var(--textNeutralLight);
-}
-
 .topic-nav-item .toggle-button[data-state='open'] .toggle-icon {
   transform: rotate(90deg);
 }
