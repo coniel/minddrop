@@ -36,6 +36,7 @@ export const uiRoutes = [
       { title: 'Sidebar', slug: 'docs/ui/components/sidebar' },
       { title: 'Collapsible', slug: 'docs/ui/components/collapsible' },
       { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
+      { title: 'PrimaryNavItem', slug: 'docs/ui/components/primary-nav-item' },
       // TEMPLATE_APPEND
     ],
   },

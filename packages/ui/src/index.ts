@@ -13,3 +13,4 @@ export * from './DropdownMenu';
 export * from './Sidebar';
 export * from './Collapsible';
 export * from './TopicNavItem';
+export * from './PrimaryNavItem';

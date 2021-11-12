@@ -16,3 +16,5 @@ export * from './ToggleEmpty';
 export * from './ToggleFilled';
 export * from './Trash';
 export * from './TurnInto';
+export * from './Search';
+export * from './Drop';

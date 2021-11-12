@@ -13,3 +13,4 @@ export { DropdownMenuDemo } from './DropdownMenuDemo';
 export { SidebarDemo } from './SidebarDemo';
 export { CollapsibleDemo } from './CollapsibleDemo';
 export { TopicNavItemDemo } from './TopicNavItemDemo';
+export { PrimaryNavItemDemo } from './PrimaryNavItemDemo';
