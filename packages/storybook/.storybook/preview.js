@@ -5,7 +5,7 @@ import '../../theme/base.css';
 import '../../theme/animations.css';
 import { initializeI18n } from '../../i18n';
 
-initializeI18n();
+initializeI18n(true);
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
