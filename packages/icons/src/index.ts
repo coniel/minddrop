@@ -19,3 +19,4 @@ export * from './TurnInto';
 export * from './Search';
 export * from './Drop';
 export * from './Extension';
+export * from './CloudUpload';
