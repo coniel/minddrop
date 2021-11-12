@@ -34,10 +34,10 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
 export const Text: FC<TextProps> = ({
   children,
   className,
-  color,
+  color = 'regular',
   component,
-  size,
-  weight,
+  size = 'regular',
+  weight = 'regular',
   ...other
 }) => {
   const Component = component || 'span';
