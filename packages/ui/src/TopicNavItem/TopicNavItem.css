@@ -53,7 +53,7 @@
 }
 
 .topic-nav-item .item.active .label {
-  font-weight: var(--fwMedium);
+  font-weight: var(--fwSemibold);
 }
 
 /* No subtopics helper text */

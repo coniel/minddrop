@@ -133,7 +133,13 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
               className="label-button"
               onClick={onClick}
             >
-              <Text component="div" className="label">
+              <Text
+                component="div"
+                color="light"
+                weight="medium"
+                className="label"
+                size="regular"
+              >
                 {label}
               </Text>
             </div>
