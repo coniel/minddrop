@@ -18,3 +18,4 @@ export * from './Trash';
 export * from './TurnInto';
 export * from './Search';
 export * from './Drop';
+export * from './Extension';

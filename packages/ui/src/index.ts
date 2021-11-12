@@ -14,3 +14,4 @@ export * from './Sidebar';
 export * from './Collapsible';
 export * from './TopicNavItem';
 export * from './PrimaryNavItem';
+export * from './SecondaryNavItem';
