@@ -34,6 +34,7 @@ export const uiRoutes = [
       { title: 'Menu', slug: 'docs/ui/components/menu' },
       { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
       { title: 'Sidebar', slug: 'docs/ui/components/sidebar' },
+      { title: 'Collapsible', slug: 'docs/ui/components/collapsible' },
       // TEMPLATE_APPEND
     ],
   },

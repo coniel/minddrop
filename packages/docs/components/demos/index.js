@@ -11,3 +11,4 @@ export { ContextMenuDemo } from './ContextMenuDemo';
 export { MenuDemo } from './MenuDemo';
 export { DropdownMenuDemo } from './DropdownMenuDemo';
 export { SidebarDemo } from './SidebarDemo';
+export { CollapsibleDemo } from './CollapsibleDemo';
