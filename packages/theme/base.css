@@ -17,6 +17,9 @@
   --fsLarge: 16px;
   --fsTitle: 28px;
 
+  --fsContentReular: 14px;
+  --fsContentTitle: 20px;
+
   /* Backgrounds */
   --bgApp: var(--appBackground);
   --bgSubtle: var(--neutral2);
