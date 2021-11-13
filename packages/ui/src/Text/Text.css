@@ -1,6 +1,7 @@
 .text {
   font-family: var(--defaultFontFamily);
   color: var(--textNeutral);
+  /* line-height: 1em; */
 }
 
 /* Color */

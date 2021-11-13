@@ -40,6 +40,7 @@ export const uiRoutes = [
       { title: 'SecondaryNavItem', slug: 'docs/ui/components/secondary-nav-item' },
       { title: 'NavGroup', slug: 'docs/ui/components/nav-group' },
       { title: 'Icon', slug: 'docs/ui/components/icon' },
+      { title: 'Breadcrumbs', slug: 'docs/ui/components/breadcrumbs' },
       // TEMPLATE_APPEND
     ],
   },
