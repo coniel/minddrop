@@ -41,6 +41,7 @@ export const uiRoutes = [
       { title: 'NavGroup', slug: 'docs/ui/components/nav-group' },
       { title: 'Icon', slug: 'docs/ui/components/icon' },
       { title: 'Breadcrumbs', slug: 'docs/ui/components/breadcrumbs' },
+      { title: 'Drop', slug: 'docs/ui/components/drop' },
       // TEMPLATE_APPEND
     ],
   },

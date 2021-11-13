@@ -1,0 +1,63 @@
+---
+metaTitle: Drop
+metaDescription: Drops are the content of MindDrop.
+name: drop
+---
+
+# Drop
+
+<Description>Drops are the content of MindDrop.</Description>
+
+<HeroContainer>
+  <DropDemo />
+</HeroContainer>
+
+```jsx hero template=DropDemo
+
+```
+
+<Highlights features={['11 background colors']} />
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Drop, DropTitle, DropNote } from '@minddrop/ui';
+
+export default () => {
+  return (
+    <Drop>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The
+        term reference frame as used here is an observational
+        perspective in space that is not undergoing any change in
+        motion (acceleration), from which a position can be measured
+        along 3 spatial axes (so, at rest or constant velocity).
+      </DropNote>
+    </Drop>
+  );
+};
+```
+
+## API Reference
+
+`DropProps` extends `React.HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'node',
+      description: 'The content of the drop.',
+    },
+    {
+      name: 'color',
+      typeSimple: 'ContentColor',
+      type: "'regular' | 'blue' | 'cyan' | 'red' | 'pink' | 'violet' | 'green' | 'orange' | 'yellow' | 'brown' | 'gray'",
+      default: 'regular',
+      description: 'The color of the drop.',
+    },
+  ]}
+/>
