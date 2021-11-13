@@ -1,5 +1,4 @@
 export type ContentColor =
-  | 'regular'
   | 'blue'
   | 'cyan'
   | 'red'
