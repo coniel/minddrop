@@ -2,6 +2,7 @@ export * from './Add';
 export * from './Archive';
 export * from './ArrowBack';
 export * from './ArrowForward';
+export * from './ArrowUpRight';
 export * from './ColorPalette';
 export * from './Duplicate';
 export * from './Expand';
