@@ -1,14 +1,4 @@
 import React, { useState } from 'react';
-import {
-  Archive,
-  Drop,
-  Extension,
-  Search,
-  Trash,
-  Settings,
-  Duplicate,
-  CloudUpload,
-} from '@minddrop/icons';
 import { Sidebar } from './Sidebar';
 import { NavGroup } from '../NavGroup';
 import { TopicNavItem } from '../TopicNavItem';
@@ -16,6 +6,7 @@ import { PrimaryNavItem } from '../PrimaryNavItem';
 import { SecondaryNavItem } from '../SecondaryNavItem';
 import { Toolbar } from '../Toolbar';
 import { IconButton } from '../IconButton';
+import { Icon } from '../Icon';
 
 export default {
   title: 'ui/Sidebar',
@@ -39,13 +30,13 @@ export const Default: React.FC = () => {
         <NavGroup label="Main">
           <PrimaryNavItem
             label="Daily drops"
-            icon={<Drop />}
+            icon={<Icon name="drop" />}
             active={active === 'daily-drops'}
             onClick={() => setActive('daily-drops')}
           />
           <PrimaryNavItem
             label="Search"
-            icon={<Search />}
+            icon={<Icon name="search" />}
             active={active === 'search'}
             onClick={() => setActive('search')}
           />
@@ -88,23 +79,24 @@ export const Default: React.FC = () => {
               onClick={() => setActive('anchoring')}
             />
           </TopicNavItem>
+          <SecondaryNavItem label="Add topic" icon={<Icon name="add" />} />
         </NavGroup>
         <NavGroup label="Utilities">
           <SecondaryNavItem
             label="Extensions"
-            icon={<Extension />}
+            icon={<Icon name="extension" />}
             active={active === 'extensions'}
             onClick={() => setActive('extensions')}
           />
           <SecondaryNavItem
             label="Archive"
-            icon={<Archive />}
+            icon={<Icon name="archive" />}
             active={active === 'archive'}
             onClick={() => setActive('archive')}
           />
           <SecondaryNavItem
             label="Trash"
-            icon={<Trash />}
+            icon={<Icon name="trash" />}
             active={active === 'trash'}
             onClick={() => setActive('trash')}
           />
@@ -112,13 +104,13 @@ export const Default: React.FC = () => {
         <div style={{ flex: 1 }} />
         <Toolbar style={{ padding: '8px 16px' }}>
           <IconButton label="Sync" color="light">
-            <CloudUpload />
+            <Icon name="cloud-upload" />
           </IconButton>
           <IconButton label="Settings" color="light">
-            <Settings />
+            <Icon name="settings" />
           </IconButton>
           <IconButton label="New window" color="light">
-            <Duplicate />
+            <Icon name="duplicate" />
           </IconButton>
         </Toolbar>
       </Sidebar>
