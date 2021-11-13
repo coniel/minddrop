@@ -15,34 +15,37 @@ export const uiRoutes = [
   {
     label: 'Components',
     pages: [
+      { title: 'Breadcrumbs', slug: 'docs/ui/components/breadcrumbs' },
       { title: 'Button', slug: 'docs/ui/components/button' },
-      { title: 'Text', slug: 'docs/ui/components/text' },
+      { title: 'Collapsible', slug: 'docs/ui/components/collapsible' },
+      { title: 'ContextMenu', slug: 'docs/ui/components/context-menu' },
+      { title: 'Drop', slug: 'docs/ui/components/drop' },
+      { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
+      { title: 'Icon', slug: 'docs/ui/components/icon' },
       { title: 'IconButton', slug: 'docs/ui/components/icon-button' },
-      { title: 'Toolbar', slug: 'docs/ui/components/toolbar' },
-      { title: 'Tooltip', slug: 'docs/ui/components/tooltip' },
-      {
-        title: 'KeyboardShortcut',
-        slug: 'docs/ui/components/keyboard-shortcut',
-      },
       {
         title: 'InvisibleTextField',
         slug: 'docs/ui/components/invisible-text-field',
       },
-      { title: 'Popover', slug: 'docs/ui/components/popover' },
-      { title: 'Separator', slug: 'docs/ui/components/separator' },
-      { title: 'ContextMenu', slug: 'docs/ui/components/context-menu' },
+      {
+        title: 'KeyboardShortcut',
+        slug: 'docs/ui/components/keyboard-shortcut',
+      },
       { title: 'Menu', slug: 'docs/ui/components/menu' },
-      { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
-      { title: 'Sidebar', slug: 'docs/ui/components/sidebar' },
-      { title: 'Collapsible', slug: 'docs/ui/components/collapsible' },
-      { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
-      { title: 'PrimaryNavItem', slug: 'docs/ui/components/primary-nav-item' },
-      { title: 'SecondaryNavItem', slug: 'docs/ui/components/secondary-nav-item' },
       { title: 'NavGroup', slug: 'docs/ui/components/nav-group' },
-      { title: 'Icon', slug: 'docs/ui/components/icon' },
-      { title: 'Breadcrumbs', slug: 'docs/ui/components/breadcrumbs' },
-      { title: 'Drop', slug: 'docs/ui/components/drop' },
+      { title: 'Popover', slug: 'docs/ui/components/popover' },
+      { title: 'PrimaryNavItem', slug: 'docs/ui/components/primary-nav-item' },
+      {
+        title: 'SecondaryNavItem',
+        slug: 'docs/ui/components/secondary-nav-item',
+      },
+      { title: 'Separator', slug: 'docs/ui/components/separator' },
+      { title: 'Sidebar', slug: 'docs/ui/components/sidebar' },
       { title: 'Tag', slug: 'docs/ui/components/tag' },
+      { title: 'Text', slug: 'docs/ui/components/text' },
+      { title: 'Toolbar', slug: 'docs/ui/components/toolbar' },
+      { title: 'Tooltip', slug: 'docs/ui/components/tooltip' },
+      { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
       // TEMPLATE_APPEND
     ],
   },
@@ -51,12 +54,12 @@ export const uiRoutes = [
     label: 'Utilities',
     pages: [
       {
-        title: 'Map props to classes',
-        slug: 'docs/ui/utilities/map-props-to-classes',
-      },
-      {
         title: 'Accessible Icon',
         slug: 'docs/ui/utilities/accessible-icon',
+      },
+      {
+        title: 'Map props to classes',
+        slug: 'docs/ui/utilities/map-props-to-classes',
       },
       { title: 'Portal', slug: 'docs/ui/utilities/portal' },
       {
