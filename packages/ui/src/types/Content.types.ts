@@ -1,10 +1,10 @@
-export type ContentBackgroundColor =
-  | 'none'
+export type ContentColor =
+  | 'regular'
   | 'blue'
   | 'cyan'
   | 'red'
   | 'pink'
-  | 'violet'
+  | 'purple'
   | 'green'
   | 'orange'
   | 'yellow'
