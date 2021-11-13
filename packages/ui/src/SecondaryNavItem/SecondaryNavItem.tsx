@@ -1,5 +1,9 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
+import {
+  createKeydownClickHandler,
+  KeyboardAccessibleClickHandler,
+} from '../utils';
 import { Text } from '../Text';
 import './SecondaryNavItem.css';
 
@@ -24,9 +28,7 @@ export interface SecondaryNavItemProps
   /**
    * Callback fired on click.
    */
-  onClick?: (
-    event: React.MouseEvent | React.KeyboardEvent<HTMLLIElement>,
-  ) => void;
+  onClick?: KeyboardAccessibleClickHandler;
 }
 
 export const SecondaryNavItem: FC<SecondaryNavItemProps> = ({
@@ -36,6 +38,7 @@ export const SecondaryNavItem: FC<SecondaryNavItemProps> = ({
   icon,
   active,
   onClick,
+  onKeyDown,
   ...other
 }) => {
   return (
@@ -45,17 +48,7 @@ export const SecondaryNavItem: FC<SecondaryNavItemProps> = ({
       aria-current={active ? 'location' : undefined}
       className={mapPropsToClasses({ className, active }, 'secondary-nav-item')}
       onClick={onClick}
-      onKeyDown={(event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') {
-          return;
-        }
-
-        if (onClick) {
-          onClick(event);
-        }
-        // prevent window from scrolling
-        event.preventDefault();
-      }}
+      onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
       {...other}
     >
       <div className="icon">{icon}</div>
