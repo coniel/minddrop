@@ -19,14 +19,14 @@
 
   /* Backgrounds */
   --bgApp: var(--appBackground);
-  --bgSubtle: var(--gray2);
-  --bgContrast: var(--gray12);
+  --bgSubtle: var(--neutral2);
+  --bgContrast: var(--neutral12);
 
-  --bgNeutral: var(--gray3);
-  --bgNeutralHover: var(--gray4);
-  --bgNeutralActive: var(--gray5);
-  --bgNeutralActiveHover: var(--gray6);
-  --bgSolidNeutral: var(--gray9);
+  --bgNeutral: var(--neutral3);
+  --bgNeutralHover: var(--neutral4);
+  --bgNeutralActive: var(--neutral5);
+  --bgNeutralActiveHover: var(--neutral6);
+  --bgSolidNeutral: var(--neutral9);
 
   --bgPrimary: var(--primary3);
   --bgPrimaryHover: var(--primary4);
@@ -43,9 +43,9 @@
   --bgSolidDangerActive: var(--danger11);
 
   /* Borders */
-  --borderNeutralSubtle: var(--gray6);
-  --borderNeutral: var(--gray7);
-  --borderNeutralHover: var(--gray8);
+  --borderNeutralSubtle: var(--neutral6);
+  --borderNeutral: var(--neutral7);
+  --borderNeutralHover: var(--neutral8);
 
   --borderPrimarySubtle: var(--primary6);
   --borderPrimary: var(--primary7);
@@ -56,9 +56,9 @@
   --borderDangerHover: var(--danger8);
 
   /* Text */
-  --textNeutralDisabled: var(--gray9);
-  --textNeutralLight: var(--gray11);
-  --textNeutral: var(--gray12);
+  --textNeutralDisabled: var(--neutral9);
+  --textNeutralLight: var(--neutral11);
+  --textNeutral: var(--neutral12);
 
   --textWhite: var(--white);
   --textContrast: var(--contrastColor);
