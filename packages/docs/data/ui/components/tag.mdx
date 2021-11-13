@@ -1,0 +1,55 @@
+---
+metaTitle: Tag
+metaDescription: An element to visually represent a drop's tags.
+name: tag
+---
+
+# Tag
+
+<Description>
+  An element to visually represent a drop's tags.
+</Description>
+
+<HeroContainer>
+  <TagDemo />
+</HeroContainer>
+
+```jsx hero template=TagDemo
+
+```
+
+<Highlights features={['10 colors']} />
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Tag } from '@minddrop/ui';
+
+export default () => {
+  return <Tag label="Formula" color="blue" />;
+};
+```
+
+## API Reference
+
+`TagProps` extends `React.HTMLAttributes<HTMLSpanElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      required: true,
+      description: 'The tag label.',
+    },
+    {
+      name: 'color',
+      typeSimple: 'ContentColor',
+      type: "'blue' | 'cyan' | 'red' | 'pink' | 'violet' | 'green' | 'orange' | 'yellow' | 'brown' | 'gray'",
+      default: 'blue',
+      description: 'The color of the tag.',
+    },
+  ]}
+/>

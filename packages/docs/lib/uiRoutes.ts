@@ -42,6 +42,7 @@ export const uiRoutes = [
       { title: 'Icon', slug: 'docs/ui/components/icon' },
       { title: 'Breadcrumbs', slug: 'docs/ui/components/breadcrumbs' },
       { title: 'Drop', slug: 'docs/ui/components/drop' },
+      { title: 'Tag', slug: 'docs/ui/components/tag' },
       // TEMPLATE_APPEND
     ],
   },

@@ -19,3 +19,4 @@ export { NavGroupDemo } from './NavGroupDemo';
 export { IconDemo } from './IconDemo';
 export { BreadcrumbsDemo } from './BreadcrumbsDemo';
 export { DropDemo } from './DropDemo';
+export { TagDemo } from './TagDemo';
