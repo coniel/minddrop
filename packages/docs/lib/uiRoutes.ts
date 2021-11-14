@@ -46,6 +46,7 @@ export const uiRoutes = [
       { title: 'Toolbar', slug: 'docs/ui/components/toolbar' },
       { title: 'Tooltip', slug: 'docs/ui/components/tooltip' },
       { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
+      { title: 'IconRenderer', slug: 'docs/ui/components/icon-renderer' },
       // TEMPLATE_APPEND
     ],
   },

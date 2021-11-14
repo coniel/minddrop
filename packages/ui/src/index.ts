@@ -20,3 +20,4 @@ export * from './Icon';
 export * from './Breadcrumbs';
 export * from './Drop';
 export * from './Tag';
+export * from './IconRenderer';

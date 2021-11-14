@@ -1,0 +1,78 @@
+---
+metaTitle: IconRenderer
+metaDescription: A convenienve component for rendering icons.
+name: icon-renderer
+---
+
+# IconRenderer
+
+<Description>
+  A convenienve component for rendering icons.
+</Description>
+
+<HeroContainer>
+  <IconRendererDemo />
+</HeroContainer>
+
+```jsx hero template=IconRendererDemo
+
+```
+
+<Highlights
+  features={[
+    'Supports icon name or instance.',
+    'Supports Icon component props.',
+  ]}
+/>
+
+## Usage
+
+`IconRenderer` is intended for internal use as a convenient way of rendering the icons of components which accept both `iconName` and `icon` props. It renders an icon from the MindDrop icon set if given an `iconName` or the the value directly if given `icon`.
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import React from 'react';
+import { IconRenderer, IconProp } from '@minddrop/ui';
+
+interface MyComponentProps {
+  icon: React.ReactNode;
+  iconName: IconName;
+}
+
+export const MyComponent: React.FC<MyComponentProps> = ({
+  icon,
+  iconName,
+}) => {
+  return (
+    <div>
+      <IconRenderer icon={icon} iconName={iconName} />
+    </div>
+  );
+};
+```
+
+## API Reference
+
+`IconRendererIconNameProps` (used when the `iconName` prop is applied) extends [`IconProps`](/docs/ui/components/icon#api-reference).
+
+`IconRenderer` requires either `icon` or `iconName` to be set.
+
+<PropsTable
+  data={[
+    {
+      name: 'icon',
+      type: 'node',
+      description: (
+        <span>
+          Usually an <Code>Icon</Code> instance.
+        </span>
+      ),
+    },
+    {
+      name: 'iconName',
+      type: 'IconName',
+      description: 'The name of an icon from the MindDrop icon set.',
+    },
+  ]}
+/>
