@@ -1,0 +1,54 @@
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: var(--textPrimary);
+  padding: 5px 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.menu-item:focus {
+  background-color: var(--bgNeutralHover);
+}
+
+.menu-item:active {
+  background-color: var(--bgNeutralActive);
+}
+
+.menu-item.has-submenu {
+  padding-right: 0;
+}
+
+/* Label */
+
+.menu-item .label {
+  line-height: var(--fsRegular);
+  display: inline-block;
+  flex: 1;
+  line-height: 18px;
+}
+
+/* Icon */
+
+.menu-item .icon {
+  display: inline-block;
+  height: 17px;
+  margin-inline-end: 8px;
+}
+
+.menu-item .icon {
+  fill: var(--textNeutral);
+  width: 17px;
+  height: 17px;
+}
+
+/* Submenu indicator */
+
+.menu-item .submenu-indicator {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  margin-inline-end: 8px;
+  fill: var(--textNeutralLight);
+}

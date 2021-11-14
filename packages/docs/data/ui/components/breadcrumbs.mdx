@@ -1,0 +1,105 @@
+---
+metaTitle: Breadcrumbs
+metaDescription: A list of navigation items to the parent views of the current view in hierarchical order.
+name: breadcrumbs
+---
+
+# Breadcrumbs
+
+<Description>
+  A list of navigation items to the parent views of the current view
+  in hierarchical order.
+</Description>
+
+<HeroContainer>
+  <BreadcrumbsDemo />
+</HeroContainer>
+
+```jsx hero template=BreadcrumbsDemo
+
+```
+
+<Highlights features={['Full keyboard navigation.']} />
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Breadcrumbs, Breadcrumb } from '@minddrop/ui';
+
+export default () => {
+  return (
+    <Breadcrumbs>
+      <Breadcrumb label="Tea" />
+      <Breadcrumb label="Books" />
+      <Breadcrumb label="The Book Of Tea" />
+    </Breadcrumbs>
+  );
+};
+```
+
+## API Reference
+
+### Breadcrumbs
+
+Contains the `Breadcrumb` elements.
+
+`BreadcrumbsProps` extends `React.HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'React.ReactElement<BreadcrumbProps>[]',
+      description: (
+        <span>
+          The breadcrumb items. Must be <Code>Breadcrumb</Code>{' '}
+          elements.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### Breadcrumb
+
+An item in the breadcrumbs list.
+
+`BreadcrumbProps` extends `React.HTMLAttributes<HTMLLIElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'label',
+      type: 'node',
+      required: true,
+      description: 'The breadcrumb label.',
+    },
+    {
+      name: 'onClick',
+      type: 'node',
+      description:
+        'Callback fired when the breadcrumb is clicked or activated using the keyboard.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Breadcrumb WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices/#breadcrumb).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Activates the breadcrumb button.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Activates the breadcrumb button.',
+    },
+  ]}
+/>

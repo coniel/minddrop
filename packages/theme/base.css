@@ -3,18 +3,33 @@
   /* Typography */
   --defaultFontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  --textPrimaryColor: var(--gray12);
-  --textSecondaryColor: var(--gray11);
-  --textContrastColor: var(--contrastColor);
+
+  --fwLight: 300;
+  --fwRegular: 400;
+  --fwMedium: 500;
+  --fwSemibold: 600;
+  --fwBold: 700;
+  --fwHeavy: 800;
+
+  --fsTiny: 12px;
+  --fsSmall: 13px;
+  --fsRegular: 14px;
+  --fsLarge: 16px;
+  --fsTitle: 28px;
+
+  --fsContentReular: 14px;
+  --fsContentTitle: 20px;
 
   /* Backgrounds */
-  --appBg: var(--gray1);
-  --subtleBg: var(--gray2);
+  --bgApp: var(--appBackground);
+  --bgSubtle: var(--neutral2);
+  --bgContrast: var(--neutral12);
 
-  --bgNeutral: var(--gray3);
-  --bgNeutralHover: var(--gray4);
-  --bgNeutralActive: var(--gray5);
-  --bgSolidNeutral: var(--gray9);
+  --bgNeutral: var(--neutral3);
+  --bgNeutralHover: var(--neutral4);
+  --bgNeutralActive: var(--neutral5);
+  --bgNeutralActiveHover: var(--neutral6);
+  --bgSolidNeutral: var(--neutral9);
 
   --bgPrimary: var(--primary3);
   --bgPrimaryHover: var(--primary4);
@@ -31,9 +46,9 @@
   --bgSolidDangerActive: var(--danger11);
 
   /* Borders */
-  --borderNeutralSubtle: var(--gray6);
-  --borderNeutral: var(--gray7);
-  --borderNeutralHover: var(--gray8);
+  --borderNeutralSubtle: var(--neutral6);
+  --borderNeutral: var(--neutral7);
+  --borderNeutralHover: var(--neutral8);
 
   --borderPrimarySubtle: var(--primary6);
   --borderPrimary: var(--primary7);
@@ -44,9 +59,13 @@
   --borderDangerHover: var(--danger8);
 
   /* Text */
-  --textNeutralDisabled: var(--gray9);
-  --textNeutralLight: var(--gray11);
-  --textNeutral: var(--gray12);
+  --textNeutralDisabled: var(--neutral9);
+  --textNeutralLight: var(--neutral11);
+  --textNeutral: var(--neutral12);
+
+  --textWhite: var(--white);
+  --textContrast: var(--contrastColor);
+  --textContrastLight: var(--contrastLightColor);
 
   --textPrimaryLight: var(--primary11);
   --textPrimary: var(--primary12);
@@ -63,9 +82,19 @@
 
   /* Transitions */
   --transitionShort: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+
+  --adPop: 0.2s;
+  --atfPop: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --adFade: 0.2s;
+  --atfFade: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --adScale: 0.1s;
+  --atfScale: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
   font-family: var(--defaultFontFamily);
   color: var(--textNeutral);
+  background-color: var(--bgApp);
 }

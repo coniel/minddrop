@@ -1,0 +1,6 @@
+.drop-note {
+  color: inherit;
+  font-weight: var(--fwRegular);
+  font-size: var(--fsContent);
+  line-height: 1.4;
+}

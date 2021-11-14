@@ -1,6 +1,7 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { IconRenderer, IconProp } from '../IconRenderer';
 import './Button.css';
 
 export interface ButtonBaseProps {
@@ -18,7 +19,7 @@ export interface ButtonBaseProps {
   /**
    * Icon placed after the children.
    */
-  endIcon?: React.ReactNode;
+  endIcon?: IconProp;
 
   /**
    * If `true`, the button will take up the full width of its container.
@@ -46,7 +47,7 @@ export interface ButtonBaseProps {
   /**
    * Icon placed before the children.
    */
-  startIcon?: React.ReactNode;
+  startIcon?: IconProp;
 
   /**
    * The variant to use based on the action type.
@@ -64,60 +65,74 @@ export interface LinkButtonProps
   href: string;
 }
 
-export const Button: FC<ButtonProps | LinkButtonProps> = ({
-  disabled = false,
-  fullWidth = false,
-  size = 'medium',
-  variant = 'neutral',
-  label,
-  href,
-  startIcon,
-  endIcon,
-  children,
-  className,
-  ...other
-}) => {
-  const { t } = useTranslation();
-  const content = useMemo(
-    () => (
-      <>
-        {startIcon && <span className="start-icon">{startIcon}</span>}
-        {label ? t(label) : children}
-        {endIcon && <span className="end-icon">{endIcon}</span>}
-      </>
-    ),
-    [startIcon, label, children, endIcon, t],
-  );
-  const classes = useMemo(
-    () =>
-      mapPropsToClasses(
-        {
-          className,
-          fullWidth,
-          size,
-          variant,
-        },
-        'button',
+export const Button = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps | LinkButtonProps
+>(
+  (
+    {
+      disabled = false,
+      fullWidth = false,
+      size = 'medium',
+      variant = 'neutral',
+      label,
+      href,
+      startIcon,
+      endIcon,
+      children,
+      className,
+      ...other
+    },
+    ref,
+  ) => {
+    const { t } = useTranslation();
+    const content = useMemo(
+      () => (
+        <>
+          <IconRenderer icon={startIcon} className="start-icon" />
+          {label ? t(label) : children}
+          <IconRenderer icon={endIcon} className="end-icon" />
+        </>
       ),
-    [className, fullWidth, size, variant],
-  );
-
-  if (href) {
-    return (
-      <a href={href} className={classes} {...(other as LinkButtonProps)}>
-        {content}
-      </a>
+      [startIcon, label, children, endIcon, t],
     );
-  }
+    const classes = useMemo(
+      () =>
+        mapPropsToClasses(
+          {
+            className,
+            fullWidth,
+            size,
+            variant,
+          },
+          'button',
+        ),
+      [className, fullWidth, size, variant],
+    );
 
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      className={classes}
-      {...(other as ButtonProps)}
-    >
-      {content}
-    </button>
-  );
-};
+    if (href) {
+      return (
+        <a
+          ref={ref as React.MutableRefObject<HTMLAnchorElement>}
+          href={href}
+          className={classes}
+          {...(other as LinkButtonProps)}
+        >
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <button
+        type="button"
+        ref={ref as React.MutableRefObject<HTMLButtonElement>}
+        disabled={disabled}
+        className={classes}
+        {...(other as ButtonProps)}
+      >
+        {content}
+      </button>
+    );
+  },
+);

@@ -1,0 +1,94 @@
+---
+metaTitle: SecondaryNavItem
+metaDescription: A secondary navigation element for sidebars.
+name: secondary-nav-item
+---
+
+# SecondaryNavItem
+
+<Description>
+  A secondary navigation element for sidebars.
+</Description>
+
+<HeroContainer>
+  <SecondaryNavItemDemo />
+</HeroContainer>
+
+```jsx hero template=SecondaryNavItemDemo
+
+```
+
+<Highlights
+  features={[
+    'Full keyboard navigation.',
+    'Applies aria-current="location" when active for accsesibility.',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { SecondaryNavItem, Icon } from '@minddrop/ui';
+
+export default () => {
+  return <SecondaryNavItem label="Trash" icon="trash" />;
+};
+```
+
+## API Reference
+
+`SecondaryNavItemProps` extends `React.HTMLAttributes<HTMLDivElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'label',
+      type: 'node',
+      required: true,
+      description: 'The item label.',
+    },
+    {
+      name: 'icon',
+      type: 'IconName | ReactElement',
+      required: true,
+      description: 'The item icon.',
+    },
+    {
+      name: 'active',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the item will have active styling and
+          accessibility indicators.
+        </span>
+      ),
+    },
+    {
+      name: 'onClick',
+      type: '(event: React.MouseEvent) => void',
+      typeSimple: 'function',
+      description: 'Callback fired on click or keyboard activation.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Button WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#button).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Activates the item.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Activates the item.',
+    },
+  ]}
+/>

@@ -23,8 +23,8 @@ name: <%= h.toKebabCase(name) %>
 
 <Highlights
   features={[
-    'Feature 1',
-    'Feature 2',
+    'Feature 1.',
+    'Feature 2.',
   ]}
 />
 
@@ -44,7 +44,7 @@ export default () => {
 
 ## API Reference
 
-<%= name %> extends `HTMLDivAttributes`.
+`<%= name %>Props` extends `React.HTMLAttributes<HTMLDivElement>`.
 
 <PropsTable
   data={[

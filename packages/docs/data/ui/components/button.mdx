@@ -21,12 +21,12 @@ name: button
 
 <Highlights
   features={[
-    'Four variants',
-    'Three sizes',
-    'Start and end icons',
-    'Full width',
-    'i18n label',
-    'Render as link',
+    'Four variant options.',
+    'Three size options.',
+    'Start and end icons.',
+    'Full width option.',
+    'Supports i18n label.',
+    'Can be rendered as a as link.',
   ]}
 />
 
@@ -52,11 +52,10 @@ Buttons without an i18n label are labeled by passing the label directly as the b
 
 ```jsx
 import { Button } from '@minddrop/ui';
-import { Heart } from '@mindrop/icons';
 
 export const LikeButton = ({ onClick, count }) => {
   return (
-    <Button startIcon={<Heart />} onClick={onClick}>
+    <Button startIcon="heart" onClick={onClick}>
       {count}
     </Button>
   );
@@ -81,7 +80,9 @@ export const DocsLink = ({ onClick, count }) => {
 
 ## API Reference
 
-Standard buttons extend `HTMLButtonAttributes`. Link buttons extend `HTMLAnchorAttributes`.
+`ButtonProps` extends `React.HTMLAttributes<HTMLButtonElement>`.
+
+`LinkButtonProps` extends `React.HTMLAttributes<HTMLAnchorElement>`.
 
 <PropsTable
   data={[
@@ -103,7 +104,7 @@ Standard buttons extend `HTMLButtonAttributes`. Link buttons extend `HTMLAnchorA
     },
     {
       name: 'endIcon',
-      type: 'node',
+      type: 'IconName | ReactElement',
       description: 'Icon placed after the children.',
     },
     {
@@ -149,9 +150,15 @@ Standard buttons extend `HTMLButtonAttributes`. Link buttons extend `HTMLAnchorA
       ),
     },
     {
-      name: 'endIcon',
-      type: 'node',
+      name: 'startIcon',
+      type: 'IconName | ReactElement',
       description: 'Icon placed before the children.',
+    },
+    {
+      name: 'startIconName',
+      type: 'IconName',
+      description:
+        'Renders the named MindDrop icon set icon as the icon placed before the children.',
     },
     {
       name: 'variant',

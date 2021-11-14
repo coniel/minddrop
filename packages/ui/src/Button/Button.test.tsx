@@ -37,13 +37,13 @@ describe('Button', () => {
   it('supports variants', () => {
     render(<Button variant="primary" />);
 
-    expect(screen.getByRole('button')).toHaveClass('primary');
+    expect(screen.getByRole('button')).toHaveClass('variant-primary');
   });
 
   it('supports sizes', () => {
     render(<Button size="small" />);
 
-    expect(screen.getByRole('button')).toHaveClass('small');
+    expect(screen.getByRole('button')).toHaveClass('size-small');
   });
 
   it('can be disabled', () => {
@@ -64,15 +64,15 @@ describe('Button', () => {
     expect(screen.getByRole('link')).toHaveTextContent('MindDrop');
   });
 
-  it('renders startIcon', () => {
-    render(<Button startIcon="start-icon" />);
+  it('renders endIcon', () => {
+    render(<Button endIcon="settings" />);
 
-    expect(screen.getByRole('button')).toHaveTextContent('start-icon');
+    screen.getByTestId('icon');
   });
 
-  it('renders endIcon', () => {
-    render(<Button endIcon="end-icon" />);
+  it('renders startIcon', () => {
+    render(<Button startIcon="settings" />);
 
-    expect(screen.getByRole('button')).toHaveTextContent('end-icon');
+    screen.getByTestId('icon');
   });
 });
