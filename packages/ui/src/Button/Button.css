@@ -14,7 +14,6 @@
   border-style: solid;
   font-weight: var(--fwSemibold);
   font-size: var(--fsRegular);
-  line-height: 20px;
 }
 
 a.button {
@@ -131,37 +130,31 @@ a.button {
 }
 
 /* Icons */
-.button > .start-icon,
-.button > .end-icon {
+.button .start-icon,
+.button .end-icon {
   display: inline-block;
   line-height: 1em;
   height: 1em;
 }
 
-.button > .start-icon {
+.button .start-icon {
   padding-inline-end: 4px;
+  fill: currentColor;
 }
 
-.button > .end-icon {
+.button .end-icon {
   padding-inline-start: 4px;
-}
-
-.button > .start-icon > svg,
-.button > .end-icon > svg {
   fill: currentColor;
-  height: 1em;
-  width: 1em;
 }
 
-.button.size-small > .start-icon,
-.button.size-small > .end-icon {
-  height: 1.2em;
-  line-height: 1.2em;
-}
-
-.button.size-small > .start-icon > svg,
-.button.size-small > .end-icon > svg {
-  fill: currentColor;
+.button .start-icon,
+.button .end-icon {
   height: 1.2em;
   width: 1.2em;
+}
+
+.button.size-small .start-icon,
+.button.size-small .end-icon {
+  height: 1.4em;
+  width: 1.4em;
 }

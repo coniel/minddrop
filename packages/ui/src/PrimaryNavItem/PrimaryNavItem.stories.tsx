@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Icon } from '../Icon';
 import { PrimaryNavItem } from './PrimaryNavItem';
 
 export default {
@@ -24,19 +23,19 @@ export const Default = () => {
     >
       <PrimaryNavItem
         label="Daily drops"
-        icon={<Icon name="drop" />}
+        icon="drop"
         active={active === 'daily-drops'}
         onClick={() => setActive('daily-drops')}
       />
       <PrimaryNavItem
         label="Search"
-        icon={<Icon name="search" />}
+        icon="search"
         active={active === 'search'}
         onClick={() => setActive('search')}
       />
       <PrimaryNavItem
         label="Settings"
-        icon={<Icon name="settings" />}
+        icon="settings"
         active={active === 'settings'}
         onClick={() => setActive('settings')}
       />

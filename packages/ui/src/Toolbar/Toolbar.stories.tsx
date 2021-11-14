@@ -1,6 +1,5 @@
 import React from 'react';
 import { Toolbar, ToolbarIconButton } from './Toolbar';
-import { Icon } from '../Icon';
 
 export default {
   title: 'ui/Toolbar',
@@ -19,15 +18,9 @@ export const Default: React.FC = () => (
         boxShadow: 'rgb(0 0 0 / 14%) 0px 2px 10px',
       }}
     >
-      <ToolbarIconButton label="Sync">
-        <Icon name="cloud-upload" />
-      </ToolbarIconButton>
-      <ToolbarIconButton label="Settings">
-        <Icon name="settings" />
-      </ToolbarIconButton>
-      <ToolbarIconButton label="New window">
-        <Icon name="duplicate" />
-      </ToolbarIconButton>
+      <ToolbarIconButton icon="cloud-upload" label="Sync" />
+      <ToolbarIconButton icon="settings" label="Settings" />
+      <ToolbarIconButton icon="duplicate" label="New window" />
     </Toolbar>
   </div>
 );

@@ -12,6 +12,7 @@ export * from './Link';
 export * from './MoreVertical';
 export * from './Note';
 export * from './Settings';
+export * from './SubmenuIndicator';
 export * from './Title';
 export * from './ToggleEmpty';
 export * from './ToggleFilled';

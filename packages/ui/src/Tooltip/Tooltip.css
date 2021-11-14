@@ -11,11 +11,11 @@
   max-width: 200px;
 }
 
-.tooltip > .keyboard-shortcut,
-.tooltip > .description {
+.tooltip .keyboard-shortcut,
+.tooltip .description {
   margin-top: 6px;
 }
 
-.tooltip > .description {
+.tooltip .description {
   line-height: 130%;
 }

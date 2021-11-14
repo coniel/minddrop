@@ -6,20 +6,20 @@ describe('<PrimaryNavItem />', () => {
   afterEach(cleanup);
 
   it('renders the label', () => {
-    render(<PrimaryNavItem label="Search" icon="I" />);
+    render(<PrimaryNavItem label="Search" />);
 
     screen.getByText('Search');
   });
 
   it('renders the icon', () => {
-    render(<PrimaryNavItem label="Search" icon="I" />);
+    render(<PrimaryNavItem label="Search" />);
 
     screen.getByText('I');
   });
 
   it('is clickable', () => {
     const onClick = jest.fn();
-    render(<PrimaryNavItem label="Search" icon="I" onClick={onClick} />);
+    render(<PrimaryNavItem label="Search" onClick={onClick} />);
 
     act(() => {
       fireEvent.click(screen.getByRole('button'));
@@ -30,7 +30,7 @@ describe('<PrimaryNavItem />', () => {
 
   it('is keyboard accessible', () => {
     const onClick = jest.fn();
-    render(<PrimaryNavItem label="Search" icon="I" onClick={onClick} />);
+    render(<PrimaryNavItem label="Search" onClick={onClick} />);
 
     act(() => {
       fireEvent.keyDown(screen.getByRole('button'), {

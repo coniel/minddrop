@@ -7,7 +7,6 @@ import { ContextMenuTriggerItem } from './ContextMenuTriggerItem';
 import { ContextMenuLabel } from './ContextMenuLabel';
 import { ContextMenuSeparator } from './ContextMenuSeparator';
 import { ContextMenuTrigger } from './ContextMenuTrigger';
-import { Icon } from '../Icon';
 
 export default {
   title: 'ui/ContextMenu',
@@ -35,19 +34,19 @@ export const GeneratedFromContentProp: React.FC = () => (
       content={[
         {
           label: 'Add title',
-          icon: <Icon name="title" />,
+          icon: 'title',
           onSelect: () => console.log('Add title'),
           keyboardShortcut: ['Ctrl', 'T'],
         },
         {
           label: 'Add note',
-          icon: <Icon name="note" />,
+          icon: 'note',
           onSelect: () => console.log('Add note'),
           keyboardShortcut: ['Ctrl', 'Shift', 'N'],
         },
         {
           label: 'Turn into',
-          icon: <Icon name="turn-into" />,
+          icon: 'turn-into',
           submenu: [
             {
               label: 'Text',
@@ -67,20 +66,20 @@ export const GeneratedFromContentProp: React.FC = () => (
         'Actions',
         {
           label: 'Copy link',
-          icon: <Icon name="link" />,
+          icon: 'link',
           onSelect: () => console.log('Copy link'),
           keyboardShortcut: ['Ctrl', 'Shift', 'C'],
         },
         {
           label: 'Move to',
-          icon: <Icon name="arrow-up-right" />,
+          icon: 'arrow-up-right',
           onSelect: () => console.log('Move to'),
           keyboardShortcut: ['Ctrl', 'M'],
           tooltipTitle: 'Move drop to another topic',
         },
         {
           label: 'Add to',
-          icon: <Icon name="inside" />,
+          icon: 'inside',
           onSelect: () => console.log('Add to'),
           keyboardShortcut: ['Ctrl', 'A'],
           tooltipTitle: 'Add drop to another topic',
@@ -112,21 +111,18 @@ export const ComposedWithComponents: React.FC = () => (
       <ContextMenuContent style={{ width: 240 }}>
         <ContextMenuItem
           label="Add title"
-          icon={<Icon name="title" />}
+          icon="title"
           keyboardShortcut={['Ctrl', 'T']}
           onSelect={() => console.log('Add title')}
         />
         <ContextMenuItem
           label="Add note"
-          icon={<Icon name="note" />}
+          icon="note"
           keyboardShortcut={['Ctrl', 'Shift', 'N']}
           onSelect={() => console.log('Add note')}
         />
         <ContextMenu>
-          <ContextMenuTriggerItem
-            label="Turn into"
-            icon={<Icon name="turn-into" />}
-          />
+          <ContextMenuTriggerItem label="Turn into" icon="turn-into" />
           <ContextMenuContent>
             <ContextMenuItem
               label="Text"
@@ -146,20 +142,20 @@ export const ComposedWithComponents: React.FC = () => (
         <ContextMenuLabel>Actions</ContextMenuLabel>
         <ContextMenuItem
           label="Copy link"
-          icon={<Icon name="link" />}
+          icon="link"
           keyboardShortcut={['Ctrl', 'Shift', 'C']}
           onSelect={() => console.log('Copy link')}
         />
         <ContextMenuItem
           label="Move to"
-          icon={<Icon name="arrow-up-right" />}
+          icon="arrow-up-right"
           keyboardShortcut={['Ctrl', 'M']}
           onSelect={() => console.log('Move to')}
           tooltipTitle="Move drop to another topic"
         />
         <ContextMenuItem
           label="Add to"
-          icon={<Icon name="inside" />}
+          icon="inside"
           keyboardShortcut={['Ctrl', 'A']}
           onSelect={() => console.log('Add to')}
           tooltipTitle="Add drop to another topic"

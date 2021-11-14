@@ -1,35 +1,35 @@
 import React from 'react';
-import { Menu, MenuItem, MenuLabel, MenuSeparator, Icon } from '@minddrop/ui';
+import { Menu, MenuItem, MenuLabel, MenuSeparator } from '@minddrop/ui';
 
 export const MenuDemo = () => (
   <div style={{ width: 240 }}>
     <Menu>
       <MenuItem
         label="Add title"
-        icon={<Icon name="title" />}
+        icon="title"
         keyboardShortcut={['Ctrl', 'T']}
       />
       <MenuItem
         label="Add note"
-        icon={<Icon name="note" />}
+        icon="note"
         keyboardShortcut={['Ctrl', 'Shift', 'N']}
       />
-      <MenuItem hasSubmenu label="Turn into" icon={<Icon name="turn-into" />} />
+      <MenuItem hasSubmenu label="Turn into" icon="turn-into" />
       <MenuSeparator />
       <MenuLabel>Actions</MenuLabel>
       <MenuItem
         label="Copy link"
-        icon={<Icon name="link" />}
+        icon="link"
         keyboardShortcut={['Ctrl', 'Shift', 'C']}
       />
       <MenuItem
         label="Move to"
-        icon={<Icon name="arrow-up-right" />}
+        icon="arrow-up-right"
         keyboardShortcut={['Ctrl', 'Shift', 'M']}
       />
       <MenuItem
         label="Add to"
-        icon={<Icon name="inside" />}
+        icon="inside"
         keyboardShortcut={['Ctrl', 'Shift', 'A']}
       />
     </Menu>

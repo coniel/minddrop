@@ -16,7 +16,7 @@
   background-color: var(--bgNeutralActive);
 }
 
-.topic-nav-item > .item.active:hover {
+.topic-nav-item .item.active:hover {
   background-color: var(--bgNeutralActiveHover);
 }
 

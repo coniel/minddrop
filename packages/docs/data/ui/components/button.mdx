@@ -52,11 +52,10 @@ Buttons without an i18n label are labeled by passing the label directly as the b
 
 ```jsx
 import { Button } from '@minddrop/ui';
-import { Heart } from '@mindrop/icons';
 
 export const LikeButton = ({ onClick, count }) => {
   return (
-    <Button startIcon={<Heart />} onClick={onClick}>
+    <Button startIcon="heart" onClick={onClick}>
       {count}
     </Button>
   );
@@ -105,7 +104,7 @@ export const DocsLink = ({ onClick, count }) => {
     },
     {
       name: 'endIcon',
-      type: 'node',
+      type: 'IconName | ReactElement',
       description: 'Icon placed after the children.',
     },
     {
@@ -151,9 +150,15 @@ export const DocsLink = ({ onClick, count }) => {
       ),
     },
     {
-      name: 'endIcon',
-      type: 'node',
+      name: 'startIcon',
+      type: 'IconName | ReactElement',
       description: 'Icon placed before the children.',
+    },
+    {
+      name: 'startIconName',
+      type: 'IconName',
+      description:
+        'Renders the named MindDrop icon set icon as the icon placed before the children.',
     },
     {
       name: 'variant',

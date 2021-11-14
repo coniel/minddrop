@@ -36,41 +36,37 @@ Menu components are intended for internal use and do not support any interaction
 Import the components from the `@minddrop/ui` package.
 
 ```jsx
-import { Menu, MenuGroup, MenuItem, Icon } from '@minddrop/ui';
+import { Menu, MenuGroup, MenuItem } from '@minddrop/ui';
 
 export default () => {
   return (
     <Menu>
       <MenuItem
         label="Add title"
-        icon={<Icon name="title" />}
+        icon="title"
         keyboardShortcut={['Ctrl', 'T']}
       />
       <MenuItem
         label="Add note"
-        icon={<Icon name="note" />}
+        icon="note"
         keyboardShortcut={['Ctrl', 'Shift', 'N']}
       />
-      <MenuItem
-        hasSubmenu
-        label="Turn into"
-        icon={<Icon name="turn-into" />}
-      />
+      <MenuItem hasSubmenu label="Turn into" icon="turn-into" />
       <MenuSeparator />
       <MenuLabel>Actions</MenuLabel>
       <MenuItem
         label="Copy link"
-        icon={<Icon name="link" />}
+        icon="link"
         keyboardShortcut={['Ctrl', 'Shift', 'C']}
       />
       <MenuItem
         label="Move to"
-        icon={<Icon name="arrow-up-right" />}
+        icon="arrow-up-right"
         keyboardShortcut={['Ctrl', 'Shift', 'M']}
       />
       <MenuItem
         label="Add to"
-        icon={<Icon name="inside" />}
+        icon="inside"
         keyboardShortcut={['Ctrl', 'Shift', 'A']}
       />
     </Menu>
@@ -108,7 +104,7 @@ export default () => {
     },
     {
       name: 'icon',
-      type: 'node',
+      type: 'IconName | ReactElement',
       description: 'The item icon.',
     },
     {

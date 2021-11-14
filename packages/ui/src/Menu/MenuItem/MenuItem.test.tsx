@@ -17,10 +17,16 @@ describe('<MenuItem />', () => {
     expect(screen.getByRole('menuitem')).toHaveTextContent('Copy');
   });
 
-  it('renders the icon', () => {
-    render(<MenuItem label="Copy" icon="ICON" />);
+  it('renders icon', () => {
+    render(<MenuItem label="Copy" icon="duplicate" />);
 
-    expect(screen.getByRole('menuitem')).toHaveTextContent('ICON');
+    screen.getByTestId('icon');
+  });
+
+  it('renders named icon', () => {
+    render(<MenuItem label="Copy" icon="settings" />);
+
+    screen.getByTestId('icon');
   });
 
   it('renders submenu indicator', () => {

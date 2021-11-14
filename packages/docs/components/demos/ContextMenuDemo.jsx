@@ -4,7 +4,6 @@ import {
   ContextMenu,
   ContextMenuTrigger,
   ContextMenuContent,
-  Icon,
 } from '@minddrop/ui';
 
 export const ContextMenuDemo = () => (
@@ -30,19 +29,19 @@ export const ContextMenuDemo = () => (
         content={[
           {
             label: 'Add title',
-            icon: <Icon name="title" />,
+            icon: 'title',
             onSelect: () => console.log('Add title'),
             keyboardShortcut: ['Ctrl', 'T'],
           },
           {
             label: 'Add note',
-            icon: <Icon name="note" />,
+            icon: 'note',
             onSelect: () => console.log('Add note'),
             keyboardShortcut: ['Ctrl', 'Shift', 'N'],
           },
           {
             label: 'Turn into',
-            icon: <Icon name="turn-into" />,
+            icon: 'turn-into',
             submenu: [
               {
                 label: 'Text',
@@ -62,20 +61,20 @@ export const ContextMenuDemo = () => (
           'Actions',
           {
             label: 'Copy link',
-            icon: <Icon name="link" />,
+            icon: 'link',
             onSelect: () => console.log('Copy link'),
             keyboardShortcut: ['Ctrl', 'Shift', 'C'],
           },
           {
             label: 'Move to',
-            icon: <Icon name="arrow-up-right" />,
+            icon: 'arrow-up-right',
             onSelect: () => console.log('Move to'),
             keyboardShortcut: ['Ctrl', 'M'],
             tooltipTitle: 'Move drop to another topic',
           },
           {
             label: 'Add to',
-            icon: <Icon name="inside" />,
+            icon: 'inside',
             onSelect: () => console.log('Add to'),
             keyboardShortcut: ['Ctrl', 'A'],
             tooltipTitle: 'Add drop to another topic',

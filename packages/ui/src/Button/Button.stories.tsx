@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button } from './Button';
-import { Icon } from '../Icon';
 
 export default {
   title: 'ui/Button',
@@ -109,13 +108,13 @@ export const WithStartIcon: React.FC = () => (
   <div>
     <div>Small</div>
     <div style={{ paddingTop: 12 }}>
-      <Button size="small" startIcon={<Icon name="settings" />}>
+      <Button size="small" startIcon="settings">
         Neutral
       </Button>
       <Button
         variant="primary"
         size="small"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -123,7 +122,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         variant="danger"
         size="small"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Danger
@@ -131,7 +130,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         variant="text"
         size="small"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Text
@@ -139,38 +138,26 @@ export const WithStartIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Medium</div>
     <div style={{ paddingTop: 12 }}>
-      <Button startIcon={<Icon name="settings" />}>Neutral</Button>
-      <Button
-        variant="primary"
-        startIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button startIcon="settings">Neutral</Button>
+      <Button variant="primary" startIcon="settings" style={{ marginLeft: 12 }}>
         Primary
       </Button>
-      <Button
-        variant="danger"
-        startIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button variant="danger" startIcon="settings" style={{ marginLeft: 12 }}>
         Danger
       </Button>
-      <Button
-        variant="text"
-        startIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button variant="text" startIcon="settings" style={{ marginLeft: 12 }}>
         Text
       </Button>
     </div>
     <div style={{ marginTop: 24 }}>Large</div>
     <div style={{ paddingTop: 12 }}>
-      <Button size="large" startIcon={<Icon name="settings" />}>
+      <Button size="large" startIcon="settings">
         Neutral
       </Button>
       <Button
         variant="primary"
         size="large"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -178,13 +165,13 @@ export const WithStartIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Disabled</div>
     <div style={{ paddingTop: 12 }}>
-      <Button disabled startIcon={<Icon name="settings" />}>
+      <Button disabled startIcon="settings">
         Neutral
       </Button>
       <Button
         disabled
         variant="primary"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -192,7 +179,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         disabled
         variant="danger"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Danger
@@ -200,7 +187,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         disabled
         variant="text"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Text
@@ -208,13 +195,13 @@ export const WithStartIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Full width</div>
     <div style={{ paddingTop: 12, maxWidth: 350 }}>
-      <Button fullWidth startIcon={<Icon name="settings" />}>
+      <Button fullWidth startIcon="settings">
         Neutral
       </Button>
       <Button
         fullWidth
         variant="primary"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginTop: 12 }}
       >
         Primary
@@ -222,7 +209,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         fullWidth
         variant="danger"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginTop: 12 }}
       >
         Danger
@@ -230,7 +217,7 @@ export const WithStartIcon: React.FC = () => (
       <Button
         fullWidth
         variant="text"
-        startIcon={<Icon name="settings" />}
+        startIcon="settings"
         style={{ marginTop: 12 }}
       >
         Text
@@ -243,13 +230,13 @@ export const WithEndIcon: React.FC = () => (
   <div>
     <div>Small</div>
     <div style={{ paddingTop: 12 }}>
-      <Button size="small" endIcon={<Icon name="settings" />}>
+      <Button size="small" endIcon="settings">
         Neutral
       </Button>
       <Button
         variant="primary"
         size="small"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -257,7 +244,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         variant="danger"
         size="small"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Danger
@@ -265,7 +252,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         variant="text"
         size="small"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Text
@@ -273,38 +260,26 @@ export const WithEndIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Medium</div>
     <div style={{ paddingTop: 12 }}>
-      <Button endIcon={<Icon name="settings" />}>Neutral</Button>
-      <Button
-        variant="primary"
-        endIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button endIcon="settings">Neutral</Button>
+      <Button variant="primary" endIcon="settings" style={{ marginLeft: 12 }}>
         Primary
       </Button>
-      <Button
-        variant="danger"
-        endIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button variant="danger" endIcon="settings" style={{ marginLeft: 12 }}>
         Danger
       </Button>
-      <Button
-        variant="text"
-        endIcon={<Icon name="settings" />}
-        style={{ marginLeft: 12 }}
-      >
+      <Button variant="text" endIcon="settings" style={{ marginLeft: 12 }}>
         Text
       </Button>
     </div>
     <div style={{ marginTop: 24 }}>Large</div>
     <div style={{ paddingTop: 12 }}>
-      <Button size="large" endIcon={<Icon name="settings" />}>
+      <Button size="large" endIcon="settings">
         Neutral
       </Button>
       <Button
         variant="primary"
         size="large"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -312,13 +287,13 @@ export const WithEndIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Disabled</div>
     <div style={{ paddingTop: 12 }}>
-      <Button disabled endIcon={<Icon name="settings" />}>
+      <Button disabled endIcon="settings">
         Neutral
       </Button>
       <Button
         disabled
         variant="primary"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Primary
@@ -326,7 +301,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         disabled
         variant="danger"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Danger
@@ -334,7 +309,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         disabled
         variant="text"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginLeft: 12 }}
       >
         Text
@@ -342,13 +317,13 @@ export const WithEndIcon: React.FC = () => (
     </div>
     <div style={{ marginTop: 24 }}>Full width</div>
     <div style={{ paddingTop: 12, maxWidth: 350 }}>
-      <Button fullWidth endIcon={<Icon name="settings" />}>
+      <Button fullWidth endIcon="settings">
         Neutral
       </Button>
       <Button
         fullWidth
         variant="primary"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginTop: 12 }}
       >
         Primary
@@ -356,7 +331,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         fullWidth
         variant="danger"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginTop: 12 }}
       >
         Danger
@@ -364,7 +339,7 @@ export const WithEndIcon: React.FC = () => (
       <Button
         fullWidth
         variant="text"
-        endIcon={<Icon name="settings" />}
+        endIcon="settings"
         style={{ marginTop: 12 }}
       >
         Text

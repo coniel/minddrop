@@ -5,6 +5,7 @@ import {
   KeyboardAccessibleClickHandler,
 } from '../utils';
 import { Text } from '../Text';
+import { IconProp, IconRenderer } from '../IconRenderer';
 import './SecondaryNavItem.css';
 
 export interface SecondaryNavItemProps
@@ -17,7 +18,7 @@ export interface SecondaryNavItemProps
   /**
    * The item icon.
    */
-  icon: React.ReactNode;
+  icon?: IconProp;
 
   /**
    * If true, the item will have active styling and
@@ -51,7 +52,7 @@ export const SecondaryNavItem: FC<SecondaryNavItemProps> = ({
       onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
       {...other}
     >
-      <div className="icon">{icon}</div>
+      <IconRenderer icon={icon} />
       <Text
         component="div"
         color="light"

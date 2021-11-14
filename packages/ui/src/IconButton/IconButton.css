@@ -14,7 +14,7 @@
   font-size: 20px;
 }
 
-.icon-button > svg {
+.icon-button .icon {
   fill: var(--textNeutral);
   width: 20px;
   height: 20px;
@@ -35,19 +35,19 @@
 
 /* Colors */
 
-.icon-button.color-light > svg {
+.icon-button.color-light .icon {
   fill: var(--textNeutralLight);
 }
 
-.icon-button.color-contrast > svg {
+.icon-button.color-contrast .icon {
   fill: var(--textContrast);
 }
 
-.icon-button.color-contrast:hover > svg {
+.icon-button.color-contrast:hover .icon {
   fill: var(--textNeutral);
 }
 
-.icon-button.color-contrast:active > svg {
+.icon-button.color-contrast:active .icon {
   fill: var(--textNeutral);
 }
 
@@ -57,7 +57,7 @@
   padding: 3px;
 }
 
-.icon-button.size-small > svg {
+.icon-button.size-small .icon {
   width: 16px;
   height: 16px;
 }
@@ -68,7 +68,7 @@
   pointer-events: none;
 }
 
-.icon-button:disabled > svg,
-.icon-button.color-light:disabled > svg {
+.icon-button:disabled .icon,
+.icon-button.color-light:disabled .icon {
   fill: var(--textNeutralDisabled);
 }

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { IconRenderer, IconProp } from '../IconRenderer';
 import './Button.css';
 
 export interface ButtonBaseProps {
@@ -18,7 +19,7 @@ export interface ButtonBaseProps {
   /**
    * Icon placed after the children.
    */
-  endIcon?: React.ReactNode;
+  endIcon?: IconProp;
 
   /**
    * If `true`, the button will take up the full width of its container.
@@ -46,7 +47,7 @@ export interface ButtonBaseProps {
   /**
    * Icon placed before the children.
    */
-  startIcon?: React.ReactNode;
+  startIcon?: IconProp;
 
   /**
    * The variant to use based on the action type.
@@ -88,9 +89,9 @@ export const Button = React.forwardRef<
     const content = useMemo(
       () => (
         <>
-          {startIcon && <span className="start-icon">{startIcon}</span>}
+          <IconRenderer icon={startIcon} className="start-icon" />
           {label ? t(label) : children}
-          {endIcon && <span className="end-icon">{endIcon}</span>}
+          <IconRenderer icon={endIcon} className="end-icon" />
         </>
       ),
       [startIcon, label, children, endIcon, t],

@@ -42,7 +42,7 @@
   height: 18px;
 }
 
-.primary-nav-item .icon > svg {
+.primary-nav-item .icon {
   height: 18px;
   width: 18px;
   fill: var(--textNeutralLight);

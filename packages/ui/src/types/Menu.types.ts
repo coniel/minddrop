@@ -3,11 +3,12 @@ import {
   ContextMenuItemProps,
   ContextMenuTriggerItemProps,
 } from '@radix-ui/react-context-menu';
+import { IconProp } from '../IconRenderer';
 
 export interface MenuItem {
   label: React.ReactNode;
   onSelect: ContextMenuItemProps['onSelect'];
-  icon?: React.ReactNode;
+  icon?: IconProp;
   keyboardShortcut?: string[];
   tooltipTitle?: React.ReactNode;
   tooltipDescription?: React.ReactNode;

@@ -33,9 +33,7 @@ Import the component from the `@minddrop/ui` package.
 import { SecondaryNavItem, Icon } from '@minddrop/ui';
 
 export default () => {
-  return (
-    <SecondaryNavItem label="Trash" icon={<Icon name="trash" />} />
-  );
+  return <SecondaryNavItem label="Trash" icon="trash" />;
 };
 ```
 
@@ -53,7 +51,7 @@ export default () => {
     },
     {
       name: 'icon',
-      type: 'node',
+      type: 'IconName | ReactElement',
       required: true,
       description: 'The item icon.',
     },

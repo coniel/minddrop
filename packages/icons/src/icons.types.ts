@@ -17,6 +17,7 @@ export type IconName =
   | 'note'
   | 'search'
   | 'settings'
+  | 'submenu-indicator'
   | 'title'
   | 'toggle-empty'
   | 'toggle-filled'
