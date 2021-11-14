@@ -17,7 +17,7 @@ describe('<InvisibleTextField />', () => {
     expect(screen.getByRole('textbox')).toHaveClass('my-class');
   });
 
-  it('renders the accessability label', () => {
+  it('renders the accessibility label', () => {
     render(<InvisibleTextField placeholder="Untitled" label="Title" />);
 
     expect(screen.getByRole('textbox')).toHaveAccessibleName('Title');

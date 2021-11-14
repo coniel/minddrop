@@ -1,9 +1,28 @@
 import React from 'react';
-import { NavGroup } from '@minddrop/ui';
+import { NavGroup, TopicNavItem } from '@minddrop/ui';
 
 export const NavGroupDemo = () => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <NavGroup>NavGroup</NavGroup>
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 16px 32px 16px',
+      backgroundColor: 'var(--bgApp)',
+      borderRadius: 'var(--radiusLg)',
+      width: 300,
+    }}
+  >
+    <NavGroup title="Topics">
+      <TopicNavItem defaultExpanded label="Sailing">
+        <TopicNavItem label="Sailboats" />
+        <TopicNavItem label="Sails" />
+        <TopicNavItem label="Navigation">
+          <TopicNavItem label="Coastal navigation" />
+          <TopicNavItem label="Offshore navigation" />
+        </TopicNavItem>
+        <TopicNavItem label="Anchoring" />
+      </TopicNavItem>
+    </NavGroup>
   </div>
 );
 

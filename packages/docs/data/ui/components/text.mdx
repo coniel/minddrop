@@ -19,7 +19,13 @@ name: text
 
 ```
 
-<Highlights features={['Five sizes', 'Five colors', 'Six weights']} />
+<Highlights
+  features={[
+    'Five size options.',
+    'Five color options.',
+    'Six weight options.',
+  ]}
+/>
 
 ## Usage
 
@@ -35,7 +41,7 @@ export default () => {
 
 ## API Reference
 
-Text props extend `HTMLSpanAttributes`.
+`TextProps` extends `React.HTMLAttributes<HTMLSpanElement>`.
 
 <PropsTable
   data={[

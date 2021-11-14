@@ -45,6 +45,8 @@ export default () => {
 
 ## API Reference
 
+`SeparatorProps` extends `React.HTMLAttributes<HTMLDivElement>`.
+
 <PropsTable
   data={[
     {
@@ -57,9 +59,8 @@ export default () => {
     },
     {
       name: 'orientation',
-      type: '"horizontal" | "vertical"',
-      typeSimple: 'enum',
-      default: '"horizontal"',
+      type: "'horizontal' | 'vertical'",
+      default: "'horizontal'",
       description: 'The orientation of the separator.',
     },
     {

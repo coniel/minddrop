@@ -3,8 +3,8 @@ import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
+  Icon,
 } from '@minddrop/ui';
-import { ToggleFilled } from '@minddrop/icons';
 
 const NavItem = ({ children, subItem, ...other }) => (
   <div
@@ -41,9 +41,10 @@ export const CollapsibleDemo = () => {
         <CollapsibleTrigger>
           <NavItem>
             <span>
-              <ToggleFilled
+              <Icon
+                name="toggle-filled"
+                color="regular"
                 style={{
-                  fill: 'var(--textPrimary)',
                   transform: open ? 'rotate(90deg)' : 'none',
                 }}
               />

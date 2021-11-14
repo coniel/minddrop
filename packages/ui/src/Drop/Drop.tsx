@@ -12,13 +12,13 @@ export interface DropProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The color of the drop.
    */
-  color?: 'regular' | ContentColor;
+  color?: ContentColor;
 }
 
 export const Drop: FC<DropProps> = ({
   children,
   className,
-  color = 'regular',
+  color,
   ...other
 }) => {
   return (

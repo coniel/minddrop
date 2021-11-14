@@ -1,12 +1,14 @@
 ---
 metaTitle: IconButton
-metaDescription: A clickable icon.
+metaDescription: An icon button element which supports multiple sizes and colors.
 name: icon-button
 ---
 
 # IconButton
 
-<Description>A clickable icon.</Description>
+<Description>
+  An icon button element which supports multiple sizes and colors.
+</Description>
 
 <HeroContainer>
   <IconButtonDemo />
@@ -17,7 +19,11 @@ name: icon-button
 ```
 
 <Highlights
-  features={['Two sizes', 'Three colors', 'Label for accessability']}
+  features={[
+    'Two size options.',
+    'Three color options.',
+    'Label for accessibility.',
+  ]}
 />
 
 ## Usage
@@ -25,13 +31,12 @@ name: icon-button
 Import the component from the `@minddrop/ui` package.
 
 ```jsx
-import { IconButton } from '@minddrop/ui';
-import { Close } from '@minddrop/icons';
+import { IconButton, Icon } from '@minddrop/ui';
 
 export default () => {
   return (
     <IconButton label="Close">
-      <Close />
+      <Icon name="close" />
     </IconButton>
   );
 };
@@ -39,7 +44,7 @@ export default () => {
 
 ## API Reference
 
-IconButton extends `HTMLButtonAttributes`.
+`IconButtonProps` extends `React.HTMLAttributes<HTMLButtonElement>`.
 
 <PropsTable
   data={[
@@ -51,7 +56,6 @@ IconButton extends `HTMLButtonAttributes`.
     },
     {
       name: 'color',
-      required: true,
       type: "'neutral' | 'light' | 'contrast'",
       default: "'neutral'",
       description: 'The color of the icon.',

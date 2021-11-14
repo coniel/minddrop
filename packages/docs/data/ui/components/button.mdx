@@ -21,12 +21,12 @@ name: button
 
 <Highlights
   features={[
-    'Four variants',
-    'Three sizes',
-    'Start and end icons',
-    'Full width',
-    'i18n label',
-    'Render as link',
+    'Four variant options.',
+    'Three size options.',
+    'Start and end icons.',
+    'Full width option.',
+    'Supports i18n label.',
+    'Can be rendered as a as link.',
   ]}
 />
 
@@ -81,7 +81,9 @@ export const DocsLink = ({ onClick, count }) => {
 
 ## API Reference
 
-Standard buttons extend `HTMLButtonAttributes`. Link buttons extend `HTMLAnchorAttributes`.
+`ButtonProps` extends `React.HTMLAttributes<HTMLButtonElement>`.
+
+`LinkButtonProps` extends `React.HTMLAttributes<HTMLAnchorElement>`.
 
 <PropsTable
   data={[

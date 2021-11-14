@@ -20,8 +20,8 @@ name: invisible-text-field
 
 <Highlights
   features={[
-    'Supports Text colors, sizes, and weights',
-    'Hidden label for accessability',
+    'Supports Text color, size, and weight options.',
+    'Hidden label for accessibility.',
   ]}
 />
 
@@ -39,7 +39,7 @@ export default (props) => {
 
 ## API Reference
 
-InvisibleTextField extends `HTMLInputAttributes`.
+`InvisibleTextFieldProps` extends `React.HTMLAttributes<HTMLInputElement>`.
 
 <PropsTable
   data={[
@@ -47,13 +47,13 @@ InvisibleTextField extends `HTMLInputAttributes`.
       name: 'label',
       required: true,
       type: 'string',
-      description: 'Hidden label for accessability',
+      description: 'Hidden label for accessibility',
     },
     {
       name: 'placeholder',
       required: true,
       type: 'string',
-      description: 'Required for accessability',
+      description: 'Required for accessibility',
     },
     {
       name: 'size',

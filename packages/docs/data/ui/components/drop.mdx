@@ -16,7 +16,7 @@ name: drop
 
 ```
 
-<Highlights features={['11 background colors']} />
+<Highlights features={['Ten color options to highlight drops.']} />
 
 ## Usage
 
@@ -54,10 +54,14 @@ export default () => {
     },
     {
       name: 'color',
-      typeSimple: "'regular' | 'ContentColor'",
+      typeSimple: 'ContentColor',
       type: "'blue' | 'cyan' | 'red' | 'pink' | 'violet' | 'green' | 'orange' | 'yellow' | 'brown' | 'gray'",
-      default: 'regular',
-      description: 'The color of the drop.',
+      description: (
+        <span>
+          The color of the drop. <Code>'regular'</Code> means no
+          background color and regular text color.
+        </span>
+      ),
     },
   ]}
 />

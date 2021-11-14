@@ -20,8 +20,8 @@ name: keyboard-shortcut
 
 <Highlights
   features={[
-    'Renders Mac appropriate modifier keys on macOS',
-    "Supports Text component's styling props",
+    'Renders Mac appropriate modifier keys on macOS.',
+    'Supports Text color, size, and weight options.',
   ]}
 />
 
@@ -48,6 +48,7 @@ export default () => {
     {
       name: 'keys',
       type: 'string[]',
+      required: true,
       description: (
         <span>
           The shortcut keys. <code>'Ctrl'</code> and{' '}

@@ -21,9 +21,9 @@ name: menu
 
 <Highlights
   features={[
-    'Supports item icon, submenu indicator, and keyboard shortcut',
-    'Separator for visually separating groups of items',
-    'Label for labeling groups of items',
+    'Supports item icon, submenu indicator, and keyboard shortcut.',
+    'Separator for visually separating groups of items.',
+    'Label for labeling groups of items.',
   ]}
 />
 
@@ -36,45 +36,41 @@ Menu components are intended for internal use and do not support any interaction
 Import the components from the `@minddrop/ui` package.
 
 ```jsx
-import { Menu, MenuGroup, MenuItem } from '@minddrop/ui';
-import {
-  Title,
-  Note,
-  TurnInto,
-  Link,
-  Move,
-  AddTo,
-} from '@minddrop/icons';
+import { Menu, MenuGroup, MenuItem, Icon } from '@minddrop/ui';
 
 export default () => {
   return (
     <Menu>
       <MenuItem
         label="Add title"
-        icon={<Title />}
+        icon={<Icon name="title" />}
         keyboardShortcut={['Ctrl', 'T']}
       />
       <MenuItem
         label="Add note"
-        icon={<Note />}
+        icon={<Icon name="note" />}
         keyboardShortcut={['Ctrl', 'Shift', 'N']}
       />
-      <MenuItem hasSubmenu label="Turn into" icon={<TurnInto />} />
+      <MenuItem
+        hasSubmenu
+        label="Turn into"
+        icon={<Icon name="turn-into" />}
+      />
       <MenuSeparator />
       <MenuLabel>Actions</MenuLabel>
       <MenuItem
         label="Copy link"
-        icon={<Link />}
+        icon={<Icon name="link" />}
         keyboardShortcut={['Ctrl', 'Shift', 'C']}
       />
       <MenuItem
         label="Move to"
-        icon={<MoveTo />}
+        icon={<Icon name="arrow-up-right" />}
         keyboardShortcut={['Ctrl', 'Shift', 'M']}
       />
       <MenuItem
         label="Add to"
-        icon={<AddTo />}
+        icon={<Icon name="inside" />}
         keyboardShortcut={['Ctrl', 'Shift', 'A']}
       />
     </Menu>
@@ -86,7 +82,7 @@ export default () => {
 
 ### Menu
 
-`MenuProps` extends `HTMLDivAttributes`.
+`MenuProps` extends `React.HTMLAttributes<HTMLDivElement>`.
 
 <PropsTable
   data={[
@@ -100,7 +96,7 @@ export default () => {
 
 ### MenuItem
 
-`MenuItemProps` extends `HtmlDivAttributes`.
+`MenuItemProps` extends `React.HTMLAttributes<HTMLDivElement>`.
 
 <PropsTable
   data={[
@@ -147,7 +143,7 @@ export default () => {
 
 Used to render a label. It won't be focusable using arrow keys.
 
-`MenuLabelProps` extends `HTMLDivAttributes`.
+`MenuLabelProps` extends `React.HTMLAttributes<HTMLDivElement>`.
 
 <PropsTable
   data={[
