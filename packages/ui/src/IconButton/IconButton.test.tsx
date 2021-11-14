@@ -15,10 +15,29 @@ describe('<IconButton />', () => {
     expect(screen.getByRole('button')).toHaveClass('my-class');
   });
 
-  it('renders the icon', () => {
+  it('renders icons from icon set', () => {
+    render(<IconButton icon="settings" label="icon" />);
+    expect(screen.getByRole('button')).toContainElement(
+      screen.getByTestId('icon'),
+    );
+  });
+
+  it('renders children', () => {
     render(<IconButton label="icon">I</IconButton>);
 
     expect(screen.getByRole('button')).toHaveTextContent('I');
+  });
+
+  it('prioritizes icon over children', () => {
+    render(
+      <IconButton icon="settings" label="icon">
+        children
+      </IconButton>,
+    );
+    expect(screen.getByRole('button')).toContainElement(
+      screen.getByTestId('icon'),
+    );
+    expect(screen.getByRole('button')).not.toHaveTextContent('children');
   });
 
   it('uses the label', () => {

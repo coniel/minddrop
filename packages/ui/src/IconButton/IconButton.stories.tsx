@@ -1,7 +1,6 @@
 import React from 'react';
 import { IconButton } from './IconButton';
 import { Text } from '../Text';
-import { Icon } from '../Icon';
 
 export default {
   title: 'ui/IconButton',
@@ -13,12 +12,8 @@ export const Default: React.FC = () => (
     <Text size="large" color="light" weight="semibold" component="div">
       Sizes
     </Text>
-    <IconButton label="settings">
-      <Icon name="settings" />
-    </IconButton>
-    <IconButton size="small" label="settings">
-      <Icon name="settings" />
-    </IconButton>
+    <IconButton icon="settings" label="settings" />
+    <IconButton icon="settings" size="small" label="settings" />
 
     <Text
       size="large"
@@ -29,18 +24,12 @@ export const Default: React.FC = () => (
     >
       Colors
     </Text>
-    <IconButton label="settings">
-      <Icon name="settings" />
-    </IconButton>
-    <IconButton color="light" label="settings">
-      <Icon name="settings" />
-    </IconButton>
+    <IconButton icon="settings" label="settings" />
+    <IconButton icon="settings" color="light" label="settings" />
     <span
       style={{ backgroundColor: 'hsl(195 7.1% 11%)', display: 'inline-block' }}
     >
-      <IconButton color="contrast" label="settings">
-        <Icon name="settings" />
-      </IconButton>
+      <IconButton icon="settings" color="contrast" label="settings" />
     </span>
 
     <Text
@@ -52,18 +41,12 @@ export const Default: React.FC = () => (
     >
       Disabled
     </Text>
-    <IconButton disabled label="settings">
-      <Icon name="settings" />
-    </IconButton>
-    <IconButton disabled color="light" label="settings">
-      <Icon name="settings" />
-    </IconButton>
+    <IconButton icon="settings" disabled label="settings" />
+    <IconButton icon="settings" disabled color="light" label="settings" />
     <span
       style={{ backgroundColor: 'hsl(195 7.1% 11%)', display: 'inline-block' }}
     >
-      <IconButton disabled color="contrast" label="settings">
-        <Icon name="settings" />
-      </IconButton>
+      <IconButton icon="settings" disabled color="contrast" label="settings" />
     </span>
   </div>
 );

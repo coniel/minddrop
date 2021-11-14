@@ -20,6 +20,7 @@ name: icon-button
 
 <Highlights
   features={[
+    'Supports icons from the MindDrop icon set.'
     'Two size options.',
     'Three color options.',
     'Label for accessibility.',
@@ -34,11 +35,7 @@ Import the component from the `@minddrop/ui` package.
 import { IconButton, Icon } from '@minddrop/ui';
 
 export default () => {
-  return (
-    <IconButton label="Close">
-      <Icon name="close" />
-    </IconButton>
-  );
+  return <IconButton icon="close" label="Close" />;
 };
 ```
 
@@ -49,10 +46,20 @@ export default () => {
 <PropsTable
   data={[
     {
+      name: 'icon',
+      type: 'IconName',
+      description: 'The name of an icon from the MindDrop icon set.',
+    },
+    {
       name: 'children',
-      required: true,
       type: 'node',
-      description: 'The icon.',
+      description: (
+        <span>
+          An icon can also be passed in as a child for more control.
+          Children are not rendered if the <Code>icon</Code> prop is
+          present.
+        </span>
+      ),
     },
     {
       name: 'color',

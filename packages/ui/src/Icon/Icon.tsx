@@ -30,6 +30,7 @@ export const Icon: FC<IconProps> = ({
 
   return (
     <Component
+      data-testid="icon"
       className={mapPropsToClasses({ className, color }, 'icon')}
       {...other}
     />

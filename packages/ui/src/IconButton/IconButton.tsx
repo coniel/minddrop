@@ -1,13 +1,21 @@
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
+import { IconName } from '@minddrop/icons';
+import { Icon } from '../Icon';
 import './IconButton.css';
 
 export interface IconButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   /**
-   * The icon.
+   * The name of the icon to render.
    */
-  children: React.ReactNode;
+  icon?: IconName;
+
+  /**
+   * Icon can also be passed in as a child for more control.
+   * Children are not rendered if the `icon` prop is present.
+   */
+  children?: React.ReactNode;
 
   /**
    * The color of the icon.
@@ -38,7 +46,10 @@ export interface IconButtonProps
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ children, color, component, className, label, size, ...other }, ref) => {
+  (
+    { icon, children, color, component, className, label, size, ...other },
+    ref,
+  ) => {
     const Component = component || 'button';
 
     return (
@@ -50,7 +61,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         className={mapPropsToClasses({ className, color, size }, 'icon-button')}
         {...other}
       >
-        {children}
+        {icon ? <Icon name={icon} /> : children}
       </Component>
     );
   },
