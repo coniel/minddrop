@@ -3,26 +3,33 @@ import { IconName } from '@minddrop/icons';
 import { Icon, IconProps } from '../Icon';
 import './IconRenderer.css';
 
+export type IconProp = IconName | React.ReactElement;
+
 interface IconRendererProps extends Omit<IconProps, 'name'> {
   /**
    * The icon to render.
    */
-  icon?: React.ReactElement;
-
-  /**
-   * The name of a MindDrop icon.
-   */
-  iconName?: IconName;
+  icon?: IconProp;
 }
 
 export const IconRenderer: FC<IconRendererProps> = ({
   icon,
-  iconName,
+  className,
   ...other
 }) => {
-  if (iconName) {
-    return <Icon name={iconName} {...other} />;
+  if (typeof icon === 'string') {
+    return <Icon name={icon} className={className} {...other} />;
   }
 
-  return icon || null;
+  if (!icon) {
+    return null;
+  }
+
+  return className
+    ? React.cloneElement(icon, {
+        className: `${className}${
+          icon.props.className ? ` ${icon.props.className}` : ''
+        }`,
+      })
+    : icon;
 };

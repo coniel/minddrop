@@ -1,19 +1,41 @@
 import React from 'react';
 import { render, cleanup, screen } from '@minddrop/test-utils';
 import { IconRenderer } from './IconRenderer';
+import { Icon } from '../Icon';
 
 describe('<IconRenderer />', () => {
   afterEach(cleanup);
 
-  it('renders icons from the icon set given a valid name', () => {
-    render(<IconRenderer iconName="settings" />);
+  it('supports icon names', () => {
+    render(<IconRenderer icon="settings" />);
 
     screen.getByTestId('icon');
   });
 
-  it('renders as children given a node', () => {
-    render(<IconRenderer icon={<span>icon</span>} />);
+  it('supports react elements', () => {
+    render(<IconRenderer icon={<Icon name="settings" />} />);
 
-    screen.getByText('icon');
+    screen.getByTestId('icon');
+  });
+
+  it('applies className to named icon', () => {
+    render(<IconRenderer className="icon-class" icon="settings" />);
+
+    expect(screen.getByTestId('icon')).toHaveClass('icon-class');
+  });
+
+  it('applies className to react element icon', () => {
+    render(
+      <IconRenderer className="icon-class" icon={<Icon name="settings" />} />,
+    );
+
+    expect(screen.getByTestId('icon')).toHaveClass('icon-class');
+    expect(screen.getByTestId('icon')).toHaveClass('my-class');
+  });
+
+  it('renders nothing if icon prop is not set', () => {
+    render(<IconRenderer />);
+
+    expect(screen.queryByTestId('icon')).toBe(null);
   });
 });

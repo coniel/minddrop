@@ -12,20 +12,20 @@ export const Default: React.FC = () => (
   <div>
     <div>
       <Text component="div" size="large" color="light" weight="medium">
-        Using the <strong style={{ fontWeight: 'bold' }}>iconName</strong> prop
+        Using an icon name
       </Text>
       <div style={{ display: 'flex', columnGap: 8, padding: 8 }}>
-        <IconRenderer color="regular" iconName="settings" />
-        <IconRenderer color="light" iconName="settings" />
+        <IconRenderer color="regular" icon="settings" />
+        <IconRenderer color="light" icon="settings" />
       </div>
     </div>
     <div style={{ marginTop: 16 }}>
       <Text component="div" size="large" color="light" weight="medium">
-        Using the <strong style={{ fontWeight: 'bold' }}>icon</strong> prop
+        Using an Icon component
       </Text>
       <div style={{ display: 'flex', columnGap: 8, padding: 8 }}>
         <IconRenderer icon={<Icon name="settings" />} />
-        <IconRenderer icon={<Icon name="search" color="light" />} />
+        <IconRenderer icon={<Icon name="settings" color="light" />} />
       </div>
     </div>
   </div>

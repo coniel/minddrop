@@ -3,7 +3,7 @@ import { IconRenderer } from '@minddrop/ui';
 
 export const IconRendererDemo = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <IconRenderer iconName="settings" color="white" />
+    <IconRenderer icon="settings" color="white" />
   </div>
 );
 

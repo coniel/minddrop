@@ -20,14 +20,22 @@ name: icon-renderer
 
 <Highlights
   features={[
-    'Supports icon name or instance.',
+    'Supports icon names and instances.',
     'Supports Icon component props.',
+    'Provides an IconProp type for component interfaces.',
+    'Applies className to the rendered icon.',
   ]}
 />
 
 ## Usage
 
-`IconRenderer` is intended for internal use as a convenient way of rendering the icons of components which accept both `iconName` and `icon` props. It renders an icon from the MindDrop icon set if given an `iconName` or the the value directly if given `icon`. Renders nothing if neither is set.
+`IconRenderer` is intended for internal use as a convenient way of rendering the icons of components which accept both an `IconName` and an `Icon` element through a single prop.
+
+- Renders an icon from the MindDrop icon set if `icon` is a valid `IconName`.
+- Renders the given element if `icon` is an element.
+- Renders nothing if `icon` is falsy or a string which is not a valid `IconName`.
+
+Exports a `IconProp` type which can be set as the component's icon prop type.
 
 Import the component from the `@minddrop/ui` package.
 
@@ -36,17 +44,13 @@ import React from 'react';
 import { IconRenderer, IconProp } from '@minddrop/ui';
 
 interface MyComponentProps {
-  icon: React.ReactNode;
-  iconName: IconName;
+  icon: IconProp;
 }
 
-export const MyComponent: React.FC<MyComponentProps> = ({
-  icon,
-  iconName,
-}) => {
+export const MyComponent: React.FC<MyComponentProps> = ({ icon }) => {
   return (
     <div>
-      <IconRenderer icon={icon} iconName={iconName} />
+      <IconRenderer icon={icon} />
     </div>
   );
 };
@@ -54,23 +58,15 @@ export const MyComponent: React.FC<MyComponentProps> = ({
 
 ## API Reference
 
-`IconRendererIconNameProps` (used when the `iconName` prop is applied) extends [`IconProps`](/docs/ui/components/icon#api-reference).
+`IconRendererProps` extends [`IconProps`](/docs/ui/components/icon#api-reference).
 
 <PropsTable
   data={[
     {
       name: 'icon',
-      type: 'node',
-      description: (
-        <span>
-          Usually an <Code>Icon</Code> instance.
-        </span>
-      ),
+      type: 'IconName | ReactElement',
+      description: 'The icon name or element. Can also be undefined.',
     },
-    {
-      name: 'iconName',
-      type: 'IconName',
-      description: 'The name of an icon from the MindDrop icon set.',
-    },
-  ]}
+
+]}
 />
