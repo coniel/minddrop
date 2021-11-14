@@ -9,7 +9,7 @@ export default {
 
 export const Default: React.FC = () => (
   <div>
-    <Text size="large" color="light" weight="semibold" component="div">
+    <Text size="large" color="light" weight="semibold" as="div">
       Sizes
     </Text>
     <IconButton icon="settings" label="settings" />
@@ -19,7 +19,7 @@ export const Default: React.FC = () => (
       size="large"
       color="light"
       weight="semibold"
-      component="div"
+      as="div"
       style={{ marginTop: 20 }}
     >
       Colors
@@ -36,7 +36,7 @@ export const Default: React.FC = () => (
       size="large"
       color="light"
       weight="semibold"
-      component="div"
+      as="div"
       style={{ marginTop: 20 }}
     >
       Disabled

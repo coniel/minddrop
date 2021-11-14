@@ -47,7 +47,7 @@ export const ToolbarIconButton: FC<IconButtonProps> = ({
   children,
   ...other
 }) => (
-  <IconButton {...other} component={RadixToolbar.Button}>
+  <IconButton {...other} as={RadixToolbar.Button}>
     {children}
   </IconButton>
 );

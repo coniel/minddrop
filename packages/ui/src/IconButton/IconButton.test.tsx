@@ -78,7 +78,7 @@ describe('<IconButton />', () => {
 
   it('supports custom components', () => {
     render(
-      <IconButton component="span" label="span">
+      <IconButton as="span" label="span">
         I
       </IconButton>,
     );

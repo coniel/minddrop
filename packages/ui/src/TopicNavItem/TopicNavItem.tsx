@@ -142,7 +142,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
               onClick={onClick}
             >
               <Text
-                component="div"
+                as="div"
                 color="light"
                 weight="medium"
                 className="label"
@@ -164,7 +164,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
               ),
             ) || (
               <Text
-                component="div"
+                as="div"
                 color="light"
                 className="helper-text"
                 style={{ paddingLeft: level * 16 }}

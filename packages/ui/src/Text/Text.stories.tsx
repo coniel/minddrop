@@ -12,7 +12,7 @@ export const ColorsWeightsAndSizes: React.FC = () => (
       size="large"
       color="light"
       weight="semibold"
-      component="div"
+      as="div"
       style={{ marginBottom: 10 }}
     >
       Colors
@@ -32,7 +32,7 @@ export const ColorsWeightsAndSizes: React.FC = () => (
       size="large"
       color="light"
       weight="semibold"
-      component="div"
+      as="div"
       style={{ marginBottom: 10, marginTop: 30 }}
     >
       Weights
@@ -58,7 +58,7 @@ export const ColorsWeightsAndSizes: React.FC = () => (
       size="large"
       color="light"
       weight="semibold"
-      component="div"
+      as="div"
       style={{ marginBottom: 10, marginTop: 30 }}
     >
       Sizes

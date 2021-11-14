@@ -54,7 +54,7 @@ export const PrimaryNavItem: FC<PrimaryNavItemProps> = ({
     >
       <IconRenderer icon={icon} />
       <Text
-        component="div"
+        as="div"
         color="light"
         weight="medium"
         size="large"

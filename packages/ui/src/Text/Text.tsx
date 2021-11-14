@@ -18,7 +18,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
    * The component used for the root node. Either a string to use a
    * HTML element or a component.
    */
-  component?: React.ElementType;
+  as?: React.ElementType;
 
   /**
    * The font size, regular is for standard UI text.
@@ -34,13 +34,13 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
 export const Text: FC<TextProps> = ({
   children,
   className,
+  as,
   color = 'regular',
-  component,
   size = 'regular',
   weight = 'regular',
   ...other
 }) => {
-  const Component = component || 'span';
+  const Component = as || 'span';
   return (
     <Component
       className={mapPropsToClasses({ className, color, size, weight }, 'text')}

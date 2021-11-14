@@ -9,10 +9,10 @@ export default {
 
 export const Default: React.FC = () => (
   <div style={{ width: '100%', maxWidth: 300, margin: '0 15px' }}>
-    <Text component="div" weight="medium" size="large">
+    <Text as="div" weight="medium" size="large">
       MindDrop UI
     </Text>
-    <Text component="div" size="large">
+    <Text as="div" size="large">
       An open-source UI component library.
     </Text>
     <Separator margin="large" />

@@ -36,7 +36,7 @@ describe('<Text />', () => {
   });
 
   it('supports custom components', () => {
-    render(<Text component="button">content</Text>);
+    render(<Text as="button">content</Text>);
 
     expect(screen.getByRole('button')).toHaveTextContent('content');
   });

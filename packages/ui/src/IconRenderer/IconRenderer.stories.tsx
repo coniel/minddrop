@@ -11,7 +11,7 @@ export default {
 export const Default: React.FC = () => (
   <div>
     <div>
-      <Text component="div" size="large" color="light" weight="medium">
+      <Text as="div" size="large" color="light" weight="medium">
         Using an icon name
       </Text>
       <div style={{ display: 'flex', columnGap: 8, padding: 8 }}>
@@ -20,7 +20,7 @@ export const Default: React.FC = () => (
       </div>
     </div>
     <div style={{ marginTop: 16 }}>
-      <Text component="div" size="large" color="light" weight="medium">
+      <Text as="div" size="large" color="light" weight="medium">
         Using an Icon component
       </Text>
       <div style={{ display: 'flex', columnGap: 8, padding: 8 }}>

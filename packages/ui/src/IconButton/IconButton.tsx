@@ -26,7 +26,7 @@ export interface IconButtonProps
    * The component used for the root node. Either a string to use a
    * HTML element or a component.
    */
-  component?: React.ElementType;
+  as?: React.ElementType;
 
   /**
    * Disables the button.
@@ -46,11 +46,8 @@ export interface IconButtonProps
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (
-    { icon, children, color, component, className, label, size, ...other },
-    ref,
-  ) => {
-    const Component = component || 'button';
+  ({ icon, children, color, as, className, label, size, ...other }, ref) => {
+    const Component = as || 'button';
 
     return (
       <Component

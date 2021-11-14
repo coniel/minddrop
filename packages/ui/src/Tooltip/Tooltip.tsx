@@ -76,12 +76,12 @@ export const Tooltip: FC<TooltipProps> = ({
         sideOffset={5}
         {...other}
       >
-        <Text component="div" color="contrast" size="small" weight="medium">
+        <Text as="div" color="contrast" size="small" weight="medium">
           {title}
         </Text>
         {description && (
           <Text
-            component="div"
+            as="div"
             size="small"
             color="contrast-light"
             className="description"
@@ -91,7 +91,7 @@ export const Tooltip: FC<TooltipProps> = ({
         )}
         {keyboardShortcut && (
           <KeyboardShortcut
-            component="div"
+            as="div"
             size="small"
             color="contrast-light"
             weight="medium"

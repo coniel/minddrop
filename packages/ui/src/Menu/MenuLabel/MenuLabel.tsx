@@ -15,7 +15,7 @@ export const MenuLabel = React.forwardRef<HTMLDivElement, MenuLabelProps>(
     return (
       <div ref={ref}>
         <Text
-          component="div"
+          as="div"
           color="light"
           weight="semibold"
           size="tiny"
