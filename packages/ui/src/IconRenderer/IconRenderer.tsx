@@ -25,6 +25,7 @@ export const IconRenderer: FC<IconRendererProps> = ({
     return null;
   }
 
+  console.log('className', className);
   return className
     ? React.cloneElement(icon, {
         className: `${className}${

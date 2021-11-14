@@ -12,9 +12,9 @@ describe('<PrimaryNavItem />', () => {
   });
 
   it('renders the icon', () => {
-    render(<PrimaryNavItem label="Search" />);
+    render(<PrimaryNavItem label="Search" icon="search" />);
 
-    screen.getByText('I');
+    screen.getByTestId('icon');
   });
 
   it('is clickable', () => {

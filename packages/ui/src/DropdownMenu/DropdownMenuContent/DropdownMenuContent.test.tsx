@@ -31,17 +31,13 @@ describe('<DropdownMenuContent />', () => {
 
   it('renders children', async () => {
     render(
-      <DropdownMenu>
+      <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>
           <div data-testid="target" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>content</DropdownMenuContent>
       </DropdownMenu>,
     );
-
-    act(() => {
-      fireEvent.contextMenu(screen.getByTestId('target'));
-    });
 
     await waitFor(() => screen.getByText('content'));
   });
@@ -66,17 +62,13 @@ describe('<DropdownMenuContent />', () => {
     ];
 
     render(
-      <DropdownMenu>
+      <DropdownMenu defaultOpen>
         <DropdownMenuTrigger>
           <div data-testid="target" />
         </DropdownMenuTrigger>
         <DropdownMenuContent content={menu} />
       </DropdownMenu>,
     );
-
-    act(() => {
-      fireEvent.contextMenu(screen.getByTestId('target'));
-    });
 
     await waitFor(() => screen.getByText('item 1'));
     screen.getByText('Actions');

@@ -27,7 +27,7 @@ const MenuContent: React.FC = ({ children }) => (
 
 const item: MenuItem = {
   label: 'label',
-  icon: 'icon',
+  icon: 'settings',
   onSelect: jest.fn(),
   keyboardShortcut: ['A', 'B'],
 };

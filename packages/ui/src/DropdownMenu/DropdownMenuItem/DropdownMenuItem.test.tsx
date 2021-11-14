@@ -31,7 +31,7 @@ describe('<DropdownMenuItem />', () => {
 
   it('renders tooltip title and description', async () => {
     render(
-      <DropdownMenu>
+      <DropdownMenu open onOpenChange={() => null}>
         <DropdownMenuTrigger>
           <div data-testid="target" />
         </DropdownMenuTrigger>
@@ -46,16 +46,11 @@ describe('<DropdownMenuItem />', () => {
       </DropdownMenu>,
     );
 
-    // Open menu
-    act(() => {
-      fireEvent.contextMenu(screen.getByTestId('target'));
-    });
-
-    await waitFor(() => screen.getByRole('menuitem'));
+    await waitFor(() => screen.getByText('item'));
 
     // Hover over item
     act(() => {
-      fireEvent.mouseOver(screen.getByRole('menuitem'));
+      fireEvent.mouseOver(screen.getByText('item'));
     });
 
     await waitFor(() => screen.getAllByText('Tooltip title'));

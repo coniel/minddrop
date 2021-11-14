@@ -26,11 +26,14 @@ describe('<IconRenderer />', () => {
 
   it('applies className to react element icon', () => {
     render(
-      <IconRenderer className="icon-class" icon={<Icon name="settings" />} />,
+      <IconRenderer
+        className="icon-renderer-class"
+        icon={<Icon name="settings" className="icon-class" />}
+      />,
     );
 
     expect(screen.getByTestId('icon')).toHaveClass('icon-class');
-    expect(screen.getByTestId('icon')).toHaveClass('my-class');
+    expect(screen.getByTestId('icon')).toHaveClass('icon-renderer-class');
   });
 
   it('renders nothing if icon prop is not set', () => {
