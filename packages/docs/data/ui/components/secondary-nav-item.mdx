@@ -30,11 +30,12 @@ name: secondary-nav-item
 Import the component from the `@minddrop/ui` package.
 
 ```jsx
-import { SecondaryNavItem } from '@minddrop/ui';
-import { Search } from '@minddrop/icons';
+import { SecondaryNavItem, Icon } from '@minddrop/ui';
 
 export default () => {
-  return <SecondaryNavItem label="Search" icon={<Search />} />;
+  return (
+    <SecondaryNavItem label="Trash" icon={<Icon name="trash" />} />
+  );
 };
 ```
 

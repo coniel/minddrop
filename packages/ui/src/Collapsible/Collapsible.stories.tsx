@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ToggleFilled } from '@minddrop/icons';
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from './Collapsible';
+import { Icon } from '../Icon';
 
 export default {
   title: 'ui/Collapsible',
@@ -46,9 +46,9 @@ export const Default = () => {
         <CollapsibleTrigger>
           <NavItem>
             <span>
-              <ToggleFilled
+              <Icon
+                name="toggle-filled"
                 style={{
-                  fill: 'var(--textPrimary)',
                   transform: open ? 'rotate(90deg)' : 'none',
                 }}
               />

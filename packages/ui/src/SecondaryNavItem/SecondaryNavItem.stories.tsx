@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useState } from 'react';
-import { Extension, Archive, Trash } from '@minddrop/icons';
+import { Icon } from '../Icon';
 import { SecondaryNavItem } from './SecondaryNavItem';
 
 export default {
@@ -22,19 +22,19 @@ export const Default: React.FC = () => {
     >
       <SecondaryNavItem
         label="Extensions"
-        icon={<Extension />}
+        icon={<Icon name="extension" />}
         active={active === 'extensions'}
         onClick={() => setActive('extensions')}
       />
       <SecondaryNavItem
         label="Archive"
-        icon={<Archive />}
+        icon={<Icon name="archive" />}
         active={active === 'archive'}
         onClick={() => setActive('archive')}
       />
       <SecondaryNavItem
         label="Trash"
-        icon={<Trash />}
+        icon={<Icon name="trash" />}
         active={active === 'trash'}
         onClick={() => setActive('trash')}
       />

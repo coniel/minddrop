@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { SecondaryNavItem } from '@minddrop/ui';
-import { Extension, Archive, Trash } from '@minddrop/icons';
+import { SecondaryNavItem, Icon } from '@minddrop/ui';
 
 export const SecondaryNavItemDemo = () => {
   const [active, setActive] = useState('extensions');
@@ -19,19 +18,19 @@ export const SecondaryNavItemDemo = () => {
     >
       <SecondaryNavItem
         label="Extensions"
-        icon={<Extension />}
+        icon={<Icon name="extension" />}
         active={active === 'extensions'}
         onClick={() => setActive('extensions')}
       />
       <SecondaryNavItem
         label="Archive"
-        icon={<Archive />}
+        icon={<Icon name="archive" />}
         active={active === 'archive'}
         onClick={() => setActive('archive')}
       />
       <SecondaryNavItem
         label="Trash"
-        icon={<Trash />}
+        icon={<Icon name="trash" />}
         active={active === 'trash'}
         onClick={() => setActive('trash')}
       />

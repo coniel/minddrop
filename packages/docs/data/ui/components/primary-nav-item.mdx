@@ -28,11 +28,12 @@ name: primary-nav-item
 Import the component from the `@minddrop/ui` package.
 
 ```jsx
-import { PrimaryNavItem } from '@minddrop/ui';
-import { Search } from '@minddrop/icons';
+import { PrimaryNavItem, Icon } from '@minddrop/ui';
 
 export default () => {
-  return <PrimaryNavItem label="Search" icon={<Search />} />;
+  return (
+    <PrimaryNavItem label="Search" icon={<Icon name="search" />} />
+  );
 };
 ```
 

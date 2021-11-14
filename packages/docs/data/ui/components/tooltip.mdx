@@ -34,14 +34,11 @@ Import the component from the `@minddrop/ui` package.
 
 ```jsx
 import { Tooltip, IconButton } from '@minddrop/ui';
-import { Add } from '@minddrop/icons';
 
 export default () => {
   return (
     <Tooltip title="New drop" keyboardShortcut={['Mod', 'N']}>
-      <IconButton>
-        <Add />
-      </IconButton>
+      <IconButton icon="add" label="New drop" />
     </Tooltip>
   );
 };

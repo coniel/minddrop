@@ -12,9 +12,11 @@ export const DropdownMenuDemo = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <IconButton label="Drop options" color="contrast">
-          <Icon name="more-vertical" />
-        </IconButton>
+        <IconButton
+          icon="more-vertical"
+          label="Drop options"
+          color="contrast"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"

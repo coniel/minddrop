@@ -46,33 +46,25 @@ import {
   ContextMenuTrigger,
   ContextMenuContent,
   MenuContent,
+  Icon,
 } from '@minddrop/ui';
-import {
-  MoreVertical,
-  Title,
-  Note,
-  TurnInto,
-  Link,
-  Move,
-  AddTo,
-} from '@minddrop/icons';
 
 const menu: MenuContent = [
   {
     label: 'Add title',
-    icon: <Title />,
+    icon: <Icon name="title" />,
     onSelect: () => console.log('Add title'),
     keyboardShortcut: ['Ctrl', 'T'],
   },
   {
     label: 'Add note',
-    icon: <Note />,
+    icon: <Icon name="note" />,
     onSelect: () => console.log('Add note'),
     keyboardShortcut: ['Ctrl', 'Shift', 'N'],
   },
   {
     label: 'Turn into',
-    icon: <TurnInto />,
+    icon: <Icon name="turn-into" />,
     submenu: [
       {
         label: 'Text',
@@ -92,24 +84,25 @@ const menu: MenuContent = [
   'Actions',
   {
     label: 'Copy link',
-    icon: <Link />,
+    icon: <Icon name="link" />,
     onSelect: () => console.log('Copy link'),
     keyboardShortcut: ['Ctrl', 'Shift', 'C'],
   },
   {
     label: 'Move to',
-    icon: <MoveTo />,
+    icon: <Icon name="arrow-up-right" />,
     onSelect: () => console.log('Move to'),
     keyboardShortcut: ['Ctrl', 'M'],
     tooltipTitle: 'Move drop to another topic',
   },
   {
     label: 'Add to',
-    icon: <AddTo />,
+    icon: <Icon name="inside" />,
     onSelect: () => console.log('Add to'),
     keyboardShortcut: ['Ctrl', 'A'],
     tooltipTitle: 'Add drop to another topic',
-    tooltipDescription: 'Drops appearing in multiple topics are kept in sync.',
+    tooltipDescription:
+      'Drops appearing in multiple topics are kept in sync.',
   },
 ];
 
@@ -117,9 +110,7 @@ export default () => {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <IconButton label="Drop options">
-          <MoreVertical>
-        </IconButton>
+        <IconButton icon="more-vertical" label="Drop options" />
       </ContextMenuTrigger>
       <ContextMenuContent content={menu} />
     </ContextMenu>
@@ -140,15 +131,8 @@ import {
   ContextMenuSeparator,
   ContextMenuItem,
   ContextMenuTriggerItem,
+  Icon,
 } from '@minddrop/ui';
-import {
-  Title,
-  Note,
-  TurnInto,
-  Link,
-  Move,
-  AddTo,
-} from '@minddrop/icons';
 
 export default () => {
   return (
@@ -159,20 +143,20 @@ export default () => {
       <ContextMenuContent>
         <ContextMenuItem
           label="Add title"
-          icon={<Title />}
+          icon={<Icon name="title" />}
           keyboardShortcut={['Ctrl', 'T']}
           onSelect={handleAddTitle}
         />
         <ContextMenuItem
           label="Add note"
-          icon={<Note />}
+          icon={<Icon name="note" />}
           keyboardShortcut={['Ctrl', 'Shift', 'N']}
           onSelect={handleAddNote}
         />
         <ContextMenu>
           <ContextMenuTriggerItem
             label="Turn into"
-            icon={<TurnInto />}
+            icon={<Icon name="turn-into" />}
           />
           <ContextMenuContent>
             <ContextMenuItem label="Text" onSelect={turnIntoText} />
@@ -187,20 +171,20 @@ export default () => {
         <ContextMenuLabel>Actions</ContextMenuLabel>
         <ContextMenuItem
           label="Copy link"
-          icon={<Copy />}
+          icon={<Icon name="link" />}
           keyboardShortcut={['Ctrl', 'Shift', 'C']}
           onSelect={handleCopyLink}
         />
         <ContextMenuItem
           label="Move to"
-          icon={<MoveTo />}
+          icon={<Icon name="arrow-up-right" />}
           keyboardShortcut={['Ctrl', 'M']}
           onSelect={handleMoveTo}
           tooltipTitle="Move drop to another topic"
         />
         <ContextMenuItem
           label="Add to"
-          icon={<AddTo />}
+          icon={<Icon name="inside" />}
           keyboardShortcut={['Ctrl', 'A']}
           onSelect={handleAddTo}
           tooltipTitle="Add drop to another topic"

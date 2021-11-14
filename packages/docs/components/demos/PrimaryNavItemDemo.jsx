@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { PrimaryNavItem } from '@minddrop/ui';
-import { Drop, Search, Settings } from '@minddrop/icons';
+import { PrimaryNavItem, Icon } from '@minddrop/ui';
 
 export const PrimaryNavItemDemo = () => {
   const [active, setActive] = useState('daily-drops');
@@ -19,19 +18,19 @@ export const PrimaryNavItemDemo = () => {
     >
       <PrimaryNavItem
         label="Daily drops"
-        icon={<Drop />}
+        icon={<Icon name="drop" />}
         active={active === 'daily-drops'}
         onClick={() => setActive('daily-drops')}
       />
       <PrimaryNavItem
         label="Search"
-        icon={<Search />}
+        icon={<Icon name="search" />}
         active={active === 'search'}
         onClick={() => setActive('search')}
       />
       <PrimaryNavItem
         label="Settings"
-        icon={<Settings />}
+        icon={<Icon name="settings" />}
         active={active === 'settings'}
         onClick={() => setActive('settings')}
       />
