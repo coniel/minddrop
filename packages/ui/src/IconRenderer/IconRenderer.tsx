@@ -3,25 +3,17 @@ import { IconName } from '@minddrop/icons';
 import { Icon, IconProps } from '../Icon';
 import './IconRenderer.css';
 
-interface IconRendererIconProps {
+interface IconRendererProps extends Omit<IconProps, 'name'> {
   /**
    * The icon to render.
    */
-  icon: React.ReactElement;
+  icon?: React.ReactElement;
 
-  iconName?: never;
-}
-
-interface IconRendererIconNameProps extends Omit<IconProps, 'name'> {
   /**
    * The name of a MindDrop icon.
    */
-  iconName: IconName;
-
-  icon?: never;
+  iconName?: IconName;
 }
-
-type IconRendererProps = IconRendererIconProps | IconRendererIconNameProps;
 
 export const IconRenderer: FC<IconRendererProps> = ({
   icon,
@@ -32,5 +24,5 @@ export const IconRenderer: FC<IconRendererProps> = ({
     return <Icon name={iconName} {...other} />;
   }
 
-  return icon;
+  return icon || null;
 };

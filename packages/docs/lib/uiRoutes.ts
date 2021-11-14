@@ -23,6 +23,7 @@ export const uiRoutes = [
       { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
       { title: 'Icon', slug: 'docs/ui/components/icon' },
       { title: 'IconButton', slug: 'docs/ui/components/icon-button' },
+      { title: 'IconRenderer', slug: 'docs/ui/components/icon-renderer' },
       {
         title: 'InvisibleTextField',
         slug: 'docs/ui/components/invisible-text-field',
@@ -46,7 +47,6 @@ export const uiRoutes = [
       { title: 'Toolbar', slug: 'docs/ui/components/toolbar' },
       { title: 'Tooltip', slug: 'docs/ui/components/tooltip' },
       { title: 'TopicNavItem', slug: 'docs/ui/components/topic-nav-item' },
-      { title: 'IconRenderer', slug: 'docs/ui/components/icon-renderer' },
       // TEMPLATE_APPEND
     ],
   },

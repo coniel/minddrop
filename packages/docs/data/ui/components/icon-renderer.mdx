@@ -27,7 +27,7 @@ name: icon-renderer
 
 ## Usage
 
-`IconRenderer` is intended for internal use as a convenient way of rendering the icons of components which accept both `iconName` and `icon` props. It renders an icon from the MindDrop icon set if given an `iconName` or the the value directly if given `icon`.
+`IconRenderer` is intended for internal use as a convenient way of rendering the icons of components which accept both `iconName` and `icon` props. It renders an icon from the MindDrop icon set if given an `iconName` or the the value directly if given `icon`. Renders nothing if neither is set.
 
 Import the component from the `@minddrop/ui` package.
 
@@ -55,8 +55,6 @@ export const MyComponent: React.FC<MyComponentProps> = ({
 ## API Reference
 
 `IconRendererIconNameProps` (used when the `iconName` prop is applied) extends [`IconProps`](/docs/ui/components/icon#api-reference).
-
-`IconRenderer` requires either `icon` or `iconName` to be set.
 
 <PropsTable
   data={[
