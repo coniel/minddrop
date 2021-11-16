@@ -1,11 +1,22 @@
 {
   "name": "@minddrop/theme",
   "version": "0.1.0",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "base.css",
-    "animation.css",
-    "dark.css",
-    "light.css",
-    "reset.css"
-  ]
+    "dist"
+  ],
+  "scripts": {
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./dist",
+    "compile": "rollup --config",
+    "prepublishOnly": "yarn run build"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.0",
+    "rimraf": "~3.0.2",
+    "rollup": "^2.59.0",
+    "rollup-plugin-css-only": "^3.1.0"
+  }
 }

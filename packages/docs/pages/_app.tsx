@@ -15,10 +15,10 @@ import { UiPage } from '@components/UiPage';
 import { ThemesPage } from '@components/ThemesPage';
 import { ApiPage } from '@components/ApiPage';
 import { IconsProvider } from '@minddrop/icons';
-import '@minddrop/theme/light.css';
-import '@minddrop/theme/dark.css';
-import '@minddrop/theme/base.css';
-import '@minddrop/theme/animations.css';
+import '@minddrop/theme/src/light.css';
+import '@minddrop/theme/src/dark.css';
+import '@minddrop/theme/src/base.css';
+import '@minddrop/theme/src/animations.css';
 import '@minddrop/ui/dist/styles.css';
 
 const globalStyles = globalCss({
@@ -67,7 +67,8 @@ function App({ Component, pageProps }: AppProps) {
   const isExtensionsDocs = router.pathname.includes('/docs/extensions');
   const isApiDocs = router.pathname.includes('/docs/api');
   const isThemesDocs = router.pathname.includes('/docs/themes');
-  const IsNotADocPage = !isComponentsDocs && !isApiDocs && !isThemesDocs;
+  const IsNotADocPage =
+    !isComponentsDocs && !isApiDocs && !isThemesDocs && !isExtensionsDocs;
 
   return (
     <DesignSystemProvider>
