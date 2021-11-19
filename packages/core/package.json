@@ -1,6 +1,6 @@
 {
   "name": "@minddrop/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -24,8 +24,8 @@
     "typescript": "~4.4.4"
   },
   "dependencies": {
-    "zustand": "^3.6.5",
-    "@minddrop/utils": "0.1.0"
+    "@minddrop/utils": "^0.2.0",
+    "zustand": "^3.6.5"
   },
   "peerDependencies": {
     "react": "17.0.2"

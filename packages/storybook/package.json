@@ -1,7 +1,7 @@
 {
   "name": "@minddrop/storybook",
   "description": "Storybook for React DOM components",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "start": "start-storybook -p 6006",
@@ -9,8 +9,8 @@
     "chromatic": "npx chromatic"
   },
   "dependencies": {
-    "@minddrop/i18n": "0.1.0",
-    "@minddrop/theme": "0.1.0"
+    "@minddrop/i18n": "^0.2.0",
+    "@minddrop/theme": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
