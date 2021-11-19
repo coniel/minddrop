@@ -4,13 +4,13 @@ import {
   DropAdd,
   DropChange,
   DropMove,
-  DataInsert,
   EventListenerCallback,
   SimpleDropEventType,
   SimpleTopicEventType,
 } from './EventListener.types';
 import { Topic } from './Topic.types';
 import { Drop } from './Drop.types';
+import { DataInsert } from './DataInsert.types';
 
 export interface UninitializedApp {
   // App event listeners
