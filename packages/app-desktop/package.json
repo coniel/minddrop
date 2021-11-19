@@ -2,6 +2,7 @@
   "name": "@minddrop/app-desktop",
   "productName": "MindDrop",
   "version": "0.1.0",
+  "private": true,
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

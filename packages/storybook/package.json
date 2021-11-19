@@ -2,6 +2,7 @@
   "name": "@minddrop/storybook",
   "description": "Storybook for React DOM components",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "start": "start-storybook -p 6006",
     "build": "build-storybook",
