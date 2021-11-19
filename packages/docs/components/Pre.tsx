@@ -45,17 +45,20 @@ export const Pre = styled('pre', {
     color: '$$text',
   },
 
-  '.token.tag, .token.class-name, .token.selector, .token.selector .class, .token.function': {
-    color: '$$syntax1',
-  },
+  '.token.tag, .token.class-name, .token.selector, .token.selector .class, .token.function':
+    {
+      color: '$$syntax1',
+    },
 
-  '.token.attr-value, .token.class, .token.string, .token.number, .token.unit, .token.color': {
-    color: '$$syntax2',
-  },
+  '.token.attr-value, .token.class, .token.string, .token.number, .token.unit, .token.color':
+    {
+      color: '$$syntax2',
+    },
 
-  '.token.attr-name, .token.keyword, .token.rule, .token.operator, .token.pseudo-class, .token.important': {
-    color: '$$syntax3',
-  },
+  '.token.attr-name, .token.keyword, .token.rule, .token.operator, .token.pseudo-class, .token.important':
+    {
+      color: '$$syntax3',
+    },
 
   '.token.punctuation, .token.module, .token.property': {
     color: '$$syntax4',

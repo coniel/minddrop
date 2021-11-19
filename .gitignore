@@ -6,3 +6,4 @@ results
 .DS_Store
 .webpack
 .parcel-cache
+storybook-static

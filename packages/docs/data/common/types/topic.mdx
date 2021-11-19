@@ -1,0 +1,136 @@
+---
+metaTitle: Topic Interface
+metaDescription: The primary way of organising content in MindDrop.
+---
+
+# Topic
+
+<Description>
+  A hierarchical way of organising content in MindDrop.
+</Description>
+
+Topics provide a hierarchical way of organising content inside of MindDrop. They can be nested inside of other topics (then referred to as subtopics). A topic can appear as a subtopic inside multiple other topics.
+
+Topics which appear at the top level of the hierarchy are referred to as root topics. Note that root topics can still be included as subtopics inside other topics.
+
+### Topic
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'Universally unique ID.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      required: true,
+      description: 'The topic title.',
+    },
+    {
+      name: 'root',
+      type: 'boolean',
+      required: true,
+      description: (
+        <span>
+          <Code>true</Code> if the topic appears at the root level.
+        </span>
+      ),
+    },
+    {
+      name: 'parents',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the parent topics of which the topic is a subtopic.',
+    },
+    {
+      name: 'drops',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops inside the topic.',
+    },
+    {
+      name: 'subtopics',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics inside the topic.',
+    },
+    {
+      name: 'tags',
+      required: true,
+      type: 'string[]',
+      description: 'IDs of the tags applied to this topic',
+    },
+    {
+      name: 'ownedTags',
+      type: 'Tag[]',
+      required: true,
+      description: 'Tags belonging to the topic.',
+    },
+    {
+      name: 'extensions',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of extensions enabled for the topic.',
+    },
+    {
+      name: 'createdAt',
+      type: 'Date',
+      required: true,
+      description: 'The timestamp at which the topic was created.',
+    },
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: (
+        <span>
+          The timestamp at which the topic was last updated. Equal to
+          the <Code>createdAt</Code> value if the topic has not been
+          updated.
+        </span>
+      ),
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      description: (
+        <span>
+          <Code>true</Code> if the topic is archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the topic was archived. Only set if
+          <Code>archived</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'trashed',
+      type: 'boolean',
+      description: (
+        <span>
+          <Code>true</Code> if the topic is in the trash.
+        </span>
+      ),
+    },
+    {
+      name: 'trashedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the topic was trashed. Only set if
+          <Code>trashed</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>

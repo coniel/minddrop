@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import '@minddrop/theme';
 import { initializeI18n } from '@minddrop/i18n';
-import '@minddrop/theme/reset.css';
-import '@minddrop/theme/light.css';
-import '@minddrop/theme/dark.css';
-import '@minddrop/theme/base.css';
-import { Button } from '@minddrop/ui';
+import { IconsProvider } from '@minddrop/icons';
 import { useEffect, useState } from 'react';
+import { AppSidebar } from './components';
+import './App.css';
 
 initializeI18n();
 
@@ -20,18 +19,11 @@ const App: React.FC = () => {
   }, [theme]);
 
   return (
-    <>
-      <h2>Hello from React!</h2>
-      <Button
-        label="test"
-        onClick={() =>
-          setTheme((theme) =>
-            theme === 'light-theme' ? 'dark-theme' : 'light-theme',
-          )
-        }
-      />
-      <Button label="test" />
-    </>
+    <IconsProvider>
+      <div style={{ display: 'flex', height: '100%' }}>
+        <AppSidebar />
+      </div>
+    </IconsProvider>
   );
 };
 

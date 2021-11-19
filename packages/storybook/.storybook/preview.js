@@ -1,9 +1,9 @@
 import React from 'react';
-import '../../theme/reset.css';
-import '../../theme/light.css';
-import '../../theme/dark.css';
-import '../../theme/base.css';
-import '../../theme/animations.css';
+import '../../theme/src/reset.css';
+import '../../theme/src/light.css';
+import '../../theme/src/dark.css';
+import '../../theme/src/base.css';
+import '../../theme/src/animations.css';
 import { initializeI18n } from '../../i18n';
 import { IconsProvider } from '../../icons';
 

@@ -1,0 +1,11 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-drag-handle {
+  -webkit-app-region: drag;
+  height: 34px;
+  width: 100%;
+}

@@ -4,8 +4,13 @@ import * as DS from '@modulz/design-system';
 import { Link2Icon } from '@radix-ui/react-icons';
 import { IdProvider } from '@radix-ui/react-id';
 import { PropsTable } from './PropsTable';
+import { FunctionsTable } from './FunctionsTable';
+import { InterfaceTable } from './InterfaceTable';
+import { EventsTable } from './EventsTable';
+import { LocationsTable } from './LocationsTable';
 import { KeyboardTable } from './KeyboardTable';
 import { Preview } from './Preview';
+import { Image } from './Image';
 import { Highlights } from './Highlights';
 import { DocCodeBlock } from './DocCodeBlock';
 import { CodeBlock } from './CodeBlock';
@@ -102,7 +107,7 @@ export const components = {
     }
     return (
       <NextLink href={href} passHref>
-        <DS.Link {...props} css={{ color: 'inherit', fontSize: 'inherit' }} />
+        <DS.Link {...props} variant="blue" />
       </NextLink>
     );
   },
@@ -219,6 +224,26 @@ export const components = {
   Highlights,
   Kbd: DS.Kbd,
   Code: DS.Code,
+  InterfaceTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <InterfaceTable {...props} />
+    </DS.Box>
+  ),
+  EventsTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <EventsTable {...props} />
+    </DS.Box>
+  ),
+  LocationsTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <LocationsTable {...props} />
+    </DS.Box>
+  ),
+  FunctionsTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <FunctionsTable {...props} />
+    </DS.Box>
+  ),
   PropsTable: (props) => (
     <DS.Box css={{ mb: '$5' }}>
       <PropsTable {...props} />
@@ -231,6 +256,7 @@ export const components = {
   ),
   Preview,
   HeroContainer,
+  Image,
   ...Demos,
 };
 

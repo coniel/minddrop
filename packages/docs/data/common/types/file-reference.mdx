@@ -1,0 +1,79 @@
+---
+metaTitle: FileReference Interface
+metaDescription: An interface for referencing file attachements.
+---
+
+# FileReference
+
+<Description>
+  An interface for referencing file attachements.
+</Description>
+
+Files attached to drops are referenced using FileReference objects.
+
+### FileReference
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'A universally unique ID.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The file media type.',
+    },
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'The file name.',
+    },
+    {
+      name: 'size',
+      type: 'number',
+      required: true,
+      description: 'The file size in bytes.',
+    },
+    {
+      name: 'url',
+      type: 'string',
+      description: 'URL to the file if it is located remotely.',
+    },
+    {
+      name: 'dimensions',
+      type: 'ImageDimensions',
+      description:
+        'Dimensions and aspect ratio of the image. Only set if the file is an image. See below for details.',
+    },
+  ]}
+/>
+
+### ImageDimensions
+
+<InterfaceTable
+  data={[
+    {
+      name: 'width',
+      type: 'number',
+      required: true,
+      description: 'The image width.',
+    },
+    {
+      name: 'height',
+      type: 'number',
+      required: true,
+      description: 'The image height.',
+    },
+    {
+      name: 'aspectRatio',
+      type: 'number',
+      required: true,
+      description: 'The image aspect ratio (width/height).',
+    },
+  ]}
+/>

@@ -1,0 +1,154 @@
+---
+metaTitle: Drop Interface
+metaDescription: The content of MindDrop.
+---
+
+# Drop
+
+<Description>The content of MindDrop.</Description>
+
+Drops are created in one of two formats: `markdown` or `json`. Markdown is intended for drops which are primarily text based, such as a note. JSON is intended for drops which are not edited by the user or not text based, such as a web page bookmark.
+
+All drops share a basic interface which can be extended to suit your extension's needs.
+
+### Drop
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'A universally unique ID.',
+    },
+    {
+      name: 'format',
+      type: "'markdown' | 'json'",
+      required: true,
+      description: 'The format in which the drop data is stored.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'topics',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics containing this drop.',
+    },
+    {
+      name: 'createdAt',
+      type: 'Date',
+      required: true,
+      description: 'Timestamp at which the drop was created.',
+    },
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: (
+        <span>
+          Timestamp at which the drop was last updated. Equal to the{' '}
+          <Code>createdAt</Code> value if the drop has not been
+          updated.
+        </span>
+      ),
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'Labels of the tags applied to the drop.',
+    },
+    {
+      name: 'files',
+      type: 'FileReference[]',
+      description:
+        "The drop's files. All files attached to the drop must be listed here.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The drop's highlight color. See the{' '}
+          <a href="color#content-colors">Color</a> page for available
+          content colors.
+        </span>
+      ),
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      description: (
+        <span>
+          <Code>true</Code> if the drop is archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the drop was archived. Only set if
+          <Code>archived</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'trashed',
+      type: 'boolean',
+      description: (
+        <span>
+          <Code>true</Code> if the drop is in the trash.
+        </span>
+      ),
+    },
+    {
+      name: 'trashedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the drop was trashed. Only set if
+          <Code>trashed</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### MarkdownDrop
+
+<InterfaceTable
+  data={[
+    {
+      name: 'format',
+      type: "'markdown'",
+      required: true,
+      description: 'The format in which the drop data is stored.',
+    },
+    {
+      name: 'content',
+      type: 'string',
+      required: true,
+      description: "The drop's markdown content.",
+    },
+  ]}
+/>
+
+### JsonDrop
+
+<InterfaceTable
+  data={[
+    {
+      name: 'format',
+      type: "'json'",
+      required: true,
+      description: 'The format in which the drop data is stored.',
+    },
+  ]}
+/>

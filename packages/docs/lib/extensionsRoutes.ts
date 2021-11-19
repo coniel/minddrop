@@ -6,6 +6,55 @@ export const extensionsRoutes = [
         title: 'Introduction',
         slug: 'docs/extensions/getting-started/introduction',
       },
+      {
+        title: 'Extension Anatomy',
+        slug: 'docs/extensions/getting-started/extension-anatomy',
+      },
+    ],
+  },
+  {
+    label: 'Types',
+    pages: [
+      {
+        title: 'App',
+        slug: 'docs/extensions/types/app',
+      },
+      {
+        title: 'Color',
+        slug: 'docs/extensions/types/color',
+      },
+      {
+        title: 'Drop',
+        slug: 'docs/extensions/types/drop',
+      },
+      {
+        title: 'EventListener',
+        slug: 'docs/extensions/types/event-listener',
+      },
+      {
+        title: 'FileReference',
+        slug: 'docs/extensions/types/file-reference',
+      },
+      {
+        title: 'Lifecycle functions',
+        slug: 'docs/extensions/types/lifecycle-functions',
+      },
+      {
+        title: 'Tag',
+        slug: 'docs/extensions/types/tag',
+      },
+      {
+        title: 'Topic',
+        slug: 'docs/extensions/types/topic',
+      },
+      {
+        title: 'UIComponentConfig',
+        slug: 'docs/extensions/types/ui-component-config',
+      },
+      {
+        title: 'UILocation',
+        slug: 'docs/extensions/types/ui-location',
+      },
     ],
   },
 ];
