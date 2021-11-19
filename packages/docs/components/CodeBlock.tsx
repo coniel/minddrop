@@ -26,7 +26,7 @@ refractor.register(diff);
 type PreProps = Omit<React.ComponentProps<typeof Pre>, 'css'>;
 
 type CodeBlockProps = PreProps & {
-  language: 'js' | 'jsx' | 'tsx' | 'bash' | 'css' | 'diff';
+  language: 'js' | 'jsx' | 'ts' | 'tsx' | 'bash' | 'css' | 'diff';
   value: string;
   line?: string;
   css?: any;

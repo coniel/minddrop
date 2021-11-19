@@ -57,6 +57,10 @@ const globalStyles = globalCss({
   },
 
   'h1, h2, h3, h4, h5': { fontWeight: 500 },
+
+  '.language-tsx ': {
+    color: '$violet12',
+  },
 });
 
 function App({ Component, pageProps }: AppProps) {

@@ -1,0 +1,46 @@
+---
+metaTitle: Tag Interface
+metaDescription: A secondary way of organising content in MindDrop.
+---
+
+# Tag
+
+<Description>
+  A secondary way of organising content in MindDrop.
+</Description>
+
+Tags can be global or topic specific. Global tags are available to all topics. Topic tags are only available within the topic and, optionally, the topic's subtopics.
+
+Drops can have one or more tags applied to them.
+
+### Tag
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'Universally unique ID',
+    },
+    {
+      name: 'label',
+      type: 'string',
+      required: true,
+      description:
+        'The tag label, must be unique within its context.',
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      required: true,
+      description: (
+        <span>
+          The tag color. See the{' '}
+          <a href="color#content-colors">Color</a> page for available
+          content colors.
+        </span>
+      ),
+    },
+  ]}
+/>

@@ -23,8 +23,8 @@ export const Header = () => {
   const router = useRouter();
   const isExtensions = router.pathname.includes('/extensions');
   const isThemes = router.pathname.includes('/themes');
-  const isApi = router.pathname.includes('/api');
-  const isComponents = router.pathname.includes('/components');
+  const isApi = router.pathname.includes('/docs/api');
+  const isComponents = router.pathname.includes('/ui');
 
   return (
     <Box as="header">

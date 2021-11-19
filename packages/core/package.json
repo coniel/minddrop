@@ -23,5 +23,11 @@
     "ts-node": "^10.4.0",
     "typescript": "~4.4.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "zustand": "^3.6.5",
+    "@minddrop/utils": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": "17.0.2"
+  }
 }
