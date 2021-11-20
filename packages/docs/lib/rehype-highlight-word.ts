@@ -14,5 +14,6 @@ export default (code: RefractorElement[]) => {
   const hast = unified()
     .use(parse, { emitParseErrors: true, fragment: true })
     .parse(result);
+  // @ts-ignore
   return hast.children;
 };
