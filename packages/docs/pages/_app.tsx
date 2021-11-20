@@ -15,7 +15,7 @@ import { UiPage } from '@components/UiPage';
 import { ThemesPage } from '@components/ThemesPage';
 import { ApiPage } from '@components/ApiPage';
 import { IconsProvider } from '@minddrop/icons';
-import '@minddrop/theme/dist/styles.css';
+import '@minddrop/theme/dist/index.css';
 import '@minddrop/ui/dist/styles.css';
 
 const globalStyles = globalCss({

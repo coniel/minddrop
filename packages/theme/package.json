@@ -18,5 +18,8 @@
     "rimraf": "~3.0.2",
     "rollup": "^2.59.0",
     "rollup-plugin-css-only": "^3.1.0"
+  },
+  "dependencies": {
+    "rollup-plugin-copy": "^3.4.0"
   }
 }
