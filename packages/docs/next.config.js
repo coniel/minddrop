@@ -2,9 +2,14 @@ const withPlugins = require('next-compose-plugins');
 const withVideos = require('next-videos');
 const withOptimizedImages = require('next-optimized-images');
 
-const withTM = require('next-transpile-modules')(['@modulz/design-system']);
+const withTM = require('next-transpile-modules')([
+  '@modulz/design-system',
+  '@minddrop/icons',
+  '@minddrop/theme',
+  '@minddrop/icons',
+]);
 
-module.exports = withPlugins([withTM, withOptimizedImages, withVideos], {
+module.exports = withPlugins([withOptimizedImages, withVideos, withTM], {
   // Next.js config
   async redirects() {
     return [

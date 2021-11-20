@@ -14,7 +14,7 @@ import { ExtensionsPage } from '@components/ExtensionsPage';
 import { UiPage } from '@components/UiPage';
 import { ThemesPage } from '@components/ThemesPage';
 import { ApiPage } from '@components/ApiPage';
-// import { IconsProvider } from '@minddrop/icons';
+import { IconsProvider } from '@minddrop/icons';
 import '@minddrop/theme/dist/index.css';
 import '@minddrop/ui/dist/styles.css';
 
@@ -73,59 +73,59 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <DesignSystemProvider>
-      {/* <IconsProvider> */}
-      <ThemeProvider
-        disableTransitionOnChange
-        attribute="class"
-        value={{ light: 'light-theme', dark: darkTheme.className }}
-        defaultTheme="system"
-      >
-        <Box
-          css={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            boxShadow: IsNotADocPage ? 'none' : '0 0 0 1px $colors$mauve5',
-            zIndex: 2,
-            backgroundColor: '$loContrast',
-
-            '.dark-theme &': {
-              backgroundColor: '$mauve1',
-            },
-          }}
+      <IconsProvider>
+        <ThemeProvider
+          disableTransitionOnChange
+          attribute="class"
+          value={{ light: 'light-theme', dark: darkTheme.className }}
+          defaultTheme="system"
         >
-          <Header />
-        </Box>
-        <Box css={{ pt: '$7', position: 'relative', zIndex: 1 }}>
-          {isExtensionsDocs && (
-            <ExtensionsPage>
-              <Component {...pageProps} />
-            </ExtensionsPage>
-          )}
-          {isComponentsDocs && (
-            <UiPage>
-              <Component {...pageProps} />
-            </UiPage>
-          )}
-          {isApiDocs && (
-            <ApiPage>
-              <Component {...pageProps} />
-            </ApiPage>
-          )}
-          {isThemesDocs && (
-            <ThemesPage>
-              <Component {...pageProps} />
-            </ThemesPage>
-          )}
-          {!isExtensionsDocs &&
-            !isComponentsDocs &&
-            !isThemesDocs &&
-            !isApiDocs && <Component {...pageProps} />}
-        </Box>
-        {IsNotADocPage && <Footer />}
-      </ThemeProvider>
-      {/* </IconsProvider> */}
+          <Box
+            css={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              boxShadow: IsNotADocPage ? 'none' : '0 0 0 1px $colors$mauve5',
+              zIndex: 2,
+              backgroundColor: '$loContrast',
+
+              '.dark-theme &': {
+                backgroundColor: '$mauve1',
+              },
+            }}
+          >
+            <Header />
+          </Box>
+          <Box css={{ pt: '$7', position: 'relative', zIndex: 1 }}>
+            {isExtensionsDocs && (
+              <ExtensionsPage>
+                <Component {...pageProps} />
+              </ExtensionsPage>
+            )}
+            {isComponentsDocs && (
+              <UiPage>
+                <Component {...pageProps} />
+              </UiPage>
+            )}
+            {isApiDocs && (
+              <ApiPage>
+                <Component {...pageProps} />
+              </ApiPage>
+            )}
+            {isThemesDocs && (
+              <ThemesPage>
+                <Component {...pageProps} />
+              </ThemesPage>
+            )}
+            {!isExtensionsDocs &&
+              !isComponentsDocs &&
+              !isThemesDocs &&
+              !isApiDocs && <Component {...pageProps} />}
+          </Box>
+          {IsNotADocPage && <Footer />}
+        </ThemeProvider>
+      </IconsProvider>
     </DesignSystemProvider>
   );
 }
