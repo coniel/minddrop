@@ -39,7 +39,7 @@ export default function Home() {
               },
             }}
           >
-            Designed from the ground up to be hackable, MindDrop features a
+            Designed with with extensibility in mind, MindDrop features a
             powerful extensions and theming API with first class DX.
           </Paragraph>
           <Grid columns={{ '@bp2': '2' }} gap="5" css={{ mx: '-$4' }}>
@@ -64,7 +64,8 @@ export default function Home() {
                 <Box css={{ p: '$4' }}>
                   <Heading css={{ fontWeight: 500, mb: '$2' }}>Themes</Heading>
                   <Text variant="gray" css={{ lineHeight: '23px' }}>
-                    Customize MindDrop&apos;s appearance with CSS based themes.
+                    Customize MindDrop&apos;s appearance with CSS based themes
+                    and custom icon sets.
                   </Text>
                 </Box>
               </Card>
