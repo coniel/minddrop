@@ -114,7 +114,8 @@ const wrapLines = function wrapLines(
 };
 
 // https://github.com/gatsbyjs/gatsby/pull/26161/files
-const MULTILINE_TOKEN_SPAN = /<span class="token ([^"]+)">[^<]*\n[^<]*<\/span>/g;
+const MULTILINE_TOKEN_SPAN =
+  /<span class="token ([^"]+)">[^<]*\n[^<]*<\/span>/g;
 
 const applyMultilineFix = (ast: RefractorRoot) => {
   // AST to HTML
@@ -130,6 +131,7 @@ const applyMultilineFix = (ast: RefractorRoot) => {
     .use(parse, { emitParseErrors: true, fragment: true })
     .parse(html);
 
+  // @ts-ignore
   return hast.children;
 };
 
