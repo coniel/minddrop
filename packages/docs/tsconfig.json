@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@minddrop/*": ["../../packages/*"],
       "@components/*": ["components/*"],
       "@lib/*": ["lib/*"],
       "@data/*": ["data/*"]
