@@ -24,6 +24,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/color',
       },
       {
+        title: 'DataInsert',
+        slug: 'docs/extensions/types/data-insert',
+      },
+      {
         title: 'Drop',
         slug: 'docs/extensions/types/drop',
       },

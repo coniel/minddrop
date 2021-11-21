@@ -1,0 +1,51 @@
+---
+metaTitle: DataInsert Interface
+metaDescription: Data resulting from a paste or drop event.
+---
+
+# DataInsert
+
+<Description>Data resulting from a paste or drop event.</Description>
+
+MindDrop supports dropping and pasting text and files directly into the app. If the event is not handled directly by a target, the app will dispatch a `data-insert` event containing a `DataInsert` object.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'types',
+      type: 'string[]',
+      description: (
+        <div>
+          The types of data which were inserted. Common types include:
+          <ul>
+            <li>
+              <Code>files</Code> if files were inserted.
+            </li>
+            <li>
+              <Code>text/plain</Code> if plain text was inserted.
+            </li>
+            <li>
+              <Code>text/html</Code> if HTML text was inserted.
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      name: 'data',
+      type: 'Record<string, string>',
+      description: (
+        <span>
+          A <Code>[type]: [data]</Code> map of the insereted text
+          data.
+        </span>
+      ),
+    },
+    {
+      name: 'files',
+      type: 'File[]',
+      description:
+        'The inserted files. Empty if no files were inserted.',
+    },
+  ]}
+/>
