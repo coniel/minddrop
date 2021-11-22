@@ -14,7 +14,9 @@
   "keywords": [],
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "app-icons/icon"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
