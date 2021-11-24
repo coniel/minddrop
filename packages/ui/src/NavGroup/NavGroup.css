@@ -10,7 +10,7 @@
   text-transform: uppercase;
   font-weight: var(--fwBold);
   font-size: var(--fsTiny);
-  letter-spacing: 3%;
+  letter-spacing: 0.03em;
   color: var(--neutral8);
   margin-bottom: 6px;
   margin-left: 6px;
