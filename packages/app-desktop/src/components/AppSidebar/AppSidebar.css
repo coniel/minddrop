@@ -3,3 +3,18 @@
   flex-direction: column;
   row-gap: 36px;
 }
+
+.sidebar .flex {
+  flex: 1;
+}
+
+.sidebar .bottom-toolbar {
+  padding: 10px 16px;
+  column-gap: 16px;
+  row-gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sidebar .bottom-toolbar .icon {
+  fill: var(--textNeutralLight);
+}

@@ -1,18 +1,16 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import './App.css';
 import '@minddrop/theme';
 import { initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
 import { useEffect, useState } from 'react';
 import { AppSidebar } from './components';
-import './App.css';
 
 initializeI18n();
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<'light-theme' | 'dark-theme'>(
-    'light-theme',
-  );
+  const [theme] = useState<'light-theme' | 'dark-theme'>('light-theme');
 
   useEffect(() => {
     document.getElementsByTagName('body').item(0).setAttribute('class', theme);
