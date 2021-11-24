@@ -14,6 +14,7 @@ MindDrop supports dropping and pasting text and files directly into the app. If 
     {
       name: 'types',
       type: 'string[]',
+      required: true,
       description: (
         <div>
           The types of data which were inserted. Common types include:
@@ -34,6 +35,7 @@ MindDrop supports dropping and pasting text and files directly into the app. If 
     {
       name: 'data',
       type: 'Record<string, string>',
+      required: true,
       description: (
         <span>
           A <Code>[type]: [data]</Code> map of the insereted text
@@ -44,8 +46,22 @@ MindDrop supports dropping and pasting text and files directly into the app. If 
     {
       name: 'files',
       type: 'File[]',
+      required: true,
       description:
         'The inserted files. Empty if no files were inserted.',
+    },
+    {
+      name: 'view',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the view into which the data was inserted.',
+    },
+    {
+      name: 'resource',
+      type: 'string',
+      description:
+        'The ID of the resource the data was inserted into (such as topic).',
     },
   ]}
 />

@@ -1,0 +1,41 @@
+---
+metaTitle: Breadcrumb Interface
+metaDescription: An item in the list of breadcrumbs displayed at the top of a view.
+---
+
+# Tag
+
+<Description>
+  An item in the list of breadcrumbs displayed at the top of a view.
+</Description>
+
+### Tag
+
+<InterfaceTable
+  data={[
+    {
+      name: 'view',
+      type: 'string',
+      required: true,
+      description: 'The ID of the corresponding view.',
+    },
+    {
+      name: 'label',
+      type: 'string',
+      required: true,
+      description: 'The view or resource name.',
+    },
+    {
+      name: 'resourceType',
+      type: 'string',
+      description:
+        "The type of resource if the corresponding view renders a resource (e.g. 'topic').",
+    },
+    {
+      name: 'resourceId',
+      type: 'string',
+      description:
+        'The ID of the resource if the corresponding view renders a resource (e.g. Topic ID).',
+    },
+  ]}
+/>

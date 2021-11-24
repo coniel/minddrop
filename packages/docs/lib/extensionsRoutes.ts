@@ -16,8 +16,8 @@ export const extensionsRoutes = [
     label: 'Types',
     pages: [
       {
-        title: 'App',
-        slug: 'docs/extensions/types/app',
+        title: 'ExtensionAppApi',
+        slug: 'docs/extensions/types/extension-app-api',
       },
       {
         title: 'Color',
