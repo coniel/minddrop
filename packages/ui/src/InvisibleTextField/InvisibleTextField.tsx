@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { TextColor, TextSize, TextWeight } from '../types';
 import './InvisibleTextField.css';
 
 export interface InvisibleTextFieldProps
-  extends React.HTMLAttributes<HTMLInputElement> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /**
    * Hidden label used for accesability.
    */
@@ -31,17 +31,13 @@ export interface InvisibleTextFieldProps
   weight?: TextWeight;
 }
 
-export const InvisibleTextField: FC<InvisibleTextFieldProps> = ({
-  children,
-  className,
-  label,
-  size,
-  color,
-  weight,
-  ...other
-}) => {
+export const InvisibleTextField = React.forwardRef<
+  HTMLInputElement,
+  InvisibleTextFieldProps
+>(({ children, className, label, size, color, weight, ...other }, ref) => {
   return (
     <input
+      ref={ref}
       type="text"
       aria-label={label}
       className={mapPropsToClasses(
@@ -51,4 +47,4 @@ export const InvisibleTextField: FC<InvisibleTextFieldProps> = ({
       {...other}
     />
   );
-};
+});
