@@ -29,6 +29,7 @@
     "@minddrop/drop": "0.1.0",
     "@minddrop/extension": "0.1.0",
     "@minddrop/icons": "0.2.0",
+    "@minddrop/tag": "0.1.0",
     "@minddrop/topic": "0.1.0",
     "@minddrop/utils": "0.2.0",
     "zustand": "^3.6.5"

@@ -9,7 +9,7 @@ export interface ExtensionApi {
   onRun: (app: ExtensionAppApi) => void;
 
   /**
-   * Called once when the extension is installed.
+   * Called once when the extesion is installed.
    * Directly followed by a call to `onActivate`.
    */
   onInstall: (app: ExtensionAppApi) => Promise<void>;

@@ -1,6 +1,7 @@
 import { Topic } from '@minddrop/topic';
 import { Drop } from '@minddrop/drop';
 import { DataInsert } from '@minddrop/core';
+import { CreateTagEventData as BaseCreateTagEventData } from '@minddrop/tag';
 import { View, ResourceView } from './View.types';
 
 export type LoadTopicsEvent = 'load-topics';
@@ -42,4 +43,16 @@ export interface AddDropEventData {
    * The drop being added.
    */
   drop: Drop;
+}
+
+export interface CreateTagEventData extends BaseCreateTagEventData {
+  /**
+   * `true` if the tag appears at the root level.
+   */
+  root: boolean;
+
+  /**
+   * The ID of the parent topic.
+   */
+  parent?: string;
 }
