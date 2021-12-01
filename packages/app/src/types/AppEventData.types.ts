@@ -1,4 +1,4 @@
-import { Topic } from '@minddrop/topic';
+import { Topic } from '@minddrop/topics';
 import { Drop } from '@minddrop/drop';
 import { DataInsert } from '@minddrop/core';
 import { CreateTagEventData as BaseCreateTagEventData } from '@minddrop/tag';

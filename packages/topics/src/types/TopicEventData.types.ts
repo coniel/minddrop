@@ -1,6 +1,8 @@
 import { Topic } from './Topic.types';
 
-export type CreateTopicEvent = 'create-topic';
+export const CREATE_TOPIC = 'create-topic';
+
+export type CreateTopicEvent = typeof CREATE_TOPIC;
 export type UpdateTopicEvent = 'update-topic';
 export type MoveTopicEvent = 'move-topic';
 export type AddTopicEvent = 'add-topic';

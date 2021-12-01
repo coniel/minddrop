@@ -19,7 +19,7 @@ import {
   UpdateTopicData,
   UpdateTopicEvent,
   UpdateTopicEventData,
-} from '@minddrop/topic';
+} from '@minddrop/topics';
 
 export interface ExtensionTopicApi {
   /**

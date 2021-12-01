@@ -1,5 +1,5 @@
 import { ExtensionAppApi } from './ExtensionAppApi.types';
-import { Topic } from '@minddrop/topic';
+import { Topic } from '@minddrop/topics';
 
 export interface ExtensionApi {
   /**
