@@ -7,7 +7,7 @@ export const UNSET = '__UNSET__';
  *
  * @param object The object from which to remove the fields.
  */
-export function unsetFields<O>(object: O): O {
+export function unsetFields<O extends object>(object: O): O {
   const cleaned = { ...object };
 
   Object.keys(object).forEach((key) => {
