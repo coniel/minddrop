@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@minddrop/core": "0.2.0",
-    "@minddrop/drop": "0.1.0",
+    "@minddrop/drops": "0.1.0",
     "@minddrop/extension": "0.1.0",
     "@minddrop/icons": "0.2.0",
     "@minddrop/tag": "0.1.0",

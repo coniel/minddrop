@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/drop",
+  "name": "@minddrop/drops",
   "version": "0.1.0",
   "main": "dist/index",
   "types": "dist/index",

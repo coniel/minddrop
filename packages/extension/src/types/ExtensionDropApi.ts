@@ -15,7 +15,7 @@ import {
   UpdateDropData,
   UpdateDropEvent,
   UpdateDropEventData,
-} from '@minddrop/drop';
+} from '@minddrop/drops';
 import {
   AddDropEvent,
   AddDropEventData,
