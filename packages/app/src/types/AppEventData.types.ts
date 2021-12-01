@@ -1,7 +1,7 @@
 import { Topic } from '@minddrop/topics';
 import { Drop } from '@minddrop/drops';
 import { DataInsert } from '@minddrop/core';
-import { CreateTagEventData as BaseCreateTagEventData } from '@minddrop/tag';
+import { CreateTagEventData as BaseCreateTagEventData } from '@minddrop/tags';
 import { View, ResourceView } from './View.types';
 
 export type LoadTopicsEvent = 'load-topics';

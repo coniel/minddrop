@@ -9,7 +9,7 @@ import {
   UpdateTagData,
   UpdateTagEvent,
   UpdateTagEventData,
-} from '@minddrop/tag';
+} from '@minddrop/tags';
 
 export interface ExtensionTagApi {
   /**
