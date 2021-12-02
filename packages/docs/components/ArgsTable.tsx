@@ -9,20 +9,31 @@ type InterfaceDef = {
   description: string;
 };
 
-export function InterfaceTable({
-  data,
+const coreDef: InterfaceDef = {
+  name: 'core',
+  type: 'Core',
+  required: true,
+  description: 'The MindDrop core instance.',
+};
+
+export function ArgsTable({
+  data: dataProp,
+  core,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
 }: {
   data: InterfaceDef[];
+  core?: boolean;
   'aria-label'?: string;
   'aria-labelledby'?: string;
 }) {
   const hasAriaLabel = !!(ariaLabel || ariaLabelledBy);
+  const data = core ? [coreDef, ...dataProp] : dataProp;
+
   return (
     <RegionTable
       css={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}
-      aria-label={hasAriaLabel ? ariaLabel : 'Interface Properties'}
+      aria-label={hasAriaLabel ? ariaLabel : 'Function arguments'}
       aria-labelledby={ariaLabelledBy}
     >
       <thead>
@@ -32,7 +43,7 @@ export function InterfaceTable({
             css={{ borderBottom: '1px solid $gray6', py: '$3', pr: '$4' }}
           >
             <Text size="2" css={{ color: '$gray11' }}>
-              Property
+              Argument
             </Text>
           </Box>
           <Box

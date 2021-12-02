@@ -1,0 +1,120 @@
+---
+metaTitle: App API Reference
+metaDescription: An interface for interacting with MindDrop's high level application.
+---
+
+# App
+
+<Description>
+  An interface for interacting with MindDrop's high level application.
+</Description>
+
+## Static methods
+
+### addTopic
+
+Adds a topic to the root level and dispaches an `app:add-topic` event.
+
+```tsx
+App.addTopic(core: Core, id: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to add.',
+    },
+  ]}
+/>
+
+### removeTopic
+
+Removes a topic from the root level and dispaches an `app:remove-topic` event.
+
+```tsx
+App.removeTopic(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to remove.',
+    },
+  ]}
+/>
+
+### addTag
+
+Adds a global tag and dispaches an `app:add-topic` event.
+
+```tsx
+App.addTag(core: Core, id: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to add.',
+    },
+  ]}
+/>
+
+### removeTag
+
+Removes a global tag and dispaches an `app:remove-tag` event.
+
+```tsx
+App.removeTag(core: Core, id: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to remove.',
+    },
+  ]}
+/>
+
+## App events
+
+App events are prefixed with the namespace `app`.
+
+<EventsTable
+  data={[
+    {
+      name: 'app:add-topic',
+      data: 'Topic',
+      description:
+        'Dispatched when a topic is added to the root level.',
+    },
+    {
+      name: 'app:remove-topic',
+      data: 'Topic',
+      description:
+        'Dispatched when a topic is removed from the root level.',
+    },
+    {
+      name: 'app:add-tag',
+      data: 'Tag',
+      description: 'Dispatched when a global tag is added.',
+    },
+    {
+      name: 'app:remove-tag',
+      data: 'Tag',
+      description: 'Dispatched when a global tag is removed.',
+    },
+  ]}
+/>

@@ -1,0 +1,204 @@
+---
+metaTitle: Core API Reference
+metaDescription: An interface for interacting with MindDrop's core.
+---
+
+# Core
+
+<Description>
+  An interface for interacting with MindDrop's core.
+</Description>
+
+MindDrop has a lean core mainly responsible for managing event listeners and UI extensions. The core is not aware of any resources such a topics and drops, rather, those are built on top of the core.
+
+## Methods
+
+### addEventListener
+
+Adds an event listener for a given event, firing the callback each time the event occurs. Allows extensions to react to events occuring throughout the app.
+
+```ts
+core.addEventListener(type: string, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type to listen to.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: (
+        <span>
+          The callback fired when the event occurs. See the
+          <a href="/docs/extensions/types/event-listener-callback">
+            EventListenerCallback
+          </a> page for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes a given event listener.
+
+```ts
+core.removeEventListener(type: string, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback fired when the event occurs.',
+    },
+  ]}
+/>
+
+### openView
+
+Opens a view in the app.
+
+```ts
+core.openView(view: string, options?: ViewConfig): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'view',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view to open.',
+    },
+    {
+      name: 'options',
+      type: 'ViewConfig',
+      description: (
+        <span>
+          The view configuration, including breadcrumbs and resource.
+          See the{' '}
+          <a href="/docs/extensions/types/view-config">ViewConfig</a>{' '}
+          page for more details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### addUiExtension
+
+Adds a UI extension at a given location.
+
+```ts
+core.addUiExtension(location: UiLocation | string, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation | string',
+      required: true,
+      description: (
+        <span>
+          The location at which to extend the UI. See the{' '}
+          <a href="">UiLocation</a> page for available locations.
+          Extensions can also provide their own UI extension locations
+          using the <a href="">Slot</a> component.
+        </span>
+      ),
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: (
+        <span>
+          The UI element to render. Either a{' '}
+          <a href="/docs/extensions/types/ui-component-config">
+            UiComponentConfig
+          </a>{' '}
+          object or a React element.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeUiExtension
+
+Removes a UI extension from a given location.
+
+```ts
+core.removeUiExtension(location: string, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation | string',
+      required: true,
+      description:
+        'The location from which to remove the UI extension.',
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: 'The UI element to remove.',
+    },
+  ]}
+/>
+
+## Core events
+
+Core events are prefixed with the namespace `core`.
+
+See below the table for more details on the data passed by topic related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'core:open-view',
+      data: 'OpenViewEventData',
+      description: 'Dispatched when a view is opened.',
+    },
+  ]}
+/>
+
+### Core event data types
+
+#### OpenViewEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'view',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view which was opened.',
+    },
+    {
+      name: 'options',
+      type: 'ViewConfig',
+      description: 'The view options.',
+    },
+  ]}
+/>

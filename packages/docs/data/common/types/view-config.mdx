@@ -1,0 +1,45 @@
+---
+metaTitle: ViewConfig Interface
+metaDescription: Configuration for views opened in the app.
+---
+
+# ViewConfig
+
+<Description>Configuration for views opened in the app.</Description>
+
+Views can render a breadcrumb trail leading up to them by proving the `breadcrumb` config.
+
+Views which render a resource, such as a topic, must provide both the resource ID and the resource type.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'breadcrumbs',
+      type: 'Breadcrumb[]',
+      description:
+        'Breadcrumbs leading up to and including the view.',
+    },
+    {
+      name: 'resourceId',
+      type: 'string',
+      description: (
+        <span>
+          ID of the resource displayed by the view (e.g. topic ID).
+          Must also provide <Code>resourceType</Code> if resource is
+          provided.
+        </span>
+      ),
+    },
+    {
+      name: 'resourceType',
+      type: 'string',
+      description: (
+        <span>
+          The type of resource rendered by the view (e.g.{' '}
+          <Code>'topic'</Code>). Required if <Code>resource</Code> is
+          set, should not be set otherwise.
+        </span>
+      ),
+    },
+  ]}
+/>

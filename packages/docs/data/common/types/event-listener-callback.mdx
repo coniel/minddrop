@@ -1,0 +1,57 @@
+---
+metaTitle: EventListenerCallback Interface
+metaDescription: Callback fired in response to events.
+---
+
+# EventListenerCallback
+
+<Description>Callback fired in response to events.</Description>
+
+MindDrop uses an event driven API. Extensions can react to events happening throughout the app by creating event listerners with an callback fired each time the event occurs.
+
+Event listeners are added as follows:
+
+```ts
+function onCreateTopic(payload: EventPayload<Topic>) {
+  const { type, source, data } = payload;
+  ...
+}
+
+app.addEventListener('create-topic', onCreateTopic): void
+```
+
+The `EventListenerCallback` is called with a single `payload` attribute, with the following properties.
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description:
+        'The event type. Useful if your callback is passed to multiple event listeners of different types.',
+    },
+    {
+      name: 'source',
+      type: 'string',
+      description: (
+        <span>
+          The source from which the event was dispatched. Either an
+          extension ID or <Code>'app'</Code> if dispatched by the app
+          istelf. Useful for ignoring events dispatched by your own
+          extension.
+        </span>
+      ),
+    },
+    {
+      name: 'data',
+      type: 'EventData',
+      description: (
+        <span>
+          The data associated with the event. Check event specific
+          docs for the type of data dispatched with different events.
+          In the example above, the data is a topic.
+        </span>
+      ),
+    },
+  ]}
+/>

@@ -40,13 +40,6 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       ),
     },
     {
-      name: 'parents',
-      type: 'string[]',
-      required: true,
-      description:
-        'The IDs of the parent topics of which the topic is a subtopic.',
-    },
-    {
       name: 'drops',
       type: 'string[]',
       required: true,
@@ -62,13 +55,7 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       name: 'tags',
       required: true,
       type: 'string[]',
-      description: 'IDs of the tags applied to this topic',
-    },
-    {
-      name: 'ownedTags',
-      type: 'Tag[]',
-      required: true,
-      description: 'Tags belonging to the topic.',
+      description: 'IDs of the tags belonging to the topic.',
     },
     {
       name: 'extensions',

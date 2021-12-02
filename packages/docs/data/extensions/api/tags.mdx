@@ -1,0 +1,238 @@
+---
+metaTitle: Tags API Interface
+metaDescription: An interface for retrieving and managing tags.
+---
+
+# Tags
+
+<Description>
+  An interface for retrieving and managing tags.
+</Description>
+
+## Hooks
+
+Hooks provide access to tags from inside React components. Unlike resources accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useTags
+
+Returns a `{ [id]: Tag }` map of tags matching the provided IDs.
+
+```ts
+useTags(ids: string[]): Record<string, Tag>
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'ids',
+      type: 'string[]',
+      description: 'The IDs of the tags to retrieve.',
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves a tag by ID, returning the tag or `null` if not found.
+
+```ts
+Tags.get(id: string): Tag | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to retrieve.',
+    },
+  ]}
+/>
+
+### create
+
+Creates a new tag from a tag and dispatches a `create-tag` event. Returns the new tag.
+
+```ts
+Tags.create(core: Core, type: string, tag: Tag): Tag
+```
+
+<InterfaceTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      required: true,
+      description: "The tag's label text.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: "The tag's color.",
+    },
+  ]}
+/>
+
+### update
+
+Updates a tag and dispatches a `update-tag` event. Returns the updated tag.
+
+```ts
+Tags.update(core: Core, id: string, data: UpdateTagData): Tag
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to update.',
+    },
+    {
+      name: 'data',
+      type: 'UpdateTagData',
+      required: true,
+      description:
+        'The changes to apply to the tag. See below for details.',
+    },
+  ]}
+/>
+
+#### `UpdateTagData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      description: "The tag's label text.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: "The tag's color.",
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a tag and dispatches a `delete-tag` event.
+
+```ts
+Tags.delete(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag.',
+    },
+  ]}
+/>
+
+### load
+
+Loads tags into the store and dispatches a `load-tags` event.
+
+```ts
+Tags.load(core: Core, tags: Tag[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tags',
+      type: 'Tag[]',
+      required: true,
+      description: 'The tags to load into the store.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds tag specific event listeners. Equivalent to calling `addEventListener` directly on `app`, but provides more advanced type definitions.
+
+```ts
+Tags.addEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TagEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the tag events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the tag events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes tag specific event listeners. Equivalent to calling `removeEventListener` directly on `app`, but provides more advanced type definitions.
+
+```ts
+Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TagEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Tag events
+
+<EventsTable
+  data={[
+    {
+      name: 'tags:create',
+      data: 'Tag',
+      description: 'Dispatched when a tag is added.',
+    },
+    {
+      name: 'tags:delete',
+      data: 'Tag',
+      description: 'Dispatched when a tag is deleted.',
+    },
+    {
+      name: 'tags:load',
+      data: 'Tag[]',
+      description: 'Dispatched when tags are loaded into the store.',
+    },
+  ]}
+/>

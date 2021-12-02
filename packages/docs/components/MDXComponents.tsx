@@ -4,6 +4,7 @@ import * as DS from '@modulz/design-system';
 import { Link2Icon } from '@radix-ui/react-icons';
 import { IdProvider } from '@radix-ui/react-id';
 import { PropsTable } from './PropsTable';
+import { ArgsTable } from './ArgsTable';
 import { FunctionsTable } from './FunctionsTable';
 import { InterfaceTable } from './InterfaceTable';
 import { EventsTable } from './EventsTable';
@@ -242,6 +243,11 @@ export const components = {
   FunctionsTable: (props) => (
     <DS.Box css={{ mb: '$5' }}>
       <FunctionsTable {...props} />
+    </DS.Box>
+  ),
+  ArgsTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <ArgsTable {...props} />
     </DS.Box>
   ),
   PropsTable: (props) => (

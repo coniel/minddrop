@@ -1,0 +1,167 @@
+---
+metaTitle: Files API Interface
+metaDescription: An interface for retrieving and managing files.
+---
+
+# Files
+
+<Description>
+  An interface for retrieving and managing content files.
+</Description>
+
+## Static methods
+
+### get
+
+Retrieves a file by ID, returning the file reference or `null` if not found.
+
+```ts
+Files.get(id: string): FileReference | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the file to retrieve.',
+    },
+  ]}
+/>
+
+### create
+
+Creates a new file reference from a file and dispatches a `create-file` event. Returns the new file reference.
+
+```ts
+Files.create(core: Core, type: string, file: File): FileReference
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'file',
+      type: 'File',
+      description: 'The file itslef.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a file and dispatches a `delete-file` event.
+
+```ts
+Files.delete(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the file reference.',
+    },
+  ]}
+/>
+
+### load
+
+Loads files into the store and dispatches a `load-files` event.
+
+```ts
+Files.load(core: Core, files: FileReference[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'files',
+      type: 'FileReference[]',
+      required: true,
+      description: 'The files to load into the store.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds file specific event listeners. Equivalent to calling `addEventListener` directly on `app`, but provides more advanced type definitions.
+
+```ts
+Files.addEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the file events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the file events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes file specific event listeners. Equivalent to calling `removeEventListener` directly on `app`, but provides more advanced type definitions.
+
+```ts
+Files.removeEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## File events
+
+<EventsTable
+  data={[
+    {
+      name: 'files:create',
+      data: 'FileReference',
+      description: 'Dispatched when a file is added.',
+    },
+    {
+      name: 'files:delete',
+      data: 'FileReference',
+      description: 'Dispatched when a file is deleted.',
+    },
+    {
+      name: 'files:load',
+      data: 'FileReference[]',
+      description: 'Dispatched when files are loaded into the store.',
+    },
+  ]}
+/>
