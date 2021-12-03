@@ -67,10 +67,11 @@ Topics which appear at the top level of the hierarchy are referred to as root to
     },
     {
       name: 'archived',
-      type: 'boolean',
+      type: 'true',
       description: (
         <span>
-          If <Code>true</Code>, the topic is archived.
+          If <Code>true</Code>, the topic is archived. Not present if
+          the topic is not archived.
         </span>
       ),
     },
@@ -86,10 +87,11 @@ Topics which appear at the top level of the hierarchy are referred to as root to
     },
     {
       name: 'deleted',
-      type: 'boolean',
+      type: 'true',
       description: (
         <span>
-          If <Code>true</Code>, the topic is in the trash.
+          If <Code>true</Code>, the topic is in the trash. Not present
+          if the topic is not deleted.
         </span>
       ),
     },
@@ -100,6 +102,16 @@ Topics which appear at the top level of the hierarchy are referred to as root to
         <span>
           Timestamp at which the topic was deleted. Only set if
           <Code>deleted</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'hidden',
+      type: 'true',
+      description: (
+        <span>
+          If <Code>true</Code>, the topic will be hidden. Not present
+          if the topic is not hidden.
         </span>
       ),
     },

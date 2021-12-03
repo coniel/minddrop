@@ -32,7 +32,7 @@ Files.get(id: string | string[]): File | File[] | null
 
 ### create
 
-Creates a new file reference from a file and dispatches a `create-file` event. Returns the new file reference.
+Creates a new file reference from a file and dispatches a `files:create` event. Returns the new file reference.
 
 ```ts
 Files.create(core: Core, type: string, file: File): FileReference
@@ -51,7 +51,7 @@ Files.create(core: Core, type: string, file: File): FileReference
 
 ### delete
 
-Deletes a file and dispatches a `delete-file` event.
+Deletes a file and dispatches a `files:delete` event.
 
 ```ts
 Files.delete(core: Core, id: string): void
@@ -71,7 +71,7 @@ Files.delete(core: Core, id: string): void
 
 ### load
 
-Loads files into the store and dispatches a `load-files` event.
+Loads files into the store and dispatches a `files:load` event.
 
 ```ts
 Files.load(core: Core, files: FileReference[]): void

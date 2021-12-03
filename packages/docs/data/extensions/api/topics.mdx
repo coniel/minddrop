@@ -158,7 +158,7 @@ Topics.dropParents(id: string, filters?: TopicFilters): Topic[]
 
 ### create
 
-Creates a new topic and dispatches a `create-topic` event. Returns the new topic.
+Creates a new topic and dispatches a `topics:create` event. Returns the new topic.
 
 ```ts
 Topics.create(core: Core, data?: CreateTopicData): Topic
@@ -196,7 +196,7 @@ Topics.create(core: Core, data?: CreateTopicData): Topic
 
 ### update
 
-Updates a topic and dispatches a `update-topic` event. Returns the updated topic.
+Updates a topic and dispatches a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.update(core: Core, id: string, data: UpdateTopicData): Topic
@@ -233,12 +233,12 @@ Topics.update(core: Core, id: string, data: UpdateTopicData): Topic
   ]}
 />
 
-### addSubtopic
+### addSubtopics
 
-Adds a topic as a subtopic into another topic **without removing** it from its current location. Dispatches an `add-subtopic` event, as well as `update-topic` events for both topics.
+Adds subtopics into a parent topic. Dispatches an `topics:add-subtopics` event, as well as `topics:update` event.
 
 ```ts
-Topics.addSubtopic(core: Core, topicId: string, subtopicId: string): void
+Topics.addSubtopics(core: Core, topicId: string, subtopicIds: string[]): void
 ```
 
 <ArgsTable core data={[
@@ -250,20 +250,20 @@ Topics.addSubtopic(core: Core, topicId: string, subtopicId: string): void
       description: 'The ID of the parent topic into which to add the subtopic.',
     },
     {
-      name: 'subtopicId',
-      type: 'string',
+      name: 'subtopicIds',
+      type: 'string[]',
       required: true,
-      description: 'The ID of the subtopic.',
+      description: 'The IDs of the subtopics.',
     },
 
 ]} />
 
-### removeSubtopic
+### removeSubtopics
 
-Removes a subtopic from a topic. Dispatches a `remove-subtopic` event as well as `update-topic` events for both affected topics.
+Removes subtopics from a topic. Dispatches a `topics:remove-subtopics` event as well as `topics:update` event.
 
 ```tsx
-Topics.removeSubtopic(core: Core, parentId: string, subtopicId: string): void
+Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): void
 ```
 
 <ArgsTable core data={[
@@ -272,20 +272,126 @@ Topics.removeSubtopic(core: Core, parentId: string, subtopicId: string): void
       name: 'parentId',
       type: 'string',
       required: true,
-      description: 'The ID of the parent topic from which to remove the subtopic.',
+      description: 'The ID of the parent topic from which to remove the subtopics.',
     },
     {
-      name: 'subtopicId',
-      type: 'string',
+      name: 'subtopicIds',
+      type: 'string[]',
       required: true,
-      description: 'The ID of the subtopic to remove.',
+      description: 'The IDs of the subtopics to remove.',
     },
 
 ]} />
 
+### addDrops
+
+Adds drops to a topic, dispaches an `topics:add-drops` event and an `topics:update` event.
+
+```ts
+Topics.addDrops(core: Core, topicId: string, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the drop.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to add.',
+    },
+  ]}
+/>
+
+### removeDrops
+
+Removes drops from a topic and dispatches a `topics:remove-drops` event as well as an `topics:update` event.
+
+```ts
+Topics.addDrops(core: Core, topicId: string, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to remove.',
+    },
+  ]}
+/>
+
+### addTags
+
+Adds tags to a topic, dispaches an `topics:add-tags` event and an `topics:update` event.
+
+```ts
+Topics.addTags(core: Core, topicId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add.',
+    },
+  ]}
+/>
+
+### removeTags
+
+Removes tags from a topic and dispatches a `topics:remove-tags` event as well as an `topics:update` event.
+
+```ts
+Topics.addTag(core: Core, topicId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to remove.',
+    },
+  ]}
+/>
+
 ### archive
 
-Archives a topic and dispatches an `archive-topic` event and an `update-topic` event.
+Archives a topic and dispatches a `topics:archive` event and an `topics:update` event.
 
 ```ts
 Topics.archive(core: Core, id: string): void
@@ -305,7 +411,7 @@ Topics.archive(core: Core, id: string): void
 
 ### unarchive
 
-Unarchives a topic and dispatches an `unarchive-topic` event and an `update-topic` event.
+Unarchives a topic and dispatches a `topics:unarchive` event and an `topics:update` event.
 
 ```ts
 Topics.unarchive(core: Core, id: string): void
@@ -325,7 +431,7 @@ Topics.unarchive(core: Core, id: string): void
 
 ### delete
 
-Deletes a topic and dispatches an `delete-topic` event and an `update-topic` event.
+Deletes a topic and dispatches a `topics:delete` event and an `topics:update` event.
 
 ```ts
 Topics.delete(core: Core, id: string): void
@@ -345,7 +451,7 @@ Topics.delete(core: Core, id: string): void
 
 ### restore
 
-Restores a deleted topic and dispatches a `restore-topic` event and an `update-topic` event.
+Restores a deleted topic and dispatches a `topics:restore` event and an `topics:update` event.
 
 ```ts
 Topics.restore(core: Core, id: string): void
@@ -363,113 +469,9 @@ Topics.restore(core: Core, id: string): void
   ]}
 />
 
-### addDrop
-
-Adds a drop to a topic, dispaches an `add-drop` event and an `update-topic` event.
-
-```ts
-Topics.addDrop(core: Core, topicId: string, dropId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic to which to add the drop.',
-    },
-    {
-      name: 'dropId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to add.',
-    },
-  ]}
-/>
-
-### removeDrop
-
-Removes a drop from a topic and dispatches a `remove-drop` event as well as an `update-topic` event.
-
-```ts
-Topics.addDrop(core: Core, topicId: string, dropId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic to which to add the drop.',
-    },
-    {
-      name: 'dropId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to remove.',
-    },
-  ]}
-/>
-
-### addTag
-
-Adds a tag to a topic, dispaches an `add-topic-tag` event and an `update-topic` event.
-
-```ts
-Topics.addTag(core: Core, topicId: string, tagId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic to which to add the tag.',
-    },
-    {
-      name: 'tagId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the tag to add.',
-    },
-  ]}
-/>
-
-### removeTag
-
-Removes a tag from a topic and dispatches a `remove-topic-tag` event as well as an `update-topic` event.
-
-```ts
-Topics.addTag(core: Core, topicId: string, tagId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic to which to add the tag.',
-    },
-    {
-      name: 'tagId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the tag to remove.',
-    },
-  ]}
-/>
-
 ### load
 
-Loads topics into the store and dispatches a `load-topics` event.
+Loads topics into the store and dispatches a `topics:load` event.
 
 ```ts
 Topics.load(core: Core, topics: Topic[]): void
@@ -489,7 +491,7 @@ Topics.load(core: Core, topics: Topic[]): void
 
 ### insertData
 
-Dispatches a `topic-insert-data` event.
+Dispatches a `topics:insert-data` event.
 
 ```ts
 Topics.insertData(core: Core, id: string, data: DataInsert): void
@@ -587,15 +589,35 @@ See below the table for more details on the data passed by topic related events.
       description: 'Dispatched when a topic is updated.',
     },
     {
-      name: 'topics:add-subtopic',
-      data: 'AddSubtopicEventData',
-      description: 'Dispatched when a subtopic is added to a topic.',
+      name: 'topics:add-subtopics',
+      data: 'AddSubtopicsEventData',
+      description: 'Dispatched when subtopics are added to a topic.',
     },
     {
-      name: 'topics:remove-subtopic',
-      data: 'RemoveSubtopicEventData',
+      name: 'topics:remove-subtopics',
+      data: 'RemoveSubtopicsEventData',
       description:
-        'Dispatched when a subtopic is removed from a topic.',
+        'Dispatched when subtopics are removed from a topic.',
+    },
+    {
+      name: 'topics:add-drops',
+      data: 'AddDropsEventData',
+      description: 'Dispatched when drops are added to a topic.',
+    },
+    {
+      name: 'topics:remove-drops',
+      data: 'RemoveDropsEventData',
+      description: 'Dispatched when drops are removed from a topic.',
+    },
+    {
+      name: 'topics:add-tags',
+      data: 'AddTagsEventData',
+      description: 'Dispatched when tags are added to a topic.',
+    },
+    {
+      name: 'topics:remove-tags',
+      data: 'RemoveTagsEventData',
+      description: 'Dispatched when tags are removed from a topic.',
     },
     {
       name: 'topics:archive',
@@ -616,26 +638,6 @@ See below the table for more details on the data passed by topic related events.
       name: 'topics:restore',
       data: 'Topic',
       description: 'Dispatched when a deleted topic is restored.',
-    },
-    {
-      name: 'topics:add-drop',
-      data: 'AddDropEventData',
-      description: 'Dispatched when a drop is added to a topic.',
-    },
-    {
-      name: 'topics:remove-drop',
-      data: 'RemoveDropEventData',
-      description: 'Dispatched when a drop is removed from a topic.',
-    },
-    {
-      name: 'topics:add-tag',
-      data: 'AddTagEventData',
-      description: 'Dispatched when a tag is added to a topic.',
-    },
-    {
-      name: 'topics:remove-tag',
-      data: 'RemoveTagEventData',
-      description: 'Dispatched when a tag is removed from a topic.',
     },
     {
       name: 'topics:load',
@@ -744,10 +746,19 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'Date | Delete',
       description: 'Timestamp at which the topic was deleted.',
     },
+    {
+      name: 'hidden',
+      type: 'true | Delete',
+      description: (
+        <span>
+          If <Code>true</Code>, the topic is hidden.
+        </span>
+      ),
+    },
   ]}
 />
 
-#### AddSubtopicEventData
+#### AddSubtopicsEventData
 
 <InterfaceTable
   data={[
@@ -755,18 +766,18 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic to which the subtopic was added.',
+      description: 'The topic to which the subtopics were added.',
     },
     {
-      name: 'subtopic',
-      type: 'Topic',
+      name: 'subtopics',
+      type: 'Topic[]',
       required: true,
-      description: 'The subtopic added to the topic.',
+      description: 'The subtopics added to the topic.',
     },
   ]}
 />
 
-#### RemoveSubtopicEventData
+#### RemoveSubtopicsEventData
 
 <InterfaceTable
   data={[
@@ -774,18 +785,18 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic from which the subtopic was removed.',
+      description: 'The topic from which the subtopics were removed.',
     },
     {
-      name: 'subtopic',
-      type: 'Topic',
+      name: 'subtopics',
+      type: 'Topic[]',
       required: true,
-      description: 'The subtopic which was removed from the topic.',
+      description: 'The subtopics which were removed from the topic.',
     },
   ]}
 />
 
-#### AddDropEventData
+#### AddDropsEventData
 
 <InterfaceTable
   data={[
@@ -793,18 +804,18 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic to which the drop was added.',
+      description: 'The topic to which the drops were added.',
     },
     {
-      name: 'drop',
-      type: 'Drop',
+      name: 'drops',
+      type: 'Drop[]',
       required: true,
-      description: 'The drop which was added to the topic.',
+      description: 'The drops which were added to the topic.',
     },
   ]}
 />
 
-#### RemoveDropEventData
+#### RemoveDropsEventData
 
 <InterfaceTable
   data={[
@@ -812,18 +823,18 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic from which the drop was removed.',
+      description: 'The topic from which the drops were removed.',
     },
     {
-      name: 'drop',
-      type: 'Drop',
+      name: 'drops',
+      type: 'Drop[]',
       required: true,
-      description: 'The drop which was removed from the topic.',
+      description: 'The drops which were removed from the topic.',
     },
   ]}
 />
 
-#### AddTagEventData
+#### AddTagsEventData
 
 <InterfaceTable
   data={[
@@ -831,18 +842,18 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic to which the tag was added.',
+      description: 'The topic to which the tags were added.',
     },
     {
-      name: 'tag',
-      type: 'Tag',
+      name: 'tags',
+      type: 'Tag[]',
       required: true,
-      description: 'The tag which was added to the topic.',
+      description: 'The tags which were added to the topic.',
     },
   ]}
 />
 
-#### RemoveTagEventData
+#### RemoveTagsEventData
 
 <InterfaceTable
   data={[
@@ -850,13 +861,13 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'topic',
       type: 'Topic',
       required: true,
-      description: 'The topic from which the tag was removed.',
+      description: 'The topic from which the tags were removed.',
     },
     {
-      name: 'tag',
-      type: 'Tag',
+      name: 'tags',
+      type: 'Tag[]',
       required: true,
-      description: 'The tag which was removed from the topic.',
+      description: 'The tags which were removed from the topic.',
     },
   ]}
 />
@@ -883,6 +894,12 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'boolean',
       default: 'false',
       description: 'Include deleted topics.',
+    },
+    {
+      name: 'hidden',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include hidden topics.',
     },
   ]}
 />

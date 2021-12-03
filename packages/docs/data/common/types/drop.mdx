@@ -76,10 +76,11 @@ All drops share a basic interface which can be extended to suit your extension's
     },
     {
       name: 'archived',
-      type: 'boolean',
+      type: 'true',
       description: (
         <span>
-          If <Code>true</Code>, the drop is archived.
+          If <Code>true</Code>, the drop is archived. Not present if
+          the drop is not archived.
         </span>
       ),
     },
@@ -95,10 +96,11 @@ All drops share a basic interface which can be extended to suit your extension's
     },
     {
       name: 'deleted',
-      type: 'boolean',
+      type: 'true',
       description: (
         <span>
-          If <Code>true</Code>, the drop is deleted.
+          If <Code>true</Code>, the drop is deleted. Not present if
+          the drop is not deleted.
         </span>
       ),
     },

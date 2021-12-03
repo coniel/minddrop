@@ -54,7 +54,7 @@ Tags.get(id: string | string[]): Tag | Tag[] | null
 
 ### create
 
-Creates a new tag from a tag and dispatches a `create-tag` event. Returns the new tag.
+Creates a new tag from a tag and dispatches a `tags:create` event. Returns the new tag.
 
 ```ts
 Tags.create(core: Core, type: string, tag: Tag): Tag
@@ -78,7 +78,7 @@ Tags.create(core: Core, type: string, tag: Tag): Tag
 
 ### update
 
-Updates a tag and dispatches a `update-tag` event. Returns the updated tag.
+Updates a tag and dispatches a `tags:update` event. Returns the updated tag.
 
 ```ts
 Tags.update(core: Core, id: string, data: UpdateTagData): Tag
@@ -122,7 +122,7 @@ Tags.update(core: Core, id: string, data: UpdateTagData): Tag
 
 ### delete
 
-Deletes a tag and dispatches a `delete-tag` event.
+Deletes a tag and dispatches a `tags:delete` event.
 
 ```ts
 Tags.delete(core: Core, id: string): void
@@ -142,7 +142,7 @@ Tags.delete(core: Core, id: string): void
 
 ### load
 
-Loads tags into the store and dispatches a `load-tags` event.
+Loads tags into the store and dispatches a `tags:load` event.
 
 ```ts
 Tags.load(core: Core, tags: Tag[]): void

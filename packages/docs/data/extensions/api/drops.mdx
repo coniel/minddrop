@@ -45,6 +45,7 @@ useDrops(ids: string[], filters?: DropFilters): Record<string, Drop>
     {
       name: 'ids',
       type: 'string[]',
+      required: true,
       description: 'The IDs of the drops to retrieve.',
     },
     {
@@ -93,29 +94,9 @@ Drops.get(id: string | string[], filters?: DropFilters): Drop | Drop[] | null
   ]}
 />
 
-### tags
-
-Retrieves a given drop's tags.
-
-```ts
-Drops.tags(id: string): Tag[]
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the drop for which to retrieve the tags.',
-    },
-  ]}
-/>
-
 ### create
 
-Creates a new drop and dispatches a `create-drop` event. Returns the new drop.
+Creates a new drop and dispatches a `drops:create` event. Returns the new drop.
 
 ```ts
 Drops.create(core: Core, type: string, data?: CreateDropData): Drop
@@ -163,7 +144,7 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
 
 ### update
 
-Updates a drop and dispatches a `update-drop` event. Returns the updated drop.
+Updates a drop and dispatches a `drops:update` event. Returns the updated drop.
 
 ```ts
 Drops.update(core: Core, id: string, data: UpdateDropData): Drop
@@ -216,9 +197,62 @@ Drops.update(core: Core, id: string, data: UpdateDropData): Drop
   ]}
 />
 
+### addTags
+
+Adds tags to a drop, dispaches an `drops:add-tags` event and a `drops:update` event.
+
+```ts
+Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to which to add the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add.',
+    },
+  ]}
+/>
+
+### removeTags
+
+Removes tags from a drop and dispatches a `drops:remove-tags` event as well as a `drops:update` event.
+
+```ts
+Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop from which to remove the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to remove.',
+    },
+  ]}
+/>
+
 ### archive
 
-Archives a drop and dispatches an `archive-drop` event and an `update-drop` event.
+Archives a drop and dispatches a `drops:archive` event and an `drops:update` event.
 
 ```ts
 Drops.archive(core: Core, id: string): void
@@ -238,7 +272,7 @@ Drops.archive(core: Core, id: string): void
 
 ### unarchive
 
-Unarchives a drop and dispatches an `unarchive-drop` event and an `update-drop` event.
+Unarchives a drop and dispatches a `drops:unarchive` event and an `drops:update` event.
 
 ```ts
 Drops.unarchive(core: Core, id: string): void
@@ -258,7 +292,7 @@ Drops.unarchive(core: Core, id: string): void
 
 ### delete
 
-Deletes a drop and dispatches an `delete-drop` event and an `update-drop` event.
+Deletes a drop and dispatches a `drops:delete` event and an `drops:update` event.
 
 ```ts
 Drops.delete(core: Core, id: string): void
@@ -278,7 +312,7 @@ Drops.delete(core: Core, id: string): void
 
 ### restore
 
-Restores a deleted drop and dispatches a `restore-drop` event and an `update-drop` event.
+Restores a deleted drop and dispatches a `drops:restore` event and an `drops:update` event.
 
 ```ts
 Drops.restore(core: Core, id: string): void
@@ -296,61 +330,9 @@ Drops.restore(core: Core, id: string): void
   ]}
 />
 
-### addTag
-
-Adds a tag to a drop, dispaches an `add-drop-tag` event and an `update-drop` event.
-
-```ts
-Drops.addTag(core: Core, dropId: string, tagId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'dropId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to which to add the tag.',
-    },
-    {
-      name: 'tagId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the tag to add.',
-    },
-  ]}
-/>
-
-### removeTag
-
-Removes a tag from a drop and dispatches a `remove-drop-tag` event as well as an `update-drop` event.
-
-```ts
-Drops.addTag(core: Core, dropId: string, tagId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'dropId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to which to add the tag.',
-    },
-    {
-      name: 'tagId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the tag to remove.',
-    },
-  ]}
-/>
-
 ### load
 
-Loads drops into the store and dispatches a `load-drops` event.
+Loads drops into the store and dispatches a `drops:load` event.
 
 ```ts
 Drops.load(core: Core, drops: Drop[]): void
@@ -460,14 +442,14 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when a deleted drop is restored.',
     },
     {
-      name: 'drops:add-tag',
-      data: 'AddTagEventData',
-      description: 'Dispatched when a tag is added to a drop.',
+      name: 'drops:add-tags',
+      data: 'AddTagsEventData',
+      description: 'Dispatched when tags are added to a drop.',
     },
     {
       name: 'drops:remove',
-      data: 'RemoveTagEventData',
-      description: 'Dispatched when a tag is removed from a drop.',
+      data: 'RemoveTagsEventData',
+      description: 'Dispatched when tags are removed from a drop.',
     },
     {
       name: 'drops:load',
@@ -586,7 +568,7 @@ See the [Drop](/docs/extensions/types/drop) interface page.
   ]}
 />
 
-#### AddTagEventData
+#### AddTagsEventData
 
 <InterfaceTable
   data={[
@@ -594,18 +576,18 @@ See the [Drop](/docs/extensions/types/drop) interface page.
       name: 'drop',
       type: 'Drop',
       required: true,
-      description: 'The drop to which the tag was added.',
+      description: 'The drop to which the tags were added.',
     },
     {
-      name: 'tag',
-      type: 'Tag',
+      name: 'tags',
+      type: 'Tag[]',
       required: true,
-      description: 'The tag which was added to the drop.',
+      description: 'The tags which were added to the drop.',
     },
   ]}
 />
 
-#### RemoveTagEventData
+#### RemoveTagsEventData
 
 <InterfaceTable
   data={[
@@ -613,13 +595,13 @@ See the [Drop](/docs/extensions/types/drop) interface page.
       name: 'drop',
       type: 'Drop',
       required: true,
-      description: 'The drop from which the tag was removed.',
+      description: 'The drop from which the tags were removed.',
     },
     {
-      name: 'tag',
-      type: 'Tag',
+      name: 'tags',
+      type: 'Tag[]',
       required: true,
-      description: 'The tag which was removed from the drop.',
+      description: 'The tags which were removed from the drop.',
     },
   ]}
 />
