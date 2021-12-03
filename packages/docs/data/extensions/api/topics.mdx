@@ -34,10 +34,10 @@ useTopic(id: string): Topic | null
 
 ### useTopics
 
-Returns a `{ [id]: Topic }` map of topics matching the provided IDs.
+Returns a `{ [id]: Topic }` map of topics matching the provided IDs. By default, only active topics are returned.
 
 ```ts
-useTopics(ids: string[]): Record<string, Topic>
+useTopics(ids: string[], filters?: TopicFilters): Record<string, Topic>
 ```
 
 <ArgsTable
@@ -47,6 +47,17 @@ useTopics(ids: string[]): Record<string, Topic>
       type: 'string[]',
       description: 'The IDs of the topics to retrieve.',
     },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -54,89 +65,40 @@ useTopics(ids: string[]): Record<string, Topic>
 
 ### get
 
-Retrieves a topic by ID, returning the topic or `null` if not found.
+Retrieves topics by ID. If provided a signle ID string, returns the topic or `null` if not found. If provided an array of IDs, returns an array of the corresponding topics. By default, only active topics are returned when getting multiple topics. Filtering is not supported when getting a single topic.
 
 ```ts
-Topics.get(id: string): Topic | null
+Topics.get(id: string | string[], filters?: TopicFilters): Topic | Topic[] | null
 ```
 
 <ArgsTable
   data={[
     {
       name: 'id',
-      type: 'string',
+      type: 'string | string[]',
       required: true,
-      description: 'The ID of the topic to retrieve.',
+      description: 'The ID(s) of the topic(s) to retrieve.',
     },
-  ]}
-/>
-
-### subtopics
-
-Retrieves a given topic's subtopics.
-
-```ts
-Topics.subtopics(id: string): Topic[]
-```
-
-<ArgsTable
-  data={[
     {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic for which to retrieve the subtopics.',
-    },
-  ]}
-/>
-
-### drops
-
-Retrieves a given topic's drops.
-
-```ts
-Topics.drops(id: string): Drop[]
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic for which to retrieve the drops.',
-    },
-  ]}
-/>
-
-### tags
-
-Retrieves a given topic's tags.
-
-```ts
-Topics.tags(id: string): Tag[]
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic for which to retrieve the tags.',
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
     },
   ]}
 />
 
 ### parents
 
-Retrieves a topic's parents, returning an array of topics.
+Retrieves a topic's parents, returning an array of topics. By default, only active topics are returned.
 
 ```ts
-Topics.parents(id: string): Topic[]
+Topics.parents(id: string, filters?: TopicFilters): Topic[]
 ```
 
 <ArgsTable
@@ -148,15 +110,26 @@ Topics.parents(id: string): Topic[]
       description:
         'The ID of the topic for which to retrieve the parent topics.',
     },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
   ]}
 />
 
 ### dropParents
 
-Retrieves a drop's parent topics, returning an array of topics.
+Retrieves a drop's parent topics, returning an array of topics. By default, only active topics are returned.
 
 ```ts
-Topics.dropParents(id: string): Topic[]
+Topics.dropParents(id: string, filters?: TopicFilters): Topic[]
 ```
 
 <ArgsTable
@@ -168,7 +141,19 @@ Topics.dropParents(id: string): Topic[]
       description:
         'The ID of the drop for which to retrieve the parent topics.',
     },
-  ]}
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+
+]}
 />
 
 ### create
@@ -693,9 +678,71 @@ See the [Topic](/docs/extensions/types/topic) interface page.
     },
     {
       name: 'changes',
-      type: 'UpdateTopicData',
+      type: 'TopicChanges',
       required: true,
-      description: 'The changes made to the topic.',
+      description:
+        'The changes made to the topic. See below for details.',
+    },
+  ]}
+/>
+
+`TopicChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: 'The timestamp at which the topic was updated.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      description: 'The topic title.',
+    },
+    {
+      name: 'subtopics',
+      type: 'string[]',
+      description: 'The IDs of the topics inside the topic.',
+    },
+    {
+      name: 'drops',
+      type: 'string[]',
+      description: 'The IDs of the drops inside the topic.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'IDs of the tags belonging to the topic.',
+    },
+    {
+      name: 'archived',
+      type: 'boolean | Delete',
+      description: (
+        <span>
+          If <Code>true</Code>, the topic is archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date | Delete',
+      description: 'Timestamp at which the topic was archived.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean | Delete',
+      description: (
+        <span>
+          If <Code>true</Code> the topic is deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date | Delete',
+      description: 'Timestamp at which the topic was deleted.',
     },
   ]}
 />
@@ -810,6 +857,32 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'Tag',
       required: true,
       description: 'The tag which was removed from the topic.',
+    },
+  ]}
+/>
+
+## TopicFilters
+
+<PropsTable
+  data={[
+    {
+      name: 'active',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Include active topics (topics which are neither archived nor deleted).',
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include archived topics.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include deleted topics.',
     },
   ]}
 />

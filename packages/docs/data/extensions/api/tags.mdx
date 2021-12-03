@@ -35,19 +35,19 @@ useTags(ids: string[]): Record<string, Tag>
 
 ### get
 
-Retrieves a tag by ID, returning the tag or `null` if not found.
+Retrieves tags by ID. If provided a signle ID string, returns the tag or `null` if not found. If provided an array of IDs, returns an array of the corresponding tags.
 
 ```ts
-Tags.get(id: string): Tag | null
+Tags.get(id: string | string[]): Tag | Tag[] | null
 ```
 
 <ArgsTable
   data={[
     {
       name: 'id',
-      type: 'string',
+      type: 'string | string[]',
       required: true,
-      description: 'The ID of the tag to retrieve.',
+      description: 'The ID(s) of the tag(s) to retrieve.',
     },
   ]}
 />
@@ -222,7 +222,12 @@ Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCal
     {
       name: 'tags:create',
       data: 'Tag',
-      description: 'Dispatched when a tag is added.',
+      description: 'Dispatched when a tag is created.',
+    },
+    {
+      name: 'tags:update',
+      data: 'UpdateTagData',
+      description: 'Dispatched when a tag is updated.',
     },
     {
       name: 'tags:delete',

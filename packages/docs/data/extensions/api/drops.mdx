@@ -37,7 +37,7 @@ useDrop(id: string): Drop | null
 Returns a `{ [id]: Drop }` map of drops matching the provided IDs.
 
 ```ts
-useDrops(ids: string[]): Record<string, Drop>
+useDrops(ids: string[], filters?: DropFilters): Record<string, Drop>
 ```
 
 <ArgsTable
@@ -47,6 +47,17 @@ useDrops(ids: string[]): Record<string, Drop>
       type: 'string[]',
       description: 'The IDs of the drops to retrieve.',
     },
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Allows filtering of returned drops. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -54,19 +65,30 @@ useDrops(ids: string[]): Record<string, Drop>
 
 ### get
 
-Retrieves a drop by ID, returning the drop or `null` if not found.
+Retrieves drops by ID. If provided a signle ID string, returns the drop or `null` if not found. If provided an array of IDs, returns an array of the corresponding drops.
 
 ```ts
-Drops.get(id: string): Drop | null
+Drops.get(id: string | string[], filters?: DropFilters): Drop | Drop[] | null
 ```
 
 <ArgsTable
   data={[
     {
       name: 'id',
-      type: 'string',
+      type: 'string | string[]',
       required: true,
-      description: 'The ID of the drop to retrieve.',
+      description: 'The ID(s) of the drop(s) to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Allows filtering of returned drops. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
     },
   ]}
 />
@@ -177,18 +199,18 @@ Drops.update(core: Core, id: string, data: UpdateDropData): Drop
     },
     {
       name: 'markdown',
-      type: 'string',
+      type: 'string | Delete',
       description: "The drop's markdown text content.",
     },
     {
       name: 'files',
-      type: 'string[]',
+      type: 'string[] | Delete',
       description:
-        "IDs of the drop's files. All files attached to the drop must be listed here.",
+        "The IDs of the drop's files. All files attached to the drop must be listed here.",
     },
     {
       name: 'color',
-      type: 'ContentColor',
+      type: 'ContentColor | Delete',
       description: "The drop's highlight color.",
     },
   ]}
@@ -410,7 +432,7 @@ See below the table for more details on the data passed by drop related events.
     {
       name: 'drops:create',
       data: 'Drop',
-      description: 'Dispatched when a drop is added.',
+      description: 'Dispatched when a drop is created.',
     },
     {
       name: 'drops:update',
@@ -481,9 +503,85 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'changes',
-      type: 'UpdateDropData',
+      type: 'DropChanges',
       required: true,
-      description: 'The changes made to the drop.',
+      description:
+        'The changes made to the drop. See below for details.',
+    },
+  ]}
+/>
+
+`DropChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: 'Timestamp at which the drop was updated.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'The IDs of the tags applied to the drop.',
+    },
+    {
+      name: 'markdown',
+      type: 'string | Delete',
+      description: "The drop's markdown text content.",
+    },
+    {
+      name: 'files',
+      type: 'string[] | Delete',
+      description: "The IDs of the drop's files.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor | Delete',
+      description: (
+        <span>
+          The drop's highlight color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date',
+      description: 'Timestamp at which the drop was archived.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description: 'Timestamp at which the drop was deleted.',
     },
   ]}
 />
@@ -522,6 +620,32 @@ See the [Drop](/docs/extensions/types/drop) interface page.
       type: 'Tag',
       required: true,
       description: 'The tag which was removed from the drop.',
+    },
+  ]}
+/>
+
+## DropFilters
+
+<PropsTable
+  data={[
+    {
+      name: 'active',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Include active drops (drops which are neither archived nor deleted).',
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include archived drops.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include deleted drops.',
     },
   ]}
 />

@@ -30,14 +30,10 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       description: 'The topic title.',
     },
     {
-      name: 'root',
-      type: 'boolean',
+      name: 'subtopics',
+      type: 'string[]',
       required: true,
-      description: (
-        <span>
-          <Code>true</Code> if the topic appears at the root level.
-        </span>
-      ),
+      description: 'The IDs of the topics inside the topic.',
     },
     {
       name: 'drops',
@@ -46,22 +42,10 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       description: 'The IDs of the drops inside the topic.',
     },
     {
-      name: 'subtopics',
-      type: 'string[]',
-      required: true,
-      description: 'The IDs of the topics inside the topic.',
-    },
-    {
       name: 'tags',
       required: true,
       type: 'string[]',
       description: 'IDs of the tags belonging to the topic.',
-    },
-    {
-      name: 'extensions',
-      type: 'string[]',
-      required: true,
-      description: 'The IDs of extensions enabled for the topic.',
     },
     {
       name: 'createdAt',
@@ -86,7 +70,7 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       type: 'boolean',
       description: (
         <span>
-          <Code>true</Code> if the topic is archived.
+          If <Code>true</Code>, the topic is archived.
         </span>
       ),
     },
@@ -101,21 +85,21 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       ),
     },
     {
-      name: 'trashed',
+      name: 'deleted',
       type: 'boolean',
       description: (
         <span>
-          <Code>true</Code> if the topic is in the trash.
+          If <Code>true</Code>, the topic is in the trash.
         </span>
       ),
     },
     {
-      name: 'trashedAt',
+      name: 'deletedAt',
       type: 'Date',
       description: (
         <span>
-          Timestamp at which the topic was trashed. Only set if
-          <Code>trashed</Code> is <Code>true</Code>.
+          Timestamp at which the topic was deleted. Only set if
+          <Code>deleted</Code> is <Code>true</Code>.
         </span>
       ),
     },

@@ -18,14 +18,4 @@ export interface DataInsert {
    * The inserted files. Empty if no files were inserted.
    */
   files: File[];
-
-  /**
-   * The ID of the view into which the data was inserted.
-   */
-  view: string;
-
-  /**
-   * The ID of the resource the data was inserted into (such as topic).
-   */
-  resource?: string;
 }
