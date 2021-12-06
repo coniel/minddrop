@@ -17,7 +17,7 @@ const coreDef: InterfaceDef = {
 };
 
 export function ArgsTable({
-  data: dataProp,
+  data: dataProp = [],
   core,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,

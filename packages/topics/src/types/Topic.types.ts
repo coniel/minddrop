@@ -1,4 +1,8 @@
-import { Unset } from '@minddrop/utils';
+import {
+  FieldValueArrayRemove,
+  FieldValueArrayUnion,
+  FieldValueDelete,
+} from '@minddrop/utils';
 
 export interface Topic {
   /**
@@ -12,19 +16,19 @@ export interface Topic {
   title: string;
 
   /**
-   * `true` if the topic appears at the root level.
-   */
-  root: boolean;
-
-  /**
-   * The IDs of the parent topics of which the topic is a subtopic.
-   */
-  parents: string[];
-
-  /**
-   * The IDs of the topics inside the topic.
+   * The IDs of the subtopics inside to the topic.
    */
   subtopics: string[];
+
+  /**
+   * The IDs of the drops inside the topic.
+   */
+  drops: string[];
+
+  /**
+   * The IDs of the tags belonging to the topic.
+   */
+  tags: string[];
 
   /**
    * Timestamp at which the topic was created.
@@ -37,7 +41,7 @@ export interface Topic {
   updatedAt: Date;
 
   /**
-   * `true` when the topic is archived.
+   * If `true`, the topic is archived.
    */
   archived?: boolean;
 
@@ -47,27 +51,44 @@ export interface Topic {
   archivedAt?: Date;
 
   /**
-   * `true` if the topic is  in the trash.
+   * If `true`, the topic is deleted.
    */
   deleted?: boolean;
 
   /**
    * Timestamp at which the topic was deleted.
    */
-  deleteAt?: boolean;
+  deletedAt?: Date;
+
+  /**
+   * If `true`, the topic is hidden.
+   */
+  hidden?: boolean;
 }
 
 export interface CreateTopicData {
   title?: string;
+  hidden?: true;
 }
 
 export interface UpdateTopicData {
   title?: string;
-  root?: true | Unset;
-  parents?: string[];
-  subtopics?: string[];
-  archived?: true | Unset;
-  archivedAt?: Date | Unset;
-  deleted?: true | Unset;
-  deletedAt?: Date | Unset;
 }
+
+export interface TopicChanges {
+  updatedAt: Date;
+  title?: string;
+  subtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  drops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  archived?: true | FieldValueDelete;
+  archivedAt?: Date | FieldValueDelete;
+  deleted?: true | FieldValueDelete;
+  deletedAt?: Date | FieldValueDelete;
+  hidden?: true | FieldValueDelete;
+}
+
+/**
+ * A [id]: Topic map.
+ */
+export type TopicMap = Record<string, Topic>;

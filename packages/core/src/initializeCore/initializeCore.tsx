@@ -2,25 +2,39 @@ import { EventListener, Core } from '../types';
 
 let eventListeners: EventListener[] = [];
 
-export function initializeCore(): Core {
+/**
+ * Creates an extension specific core API instance.
+ *
+ * @param extensionId The ID of the extension which will use the core API instance.
+ * @returns A core API instance.
+ */
+export function initializeCore(extensionId: string): Core {
   return {
-    addEventListener: (source, type, callback) =>
-      eventListeners.push({ source, type, callback }),
+    addEventListener: (type, callback) =>
+      eventListeners.push({ source: extensionId, type, callback }),
 
-    removeEventListener: (source, type, callback) => {
+    removeEventListener: (type, callback) => {
       eventListeners = eventListeners.filter(
         (listener) =>
           !(
-            listener.source === source &&
+            listener.source === extensionId &&
             listener.type === type &&
             listener.callback === callback
           ),
       );
     },
 
-    dispatch: (source, type, data) =>
+    removeAllEventListeners: () => {
+      eventListeners = eventListeners.filter(
+        (listener) => listener.source !== extensionId,
+      );
+    },
+
+    dispatch: (type, data) =>
       eventListeners
         .filter((listener) => listener.type === type)
-        .forEach((listener) => listener.callback({ source, type, data })),
+        .forEach((listener) =>
+          listener.callback({ source: extensionId, type, data }),
+        ),
   };
 }

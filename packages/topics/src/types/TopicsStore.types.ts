@@ -1,6 +1,6 @@
-import { Topic, UpdateTopicData } from './Topic.types';
+import { Topic, TopicChanges } from './Topic.types';
 
-export interface TopicStore {
+export interface TopicsStore {
   /**
    * The topics, stored as a `[topicId]: Topic` map.
    */
@@ -31,7 +31,7 @@ export interface TopicStore {
    * @param id The ID of the topic to update.
    * @param data The data to set on the topic.
    */
-  updateTopic(id: string, data: UpdateTopicData): void;
+  updateTopic(id: string, data: TopicChanges): void;
 
   /**
    * Removes a topic from the store.

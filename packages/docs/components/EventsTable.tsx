@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Text, Code } from '@modulz/design-system';
+import { DividerHorizontalIcon } from '@radix-ui/react-icons';
+import { AccessibleIcon } from '@radix-ui/react-accessible-icon';
 import { RegionTable } from './RegionTable';
 
 type EventDef = {
@@ -75,7 +77,16 @@ export function EventsTable({
                 whiteSpace: 'nowrap',
               }}
             >
-              <Code>{data}</Code>
+              {data && <Code>{data}</Code>}
+              {!data && (
+                <Box
+                  as={AccessibleIcon}
+                  label="No data"
+                  css={{ color: '$gray8' }}
+                >
+                  <DividerHorizontalIcon />
+                </Box>
+              )}
             </Box>
             <Box
               as="td"

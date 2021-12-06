@@ -1,4 +1,4 @@
-export interface EventListenerPayload<T, D> {
+export interface EventListenerPayload<T, D = undefined> {
   /**
    * The ID of the extension that dispatched the event.
    */
@@ -12,10 +12,10 @@ export interface EventListenerPayload<T, D> {
   /**
    * The data associated with the event.
    */
-  data: D;
+  data?: D;
 }
 
-export type EventListenerCallback<T, D> = (
+export type EventListenerCallback<T, D = undefined> = (
   payload: EventListenerPayload<T, D>,
 ) => void;
 

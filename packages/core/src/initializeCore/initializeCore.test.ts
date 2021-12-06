@@ -6,19 +6,19 @@ describe('initializeCore', () => {
     const callback2 = jest.fn();
     const callback3 = jest.fn();
     const data = { foo: 'foo' };
-    const core = initializeCore();
+    const core = initializeCore('app');
 
     // Add event listeners
-    core.addEventListener('core', 'test', callback1);
-    core.addEventListener('core', 'test', callback2);
-    core.addEventListener('core', 'test-2', callback3);
+    core.addEventListener('test', callback1);
+    core.addEventListener('test', callback2);
+    core.addEventListener('test-2', callback3);
 
     // Dispatch 'test' event
-    core.dispatch('core', 'test', data);
+    core.dispatch('test', data);
 
     expect(callback1).toHaveBeenCalledWith({
       data,
-      source: 'core',
+      source: 'app',
       type: 'test',
     });
     expect(callback2).toHaveBeenCalled();
@@ -26,13 +26,24 @@ describe('initializeCore', () => {
     callback1.mockClear();
     callback2.mockClear();
 
-    // Remove 1 'test' event listener
-    core.removeEventListener('core', 'test', callback2);
+    // Remove a single 'test' event listener
+    core.removeEventListener('test', callback2);
 
     // Dispatch 'test' event
-    core.dispatch('core', 'test', data);
+    core.dispatch('test', data);
 
     expect(callback1).toHaveBeenCalled();
     expect(callback2).not.toHaveBeenCalled();
+    callback1.mockClear();
+
+    core.removeAllEventListeners();
+
+    // Dispatch 'test' event
+    core.dispatch('test', data);
+    // Dispatch 'test-2' event
+    core.dispatch('test-2', data);
+
+    expect(callback1).not.toHaveBeenCalled();
+    expect(callback3).not.toHaveBeenCalled();
   });
 });

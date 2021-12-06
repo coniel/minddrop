@@ -1,20 +1,18 @@
 import { renderHook, act, MockDate } from '@minddrop/test-utils';
 import { generateTopic } from '../generateTopic';
-import { createTopicStore } from './createTopicStore';
+import { useTopicsStore } from './useTopicsStore';
 
-const useTopicStore = createTopicStore();
-
-describe('useTopicStore', () => {
+describe('useTopicsStore', () => {
   afterEach(() => {
     MockDate.reset();
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
     act(() => {
       result.current.clear();
     });
   });
 
   it('loads in topics', () => {
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
       result.current.loadTopics([generateTopic(), generateTopic()]);
@@ -24,7 +22,7 @@ describe('useTopicStore', () => {
   });
 
   it('clears the store', () => {
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
       result.current.loadTopics([generateTopic(), generateTopic()]);
@@ -35,7 +33,7 @@ describe('useTopicStore', () => {
   });
 
   it('adds a topic', () => {
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
       result.current.addTopic(generateTopic());
@@ -46,11 +44,14 @@ describe('useTopicStore', () => {
 
   it('updates a topic', () => {
     const topic = generateTopic();
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
       result.current.addTopic(topic);
-      result.current.updateTopic(topic.id, { title: 'Hello world' });
+      result.current.updateTopic(topic.id, {
+        updatedAt: new Date(),
+        title: 'Hello world',
+      });
     });
 
     expect(result.current.topics[topic.id].title).toBe('Hello world');
@@ -58,7 +59,7 @@ describe('useTopicStore', () => {
 
   it('removes a topic', () => {
     const topic = generateTopic();
-    const { result } = renderHook(() => useTopicStore((state) => state));
+    const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
       result.current.loadTopics([topic, generateTopic()]);
