@@ -61,6 +61,7 @@ export interface TopicsApi {
    * Retrieves all topics from the topics store as a `[id]: Topic` map.
    * Topics can be filtered by passing in TopicFilters.
    *
+   * @param filters Filters to filter to the topics by.
    * @returns A `[id]: Topic` map.
    */
   getAll(filters?: TopicFilters): TopicMap;

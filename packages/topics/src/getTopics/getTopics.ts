@@ -8,7 +8,8 @@ import { filterTopics } from '../filterTopics';
  * Topics can be filtered by passing in TopicFilters.
  *
  * @param ids An array of topic IDs to retrieve.
- * @returns The requested topics.
+ * @param filters Filters to filter to the topics by.
+ * @returns A `[id]: Topic` map of the requested topics.
  */
 export function getTopics(ids: string[], filters?: TopicFilters): TopicMap {
   const { topics } = useTopicsStore.getState();

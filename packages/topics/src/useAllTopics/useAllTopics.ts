@@ -8,7 +8,7 @@ import { useTopicsStore } from '../useTopicsStore';
  * By default, only active topics are returned.
  *
  * @param filters Filters to filter to the topics.
- * @returns The requested topic or null.
+ * @returns A `[id]: Topic` map of all topics.
  */
 export function useAllTopics(filters?: TopicFilters): TopicMap {
   const { topics } = useTopicsStore();

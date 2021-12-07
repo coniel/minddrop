@@ -8,7 +8,7 @@ import { useTopicsStore } from '../useTopicsStore';
  *
  * @param topicIds The IDs of the topics to retrieve.
  * @param filters Filters to filter to the topics.
- * @returns The requested topic or null.
+ * @returns A `[id]: Topic` map of the requested topics.
  */
 export function useTopics(
   topicIds: string[],
