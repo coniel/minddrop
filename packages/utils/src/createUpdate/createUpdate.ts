@@ -13,9 +13,12 @@ type WithUpdatedAt = {
 export function createUpdate<C extends object, R extends object>(
   object: R,
   data: C,
-): Update<R, C & WithUpdatedAt> {
+  setUpdatedAt?: boolean,
+): Update<R, C | (C & WithUpdatedAt)> {
   const before = { ...object };
-  const changes: C & WithUpdatedAt = { ...data, updatedAt: new Date() };
+  const changes: C | (C & WithUpdatedAt) = setUpdatedAt
+    ? { ...data, updatedAt: new Date() }
+    : data;
   const after = applyFieldValues(object, changes);
 
   return { before, after, changes };

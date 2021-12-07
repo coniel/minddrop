@@ -4,9 +4,7 @@ import { createUpdate } from './createUpdate';
 
 describe('createUpdate', () => {
   it('creates an update object with changes applied', () => {
-    MockDate.set('01/01/2000');
     const object = {
-      updatedAt: new Date('01/01/1999'),
       title: 'Title',
       optional: 'optional',
       array: [1, 2],
@@ -20,15 +18,32 @@ describe('createUpdate', () => {
     };
     const result = createUpdate(object, changes);
 
-    expect(result.changes).toEqual({ ...changes, updatedAt: new Date() });
+    expect(result.changes).toEqual(changes);
     expect(result.after).toEqual({
       title: 'Updated title',
       array: [1, 2, 3, 4],
       array2: [1],
-      updatedAt: new Date(),
     });
     // Before should equal original object
     expect(result.before).toEqual(object);
+  });
+
+  it('sets updatedAt timestamp if requested', () => {
+    MockDate.set('01/01/2000');
+    const object = {
+      updatedAt: new Date('01/01/1999'),
+      title: 'Title',
+    };
+    const changes = {
+      title: 'Updated title',
+    };
+    const result = createUpdate(object, changes, true);
+
+    expect(result.changes).toEqual({ ...changes, updatedAt: new Date() });
+    expect(result.after).toEqual({
+      title: 'Updated title',
+      updatedAt: new Date(),
+    });
 
     MockDate.reset();
   });

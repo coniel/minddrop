@@ -18,7 +18,7 @@ export function updateTopic(
   data: Omit<TopicChanges, 'updatedAt'>,
 ): Topic {
   const topic = getTopic(id);
-  const update = createUpdate(topic, data);
+  const update = createUpdate(topic, data, true);
 
   core.dispatch('topics:update', update);
 
