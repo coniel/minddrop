@@ -50,10 +50,10 @@ describe('useDropStore', () => {
 
     act(() => {
       result.current.addDrop(drop);
-      result.current.updateDrop(drop.id, { content: 'Hello world' });
+      result.current.updateDrop(drop.id, { color: 'red' });
     });
 
-    expect(result.current.drops[drop.id].content).toBe('Hello world');
+    expect(result.current.drops[drop.id].color).toBe('red');
   });
 
   it('removes a drop', () => {
