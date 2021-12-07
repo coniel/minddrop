@@ -1,4 +1,4 @@
-import { FileReference, ContentColor } from '@minddrop/core';
+import { ContentColor } from '@minddrop/core';
 import { Unset } from '@minddrop/utils';
 
 export interface Drop {
@@ -24,14 +24,19 @@ export interface Drop {
   updatedAt: Date;
 
   /**
-   * The drop's markdown text content.
+   * The IDs of the tags applied to the drop.
    */
-  content?: string;
+  tags: string[];
 
   /**
-   * The drop's files. All files attached to the drop must be listed here.
+   * The drop's markdown text content.
    */
-  files?: FileReference[];
+  markdown?: string;
+
+  /**
+   * IDs of the drop's files. All files attached to the drop must be listed here.
+   */
+  files?: string[];
 
   /**
    * The drop's highlight color.
@@ -55,22 +60,32 @@ export interface Drop {
   deleted?: boolean;
 
   /**
-   * Timestamp at which the drop was trashed.
-   * Only set if `trashed` is `true`.
+   * Timestamp at which the drop was deleted.
+   * Only set if `deleted` is `true`.
    */
   deletedAt?: Date;
 }
 
 export interface CreateDropData {
-  content?: string;
-  files?: FileReference[];
+  type: string;
+  markdown?: string;
+  files?: string[];
   color?: ContentColor;
 }
 
 export interface UpdateDropData {
   type?: string;
-  content?: string | Unset;
-  files?: FileReference | Unset;
+  markdown?: string | Unset;
+  files?: string[] | Unset;
+  color?: ContentColor | Unset;
+}
+
+export interface DropChanges {
+  updatedAt: Date;
+  type?: string;
+  markdown?: string | Unset;
+  tags?: string[];
+  files?: string[] | Unset;
   color?: ContentColor | Unset;
   archived?: true | Unset;
   archivedAt?: Date | Unset;
