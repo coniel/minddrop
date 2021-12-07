@@ -19,21 +19,5 @@ export function initializeExtension(
       app.extendUi(extensionId, location, element),
 
     openView: (view) => app.dispatch(extensionId, 'open-view', view),
-
-    createTopic: (data) => {
-      const topic = generateTopic(data);
-
-      app.dispatch(extensionId, 'create-topic', topic);
-
-      return topic;
-    },
-
-    updateTopic: (id, data) => {
-      const topic = useStore.getState().topics[id];
-
-      if (!topic) {
-        // throw
-      }
-    },
   };
 }
