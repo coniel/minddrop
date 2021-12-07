@@ -7,7 +7,7 @@ export interface Tag {
   id: string;
 
   /**
-   * The tag text label.
+   * The tag label text.
    */
   label: string;
 
@@ -19,7 +19,7 @@ export interface Tag {
 
 export interface CreateTagData {
   /**
-   * The tag text label.
+   * The tag label text.
    */
   label: string;
 
@@ -31,7 +31,7 @@ export interface CreateTagData {
 
 export interface UpdateTagData {
   /**
-   * The tag text label.
+   * The tag label text.
    */
   label?: string;
 
@@ -40,3 +40,17 @@ export interface UpdateTagData {
    */
   color?: ContentColor;
 }
+
+export interface TagChanges {
+  /**
+   * The tag label text.
+   */
+  lable?: string;
+
+  /**
+   * The tag color.
+   */
+  color?: ContentColor;
+}
+
+export type TagMap = Record<string, Tag>;

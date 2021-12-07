@@ -1,18 +1,16 @@
-import { ContentColor } from '@minddrop/core';
 import { generateId } from '@minddrop/utils';
-import { Tag } from '../types';
+import { CreateTagData, Tag } from '../types';
 
 /**
  * Generates a new tag.
  *
- * @param label The tag label.
- * @param color The tag color.
+ * @param data The tag data.
  * @returns A new tag.
  */
-export function generateTag(label: string, color: ContentColor = 'blue'): Tag {
+export function generateTag(data: CreateTagData): Tag {
   return {
-    label,
-    color,
     id: generateId(),
+    color: 'blue',
+    ...data,
   };
 }

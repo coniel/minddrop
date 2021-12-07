@@ -1,4 +1,4 @@
 export * from './Tag.types';
-export * from './TagCore.types';
-export * from './TagStore.types';
-export * from './TagEventData.types';
+export * from './TagEvents.types';
+export * from './TagsApi.types';
+export * from './TagsStore.types';

@@ -1,6 +1,6 @@
 import { Tag, UpdateTagData } from './Tag.types';
 
-export interface TagStore {
+export interface TagsStore {
   /**
    * The tags, stored as a `[tagId]: Tag` map.
    */
