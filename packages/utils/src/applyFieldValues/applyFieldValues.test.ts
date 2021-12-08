@@ -20,15 +20,15 @@ describe('applyFieldValues', () => {
 
   it('handles FieldValue.arrayUnion', () => {
     const object = { field: [0, 1, 2] };
-    const changes = { field: FieldValue.arrayUnion(3, 4) };
+    const changes = { field: FieldValue.arrayUnion([3, 4]) };
     const result = applyFieldValues(object, changes);
 
     expect(result.field.length).toBe(5);
   });
 
-  it('removes values from array', () => {
+  it('handles FieldValue.arrayRemove', () => {
     const object = { field: [0, 1, 2, 3, 4] };
-    const changes = { field: FieldValue.arrayRemove(2, 4) };
+    const changes = { field: FieldValue.arrayRemove([2, 4]) };
     const result = applyFieldValues(object, changes);
 
     expect(result.field.length).toBe(3);

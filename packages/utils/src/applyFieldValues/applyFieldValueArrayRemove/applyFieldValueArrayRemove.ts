@@ -21,9 +21,13 @@ export function applyFieldValueArrayRemove<O extends object, C extends object>(
       value.isFieldValue &&
       value.type === 'array-remove'
     ) {
+      const elements = Array.isArray(value.elements)
+        ? value.elements
+        : [value.elements];
+
       if (Array.isArray(object[key])) {
         removed[key] = object[key].filter(
-          (element) => value.elements.indexOf(element) === -1,
+          (element) => elements.indexOf(element) === -1,
         );
       }
     }

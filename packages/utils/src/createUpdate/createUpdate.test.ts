@@ -13,7 +13,7 @@ describe('createUpdate', () => {
     const changes = {
       title: 'Updated title',
       optional: FieldValue.delete(),
-      array: FieldValue.arrayUnion(3, 4),
+      array: FieldValue.arrayUnion([3, 4]),
       array2: FieldValue.arrayRemove(2),
     };
     const result = createUpdate(object, changes);

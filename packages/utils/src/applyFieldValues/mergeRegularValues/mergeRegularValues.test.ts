@@ -14,7 +14,7 @@ describe('mergeRegularValues', () => {
     const object = { field: 'value', field2: [1, 2] };
     const changes = {
       field: FieldValue.delete(),
-      field2: FieldValue.arrayUnion(3, 4),
+      field2: FieldValue.arrayUnion([3, 4]),
     };
     const result = mergeRegularValues(object, changes);
 

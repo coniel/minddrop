@@ -1,13 +1,13 @@
 export interface FieldValueArrayUnion<T = any> {
   isFieldValue: true;
   type: 'array-union';
-  elements: T[];
+  elements: T | T[];
 }
 
 export interface FieldValueArrayRemove<T = any> {
   isFieldValue: true;
   type: 'array-remove';
-  elements: T[];
+  elements: T | T[];
 }
 
 export interface FieldValueDelete {
@@ -20,7 +20,7 @@ export type FieldValue =
   | FieldValueArrayRemove
   | FieldValueDelete;
 
-function arrayUnion<T = any>(...elements: T[]): FieldValueArrayUnion<T> {
+function arrayUnion<T = any>(elements: T | T[]): FieldValueArrayUnion<T> {
   return {
     isFieldValue: true,
     type: 'array-union',
@@ -28,7 +28,7 @@ function arrayUnion<T = any>(...elements: T[]): FieldValueArrayUnion<T> {
   };
 }
 
-function arrayRemove<T = any>(...elements: T[]): FieldValueArrayRemove<T> {
+function arrayRemove<T = any>(elements: T | T[]): FieldValueArrayRemove<T> {
   return {
     isFieldValue: true,
     type: 'array-remove',

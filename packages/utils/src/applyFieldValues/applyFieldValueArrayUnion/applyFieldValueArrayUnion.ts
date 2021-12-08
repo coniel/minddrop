@@ -22,10 +22,14 @@ export function applyFieldValueArrayUnion<O extends object, C extends object>(
       value.isFieldValue &&
       value.type === 'array-union'
     ) {
+      const elements = Array.isArray(value.elements)
+        ? value.elements
+        : [value.elements];
+
       if (typeof object[key] !== 'undefined') {
-        merged[key] = [...object[key], ...value.elements];
+        merged[key] = [...object[key], ...elements];
       } else {
-        merged[key] = value.elements;
+        merged[key] = elements;
       }
     }
   });
