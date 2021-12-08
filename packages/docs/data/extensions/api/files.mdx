@@ -1,13 +1,15 @@
 ---
 metaTitle: Files API Interface
-metaDescription: An interface for retrieving and managing files.
+metaDescription: An interface for retrieving and managing file attachements.
 ---
 
 # Files
 
 <Description>
-  An interface for retrieving and managing content files.
+  An interface for retrieving and managing file attachements.
 </Description>
+
+Drops can include file attachements. MindDrop creates a [FileReference](/docs/extensions/types/file-reference) containing metadata about the file for every file attachement.
 
 ## Static methods
 
@@ -16,7 +18,7 @@ metaDescription: An interface for retrieving and managing files.
 Retrieves file references by ID. If provided a single ID string, returns the file reference or `null` if not found. If provided an array of IDs, returns an array of the corresponding file references.
 
 ```ts
-Files.get(id: string | string[]): File | File[] | null
+Files.get(id: string | string[]): FileReference | null | FileReferenceMap
 ```
 
 <ArgsTable
@@ -30,12 +32,20 @@ Files.get(id: string | string[]): File | File[] | null
   ]}
 />
 
-### create
+### getAll
 
-Creates a new file reference from a file and dispatches a `files:create` event. Returns the new file reference.
+Retrieves all file references.
 
 ```ts
-Files.create(core: Core, type: string, file: File): FileReference
+Files.getAll(): FileReferenceMap
+```
+
+### create
+
+Creates a new file reference from a file and dispatches a `files:create` event. Returns a promise which resolves to the new file reference.
+
+```ts
+Files.create(core: Core, type: string, file: File): Promise<FileReference>
 ```
 
 <ArgsTable
@@ -51,7 +61,7 @@ Files.create(core: Core, type: string, file: File): FileReference
 
 ### delete
 
-Deletes a file and dispatches a `files:delete` event.
+Deletes a file and its reference and dispatches a `files:delete` event.
 
 ```ts
 Files.delete(core: Core, id: string): void
@@ -71,7 +81,7 @@ Files.delete(core: Core, id: string): void
 
 ### load
 
-Loads files into the store and dispatches a `files:load` event.
+Loads file references into the store and dispatches a `files:load` event.
 
 ```ts
 Files.load(core: Core, files: FileReference[]): void
@@ -88,6 +98,12 @@ Files.load(core: Core, files: FileReference[]): void
     },
   ]}
 />
+
+### clear
+
+Clears file references from the store by dispatching a `files:clear` event.
+
+<ArgsTable core />
 
 ### addEventListener
 
@@ -161,7 +177,13 @@ Files.removeEventListener(core: Core, event: FileEvent, callback: EventListenerC
     {
       name: 'files:load',
       data: 'FileReference[]',
-      description: 'Dispatched when files are loaded into the store.',
+      description:
+        'Dispatched when file references are loaded into the store.',
+    },
+    {
+      name: 'files:clear',
+      description:
+        'Dispatched when file references are cleared from the store.',
     },
   ]}
 />
