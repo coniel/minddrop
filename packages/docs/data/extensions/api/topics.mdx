@@ -94,7 +94,7 @@ useAllTopics(filters?: TopicFilters): TopicMap
 
 ### get
 
-Retrieves topics by ID. If provided a signle ID string, returns the topic. If provided an array of IDs, returns a `TopicMap` of the corresponding topics. Returned topics can be filtered by passing in `TopicFilters`. Filtering is not supported when getting a single topic.
+Retrieves topics by ID. If provided a single ID string, returns the topic. If provided an array of IDs, returns a `TopicMap` of the corresponding topics. Returned topics can be filtered by passing in `TopicFilters`. Filtering is not supported when getting a single topic.
 
 Throws a `TopicNotFoundError` if one or more of the requested topics does not exist.
 

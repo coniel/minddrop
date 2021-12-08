@@ -17,7 +17,7 @@ export interface TagsApi {
   /**
    * Retrieves one or more tags by ID.
    *
-   * If provided a signle ID string, returns the tag.
+   * If provided a single ID string, returns the tag.
    *
    * If provided an array of IDs, returns a `[id]: Tag` map of the corresponding tags.
    *
@@ -65,7 +65,7 @@ export interface TagsApi {
   delete(core: Core, id: string): void;
 
   /**
-   * Lodas tags into the store by dispatching a `tags:load` event.
+   * Loads tags into the store by dispatching a `tags:load` event.
    *
    * @param core A MindDrop core instance.
    * @param tags The tags to load.

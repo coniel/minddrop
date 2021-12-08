@@ -45,7 +45,7 @@ export interface TopicsApi {
   /**
    * Retrieves one or more topics by ID.
    *
-   * If provided a signle ID string, returns the topic.
+   * If provided a single ID string, returns the topic.
    *
    * If provided an array of IDs, returns a `[id]: Topic` map of the corresponding topics.
    * Topics can be filtered by passing in TopicFilters. Filtering is not supported when getting a single topic.
@@ -183,7 +183,7 @@ export interface TopicsApi {
   insertData(core: Core, topicId: string, data: DataInsert): void;
 
   /**
-   * Lodas topics into the store by dispatching a `topics:load` event.
+   * Loads topics into the store by dispatching a `topics:load` event.
    *
    * @param core A MindDrop core instance.
    * @param topics The topics to load.

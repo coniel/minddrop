@@ -5,7 +5,7 @@ import { Topic, TopicFilters, TopicMap } from '../types';
 /**
  * Retrieves one or more topics by ID.
  *
- * If provided a signle ID string, returns the topic.
+ * If provided a single ID string, returns the topic.
  *
  * If provided an array of IDs, returns a `[id]: Topic` map of the corresponding topics.
  * Topics can be filtered by passing in TopicFilters. Filtering is not supported when getting a single topic.
