@@ -37,7 +37,7 @@ describe('createUpdate', () => {
     const changes = {
       title: 'Updated title',
     };
-    const result = createUpdate(object, changes, true);
+    const result = createUpdate(object, changes, { setUpdatedAt: true });
 
     expect(result.changes).toEqual({ ...changes, updatedAt: new Date() });
     expect(result.after).toEqual({
@@ -46,5 +46,44 @@ describe('createUpdate', () => {
     });
 
     MockDate.reset();
+  });
+
+  it('removes empty fields if specified in removeEmptyFields', () => {
+    const object = {
+      string1: 'string1',
+      string2: 'string2',
+      undef: 'undef',
+      null: null,
+      array1: [1, 2],
+      array2: [1, 2],
+    };
+    const changes = {
+      string1: '',
+      undef: undefined,
+      array1: FieldValue.arrayRemove([1, 2]),
+    };
+    const result = createUpdate(object, changes, {
+      deleteEmptyFields: [
+        'string1',
+        'string2',
+        'undef',
+        'null',
+        'array1',
+        'array2',
+        'missing',
+      ],
+    });
+
+    expect(result.after.string1).not.toBeDefined();
+    expect(result.after.undef).not.toBeDefined();
+    expect(result.after.array1).not.toBeDefined();
+    // Does not remove non-empty fields
+    expect(result.after.string2).toBe('string2');
+    expect(result.after.null).toBe(null);
+    expect(result.after.array2).toEqual([1, 2]);
+
+    expect(result.changes.string1).toEqual(FieldValue.delete());
+    expect(result.changes.undef).toEqual(FieldValue.delete());
+    expect(result.changes.array1).toEqual(FieldValue.delete());
   });
 });
