@@ -1,5 +1,5 @@
 export * from './errors';
-export * from './extension';
+export * from './files-extension';
 export * from './types';
 export * from './useFileReferencesStore';
 export * from './generateFileReference';

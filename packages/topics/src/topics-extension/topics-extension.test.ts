@@ -1,6 +1,6 @@
 import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from './extension';
+import { onDisable, onRun } from './topics-extension';
 import { generateTopic } from '../generateTopic';
 import { useAllTopics } from '../useAllTopics';
 

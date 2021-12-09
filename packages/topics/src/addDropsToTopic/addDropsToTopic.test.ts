@@ -7,7 +7,7 @@ import {
   Drop,
   DropNotFoundError,
 } from '@minddrop/drops';
-import { onRun, onDisable } from '../extension';
+import { onRun, onDisable } from '../topics-extension';
 import { addDropsToTopic } from './addDropsToTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';

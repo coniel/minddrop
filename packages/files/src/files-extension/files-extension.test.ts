@@ -1,6 +1,6 @@
 import { renderHook, act, textFile } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from './extension';
+import { onDisable, onRun } from './files-extension';
 import { generateFileReference } from '../generateFileReference';
 import { useAllFileReferences } from '../useAllFileReferences';
 import { Files } from '../Files';

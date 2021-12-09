@@ -1,5 +1,5 @@
 export * from './errors';
-export * from './extension';
+export * from './tags-extension';
 export * from './types';
 export * from './useTagsStore';
 export * from './generateTag';

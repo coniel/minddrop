@@ -6,7 +6,7 @@ import {
   onDisable as onDisableDrops,
   Drop,
 } from '@minddrop/drops';
-import { onRun, onDisable } from '../extension';
+import { onRun, onDisable } from '../topics-extension';
 import { removeDropsFromTopic } from './removeDropsFromTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';

@@ -1,4 +1,4 @@
-export * from './extension';
+export * from './topics-extension';
 export * from './generateTopic';
 export * from './types';
 export * from './errors';
