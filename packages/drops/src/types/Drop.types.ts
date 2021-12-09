@@ -1,5 +1,9 @@
 import { ContentColor } from '@minddrop/core';
-import { Unset } from '@minddrop/utils';
+import {
+  FieldValueArrayRemove,
+  FieldValueArrayUnion,
+  FieldValueDelete,
+} from '@minddrop/utils';
 
 export interface Drop {
   /**
@@ -26,7 +30,7 @@ export interface Drop {
   /**
    * The IDs of the tags applied to the drop.
    */
-  tags: string[];
+  tags?: string[];
 
   /**
    * The drop's markdown text content.
@@ -66,29 +70,39 @@ export interface Drop {
   deletedAt?: Date;
 }
 
+export interface GenerateDropData extends Partial<Drop> {
+  type: string;
+}
+
 export interface CreateDropData {
   type: string;
   markdown?: string;
-  files?: string[];
   color?: ContentColor;
+  files?: string[];
+  tags?: string[];
 }
 
 export interface UpdateDropData {
   type?: string;
-  markdown?: string | Unset;
-  files?: string[] | Unset;
-  color?: ContentColor | Unset;
+  markdown?: string | FieldValueDelete;
+  color?: ContentColor | FieldValueDelete;
 }
 
 export interface DropChanges {
   updatedAt: Date;
   type?: string;
-  markdown?: string | Unset;
-  tags?: string[];
-  files?: string[] | Unset;
-  color?: ContentColor | Unset;
-  archived?: true | Unset;
-  archivedAt?: Date | Unset;
-  deleted?: true | Unset;
-  deletedAt?: Date | Unset;
+  markdown?: string | FieldValueDelete;
+  tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  files?:
+    | string[]
+    | FieldValueDelete
+    | FieldValueArrayUnion
+    | FieldValueArrayRemove;
+  color?: ContentColor | FieldValueDelete;
+  archived?: true | FieldValueDelete;
+  archivedAt?: Date | FieldValueDelete;
+  deleted?: true | FieldValueDelete;
+  deletedAt?: Date | FieldValueDelete;
 }
+
+export type DropMap = Record<string, Drop>;

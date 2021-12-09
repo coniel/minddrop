@@ -250,6 +250,86 @@ Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
   ]}
 />
 
+### addFiles
+
+Adds files to a drop, dispaches an `drops:add-files` event and a `drops:update` event.
+
+```ts
+Drops.addFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to which to add the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
+### removeFiles
+
+Removes files from a drop and dispatches a `drops:remove-files` event as well as a `drops:update` event.
+
+```ts
+Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop from which to remove the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to remove.',
+    },
+  ]}
+/>
+
+### replaceFiles
+
+Replaces files in a drop (removing current files and adding given files) and dispatches a `drops:replace-files` event as well as a `drops:update` event.
+
+```ts
+Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop for which to replace the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
 ### archive
 
 Archives a drop and dispatches a `drops:archive` event and an `drops:update` event.
@@ -266,26 +346,6 @@ Drops.archive(core: Core, id: string): void
       type: 'string',
       required: true,
       description: 'The ID of the drop to archive.',
-    },
-  ]}
-/>
-
-### unarchive
-
-Unarchives a drop and dispatches a `drops:unarchive` event and an `drops:update` event.
-
-```ts
-Drops.unarchive(core: Core, id: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to unarchive.',
     },
   ]}
 />
@@ -312,7 +372,7 @@ Drops.delete(core: Core, id: string): void
 
 ### restore
 
-Restores a deleted drop and dispatches a `drops:restore` event and an `drops:update` event.
+Restores an archived/deleted drop and dispatches a `drops:restore` event and an `drops:update` event.
 
 ```ts
 Drops.restore(core: Core, id: string): void
@@ -427,11 +487,6 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when a drop is archived.',
     },
     {
-      name: 'drops:unarchive',
-      data: 'Drop',
-      description: 'Dispatched when a drop is unarchived.',
-    },
-    {
       name: 'drops:delete',
       data: 'Drop',
       description: 'Dispatched when a drop is deleted.',
@@ -439,7 +494,8 @@ See below the table for more details on the data passed by drop related events.
     {
       name: 'drops:restore',
       data: 'Drop',
-      description: 'Dispatched when a deleted drop is restored.',
+      description:
+        'Dispatched when an archived/deleted drop is restored.',
     },
     {
       name: 'drops:add-tags',
@@ -447,14 +503,35 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when tags are added to a drop.',
     },
     {
-      name: 'drops:remove',
+      name: 'drops:remove-tags',
       data: 'RemoveTagsEventData',
       description: 'Dispatched when tags are removed from a drop.',
+    },
+    {
+      name: 'drops:add-files',
+      data: 'AddFilesEventData',
+      description: 'Dispatched when files are added to a drop.',
+    },
+    {
+      name: 'drops:remove-files',
+      data: 'RemoveFilesEventData',
+      description: 'Dispatched when files are removed from a drop.',
+    },
+    {
+      name: 'drops:replaced-files',
+      data: 'ReplaceFilesEventData',
+      description:
+        "Dispatched when a drop's files are replaced with new ones.",
     },
     {
       name: 'drops:load',
       data: 'Drop[]',
       description: 'Dispatched when drops are loaded into the store.',
+    },
+    {
+      name: 'drops:clear',
+      description:
+        'Dispatched when drops are cleared from the store.',
     },
   ]}
 />
@@ -580,9 +657,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'tags',
-      type: 'Tag[]',
+      type: 'string[]',
       required: true,
-      description: 'The tags which were added to the drop.',
+      description:
+        'The IDs of the tags which were added to the drop.',
     },
   ]}
 />
@@ -599,9 +677,70 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'tags',
-      type: 'Tag[]',
+      type: 'string[]',
       required: true,
-      description: 'The tags which were removed from the drop.',
+      description:
+        'The IDs of the tags which were removed from the drop.',
+    },
+  ]}
+/>
+
+#### AddFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to which the files were added.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were added to the drop.',
+    },
+  ]}
+/>
+
+#### RemoveFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop from which the files were removed.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were removed from the drop.',
+    },
+  ]}
+/>
+
+#### ReplaceFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop in which the files were replaced.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were added to the drop.',
     },
   ]}
 />

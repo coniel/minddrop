@@ -1,33 +1,37 @@
 import { renderHook, act, MockDate } from '@minddrop/test-utils';
 import { generateDrop } from '../generateDrop';
-import { createDropStore } from './createDropStore';
+import { useDropsStore } from './useDropsStore';
 
-const useDropStore = createDropStore();
-
-describe('useDropStore', () => {
+describe('useDropsStore', () => {
   afterEach(() => {
     MockDate.reset();
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const { result } = renderHook(() => useDropsStore((state) => state));
     act(() => {
       result.current.clear();
     });
   });
 
   it('loads in drops', () => {
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.loadDrops([generateDrop('text'), generateDrop('text')]);
+      result.current.loadDrops([
+        generateDrop({ type: 'text' }),
+        generateDrop({ type: 'text' }),
+      ]);
     });
 
     expect(Object.keys(result.current.drops).length).toBe(2);
   });
 
   it('clears the store', () => {
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.loadDrops([generateDrop('text'), generateDrop('text')]);
+      result.current.loadDrops([
+        generateDrop({ type: 'text' }),
+        generateDrop({ type: 'text' }),
+      ]);
       result.current.clear();
     });
 
@@ -35,18 +39,18 @@ describe('useDropStore', () => {
   });
 
   it('adds a drop', () => {
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.addDrop(generateDrop('text'));
+      result.current.addDrop(generateDrop({ type: 'text' }));
     });
 
     expect(Object.keys(result.current.drops).length).toBe(1);
   });
 
   it('updates a drop', () => {
-    const drop = generateDrop('text');
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const drop = generateDrop({ type: 'text' });
+    const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
       result.current.addDrop(drop);
@@ -57,11 +61,11 @@ describe('useDropStore', () => {
   });
 
   it('removes a drop', () => {
-    const drop = generateDrop('text');
-    const { result } = renderHook(() => useDropStore((state) => state));
+    const drop = generateDrop({ type: 'text' });
+    const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.loadDrops([drop, generateDrop('text')]);
+      result.current.loadDrops([drop, generateDrop({ type: 'text' })]);
       result.current.removeDrop(drop.id);
     });
 
