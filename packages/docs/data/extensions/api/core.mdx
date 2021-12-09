@@ -11,6 +11,18 @@ metaDescription: An interface for interacting with MindDrop's core.
 
 MindDrop has a lean core mainly responsible for managing event listeners and UI extensions. The core is not aware of any resources such a topics and drops, rather, those are built on top of the core.
 
+## Properties
+
+<InterfaceTable
+  data={[
+    {
+      name: 'resourceConnectors',
+      type: 'ResourceConnector[]',
+      description: 'ResourceConnectors for registered resources.',
+    },
+  ]}
+/>
+
 ## Methods
 
 ### addEventListener
@@ -175,6 +187,42 @@ core.removeUiExtension(location: string, element: UiComponentConfig | ReactEleme
   ]}
 />
 
+### registerResource
+
+Registers a new resource type. Fires a `core:register-resource` event.
+
+```ts
+core.registerResource(resource: ResourceConnector);
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resource',
+      type: 'ResourceConnector',
+      description: 'The connector of the resource to register.',
+    },
+  ]}
+/>
+
+### unregisterResource
+
+Unregisters a resource type. All resources of the specified type will be permanently deleted. Fires a `core:unregister-resource` event.
+
+```ts
+core.registerResource(resourceType: string);
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resourceType',
+      type: 'string',
+      description: 'The type of resource to unregister.',
+    },
+  ]}
+/>
+
 ## Core events
 
 Core events are prefixed with the namespace `core`.
@@ -187,6 +235,16 @@ See below the table for more details on the data passed by topic related events.
       name: 'core:open-view',
       data: 'OpenViewEventData',
       description: 'Dispatched when a view is opened.',
+    },
+    {
+      name: 'core:register-resource',
+      data: 'ResourceConnector',
+      description: 'Dispatched when a new resource is registered.',
+    },
+    {
+      name: 'core:unregister-resource',
+      data: 'string',
+      description: 'Dispatched when a resource is unregistered.',
     },
   ]}
 />

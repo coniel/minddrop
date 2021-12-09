@@ -9,7 +9,9 @@ let eventListeners: EventListener[] = [];
  * @returns A core API instance.
  */
 export function initializeCore(extensionId: string): Core {
-  return {
+  const core: Core = {
+    resourceConnectors: [],
+
     addEventListener: (type, callback) =>
       eventListeners.push({ source: extensionId, type, callback }),
 
@@ -36,5 +38,27 @@ export function initializeCore(extensionId: string): Core {
         .forEach((listener) =>
           listener.callback({ source: extensionId, type, data }),
         ),
+
+    registerResource: (connector) => {
+      core.resourceConnectors.push(connector);
+      core.dispatch('core:register-resource', connector);
+    },
+
+    unregisterResource: (type) => {
+      const connector = core.resourceConnectors.find(
+        (connector) => connector.type === type,
+      );
+
+      if (!connector) {
+        return;
+      }
+
+      core.resourceConnectors = core.resourceConnectors.filter(
+        (c) => c.type !== type,
+      );
+      core.dispatch('core:unregister-resource', connector);
+    },
   };
+
+  return core;
 }

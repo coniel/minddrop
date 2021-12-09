@@ -1,3 +1,4 @@
+import { ResourceConnector } from '../types';
 import { initializeCore } from './initializeCore';
 
 describe('initializeCore', () => {
@@ -6,7 +7,7 @@ describe('initializeCore', () => {
     const callback2 = jest.fn();
     const callback3 = jest.fn();
     const data = { foo: 'foo' };
-    const core = initializeCore('app');
+    const core = initializeCore('core');
 
     // Add event listeners
     core.addEventListener('test', callback1);
@@ -18,7 +19,7 @@ describe('initializeCore', () => {
 
     expect(callback1).toHaveBeenCalledWith({
       data,
-      source: 'app',
+      source: 'core',
       type: 'test',
     });
     expect(callback2).toHaveBeenCalled();
@@ -45,5 +46,37 @@ describe('initializeCore', () => {
 
     expect(callback1).not.toHaveBeenCalled();
     expect(callback3).not.toHaveBeenCalled();
+  });
+
+  it('manages resource connectors', () => {
+    const core = initializeCore('core');
+    const registerCallback = jest.fn();
+    const unregisterCallback = jest.fn();
+    const connector: ResourceConnector = {
+      type: 'test',
+    };
+
+    // Adds resource connectors and dispatches 'core:register-resource'
+    core.addEventListener('core:register-resource', registerCallback);
+    core.registerResource(connector);
+
+    expect(core.resourceConnectors.length).toBe(1);
+    expect(core.resourceConnectors[0]).toBe(connector);
+    expect(registerCallback).toHaveBeenCalled();
+    expect(registerCallback.mock.calls[0][0].data).toEqual(connector);
+
+    // Removes resource connectors and dispatches 'core:unregister-resource'
+    core.addEventListener('core:unregister-resource', unregisterCallback);
+    core.unregisterResource('test');
+
+    expect(core.resourceConnectors.length).toBe(0);
+    expect(unregisterCallback).toHaveBeenCalled();
+    expect(unregisterCallback.mock.calls[0][0].data).toEqual(connector);
+
+    // Ignores unregistering non-existant resources
+    unregisterCallback.mockClear();
+    core.unregisterResource('invalid');
+
+    expect(unregisterCallback).not.toHaveBeenCalled();
   });
 });

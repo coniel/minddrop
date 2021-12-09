@@ -5,3 +5,5 @@ export * from './DataInsert.types';
 export * from './EventListener.types';
 export * from './ExtensionApi.types';
 export * from './FileReference.types';
+export * from './ResourceChange.types';
+export * from './ResourceConnector.types';

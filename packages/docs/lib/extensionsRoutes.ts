@@ -102,6 +102,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/file-reference',
       },
       {
+        title: 'ResourceConnector',
+        slug: 'docs/extensions/types/resource-connector',
+      },
+      {
         title: 'Slot',
         slug: 'docs/extensions/types/slot',
       },
