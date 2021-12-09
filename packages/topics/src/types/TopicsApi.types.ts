@@ -47,7 +47,7 @@ export interface TopicsApi {
    *
    * If provided a single ID string, returns the topic.
    *
-   * If provided an array of IDs, returns a `[id]: Topic` map of the corresponding topics.
+   * If provided an array of IDs, returns a `{ [id]: Topic }` map of the corresponding topics.
    * Topics can be filtered by passing in TopicFilters. Filtering is not supported when getting a single topic.
    *
    * @param ids An array of topic IDs to retrieve.
@@ -58,31 +58,31 @@ export interface TopicsApi {
   get(topicIds: string[], filters?: TopicFilters): TopicMap;
 
   /**
-   * Retrieves all topics from the topics store as a `[id]: Topic` map.
+   * Retrieves all topics from the topics store as a `{ [id]: Topic }` map.
    * Topics can be filtered by passing in TopicFilters.
    *
    * @param filters Filters to filter to the topics by.
-   * @returns A `[id]: Topic` map.
+   * @returns A `{ [id]: Topic }` map.
    */
   getAll(filters?: TopicFilters): TopicMap;
 
   /**
-   * Returns an `[id]: Topic` map of a given topic's parents. The results
+   * Returns an `{ [id]: Topic }` map of a given topic's parents. The results
    * can be filtered using TopicFilters.
    *
    * @param topicId The ID of the topic for which to retrieve the parents.
-   * @param filters Filters to filter the prants by.
-   * @returns A `[id]: Topic` map of the topic's parents.
+   * @param filters Filters to filter the parents by.
+   * @returns A `{ [id]: Topic }` map of the topic's parents.
    */
   parents(topicId: string, filters?: TopicFilters): TopicMap;
 
   /**
-   * Returns an `[id]: Topic` map of a given drop's parent topics. The results
+   * Returns an `{ [id]: Topic }` map of a given drop's parent topics. The results
    * can be filtered using TopicFilters.
    *
    * @param dropId The ID of the drop for which to retrieve the parent topics.
    * @param filters Filters to filter the parent topics by.
-   * @returns A `[id]: Topic` map of the drop's parent topics.
+   * @returns A `{ [id]: Topic }` map of the drop's parent topics.
    */
   dropParents(dropId: string): TopicMap;
 

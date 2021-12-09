@@ -3,12 +3,12 @@ import { getAllTopics } from '../getAllTopics';
 import { TopicFilters, TopicMap } from '../types';
 
 /**
- * Returns an `[id]: Topic` map of a given drop's parent topics. The results
+ * Returns an `{ [id]: Topic }` map of a given drop's parent topics. The results
  * can be filtered using TopicFilters.
  *
  * @param dropId The ID of the drop for which to retrieve the parent topics.
  * @param filters Filters to filter the parent topics by.
- * @returns A `[id]: Topic` map of the drop's parent topics.
+ * @returns A `{ [id]: Topic }` map of the drop's parent topics.
  */
 export function getDropParents(
   dropId: string,

@@ -7,7 +7,7 @@ import { Topic, TopicFilters, TopicMap } from '../types';
  *
  * If provided a single ID string, returns the topic.
  *
- * If provided an array of IDs, returns a `[id]: Topic` map of the corresponding topics.
+ * If provided an array of IDs, returns a `{ [id]: Topic }` map of the corresponding topics.
  * Topics can be filtered by passing in TopicFilters. Filtering is not supported when getting a single topic.
  *
  * @param ids An array of topic IDs to retrieve.

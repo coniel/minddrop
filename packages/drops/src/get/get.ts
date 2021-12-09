@@ -7,7 +7,7 @@ import { Drop, DropFilters, DropMap } from '../types';
  *
  * If provided a single ID string, returns the drop.
  *
- * If provided an array of IDs, returns a `[id]: Drop` map of the corresponding drops.
+ * If provided an array of IDs, returns a `{ [id]: Drop }` map of the corresponding drops.
  * Drops can be filtered by passing in DropFilters. Filtering is not supported when getting a single drop.
  *
  * @param ids An array of drop IDs to retrieve.

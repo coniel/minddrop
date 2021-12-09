@@ -17,7 +17,7 @@ export interface FilesApi {
    *
    * If provided a single file ID string, returns the its file reference.
    *
-   * If provided an array of file IDs, returns a `[id]: FileReference` map of the corresponding files.
+   * If provided an array of file IDs, returns a `{ [id]: FileReference }` map of the corresponding files.
    *
    * @param ids An array of file IDs to retrieve.
    * @returns The requested file reference(s).
@@ -26,9 +26,9 @@ export interface FilesApi {
   get(fileIds: string[]): FileReferenceMap;
 
   /**
-   * Retrieves all file references from the file references store as a `[id]: FileReference` map.
+   * Retrieves all file references from the file references store as a `{ [id]: FileReference }` map.
    *
-   * @returns A `[id]: FileReference` map.
+   * @returns A `{ [id]: FileReference }` map.
    */
   getAll(): FileReferenceMap;
 

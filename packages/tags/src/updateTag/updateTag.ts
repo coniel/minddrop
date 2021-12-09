@@ -4,8 +4,8 @@ import { getTag } from '../getTag';
 import { Tag, TagChanges } from '../types';
 
 /**
- * Applies data changes to a tag and dispatches a
- * `tags:update` event. Returns the updated tag.
+ * Updates a tag and dispatches a `tags:update` event.
+ * Returns the updated tag.
  *
  * @param core A MindDrop core instance.
  * @param id The ID of the tag to update.

@@ -8,7 +8,7 @@ import { useDropsStore } from '../useDropsStore';
  * By default, only active drops are returned.
  *
  * @param filters Filters to filter to the drops.
- * @returns A `[id]: Drop` map of all drops.
+ * @returns A `{ [id]: Drop }` map of all drops.
  */
 export function useAllDrops(filters?: DropFilters): DropMap {
   const { drops } = useDropsStore();

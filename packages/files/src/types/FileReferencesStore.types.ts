@@ -2,7 +2,7 @@ import { FileReference } from './FileReference.types';
 
 export interface FileReferencesStore {
   /**
-   * The files, stored as a `[fileId]: FileReference` map.
+   * The files, stored as a `{ [fileId]: FileReference }` map.
    */
   files: Record<string, FileReference>;
 

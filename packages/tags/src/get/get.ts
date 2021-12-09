@@ -7,7 +7,7 @@ import { Tag, TagMap } from '../types';
  *
  * If provided a single ID string, returns the tag.
  *
- * If provided an array of IDs, returns a `[id]: Tag` map of the corresponding tags.
+ * If provided an array of IDs, returns a `{ [id]: Tag }` map of the corresponding tags.
  *
  * @param ids An array of tag IDs to retrieve.
  * @returns The requested tag(s).

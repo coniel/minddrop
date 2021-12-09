@@ -2,7 +2,7 @@ import { Drop, UpdateDropData } from './Drop.types';
 
 export interface DropStore {
   /**
-   * The drops, stored as a `[dropId]: Drop` map.
+   * The drops, stored as a `{ [dropId]: Drop }` map.
    */
   drops: Record<string, Drop>;
 

@@ -4,8 +4,8 @@ import { getTopic } from '../getTopic';
 import { Topic, TopicChanges } from '../types';
 
 /**
- * Applies data changes to a topic and dispatches a
- * `topics:update` event. Returns the updated topic.
+ * Updates a topic and dispatches a `topics:update` event.
+ *  Returns the updated topic.
  *
  * @param core A MindDrop core instance.
  * @param id The ID of the topic to update.

@@ -19,7 +19,7 @@ export interface TagsApi {
    *
    * If provided a single ID string, returns the tag.
    *
-   * If provided an array of IDs, returns a `[id]: Tag` map of the corresponding tags.
+   * If provided an array of IDs, returns a `{ [id]: Tag }` map of the corresponding tags.
    *
    * @param ids An array of tag IDs to retrieve.
    * @returns The requested tag(s).
@@ -28,9 +28,9 @@ export interface TagsApi {
   get(tagIds: string[]): TagMap;
 
   /**
-   * Retrieves all tags from the tags store as a `[id]: Tag` map.
+   * Retrieves all tags from the tags store as a `{ [id]: Tag }` map.
    *
-   * @returns A `[id]: Tag` map.
+   * @returns A `{ [id]: Tag }` map.
    */
   getAll(): TagMap;
 

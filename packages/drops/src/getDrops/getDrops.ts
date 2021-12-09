@@ -9,7 +9,7 @@ import { filterDrops } from '../filterDrops';
  *
  * @param ids An array of drop IDs to retrieve.
  * @param filters Filters to filter to the drops by.
- * @returns A `[id]: Drop` map of the requested drops.
+ * @returns A `{ [id]: Drop }` map of the requested drops.
  */
 export function getDrops(ids: string[], filters?: DropFilters): DropMap {
   const { drops } = useDropsStore.getState();

@@ -36,7 +36,7 @@ export interface DropsApi {
    *
    * If provided a single ID string, returns the drop.
    *
-   * If provided an array of IDs, returns a `[id]: Drop` map of the corresponding drops.
+   * If provided an array of IDs, returns a `{ [id]: Drop }` map of the corresponding drops.
    * Drops can be filtered by passing in DropFilters. Filtering is not supported when getting a single drop.
    *
    * @param ids An array of drop IDs to retrieve.
@@ -47,11 +47,11 @@ export interface DropsApi {
   get(dropIds: string[], filters?: DropFilters): DropMap;
 
   /**
-   * Retrieves all drops from the drops store as a `[id]: Drop` map.
+   * Retrieves all drops from the drops store as a `{ [id]: Drop }` map.
    * Drops can be filtered by passing in DropFilters.
    *
    * @param filters Filters to filter to the drops by.
-   * @returns A `[id]: Drop` map.
+   * @returns A `{ [id]: Drop }` map.
    */
   getAll(filters?: DropFilters): DropMap;
 

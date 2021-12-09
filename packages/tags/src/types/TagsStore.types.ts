@@ -2,7 +2,7 @@ import { Tag, UpdateTagData } from './Tag.types';
 
 export interface TagsStore {
   /**
-   * The tags, stored as a `[tagId]: Tag` map.
+   * The tags, stored as a `{ [tagId]: Tag }` map.
    */
   tags: Record<string, Tag>;
 

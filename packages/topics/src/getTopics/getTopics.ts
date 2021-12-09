@@ -9,7 +9,7 @@ import { filterTopics } from '../filterTopics';
  *
  * @param ids An array of topic IDs to retrieve.
  * @param filters Filters to filter to the topics by.
- * @returns A `[id]: Topic` map of the requested topics.
+ * @returns A `{ [id]: Topic }` map of the requested topics.
  */
 export function getTopics(ids: string[], filters?: TopicFilters): TopicMap {
   const { topics } = useTopicsStore.getState();

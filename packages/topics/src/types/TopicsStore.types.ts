@@ -2,7 +2,7 @@ import { Topic, TopicChanges } from './Topic.types';
 
 export interface TopicsStore {
   /**
-   * The topics, stored as a `[topicId]: Topic` map.
+   * The topics, stored as a `{ [topicId]: Topic }` map.
    */
   topics: Record<string, Topic>;
 

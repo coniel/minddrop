@@ -7,7 +7,7 @@ import { FileReference, FileReferenceMap } from '../types';
  *
  * If provided a single file ID string, returns the its file reference.
  *
- * If provided an array of file IDs, returns a `[id]: FileReference` map of the corresponding files.
+ * If provided an array of file IDs, returns a `{ [id]: FileReference }` map of the corresponding files.
  *
  * @param ids An array of file IDs to retrieve.
  * @returns The requested file reference(s).
