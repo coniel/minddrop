@@ -20,7 +20,7 @@ export function removeSubtopics(
 ): Topic {
   // Update the topic
   const updated = updateTopic(core, topicId, {
-    subtopics: FieldValue.arrayRemove(...subtopicIds),
+    subtopics: FieldValue.arrayRemove(subtopicIds),
   });
 
   core.dispatch('topics:remove-subtopics', {

@@ -24,7 +24,7 @@ export function addSubtopics(
 
   // Update the topic
   const updated = updateTopic(core, topicId, {
-    subtopics: FieldValue.arrayUnion(...subtopicIds),
+    subtopics: FieldValue.arrayUnion(subtopicIds),
   });
 
   core.dispatch('topics:add-subtopics', {

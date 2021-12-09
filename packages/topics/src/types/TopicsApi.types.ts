@@ -77,10 +77,14 @@ export interface TopicsApi {
   parents(topicId: string, filters?: TopicFilters): TopicMap;
 
   /**
-   * Retrieves a drop's parent topics, returning an array of topics.
-   * By default, only active topics are returned.
+   * Returns an `[id]: Topic` map of a given drop's parent topics. The results
+   * can be filtered using TopicFilters.
+   *
+   * @param dropId The ID of the drop for which to retrieve the parent topics.
+   * @param filters Filters to filter the parent topics by.
+   * @returns A `[id]: Topic` map of the drop's parent topics.
    */
-  // dropParents(dropId: string): Topic[];
+  dropParents(dropId: string): TopicMap;
 
   /**
    * Creates a new topic and dispatches a `topics:create` event.
@@ -127,13 +131,49 @@ export interface TopicsApi {
    */
   removeSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
 
-  // addDrops(core: Core, topicId: string, dropIds: string[]): void;
+  /**
+   * Adds drops to a topic and dispatches a `topics:add-drops` event
+   * and a `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to which to add the drops.
+   * @param dropIds The IDs of the drops to add to the topic.
+   * @returns The updated topic.
+   */
+  addDrops(core: Core, topicId: string, dropIds: string[]): Topic;
 
-  // removeDrops(core: Core, topicId: string, dropIds: string[]): void;
+  /**
+   * Removes drops from a topic and dispatches a `topics:remove-drops` event
+   * and a `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic from which to remove the drops.
+   * @param dropIds The IDs of the drops to remove.
+   * @returns The updated topic.
+   */
+  removeDrops(core: Core, topicId: string, dropIds: string[]): Topic;
 
-  // addTags(core: Core, topicId: string, tagIds: string[]): void;
+  /**
+   * Adds tags to a topic and dispatches a `topics:add-tags` event
+   * and a `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to which to add the tags.
+   * @param tagIds The IDs of the tags to add to the topic.
+   * @returns The updated topic.
+   */
+  addTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
-  // removeTags(core: Core, topicId: string, tagIds: string[]): void;
+  /**
+   * Removes tags from a topic and dispatches a `topics:remove-tags` event
+   * and a `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic from which to remove the tags.
+   * @param tagIds The IDs of the tags to remove.
+   * @returns The updated topic.
+   */
+  removeTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
   /**
    * Archives a topic and dispatches a `topics:archive`
