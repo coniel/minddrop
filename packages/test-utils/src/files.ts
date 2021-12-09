@@ -1,8 +1,7 @@
 function dataURLtoFile(dataurl: string, filename: string): File {
   const parts = dataurl.split(',');
   const mime = parts[0].match(/:(.*?);/)[1];
-  const buf = Buffer.from('hello world', 'utf8');
-  const bstr = buf.toString('base64');
+  const bstr = atob(parts[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
   while (n--) {

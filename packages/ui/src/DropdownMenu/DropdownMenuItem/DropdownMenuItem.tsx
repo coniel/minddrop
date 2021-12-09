@@ -37,7 +37,6 @@ export const DropdownMenuItem: FC<DropdownMenuItemProps> = ({
         side="right"
         sideOffset={6}
         skipDelayDuration={0}
-        delayDuration={8000}
         title={tooltipTitle}
         description={tooltipDescription}
       >

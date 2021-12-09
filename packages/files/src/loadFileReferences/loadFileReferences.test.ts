@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../files-extension';
 import { loadFileReferences } from './loadFileReferences';
 import { generateFileReference } from '../generateFileReference';
 import { textFile } from '@minddrop/test-utils';

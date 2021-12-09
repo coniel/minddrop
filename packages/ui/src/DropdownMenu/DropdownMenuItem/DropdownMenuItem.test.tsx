@@ -50,7 +50,7 @@ describe('<DropdownMenuItem />', () => {
 
     // Hover over item
     act(() => {
-      fireEvent.mouseOver(screen.getByText('item'));
+      fireEvent.mouseOver(screen.getByRole('menuitem'));
     });
 
     await waitFor(() => screen.getAllByText('Tooltip title'));

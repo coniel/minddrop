@@ -1,6 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../tags-extension';
 import { createTag } from '../createTag';
 import { Tag } from '../types';
 import { deleteTag } from './deleteTag';

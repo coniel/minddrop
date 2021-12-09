@@ -1,6 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { act, textFile } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../files-extension';
 import { createFile } from '../createFile';
 import { FileReference } from '../types';
 import { deleteFile } from './deleteFile';

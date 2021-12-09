@@ -7,7 +7,7 @@ import {
   Tag,
   TagNotFoundError,
 } from '@minddrop/tags';
-import { onRun, onDisable } from '../extension';
+import { onRun, onDisable } from '../topics-extension';
 import { addTagsToTopic } from './addTagsToTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';

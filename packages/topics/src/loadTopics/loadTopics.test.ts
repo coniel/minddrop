@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../topics-extension';
 import { loadTopics } from './loadTopics';
 import { generateTopic } from '../generateTopic';
 

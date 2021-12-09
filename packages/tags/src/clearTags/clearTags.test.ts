@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../tags-extension';
 import { clearTags } from './clearTags';
 
 let core = initializeCore('tags');

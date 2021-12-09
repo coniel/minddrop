@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../files-extension';
 import { clearFileReferences } from './clearFiles';
 
 let core = initializeCore('files');

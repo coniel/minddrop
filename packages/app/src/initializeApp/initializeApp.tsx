@@ -10,7 +10,7 @@ interface InitializeAppConig {
 }
 
 export function initializeApp({ componentMap }: InitializeAppConig): AppCore {
-  const core = initializeCore();
+  const core = initializeCore('app');
   const app: AppCore = {
     ...core,
     Slot: (props) => <Slot {...props} components={componentMap} />,

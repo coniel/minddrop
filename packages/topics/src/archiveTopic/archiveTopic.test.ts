@@ -1,6 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../extension';
+import { onDisable, onRun } from '../topics-extension';
 import { createTopic } from '../createTopic';
 import { Topic } from '../types';
 import { archiveTopic } from './archiveTopic';

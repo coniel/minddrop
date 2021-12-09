@@ -6,7 +6,7 @@ import {
   onDisable as onDisableTags,
   Tag,
 } from '@minddrop/tags';
-import { onRun, onDisable } from '../extension';
+import { onRun, onDisable } from '../topics-extension';
 import { removeTagsFromTopic } from './removeTagsFromTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';
