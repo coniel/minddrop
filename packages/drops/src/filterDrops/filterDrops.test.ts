@@ -54,4 +54,26 @@ describe('filterDrops', () => {
     expect(Object.keys(result).length).toBe(1);
     expect(result[deletedDrop.id]).toBeDefined();
   });
+
+  it('filters drops by type', () => {
+    const imageDrop = generateDrop({ type: 'image' });
+    const imageDropDeleted = generateDrop({
+      type: 'image',
+      deleted: true,
+      deletedAt: new Date(),
+    });
+    const result = filterDrops(
+      {
+        ...drops,
+        [imageDrop.id]: imageDrop,
+        [imageDropDeleted.id]: imageDropDeleted,
+      },
+      {
+        type: ['image'],
+      },
+    );
+
+    expect(Object.keys(result).length).toBe(1);
+    expect(result[imageDrop.id]).toBeDefined();
+  });
 });

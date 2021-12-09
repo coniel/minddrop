@@ -19,9 +19,4 @@ export interface DropFilters {
    * Include deleted drops.
    */
   deleted?: boolean;
-
-  /**
-   * Include hidden drops.
-   */
-  hidden?: boolean;
 }

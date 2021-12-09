@@ -11,12 +11,18 @@ import { DropMap, DropFilters } from '../types';
  * @returns The filtere drops.
  */
 export function filterDrops(drops: DropMap, filters: DropFilters): DropMap {
-  // Active drops are included if `active = true` or no filters are set.
+  // Active drops are included if `active = true` or if `archived`
+  // and `deleted` filters are not set.
   const includeActive =
-    filters.active === true || Object.keys(filters).length === 0;
+    filters.active !== false &&
+    (filters.active === true ||
+      (filters.archived !== true && filters.deleted !== true));
 
   return Object.values(drops)
     .filter((drop) => {
+      if (filters.type && !filters.type.includes(drop.type)) {
+        return false;
+      }
       if (includeActive && !drop.archived && !drop.deleted) {
         return true;
       }
