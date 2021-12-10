@@ -1,6 +1,7 @@
-import { EventListener, Core } from '../types';
+import { EventListener, Core, ResourceConnector } from '../types';
 
 let eventListeners: EventListener[] = [];
+let resourceConnectors: ResourceConnector[] = [];
 
 /**
  * Creates an extension specific core API instance.
@@ -10,8 +11,6 @@ let eventListeners: EventListener[] = [];
  */
 export function initializeCore(extensionId: string): Core {
   const core: Core = {
-    resourceConnectors: [],
-
     addEventListener: (type, callback) =>
       eventListeners.push({ source: extensionId, type, callback }),
 
@@ -26,11 +25,29 @@ export function initializeCore(extensionId: string): Core {
       );
     },
 
+    removeEventListeners: (type) => {
+      eventListeners = eventListeners.filter(
+        (listener) =>
+          !(listener.source === extensionId && listener.type === type),
+      );
+    },
+
     removeAllEventListeners: () => {
       eventListeners = eventListeners.filter(
         (listener) => listener.source !== extensionId,
       );
     },
+
+    hasEventListener: (type, callback) =>
+      !!eventListeners.find(
+        (listener) => listener.type === type && listener.callback === callback,
+      ),
+
+    hasEventListeners: (type) =>
+      !!eventListeners.find((listener) => listener.type === type),
+
+    eventListenerCount: (type) =>
+      eventListeners.filter((listener) => listener.type === type).length,
 
     dispatch: (type, data) =>
       eventListeners
@@ -40,12 +57,12 @@ export function initializeCore(extensionId: string): Core {
         ),
 
     registerResource: (connector) => {
-      core.resourceConnectors.push(connector);
+      resourceConnectors.push(connector);
       core.dispatch('core:register-resource', connector);
     },
 
     unregisterResource: (type) => {
-      const connector = core.resourceConnectors.find(
+      const connector = resourceConnectors.find(
         (connector) => connector.type === type,
       );
 
@@ -53,11 +70,14 @@ export function initializeCore(extensionId: string): Core {
         return;
       }
 
-      core.resourceConnectors = core.resourceConnectors.filter(
-        (c) => c.type !== type,
-      );
+      resourceConnectors = resourceConnectors.filter((c) => c.type !== type);
       core.dispatch('core:unregister-resource', connector);
     },
+
+    isResourceRegistered: (type) =>
+      !!resourceConnectors.find((connector) => connector.type === type),
+
+    getResourceConnectors: () => resourceConnectors,
   };
 
   return core;

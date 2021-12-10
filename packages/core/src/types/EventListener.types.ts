@@ -15,7 +15,7 @@ export interface EventListenerPayload<T, D = undefined> {
   data?: D;
 }
 
-export type EventListenerCallback<T, D = undefined> = (
+export type EventListenerCallback<T extends string, D = undefined> = (
   payload: EventListenerPayload<T, D>,
 ) => void;
 

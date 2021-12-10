@@ -3,19 +3,14 @@ import { ResourceConnector } from './ResourceConnector.types';
 
 export interface Core {
   /**
-   * ResourceCOnnectors for registered resources.
-   */
-  resourceConnectors: ResourceConnector[];
-
-  /**
    * Adds an event listener for the specified event.
    *
    * @param type The event type to listen to.
    * @param callback The callback fired when an even occurs.
    */
-  addEventListener(
-    type: string,
-    callback: EventListenerCallback<string, any>,
+  addEventListener<T extends string = string, D = any>(
+    type: T,
+    callback: EventListenerCallback<T, D>,
   ): void;
 
   /**
@@ -30,9 +25,47 @@ export interface Core {
   ): void;
 
   /**
+   * Removes all of the source's event listeners
+   * for a given event type.
+   *
+   * @param type The event listener type to remove.
+   */
+  removeEventListeners(type: string): void;
+
+  /**
    * Removes all of the source's event listeners.
    */
   removeAllEventListeners(): void;
+
+  /**
+   * Checks whether a specified event listener exists.
+   *
+   * @param type The event type.
+   * @param callback The event listener callback.
+   * @returns `true` if the specified event listener is present, otherwise `false`.
+   */
+  hasEventListener(
+    type: string,
+    callback: EventListenerCallback<string, any>,
+  ): boolean;
+
+  /**
+   * Checks whether any event listeners exist for a
+   * specified event type.
+   *
+   * @param type The event type.
+   * @returns `true` if there are any event listeners of the specified type, otherwise `false`.
+   */
+  hasEventListeners(type: string): boolean;
+
+  /**
+   * Returns the number of event listeners for a
+   * specified event type.
+   *
+   * @param type The type of event listener for which to get the count.
+   * @returns The number of event listener of the specified type/
+   */
+  eventListenerCount(type: string): number;
 
   /**
    * Dispatches an event.
@@ -58,4 +91,19 @@ export interface Core {
    * @param resourceType The type of resource to unregister.
    */
   unregisterResource(resourceType: string): void;
+
+  /**
+   * Checks whether a specified resource is registrerd.
+   *
+   * @param type The resource type.
+   * @returns `true` if the resource is registered, otherwise `false`.
+   */
+  isResourceRegistered(type: string): boolean;
+
+  /**
+   * Fetches all resource connectors.
+   *
+   * @returns All resource connectors.
+   */
+  getResourceConnectors(): ResourceConnector[];
 }

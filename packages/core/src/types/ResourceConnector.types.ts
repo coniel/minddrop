@@ -1,6 +1,3 @@
-import { Core } from './Core.types';
-import { ResourceChange } from './ResourceChange.types';
-
 export interface ResourceConnector {
   /**
    * A unique identifier for the type of the resource
@@ -16,7 +13,7 @@ export interface ResourceConnector {
    * @param core A MindDrop core instance.
    * @param resources The loaded resources.
    */
-  onLoad?<R>(core: Core, resources: R[]): void;
+  onLoad?<R>(resources: R[]): void;
 
   /**
    * A callback fired whenever a resource matching the
@@ -26,11 +23,7 @@ export interface ResourceConnector {
    * @param change The change object.
    * @param deleted If `true`, the resource was permanently deleted.
    */
-  onChange?<R, C>(
-    core: Core,
-    change: ResourceChange<R, C>,
-    deleted: boolean,
-  ): void;
+  onChange?<R>(change: R, deleted: boolean): void;
 
   /**
    * If provided, an event listener will be added for this

@@ -82,13 +82,95 @@ core.removeEventListener(type: string, callback: EventListenerCallback): void
   ]}
 />
 
+### removeEventListeners
+
+Removes all event listeners of a specified type that were added by the extension.
+
+```ts
+core.removeEventListeners(type: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+  ]}
+/>
+
 ### removeAllEventListeners
 
-Removes all event listeners added by the extension.
+Removes all event listeners that were added by the extension.
 
 ```ts
 core.removeAllEventListeners(): void
 ```
+
+### hasEventListener
+
+Checks whether a specified event listener exists.
+
+```ts
+core.hasEventListener(type: string, callback: EventListenerCallback): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback fired when the event occurs.',
+    },
+  ]}
+/>
+
+### hasEventListeners
+
+Checks whether any event listeners exist for a specified event type.
+
+```ts
+core.hasEventListener(type: string): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+  ]}
+/>
+
+### eventListenerCount
+
+Returns the number of event listeners for a specified event type.
+
+```ts
+core.eventListenerCount(type: string): number
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+  ]}
+/>
 
 ### openView
 
@@ -192,7 +274,7 @@ core.removeUiExtension(location: string, element: UiComponentConfig | ReactEleme
 Registers a new resource type. Fires a `core:register-resource` event.
 
 ```ts
-core.registerResource(resource: ResourceConnector);
+core.registerResource(resource: ResourceConnector): void
 ```
 
 <ArgsTable
@@ -210,7 +292,7 @@ core.registerResource(resource: ResourceConnector);
 Unregisters a resource type. All resources of the specified type will be permanently deleted. Fires a `core:unregister-resource` event.
 
 ```ts
-core.registerResource(resourceType: string);
+core.registerResource(resourceType: string): void
 ```
 
 <ArgsTable
@@ -219,6 +301,32 @@ core.registerResource(resourceType: string);
       name: 'resourceType',
       type: 'string',
       description: 'The type of resource to unregister.',
+    },
+  ]}
+/>
+
+### getResourceConnectors
+
+Returns all registered resource connectors as an array.
+
+```ts
+core.getResourceConnectors(resourceType: string): ResourceConnector[]
+```
+
+### isResourceRegistered
+
+Checks whether a specified resource is registrerd.
+
+```ts
+core.isResourceRegistered(resourceType: string): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resourceType',
+      type: 'string',
+      description: 'The type of resource.',
     },
   ]}
 />
