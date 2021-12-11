@@ -1,10 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './App.css';
 import '@minddrop/theme';
 import { initializeI18n } from '@minddrop/i18n';
+import { initializeFileStorage } from './renderer-init';
+import './App.css';
 
 initializeI18n();
+initializeFileStorage();
 
 const App: React.FC = () => {
   return <div />;

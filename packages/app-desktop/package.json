@@ -93,6 +93,7 @@
   },
   "dependencies": {
     "@minddrop/core": "^0.2.0",
+    "@minddrop/files": "0.1.0",
     "@minddrop/i18n": "^0.2.0",
     "@minddrop/icons": "^0.2.0",
     "@minddrop/theme": "^0.2.0",
