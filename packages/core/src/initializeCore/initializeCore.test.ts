@@ -75,6 +75,18 @@ describe('initializeCore', () => {
     expect(callback3).toHaveBeenCalled();
   });
 
+  it('calls * event for all event types', () => {
+    const callback = jest.fn();
+    const core = initializeCore('core');
+
+    core.addEventListener('*', callback);
+
+    core.dispatch('test');
+    core.dispatch('test-2');
+
+    expect(callback).toBeCalledTimes(2);
+  });
+
   it('manages resource connectors', () => {
     const core = initializeCore('core');
     const registerCallback = jest.fn();

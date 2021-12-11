@@ -29,6 +29,8 @@ MindDrop has a lean core mainly responsible for managing event listeners and UI 
 
 Adds an event listener for a given event, firing the callback each time the event occurs. Allows extensions to react to events occuring throughout the app.
 
+You can use `'*'` as the event type to listen to all events.
+
 ```ts
 core.addEventListener(type: string, callback: EventListenerCallback): void
 ```

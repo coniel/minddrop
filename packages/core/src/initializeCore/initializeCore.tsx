@@ -51,7 +51,7 @@ export function initializeCore(extensionId: string): Core {
 
     dispatch: (type, data) =>
       eventListeners
-        .filter((listener) => listener.type === type)
+        .filter((listener) => listener.type === type || listener.type === '*')
         .forEach((listener) =>
           listener.callback({ source: extensionId, type, data }),
         ),
