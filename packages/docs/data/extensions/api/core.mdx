@@ -273,8 +273,10 @@ core.removeUiExtension(location: string, element: UiComponentConfig | ReactEleme
 
 Registers a new resource type. Fires a `core:register-resource` event.
 
+You can pass in the resource interface for better type support.
+
 ```ts
-core.registerResource(resource: ResourceConnector): void
+core.registerResource<Resource>(resource: ResourceConnector<Resource>): void
 ```
 
 <ArgsTable
@@ -292,7 +294,7 @@ core.registerResource(resource: ResourceConnector): void
 Unregisters a resource type. All resources of the specified type will be permanently deleted. Fires a `core:unregister-resource` event.
 
 ```ts
-core.registerResource(resourceType: string): void
+core.unregisterResource(resourceType: string): void
 ```
 
 <ArgsTable
