@@ -6,8 +6,8 @@ import { DBApi } from '../types';
 export function initializePouchDB(db: ResourceDB): DBApi {
   return {
     getAllDocs: () => getAllDocs(db),
-    add: async (type, doc) => {
-      await db.put(serializeResouceDocument(doc, type));
+    add: (type, doc) => {
+      db.put(serializeResouceDocument(doc, type));
     },
     update: async (id, changes) => {
       const item = await db.get(id);
