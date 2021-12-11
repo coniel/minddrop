@@ -87,7 +87,7 @@ MindDrop's core is responsible for retrieving and managing persistent resources.
 A callback fired once when the resources are loaded on app startup.
 
 ```ts
-onLoad<Resource>(core: Core, resources: Resouce[]): void;
+onLoad(core: Core, resources: Resouce[]): void;
 ```
 
 <ArgsTable
@@ -108,7 +108,7 @@ onLoad<Resource>(core: Core, resources: Resouce[]): void;
 A callback fired whenever a resource matching the given type is added, updated, or deleted.
 
 ```ts
-onChange<Resource>(core: Core, resource: Resouce, deleted: boolean): void;
+onChange(core: Core, resource: Resouce, deleted: boolean): void;
 ```
 
 <ArgsTable

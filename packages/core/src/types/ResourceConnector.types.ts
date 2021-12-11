@@ -1,4 +1,4 @@
-export interface ResourceConnector {
+export interface ResourceConnector<R = {}> {
   /**
    * A unique identifier for the type of the resource
    * composed using the extension ID and resource type:
@@ -13,7 +13,7 @@ export interface ResourceConnector {
    * @param core A MindDrop core instance.
    * @param resources The loaded resources.
    */
-  onLoad?<R>(resources: R[]): void;
+  onLoad?(resources: R[]): void;
 
   /**
    * A callback fired whenever a resource matching the
@@ -23,7 +23,7 @@ export interface ResourceConnector {
    * @param change The change object.
    * @param deleted If `true`, the resource was permanently deleted.
    */
-  onChange?<R>(change: R, deleted: boolean): void;
+  onChange?(change: R, deleted: boolean): void;
 
   /**
    * If provided, an event listener will be added for this

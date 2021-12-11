@@ -81,7 +81,7 @@ export interface Core {
    *
    * @param connector The connector of the resource to register.
    */
-  registerResource(connector: ResourceConnector): void;
+  registerResource<R>(connector: ResourceConnector<R>): void;
 
   /**
    * Unregisters a resource type. All resources of the specified
