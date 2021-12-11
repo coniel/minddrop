@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import { Core, initializeCore, ResourceConnector } from '@minddrop/core';
 import PouchDB from 'pouchdb';
+import { initializePouchDB } from '../initializePouchDB';
 import { deserializeResourceDocument } from '../deserializeResourceDocument';
-import { serializeResouceDocument } from '../serializeResouceDocument';
-import { DBResourceDocument } from '../types';
+import { DBResourceDocument, DBApi } from '../types';
 import { initializeResourceConnectors } from './initializeResourceConnectors';
 
 const item1 = {
@@ -24,10 +24,10 @@ const newItem = {
   id: 'item-4',
   markdown: 'New',
 };
-const serializedNewItem = serializeResouceDocument(newItem, 'items:item');
 
 describe('initializeResourceConnectors', () => {
-  let db: PouchDB.Database;
+  let db: PouchDB.Database<DBResourceDocument>;
+  let dbApi: DBApi;
   let core: Core;
   const onLoad = jest.fn();
   const onChange = jest.fn();
@@ -41,7 +41,8 @@ describe('initializeResourceConnectors', () => {
   };
 
   beforeEach(async () => {
-    db = new PouchDB('test');
+    db = new PouchDB<DBResourceDocument>('initializeResourceConnectors');
+    dbApi = initializePouchDB(db);
     core = initializeCore('pouchdb');
     await Promise.all([db.put(item1), db.put(item2), db.put(item3)]);
   });
@@ -56,7 +57,7 @@ describe('initializeResourceConnectors', () => {
 
   it('loads resources', async () => {
     core.registerResource(connector);
-    await initializeResourceConnectors(core, db);
+    await initializeResourceConnectors(core, dbApi);
     const item1Dirty = await db.get<DBResourceDocument>(item1._id);
     const item2Dirty = await db.get<DBResourceDocument>(item2._id);
     const item1Cleaned = deserializeResourceDocument(item1Dirty);
@@ -64,83 +65,6 @@ describe('initializeResourceConnectors', () => {
 
     expect(onLoad).toHaveBeenCalled();
     expect(onLoad.mock.calls[0][0]).toEqual([item1Cleaned, item2Cleaned]);
-  });
-
-  describe('onChange', () => {
-    it('is called when a document is added', (done) => {
-      async function onChange(doc, deleted) {
-        const itemDirty = await db.get<DBResourceDocument>('item-4');
-        const itemCleaned = deserializeResourceDocument(itemDirty);
-
-        expect(doc).toEqual(itemCleaned);
-        expect(deleted).toBe(false);
-        done();
-      }
-
-      async function run() {
-        core.registerResource({
-          ...connector,
-          onChange,
-        });
-        await initializeResourceConnectors(core, db);
-        await db.put(serializedNewItem);
-      }
-
-      run();
-    });
-
-    it('is called when a document is updated', (done) => {
-      async function onChange(doc, deleted) {
-        const itemDirty = await db.get<DBResourceDocument>('item-1');
-        const itemCleaned = deserializeResourceDocument(itemDirty);
-
-        expect(doc).toEqual(itemCleaned);
-        expect(deleted).toBe(false);
-        done();
-      }
-
-      async function run() {
-        core.registerResource({
-          ...connector,
-          onChange,
-        });
-        await initializeResourceConnectors(core, db);
-        const item = await db.get<DBResourceDocument>('item-1');
-        await db.put({
-          ...item,
-          markdown: 'Updated',
-        });
-      }
-
-      run();
-    });
-
-    it('is called when a document is deleted', (done) => {
-      async function onChange(doc, deleted) {
-        const itemCleaned = deserializeResourceDocument(
-          item1 as unknown as DBResourceDocument,
-        );
-
-        expect(doc).toEqual(itemCleaned);
-        expect(deleted).toBe(true);
-        done();
-      }
-
-      async function run() {
-        core.registerResource({
-          ...connector,
-          onChange,
-        });
-        await initializeResourceConnectors(core, db);
-        const item = await db.get<DBResourceDocument>('item-1');
-        await db.put({
-          ...item,
-          _deleted: true,
-        });
-      }
-
-      run();
-    });
   });
 
   it('reacts to createEvent', (done) => {
@@ -155,7 +79,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, db);
+      await initializeResourceConnectors(core, dbApi);
 
       core.dispatch(connector.createEvent, newItem);
     }
@@ -176,7 +100,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, db);
+      await initializeResourceConnectors(core, dbApi);
       const item = deserializeResourceDocument(item1);
       core.dispatch(connector.updateEvent, {
         before: item,
@@ -204,7 +128,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, db);
+      await initializeResourceConnectors(core, dbApi);
       core.dispatch(connector.deleteEvent, deserializeResourceDocument(item1));
     }
 
@@ -213,7 +137,7 @@ describe('initializeResourceConnectors', () => {
 
   describe('resource registered after init', () => {
     it('loads resources', async () => {
-      await initializeResourceConnectors(core, db);
+      await initializeResourceConnectors(core, dbApi);
       core.registerResource(connector);
       const item1Dirty = await db.get<DBResourceDocument>(item1._id);
       const item2Dirty = await db.get<DBResourceDocument>(item2._id);
@@ -223,84 +147,6 @@ describe('initializeResourceConnectors', () => {
       expect(onLoad).toHaveBeenCalled();
       expect(onLoad.mock.calls[0][0]).toEqual([item1Cleaned, item2Cleaned]);
     });
-
-    describe('onChange', () => {
-      it('is called when a document is added', (done) => {
-        async function onChange(doc, deleted) {
-          const itemDirty = await db.get<DBResourceDocument>('item-4');
-          const itemCleaned = deserializeResourceDocument(itemDirty);
-
-          expect(doc).toEqual(itemCleaned);
-          expect(deleted).toBe(false);
-          done();
-        }
-
-        async function run() {
-          await initializeResourceConnectors(core, db);
-          core.registerResource({
-            ...connector,
-            onChange,
-          });
-          await db.put(serializedNewItem);
-        }
-
-        run();
-      });
-
-      it('is called when a document is updated', (done) => {
-        async function onChange(doc, deleted) {
-          const itemDirty = await db.get<DBResourceDocument>('item-1');
-          const itemCleaned = deserializeResourceDocument(itemDirty);
-
-          expect(doc).toEqual(itemCleaned);
-          expect(deleted).toBe(false);
-          done();
-        }
-
-        async function run() {
-          await initializeResourceConnectors(core, db);
-          core.registerResource({
-            ...connector,
-            onChange,
-          });
-          const item = await db.get<DBResourceDocument>('item-1');
-          await db.put({
-            ...item,
-            markdown: 'Updated',
-          });
-        }
-
-        run();
-      });
-
-      it('is called when a document is deleted', (done) => {
-        async function onChange(doc, deleted) {
-          const itemCleaned = deserializeResourceDocument(
-            item1 as unknown as DBResourceDocument,
-          );
-
-          expect(doc).toEqual(itemCleaned);
-          expect(deleted).toBe(true);
-          done();
-        }
-
-        async function run() {
-          await initializeResourceConnectors(core, db);
-          core.registerResource({
-            ...connector,
-            onChange,
-          });
-          const item = await db.get<DBResourceDocument>('item-1');
-          await db.put({
-            ...item,
-            _deleted: true,
-          });
-        }
-
-        run();
-      });
-    });
-
     it('reacts to createEvent', (done) => {
       function handleChange(change) {
         expect(change.doc._id).toBe(newItem.id);
@@ -312,7 +158,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, db);
+        await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
         core.dispatch(connector.createEvent, newItem);
       }
@@ -332,7 +178,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, db);
+        await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
         const item = deserializeResourceDocument(item1);
         core.dispatch(connector.updateEvent, {
@@ -360,7 +206,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, db);
+        await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
         core.dispatch(
           connector.deleteEvent,
@@ -373,36 +219,9 @@ describe('initializeResourceConnectors', () => {
   });
 
   describe('resources unregistered after init', () => {
-    it('no longer reacts to changes', (done) => {
-      let changes = 0;
-      async function onChange() {
-        changes += 1;
-        if (changes === 3) {
-          expect(connector.onChange).not.toHaveBeenCalled();
-          done();
-        }
-      }
-
-      db.changes({ since: 'now', live: true }).on('change', onChange);
-
-      async function run() {
-        core.registerResource(connector);
-        await initializeResourceConnectors(core, db);
-        core.unregisterResource('items:item');
-
-        await db.put(serializedNewItem);
-        let item = await db.get(newItem.id);
-        await db.put({ ...item, markdown: 'Updated' });
-        item = await db.get(newItem.id);
-        await db.put({ ...item, _deleted: true });
-      }
-
-      run();
-    });
-
     it('no longer reacts to createEvent, updateEvent, and deleteEvent', async () => {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, db);
+      await initializeResourceConnectors(core, dbApi);
       core.unregisterResource('items:item');
 
       expect(core.hasEventListeners(connector.createEvent)).toBe(false);
