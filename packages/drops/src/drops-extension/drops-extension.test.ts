@@ -88,6 +88,51 @@ describe('drops extension', () => {
 
       expect(result.current[drop.id]).not.toBeDefined();
     });
+
+    describe('drops resource registration', () => {
+      it('loads drops', () => {
+        const { result } = renderHook(() => useAllDrops());
+        const drop = generateDrop({ type: 'text' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([drop]);
+        });
+
+        expect(result.current[drop.id]).toBeDefined();
+      });
+
+      it('handles added/updated drops', () => {
+        const { result } = renderHook(() => useAllDrops());
+        const drop = generateDrop({ type: 'text' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onChange(drop, false);
+        });
+
+        expect(result.current[drop.id]).toBeDefined();
+      });
+
+      it('handles deleted drops', () => {
+        const { result } = renderHook(() => useAllDrops());
+        const drop = generateDrop({ type: 'text' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([drop]);
+          connector.onChange(drop, true);
+        });
+
+        expect(result.current[drop.id]).not.toBeDefined();
+      });
+    });
   });
 
   describe('onDisable', () => {
