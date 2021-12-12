@@ -93,6 +93,51 @@ describe('topics extension', () => {
 
       expect(result.current[topic.id]).not.toBeDefined();
     });
+
+    describe('topics resource registration', () => {
+      it('loads topics', () => {
+        const { result } = renderHook(() => useAllTopics());
+        const topic = generateTopic();
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([topic]);
+        });
+
+        expect(result.current[topic.id]).toBeDefined();
+      });
+
+      it('handles added/updated topics', () => {
+        const { result } = renderHook(() => useAllTopics());
+        const topic = generateTopic();
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onChange(topic, false);
+        });
+
+        expect(result.current[topic.id]).toBeDefined();
+      });
+
+      it('handles deleted topics', () => {
+        const { result } = renderHook(() => useAllTopics());
+        const topic = generateTopic();
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([topic]);
+          connector.onChange(topic, true);
+        });
+
+        expect(result.current[topic.id]).not.toBeDefined();
+      });
+    });
   });
 
   describe('onDisable', () => {

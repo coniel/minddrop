@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Topics } from '../Topics';
+import { Topic } from '../types';
 import { useTopicsStore } from '../useTopicsStore';
 
 export function onRun(core: Core) {
@@ -31,6 +32,23 @@ export function onRun(core: Core) {
   Topics.addEventListener(core, 'topics:delete-permanently', (payload) =>
     useTopicsStore.getState().removeTopic(payload.data.id),
   );
+
+  // Register the topics:topic resource
+  core.registerResource<Topic>({
+    type: 'topics:topic',
+    createEvent: 'topics:create',
+    updateEvent: 'topics:update',
+    deleteEvent: 'topics:delete-permanently',
+    onLoad: (topics) => useTopicsStore.getState().loadTopics(topics),
+    onChange: (topic, deleted) => {
+      const store = useTopicsStore.getState();
+      if (deleted) {
+        store.removeTopic(topic.id);
+      } else {
+        store.loadTopics([topic]);
+      }
+    },
+  });
 }
 
 export function onDisable(core: Core) {
