@@ -75,6 +75,51 @@ describe('files extension', () => {
 
       expect(result.current[ref.id]).not.toBeDefined();
     });
+
+    describe('filleReferences resource registration', () => {
+      it('loads filleReferences', async () => {
+        const { result } = renderHook(() => useAllFileReferences());
+        const filleReference = await generateFileReference(textFile);
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([filleReference]);
+        });
+
+        expect(result.current[filleReference.id]).toBeDefined();
+      });
+
+      it('handles added/updated filleReferences', async () => {
+        const { result } = renderHook(() => useAllFileReferences());
+        const filleReference = await generateFileReference(textFile);
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onChange(filleReference, false);
+        });
+
+        expect(result.current[filleReference.id]).toBeDefined();
+      });
+
+      it('handles deleted filleReferences', async () => {
+        const { result } = renderHook(() => useAllFileReferences());
+        const filleReference = await generateFileReference(textFile);
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([filleReference]);
+          connector.onChange(filleReference, true);
+        });
+
+        expect(result.current[filleReference.id]).not.toBeDefined();
+      });
+    });
   });
 
   describe('onDisable', () => {
