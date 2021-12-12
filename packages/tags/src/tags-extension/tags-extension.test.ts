@@ -93,6 +93,51 @@ describe('tags extension', () => {
 
       expect(result.current[tag.id]).not.toBeDefined();
     });
+
+    describe('tags resource registration', () => {
+      it('loads tags', () => {
+        const { result } = renderHook(() => useAllTags());
+        const tag = generateTag({ label: 'Tag' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([tag]);
+        });
+
+        expect(result.current[tag.id]).toBeDefined();
+      });
+
+      it('handles added/updated tags', () => {
+        const { result } = renderHook(() => useAllTags());
+        const tag = generateTag({ label: 'Tag' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onChange(tag, false);
+        });
+
+        expect(result.current[tag.id]).toBeDefined();
+      });
+
+      it('handles deleted tags', () => {
+        const { result } = renderHook(() => useAllTags());
+        const tag = generateTag({ label: 'Tag' });
+
+        onRun(core);
+
+        act(() => {
+          const [connector] = core.getResourceConnectors();
+          connector.onLoad([tag]);
+          connector.onChange(tag, true);
+        });
+
+        expect(result.current[tag.id]).not.toBeDefined();
+      });
+    });
   });
 
   describe('onDisable', () => {

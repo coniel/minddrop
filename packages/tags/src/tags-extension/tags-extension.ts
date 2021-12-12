@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Tags } from '../Tags';
+import { Tag } from '../types';
 import { useTagsStore } from '../useTagsStore';
 
 export function onRun(core: Core) {
@@ -27,6 +28,23 @@ export function onRun(core: Core) {
   Tags.addEventListener(core, 'tags:delete', (payload) =>
     useTagsStore.getState().removeTag(payload.data.id),
   );
+
+  // Register the tags:tag resource
+  core.registerResource<Tag>({
+    type: 'tags:tag',
+    createEvent: 'tags:create',
+    updateEvent: 'tags:update',
+    deleteEvent: 'tags:delete',
+    onLoad: (tags) => useTagsStore.getState().loadTags(tags),
+    onChange: (tag, deleted) => {
+      const store = useTagsStore.getState();
+      if (deleted) {
+        store.removeTag(tag.id);
+      } else {
+        store.loadTags([tag]);
+      }
+    },
+  });
 }
 
 export function onDisable(core: Core) {
