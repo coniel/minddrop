@@ -1,4 +1,4 @@
-import { MockDate } from '@minddrop/test-utils';
+import MockDate from 'mockdate';
 import { FieldValue } from '../FieldValue';
 import { createUpdate } from './createUpdate';
 
