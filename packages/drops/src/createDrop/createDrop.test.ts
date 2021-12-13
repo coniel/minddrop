@@ -1,42 +1,25 @@
-import { act, textFile } from '@minddrop/test-utils';
+import { act, textFile, renderHook } from '@minddrop/test-utils';
 import {
   Files,
-  onRun as onRunFiles,
-  onDisable as onDisableFiles,
   FileReference,
   FileReferenceNotFoundError,
 } from '@minddrop/files';
-import {
-  Tags,
-  onRun as onRunTags,
-  onDisable as onDisableTags,
-  Tag,
-  TagNotFoundError,
-} from '@minddrop/tags';
+import { Tags, Tag, TagNotFoundError } from '@minddrop/tags';
 import { initializeCore } from '@minddrop/core';
 import { createDrop } from './createDrop';
 import { Drop } from '../types';
-import { onDisable, onRun } from '../drops-extension';
+import { useAllDrops } from '../useAllDrops';
+import { clearDrops } from '../clearDrops';
 
 let core = initializeCore('drops');
-
-// Run files extension
-onRunFiles(core);
-// Run tags extension
-onRunTags(core);
-// Run drops extension
-onRun(core);
 
 describe('createDrop', () => {
   afterEach(() => {
     core = initializeCore('drops');
     act(() => {
-      onDisableFiles(core);
-      onDisableTags(core);
-      onDisable(core);
-      onRunFiles(core);
-      onRunTags(core);
-      onRun(core);
+      clearDrops(core);
+      Files.clear(core);
+      Tags.clear(core);
     });
   });
 
@@ -89,17 +72,29 @@ describe('createDrop', () => {
     ).toThrowError(TagNotFoundError);
   });
 
-  it("dispatches a 'drops:create' event", () => {
-    const callback = jest.fn();
+  it('adds the drop to the store', () => {
+    const { result } = renderHook(() => useAllDrops());
+    let drop: Drop;
+
+    act(() => {
+      drop = createDrop(core, { type: 'text' });
+    });
+
+    expect(result.current[drop.id]).toEqual(drop);
+  });
+
+  it("dispatches a 'drops:create' event", (done) => {
+    let drop: Drop;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(drop);
+      done();
+    }
 
     core.addEventListener('drops:create', callback);
 
-    const drop = createDrop(core, { type: 'text' });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:create',
-      data: drop,
+    act(() => {
+      drop = createDrop(core, { type: 'text' });
     });
   });
 });

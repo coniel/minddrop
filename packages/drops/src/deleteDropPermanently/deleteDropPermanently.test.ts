@@ -1,38 +1,45 @@
+import { act, renderHook } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../drops-extension';
 import { deleteDropPermanently } from './deleteDropPermanently';
-import { generateDrop } from '../generateDrop';
-import { loadDrops } from '../loadDrops';
+import { clearDrops } from '../clearDrops';
+import { Drop } from '../types';
+import { createDrop } from '../createDrop';
+import { useAllDrops } from '../useAllDrops';
 
 let core = initializeCore('drops');
 
-// Set up extension
-onRun(core);
-
 describe('deleteDrop', () => {
   afterEach(() => {
-    // Reset extension
     act(() => {
-      onDisable(core);
+      clearDrops(core);
     });
     core = initializeCore('drops');
-    onRun(core);
+  });
+
+  it("reacts to 'drops:delete-permanently' events by removing the drop from the store", () => {
+    const { result } = renderHook(() => useAllDrops());
+    let drop: Drop;
+
+    act(() => {
+      drop = createDrop(core, { type: 'text' });
+      deleteDropPermanently(core, drop.id);
+    });
+
+    expect(result.current[drop.id]).not.toBeDefined();
   });
 
   it("dispatches a 'drops:delete-permanently' event", () => {
-    const callback = jest.fn();
-    const drop = generateDrop({ type: 'text' });
+    let drop: Drop;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(drop);
+    }
 
     core.addEventListener('drops:delete-permanently', callback);
 
     act(() => {
-      loadDrops(core, [drop]);
+      drop = createDrop(core, { type: 'text' });
+      deleteDropPermanently(core, drop.id);
     });
-
-    deleteDropPermanently(core, drop.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(drop);
   });
 });

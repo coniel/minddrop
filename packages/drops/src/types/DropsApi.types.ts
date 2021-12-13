@@ -178,7 +178,7 @@ export interface DropsApi {
   replaceFiles(core: Core, dropId: string, fileIds: string[]): Drop;
 
   /**
-   * Loads drops into the store by dispatching a `drops:load` event.
+   * Loads drops into the store and dispatches a `drops:load` event.
    *
    * @param core A MindDrop core instance.
    * @param drops The drops to load.
@@ -186,7 +186,7 @@ export interface DropsApi {
   load(core: Core, drops: Drop[]): void;
 
   /**
-   * Clears drops from the store by dispatching a `drops:clear` event.
+   * Clears drops from the store and dispatches a `drops:clear` event.
    *
    * @param core A MindDrop core instance.
    */

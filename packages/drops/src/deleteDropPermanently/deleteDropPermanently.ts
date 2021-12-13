@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { getDrop } from '../getDrop';
+import { useDropsStore } from '../useDropsStore';
 
 /**
  * Permanently deletes a drop and dispatches a
@@ -10,6 +11,9 @@ import { getDrop } from '../getDrop';
  */
 export function deleteDropPermanently(core: Core, dropId: string): void {
   const drop = getDrop(dropId);
+
+  // Remove drop from store
+  useDropsStore.getState().removeDrop(drop.id);
 
   // Dispatch 'drops:delete-permanently' event
   core.dispatch('drops:delete-permanently', drop);

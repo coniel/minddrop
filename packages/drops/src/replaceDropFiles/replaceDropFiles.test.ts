@@ -58,29 +58,31 @@ describe('replaceDropFiles', () => {
     ).toThrowError(FileReferenceNotFoundError);
   });
 
-  it("dispatches a 'drops:replace-files' event", async () => {
-    const callback = jest.fn();
+  it("dispatches a 'drops:replace-files' event", (done) => {
     let drop: Drop;
     let fileRef1: FileReference;
     let fileRef2: FileReference;
 
-    core.addEventListener('drops:replace-files', callback);
-
-    await act(async () => {
-      fileRef1 = await Files.create(core, textFile);
-      fileRef2 = await Files.create(core, textFile);
-      drop = createDrop(core, { type: 'text', files: [fileRef1.id] });
-      drop = replaceDropFiles(core, drop.id, [fileRef2.id]);
-    });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:replace-files',
-      data: {
+    function callback(payload) {
+      expect(payload.data).toEqual({
         drop,
         removedFiles: { [fileRef1.id]: fileRef1 },
         addedFiles: { [fileRef2.id]: fileRef2 },
-      },
-    });
+      });
+      done();
+    }
+
+    core.addEventListener('drops:replace-files', callback);
+
+    async function run() {
+      await act(async () => {
+        fileRef1 = await Files.create(core, textFile);
+        fileRef2 = await Files.create(core, textFile);
+        drop = createDrop(core, { type: 'text', files: [fileRef1.id] });
+        drop = replaceDropFiles(core, drop.id, [fileRef2.id]);
+      });
+    }
+
+    run();
   });
 });

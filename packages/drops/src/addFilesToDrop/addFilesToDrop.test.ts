@@ -2,31 +2,22 @@ import { act, textFile } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
 import {
   Files,
-  onRun as onRunFiles,
-  onDisable as onDisableFiles,
   FileReference,
   FileReferenceNotFoundError,
 } from '@minddrop/files';
-import { onRun, onDisable } from '../drops-extension';
 import { addFilesToDrop } from './addFilesToDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
+import { clearDrops } from '../clearDrops';
 
 let core = initializeCore('drops');
-
-// Run files extension
-onRunFiles(core);
-// Run drops extension
-onRun(core);
 
 describe('addFilesToDrop', () => {
   afterEach(() => {
     core = initializeCore('drops');
     act(() => {
-      onDisableFiles(core);
-      onDisable(core);
-      onRunFiles(core);
-      onRun(core);
+      Files.clear(core);
+      clearDrops(core);
     });
   });
 
@@ -51,28 +42,31 @@ describe('addFilesToDrop', () => {
     await act(async () => {
       drop = createDrop(core, { type: 'text' });
     });
+
     expect(() =>
       addFilesToDrop(core, drop.id, ['missing-file-id']),
     ).toThrowError(FileReferenceNotFoundError);
   });
 
-  it("dispatches a 'drops:add-files' event", async () => {
-    const callback = jest.fn();
+  it("dispatches a 'drops:add-files' event", (done) => {
     let drop: Drop;
     let fileRef: FileReference;
 
+    function callback(payload) {
+      expect(payload.data).toEqual({ drop, files: { [fileRef.id]: fileRef } });
+      done();
+    }
+
+    async function run() {
+      await act(async () => {
+        fileRef = await Files.create(core, textFile);
+        drop = createDrop(core, { type: 'text', files: [fileRef.id] });
+        drop = addFilesToDrop(core, drop.id, [fileRef.id]);
+      });
+    }
+
     core.addEventListener('drops:add-files', callback);
 
-    await act(async () => {
-      fileRef = await Files.create(core, textFile);
-      drop = createDrop(core, { type: 'text', files: [fileRef.id] });
-      drop = addFilesToDrop(core, drop.id, [fileRef.id]);
-    });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:add-files',
-      data: { drop, files: { [fileRef.id]: fileRef } },
-    });
+    run();
   });
 });

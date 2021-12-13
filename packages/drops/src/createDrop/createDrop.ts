@@ -3,6 +3,7 @@ import { Files } from '@minddrop/files';
 import { Tags } from '@minddrop/tags';
 import { generateDrop } from '../generateDrop';
 import { CreateDropData, Drop } from '../types';
+import { useDropsStore } from '../useDropsStore';
 
 /**
  * Creates a new drop and dispatches a `drops:create` event.
@@ -14,6 +15,7 @@ import { CreateDropData, Drop } from '../types';
  */
 export function createDrop(core: Core, data: CreateDropData): Drop {
   const drop = generateDrop(data);
+
   // Ensure that attached files exist.
   if (data.files) {
     Files.get(data.files);
@@ -23,6 +25,10 @@ export function createDrop(core: Core, data: CreateDropData): Drop {
     Tags.get(data.tags);
   }
 
+  // Add the drop to the store
+  useDropsStore.getState().setDrop(drop);
+
+  // Dispatch 'drops:create' event
   core.dispatch('drops:create', drop);
 
   return drop;

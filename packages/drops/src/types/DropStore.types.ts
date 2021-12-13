@@ -1,4 +1,4 @@
-import { Drop, UpdateDropData } from './Drop.types';
+import { Drop } from './Drop.types';
 
 export interface DropStore {
   /**
@@ -19,19 +19,11 @@ export interface DropStore {
   clear(): void;
 
   /**
-   * Adds a drop to the store.
+   * Sets a drop to the store.
    *
    * @param drop The drop to add.
    */
-  addDrop(drop: Drop): void;
-
-  /**
-   * Updates a drop in the store.
-   *
-   * @param id The ID of the drop to update.
-   * @param data The data to set on the drop.
-   */
-  updateDrop(id: string, data: UpdateDropData): void;
+  setDrop(drop: Drop): void;
 
   /**
    * Removes a drop from the store.
