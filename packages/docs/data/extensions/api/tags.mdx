@@ -162,7 +162,7 @@ Tags.load(core: Core, tags: Tag[]): void
 
 ### addEventListener
 
-Adds tag specific event listeners. Equivalent to calling `addEventListener` directly on `app`, but provides more advanced type definitions.
+Adds tag specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Tags.addEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void
@@ -190,7 +190,7 @@ Tags.addEventListener(core: Core, event: TagEvent, callback: EventListenerCallba
 
 ### removeEventListener
 
-Removes tag specific event listeners. Equivalent to calling `removeEventListener` directly on `app`, but provides more advanced type definitions.
+Removes tag specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void

@@ -592,7 +592,7 @@ Topics.clear(core: Core): void
 
 ### addEventListener
 
-Adds topic specific event listeners. Equivalent to calling `addEventListener` directly on `app`, but provides more advanced type definitions.
+Adds topic specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Topics.addEventListener(core: Core, event: TopicEvent, callback: EventListenerCallback): void
@@ -620,7 +620,7 @@ Topics.addEventListener(core: Core, event: TopicEvent, callback: EventListenerCa
 
 ### removeEventListener
 
-Removes topic specific event listeners. Equivalent to calling `removeEventListener` directly on `app`, but provides more advanced type definitions.
+Removes topic specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Topics.removeEventListener(core: Core, event: TopicEvent, callback: EventListenerCallback): void

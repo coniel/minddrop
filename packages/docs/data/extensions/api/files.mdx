@@ -107,7 +107,7 @@ Clears file references from the store by dispatching a `files:clear` event.
 
 ### addEventListener
 
-Adds file specific event listeners. Equivalent to calling `addEventListener` directly on `app`, but provides more advanced type definitions.
+Adds file specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Files.addEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
@@ -135,7 +135,7 @@ Files.addEventListener(core: Core, event: FileEvent, callback: EventListenerCall
 
 ### removeEventListener
 
-Removes file specific event listeners. Equivalent to calling `removeEventListener` directly on `app`, but provides more advanced type definitions.
+Removes file specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
 
 ```ts
 Files.removeEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
