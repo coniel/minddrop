@@ -1,6 +1,6 @@
 {
   "name": "@minddrop/test-utils",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@minddrop/i18n": "^0.2.0",
-    "@minddrop/icons": "^0.2.0",
+    "@minddrop/icons": "^0.3.0",
     "mockdate": "^3.0.5"
   },
   "devDependencies": {
