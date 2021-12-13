@@ -27,26 +27,36 @@ export function initializeCore(extensionId: string): Core {
       );
     },
 
-    removeEventListeners: (type) => {
-      eventListeners = eventListeners.filter(
-        (listener) =>
-          !(listener.source === extensionId && listener.type === type),
-      );
-    },
+    removeAllEventListeners: (type) => {
+      eventListeners = eventListeners.filter((listener) => {
+        let keep = listener.source !== extensionId;
 
-    removeAllEventListeners: () => {
-      eventListeners = eventListeners.filter(
-        (listener) => listener.source !== extensionId,
-      );
+        if (type && !keep) {
+          keep = listener.type !== type;
+        }
+
+        return keep;
+      });
     },
 
     hasEventListener: (type, callback) =>
       !!eventListeners.find(
-        (listener) => listener.type === type && listener.callback === callback,
+        (listener) =>
+          listener.source === extensionId &&
+          listener.type === type &&
+          listener.callback === callback,
       ),
 
     hasEventListeners: (type) =>
-      !!eventListeners.find((listener) => listener.type === type),
+      !!eventListeners.find((listener) => {
+        let has = listener.source === extensionId;
+
+        if (type && has) {
+          has = listener.type === type;
+        }
+
+        return has;
+      }),
 
     eventListenerCount: (type) =>
       eventListeners.filter((listener) => listener.type === type).length,
@@ -54,9 +64,13 @@ export function initializeCore(extensionId: string): Core {
     dispatch: (type, data) =>
       eventListeners
         .filter((listener) => listener.type === type || listener.type === '*')
-        .forEach((listener) =>
-          listener.callback({ source: extensionId, type, data }),
-        ),
+        .forEach((listener) => {
+          // We use setTimeout to run the function in a non-blocking way
+          setTimeout(
+            () => listener.callback({ source: extensionId, type, data }),
+            0,
+          );
+        }),
 
     registerResource: (connector) => {
       resourceConnectors.push(connector);

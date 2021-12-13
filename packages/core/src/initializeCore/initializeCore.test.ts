@@ -1,122 +1,176 @@
 import { ResourceConnector } from '../types';
 import { initializeCore } from './initializeCore';
 
+const core = initializeCore('app');
+const core2 = initializeCore('topics');
+
 describe('initializeCore', () => {
-  it('manages event listeners', () => {
-    const callback1 = jest.fn();
+  afterEach(() => {
+    core.removeAllEventListeners();
+    core2.removeAllEventListeners();
+  });
+
+  it('adds event listeners', () => {
+    const callback = jest.fn();
+
+    core.addEventListener('test', callback);
+
+    expect(core.hasEventListener('test', callback)).toBe(true);
+  });
+
+  it('dispatches events', (done) => {
+    const data = 'foo';
+
+    function callback(payload) {
+      expect(payload.type).toBe('test');
+      expect(payload.source).toBe('app');
+      expect(payload.data).toBe(data);
+      done();
+    }
+
+    core.addEventListener('test', callback);
+
+    core.dispatch('test', data);
+  });
+
+  it('removes a specified event listener', () => {
+    const callback = jest.fn();
     const callback2 = jest.fn();
-    const callback3 = jest.fn();
-    const data = { foo: 'foo' };
-    const core = initializeCore('core');
-    const core2 = initializeCore('core-2');
 
-    // Add event listeners
-    core.addEventListener('test', callback1);
+    core.addEventListener('test', callback);
+    core.addEventListener('test-2', callback);
     core.addEventListener('test', callback2);
-    core.addEventListener('test-2', callback3);
 
-    // Check that event listener exists
-    expect(core.eventListenerCount('test')).toBe(2);
-    expect(core.hasEventListener('test', callback1)).toBe(true);
-    expect(core.hasEventListeners('test')).toBe(true);
+    core.removeEventListener('test', callback);
 
-    // Dispatch 'test' event
-    core.dispatch('test', data);
+    expect(core.hasEventListener('test', callback)).toBe(false);
+    expect(core.hasEventListener('test', callback2)).toBe(true);
+    expect(core.hasEventListener('test-2', callback)).toBe(true);
+  });
 
-    expect(callback1).toHaveBeenCalledWith({
-      data,
-      source: 'core',
-      type: 'test',
-    });
-    expect(callback2).toHaveBeenCalled();
-    expect(callback3).not.toHaveBeenCalled();
-    callback1.mockClear();
-    callback2.mockClear();
+  it('removes all event listeners of a given type', () => {
+    const callback = jest.fn();
+    const callback2 = jest.fn();
 
-    // Remove a single 'test' event listener
-    core.removeEventListener('test', callback2);
+    core.addEventListener('test', callback);
+    core.addEventListener('test-2', callback);
+    core.addEventListener('test', callback2);
 
-    // Check that event listener was removed
+    core.removeAllEventListeners('test');
+
+    expect(core.hasEventListener('test', callback)).toBe(false);
     expect(core.hasEventListener('test', callback2)).toBe(false);
+    expect(core.hasEventListener('test-2', callback)).toBe(true);
+  });
 
-    // Dispatch 'test' event
-    core.dispatch('test', data);
+  it("removes all of a source's event listeners", () => {
+    const callback = jest.fn();
+    const callback2 = jest.fn();
 
-    expect(callback1).toHaveBeenCalled();
-    expect(callback2).not.toHaveBeenCalled();
-    callback1.mockClear();
+    core.addEventListener('test', callback);
+    core.addEventListener('test-2', callback);
+    core.addEventListener('test', callback2);
+    core2.addEventListener('test', callback2);
 
     core.removeAllEventListeners();
 
-    // Dispatch 'test' event
-    core.dispatch('test', data);
-    // Dispatch 'test-2' event
-    core.dispatch('test-2', data);
-
-    expect(callback1).not.toHaveBeenCalled();
-    expect(callback3).not.toHaveBeenCalled();
-
-    // Add event listeners
-    callback1.mockClear();
-    callback2.mockClear();
-    callback3.mockClear();
-    core.addEventListener('test', callback1);
-    core.addEventListener('test', callback2);
-    core2.addEventListener('test', callback3);
-
-    // Remove all 'test' event listeners for core-1
-    core.removeEventListeners('test');
-
-    // Dispatch 'test' event
-    core.dispatch('test', data);
-
-    expect(callback1).not.toHaveBeenCalled();
-    expect(callback2).not.toHaveBeenCalled();
-    expect(callback3).toHaveBeenCalled();
+    expect(core.hasEventListener('test', callback)).toBe(false);
+    expect(core.hasEventListener('test', callback2)).toBe(false);
+    expect(core.hasEventListener('test-2', callback)).toBe(false);
+    expect(core2.hasEventListener('test', callback2)).toBe(true);
   });
 
-  it('calls * event for all event types', () => {
+  it('checks for a specific event listener', () => {
     const callback = jest.fn();
-    const core = initializeCore('core');
+
+    core.addEventListener('test', callback);
+
+    expect(core.hasEventListener('test', callback)).toBe(true);
+    expect(core2.hasEventListener('test', callback)).toBe(false);
+  });
+
+  it("checks for a source's event listeners of a specific type", () => {
+    const callback = jest.fn();
+
+    core.addEventListener('test', callback);
+
+    expect(core.hasEventListeners('test')).toBe(true);
+    expect(core.hasEventListeners('test-2')).toBe(false);
+
+    core.removeEventListener('test', callback);
+    core2.addEventListener('test', callback);
+
+    expect(core.hasEventListeners('test')).toBe(false);
+  });
+
+  it('checks for any event listeners added by a source', () => {
+    const callback = jest.fn();
+
+    core.addEventListener('test', callback);
+    core.addEventListener('test-2', callback);
+
+    expect(core.hasEventListeners()).toBe(true);
+    expect(core2.hasEventListeners()).toBe(false);
+  });
+
+  it('calls * event for all event types', (done) => {
+    let calls = 0;
+
+    function callback() {
+      calls += 1;
+      if (calls === 2) {
+        done();
+      }
+    }
 
     core.addEventListener('*', callback);
 
     core.dispatch('test');
     core.dispatch('test-2');
-
-    expect(callback).toBeCalledTimes(2);
   });
 
-  it('manages resource connectors', () => {
-    const core = initializeCore('core');
-    const registerCallback = jest.fn();
-    const unregisterCallback = jest.fn();
+  it('adds and removes resource connectors', () => {
     const connector: ResourceConnector = {
       type: 'test',
     };
 
-    // Adds resource connectors and dispatches 'core:register-resource'
-    core.addEventListener('core:register-resource', registerCallback);
     core.registerResource(connector);
 
-    expect(core.isResourceRegistered('test')).toBe(true);
     expect(core.getResourceConnectors().length).toBe(1);
-    expect(core.getResourceConnectors()[0]).toBe(connector);
-    expect(registerCallback).toHaveBeenCalled();
-    expect(registerCallback.mock.calls[0][0].data).toEqual(connector);
 
-    // Removes resource connectors and dispatches 'core:unregister-resource'
-    core.addEventListener('core:unregister-resource', unregisterCallback);
     core.unregisterResource('test');
 
     expect(core.getResourceConnectors().length).toBe(0);
-    expect(unregisterCallback).toHaveBeenCalled();
-    expect(unregisterCallback.mock.calls[0][0].data).toEqual(connector);
+  });
 
-    // Ignores unregistering non-existant resources
-    unregisterCallback.mockClear();
-    core.unregisterResource('invalid');
+  it("dispatches a 'core:register-resource' event", (done) => {
+    const connector: ResourceConnector = {
+      type: 'test',
+    };
 
-    expect(unregisterCallback).not.toHaveBeenCalled();
+    function callback(payload) {
+      expect(payload.data).toBe(connector);
+      done();
+    }
+
+    core.addEventListener('core:register-resource', callback);
+
+    core.registerResource(connector);
+  });
+
+  it("dispatches a 'core:unregister-resource' event", (done) => {
+    const connector: ResourceConnector = {
+      type: 'test',
+    };
+
+    function callback(payload) {
+      expect(payload.data).toEqual(connector);
+      done();
+    }
+
+    core.addEventListener('core:unregister-resource', callback);
+
+    core.registerResource(connector);
+    core.unregisterResource(connector.type);
   });
 });
