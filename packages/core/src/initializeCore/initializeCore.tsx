@@ -11,6 +11,8 @@ let resourceConnectors: ResourceConnector[] = [];
  */
 export function initializeCore(extensionId: string): Core {
   const core: Core = {
+    initializedFor: extensionId,
+
     addEventListener: (type, callback) =>
       eventListeners.push({ source: extensionId, type, callback }),
 

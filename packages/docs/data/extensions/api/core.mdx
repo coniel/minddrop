@@ -9,21 +9,46 @@ metaDescription: An interface for interacting with MindDrop's core.
   An interface for interacting with MindDrop's core.
 </Description>
 
-MindDrop has a lean core mainly responsible for managing event listeners and UI extensions. The core is not aware of any resources such a topics and drops, rather, those are built on top of the core.
+MindDrop has a lean core mainly responsible for managing event listeners and resource connectors.
 
 ## Properties
 
 <InterfaceTable
   data={[
     {
-      name: 'resourceConnectors',
-      type: 'ResourceConnector[]',
-      description: 'ResourceConnectors for registered resources.',
+      name: 'initializedFor',
+      type: 'string',
+      description:
+        'The ID of the extension for which the core instance was initialized.',
     },
   ]}
 />
 
 ## Methods
+
+### dispatch
+
+Dispatches an event. Any matching event listeners will be fired.
+
+```ts
+core.dispatch(type: string, data: any): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'data',
+      type: 'any',
+      description: 'The event data.',
+    },
+  ]}
+/>
 
 ### addEventListener
 
@@ -141,7 +166,7 @@ core.hasEventListener(type: string, callback: EventListenerCallback): boolean
 Checks whether any event listeners exist for a specified event type.
 
 ```ts
-core.hasEventListener(type: string): boolean
+core.hasEventListeners(type: string): boolean
 ```
 
 <ArgsTable
@@ -174,108 +199,11 @@ core.eventListenerCount(type: string): number
   ]}
 />
 
-### openView
-
-Opens a view in the app.
-
-```ts
-core.openView(view: string, options?: ViewConfig): void
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'view',
-      type: 'string',
-      required: true,
-      description: 'The ID of the view to open.',
-    },
-    {
-      name: 'options',
-      type: 'ViewConfig',
-      description: (
-        <span>
-          The view configuration, including breadcrumbs and resource.
-          See the{' '}
-          <a href="/docs/extensions/types/view-config">ViewConfig</a>{' '}
-          page for more details.
-        </span>
-      ),
-    },
-  ]}
-/>
-
-### addUiExtension
-
-Adds a UI extension at a given location.
-
-```ts
-core.addUiExtension(location: UiLocation | string, element: UiComponentConfig | ReactElement): void
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'location',
-      type: 'UiLocation | string',
-      required: true,
-      description: (
-        <span>
-          The location at which to extend the UI. See the{' '}
-          <a href="">UiLocation</a> page for available locations.
-          Extensions can also provide their own UI extension locations
-          using the <a href="">Slot</a> component.
-        </span>
-      ),
-    },
-    {
-      name: 'element',
-      type: 'UiComponentConfig | ReactElement',
-      required: true,
-      description: (
-        <span>
-          The UI element to render. Either a{' '}
-          <a href="/docs/extensions/types/ui-component-config">
-            UiComponentConfig
-          </a>{' '}
-          object or a React element.
-        </span>
-      ),
-    },
-  ]}
-/>
-
-### removeUiExtension
-
-Removes a UI extension from a given location.
-
-```ts
-core.removeUiExtension(location: string, element: UiComponentConfig | ReactElement): void
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'location',
-      type: 'UiLocation | string',
-      required: true,
-      description:
-        'The location from which to remove the UI extension.',
-    },
-    {
-      name: 'element',
-      type: 'UiComponentConfig | ReactElement',
-      required: true,
-      description: 'The UI element to remove.',
-    },
-  ]}
-/>
-
 ### registerResource
 
 Registers a new resource type. Fires a `core:register-resource` event.
 
-You can pass in the resource interface for better type support.
+You can pass in the resource's Typescript interface for better type support.
 
 ```ts
 core.registerResource<Resource>(resource: ResourceConnector<Resource>): void
@@ -339,15 +267,8 @@ core.isResourceRegistered(resourceType: string): boolean
 
 Core events are prefixed with the namespace `core`.
 
-See below the table for more details on the data passed by topic related events.
-
 <EventsTable
   data={[
-    {
-      name: 'core:open-view',
-      data: 'OpenViewEventData',
-      description: 'Dispatched when a view is opened.',
-    },
     {
       name: 'core:register-resource',
       data: 'ResourceConnector',
@@ -357,26 +278,6 @@ See below the table for more details on the data passed by topic related events.
       name: 'core:unregister-resource',
       data: 'string',
       description: 'Dispatched when a resource is unregistered.',
-    },
-  ]}
-/>
-
-### Core event data types
-
-#### OpenViewEventData
-
-<InterfaceTable
-  data={[
-    {
-      name: 'view',
-      type: 'string',
-      required: true,
-      description: 'The ID of the view which was opened.',
-    },
-    {
-      name: 'options',
-      type: 'ViewConfig',
-      description: 'The view options.',
     },
   ]}
 />
