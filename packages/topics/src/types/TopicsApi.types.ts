@@ -223,7 +223,7 @@ export interface TopicsApi {
   insertData(core: Core, topicId: string, data: DataInsert): void;
 
   /**
-   * Loads topics into the store by dispatching a `topics:load` event.
+   * Loads topics into the store and dispatches a `topics:load` event.
    *
    * @param core A MindDrop core instance.
    * @param topics The topics to load.
@@ -231,7 +231,7 @@ export interface TopicsApi {
   load(core: Core, topics: Topic[]): void;
 
   /**
-   * Clears topics from the store by dispatching a `topics:clear` event.
+   * Clears topics from the store and dispatches a `topics:clear` event.
    *
    * @param core A MindDrop core instance.
    */

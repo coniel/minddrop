@@ -3,7 +3,7 @@ import { Topic } from '../types';
 import { useTopicsStore } from '../useTopicsStore';
 
 /**
- * Loads topics into the store by dispatching a `topics:load` event.
+ * Loads topics into the store and dispatches a `topics:load` event.
  *
  * @param core A MindDrop core instance.
  * @param topics The topics to load.

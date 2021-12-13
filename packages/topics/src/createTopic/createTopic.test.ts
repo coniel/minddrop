@@ -31,7 +31,7 @@ describe('createTopic', () => {
       topic = createTopic(core, { title: 'My topic' });
     });
 
-    expect(result.current[topic.id]).toBeDefined();
+    expect(result.current[topic.id]).toEqual(topic);
   });
 
   it("dispatches a 'topics:create' event", (done) => {

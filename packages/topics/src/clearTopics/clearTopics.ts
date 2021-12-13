@@ -2,7 +2,7 @@ import { Core } from '@minddrop/core';
 import { useTopicsStore } from '../useTopicsStore';
 
 /**
- * Clears topics from the store by dispatching a `topics:clear` event.
+ * Clears topics from the store and dispatches a `topics:clear` event.
  *
  * @param core A MindDrop core instance.
  */

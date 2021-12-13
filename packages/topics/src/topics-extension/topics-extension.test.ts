@@ -3,6 +3,7 @@ import { initializeCore } from '@minddrop/core';
 import { onDisable, onRun } from './topics-extension';
 import { generateTopic } from '../generateTopic';
 import { useAllTopics } from '../useAllTopics';
+import { Topics } from '../Topics';
 
 let core = initializeCore('topics');
 
@@ -86,19 +87,13 @@ describe('topics extension', () => {
     });
 
     it('removes event listeners', () => {
-      const { result } = renderHook(() => useAllTopics());
-      const topic1 = generateTopic();
-      const topic2 = generateTopic();
-
       onRun(core);
+      Topics.addEventListener(core, 'topics:create', jest.fn());
 
       act(() => {
         onDisable(core);
-        core.dispatch('topics:load', [topic1, topic2]);
+        expect(core.hasEventListeners()).toBe(false);
       });
-
-      expect(result.current[topic1.id]).not.toBeDefined();
-      expect(result.current[topic2.id]).not.toBeDefined();
     });
   });
 });
