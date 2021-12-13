@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Topic } from '../types';
+import { useTopicsStore } from '../useTopicsStore';
 
 /**
  * Loads topics into the store by dispatching a `topics:load` event.
@@ -8,6 +9,9 @@ import { Topic } from '../types';
  * @param topics The topics to load.
  */
 export function loadTopics(core: Core, topics: Topic[]): void {
+  // Add topics to store
+  useTopicsStore.getState().loadTopics(topics);
+
   // Dispatch 'topics:load' event
   core.dispatch('topics:load', topics);
 }

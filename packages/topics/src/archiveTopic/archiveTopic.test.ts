@@ -31,9 +31,13 @@ describe('archiveTopic', () => {
     expect(archived.archivedAt).toBeDefined();
   });
 
-  it("dispatches a 'topics:archive' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:archive' event", (done) => {
     let topic: Topic;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(topic);
+      done();
+    }
 
     core.addEventListener('topics:archive', callback);
 
@@ -41,9 +45,6 @@ describe('archiveTopic', () => {
       topic = createTopic(core);
     });
 
-    const archived = archiveTopic(core, topic.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(archived);
+    topic = archiveTopic(core, topic.id);
   });
 });

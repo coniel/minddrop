@@ -10,7 +10,7 @@ let core = initializeCore('topics');
 // Set up extension
 onRun(core);
 
-describe('loadTopics', () => {
+describe('insertData', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
@@ -18,14 +18,19 @@ describe('loadTopics', () => {
     onRun(core);
   });
 
-  it("dispatches a 'topics:load' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:inert-data' event", (done) => {
     let topic: Topic;
     const data = {
       types: ['text/plain'],
       data: { 'text/plain': 'Hellow world' },
       files: [],
     };
+
+    function callback(payload) {
+      expect(payload.data.data).toBe(data);
+      expect(payload.data.topic).toBe(topic);
+      done();
+    }
 
     core.addEventListener('topics:insert-data', callback);
 
@@ -34,11 +39,5 @@ describe('loadTopics', () => {
     });
 
     insertData(core, topic.id, data);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toEqual({
-      topic,
-      data,
-    });
   });
 });

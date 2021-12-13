@@ -1,5 +1,4 @@
 import createStore from 'zustand';
-import { applyFieldValues } from '@minddrop/utils';
 import { TopicsStore } from '../types';
 
 export const useTopicsStore = createStore<TopicsStore>((set) => ({
@@ -21,19 +20,11 @@ export const useTopicsStore = createStore<TopicsStore>((set) => ({
 
   clear: () => set(() => ({ topics: {} })),
 
-  addTopic: (topic) =>
+  setTopic: (topic) =>
     set((state) => ({
       topics: {
         ...state.topics,
         [topic.id]: topic,
-      },
-    })),
-
-  updateTopic: (id, data) =>
-    set((state) => ({
-      topics: {
-        ...state.topics,
-        [id]: applyFieldValues(state.topics[id], data),
       },
     })),
 

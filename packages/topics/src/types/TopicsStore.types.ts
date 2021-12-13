@@ -1,4 +1,4 @@
-import { Topic, TopicChanges } from './Topic.types';
+import { Topic } from './Topic.types';
 
 export interface TopicsStore {
   /**
@@ -19,19 +19,11 @@ export interface TopicsStore {
   clear(): void;
 
   /**
-   * Adds a topic to the store.
+   * Sets a topic in the store.
    *
-   * @param topic The topic to add.
+   * @param topic The topic to set.
    */
-  addTopic(topic: Topic): void;
-
-  /**
-   * Updates a topic in the store.
-   *
-   * @param id The ID of the topic to update.
-   * @param data The data to set on the topic.
-   */
-  updateTopic(id: string, data: TopicChanges): void;
+  setTopic(topic: Topic): void;
 
   /**
    * Removes a topic from the store.

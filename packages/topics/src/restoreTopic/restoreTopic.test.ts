@@ -12,7 +12,7 @@ let core = initializeCore('topics');
 // Set up extension
 onRun(core);
 
-describe('unarchiveTopic', () => {
+describe('restoreTopic', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
@@ -48,9 +48,13 @@ describe('unarchiveTopic', () => {
     expect(restored.deletedAt).not.toBeDefined();
   });
 
-  it("dispatches a 'topics:restore' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:restore' event", (done) => {
     let topic: Topic;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(topic);
+      done();
+    }
 
     core.addEventListener('topics:restore', callback);
 
@@ -58,9 +62,6 @@ describe('unarchiveTopic', () => {
       topic = createTopic(core);
     });
 
-    const restored = restoreTopic(core, topic.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(restored);
+    topic = restoreTopic(core, topic.id);
   });
 });

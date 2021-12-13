@@ -31,9 +31,13 @@ describe('deleteTopic', () => {
     expect(deleted.deletedAt).toBeDefined();
   });
 
-  it("dispatches a 'topics:delete' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:delete' event", (done) => {
     let topic: Topic;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(topic);
+      done();
+    }
 
     core.addEventListener('topics:delete', callback);
 
@@ -41,9 +45,6 @@ describe('deleteTopic', () => {
       topic = createTopic(core);
     });
 
-    const deleted = deleteTopic(core, topic.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(deleted);
+    topic = deleteTopic(core, topic.id);
   });
 });
