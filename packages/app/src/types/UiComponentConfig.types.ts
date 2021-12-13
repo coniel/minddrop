@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName } from '@minddrop/icons';
-import { AppCore } from './AppCore.types';
+import { View } from './View.types';
 
 export type UiComponentConfigType =
   | 'primary-nav-item'
@@ -26,14 +26,9 @@ export interface BaseNavItemConfig extends BaseUiComponentConfig {
   icon: IconName;
 
   /**
-   * The view ID opened by the item.
+   * The view opened by the item.
    */
-  view: string;
-
-  /**
-   * The ID of the resource opened by the item.
-   */
-  resource?: string;
+  view: View;
 }
 
 export interface PrimaryNavItemConfig extends BaseNavItemConfig {
@@ -68,10 +63,7 @@ export interface IconButtonConfig {
    * Callback fired when the item is clicked
    * (or activated using the keyboard).
    */
-  onClick: (
-    event: React.MouseEvent | React.KeyboardEvent,
-    app: AppCore,
-  ) => void;
+  onClick: (event: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
 export type UiComponentConfig =

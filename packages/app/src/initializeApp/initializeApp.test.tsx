@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderHook, act } from '@minddrop/test-utils';
+import { initializeCore } from '@minddrop/core';
 import { initializeApp } from './initializeApp';
 import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
@@ -13,6 +14,7 @@ const config: IconButtonConfig = {
 };
 
 const element = () => <span />;
+const core = initializeCore('app');
 
 const componentMap = {
   // @ts-ignore
@@ -27,12 +29,30 @@ describe('initializeApp', () => {
     });
   });
 
-  it('extends the UI', () => {
+  it("opens a view and dispatches a 'app:open-view'", () => {
+    const callback = jest.fn();
+    const app = initializeApp({ componentMap });
+    const { result } = renderHook(() => useAppStore((state) => state));
+    core.addEventListener('app:open-view', callback);
+
+    act(() => {
+      app.openView(core, { id: 'my-view', title: 'My view' });
+    });
+
+    expect(result.current.view.id).toBe('my-view');
+    expect(callback).toHaveBeenCalled();
+    expect(callback.mock.calls[0][0].data).toEqual({
+      id: 'my-view',
+      title: 'My view',
+    });
+  });
+
+  it('adds UI extensions', () => {
     const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      app.extendUi('test', 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
     });
 
     expect(result.current.uiExtensions.length).toBe(1);
@@ -48,11 +68,55 @@ describe('initializeApp', () => {
     );
 
     act(() => {
-      app.extendUi('test', 'Sidebar:PrimaryNav:Item', element);
-      app.extendUi('test', 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core, 'Sidebar:PrimaryNav:Item', element);
+      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
     });
 
     expect(primaryNav.current[0].type).toBe('component');
     expect(toolbar.current[0].type).toBe('config');
+  });
+
+  it('removes UI extensions', () => {
+    const app = initializeApp({ componentMap });
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      app.removeUiExtension('Sidebar:BottomToolbar:Item', config);
+    });
+
+    expect(result.current.uiExtensions.length).toBe(0);
+  });
+
+  it('removes all UI extensions added by the extension from a specified location', () => {
+    const app = initializeApp({ componentMap });
+    const { result } = renderHook(() => useAppStore((state) => state));
+    const core2 = initializeCore('extension');
+
+    act(() => {
+      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
+      app.removeAllUiExtensions(core2, 'Sidebar:BottomToolbar:Item');
+    });
+
+    expect(result.current.uiExtensions.length).toBe(2);
+  });
+
+  it('removes all UI extensions added by the extension', () => {
+    const app = initializeApp({ componentMap });
+    const { result } = renderHook(() => useAppStore((state) => state));
+    const core2 = initializeCore('extension');
+
+    act(() => {
+      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
+      app.removeAllUiExtensions(core2);
+    });
+
+    expect(result.current.uiExtensions.length).toBe(1);
   });
 });
