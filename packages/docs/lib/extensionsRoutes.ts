@@ -78,10 +78,6 @@ export const extensionsRoutes = [
     label: 'Types',
     pages: [
       {
-        title: 'Breadcrumb',
-        slug: 'docs/extensions/types/breadcrumb',
-      },
-      {
         title: 'Color',
         slug: 'docs/extensions/types/color',
       },
@@ -126,8 +122,8 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/ui-location',
       },
       {
-        title: 'ViewConfig',
-        slug: 'docs/extensions/types/view-config',
+        title: 'View',
+        slug: 'docs/extensions/types/view',
       },
     ],
   },

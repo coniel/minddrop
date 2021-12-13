@@ -1,5 +1,16 @@
-import { Breadcrumb } from '@minddrop/core';
-import { AppCore } from './AppCore.types';
+import { Core } from '@minddrop/core';
+
+export interface ViewResource {
+  /**
+   * The resource type.
+   */
+  type: string;
+
+  /**
+   * The ID of the resource.
+   */
+  id: string;
+}
 
 export interface View {
   /**
@@ -8,38 +19,42 @@ export interface View {
   id: string;
 
   /**
-   * Breadcrumbs leading up to and including the view.
+   * The name of the view or the name of the resource
+   * rendered by the view.
    */
-  breadcrumbs?: Breadcrumb[];
-
-  /**
-   * ID of the resource to be displayed by the view.
-   */
-  resource?: string;
-}
-
-export interface ViewProps {
-  /**
-   * App API with which the view can interact with the app.
-   */
-  app: AppCore;
+  title: string;
 
   /**
    * Breadcrumbs leading up to and including the view.
    */
-  breadcrumbs?: Breadcrumb[];
-}
+  breadcrumbs?: View[];
 
-export interface ResourceViewProps extends ViewProps {
   /**
-   * ID of the resource to be displayed by the view.
+   * The resource to be displayed by the view.
    */
-  resource: string;
+  resource?: ViewResource;
 }
 
 export interface ResourceView extends View {
   /**
-   * ID of the resource to be displayed by the view.
+   * The resource to be displayed by the view.
    */
-  resource: string;
+  resource: ViewResource;
+}
+
+export interface ViewProps {
+  /**
+   * A MindDrop core instance.
+   */
+  core: Core;
+
+  /**
+   * Breadcrumbs leading up to and including the view.
+   */
+  breadcrumbs?: View[];
+
+  /**
+   * The resource to be displayed by the view.
+   */
+  resource?: ViewResource;
 }

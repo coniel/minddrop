@@ -1,0 +1,65 @@
+---
+metaTitle: View Interface
+metaDescription: An interface for describing MindDrop's views.
+---
+
+# View
+
+<Description>
+  An interface for describing MindDrop's views.
+</Description>
+
+Views are used to render content in the main content area of MindDrop's window (on the right of the sidebar). MindDrop renders a single view at a time. Views are opened using the `App.openView` method (see the [App](/docs/extensions/api/app) page for details).
+
+Views can render a breadcrumb trail leading up to them by proving a `breadcrumbs` parameter consisting of an array of view objects, with the current view being last in the array.
+
+Views which render a resource, such as a topic, contain a `resource` parameter describing the resource.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The view ID.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      required: true,
+      description:
+        'The name of the view or the name of the resource rendered by the view.',
+    },
+    {
+      name: 'breadcrumbs',
+      type: 'View[]',
+      description:
+        'Breadcrumbs leading up to and including the view.',
+    },
+    {
+      name: 'resource',
+      type: 'ViewResource',
+      description:
+        'The resource rendered by the view. See below for details.',
+    },
+  ]}
+/>
+
+### ViewResource
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The resource type.',
+    },
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The resource ID.',
+    },
+  ]}
+/>
