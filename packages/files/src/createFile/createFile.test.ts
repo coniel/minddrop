@@ -1,5 +1,8 @@
 import { initializeCore } from '@minddrop/core';
-import { imageFile, textFile } from '@minddrop/test-utils';
+import { act, imageFile, renderHook, textFile } from '@minddrop/test-utils';
+import { clearFileReferences } from '../clearFileReferences';
+import { FileReference } from '../types';
+import { useAllFileReferences } from '../useAllFileReferences';
 import { createFile } from './createFile';
 
 let core = initializeCore('files');
@@ -7,6 +10,7 @@ let core = initializeCore('files');
 describe('createFile', () => {
   afterEach(() => {
     core = initializeCore('files');
+    clearFileReferences(core);
   });
 
   it('retunrs a file reference', async () => {
@@ -16,20 +20,34 @@ describe('createFile', () => {
     expect(ref.name).toBe('text.txt');
   });
 
-  it("dispatches a 'files:create' event", async () => {
-    const callback = jest.fn();
+  it('adds the file reference to the store', async () => {
+    const { result } = renderHook(() => useAllFileReferences());
+    let ref: FileReference;
+
+    await act(async () => {
+      ref = await createFile(core, textFile);
+    });
+
+    expect(result.current[ref.id]).toEqual(ref);
+  });
+
+  it("dispatches a 'files:create' event", (done) => {
+    let ref: FileReference;
+
+    function callback(payload) {
+      expect(payload.data).toEqual({
+        file: imageFile,
+        reference: ref,
+      });
+      done();
+    }
 
     core.addEventListener('files:create', callback);
 
-    const ref = await createFile(core, imageFile);
+    async function run() {
+      ref = await createFile(core, imageFile);
+    }
 
-    expect(callback).toHaveBeenCalledWith({
-      source: 'files',
-      type: 'files:create',
-      data: {
-        file: imageFile,
-        reference: ref,
-      },
-    });
+    run();
   });
 });

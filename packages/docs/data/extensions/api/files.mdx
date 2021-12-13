@@ -61,10 +61,10 @@ Files.create(core: Core, type: string, file: File): Promise<FileReference>
 
 ### delete
 
-Deletes a file and its reference and dispatches a `files:delete` event.
+Deletes a file and its reference and dispatches a `files:delete` event. Returns the deleted file reference.
 
 ```ts
-Files.delete(core: Core, id: string): void
+Files.delete(core: Core, id: string): FileReference
 ```
 
 <ArgsTable
@@ -101,7 +101,7 @@ Files.load(core: Core, files: FileReference[]): void
 
 ### clear
 
-Clears file references from the store by dispatching a `files:clear` event.
+Clears file references from the store and dispatches a `files:clear` event.
 
 <ArgsTable core />
 

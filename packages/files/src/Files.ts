@@ -4,7 +4,7 @@ import { getAllFileReferences } from './getAllFileReferences';
 import { createFile } from './createFile';
 import { deleteFile } from './deleteFile';
 import { loadFileReferences } from './loadFileReferences';
-import { clearFileReferences } from './clearFiles';
+import { clearFileReferences } from './clearFileReferences';
 
 export const Files: FilesApi = {
   get,

@@ -49,10 +49,10 @@ export interface FilesApi {
    * @param core A MindDrop core instance.
    * @param fileId The ID of the file to delete.
    */
-  delete(core: Core, id: string): void;
+  delete(core: Core, id: string): FileReference;
 
   /**
-   * Loads file references into the store by dispatching a `files:load` event.
+   * Loads file references into the store and dispatches a `files:load` event.
    *
    * @param core A MindDrop core instance.
    * @param files The file references to load.
@@ -60,7 +60,7 @@ export interface FilesApi {
   load(core: Core, files: FileReference[]): void;
 
   /**
-   * Clears file references from the store by dispatching a `files:clear` event.
+   * Clears file references from the store and dispatches a `files:clear` event.
    *
    * @param core A MindDrop core instance.
    */

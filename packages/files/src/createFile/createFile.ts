@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { generateFileReference } from '../generateFileReference';
 import { FileReference } from '../types';
+import { useFileReferencesStore } from '../useFileReferencesStore';
 
 /**
  * Creates a new file reference and dispatches a `files:create` event.
@@ -16,6 +17,10 @@ export async function createFile(
 ): Promise<FileReference> {
   const reference = await generateFileReference(file);
 
+  // Add file reference to store
+  useFileReferencesStore.getState().addFileReference(reference);
+
+  // Dispatch 'files:create' event
   core.dispatch('files:create', { file, reference });
 
   return reference;

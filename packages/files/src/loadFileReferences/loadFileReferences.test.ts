@@ -1,33 +1,54 @@
 import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from '../files-extension';
 import { loadFileReferences } from './loadFileReferences';
 import { generateFileReference } from '../generateFileReference';
-import { textFile } from '@minddrop/test-utils';
+import { act, renderHook, textFile } from '@minddrop/test-utils';
+import { useAllFileReferences } from '../useAllFileReferences';
+import { FileReference } from '../types';
+import { clearFileReferences } from '../clearFileReferences';
 
 let core = initializeCore('files');
 
-// Set up extension
-onRun(core);
-
 describe('loadFileReferences', () => {
   afterEach(() => {
-    // Reset extension
-    onDisable(core);
     core = initializeCore('files');
-    onRun(core);
+    act(() => {
+      clearFileReferences(core);
+    });
   });
 
-  it("dispatches a 'files:load' event", async () => {
-    const callback = jest.fn();
+  it('adds files references to the store', async () => {
+    const { result } = renderHook(() => useAllFileReferences());
     const file1 = await generateFileReference(textFile);
     const file2 = await generateFileReference(textFile);
-    const files = [file1, file2];
+
+    act(() => {
+      loadFileReferences(core, [file1, file2]);
+    });
+
+    expect(result.current[file1.id]).toEqual(file1);
+    expect(result.current[file2.id]).toEqual(file2);
+  });
+
+  it("dispatches a 'files:load' event", (done) => {
+    let file1: FileReference;
+    let file2: FileReference;
+
+    function callback(payload) {
+      expect(payload.data).toEqual([file1, file2]);
+      done();
+    }
 
     core.addEventListener('files:load', callback);
 
-    loadFileReferences(core, files);
+    async function run() {
+      file1 = await generateFileReference(textFile);
+      file2 = await generateFileReference(textFile);
 
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toEqual(files);
+      act(() => {
+        loadFileReferences(core, [file1, file2]);
+      });
+    }
+
+    run();
   });
 });
