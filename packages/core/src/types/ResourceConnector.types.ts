@@ -20,10 +20,10 @@ export interface ResourceConnector<R = {}> {
    * given type is added, updated, or deleted.
    *
    * @param core A MindDrop core instance.
-   * @param change The change object.
+   * @param resource The changed resource.
    * @param deleted If `true`, the resource was permanently deleted.
    */
-  onChange?(change: R, deleted: boolean): void;
+  onChange?(resource: R, deleted: boolean): void;
 
   /**
    * If provided, an event listener will be added for this
