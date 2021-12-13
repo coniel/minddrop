@@ -1,3 +1,6 @@
+# PouchDB data
+.db
+
 # Logs
 logs
 *.log

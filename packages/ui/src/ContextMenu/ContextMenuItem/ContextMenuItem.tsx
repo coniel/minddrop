@@ -37,7 +37,7 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = ({
         side="right"
         sideOffset={6}
         skipDelayDuration={0}
-        delayDuration={8000}
+        delayDuration={800}
         title={tooltipTitle}
         description={tooltipDescription}
       >

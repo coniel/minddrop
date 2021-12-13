@@ -1,9 +1,9 @@
 ---
-metaTitle: UIComponentConfig Interface
+metaTitle: UiComponentConfig Interface
 metaDescription: Extends MindDrop's UI using simple configuration objects.
 ---
 
-# UIComponentConfig
+# UiComponentConfig
 
 <Description>
   Extend MindDrop's UI using simple configuration objects.
@@ -36,7 +36,7 @@ Used to render a [`PrimaryNavItem`](/docs/ui/components/primary-nav-item) or [`S
     {
       name: 'onClick',
       typeSimple: 'function',
-      type: '(app: App) => void',
+      type: '(core: Core) => void',
       required: true,
       description:
         'Callback fired when the item is clicked (or activated using the keyboard).',
@@ -44,7 +44,7 @@ Used to render a [`PrimaryNavItem`](/docs/ui/components/primary-nav-item) or [`S
     {
       name: 'isActive',
       typeSimple: 'function',
-      type: '(app: App) => boolean',
+      type: '(core: Core) => boolean',
       required: true,
       description:
         'Function used to determine if the item is active.',
@@ -74,7 +74,7 @@ Used to render an [`IconButton`](/docs/ui/components/icon-button).
     {
       name: 'onClick',
       typeSimple: 'function',
-      type: '(app: App) => void',
+      type: '(core: Core) => void',
       required: true,
       description:
         'Callback fired when the item is clicked (or activated using the keyboard).',

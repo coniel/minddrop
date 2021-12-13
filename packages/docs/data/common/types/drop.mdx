@@ -22,23 +22,11 @@ All drops share a basic interface which can be extended to suit your extension's
       description: 'A universally unique ID.',
     },
     {
-      name: 'format',
-      type: "'markdown' | 'json'",
-      required: true,
-      description: 'The format in which the drop data is stored.',
-    },
-    {
       name: 'type',
       type: 'string',
       required: true,
       description:
         'The drop type. Determines which component will be used to render it.',
-    },
-    {
-      name: 'topics',
-      type: 'string[]',
-      required: true,
-      description: 'The IDs of the topics containing this drop.',
     },
     {
       name: 'createdAt',
@@ -61,13 +49,18 @@ All drops share a basic interface which can be extended to suit your extension's
     {
       name: 'tags',
       type: 'string[]',
-      description: 'Labels of the tags applied to the drop.',
+      description: 'The IDs of the tags applied to the drop.',
+    },
+    {
+      name: 'markdown',
+      type: 'string',
+      description: "The drop's markdown text content.",
     },
     {
       name: 'files',
-      type: 'FileReference[]',
+      type: 'string[]',
       description:
-        "The drop's files. All files attached to the drop must be listed here.",
+        "The IDs of the drop's files. All files attached to the drop must be listed here.",
     },
     {
       name: 'color',
@@ -82,10 +75,11 @@ All drops share a basic interface which can be extended to suit your extension's
     },
     {
       name: 'archived',
-      type: 'boolean',
+      type: 'true',
       description: (
         <span>
-          <Code>true</Code> if the drop is archived.
+          If <Code>true</Code>, the drop is archived. Not present if
+          the drop is not archived.
         </span>
       ),
     },
@@ -100,55 +94,24 @@ All drops share a basic interface which can be extended to suit your extension's
       ),
     },
     {
-      name: 'trashed',
-      type: 'boolean',
+      name: 'deleted',
+      type: 'true',
       description: (
         <span>
-          <Code>true</Code> if the drop is in the trash.
+          If <Code>true</Code>, the drop is deleted. Not present if
+          the drop is not deleted.
         </span>
       ),
     },
     {
-      name: 'trashedAt',
+      name: 'deletedAt',
       type: 'Date',
       description: (
         <span>
-          Timestamp at which the drop was trashed. Only set if
-          <Code>trashed</Code> is <Code>true</Code>.
+          Timestamp at which the drop was deleted. Only set if
+          <Code>deleted</Code> is <Code>true</Code>.
         </span>
       ),
-    },
-  ]}
-/>
-
-### MarkdownDrop
-
-<InterfaceTable
-  data={[
-    {
-      name: 'format',
-      type: "'markdown'",
-      required: true,
-      description: 'The format in which the drop data is stored.',
-    },
-    {
-      name: 'content',
-      type: 'string',
-      required: true,
-      description: "The drop's markdown content.",
-    },
-  ]}
-/>
-
-### JsonDrop
-
-<InterfaceTable
-  data={[
-    {
-      name: 'format',
-      type: "'json'",
-      required: true,
-      description: 'The format in which the drop data is stored.',
     },
   ]}
 />

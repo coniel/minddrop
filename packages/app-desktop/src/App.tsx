@@ -2,29 +2,29 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import '@minddrop/theme';
 import { initializeI18n } from '@minddrop/i18n';
-import { IconsProvider } from '@minddrop/icons';
-import { useEffect, useState } from 'react';
-import { AppSidebar } from './components';
+import { initializeCore } from '@minddrop/core';
+import { initializeResourceConnectors } from '@minddrop/pouchdb';
+import { initializeFileStorage } from './renderer-init';
+import * as files from '@minddrop/files';
+import * as tags from '@minddrop/tags';
+import * as drops from '@minddrop/drops';
+import * as topics from '@minddrop/topics';
 import './App.css';
 
 initializeI18n();
+initializeFileStorage();
+
+const core = initializeCore('app');
+
+files.onRun(core);
+tags.onRun(core);
+drops.onRun(core);
+topics.onRun(core);
+
+initializeResourceConnectors(core, window.db);
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<'light-theme' | 'dark-theme'>(
-    'light-theme',
-  );
-
-  useEffect(() => {
-    document.getElementsByTagName('body').item(0).setAttribute('class', theme);
-  }, [theme]);
-
-  return (
-    <IconsProvider>
-      <div style={{ display: 'flex', height: '100%' }}>
-        <AppSidebar />
-      </div>
-    </IconsProvider>
-  );
+  return <div />;
 };
 
 function render() {

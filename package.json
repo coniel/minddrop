@@ -18,7 +18,7 @@
     "build:packages": "lerna run build --no-private",
     "build:docs": "yarn workspace @minddrop/docs build",
     "build:website": "yarn workspace @minddrop/website build",
-    "pub": "lerna publish",
+    "pub": "lerna publish --no-private",
     "test": "lerna run test -- --passWithNoTests",
     "test:watch": "lerna run test --parallel -- --passWithNoTests --watch",
     "lint": "eslint --ext js,ts,tsx .",

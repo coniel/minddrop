@@ -2,8 +2,8 @@ import * as React from 'react';
 import NextLink from 'next/link';
 import * as DS from '@modulz/design-system';
 import { Link2Icon } from '@radix-ui/react-icons';
-import { IdProvider } from '@radix-ui/react-id';
 import { PropsTable } from './PropsTable';
+import { ArgsTable } from './ArgsTable';
 import { FunctionsTable } from './FunctionsTable';
 import { InterfaceTable } from './InterfaceTable';
 import { EventsTable } from './EventsTable';
@@ -244,6 +244,11 @@ export const components = {
       <FunctionsTable {...props} />
     </DS.Box>
   ),
+  ArgsTable: (props) => (
+    <DS.Box css={{ mb: '$5' }}>
+      <ArgsTable {...props} />
+    </DS.Box>
+  ),
   PropsTable: (props) => (
     <DS.Box css={{ mb: '$5' }}>
       <PropsTable {...props} />
@@ -303,10 +308,8 @@ export const FrontmatterContext = React.createContext<Frontmatter>({} as any);
 export function MDXProvider(props) {
   const { frontmatter, children } = props;
   return (
-    <IdProvider>
-      <FrontmatterContext.Provider value={frontmatter}>
-        {children}
-      </FrontmatterContext.Provider>
-    </IdProvider>
+    <FrontmatterContext.Provider value={frontmatter}>
+      {children}
+    </FrontmatterContext.Provider>
   );
 }

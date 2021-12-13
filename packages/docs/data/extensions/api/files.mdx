@@ -1,0 +1,189 @@
+---
+metaTitle: Files API Interface
+metaDescription: An interface for retrieving and managing file attachements.
+---
+
+# Files
+
+<Description>
+  An interface for retrieving and managing file attachements.
+</Description>
+
+Drops can include file attachements. MindDrop creates a [FileReference](/docs/extensions/types/file-reference) containing metadata about the file for every file attachement.
+
+## Static methods
+
+### get
+
+Retrieves file references by ID. If provided a single ID string, returns the file reference or `null` if not found. If provided an array of IDs, returns an array of the corresponding file references.
+
+```ts
+Files.get(id: string | string[]): FileReference | null | FileReferenceMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string | string[]',
+      required: true,
+      description: 'The ID(s) of the file reference(s) to retrieve.',
+    },
+  ]}
+/>
+
+### getAll
+
+Retrieves all file references.
+
+```ts
+Files.getAll(): FileReferenceMap
+```
+
+### create
+
+Creates a new file reference from a file and dispatches a `files:create` event. Returns a promise which resolves to the new file reference.
+
+```ts
+Files.create(core: Core, type: string, file: File): Promise<FileReference>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'file',
+      type: 'File',
+      description: 'The file itslef.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a file and its reference and dispatches a `files:delete` event.
+
+```ts
+Files.delete(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the file reference.',
+    },
+  ]}
+/>
+
+### load
+
+Loads file references into the store and dispatches a `files:load` event.
+
+```ts
+Files.load(core: Core, files: FileReference[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'files',
+      type: 'FileReference[]',
+      required: true,
+      description: 'The files to load into the store.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears file references from the store by dispatching a `files:clear` event.
+
+<ArgsTable core />
+
+### addEventListener
+
+Adds file specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Files.addEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the file events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the file events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes file specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Files.removeEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## File events
+
+<EventsTable
+  data={[
+    {
+      name: 'files:create',
+      data: 'FileReference',
+      description: 'Dispatched when a file is created.',
+    },
+    {
+      name: 'files:delete',
+      data: 'FileReference',
+      description: 'Dispatched when a file is deleted.',
+    },
+    {
+      name: 'files:load',
+      data: 'FileReference[]',
+      description:
+        'Dispatched when file references are loaded into the store.',
+    },
+    {
+      name: 'files:clear',
+      description:
+        'Dispatched when file references are cleared from the store.',
+    },
+  ]}
+/>

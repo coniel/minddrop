@@ -1,0 +1,772 @@
+---
+metaTitle: Drops API Reference
+metaDescription: An interface for retrieving and managing drops.
+---
+
+# Drops
+
+<Description>
+  An interface for retrieving and managing drops.
+</Description>
+
+## Hooks
+
+Hooks provide access to drops and related data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useDrop
+
+Returns a drop by ID or `null` if no drop was found.
+
+```ts
+useDrop(id: string): Drop | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to retrieve.',
+    },
+  ]}
+/>
+
+### useDrops
+
+Returns a `{ [id]: Drop }` map of drops matching the provided IDs.
+
+```ts
+useDrops(ids: string[], filters?: DropFilters): Record<string, Drop>
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'ids',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Allows filtering of returned drops. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves drops by ID. If provided a single ID string, returns the drop or `null` if not found. If provided an array of IDs, returns an array of the corresponding drops.
+
+```ts
+Drops.get(id: string | string[], filters?: DropFilters): Drop | Drop[] | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string | string[]',
+      required: true,
+      description: 'The ID(s) of the drop(s) to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Allows filtering of returned drops. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### create
+
+Creates a new drop and dispatches a `drops:create` event. Returns the new drop.
+
+```ts
+Drops.create(core: Core, type: string, data?: CreateDropData): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description: 'The drop type.',
+    },
+    {
+      name: 'data',
+      type: 'CreateDropData',
+      description:
+        'The default drop property values. See below for details.',
+    },
+  ]}
+/>
+
+#### `CreateDropData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'markdown',
+      type: 'string',
+      description: "The drop's markdown text content.",
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      description:
+        "IDs of the drop's files. All files attached to the drop must be listed here.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: "The drop's highlight color.",
+    },
+  ]}
+/>
+
+### update
+
+Updates a drop and dispatches a `drops:update` event. Returns the updated drop.
+
+```ts
+Drops.update(core: Core, id: string, data: UpdateDropData): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to update.',
+    },
+    {
+      name: 'data',
+      type: 'UpdateDropData',
+      required: true,
+      description:
+        'The changes to apply to the drop. See below for details.',
+    },
+  ]}
+/>
+
+#### `UpdateDropData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description: 'The drop type.',
+    },
+    {
+      name: 'markdown',
+      type: 'string | Delete',
+      description: "The drop's markdown text content.",
+    },
+    {
+      name: 'files',
+      type: 'string[] | Delete',
+      description:
+        "The IDs of the drop's files. All files attached to the drop must be listed here.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor | Delete',
+      description: "The drop's highlight color.",
+    },
+  ]}
+/>
+
+### addTags
+
+Adds tags to a drop, dispaches an `drops:add-tags` event and a `drops:update` event.
+
+```ts
+Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to which to add the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add.',
+    },
+  ]}
+/>
+
+### removeTags
+
+Removes tags from a drop and dispatches a `drops:remove-tags` event as well as a `drops:update` event.
+
+```ts
+Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop from which to remove the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to remove.',
+    },
+  ]}
+/>
+
+### addFiles
+
+Adds files to a drop, dispaches an `drops:add-files` event and a `drops:update` event.
+
+```ts
+Drops.addFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to which to add the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
+### removeFiles
+
+Removes files from a drop and dispatches a `drops:remove-files` event as well as a `drops:update` event.
+
+```ts
+Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop from which to remove the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to remove.',
+    },
+  ]}
+/>
+
+### replaceFiles
+
+Replaces files in a drop (removing current files and adding given files) and dispatches a `drops:replace-files` event as well as a `drops:update` event.
+
+```ts
+Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop for which to replace the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
+### archive
+
+Archives a drop and dispatches a `drops:archive` event and an `drops:update` event.
+
+```ts
+Drops.archive(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to archive.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a drop and dispatches a `drops:delete` event and an `drops:update` event.
+
+```ts
+Drops.delete(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to delete.',
+    },
+  ]}
+/>
+
+### restore
+
+Restores an archived/deleted drop and dispatches a `drops:restore` event and an `drops:update` event.
+
+```ts
+Drops.restore(core: Core, id: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to restore.',
+    },
+  ]}
+/>
+
+### load
+
+Loads drops into the store and dispatches a `drops:load` event.
+
+```ts
+Drops.load(core: Core, drops: Drop[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'drops',
+      type: 'Drop[]',
+      required: true,
+      description: 'The drops to load into the store.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds drop specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Drops.addEventListener(core: Core, event: DropEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'DropEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the drop events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the drop events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes drop specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Drops.removeEventListener(core: Core, event: DropEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'DropEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Drop events
+
+See below the table for more details on the data passed by drop related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'drops:create',
+      data: 'Drop',
+      description: 'Dispatched when a drop is created.',
+    },
+    {
+      name: 'drops:update',
+      data: 'ChangeDropEventData',
+      description: 'Dispatched when a drop is updated.',
+    },
+    {
+      name: 'drops:archive',
+      data: 'Drop',
+      description: 'Dispatched when a drop is archived.',
+    },
+    {
+      name: 'drops:delete',
+      data: 'Drop',
+      description: 'Dispatched when a drop is deleted.',
+    },
+    {
+      name: 'drops:restore',
+      data: 'Drop',
+      description:
+        'Dispatched when an archived/deleted drop is restored.',
+    },
+    {
+      name: 'drops:add-tags',
+      data: 'AddTagsEventData',
+      description: 'Dispatched when tags are added to a drop.',
+    },
+    {
+      name: 'drops:remove-tags',
+      data: 'RemoveTagsEventData',
+      description: 'Dispatched when tags are removed from a drop.',
+    },
+    {
+      name: 'drops:add-files',
+      data: 'AddFilesEventData',
+      description: 'Dispatched when files are added to a drop.',
+    },
+    {
+      name: 'drops:remove-files',
+      data: 'RemoveFilesEventData',
+      description: 'Dispatched when files are removed from a drop.',
+    },
+    {
+      name: 'drops:replaced-files',
+      data: 'ReplaceFilesEventData',
+      description:
+        "Dispatched when a drop's files are replaced with new ones.",
+    },
+    {
+      name: 'drops:load',
+      data: 'Drop[]',
+      description: 'Dispatched when drops are loaded into the store.',
+    },
+    {
+      name: 'drops:clear',
+      description:
+        'Dispatched when drops are cleared from the store.',
+    },
+  ]}
+/>
+
+### Drop event data types
+
+Drop events are dispatched with one of the following types of data.
+
+#### Drop
+
+See the [Drop](/docs/extensions/types/drop) interface page.
+
+#### UpdateDropEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'Drop',
+      required: true,
+      description: 'Drop data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'Drop',
+      required: true,
+      description: 'Updated drop data.',
+    },
+    {
+      name: 'changes',
+      type: 'DropChanges',
+      required: true,
+      description:
+        'The changes made to the drop. See below for details.',
+    },
+  ]}
+/>
+
+`DropChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: 'Timestamp at which the drop was updated.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'The IDs of the tags applied to the drop.',
+    },
+    {
+      name: 'markdown',
+      type: 'string | Delete',
+      description: "The drop's markdown text content.",
+    },
+    {
+      name: 'files',
+      type: 'string[] | Delete',
+      description: "The IDs of the drop's files.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor | Delete',
+      description: (
+        <span>
+          The drop's highlight color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date',
+      description: 'Timestamp at which the drop was archived.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description: 'Timestamp at which the drop was deleted.',
+    },
+  ]}
+/>
+
+#### AddTagsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to which the tags were added.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the tags which were added to the drop.',
+    },
+  ]}
+/>
+
+#### RemoveTagsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop from which the tags were removed.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the tags which were removed from the drop.',
+    },
+  ]}
+/>
+
+#### AddFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to which the files were added.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were added to the drop.',
+    },
+  ]}
+/>
+
+#### RemoveFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop from which the files were removed.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were removed from the drop.',
+    },
+  ]}
+/>
+
+#### ReplaceFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop in which the files were replaced.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the files which were added to the drop.',
+    },
+  ]}
+/>
+
+## DropFilters
+
+<PropsTable
+  data={[
+    {
+      name: 'active',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Include active drops (drops which are neither archived nor deleted).',
+    },
+    {
+      name: 'archived',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include archived drops.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include deleted drops.',
+    },
+  ]}
+/>

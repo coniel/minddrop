@@ -74,7 +74,28 @@ export function InterfaceTable({
               as="td"
               css={{ borderBottom: '1px solid $gray6', py: '$3', pr: '$4' }}
             >
-              <Code css={{ bc: '$gray4', color: '$gray11' }}>{type}</Code>
+              <Code
+                css={{
+                  bc: '$gray4',
+                  color: '$gray11',
+                  display: 'inline-block',
+                }}
+              >
+                {type.length < 30 || !type.includes('|')
+                  ? type
+                  : type.split('|').map((value, index) => (
+                      <>
+                        {index > 0 ? (
+                          <>
+                            <br />|
+                          </>
+                        ) : (
+                          '|'
+                        )}{' '}
+                        {value}
+                      </>
+                    ))}
+              </Code>
             </Box>
             <Box
               as="td"
