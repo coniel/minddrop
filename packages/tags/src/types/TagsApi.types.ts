@@ -112,16 +112,16 @@ export interface TagsApi {
     callback: LoadTagsEventCallback,
   ): void;
 
-  // Add 'tags:delete' event listener
+  // Add 'tags:clear' event listener
   addEventListener(
     core: Core,
     type: ClearTagsEvent,
     callback: ClearTagsEventCallback,
   ): void;
 
-  /* ********************************** */
+  /* ************************************* */
   /* *** removeEventListener overloads *** */
-  /* ********************************** */
+  /* ************************************* */
 
   // Add 'tags:create' event listener
   removeEventListener(
@@ -151,7 +151,7 @@ export interface TagsApi {
     callback: LoadTagsEventCallback,
   ): void;
 
-  // Add 'tags:delete' event listener
+  // Add 'tags:clear' event listener
   removeEventListener(
     core: Core,
     type: ClearTagsEvent,

@@ -16,7 +16,7 @@ describe('deleteTag', () => {
     });
   });
 
-  it("reacts to 'tags:delete' events by removing the tag from the store", () => {
+  it('removes tag from the store', () => {
     const { result } = renderHook(() => useAllTags());
     let tag: Tag;
 
