@@ -29,21 +29,34 @@ describe('initializeApp', () => {
     });
   });
 
-  it("opens a view and dispatches a 'app:open-view'", () => {
-    const callback = jest.fn();
-    const app = initializeApp({ componentMap });
-    const { result } = renderHook(() => useAppStore((state) => state));
-    core.addEventListener('app:open-view', callback);
+  describe('openView', () => {
+    it('sets the current view in the store', () => {
+      const app = initializeApp({ componentMap });
+      const { result } = renderHook(() => useAppStore((state) => state));
 
-    act(() => {
-      app.openView(core, { id: 'my-view', title: 'My view' });
+      act(() => {
+        app.openView(core, { id: 'my-view', title: 'My view' });
+      });
+
+      expect(result.current.view.id).toBe('my-view');
     });
 
-    expect(result.current.view.id).toBe('my-view');
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toEqual({
-      id: 'my-view',
-      title: 'My view',
+    it("dispatches a 'app:open-view' event", (done) => {
+      const app = initializeApp({ componentMap });
+
+      function callback(payload) {
+        expect(payload.data).toEqual({
+          id: 'my-view',
+          title: 'My view',
+        });
+        done();
+      }
+
+      core.addEventListener('app:open-view', callback);
+
+      act(() => {
+        app.openView(core, { id: 'my-view', title: 'My view' });
+      });
     });
   });
 
