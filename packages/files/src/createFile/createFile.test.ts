@@ -10,14 +10,17 @@ let core = initializeCore('files');
 describe('createFile', () => {
   afterEach(() => {
     core = initializeCore('files');
-    clearFileReferences(core);
+    act(() => {
+      clearFileReferences(core);
+    });
   });
 
-  it('retunrs a file reference', async () => {
-    const ref = await createFile(core, textFile);
+  it('returns a file reference', async () => {
+    const ref = await createFile(core, textFile, ['resource-id']);
 
     expect(ref).toBeDefined();
     expect(ref.name).toBe('text.txt');
+    expect(ref.attachedTo).toEqual(['resource-id']);
   });
 
   it('adds the file reference to the store', async () => {

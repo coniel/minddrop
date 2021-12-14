@@ -15,7 +15,7 @@ describe('clearFileReferences', () => {
     });
   });
 
-  it("reacts to 'files:clear' events by clearing the files store", async () => {
+  it('clears file references from the store', async () => {
     const { result } = renderHook(() => useAllFileReferences());
     const file1 = await generateFileReference(textFile);
     const file2 = await generateFileReference(textFile);

@@ -8,14 +8,16 @@ import { useFileReferencesStore } from '../useFileReferencesStore';
  * Returns a promise which resolves to the newly created file reference.
  *
  * @param core A MindDrop core instance.
- * @param data The file property values.
+ * @param file A file object.
+ * @param attachedTo The IDs of the resources to which this file is attached.
  * @returns A promise which resolves to the newly created file reference.
  */
 export async function createFile(
   core: Core,
   file: File,
+  attachedTo?: string[],
 ): Promise<FileReference> {
-  const reference = await generateFileReference(file);
+  const reference = await generateFileReference(file, attachedTo);
 
   // Add file reference to store
   useFileReferencesStore.getState().setFileReference(reference);

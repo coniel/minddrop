@@ -19,7 +19,7 @@ describe('getFileReference', () => {
     const file = await generateFileReference(textFile);
 
     act(() => {
-      result.current.addFileReference(file);
+      result.current.setFileReference(file);
     });
 
     expect(getFileReference(file.id)).toBe(file);

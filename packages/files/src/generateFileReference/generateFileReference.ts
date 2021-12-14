@@ -6,16 +6,19 @@ import { getImageDimensions } from '../getImageDimensions';
  * Generates a new file reference for a given file.
  *
  * @param file The file for which to create a reference.
+ * @param attachedTo The IDs of the resources to which this file is attached.
  * @returns A new file.
  */
 export async function generateFileReference(
   file: File,
+  attachedTo: string[] = [],
 ): Promise<FileReference> {
   const reference: FileReference = {
     id: generateId(),
     name: file.name,
     size: file.size,
     type: file.type,
+    attachedTo,
   };
 
   if (file.type.startsWith('image')) {
