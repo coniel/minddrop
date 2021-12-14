@@ -152,22 +152,21 @@ Drops.filter(drops: DropMap, filters: DropFilters): DropMap
 Creates a new drop and dispatches a `drops:create` event. Returns the new drop.
 
 ```ts
-Drops.create(core: Core, type: string, data?: CreateDropData): Drop
+Drops.create(core: Core, data: CreateDropData): Drop
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'type',
-      type: 'string',
-      description: 'The drop type.',
-    },
-    {
       name: 'data',
       type: 'CreateDropData',
-      description:
-        'The default drop property values. See below for details.',
+      description: (
+        <span>
+          The drop data, of which <Code>type</Code> is the only
+          required value. See below for details.
+        </span>
+      ),
     },
   ]}
 />
@@ -177,6 +176,12 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
 <InterfaceTable
   data={[
     {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The drop type.',
+    },
+    {
       name: 'markdown',
       type: 'string',
       description: "The drop's markdown text content.",
@@ -185,7 +190,7 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
       name: 'files',
       type: 'string[]',
       description:
-        "IDs of the drop's files. All files attached to the drop must be listed here.",
+        "IDs of the drop's files. All files attached to the drop must be listed here. The file references of attached files will be automatically updated, adding the drop as an attached resource.",
     },
     {
       name: 'color',
@@ -367,7 +372,7 @@ Drops.addTags(core: Core, dropId: string, tagIds: string[]): Drop
 Removes tags from a drop and dispatches a `drops:remove-tags` event as well as a `drops:update` event. Returns the updated drop.
 
 ```ts
-Drops.addTags(core: Core, dropId: string, tagIds: string[]): Drop
+Drops.removeTags(core: Core, dropId: string, tagIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -392,6 +397,8 @@ Drops.addTags(core: Core, dropId: string, tagIds: string[]): Drop
 ### addFiles
 
 Adds files to a drop, dispaches an `drops:add-files` event and a `drops:update` event. Returns the updated drop.
+
+The file references of the added files will be automatically updated to include the drop ID in their `attachedTo` value.
 
 ```ts
 Drops.addFiles(core: Core, dropId: string, fileIds: string[]): Drop
@@ -419,6 +426,8 @@ Drops.addFiles(core: Core, dropId: string, fileIds: string[]): Drop
 
 Removes files from a drop and dispatches a `drops:remove-files` event as well as a `drops:update` event. Returns the updated drop.
 
+The file references of the removed files will be automatically updated to remove the drop ID from their `attachedTo` value, and deleted if the drop was their only attachment.
+
 ```ts
 Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): Drop
 ```
@@ -445,6 +454,10 @@ Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): Drop
 ### replaceFiles
 
 Replaces files in a drop (removing current files and adding given files) and dispatches a `drops:replace-files` event as well as a `drops:update` event. Returns the updated drop.
+
+The file references of the added files will be automatically updated to include the drop ID in their `attachedTo` value.
+
+The file references of the removed files will be automatically updated to remove the drop ID from their `attachedTo` value, and deleted if the drop was their only attachment.
 
 ```ts
 Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): Drop

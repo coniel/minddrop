@@ -52,6 +52,24 @@ describe('createDrop', () => {
     ).toThrowError(FileReferenceNotFoundError);
   });
 
+  it('adds the drop as an attachment to files', async () => {
+    let drop: Drop;
+    let file1Ref: FileReference;
+    let file2Ref: FileReference;
+
+    await act(async () => {
+      file1Ref = await Files.create(core, textFile);
+      file2Ref = await Files.create(core, textFile);
+      drop = createDrop(core, {
+        type: 'text',
+        files: [file1Ref.id, file2Ref.id],
+      });
+    });
+
+    expect(Files.get(file1Ref.id).attachedTo).toEqual([drop.id]);
+    expect(Files.get(file2Ref.id).attachedTo).toEqual([drop.id]);
+  });
+
   it('supports tags', () => {
     let drop: Drop;
     let tag: Tag;

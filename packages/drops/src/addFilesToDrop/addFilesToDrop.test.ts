@@ -36,6 +36,22 @@ describe('addFilesToDrop', () => {
     expect(drop.files[0]).toBe(fileRef.id);
   });
 
+  it('adds the drop as an attachment to the files', async () => {
+    let drop: Drop;
+    let file1Ref: FileReference;
+    let file2Ref: FileReference;
+
+    await act(async () => {
+      file1Ref = await Files.create(core, textFile);
+      file2Ref = await Files.create(core, textFile);
+      drop = createDrop(core, { type: 'text' });
+      drop = addFilesToDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
+    });
+
+    expect(Files.get(file1Ref.id).attachedTo).toEqual([drop.id]);
+    expect(Files.get(file2Ref.id).attachedTo).toEqual([drop.id]);
+  });
+
   it('throws if file attachement does not exist', async () => {
     let drop: Drop;
 
@@ -53,7 +69,10 @@ describe('addFilesToDrop', () => {
     let fileRef: FileReference;
 
     function callback(payload) {
-      expect(payload.data).toEqual({ drop, files: { [fileRef.id]: fileRef } });
+      expect(payload.data).toEqual({
+        drop,
+        files: { [fileRef.id]: { ...fileRef, attachedTo: [drop.id] } },
+      });
       done();
     }
 

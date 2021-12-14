@@ -50,6 +50,23 @@ describe('removeFilesFromDrop', () => {
     expect(drop.files).not.toBeDefined();
   });
 
+  it('removes the drop as an attachment from the files', async () => {
+    let drop: Drop;
+    let file1Ref: FileReference;
+    let file2Ref: FileReference;
+
+    await act(async () => {
+      file1Ref = await Files.create(core, textFile, ['resource-id']);
+      file2Ref = await Files.create(core, textFile, ['resource-id']);
+      drop = createDrop(core, { type: 'text' });
+      drop = addFilesToDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
+      drop = removeFilesFromDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
+    });
+
+    expect(Files.get(file1Ref.id).attachedTo).toEqual(['resource-id']);
+    expect(Files.get(file2Ref.id).attachedTo).toEqual(['resource-id']);
+  });
+
   it("dispatches a 'drops:remove-files' event", (done) => {
     let drop: Drop;
     let fileRef: FileReference;
@@ -62,7 +79,7 @@ describe('removeFilesFromDrop', () => {
     core.addEventListener('drops:remove-files', callback);
 
     async function run() {
-      fileRef = await Files.create(core, textFile);
+      fileRef = await Files.create(core, textFile, ['resource-id']);
       drop = createDrop(core, { type: 'text', files: [fileRef.id] });
       drop = addFilesToDrop(core, drop.id, [fileRef.id]);
       drop = removeFilesFromDrop(core, drop.id, [fileRef.id]);

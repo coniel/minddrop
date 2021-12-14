@@ -77,6 +77,10 @@ export interface DropsApi {
    * Creates a new drop and dispatches a `drops:create` event.
    * Returns the new drop.
    *
+   * If the drop is created with attached files, the file references
+   * of the attached files will be automatically updated, adding the
+   * drop as a attached resource.
+   *
    * @param core A MindDrop core instance.
    * @param data The default drop property values.
    * @returns The newly created drop.
@@ -160,6 +164,9 @@ export interface DropsApi {
    * Adds files to a drop and dispatches a `drops:add-files` event
    * and a `drops:update` event.
    *
+   * The file references of the attached files will be automatically
+   * updated to include the drop ID in their `attachedTo` value.
+   *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the files.
    * @param fileIds The IDs of the files to add to the drop.
@@ -170,6 +177,10 @@ export interface DropsApi {
   /**
    * Removes files from a drop and dispatches a `drops:add-files` event
    * and a `drops:update` event.
+   *
+   * The file references of the removed files will be automatically updated
+   * to remove the drop ID from their `attachedTo` value, and deleted if the
+   * drop was their only attachment.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop from which to remove the files.
@@ -182,6 +193,13 @@ export interface DropsApi {
    * Replaces a drop's files, removing the current ones and
    * adding the new ones. Dispatches a `drops:replace-files` event
    * and a `drops:update` event.
+   *
+   * The file references of the added files will be automatically
+   * updated to include the drop ID in their `attachedTo` value.
+   *
+   * The file references of the removed files will be automatically
+   * updated to remove the drop ID from their `attachedTo` value, and
+   * deleted if the drop was their only attachment.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop in which to replace the files.
