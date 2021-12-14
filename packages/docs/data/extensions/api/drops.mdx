@@ -390,6 +390,26 @@ Drops.restore(core: Core, id: string): void
   ]}
 />
 
+### deletePermanently
+
+Permanently deletes a drop and dispatches a `drops:delete-permanently` event. Permanently deleted drops cannot be restored.
+
+```ts
+Drops.deletePermanently(core: Core, dropId: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to delete.',
+    },
+  ]}
+/>
+
 ### load
 
 Loads drops into the store and dispatches a `drops:load` event.
@@ -496,6 +516,11 @@ See below the table for more details on the data passed by drop related events.
       data: 'Drop',
       description:
         'Dispatched when an archived/deleted drop is restored.',
+    },
+    {
+      name: 'drops:delete-permanently',
+      data: 'Drop',
+      description: 'Dispatched when a drop is permanently deleted.',
     },
     {
       name: 'drops:add-tags',
