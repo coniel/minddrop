@@ -16,7 +16,7 @@ export function onRun(core: Core) {
       if (deleted) {
         store.removeFileReference(file.id);
       } else {
-        store.loadFileReferences([file]);
+        store.setFileReference(file);
       }
     },
   });

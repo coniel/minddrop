@@ -18,7 +18,7 @@ export async function createFile(
   const reference = await generateFileReference(file);
 
   // Add file reference to store
-  useFileReferencesStore.getState().addFileReference(reference);
+  useFileReferencesStore.getState().setFileReference(reference);
 
   // Dispatch 'files:create' event
   core.dispatch('files:create', { file, reference });
