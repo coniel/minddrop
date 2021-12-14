@@ -15,7 +15,7 @@ export function onRun(core: Core) {
       if (deleted) {
         store.removeDrop(drop.id);
       } else {
-        store.loadDrops([drop]);
+        store.setDrop(drop);
       }
     },
   });

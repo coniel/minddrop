@@ -15,7 +15,7 @@ export function onRun(core: Core) {
       if (deleted) {
         store.removeTopic(topic.id);
       } else {
-        store.loadTopics([topic]);
+        store.setTopic(topic);
       }
     },
   });

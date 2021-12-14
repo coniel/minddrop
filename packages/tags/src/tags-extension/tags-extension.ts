@@ -15,7 +15,7 @@ export function onRun(core: Core) {
       if (deleted) {
         store.removeTag(tag.id);
       } else {
-        store.loadTags([tag]);
+        store.setTag(tag);
       }
     },
   });
