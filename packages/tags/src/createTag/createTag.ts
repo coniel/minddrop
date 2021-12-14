@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { generateTag } from '../generateTag';
 import { CreateTagData, Tag } from '../types';
+import { useTagsStore } from '../useTagsStore';
 
 /**
  * Creates a new tag and dispatches a `tags:create` event.
@@ -13,6 +14,10 @@ import { CreateTagData, Tag } from '../types';
 export function createTag(core: Core, data: CreateTagData): Tag {
   const tag = generateTag(data);
 
+  // Add tag to the store
+  useTagsStore.getState().setTag(tag);
+
+  // Dispatch 'tags:create' event
   core.dispatch('tags:create', tag);
 
   return tag;

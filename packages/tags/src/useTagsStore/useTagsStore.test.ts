@@ -38,26 +38,14 @@ describe('useTagStore', () => {
     expect(Object.keys(result.current.tags).length).toBe(0);
   });
 
-  it('adds a tag', () => {
+  it('sets a tag', () => {
     const { result } = renderHook(() => useTagsStore((state) => state));
 
     act(() => {
-      result.current.addTag(generateTag({ label: 'Tag' }));
+      result.current.setTag(generateTag({ label: 'Tag' }));
     });
 
     expect(Object.keys(result.current.tags).length).toBe(1);
-  });
-
-  it('updates a tag', () => {
-    const tag = generateTag({ label: 'Tag' });
-    const { result } = renderHook(() => useTagsStore((state) => state));
-
-    act(() => {
-      result.current.addTag(tag);
-      result.current.updateTag(tag.id, { label: 'Hello world' });
-    });
-
-    expect(result.current.tags[tag.id].label).toBe('Hello world');
   });
 
   it('removes a tag', () => {

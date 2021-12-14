@@ -1,59 +1,64 @@
 import { act, renderHook } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { generateTag } from '../generateTag';
 import { updateTag } from './updateTag';
-import { useTagsStore } from '../useTagsStore';
-import { UpdateTagData } from '../types';
+import { Tag, UpdateTagData } from '../types';
+import { useAllTags } from '../useAllTags';
+import { createTag } from '../createTag';
+import { clearTags } from '../clearTags';
 
-let core = initializeCore('tags');
+const core = initializeCore('tags');
 
 describe('updateTag', () => {
   afterEach(() => {
-    const { result } = renderHook(() => useTagsStore());
-
+    core.removeAllEventListeners();
     act(() => {
-      result.current.clear();
+      clearTags(core);
     });
-
-    core = initializeCore('tags');
   });
 
   it('returns the updated tag', () => {
-    const { result } = renderHook(() => useTagsStore());
     const changes: UpdateTagData = { color: 'red' };
-    const tag = generateTag({ label: 'Book' });
+    let tag: Tag;
 
     act(() => {
-      result.current.addTag(tag);
+      tag = createTag(core, { label: 'Tag', color: 'blue' });
+      tag = updateTag(core, tag.id, changes);
     });
 
-    const updated = updateTag(core, tag.id, changes);
-
-    expect(updated.color).toBe('red');
+    expect(tag.color).toBe('red');
   });
 
-  it("dispatches a 'tags:update' event", () => {
-    const { result } = renderHook(() => useTagsStore());
-    const callback = jest.fn();
-    const changes: UpdateTagData = { label: 'My tag' };
-    const tag = generateTag({ label: 'Tag' });
+  it('updates the tag in the store', () => {
+    const { result } = renderHook(() => useAllTags());
+    let tag: Tag;
 
     act(() => {
-      result.current.addTag(tag);
+      tag = createTag(core, { label: 'Tag' });
+      tag = updateTag(core, tag.id, { lable: 'Updated tag' });
     });
+
+    expect(result.current[tag.id]).toEqual(tag);
+  });
+
+  it("dispatches a 'tags:update' event", (done) => {
+    const changes: UpdateTagData = { label: 'My tag' };
+    let tag: Tag;
+    let updated: Tag;
+
+    function callback(payload) {
+      expect(payload.data).toEqual({
+        before: tag,
+        after: updated,
+        changes,
+      });
+      done();
+    }
 
     core.addEventListener('tags:update', callback);
 
-    updateTag(core, tag.id, changes);
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'tags',
-      type: 'tags:update',
-      data: {
-        before: tag,
-        after: { ...tag, ...changes },
-        changes,
-      },
+    act(() => {
+      tag = createTag(core, { label: 'Tag' });
+      updated = updateTag(core, tag.id, changes);
     });
   });
 });

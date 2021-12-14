@@ -1,4 +1,4 @@
-import { Tag, UpdateTagData } from './Tag.types';
+import { Tag } from './Tag.types';
 
 export interface TagsStore {
   /**
@@ -19,19 +19,11 @@ export interface TagsStore {
   clear(): void;
 
   /**
-   * Adds a tag to the store.
+   * Sets a tag in the store.
    *
    * @param tag The tag to add.
    */
-  addTag(tag: Tag): void;
-
-  /**
-   * Updates a tag in the store.
-   *
-   * @param id The ID of the tag to update.
-   * @param data The data to set on the tag.
-   */
-  updateTag(id: string, data: UpdateTagData): void;
+  setTag(tag: Tag): void;
 
   /**
    * Removes a tag from the store.
