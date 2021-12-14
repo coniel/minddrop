@@ -20,6 +20,18 @@ describe('deleteTopicPermanently', () => {
     onRun(core);
   });
 
+  it('returns the deleted topic', () => {
+    let topic: Topic;
+    let deletedTopic: Topic;
+
+    act(() => {
+      topic = createTopic(core);
+      deletedTopic = deleteTopicPermanently(core, topic.id);
+    });
+
+    expect(deletedTopic).toEqual(topic);
+  });
+
   it('removes topic from the store', () => {
     let topic: Topic;
 

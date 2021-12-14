@@ -87,6 +87,18 @@ export interface TopicsApi {
   dropParents(dropId: string): TopicMap;
 
   /**
+   * Filters topics by active, archived, and deleted state.
+   * If no filters are set, returns active topics.
+   * If either archived or deleted filters are `true`, active
+   * topics are not included unless specifically set to `true`.
+   *
+   * @param topics The topics to filter.
+   * @param filters The filters by which to filter the topics.
+   * @returns The filtered topics.
+   */
+  filter(topics: TopicMap, filters: TopicFilters): TopicMap;
+
+  /**
    * Creates a new topic and dispatches a `topics:create` event.
    * Returns the new topic.
    *
@@ -106,6 +118,46 @@ export interface TopicsApi {
    * @returns The updated topic.
    */
   update(core: Core, id: string, data: UpdateTopicData): Topic;
+
+  /**
+   * Archives a topic and dispatches a `topics:archive`
+   * event and an `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to archive.
+   * @returns The archived topic.
+   */
+  archive(core: Core, topicId: string): Topic;
+
+  /**
+   * Deletes a topic and dispatches a `topics:delete`
+   * event and an `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to delete.
+   * @returns The deleted topic.
+   */
+  delete(core: Core, topicId: string): Topic;
+
+  /**
+   * Restores an archived or deleted topic and dispatches
+   * a `topics:restore` event and an `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to restore.
+   * @returns The restored topic.
+   */
+  restore(core: Core, topicId: string): Topic;
+
+  /**
+   * Permanently deletes a topic and dispatches a
+   * `topics:delete-permanently` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to delete permanently.
+   * @retuns The deleted topic.
+   */
+  deletePermanently(core: Core, topicId: string): Topic;
 
   /**
    * Adds subtopics into a parent topic.
@@ -176,45 +228,6 @@ export interface TopicsApi {
   removeTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
   /**
-   * Archives a topic and dispatches a `topics:archive`
-   * event and an `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to archive.
-   * @returns The archived topic.
-   */
-  archive(core: Core, topicId: string): Topic;
-
-  /**
-   * Deletes a topic and dispatches a `topics:delete`
-   * event and an `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to delete.
-   * @returns The deleted topic.
-   */
-  delete(core: Core, topicId: string): Topic;
-
-  /**
-   * Restores an archived or deleted topic and dispatches
-   * a `topics:restore` event and an `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to restore.
-   * @returns The restored topic.
-   */
-  restore(core: Core, topicId: string): Topic;
-
-  /**
-   * Permanently deletes a topic and dispatches a
-   * `topics:delete-permanently` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to delete permanently.
-   */
-  deletePermanently(core: Core, topicId: string): void;
-
-  /**
    * Dispatches a `topics:insert-data` event for a given topic.
    *
    * @param core A MindDrop core instance.
@@ -253,6 +266,41 @@ export interface TopicsApi {
     core: Core,
     type: UpdateTopicEvent,
     callback: UpdateTopicEventCallback,
+  ): void;
+
+  // Add 'topics:archive' event listener
+  addEventListener(
+    core: Core,
+    type: ArchiveTopicEvent,
+    callback: ArchiveTopicEventCallback,
+  ): void;
+
+  // Add 'topics:unarchive' event listener
+  addEventListener(
+    core: Core,
+    type: UnarchiveTopicEvent,
+    callback: UnarchiveTopicEventCallback,
+  ): void;
+
+  // Add 'topics:delete' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteTopicEvent,
+    callback: DeleteTopicEventCallback,
+  ): void;
+
+  // Add 'topics:restore' event listener
+  addEventListener(
+    core: Core,
+    type: RestoreTopicEvent,
+    callback: RestoreTopicEventCallback,
+  ): void;
+
+  // Add 'topics:delete-permanently' event listener
+  addEventListener(
+    core: Core,
+    type: PermanentlyDeleteTopicEvent,
+    callback: PermanentlyDeleteTopicEventCallback,
   ): void;
 
   // Add 'topics:add-subtopics' event listener
@@ -297,41 +345,6 @@ export interface TopicsApi {
     callback: RemoveTagsEventCallback,
   ): void;
 
-  // Add 'topics:archive' event listener
-  addEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Add 'topics:unarchive' event listener
-  addEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
-  ): void;
-
-  // Add 'topics:delete' event listener
-  addEventListener(
-    core: Core,
-    type: DeleteTopicEvent,
-    callback: DeleteTopicEventCallback,
-  ): void;
-
-  // Add 'topics:restore' event listener
-  addEventListener(
-    core: Core,
-    type: RestoreTopicEvent,
-    callback: RestoreTopicEventCallback,
-  ): void;
-
-  // Add 'topics:delete-permanently' event listener
-  addEventListener(
-    core: Core,
-    type: PermanentlyDeleteTopicEvent,
-    callback: PermanentlyDeleteTopicEventCallback,
-  ): void;
-
   // Add 'topics:insert-data' event listener
   addEventListener(
     core: Core,
@@ -369,6 +382,41 @@ export interface TopicsApi {
     core: Core,
     type: UpdateTopicEvent,
     callback: UpdateTopicEventCallback,
+  ): void;
+
+  // Remove 'topics:archive' event listener
+  removeEventListener(
+    core: Core,
+    type: ArchiveTopicEvent,
+    callback: ArchiveTopicEventCallback,
+  ): void;
+
+  // Remove 'topics:unarchive' event listener
+  removeEventListener(
+    core: Core,
+    type: UnarchiveTopicEvent,
+    callback: UnarchiveTopicEventCallback,
+  ): void;
+
+  // Remove 'topics:delete' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteTopicEvent,
+    callback: DeleteTopicEventCallback,
+  ): void;
+
+  // Remove 'topics:restore' event listener
+  removeEventListener(
+    core: Core,
+    type: RestoreTopicEvent,
+    callback: RestoreTopicEventCallback,
+  ): void;
+
+  // Remove 'topics:delete-permanently' event listener
+  removeEventListener(
+    core: Core,
+    type: PermanentlyDeleteTopicEvent,
+    callback: PermanentlyDeleteTopicEventCallback,
   ): void;
 
   // Remove 'topics:add-subtopics' event listener
@@ -411,34 +459,6 @@ export interface TopicsApi {
     core: Core,
     type: RemoveTagsEvent,
     callback: RemoveTagsEventCallback,
-  ): void;
-
-  // Remove 'topics:archive' event listener
-  removeEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:unarchive' event listener
-  removeEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:delete' event listener
-  removeEventListener(
-    core: Core,
-    type: DeleteTopicEvent,
-    callback: DeleteTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:restore' event listener
-  removeEventListener(
-    core: Core,
-    type: RestoreTopicEvent,
-    callback: RestoreTopicEventCallback,
   ): void;
 
   // Remove 'topics:load' event listener

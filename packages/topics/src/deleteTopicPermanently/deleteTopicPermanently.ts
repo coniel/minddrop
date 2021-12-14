@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { getTopic } from '../getTopic';
+import { Topic } from '../types';
 import { useTopicsStore } from '../useTopicsStore';
 
 /**
@@ -8,8 +9,9 @@ import { useTopicsStore } from '../useTopicsStore';
  *
  * @param core A MindDrop core instance.
  * @param topicId The ID of the topic to delete permanently.
+ * @retuns The deleted topic.
  */
-export function deleteTopicPermanently(core: Core, topicId: string): void {
+export function deleteTopicPermanently(core: Core, topicId: string): Topic {
   const topic = getTopic(topicId);
 
   // Remove the topic from the store
@@ -17,4 +19,6 @@ export function deleteTopicPermanently(core: Core, topicId: string): void {
 
   // Dispatch 'topics:delete-permanently' event
   core.dispatch('topics:delete-permanently', topic);
+
+  return topic;
 }
