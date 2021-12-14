@@ -40,6 +40,11 @@ export function createUpdate<C extends object, R extends object>(
 export function createUpdate<C extends object, R extends object>(
   object: R,
   data: C,
+  options: CreateUpdateOptions,
+): Update<R, C>;
+export function createUpdate<C extends object, R extends object>(
+  object: R,
+  data: C,
 ): Update<R, C>;
 export function createUpdate<C extends object, R extends object>(
   object: R,
