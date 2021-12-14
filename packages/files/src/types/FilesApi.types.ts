@@ -48,6 +48,7 @@ export interface FilesApi {
    *
    * @param core A MindDrop core instance.
    * @param fileId The ID of the file to delete.
+   * @retuns The reference of the deleted file.
    */
   delete(core: Core, id: string): FileReference;
 

@@ -9,6 +9,7 @@ import { useFileReferencesStore } from '../useFileReferencesStore';
  *
  * @param core A MindDrop core instance.
  * @param fileId The ID of the file to delete.
+ * @retuns The reference of the deleted file.
  */
 export function deleteFile(core: Core, fileId: string): FileReference {
   const file = getFileReference(fileId);
