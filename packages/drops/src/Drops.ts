@@ -1,6 +1,7 @@
 import { DropsApi } from './types';
 import { get } from './get';
 import { getAllDrops } from './getAllDrops';
+import { filterDrops } from './filterDrops';
 import { createDrop } from './createDrop';
 import { updateDrop } from './updateDrop';
 import { archiveDrop } from './archiveDrop';
@@ -18,6 +19,7 @@ import { clearDrops } from './clearDrops';
 export const Drops: DropsApi = {
   get,
   getAll: getAllDrops,
+  filter: filterDrops,
   create: createDrop,
   update: updateDrop,
   archive: archiveDrop,

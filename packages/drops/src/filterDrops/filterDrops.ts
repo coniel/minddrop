@@ -1,14 +1,14 @@
 import { DropMap, DropFilters } from '../types';
 
 /**
- * Filters drops by active, archived, and deleted state.
+ * Filters drops by type, active, archived, and deleted states.
  * If no filters are set, returns active drops.
  * If either archived or deleted filters are `true`, active
  * drops are not included unless specifically set to `true`.
  *
  * @param drops The drops to filter.
  * @param filters The filters by which to filter the drops.
- * @returns The filtere drops.
+ * @returns The filtered drops.
  */
 export function filterDrops(drops: DropMap, filters: DropFilters): DropMap {
   // Active drops are included if `active = true` or if `archived`

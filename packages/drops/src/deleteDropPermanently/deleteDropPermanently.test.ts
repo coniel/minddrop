@@ -16,7 +16,19 @@ describe('deleteDrop', () => {
     core = initializeCore('drops');
   });
 
-  it("reacts to 'drops:delete-permanently' events by removing the drop from the store", () => {
+  it('returns the deleted drop', () => {
+    let drop: Drop;
+    let deletedDrop: Drop;
+
+    act(() => {
+      drop = createDrop(core, { type: 'text' });
+      deletedDrop = deleteDropPermanently(core, drop.id);
+    });
+
+    expect(deletedDrop).toEqual(drop);
+  });
+
+  it('removes the drop from the store', () => {
     const { result } = renderHook(() => useAllDrops());
     let drop: Drop;
 
