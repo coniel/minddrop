@@ -136,17 +136,27 @@ describe('initializeResourceConnectors', () => {
   });
 
   describe('resource registered after init', () => {
-    it('loads resources', async () => {
-      await initializeResourceConnectors(core, dbApi);
-      core.registerResource(connector);
-      const item1Dirty = await db.get<DBResourceDocument>(item1._id);
-      const item2Dirty = await db.get<DBResourceDocument>(item2._id);
-      const item1Cleaned = deserializeResourceDocument(item1Dirty);
-      const item2Cleaned = deserializeResourceDocument(item2Dirty);
+    it('loads resources', (done) => {
+      let item1Cleaned;
+      let item2Cleaned;
 
-      expect(onLoad).toHaveBeenCalled();
-      expect(onLoad.mock.calls[0][0]).toEqual([item1Cleaned, item2Cleaned]);
+      function handleLoad(data) {
+        expect(data).toEqual([item1Cleaned, item2Cleaned]);
+        done();
+      }
+
+      async function run() {
+        await initializeResourceConnectors(core, dbApi);
+        const item1Dirty = await db.get<DBResourceDocument>(item1._id);
+        const item2Dirty = await db.get<DBResourceDocument>(item2._id);
+        item1Cleaned = deserializeResourceDocument(item1Dirty);
+        item2Cleaned = deserializeResourceDocument(item2Dirty);
+        core.registerResource({ ...connector, onLoad: handleLoad });
+      }
+
+      run();
     });
+
     it('reacts to createEvent', (done) => {
       function handleChange(change) {
         expect(change.doc._id).toBe(newItem.id);
@@ -160,7 +170,9 @@ describe('initializeResourceConnectors', () => {
       async function run() {
         await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
-        core.dispatch(connector.createEvent, newItem);
+        setTimeout(() => {
+          core.dispatch(connector.createEvent, newItem);
+        });
       }
 
       run();
@@ -181,13 +193,15 @@ describe('initializeResourceConnectors', () => {
         await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
         const item = deserializeResourceDocument(item1);
-        core.dispatch(connector.updateEvent, {
-          before: item,
-          after: {
-            ...item,
-            markdown: 'Updated',
-            changes: { markdown: 'Updated' },
-          },
+        setTimeout(() => {
+          core.dispatch(connector.updateEvent, {
+            before: item,
+            after: {
+              ...item,
+              markdown: 'Updated',
+              changes: { markdown: 'Updated' },
+            },
+          });
         });
       }
 
@@ -208,10 +222,12 @@ describe('initializeResourceConnectors', () => {
       async function run() {
         await initializeResourceConnectors(core, dbApi);
         core.registerResource(connector);
-        core.dispatch(
-          connector.deleteEvent,
-          deserializeResourceDocument(item1),
-        );
+        setTimeout(() => {
+          core.dispatch(
+            connector.deleteEvent,
+            deserializeResourceDocument(item1),
+          );
+        });
       }
 
       run();
@@ -224,9 +240,11 @@ describe('initializeResourceConnectors', () => {
       await initializeResourceConnectors(core, dbApi);
       core.unregisterResource('items:item');
 
-      expect(core.hasEventListeners(connector.createEvent)).toBe(false);
-      expect(core.hasEventListeners(connector.updateEvent)).toBe(false);
-      expect(core.hasEventListeners(connector.deleteEvent)).toBe(false);
+      setTimeout(() => {
+        expect(core.hasEventListeners(connector.createEvent)).toBe(false);
+        expect(core.hasEventListeners(connector.updateEvent)).toBe(false);
+        expect(core.hasEventListeners(connector.deleteEvent)).toBe(false);
+      });
     });
   });
 });
