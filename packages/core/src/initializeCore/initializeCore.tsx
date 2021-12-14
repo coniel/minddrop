@@ -59,7 +59,15 @@ export function initializeCore(extensionId: string): Core {
       }),
 
     eventListenerCount: (type) =>
-      eventListeners.filter((listener) => listener.type === type).length,
+      eventListeners.filter((listener) => {
+        let count = listener.source === extensionId;
+
+        if (count && type) {
+          count = listener.type === type;
+        }
+
+        return count;
+      }).length,
 
     dispatch: (type, data) =>
       eventListeners

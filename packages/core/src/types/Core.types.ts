@@ -74,7 +74,7 @@ export interface Core {
    * @param type The type of event listener for which to get the count.
    * @returns The number of event listener of the specified type/
    */
-  eventListenerCount(type: string): number;
+  eventListenerCount(type?: string): number;
 
   /**
    * Dispatches an event.

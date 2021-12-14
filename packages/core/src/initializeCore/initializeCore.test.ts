@@ -113,6 +113,29 @@ describe('initializeCore', () => {
     expect(core2.hasEventListeners()).toBe(false);
   });
 
+  it("counts a source's event listeners of a specific type", () => {
+    const callback = jest.fn();
+    const callback2 = jest.fn();
+
+    core.addEventListener('test', callback);
+    core.addEventListener('test', callback2);
+    core2.addEventListener('test', callback);
+
+    expect(core.eventListenerCount('test')).toBe(2);
+    expect(core.eventListenerCount('test-2')).toBe(0);
+  });
+
+  it('counts all event listeners added by a source', () => {
+    const callback = jest.fn();
+    const callback2 = jest.fn();
+
+    core.addEventListener('test', callback);
+    core.addEventListener('test-2', callback);
+    core2.addEventListener('test', callback2);
+
+    expect(core.eventListenerCount()).toBe(2);
+  });
+
   it('calls * event for all event types', (done) => {
     let calls = 0;
 
