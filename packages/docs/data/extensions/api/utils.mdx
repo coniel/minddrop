@@ -78,11 +78,13 @@ applyFieldValues<R, C>(resource: R, changes: C): R;
     {
       name: 'resource',
       type: 'Resource',
+      required: true,
       description: 'The resource to update.',
     },
     {
       name: 'changes',
       type: 'ResourceChanges',
+      required: true,
       description: (
         <span>
           Changes to apply to the resource. Supports{' '}
@@ -138,11 +140,13 @@ interface ResourceUpdate<R, C> {
     {
       name: 'resource',
       type: 'Resource',
+      required: true,
       description: 'The resource to update.',
     },
     {
       name: 'changes',
       type: 'ResourceChanges',
+      required: true,
       description: (
         <span>
           Changes to apply to the resource. Supports{' '}
