@@ -72,6 +72,10 @@ export const extensionsRoutes = [
         title: 'Topics',
         slug: 'docs/extensions/api/topics',
       },
+      {
+        title: 'Utils',
+        slug: 'docs/extensions/api/utils',
+      },
     ],
   },
   {
