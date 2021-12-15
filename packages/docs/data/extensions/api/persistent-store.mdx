@@ -1,0 +1,245 @@
+---
+metaTitle: PersistentStore API Interface
+metaDescription: An interface for retrieving and managing persistently stored data.
+---
+
+# PersistentStore
+
+<Description>
+  An interface for retrieving and managing persistently stored data.
+</Description>
+
+The persistent store is a key-value store which is persisted between app restarts and synced accross devices if using the Sync add on.
+
+Values are namespaced by extension ID in order to prevent seperate extensions from overwiting eachother's data.
+
+## Hooks
+
+Hooks provide access to persistently stored data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### usePersistentStore
+
+Returns an object containing all key-value pairs persistently stored by the extension.
+
+```ts
+usePersistentStore<T>(core: Core): T
+```
+
+## Static methods
+
+### get
+
+Retrieves a value from the persistent store.
+
+```ts
+PersistentStore.get<T>(core: Core, key: string): T
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key of the value to retrieve.',
+    },
+  ]}
+/>
+
+### set
+
+Sets a value in the persistent store and dispaches a `persistent-store:update` event.
+
+Supports [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations.
+
+```ts
+PersistentStore.set(core: Core, key: string, value: any): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key for which to set the value.',
+    },
+    {
+      name: 'data',
+      type: 'any',
+      required: true,
+      description: 'The data to set. Must be serializable into text.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a key and assotiated data from the persistent store. Dispatches a `persistent-store:update` event.
+
+```ts
+PersistentStore.delete(core: Core, key: string, value: any): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key to delete.',
+    },
+  ]}
+/>
+
+### clear
+
+Permanently deletes all data added by the extension from the persistent store. Dispatches a `persistent-store:update` event.
+
+```ts
+PersistentStore.clear(core: Core): void
+```
+
+<ArgsTable core />
+
+### clearLocal
+
+Clears all data (including data added by other extensions) from the local store. This does not delete the persisted data. Dispatches a `persistent-store:clear-local` event.
+
+Useful for forcefully refreshing the store when crating a storage-adapter.
+
+```ts
+PersistentStore.clearLocal(): void
+```
+
+### addEventListener
+
+Adds persistent store specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+PersistentStore.addEventListener(core: Core, event: PersistentStoreEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'PersistentStoreEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the tag events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the tag events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes persistent store specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'PersistentStoreEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## PersistentStore events
+
+<EventsTable
+  data={[
+    {
+      name: 'persistent-store:update',
+      data: 'UpdatePersistentStoreEventData',
+      description: 'Dispatched when the persistent store is updated.',
+    },
+    {
+      name: 'persistent-store:clear-local',
+      description: 'Dispatched when the local store is cleared.',
+    },
+  ]}
+/>
+
+#### UpdatePersistentStoreEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'PersistentStoreData',
+      required: true,
+      description: 'Persistent store data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'PersistentStoreData',
+      required: true,
+      description: 'Updated persistent store data.',
+    },
+    {
+      name: 'changes',
+      type: 'PersistentStoreChanges',
+      required: true,
+      description:
+        'The changes made to the persistent store data. See below for details.',
+    },
+  ]}
+/>
+
+`PersistentStoreData`
+
+An object containing key-value pairs namespaced by extension ID.
+
+Example
+
+```ts
+data = {
+  app: {
+    topics: ['topic-1-id', 'topic-2-id'],
+    tags: ['tag-id'],
+  },
+  extensionId: {
+    foo: 'bar',
+  },
+};
+```
+
+`PersistentStoreChanges`
+
+An object containing new field values namespaced by the extension ID which caused the update, supports [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations.
+
+Example
+
+```ts
+changes = {
+  extensionId: {
+    foo: 'bar',
+  },
+};
+```
