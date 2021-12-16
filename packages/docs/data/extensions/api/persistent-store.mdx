@@ -9,9 +9,13 @@ metaDescription: An interface for retrieving and managing persistently stored da
   An interface for retrieving and managing persistently stored data.
 </Description>
 
-The persistent store is a key-value store which is persisted between app restarts and synced accross devices if using the Sync add on.
+The persistent store is a key-value store which is persisted between app restarts.
 
-Values are namespaced by extension ID in order to prevent seperate extensions from overwiting eachother's data.
+The persistent store has two scopes, `global` and `local`. The global scope is backed up and synced accross devices when using the Sync add-on. The local scope is app specific and is not synced across devices. By default, values are set/retrieved from the global scope.
+
+Values are automatically namespaced by extension ID in order to prevent seperate extensions from overwiting eachother's data.
+
+The persistent store is intended for small pieces of simple data. If your extension needs to store a large amount of data or individual documents, [register a resource](/docs/extensions/api/core#registerresource) insteasd.
 
 ## Hooks
 
@@ -22,17 +26,30 @@ Hooks provide access to persistently stored data from inside React components. U
 Returns an object containing all key-value pairs persistently stored by the extension.
 
 ```ts
-usePersistentStore<T>(core: Core): T
+usePersistentStore<T>(core: Core, local?: boolean): T
 ```
 
-## Static methods
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'local',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the data will be retrieved from the
+          app specific local store.
+        </span>
+      ),
+    },
+  ]}
+/>
+### usePersistentStoreValue
 
-### get
-
-Retrieves a value from the persistent store.
+Returns a value from the persistent store.
 
 ```ts
-PersistentStore.get<T>(core: Core, key: string): T
+usePersistentStore<T>(core: Core, key: string, local?: boolean): T
 ```
 
 <ArgsTable
@@ -43,6 +60,48 @@ PersistentStore.get<T>(core: Core, key: string): T
       type: 'string',
       required: true,
       description: 'The key of the value to retrieve.',
+    },
+    {
+      name: 'local',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the data will be retrieved from the
+          app specific local store.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves a value from the persistent store.
+
+```ts
+PersistentStore.get<T>(core: Core, key: string, local?: boolean): T
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key of the value to retrieve.',
+    },
+    {
+      name: 'local',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the value will be retrieved from the
+          app specific local store.
+        </span>
+      ),
     },
   ]}
 />
@@ -72,6 +131,16 @@ PersistentStore.set(core: Core, key: string, value: any): void
       required: true,
       description: 'The data to set. Must be serializable into text.',
     },
+    {
+      name: 'local',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the data will be set to the app
+          specific local store.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -80,7 +149,7 @@ PersistentStore.set(core: Core, key: string, value: any): void
 Deletes a key and assotiated data from the persistent store. Dispatches a `persistent-store:update` event.
 
 ```ts
-PersistentStore.delete(core: Core, key: string, value: any): void
+PersistentStore.delete(core: Core, key: string): void
 ```
 
 <ArgsTable
@@ -92,6 +161,16 @@ PersistentStore.delete(core: Core, key: string, value: any): void
       required: true,
       description: 'The key to delete.',
     },
+    {
+      name: 'local',
+      type: 'boolean',
+      description: (
+        <span>
+          If <Code>true</Code>, the data will be deleted from the app
+          specific local store.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -100,19 +179,35 @@ PersistentStore.delete(core: Core, key: string, value: any): void
 Permanently deletes all data added by the extension from the persistent store. Dispatches a `persistent-store:update` event.
 
 ```ts
-PersistentStore.clear(core: Core): void
+PersistentStore.clear(core: Core, store: 'local' | 'global' | 'both'): void
 ```
 
-<ArgsTable core />
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'scope',
+      type: "'local' | 'global' | 'both'",
+      description: (
+        <span>
+          The store to clear. <Code>'local'</Code> clears the local,
+          app specific store. <Code>'global'</Code> clears the global
+          (not app specific) store. <Code>'both'</Code> clears both
+          the local and global store.
+        </span>
+      ),
+    },
+  ]}
+/>
 
-### clearLocal
+### clearCache
 
-Clears all data (including data added by other extensions) from the local store. This does not delete the persisted data. Dispatches a `persistent-store:clear-local` event.
+Clears all data (including data added by other extensions) from the global store cache. This does not delete the persisted data. Dispatches a `persistent-store:clear-cache` event.
 
-Useful for forcefully refreshing the store when crating a storage-adapter.
+Useful for forcefully refreshing the store from a storage adapter.
 
 ```ts
-PersistentStore.clearLocal(): void
+PersistentStore.clearCache(): void
 ```
 
 ### addEventListener
@@ -220,12 +315,26 @@ Example
 
 ```ts
 data = {
-  app: {
-    topics: ['topic-1-id', 'topic-2-id'],
-    tags: ['tag-id'],
+  global: {
+    app: {
+      topics: ['topic-1-id', 'topic-2-id'],
+      tags: ['tag-id'],
+    },
+    extensionId: {
+      foo: 'bar',
+    },
   },
-  extensionId: {
-    foo: 'bar',
+  local: {
+    app: {
+      view: {
+        id: 'topic',
+        title: 'Sailing',
+        resource: {
+          type: 'topic',
+          id: 'topic-id',
+        },
+      },
+    },
   },
 };
 ```
