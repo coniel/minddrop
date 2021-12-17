@@ -3,10 +3,16 @@ import { ResourceConnector } from './ResourceConnector.types';
 
 export interface Core {
   /**
+   * The application ID for which the core intance
+   * was initialized.
+   */
+  appId: string;
+
+  /**
    * The extension ID for which the core intance
    * was initialized.
    */
-  initializedFor: string;
+  extensionId: string;
 
   /**
    * Adds an event listener for the specified event.

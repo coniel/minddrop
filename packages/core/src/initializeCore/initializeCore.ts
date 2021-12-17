@@ -3,15 +3,33 @@ import { EventListener, Core, ResourceConnector } from '../types';
 let eventListeners: EventListener[] = [];
 let resourceConnectors: ResourceConnector[] = [];
 
+export interface InitializeCoreOptions {
+  /**
+   * The application ID for which to initialize
+   * the core instance.
+   */
+  appId: string;
+
+  /**
+   * The extension ID for which to initialize
+   * the core instance.
+   */
+  extensionId: string;
+}
+
 /**
  * Creates an extension specific core API instance.
  *
  * @param extensionId The ID of the extension which will use the core API instance.
  * @returns A core API instance.
  */
-export function initializeCore(extensionId: string): Core {
+export function initializeCore({
+  appId,
+  extensionId,
+}: InitializeCoreOptions): Core {
   const core: Core = {
-    initializedFor: extensionId,
+    appId,
+    extensionId,
 
     addEventListener: (type, callback) =>
       eventListeners.push({ source: extensionId, type, callback }),
