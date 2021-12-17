@@ -58,7 +58,13 @@ export const EmailForm: React.FC = () => {
           aria-label="Email address"
           className={styles.input}
         />
-        <Button type="submit" size="large" variant="primary" disabled={loading}>
+        <Button
+          type="submit"
+          size="large"
+          variant="primary"
+          disabled={loading}
+          className={styles.button}
+        >
           Notify me
         </Button>
       </form>

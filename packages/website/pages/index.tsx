@@ -5,6 +5,16 @@ import { Toolbar, Button, Separator } from '@minddrop/ui';
 import { Image, ImageSvg, ThemeToggle, EmailForm } from '../components';
 import styles from '../styles/Home.module.css';
 
+function className(classes: string[]): string {
+  let value = '';
+
+  classes.forEach((name) => {
+    value = `${value} ${styles[name]}`;
+  });
+
+  return value;
+}
+
 const Checkmark: React.FC = () => (
   <ImageSvg
     srcLight="/checkmark-light.svg"
@@ -26,6 +36,7 @@ const Home: NextPage = () => {
     <div className={`${styles.container}`}>
       <Head>
         <title>MindDrop</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Your mind's visual workspace." />
         <link rel="icon" href="/favicon.png" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -38,10 +49,18 @@ const Home: NextPage = () => {
         </div>
         <div>
           <Toolbar>
-            <Button variant="text" href="#pricing">
+            <Button
+              variant="text"
+              href="#pricing"
+              className={styles.hiddenMobile}
+            >
               Pricing
             </Button>
-            <Button variant="text" href="https://docs.minddrop.app">
+            <Button
+              variant="text"
+              href="https://docs.minddrop.app"
+              className={styles.hiddenMobile}
+            >
               Docs
             </Button>
             <span />
