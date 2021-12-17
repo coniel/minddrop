@@ -5,7 +5,7 @@ import { Tag } from '../types';
 import { useAllTags } from '../useAllTags';
 import { createTag } from './createTag';
 
-const core = initializeCore('tags');
+const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('createTag', () => {
   afterEach(() => {

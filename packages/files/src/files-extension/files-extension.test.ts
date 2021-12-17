@@ -5,7 +5,7 @@ import { generateFileReference } from '../generateFileReference';
 import { useAllFileReferences } from '../useAllFileReferences';
 import { Files } from '../Files';
 
-let core = initializeCore('files');
+let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('files extension', () => {
   describe('onRun', () => {
@@ -13,7 +13,7 @@ describe('files extension', () => {
       act(() => {
         Files.clear(core);
       });
-      core = initializeCore('files');
+      core = initializeCore({ appId: 'app-id', extensionId: 'files' });
     });
 
     describe('filleReferences resource registration', () => {
@@ -67,7 +67,7 @@ describe('files extension', () => {
       act(() => {
         Files.clear(core);
       });
-      core = initializeCore('files');
+      core = initializeCore({ appId: 'app-id', extensionId: 'files' });
     });
 
     it('clears the store', async () => {

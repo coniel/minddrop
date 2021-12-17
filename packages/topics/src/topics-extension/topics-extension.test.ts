@@ -5,7 +5,7 @@ import { generateTopic } from '../generateTopic';
 import { useAllTopics } from '../useAllTopics';
 import { Topics } from '../Topics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('topics extension', () => {
   describe('onRun', () => {
@@ -13,7 +13,7 @@ describe('topics extension', () => {
       act(() => {
         core.dispatch('topics:clear');
       });
-      core = initializeCore('topics');
+      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     });
 
     describe('topics resource registration', () => {
@@ -67,7 +67,7 @@ describe('topics extension', () => {
       act(() => {
         core.dispatch('topics:clear');
       });
-      core = initializeCore('topics');
+      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     });
 
     it('clears the store', () => {

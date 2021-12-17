@@ -5,11 +5,11 @@ import { FileReference } from '../types';
 import { useAllFileReferences } from '../useAllFileReferences';
 import { createFile } from './createFile';
 
-let core = initializeCore('files');
+let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('createFile', () => {
   afterEach(() => {
-    core = initializeCore('files');
+    core = initializeCore({ appId: 'app-id', extensionId: 'files' });
     act(() => {
       clearFileReferences(core);
     });

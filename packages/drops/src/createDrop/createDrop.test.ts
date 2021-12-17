@@ -11,11 +11,11 @@ import { Drop } from '../types';
 import { useAllDrops } from '../useAllDrops';
 import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('createDrop', () => {
   afterEach(() => {
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
       clearDrops(core);
       Files.clear(core);

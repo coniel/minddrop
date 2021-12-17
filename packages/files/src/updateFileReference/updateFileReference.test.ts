@@ -6,7 +6,7 @@ import { createFile } from '../createFile';
 import { useAllFileReferences } from '../useAllFileReferences';
 import { clearFileReferences } from '../clearFileReferences';
 
-const core = initializeCore('files');
+const core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('updateFileReference', () => {
   afterEach(() => {

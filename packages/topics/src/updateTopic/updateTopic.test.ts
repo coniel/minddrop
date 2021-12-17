@@ -6,7 +6,7 @@ import { useAllTopics } from '../useAllTopics';
 import { createTopic } from '../createTopic';
 import { Topic } from '../types';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('updateTopic', () => {
   afterEach(() => {
@@ -16,7 +16,7 @@ describe('updateTopic', () => {
       result.current.clear();
     });
 
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
   });
 
   it('updates the topic', () => {

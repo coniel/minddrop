@@ -5,14 +5,14 @@ import { generateTopic } from '../generateTopic';
 import { useAllTopics } from '../useAllTopics';
 import { useTopicsStore } from '../useTopicsStore';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('loadTopics', () => {
   afterEach(() => {
     act(() => {
       useTopicsStore.getState().clear();
     });
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
   });
 
   it('loads topics into the store', () => {

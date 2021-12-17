@@ -7,7 +7,7 @@ import { restoreDrop } from './restoreDrop';
 import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 // Set up extension
 onRun(core);
@@ -18,7 +18,7 @@ describe('restoreDrop', () => {
     act(() => {
       onDisable(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     onRun(core);
   });
 

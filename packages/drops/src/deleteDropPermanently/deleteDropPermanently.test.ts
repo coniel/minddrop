@@ -6,14 +6,14 @@ import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { useAllDrops } from '../useAllDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('deleteDrop', () => {
   afterEach(() => {
     act(() => {
       clearDrops(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('returns the deleted drop', () => {

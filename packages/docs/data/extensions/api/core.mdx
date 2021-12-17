@@ -16,7 +16,13 @@ MindDrop has a lean core mainly responsible for managing event listeners and res
 <InterfaceTable
   data={[
     {
-      name: 'initializedFor',
+      name: 'appId',
+      type: 'string',
+      description:
+        'The ID of the application for which the core instance was initialized. This is unique to each application installation.',
+    },
+    {
+      name: 'extensionId',
       type: 'string',
       description:
         'The ID of the extension for which the core instance was initialized.',

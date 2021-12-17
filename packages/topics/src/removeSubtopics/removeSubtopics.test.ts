@@ -6,7 +6,7 @@ import { Topic } from '../types';
 import { removeSubtopics } from './removeSubtopics';
 import { addSubtopics } from '../addSubtopics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Set up extension
 onRun(core);
@@ -15,7 +15,7 @@ describe('removeSubtopics', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     onRun(core);
   });
 

@@ -5,7 +5,7 @@ import { insertData } from './insertData';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Set up extension
 onRun(core);
@@ -14,7 +14,7 @@ describe('insertData', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     onRun(core);
   });
 

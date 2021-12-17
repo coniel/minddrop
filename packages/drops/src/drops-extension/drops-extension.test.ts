@@ -5,7 +5,7 @@ import { generateDrop } from '../generateDrop';
 import { useAllDrops } from '../useAllDrops';
 import { Drops } from '../Drops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('drops extension', () => {
   describe('onRun', () => {
@@ -13,7 +13,7 @@ describe('drops extension', () => {
       act(() => {
         Drops.clear(core);
       });
-      core = initializeCore('drops');
+      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     });
 
     describe('drops resource registration', () => {
@@ -67,7 +67,7 @@ describe('drops extension', () => {
       act(() => {
         Drops.clear(core);
       });
-      core = initializeCore('drops');
+      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     });
 
     it('clears the store', () => {

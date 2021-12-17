@@ -43,7 +43,7 @@ describe('initializeResourceConnectors', () => {
   beforeEach(async () => {
     db = new PouchDB<DBResourceDocument>('initializeResourceConnectors');
     dbApi = initializePouchDB(db);
-    core = initializeCore('pouchdb');
+    core = initializeCore({ appId: 'app-id', extensionId: 'pouchdb' });
     await Promise.all([db.put(item1), db.put(item2), db.put(item3)]);
   });
 

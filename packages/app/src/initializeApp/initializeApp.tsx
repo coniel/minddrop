@@ -20,7 +20,7 @@ export function initializeApp({ componentMap }: InitializeAppConig): AppApi {
     addUiExtension: (core, location, element) => {
       const type = typeof element === 'object' ? 'config' : 'component';
       useAppStore.getState().addUiExtension({
-        source: core.initializedFor,
+        source: core.extensionId,
         type,
         location,
         element,
@@ -32,9 +32,7 @@ export function initializeApp({ componentMap }: InitializeAppConig): AppApi {
     },
 
     removeAllUiExtensions: (core, location) =>
-      useAppStore
-        .getState()
-        .removeAllUiExtensions(core.initializedFor, location),
+      useAppStore.getState().removeAllUiExtensions(core.extensionId, location),
 
     addEventListener: (core, event, callback) =>
       core.addEventListener(event, callback),

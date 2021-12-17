@@ -6,11 +6,11 @@ import { useAllFileReferences } from '../useAllFileReferences';
 import { FileReference } from '../types';
 import { clearFileReferences } from '../clearFileReferences';
 
-let core = initializeCore('files');
+let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('loadFileReferences', () => {
   afterEach(() => {
-    core = initializeCore('files');
+    core = initializeCore({ appId: 'app-id', extensionId: 'files' });
     act(() => {
       clearFileReferences(core);
     });

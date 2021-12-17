@@ -6,11 +6,11 @@ import { deleteFile } from './deleteFile';
 import { clearFileReferences } from '../clearFileReferences';
 import { useAllFileReferences } from '../useAllFileReferences';
 
-let core = initializeCore('files');
+let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('deleteFile', () => {
   afterEach(() => {
-    core = initializeCore('files');
+    core = initializeCore({ appId: 'app-id', extensionId: 'files' });
     act(() => {
       clearFileReferences(core);
     });

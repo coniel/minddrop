@@ -7,7 +7,7 @@ import { deleteTopicPermanently } from './deleteTopicPermanently';
 import { getTopic } from '../getTopic';
 import { TopicNotFoundError } from '../errors';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Set up extension
 onRun(core);
@@ -16,7 +16,7 @@ describe('deleteTopicPermanently', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     onRun(core);
   });
 

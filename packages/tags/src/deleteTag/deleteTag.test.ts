@@ -6,7 +6,7 @@ import { deleteTag } from './deleteTag';
 import { clearTags } from '../clearTags';
 import { useAllTags } from '../useAllTags';
 
-const core = initializeCore('tags');
+const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('deleteTag', () => {
   afterEach(() => {

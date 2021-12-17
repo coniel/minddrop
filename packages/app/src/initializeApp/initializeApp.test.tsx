@@ -14,7 +14,7 @@ const config: IconButtonConfig = {
 };
 
 const element = () => <span />;
-const core = initializeCore('app');
+const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 const componentMap = {
   // @ts-ignore
@@ -104,7 +104,7 @@ describe('initializeApp', () => {
   it('removes all UI extensions added by the extension from a specified location', () => {
     const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore('extension');
+    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
       app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
@@ -120,7 +120,7 @@ describe('initializeApp', () => {
   it('removes all UI extensions added by the extension', () => {
     const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore('extension');
+    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
       app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);

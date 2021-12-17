@@ -7,14 +7,14 @@ import { clearDrops } from '../clearDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('archiveDrop', () => {
   afterEach(() => {
     act(() => {
       clearDrops(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('archives the drop', () => {

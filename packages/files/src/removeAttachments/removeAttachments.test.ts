@@ -7,7 +7,7 @@ import { removeAttachments } from './removeAttachments';
 import { useAllFileReferences } from '../useAllFileReferences';
 import { FieldValue } from '@minddrop/utils';
 
-const core = initializeCore('files');
+const core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('removeAttachments', () => {
   afterEach(() => {

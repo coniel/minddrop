@@ -6,7 +6,7 @@ import { clearFileReferences } from '../clearFileReferences';
 import { addAttachments } from './addAttachments';
 import { useAllFileReferences } from '../useAllFileReferences';
 
-const core = initializeCore('files');
+const core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('addAttachments', () => {
   afterEach(() => {

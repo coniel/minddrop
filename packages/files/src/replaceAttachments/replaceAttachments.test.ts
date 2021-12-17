@@ -6,7 +6,7 @@ import { clearFileReferences } from '../clearFileReferences';
 import { replaceAttachments } from './replaceAttachments';
 import { useAllFileReferences } from '../useAllFileReferences';
 
-const core = initializeCore('files');
+const core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('replaceAttachments', () => {
   afterEach(() => {

@@ -7,11 +7,11 @@ import { createDrop } from '../createDrop';
 import { addFilesToDrop } from '../addFilesToDrop';
 import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('removeFilesFromDrop', () => {
   afterEach(() => {
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
       Files.clear(core);
       clearDrops(core);

@@ -6,11 +6,11 @@ import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('addTagsToDrop', () => {
   afterEach(() => {
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
       Tags.clear(core);
       clearDrops(core);

@@ -5,14 +5,14 @@ import { useAllDrops } from '../useAllDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('clearDrops', () => {
   afterEach(() => {
     act(() => {
       clearDrops(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('clears drops from the store', () => {

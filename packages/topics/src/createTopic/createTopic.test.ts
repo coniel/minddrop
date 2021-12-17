@@ -4,11 +4,11 @@ import { Topic } from '../types';
 import { createTopic } from './createTopic';
 import { useAllTopics } from '../useAllTopics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('createTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
   });
 
   it('creates a topic', () => {

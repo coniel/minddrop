@@ -5,11 +5,11 @@ import { useAllTopics } from '../useAllTopics';
 import { clearTopics } from './clearTopics';
 import { loadTopics } from '../loadTopics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('clearTopics', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
   });
 
   it('clears topics from the store', () => {

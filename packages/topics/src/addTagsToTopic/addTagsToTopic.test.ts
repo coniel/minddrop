@@ -12,7 +12,7 @@ import { addTagsToTopic } from './addTagsToTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Run tags extension
 onRunTags(core);
@@ -21,7 +21,7 @@ onRun(core);
 
 describe('addTagsToTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {
       onDisableTags(core);
       onDisable(core);

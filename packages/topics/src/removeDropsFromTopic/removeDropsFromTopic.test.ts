@@ -12,7 +12,7 @@ import { Topic } from '../types';
 import { createTopic } from '../createTopic';
 import { addDropsToTopic } from '../addDropsToTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Run drops extension
 onRunDrops(core);
@@ -21,7 +21,7 @@ onRun(core);
 
 describe('removeDropsFromTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {
       onDisableDrops(core);
       onDisable(core);

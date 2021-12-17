@@ -6,7 +6,7 @@ import { Drop } from '../types';
 import { clearDrops } from '../clearDrops';
 import { useAllDrops } from '../useAllDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('updateDrop', () => {
   afterEach(() => {
@@ -14,7 +14,7 @@ describe('updateDrop', () => {
     act(() => {
       clearDrops(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('returns the updated drop', () => {
