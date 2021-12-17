@@ -4,10 +4,10 @@ import {
   PersistentStoreData,
 } from './PersistentStore.types';
 
-export type UpdatePersistentStoreEvent = 'persistent-store:update';
-export type ClearPersistentStoreEvent = 'persistent-store:clear';
+export type UpdateGlobalStoreEvent = 'persistent-store:update-global';
+export type UpdateLocalStoreEvent = 'persistent-store:update-local';
 
-export interface UpdatePersistentStoreEventData {
+export interface UpdateGlobalStoreEventData {
   /**
    * The sotre data before it was updated.
    */
@@ -24,9 +24,28 @@ export interface UpdatePersistentStoreEventData {
   changes: PersistentStoreChanges;
 }
 
-export type UpdatePersistentStoreEventCallback = EventListenerCallback<
-  UpdatePersistentStoreEvent,
-  UpdatePersistentStoreEventData
+export interface UpdateLocalStoreEventData {
+  /**
+   * The sotre data before it was updated.
+   */
+  before: PersistentStoreData;
+
+  /**
+   * The updated store data.
+   */
+  after: PersistentStoreData;
+
+  /**
+   * Changes applied to the store data.
+   */
+  changes: PersistentStoreChanges;
+}
+
+export type UpdateGlobalStoreEventCallback = EventListenerCallback<
+  UpdateGlobalStoreEvent,
+  UpdateGlobalStoreEventData
 >;
-export type ClearPersistentStoreEventCallback =
-  EventListenerCallback<ClearPersistentStoreEvent>;
+export type UpdateLocalStoreEventCallback = EventListenerCallback<
+  UpdateLocalStoreEvent,
+  UpdateLocalStoreEventData
+>;

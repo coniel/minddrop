@@ -9,47 +9,40 @@ metaDescription: An interface for retrieving and managing persistently stored da
   An interface for retrieving and managing persistently stored data.
 </Description>
 
-The persistent store is a key-value store which is persisted between app restarts.
-
-The persistent store has two scopes, `global` and `local`. The global scope is backed up and synced accross devices when using the Sync add-on. The local scope is app specific and is not synced across devices. By default, values are set/retrieved from the global scope.
+The persistent store is a key-value store which is persisted between app restarts. It has two scopes, `global` and `local`.
 
 Values are automatically namespaced by extension ID in order to prevent seperate extensions from overwiting eachother's data.
 
 The persistent store is intended for small pieces of simple data. If your extension needs to store a large amount of data or individual documents, [register a resource](/docs/extensions/api/core#registerresource) insteasd.
 
+### Global store
+
+The global store is backed up and synced accross devices when using the Sync add-on. It is intended for data which is not specific to an app installation. For example, internally, MindDrop stores a list of root level topic and tag IDs in the global store.
+
+### Local store
+
+The local store is app specific and is not synced across devices. It is intended for app specific data. For example, internally, MindDrop stores the last opened view and sidebar width in the local store.
+
 ## Hooks
 
 Hooks provide access to persistently stored data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
 
-### usePersistentStore
+### useGlobalStore
 
-Returns an object containing all key-value pairs persistently stored by the extension.
+Returns an object containing all of the data stored by the extension in the global store.
 
 ```ts
-usePersistentStore<T>(core: Core, local?: boolean): T
+useGlobalStore<T>(core: Core): T
 ```
 
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'local',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the data will be retrieved from the
-          app specific local store.
-        </span>
-      ),
-    },
-  ]}
-/>
-### usePersistentStoreValue
+<ArgsTable core />
 
-Returns a value from the persistent store.
+### useGlobalStoreValue
+
+Returns a value from the global store.
 
 ```ts
-usePersistentStore<T>(core: Core, key: string, local?: boolean): T
+useGlobalStoreValue<T>(core: Core, key: string): T
 ```
 
 <ArgsTable
@@ -61,27 +54,47 @@ usePersistentStore<T>(core: Core, key: string, local?: boolean): T
       required: true,
       description: 'The key of the value to retrieve.',
     },
+  ]}
+/>
+
+### useLocalStore
+
+Returns an object containing all of the data stored by the extension in the local store.
+
+```ts
+useLocalStore<T>(core: Core): T
+```
+
+<ArgsTable core />
+
+### useLocalStoreValue
+
+Returns a value from the local store.
+
+```ts
+useLocalStoreValue<T>(core: Core, key: string): T
+```
+
+<ArgsTable
+  core
+  data={[
     {
-      name: 'local',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the data will be retrieved from the
-          app specific local store.
-        </span>
-      ),
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key of the value to retrieve.',
     },
   ]}
 />
 
 ## Static methods
 
-### get
+### getGlobal
 
-Retrieves a value from the persistent store.
+Retrieves a value from the global store.
 
 ```ts
-PersistentStore.get<T>(core: Core, key: string, local?: boolean): T
+PersistentStore.getGlobal<T>(core: Core, key: string): T
 ```
 
 <ArgsTable
@@ -93,27 +106,37 @@ PersistentStore.get<T>(core: Core, key: string, local?: boolean): T
       required: true,
       description: 'The key of the value to retrieve.',
     },
+  ]}
+/>
+
+### getLocal
+
+Retrieves a value from the local store.
+
+```ts
+PersistentStore.getLocal<T>(core: Core, key: string): T
+```
+
+<ArgsTable
+  core
+  data={[
     {
-      name: 'local',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the value will be retrieved from the
-          app specific local store.
-        </span>
-      ),
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key of the value to retrieve.',
     },
   ]}
 />
 
-### set
+### setGlobal
 
-Sets a value in the persistent store and dispaches a `persistent-store:update` event.
+Sets a value in the global store and dispaches a `persistent-store:update-global` event.
 
 Supports [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations.
 
 ```ts
-PersistentStore.set(core: Core, key: string, value: any): void
+PersistentStore.setGlobal<T>(core: Core, key: string, value: T): void
 ```
 
 <ArgsTable
@@ -131,25 +154,43 @@ PersistentStore.set(core: Core, key: string, value: any): void
       required: true,
       description: 'The data to set. Must be serializable into text.',
     },
+  ]}
+/>
+
+### setLocal
+
+Sets a value in the local store and dispaches a `persistent-store:update-local` event.
+
+Supports [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations.
+
+```ts
+PersistentStore.setLocal<T>(core: Core, key: string, value: T): void
+```
+
+<ArgsTable
+  core
+  data={[
     {
-      name: 'local',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the data will be set to the app
-          specific local store.
-        </span>
-      ),
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key for which to set the value.',
+    },
+    {
+      name: 'data',
+      type: 'any',
+      required: true,
+      description: 'The data to set. Must be serializable into text.',
     },
   ]}
 />
 
-### delete
+### deleteGlobal
 
-Deletes a key and assotiated data from the persistent store. Dispatches a `persistent-store:update` event.
+Deletes a key and assotiated data from the global store. Dispatches a `persistent-store:update-global` event.
 
 ```ts
-PersistentStore.delete(core: Core, key: string): void
+PersistentStore.deleteGlobal(core: Core, key: string): void
 ```
 
 <ArgsTable
@@ -161,53 +202,67 @@ PersistentStore.delete(core: Core, key: string): void
       required: true,
       description: 'The key to delete.',
     },
-    {
-      name: 'local',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the data will be deleted from the app
-          specific local store.
-        </span>
-      ),
-    },
   ]}
 />
 
-### clear
+### deleteLocal
 
-Permanently deletes all data added by the extension from the persistent store. Dispatches a `persistent-store:update` event.
+Deletes a key and assotiated data from the local store. Dispatches a `persistent-store:update-local` event.
 
 ```ts
-PersistentStore.clear(core: Core, store: 'local' | 'global' | 'both'): void
+PersistentStore.deleteLocal(core: Core, key: string): void
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'scope',
-      type: "'local' | 'global' | 'both'",
-      description: (
-        <span>
-          The store to clear. <Code>'local'</Code> clears the local,
-          app specific store. <Code>'global'</Code> clears the global
-          (not app specific) store. <Code>'both'</Code> clears both
-          the local and global store.
-        </span>
-      ),
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key to delete.',
     },
   ]}
 />
 
-### clearCache
+### clearGlobal
 
-Clears all data (including data added by other extensions) from the global store cache. This does not delete the persisted data. Dispatches a `persistent-store:clear-cache` event.
+Permanently deletes all data added by the extension from the global store. Dispatches a `persistent-store:update-global` event.
+
+```ts
+PersistentStore.clearGlobal(core: Core): void
+```
+
+<ArgsTable core />
+
+### clearLocal
+
+Permanently deletes all data added by the extension from the local store. Dispatches a `persistent-store:update-local` event.
+
+```ts
+PersistentStore.clearLocal(core: Core): void
+```
+
+<ArgsTable core />
+
+### clearGlobalCache
+
+Clears all data (including data added by other extensions) from the global store cache. This does not delete the persisted data.
 
 Useful for forcefully refreshing the store from a storage adapter.
 
 ```ts
-PersistentStore.clearCache(): void
+PersistentStore.clearGlobalCache(): void
+```
+
+### clearLocalCache
+
+Clears all data (including data added by other extensions) from the local store cache. This does not delete the persisted data.
+
+Useful for forcefully refreshing the store from a storage adapter.
+
+```ts
+PersistentStore.clearLocalCache(): void
 ```
 
 ### addEventListener
@@ -270,18 +325,19 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
 <EventsTable
   data={[
     {
-      name: 'persistent-store:update',
-      data: 'UpdatePersistentStoreEventData',
-      description: 'Dispatched when the persistent store is updated.',
+      name: 'persistent-store:update-global',
+      data: 'UpdateGlobalStoreEventData',
+      description: 'Dispatched when the global store is updated.',
     },
     {
-      name: 'persistent-store:clear-local',
-      description: 'Dispatched when the local store is cleared.',
+      name: 'persistent-store:update-local',
+      data: 'UpdateLocalStoreEventData',
+      description: 'Dispatched when the local store is updated.',
     },
   ]}
 />
 
-#### UpdatePersistentStoreEventData
+#### UpdateGlobalStoreEventData
 
 <InterfaceTable
   data={[
@@ -289,20 +345,46 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
       name: 'before',
       type: 'PersistentStoreData',
       required: true,
-      description: 'Persistent store data before it was changed.',
+      description: 'Global store data before it was changed.',
     },
     {
       name: 'after',
       type: 'PersistentStoreData',
       required: true,
-      description: 'Updated persistent store data.',
+      description: 'Updated global store data.',
     },
     {
       name: 'changes',
       type: 'PersistentStoreChanges',
       required: true,
       description:
-        'The changes made to the persistent store data. See below for details.',
+        'The changes made to the global store data. See below for details.',
+    },
+  ]}
+/>
+
+#### UpdateLocalStoreEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'PersistentStoreData',
+      required: true,
+      description: 'Local store data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'PersistentStoreData',
+      required: true,
+      description: 'Updated local store data.',
+    },
+    {
+      name: 'changes',
+      type: 'PersistentStoreChanges',
+      required: true,
+      description:
+        'The changes made to the local store data. See below for details.',
     },
   ]}
 />
@@ -315,26 +397,12 @@ Example
 
 ```ts
 data = {
-  global: {
-    app: {
-      topics: ['topic-1-id', 'topic-2-id'],
-      tags: ['tag-id'],
-    },
-    extensionId: {
-      foo: 'bar',
-    },
+  app: {
+    topics: ['topic-1-id', 'topic-2-id'],
+    tags: ['tag-id'],
   },
-  local: {
-    app: {
-      view: {
-        id: 'topic',
-        title: 'Sailing',
-        resource: {
-          type: 'topic',
-          id: 'topic-id',
-        },
-      },
-    },
+  extensionId: {
+    foo: 'bar',
   },
 };
 ```

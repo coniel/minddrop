@@ -5,9 +5,12 @@ describe('usePersistentStore', () => {
   afterEach(() => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
     act(() => {
-      result.current.clearAll();
-      result.current.set('test', 'foo', 'foo');
-      result.current.set('test', 'bar', 'bar');
+      result.current.clearChache('global');
+      result.current.clearChache('local');
+      result.current.set('global', 'test', 'foo', 'foo');
+      result.current.set('global', 'test', 'bar', 'bar');
+      result.current.set('local', 'test', 'foo', 'foo');
+      result.current.set('local', 'test', 'bar', 'bar');
     });
   });
 
@@ -15,46 +18,79 @@ describe('usePersistentStore', () => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
 
     act(() => {
-      result.current.set('app', 'foo', 'foo');
-      result.current.set('app', 'bar', 'bar');
+      // Global
+      result.current.set('global', 'app', 'foo', 'foo');
+      result.current.set('global', 'app', 'bar', 'bar');
+      // Local
+      result.current.set('local', 'app', 'foo', 'foo');
+      result.current.set('local', 'app', 'bar', 'bar');
     });
 
-    expect(result.current.data.app.foo).toBe('foo');
-    expect(result.current.data.app.bar).toBe('bar');
+    // Global
+    expect(result.current.global.app.foo).toBe('foo');
+    expect(result.current.global.app.bar).toBe('bar');
+    // Local
+    expect(result.current.local.app.foo).toBe('foo');
+    expect(result.current.local.app.bar).toBe('bar');
   });
 
   it('deletes a value', () => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
 
     act(() => {
-      result.current.delete('test', 'foo');
+      // Global
+      result.current.delete('global', 'test', 'foo');
       // Should not throw error
-      result.current.delete('test-2', 'foo');
+      result.current.delete('global', 'test-2', 'foo');
+
+      // Local
+      result.current.delete('local', 'test', 'foo');
+      // Should not throw error
+      result.current.delete('local', 'test-2', 'foo');
     });
 
-    expect(result.current.data.test.foo).not.toBeDefined();
-    expect(result.current.data.test.bar).toBe('bar');
+    // Global
+    expect(result.current.global.test.foo).not.toBeDefined();
+    expect(result.current.global.test.bar).toBe('bar');
+    // Local
+    expect(result.current.local.test.foo).not.toBeDefined();
+    expect(result.current.local.test.bar).toBe('bar');
   });
 
   it('clears the data for a namespace', () => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
 
     act(() => {
-      result.current.clear('test');
+      // Global
+      result.current.clear('global', 'test');
       // Should not throw error
-      result.current.clear('test-2');
+      result.current.clear('global', 'test-2');
+
+      // Local
+      result.current.clear('local', 'test');
+      // Should not throw error
+      result.current.clear('local', 'test-2');
     });
 
-    expect(result.current.data.test).not.toBeDefined();
+    // Global
+    expect(result.current.global.test).not.toBeDefined();
+    // Local
+    expect(result.current.local.test).not.toBeDefined();
   });
 
   it('clears all data', () => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
 
     act(() => {
-      result.current.clearAll();
+      // Global
+      result.current.clearChache('global');
+      // Local
+      result.current.clearChache('local');
     });
 
-    expect(result.current.data).toEqual({});
+    // Global
+    expect(result.current.global).toEqual({});
+    // Local
+    expect(result.current.local).toEqual({});
   });
 });

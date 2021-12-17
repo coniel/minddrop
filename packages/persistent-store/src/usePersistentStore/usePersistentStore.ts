@@ -2,43 +2,49 @@ import createStore from 'zustand';
 import { PersistentStore } from '../types';
 
 export const usePersistentStore = createStore<PersistentStore>((set) => ({
-  data: {},
+  global: {},
 
-  set: (namespace, key, value) =>
+  local: {},
+
+  set: (scope, namespace, key, value) =>
     set((state) => ({
-      data: {
-        ...state.data,
+      [scope as 'global']: {
+        ...state[scope],
         [namespace]: {
-          ...(state.data[namespace] || {}),
+          ...(state[scope][namespace] || {}),
           [key]: value,
         },
       },
     })),
 
-  delete: (namespace, key) =>
+  delete: (scope, namespace, key) =>
     set((state) => {
-      const data = state.data[namespace] || {};
+      const data = state[scope][namespace] || {};
 
       delete data[key];
 
       return {
-        data: {
-          ...state.data,
+        [scope as 'global']: {
+          ...state[scope],
           [namespace]: data,
         },
       };
     }),
 
-  clear: (namespace) =>
+  clear: (scope, namespace) =>
     set((state) => {
-      const { data } = state;
+      const { global, local } = state;
 
-      delete data[namespace];
+      if (scope === 'global') {
+        delete global[namespace];
+      } else {
+        delete local[namespace];
+      }
 
       return {
-        data,
+        local,
       };
     }),
 
-  clearAll: () => set(() => ({ data: {} })),
+  clearChache: (scope) => set(() => ({ [scope as 'global']: {} })),
 }));
