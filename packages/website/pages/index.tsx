@@ -37,7 +37,10 @@ const Home: NextPage = () => {
       <Head>
         <title>MindDrop</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Your mind's visual workspace." />
+        <meta
+          name="description"
+          content="Organize your projects, studies, research, and ideas into a visual workspace."
+        />
         <link rel="icon" href="/favicon.png" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </Head>
