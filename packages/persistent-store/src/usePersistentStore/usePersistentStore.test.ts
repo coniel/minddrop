@@ -2,15 +2,44 @@ import { renderHook, act } from '@minddrop/test-utils';
 import { usePersistentStore } from './usePersistentStore';
 
 describe('usePersistentStore', () => {
+  beforeEach(() => {
+    const { result } = renderHook(() => usePersistentStore((state) => state));
+    act(() => {
+      result.current.set('global', 'test', 'foo', 'foo');
+      result.current.set('global', 'test', 'bar', 'bar');
+      result.current.set('local', 'test', 'foo', 'foo');
+      result.current.set('local', 'test', 'bar', 'bar');
+    });
+  });
+
   afterEach(() => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
     act(() => {
       result.current.clearChache('global');
       result.current.clearChache('local');
-      result.current.set('global', 'test', 'foo', 'foo');
-      result.current.set('global', 'test', 'bar', 'bar');
-      result.current.set('local', 'test', 'foo', 'foo');
-      result.current.set('local', 'test', 'bar', 'bar');
+    });
+  });
+
+  it('loads in data', () => {
+    const { result } = renderHook(() => usePersistentStore((state) => state));
+    const data = { app: { loaded: 'loaded' } };
+
+    act(() => {
+      // Global
+      result.current.load('global', data);
+      // Local
+      result.current.load('local', data);
+    });
+
+    // Global
+    expect(result.current.global).toEqual({
+      app: { loaded: 'loaded' },
+      test: { foo: 'foo', bar: 'bar' },
+    });
+    // Local
+    expect(result.current.local).toEqual({
+      app: { loaded: 'loaded' },
+      test: { foo: 'foo', bar: 'bar' },
     });
   });
 

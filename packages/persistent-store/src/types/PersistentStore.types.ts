@@ -14,6 +14,14 @@ export interface PersistentStore {
   local: PersistentStoreData;
 
   /**
+   * Loads data into the store.
+   *
+   * @param scope The scope into which to load the data.
+   * @param data The data to load.
+   */
+  load(scope: PersistentStoreScope, data: PersistentStoreData): void;
+
+  /**
    * Sets a value in the store.
    *
    * @param scope The scope under which the value is stored.

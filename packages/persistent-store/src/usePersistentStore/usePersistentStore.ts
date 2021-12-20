@@ -6,6 +6,14 @@ export const usePersistentStore = createStore<PersistentStore>((set) => ({
 
   local: {},
 
+  load: (scope, data) =>
+    set((state) => ({
+      [scope as 'global']: {
+        ...state[scope],
+        ...data,
+      },
+    })),
+
   set: (scope, namespace, key, value) =>
     set((state) => ({
       [scope as 'global']: {
