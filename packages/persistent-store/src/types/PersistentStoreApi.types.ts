@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { PersistentStoreData } from './PersistentStore.types';
 import {
   UpdateGlobalStoreEvent,
   UpdateGlobalStoreEventCallback,
@@ -8,13 +9,32 @@ import {
 
 export interface PersistentStoreApi {
   /**
+   * Returns an object containing all of the data stored
+   * by an extension in the global store.
+   *
+   * @param core A MindDrop core instance.
+   * @returns Extension's global store data.
+   */
+  getGlobalStore<T = any>(core: Core): T;
+
+  /**
+   * Returns an object containing all of the data stored
+   * by an extension in the local store.
+   *
+   * @param core A MindDrop core instance.
+   * @returns Extension's local store data.
+   */
+  getLocalStore<T = any>(core: Core): T;
+
+  /**
    * Retrieves a value from the global store.
    *
    * @param core A MindDrop core instance.
    * @param key The key of the value to retrieve.
+   * @param defaultValue The default value returned if the global store value does not exist.
    * @retuns The value.
    */
-  getGlobal<T = any>(core: Core, key: string): T;
+  getGlobalValue<T = any>(core: Core, key: string): T;
 
   /**
    * Retrieves a value from the local (app specific)
@@ -22,9 +42,32 @@ export interface PersistentStoreApi {
    *
    * @param core A MindDrop core instance.
    * @param key The key of the value to retrieve.
+   * @param defaultValue The default value returned if the local store value does not exist.
    * @retuns The value.
    */
-  getLocal<T = any>(core: Core, key: string): T;
+  getLocalValue<T = any>(core: Core, key: string, defaultValue: T): T;
+
+  /**
+   * Sets an extension's data in the global store and dispaches
+   * a persistent-store:update-global event.
+   * Useful for initializing the extension's default global store
+   * data upon extension activation.
+   *
+   * @param core A MindDrop core instance.
+   * @param data
+   */
+  setGlobalStore(core: Core, data: PersistentStoreData): void;
+
+  /**
+   * Sets an extension's data in the local store and dispaches
+   * a persistent-store:update-global event.
+   * Useful for initializing the extension's default local store
+   * data upon extension activation.
+   *
+   * @param core A MindDrop core instance.
+   * @param data
+   */
+  setLocalStore(core: Core, data: PersistentStoreData): void;
 
   /**
    * Sets a value in the global store and dispaches a
@@ -36,7 +79,7 @@ export interface PersistentStoreApi {
    * @param key The key for which to set the value.
    * @param value The value to set.
    */
-  setGlobal(core: Core, key: string, value: any): void;
+  setGlobalValue(core: Core, key: string, value: any): void;
 
   /**
    * Sets a value in the local (app specific) persistent store
@@ -48,7 +91,7 @@ export interface PersistentStoreApi {
    * @param key The key for which to set the value.
    * @param value The value to set.
    */
-  setLocal(core: Core, key: string, value: any): void;
+  setLocalValue(core: Core, key: string, value: any): void;
 
   /**
    * Deletes a key and assotiated data from the global
@@ -58,7 +101,7 @@ export interface PersistentStoreApi {
    * @param core A MindDrop core instance.
    * @param key The key to delete.
    */
-  deleteGlobal(core: Core, key: string): void;
+  deleteGlobalValue(core: Core, key: string): void;
 
   /**
    * Deletes a key and assotiated data from the local (app
@@ -68,7 +111,7 @@ export interface PersistentStoreApi {
    * @param core A MindDrop core instance.
    * @param key The key to delete.
    */
-  deleteLocal(core: Core, key: string): void;
+  deleteLocalValue(core: Core, key: string): void;
 
   /**
    * Permanently deletes all data added by an extension from
@@ -77,7 +120,7 @@ export interface PersistentStoreApi {
    *
    * @param core A MindDrop core instance.
    */
-  clearGlobal(core: Core): void;
+  deleteGlobalStore(core: Core): void;
 
   /**
    * Permanently deletes all data added by an extension from
@@ -86,7 +129,7 @@ export interface PersistentStoreApi {
    *
    * @param core A MindDrop core instance.
    */
-  clearLocal(core: Core): void;
+  deleteLocalStore(core: Core): void;
 
   /**
    * Clears all cached data (including data added by other
