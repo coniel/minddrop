@@ -34,7 +34,7 @@ export interface PersistentStoreApi {
    * @param defaultValue The default value returned if the global store value does not exist.
    * @retuns The value.
    */
-  getGlobalValue<T = any>(core: Core, key: string): T;
+  getGlobalValue<T = any>(core: Core, key: string, defaultValue?: T): T;
 
   /**
    * Retrieves a value from the local (app specific)
