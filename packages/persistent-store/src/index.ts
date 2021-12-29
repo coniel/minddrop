@@ -4,3 +4,4 @@ export * from './useGlobalStoreValue';
 export * from './useLocalStore';
 export * from './useLocalStoreValue';
 export * from './getStoreValue';
+export * from './setStore';
