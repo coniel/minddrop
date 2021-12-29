@@ -5,6 +5,7 @@ import { setStore } from './setStore';
 import { setValue } from './setValue';
 import { deleteValue } from './deleteValue';
 import { deleteStore } from './deleteStore';
+import { clearCache } from './clearCache';
 
 export const PersistentStore: PersistentStoreApi = {
   getGlobalStore: (core) => getStore('global', core),
@@ -21,4 +22,6 @@ export const PersistentStore: PersistentStoreApi = {
   deleteLocalValue: (core, key) => deleteValue('local', core, key),
   deleteGlobalStore: (core) => deleteStore('global', core),
   deleteLocalStore: (core) => deleteStore('local', core),
+  clearGlobalCache: () => clearCache('global'),
+  clearLocalCache: () => clearCache('local'),
 };
