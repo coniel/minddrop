@@ -3,7 +3,7 @@ import { PersistentStoreScope } from '../types';
 import { usePersistentStore } from '../usePersistentStore';
 
 /**
- * Sets a value in the local store and dispaches a
+ * Sets a value in a store and dispaches a
  * `persistent-store:update-local` event.
  *
  * @param scope The scope for which to set the value.

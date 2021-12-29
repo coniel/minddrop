@@ -3,9 +3,8 @@ import { PersistentStoreScope } from '../types';
 import { usePersistentStore } from '../usePersistentStore';
 
 /**
- * Sets the extension's data in the local store and
- * dispaches a `persistent-store:update-[global/local]`
- * event.
+ * Sets the extension's data in a store and dispatches
+ * a `persistent-store:update-[global/local]` event.
  *
  * @param scope The scope for which to set the store.
  * @param core A MindDrop core isntance.
