@@ -14,8 +14,8 @@ describe('persistent-store-extension', () => {
     afterEach(() => {
       core.unregisterResource('persistent-store:stores');
       act(() => {
-        usePersistentStore.getState().clearChache('global');
-        usePersistentStore.getState().clearChache('local');
+        usePersistentStore.getState().clearScope('global');
+        usePersistentStore.getState().clearScope('local');
       });
     });
 

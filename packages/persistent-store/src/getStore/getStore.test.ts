@@ -8,8 +8,8 @@ const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 describe('getStore', () => {
   afterEach(() => {
     act(() => {
-      usePersistentStore.getState().clearChache('global');
-      usePersistentStore.getState().clearChache('local');
+      usePersistentStore.getState().clearScope('global');
+      usePersistentStore.getState().clearScope('local');
     });
   });
 

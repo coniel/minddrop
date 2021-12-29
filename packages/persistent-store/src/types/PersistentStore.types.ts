@@ -58,7 +58,7 @@ export interface PersistentStore {
    *
    * @param scope The scope under which the value is stored.
    */
-  clearChache(scope: 'global' | 'local'): void;
+  clearScope(scope: 'global' | 'local'): void;
 }
 
 export type PersistentStoreChanges = Record<string, any>;

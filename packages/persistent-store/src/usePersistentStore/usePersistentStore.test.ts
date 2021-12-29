@@ -15,8 +15,8 @@ describe('usePersistentStore', () => {
   afterEach(() => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
     act(() => {
-      result.current.clearChache('global');
-      result.current.clearChache('local');
+      result.current.clearScope('global');
+      result.current.clearScope('local');
     });
   });
 
@@ -112,9 +112,9 @@ describe('usePersistentStore', () => {
 
     act(() => {
       // Global
-      result.current.clearChache('global');
+      result.current.clearScope('global');
       // Local
-      result.current.clearChache('local');
+      result.current.clearScope('local');
     });
 
     // Global

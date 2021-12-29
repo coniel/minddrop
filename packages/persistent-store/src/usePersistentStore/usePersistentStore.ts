@@ -54,5 +54,5 @@ export const usePersistentStore = createStore<PersistentStore>((set) => ({
       };
     }),
 
-  clearChache: (scope) => set(() => ({ [scope as 'global']: {} })),
+  clearScope: (scope) => set(() => ({ [scope as 'global']: {} })),
 }));
