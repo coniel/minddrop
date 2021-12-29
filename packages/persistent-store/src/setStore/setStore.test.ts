@@ -8,6 +8,13 @@ const core = initializeCore({ appId: 'app', extensionId: 'test' });
 const core2 = initializeCore({ appId: 'app', extensionId: 'app' });
 
 describe('setStore', () => {
+  afterEach(() => {
+    act(() => {
+      usePersistentStore.getState().clearChache('global');
+      usePersistentStore.getState().clearChache('local');
+    });
+  });
+
   it("sets an extension's store", () => {
     const existingData = { app: { foo: 'foo' } };
     const data = { foo: 'foo' };
@@ -22,5 +29,35 @@ describe('setStore', () => {
 
     expect(result).toEqual(data);
     expect(existing).toEqual(existingData.app);
+  });
+
+  it("dispatches a 'persistent-store:update-global' event", (done) => {
+    const data = { foo: 'foo' };
+
+    function callback(payload) {
+      expect(payload.data).toEqual({ test: data });
+      done();
+    }
+
+    core.addEventListener('persistent-store:update-global', callback);
+
+    act(() => {
+      setStore('global', core, data);
+    });
+  });
+
+  it("dispatches a 'persistent-store:update-local' event", (done) => {
+    const data = { foo: 'foo' };
+
+    function callback(payload) {
+      expect(payload.data).toEqual({ test: data });
+      done();
+    }
+
+    core.addEventListener('persistent-store:update-local', callback);
+
+    act(() => {
+      setStore('local', core, data);
+    });
   });
 });

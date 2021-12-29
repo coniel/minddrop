@@ -3,7 +3,13 @@ import { PersistentStoreScope } from '../types';
 import { usePersistentStore } from '../usePersistentStore';
 
 /**
- * Does something useful.
+ * Sets the extension's data in the local store and
+ * dispaches a `persistent-store:update-[global/local]`
+ * event.
+ *
+ * @param scope The scope for which to set the store.
+ * @param core A MindDrop core isntance.
+ * @param data The store data.
  */
 export function setStore(
   scope: PersistentStoreScope,
@@ -11,7 +17,8 @@ export function setStore(
   data: Record<string, any>,
 ): void {
   const store = usePersistentStore.getState()[scope];
-  usePersistentStore
-    .getState()
-    .load(scope, { ...store, [core.extensionId]: data });
+  const updated = { ...store, [core.extensionId]: data };
+  usePersistentStore.getState().load(scope, updated);
+
+  core.dispatch(`persistent-store:update-${scope}`, updated);
 }
