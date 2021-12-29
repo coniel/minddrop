@@ -1,6 +1,6 @@
 import { PersistentStoreApi } from './types';
 import { getStore } from './getStore';
-import { getStoreValue } from '.';
+import { getStoreValue } from './getStoreValue';
 import { setStore } from './setStore';
 import { setValue } from './setValue';
 import { deleteValue } from './deleteValue';

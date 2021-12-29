@@ -2,7 +2,7 @@ export type PersistentStoreData = Record<string, Record<string, any>>;
 
 export type PersistentStoreScope = 'global' | 'local';
 
-export interface PersistentStore {
+export interface PersistentStoreStore {
   /**
    * The global store data. Namespaced by extension ID.
    */

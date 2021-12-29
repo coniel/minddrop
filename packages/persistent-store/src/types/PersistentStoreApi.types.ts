@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { PersistentStoreData } from './PersistentStore.types';
+import { PersistentStoreData } from './PersistentStoreStore.types';
 import {
   UpdateGlobalStoreEvent,
   UpdateGlobalStoreEventCallback,

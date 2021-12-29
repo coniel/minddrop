@@ -1,7 +1,7 @@
 import createStore from 'zustand';
-import { PersistentStore } from '../types';
+import { PersistentStoreStore } from '../types';
 
-export const usePersistentStore = createStore<PersistentStore>((set) => ({
+export const usePersistentStore = createStore<PersistentStoreStore>((set) => ({
   global: {},
 
   local: {},
