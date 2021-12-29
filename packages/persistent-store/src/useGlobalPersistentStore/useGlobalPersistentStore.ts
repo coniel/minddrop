@@ -8,6 +8,10 @@ import { usePersistentStore } from '../usePersistentStore';
  * @param core A MindDrop core instance.
  * @returns The extension's global store data.
  */
-export function useLocalStore<T = Record<string, any>>(core: Core): T {
-  return (usePersistentStore().global[core.extensionId] || {}) as T;
+export function useGlobalPersistentStore<T = Record<string, any>>(
+  core: Core,
+): T {
+  const { global } = usePersistentStore();
+
+  return (global[core.extensionId] || {}) as T;
 }

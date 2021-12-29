@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { useLocalStore } from '../useLocalStore';
+import { useLocalPersistentStore } from '../useLocalPersistentStore';
 
 /**
  * Returns a value from the global store.
@@ -8,8 +8,11 @@ import { useLocalStore } from '../useLocalStore';
  * @param key The key of the value to retrieve.
  * @returns The value.
  */
-export function useLocalStoreValue<T = any>(core: Core, key: string): T {
-  const data = useLocalStore(core);
+export function useLocalPersistentStoreValue<T = any>(
+  core: Core,
+  key: string,
+): T {
+  const data = useLocalPersistentStore(core);
 
   return data[key];
 }

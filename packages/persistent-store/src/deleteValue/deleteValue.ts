@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { usePersistentStore } from '../usePersistentStore';
-import { PersistentStoreScope } from '..';
+import { PersistentStoreScope } from '../types';
 
 /**
  * Deletes a key and assotiated data from a store.

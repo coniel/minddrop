@@ -1,11 +1,11 @@
 import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { useGlobalStore } from './useGlobalStore';
+import { useLocalPersistentStore } from './useLocalPersistentStore';
 import { usePersistentStore } from '../usePersistentStore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
-describe('useGlobalStore', () => {
+describe('useLocalStore', () => {
   afterEach(() => {
     act(() => {
       usePersistentStore.getState().clearScope('global');
@@ -13,7 +13,7 @@ describe('useGlobalStore', () => {
   });
 
   it("returns the extension's data from the global store", () => {
-    const { result } = renderHook(() => useGlobalStore(core));
+    const { result } = renderHook(() => useLocalPersistentStore(core));
 
     const data = { app: { foo: 'foo' } };
 
@@ -25,7 +25,7 @@ describe('useGlobalStore', () => {
   });
 
   it('returns an empty object if extension data is not set', () => {
-    const { result } = renderHook(() => useGlobalStore(core));
+    const { result } = renderHook(() => useLocalPersistentStore(core));
 
     expect(result.current).toEqual({});
   });

@@ -35,6 +35,16 @@ useGlobalPersistentStore<T>(core: Core): T | undefined
 
 <ArgsTable core />
 
+### useLocalPersistentStore
+
+Returns an object containing all of the data stored by the extension in the local store.
+
+```ts
+useLocalPersistentStore<T>(core: Core): T | undefined
+```
+
+<ArgsTable core />
+
 ### useGlobalPersistentValue
 
 Returns a value from the global store.
@@ -60,16 +70,6 @@ useGlobalPersistentValue<T>(core: Core, key: string, default?: T): T | undefined
     },
   ]}
 />
-
-### useLocalPersistentStore
-
-Returns an object containing all of the data stored by the extension in the local store.
-
-```ts
-useLocalPersistentStore<T>(core: Core): T | undefined
-```
-
-<ArgsTable core />
 
 ### useLocalPersistentValue
 
