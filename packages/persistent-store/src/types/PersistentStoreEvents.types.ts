@@ -2,7 +2,7 @@ import { EventListenerCallback } from '@minddrop/core';
 import {
   PersistentStoreChanges,
   PersistentStoreData,
-} from './PersistentStore.types';
+} from './PersistentStoreStore.types';
 
 export type UpdateGlobalStoreEvent = 'persistent-store:update-global';
 export type UpdateLocalStoreEvent = 'persistent-store:update-local';

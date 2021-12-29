@@ -1,4 +1,4 @@
-import { PersistentStoreData } from './PersistentStore.types';
+import { PersistentStoreData } from './PersistentStoreStore.types';
 
 export interface PersistentStoreDocument {
   /**
