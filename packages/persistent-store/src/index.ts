@@ -7,3 +7,4 @@ export * from './getStoreValue';
 export * from './setStore';
 export * from './setValue';
 export * from './deleteValue';
+export * from './deleteStore';
