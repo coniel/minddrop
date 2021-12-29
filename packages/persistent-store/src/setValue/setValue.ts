@@ -4,7 +4,7 @@ import { usePersistentStore } from '../usePersistentStore';
 
 /**
  * Sets a value in a store and dispaches a
- * `persistent-store:update-local` event.
+ * `persistent-store:update-[global/local]` event.
  *
  * @param scope The scope for which to set the value.
  * @param core A MindDrop core instance.
