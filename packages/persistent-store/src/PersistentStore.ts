@@ -24,4 +24,7 @@ export const PersistentStore: PersistentStoreApi = {
   deleteLocalStore: (core) => deleteStore('local', core),
   clearGlobalCache: () => clearCache('global'),
   clearLocalCache: () => clearCache('local'),
+  addEventListener: (core, type, data) => core.addEventListener(type, data),
+  removeEventListener: (core, type, data) =>
+    core.removeEventListener(type, data),
 };
