@@ -123,6 +123,88 @@ App.removeAllUiExtensions(core: Core, location?: UiLocation): void
   ]}
 />
 
+### addTopics
+
+Adds topics to the root level and dispaches an `app:add-topics` event.
+
+```tsx
+App.addTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics to add to the root level.',
+    },
+  ]}
+/>
+
+### removeTopics
+
+Removes topics from the root level and dispaches an `app:remove-topics` event.
+
+```tsx
+App.removeTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic to remove from the root level.',
+    },
+  ]}
+/>
+
+### addTags
+
+Adds global tags and dispaches an `app:add-tags` event.
+
+```tsx
+App.addTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add to the root level.',
+    },
+  ]}
+/>
+
+### removeTags
+
+Removes global tags and dispaches an `app:remove-tags` event.
+
+```tsx
+App.removeTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the tags to remove from the global level.',
+    },
+  ]}
+/>
+
 ### addEventListener
 
 Adds app specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
@@ -188,6 +270,28 @@ App events are prefixed with the namespace `app`.
       name: 'app:open-view',
       data: 'View',
       description: 'Dispatched when a view is opened.',
+    },
+    {
+      name: 'app:add-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are added to the root level.',
+    },
+    {
+      name: 'app:remove-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are removed from the root level.',
+    },
+    {
+      name: 'app:add-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are added.',
+    },
+    {
+      name: 'app:remove-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are removed.',
     },
   ]}
 />

@@ -20,9 +20,9 @@ describe('getAllTopics', () => {
     const topic3 = generateTopic();
 
     act(() => {
-      result.current.addTopic(topic1);
-      result.current.addTopic(topic2);
-      result.current.addTopic(topic3);
+      result.current.setTopic(topic1);
+      result.current.setTopic(topic2);
+      result.current.setTopic(topic3);
     });
 
     const topics = getAllTopics();

@@ -1,5 +1,4 @@
 import createStore from 'zustand';
-import { updateStoreObject } from '@minddrop/utils';
 import { DropStore } from '../types';
 
 export const useDropsStore = createStore<DropStore>((set) => ({
@@ -21,19 +20,11 @@ export const useDropsStore = createStore<DropStore>((set) => ({
 
   clear: () => set(() => ({ drops: {} })),
 
-  addDrop: (drop) =>
+  setDrop: (drop) =>
     set((state) => ({
       drops: {
         ...state.drops,
         [drop.id]: drop,
-      },
-    })),
-
-  updateDrop: (id, data) =>
-    set((state) => ({
-      drops: {
-        ...state.drops,
-        [id]: updateStoreObject(state.drops[id], data),
       },
     })),
 

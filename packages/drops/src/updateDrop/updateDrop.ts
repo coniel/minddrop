@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { createUpdate } from '@minddrop/utils';
 import { getDrop } from '../getDrop';
 import { Drop, DropChanges } from '../types';
+import { useDropsStore } from '../useDropsStore';
 
 /**
  * Updates a drop and dispatches a `drops:update` event.
@@ -20,9 +21,13 @@ export function updateDrop(
   const drop = getDrop(id);
   const update = createUpdate(drop, data, {
     setUpdatedAt: true,
-    deleteEmptyFields: ['files', 'tags'],
+    deleteEmptyFields: ['files'],
   });
 
+  // Update drop in store
+  useDropsStore.getState().setDrop(update.after);
+
+  // Dispatch 'drops:update' event
   core.dispatch('drops:update', update);
 
   return update.after;

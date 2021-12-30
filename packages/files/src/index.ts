@@ -6,3 +6,5 @@ export * from './generateFileReference';
 export * from './errors/FileReferenceNotFoundError';
 export * from './Files';
 export * from './getImageDimensions';
+export * from './updateFileReference';
+export * from './addAttachments';

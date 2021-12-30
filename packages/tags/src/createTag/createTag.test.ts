@@ -1,11 +1,18 @@
 import { initializeCore } from '@minddrop/core';
+import { act, renderHook } from '@minddrop/test-utils';
+import { clearTags } from '../clearTags';
+import { Tag } from '../types';
+import { useAllTags } from '../useAllTags';
 import { createTag } from './createTag';
 
-let core = initializeCore('tags');
+const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('createTag', () => {
   afterEach(() => {
-    core = initializeCore('tags');
+    core.removeAllEventListeners();
+    act(() => {
+      clearTags(core);
+    });
   });
 
   it('creates a tag', () => {
@@ -16,17 +23,29 @@ describe('createTag', () => {
     expect(tag.color).toBe('red');
   });
 
-  it("dispatches a 'tags:create' event", () => {
-    const callback = jest.fn();
+  it('adds tag to the store', () => {
+    const { result } = renderHook(() => useAllTags());
+    let tag: Tag;
+
+    act(() => {
+      tag = createTag(core, { label: 'Tag' });
+    });
+
+    expect(result.current[tag.id]).toEqual(tag);
+  });
+
+  it("dispatches a 'tags:create' event", (done) => {
+    let tag: Tag;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(tag);
+      done();
+    }
 
     core.addEventListener('tags:create', callback);
 
-    const tag = createTag(core, { label: 'My tag' });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'tags',
-      type: 'tags:create',
-      data: tag,
+    act(() => {
+      tag = createTag(core, { label: 'My tag' });
     });
   });
 });

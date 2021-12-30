@@ -14,7 +14,7 @@ const config: IconButtonConfig = {
 };
 
 const element = () => <span />;
-const core = initializeCore('app');
+const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 const componentMap = {
   // @ts-ignore
@@ -29,21 +29,34 @@ describe('initializeApp', () => {
     });
   });
 
-  it("opens a view and dispatches a 'app:open-view'", () => {
-    const callback = jest.fn();
-    const app = initializeApp({ componentMap });
-    const { result } = renderHook(() => useAppStore((state) => state));
-    core.addEventListener('app:open-view', callback);
+  describe('openView', () => {
+    it('sets the current view in the store', () => {
+      const app = initializeApp({ componentMap });
+      const { result } = renderHook(() => useAppStore((state) => state));
 
-    act(() => {
-      app.openView(core, { id: 'my-view', title: 'My view' });
+      act(() => {
+        app.openView(core, { id: 'my-view', title: 'My view' });
+      });
+
+      expect(result.current.view.id).toBe('my-view');
     });
 
-    expect(result.current.view.id).toBe('my-view');
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toEqual({
-      id: 'my-view',
-      title: 'My view',
+    it("dispatches a 'app:open-view' event", (done) => {
+      const app = initializeApp({ componentMap });
+
+      function callback(payload) {
+        expect(payload.data).toEqual({
+          id: 'my-view',
+          title: 'My view',
+        });
+        done();
+      }
+
+      core.addEventListener('app:open-view', callback);
+
+      act(() => {
+        app.openView(core, { id: 'my-view', title: 'My view' });
+      });
     });
   });
 
@@ -91,7 +104,7 @@ describe('initializeApp', () => {
   it('removes all UI extensions added by the extension from a specified location', () => {
     const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore('extension');
+    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
       app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
@@ -107,7 +120,7 @@ describe('initializeApp', () => {
   it('removes all UI extensions added by the extension', () => {
     const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore('extension');
+    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
       app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);

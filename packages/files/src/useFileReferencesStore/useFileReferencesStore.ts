@@ -21,7 +21,7 @@ export const useFileReferencesStore = createStore<FileReferencesStore>(
 
     clear: () => set(() => ({ files: {} })),
 
-    addFileReference: (file) =>
+    setFileReference: (file) =>
       set((state) => ({
         files: {
           ...state.files,

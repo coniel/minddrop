@@ -21,9 +21,9 @@ describe('get', () => {
       const file3 = await generateFileReference(textFile);
 
       act(() => {
-        result.current.addFileReference(file1);
-        result.current.addFileReference(file2);
-        result.current.addFileReference(file3);
+        result.current.setFileReference(file1);
+        result.current.setFileReference(file2);
+        result.current.setFileReference(file3);
       });
 
       const files = get([file1.id, file2.id]);
@@ -41,7 +41,7 @@ describe('get', () => {
       const file = await generateFileReference(textFile);
 
       act(() => {
-        result.current.addFileReference(file);
+        result.current.setFileReference(file);
       });
 
       expect(get(file.id)).toBe(file);

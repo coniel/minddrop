@@ -19,11 +19,11 @@ export interface FileReferencesStore {
   clear(): void;
 
   /**
-   * Adds a file to the store.
+   * Sets a file in the store.
    *
    * @param file The file to add.
    */
-  addFileReference(file: FileReference): void;
+  setFileReference(file: FileReference): void;
 
   /**
    * Removes a file from the store.

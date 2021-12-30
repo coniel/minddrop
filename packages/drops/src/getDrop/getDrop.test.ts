@@ -6,7 +6,7 @@ import { onDisable, onRun } from '../drops-extension';
 import { generateDrop } from '../generateDrop';
 import { loadDrops } from '../loadDrops';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 // Set up extension
 onRun(core);
@@ -17,7 +17,7 @@ describe('getDrop', () => {
     act(() => {
       onDisable(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     onRun(core);
   });
 

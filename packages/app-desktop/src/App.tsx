@@ -14,7 +14,7 @@ import './App.css';
 initializeI18n();
 initializeFileStorage();
 
-const core = initializeCore('app');
+const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 files.onRun(core);
 tags.onRun(core);

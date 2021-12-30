@@ -65,12 +65,20 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/files',
       },
       {
+        title: 'PersistentStore',
+        slug: 'docs/extensions/api/persistent-store',
+      },
+      {
         title: 'Tags',
         slug: 'docs/extensions/api/tags',
       },
       {
         title: 'Topics',
         slug: 'docs/extensions/api/topics',
+      },
+      {
+        title: 'Utils',
+        slug: 'docs/extensions/api/utils',
       },
     ],
   },

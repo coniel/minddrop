@@ -56,6 +56,18 @@ export interface DropsApi {
   getAll(filters?: DropFilters): DropMap;
 
   /**
+   * Filters drops by type, active, archived, and deleted states.
+   * If no filters are set, returns active drops.
+   * If either archived or deleted filters are `true`, active
+   * drops are not included unless specifically set to `true`.
+   *
+   * @param drops The drops to filter.
+   * @param filters The filters by which to filter the drops.
+   * @returns The filtered drops.
+   */
+  filter(drops: DropMap, filters: DropFilters): DropMap;
+
+  /**
    * Retrieves a drop's parent drops, returning an array of drops.
    * By default, only active drops are returned.
    */
@@ -64,6 +76,10 @@ export interface DropsApi {
   /**
    * Creates a new drop and dispatches a `drops:create` event.
    * Returns the new drop.
+   *
+   * If the drop is created with attached files, the file references
+   * of the attached files will be automatically updated, adding the
+   * drop as a attached resource.
    *
    * @param core A MindDrop core instance.
    * @param data The default drop property values.
@@ -118,8 +134,9 @@ export interface DropsApi {
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to delete permanently.
+   * @returns The deleted drop.
    */
-  deletePermanently(core: Core, dropId: string): void;
+  deletePermanently(core: Core, dropId: string): Drop;
 
   /**
    * Adds tags to a drop and dispatches a `drops:add-tags` event
@@ -130,7 +147,7 @@ export interface DropsApi {
    * @param tagIds The IDs of the tags to add to the drop.
    * @returns The updated drop.
    */
-  addTags(core: Core, dropId: string, tagIds: string[]): void;
+  addTags(core: Core, dropId: string, tagIds: string[]): Drop;
 
   /**
    * Removes tags from a drop and dispatches a `drops:remove-tags` event
@@ -141,11 +158,14 @@ export interface DropsApi {
    * @param tagIds The IDs of the tags to remove.
    * @returns The updated drop.
    */
-  removeTags(core: Core, dropId: string, tagIds: string[]): void;
+  removeTags(core: Core, dropId: string, tagIds: string[]): Drop;
 
   /**
    * Adds files to a drop and dispatches a `drops:add-files` event
    * and a `drops:update` event.
+   *
+   * The file references of the attached files will be automatically
+   * updated to include the drop ID in their `attachedTo` value.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the files.
@@ -157,6 +177,10 @@ export interface DropsApi {
   /**
    * Removes files from a drop and dispatches a `drops:add-files` event
    * and a `drops:update` event.
+   *
+   * The file references of the removed files will be automatically updated
+   * to remove the drop ID from their `attachedTo` value, and deleted if the
+   * drop was their only attachment.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop from which to remove the files.
@@ -170,6 +194,13 @@ export interface DropsApi {
    * adding the new ones. Dispatches a `drops:replace-files` event
    * and a `drops:update` event.
    *
+   * The file references of the added files will be automatically
+   * updated to include the drop ID in their `attachedTo` value.
+   *
+   * The file references of the removed files will be automatically
+   * updated to remove the drop ID from their `attachedTo` value, and
+   * deleted if the drop was their only attachment.
+   *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop in which to replace the files.
    * @param fileIds The IDs of the files to add to the drop.
@@ -178,7 +209,7 @@ export interface DropsApi {
   replaceFiles(core: Core, dropId: string, fileIds: string[]): Drop;
 
   /**
-   * Loads drops into the store by dispatching a `drops:load` event.
+   * Loads drops into the store and dispatches a `drops:load` event.
    *
    * @param core A MindDrop core instance.
    * @param drops The drops to load.
@@ -186,11 +217,11 @@ export interface DropsApi {
   load(core: Core, drops: Drop[]): void;
 
   /**
-   * Clears drops from the store by dispatching a `drops:clear` event.
+   * Clears drops from the store and dispatches a `drops:clear` event.
    *
    * @param core A MindDrop core instance.
    */
-  clear(core: Core);
+  clear(core: Core): void;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -312,7 +343,7 @@ export interface DropsApi {
     callback: ArchiveDropEventCallback,
   ): void;
 
-  // Remove drops:delete-permanently event listener
+  // Remove drops:delete event listener
   removeEventListener(
     core: Core,
     type: DeleteDropEvent,
@@ -345,6 +376,27 @@ export interface DropsApi {
     core: Core,
     type: RemoveTagsEvent,
     callback: RemoveTagsEventCallback,
+  );
+
+  // Remove drops:add-files event listener
+  removeEventListener(
+    core: Core,
+    type: AddFilesEvent,
+    callback: AddFilesEventCallback,
+  );
+
+  // Remove drops:remove-files event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveFilesEvent,
+    callback: RemoveFilesEventCallback,
+  );
+
+  // Remove drops:replace-files event listener
+  removeEventListener(
+    core: Core,
+    type: ReplaceFilesEvent,
+    callback: ReplaceFilesEventCallback,
   );
 
   // Remove drops:load event listener

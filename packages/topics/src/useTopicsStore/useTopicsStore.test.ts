@@ -32,29 +32,14 @@ describe('useTopicsStore', () => {
     expect(Object.keys(result.current.topics).length).toBe(0);
   });
 
-  it('adds a topic', () => {
+  it('sets a topic', () => {
     const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
-      result.current.addTopic(generateTopic());
+      result.current.setTopic(generateTopic());
     });
 
     expect(Object.keys(result.current.topics).length).toBe(1);
-  });
-
-  it('updates a topic', () => {
-    const topic = generateTopic();
-    const { result } = renderHook(() => useTopicsStore((state) => state));
-
-    act(() => {
-      result.current.addTopic(topic);
-      result.current.updateTopic(topic.id, {
-        updatedAt: new Date(),
-        title: 'Hello world',
-      });
-    });
-
-    expect(result.current.topics[topic.id].title).toBe('Hello world');
   });
 
   it('removes a topic', () => {

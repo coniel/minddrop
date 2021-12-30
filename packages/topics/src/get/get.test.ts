@@ -21,9 +21,9 @@ describe('get', () => {
       const topic3 = generateTopic();
 
       act(() => {
-        result.current.addTopic(topic1);
-        result.current.addTopic(topic2);
-        result.current.addTopic(topic3);
+        result.current.setTopic(topic1);
+        result.current.setTopic(topic2);
+        result.current.setTopic(topic3);
       });
 
       const topics = get([topic1.id, topic2.id]);
@@ -70,7 +70,7 @@ describe('get', () => {
       const topic = generateTopic();
 
       act(() => {
-        result.current.addTopic(topic);
+        result.current.setTopic(topic);
       });
 
       expect(get(topic.id)).toBe(topic);
@@ -82,7 +82,7 @@ describe('get', () => {
       const topic = generateTopic();
 
       act(() => {
-        result.current.addTopic(topic);
+        result.current.setTopic(topic);
       });
 
       // @ts-ignore

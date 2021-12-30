@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { createUpdate } from '@minddrop/utils';
 import { getTag } from '../getTag';
 import { Tag, TagChanges } from '../types';
+import { useTagsStore } from '../useTagsStore';
 
 /**
  * Updates a tag and dispatches a `tags:update` event.
@@ -16,6 +17,10 @@ export function updateTag(core: Core, id: string, data: TagChanges): Tag {
   const tag = getTag(id);
   const update = createUpdate(tag, data);
 
+  // Update the tag in the store
+  useTagsStore.getState().setTag(update.after);
+
+  // Dispatch 'tags:update' event
   core.dispatch('tags:update', update);
 
   return update.after;

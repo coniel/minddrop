@@ -8,7 +8,7 @@ import { TopicMap, TopicFilters } from '../types';
  *
  * @param topics The topics to filter.
  * @param filters The filters by which to filter the topics.
- * @returns The filtere topics.
+ * @returns The filtered topics.
  */
 export function filterTopics(
   topics: TopicMap,
