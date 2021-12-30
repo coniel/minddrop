@@ -70,9 +70,9 @@ export async function initializeResourceConnectors(core: Core, db: DBApi) {
     'core:unregister-resource',
     (payload) => {
       const { data } = payload;
-      core.removeEventListeners(data.createEvent);
-      core.removeEventListeners(data.updateEvent);
-      core.removeEventListeners(data.deleteEvent);
+      core.removeAllEventListeners(data.createEvent);
+      core.removeAllEventListeners(data.updateEvent);
+      core.removeAllEventListeners(data.deleteEvent);
     },
   );
 }

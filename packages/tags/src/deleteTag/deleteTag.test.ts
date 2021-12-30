@@ -1,36 +1,46 @@
 import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../tags-extension';
+import { act, renderHook } from '@minddrop/test-utils';
 import { createTag } from '../createTag';
 import { Tag } from '../types';
 import { deleteTag } from './deleteTag';
+import { clearTags } from '../clearTags';
+import { useAllTags } from '../useAllTags';
 
-let core = initializeCore('tags');
-
-// Set up extension
-onRun(core);
+const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('deleteTag', () => {
   afterEach(() => {
-    // Reset extension
-    onDisable(core);
-    core = initializeCore('tags');
-    onRun(core);
+    core.removeAllEventListeners();
+    act(() => {
+      clearTags(core);
+    });
   });
 
-  it("dispatches a 'tags:delete' event", () => {
-    const callback = jest.fn();
+  it('removes tag from the store', () => {
+    const { result } = renderHook(() => useAllTags());
     let tag: Tag;
+
+    act(() => {
+      tag = createTag(core, { label: 'Tag' });
+      deleteTag(core, tag.id);
+    });
+
+    expect(result.current[tag.id]).not.toBeDefined();
+  });
+
+  it("dispatches a 'tags:delete' event", (done) => {
+    let tag: Tag;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(tag);
+      done();
+    }
 
     core.addEventListener('tags:delete', callback);
 
     act(() => {
       tag = createTag(core, { label: 'Book' });
+      tag = deleteTag(core, tag.id);
     });
-
-    deleteTag(core, tag.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(tag);
   });
 });

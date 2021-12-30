@@ -5,7 +5,7 @@ import { createTopic } from '../createTopic';
 import { Topic } from '../types';
 import { addSubtopics } from './addSubtopics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Set up extension
 onRun(core);
@@ -14,7 +14,7 @@ describe('addSubtopics', () => {
   afterEach(() => {
     // Reset extension
     onDisable(core);
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     onRun(core);
   });
 
@@ -36,11 +36,19 @@ describe('addSubtopics', () => {
     expect(updated.subtopics.includes(subtopic2.id)).toBe(true);
   });
 
-  it("dispatches a 'topics:add-subtopics' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:add-subtopics' event", (done) => {
     let topic: Topic;
     let subtopic1: Topic;
     let subtopic2: Topic;
+
+    function callback(payload) {
+      expect(payload.data.topic).toEqual(topic);
+      expect(payload.data.subtopics).toEqual({
+        [subtopic1.id]: subtopic1,
+        [subtopic2.id]: subtopic2,
+      });
+      done();
+    }
 
     core.addEventListener('topics:add-subtopics', callback);
 
@@ -50,12 +58,6 @@ describe('addSubtopics', () => {
       subtopic2 = createTopic(core);
     });
 
-    const updated = addSubtopics(core, topic.id, [subtopic1.id, subtopic2.id]);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toMatchObject({
-      topic: updated,
-      subtopics: [subtopic1.id, subtopic2.id],
-    });
+    topic = addSubtopics(core, topic.id, [subtopic1.id, subtopic2.id]);
   });
 });

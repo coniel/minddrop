@@ -1,3 +1,5 @@
+import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
+
 export interface ImageDimensions {
   /**
    * The image width.
@@ -37,6 +39,11 @@ export interface FileReference {
   size: number;
 
   /**
+   * IDs of resources to which the file is attached.
+   */
+  attachedTo: string[];
+
+  /**
    * URL to the file if it is located remotely.
    */
   url?: string;
@@ -55,3 +62,7 @@ export interface ImageFileReference extends FileReference {
 }
 
 export type FileReferenceMap = Record<string, FileReference>;
+
+export interface FileReferenceChanges {
+  attachedTo: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+}

@@ -20,9 +20,9 @@ describe('getAllTags', () => {
     const tag3 = generateTag({ label: 'Important' });
 
     act(() => {
-      result.current.addTag(tag1);
-      result.current.addTag(tag2);
-      result.current.addTag(tag3);
+      result.current.setTag(tag1);
+      result.current.setTag(tag2);
+      result.current.setTag(tag3);
     });
 
     const tags = getAllTags();

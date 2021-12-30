@@ -19,7 +19,7 @@ describe('getTopic', () => {
     const topic = generateTopic();
 
     act(() => {
-      result.current.addTopic(topic);
+      result.current.setTopic(topic);
     });
 
     expect(getTopic(topic.id)).toBe(topic);

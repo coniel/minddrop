@@ -6,14 +6,14 @@ import { getDropParents } from './getDropParents';
 import { loadTopics } from '../loadTopics';
 import { archiveTopic } from '../archiveTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Run topics extension
 onRun(core);
 
 describe('getDropParents', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {
       onDisable(core);
       onRun(core);

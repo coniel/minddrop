@@ -12,7 +12,7 @@ import { Topic } from '../types';
 import { createTopic } from '../createTopic';
 import { addTagsToTopic } from '../addTagsToTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Run tags extension
 onRunTags(core);
@@ -21,7 +21,7 @@ onRun(core);
 
 describe('removeTagsFromTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {
       onDisableTags(core);
       onDisable(core);
@@ -32,40 +32,39 @@ describe('removeTagsFromTopic', () => {
 
   it('removes tags from the topic', async () => {
     let topic: Topic;
-    let tagRef1: Tag;
-    let tagRef2: Tag;
+    let tag1: Tag;
+    let tag2: Tag;
 
     await act(async () => {
-      tagRef1 = await Tags.create(core, { label: 'Tag' });
-      tagRef2 = await Tags.create(core, { label: 'Tag' });
+      tag1 = await Tags.create(core, { label: 'Tag' });
+      tag2 = await Tags.create(core, { label: 'Tag' });
       topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tagRef1.id, tagRef2.id]);
-      topic = removeTagsFromTopic(core, topic.id, [tagRef1.id]);
+      topic = addTagsToTopic(core, topic.id, [tag1.id, tag2.id]);
+      topic = removeTagsFromTopic(core, topic.id, [tag1.id]);
     });
 
     expect(topic.tags).toBeDefined();
     expect(topic.tags.length).toBe(1);
-    expect(topic.tags[0]).toBe(tagRef2.id);
+    expect(topic.tags[0]).toBe(tag2.id);
   });
 
-  it("dispatches a 'topics:remove-tags' event", async () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:remove-tags' event", (done) => {
     let topic: Topic;
-    let tagRef: Tag;
+    let tag: Tag;
+
+    function callback(payload) {
+      expect(payload.data.topic).toEqual(topic);
+      expect(payload.data.tags).toEqual({ [tag.id]: tag });
+      done();
+    }
 
     core.addEventListener('topics:remove-tags', callback);
 
-    await act(async () => {
-      tagRef = await Tags.create(core, { label: 'Tag' });
+    act(() => {
+      tag = Tags.create(core, { label: 'Tag' });
       topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tagRef.id]);
-      topic = removeTagsFromTopic(core, topic.id, [tagRef.id]);
-    });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'topics',
-      type: 'topics:remove-tags',
-      data: { topic, tags: { [tagRef.id]: tagRef } },
+      topic = addTagsToTopic(core, topic.id, [tag.id]);
+      topic = removeTagsFromTopic(core, topic.id, [tag.id]);
     });
   });
 });

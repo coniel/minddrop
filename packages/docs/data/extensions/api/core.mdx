@@ -16,7 +16,13 @@ MindDrop has a lean core mainly responsible for managing event listeners and res
 <InterfaceTable
   data={[
     {
-      name: 'initializedFor',
+      name: 'appId',
+      type: 'string',
+      description:
+        'The ID of the application for which the core instance was initialized. This is unique to each application installation.',
+    },
+    {
+      name: 'extensionId',
       type: 'string',
       description:
         'The ID of the extension for which the core instance was initialized.',
@@ -109,12 +115,14 @@ core.removeEventListener(type: string, callback: EventListenerCallback): void
   ]}
 />
 
-### removeEventListeners
+### removeAllEventListeners
 
-Removes all event listeners of a specified type that were added by the extension.
+Removes all of the source's event listeners. Only removes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to remove event listeners only for the specified event type.
 
 ```ts
-core.removeEventListeners(type: string): void
+core.removeAllEventListeners(type?: string): void
 ```
 
 <ArgsTable
@@ -122,19 +130,10 @@ core.removeEventListeners(type: string): void
     {
       name: 'type',
       type: 'string',
-      required: true,
-      description: 'The event type.',
+      description: 'The event type for which to remove listeners.',
     },
   ]}
 />
-
-### removeAllEventListeners
-
-Removes all event listeners that were added by the extension.
-
-```ts
-core.removeAllEventListeners(): void
-```
 
 ### hasEventListener
 
@@ -163,10 +162,12 @@ core.hasEventListener(type: string, callback: EventListenerCallback): boolean
 
 ### hasEventListeners
 
-Checks whether any event listeners exist for a specified event type.
+Checks whether any event listeners exist. Only includes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to only check for event listeners of the specified event type.
 
 ```ts
-core.hasEventListeners(type: string): boolean
+core.hasEventListeners(type?: string): boolean
 ```
 
 <ArgsTable
@@ -182,10 +183,12 @@ core.hasEventListeners(type: string): boolean
 
 ### eventListenerCount
 
-Returns the number of event listeners for a specified event type.
+Returns the number of event listeners. Only includes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to count event listeners only of the specified event type.
 
 ```ts
-core.eventListenerCount(type: string): number
+core.eventListenerCount(type?: string): number
 ```
 
 <ArgsTable

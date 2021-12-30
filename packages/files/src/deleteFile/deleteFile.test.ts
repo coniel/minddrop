@@ -1,36 +1,50 @@
 import { initializeCore } from '@minddrop/core';
-import { act, textFile } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../files-extension';
+import { act, renderHook, textFile } from '@minddrop/test-utils';
 import { createFile } from '../createFile';
 import { FileReference } from '../types';
 import { deleteFile } from './deleteFile';
+import { clearFileReferences } from '../clearFileReferences';
+import { useAllFileReferences } from '../useAllFileReferences';
 
-let core = initializeCore('files');
-
-// Set up extension
-onRun(core);
+let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
 
 describe('deleteFile', () => {
   afterEach(() => {
-    // Reset extension
-    onDisable(core);
-    core = initializeCore('files');
-    onRun(core);
+    core = initializeCore({ appId: 'app-id', extensionId: 'files' });
+    act(() => {
+      clearFileReferences(core);
+    });
   });
 
-  it("dispatches a 'files:delete' event", async () => {
-    const callback = jest.fn();
+  it('removes the file reference from the store', async () => {
+    const { result } = renderHook(() => useAllFileReferences());
+    let ref: FileReference;
+
+    await act(async () => {
+      ref = await createFile(core, textFile);
+      ref = deleteFile(core, ref.id);
+    });
+
+    expect(result.current[ref.id]).not.toBeDefined();
+  });
+
+  it("dispatches a 'files:delete' event", (done) => {
     let file: FileReference;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(file);
+      done();
+    }
 
     core.addEventListener('files:delete', callback);
 
-    await act(async () => {
-      file = await createFile(core, textFile);
-    });
+    async function run() {
+      await act(async () => {
+        file = await createFile(core, textFile);
+        file = deleteFile(core, file.id);
+      });
+    }
 
-    deleteFile(core, file.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(file);
+    run();
   });
 });

@@ -12,7 +12,7 @@ import { addTagsToTopic } from './addTagsToTopic';
 import { Topic } from '../types';
 import { createTopic } from '../createTopic';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 // Run tags extension
 onRunTags(core);
@@ -21,7 +21,7 @@ onRun(core);
 
 describe('addTagsToTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {
       onDisableTags(core);
       onDisable(core);
@@ -32,20 +32,20 @@ describe('addTagsToTopic', () => {
 
   it('adds tags to the topic', async () => {
     let topic: Topic;
-    let tagRef: Tag;
+    let tag: Tag;
 
     await act(async () => {
-      tagRef = await Tags.create(core, { label: 'Tag' });
+      tag = await Tags.create(core, { label: 'Tag' });
       topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tagRef.id]);
+      topic = addTagsToTopic(core, topic.id, [tag.id]);
     });
 
     expect(topic.tags).toBeDefined();
     expect(topic.tags.length).toBe(1);
-    expect(topic.tags[0]).toBe(tagRef.id);
+    expect(topic.tags[0]).toBe(tag.id);
   });
 
-  it('throws if tag attachement does not exist', async () => {
+  it('throws if tag does not exist', async () => {
     let topic: Topic;
 
     await act(async () => {
@@ -56,23 +56,22 @@ describe('addTagsToTopic', () => {
     ).toThrowError(TagNotFoundError);
   });
 
-  it("dispatches a 'topics:add-tags' event", async () => {
-    const callback = jest.fn();
+  it("dispatches a 'topics:add-tags' event", (done) => {
     let topic: Topic;
-    let tagRef: Tag;
+    let tag: Tag;
+
+    function callback(payload) {
+      expect(payload.data.topic).toEqual(topic);
+      expect(payload.data.tags).toEqual({ [tag.id]: tag });
+      done();
+    }
 
     core.addEventListener('topics:add-tags', callback);
 
-    await act(async () => {
-      tagRef = await Tags.create(core, { label: 'Tag' });
+    act(() => {
+      tag = Tags.create(core, { label: 'Tag' });
       topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tagRef.id]);
-    });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'topics',
-      type: 'topics:add-tags',
-      data: { topic, tags: { [tagRef.id]: tagRef } },
+      topic = addTagsToTopic(core, topic.id, [tag.id]);
     });
   });
 });

@@ -55,7 +55,7 @@ describe('useFileReferenceStore', () => {
     const file = await generateFileReference(textFile);
 
     act(() => {
-      result.current.addFileReference(file);
+      result.current.setFileReference(file);
     });
 
     expect(Object.keys(result.current.files).length).toBe(1);

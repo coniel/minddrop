@@ -3,6 +3,7 @@ import { get } from './get';
 import { getAllTopics } from './getAllTopics';
 import { getTopicParents } from './getTopicParents';
 import { getDropParents } from './getDropParents';
+import { filterTopics } from './filterTopics';
 import { createTopic } from './createTopic';
 import { updateTopic } from './updateTopic';
 import { addSubtopics } from './addSubtopics';
@@ -24,6 +25,7 @@ export const Topics: TopicsApi = {
   getAll: getAllTopics,
   parents: getTopicParents,
   dropParents: getDropParents,
+  filter: filterTopics,
   create: createTopic,
   update: updateTopic,
   addSubtopics,

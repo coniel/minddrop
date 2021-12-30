@@ -15,4 +15,10 @@ describe('generateFileReference', () => {
 
     expect(result.dimensions).toBeDefined();
   });
+
+  it('accepts attachedTo values', async () => {
+    const result = await generateFileReference(imageFile, ['resource-id']);
+
+    expect(result.attachedTo).toEqual(['resource-id']);
+  });
 });

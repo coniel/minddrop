@@ -1,7 +1,7 @@
 import { EventListenerCallback } from '@minddrop/core';
 import { TagMap } from '@minddrop/tags';
 import { FileReferenceMap } from '@minddrop/files';
-import { Drop } from './Drop.types';
+import { Drop, DropChanges } from './Drop.types';
 
 export type CreateDropEvent = 'drops:create';
 export type UpdateDropEvent = 'drops:update';
@@ -38,7 +38,7 @@ export interface UpdateDropEventData {
   /**
    * The changes made to the drop data.
    */
-  changes: Partial<Drop>;
+  changes: DropChanges;
 
   /**
    * The drop's files. Only set if files were added to the drop during the update.

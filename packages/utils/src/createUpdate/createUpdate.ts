@@ -16,6 +16,10 @@ export interface CreateUpdateOptions {
   deleteEmptyFields?: string[];
 }
 
+export interface CreateUpdateOptionsWithUpdatedAt extends CreateUpdateOptions {
+  setUpdatedAt: true;
+}
+
 /**
  * Creates an update object containing:
  * `after`: the updated object
@@ -28,6 +32,20 @@ export interface CreateUpdateOptions {
  * @param options.deleteEmptyFields An array of field keys to delete if they are empty or undefined.
  * @returns An update object.
  */
+export function createUpdate<C extends object, R extends object>(
+  object: R,
+  data: C,
+  options: CreateUpdateOptionsWithUpdatedAt,
+): Update<R, C & WithUpdatedAt>;
+export function createUpdate<C extends object, R extends object>(
+  object: R,
+  data: C,
+  options: CreateUpdateOptions,
+): Update<R, C>;
+export function createUpdate<C extends object, R extends object>(
+  object: R,
+  data: C,
+): Update<R, C>;
 export function createUpdate<C extends object, R extends object>(
   object: R,
   data: C,

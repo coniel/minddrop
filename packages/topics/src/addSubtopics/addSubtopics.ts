@@ -19,17 +19,17 @@ export function addSubtopics(
   topicId: string,
   subtopicIds: string[],
 ): Topic {
-  // Check that all subtopics exist
-  getTopics(subtopicIds);
+  const subtopics = getTopics(subtopicIds);
 
   // Update the topic
   const updated = updateTopic(core, topicId, {
     subtopics: FieldValue.arrayUnion(subtopicIds),
   });
 
+  // Dispatch 'topics:add-subtopics' event
   core.dispatch('topics:add-subtopics', {
     topic: updated,
-    subtopics: subtopicIds,
+    subtopics,
   });
 
   return updated;
