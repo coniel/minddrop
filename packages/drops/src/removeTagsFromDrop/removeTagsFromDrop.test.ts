@@ -1,85 +1,57 @@
 import { act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import {
-  Tags,
-  onRun as onRunTags,
-  onDisable as onDisableTags,
-  Tag,
-} from '@minddrop/tags';
-import { onRun, onDisable } from '../drops-extension';
+import { Tags, Tag } from '@minddrop/tags';
 import { removeTagsFromDrop } from './removeTagsFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addTagsToDrop } from '../addTagsToDrop';
+import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
-
-// Run tags extension
-onRunTags(core);
-// Run drops extension
-onRun(core);
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('removeTagsFromDrop', () => {
   afterEach(() => {
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
-      onDisableTags(core);
-      onDisable(core);
-      onRunTags(core);
-      onRun(core);
+      Tags.clear(core);
+      clearDrops(core);
     });
   });
 
   it('removes tags from the drop', async () => {
     let drop: Drop;
-    let tagRef1: Tag;
-    let tagRef2: Tag;
+    let tag1: Tag;
+    let tag2: Tag;
 
     await act(async () => {
-      tagRef1 = await Tags.create(core, { label: 'Tag' });
-      tagRef2 = await Tags.create(core, { label: 'Tag' });
+      tag1 = await Tags.create(core, { label: 'Tag' });
+      tag2 = await Tags.create(core, { label: 'Tag' });
       drop = createDrop(core, { type: 'text' });
-      drop = addTagsToDrop(core, drop.id, [tagRef1.id, tagRef2.id]);
-      drop = removeTagsFromDrop(core, drop.id, [tagRef1.id]);
+      drop = addTagsToDrop(core, drop.id, [tag1.id, tag2.id]);
+      drop = removeTagsFromDrop(core, drop.id, [tag1.id]);
     });
 
     expect(drop.tags).toBeDefined();
     expect(drop.tags.length).toBe(1);
-    expect(drop.tags[0]).toBe(tagRef2.id);
+    expect(drop.tags[0]).toBe(tag2.id);
   });
 
-  it('removes the tags field if there are no tags left', async () => {
+  it("dispatches a 'drops:remove-tags' event", (done) => {
     let drop: Drop;
-    let tagRef: Tag;
+    let tag: Tag;
 
-    await act(async () => {
-      tagRef = await Tags.create(core, { label: 'Tag' });
-      drop = createDrop(core, { type: 'text' });
-      drop = addTagsToDrop(core, drop.id, [tagRef.id]);
-      drop = removeTagsFromDrop(core, drop.id, [tagRef.id]);
-    });
-
-    expect(drop.tags).not.toBeDefined();
-  });
-
-  it("dispatches a 'drops:remove-tags' event", async () => {
-    const callback = jest.fn();
-    let drop: Drop;
-    let tagRef: Tag;
+    function callback(payload) {
+      expect(payload.data).toEqual({ drop, tags: { [tag.id]: tag } });
+      done();
+    }
 
     core.addEventListener('drops:remove-tags', callback);
 
-    await act(async () => {
-      tagRef = await Tags.create(core, { label: 'Tag' });
-      drop = createDrop(core, { type: 'text', tags: [tagRef.id] });
-      drop = addTagsToDrop(core, drop.id, [tagRef.id]);
-      drop = removeTagsFromDrop(core, drop.id, [tagRef.id]);
-    });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:remove-tags',
-      data: { drop, tags: { [tagRef.id]: tagRef } },
+    act(() => {
+      tag = Tags.create(core, { label: 'Tag' });
+      drop = createDrop(core, { type: 'text', tags: [tag.id] });
+      drop = addTagsToDrop(core, drop.id, [tag.id]);
+      drop = removeTagsFromDrop(core, drop.id, [tag.id]);
     });
   });
 });

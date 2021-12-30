@@ -18,13 +18,13 @@ Hooks provide access to drops and related data from inside React components. Unl
 Returns a drop by ID or `null` if no drop was found.
 
 ```ts
-useDrop(id: string): Drop | null
+useDrop(dropId: string): Drop | null
 ```
 
 <ArgsTable
   data={[
     {
-      name: 'id',
+      name: 'dropId',
       type: 'string',
       required: true,
       description: 'The ID of the drop to retrieve.',
@@ -37,13 +37,13 @@ useDrop(id: string): Drop | null
 Returns a `{ [id]: Drop }` map of drops matching the provided IDs.
 
 ```ts
-useDrops(ids: string[], filters?: DropFilters): Record<string, Drop>
+useDrops(dropIds: string[], filters?: DropFilters): Record<string, Drop>
 ```
 
 <ArgsTable
   data={[
     {
-      name: 'ids',
+      name: 'dropIds',
       type: 'string[]',
       required: true,
       description: 'The IDs of the drops to retrieve.',
@@ -69,13 +69,13 @@ useDrops(ids: string[], filters?: DropFilters): Record<string, Drop>
 Retrieves drops by ID. If provided a single ID string, returns the drop or `null` if not found. If provided an array of IDs, returns an array of the corresponding drops.
 
 ```ts
-Drops.get(id: string | string[], filters?: DropFilters): Drop | Drop[] | null
+Drops.get(dropId: string | string[], filters?: DropFilters): Drop | Drop[] | null
 ```
 
 <ArgsTable
   data={[
     {
-      name: 'id',
+      name: 'dropId',
       type: 'string | string[]',
       required: true,
       description: 'The ID(s) of the drop(s) to retrieve.',
@@ -94,27 +94,79 @@ Drops.get(id: string | string[], filters?: DropFilters): Drop | Drop[] | null
   ]}
 />
 
+### getAll
+
+Retrieves all drops, returning a `DropMap`. Returned drops can be filtered by passing in `DropFilters`.
+
+```ts
+Drops.getAll(filters?: DropFilters): DropMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Allows filtering of returned drops. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### filter
+
+Filters drops according to provided filters.
+
+```ts
+Drops.filter(drops: DropMap, filters: DropFilters): DropMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'drops',
+      type: 'DropMap',
+      description: 'The drops to filter.',
+    },
+    {
+      name: 'filters',
+      type: 'DropFilters',
+      description: (
+        <span>
+          Filtering options. See the{' '}
+          <a href="#dropfilters">DropFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ### create
 
 Creates a new drop and dispatches a `drops:create` event. Returns the new drop.
 
 ```ts
-Drops.create(core: Core, type: string, data?: CreateDropData): Drop
+Drops.create(core: Core, data: CreateDropData): Drop
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'type',
-      type: 'string',
-      description: 'The drop type.',
-    },
-    {
       name: 'data',
       type: 'CreateDropData',
-      description:
-        'The default drop property values. See below for details.',
+      description: (
+        <span>
+          The drop data, of which <Code>type</Code> is the only
+          required value. See below for details.
+        </span>
+      ),
     },
   ]}
 />
@@ -124,6 +176,12 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
 <InterfaceTable
   data={[
     {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The drop type.',
+    },
+    {
       name: 'markdown',
       type: 'string',
       description: "The drop's markdown text content.",
@@ -132,7 +190,7 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
       name: 'files',
       type: 'string[]',
       description:
-        "IDs of the drop's files. All files attached to the drop must be listed here.",
+        "IDs of the drop's files. All files attached to the drop must be listed here. The file references of attached files will be automatically updated, adding the drop as an attached resource.",
     },
     {
       name: 'color',
@@ -147,14 +205,14 @@ Drops.create(core: Core, type: string, data?: CreateDropData): Drop
 Updates a drop and dispatches a `drops:update` event. Returns the updated drop.
 
 ```ts
-Drops.update(core: Core, id: string, data: UpdateDropData): Drop
+Drops.update(core: Core, dropId: string, data: UpdateDropData): Drop
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'id',
+      name: 'dropId',
       type: 'string',
       required: true,
       description: 'The ID of the drop to update.',
@@ -197,12 +255,98 @@ Drops.update(core: Core, id: string, data: UpdateDropData): Drop
   ]}
 />
 
-### addTags
+### archive
 
-Adds tags to a drop, dispaches an `drops:add-tags` event and a `drops:update` event.
+Archives a drop and dispatches a `drops:archive` event and an `drops:update` event. Returns the updated drop.
+
+Archived drops can be restored using the `Drops.restore` method.
 
 ```ts
-Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+Drops.archive(core: Core, dropId: string): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to archive.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a drop and dispatches a `drops:delete` event and an `drops:update` event. Returns the deleted drop.
+
+Deleted drops can be restored using the `Drops.restore` method.
+
+```ts
+Drops.delete(core: Core, dropId: string): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to delete.',
+    },
+  ]}
+/>
+
+### restore
+
+Restores an archived or deleted drop and dispatches a `drops:restore` event and an `drops:update` event. Returns the restored drop.
+
+```ts
+Drops.restore(core: Core, dropId: string): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to restore.',
+    },
+  ]}
+/>
+
+### deletePermanently
+
+Permanently deletes a drop and dispatches a `drops:delete-permanently` event. Returns the deleted drop.
+
+Permanently deleted drops cannot be restored.
+
+```ts
+Drops.deletePermanently(core: Core, dropId: string): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to delete.',
+    },
+  ]}
+/>
+
+### addTags
+
+Adds tags to a drop, dispaches an `drops:add-tags` event and a `drops:update` event. Returns the updated drop.
+
+```ts
+Drops.addTags(core: Core, dropId: string, tagIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -225,10 +369,10 @@ Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
 
 ### removeTags
 
-Removes tags from a drop and dispatches a `drops:remove-tags` event as well as a `drops:update` event.
+Removes tags from a drop and dispatches a `drops:remove-tags` event as well as a `drops:update` event. Returns the updated drop.
 
 ```ts
-Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
+Drops.removeTags(core: Core, dropId: string, tagIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -252,10 +396,12 @@ Drops.addTags(core: Core, dropId: string, tagIds: string[]): void
 
 ### addFiles
 
-Adds files to a drop, dispaches an `drops:add-files` event and a `drops:update` event.
+Adds files to a drop, dispaches an `drops:add-files` event and a `drops:update` event. Returns the updated drop.
+
+The file references of the added files will be automatically updated to include the drop ID in their `attachedTo` value.
 
 ```ts
-Drops.addFiles(core: Core, dropId: string, fileIds: string[]): void
+Drops.addFiles(core: Core, dropId: string, fileIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -278,10 +424,12 @@ Drops.addFiles(core: Core, dropId: string, fileIds: string[]): void
 
 ### removeFiles
 
-Removes files from a drop and dispatches a `drops:remove-files` event as well as a `drops:update` event.
+Removes files from a drop and dispatches a `drops:remove-files` event as well as a `drops:update` event. Returns the updated drop.
+
+The file references of the removed files will be automatically updated to remove the drop ID from their `attachedTo` value, and deleted if the drop was their only attachment.
 
 ```ts
-Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): void
+Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -305,10 +453,14 @@ Drops.removeFiles(core: Core, dropId: string, fileIds: string[]): void
 
 ### replaceFiles
 
-Replaces files in a drop (removing current files and adding given files) and dispatches a `drops:replace-files` event as well as a `drops:update` event.
+Replaces files in a drop (removing current files and adding given files) and dispatches a `drops:replace-files` event as well as a `drops:update` event. Returns the updated drop.
+
+The file references of the added files will be automatically updated to include the drop ID in their `attachedTo` value.
+
+The file references of the removed files will be automatically updated to remove the drop ID from their `attachedTo` value, and deleted if the drop was their only attachment.
 
 ```ts
-Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): void
+Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): Drop
 ```
 
 <ArgsTable
@@ -326,66 +478,6 @@ Drops.replaceFiles(core: Core, dropId: string, fileIds: string[]): void
       type: 'string[]',
       required: true,
       description: 'The IDs of the files to add.',
-    },
-  ]}
-/>
-
-### archive
-
-Archives a drop and dispatches a `drops:archive` event and an `drops:update` event.
-
-```ts
-Drops.archive(core: Core, id: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to archive.',
-    },
-  ]}
-/>
-
-### delete
-
-Deletes a drop and dispatches a `drops:delete` event and an `drops:update` event.
-
-```ts
-Drops.delete(core: Core, id: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to delete.',
-    },
-  ]}
-/>
-
-### restore
-
-Restores an archived/deleted drop and dispatches a `drops:restore` event and an `drops:update` event.
-
-```ts
-Drops.restore(core: Core, id: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'id',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to restore.',
     },
   ]}
 />
@@ -409,6 +501,16 @@ Drops.load(core: Core, drops: Drop[]): void
     },
   ]}
 />
+
+### clear
+
+Clears drops from the store and dispaches a `drops:clear` event.
+
+```ts
+Drops.clear(core: Core): void
+```
+
+<ArgsTable core />
 
 ### addEventListener
 
@@ -496,6 +598,11 @@ See below the table for more details on the data passed by drop related events.
       data: 'Drop',
       description:
         'Dispatched when an archived/deleted drop is restored.',
+    },
+    {
+      name: 'drops:delete-permanently',
+      data: 'Drop',
+      description: 'Dispatched when a drop is permanently deleted.',
     },
     {
       name: 'drops:add-tags',
@@ -747,8 +854,19 @@ See the [Drop](/docs/extensions/types/drop) interface page.
 
 ## DropFilters
 
+Drops can be filtered using one or more of the options below.
+
+By default, archived and deleted drops are filtered out. If either `archived` or `deleted` is set to `true`, active drops will be filtered out by default unless `active` is also set to `true`.
+
+A drop is considered active if it is neither archived nor deleted.
+
 <PropsTable
   data={[
+    {
+      name: 'type',
+      type: 'string[]',
+      description: 'Only include drops of given types.',
+    },
     {
       name: 'active',
       type: 'boolean',

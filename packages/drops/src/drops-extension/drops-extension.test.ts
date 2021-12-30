@@ -4,9 +4,8 @@ import { onDisable, onRun } from './drops-extension';
 import { generateDrop } from '../generateDrop';
 import { useAllDrops } from '../useAllDrops';
 import { Drops } from '../Drops';
-import { Drop } from '../types';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('drops extension', () => {
   describe('onRun', () => {
@@ -14,79 +13,7 @@ describe('drops extension', () => {
       act(() => {
         Drops.clear(core);
       });
-      core = initializeCore('drops');
-    });
-
-    it("reacts to 'drops:load' events by loading the drops into the store", () => {
-      const { result } = renderHook(() => useAllDrops());
-      const drop1 = generateDrop({ type: 'text' });
-      const drop2 = generateDrop({ type: 'text' });
-
-      onRun(core);
-
-      act(() => {
-        Drops.load(core, [drop1, drop2]);
-      });
-
-      expect(result.current[drop1.id]).toBeDefined();
-      expect(result.current[drop2.id]).toBeDefined();
-    });
-
-    it("reacts to 'drops:clear' events by clearing the drops store", () => {
-      const { result } = renderHook(() => useAllDrops());
-      const drop1 = generateDrop({ type: 'text' });
-      const drop2 = generateDrop({ type: 'text' });
-
-      onRun(core);
-
-      act(() => {
-        Drops.load(core, [drop1, drop2]);
-        Drops.clear(core);
-      });
-
-      expect(result.current[drop1.id]).not.toBeDefined();
-      expect(result.current[drop2.id]).not.toBeDefined();
-    });
-
-    it("reacts to 'drops:create' events by adding the new drop to the store", () => {
-      const { result } = renderHook(() => useAllDrops());
-      let drop: Drop;
-
-      onRun(core);
-
-      act(() => {
-        drop = Drops.create(core, { type: 'text' });
-      });
-
-      expect(result.current[drop.id]).toBeDefined();
-    });
-
-    it("reacts to 'drops:update' events by updating the drop in the store", () => {
-      const { result } = renderHook(() => useAllDrops());
-      const drop = generateDrop({ type: 'text', markdown: 'Hello' });
-
-      onRun(core);
-
-      act(() => {
-        Drops.load(core, [drop]);
-        Drops.update(core, drop.id, { markdown: 'Updated' });
-      });
-
-      expect(result.current[drop.id].markdown).toBe('Updated');
-    });
-
-    it("reacts to 'drops:delete-permanently' events by removing the drop from the store", () => {
-      const { result } = renderHook(() => useAllDrops());
-      let drop: Drop;
-
-      onRun(core);
-
-      act(() => {
-        drop = Drops.create(core, { type: 'text' });
-        Drops.deletePermanently(core, drop.id);
-      });
-
-      expect(result.current[drop.id]).not.toBeDefined();
+      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     });
 
     describe('drops resource registration', () => {
@@ -140,7 +67,7 @@ describe('drops extension', () => {
       act(() => {
         Drops.clear(core);
       });
-      core = initializeCore('drops');
+      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     });
 
     it('clears the store', () => {
@@ -160,19 +87,13 @@ describe('drops extension', () => {
     });
 
     it('removes event listeners', () => {
-      const { result } = renderHook(() => useAllDrops());
-      const drop1 = generateDrop({ type: 'text' });
-      const drop2 = generateDrop({ type: 'text' });
-
       onRun(core);
+      Drops.addEventListener(core, 'drops:create', jest.fn());
 
       act(() => {
         onDisable(core);
-        Drops.load(core, [drop1, drop2]);
+        expect(core.hasEventListeners()).toBe(false);
       });
-
-      expect(result.current[drop1.id]).not.toBeDefined();
-      expect(result.current[drop2.id]).not.toBeDefined();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
+import { getTopics } from '../getTopics';
 import { Topic } from '../types';
 import { updateTopic } from '../updateTopic';
 
@@ -18,14 +19,17 @@ export function removeSubtopics(
   topicId: string,
   subtopicIds: string[],
 ): Topic {
-  // Update the topic
+  const subtopics = getTopics(subtopicIds);
+
+  // Update the topic in the store
   const updated = updateTopic(core, topicId, {
     subtopics: FieldValue.arrayRemove(subtopicIds),
   });
 
+  // Dispatch 'topics:remove-subtopics'
   core.dispatch('topics:remove-subtopics', {
     topic: updated,
-    subtopics: subtopicIds,
+    subtopics,
   });
 
   return updated;

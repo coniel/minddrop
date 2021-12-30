@@ -1,32 +1,20 @@
 import { act, textFile } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import {
-  Files,
-  onRun as onRunFiles,
-  onDisable as onDisableFiles,
-  FileReference,
-} from '@minddrop/files';
-import { onRun, onDisable } from '../drops-extension';
+import { Files, FileReference } from '@minddrop/files';
 import { removeFilesFromDrop } from './removeFilesFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addFilesToDrop } from '../addFilesToDrop';
+import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
-
-// Run files extension
-onRunFiles(core);
-// Run drops extension
-onRun(core);
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('removeFilesFromDrop', () => {
   afterEach(() => {
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
-      onDisableFiles(core);
-      onDisable(core);
-      onRunFiles(core);
-      onRun(core);
+      Files.clear(core);
+      clearDrops(core);
     });
   });
 
@@ -62,24 +50,41 @@ describe('removeFilesFromDrop', () => {
     expect(drop.files).not.toBeDefined();
   });
 
-  it("dispatches a 'drops:remove-files' event", async () => {
-    const callback = jest.fn();
+  it('removes the drop as an attachment from the files', async () => {
+    let drop: Drop;
+    let file1Ref: FileReference;
+    let file2Ref: FileReference;
+
+    await act(async () => {
+      file1Ref = await Files.create(core, textFile, ['resource-id']);
+      file2Ref = await Files.create(core, textFile, ['resource-id']);
+      drop = createDrop(core, { type: 'text' });
+      drop = addFilesToDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
+      drop = removeFilesFromDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
+    });
+
+    expect(Files.get(file1Ref.id).attachedTo).toEqual(['resource-id']);
+    expect(Files.get(file2Ref.id).attachedTo).toEqual(['resource-id']);
+  });
+
+  it("dispatches a 'drops:remove-files' event", (done) => {
     let drop: Drop;
     let fileRef: FileReference;
 
+    function callback(payload) {
+      expect(payload.data).toEqual({ drop, files: { [fileRef.id]: fileRef } });
+      done();
+    }
+
     core.addEventListener('drops:remove-files', callback);
 
-    await act(async () => {
-      fileRef = await Files.create(core, textFile);
+    async function run() {
+      fileRef = await Files.create(core, textFile, ['resource-id']);
       drop = createDrop(core, { type: 'text', files: [fileRef.id] });
       drop = addFilesToDrop(core, drop.id, [fileRef.id]);
       drop = removeFilesFromDrop(core, drop.id, [fileRef.id]);
-    });
+    }
 
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:remove-files',
-      data: { drop, files: { [fileRef.id]: fileRef } },
-    });
+    run();
   });
 });

@@ -5,7 +5,7 @@ describe('handleResourceChange', () => {
   it('calls onChange on the appropriate resource connector', () => {
     const onChangeFoo = jest.fn();
     const onChangeBar = jest.fn();
-    const core = initializeCore('pouchdb');
+    const core = initializeCore({ appId: 'app-id', extensionId: 'pouchdb' });
 
     core.registerResource({ type: 'foos:foo', onChange: onChangeFoo });
     core.registerResource({ type: 'bars:bar', onChange: onChangeBar });
@@ -18,7 +18,7 @@ describe('handleResourceChange', () => {
   });
 
   it('ignores unregistered resources', () => {
-    const core = initializeCore('pouchdb');
+    const core = initializeCore({ appId: 'app-id', extensionId: 'pouchdb' });
 
     const changeHandler = createResourceChangeHandler(core);
     changeHandler('foos:foo', { id: 'foo' }, false);

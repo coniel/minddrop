@@ -1,11 +1,14 @@
+import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
+import { Topic } from '../types';
 import { createTopic } from './createTopic';
+import { useAllTopics } from '../useAllTopics';
 
-let core = initializeCore('topics');
+let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 describe('createTopic', () => {
   afterEach(() => {
-    core = initializeCore('topics');
+    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
   });
 
   it('creates a topic', () => {
@@ -20,17 +23,27 @@ describe('createTopic', () => {
     expect(topic.title).toBe('My topic');
   });
 
-  it("dispatches a 'topics:create' event", () => {
-    const callback = jest.fn();
+  it('adds topic to the store', () => {
+    const { result } = renderHook(() => useAllTopics());
+    let topic: Topic;
+
+    act(() => {
+      topic = createTopic(core, { title: 'My topic' });
+    });
+
+    expect(result.current[topic.id]).toEqual(topic);
+  });
+
+  it("dispatches a 'topics:create' event", (done) => {
+    let topic: Topic;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(topic);
+      done();
+    }
 
     core.addEventListener('topics:create', callback);
 
-    const topic = createTopic(core, { title: 'My topic' });
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'topics',
-      type: 'topics:create',
-      data: topic,
-    });
+    topic = createTopic(core, { title: 'My topic' });
   });
 });

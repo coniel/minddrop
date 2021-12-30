@@ -3,10 +3,16 @@ import { ResourceConnector } from './ResourceConnector.types';
 
 export interface Core {
   /**
+   * The application ID for which the core intance
+   * was initialized.
+   */
+  appId: string;
+
+  /**
    * The extension ID for which the core intance
    * was initialized.
    */
-  initializedFor: string;
+  extensionId: string;
 
   /**
    * Adds an event listener for the specified event.
@@ -31,20 +37,17 @@ export interface Core {
   ): void;
 
   /**
-   * Removes all of the source's event listeners
-   * for a given event type.
+   * Removes all of the source's event listeners.
+   * Optionally, a type can be specified to remove
+   * event listeners only for the specified event type.
    *
    * @param type The event listener type to remove.
    */
-  removeEventListeners(type: string): void;
-
-  /**
-   * Removes all of the source's event listeners.
-   */
-  removeAllEventListeners(): void;
+  removeAllEventListeners(type?: string): void;
 
   /**
    * Checks whether a specified event listener exists.
+   * Only includes event listeners added by the source.
    *
    * @param type The event type.
    * @param callback The event listener callback.
@@ -56,22 +59,28 @@ export interface Core {
   ): boolean;
 
   /**
-   * Checks whether any event listeners exist for a
-   * specified event type.
+   * Checks whether any event listeners exist.
+   * Only includes event listeners added by the source.
+   *
+   * Optionally, a type can be specified to only check for
+   * event listeners of the specified event type.
    *
    * @param type The event type.
    * @returns `true` if there are any event listeners of the specified type, otherwise `false`.
    */
-  hasEventListeners(type: string): boolean;
+  hasEventListeners(type?: string): boolean;
 
   /**
-   * Returns the number of event listeners for a
-   * specified event type.
+   * Returns the number of event listeners.
+   * Only includes event listeners added by the source.
+   *
+   * Optionally, a type can be specified to count
+   * event listeners only of the specified event type.
    *
    * @param type The type of event listener for which to get the count.
    * @returns The number of event listener of the specified type/
    */
-  eventListenerCount(type: string): number;
+  eventListenerCount(type?: string): number;
 
   /**
    * Dispatches an event.

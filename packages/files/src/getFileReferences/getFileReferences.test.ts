@@ -21,9 +21,9 @@ describe('getFileReferences', () => {
     const file3 = await generateFileReference(textFile);
 
     act(() => {
-      result.current.addFileReference(file1);
-      result.current.addFileReference(file2);
-      result.current.addFileReference(file3);
+      result.current.setFileReference(file1);
+      result.current.setFileReference(file2);
+      result.current.setFileReference(file3);
     });
 
     const files = getFileReferences([file1.id, file2.id]);

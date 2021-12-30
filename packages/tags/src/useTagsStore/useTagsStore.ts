@@ -1,5 +1,4 @@
 import createStore from 'zustand';
-import { updateStoreObject } from '@minddrop/utils';
 import { TagsStore } from '../types';
 
 export const useTagsStore = createStore<TagsStore>((set) => ({
@@ -21,19 +20,11 @@ export const useTagsStore = createStore<TagsStore>((set) => ({
 
   clear: () => set(() => ({ tags: {} })),
 
-  addTag: (tag) =>
+  setTag: (tag) =>
     set((state) => ({
       tags: {
         ...state.tags,
         [tag.id]: tag,
-      },
-    })),
-
-  updateTag: (id, data) =>
-    set((state) => ({
-      tags: {
-        ...state.tags,
-        [id]: updateStoreObject(state.tags[id], data),
       },
     })),
 

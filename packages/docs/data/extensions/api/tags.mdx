@@ -44,7 +44,7 @@ Tags.get(id: string | string[]): Tag | Tag[] | null
 <ArgsTable
   data={[
     {
-      name: 'id',
+      name: 'tagId',
       type: 'string | string[]',
       required: true,
       description: 'The ID(s) of the tag(s) to retrieve.',
@@ -54,11 +54,28 @@ Tags.get(id: string | string[]): Tag | Tag[] | null
 
 ### create
 
-Creates a new tag from a tag and dispatches a `tags:create` event. Returns the new tag.
+Creates a new tag and dispatches a `tags:create` event. Returns the new tag.
 
 ```ts
-Tags.create(core: Core, type: string, tag: Tag): Tag
+Tags.create(core: Core, data: CreateTagData): Tag
 ```
+
+<InterfaceTable
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTagData',
+      description: (
+        <span>
+          The tag data, of which <Code>label</Code> is the only
+          required value. See below for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### `CreateTagData`
 
 <InterfaceTable
   data={[
@@ -71,7 +88,16 @@ Tags.create(core: Core, type: string, tag: Tag): Tag
     {
       name: 'color',
       type: 'ContentColor',
-      description: "The tag's color.",
+      description: (
+        <span>
+          The tag's color. The default color is <Code>'blue'</Code>.
+          See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
     },
   ]}
 />
@@ -81,14 +107,14 @@ Tags.create(core: Core, type: string, tag: Tag): Tag
 Updates a tag and dispatches a `tags:update` event. Returns the updated tag.
 
 ```ts
-Tags.update(core: Core, id: string, data: UpdateTagData): Tag
+Tags.update(core: Core,tagId: string, data: UpdateTagData): Tag
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'id',
+      name: 'tagId',
       type: 'string',
       required: true,
       description: 'The ID of the tag to update.',
@@ -115,7 +141,15 @@ Tags.update(core: Core, id: string, data: UpdateTagData): Tag
     {
       name: 'color',
       type: 'ContentColor',
-      description: "The tag's color.",
+      description: (
+        <span>
+          The tag's color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
     },
   ]}
 />
@@ -125,17 +159,17 @@ Tags.update(core: Core, id: string, data: UpdateTagData): Tag
 Deletes a tag and dispatches a `tags:delete` event.
 
 ```ts
-Tags.delete(core: Core, id: string): void
+Tags.delete(core: Core,tagId: string): void
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'id',
+      name: 'tagId',
       type: 'string',
       required: true,
-      description: 'The ID of the tag.',
+      description: 'The ID of the tag to delete.',
     },
   ]}
 />
@@ -226,7 +260,7 @@ Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCal
     },
     {
       name: 'tags:update',
-      data: 'UpdateTagData',
+      data: 'UpdateTagEventData',
       description: 'Dispatched when a tag is updated.',
     },
     {
@@ -238,6 +272,58 @@ Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCal
       name: 'tags:load',
       data: 'Tag[]',
       description: 'Dispatched when tags are loaded into the store.',
+    },
+  ]}
+/>
+
+#### UpdateTagEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'Tag',
+      required: true,
+      description: 'Tag data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'Tag',
+      required: true,
+      description: 'Updated tag data.',
+    },
+    {
+      name: 'changes',
+      type: 'TagChanges',
+      required: true,
+      description:
+        'The changes made to the tag. See below for details.',
+    },
+  ]}
+/>
+
+`TagChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The tag's color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
     },
   ]}
 />

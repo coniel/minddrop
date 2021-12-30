@@ -1,32 +1,29 @@
-import { act, MockDate } from '@minddrop/test-utils';
+import { act, MockDate, renderHook } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
 import { updateDrop } from './updateDrop';
-import { onDisable, onRun } from '../drops-extension';
-import { generateDrop } from '../generateDrop';
-import { loadDrops } from '../loadDrops';
+import { createDrop } from '../createDrop';
+import { Drop } from '../types';
+import { clearDrops } from '../clearDrops';
+import { useAllDrops } from '../useAllDrops';
 
-let core = initializeCore('drops');
-
-// Set up extension
-onRun(core);
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('updateDrop', () => {
   afterEach(() => {
     // Reset extension
     act(() => {
-      onDisable(core);
+      clearDrops(core);
     });
-    core = initializeCore('drops');
-    onRun(core);
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('returns the updated drop', () => {
     MockDate.set('01/01/2000');
     const changes = { markdown: 'Updated' };
-    const drop = generateDrop({ type: 'text' });
+    let drop: Drop;
 
     act(() => {
-      loadDrops(core, [drop]);
+      drop = createDrop(core, { type: 'text' });
     });
 
     MockDate.set('01/02/2000');
@@ -40,32 +37,39 @@ describe('updateDrop', () => {
     MockDate.reset();
   });
 
-  it("dispatches a 'drops:update' event", () => {
-    MockDate.set('01/01/2000');
-    const callback = jest.fn();
-    const changes = { markdown: 'Updated' };
-    const drop = generateDrop({ type: 'text' });
+  it('updates the drop in the store', () => {
+    const { result } = renderHook(() => useAllDrops());
+    let drop: Drop;
 
     act(() => {
-      loadDrops(core, [drop]);
+      drop = createDrop(core, { type: 'text' });
+      drop = updateDrop(core, drop.id, { markdown: 'Updated' });
     });
 
-    core.addEventListener('drops:update', callback);
+    expect(result.current[drop.id]).toEqual(drop);
+  });
 
-    MockDate.set('01/02/2000');
+  it("dispatches a 'drops:update' event", (done) => {
+    MockDate.set('01/01/2000');
+    const changes = { markdown: 'My drop' };
+    let drop: Drop;
 
-    updateDrop(core, drop.id, changes);
-
-    expect(callback).toHaveBeenCalledWith({
-      source: 'drops',
-      type: 'drops:update',
-      data: {
+    function callback(payload) {
+      expect(payload.data).toEqual({
         before: drop,
         after: { ...drop, ...changes, updatedAt: new Date('01/02/2000') },
         changes: { ...changes, updatedAt: new Date('01/02/2000') },
-      },
-    });
+      });
+      done();
+    }
 
-    MockDate.reset();
+    core.addEventListener('drops:update', callback);
+
+    act(() => {
+      drop = createDrop(core, { type: 'text' });
+      MockDate.set('01/02/2000');
+      updateDrop(core, drop.id, changes);
+      MockDate.reset();
+    });
   });
 });

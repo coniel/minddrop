@@ -19,7 +19,7 @@ describe('getTag', () => {
     const tag = generateTag({ label: 'Books' });
 
     act(() => {
-      result.current.addTag(tag);
+      result.current.setTag(tag);
     });
 
     expect(getTag(tag.id)).toBe(tag);

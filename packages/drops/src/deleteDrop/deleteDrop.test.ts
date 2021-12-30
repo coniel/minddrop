@@ -1,51 +1,45 @@
 import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../drops-extension';
 import { deleteDrop } from './deleteDrop';
-import { generateDrop } from '../generateDrop';
-import { loadDrops } from '../loadDrops';
+import { Drop } from '../types';
+import { createDrop } from '../createDrop';
+import { clearDrops } from '../clearDrops';
 
-let core = initializeCore('drops');
-
-// Set up extension
-onRun(core);
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('deleteDrop', () => {
   afterEach(() => {
-    // Reset extension
     act(() => {
-      onDisable(core);
+      clearDrops(core);
     });
-    core = initializeCore('drops');
-    onRun(core);
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
   });
 
   it('deletes the drop', () => {
-    const drop = generateDrop({ type: 'text' });
+    let drop: Drop;
 
     act(() => {
-      loadDrops(core, [drop]);
+      drop = createDrop(core, { type: 'text' });
+      drop = deleteDrop(core, drop.id);
     });
 
-    const deleted = deleteDrop(core, drop.id);
-
-    expect(deleted.deleted).toBe(true);
-    expect(deleted.deletedAt).toBeDefined();
+    expect(drop.deleted).toBe(true);
+    expect(drop.deletedAt).toBeDefined();
   });
 
-  it("dispatches a 'drops:delete' event", () => {
-    const callback = jest.fn();
-    const drop = generateDrop({ type: 'text' });
+  it("dispatches a 'drops:delete' event", (done) => {
+    let drop: Drop;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(drop);
+      done();
+    }
 
     core.addEventListener('drops:delete', callback);
 
     act(() => {
-      loadDrops(core, [drop]);
+      drop = createDrop(core, { type: 'text' });
+      drop = deleteDrop(core, drop.id);
     });
-
-    const deleted = deleteDrop(core, drop.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(deleted);
   });
 });

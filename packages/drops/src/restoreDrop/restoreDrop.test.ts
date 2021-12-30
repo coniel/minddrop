@@ -7,7 +7,7 @@ import { restoreDrop } from './restoreDrop';
 import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 
-let core = initializeCore('drops');
+let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 // Set up extension
 onRun(core);
@@ -18,7 +18,7 @@ describe('restoreDrop', () => {
     act(() => {
       onDisable(core);
     });
-    core = initializeCore('drops');
+    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     onRun(core);
   });
 
@@ -50,19 +50,19 @@ describe('restoreDrop', () => {
     expect(restored.deletedAt).not.toBeDefined();
   });
 
-  it("dispatches a 'drops:restore' event", () => {
-    const callback = jest.fn();
+  it("dispatches a 'drops:restore' event", (done) => {
     let drop: Drop;
+
+    function callback(payload) {
+      expect(payload.data).toEqual(drop);
+      done();
+    }
 
     core.addEventListener('drops:restore', callback);
 
     act(() => {
       drop = createDrop(core, { type: 'text' });
+      drop = restoreDrop(core, drop.id);
     });
-
-    const restored = restoreDrop(core, drop.id);
-
-    expect(callback).toHaveBeenCalled();
-    expect(callback.mock.calls[0][0].data).toBe(restored);
   });
 });
