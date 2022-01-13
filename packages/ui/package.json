@@ -1,6 +1,6 @@
 {
   "name": "@minddrop/ui",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "source": "src/index.ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,9 +16,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@minddrop/i18n": "^0.2.0",
-    "@minddrop/icons": "^0.3.0",
-    "@minddrop/utils": "^0.3.0",
+    "@minddrop/i18n": "^0.2.1",
+    "@minddrop/icons": "^0.3.1",
+    "@minddrop/utils": "^0.4.0",
     "@radix-ui/react-collapsible": "^0.1.1",
     "@radix-ui/react-context-menu": "^0.1.1",
     "@radix-ui/react-dropdown-menu": "^0.1.1",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@jest/types": "^27.2.5",
-    "@minddrop/test-utils": "^0.3.0",
+    "@minddrop/test-utils": "^0.3.1",
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/node": "^16.11.6",
     "css-loader": "^6.5.0",
