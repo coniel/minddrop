@@ -54,6 +54,15 @@ export interface AppApi {
    */
   removeAllUiExtensions(core: Core, location?: UiLocation): void;
 
+  /**
+   * Adds topics to the root level and dispaches an
+   * `app:add-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to be added to the root level.
+   */
+  addTopics(core: Core, topicIds: []): void;
+
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */

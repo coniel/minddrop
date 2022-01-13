@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppApi, UiExtensionConfig } from '../types';
 import { Slot, UiComponentConfigMap } from '../Slot';
+import { addTopics } from '../addTopics';
 import { useAppStore } from '../useAppStore';
 
 interface InitializeAppConig {
@@ -9,6 +10,7 @@ interface InitializeAppConig {
 
 export function initializeApp({ componentMap }: InitializeAppConig): AppApi {
   const app: AppApi = {
+    addTopics,
     Slot: (props) => <Slot {...props} components={componentMap} />,
 
     openView: (core, view) => {
