@@ -1,5 +1,4 @@
 import { Core } from '@minddrop/core';
-import { PersistentStoreData } from './PersistentStoreStore.types';
 import {
   UpdateGlobalStoreEvent,
   UpdateGlobalStoreEventCallback,
@@ -45,7 +44,7 @@ export interface PersistentStoreApi {
    * @param defaultValue The default value returned if the local store value does not exist.
    * @retuns The value.
    */
-  getLocalValue<T = any>(core: Core, key: string, defaultValue: T): T;
+  getLocalValue<T = any>(core: Core, key: string, defaultValue?: T): T;
 
   /**
    * Sets an extension's data in the global store and dispaches
@@ -56,7 +55,7 @@ export interface PersistentStoreApi {
    * @param core A MindDrop core instance.
    * @param data
    */
-  setGlobalStore(core: Core, data: PersistentStoreData): void;
+  setGlobalStore(core: Core, data: Record<string, any>): void;
 
   /**
    * Sets an extension's data in the local store and dispaches
@@ -67,7 +66,7 @@ export interface PersistentStoreApi {
    * @param core A MindDrop core instance.
    * @param data
    */
-  setLocalStore(core: Core, data: PersistentStoreData): void;
+  setLocalStore(core: Core, data: Record<string, any>): void;
 
   /**
    * Sets a value in the global store and dispaches a

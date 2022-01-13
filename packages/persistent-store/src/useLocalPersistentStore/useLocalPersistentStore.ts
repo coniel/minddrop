@@ -11,5 +11,5 @@ import { usePersistentStore } from '../usePersistentStore';
 export function useLocalPersistentStore<T = Record<string, any>>(
   core: Core,
 ): T {
-  return (usePersistentStore().global[core.extensionId] || {}) as T;
+  return (usePersistentStore().local[core.extensionId] || {}) as T;
 }
