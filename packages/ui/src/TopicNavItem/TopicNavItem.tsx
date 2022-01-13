@@ -155,14 +155,16 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
         </Tooltip>
         <CollapsibleContent asChild>
           <div className="children">
-            {React.Children.map(children, (child) =>
-              React.cloneElement(
-                child as React.ReactElement<TopicNavItemProps>,
-                {
-                  level: level + 1,
-                },
-              ),
-            ) || (
+            {childCount > 0 ? (
+              React.Children.map(children, (child) =>
+                React.cloneElement(
+                  child as React.ReactElement<TopicNavItemProps>,
+                  {
+                    level: level + 1,
+                  },
+                ),
+              )
+            ) : (
               <Text
                 as="div"
                 color="light"
