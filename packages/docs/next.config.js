@@ -11,6 +11,9 @@ const withTM = require('next-transpile-modules')([
 
 module.exports = withPlugins([withOptimizedImages, withVideos, withTM], {
   // Next.js config
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async redirects() {
     return [
       {

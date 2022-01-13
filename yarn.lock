@@ -2655,6 +2655,15 @@
     "@minddrop/utils" "^0.2.0"
     zustand "^3.6.5"
 
+"@minddrop/files@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/files/-/files-0.1.0.tgz#cfeedf2b75e554d9cec7eded780795a8f4aa5a77"
+  integrity sha512-zvrnS7YdpEkzzFUDkX2bSNWRyhOuK1UNh8fA7HW+tvQsrQwZYrMiY35035Toubx5lClXC2ECqw77bhaKtFSCFw==
+  dependencies:
+    "@minddrop/core" "^0.3.0"
+    "@minddrop/utils" "^0.3.0"
+    zustand "^3.6.5"
+
 "@minddrop/icons@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@minddrop/icons/-/icons-0.2.0.tgz#6a856205eb6199cf9ed9cc3db78d87efc2c58732"
@@ -2662,10 +2671,38 @@
   dependencies:
     "@minddrop/utils" "^0.2.0"
 
+"@minddrop/pouchdb@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/pouchdb/-/pouchdb-0.1.0.tgz#62ed670c4d461caf33352ea060c692eab71fc136"
+  integrity sha512-9/AL/w/RfGyX1y5EuhxcmLmCA7i+VaA9H7hBFA62oqWV2JAIDeQNmbPYA0o2rTzj8FYSg1Ge/oCecu2DwgLEyA==
+  dependencies:
+    "@minddrop/core" "^0.3.0"
+    pouchdb "^7.2.2"
+
+"@minddrop/tags@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/tags/-/tags-0.1.0.tgz#c5c56d753d3ace12fe1ef929d2118cc59ae85e95"
+  integrity sha512-scqR0+7ppOwbbpzfHSN8McyiubWNXJA+9StbAVhN1i+lpsXAt5zxEKmZB59dxbvukhrvB8HTLpXasj6Z60cy3g==
+  dependencies:
+    "@minddrop/core" "^0.3.0"
+    "@minddrop/utils" "^0.3.0"
+    zustand "^3.6.5"
+
 "@minddrop/theme@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@minddrop/theme/-/theme-0.2.0.tgz#8b9f63fe818417b36d52e499d2da1b99807aca3d"
   integrity sha512-ydESt9WPlbwGqjamFDkG/E14uy1yo2me4TfNKV/lnXLutfmU+lJLtvWSm3hKu8apUDmd8fNz5Bj/EtVr60vmtg==
+
+"@minddrop/topics@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/topics/-/topics-0.1.0.tgz#98419f6a98bfd1da097608de5a7caed69bb793c7"
+  integrity sha512-ucH7TG4PPFokbTnEzGsw45/b9L4SicVsENMjx4QOsC6um91ECBYSRe8XTwDIhFMyyEEb0SIUFlrZHeEUE61ICw==
+  dependencies:
+    "@minddrop/core" "^0.3.0"
+    "@minddrop/drops" "^0.1.0"
+    "@minddrop/tags" "^0.1.0"
+    "@minddrop/utils" "^0.3.0"
+    zustand "^3.6.5"
 
 "@minddrop/ui@0.2.0":
   version "0.2.0"
@@ -2687,6 +2724,13 @@
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@minddrop/utils/-/utils-0.2.0.tgz#78ea7501aaee6be26413c95c620b1a656c6d70b9"
   integrity sha512-+Lx/cNfkdEcLkSZsSqKuCXtfnBsOv1iaPC1+NgYX4hy60ig1ilJd/gqDziVMWBbvrdOD40AgPausydO1Rd5Y0Q==
+  dependencies:
+    uuid "^8.3.2"
+
+"@minddrop/utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/utils/-/utils-0.3.0.tgz#d20da983f021312a912c3f4a3c1b3c17a1808ec1"
+  integrity sha512-ujci9Cm+ScESU3UrAfpzJLM/674eph+gdvSYs7u3ZmAPVLKQ9CvQHv70BXLAX8likj9z4k7qn4QWWpP992Fy6w==
   dependencies:
     uuid "^8.3.2"
 
