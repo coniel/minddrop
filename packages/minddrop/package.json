@@ -33,9 +33,11 @@
     "@minddrop/files": "^0.1.0",
     "@minddrop/i18n": "^0.2.0",
     "@minddrop/icons": "^0.3.0",
+    "@minddrop/persistent-store": "^0.1.0",
     "@minddrop/tags": "^0.1.0",
     "@minddrop/topics": "^0.1.0",
     "@minddrop/ui": "^0.2.1",
+    "@minddrop/utils": "^0.3.0",
     "zustand": "^3.6.5"
   },
   "peerDependencies": {
