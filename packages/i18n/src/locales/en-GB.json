@@ -1,6 +1,10 @@
 {
   "test": "Test-en-GB-s",
 
+  "primaryNavigation": "Main",
+  "secondaryNavigation": "Tools",
+  "topicsNavigation": "Topics",
+
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
   "subtopicCount_other": "{{count}} subtopics",

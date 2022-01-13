@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from 'react';
-import { Sidebar, NavGroup } from '@minddrop/ui';
+import { Sidebar, NavGroup, Toolbar } from '@minddrop/ui';
 import { useTranslation } from '@minddrop/i18n';
 import { useTopics } from '@minddrop/topics';
 import {
@@ -34,6 +34,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({ core }) => {
       initialWidth={width}
       onResized={handleResize}
     >
+      <div className="app-drag-handle" />
       <NavGroup label="Main" />
       <NavGroup title={t('topics')}>
         {Object.values(topics).map((topic) => (
@@ -41,6 +42,8 @@ export const AppSidebar: FC<AppSidebarProps> = ({ core }) => {
         ))}
       </NavGroup>
       <NavGroup label="Secondary" />
+      <div className="flex" />
+      <Toolbar className="bottom-toolbar" />
     </Sidebar>
   );
 };

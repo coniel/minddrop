@@ -55,7 +55,7 @@ export const tSailing: Topic = {
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
-  subtopics: [tNavigation.id],
+  subtopics: [tNavigation.id, tBoats.id, tAnchoring.id],
   drops: [],
   tags: [],
 };
