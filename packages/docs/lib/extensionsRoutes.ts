@@ -6,41 +6,41 @@ export const extensionsRoutes = [
         title: 'Introduction',
         slug: 'docs/extensions/getting-started/introduction',
       },
-      {
-        title: 'Creating your first extension',
-        slug: 'docs/extensions/getting-started/extension-anatomy',
-      },
+      // {
+      //   title: 'Creating your first extension',
+      //   slug: 'docs/extensions/getting-started/extension-anatomy',
+      // },
     ],
   },
-  {
-    label: 'Walkthroughs',
-    pages: [
-      {
-        title: 'Reacting to events',
-        slug: 'docs/extensions/walkthroughs/event-listeners.mdx',
-      },
-      {
-        title: 'Adding new drop types',
-        slug: 'docs/extensions/walkthroughs/drops.mdx',
-      },
-      {
-        title: 'Extending the UI',
-        slug: 'docs/extensions/walkthroughs/ui-extensions.mdx',
-      },
-      {
-        title: 'Adding views',
-        slug: 'docs/extensions/walkthroughs/views.mdx',
-      },
-      {
-        title: 'Creating a storage adapter',
-        slug: 'docs/extensions/walkthroughs/storage-adapter.mdx',
-      },
-      {
-        title: 'Making extensible extensions',
-        slug: 'docs/extensions/walkthroughs/extensible-extensions.mdx',
-      },
-    ],
-  },
+  // {
+  //   label: 'Walkthroughs',
+  //   pages: [
+  //     {
+  //       title: 'Reacting to events',
+  //       slug: 'docs/extensions/walkthroughs/event-listeners.mdx',
+  //     },
+  //     {
+  //       title: 'Adding new drop types',
+  //       slug: 'docs/extensions/walkthroughs/drops.mdx',
+  //     },
+  //     {
+  //       title: 'Extending the UI',
+  //       slug: 'docs/extensions/walkthroughs/ui-extensions.mdx',
+  //     },
+  //     {
+  //       title: 'Adding views',
+  //       slug: 'docs/extensions/walkthroughs/views.mdx',
+  //     },
+  //     {
+  //       title: 'Creating a storage adapter',
+  //       slug: 'docs/extensions/walkthroughs/storage-adapter.mdx',
+  //     },
+  //     {
+  //       title: 'Making extensible extensions',
+  //       slug: 'docs/extensions/walkthroughs/extensible-extensions.mdx',
+  //     },
+  //   ],
+  // },
   {
     label: 'API',
     pages: [
