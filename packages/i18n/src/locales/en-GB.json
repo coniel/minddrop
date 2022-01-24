@@ -4,6 +4,7 @@
   "primaryNavigation": "Main",
   "secondaryNavigation": "Tools",
   "topicsNavigation": "Topics",
+  "createTopic": "Add topic",
 
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
