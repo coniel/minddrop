@@ -4,13 +4,14 @@ import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
 import { View } from './View.types';
 import { OpenViewEvent, OpenViewEventCallback } from './AppEvents.types';
+import { SlotProps } from '../Slot';
 
 export interface AppApi {
   /**
    * A component which will render UI extensions
    * for a given location.
    */
-  Slot: ComponentType<{ location: UiLocation }>;
+  Slot: ComponentType<SlotProps>;
 
   /**
    * Opens a view in the app.
@@ -61,7 +62,7 @@ export interface AppApi {
    * @param core A MindDrop core instance.
    * @param topicIds The IDs of the topics to be added to the root level.
    */
-  addTopics(core: Core, topicIds: []): void;
+  addTopics(core: Core, topicIds: string[]): void;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */

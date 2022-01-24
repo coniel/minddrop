@@ -1,10 +1,9 @@
 import React from 'react';
 import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { initializeApp } from './initializeApp';
+import { App } from './App';
 import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
-import { UiComponentConfigMap } from '../Slot';
 
 const config: IconButtonConfig = {
   type: 'icon-button',
@@ -16,11 +15,6 @@ const config: IconButtonConfig = {
 const element = () => <span />;
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
-const componentMap = {
-  // @ts-ignore
-  'icon-button': ({ label }) => <div>{label}</div>,
-} as UiComponentConfigMap;
-
 describe('initializeApp', () => {
   afterEach(() => {
     const { result } = renderHook(() => useAppStore((state) => state));
@@ -31,19 +25,16 @@ describe('initializeApp', () => {
 
   describe('openView', () => {
     it('sets the current view in the store', () => {
-      const app = initializeApp({ componentMap });
       const { result } = renderHook(() => useAppStore((state) => state));
 
       act(() => {
-        app.openView(core, { id: 'my-view', title: 'My view' });
+        App.openView(core, { id: 'my-view', title: 'My view' });
       });
 
       expect(result.current.view.id).toBe('my-view');
     });
 
     it("dispatches a 'app:open-view' event", (done) => {
-      const app = initializeApp({ componentMap });
-
       function callback(payload) {
         expect(payload.data).toEqual({
           id: 'my-view',
@@ -55,24 +46,22 @@ describe('initializeApp', () => {
       core.addEventListener('app:open-view', callback);
 
       act(() => {
-        app.openView(core, { id: 'my-view', title: 'My view' });
+        App.openView(core, { id: 'my-view', title: 'My view' });
       });
     });
   });
 
   it('adds UI extensions', () => {
-    const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
     });
 
     expect(result.current.uiExtensions.length).toBe(1);
   });
 
   it('applies appropriate type to UiExtension', () => {
-    const app = initializeApp({ componentMap });
     const { result: primaryNav } = renderHook(() =>
       useUiExtensions('Sidebar:PrimaryNav:Item'),
     );
@@ -81,8 +70,8 @@ describe('initializeApp', () => {
     );
 
     act(() => {
-      app.addUiExtension(core, 'Sidebar:PrimaryNav:Item', element);
-      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core, 'Sidebar:PrimaryNav:Item', element);
+      App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
     });
 
     expect(primaryNav.current[0].type).toBe('component');
@@ -90,44 +79,41 @@ describe('initializeApp', () => {
   });
 
   it('removes UI extensions', () => {
-    const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
-      app.removeUiExtension('Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      App.removeUiExtension('Sidebar:BottomToolbar:Item', config);
     });
 
     expect(result.current.uiExtensions.length).toBe(0);
   });
 
   it('removes all UI extensions added by the extension from a specified location', () => {
-    const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
     const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
-      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
-      app.removeAllUiExtensions(core2, 'Sidebar:BottomToolbar:Item');
+      App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
+      App.removeAllUiExtensions(core2, 'Sidebar:BottomToolbar:Item');
     });
 
     expect(result.current.uiExtensions.length).toBe(2);
   });
 
   it('removes all UI extensions added by the extension', () => {
-    const app = initializeApp({ componentMap });
     const { result } = renderHook(() => useAppStore((state) => state));
     const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
 
     act(() => {
-      app.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
-      app.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
-      app.removeAllUiExtensions(core2);
+      App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Item', config);
+      App.addUiExtension(core2, 'Sidebar:BottomToolbar:Below', config);
+      App.removeAllUiExtensions(core2);
     });
 
     expect(result.current.uiExtensions.length).toBe(1);

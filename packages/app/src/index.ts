@@ -1,4 +1,4 @@
 export * from './types';
-export * from './initializeApp';
+export * from './App';
 export * from './useAppStore';
 export * from './Slot';
