@@ -1,14 +1,30 @@
 import React from 'react';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  renderHook,
+  cleanup,
+  screen,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
+import { useTranslation } from '@minddrop/i18n';
 import { TopicNavItem } from './TopicNavItem';
 
 describe('<TopicNavItem />', () => {
   afterEach(cleanup);
 
   it('renders the label', () => {
-    render(<TopicNavItem label="Sailing" className="my-class" />);
+    render(<TopicNavItem label="Sailing" />);
 
     screen.getByText('Sailing');
+  });
+
+  it('renders "Untitled" when the topic has no label', () => {
+    const { result } = renderHook(() => useTranslation());
+    render(<TopicNavItem label="" />);
+
+    const untitled = result.current.t('untitled');
+    screen.getByText(untitled);
   });
 
   it('supports defaultExpanded', () => {

@@ -80,6 +80,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
     () => React.Children.toArray(children).length,
     [children],
   );
+  const title = label || t('untitled');
 
   return (
     <Collapsible
@@ -95,7 +96,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
         <Tooltip
           side="right"
           sideOffset={6}
-          title={label}
+          title={title}
           delayDuration={800}
           description={t('subtopicCount_interval', {
             postProcess: 'interval',
@@ -148,7 +149,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
                 className="label"
                 size="regular"
               >
-                {label}
+                {title}
               </Text>
             </div>
           </div>
