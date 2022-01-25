@@ -32,12 +32,12 @@ export interface MenuTriggerItemProps
     MenuItemProps,
     'tooltipTitle' | 'tooltipDescription' | 'keyboardShortcut' | 'onSelect'
   > {
-  type: 'menu-item';
   onSelect?: ContextMenuTriggerItemProps['onSelect'];
 }
 
 export interface MenuTriggerItem extends MenuTriggerItemProps {
   submenu: (MenuItem | MenuTriggerItem)[];
+  type: 'menu-item';
 }
 
 export type MenuContents = (
