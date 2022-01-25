@@ -1,9 +1,15 @@
 import React from 'react';
 import { render, cleanup, screen } from '@minddrop/test-utils';
-import { MenuItem, MenuTriggerItemProps } from '../../types';
+import {
+  MenuItem,
+  MenuItemProps,
+  MenuLabel,
+  MenuSeparator,
+  MenuTriggerItemProps,
+} from '../../types';
 import { generateMenu } from './generateMenu';
 
-const Item: React.FC<MenuItem> = ({ label }) => (
+const Item: React.FC<MenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>
 );
 
@@ -26,10 +32,20 @@ const MenuContent: React.FC = ({ children }) => (
 );
 
 const item: MenuItem = {
+  type: 'menu-item',
   label: 'label',
   icon: 'settings',
   onSelect: jest.fn(),
   keyboardShortcut: ['A', 'B'],
+};
+
+const label: MenuLabel = {
+  type: 'menu-label',
+  label: 'Actions',
+};
+
+const separator: MenuSeparator = {
+  type: 'menu-separator',
 };
 
 const components = { Item, TriggerItem, Label, Separator, Menu, MenuContent };
@@ -44,14 +60,14 @@ describe('generateMenu', () => {
   });
 
   it('generates menu labels', () => {
-    const menu = generateMenu(components, ['Actions']);
+    const menu = generateMenu(components, [label]);
     render(<div>{menu}</div>);
 
     expect(screen.getByTestId('label')).toHaveTextContent('Actions');
   });
 
   it('generates menu separators', () => {
-    const menu = generateMenu(components, ['---']);
+    const menu = generateMenu(components, [separator]);
     render(<div>{menu}</div>);
 
     screen.getByTestId('separator');
@@ -69,5 +85,18 @@ describe('generateMenu', () => {
       'trigger label',
     );
     expect(screen.getByTestId('item')).toHaveTextContent('label');
+  });
+
+  it('retuns custom components as is', () => {
+    const menu = generateMenu(components, [
+      <div key="custom" data-testid="custom-component">
+        custom component
+      </div>,
+    ]);
+
+    render(<div>{menu}</div>);
+
+    screen.getByTestId('custom-component');
+    screen.getByText('custom component');
   });
 });

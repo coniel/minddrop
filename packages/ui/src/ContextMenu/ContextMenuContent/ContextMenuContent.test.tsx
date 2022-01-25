@@ -49,15 +49,21 @@ describe('<ContextMenuContent />', () => {
   it('generates contents from menu prop', async () => {
     const menu: MenuContents = [
       {
+        type: 'menu-item',
         label: 'item 1',
         onSelect: jest.fn(),
       },
-      'Actions',
       {
+        type: 'menu-label',
+        label: 'Actions',
+      },
+      {
+        type: 'menu-item',
         label: 'item 2',
         onSelect: jest.fn(),
         submenu: [
           {
+            type: 'menu-item',
             label: 'sub item 1',
             onSelect: jest.fn(),
           },

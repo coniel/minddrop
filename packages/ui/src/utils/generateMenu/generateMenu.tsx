@@ -1,9 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { MenuContents, MenuItem, MenuTriggerItemProps } from '../../types';
+import {
+  MenuContents,
+  MenuItemProps,
+  MenuLabel,
+  MenuTriggerItemProps,
+} from '../../types';
 
 export interface MenuComponents {
-  Item: React.ElementType<MenuItem>;
+  Item: React.ElementType<MenuItemProps>;
   Label: React.ElementType;
   Separator: React.ElementType;
   TriggerItem: React.ElementType<MenuTriggerItemProps>;
@@ -22,30 +27,40 @@ export function generateMenu(
   const { Item, Label, Separator, Menu, MenuContent, TriggerItem } = components;
 
   return menu.reduce((items, item, index) => {
+    const { type, ...props } = item;
+
     // Generate Separator
-    if (item === '---') {
+    if (type === 'menu-separator') {
       return [...items, <Separator key={index} />];
     }
 
     // Generate Label
-    if (typeof item === 'string') {
-      return [...items, <Label key={index}>{item}</Label>];
-    }
-
-    // Generate submenu
-    if ('submenu' in item) {
-      const { submenu, ...props } = item;
-
-      return [
-        ...items,
-        <Menu key={index}>
-          <TriggerItem {...props} />
-          <MenuContent>{generateMenu(components, submenu)}</MenuContent>
-        </Menu>,
-      ];
+    if (type === 'menu-label') {
+      return [...items, <Label key={index}>{(item as MenuLabel).label}</Label>];
     }
 
     // Generate Item
-    return [...items, <Item key={index} {...item} />];
+    if (type === 'menu-item') {
+      // Generate submenu
+      if ('submenu' in item) {
+        const { submenu, ...otherProps } = item;
+
+        return [
+          ...items,
+          <Menu key={index}>
+            <TriggerItem {...otherProps} />
+            <MenuContent>{generateMenu(components, submenu)}</MenuContent>
+          </Menu>,
+        ];
+      }
+
+      return [...items, <Item key={index} {...(props as MenuItemProps)} />];
+    }
+
+    if (React.isValidElement(item)) {
+      return [...items, item];
+    }
+
+    return items;
   }, []);
 }
