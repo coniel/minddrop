@@ -3,7 +3,8 @@ import { IconButton, Tooltip } from '@minddrop/ui';
 import { useTheme } from 'next-themes';
 
 export const ThemeToggle: React.FC = (props) => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
 
   return (
     <Tooltip
@@ -14,7 +15,7 @@ export const ThemeToggle: React.FC = (props) => {
     >
       <IconButton
         onClick={() =>
-          theme === 'dark' ? setTheme('light') : setTheme('dark')
+          currentTheme === 'dark' ? setTheme('light') : setTheme('dark')
         }
         {...props}
         label="toggle a light and dark color scheme"

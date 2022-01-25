@@ -30,9 +30,13 @@ export const Image: React.FC<ImageProps> = ({
   srcDark,
   ...props
 }) => {
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
 
   return (
-    <ImagePrimitive {...props} src={theme === 'light' ? srcLight : srcDark} />
+    <ImagePrimitive
+      {...props}
+      src={currentTheme === 'light' ? srcLight : srcDark}
+    />
   );
 };

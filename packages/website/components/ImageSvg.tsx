@@ -21,7 +21,8 @@ export const ImageSvg: React.FC<ImageSvgProps> = ({
   srcDark,
   ...props
 }) => {
-  const { theme } = useTheme();
+  const { theme, systemTheme } = useTheme();
+  const currentTheme = theme === 'system' ? systemTheme : theme;
 
-  return <img {...props} src={theme === 'light' ? srcLight : srcDark} />;
+  return <img {...props} src={currentTheme === 'light' ? srcLight : srcDark} />;
 };
