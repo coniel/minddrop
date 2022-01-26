@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
@@ -63,121 +63,127 @@ export interface TopicNavItemProps
   onExpandedChange?: (expanded: boolean) => void;
 }
 
-export const TopicNavItem: FC<TopicNavItemProps> = ({
-  children,
-  className,
-  defaultExpanded,
-  expanded,
-  onExpandedChange,
-  active,
-  label,
-  level = 0,
-  onClick,
-  ...other
-}) => {
-  const { t } = useTranslation();
-  const childCount = useMemo(
-    () => React.Children.toArray(children).length,
-    [children],
-  );
-  const title = label || t('untitled');
+export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
+  (
+    {
+      children,
+      className,
+      defaultExpanded,
+      expanded,
+      onExpandedChange,
+      active,
+      label,
+      level = 0,
+      onClick,
+      ...other
+    },
+    ref,
+  ) => {
+    const { t } = useTranslation();
+    const childCount = useMemo(
+      () => React.Children.toArray(children).length,
+      [children],
+    );
+    const title = label || t('untitled');
 
-  return (
-    <Collapsible
-      asChild
-      defaultOpen={defaultExpanded}
-      open={expanded}
-      onOpenChange={onExpandedChange}
-    >
-      <div
-        className={mapPropsToClasses({ className }, 'topic-nav-item')}
-        {...other}
+    return (
+      <Collapsible
+        asChild
+        defaultOpen={defaultExpanded}
+        open={expanded}
+        onOpenChange={onExpandedChange}
       >
-        <Tooltip
-          side="right"
-          sideOffset={6}
-          title={title}
-          delayDuration={800}
-          description={t('subtopicCount_interval', {
-            postProcess: 'interval',
-            count: childCount,
-          })}
+        <div
+          ref={ref}
+          className={mapPropsToClasses({ className }, 'topic-nav-item')}
+          {...other}
         >
-          <div className={mapPropsToClasses({ active }, 'item')}>
-            {level > 0 && (
-              <div
-                role="button"
-                aria-hidden="true"
-                className="spacer-button"
-                tabIndex={-1}
-                onClick={onClick}
-                style={{ paddingLeft: level * 16, height: 24 }}
-              />
-            )}
-            <CollapsibleTrigger>
+          <Tooltip
+            side="right"
+            sideOffset={6}
+            title={title}
+            delayDuration={800}
+            description={t('subtopicCount_interval', {
+              postProcess: 'interval',
+              count: childCount,
+            })}
+          >
+            <div className={mapPropsToClasses({ active }, 'item')}>
+              {level > 0 && (
+                <div
+                  role="button"
+                  aria-hidden="true"
+                  className="spacer-button"
+                  tabIndex={-1}
+                  onClick={onClick}
+                  style={{ paddingLeft: level * 16, height: 24 }}
+                />
+              )}
+              <CollapsibleTrigger>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="toggle-button"
+                  aria-label={t('expandSubtopics')}
+                >
+                  {childCount ? (
+                    <Icon
+                      name="toggle-filled"
+                      color="light"
+                      className="toggle-icon has-subtopics"
+                    />
+                  ) : (
+                    <Icon
+                      name="toggle-empty"
+                      color="light"
+                      className="toggle-icon no-subtopics"
+                    />
+                  )}
+                </div>
+              </CollapsibleTrigger>
               <div
                 role="button"
                 tabIndex={0}
-                className="toggle-button"
-                aria-label={t('expandSubtopics')}
+                className="label-button"
+                onClick={onClick}
               >
-                {childCount ? (
-                  <Icon
-                    name="toggle-filled"
-                    color="light"
-                    className="toggle-icon has-subtopics"
-                  />
-                ) : (
-                  <Icon
-                    name="toggle-empty"
-                    color="light"
-                    className="toggle-icon no-subtopics"
-                  />
-                )}
+                <Text
+                  as="div"
+                  color="light"
+                  weight="medium"
+                  className="label"
+                  size="regular"
+                >
+                  {title}
+                </Text>
               </div>
-            </CollapsibleTrigger>
-            <div
-              role="button"
-              tabIndex={0}
-              className="label-button"
-              onClick={onClick}
-            >
-              <Text
-                as="div"
-                color="light"
-                weight="medium"
-                className="label"
-                size="regular"
-              >
-                {title}
-              </Text>
             </div>
-          </div>
-        </Tooltip>
-        <CollapsibleContent asChild>
-          <div className="children">
-            {childCount > 0 ? (
-              React.Children.map(children, (child) =>
-                React.cloneElement(
-                  child as React.ReactElement<TopicNavItemProps>,
-                  {
-                    level: level + 1,
-                  },
-                ),
-              )
-            ) : (
-              <Text
-                as="div"
-                color="light"
-                className="helper-text"
-                style={{ paddingLeft: level * 16 }}
-              >
-                {t('noSubtopics')}
-              </Text>
-            )}
-          </div>
-        </CollapsibleContent>
-      </div>
-    </Collapsible>
-  );
-};
+          </Tooltip>
+          <CollapsibleContent asChild>
+            <div className="children">
+              {childCount > 0 ? (
+                React.Children.map(children, (child) =>
+                  React.cloneElement(
+                    child as React.ReactElement<TopicNavItemProps>,
+                    {
+                      level: level + 1,
+                    },
+                  ),
+                )
+              ) : (
+                <Text
+                  as="div"
+                  color="light"
+                  className="helper-text"
+                  style={{ paddingLeft: level * 16 }}
+                >
+                  {t('noSubtopics')}
+                </Text>
+              )}
+            </div>
+          </CollapsibleContent>
+        </div>
+      </Collapsible>
+    );
+  },
+);
