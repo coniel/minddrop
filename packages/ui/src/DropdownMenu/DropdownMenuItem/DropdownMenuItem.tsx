@@ -2,14 +2,14 @@ import React, { FC } from 'react';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
 import { Tooltip } from '../../Tooltip';
 import { MenuItem } from '../../Menu';
-import { MenuItemProps } from '../../types';
+import { TooltipMenuItemProps } from '../../types';
 
 export interface DropdownMenuItemProps
   extends Omit<
       DropdownMenuPrimitives.DropdownMenuItemProps,
       'children' | 'onSelect'
     >,
-    MenuItemProps {}
+    TooltipMenuItemProps {}
 
 export const DropdownMenuItem: FC<DropdownMenuItemProps> = ({
   label,

@@ -2,13 +2,12 @@
 import React from 'react';
 import {
   MenuContents,
-  MenuItemProps,
-  MenuLabel,
   MenuTriggerItemProps,
+  TooltipMenuItemProps,
 } from '../../types';
 
 export interface MenuComponents {
-  Item: React.ElementType<MenuItemProps>;
+  Item: React.ElementType<TooltipMenuItemProps>;
   Label: React.ElementType;
   Separator: React.ElementType;
   TriggerItem: React.ElementType<MenuTriggerItemProps>;
@@ -35,8 +34,8 @@ export function generateMenu(
     }
 
     // Generate Label
-    if (type === 'menu-label') {
-      return [...items, <Label key={index}>{(item as MenuLabel).label}</Label>];
+    if (type === 'menu-label' && 'label' in item) {
+      return [...items, <Label key={index}>{item.label}</Label>];
     }
 
     // Generate Item
@@ -54,7 +53,10 @@ export function generateMenu(
         ];
       }
 
-      return [...items, <Item key={index} {...(props as MenuItemProps)} />];
+      return [
+        ...items,
+        <Item key={index} {...(props as TooltipMenuItemProps)} />,
+      ];
     }
 
     if (React.isValidElement(item)) {

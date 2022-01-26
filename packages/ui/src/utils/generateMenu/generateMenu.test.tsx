@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, cleanup, screen } from '@minddrop/test-utils';
 import {
-  MenuItem,
-  MenuItemProps,
-  MenuLabel,
-  MenuSeparator,
+  MenuItemConfig,
+  MenuLabelConfig,
+  MenuSeparatorConfig,
+  TooltipMenuItemProps,
   MenuTriggerItemProps,
 } from '../../types';
 import { generateMenu } from './generateMenu';
 
-const Item: React.FC<MenuItemProps> = ({ label }) => (
+const Item: React.FC<TooltipMenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>
 );
 
@@ -31,7 +31,7 @@ const MenuContent: React.FC = ({ children }) => (
   <div data-testid="menu-content">{children}</div>
 );
 
-const item: MenuItem = {
+const item: MenuItemConfig = {
   type: 'menu-item',
   label: 'label',
   icon: 'settings',
@@ -39,12 +39,12 @@ const item: MenuItem = {
   keyboardShortcut: ['A', 'B'],
 };
 
-const label: MenuLabel = {
+const label: MenuLabelConfig = {
   type: 'menu-label',
   label: 'Actions',
 };
 
-const separator: MenuSeparator = {
+const separator: MenuSeparatorConfig = {
   type: 'menu-separator',
 };
 

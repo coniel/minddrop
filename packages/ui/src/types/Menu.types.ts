@@ -5,7 +5,7 @@ import {
 } from '@radix-ui/react-context-menu';
 import { IconProp } from '../IconRenderer';
 
-export interface MenuItem {
+export interface MenuItemConfig {
   type: 'menu-item';
   label: React.ReactNode;
   onSelect: ContextMenuItemProps['onSelect'];
@@ -16,34 +16,35 @@ export interface MenuItem {
   disabled?: boolean;
   textValue?: string;
 }
-export interface MenuLabel {
+
+export type TooltipMenuItemProps = Omit<MenuItemConfig, 'type'>;
+
+export interface MenuLabelConfig {
   type: 'menu-label';
   label: string;
 }
 
-export interface MenuSeparator {
+export interface MenuSeparatorConfig {
   type: 'menu-separator';
 }
 
-export type MenuItemProps = Omit<MenuItem, 'type'>;
-
 export interface MenuTriggerItemProps
   extends Omit<
-    MenuItemProps,
+    TooltipMenuItemProps,
     'tooltipTitle' | 'tooltipDescription' | 'keyboardShortcut' | 'onSelect'
   > {
   onSelect?: ContextMenuTriggerItemProps['onSelect'];
 }
 
-export interface MenuTriggerItem extends MenuTriggerItemProps {
-  submenu: (MenuItem | MenuTriggerItem)[];
+export interface MenuTriggerItemConfig extends MenuTriggerItemProps {
+  submenu: (MenuItemConfig | MenuTriggerItemConfig)[];
   type: 'menu-item';
 }
 
 export type MenuContents = (
-  | MenuItem
-  | MenuTriggerItem
-  | MenuLabel
-  | MenuSeparator
+  | MenuItemConfig
+  | MenuTriggerItemConfig
+  | MenuLabelConfig
+  | MenuSeparatorConfig
   | React.ReactElement
 )[];

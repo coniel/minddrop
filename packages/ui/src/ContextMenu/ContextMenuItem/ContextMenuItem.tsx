@@ -2,14 +2,14 @@ import React, { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
 import { Tooltip } from '../../Tooltip';
 import { MenuItem } from '../../Menu';
-import { MenuItemProps } from '../../types';
+import { TooltipMenuItemProps } from '../../types';
 
 export interface ContextMenuItemProps
   extends Omit<
       ContextMenuPrimitives.ContextMenuItemProps,
       'children' | 'onSelect'
     >,
-    MenuItemProps {}
+    TooltipMenuItemProps {}
 
 export const ContextMenuItem: FC<ContextMenuItemProps> = ({
   label,
