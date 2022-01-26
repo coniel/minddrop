@@ -6,6 +6,7 @@ import '../../theme/src/base.css';
 import '../../theme/src/animations.css';
 import { initializeI18n } from '../../i18n';
 import { IconsProvider } from '../../icons';
+import { CoreProvider } from '../../core';
 
 initializeI18n(true);
 
@@ -27,7 +28,9 @@ export const parameters = {
 export const decorators = [
   (Story) => (
     <IconsProvider>
-      <Story />
+      <CoreProvider>
+        <Story />
+      </CoreProvider>
     </IconsProvider>
   ),
 ];
