@@ -9,7 +9,7 @@ describe('<AppSidebar />', () => {
   afterEach(cleanup);
 
   it('sets initial width', () => {
-    render(<AppSidebar core={core} />);
+    render(<AppSidebar />);
 
     expect(screen.getByTestId('AppSidebar').getAttribute('data-width')).toEqual(
       `${localPersistentStore.sidebarWidth}`,
@@ -17,7 +17,7 @@ describe('<AppSidebar />', () => {
   });
 
   it('updates the local persistent store width value', () => {
-    render(<AppSidebar core={core} />);
+    render(<AppSidebar />);
 
     act(() => {
       // Set width in store to different value than sidebar
@@ -41,7 +41,7 @@ describe('<AppSidebar />', () => {
   });
 
   it('renders root topics', () => {
-    render(<AppSidebar core={core} />);
+    render(<AppSidebar />);
 
     screen.getByText(tSailing.title);
   });

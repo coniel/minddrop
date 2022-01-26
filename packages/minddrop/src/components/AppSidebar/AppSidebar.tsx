@@ -7,17 +7,14 @@ import {
   useGlobalPersistentStoreValue,
   useLocalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import { Core } from '@minddrop/core';
 import './AppSidebar.css';
 import { TopicNavItem } from '../TopicNavItem';
 import { AddTopicButton } from '../AddTopicButton';
+import { useAppCore } from '../../utils';
 
-export interface AppSidebarProps {
-  core: Core;
-}
-
-export const AppSidebar: FC<AppSidebarProps> = ({ core }) => {
+export const AppSidebar: FC = () => {
   const { t } = useTranslation();
+  const core = useAppCore();
   const topicIds = useGlobalPersistentStoreValue(core, 'topics');
   const width = useLocalPersistentStoreValue(core, 'sidebarWidth');
   const topics = useTopics(topicIds);
@@ -27,10 +24,6 @@ export const AppSidebar: FC<AppSidebarProps> = ({ core }) => {
       PersistentStore.setLocalValue(core, 'sidebarWidth', value),
     [core],
   );
-
-  function handleClick(event: React.MouseEvent) {
-    event.preventDefault();
-  }
 
   return (
     <Sidebar
