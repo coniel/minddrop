@@ -8,17 +8,17 @@ const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 describe('useLocalStore', () => {
   afterEach(() => {
     act(() => {
-      usePersistentStore.getState().clearScope('global');
+      usePersistentStore.getState().clearScope('local');
     });
   });
 
-  it("returns the extension's data from the global store", () => {
+  it("returns the extension's data from the local store", () => {
     const { result } = renderHook(() => useLocalPersistentStore(core));
 
     const data = { app: { foo: 'foo' } };
 
     act(() => {
-      usePersistentStore.getState().load('global', data);
+      usePersistentStore.getState().load('local', data);
     });
 
     expect(result.current).toEqual(data.app);
