@@ -9,6 +9,7 @@ import { onRun as onRunFiles } from '@minddrop/files';
 import { onRun as onRunTopics, Topics } from '@minddrop/topics';
 import { onRun as onRunDrops } from '@minddrop/drops';
 import { topics, rootTopicIds } from './topics.data';
+import '../minddrop.css';
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 

@@ -5,6 +5,9 @@
   "secondaryNavigation": "Tools",
   "topicsNavigation": "Topics",
   "createTopic": "Add topic",
+  "addSubtopic": "Add subtopic",
+  "delete": "Delete",
+  "rename": "Rename",
 
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
