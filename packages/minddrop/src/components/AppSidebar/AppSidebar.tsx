@@ -17,7 +17,7 @@ export const AppSidebar: FC = () => {
   const core = useAppCore();
   const topicIds = useGlobalPersistentStoreValue(core, 'topics');
   const width = useLocalPersistentStoreValue(core, 'sidebarWidth');
-  const topics = useTopics(topicIds);
+  const topics = useTopics(topicIds, { active: true });
 
   const handleResize = useCallback(
     (value: number) =>
