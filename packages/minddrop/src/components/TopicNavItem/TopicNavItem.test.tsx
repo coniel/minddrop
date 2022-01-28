@@ -1,5 +1,12 @@
 import React from 'react';
-import { render, cleanup, screen } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup,
+  screen,
+  act,
+  fireEvent,
+  waitFor,
+} from '@minddrop/test-utils';
 import { TopicNavItem } from './TopicNavItem';
 import {
   tSailing,
@@ -7,10 +14,14 @@ import {
   tBoats,
   tAnchoring,
 } from '../../tests/topics.data';
-import '../../tests/initialize-app';
+import { reInitialize } from '../../tests/initialize-app';
+import { i18n } from '@minddrop/i18n';
 
 describe('<TopicNavItem />', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    reInitialize();
+  });
 
   it('renders the title', () => {
     render(<TopicNavItem id={tSailing.id} />);
@@ -18,11 +29,50 @@ describe('<TopicNavItem />', () => {
     screen.getByText(tSailing.title);
   });
 
-  it('renders subtopics', () => {
-    render(<TopicNavItem defaultExpanded id={tSailing.id} />);
+  it('renders subtopics when expanded', () => {
+    render(<TopicNavItem id={tSailing.id} />);
+
+    act(() => {
+      // Expand topic by clicking on toggle button
+      const label = i18n.t('expandSubtopics');
+      fireEvent.click(screen.getByLabelText(label));
+    });
 
     screen.getByText(tNavigation.title);
     screen.getByText(tBoats.title);
     screen.getByText(tAnchoring.title);
+  });
+
+  it('expands subtopics when adding a subtopic', async () => {
+    render(<TopicNavItem id={tSailing.id} />);
+
+    // Open context menu
+    fireEvent.contextMenu(screen.getByText(tSailing.title));
+
+    // Wait for menu to open
+    const addSubtopic = i18n.t('addSubtopic');
+    await waitFor(() => screen.getAllByText(addSubtopic));
+    // Click 'Add subtopic'
+    act(() => {
+      fireEvent.click(screen.getByText(addSubtopic));
+    });
+
+    screen.getByText(tNavigation.title);
+  });
+
+  it('opens the rename popover when clicking on Rename menu option', async () => {
+    render(<TopicNavItem id={tSailing.id} />);
+
+    // Open context menu
+    fireEvent.contextMenu(screen.getByText(tSailing.title));
+
+    // Click "Rename" menu item
+    const rename = i18n.t('rename');
+    await waitFor(() => screen.getAllByText(rename));
+    fireEvent.click(screen.getByText(rename));
+
+    // Check for rename popover input
+    const input = i18n.t('topicName');
+    screen.getByLabelText(input);
   });
 });

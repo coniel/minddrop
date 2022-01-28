@@ -8,6 +8,7 @@
   "addSubtopic": "Add subtopic",
   "delete": "Delete",
   "rename": "Rename",
+  "topicName": "Topic name",
 
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
