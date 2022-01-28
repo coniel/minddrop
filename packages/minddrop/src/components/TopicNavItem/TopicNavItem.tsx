@@ -17,6 +17,7 @@ import {
 } from '@minddrop/persistent-store';
 import { FieldValue } from '@minddrop/utils';
 import { RenameTopicPopover } from '../RenameTopicPopover';
+import { App } from '@minddrop/app';
 
 export interface TopicNavItemProps
   extends Omit<TopicNavItemPrimitiveProps, 'label'> {
@@ -58,6 +59,14 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
     setRenamePopoverOpen(false);
   }
 
+  function openTopicView() {
+    App.openView(core, {
+      id: 'topic',
+      title: topic.title,
+      resource: { id: topic.id, type: 'topic' },
+    });
+  }
+
   return (
     <Popover open={renamePopoverOpen} onOpenChange={null}>
       <ContextMenu>
@@ -67,6 +76,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
               label={topic.title}
               expanded={expandedTopics.includes(id)}
               onExpandedChange={handleExpandedChange}
+              onClick={openTopicView}
               {...other}
             >
               {topic.subtopics.map((subtopicId) => (

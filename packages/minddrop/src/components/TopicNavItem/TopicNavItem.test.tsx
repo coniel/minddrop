@@ -16,6 +16,7 @@ import {
 } from '../../tests/topics.data';
 import { reInitialize } from '../../tests/initialize-app';
 import { i18n } from '@minddrop/i18n';
+import { App } from '@minddrop/app';
 
 describe('<TopicNavItem />', () => {
   afterEach(() => {
@@ -41,6 +42,18 @@ describe('<TopicNavItem />', () => {
     screen.getByText(tNavigation.title);
     screen.getByText(tBoats.title);
     screen.getByText(tAnchoring.title);
+  });
+
+  it('opens topic view when clicked', () => {
+    render(<TopicNavItem id={tSailing.id} />);
+
+    act(() => {
+      fireEvent.click(screen.getByText(tSailing.title));
+    });
+
+    const view = App.getCurrentView();
+    expect(view.id).toBe('topic');
+    expect(view.resource.id).toBe(tSailing.id);
   });
 
   it('expands subtopics when adding a subtopic', async () => {
