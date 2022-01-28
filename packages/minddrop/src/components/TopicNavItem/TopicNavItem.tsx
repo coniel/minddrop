@@ -8,7 +8,7 @@ import {
   Popover,
   PopoverAnchor,
 } from '@minddrop/ui';
-import { useTopic } from '@minddrop/topics';
+import { Topic, useTopic } from '@minddrop/topics';
 import { generateTopicMenu } from '../../menus';
 import { useAppCore } from '../../utils';
 import {
@@ -47,8 +47,17 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
     [id],
   );
 
-  function expand() {
+  function openTopicView(topicId: string) {
+    App.openView(core, {
+      id: 'topic',
+      title: topic.title,
+      resource: { id: topicId, type: 'topic' },
+    });
+  }
+
+  function onAddSubtopic(t: Topic, subtopic: Topic) {
     handleExpandedChange(true);
+    openTopicView(subtopic.id);
   }
 
   function openRenamePopover() {
@@ -57,14 +66,6 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
 
   function closeRenamePopover() {
     setRenamePopoverOpen(false);
-  }
-
-  function openTopicView() {
-    App.openView(core, {
-      id: 'topic',
-      title: topic.title,
-      resource: { id: topic.id, type: 'topic' },
-    });
   }
 
   return (
@@ -76,7 +77,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
               label={topic.title}
               expanded={expandedTopics.includes(id)}
               onExpandedChange={handleExpandedChange}
-              onClick={openTopicView}
+              onClick={() => openTopicView(id)}
               {...other}
             >
               {topic.subtopics.map((subtopicId) => (
@@ -89,7 +90,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
           className="topic-menu-content"
           content={generateTopicMenu(core, topic, {
             onRename: openRenamePopover,
-            onAddSubtopic: expand,
+            onAddSubtopic,
           })}
         />
       </ContextMenu>

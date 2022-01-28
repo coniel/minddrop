@@ -17,6 +17,7 @@ import {
 import { reInitialize } from '../../tests/initialize-app';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
+import { Topics } from '@minddrop/topics';
 
 describe('<TopicNavItem />', () => {
   afterEach(() => {
@@ -71,6 +72,26 @@ describe('<TopicNavItem />', () => {
     });
 
     screen.getByText(tNavigation.title);
+  });
+
+  it('opens the new suptopic view when adding a subtopic', async () => {
+    render(<TopicNavItem id={tSailing.id} />);
+
+    // Open context menu
+    fireEvent.contextMenu(screen.getByText(tSailing.title));
+
+    // Wait for menu to open
+    const addSubtopic = i18n.t('addSubtopic');
+    await waitFor(() => screen.getAllByText(addSubtopic));
+    // Click 'Add subtopic'
+    act(() => {
+      fireEvent.click(screen.getByText(addSubtopic));
+    });
+
+    const view = App.getCurrentView();
+    const subtopicId = Topics.get(tSailing.id).subtopics.slice(-1)[0];
+    expect(view.id).toBe('topic');
+    expect(view.resource.id).toBe(subtopicId);
   });
 
   it('opens the rename popover when clicking on Rename menu option', async () => {
