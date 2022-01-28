@@ -4,6 +4,7 @@ import {
   onRun as onRunPersistentStore,
   PersistentStore,
 } from '@minddrop/persistent-store';
+import { onRun as onRunApp } from '@minddrop/app';
 import { onRun as onRunTags } from '@minddrop/tags';
 import { onRun as onRunFiles } from '@minddrop/files';
 import { onRun as onRunTopics, Topics } from '@minddrop/topics';
@@ -18,6 +19,7 @@ export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
 initializeI18n();
 
+onRunApp(core);
 onRunPersistentStore(core);
 onRunFiles(core);
 onRunTags(core);
