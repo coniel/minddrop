@@ -5,6 +5,7 @@ export * from './ArrowForward';
 export * from './ArrowUpRight';
 export * from './ColorPalette';
 export * from './Duplicate';
+export * from './Edit';
 export * from './Expand';
 export * from './ExpandHorizontal';
 export * from './Inside';

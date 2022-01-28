@@ -8,6 +8,7 @@ export type IconName =
   | 'color-palette'
   | 'drop'
   | 'duplicate'
+  | 'edit'
   | 'expand'
   | 'expand-horizontal'
   | 'extension'
