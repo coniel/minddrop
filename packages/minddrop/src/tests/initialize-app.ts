@@ -14,7 +14,7 @@ import '../minddrop.css';
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 export const globalPersistentStore = { topics: rootTopicIds };
-export const localPersistentStore = { sidebarWidth: 302 };
+export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
 initializeI18n();
 
@@ -28,3 +28,12 @@ Topics.load(core, topics);
 
 PersistentStore.setGlobalStore(core, globalPersistentStore);
 PersistentStore.setLocalStore(core, localPersistentStore);
+
+export function reInitialize() {
+  Topics.clear(core);
+  Topics.load(core, topics);
+  PersistentStore.clearGlobalCache();
+  PersistentStore.clearLocalCache();
+  PersistentStore.setGlobalStore(core, globalPersistentStore);
+  PersistentStore.setLocalStore(core, localPersistentStore);
+}
