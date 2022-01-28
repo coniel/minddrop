@@ -22,6 +22,13 @@ export interface AppApi {
   openView(core: Core, view: View): void;
 
   /**
+   * Returns the currently open view.
+   *
+   * @returns The currently open view.
+   */
+  getCurrentView(): View;
+
+  /**
    * Adds a new UI extension for a speficied location.
    *
    * @param core A MindDrop core instance.

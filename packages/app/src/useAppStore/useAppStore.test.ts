@@ -1,4 +1,5 @@
 import { renderHook, act } from '@minddrop/test-utils';
+import { useCurrentView } from '.';
 import { UiExtensionConfig } from '../types';
 import { useAppStore } from './useAppStore';
 
@@ -60,10 +61,12 @@ describe('useAppStore', () => {
     act(() => {
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
+      result.current.setView({ id: 'some-view', title: 'Some view' });
       result.current.clear();
     });
 
     expect(result.current.uiExtensions.length).toBe(0);
+    expect(result.current.view.id).toBe('home');
   });
 
   it('removes a UI extension', () => {
@@ -111,5 +114,13 @@ describe('useAppStore', () => {
     });
 
     expect(result.current.uiExtensions.length).toBe(1);
+  });
+});
+
+describe('useCurrentView', () => {
+  it('returns the current view', () => {
+    const { result } = renderHook(() => useCurrentView());
+
+    expect(result.current).toEqual({ id: 'home', title: 'Home' });
   });
 });

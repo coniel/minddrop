@@ -51,6 +51,18 @@ describe('initializeApp', () => {
     });
   });
 
+  describe('getCurrentView', () => {
+    it('returns the current view', () => {
+      const view = { id: 'current-view', title: 'View' };
+
+      act(() => {
+        App.openView(core, view);
+      });
+
+      expect(App.getCurrentView()).toEqual(view);
+    });
+  });
+
   it('adds UI extensions', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 

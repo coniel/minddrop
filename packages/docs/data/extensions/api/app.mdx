@@ -9,7 +9,27 @@ metaDescription: An interface for interacting with the MindDrop application.
   An interface for interacting with the MindDrop application.
 </Description>
 
+## Hooks
+
+Hooks provide access to app data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useCurrentView
+
+Returns the currently open view.
+
+```ts
+useCurrentView(): View
+```
+
 ## Static methods
+
+### getCurrentView
+
+Returns the currently open view.
+
+```ts
+App.getCurrentView(): View
+```
 
 ### openView
 

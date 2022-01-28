@@ -31,7 +31,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
       }),
     })),
 
-  clear: () => set({ uiExtensions: [] }),
+  clear: () => set({ uiExtensions: [], view: { id: 'home', title: 'Home' } }),
 }));
 
 /**
@@ -39,7 +39,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
  *
  * @returns The current view.
  */
-export const useView = () => useAppStore((state) => state.view);
+export const useCurrentView = () => useAppStore((state) => state.view);
 
 /**
  * A hook which returns UI extensions for a given location.

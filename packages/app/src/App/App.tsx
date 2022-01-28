@@ -13,6 +13,8 @@ export const App: AppApi = {
     core.dispatch('app:open-view', view);
   },
 
+  getCurrentView: () => useAppStore.getState().view,
+
   addUiExtension: (core, location, element) => {
     const type = typeof element === 'object' ? 'config' : 'component';
     useAppStore.getState().addUiExtension({
