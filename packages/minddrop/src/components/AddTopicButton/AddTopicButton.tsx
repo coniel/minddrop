@@ -23,6 +23,7 @@ export const AddTopicButton: FC<AddTopicButtonProps> = ({ core }) => {
   return (
     <SecondaryNavItem
       data-testid="button"
+      icon="add"
       label={t('createTopic')}
       onClick={handleClick}
     />
