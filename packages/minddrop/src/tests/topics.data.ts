@@ -1,3 +1,4 @@
+import { ResourceView } from '@minddrop/app';
 import { Topic } from '@minddrop/topics';
 
 export const tCoastalNavigation: Topic = {
@@ -60,7 +61,17 @@ export const tSailing: Topic = {
   tags: [],
 };
 
-export const rootTopicIds = [tSailing.id];
+export const tUntitled: Topic = {
+  id: 'topic-untitled',
+  createdAt: new Date('01/01/2000'),
+  updatedAt: new Date('01/01/2000'),
+  title: '',
+  subtopics: [],
+  drops: [],
+  tags: [],
+};
+
+export const rootTopicIds = [tSailing.id, tUntitled.id];
 
 export const topics = [
   tCoastalNavigation,
@@ -69,4 +80,65 @@ export const topics = [
   tBoats,
   tAnchoring,
   tSailing,
+  tUntitled,
 ];
+
+export const tSailingView: ResourceView = {
+  id: 'topic',
+  title: tSailing.title,
+  breadcrumbs: [
+    {
+      id: 'topic',
+      title: tSailing.title,
+      resource: {
+        id: tSailing.id,
+        type: 'topic',
+      },
+    },
+  ],
+  resource: {
+    id: tSailing.id,
+    type: 'topic',
+  },
+};
+
+export const tNavigationView: ResourceView = {
+  id: 'topic',
+  title: tNavigation.title,
+  breadcrumbs: [
+    tSailingView,
+    {
+      id: 'topic',
+      title: tNavigation.title,
+      resource: {
+        id: tNavigation.id,
+        type: 'topic',
+      },
+    },
+  ],
+  resource: {
+    id: tNavigation.id,
+    type: 'topic',
+  },
+};
+
+export const tCoastalNavigationView: ResourceView = {
+  id: 'topic',
+  title: tCoastalNavigation.title,
+  breadcrumbs: [
+    tSailingView,
+    tNavigationView,
+    {
+      id: 'topic',
+      title: tCoastalNavigation.title,
+      resource: {
+        id: tCoastalNavigation.id,
+        type: 'topic',
+      },
+    },
+  ],
+  resource: {
+    id: tCoastalNavigation.id,
+    type: 'topic',
+  },
+};

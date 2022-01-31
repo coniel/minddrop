@@ -19,8 +19,8 @@ export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
 initializeI18n();
 
-onRunApp(core);
 onRunPersistentStore(core);
+onRunApp(core);
 onRunFiles(core);
 onRunTags(core);
 onRunTopics(core);

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../tests/initialize-app';
 import { AppSidebar } from './AppSidebar';
 
 export default {
