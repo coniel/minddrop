@@ -147,7 +147,7 @@ App.removeAllUiExtensions(core: Core, location?: UiLocation): void
 
 Adds topics to the root level and dispaches an `app:add-topics` event.
 
-```tsx
+```ts
 App.addTopics(core: Core, topicIds: string[]): void
 ```
 
@@ -167,7 +167,7 @@ App.addTopics(core: Core, topicIds: string[]): void
 
 Removes topics from the root level and dispaches an `app:remove-topics` event.
 
-```tsx
+```ts
 App.removeTopics(core: Core, topicIds: string[]): void
 ```
 
@@ -188,7 +188,7 @@ App.removeTopics(core: Core, topicIds: string[]): void
 
 Adds global tags and dispaches an `app:add-tags` event.
 
-```tsx
+```ts
 App.addTags(core: Core, tagIds: string[]): void
 ```
 
@@ -208,7 +208,7 @@ App.addTags(core: Core, tagIds: string[]): void
 
 Removes global tags and dispaches an `app:remove-tags` event.
 
-```tsx
+```ts
 App.removeTags(core: Core, tagIds: string[]): void
 ```
 
@@ -221,6 +221,47 @@ App.removeTags(core: Core, tagIds: string[]): void
       required: true,
       description:
         'The IDs of the tags to remove from the global level.',
+    },
+  ]}
+/>
+
+### openTopicView
+
+Opens the topic view for a given topic.
+
+```ts
+App.openTopicView(core: Core, topicId: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic for which to open the view.',
+    },
+  ]}
+/>
+
+### getTopicBreadcrumbs
+
+Returns a list of views leading up to and including the provided topic based on the topic's hierarchy of parents.
+
+```ts
+App.getTopicBreadcrumbs(topidId: string): ResourceView[]
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retreive the breadcrumbs.',
     },
   ]}
 />

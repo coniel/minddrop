@@ -44,11 +44,6 @@ export interface ResourceView extends View {
 
 export interface ViewProps {
   /**
-   * A MindDrop core instance.
-   */
-  core: Core;
-
-  /**
    * Breadcrumbs leading up to and including the view.
    */
   breadcrumbs?: View[];
@@ -57,4 +52,16 @@ export interface ViewProps {
    * The resource to be displayed by the view.
    */
   resource?: ViewResource;
+}
+
+export interface ResourceViewProps {
+  /**
+   * Breadcrumbs leading up to and including the view.
+   */
+  breadcrumbs?: View[];
+
+  /**
+   * The resource to be displayed by the view.
+   */
+  resource: ViewResource;
 }

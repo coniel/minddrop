@@ -2,7 +2,7 @@ import { ComponentType } from 'react';
 import { Core } from '@minddrop/core';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
-import { View } from './View.types';
+import { View, ResourceView } from './View.types';
 import { OpenViewEvent, OpenViewEventCallback } from './AppEvents.types';
 import { SlotProps } from '../Slot';
 
@@ -70,6 +70,24 @@ export interface AppApi {
    * @param topicIds The IDs of the topics to be added to the root level.
    */
   addTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Opens the view of a given topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to open.
+   */
+  openTopicView(core: Core, topicId: string): void;
+
+  /**
+   * Returns a list of views leading up to and
+   * including the provided topic based on the
+   * topic's hierarchy of parents.
+   *
+   * @param topicId The ID of the topic for which to get the breadcrumbs.
+   * @returns A list of views leading up to and including the provided topic.
+   */
+  getTopicBreadcrumbs(topidId: string): ResourceView[];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
