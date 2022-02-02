@@ -2,7 +2,10 @@ import { EventListenerCallback } from '@minddrop/core';
 import { TagMap } from '@minddrop/tags';
 import { FileReferenceMap } from '@minddrop/files';
 import { Drop, DropChanges } from './Drop.types';
+import { DropConfig } from './DropConfig.types';
 
+export type RegisterDropTypeEvent = 'drops:register';
+export type UnregisterDropTypeEvent = 'drops:unregister';
 export type CreateDropEvent = 'drops:create';
 export type UpdateDropEvent = 'drops:update';
 export type ArchiveDropEvent = 'drops:archive';
@@ -15,8 +18,11 @@ export type AddFilesEvent = 'drops:add-files';
 export type RemoveFilesEvent = 'drops:remove-files';
 export type ReplaceFilesEvent = 'drops:replace-files';
 export type LoadDropsEvent = 'drops:load';
-export type ClearDropsEvent = 'drops:clear';
+export type ClearDropsEvent = 'drops:clear-drops';
+export type ClearRegisteredDropTypesEvent = 'drops:clear-register';
 
+export type RegisterDropTypeEventData = DropConfig;
+export type UnregisterDropTypeEventData = DropConfig;
 export type CreateDropEventData = Drop;
 export type ArchiveDropEventData = Drop;
 export type DeleteDropEventData = Drop;
@@ -111,6 +117,14 @@ export interface ReplaceFilesEventData {
   newFiles: FileReferenceMap;
 }
 
+export type RegisterDropTypeEventCallback = EventListenerCallback<
+  RegisterDropTypeEvent,
+  RegisterDropTypeEventData
+>;
+export type UnregisterDropTypeEventCallback = EventListenerCallback<
+  UnregisterDropTypeEvent,
+  UnregisterDropTypeEventData
+>;
 export type CreateDropEventCallback = EventListenerCallback<
   CreateDropEvent,
   CreateDropEventData
@@ -160,3 +174,5 @@ export type LoadDropsEventCallback = EventListenerCallback<
   LoadDropsEventData
 >;
 export type ClearDropsEventCallback = EventListenerCallback<ClearDropsEvent>;
+export type ClearRegisteredDropTypesEventCallback =
+  EventListenerCallback<ClearRegisteredDropTypesEvent>;

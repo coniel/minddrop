@@ -1,20 +1,17 @@
 import { act, MockDate, renderHook } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { updateDrop } from './updateDrop';
 import { createDrop } from '../createDrop';
 import { Drop } from '../types';
-import { clearDrops } from '../clearDrops';
 import { useAllDrops } from '../useAllDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('updateDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    // Reset extension
-    act(() => {
-      clearDrops(core);
-    });
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+    cleanup();
   });
 
   it('returns the updated drop', () => {

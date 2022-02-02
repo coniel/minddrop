@@ -1,10 +1,30 @@
 import { Drop } from './Drop.types';
+import { DropConfig } from './DropConfig.types';
 
 export interface DropStore {
+  /**
+   * Registered drop type configs.
+   */
+  registered: DropConfig[];
+
   /**
    * The drops, stored as a `{ [dropId]: Drop }` map.
    */
   drops: Record<string, Drop>;
+
+  /**
+   * Adds a new drop config to registered drops.
+   *
+   * @param config The drop config.
+   */
+  registerDropType(config: DropConfig): void;
+
+  /**
+   * Removes a drop config from the registered drops.
+   *
+   * @param type The drop type to unregister.
+   */
+  unregisterDropType(type: string): void;
 
   /**
    * Bulk inserts an array of drops into the store.
@@ -14,9 +34,14 @@ export interface DropStore {
   loadDrops(drops: Drop[]): void;
 
   /**
-   * Clears all data from the store.
+   * Clears registered drop types from the store.
    */
-  clear(): void;
+  clearRegistered(): void;
+
+  /**
+   * Clears all drops from the store.
+   */
+  clearDrops(): void;
 
   /**
    * Sets a drop to the store.

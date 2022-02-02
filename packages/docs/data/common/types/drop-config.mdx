@@ -1,0 +1,166 @@
+---
+metaTitle: DropConfig
+metaDescription: An interface for describing drop types.
+---
+
+# DropConfig
+
+<Description>An interface for describing drop types.</Description>
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The drop type.',
+    },
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'The name of the drop type. Displayed to users.',
+    },
+    {
+      name: 'description',
+      type: 'string',
+      required: true,
+      description:
+        'A short description of the drop type. Displayed to users.',
+    },
+    {
+      name: 'dataTypes',
+      type: 'string[]',
+      description: (
+        <div>
+          The data types from which this kind of drop can be created.
+          Omit if this drop type does not support data.
+        </div>
+      ),
+    },
+    {
+      name: 'fileTypes',
+      type: 'string[]',
+      description: (
+        <div>
+          The file types from which this kind of drop can be created.
+          Omit if this drop type does not support files.
+        </div>
+      ),
+    },
+    {
+      name: 'multiFile',
+      type: 'boolean',
+      description: (
+        <div>
+          If <Code>true</Code>, indicates that this drop type supports
+          multiple files at once.
+        </div>
+      ),
+    },
+    {
+      name: 'requiresData',
+      type: 'boolean',
+      required: false,
+      description: (
+        <span>
+          If <Code>true</Code>, this drop type requires a data for
+          creation. If both <Code>requiresData</Code> and{' '}
+          <Code>requiresFile</Code> are true, either one will satisfy
+          the condition.
+        </span>
+      ),
+    },
+    {
+      name: 'requiresFile',
+      type: 'boolean',
+      required: false,
+      description: (
+        <span>
+          If <Code>true</Code>, this drop type requires a file for
+          creation. If both <Code>requiresData</Code> and{' '}
+          <Code>requiresFile</Code> are true, either one will satisfy
+          the condition.
+        </span>
+      ),
+    },
+    {
+      name: 'create',
+      type: 'function',
+      required: true,
+      description:
+        'Creates a new drop of this type. See below for details.',
+    },
+    {
+      name: 'insertData',
+      type: 'function',
+      description:
+        'Called when data is dropped or pasted onto the drop. Omit if updating the drop using data is not supported. See below for more details.',
+    },
+  ]}
+/>
+
+### create
+
+Creates a new drop of this type. Must return a promise resolving to the new drop. If a drop could not be created due to invalid or missing data, a `InvalidDropDataError` should be thrown.
+
+- Should make use of the [`Drops.create`](/docs/extensions/api/drops#create) method in order to actually create the drop.
+- A [`FileReference`](/docs/extensions/types/file-reference) must be created for any files from the data which need to be preserved using the [`Files.create`](/docs/extensions/api/files#create) method.
+
+```ts
+create(core: Core, data?: DataInsert): Promise<Drop>;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'DataInsert',
+      description: (
+        <div>
+          <p>
+            A <Code>DataInsert</Code> object containing the data from
+            which the drop is to be created.
+          </p>
+          <p>
+            Note that this function can be called without data if
+            neither <Code>requiresData</Code> nor{' '}
+            <Code>requiresFile</Code>. If a drop cannot be created
+            without data, be sure to set either or both properties to{' '}
+            <Code>true</Code>.
+          </p>
+        </div>
+      ),
+    },
+  ]}
+/>
+
+### insertData
+
+Called when data is dropped or pasted onto the drop. Omit if updating the drop in this way is not supported. Must return a promise which resolves to the updated drop (or original drop if it was not updated).
+
+- Should make use of the [`Drops.update`](/docs/extensions/api/drops#update) method in order to update the drop.
+- A [`FileReference`](/docs/extensions/types/file-reference) must be created for any files from the data which need to be preserved using the [`Files.create`](/docs/extensions/api/files#create) method.
+
+```ts
+insertData(core: Core, drop: Drop, data: DataInsert): Promise<Drop>;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop into which the data was inserted.',
+    },
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The data dropped or pasted onto the drop.',
+    },
+  ]}
+/>

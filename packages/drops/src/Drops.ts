@@ -2,6 +2,8 @@ import { DropsApi } from './types';
 import { get } from './get';
 import { getAllDrops } from './getAllDrops';
 import { filterDrops } from './filterDrops';
+import { registerDropType } from './registerDropType';
+import { unregisterDropType } from './unregisterDropType';
 import { createDrop } from './createDrop';
 import { updateDrop } from './updateDrop';
 import { archiveDrop } from './archiveDrop';
@@ -15,13 +17,23 @@ import { removeFilesFromDrop } from './removeFilesFromDrop';
 import { replaceDropFiles } from './replaceDropFiles';
 import { loadDrops } from './loadDrops';
 import { clearDrops } from './clearDrops';
+import { getRegisteredDropTypes } from './getRegisteredDropTypes';
+import { clearRegisteredDropTypes } from './clearRegisteredDropTypes';
+import { createOfType } from './createOfType';
+import { createFromDataInsert } from './createFromDataInsert';
+import { insertData } from './insertData';
 
 export const Drops: DropsApi = {
   get,
   getAll: getAllDrops,
   filter: filterDrops,
+  register: registerDropType,
+  unregister: unregisterDropType,
   create: createDrop,
+  createOfType,
+  createFromDataInsert,
   update: updateDrop,
+  insertData,
   archive: archiveDrop,
   delete: deleteDrop,
   restore: restoreDrop,
@@ -32,7 +44,9 @@ export const Drops: DropsApi = {
   replaceFiles: replaceDropFiles,
   deletePermanently: deleteDropPermanently,
   load: loadDrops,
-  clear: clearDrops,
+  clearDrops,
+  clearRegisteredDropTypes,
+  getRegisteredDropTypes,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>

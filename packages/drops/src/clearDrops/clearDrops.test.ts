@@ -1,18 +1,17 @@
 import { act, renderHook } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { clearDrops } from './clearDrops';
 import { useAllDrops } from '../useAllDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('clearDrops', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    act(() => {
-      clearDrops(core);
-    });
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+    cleanup();
   });
 
   it('clears drops from the store', () => {
@@ -31,12 +30,12 @@ describe('clearDrops', () => {
     expect(result.current[drop2.id]).not.toBeDefined();
   });
 
-  it("dispatches a 'drops:clear' event", (done) => {
+  it("dispatches a 'drops:clear-drops' event", (done) => {
     function callback() {
       done();
     }
 
-    core.addEventListener('drops:clear', callback);
+    core.addEventListener('drops:clear-drops', callback);
 
     clearDrops(core);
   });

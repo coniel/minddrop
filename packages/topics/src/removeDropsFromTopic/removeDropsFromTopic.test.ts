@@ -20,6 +20,15 @@ onRunDrops(core);
 onRun(core);
 
 describe('removeDropsFromTopic', () => {
+  beforeEach(() => {
+    Drops.register(core, {
+      type: 'text',
+      name: 'Text',
+      description: 'Text drop',
+      create: jest.fn(),
+    });
+  });
+
   afterEach(() => {
     core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     act(() => {

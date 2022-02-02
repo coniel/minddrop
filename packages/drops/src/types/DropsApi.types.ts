@@ -1,6 +1,11 @@
-import { Core } from '@minddrop/core';
+import { Core, DataInsert } from '@minddrop/core';
 import { CreateDropData, Drop, DropMap, UpdateDropData } from './Drop.types';
+import { DropConfig } from './DropConfig.types';
 import {
+  RegisterDropTypeEvent,
+  RegisterDropTypeEventCallback,
+  UnregisterDropTypeEvent,
+  UnregisterDropTypeEventCallback,
   CreateDropEvent,
   UpdateDropEvent,
   ArchiveDropEvent,
@@ -14,6 +19,8 @@ import {
   ArchiveDropEventCallback,
   ClearDropsEvent,
   ClearDropsEventCallback,
+  ClearRegisteredDropTypesEvent,
+  ClearRegisteredDropTypesEventCallback,
   DeleteDropEventCallback,
   LoadDropsEvent,
   LoadDropsEventCallback,
@@ -68,10 +75,21 @@ export interface DropsApi {
   filter(drops: DropMap, filters: DropFilters): DropMap;
 
   /**
-   * Retrieves a drop's parent drops, returning an array of drops.
-   * By default, only active drops are returned.
+   * Registers a new drop type and dispatches a `drops:register`
+   * event.
+   *
+   * @param core A MindDrop core instance.
+   * @param config The configartion of the drop type to register.
    */
-  // dropParents(dropId: string): Drop[];
+  register(core: Core, config: DropConfig): void;
+
+  /**
+   * Unregisters a drop type and dispatches a `drops:unregister` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param type The type of drop to unregister.
+   */
+  unregister(core: Core, type: string): void;
 
   /**
    * Creates a new drop and dispatches a `drops:create` event.
@@ -88,6 +106,33 @@ export interface DropsApi {
   create(core: Core, data?: CreateDropData): Drop;
 
   /**
+   * Creates a drop of the specified type and dispatches
+   * a `drops:create` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param type The type of drop to create.
+   * @param data The data from which to create the drop.
+   * @returns A promise which resolves to the new drop.
+   */
+  createOfType(core: Core, type: string, data?: DataInsert): Promise<Drop>;
+
+  /**
+   * Creates drops of the appropriate type given a `DataInsert` object
+   * and an array of `DropConfig` objects. Returns a promise resolving
+   * to a `{ [id]: Drop }` map of the created drops. Dispatches a
+   * `drops:create` event for each created drop.
+   *
+   * @param core A MindDrop core instance.
+   * @param data The data from which to create the drops.
+   * @param configs The drop configs from which to create the drops.
+   */
+  createFromDataInsert(
+    core: Core,
+    dataInsert: DataInsert,
+    configs: DropConfig[],
+  ): Promise<DropMap>;
+
+  /**
    * Updates a drop and dispatches a `drops:update` event.
    * Returns the updated drop.
    *
@@ -97,6 +142,22 @@ export interface DropsApi {
    * @returns The updated drop.
    */
   update(core: Core, id: string, data: UpdateDropData): Drop;
+
+  /**
+   * Inserts data into a drop.
+   * Does nothing if the drop type is not configured to accept
+   * data inserts. Returns a promise which resolves to the updated
+   * drop (or original drop if it was not updated).
+   *
+   * If the drop is updated as a result of the insert, dispatches a
+   * `drops:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropId The ID of the drop into which to insert the data.
+   * @param data The data to be inserted into the drop.
+   * @returns A promise resolving to the updated drop.
+   */
+  insertData(core: Core, dropId: string, data: DataInsert): Promise<Drop>;
 
   /**
    * Archives a drop and dispatches a `drops:archive`
@@ -217,15 +278,44 @@ export interface DropsApi {
   load(core: Core, drops: Drop[]): void;
 
   /**
-   * Clears drops from the store and dispatches a `drops:clear` event.
+   * Clears drops from the store and dispatches a `drops:clear-drops` event.
    *
    * @param core A MindDrop core instance.
    */
-  clear(core: Core): void;
+  clearDrops(core: Core): void;
+
+  /**
+   * Clears registered drop types from the store and dispatches a `drops:clear-register` event.
+   *
+   * @param core A MindDrop core instance.
+   */
+  clearRegisteredDropTypes(core: Core): void;
+
+  /**
+   * Returns registered drop type configs, optionally filtered by drop type.
+   *
+   * @param types An array of drop types by which to filter the configs.
+   * @returns Registered drop type configs.
+   */
+  getRegisteredDropTypes(types?: string[]): DropConfig[];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
+
+  // Add drops:register event listener
+  addEventListener(
+    core: Core,
+    type: RegisterDropTypeEvent,
+    callback: RegisterDropTypeEventCallback,
+  ): void;
+
+  // Add drops:unregister event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterDropTypeEvent,
+    callback: UnregisterDropTypeEventCallback,
+  ): void;
 
   // Add drops:create event listener
   addEventListener(
@@ -311,16 +401,37 @@ export interface DropsApi {
     callback: LoadDropsEventCallback,
   );
 
-  // Add drops:clear event listener
+  // Add drops:clear-drops event listener
   addEventListener(
     core: Core,
     type: ClearDropsEvent,
     callback: ClearDropsEventCallback,
   );
 
+  // Add drops:clear-register event listener
+  addEventListener(
+    core: Core,
+    type: ClearRegisteredDropTypesEvent,
+    callback: ClearRegisteredDropTypesEventCallback,
+  );
+
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
+
+  // Remove drops:register event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterDropTypeEvent,
+    callback: RegisterDropTypeEventCallback,
+  ): void;
+
+  // Remove drops:unregister event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterDropTypeEvent,
+    callback: UnregisterDropTypeEventCallback,
+  ): void;
 
   // Remove drops:create event listener
   removeEventListener(
@@ -406,10 +517,17 @@ export interface DropsApi {
     callback: LoadDropsEventCallback,
   );
 
-  // Remove drops:clear event listener
+  // Remove drops:clear-drops event listener
   removeEventListener(
     core: Core,
     type: ClearDropsEvent,
     callback: ClearDropsEventCallback,
+  );
+
+  // Remove drops:clear-register event listener
+  removeEventListener(
+    core: Core,
+    type: ClearRegisteredDropTypesEvent,
+    callback: ClearRegisteredDropTypesEventCallback,
   );
 }

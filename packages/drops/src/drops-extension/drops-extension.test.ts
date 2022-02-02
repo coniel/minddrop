@@ -1,21 +1,22 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { onDisable, onRun } from './drops-extension';
 import { generateDrop } from '../generateDrop';
 import { useAllDrops } from '../useAllDrops';
 import { Drops } from '../Drops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { registerDropType } from '../registerDropType';
+import { cleanup, core, initialize, textDropConfig } from '../tests';
+import { getRegisteredDropTypes } from '../getRegisteredDropTypes';
 
 describe('drops extension', () => {
-  describe('onRun', () => {
-    afterEach(() => {
-      act(() => {
-        Drops.clear(core);
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    });
+  beforeEach(() => {
+    initialize();
+  });
 
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe('onRun', () => {
     describe('drops resource registration', () => {
       it('loads drops', () => {
         const { result } = renderHook(() => useAllDrops());
@@ -63,13 +64,6 @@ describe('drops extension', () => {
   });
 
   describe('onDisable', () => {
-    afterEach(() => {
-      act(() => {
-        Drops.clear(core);
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    });
-
     it('clears the store', () => {
       const { result } = renderHook(() => useAllDrops());
       const drop1 = generateDrop({ type: 'text' });
@@ -78,12 +72,14 @@ describe('drops extension', () => {
       onRun(core);
 
       act(() => {
+        registerDropType(core, textDropConfig);
         Drops.load(core, [drop1, drop2]);
         onDisable(core);
       });
 
       expect(result.current[drop1.id]).not.toBeDefined();
       expect(result.current[drop2.id]).not.toBeDefined();
+      expect(getRegisteredDropTypes().length).toBe(0);
     });
 
     it('removes event listeners', () => {

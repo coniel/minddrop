@@ -66,10 +66,10 @@ useDrops(dropIds: string[], filters?: DropFilters): Record<string, Drop>
 
 ### get
 
-Retrieves drops by ID. If provided a single ID string, returns the drop or `null` if not found. If provided an array of IDs, returns an array of the corresponding drops.
+Retrieves drops by ID. If provided a single ID string, returns the drop or `null` if not found. If provided an array of IDs, returns a `{ [id]: Drop }` of the corresponding drops.
 
 ```ts
-Drops.get(dropId: string | string[], filters?: DropFilters): Drop | Drop[] | null
+Drops.get(dropId: string | string[], filters?: DropFilters): Drop | DropMap | null
 ```
 
 <ArgsTable
@@ -147,6 +147,47 @@ Drops.filter(drops: DropMap, filters: DropFilters): DropMap
   ]}
 />
 
+### register
+
+Registers a new drop type and dispatches a `drops:register` event.
+
+```ts
+Drops.register(core: Core, config: DropConfig): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'config',
+      type: 'DropConfig',
+      required: true,
+      description:
+        'The configuration of the new drop type to register.',
+    },
+  ]}
+/>
+
+### unregister
+
+Unregisters a drop type and dispatches a `drops:unregister` event.
+
+```ts
+Drops.unregister(core: Core, type: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The type of drop to unregister.',
+    },
+  ]}
+/>
+
 ### create
 
 Creates a new drop and dispatches a `drops:create` event. Returns the new drop.
@@ -171,34 +212,67 @@ Drops.create(core: Core, data: CreateDropData): Drop
   ]}
 />
 
-#### `CreateDropData`
+### createOfType
 
-<InterfaceTable
+Creates a drop of the specified type. Data can be provided by supplying a [`DataInsert`](/docs/extensions/types/data-insert) object. Returns a promise which resolves to the new drop. Dispatches a `drops:create` event.
+
+Throws a `InvalidDropDataError` if the drop could not be created due to invalid or missing data.
+
+```ts
+Drops.createOfType(core: Core, type: string, data?: DataInsert): Promise<Drop>
+```
+
+<ArgsTable
+  core
   data={[
     {
       name: 'type',
       type: 'string',
       required: true,
-      description: 'The drop type.',
+      description: 'The type of drop to create.',
     },
     {
-      name: 'markdown',
-      type: 'string',
-      description: "The drop's markdown text content.",
-    },
-    {
-      name: 'files',
-      type: 'string[]',
-      description:
-        "IDs of the drop's files. All files attached to the drop must be listed here. The file references of attached files will be automatically updated, adding the drop as an attached resource.",
-    },
-    {
-      name: 'color',
-      type: 'ContentColor',
-      description: "The drop's highlight color.",
+      name: 'data',
+      type: 'DataInsert',
+      description: 'The data from which to create the drop.',
     },
   ]}
 />
+
+### createFromDataInsert
+
+Creates drops of the appropriate type given a [`DataInsert`](/docs/extensions/types/data-insert) object and an array of [`DropConfig`](/docs/extensions/types/drop-config) objects. Returns a promise resolving to a `{ [id]: Drop }` map of the created drops. Dispatches a `drops:create` event for each created drop.
+
+```ts
+Drops.createFromDataInsert(core: Core, data: DataInsert, configs: DropConfig[]): Promise<DropMap>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The data from which to create the drop(s).',
+    },
+    {
+      name: 'configs',
+      type: 'DropConfig[]',
+      required: true,
+      description:
+        'The drop configurations with which to create the drops.',
+    },
+  ]}
+/>
+
+To create the appropriate drop types, the data is matched against the drop configs' `dataTypes` property. When a match is found, a drop of that type is created.
+
+If multiple drop configs support the provided data, only a single drop of the first type to match will be created. The priority of the matching is based on the order of the configs in the array (the first item having the highest priority).
+
+If the data contains files, the files are matched against the drop config's `fileTypes` property. When a match is found, a drop of that type is created.
+
+If the data contains multiple files, a drop will be created for each file unless the first matching drop type supports multiple files. In that case, a single drop will be created from all supported files which have not already been matched. Any left over unsupported files will continue on to be matched against other drop types.
 
 ### update
 
@@ -251,6 +325,33 @@ Drops.update(core: Core, dropId: string, data: UpdateDropData): Drop
       name: 'color',
       type: 'ContentColor | Delete',
       description: "The drop's highlight color.",
+    },
+  ]}
+/>
+
+### insertData
+
+Inserts data into a drop. Does nothing if the drop type is not configured to accept data inserts. Returns a promise which resolves to the updated drop (or original drop if it was not updated). Inserts resulting in a drop update dispatch a `drops:update` event.
+
+```ts
+Drops.insertData(core: Core, dropId: string, data: DataInsert): Promise<Drop>;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop into which to insert the data.',
+    },
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The data to insert into the drop.',
     },
   ]}
 />
@@ -502,15 +603,44 @@ Drops.load(core: Core, drops: Drop[]): void
   ]}
 />
 
-### clear
+### clearDrops
 
-Clears drops from the store and dispaches a `drops:clear` event.
+Clears drops from the store and dispaches a `drops:clear-drops` event.
 
 ```ts
-Drops.clear(core: Core): void
+Drops.clearDrops(core: Core): void
 ```
 
 <ArgsTable core />
+
+### clearRegisteredDropTypes
+
+Clears registered drop types from the store and dispaches a `drops:clear-register` event.
+
+```ts
+Drops.clearRegisteredDropTypes(core: Core): void
+```
+
+<ArgsTable core />
+
+### getRegisteredDropTypes
+
+Returns the [`DropConfig`](/docs/extensions/types/drop-config)s of registered drop types.
+
+```ts
+Drops.getRegisteredDropTypes(types?: string[]): DropConfig[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'types',
+      type: 'string[]',
+      description:
+        'An array of drop types. If provided, only configs for the given types will be returned.',
+    },
+  ]}
+/>
 
 ### addEventListener
 
@@ -574,6 +704,16 @@ See below the table for more details on the data passed by drop related events.
 <EventsTable
   data={[
     {
+      name: 'drops:register',
+      data: 'DropConfig',
+      description: 'Dispatched when a new drop type is registered.',
+    },
+    {
+      name: 'drops:unregister',
+      data: 'DropConfig',
+      description: 'Dispatched when a drop type is unregistered.',
+    },
+    {
       name: 'drops:create',
       data: 'Drop',
       description: 'Dispatched when a drop is created.',
@@ -636,9 +776,14 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when drops are loaded into the store.',
     },
     {
-      name: 'drops:clear',
+      name: 'drops:clear-drops',
       description:
         'Dispatched when drops are cleared from the store.',
+    },
+    {
+      name: 'drops:clear-register',
+      description:
+        'Dispatched when registered drop types are cleared from the store.',
     },
   ]}
 />
@@ -646,6 +791,10 @@ See below the table for more details on the data passed by drop related events.
 ### Drop event data types
 
 Drop events are dispatched with one of the following types of data.
+
+#### DropConfig
+
+See the [DropConfig](/docs/extensions/types/drop-config) interface page.
 
 #### Drop
 

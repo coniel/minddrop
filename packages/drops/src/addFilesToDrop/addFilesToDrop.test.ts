@@ -9,10 +9,19 @@ import { addFilesToDrop } from './addFilesToDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { clearDrops } from '../clearDrops';
+import { cleanup, initialize } from '../tests';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('addFilesToDrop', () => {
+  beforeAll(() => {
+    initialize();
+  });
+
+  afterAll(() => {
+    cleanup();
+  });
+
   afterEach(() => {
     core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {

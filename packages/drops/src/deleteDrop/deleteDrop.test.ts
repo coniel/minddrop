@@ -1,18 +1,16 @@
-import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
 import { deleteDrop } from './deleteDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { clearDrops } from '../clearDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('deleteDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    act(() => {
-      clearDrops(core);
-    });
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+    cleanup();
   });
 
   it('deletes the drop', () => {

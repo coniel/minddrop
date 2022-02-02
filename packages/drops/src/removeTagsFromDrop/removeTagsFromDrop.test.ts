@@ -1,21 +1,18 @@
 import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { Tags, Tag } from '@minddrop/tags';
 import { removeTagsFromDrop } from './removeTagsFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addTagsToDrop } from '../addTagsToDrop';
-import { clearDrops } from '../clearDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('removeTagsFromDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    act(() => {
-      Tags.clear(core);
-      clearDrops(core);
-    });
+    cleanup();
   });
 
   it('removes tags from the drop', async () => {

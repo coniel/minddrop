@@ -10,10 +10,21 @@ import { createDrop } from './createDrop';
 import { Drop } from '../types';
 import { useAllDrops } from '../useAllDrops';
 import { clearDrops } from '../clearDrops';
+import { registerDropType } from '../registerDropType';
+import { DropTypeNotRegisteredError } from '../errors';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('createDrop', () => {
+  beforeEach(() => {
+    registerDropType(core, {
+      type: 'text',
+      name: 'Text',
+      description: 'Text drop',
+      create: jest.fn(),
+    });
+  });
+
   afterEach(() => {
     core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
     act(() => {
@@ -114,5 +125,11 @@ describe('createDrop', () => {
     act(() => {
       drop = createDrop(core, { type: 'text' });
     });
+  });
+
+  it('throws a DropTypeNotRegisteredError if the drop type is not registered', () => {
+    expect(() => createDrop(core, { type: 'not-registered' })).toThrowError(
+      DropTypeNotRegisteredError,
+    );
   });
 });

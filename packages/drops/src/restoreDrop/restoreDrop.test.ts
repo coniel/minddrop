@@ -1,25 +1,18 @@
-import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../drops-extension';
 import { createDrop } from '../createDrop';
 import { Drop } from '../types';
 import { restoreDrop } from './restoreDrop';
 import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-
-// Set up extension
-onRun(core);
+import { cleanup, core, initialize } from '../tests';
 
 describe('restoreDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    // Reset extension
-    act(() => {
-      onDisable(core);
-    });
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    onRun(core);
+    cleanup();
   });
 
   it('restores archived drops', () => {

@@ -1,5 +1,4 @@
-import { act, textFile } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
+import { act, cleanup, textFile } from '@minddrop/test-utils';
 import {
   Files,
   FileReference,
@@ -8,18 +7,16 @@ import {
 import { replaceDropFiles } from './replaceDropFiles';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { clearDrops } from '../clearDrops';
 import { addFilesToDrop } from '../addFilesToDrop';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { core, initialize } from '../tests';
 
 describe('replaceDropFiles', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    act(() => {
-      clearDrops(core);
-      Files.clear(core);
-    });
+    cleanup();
   });
 
   it("replaces the drop's files", async () => {

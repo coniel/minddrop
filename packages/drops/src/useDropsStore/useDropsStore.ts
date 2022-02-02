@@ -3,6 +3,17 @@ import { DropStore } from '../types';
 
 export const useDropsStore = createStore<DropStore>((set) => ({
   drops: {},
+  registered: [],
+
+  registerDropType: (config) =>
+    set((state) => ({
+      registered: [...state.registered, config],
+    })),
+
+  unregisterDropType: (type) =>
+    set((state) => ({
+      registered: state.registered.filter((config) => config.type !== type),
+    })),
 
   loadDrops: (drops) =>
     set((state) => ({
@@ -18,7 +29,9 @@ export const useDropsStore = createStore<DropStore>((set) => ({
       },
     })),
 
-  clear: () => set(() => ({ drops: {} })),
+  clearRegistered: () => set(() => ({ registered: [] })),
+
+  clearDrops: () => set(() => ({ drops: {} })),
 
   setDrop: (drop) =>
     set((state) => ({

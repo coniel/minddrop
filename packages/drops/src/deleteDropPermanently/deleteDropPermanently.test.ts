@@ -1,19 +1,17 @@
 import { act, renderHook } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { deleteDropPermanently } from './deleteDropPermanently';
-import { clearDrops } from '../clearDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { useAllDrops } from '../useAllDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('deleteDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    act(() => {
-      clearDrops(core);
-    });
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+    cleanup();
   });
 
   it('returns the deleted drop', () => {

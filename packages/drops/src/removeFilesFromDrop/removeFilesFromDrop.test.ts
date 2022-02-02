@@ -1,21 +1,18 @@
 import { act, textFile } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { Files, FileReference } from '@minddrop/files';
 import { removeFilesFromDrop } from './removeFilesFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addFilesToDrop } from '../addFilesToDrop';
-import { clearDrops } from '../clearDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('removeFilesFromDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    act(() => {
-      Files.clear(core);
-      clearDrops(core);
-    });
+    cleanup();
   });
 
   it('removes files from the drop', async () => {

@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { Files } from '@minddrop/files';
 import { Tags } from '@minddrop/tags';
 import { generateDrop } from '../generateDrop';
+import { getDropTypeConfig } from '../getDropTypeConfig';
 import { CreateDropData, Drop } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
@@ -19,6 +20,9 @@ import { useDropsStore } from '../useDropsStore';
  */
 export function createDrop(core: Core, data: CreateDropData): Drop {
   const drop = generateDrop(data);
+
+  // Verify that drop type is registered
+  getDropTypeConfig(drop.type);
 
   // Ensure that tags exist
   if (data.tags) {

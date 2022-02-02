@@ -1,20 +1,17 @@
 import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { Tags, Tag, TagNotFoundError } from '@minddrop/tags';
 import { addTagsToDrop } from './addTagsToDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { clearDrops } from '../clearDrops';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+import { cleanup, core, initialize } from '../tests';
 
 describe('addTagsToDrop', () => {
+  beforeEach(() => {
+    initialize();
+  });
+
   afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    act(() => {
-      Tags.clear(core);
-      clearDrops(core);
-    });
+    cleanup();
   });
 
   it('adds tags to the drop', async () => {
@@ -32,7 +29,7 @@ describe('addTagsToDrop', () => {
     expect(drop.tags[0]).toBe(tag.id);
   });
 
-  it('throws if tag attachement does not exist', async () => {
+  it('throws if tag does not exist', async () => {
     let drop: Drop;
 
     await act(async () => {

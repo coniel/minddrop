@@ -23,7 +23,8 @@ export function onRun(core: Core) {
 
 export function onDisable(core: Core) {
   // Clear the store
-  useDropsStore.getState().clear();
+  useDropsStore.getState().clearDrops();
+  useDropsStore.getState().clearRegistered();
   // Remove event listeners
   core.removeAllEventListeners();
 }

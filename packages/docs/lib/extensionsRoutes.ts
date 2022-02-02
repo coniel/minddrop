@@ -98,6 +98,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/drop',
       },
       {
+        title: 'DropConfig',
+        slug: 'docs/extensions/types/drop-config',
+      },
+      {
         title: 'EventListenerCallback',
         slug: 'docs/extensions/types/event-listener-callback',
       },
