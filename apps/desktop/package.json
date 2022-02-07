@@ -1,0 +1,112 @@
+{
+  "name": "@minddrop/desktop",
+  "productName": "MindDrop",
+  "version": "0.2.0",
+  "private": true,
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx ."
+  },
+  "keywords": [],
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "app-icons/icon"
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "app_desktop"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "port": 3001,
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.ts",
+                  "name": "main_window",
+                  "preload": {
+                    "js": "./src/preload.ts"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.61",
+    "@jest/types": "^27.2.5",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "@vercel/webpack-asset-relocator-loader": "1.7.0",
+    "copy-webpack-plugin": "^9.1.0",
+    "css-loader": "^6.0.0",
+    "electron": "16.0.0",
+    "eslint": "^7.6.0",
+    "eslint-plugin-import": "^2.20.0",
+    "fork-ts-checker-webpack-plugin": "^6.0.1",
+    "node-loader": "^2.0.0",
+    "spectron": "^15.0.0",
+    "style-loader": "^3.0.0",
+    "ts-jest": "^27.0.7",
+    "ts-loader": "^9.2.2",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.0.2",
+    "webpack": "^5.64.1"
+  },
+  "dependencies": {
+    "@minddrop/core": "^0.2.0",
+    "@minddrop/drops": "^0.1.0",
+    "@minddrop/files": "0.1.0",
+    "@minddrop/i18n": "^0.2.0",
+    "@minddrop/icons": "^0.2.0",
+    "@minddrop/tags": "0.1.0",
+    "@minddrop/theme": "^0.2.0",
+    "@minddrop/topics": "0.1.0",
+    "@minddrop/pouchdb": "0.1.0",
+    "@minddrop/ui": "^0.2.0",
+    "pouchdb": "^7.2.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "remove": "^0.1.5",
+    "webpack": "^5.64.1"
+  }
+}

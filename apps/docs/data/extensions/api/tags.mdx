@@ -1,0 +1,329 @@
+---
+metaTitle: Tags API Interface
+metaDescription: An interface for retrieving and managing tags.
+---
+
+# Tags
+
+<Description>
+  An interface for retrieving and managing tags.
+</Description>
+
+## Hooks
+
+Hooks provide access to tags from inside React components. Unlike resources accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useTags
+
+Returns a `{ [id]: Tag }` map of tags matching the provided IDs.
+
+```ts
+useTags(ids: string[]): Record<string, Tag>
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'ids',
+      type: 'string[]',
+      description: 'The IDs of the tags to retrieve.',
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves tags by ID. If provided a single ID string, returns the tag or `null` if not found. If provided an array of IDs, returns an array of the corresponding tags.
+
+```ts
+Tags.get(id: string | string[]): Tag | Tag[] | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'tagId',
+      type: 'string | string[]',
+      required: true,
+      description: 'The ID(s) of the tag(s) to retrieve.',
+    },
+  ]}
+/>
+
+### create
+
+Creates a new tag and dispatches a `tags:create` event. Returns the new tag.
+
+```ts
+Tags.create(core: Core, data: CreateTagData): Tag
+```
+
+<InterfaceTable
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTagData',
+      description: (
+        <span>
+          The tag data, of which <Code>label</Code> is the only
+          required value. See below for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### `CreateTagData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      required: true,
+      description: "The tag's label text.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The tag's color. The default color is <Code>'blue'</Code>.
+          See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### update
+
+Updates a tag and dispatches a `tags:update` event. Returns the updated tag.
+
+```ts
+Tags.update(core: Core,tagId: string, data: UpdateTagData): Tag
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to update.',
+    },
+    {
+      name: 'data',
+      type: 'UpdateTagData',
+      required: true,
+      description:
+        'The changes to apply to the tag. See below for details.',
+    },
+  ]}
+/>
+
+#### `UpdateTagData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'label',
+      type: 'string',
+      description: "The tag's label text.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The tag's color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a tag and dispatches a `tags:delete` event.
+
+```ts
+Tags.delete(core: Core,tagId: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the tag to delete.',
+    },
+  ]}
+/>
+
+### load
+
+Loads tags into the store and dispatches a `tags:load` event.
+
+```ts
+Tags.load(core: Core, tags: Tag[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tags',
+      type: 'Tag[]',
+      required: true,
+      description: 'The tags to load into the store.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds tag specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Tags.addEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TagEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the tag events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the tag events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes tag specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Tags.removeEventListener(core: Core, event: TagEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TagEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Tag events
+
+<EventsTable
+  data={[
+    {
+      name: 'tags:create',
+      data: 'Tag',
+      description: 'Dispatched when a tag is created.',
+    },
+    {
+      name: 'tags:update',
+      data: 'UpdateTagEventData',
+      description: 'Dispatched when a tag is updated.',
+    },
+    {
+      name: 'tags:delete',
+      data: 'Tag',
+      description: 'Dispatched when a tag is deleted.',
+    },
+    {
+      name: 'tags:load',
+      data: 'Tag[]',
+      description: 'Dispatched when tags are loaded into the store.',
+    },
+  ]}
+/>
+
+#### UpdateTagEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'Tag',
+      required: true,
+      description: 'Tag data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'Tag',
+      required: true,
+      description: 'Updated tag data.',
+    },
+    {
+      name: 'changes',
+      type: 'TagChanges',
+      required: true,
+      description:
+        'The changes made to the tag. See below for details.',
+    },
+  ]}
+/>
+
+`TagChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The tag's color. See the{' '}
+          <a href="/docs/extensions/types/color#content-colors">
+            Color
+          </a>{' '}
+          page for available content colors.
+        </span>
+      ),
+    },
+  ]}
+/>

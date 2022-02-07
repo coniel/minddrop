@@ -1,0 +1,52 @@
+.root {
+  display: flex;
+  margin-top: 24px;
+  width: 500px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  column-gap: 16px;
+}
+
+.input {
+  width: 260px;
+  height: 40px;
+  padding-left: 16px;
+  font-size: 16px;
+  border-radius: var(--radiusMd);
+  border: 2px solid var(--borderNeutral);
+  background-color: transparent;
+}
+
+.input:active {
+  border-color: var(--borderPrimary);
+}
+
+.message {
+  margin-top: 8px;
+  height: 18px;
+}
+
+@media only screen and (max-width: 768px) {
+  .root {
+    width: 100%;
+  }
+
+  .form {
+    flex-direction: column;
+    column-gap: 0;
+    row-gap: 8px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .button {
+    display: block;
+  }
+}

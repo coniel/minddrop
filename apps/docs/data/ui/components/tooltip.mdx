@@ -1,0 +1,346 @@
+---
+metaTitle: Tooltip
+metaDescription: A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
+name: tooltip
+---
+
+# Tooltip
+
+<Description>
+  A popup that displays information related to an element when the
+  element receives keyboard focus or the mouse hovers over it.
+</Description>
+
+<HeroContainer>
+  <TooltipDemo />
+</HeroContainer>
+
+```jsx hero template=TooltipDemo
+
+```
+
+<Highlights
+  features={[
+    'Opens when the trigger is focused or hovered.',
+    'Closes when the trigger is activated or when pressing escape.',
+    'Supports custom timings.',
+    'Renders a title, description, and keyboard shortcut.',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { Tooltip, IconButton } from '@minddrop/ui';
+
+export default () => {
+  return (
+    <Tooltip title="New drop" keyboardShortcut={['Mod', 'N']}>
+      <IconButton icon="add" label="New drop" />
+    </Tooltip>
+  );
+};
+```
+
+### Show instantly
+
+Use the `delayDuration` prop to control the time it takes for the tooltip to open.
+
+```jsx line=4
+import { Tooltip } from '@minddrop/ui';
+
+export default () => (
+  <Tooltip __delayDuration__={0}>
+    <button>...</button>
+  </Tooltip>
+);
+```
+
+### Displaying a tooltip from a disabled button
+
+Since disabled buttons don't fire events, you need to:
+
+- Render the `Trigger` as `span`.
+- Ensure the `button` has no `pointerEvents`.
+
+```jsx line=5-7
+import { Tooltip } from '@minddrop/ui';
+
+export default () => (
+  <Tooltip title="Not available offline">
+    <span>
+      <button disabled style={{ __pointerEvents__: 'none' }}>Publish<button>
+    </span>
+  </Tooltip>
+);
+```
+
+## Styling
+
+### Origin-aware animations
+
+Radix exposes a CSS custom property `--radix-tooltip-content-transform-origin`. Use it to animate the content from its computed origin based on `side`, `sideOffset`, `align`, `alignOffset` and any collisions.
+
+```css line=14
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tooltip {
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  animation: scaleIn 0.5s ease-out;
+}
+```
+
+### Collision-aware animations
+
+Radix exposes `data-side` and `data-align` attributes. Their values will change at runtime to reflect collisions. Use them to create collision and direction-aware animations.
+
+```css line=30-32,34-36
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+}
+
+.tooltip {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tooltip[data-side='bottom'] {
+  animation: slideDown;
+}
+
+.tooltip[data-side='top'] {
+  animation: slideUp;
+}
+```
+
+## API Reference
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'node',
+      required: true,
+      description:
+        'The trigger component, usually some sort of button.',
+    },
+    {
+      name: 'title',
+      type: 'node',
+      required: true,
+      description:
+        'The primary content of the tooltip, typically the name of the action.',
+    },
+    {
+      name: 'description',
+      type: 'node',
+      description:
+        'Optional secondary content providing additional details.',
+    },
+    {
+      name: 'keyboardShortcut',
+      type: 'string[]',
+      default: '[]',
+      description: (
+        <span>
+          An array of key name strings. Use <code>'Mod'</code> to
+          render <code>'⌘'</code> or <code>'Ctrl'</code> on Mac and
+          Widnows/Linux respectively.
+        </span>
+      ),
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      description: (
+        <span>
+          The open state of the tooltip when it is initially rendered.
+          Use when you do not need to control its open state.
+        </span>
+      ),
+    },
+    {
+      name: 'open',
+      type: 'boolean',
+      description: (
+        <span>
+          The controlled open state of the tooltip. Must be used in
+          conjunction with <Code>onOpenChange</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the open state of the tooltip
+          changes.
+        </span>
+      ),
+    },
+    {
+      name: 'delayDuration',
+      type: 'number',
+      default: 700,
+      description:
+        'The duration from when the mouse enters the trigger until the tooltip opens.',
+    },
+    {
+      name: 'skipDelayDuration',
+      type: 'number',
+      default: 300,
+      description:
+        'How much time a user has to enter another trigger without incurring a delay again.',
+    },
+    {
+      name: 'aria-label',
+      type: 'string',
+      description: (
+        <span>
+          By default, screenreaders will announce the content inside
+          the component. If this is not descriptive enough, or you
+          have content that cannot be announced, use{' '}
+          <Code>aria-label</Code> as a more descriptive label.
+        </span>
+      ),
+    },
+    {
+      name: 'portalled',
+      type: 'boolean',
+      default: 'true',
+      description: (
+        <span>
+          Whether to render in a <Code>Portal</Code> when open.
+        </span>
+      ),
+    },
+    {
+      name: 'side',
+      type: "'top' | 'right' | 'bottom' | 'left'",
+      default: "'bottom'",
+      description: (
+        <span>
+          The preferred side of the trigger to render against when
+          open. Will be reversed when collisions occur and{' '}
+          <Code>avoidCollisions</Code> is enabled.
+        </span>
+      ),
+    },
+    {
+      name: 'sideOffset',
+      type: 'number',
+      default: '0',
+      description: (
+        <span>
+          <span>The distance in pixels from the trigger.</span>
+        </span>
+      ),
+    },
+    {
+      name: 'align',
+      type: "'start' | 'center' | 'end'",
+      default: "'center'",
+      description: (
+        <span>
+          The preferred alignment against the trigger. May change when
+          collisions occur.
+        </span>
+      ),
+    },
+    {
+      name: 'alignOffset',
+      type: 'number',
+      default: '0',
+      description: (
+        <span>
+          An offset in pixels from the <Code>"start"</Code> or{' '}
+          <Code>"end"</Code> alignment options.
+        </span>
+      ),
+    },
+    {
+      name: 'avoidCollisions',
+      type: 'boolean',
+      default: 'true',
+      description: (
+        <span>
+          When <Code>true</Code>, overrides the <Code>side</Code> and
+          <Code>align</Code> preferences to prevent collisions with window
+          edges.
+        </span>
+      ),
+    },
+    {
+      name: 'collisionTolerance',
+      type: 'number',
+      default: '0',
+      description: (
+        <span>
+          The distance in pixels from window edges where collision
+          detection should occur.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Tooltip Widget WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#tooltip).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Tab'],
+      description: 'Opens/closes the tooltip without delay.',
+    },
+    {
+      keys: ['Space'],
+      description: 'If open, closes the tooltip without delay.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'If open, closes the tooltip without delay.',
+    },
+    {
+      keys: ['Escape'],
+      description: 'If open, closes the tooltip without delay.',
+    },
+  ]}
+/>

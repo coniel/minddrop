@@ -1,0 +1,286 @@
+---
+metaTitle: Core API Reference
+metaDescription: An interface for interacting with MindDrop's core.
+---
+
+# Core
+
+<Description>
+  An interface for interacting with MindDrop's core.
+</Description>
+
+MindDrop has a lean core mainly responsible for managing event listeners and resource connectors.
+
+## Properties
+
+<InterfaceTable
+  data={[
+    {
+      name: 'appId',
+      type: 'string',
+      description:
+        'The ID of the application for which the core instance was initialized. This is unique to each application installation.',
+    },
+    {
+      name: 'extensionId',
+      type: 'string',
+      description:
+        'The ID of the extension for which the core instance was initialized.',
+    },
+  ]}
+/>
+
+## Methods
+
+### dispatch
+
+Dispatches an event. Any matching event listeners will be fired.
+
+```ts
+core.dispatch(type: string, data: any): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'data',
+      type: 'any',
+      description: 'The event data.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds an event listener for a given event, firing the callback each time the event occurs. Allows extensions to react to events occuring throughout the app.
+
+You can use `'*'` as the event type to listen to all events.
+
+```ts
+core.addEventListener(type: string, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type to listen to.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: (
+        <span>
+          The callback fired when the event occurs. See the
+          <a href="/docs/extensions/types/event-listener-callback">
+            EventListenerCallback
+          </a> page for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes a given event listener.
+
+```ts
+core.removeEventListener(type: string, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback fired when the event occurs.',
+    },
+  ]}
+/>
+
+### removeAllEventListeners
+
+Removes all of the source's event listeners. Only removes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to remove event listeners only for the specified event type.
+
+```ts
+core.removeAllEventListeners(type?: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      description: 'The event type for which to remove listeners.',
+    },
+  ]}
+/>
+
+### hasEventListener
+
+Checks whether a specified event listener exists.
+
+```ts
+core.hasEventListener(type: string, callback: EventListenerCallback): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback fired when the event occurs.',
+    },
+  ]}
+/>
+
+### hasEventListeners
+
+Checks whether any event listeners exist. Only includes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to only check for event listeners of the specified event type.
+
+```ts
+core.hasEventListeners(type?: string): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+  ]}
+/>
+
+### eventListenerCount
+
+Returns the number of event listeners. Only includes event listeners added by the extension calling it.
+
+Optionally, a type can be specified to count event listeners only of the specified event type.
+
+```ts
+core.eventListenerCount(type?: string): number
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The event type.',
+    },
+  ]}
+/>
+
+### registerResource
+
+Registers a new resource type. Fires a `core:register-resource` event.
+
+You can pass in the resource's Typescript interface for better type support.
+
+```ts
+core.registerResource<Resource>(resource: ResourceConnector<Resource>): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resource',
+      type: 'ResourceConnector',
+      description: 'The connector of the resource to register.',
+    },
+  ]}
+/>
+
+### unregisterResource
+
+Unregisters a resource type. All resources of the specified type will be permanently deleted. Fires a `core:unregister-resource` event.
+
+```ts
+core.unregisterResource(resourceType: string): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resourceType',
+      type: 'string',
+      description: 'The type of resource to unregister.',
+    },
+  ]}
+/>
+
+### getResourceConnectors
+
+Returns all registered resource connectors as an array.
+
+```ts
+core.getResourceConnectors(resourceType: string): ResourceConnector[]
+```
+
+### isResourceRegistered
+
+Checks whether a specified resource is registrerd.
+
+```ts
+core.isResourceRegistered(resourceType: string): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resourceType',
+      type: 'string',
+      description: 'The type of resource.',
+    },
+  ]}
+/>
+
+## Core events
+
+Core events are prefixed with the namespace `core`.
+
+<EventsTable
+  data={[
+    {
+      name: 'core:register-resource',
+      data: 'ResourceConnector',
+      description: 'Dispatched when a new resource is registered.',
+    },
+    {
+      name: 'core:unregister-resource',
+      data: 'string',
+      description: 'Dispatched when a resource is unregistered.',
+    },
+  ]}
+/>

@@ -1,0 +1,117 @@
+---
+metaTitle: Drop Interface
+metaDescription: The content of MindDrop.
+---
+
+# Drop
+
+<Description>The content of MindDrop.</Description>
+
+Drops are created in one of two formats: `markdown` or `json`. Markdown is intended for drops which are primarily text based, such as a note. JSON is intended for drops which are not edited by the user or not text based, such as a web page bookmark.
+
+All drops share a basic interface which can be extended to suit your extension's needs.
+
+### Drop
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'A universally unique ID.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description:
+        'The drop type. Determines which component will be used to render it.',
+    },
+    {
+      name: 'createdAt',
+      type: 'Date',
+      required: true,
+      description: 'Timestamp at which the drop was created.',
+    },
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: (
+        <span>
+          Timestamp at which the drop was last updated. Equal to the{' '}
+          <Code>createdAt</Code> value if the drop has not been
+          updated.
+        </span>
+      ),
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'The IDs of the tags applied to the drop.',
+    },
+    {
+      name: 'markdown',
+      type: 'string',
+      description: "The drop's markdown text content.",
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      description:
+        "The IDs of the drop's files. All files attached to the drop must be listed here.",
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      description: (
+        <span>
+          The drop's highlight color. See the{' '}
+          <a href="color#content-colors">Color</a> page for available
+          content colors.
+        </span>
+      ),
+    },
+    {
+      name: 'archived',
+      type: 'true',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is archived. Not present if
+          the drop is not archived.
+        </span>
+      ),
+    },
+    {
+      name: 'archivedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the drop was archived. Only set if
+          <Code>archived</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'deleted',
+      type: 'true',
+      description: (
+        <span>
+          If <Code>true</Code>, the drop is deleted. Not present if
+          the drop is not deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the drop was deleted. Only set if
+          <Code>deleted</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>

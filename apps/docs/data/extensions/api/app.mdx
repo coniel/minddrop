@@ -1,0 +1,432 @@
+---
+metaTitle: App API Reference
+metaDescription: An interface for interacting with the MindDrop application.
+---
+
+# App
+
+<Description>
+  An interface for interacting with the MindDrop application.
+</Description>
+
+## Hooks
+
+Hooks provide access to app data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useCurrentView
+
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
+
+```ts
+useCurrentView(): { view: View, instance: ViewInstance | null }
+```
+
+### useRootTopics
+
+Returns an `{ [id]: Topic }` map of root level topics. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+useRootTopics(filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="/docs/extensions/api/topics#topicfilters">
+            TopicFilters
+          </a>{' '}
+          section of the Topics interface page for more details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Static methods
+
+### getCurrentView
+
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
+
+```ts
+App.getCurrentView(): { view: View, instance: ViewInstance | null }
+```
+
+### openView
+
+Opens a view in the app and dispatches a `app:open-view` event. If opening a view instance, use `App.openViewInstance` instead.
+
+```ts
+App.openView(core: Core, view: viewId): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view to open.',
+    },
+  ]}
+/>
+
+### openViewInstance
+
+Opens a view instance in the app and dispatches a `app:open-view` event. If opening a static view, use `App.openView` instead.
+
+```ts
+App.openViewInstance(core: Core, view: viewInstanceId): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstanceId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view instance to open.',
+    },
+  ]}
+/>
+
+### addUiExtension
+
+Adds a UI extension at a given location.
+
+```ts
+App.addUiExtension(location: UiLocation, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation',
+      required: true,
+      description: (
+        <span>
+          The location at which to extend the UI. See the{' '}
+          <a href="">UiLocation</a> page for available locations.
+          Extensions can also provide their own UI extension locations
+          using the <a href="">Slot</a> component.
+        </span>
+      ),
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: (
+        <span>
+          The UI element to render. Either a{' '}
+          <a href="/docs/extensions/types/ui-component-config">
+            UiComponentConfig
+          </a>{' '}
+          object or a React element.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeUiExtension
+
+Removes a UI extension from a given location. The location and element must be the same as the ones used when adding the extension.
+
+```ts
+App.removeUiExtension(location: UiLocation, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation',
+      required: true,
+      description:
+        'The location from which to remove the UI extension.',
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: 'The UI element to remove.',
+    },
+  ]}
+/>
+
+### removeAllUiExtensions
+
+Removes all UI extensions added by the extension. Optionally, a location can be specified to remove UI extensions only from the specified location.
+
+```ts
+App.removeAllUiExtensions(core: Core, location?: UiLocation): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'location',
+      type: 'string',
+      description:
+        'The location from which to remove all UI extensions. If ommited, UI extensions will be removed from all locations.',
+    },
+  ]}
+/>
+
+### createTopic
+
+Creates a new topic along with a default view for it. Returns the new topic.
+
+```ts
+App.createTopic(core: Core, data?: CreateTopicData): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTopicData',
+      description: (
+        <span>
+          The default topic property values. See the{' '}
+          <a href="/docs/extensions/api/topics#create">
+            Topics interface page
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### permanentlyDeleteTopic
+
+Permanently deletes a topic along with its associated views.
+
+```ts
+App.permanentlyDeleteTopic(core: Core, topicId: string): Topic;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to delete.',
+    },
+  ]}
+/>
+
+### addRootTopics
+
+Adds topics to the root level and dispaches an `app:add-root-topics` event. Returns the deleted topic.
+
+```ts
+App.addRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics to add to the root level.',
+    },
+  ]}
+/>
+
+### removeRootTopics
+
+Removes topics from the root level and dispaches an `app:remove-root-topics` event.
+
+```ts
+App.removeRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics to remove from the root level.',
+    },
+  ]}
+/>
+
+### addGlobalTags
+
+Adds global tags and dispaches an `app:add-global-tags` event.
+
+```ts
+App.addGlobalTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add to the root level.',
+    },
+  ]}
+/>
+
+### removeGlobalTags
+
+Removes global tags and dispaches an `app:remove-global-tags` event.
+
+```ts
+App.removeGlobalTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the tags to remove from the global level.',
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds app specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+App.addEventListener(core: Core, event: AppEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'AppEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the app events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the app events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes app specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+App.removeEventListener(core: Core, event: AppEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'AppEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## App events
+
+App events are prefixed with the namespace `app`.
+
+See below the table for more details on the data passed by app related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'app:open-view',
+      data: 'AppView',
+      description: 'Dispatched when a view is opened.',
+    },
+    {
+      name: 'app:add-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are added to the root level.',
+    },
+    {
+      name: 'app:remove-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are removed from the root level.',
+    },
+    {
+      name: 'app:add-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are added.',
+    },
+    {
+      name: 'app:remove-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are removed.',
+    },
+  ]}
+/>
+
+### App event data types
+
+#### AppView
+
+<InterfaceTable
+  data={[
+    {
+      name: 'view',
+      type: 'View',
+      required: true,
+      description: 'The view object.',
+    },
+    {
+      name: 'instance',
+      type: 'ViewInstance | null',
+      required: true,
+      description: (
+        <span>
+          The view instance object or <Code>null</Code> if no view
+          instance is included.
+        </span>
+      ),
+    },
+  ]}
+/>

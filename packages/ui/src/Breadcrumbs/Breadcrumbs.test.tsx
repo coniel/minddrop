@@ -6,7 +6,7 @@ import { Breadcrumb } from './Breadcrumb';
 describe('<Breadcrumbs />', () => {
   afterEach(cleanup);
 
-  it('renders children seperated by /', () => {
+  it('renders children separated by /', () => {
     render(
       <Breadcrumbs>
         <Breadcrumb label="level 1" />

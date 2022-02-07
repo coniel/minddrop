@@ -1,0 +1,190 @@
+---
+metaTitle: Button
+metaDescription: A button element which supports multiple variants, sizes, and colors.
+name: button
+---
+
+# Button
+
+<Description>
+  A button element which supports multiple variants, sizes, and
+  colors.
+</Description>
+
+<HeroContainer>
+  <ButtonDemo />
+</HeroContainer>
+
+```jsx hero template=ButtonDemo
+
+```
+
+<Highlights
+  features={[
+    'Four variant options.',
+    'Three size options.',
+    'Start and end icons.',
+    'Full width option.',
+    'Supports i18n label.',
+    'Can be rendered as a as link.',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+### i18n label buttons
+
+Buttons with an i18n label are labeled by passing the i18n key to the `label` prop.
+
+```jsx
+import { Button } from '@minddrop/ui';
+
+export const SaveButton = ({ onClick }) => {
+  return <Button label="save" variant="primary" onClick={onClick} />;
+};
+```
+
+### Dynamic label buttons
+
+Buttons without an i18n label are labeled by passing the label directly as the button's `children`.
+
+```jsx
+import { Button } from '@minddrop/ui';
+
+export const LikeButton = ({ onClick, count }) => {
+  return (
+    <Button startIcon="heart" onClick={onClick}>
+      {count}
+    </Button>
+  );
+};
+```
+
+### Link buttons
+
+Buttons with an `href` prop are rendered using an `a` as the root element.
+
+```jsx
+import { Button } from '@minddrop/ui';
+
+export const DocsLink = ({ onClick, count }) => {
+  return (
+    <Button variant="text" href="https://developer.minddrop.app">
+      Developer Docs
+    </Button>
+  );
+};
+```
+
+## API Reference
+
+`ButtonProps` extends `React.HTMLAttributes<HTMLButtonElement>`.
+
+`LinkButtonProps` extends `React.HTMLAttributes<HTMLAnchorElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'children',
+      type: 'node',
+      description:
+        'Children are only rendered when the label prop is not provided.',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      description: (
+        <span>
+          If <code>true</code>, the button will be disabled.
+        </span>
+      ),
+    },
+    {
+      name: 'endIcon',
+      type: 'IconName | ReactElement',
+      description: 'Icon placed after the children.',
+    },
+    {
+      name: 'fullWidth',
+      type: 'boolean',
+      default: 'false',
+      description: (
+        <span>
+          If <code>true</code>, the button will take up the full width
+          of its container.
+        </span>
+      ),
+    },
+    {
+      name: 'href',
+      type: 'string',
+      description: (
+        <span>
+          The URL to link to when the button is clicked. If defined,
+          an <code>a</code> element will be used as the root node.
+        </span>
+      ),
+    },
+    {
+      name: 'label',
+      type: 'string',
+      description: (
+        <span>
+          The i18n label key. If the button does not have an i18n
+          label, use <code>children</code> instead.
+        </span>
+      ),
+    },
+    {
+      name: 'size',
+      type: "'small' | 'medium' | 'large'",
+      default: "'medium'",
+      description: (
+        <span>
+          The size of the button, <code>'large'</code> is intended for
+          call to action buttons on marketing pages.
+        </span>
+      ),
+    },
+    {
+      name: 'startIcon',
+      type: 'IconName | ReactElement',
+      description: 'Icon placed before the children.',
+    },
+    {
+      name: 'startIconName',
+      type: 'IconName',
+      description:
+        'Renders the named MindDrop icon set icon as the icon placed before the children.',
+    },
+    {
+      name: 'variant',
+      type: "'neutral' | 'primary' | 'danger' | 'text'",
+      default: "'neutral'",
+      description:
+        'The variant of the button. This should be based on the action type.',
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Button WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#button).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Activates the button.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Activates the button.',
+    },
+  ]}
+/>

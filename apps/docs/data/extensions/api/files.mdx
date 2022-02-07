@@ -1,0 +1,421 @@
+---
+metaTitle: Files API Interface
+metaDescription: An interface for retrieving and managing file attachements.
+---
+
+# Files
+
+<Description>
+  An interface for retrieving and managing file attachements.
+</Description>
+
+Drops can include file attachements. MindDrop creates a [FileReference](/docs/extensions/types/file-reference) containing metadata about the file for every file attachement.
+
+File references contain a `attachedTo` property which keeps track of the resources the file is attached to. When the last `attachedTo` value is removed, the file is automatically deleted.
+
+## Static methods
+
+### get
+
+Retrieves file references by ID. If provided a single ID string, returns the file reference or `null` if not found. If provided an array of IDs, returns an array of the corresponding file references.
+
+```ts
+Files.get(id: string | string[]): FileReference | null | FileReferenceMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string | string[]',
+      required: true,
+      description: 'The ID(s) of the file reference(s) to retrieve.',
+    },
+  ]}
+/>
+
+### getAll
+
+Retrieves all file references.
+
+```ts
+Files.getAll(): FileReferenceMap
+```
+
+### create
+
+Creates a new file reference from a file and dispatches a `files:create` event. Returns a promise which resolves to the new file reference.
+
+```ts
+Files.create(core: Core, file: File, attachedTo?: string[]): Promise<FileReference>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'file',
+      type: 'File',
+      description: 'A file object.',
+    },
+    {
+      name: 'attachedTo',
+      type: 'string[]',
+      description:
+        'The IDs of the resources to which this file is attached.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a file and its reference and dispatches a `files:delete` event. Returns the deleted file reference.
+
+```ts
+Files.delete(core: Core, id: string): FileReference
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the file reference.',
+    },
+  ]}
+/>
+
+### addAttachments
+
+Adds resource IDs to a file reference's `attachedTo` value and dispatches a `files:add-attachments` event as well as a `files:update-file-reference` event. Returns the updated file reference.
+
+```ts
+Files.addAttachments(core: Core, fileId: string, resourceIds: string[]): FileReference;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'fileId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the file to which to add the attachments.',
+    },
+    {
+      name: 'resourceIds',
+      type: 'string',
+      required: true,
+      description:
+        'The IDs of the resources to which the file is attached.',
+    },
+  ]}
+/>
+
+### removeAttachments
+
+Removes resource IDs from a file reference's `attachedTo` value.
+
+If the file reference's `attachedTo` value becomes empty, the files is deleted.
+
+Dispatches a `files:replace-attachments` event as well as a `files:update-file-reference` event unless the file was deleted, in which case a `files:delete` event is dispatched.
+
+Returns the updated file reference.
+
+```ts
+Files.removeAttachments(core: Core, fileId: string, resourceIds: string[]): FileReference;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'fileId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the file from which to remove the attachments.',
+    },
+    {
+      name: 'resourceIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the resources from which the file was removed.',
+    },
+  ]}
+/>
+
+### replaceAttachments
+
+Replaces the resource IDs (removing the current ones and adding the given ones) in file reference's `attachedTo` value.
+
+If `resourceIds` is an empty array, the file will be deleted.
+
+Dispatches a `files:replace-attachments` event as well as a `files:update-file-reference` event unless the file was deleted, in which case a `files:delete` event is dispatched.
+
+Returns the updated file reference.
+
+```ts
+Files.replaceAttachments(core: Core, fileId: string, resourceIds: string[]): FileReference;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'fileId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the file for which to replace the attachments.',
+    },
+    {
+      name: 'resourceIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the resources to which the file was attached.',
+    },
+  ]}
+/>
+
+### load
+
+Loads file references into the store and dispatches a `files:load` event.
+
+```ts
+Files.load(core: Core, files: FileReference[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'files',
+      type: 'FileReference[]',
+      required: true,
+      description: 'The files to load into the store.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears file references from the store and dispatches a `files:clear` event.
+
+<ArgsTable core />
+
+### addEventListener
+
+Adds file specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Files.addEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the file events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the file events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes file specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Files.removeEventListener(core: Core, event: FileEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'FileEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## File events
+
+<EventsTable
+  data={[
+    {
+      name: 'files:create',
+      data: 'FileReference',
+      description: 'Dispatched when a file is created.',
+    },
+    {
+      name: 'files:update-file-reference',
+      data: 'UpdateFileReferenceEventData',
+      description: 'Dispatched when a file reference is updated.',
+    },
+    {
+      name: 'files:add-attachments',
+      data: 'AddAttachmentsEventData',
+      description:
+        'Dispatched when resources are attached to a file reference.',
+    },
+    {
+      name: 'files:remove-attachments',
+      data: 'RemoveAttachmentsEventData',
+      description:
+        'Dispatched when resources are removed as attachments from a file reference.',
+    },
+    {
+      name: 'files:replace-attachments',
+      data: 'ReplaceAttachmentsEventData',
+      description:
+        "Dispatched when a file reference's attached resources are replaced.",
+    },
+    {
+      name: 'files:delete',
+      data: 'FileReference',
+      description: 'Dispatched when a file is deleted.',
+    },
+    {
+      name: 'files:load',
+      data: 'FileReference[]',
+      description:
+        'Dispatched when file references are loaded into the store.',
+    },
+    {
+      name: 'files:clear',
+      description:
+        'Dispatched when file references are cleared from the store.',
+    },
+  ]}
+/>
+
+#### UpdateFileReferenceEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'FileReference',
+      required: true,
+      description: 'FileReference data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'FileReference',
+      required: true,
+      description: 'Updated file reference data.',
+    },
+    {
+      name: 'changes',
+      type: 'FileReferenceChanges',
+      required: true,
+      description:
+        'The changes made to the file reference. See below for details.',
+    },
+  ]}
+/>
+
+`FileReferenceChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'attachedTo',
+      type: 'string[]',
+      description:
+        'The resource IDs to which the file is attached to.',
+    },
+  ]}
+/>
+
+#### AddAttachmentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'reference',
+      type: 'FileReference',
+      required: true,
+      description:
+        'The file reference to which the resources were attached.',
+    },
+    {
+      name: 'resourceIds',
+      type: 'string[]',
+      required: true,
+      description: 'The added resource IDs.',
+    },
+  ]}
+/>
+
+#### RemoveAttachmentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'reference',
+      type: 'FileReference',
+      required: true,
+      description:
+        'The file reference from which the resource attahcments were removed.',
+    },
+    {
+      name: 'resourceIds',
+      type: 'string[]',
+      required: true,
+      description: 'The removed resource IDs.',
+    },
+  ]}
+/>
+
+#### ReplaceAttachmentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'reference',
+      type: 'FileReference',
+      required: true,
+      description:
+        'The file reference in which the resources were replaced.',
+    },
+    {
+      name: 'oldResourceIds',
+      type: 'string[]',
+      required: true,
+      description: 'The removed resource IDs.',
+    },
+    {
+      name: 'newResourceIds',
+      type: 'string[]',
+      required: true,
+      description: 'The added resource IDs.',
+    },
+  ]}
+/>

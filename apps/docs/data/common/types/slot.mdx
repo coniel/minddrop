@@ -1,0 +1,42 @@
+---
+metaTitle: Slot
+metaDescription: A component which renders UI extensions.
+---
+
+# Slot
+
+<Description>A component which renders UI extensions.</Description>
+
+## Usage
+
+Below is an example of how the Slot component is used to allow extending the app's sidebar primary navigation.
+
+```tsx line=3,7,9,11
+import React from 'react';
+import { Sidebar, NavGroup } from '@minddrop/ui';
+import { Slot } from '@minddrop/core';
+
+export const AppSidebar = () => (
+  <Sidebar>
+    <Slot location="Sidebar:PrimaryNav:Above" />
+    <NavGroup label="Main menu">
+      <Slot location="Sidebar:PrimaryNav:Item" />
+    </NavGroup>
+    <Slot location="Sidebar:PrimaryNav:Below" />
+  </Sidebar>
+);
+```
+
+## SlotProps
+
+<PropsTable
+  data={[
+    {
+      name: 'location',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the location at which the slot is placed. Used when adding UI extensions.',
+    },
+  ]}
+/>

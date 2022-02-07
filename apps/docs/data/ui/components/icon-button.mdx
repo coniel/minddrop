@@ -1,0 +1,119 @@
+---
+metaTitle: IconButton
+metaDescription: An icon button element which supports multiple sizes and colors.
+name: icon-button
+---
+
+# IconButton
+
+<Description>
+  An icon button element which supports multiple sizes and colors.
+</Description>
+
+<HeroContainer>
+  <IconButtonDemo />
+</HeroContainer>
+
+```jsx hero template=IconButtonDemo
+
+```
+
+<Highlights
+  features={[
+    'Supports icons from the MindDrop icon set.',
+    'Two size options.',
+    'Three color options.',
+    'Label for accessibility.',
+  ]}
+/>
+
+## Usage
+
+Import the component from the `@minddrop/ui` package.
+
+```jsx
+import { IconButton, Icon } from '@minddrop/ui';
+
+export default () => {
+  return <IconButton icon="close" label="Close" />;
+};
+```
+
+## API Reference
+
+`IconButtonProps` extends `React.HTMLAttributes<HTMLButtonElement>`.
+
+<PropsTable
+  data={[
+    {
+      name: 'icon',
+      type: 'IconName',
+      description: 'The name of an icon from the MindDrop icon set.',
+    },
+    {
+      name: 'children',
+      type: 'node',
+      description: (
+        <span>
+          An icon can also be passed in as a child for more control.
+          Children are not rendered if the <Code>icon</Code> prop is
+          present.
+        </span>
+      ),
+    },
+    {
+      name: 'color',
+      type: "'neutral' | 'light' | 'contrast'",
+      default: "'neutral'",
+      description: 'The color of the icon.',
+    },
+    {
+      name: 'as',
+      type: 'React.ElementType',
+      description:
+        'The component used for the root node. Either a string to use a HTML element or a component.',
+      default: 'button',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      description: 'Disables the button.',
+    },
+    {
+      name: 'label',
+      type: 'string',
+      description:
+        'Makes the button accessible by providing a meaningful label which is announced correctly by screen readers.',
+    },
+    {
+      name: 'size',
+      type: "'small' | 'medium'",
+      default: "'medium'",
+      description: (
+        <span>
+          The size of the button. <code>'medium'</code> should be used
+          for regular buttons.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Accessibility
+
+Adheres to the [Button WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#button).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Activates the button.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Activates the button.',
+    },
+  ]}
+/>

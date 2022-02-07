@@ -1,0 +1,243 @@
+---
+metaTitle: UiLocation Interface
+metaDescription: Locations at which UI components can be inserted.
+---
+
+# UiLocation
+
+<Description>
+  Locations at which UI components can be inserted.
+</Description>
+
+Extensions can extend MindDrop's UI by inserting UI elemnts throughout different locations. This is done using the `app.extendUi` method, which takes a `UiLocation` as its first parameter, and a `UiComponentConfig` or React element as its second parameter.
+
+## UI locations
+
+Locations are referenced in a hierarchical fashion, generally in the form:
+
+`[Section]:[Subsection?]:[Container]:[Target]`
+
+For example, to add an item to the sidebar's primary navigation menu:
+
+`Sidebar:PrimaryNav:Item`
+
+`Sidebar` being the section, `PrimaryNav` the container, and `Item` the target. In this case there is no subsection.
+
+#### Sections
+
+The MindDrop UI features two primary sections: `Sidebar` and `[Content]`. The `[Content]` section is referenced using a name based on the view, such as `Topic` when targetting the topic view.
+
+#### Subsections
+
+Some sections contain subsections, such as `Header` and `Footer`.
+
+#### Containers
+
+Containers generally contain similar UI elements, such as a menu containing navigation items.
+
+#### Targets
+
+##### Inside containers
+
+- `Content`: add content into a container.
+- `Item`: add an item into a menu or list container.
+- `Top`: add content before other content in a vertical container.
+- `Bottom`: add content after other content in a vertical container.
+- `Start`: add content before other content in a horizontal container.
+- `End`: add content after other content in a horizontal container.
+
+##### Outside containers
+
+- `Above`: the space directly above the container.
+- `Below`: the space directly below the container.
+- `Before`: the space directly to the left (or right in RTL languages) of the container.
+- `After`: the space directly to the right (or left in RTL languages) of the container.
+
+##### Notes
+
+Not all containers offer every target keyword. For example, toolbars can be extended using `Item`, but not `Top` or `Bottom` as they are intended to be a single row.
+
+The load order of extensions determines the order in which elements are inserted. If multiple extensions add content `Above` into a container, the content added by the extension loaded last will come out on top.
+
+## Sidebar
+
+The sidebar allows the user to navigate to any view within the app and launch app related actions from it's bottom toolbar.
+
+<Image
+  srcLight="/images/sidebar-locations-light.png"
+  srcDark="/images/sidebar-locations-dark.png"
+  width={1300}
+  height={734}
+/>
+
+<LocationsTable
+  data={[
+    {
+      name: 'Sidebar:PrimaryNav:Item',
+      accepts: [
+        {
+          type: 'NavItemConfig',
+          url: 'ui-component-config#navitemconfig',
+        },
+        {
+          type: 'ReactElement',
+          props: 'PrimaryNavItemProps',
+          url: '/docs/ui/components/primary-nav-item#api-reference',
+        },
+      ],
+      description:
+        'The primary navigation menu is intended for frequently accessed navigation items which open a view in the content section.',
+    },
+    {
+      name: 'Sidebar:PrimaryNav:Above',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly above the primary navigation menu.',
+    },
+    {
+      name: 'Sidebar:PrimaryNav:Below',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly below the primary navigation menu.',
+    },
+    {
+      name: 'Sidebar:SecondaryNav:Item',
+      accepts: [
+        {
+          type: 'NavItemConfig',
+          url: 'ui-component-config#navitemconfig',
+        },
+        {
+          type: 'ReactElement',
+          props: 'SecondaryNavItemProps',
+          url: '/docs/ui/components/secondary-nav-item#api-reference',
+        },
+      ],
+      description:
+        'The secondary navigation menu is intended for infrequently accessed navigation items which open a view in the content section.',
+    },
+    {
+      name: 'Sidebar:SecondaryNav:Above',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly above the secondary navigation menu.',
+    },
+    {
+      name: 'Sidebar:SecondaryNav:Below',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly below the secondary navigation menu.',
+    },
+    {
+      name: 'Sidebar:BottomToolbar:Item',
+      accepts: [
+        {
+          type: 'IconButtonConfig',
+          url: 'ui-component-config#iconbuttonconfig',
+        },
+        {
+          type: 'ReactElement',
+          props: 'IconButtonProps',
+          url: '/docs/ui/components/icon-button#api-reference',
+        },
+      ],
+      description:
+        'The bottom toolbar is intended for commonly used application actions (i.e. not content view specific). It can only contain icon buttons. Toolbar actions should not open content views, rather, they should open a dropdown menu, popover, or dialog.',
+    },
+    {
+      name: 'Sidebar:BottomToolbar:Above',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly above the bottom toolbar.',
+    },
+    {
+      name: 'Sidebar:BottomToolbar:Below',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly below the bottom toolbar.',
+    },
+  ]}
+/>
+
+## Topic
+
+The topic content view is displayed when the user opens a topic.
+
+<Image
+  srcLight="/images/topic-locations-light.png"
+  srcDark="/images/topic-locations-dark.png"
+  width={1300}
+  height={734}
+/>
+
+<LocationsTable
+  data={[
+    {
+      name: 'Topic:Header:Title:Before',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly before the topic title.',
+    },
+    {
+      name: 'Topic:Header:Title:After',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly after the topic title. Note that the topic title flexes to fill the available space up until the toolbar.',
+    },
+    {
+      name: 'Topic:Header:Toolbar:Item',
+      accepts: [
+        {
+          type: 'IconButtonConfig',
+          url: 'ui-component-config#iconbuttonconfig',
+        },
+        { type: 'ReactElement' },
+      ],
+      description:
+        'The toolbar on the right hand side of the topic header. All topic specific actions should be placed here, preferably using an icon button if appropriate.',
+    },
+    {
+      name: 'Topic:Header:Toolbar:Before',
+      accepts: [{ type: 'ReactElement' }],
+      description:
+        'The space directly before the topic header toolbar.',
+    },
+    {
+      name: 'Topic:Header:Toolbar:After',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly after the header toolbar.',
+    },
+    {
+      name: 'Topic:Header:Above',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly above the topic header.',
+    },
+    {
+      name: 'Topic:Header:Below',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly below the topic header.',
+    },
+    {
+      name: 'Topic:Footer:Content',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'Add content into the topic footer.',
+    },
+    {
+      name: 'Topic:Footer:Top',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'Add content to the top of the topic footer.',
+    },
+    {
+      name: 'Topic:Footer:Bottom',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'Add content to the bottom of the topic footer.',
+    },
+    {
+      name: 'Topic:Footer:Above',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly above the topic footer.',
+    },
+    {
+      name: 'Topic:Footer:Below',
+      accepts: [{ type: 'ReactElement' }],
+      description: 'The space directly below the topic footer.',
+    },
+  ]}
+/>

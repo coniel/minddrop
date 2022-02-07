@@ -1,0 +1,114 @@
+---
+metaTitle: Map props to classes
+metaDescription: Maps a component's props to class names.
+name: mapPropsToClasses
+package: utils
+---
+
+# mapPropsToClasses
+
+<Description>Maps a component's props to class names.</Description>
+
+<Highlights
+  features={[
+    'Supports boolean and string props',
+    'Appends className prop to allow extending class names',
+    'Optional root class applied before other classes',
+  ]}
+/>
+
+## Usage
+
+Import the function from `@minddrop/utils`.
+
+```tsx
+import { mapPropsToClasses } from '@minddrop/utils';
+
+export interface ButtonProps {
+  size?: 'small' | 'medium' | 'large';
+  color?: 'primary' | 'danger';
+  disabled?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  children,
+  className,
+  color,
+  disabled,
+  size = 'medium',
+}) => (
+  <button
+    className={mapPropsToClasses(
+      { className, size, color, disabled },
+      'button',
+    )}
+  >
+    {children}
+  </button>
+);
+```
+
+A `Button` component with default props would render as:
+
+```jsx
+<button class="button size-medium" />
+```
+
+A `Button` component with the following props:
+
+```jsx
+<Button
+  disabled
+  size="small"
+  color="primary"
+  className="custom-button"
+/>
+```
+
+Would render as:
+
+```jsx
+<button class="button size-small color-primary disabled custom-button" />
+```
+
+## Class names
+
+Boolean props are mapped simply as the prop name, with `camelCase` names converted to `kebab-case`. For example, a `fullWidth` prop would add a `full-width`.
+
+String props are mapped as `[name]-[value]`. For example, a `size="small"` prop would add a class of `size-small`.
+
+The `className` prop is appended to the generated class names.
+
+Falsy props do not generate any classes.
+
+The `rootClass` value is prepended to the generated class names.
+
+`class="rootClass [prop classes] className"`
+
+## API Reference
+
+```ts
+mapPropsToClasses(
+  props: Record<string, string | boolean>,
+  rootClass?: string,
+);
+```
+
+<PropsTable
+  data={[
+    {
+      name: 'props',
+      required: true,
+      type: 'object',
+      description:
+        'The props you wish to map to class names. Supports string and boolean props, as well as the className prop which is appended to the final className.',
+    },
+    {
+      name: 'rootClass',
+      required: false,
+      type: 'strin',
+      description:
+        'The root class name which will be applied to the component before props based classes.',
+    },
+  ]}
+/>

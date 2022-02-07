@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "apps/*"
     ],
     "nohoist": [
       "react-static-plugin-source-filesystem",
