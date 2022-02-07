@@ -1,5 +1,5 @@
 ---
-to: packages/app-ui/src/components/<%= name %>/<%= name %>.tsx
+to: packages/app-ui/src/<%= name %>/<%= name %>.tsx
 ---
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@app-ui/utils';

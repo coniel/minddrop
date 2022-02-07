@@ -1,4 +1,4 @@
 ---
-to: packages/app-ui/src/components/<%= name %>/index.ts
+to: packages/app-ui/src/name %>/index.ts
 ---
 export * from './<%= name %>';

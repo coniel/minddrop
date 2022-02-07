@@ -1,5 +1,5 @@
 ---
-to: packages/app-ui/src/components/<%= name %>/<%= name %>.test.tsx
+to: packages/app-ui/src/<%= name %>/<%= name %>.test.tsx
 ---
 import React from 'react';
 import { render, cleanup, screen } from '@app-ui/test-utils';
