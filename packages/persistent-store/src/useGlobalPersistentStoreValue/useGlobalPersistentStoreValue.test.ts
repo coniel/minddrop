@@ -25,4 +25,12 @@ describe('useGlobalStoreValue', () => {
 
     expect(result.current).toEqual(data.app.foo);
   });
+
+  it('returns the default value if the value is not set', () => {
+    const { result } = renderHook(() =>
+      useGlobalPersistentStoreValue(core, 'bar', 'foo'),
+    );
+
+    expect(result.current).toEqual('foo');
+  });
 });

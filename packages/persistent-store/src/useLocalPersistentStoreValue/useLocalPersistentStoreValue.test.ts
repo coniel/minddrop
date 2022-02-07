@@ -25,4 +25,12 @@ describe('useLocalStoreValue', () => {
 
     expect(result.current).toEqual(data.app.foo);
   });
+
+  it('returns the default value if the value is not set', () => {
+    const { result } = renderHook(() =>
+      useLocalPersistentStoreValue(core, 'bar', 'foo'),
+    );
+
+    expect(result.current).toEqual('foo');
+  });
 });
