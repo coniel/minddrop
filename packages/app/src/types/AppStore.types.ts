@@ -1,11 +1,17 @@
-import { View } from './View.types';
+import { ViewInstance } from '@minddrop/views';
 import { UiExtension } from './UiExtension.types';
 
 export interface AppStore {
   /**
-   * The currently open view.
+   * The ID of the currently open view.
    */
-  view: View;
+  view: string;
+
+  /**
+   * The currently open view instance.
+   * `null` if a static view is open.
+   */
+  viewInstance: ViewInstance | null;
 
   /**
    * The UI extensions added by extensions.
@@ -13,11 +19,19 @@ export interface AppStore {
   uiExtensions: UiExtension[];
 
   /**
-   * Sets the currently open view.
+   * Sets the ID of the currently open view.
    *
-   * @param view The view.
+   * @param viewId The ID of the view.
    */
-  setView(view: View): void;
+  setView(viewId: string): void;
+
+  /**
+   * Sets the currently open view instance. Can be set
+   * to `null` if no view instance is open.
+   *
+   * @param viewInstance The view instance or null to clear.
+   */
+  setViewInstance(viewInstance: ViewInstance | null): void;
 
   /**
    * Adds a UI extension to the store.

@@ -2,10 +2,13 @@ import createStore from 'zustand';
 import { AppStore } from '../types';
 
 export const useAppStore = createStore<AppStore>((set) => ({
-  view: { id: 'home', title: 'Home' },
+  view: 'app:home',
+  viewInstance: null,
   uiExtensions: [],
 
   setView: (view) => set({ view }),
+
+  setViewInstance: (viewInstance) => set({ viewInstance }),
 
   addUiExtension: (extension) =>
     set((state) => ({ uiExtensions: [...state.uiExtensions, extension] })),
@@ -31,7 +34,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
       }),
     })),
 
-  clear: () => set({ uiExtensions: [], view: { id: 'home', title: 'Home' } }),
+  clear: () => set({ uiExtensions: [], view: 'app:home', viewInstance: null }),
 }));
 
 /**

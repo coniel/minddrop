@@ -5,7 +5,7 @@ import {
   useGlobalPersistentStoreValue,
 } from '@minddrop/persistent-store';
 import { Topic, Topics } from '@minddrop/topics';
-import { addTopics } from './addTopics';
+import { addRootTopics } from './addRootTopics';
 
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
@@ -34,13 +34,13 @@ describe('addTopics', () => {
     );
 
     act(() => {
-      addTopics(core, [topic1.id, topic2.id]);
+      addRootTopics(core, [topic1.id, topic2.id]);
     });
 
     expect(result.current).toEqual([topic3.id, topic1.id, topic2.id]);
   });
 
-  it("dispatches a 'app:add-topics' event", (done) => {
+  it("dispatches a 'app:add-root-topics' event", (done) => {
     function callback(payload) {
       expect(payload.data).toEqual({
         [topic1.id]: topic1,
@@ -49,10 +49,10 @@ describe('addTopics', () => {
       done();
     }
 
-    core.addEventListener('app:add-topics', callback);
+    core.addEventListener('app:add-root-topics', callback);
 
     act(() => {
-      addTopics(core, [topic1.id, topic2.id]);
+      addRootTopics(core, [topic1.id, topic2.id]);
     });
   });
 });

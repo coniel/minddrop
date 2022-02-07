@@ -1,36 +1,28 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
-import { render, cleanup, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup as cleanupRender,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
 import { RenameTopicPopover } from './RenameTopicPopover';
-import { core } from '../../tests/initialize-app';
+import { core, cleanup } from '../../tests/setup-tests';
 import { Topic, Topics } from '@minddrop/topics';
 import { Popover, PopoverTrigger } from '@minddrop/ui';
-
-class ResizeObserver {
-  observe() {}
-
-  unobserve() {}
-}
 
 describe('<RenameTopicPopover />', () => {
   let topic: Topic;
   const onClose = jest.fn();
 
-  beforeAll(() => {
-    // @ts-ignore
-    window.DOMRect = { fromRect: () => ({}) };
-    // @ts-ignore
-    window.ResizeObserver = ResizeObserver;
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+    onClose.mockClear();
   });
 
   beforeEach(() => {
     topic = Topics.create(core, { title: 'My topic' });
-  });
-
-  afterEach(() => {
-    cleanup();
-    Topics.clear(core);
-    onClose.mockClear();
   });
 
   const setup = () => {

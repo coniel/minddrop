@@ -2,9 +2,16 @@ import { ComponentType } from 'react';
 import { Core } from '@minddrop/core';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
-import { View, ResourceView } from './View.types';
 import { OpenViewEvent, OpenViewEventCallback } from './AppEvents.types';
 import { SlotProps } from '../Slot';
+import {
+  AddRootTopicsEvent,
+  AddRootTopicsEventCallback,
+  RemoveRootTopicsEvent,
+  RemoveRootTopicsEventCallback,
+} from '.';
+import { View, ViewInstance } from '@minddrop/views';
+import { CreateTopicData, Topic } from '@minddrop/topics';
 
 export interface AppApi {
   /**
@@ -14,19 +21,28 @@ export interface AppApi {
   Slot: ComponentType<SlotProps>;
 
   /**
-   * Opens a view in the app.
+   * Opens a static view in the app and dispatches an `app:open-view` event.
    *
    * @param core A MindDrop core instance.
-   * @param view The view to open.
+   * @param viewId The ID of the static view to open.
    */
-  openView(core: Core, view: View): void;
+  openView(core: Core, viewId: string): void;
 
   /**
-   * Returns the currently open view.
+   * Opens a view instance in the app and dispatches an `app:open-view` event.
    *
-   * @returns The currently open view.
+   * @param core A MindDrop core instance.
+   * @param viewId The ID of the view instance document to open.
    */
-  getCurrentView(): View;
+  openViewInstance(core: Core, viewInstanceId: string): void;
+
+  /**
+   * Returns a `{ view: View, instance: ViewInstance | null }` map of the currently
+   * open view and view instance (`null` if no view instance is open).
+   *
+   * @returns The currently open view and view instance.
+   */
+  getCurrentView(): { view: View; instance: ViewInstance | null };
 
   /**
    * Adds a new UI extension for a speficied location.
@@ -63,31 +79,40 @@ export interface AppApi {
   removeAllUiExtensions(core: Core, location?: UiLocation): void;
 
   /**
+   * Creates a new topic along with a default view for it.
+   * Dispatches a `topics:create` event and `views:create`
+   * event. Returns the new topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param data The default topic property values.
+   * @returns The new topic.
+   */
+  createTopic(core: Core, data?: CreateTopicData): Topic;
+
+  /**
+   * Permanently deletes a topic along with its associated views.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to delete.
+   */
+  permanentlyDeleteTopic(core: Core, topicId: string): Topic;
+
+  /**
    * Adds topics to the root level and dispaches an
-   * `app:add-topics` event.
+   * `app:add-root-topics` event.
    *
    * @param core A MindDrop core instance.
    * @param topicIds The IDs of the topics to be added to the root level.
    */
-  addTopics(core: Core, topicIds: string[]): void;
+  addRootTopics(core: Core, topicIds: string[]): void;
 
   /**
-   * Opens the view of a given topic.
+   * Opens a topic's view.
    *
    * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to open.
+   * @param topicId The ID of the topic for which to open the view.
    */
   openTopicView(core: Core, topicId: string): void;
-
-  /**
-   * Returns a list of views leading up to and
-   * including the provided topic based on the
-   * topic's hierarchy of parents.
-   *
-   * @param topicId The ID of the topic for which to get the breadcrumbs.
-   * @returns A list of views leading up to and including the provided topic.
-   */
-  getTopicBreadcrumbs(topidId: string): ResourceView[];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -100,6 +125,20 @@ export interface AppApi {
     callback: OpenViewEventCallback,
   );
 
+  // Add 'app:add-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: AddRootTopicsEvent,
+    callback: AddRootTopicsEventCallback,
+  );
+
+  // Add 'app:remove-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: RemoveRootTopicsEvent,
+    callback: RemoveRootTopicsEventCallback,
+  );
+
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
@@ -110,4 +149,18 @@ export interface AppApi {
     type: OpenViewEvent,
     callback: OpenViewEventCallback,
   ): void;
+
+  // Remove 'app:add-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: AddRootTopicsEvent,
+    callback: AddRootTopicsEventCallback,
+  );
+
+  // Remove 'app:remove-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: RemoveRootTopicsEvent,
+    callback: RemoveRootTopicsEventCallback,
+  );
 }

@@ -1,22 +1,21 @@
 import React from 'react';
-import { render, cleanup, screen } from '@minddrop/test-utils';
+import { render, cleanup as cleanupRender } from '@minddrop/test-utils';
+import { setup as setupApp, cleanup } from '../../tests';
 import { TopicView } from './TopicView';
-import {
-  tCoastalNavigationView,
-  tNavigationView,
-  tSailingView,
-} from '../../tests/topics.data';
+import { tCoastalNavigationView } from '../../tests/topics.data';
 
 describe('<TopicView />', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    setupApp();
+  });
+
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+  });
 
   const setup = () => {
-    const utils = render(
-      <TopicView
-        resource={tCoastalNavigationView.resource}
-        breadcrumbs={[tSailingView, tNavigationView, tCoastalNavigationView]}
-      />,
-    );
+    const utils = render(<TopicView {...tCoastalNavigationView} />);
 
     return { ...utils };
   };

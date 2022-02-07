@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useMemo, useRef } from 'react';
 import { Topic, useTopic } from '@minddrop/topics';
-import { App, ResourceViewProps } from '@minddrop/app';
+import { App } from '@minddrop/app';
+import { InstanceViewProps } from '@minddrop/views';
 import {
   Breadcrumbs,
   DropdownMenu,
@@ -9,22 +10,28 @@ import {
   IconButton,
   Toolbar,
 } from '@minddrop/ui';
-import { useAppCore } from '../../utils';
+import { useAppCore } from '@minddrop/app';
 import { TopicBreadcrumb } from '../TopicBreadcrumb';
 import { useTranslation } from '@minddrop/i18n';
 import { generateTopicMenu } from '../../menus';
 import './TopicView.css';
 import { TopicTitle } from '../TopicTitle';
 
-export const TopicView: FC<ResourceViewProps> = ({ resource }) => {
+export interface TopicViewBaseProps {
+  topicId: string;
+}
+
+export type TopicViewProps = InstanceViewProps<TopicViewBaseProps>;
+
+export const TopicView: FC<TopicViewProps> = ({ topicId }) => {
   const titleInput = useRef<HTMLInputElement | null>(null);
   const core = useAppCore();
   const { t } = useTranslation();
-  const topic = useTopic(resource.id);
-  const breadcrumbs = useMemo(
-    () => App.getTopicBreadcrumbs(resource.id),
-    [resource.id],
-  );
+  const topic = useTopic(topicId);
+  // const breadcrumbs = useMemo(
+  //   () => App.getTopicBreadcrumbs(resource.id),
+  //   [resource.id],
+  // );
   const onAddSubtopic = useCallback((t: Topic, subtopic: Topic) => {
     App.openTopicView(core, subtopic.id);
   }, []);
@@ -47,7 +54,7 @@ export const TopicView: FC<ResourceViewProps> = ({ resource }) => {
   return (
     <div className="topic-view">
       <Toolbar className="top-toolbar">
-        {breadcrumbs.length && (
+        {/* {breadcrumbs.length && (
           <Breadcrumbs>
             {breadcrumbs.map((crumb) => (
               <TopicBreadcrumb
@@ -61,7 +68,7 @@ export const TopicView: FC<ResourceViewProps> = ({ resource }) => {
               />
             ))}
           </Breadcrumbs>
-        )}
+        )} */}
       </Toolbar>
       <div className="header">
         <TopicTitle ref={titleInput} topic={topic} />
@@ -75,6 +82,15 @@ export const TopicView: FC<ResourceViewProps> = ({ resource }) => {
           </DropdownMenu>
         </Toolbar>
       </div>
+      <div
+        style={{ height: 500, border: '1px dashed black' }}
+        onDragEnter={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          console.log(event.dataTransfer.types);
+          console.log(event.dataTransfer.items);
+        }}
+      ></div>
     </div>
   );
 };

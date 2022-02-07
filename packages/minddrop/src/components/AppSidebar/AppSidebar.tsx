@@ -7,10 +7,10 @@ import {
   useGlobalPersistentStoreValue,
   useLocalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import './AppSidebar.css';
+import { useAppCore } from '@minddrop/app';
 import { TopicNavItem } from '../TopicNavItem';
 import { AddTopicButton } from '../AddTopicButton';
-import { useAppCore } from '../../utils';
+import './AppSidebar.css';
 
 export const AppSidebar: FC = () => {
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ export const AppSidebar: FC = () => {
         {Object.values(topics).map((topic) => (
           <TopicNavItem key={topic.id} id={topic.id} />
         ))}
-        <AddTopicButton core={core} />
+        <AddTopicButton />
       </NavGroup>
       <NavGroup label="Secondary" />
       <div className="flex" />

@@ -4,4 +4,6 @@ export * from './app-extension';
 export * from './useAppStore';
 export * from './Slot';
 export * from './openTopicView';
-export * from './getTopicBreadcrumbs';
+export * from './utils';
+export * from './createTopic';
+export * from './permanentlyDeleteTopic';

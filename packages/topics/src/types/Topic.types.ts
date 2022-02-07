@@ -21,6 +21,11 @@ export interface Topic {
   subtopics: string[];
 
   /**
+   * The IDs of the views belonging to the topic.
+   */
+  views: string[];
+
+  /**
    * The IDs of the drops inside the topic.
    */
   drops: string[];
@@ -69,6 +74,7 @@ export interface Topic {
 export interface CreateTopicData {
   title?: string;
   hidden?: true;
+  views?: string[];
 }
 
 export interface UpdateTopicData {

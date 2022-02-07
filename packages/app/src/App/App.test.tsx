@@ -1,9 +1,22 @@
 import React from 'react';
 import { renderHook, act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
+import {
+  ViewNotRegisteredError,
+  ViewInstanceNotFoundError,
+} from '@minddrop/views';
 import { App } from './App';
 import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
+import {
+  core,
+  cleanup,
+  setup,
+  viewInstance1,
+  staticView,
+  unregisteredView,
+  instanceView,
+} from '../tests';
+import { initializeCore } from '@minddrop/core';
 
 const config: IconButtonConfig = {
   type: 'icon-button',
@@ -13,53 +26,100 @@ const config: IconButtonConfig = {
 };
 
 const element = () => <span />;
-const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
-describe('initializeApp', () => {
+describe('App', () => {
+  beforeEach(() => {
+    setup();
+  });
+
   afterEach(() => {
-    const { result } = renderHook(() => useAppStore((state) => state));
-    act(() => {
-      result.current.clear();
-    });
+    cleanup();
   });
 
   describe('openView', () => {
-    it('sets the current view in the store', () => {
+    it('sets the current view ID in the store', () => {
       const { result } = renderHook(() => useAppStore((state) => state));
 
       act(() => {
-        App.openView(core, { id: 'my-view', title: 'My view' });
+        App.openView(core, staticView.id);
       });
 
-      expect(result.current.view.id).toBe('my-view');
+      expect(result.current.view).toBe(staticView.id);
     });
 
     it("dispatches a 'app:open-view' event", (done) => {
       function callback(payload) {
-        expect(payload.data).toEqual({
-          id: 'my-view',
-          title: 'My view',
-        });
+        expect(payload.data.view).toEqual(staticView);
+        expect(payload.data.instance).toBeNull();
         done();
       }
 
       core.addEventListener('app:open-view', callback);
 
       act(() => {
-        App.openView(core, { id: 'my-view', title: 'My view' });
+        App.openView(core, staticView.id);
       });
+    });
+
+    it('throws a ViewNotRegisteredError if the view is not registered', () => {
+      expect(() => App.openView(core, unregisteredView.id)).toThrowError(
+        ViewNotRegisteredError,
+      );
+    });
+  });
+
+  describe('openViewInstance', () => {
+    it('sets the current view ID in the store', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        App.openViewInstance(core, viewInstance1.id);
+      });
+
+      expect(result.current.view).toEqual(viewInstance1.view);
+    });
+
+    it('sets the current view instance in the store', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        App.openViewInstance(core, viewInstance1.id);
+      });
+
+      expect(result.current.viewInstance).toEqual(viewInstance1);
+    });
+
+    it("dispatches a 'app:open-view' event", (done) => {
+      function callback(payload) {
+        expect(payload.data.view).toEqual(instanceView);
+        expect(payload.data.instance).toEqual(viewInstance1);
+        done();
+      }
+
+      core.addEventListener('app:open-view', callback);
+
+      act(() => {
+        App.openViewInstance(core, viewInstance1.id);
+      });
+    });
+
+    it('throws a ViewInstanceNotFoundError if the view instance does not exist', () => {
+      expect(() =>
+        App.openViewInstance(core, unregisteredView.id),
+      ).toThrowError(ViewInstanceNotFoundError);
     });
   });
 
   describe('getCurrentView', () => {
     it('returns the current view', () => {
-      const view = { id: 'current-view', title: 'View' };
-
       act(() => {
-        App.openView(core, view);
+        App.openViewInstance(core, viewInstance1.id);
       });
 
-      expect(App.getCurrentView()).toEqual(view);
+      expect(App.getCurrentView()).toEqual({
+        view: instanceView,
+        instance: viewInstance1,
+      });
     });
   });
 

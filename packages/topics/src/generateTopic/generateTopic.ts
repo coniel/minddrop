@@ -11,6 +11,7 @@ export function generateTopic(data?: Partial<Topic>): Topic {
   return {
     title: '',
     subtopics: [],
+    views: [],
     drops: [],
     tags: [],
     createdAt: new Date(),

@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from 'react';
 import { Breadcrumb, Popover, PopoverAnchor } from '@minddrop/ui';
 import { useTopic } from '@minddrop/topics';
 import { App } from '@minddrop/app';
-import { useAppCore } from '../../utils';
+import { useAppCore } from '@minddrop/app';
 import { RenameTopicPopover } from '../RenameTopicPopover';
 import { useTranslation } from '@minddrop/i18n';
 

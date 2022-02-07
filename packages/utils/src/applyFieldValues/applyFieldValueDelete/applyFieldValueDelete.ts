@@ -16,6 +16,7 @@ export function applyFieldValueDelete<O extends object, C extends object>(
     const value = changes[key];
 
     if (
+      value !== null &&
       typeof value === 'object' &&
       (value as FieldValueDelete).isFieldValue &&
       (value as FieldValueDelete).type === 'delete'

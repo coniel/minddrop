@@ -1,12 +1,30 @@
 import React from 'react';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup as cleanupRender,
+  screen,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
 import { AppSidebar } from './AppSidebar';
 import { tSailing } from '../../tests/topics.data';
-import { core, localPersistentStore } from '../../tests/initialize-app';
+import {
+  core,
+  localPersistentStore,
+  setup,
+  cleanup,
+} from '../../tests/setup-tests';
 import { PersistentStore } from '@minddrop/persistent-store';
 
 describe('<AppSidebar />', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    setup();
+  });
+
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+  });
 
   it('sets initial width', () => {
     render(<AppSidebar />);

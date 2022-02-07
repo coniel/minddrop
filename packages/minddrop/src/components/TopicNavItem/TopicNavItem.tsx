@@ -10,7 +10,7 @@ import {
 } from '@minddrop/ui';
 import { Topic, useTopic } from '@minddrop/topics';
 import { generateTopicMenu } from '../../menus';
-import { useAppCore } from '../../utils';
+import { useAppCore } from '@minddrop/app';
 import {
   PersistentStore,
   useLocalPersistentStoreValue,
@@ -48,11 +48,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
   );
 
   function openTopicView(topicId: string) {
-    App.openView(core, {
-      id: 'topic',
-      title: topic.title,
-      resource: { id: topicId, type: 'topic' },
-    });
+    App.openTopicView(core, topicId);
   }
 
   function onAddSubtopic(t: Topic, subtopic: Topic) {

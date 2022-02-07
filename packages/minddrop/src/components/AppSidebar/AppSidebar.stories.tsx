@@ -1,6 +1,8 @@
 import React from 'react';
-import '../../tests/initialize-app';
+import { setup } from '../../tests/setup-tests';
 import { AppSidebar } from './AppSidebar';
+
+setup();
 
 export default {
   title: 'app/AppSidebar',

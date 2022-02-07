@@ -39,6 +39,7 @@
     "@minddrop/topics": "^0.1.1",
     "@minddrop/ui": "^0.2.2",
     "@minddrop/utils": "^0.4.0",
+    "@minddrop/views": "^0.1.0",
     "use-debounce": "^7.0.1",
     "zustand": "^3.6.5"
   },

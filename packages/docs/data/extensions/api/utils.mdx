@@ -63,6 +63,25 @@ const update = {
 };
 ```
 
+### objectUnion
+
+Merges values into an object or creates the object if it does not exist. Fields within the merged object can also make use of `FieldValue` mutations.
+
+```ts
+FieldValue.objectUnion(value: object): FieldValueObjectUnion
+```
+
+#### Example
+
+```ts
+const update = {
+  someObject: FieldValue.objectUnion({
+    foo: 'bar',
+    bar: FieldValue.delete(),
+  }),
+};
+```
+
 ## applyFieldValues
 
 Updates field values by applying `FieldValue` mutations and merging in regular fields.

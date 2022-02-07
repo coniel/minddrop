@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName } from '@minddrop/icons';
-import { View } from './View.types';
+import { View } from '@minddrop/views';
 
 export type UiComponentConfigType =
   | 'primary-nav-item'

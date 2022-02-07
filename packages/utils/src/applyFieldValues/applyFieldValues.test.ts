@@ -18,6 +18,14 @@ describe('applyFieldValues', () => {
     expect(result.field).not.toBeDefined();
   });
 
+  it('handles FieldValue.objectUnion', () => {
+    const object = { field: { foo: 'foo' } };
+    const changes = { field: FieldValue.objectUnion({ foo: 'bar' }) };
+    const result = applyFieldValues(object, changes);
+
+    expect(result.field.foo).toBe('bar');
+  });
+
   it('handles FieldValue.arrayUnion', () => {
     const object = { field: [0, 1, 2] };
     const changes = { field: FieldValue.arrayUnion([3, 4]) };

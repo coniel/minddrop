@@ -10,6 +10,12 @@ export interface FieldValueArrayRemove<T = any> {
   elements: T | T[];
 }
 
+export interface FieldValueObjectUnion {
+  isFieldValue: true;
+  type: 'object-union';
+  value: object;
+}
+
 export interface FieldValueDelete {
   isFieldValue: true;
   type: 'delete';
@@ -18,6 +24,7 @@ export interface FieldValueDelete {
 export type FieldValue =
   | FieldValueArrayUnion
   | FieldValueArrayRemove
+  | FieldValueObjectUnion
   | FieldValueDelete;
 
 function arrayUnion<T = any>(elements: T | T[]): FieldValueArrayUnion<T> {
@@ -36,9 +43,18 @@ function arrayRemove<T = any>(elements: T | T[]): FieldValueArrayRemove<T> {
   };
 }
 
+function objectUnion(value: object): FieldValueObjectUnion {
+  return {
+    isFieldValue: true,
+    type: 'object-union',
+    value,
+  };
+}
+
 export const FieldValue = {
   arrayUnion,
   arrayRemove,
+  objectUnion,
   delete: (): FieldValueDelete => ({
     isFieldValue: true,
     type: 'delete',

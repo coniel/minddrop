@@ -3,7 +3,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { Topic, Topics } from '@minddrop/topics';
 import { useTranslation } from '@minddrop/i18n';
 import { InvisibleTextField, InvisibleTextFieldProps } from '@minddrop/ui';
-import { useAppCore } from '../../utils';
+import { useAppCore } from '@minddrop/app';
 
 export interface TopicTitleProps extends Partial<InvisibleTextFieldProps> {
   /**

@@ -1,23 +1,43 @@
 import { AppApi, UiExtensionConfig } from '../types';
+import { Views } from '@minddrop/views';
 import { Slot } from '../Slot';
-import { addTopics } from '../addTopics';
+import { addRootTopics } from '../addRootTopics';
 import { useAppStore } from '../useAppStore';
 import { openTopicView } from '../openTopicView';
-import { getTopicBreadcrumbs } from '../getTopicBreadcrumbs';
+import { createTopic } from '../createTopic';
+import { permanentlyDeleteTopic } from '../permanentlyDeleteTopic';
 
 export const App: AppApi = {
-  addTopics,
-  Slot,
+  addRootTopics,
   openTopicView,
-  getTopicBreadcrumbs,
+  createTopic,
+  permanentlyDeleteTopic,
+  Slot,
 
-  openView: (core, view) => {
-    useAppStore.getState().setView(view);
+  openView: (core, viewId) => {
+    const view = Views.get(viewId);
 
-    core.dispatch('app:open-view', view);
+    useAppStore.getState().setView(viewId);
+
+    core.dispatch('app:open-view', { view, instance: null });
   },
 
-  getCurrentView: () => useAppStore.getState().view,
+  openViewInstance: (core, viewInstanceId) => {
+    const instance = Views.getInstance(viewInstanceId);
+    const view = Views.get(instance.view);
+
+    useAppStore.getState().setView(view.id);
+    useAppStore.getState().setViewInstance(instance);
+
+    core.dispatch('app:open-view', { view, instance });
+  },
+
+  getCurrentView: () => {
+    const view = Views.get(useAppStore.getState().view);
+    const instance = useAppStore.getState().viewInstance;
+
+    return { view, instance };
+  },
 
   addUiExtension: (core, location, element) => {
     const type = typeof element === 'object' ? 'config' : 'component';

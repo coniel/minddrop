@@ -1,13 +1,26 @@
 import React from 'react';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup as cleanupRender,
+  screen,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
 import { TopicBreadcrumb } from './TopicBreadcrumb';
-import '../../tests/initialize-app';
+import { setup, cleanup } from '../../tests/setup-tests';
 import { tSailing, tUntitled } from '../../tests/topics.data';
 import { App } from '@minddrop/app';
 import { i18n } from '@minddrop/i18n';
 
 describe('<TopicBreadcrumb />', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    setup();
+  });
+
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+  });
 
   it('renders the topic name', () => {
     render(<TopicBreadcrumb topicId={tSailing.id} />);
@@ -22,7 +35,7 @@ describe('<TopicBreadcrumb />', () => {
       fireEvent.click(screen.getByText(tSailing.title));
     });
 
-    expect(App.getCurrentView().resource.id).toEqual(tSailing.id);
+    expect(App.getCurrentView().instance.id).toEqual(tSailing.views[0]);
   });
 
   it('opens the rename popover when onClick="rename"', () => {

@@ -15,44 +15,84 @@ Hooks provide access to app data from inside React components. Unlike data acces
 
 ### useCurrentView
 
-Returns the currently open view.
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
 
 ```ts
-useCurrentView(): View
+useCurrentView(): { view: View, instance: ViewInstance | null }
 ```
+
+### useRootTopics
+
+Returns an `{ [id]: Topic }` map of root level topics. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+useRootTopics(filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="/docs/extensions/api/topics#topicfilters">
+            TopicFilters
+          </a>{' '}
+          section of the Topics interface page for more details.
+        </span>
+      ),
+    },
+  ]}
+/>
 
 ## Static methods
 
 ### getCurrentView
 
-Returns the currently open view.
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
 
 ```ts
-App.getCurrentView(): View
+App.getCurrentView(): { view: View, instance: ViewInstance | null }
 ```
 
 ### openView
 
-Opens a view in the app and dispatches a `app:open-view` event.
+Opens a view in the app and dispatches a `app:open-view` event. If opening a view instance, use `App.openViewInstance` instead.
 
 ```ts
-App.openView(core: Core, view: View): void
+App.openView(core: Core, view: viewId): void
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'view',
-      type: 'View',
+      name: 'viewId',
+      type: 'string',
       required: true,
-      description: (
-        <span>
-          The view to open. See the{' '}
-          <a href="/docs/extensions/types/view">View</a> page for more
-          details.
-        </span>
-      ),
+      description: 'The ID of the view to open.',
+    },
+  ]}
+/>
+
+### openViewInstance
+
+Opens a view instance in the app and dispatches a `app:open-view` event. If opening a static view, use `App.openView` instead.
+
+```ts
+App.openViewInstance(core: Core, view: viewInstanceId): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstanceId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view instance to open.',
     },
   ]}
 />
@@ -143,12 +183,59 @@ App.removeAllUiExtensions(core: Core, location?: UiLocation): void
   ]}
 />
 
-### addTopics
+### createTopic
 
-Adds topics to the root level and dispaches an `app:add-topics` event.
+Creates a new topic along with a default view for it. Returns the new topic.
 
 ```ts
-App.addTopics(core: Core, topicIds: string[]): void
+App.createTopic(core: Core, data?: CreateTopicData): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTopicData',
+      description: (
+        <span>
+          The default topic property values. See the{' '}
+          <a href="/docs/extensions/api/topics#create">
+            Topics interface page
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### permanentlyDeleteTopic
+
+Permanently deletes a topic along with its associated views.
+
+```ts
+App.permanentlyDeleteTopic(core: Core, topicId: string): Topic;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to delete.',
+    },
+  ]}
+/>
+
+### addRootTopics
+
+Adds topics to the root level and dispaches an `app:add-root-topics` event. Returns the deleted topic.
+
+```ts
+App.addRootTopics(core: Core, topicIds: string[]): void
 ```
 
 <ArgsTable
@@ -163,33 +250,33 @@ App.addTopics(core: Core, topicIds: string[]): void
   ]}
 />
 
-### removeTopics
+### removeRootTopics
 
-Removes topics from the root level and dispaches an `app:remove-topics` event.
+Removes topics from the root level and dispaches an `app:remove-root-topics` event.
 
 ```ts
-App.removeTopics(core: Core, topicIds: string[]): void
+App.removeRootTopics(core: Core, topicIds: string[]): void
 ```
 
 <ArgsTable
   core
   data={[
     {
-      name: 'id',
-      type: 'string',
+      name: 'topicIds',
+      type: 'string[]',
       required: true,
       description:
-        'The ID of the topic to remove from the root level.',
+        'The IDs of the topics to remove from the root level.',
     },
   ]}
 />
 
-### addTags
+### addGlobalTags
 
-Adds global tags and dispaches an `app:add-tags` event.
+Adds global tags and dispaches an `app:add-global-tags` event.
 
 ```ts
-App.addTags(core: Core, tagIds: string[]): void
+App.addGlobalTags(core: Core, tagIds: string[]): void
 ```
 
 <ArgsTable
@@ -204,12 +291,12 @@ App.addTags(core: Core, tagIds: string[]): void
   ]}
 />
 
-### removeTags
+### removeGlobalTags
 
-Removes global tags and dispaches an `app:remove-tags` event.
+Removes global tags and dispaches an `app:remove-global-tags` event.
 
 ```ts
-App.removeTags(core: Core, tagIds: string[]): void
+App.removeGlobalTags(core: Core, tagIds: string[]): void
 ```
 
 <ArgsTable
@@ -221,47 +308,6 @@ App.removeTags(core: Core, tagIds: string[]): void
       required: true,
       description:
         'The IDs of the tags to remove from the global level.',
-    },
-  ]}
-/>
-
-### openTopicView
-
-Opens the topic view for a given topic.
-
-```ts
-App.openTopicView(core: Core, topicId: string): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic for which to open the view.',
-    },
-  ]}
-/>
-
-### getTopicBreadcrumbs
-
-Returns a list of views leading up to and including the provided topic based on the topic's hierarchy of parents.
-
-```ts
-App.getTopicBreadcrumbs(topidId: string): ResourceView[]
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic for which to retreive the breadcrumbs.',
     },
   ]}
 />
@@ -325,11 +371,13 @@ App.removeEventListener(core: Core, event: AppEvent, callback: EventListenerCall
 
 App events are prefixed with the namespace `app`.
 
+See below the table for more details on the data passed by app related events.
+
 <EventsTable
   data={[
     {
       name: 'app:open-view',
-      data: 'View',
+      data: 'AppView',
       description: 'Dispatched when a view is opened.',
     },
     {
@@ -353,6 +401,32 @@ App events are prefixed with the namespace `app`.
       name: 'app:remove-tags',
       data: 'TagMap',
       description: 'Dispatched when global tags are removed.',
+    },
+  ]}
+/>
+
+### App event data types
+
+#### AppView
+
+<InterfaceTable
+  data={[
+    {
+      name: 'view',
+      type: 'View',
+      required: true,
+      description: 'The view object.',
+    },
+    {
+      name: 'instance',
+      type: 'ViewInstance | null',
+      required: true,
+      description: (
+        <span>
+          The view instance object or <Code>null</Code> if no view
+          instance is included.
+        </span>
+      ),
     },
   ]}
 />

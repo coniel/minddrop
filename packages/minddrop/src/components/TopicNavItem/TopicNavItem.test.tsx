@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   render,
-  cleanup,
+  cleanup as cleanupRender,
   screen,
   act,
   fireEvent,
@@ -13,16 +13,21 @@ import {
   tNavigation,
   tBoats,
   tAnchoring,
+  tSailingView,
 } from '../../tests/topics.data';
-import { reInitialize } from '../../tests/initialize-app';
+import { setup, cleanup } from '../../tests/setup-tests';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
 
 describe('<TopicNavItem />', () => {
+  beforeEach(() => {
+    setup();
+  });
+
   afterEach(() => {
+    cleanupRender();
     cleanup();
-    reInitialize();
   });
 
   it('renders the title', () => {
@@ -52,9 +57,9 @@ describe('<TopicNavItem />', () => {
       fireEvent.click(screen.getByText(tSailing.title));
     });
 
-    const view = App.getCurrentView();
-    expect(view.id).toBe('topic');
-    expect(view.resource.id).toBe(tSailing.id);
+    const { view, instance } = App.getCurrentView();
+    expect(view.id).toBe('app:topic');
+    expect(instance.id).toBe(tSailingView.id);
   });
 
   it('expands subtopics when adding a subtopic', async () => {
@@ -88,10 +93,11 @@ describe('<TopicNavItem />', () => {
       fireEvent.click(screen.getByText(addSubtopic));
     });
 
-    const view = App.getCurrentView();
+    const { view, instance } = App.getCurrentView();
     const subtopicId = Topics.get(tSailing.id).subtopics.slice(-1)[0];
-    expect(view.id).toBe('topic');
-    expect(view.resource.id).toBe(subtopicId);
+    const subtopic = Topics.get(subtopicId);
+    expect(view.id).toBe('app:topic');
+    expect(instance.id).toBe(subtopic.views[0]);
   });
 
   it('opens the rename popover when clicking on Rename menu option', async () => {

@@ -1,36 +1,70 @@
-import { initializeCore } from '@minddrop/core';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { onDisable, onRun } from './app-extension';
 import { App } from '../App';
 import { act, renderHook } from '@minddrop/test-utils';
 import { useAppStore } from '../useAppStore';
-
-const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
-const initialView = { id: 'initial-view-id', title: 'View title' };
-const secondView = { id: 'second-view-id', title: 'View 2 title' };
+import {
+  cleanup,
+  setup,
+  core,
+  viewInstance1,
+  instanceView,
+  viewInstance2,
+  staticView,
+} from '../tests';
 
 describe('app-extension', () => {
   beforeEach(() => {
-    PersistentStore.setLocalValue(core, 'view', initialView);
-    onRun(core);
+    setup();
   });
 
   afterEach(() => {
+    cleanup();
     PersistentStore.clearLocalCache();
   });
 
   describe('onRun', () => {
     it('loads current view from the local persistent store', () => {
-      expect(App.getCurrentView()).toEqual(initialView);
+      PersistentStore.setLocalValue(core, 'view', staticView.id);
+      PersistentStore.setLocalValue(core, 'viewInstance', null);
+
+      onRun(core);
+
+      expect(App.getCurrentView()).toEqual({
+        view: staticView,
+        instance: null,
+      });
+    });
+
+    it('loads current view instance from the local persistent store', () => {
+      PersistentStore.setLocalValue(core, 'view', viewInstance1.view);
+      PersistentStore.setLocalValue(core, 'viewInstance', viewInstance1.id);
+
+      onRun(core);
+
+      expect(App.getCurrentView()).toEqual({
+        view: instanceView,
+        instance: viewInstance1,
+      });
     });
 
     it('updates the current view in the local persistent on change', (done) => {
+      PersistentStore.setLocalValue(core, 'view', viewInstance1.view);
+      PersistentStore.setLocalValue(core, 'viewInstance', viewInstance1.id);
+
+      onRun(core);
+
       act(() => {
-        App.openView(core, secondView);
+        App.openViewInstance(core, viewInstance2.id);
       });
 
       core.addEventListener('persistent-store:update-local', () => {
-        expect(PersistentStore.getLocalValue(core, 'view')).toEqual(secondView);
+        expect(PersistentStore.getLocalValue(core, 'view')).toEqual(
+          viewInstance2.view,
+        );
+        expect(PersistentStore.getLocalValue(core, 'viewInstance')).toEqual(
+          viewInstance2.id,
+        );
         done();
       });
     });
@@ -38,6 +72,7 @@ describe('app-extension', () => {
 
   describe('onDisable', () => {
     it('resets the store', () => {
+      onRun(core);
       const { result } = renderHook(() => useAppStore());
 
       act(() => {
@@ -51,10 +86,12 @@ describe('app-extension', () => {
       });
 
       expect(result.current.uiExtensions.length).toBe(0);
-      expect(result.current.view.id).not.toBe('initial-view-id');
+      expect(result.current.view).not.toBe('initial-view-id');
     });
 
     it('removes event listeners', () => {
+      onRun(core);
+
       act(() => {
         App.addEventListener(core, 'app:open-view', jest.fn());
 

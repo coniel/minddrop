@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, cleanup, screen, renderHook, act } from '@minddrop/test-utils';
-import { Slot, UiComponentConfigMap } from './Slot';
+import { Slot } from './Slot';
 import { UiExtensionConfig, UiExtensionElement } from '../types';
 import { useAppStore } from '../useAppStore';
 

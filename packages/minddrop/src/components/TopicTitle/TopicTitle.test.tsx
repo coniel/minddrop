@@ -1,17 +1,24 @@
 import React from 'react';
-import { render, cleanup, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup as cleanupRender,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { reInitialize } from '../../tests/initialize-app';
+import { setup as setupApp, cleanup } from '../../tests/setup-tests';
 import { tNavigation, tSailing, tUntitled } from '../../tests/topics.data';
 import { TopicTitle } from './TopicTitle';
 import { Topics } from '@minddrop/topics';
 
 describe('<TopicTitle />', () => {
+  beforeEach(() => {
+    setupApp();
+  });
+
   afterEach(() => {
+    cleanupRender();
     cleanup();
-    act(() => {
-      reInitialize();
-    });
   });
 
   const setup = () => {

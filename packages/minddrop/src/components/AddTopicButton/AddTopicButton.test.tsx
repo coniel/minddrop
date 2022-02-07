@@ -1,36 +1,48 @@
 import React from 'react';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import { render, screen, act, fireEvent } from '@minddrop/test-utils';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
+import { setup, cleanup, core } from '../../tests/setup-tests';
 import { Topics } from '@minddrop/topics';
-import { initializeCore } from '@minddrop/core';
-
-const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 describe('<AddTopicButton />', () => {
+  beforeEach(() => {
+    setup();
+    act(() => {
+      Topics.clear(core);
+    });
+  });
+
   afterEach(() => {
     cleanup();
-    Topics.clear(core);
-    PersistentStore.clearGlobalCache();
   });
 
-  it('creates a topic', () => {
-    render(<AddTopicButton core={core} />);
+  it('creates a topic', (done) => {
+    render(<AddTopicButton />);
+
+    core.addEventListener('topics:create', () => {
+      done();
+    });
 
     act(() => {
       fireEvent.click(screen.getByTestId('button'));
     });
-
-    expect(Object.keys(Topics.getAll()).length).toBe(1);
   });
 
-  it('adds the topic to the root level', () => {
-    render(<AddTopicButton core={core} />);
+  it('adds the topic to the root level', (done) => {
+    render(<AddTopicButton />);
+
+    core.addEventListener('topics:create', (payload) => {
+      expect(
+        PersistentStore.getGlobalValue(core, 'topics', []).includes(
+          payload.data.id,
+        ),
+      ).toBe(true);
+      done();
+    });
 
     act(() => {
       fireEvent.click(screen.getByTestId('button'));
     });
-
-    expect(PersistentStore.getGlobalValue(core, 'topics', []).length).toBe(1);
   });
 });

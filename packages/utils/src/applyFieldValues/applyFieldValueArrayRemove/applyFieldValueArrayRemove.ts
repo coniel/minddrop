@@ -17,6 +17,7 @@ export function applyFieldValueArrayRemove<O extends object, C extends object>(
     const value = changes[key] as FieldValueArrayRemove;
 
     if (
+      value !== null &&
       typeof value === 'object' &&
       value.isFieldValue &&
       value.type === 'array-remove'

@@ -1,18 +1,17 @@
 /* eslint-disable class-methods-use-this */
 import React from 'react';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import {
+  render,
+  cleanup as cleanupRender,
+  screen,
+  act,
+  fireEvent,
+} from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { core } from '../../tests/initialize-app';
+import { setup, cleanup, core } from '../../tests/setup-tests';
 import { DropdownMenuContent, DropdownMenu } from '@minddrop/ui';
 import { Topic, Topics } from '@minddrop/topics';
 import { generateTopicMenu, TopicMenuOptions } from './generateTopicMenu';
-
-class ResizeObserver {
-  observe() {}
-
-  unobserve() {}
-}
-
 const options: TopicMenuOptions = {
   onAddSubtopic: jest.fn(),
   onDelete: jest.fn(),
@@ -23,15 +22,8 @@ describe('generateTopicMenu', () => {
   let Menu;
   let topic: Topic;
 
-  afterEach(() => {
-    cleanup();
-    Topics.clear(core);
-    Object.values(options).forEach((mock) => {
-      mock.mockClear();
-    });
-  });
-
   beforeEach(() => {
+    setup();
     topic = Topics.create(core);
     Menu = () => (
       <DropdownMenu defaultOpen>
@@ -42,11 +34,12 @@ describe('generateTopicMenu', () => {
     );
   });
 
-  beforeAll(() => {
-    // @ts-ignore
-    window.DOMRect = { fromRect: () => ({}) };
-    // @ts-ignore
-    window.ResizeObserver = ResizeObserver;
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+    Object.values(options).forEach((mock) => {
+      mock.mockClear();
+    });
   });
 
   it('allows creating subtopics', () => {

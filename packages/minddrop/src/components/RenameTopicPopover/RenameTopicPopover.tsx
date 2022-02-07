@@ -2,7 +2,7 @@ import React, { FC, useCallback, useRef } from 'react';
 import { InvisibleTextField, PopoverContent } from '@minddrop/ui';
 import { Topic, Topics } from '@minddrop/topics';
 import './RenameTopicPopover.css';
-import { useAppCore } from '../../utils';
+import { useAppCore } from '@minddrop/app';
 import { useTranslation } from '@minddrop/i18n';
 
 export interface RenameTopicPopoverProps {

@@ -1,23 +1,18 @@
 import React, { FC } from 'react';
 import { SecondaryNavItem } from '@minddrop/ui';
 import { useTranslation } from '@minddrop/i18n';
-import { Core } from '@minddrop/core';
-import { App } from '@minddrop/app';
-import { Topics } from '@minddrop/topics';
+import { App, useAppCore } from '@minddrop/app';
 
-export interface AddTopicButtonProps {
-  core: Core;
-}
-
-export const AddTopicButton: FC<AddTopicButtonProps> = ({ core }) => {
+export const AddTopicButton: FC = () => {
+  const core = useAppCore();
   const { t } = useTranslation();
 
   function handleClick() {
     // Create the topic
-    const topic = Topics.create(core);
+    const topic = App.createTopic(core);
 
     // Add the new topic to the root level
-    App.addTopics(core, [topic.id]);
+    App.addRootTopics(core, [topic.id]);
   }
 
   return (

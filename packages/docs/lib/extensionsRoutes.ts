@@ -80,6 +80,10 @@ export const extensionsRoutes = [
         title: 'Utils',
         slug: 'docs/extensions/api/utils',
       },
+      {
+        title: 'Views',
+        slug: 'docs/extensions/api/views',
+      },
     ],
   },
   {
@@ -136,6 +140,10 @@ export const extensionsRoutes = [
       {
         title: 'View',
         slug: 'docs/extensions/types/view',
+      },
+      {
+        title: 'ViewInstance',
+        slug: 'docs/extensions/types/view-instance',
       },
     ],
   },

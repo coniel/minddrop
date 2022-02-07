@@ -1,5 +1,5 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { useCurrentView } from '.';
+import { ViewInstance } from '@minddrop/views';
 import { UiExtensionConfig } from '../types';
 import { useAppStore } from './useAppStore';
 
@@ -26,6 +26,12 @@ const uiExtension3 = {
   id: 'id-3',
   source: 'extension-id-2',
 };
+const viewInstance: ViewInstance = {
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  id: 'view-instance-id',
+  view: 'view-id',
+};
 
 describe('useAppStore', () => {
   afterEach(() => {
@@ -39,10 +45,20 @@ describe('useAppStore', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      result.current.setView({ id: 'my-view', title: 'My view' });
+      result.current.setView('my-view');
     });
 
-    expect(result.current.view.id).toBe('my-view');
+    expect(result.current.view).toBe('my-view');
+  });
+
+  it('sets the view instance', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.setViewInstance(viewInstance);
+    });
+
+    expect(result.current.viewInstance).toBe(viewInstance);
   });
 
   it('add a UI extension', () => {
@@ -61,12 +77,14 @@ describe('useAppStore', () => {
     act(() => {
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
-      result.current.setView({ id: 'some-view', title: 'Some view' });
+      result.current.setView('some-view');
+      result.current.setViewInstance(viewInstance);
       result.current.clear();
     });
 
     expect(result.current.uiExtensions.length).toBe(0);
-    expect(result.current.view.id).toBe('home');
+    expect(result.current.view).toBe('app:home');
+    expect(result.current.viewInstance).toBeNull();
   });
 
   it('removes a UI extension', () => {
@@ -114,13 +132,5 @@ describe('useAppStore', () => {
     });
 
     expect(result.current.uiExtensions.length).toBe(1);
-  });
-});
-
-describe('useCurrentView', () => {
-  it('returns the current view', () => {
-    const { result } = renderHook(() => useCurrentView());
-
-    expect(result.current).toEqual({ id: 'home', title: 'Home' });
   });
 });

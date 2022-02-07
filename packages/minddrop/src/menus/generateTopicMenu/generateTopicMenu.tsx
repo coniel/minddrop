@@ -1,11 +1,9 @@
 // import React from 'react';
-// import { App, Slot } from '@minddrop/app';
 import { Topic, Topics } from '@minddrop/topics';
 import { MenuContents } from '@minddrop/ui';
 import { Core } from '@minddrop/core';
 import { i18n } from '@minddrop/i18n';
-import { PersistentStore } from '@minddrop/persistent-store';
-import { FieldValue } from '@minddrop/utils';
+import { App } from '@minddrop/app';
 
 export interface TopicMenuOptions {
   /**
@@ -39,7 +37,7 @@ function handleAddSubtopic(
   callback?: TopicMenuOptions['onAddSubtopic'],
 ) {
   // Create the subtopic
-  const subtopic = Topics.create(core);
+  const subtopic = App.createTopic(core);
 
   // Add the new subtopic to the topic
   const updatedTopic = Topics.addSubtopics(core, topic.id, [subtopic.id]);
