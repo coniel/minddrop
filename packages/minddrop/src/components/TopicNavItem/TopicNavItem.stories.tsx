@@ -1,9 +1,7 @@
 import React from 'react';
 import { TopicNavItem } from './TopicNavItem';
 import { tSailing } from '../../tests/topics.data';
-import { setup } from '../../tests/setup-tests';
-
-setup();
+import '../../tests/setup-stories';
 
 export default {
   title: 'app/TopicNavItem',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { setup } from '../../tests/setup-tests';
+import '../../tests/setup-stories';
 import { tCoastalNavigationView } from '../../tests/topics.data';
 import { TopicView } from './TopicView';
 
@@ -7,8 +7,6 @@ export default {
   title: 'app/TopicView',
   component: TopicView,
 };
-
-setup();
 
 export const Default: React.FC = () => {
   return (

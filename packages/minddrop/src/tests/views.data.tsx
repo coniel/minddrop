@@ -1,33 +1,34 @@
+import React from 'react';
 import { View, ViewInstance } from '@minddrop/views';
 
 export const homeView: View = {
   id: 'app:home',
   type: 'static',
-  component: jest.fn(),
+  component: () => <div />,
 };
 
 export const topicView: View = {
   id: 'app:topic',
   type: 'instance',
-  component: jest.fn(),
+  component: () => <div />,
 };
 
 export const staticView: View = {
   id: 'static-view',
   type: 'static',
-  component: jest.fn(),
+  component: () => <div />,
 };
 
 export const instanceView: View = {
   id: 'view-instance',
   type: 'instance',
-  component: jest.fn(),
+  component: () => <div />,
 };
 
 export const unregisteredView: View = {
   id: 'unregistered-view',
   type: 'instance',
-  component: jest.fn(),
+  component: () => <div />,
 };
 
 export const viewInstance1: ViewInstance = {
