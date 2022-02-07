@@ -2,7 +2,7 @@
 to: packages/app-ui/src/<%= name %>/<%= name %>.tsx
 ---
 import React, { FC } from 'react';
-import { mapPropsToClasses } from '@app-ui/utils';
+import { mapPropsToClasses } from '@minddrop/utils';
 import './<%= name %>.css';
 
 export interface <%= name %>Props extends React.HTMLAttributes<HTMLDivElement> {
