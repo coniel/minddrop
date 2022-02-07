@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, act, fireEvent } from '@minddrop/test-utils';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
-import { setup, cleanup, core } from '../../tests/setup-tests';
+import { setup, cleanup, core } from '../tests';
 import { Topics } from '@minddrop/topics';
 
 describe('<AddTopicButton />', () => {

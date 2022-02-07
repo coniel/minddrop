@@ -1,5 +1,5 @@
 ---
-to: packages/minddrop/src/components/<%= name %>/<%= name %>.stories.tsx
+to: packages/app-ui/src/components/<%= name %>/<%= name %>.stories.tsx
 ---
 import React from 'react';
 import { <%= name %> } from './<%= name %>';

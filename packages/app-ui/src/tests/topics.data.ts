@@ -1,5 +1,5 @@
 import { Topic } from '@minddrop/topics';
-import { TopicViewProps } from '../components/TopicView';
+import { TopicViewProps } from '../TopicView';
 
 export const tCoastalNavigationView: TopicViewProps = {
   id: 't-coastal-navigation-view',

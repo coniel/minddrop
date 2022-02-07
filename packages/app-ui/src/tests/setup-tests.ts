@@ -18,7 +18,7 @@ import {
   onDisable as onDisableDrops,
 } from '@minddrop/drops';
 import { topics, rootTopicIds, topicViews } from './topics.data';
-import '../minddrop.css';
+import '../app.css';
 import { Views } from '@minddrop/views';
 import { viewInstances, views } from './views.data';
 

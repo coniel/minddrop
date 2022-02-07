@@ -14,8 +14,8 @@ import {
   tBoats,
   tAnchoring,
   tSailingView,
-} from '../../tests/topics.data';
-import { setup, cleanup } from '../../tests/setup-tests';
+} from '../tests/topics.data';
+import { setup, cleanup } from '../tests';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';

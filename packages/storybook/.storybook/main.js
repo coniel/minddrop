@@ -4,7 +4,7 @@ module.exports = {
   },
   stories: [
     '../../ui/**/*.stories.@(ts|tsx)',
-    '../../minddrop/**/*.stories.@(ts|tsx)',
+    '../../app-ui/**/*.stories.@(ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',

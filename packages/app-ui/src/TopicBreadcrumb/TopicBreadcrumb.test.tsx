@@ -7,8 +7,8 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { TopicBreadcrumb } from './TopicBreadcrumb';
-import { setup, cleanup } from '../../tests/setup-tests';
-import { tSailing, tUntitled } from '../../tests/topics.data';
+import { setup, cleanup } from '../tests';
+import { tSailing, tUntitled } from '../tests/topics.data';
 import { App } from '@minddrop/app';
 import { i18n } from '@minddrop/i18n';
 

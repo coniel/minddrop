@@ -1,5 +1,5 @@
 ---
-to: packages/minddrop/src/components/<%= name %>/<%= name %>.css
+to: packages/app-ui/src/components/<%= name %>/<%= name %>.css
 ---
 .<%= h.toKebabCase(name) %> {
     background-color: var(--bgNeutral);

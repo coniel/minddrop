@@ -13,7 +13,7 @@ import {
 import { useAppCore } from '@minddrop/app';
 import { TopicBreadcrumb } from '../TopicBreadcrumb';
 import { useTranslation } from '@minddrop/i18n';
-import { generateTopicMenu } from '../../menus';
+import { generateTopicMenu } from '../menus';
 import './TopicView.css';
 import { TopicTitle } from '../TopicTitle';
 

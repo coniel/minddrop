@@ -9,7 +9,7 @@ import {
   PopoverAnchor,
 } from '@minddrop/ui';
 import { Topic, useTopic } from '@minddrop/topics';
-import { generateTopicMenu } from '../../menus';
+import { generateTopicMenu } from '../menus';
 import { useAppCore } from '@minddrop/app';
 import {
   PersistentStore,

@@ -7,7 +7,7 @@ import { onRun as onRunFiles } from '@minddrop/files';
 import { onRun as onRunTopics, Topics } from '@minddrop/topics';
 import { onRun as onRunDrops } from '@minddrop/drops';
 import { topics, rootTopicIds, topicViews } from './topics.data';
-import '../minddrop.css';
+import '../app.css';
 import { Views } from '@minddrop/views';
 import { viewInstances, views } from './views.data';
 

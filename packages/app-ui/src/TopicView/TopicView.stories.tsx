@@ -1,6 +1,6 @@
 import React from 'react';
-import '../../tests/setup-stories';
-import { tCoastalNavigationView } from '../../tests/topics.data';
+import '../tests/setup-stories';
+import { tCoastalNavigationView } from '../tests/topics.data';
 import { TopicView } from './TopicView';
 
 export default {

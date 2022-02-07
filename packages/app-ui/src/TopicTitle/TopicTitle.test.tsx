@@ -6,8 +6,8 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { setup as setupApp, cleanup } from '../../tests/setup-tests';
-import { tNavigation, tSailing, tUntitled } from '../../tests/topics.data';
+import { setup as setupApp, cleanup } from '../tests';
+import { tNavigation, tSailing, tUntitled } from '../tests/topics.data';
 import { TopicTitle } from './TopicTitle';
 import { Topics } from '@minddrop/topics';
 

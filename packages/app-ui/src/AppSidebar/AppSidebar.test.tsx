@@ -7,13 +7,8 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { AppSidebar } from './AppSidebar';
-import { tSailing } from '../../tests/topics.data';
-import {
-  core,
-  localPersistentStore,
-  setup,
-  cleanup,
-} from '../../tests/setup-tests';
+import { tSailing } from '../tests/topics.data';
+import { core, localPersistentStore, setup, cleanup } from '../tests';
 import { PersistentStore } from '@minddrop/persistent-store';
 
 describe('<AppSidebar />', () => {
