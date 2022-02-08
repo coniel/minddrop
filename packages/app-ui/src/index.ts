@@ -6,3 +6,4 @@ export * from './TopicView';
 export * from './TopicBreadcrumb';
 export * from './TopicTitle';
 export * from './TopicBreadcrumbs';
+export * from './TopicViewOptionsMenu';

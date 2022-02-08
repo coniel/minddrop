@@ -15,13 +15,18 @@ describe('<TopicView />', () => {
   });
 
   const setup = () => {
-    const utils = render(<TopicView {...tCoastalNavigationView} />);
+    const utils = render(
+      <TopicView {...tCoastalNavigationView}>
+        <div>children</div>
+      </TopicView>,
+    );
 
     return { ...utils };
   };
 
-  it('renders the className', () => {
-    // render(<TopicView className="my-class">content</TopicView>);
-    // expect(screen.getByText('content')).toHaveClass('my-class');
+  it('renders children', () => {
+    const { getByText } = setup();
+
+    getByText('children');
   });
 });

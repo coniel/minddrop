@@ -86,4 +86,20 @@ describe('generateTopicMenu', () => {
 
     expect(options.onRename).toHaveBeenCalledWith(topic);
   });
+
+  it('does not incldue rename option if options.onRename is not defined', () => {
+    const noRenameOptions = { ...options };
+    delete noRenameOptions.onRename;
+
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuContent
+          content={generateTopicMenu(core, topic, noRenameOptions)}
+        />
+      </DropdownMenu>,
+    );
+    const label = i18n.t('rename');
+
+    expect(screen.queryByText(label)).toBeNull();
+  });
 });

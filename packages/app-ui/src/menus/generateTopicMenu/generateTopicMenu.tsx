@@ -28,7 +28,7 @@ export interface TopicMenuOptions {
    *
    * @param topic The topic to rename.
    */
-  onRename(topic: Topic): void;
+  onRename?(topic: Topic): void;
 }
 
 function handleAddSubtopic(
@@ -67,10 +67,10 @@ export function generateTopicMenu(
   topic: Topic,
   options: TopicMenuOptions,
 ): MenuContents {
-  return [
+  const menu: MenuContents = [
     {
       type: 'menu-item',
-      label: 'Add subtopic',
+      label: i18n.t('addSubtopic'),
       onSelect: () => handleAddSubtopic(core, topic, options.onAddSubtopic),
       icon: 'inside',
     },
@@ -80,11 +80,16 @@ export function generateTopicMenu(
       onSelect: () => handleDelete(core, topic, options.onDelete),
       icon: 'trash',
     },
-    {
+  ];
+
+  if (options.onRename) {
+    menu.push({
       type: 'menu-item',
       label: i18n.t('rename'),
       onSelect: () => options.onRename(topic),
       icon: 'edit',
-    },
-  ];
+    });
+  }
+
+  return menu;
 }
