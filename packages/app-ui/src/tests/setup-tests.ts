@@ -16,11 +16,14 @@ import {
 import {
   onRun as onRunDrops,
   onDisable as onDisableDrops,
+  Drops,
 } from '@minddrop/drops';
 import { topics, rootTopicIds, topicViews } from './topics.data';
 import '../app.css';
 import { Views } from '@minddrop/views';
 import { viewInstances, views } from './views.data';
+import { drops } from './drops.data';
+import { dropTypeConfigs } from '.';
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
@@ -32,8 +35,10 @@ initializeI18n();
 export function setup() {
   act(() => {
     views.forEach((view) => Views.register(core, view));
+    dropTypeConfigs.forEach((config) => Drops.register(core, config));
     Views.loadInstances(core, [...viewInstances, ...topicViews]);
     Topics.load(core, topics);
+    Drops.load(core, drops);
 
     PersistentStore.setGlobalStore(core, globalPersistentStore);
     PersistentStore.setLocalStore(core, localPersistentStore);
