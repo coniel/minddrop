@@ -2,15 +2,27 @@
 to: packages/app-ui/src/<%= name %>/<%= name %>.test.tsx
 ---
 import React from 'react';
-import { render, cleanup, screen } from '@minddrop/test-utils';
+import { render, cleanup as cleanupRender } from '@minddrop/test-utils';
+import { cleanup, setup } from '../tests';
 import { <%= name %> } from './<%= name %>';
 
 describe('<<%= name %> />', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    setup();
+  });
 
-  it('renders the className', () => {
-    render(<<%= name %> className="my-class">content</<%= name %>>);
+  afterEach(() => {
+    cleanupRender();
+    cleanup();
+  });
 
-    expect(screen.getByText('content')).toHaveClass('my-class');
+  const init = () => {
+    const utils = render(<<%= name %> />);
+
+    return utils;
+  };
+
+  it('renders', () => {
+    init();
   });
 });
