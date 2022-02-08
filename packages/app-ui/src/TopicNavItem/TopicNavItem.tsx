@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import {
   TopicNavItem as TopicNavItemPrimitive,
   TopicNavItemProps as TopicNavItemPrimitiveProps,
@@ -22,14 +22,16 @@ import { App } from '@minddrop/app';
 export interface TopicNavItemProps
   extends Omit<TopicNavItemPrimitiveProps, 'label'> {
   /**
-   * The ID of the topic.
+   * The IDs of the topics leading up to and including the topic.
    */
-  id: string;
+  trail: string[];
 }
 
-export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
+export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   const core = useAppCore();
-  const topic = useTopic(id);
+  // The topic ID is the last ID in the trail
+  const topicId = useMemo(() => trail.slice(-1)[0], trail);
+  const topic = useTopic(topicId);
   const expandedTopics = useLocalPersistentStoreValue<string[]>(
     core,
     'expandedTopics',
@@ -41,19 +43,21 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
       PersistentStore.setLocalValue(
         core,
         'expandedTopics',
-        expanded ? FieldValue.arrayUnion(id) : FieldValue.arrayRemove(id),
+        expanded
+          ? FieldValue.arrayUnion(topicId)
+          : FieldValue.arrayRemove(topicId),
       );
     },
-    [id],
+    [topicId],
   );
 
-  function openTopicView(topicId: string) {
-    App.openTopicView(core, topicId);
+  function openTopicView(topicTrail: string[]) {
+    App.openTopicView(core, topicTrail);
   }
 
   function onAddSubtopic(t: Topic, subtopic: Topic) {
     handleExpandedChange(true);
-    openTopicView(subtopic.id);
+    openTopicView([...trail, subtopic.id]);
   }
 
   function openRenamePopover() {
@@ -71,13 +75,13 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ id, ...other }) => {
           <PopoverAnchor asChild>
             <TopicNavItemPrimitive
               label={topic.title}
-              expanded={expandedTopics.includes(id)}
+              expanded={expandedTopics.includes(topicId)}
               onExpandedChange={handleExpandedChange}
-              onClick={() => openTopicView(id)}
+              onClick={() => openTopicView(trail)}
               {...other}
             >
               {topic.subtopics.map((subtopicId) => (
-                <TopicNavItem key={subtopicId} id={subtopicId} />
+                <TopicNavItem key={subtopicId} trail={[...trail, subtopicId]} />
               ))}
             </TopicNavItemPrimitive>
           </PopoverAnchor>

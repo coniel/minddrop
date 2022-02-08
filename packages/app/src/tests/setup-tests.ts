@@ -61,6 +61,13 @@ export const topic1: Topic = {
 export const topic2: Topic = {
   ...generateTopic({ views: [viewInstance2.id] }),
   id: 'topic-2',
+  subtopics: [topic1.id],
+};
+
+export const topic3: Topic = {
+  ...generateTopic({ views: [viewInstance2.id] }),
+  id: 'topic-3',
+  subtopics: [topic2.id],
 };
 
 export function setup() {
@@ -70,7 +77,7 @@ export function setup() {
     Views.register(core, staticView);
     Views.register(core, instanceView);
     Views.loadInstances(core, [viewInstance1, viewInstance2]);
-    Topics.load(core, [topic1, topic2]);
+    Topics.load(core, [topic1, topic2, topic3]);
   });
 }
 

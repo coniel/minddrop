@@ -8,9 +8,10 @@ import { useTranslation } from '@minddrop/i18n';
 
 export interface TopicBreadcrumbProps {
   /**
-   * The ID of the topic represented by the breadcrumb.
+   * The IDs of the topics leading up to and including the
+   * topicrepresented by the breadcrumb.
    */
-  topicId: string;
+  trail: string[];
 
   /**
    * Action fired when the breadcrumb is clicked.
@@ -21,9 +22,10 @@ export interface TopicBreadcrumbProps {
 }
 
 export const TopicBreadcrumb: FC<TopicBreadcrumbProps> = ({
-  topicId,
+  trail,
   onClick,
 }) => {
+  const topicId = trail.slice(-1)[0];
   const core = useAppCore();
   const topic = useTopic(topicId);
   const { t } = useTranslation();
@@ -40,7 +42,7 @@ export const TopicBreadcrumb: FC<TopicBreadcrumbProps> = ({
 
   const handleClick = useCallback(() => {
     if (onClick === 'open-view') {
-      App.openTopicView(core, topicId);
+      App.openTopicView(core, trail);
     }
   }, [onClick]);
 

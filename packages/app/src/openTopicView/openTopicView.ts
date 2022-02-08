@@ -11,14 +11,16 @@ import { App } from '../App';
  * If an instance view ID is passed in, opens that view instance.
  *
  * @param core A MindDrop core instance.
- * @param topicId The ID of the topic to open.
+ * @param trail The IDs of the topics leading up to and including the topic to open.
  * @param viewInstanceId The ID of the topic view instance to open.
  */
 export function openTopicView(
   core: Core,
-  topicId: string,
+  trail: string[],
   viewInstanceId?: string,
 ): void {
+  // The topic to open is the last one in the trail
+  const topicId = trail.slice(-1)[0];
   // We need a core with 'app' as the extensionId for PersistentStore
   const appCore = initializeCore({ appId: core.appId, extensionId: 'app' });
   // Get the topic
@@ -38,6 +40,8 @@ export function openTopicView(
     App.openViewInstance(core, previousView || defaultView);
   }
 
+  // Save the view instance as the topic's last opened
+  // view instance in the local persistent store.
   PersistentStore.setLocalValue(
     appCore,
     'topicViews',
@@ -45,4 +49,7 @@ export function openTopicView(
       [topicId]: viewInstanceId || previousView || defaultView,
     }),
   );
+
+  // Save the trail in the local persistent store
+  PersistentStore.setLocalValue(appCore, 'topicTrail', trail);
 }

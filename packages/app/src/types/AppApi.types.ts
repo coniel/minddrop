@@ -110,9 +110,10 @@ export interface AppApi {
    * Opens a topic's view.
    *
    * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic for which to open the view.
+   * @param trail The IDs of the topics leading up to and including the topic to open.
+   * @param viewInstanceId The ID of the topic view instance to open.
    */
-  openTopicView(core: Core, topicId: string): void;
+  openTopicView(core: Core, trail: string[], viewInstanceId?: string): void;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */

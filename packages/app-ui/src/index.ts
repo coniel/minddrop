@@ -5,3 +5,4 @@ export * from './RenameTopicPopover';
 export * from './TopicView';
 export * from './TopicBreadcrumb';
 export * from './TopicTitle';
+export * from './TopicBreadcrumbs';

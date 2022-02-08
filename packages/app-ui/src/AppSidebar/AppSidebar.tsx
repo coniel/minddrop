@@ -36,7 +36,7 @@ export const AppSidebar: FC = () => {
       <NavGroup label="Main" />
       <NavGroup title={t('topics')}>
         {Object.values(topics).map((topic) => (
-          <TopicNavItem key={topic.id} id={topic.id} />
+          <TopicNavItem key={topic.id} trail={[topic.id]} />
         ))}
         <AddTopicButton />
       </NavGroup>

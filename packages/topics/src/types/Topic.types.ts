@@ -72,6 +72,7 @@ export interface Topic {
 }
 
 export interface CreateTopicData {
+  id?: string;
   title?: string;
   hidden?: true;
   views?: string[];

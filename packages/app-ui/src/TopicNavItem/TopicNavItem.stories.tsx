@@ -10,6 +10,6 @@ export default {
 
 export const Default: React.FC = () => (
   <div>
-    <TopicNavItem id={tSailing.id} />
+    <TopicNavItem trail={[tSailing.id]} />
   </div>
 );

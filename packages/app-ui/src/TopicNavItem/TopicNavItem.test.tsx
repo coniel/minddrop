@@ -13,12 +13,15 @@ import {
   tNavigation,
   tBoats,
   tAnchoring,
-  tSailingView,
+  tCoastalNavigationView,
+  tCoastalNavigation,
 } from '../tests/topics.data';
 import { setup, cleanup } from '../tests';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
+
+const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];
 
 describe('<TopicNavItem />', () => {
   beforeEach(() => {
@@ -31,13 +34,13 @@ describe('<TopicNavItem />', () => {
   });
 
   it('renders the title', () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={trail} />);
 
-    screen.getByText(tSailing.title);
+    screen.getByText(tCoastalNavigation.title);
   });
 
   it('renders subtopics when expanded', () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={[tSailing.id]} />);
 
     act(() => {
       // Expand topic by clicking on toggle button
@@ -51,19 +54,19 @@ describe('<TopicNavItem />', () => {
   });
 
   it('opens topic view when clicked', () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={trail} />);
 
     act(() => {
-      fireEvent.click(screen.getByText(tSailing.title));
+      fireEvent.click(screen.getByText(tCoastalNavigation.title));
     });
 
     const { view, instance } = App.getCurrentView();
     expect(view.id).toBe('app:topic');
-    expect(instance.id).toBe(tSailingView.id);
+    expect(instance.id).toBe(tCoastalNavigationView.id);
   });
 
   it('expands subtopics when adding a subtopic', async () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={[tSailing.id]} />);
 
     // Open context menu
     fireEvent.contextMenu(screen.getByText(tSailing.title));
@@ -80,10 +83,10 @@ describe('<TopicNavItem />', () => {
   });
 
   it('opens the new suptopic view when adding a subtopic', async () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={trail} />);
 
     // Open context menu
-    fireEvent.contextMenu(screen.getByText(tSailing.title));
+    fireEvent.contextMenu(screen.getByText(tCoastalNavigation.title));
 
     // Wait for menu to open
     const addSubtopic = i18n.t('addSubtopic');
@@ -94,17 +97,17 @@ describe('<TopicNavItem />', () => {
     });
 
     const { view, instance } = App.getCurrentView();
-    const subtopicId = Topics.get(tSailing.id).subtopics.slice(-1)[0];
+    const subtopicId = Topics.get(tCoastalNavigation.id).subtopics.slice(-1)[0];
     const subtopic = Topics.get(subtopicId);
     expect(view.id).toBe('app:topic');
     expect(instance.id).toBe(subtopic.views[0]);
   });
 
   it('opens the rename popover when clicking on Rename menu option', async () => {
-    render(<TopicNavItem id={tSailing.id} />);
+    render(<TopicNavItem trail={trail} />);
 
     // Open context menu
-    fireEvent.contextMenu(screen.getByText(tSailing.title));
+    fireEvent.contextMenu(screen.getByText(tCoastalNavigation.title));
 
     // Click "Rename" menu item
     const rename = i18n.t('rename');

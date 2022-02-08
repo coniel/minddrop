@@ -10,11 +10,17 @@ import { topics, rootTopicIds, topicViews } from './topics.data';
 import '../app.css';
 import { Views } from '@minddrop/views';
 import { viewInstances, views } from './views.data';
+import { tCoastalNavigationView } from './topics.data';
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 export const globalPersistentStore = { topics: rootTopicIds };
-export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
+export const localPersistentStore = {
+  sidebarWidth: 302,
+  expandedTopics: [],
+  view: 'app:topic',
+  viewInstance: tCoastalNavigationView.id,
+};
 
 initializeI18n();
 

@@ -16,6 +16,8 @@ import { useTranslation } from '@minddrop/i18n';
 import { generateTopicMenu } from '../menus';
 import './TopicView.css';
 import { TopicTitle } from '../TopicTitle';
+import { useLocalPersistentStoreValue } from '@minddrop/persistent-store';
+import { TopicBreadcrumbs } from '../TopicBreadcrumbs';
 
 export interface TopicViewBaseProps {
   topicId: string;
@@ -23,18 +25,19 @@ export interface TopicViewBaseProps {
 
 export type TopicViewProps = InstanceViewProps<TopicViewBaseProps>;
 
-export const TopicView: FC<TopicViewProps> = ({ topicId }) => {
+export const TopicView: FC<TopicViewProps> = ({ topicId, ...other }) => {
+  console.log(other, 'topicId');
   const titleInput = useRef<HTMLInputElement | null>(null);
   const core = useAppCore();
   const { t } = useTranslation();
   const topic = useTopic(topicId);
-  // const breadcrumbs = useMemo(
-  //   () => App.getTopicBreadcrumbs(resource.id),
-  //   [resource.id],
-  // );
-  const onAddSubtopic = useCallback((t: Topic, subtopic: Topic) => {
-    App.openTopicView(core, subtopic.id);
-  }, []);
+  const trail = useLocalPersistentStoreValue(core, 'topicTrail', [topicId]);
+  const onAddSubtopic = useCallback(
+    (t: Topic, subtopic: Topic) => {
+      App.openTopicView(core, [...trail, subtopic.id]);
+    },
+    [trail],
+  );
 
   const handleClickRename = useCallback(() => {
     setTimeout(() => {
@@ -51,24 +54,14 @@ export const TopicView: FC<TopicViewProps> = ({ topicId }) => {
     [core, topic, onAddSubtopic, handleClickRename],
   );
 
+  if (!topic) {
+    return <div />;
+  }
+
   return (
     <div className="topic-view">
       <Toolbar className="top-toolbar">
-        {/* {breadcrumbs.length && (
-          <Breadcrumbs>
-            {breadcrumbs.map((crumb) => (
-              <TopicBreadcrumb
-                topicId={crumb.resource.id}
-                key={crumb.resource.id}
-                onClick={
-                  crumb.resource.id === resource.id
-                    ? 'open-rename'
-                    : 'open-view'
-                }
-              />
-            ))}
-          </Breadcrumbs>
-        )} */}
+        <TopicBreadcrumbs trail={trail} />
       </Toolbar>
       <div className="header">
         <TopicTitle ref={titleInput} topic={topic} />

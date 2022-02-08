@@ -155,3 +155,5 @@ export const topicViews = [
   tSailingView,
   tUntitledView,
 ];
+
+export const topicTrail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];

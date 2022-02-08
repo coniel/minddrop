@@ -1,4 +1,5 @@
 import createStore from 'zustand';
+import shallow from 'zustand/shallow';
 import { AppStore } from '../types';
 
 export const useAppStore = createStore<AppStore>((set) => ({
@@ -42,7 +43,11 @@ export const useAppStore = createStore<AppStore>((set) => ({
  *
  * @returns The current view.
  */
-export const useCurrentView = () => useAppStore((state) => state.view);
+export const useCurrentView = () =>
+  useAppStore(
+    (state) => ({ view: state.view, instance: state.viewInstance }),
+    shallow,
+  );
 
 /**
  * A hook which returns UI extensions for a given location.
