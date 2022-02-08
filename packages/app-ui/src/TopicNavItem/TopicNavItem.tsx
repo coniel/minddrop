@@ -10,7 +10,7 @@ import {
 } from '@minddrop/ui';
 import { Topic, useTopic } from '@minddrop/topics';
 import { generateTopicMenu } from '../menus';
-import { useAppCore } from '@minddrop/app';
+import { useAppCore, useCurrentView, TopicViewInstance } from '@minddrop/app';
 import {
   PersistentStore,
   useLocalPersistentStoreValue,
@@ -32,10 +32,18 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   // The topic ID is the last ID in the trail
   const topicId = useMemo(() => trail.slice(-1)[0], trail);
   const topic = useTopic(topicId);
+  const { instance } = useCurrentView<TopicViewInstance>();
   const expandedTopics = useLocalPersistentStoreValue<string[]>(
     core,
     'expandedTopics',
   );
+  const isActive = useMemo(() => {
+    if (!instance) {
+      return false;
+    }
+
+    return instance.topicId === topicId;
+  }, [instance, topicId]);
   const [renamePopoverOpen, setRenamePopoverOpen] = useState(false);
 
   const handleExpandedChange = useCallback(
@@ -75,6 +83,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
           <PopoverAnchor asChild>
             <TopicNavItemPrimitive
               label={topic.title}
+              active={isActive}
               expanded={expandedTopics.includes(topicId)}
               onExpandedChange={handleExpandedChange}
               onClick={() => openTopicView(trail)}

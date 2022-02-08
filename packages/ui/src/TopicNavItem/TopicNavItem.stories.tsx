@@ -7,10 +7,15 @@ export default {
 };
 
 export const Default: React.FC = () => {
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState('home');
 
   return (
     <div style={{ maxWidth: 260 }}>
+      <TopicNavItem
+        label="Home"
+        active={active === 'home'}
+        onClick={() => setActive('home')}
+      />
       <TopicNavItem
         label="Sailing"
         active={active === 'sailing'}

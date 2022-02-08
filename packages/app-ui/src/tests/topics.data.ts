@@ -124,7 +124,7 @@ export const tSailing: Topic = {
 };
 
 export const tUntitled: Topic = {
-  id: 'topic-untitled',
+  id: 't-untitled',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   title: '',

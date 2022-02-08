@@ -16,7 +16,7 @@ import {
   tCoastalNavigationView,
   tCoastalNavigation,
 } from '../tests/topics.data';
-import { setup, cleanup } from '../tests';
+import { setup, cleanup, core } from '../tests';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
@@ -117,5 +117,13 @@ describe('<TopicNavItem />', () => {
     // Check for rename popover input
     const input = i18n.t('topicName');
     screen.getByLabelText(input);
+  });
+
+  it('has active state if releveant topic view is open', () => {
+    App.openTopicView(core, [tSailing.id]);
+
+    render(<TopicNavItem trail={[tSailing.id]} />);
+
+    screen.getByRole('button', { current: true });
   });
 });

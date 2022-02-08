@@ -67,4 +67,10 @@ describe('<TopicNavItem />', () => {
 
     expect(onClick).toHaveBeenCalled();
   });
+
+  it('supports being active', () => {
+    render(<TopicNavItem label="topic" active />);
+
+    screen.getByRole('button', { current: true });
+  });
 });

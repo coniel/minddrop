@@ -146,6 +146,7 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
                 tabIndex={0}
                 className="label-button"
                 onClick={onClick}
+                aria-current={active ? 'true' : 'false'}
               >
                 <Text
                   as="div"
