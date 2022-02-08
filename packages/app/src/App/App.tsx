@@ -1,5 +1,5 @@
 import { AppApi, UiExtensionConfig } from '../types';
-import { Views } from '@minddrop/views';
+import { View, ViewInstance, Views } from '@minddrop/views';
 import { Slot } from '../Slot';
 import { addRootTopics } from '../addRootTopics';
 import { useAppStore } from '../useAppStore';
@@ -32,11 +32,14 @@ export const App: AppApi = {
     core.dispatch('app:open-view', { view, instance });
   },
 
-  getCurrentView: () => {
+  getCurrentView: <I extends ViewInstance = ViewInstance>(): {
+    view: View;
+    instance: I | null;
+  } => {
     const view = Views.get(useAppStore.getState().view);
     const instance = useAppStore.getState().viewInstance;
 
-    return { view, instance };
+    return { view, instance: instance as I };
   },
 
   addUiExtension: (core, location, element) => {

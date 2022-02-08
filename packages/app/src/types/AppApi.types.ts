@@ -42,7 +42,10 @@ export interface AppApi {
    *
    * @returns The currently open view and view instance.
    */
-  getCurrentView(): { view: View; instance: ViewInstance | null };
+  getCurrentView<I extends ViewInstance = ViewInstance>(): {
+    view: View;
+    instance: I | null;
+  };
 
   /**
    * Adds a new UI extension for a speficied location.

@@ -1,3 +1,4 @@
+import { View, ViewInstance, Views } from '@minddrop/views';
 import createStore from 'zustand';
 import shallow from 'zustand/shallow';
 import { AppStore } from '../types';
@@ -43,9 +44,12 @@ export const useAppStore = createStore<AppStore>((set) => ({
  *
  * @returns The current view.
  */
-export const useCurrentView = () =>
+export const useCurrentView = <I extends ViewInstance>() =>
   useAppStore(
-    (state) => ({ view: state.view, instance: state.viewInstance }),
+    (state): { view: View; instance: I | null } => ({
+      view: Views.get(state.view),
+      instance: state.viewInstance as I,
+    }),
     shallow,
   );
 
