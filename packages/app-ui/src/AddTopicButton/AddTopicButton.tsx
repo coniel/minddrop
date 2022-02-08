@@ -13,6 +13,9 @@ export const AddTopicButton: FC = () => {
 
     // Add the new topic to the root level
     App.addRootTopics(core, [topic.id]);
+
+    // Open the new topic
+    App.openTopicView(core, [topic.id]);
   }
 
   return (

@@ -4,6 +4,7 @@ import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
 import { setup, cleanup, core } from '../tests';
 import { Topics } from '@minddrop/topics';
+import { App, TopicViewInstance } from '@minddrop/app';
 
 describe('<AddTopicButton />', () => {
   beforeEach(() => {
@@ -38,6 +39,21 @@ describe('<AddTopicButton />', () => {
           payload.data.id,
         ),
       ).toBe(true);
+      done();
+    });
+
+    act(() => {
+      fireEvent.click(screen.getByTestId('button'));
+    });
+  });
+
+  it('opens the topic', (done) => {
+    render(<AddTopicButton />);
+
+    core.addEventListener('topics:create', (payload) => {
+      expect(App.getCurrentView<TopicViewInstance>().instance.topicId).toBe(
+        payload.data.id,
+      );
       done();
     });
 
