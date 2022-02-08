@@ -1,4 +1,5 @@
 import { Topic } from '@minddrop/topics';
+import { htmlDrop1, textDrop1, textDrop2, textDrop3 } from './drops.data';
 import { TopicViewProps } from '../TopicView';
 
 export const tCoastalNavigationView: TopicViewProps = {
@@ -119,7 +120,7 @@ export const tSailing: Topic = {
   title: 'Sailing',
   subtopics: [tNavigation.id, tBoats.id, tAnchoring.id],
   views: [tSailingView.id],
-  drops: [],
+  drops: [textDrop1.id, textDrop2.id, textDrop3.id, htmlDrop1.id],
   tags: [],
 };
 
