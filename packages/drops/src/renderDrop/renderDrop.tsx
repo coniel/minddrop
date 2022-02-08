@@ -12,5 +12,5 @@ export function renderDrop(drop: Drop): React.ReactElement {
   const dropConfig = getDropTypeConfig(drop.type);
   const Component = dropConfig.component;
 
-  return <Component {...drop} />;
+  return <Component key={drop.id} {...drop} />;
 }
