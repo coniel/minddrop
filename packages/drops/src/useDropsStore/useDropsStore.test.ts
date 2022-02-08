@@ -1,15 +1,7 @@
 import { renderHook, act, MockDate } from '@minddrop/test-utils';
 import { generateDrop } from '../generateDrop';
-import { DropConfig } from '../types/DropConfig.types';
 import { useDropsStore } from './useDropsStore';
-
-const config: DropConfig = {
-  type: 'text',
-  name: 'Text',
-  description: 'A text drop.',
-  create: () =>
-    new Promise((resolve) => resolve(generateDrop({ type: 'text' }))),
-};
+import { textDropConfig } from '../tests';
 
 describe('useDropsStore', () => {
   afterEach(() => {
@@ -25,19 +17,19 @@ describe('useDropsStore', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(config);
+      result.current.registerDropType(textDropConfig);
     });
 
     expect(result.current.registered.length).toBe(1);
-    expect(result.current.registered[0]).toEqual(config);
+    expect(result.current.registered[0]).toEqual(textDropConfig);
   });
 
   it('unregisters drop types', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(config);
-      result.current.unregisterDropType(config.type);
+      result.current.registerDropType(textDropConfig);
+      result.current.unregisterDropType(textDropConfig.type);
     });
 
     expect(Object.keys(result.current.registered).length).toBe(0);
@@ -74,7 +66,7 @@ describe('useDropsStore', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(config);
+      result.current.registerDropType(textDropConfig);
       result.current.clearRegistered();
     });
 

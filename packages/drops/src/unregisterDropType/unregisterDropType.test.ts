@@ -1,19 +1,9 @@
 import { initializeCore } from '@minddrop/core';
-import { generateDrop } from '../generateDrop';
-import { DropConfig } from '../types';
 import { useDropsStore } from '../useDropsStore';
 import { registerDropType } from '../registerDropType';
 import { unregisterDropType } from './unregisterDropType';
 import { DropTypeNotRegisteredError } from '../errors';
-import { cleanup } from '../tests';
-
-const config: DropConfig = {
-  type: 'text',
-  name: 'Text',
-  description: 'A text drop.',
-  create: () =>
-    new Promise((resolve) => resolve(generateDrop({ type: 'text' }))),
-};
+import { cleanup, textDropConfig } from '../tests';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -23,24 +13,24 @@ describe('unregisterDropType', () => {
   });
 
   it('unregisters the drop type', () => {
-    registerDropType(core, config);
-    unregisterDropType(core, config.type);
+    registerDropType(core, textDropConfig);
+    unregisterDropType(core, textDropConfig.type);
 
     expect(useDropsStore.getState().registered.length).toBe(0);
   });
 
   it("dispatches a 'drops:unregister' event", (done) => {
     core.addEventListener('drops:unregister', (payload) => {
-      expect(payload.data).toEqual(config);
+      expect(payload.data).toEqual(textDropConfig);
       done();
     });
 
-    registerDropType(core, config);
-    unregisterDropType(core, config.type);
+    registerDropType(core, textDropConfig);
+    unregisterDropType(core, textDropConfig.type);
   });
 
   it('throws a DropTypeNotRegisteredError if the drop type is not registered', () => {
-    expect(() => unregisterDropType(core, config.type)).toThrowError(
+    expect(() => unregisterDropType(core, textDropConfig.type)).toThrowError(
       DropTypeNotRegisteredError,
     );
   });

@@ -1,7 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { Drop } from './Drop.types';
 
-export interface DropConfig {
+export interface DropConfig<T extends Drop = Drop> {
   /**
    * The drop type.
    */
@@ -66,4 +66,9 @@ export interface DropConfig {
    * @returns A promsie which resolves to the updated drop (or original drop if it was not updated).
    */
   insertData?(core: Core, drop: Drop, data: DataInsert): Promise<Drop>;
+
+  /**
+   * The component used to render the drop.
+   */
+  component: React.ComponentType<T>;
 }

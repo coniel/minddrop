@@ -642,6 +642,25 @@ Drops.getRegisteredDropTypes(types?: string[]): DropConfig[]
   ]}
 />
 
+### render
+
+Renders a drop using the appropriate component.
+
+```ts
+Drops.render(drop: Drop): ReactElement;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to render.',
+    },
+  ]}
+/>
+
 ### addEventListener
 
 Adds drop specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.

@@ -1,17 +1,7 @@
 import { initializeCore } from '@minddrop/core';
-import { generateDrop } from '../generateDrop';
-import { cleanup } from '../tests';
-import { DropConfig } from '../types';
+import { cleanup, textDropConfig } from '../tests';
 import { useDropsStore } from '../useDropsStore';
 import { registerDropType } from './registerDropType';
-
-const config: DropConfig = {
-  type: 'text',
-  name: 'Text',
-  description: 'A text drop.',
-  create: () =>
-    new Promise((resolve) => resolve(generateDrop({ type: 'text' }))),
-};
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -21,18 +11,18 @@ describe('registerDropType', () => {
   });
 
   it('registers the drop type', () => {
-    registerDropType(core, config);
+    registerDropType(core, textDropConfig);
 
     expect(useDropsStore.getState().registered.length).toBe(1);
-    expect(useDropsStore.getState().registered[0]).toEqual(config);
+    expect(useDropsStore.getState().registered[0]).toEqual(textDropConfig);
   });
 
   it("dispatches a 'drops:register' event", (done) => {
     core.addEventListener('drops:register', (payload) => {
-      expect(payload.data).toEqual(config);
+      expect(payload.data).toEqual(textDropConfig);
       done();
     });
 
-    registerDropType(core, config);
+    registerDropType(core, textDropConfig);
   });
 });

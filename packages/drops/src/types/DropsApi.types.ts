@@ -299,6 +299,14 @@ export interface DropsApi {
    */
   getRegisteredDropTypes(types?: string[]): DropConfig[];
 
+  /**
+   * Renders a drop using the appropriate component.
+   *
+   * @param drop The drop to render.
+   * @returns The rendered drop element.
+   */
+  render(drop: Drop): React.ReactElement;
+
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */

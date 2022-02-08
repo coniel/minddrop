@@ -14,7 +14,7 @@ import { Drop, DropConfig, DropMap } from '../types';
 export async function createFromDataInsert(
   core: Core,
   dataInsert: DataInsert,
-  configs: DropConfig[],
+  configs: DropConfig<any>[],
 ): Promise<DropMap> {
   const drops: DropMap = {};
 

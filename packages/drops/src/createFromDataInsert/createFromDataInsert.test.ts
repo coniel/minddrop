@@ -1,8 +1,7 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { imageFile, textFile } from '@minddrop/test-utils';
-import { DropConfig } from '../types';
 import { createFromDataInsert } from './createFromDataInsert';
-import { generateDrop } from '../generateDrop';
+import { htmlDropConfig, imageDropConfig, textDropConfig } from '../tests';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -25,34 +24,6 @@ const multiTextFilesData: DataInsert = {
   types: ['files'],
   data: {},
   files: [textFile, textFile],
-};
-
-const textDropConfig: DropConfig = {
-  type: 'text',
-  name: 'Text',
-  multiFile: true,
-  description: 'A text drop',
-  dataTypes: ['text/plain'],
-  fileTypes: ['text/plain'],
-  create: async () => generateDrop({ type: 'text' }),
-};
-
-const htmlDropConfig: DropConfig = {
-  type: 'html',
-  name: 'HTML',
-  dataTypes: ['text/html'],
-  fileTypes: ['text/plain'],
-  description: 'An HTML drop',
-  create: async () => generateDrop({ type: 'html' }),
-};
-
-const imageDropConfig: DropConfig = {
-  type: 'image',
-  name: 'Image',
-  fileTypes: ['image/jpeg'],
-  requiresFile: true,
-  description: 'An image drop',
-  create: async () => generateDrop({ type: 'image' }),
 };
 
 describe('createFromDataInsert', () => {
