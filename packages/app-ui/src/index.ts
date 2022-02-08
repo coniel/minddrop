@@ -7,3 +7,4 @@ export * from './TopicBreadcrumb';
 export * from './TopicTitle';
 export * from './TopicBreadcrumbs';
 export * from './TopicViewOptionsMenu';
+export * from './TopicViewColumns';

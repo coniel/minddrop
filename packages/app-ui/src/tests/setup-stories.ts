@@ -5,12 +5,13 @@ import { onRun as onRunApp } from '@minddrop/app';
 import { onRun as onRunTags } from '@minddrop/tags';
 import { onRun as onRunFiles } from '@minddrop/files';
 import { onRun as onRunTopics, Topics } from '@minddrop/topics';
-import { onRun as onRunDrops } from '@minddrop/drops';
+import { Drops, onRun as onRunDrops } from '@minddrop/drops';
 import { topics, rootTopicIds, topicViews } from './topics.data';
 import '../app.css';
 import { Views } from '@minddrop/views';
 import { viewInstances, views } from './views.data';
 import { tCoastalNavigationView } from './topics.data';
+import { drops, dropTypeConfigs } from './drops.data';
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
@@ -25,8 +26,10 @@ export const localPersistentStore = {
 initializeI18n();
 
 views.forEach((view) => Views.register(core, view));
+dropTypeConfigs.forEach((config) => Drops.register(core, config));
 Views.loadInstances(core, [...viewInstances, ...topicViews]);
 Topics.load(core, topics);
+Drops.load(core, drops);
 
 PersistentStore.setGlobalStore(core, globalPersistentStore);
 PersistentStore.setLocalStore(core, localPersistentStore);
