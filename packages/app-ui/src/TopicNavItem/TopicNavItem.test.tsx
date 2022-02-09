@@ -8,25 +8,23 @@ import {
   waitFor,
 } from '@minddrop/test-utils';
 import { TopicNavItem } from './TopicNavItem';
-import {
+import { setup, cleanup, core } from '../test-utils';
+import { i18n } from '@minddrop/i18n';
+import { App } from '@minddrop/app';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const {
   tSailing,
   tNavigation,
   tBoats,
   tAnchoring,
   tCoastalNavigationView,
   tCoastalNavigation,
-} from '../tests/topics.data';
-import { setup, cleanup, core } from '../tests';
-import { i18n } from '@minddrop/i18n';
-import { App } from '@minddrop/app';
-import { Topics } from '@minddrop/topics';
-
-const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];
+  trail,
+} = TOPICS_TEST_DATA;
 
 describe('<TopicNavItem />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();
@@ -61,7 +59,7 @@ describe('<TopicNavItem />', () => {
     });
 
     const { view, instance } = App.getCurrentView();
-    expect(view.id).toBe('app:topic');
+    expect(view.id).toBe('topics:columns-view');
     expect(instance.id).toBe(tCoastalNavigationView.id);
   });
 
@@ -99,7 +97,7 @@ describe('<TopicNavItem />', () => {
     const { view, instance } = App.getCurrentView();
     const subtopicId = Topics.get(tCoastalNavigation.id).subtopics.slice(-1)[0];
     const subtopic = Topics.get(subtopicId);
-    expect(view.id).toBe('app:topic');
+    expect(view.id).toBe('topics:columns-view');
     expect(instance.id).toBe(subtopic.views[0]);
   });
 

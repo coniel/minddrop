@@ -1,5 +1,5 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { viewInstance, staticView } from '../tests';
+import { viewInstance1, staticView } from '../tests';
 import { useViewsStore } from './useViewsStore';
 
 describe('useViewsStore', () => {
@@ -36,39 +36,39 @@ describe('useViewsStore', () => {
     const { result } = renderHook(() => useViewsStore((state) => state));
 
     act(() => {
-      result.current.setInstance(viewInstance);
+      result.current.setInstance(viewInstance1);
     });
 
     expect(Object.keys(result.current.instances).length).toBe(1);
-    expect(result.current.instances[viewInstance.id]).toEqual(viewInstance);
+    expect(result.current.instances[viewInstance1.id]).toEqual(viewInstance1);
   });
 
   it('removes a view instance', () => {
     const { result } = renderHook(() => useViewsStore((state) => state));
 
     act(() => {
-      result.current.setInstance(viewInstance);
-      result.current.removeInstance(viewInstance.id);
+      result.current.setInstance(viewInstance1);
+      result.current.removeInstance(viewInstance1.id);
     });
 
-    expect(result.current.instances[viewInstance.id]).not.toBeDefined();
+    expect(result.current.instances[viewInstance1.id]).not.toBeDefined();
   });
 
   it('loads in views instance', () => {
     const { result } = renderHook(() => useViewsStore((state) => state));
 
     act(() => {
-      result.current.loadInstances([viewInstance]);
+      result.current.loadInstances([viewInstance1]);
     });
 
-    expect(result.current.instances[viewInstance.id]).toEqual(viewInstance);
+    expect(result.current.instances[viewInstance1.id]).toEqual(viewInstance1);
   });
 
   it('clears store data', () => {
     const { result } = renderHook(() => useViewsStore((state) => state));
 
     act(() => {
-      result.current.setInstance(viewInstance);
+      result.current.setInstance(viewInstance1);
       result.current.setView(staticView);
       result.current.clear();
     });

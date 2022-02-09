@@ -2,30 +2,26 @@ import { cleanup } from '@minddrop/test-utils';
 import { ViewInstance } from '../types';
 import { ViewInstanceNotFoundError } from '../errors';
 import { getViewInstance } from '../getViewInstance';
-import { core, setup, viewInstance } from '../tests';
+import { core, setup, viewInstance1 } from '../tests';
 import { deleteViewInstance } from './deleteViewInstance';
 
 describe('deleteViewInstance', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('deletes the view instance', () => {
-    deleteViewInstance(core, viewInstance.id);
+    deleteViewInstance(core, viewInstance1.id);
 
-    expect(() => getViewInstance(viewInstance.id)).toThrowError(
+    expect(() => getViewInstance(viewInstance1.id)).toThrowError(
       ViewInstanceNotFoundError,
     );
   });
 
   it('returns the deleted view instance', () => {
-    const deleted = deleteViewInstance(core, viewInstance.id);
+    const deleted = deleteViewInstance(core, viewInstance1.id);
 
-    expect(deleted).toEqual(viewInstance);
+    expect(deleted).toEqual(viewInstance1);
   });
 
   it('dispatches a `views:delete-instance` event', (done) => {
@@ -37,7 +33,7 @@ describe('deleteViewInstance', () => {
 
     core.addEventListener('views:delete-instance', callback);
 
-    deleted = deleteViewInstance(core, viewInstance.id);
+    deleted = deleteViewInstance(core, viewInstance1.id);
   });
 
   it('throws a ViewInstanceNotFoundError if the view instance does not exist', () => {

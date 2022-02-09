@@ -7,14 +7,14 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { AppSidebar } from './AppSidebar';
-import { tSailing } from '../tests/topics.data';
-import { core, localPersistentStore, setup, cleanup } from '../tests';
+import { core, localPersistentStore, setup, cleanup } from '../test-utils';
 import { PersistentStore } from '@minddrop/persistent-store';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const { tSailing } = TOPICS_TEST_DATA;
 
 describe('<AppSidebar />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();

@@ -1,24 +1,20 @@
 import { getViewInstances } from '../getViewInstances/getViewInstances';
-import { cleanup, core, setup, viewInstance, viewInstance2 } from '../tests';
+import { cleanup, core, setup, viewInstance1, viewInstance2 } from '../tests';
 import { loadViewInstances } from './loadViewInstances';
 
-const loaded1 = { ...viewInstance, id: 'loaded-1' };
-const loaded2 = { ...viewInstance, id: 'loaded-2' };
+const loaded1 = { ...viewInstance1, id: 'loaded-1' };
+const loaded2 = { ...viewInstance1, id: 'loaded-2' };
 
 describe('loadViewInstances', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('loads view instances into the store', () => {
     loadViewInstances(core, [loaded1, loaded2]);
 
     const instances = getViewInstances([
-      viewInstance.id,
+      viewInstance1.id,
       viewInstance2.id,
       loaded1.id,
       loaded2.id,
@@ -27,7 +23,7 @@ describe('loadViewInstances', () => {
     expect(instances).toEqual({
       [loaded1.id]: loaded1,
       [loaded2.id]: loaded2,
-      [viewInstance.id]: viewInstance,
+      [viewInstance1.id]: viewInstance1,
       [viewInstance2.id]: viewInstance2,
     });
   });

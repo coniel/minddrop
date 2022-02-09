@@ -18,7 +18,7 @@ export function createTopic(core: Core, data?: CreateTopicData): Topic {
   // Create the view instance
   const viewInstance = Views.createInstance<CreateTopicViewInstanceData>(core, {
     topicId,
-    view: 'app:topic',
+    view: 'topics:columns-view',
   });
 
   // Create the topic

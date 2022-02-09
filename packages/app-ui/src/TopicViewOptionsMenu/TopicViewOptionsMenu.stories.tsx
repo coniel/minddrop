@@ -1,7 +1,9 @@
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import React from 'react';
-import '../tests/setup-stories';
-import { tSailing } from '../tests/topics.data';
+import '../test-utils/initialize-stories';
 import { TopicViewOptionsMenu } from './TopicViewOptionsMenu';
+
+const { tSailing } = TOPICS_TEST_DATA;
 
 export default {
   title: 'app/TopicViewOptionsMenu',

@@ -4,13 +4,9 @@ import { useViewsStore } from '../useViewsStore';
 import { clear } from './clear';
 
 describe('clear', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('clears views and view instances from the store', () => {
     const { result } = renderHook(() => useViewsStore());

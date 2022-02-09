@@ -5,7 +5,7 @@ import { clearDrops } from '../clearDrops';
 import { DropConfig } from '../types';
 import { renderDrop } from './renderDrop';
 import { render } from '@minddrop/test-utils';
-import { textDrop } from '../tests';
+import { textDrop1 } from '../test-utils';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
@@ -27,8 +27,8 @@ describe('renderDrop', () => {
   });
 
   it('renders the drop', () => {
-    const { getByText } = render(renderDrop(textDrop));
+    const { getByText } = render(renderDrop(textDrop1));
 
-    getByText(textDrop.markdown);
+    getByText(textDrop1.markdown);
   });
 });

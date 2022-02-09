@@ -1,6 +1,6 @@
 import React from 'react';
-import { Drop as DropComponent } from '@minddrop/ui';
-import { Drop, DropConfig, generateDrop } from '@minddrop/drops';
+import { Drop, DropConfig } from '../types';
+import { generateDrop } from '../generateDrop';
 
 export interface ImageDrop extends Drop {
   src: string;
@@ -15,7 +15,7 @@ export const textDropConfig: DropConfig = {
   description: 'A text drop',
   dataTypes: ['text/plain'],
   fileTypes: ['text/plain'],
-  component: ({ markdown }) => <DropComponent>{markdown}</DropComponent>,
+  component: ({ markdown }) => <div>{markdown}</div>,
   create: async () => generateDrop({ type: 'text', markdown: '' }),
   insertData: async (c, drop, { data }) => ({
     ...drop,
@@ -29,7 +29,7 @@ export const htmlDropConfig: DropConfig = {
   dataTypes: ['text/html'],
   fileTypes: ['text/plain'],
   description: 'An HTML drop',
-  component: ({ markdown }) => <DropComponent>{markdown}</DropComponent>,
+  component: ({ markdown }) => <div>{markdown}</div>,
   create: async () => generateDrop({ type: 'html' }),
 };
 
@@ -48,7 +48,7 @@ export const unregisteredDropConfig: DropConfig = {
   name: 'Unregistered',
   dataTypes: ['text/plain'],
   description: 'An unregistered drop type',
-  component: ({ markdown }) => <DropComponent>{markdown}</DropComponent>,
+  component: ({ markdown }) => <div>{markdown}</div>,
   create: async () => generateDrop({ type: 'unregistered' }),
 };
 
@@ -92,10 +92,25 @@ export const htmlDrop1: Drop = {
   markdown: 'html drop 1',
 };
 
+export const imageDrop1: ImageDrop = {
+  id: 'image-drop-1',
+  type: 'image',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  src: 'image.png',
+};
+
 export const dropTypeConfigs = [
   textDropConfig,
   htmlDropConfig,
   imageDropConfig,
 ];
 
-export const drops = [textDrop1, textDrop2, textDrop3, textDrop4, htmlDrop1];
+export const drops = [
+  textDrop1,
+  textDrop2,
+  textDrop3,
+  textDrop4,
+  htmlDrop1,
+  imageDrop1,
+];

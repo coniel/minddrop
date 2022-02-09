@@ -4,16 +4,12 @@ import { removeFilesFromDrop } from './removeFilesFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addFilesToDrop } from '../addFilesToDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('removeFilesFromDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('removes files from the drop', async () => {
     let drop: Drop;

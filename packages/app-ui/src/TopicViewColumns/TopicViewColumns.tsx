@@ -10,7 +10,7 @@ export interface TopicViewColumnsProps extends TopicViewInstance {
    * An array of string arrays, each one representing a column
    * containing the IDs of the drops in that column.
    */
-  columns: string[][];
+  columns: Record<number, string[]>;
 }
 
 export const TopicViewColumns: FC<TopicViewColumnsProps> = ({
@@ -23,7 +23,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = ({
 
   return (
     <div className="topic-view-columns">
-      {columns.map((column, index) => (
+      {Object.values(columns).map((column, index) => (
         <div key={index} className="column">
           {column.map((dropId) => Drops.render(drops[dropId]))}
         </div>

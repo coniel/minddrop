@@ -1,12 +1,10 @@
 import { clearRegisteredDropTypes } from './clearRegisteredDropTypes';
 import { registerDropType } from '../registerDropType';
-import { cleanup, core, imageDropConfig, textDropConfig } from '../tests';
+import { cleanup, core, imageDropConfig, textDropConfig } from '../test-utils';
 import { getRegisteredDropTypes } from '../getRegisteredDropTypes';
 
 describe('clearRegisteredDropTypes', () => {
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('clears registered drop types from the store', () => {
     registerDropType(core, textDropConfig);

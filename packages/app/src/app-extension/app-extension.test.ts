@@ -3,20 +3,14 @@ import { onDisable, onRun } from './app-extension';
 import { App } from '../App';
 import { act, renderHook } from '@minddrop/test-utils';
 import { useAppStore } from '../useAppStore';
-import {
-  cleanup,
-  setup,
-  core,
-  viewInstance1,
-  instanceView,
-  viewInstance2,
-  staticView,
-} from '../tests';
+import { cleanup, setup, core } from '../test-utils';
+import { VIEWS_TEST_DATA } from '@minddrop/views';
+
+const { viewInstance1, instanceView, viewInstance2, staticView } =
+  VIEWS_TEST_DATA;
 
 describe('app-extension', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanup();

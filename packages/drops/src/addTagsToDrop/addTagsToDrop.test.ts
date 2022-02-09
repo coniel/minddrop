@@ -3,16 +3,12 @@ import { Tags, Tag, TagNotFoundError } from '@minddrop/tags';
 import { addTagsToDrop } from './addTagsToDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('addTagsToDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('adds tags to the drop', async () => {
     let drop: Drop;

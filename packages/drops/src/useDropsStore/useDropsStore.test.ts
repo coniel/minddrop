@@ -1,7 +1,7 @@
 import { renderHook, act, MockDate } from '@minddrop/test-utils';
 import { generateDrop } from '../generateDrop';
 import { useDropsStore } from './useDropsStore';
-import { textDropConfig } from '../tests';
+import { textDropConfig } from '../test-utils';
 
 describe('useDropsStore', () => {
   afterEach(() => {

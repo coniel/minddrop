@@ -7,7 +7,7 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { RenameTopicPopover } from './RenameTopicPopover';
-import { core, cleanup } from '../tests';
+import { core, cleanup } from '../test-utils';
 import { Topic, Topics } from '@minddrop/topics';
 import { Popover, PopoverTrigger } from '@minddrop/ui';
 

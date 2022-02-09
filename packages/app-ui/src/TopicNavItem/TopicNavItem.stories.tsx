@@ -1,7 +1,9 @@
 import React from 'react';
 import { TopicNavItem } from './TopicNavItem';
-import { tSailing } from '../tests/topics.data';
-import '../tests/setup-stories';
+import '../test-utils/initialize-stories';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const { tSailing } = TOPICS_TEST_DATA;
 
 export default {
   title: 'app/TopicNavItem',

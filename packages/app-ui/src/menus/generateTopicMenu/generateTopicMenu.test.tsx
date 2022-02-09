@@ -8,7 +8,7 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { setup, cleanup, core } from '../../tests';
+import { setup, cleanup, core } from '../../test-utils';
 import { DropdownMenuContent, DropdownMenu } from '@minddrop/ui';
 import { Topic, Topics } from '@minddrop/topics';
 import { generateTopicMenu, TopicMenuOptions } from './generateTopicMenu';

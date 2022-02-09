@@ -1,10 +1,10 @@
 import { DropTypeNotRegisteredError } from '../errors';
-import { cleanup, imageDropConfig, initialize } from '../tests';
+import { cleanup, imageDropConfig, setup } from '../test-utils';
 import { getDropTypeConfig } from './getDropTypeConfig';
 
 describe('getDropTypeConfig', () => {
   beforeAll(() => {
-    initialize();
+    setup();
   });
 
   afterAll(() => {

@@ -3,14 +3,12 @@ import { useDropsStore } from '../useDropsStore';
 import { registerDropType } from '../registerDropType';
 import { unregisterDropType } from './unregisterDropType';
 import { DropTypeNotRegisteredError } from '../errors';
-import { cleanup, textDropConfig } from '../tests';
+import { cleanup, textDropConfig } from '../test-utils';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 describe('unregisterDropType', () => {
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('unregisters the drop type', () => {
     registerDropType(core, textDropConfig);

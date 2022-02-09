@@ -4,7 +4,7 @@ import { registerDropType } from '../registerDropType';
 import { useDropsStore } from '../useDropsStore';
 import { Files } from '@minddrop/files';
 import { Tags } from '@minddrop/tags';
-import { htmlDropConfig, imageDropConfig, textDropConfig } from './drops.data';
+import { dropTypeConfigs } from './drops.data';
 
 export const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -29,11 +29,11 @@ export const multiTextFilesData: DataInsert = {
   files: [textFile, textFile],
 };
 
-export function initialize() {
+export function setup() {
   act(() => {
-    registerDropType(core, textDropConfig);
-    registerDropType(core, htmlDropConfig);
-    registerDropType(core, imageDropConfig);
+    dropTypeConfigs.forEach((config) => {
+      registerDropType(core, config);
+    });
   });
 }
 

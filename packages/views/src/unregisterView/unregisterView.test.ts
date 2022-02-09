@@ -4,13 +4,9 @@ import { getView } from '../getView';
 import { ViewNotRegisteredError } from '../errors';
 
 describe('unregisterView', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('removes the view from the store', () => {
     unregisterView(core, staticView.id);

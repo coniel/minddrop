@@ -2,16 +2,12 @@ import { act } from '@minddrop/test-utils';
 import { deleteDrop } from './deleteDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('deleteDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('deletes the drop', () => {
     let drop: Drop;

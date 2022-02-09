@@ -1,15 +1,15 @@
 import { getRegisteredDropTypes } from './getRegisteredDropTypes';
 import {
-  initialize,
+  setup,
   cleanup,
   dropTypeConfigs,
   htmlDropConfig,
   imageDropConfig,
-} from '../tests';
+} from '../test-utils';
 
 describe('getRegisteredDropTypes', () => {
   beforeAll(() => {
-    initialize();
+    setup();
   });
 
   afterAll(() => {

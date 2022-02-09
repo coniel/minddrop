@@ -1,8 +1,10 @@
 import React from 'react';
 import { render, cleanup as cleanupRender } from '@minddrop/test-utils';
-import { setup as setupApp, cleanup } from '../tests';
+import { setup as setupApp, cleanup } from '../test-utils';
 import { TopicView } from './TopicView';
-import { tCoastalNavigationView } from '../tests/topics.data';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const { tCoastalNavigationView } = TOPICS_TEST_DATA;
 
 describe('<TopicView />', () => {
   beforeEach(() => {

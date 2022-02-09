@@ -6,11 +6,11 @@ import { unregisterDropType } from '../unregisterDropType';
 import {
   cleanup,
   core,
-  initialize,
+  setup,
   textData,
   textDropConfig,
   unregisteredDropConfig,
-} from '../tests';
+} from '../test-utils';
 import { registerDropType } from '../registerDropType';
 
 describe('insertData', () => {
@@ -19,7 +19,7 @@ describe('insertData', () => {
   let unregisteredDrop: Drop;
 
   beforeAll(() => {
-    initialize();
+    setup();
     registerDropType(core, unregisteredDropConfig);
     textDrop = createDrop(core, { type: 'text', markdown: '' });
     imageDrop = createDrop(core, { type: 'image' });

@@ -3,20 +3,16 @@ import { renderHook, act } from '@minddrop/test-utils';
 import {
   ViewNotRegisteredError,
   ViewInstanceNotFoundError,
+  VIEWS_TEST_DATA,
 } from '@minddrop/views';
 import { App } from './App';
 import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
-import {
-  core,
-  cleanup,
-  setup,
-  viewInstance1,
-  staticView,
-  unregisteredView,
-  instanceView,
-} from '../tests';
+import { core, cleanup, setup } from '../tests';
 import { initializeCore } from '@minddrop/core';
+
+const { viewInstance1, staticView, unregisteredView, instanceView } =
+  VIEWS_TEST_DATA;
 
 const config: IconButtonConfig = {
   type: 'icon-button',
@@ -28,13 +24,9 @@ const config: IconButtonConfig = {
 const element = () => <span />;
 
 describe('App', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   describe('openView', () => {
     it('sets the current view ID in the store', () => {

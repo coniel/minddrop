@@ -12,12 +12,12 @@ export function onRun(core: Core) {
     updateEvent: 'views:update-instance',
     deleteEvent: 'views:delete-instance',
     onLoad: (viewInstances) => loadViewInstances(core, viewInstances),
-    onChange: (viewInstance, deleted) => {
+    onChange: (viewInstance1, deleted) => {
       const store = useViewsStore.getState();
       if (deleted) {
-        store.removeInstance(viewInstance.id);
+        store.removeInstance(viewInstance1.id);
       } else {
-        store.setInstance(viewInstance);
+        store.setInstance(viewInstance1);
       }
     },
   });

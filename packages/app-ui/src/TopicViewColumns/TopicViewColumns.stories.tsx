@@ -1,13 +1,11 @@
 import React from 'react';
-import '../tests/setup-stories';
-import {
-  htmlDrop1,
-  textDrop1,
-  textDrop2,
-  textDrop3,
-} from '../tests/drops.data';
-import { tSailingView } from '../tests/topics.data';
+import '../test-utils/initialize-stories';
 import { TopicViewColumns, TopicViewColumnsProps } from './TopicViewColumns';
+import { DROPS_TEST_DATA } from '@minddrop/drops';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const { htmlDrop1, textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
+const { tSailingView } = TOPICS_TEST_DATA;
 
 export default {
   title: 'app/TopicViewColumns',

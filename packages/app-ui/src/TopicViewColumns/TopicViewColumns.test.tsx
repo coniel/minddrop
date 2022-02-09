@@ -1,26 +1,15 @@
 import React from 'react';
 import { render, cleanup as cleanupRender } from '@minddrop/test-utils';
-import {
-  cleanup,
-  htmlDrop1,
-  setup,
-  textDrop1,
-  textDrop2,
-  textDrop3,
-  tSailingView,
-} from '../tests';
-import { TopicViewColumns, TopicViewColumnsProps } from './TopicViewColumns';
+import { cleanup, setup } from '../test-utils';
+import { TopicViewColumns } from './TopicViewColumns';
+import { DROPS_TEST_DATA } from '@minddrop/drops';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
 
-const viewInstance: TopicViewColumnsProps = {
-  ...tSailingView,
-  view: 'topics:columns',
-  columns: [[textDrop1.id, textDrop2.id], [textDrop3.id], [htmlDrop1.id], []],
-};
+const { htmlDrop1, textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
+const { tSailingView } = TOPICS_TEST_DATA;
 
 describe('<TopicViewColumns />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();
@@ -28,7 +17,7 @@ describe('<TopicViewColumns />', () => {
   });
 
   const init = () => {
-    const utils = render(<TopicViewColumns {...viewInstance} />);
+    const utils = render(<TopicViewColumns {...tSailingView} />);
 
     return utils;
   };

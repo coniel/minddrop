@@ -1,7 +1,9 @@
 import React from 'react';
-import { tSailing } from '../tests/topics.data';
-import '../tests/setup-stories';
 import { TopicTitle } from './TopicTitle';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import '../test-utils/initialize-stories';
+
+const { tSailing } = TOPICS_TEST_DATA;
 
 export default {
   title: 'app/TopicTitle',

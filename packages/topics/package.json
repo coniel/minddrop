@@ -29,6 +29,10 @@
     "@minddrop/drops": "^0.1.1",
     "@minddrop/tags": "^0.1.1",
     "@minddrop/utils": "^0.4.0",
+    "@minddrop/views": "^0.1.0",
     "zustand": "^3.6.5"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2"
   }
 }

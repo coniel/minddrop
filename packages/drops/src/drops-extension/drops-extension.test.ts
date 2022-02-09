@@ -4,17 +4,13 @@ import { generateDrop } from '../generateDrop';
 import { useAllDrops } from '../useAllDrops';
 import { Drops } from '../Drops';
 import { registerDropType } from '../registerDropType';
-import { cleanup, core, initialize, textDropConfig } from '../tests';
+import { cleanup, core, setup, textDropConfig } from '../test-utils';
 import { getRegisteredDropTypes } from '../getRegisteredDropTypes';
 
 describe('drops extension', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   describe('onRun', () => {
     describe('drops resource registration', () => {

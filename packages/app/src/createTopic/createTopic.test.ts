@@ -4,13 +4,9 @@ import { cleanup, core, setup } from '../tests';
 import { createTopic } from './createTopic';
 
 describe('createTopic', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('creates the topic', () => {
     const topic = createTopic(core);

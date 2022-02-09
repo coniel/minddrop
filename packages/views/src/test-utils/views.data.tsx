@@ -1,17 +1,5 @@
 import React from 'react';
-import { View, ViewInstance } from '@minddrop/views';
-
-export const homeView: View = {
-  id: 'app:home',
-  type: 'static',
-  component: () => <div />,
-};
-
-export const topicView: View = {
-  id: 'app:topic',
-  type: 'instance',
-  component: () => <div />,
-};
+import { ViewInstance, View } from '../types';
 
 export const staticView: View = {
   id: 'static-view',
@@ -20,7 +8,7 @@ export const staticView: View = {
 };
 
 export const instanceView: View = {
-  id: 'view-instance',
+  id: 'instance-view',
   type: 'instance',
   component: () => <div />,
 };
@@ -32,19 +20,19 @@ export const unregisteredView: View = {
 };
 
 export const viewInstance1: ViewInstance = {
-  id: 'view-instance1-id',
-  view: 'view-instance',
+  id: 'view-instance-1',
+  view: 'instance-view',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
 export const viewInstance2: ViewInstance = {
-  id: 'view-instance2-id',
-  view: 'view-instance',
+  id: 'view-instance-2',
+  view: 'instance-view',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
-export const views = [homeView, topicView, staticView, instanceView];
+export const views = [staticView, instanceView];
 
 export const viewInstances = [viewInstance1, viewInstance2];

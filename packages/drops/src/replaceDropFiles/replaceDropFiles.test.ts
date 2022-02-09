@@ -8,16 +8,12 @@ import { replaceDropFiles } from './replaceDropFiles';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addFilesToDrop } from '../addFilesToDrop';
-import { core, initialize } from '../tests';
+import { core, setup } from '../test-utils';
 
 describe('replaceDropFiles', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it("replaces the drop's files", async () => {
     let drop: Drop;

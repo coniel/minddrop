@@ -3,16 +3,12 @@ import { updateDrop } from './updateDrop';
 import { createDrop } from '../createDrop';
 import { Drop } from '../types';
 import { useAllDrops } from '../useAllDrops';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('updateDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('returns the updated drop', () => {
     MockDate.set('01/01/2000');

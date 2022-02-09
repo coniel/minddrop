@@ -12,18 +12,25 @@ import {
   onRun as onRunTopics,
   onDisable as onDisableTopics,
   Topics,
+  TOPICS_TEST_DATA,
 } from '@minddrop/topics';
 import {
   onRun as onRunDrops,
   onDisable as onDisableDrops,
   Drops,
+  DROPS_TEST_DATA,
 } from '@minddrop/drops';
-import { topics, rootTopicIds, topicViews } from './topics.data';
+import { View, Views, VIEWS_TEST_DATA } from '@minddrop/views';
 import '../app.css';
-import { Views } from '@minddrop/views';
-import { viewInstances, views } from './views.data';
-import { drops } from './drops.data';
-import { dropTypeConfigs } from '.';
+
+const { topics, rootTopicIds, topicViewInstances } = TOPICS_TEST_DATA;
+const { staticView, viewInstances, views } = VIEWS_TEST_DATA;
+const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
+
+const homeView: View = {
+  ...staticView,
+  id: 'app:home',
+};
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
@@ -34,9 +41,11 @@ initializeI18n();
 
 export function setup() {
   act(() => {
-    views.forEach((view) => Views.register(core, view));
+    [homeView, ...views, ...TOPICS_TEST_DATA.views].forEach((view) =>
+      Views.register(core, view),
+    );
     dropTypeConfigs.forEach((config) => Drops.register(core, config));
-    Views.loadInstances(core, [...viewInstances, ...topicViews]);
+    Views.loadInstances(core, [...viewInstances, ...topicViewInstances]);
     Topics.load(core, topics);
     Drops.load(core, drops);
 

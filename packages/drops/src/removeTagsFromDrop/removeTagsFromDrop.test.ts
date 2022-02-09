@@ -4,16 +4,12 @@ import { removeTagsFromDrop } from './removeTagsFromDrop';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { addTagsToDrop } from '../addTagsToDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('removeTagsFromDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('removes tags from the drop', async () => {
     let drop: Drop;

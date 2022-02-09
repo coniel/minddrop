@@ -13,13 +13,9 @@ interface Instance extends ViewInstance {
 }
 
 describe('createViewInstance', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('creates and returns a view instance', () => {
     const instance = createViewInstance<Data, Instance>(core, {

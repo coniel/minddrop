@@ -1,6 +1,6 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { DropTypeNotRegisteredError } from '../errors';
-import { cleanup, initialize } from '../tests';
+import { cleanup, setup } from '../test-utils';
 import { createOfType } from './createOfType';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
@@ -15,7 +15,7 @@ const data: DataInsert = {
 
 describe('createOfType', () => {
   beforeAll(() => {
-    initialize();
+    setup();
   });
 
   afterAll(() => {

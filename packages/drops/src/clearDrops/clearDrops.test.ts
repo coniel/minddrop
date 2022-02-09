@@ -3,16 +3,12 @@ import { clearDrops } from './clearDrops';
 import { useAllDrops } from '../useAllDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('clearDrops', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('clears drops from the store', () => {
     const { result } = renderHook(() => useAllDrops());

@@ -6,6 +6,7 @@ import {
   onDisable as onDisableDrops,
   Drop,
   DropNotFoundError,
+  DROPS_TEST_DATA,
 } from '@minddrop/drops';
 import { onRun, onDisable } from '../topics-extension';
 import { addDropsToTopic } from './addDropsToTopic';
@@ -21,12 +22,7 @@ onRun(core);
 
 describe('addDropsToTopic', () => {
   beforeEach(() => {
-    Drops.register(core, {
-      type: 'text',
-      name: 'Text',
-      description: 'Text drop',
-      create: jest.fn(),
-    });
+    Drops.register(core, DROPS_TEST_DATA.textDropConfig);
   });
 
   afterEach(() => {

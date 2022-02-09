@@ -1,19 +1,13 @@
 import React from 'react';
 import { render, cleanup as cleanupRender, screen } from '@minddrop/test-utils';
 import { TopicBreadcrumbs } from './TopicBreadcrumbs';
-import {
-  cleanup,
-  setup,
-  tCoastalNavigation,
-  tNavigation,
-  topicTrail,
-  tSailing,
-} from '../tests';
+import { cleanup, setup } from '../test-utils';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
+
+const { tCoastalNavigation, tNavigation, trail, tSailing } = TOPICS_TEST_DATA;
 
 describe('<TopicBreadcrumbs />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();
@@ -21,7 +15,7 @@ describe('<TopicBreadcrumbs />', () => {
   });
 
   it('renders the breadcrumb trail', () => {
-    render(<TopicBreadcrumbs trail={topicTrail} />);
+    render(<TopicBreadcrumbs trail={trail} />);
 
     screen.getByText(tSailing.title);
     screen.getByText(tNavigation.title);

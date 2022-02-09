@@ -4,16 +4,12 @@ import { generateDrop } from '../generateDrop';
 import { loadDrops } from '../loadDrops';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('archiveDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('archives the drop', () => {
     const drop = generateDrop({ type: 'text' });

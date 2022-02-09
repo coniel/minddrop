@@ -1,7 +1,7 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { imageFile, textFile } from '@minddrop/test-utils';
 import { createFromDataInsert } from './createFromDataInsert';
-import { htmlDropConfig, imageDropConfig, textDropConfig } from '../tests';
+import { htmlDropConfig, imageDropConfig, textDropConfig } from '../test-utils';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 

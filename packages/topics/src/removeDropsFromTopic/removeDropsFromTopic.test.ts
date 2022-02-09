@@ -5,6 +5,7 @@ import {
   onRun as onRunDrops,
   onDisable as onDisableDrops,
   Drop,
+  DROPS_TEST_DATA,
 } from '@minddrop/drops';
 import { onRun, onDisable } from '../topics-extension';
 import { removeDropsFromTopic } from './removeDropsFromTopic';
@@ -21,12 +22,7 @@ onRun(core);
 
 describe('removeDropsFromTopic', () => {
   beforeEach(() => {
-    Drops.register(core, {
-      type: 'text',
-      name: 'Text',
-      description: 'Text drop',
-      create: jest.fn(),
-    });
+    Drops.register(core, DROPS_TEST_DATA.textDropConfig);
   });
 
   afterEach(() => {

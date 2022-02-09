@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, act, fireEvent } from '@minddrop/test-utils';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
-import { setup, cleanup, core } from '../tests';
+import { setup, cleanup, core } from '../test-utils';
 import { Topics } from '@minddrop/topics';
 import { App, TopicViewInstance } from '@minddrop/app';
 
@@ -14,9 +14,7 @@ describe('<AddTopicButton />', () => {
     });
   });
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('creates a topic', (done) => {
     render(<AddTopicButton />);

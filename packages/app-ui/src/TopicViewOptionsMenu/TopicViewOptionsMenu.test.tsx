@@ -6,14 +6,7 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { TopicViewOptionsMenu } from './TopicViewOptionsMenu';
-import {
-  cleanup,
-  core,
-  setup,
-  tNavigation,
-  tSailing,
-  tUntitled,
-} from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 import { i18n } from '@minddrop/i18n';
 import { App, TopicViewInstance } from '@minddrop/app';
 import {
@@ -21,12 +14,13 @@ import {
   CreateTopicEventData,
   DeleteTopicEvent,
   DeleteTopicEventData,
+  TOPICS_TEST_DATA,
 } from '@minddrop/topics';
 
+const { tNavigation, tSailing, tUntitled } = TOPICS_TEST_DATA;
+
 describe('<TopicViewOptionsMenu />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();

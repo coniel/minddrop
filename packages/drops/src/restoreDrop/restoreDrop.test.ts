@@ -4,16 +4,12 @@ import { Drop } from '../types';
 import { restoreDrop } from './restoreDrop';
 import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('restoreDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('restores archived drops', () => {
     let drop: Drop;

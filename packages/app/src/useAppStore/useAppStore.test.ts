@@ -1,7 +1,9 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { ViewInstance } from '@minddrop/views';
+import { VIEWS_TEST_DATA } from '@minddrop/views';
 import { UiExtensionConfig } from '../types';
 import { useAppStore } from './useAppStore';
+
+const { viewInstance1 } = VIEWS_TEST_DATA;
 
 const uiExtension: UiExtensionConfig = {
   type: 'config',
@@ -26,12 +28,6 @@ const uiExtension3 = {
   id: 'id-3',
   source: 'extension-id-2',
 };
-const viewInstance: ViewInstance = {
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  id: 'view-instance-id',
-  view: 'view-id',
-};
 
 describe('useAppStore', () => {
   afterEach(() => {
@@ -55,10 +51,10 @@ describe('useAppStore', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      result.current.setViewInstance(viewInstance);
+      result.current.setViewInstance(viewInstance1);
     });
 
-    expect(result.current.viewInstance).toBe(viewInstance);
+    expect(result.current.viewInstance).toBe(viewInstance1);
   });
 
   it('add a UI extension', () => {
@@ -78,7 +74,7 @@ describe('useAppStore', () => {
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
       result.current.setView('some-view');
-      result.current.setViewInstance(viewInstance);
+      result.current.setViewInstance(viewInstance1);
       result.current.clear();
     });
 

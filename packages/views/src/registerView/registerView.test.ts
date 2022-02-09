@@ -5,13 +5,9 @@ import { registerView } from './registerView';
 const view = { ...staticView, id: 'new-view' };
 
 describe('registerView', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('adds the view to the store', () => {
     registerView(core, view);

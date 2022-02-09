@@ -4,3 +4,4 @@ export * from './useViewInstances';
 export * from './views-extension';
 export * from './Views';
 export * from './errors';
+export * from './test-utils/export';

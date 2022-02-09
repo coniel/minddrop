@@ -3,16 +3,12 @@ import { deleteDropPermanently } from './deleteDropPermanently';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
 import { useAllDrops } from '../useAllDrops';
-import { cleanup, core, initialize } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 
 describe('deleteDrop', () => {
-  beforeEach(() => {
-    initialize();
-  });
+  beforeEach(setup);
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('returns the deleted drop', () => {
     let drop: Drop;

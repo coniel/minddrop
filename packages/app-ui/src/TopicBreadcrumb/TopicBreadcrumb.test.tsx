@@ -7,22 +7,15 @@ import {
   fireEvent,
 } from '@minddrop/test-utils';
 import { TopicBreadcrumb } from './TopicBreadcrumb';
-import { setup, cleanup } from '../tests';
-import {
-  tCoastalNavigation,
-  tNavigation,
-  tSailing,
-  tUntitled,
-} from '../tests/topics.data';
+import { setup, cleanup } from '../test-utils';
 import { App } from '@minddrop/app';
 import { i18n } from '@minddrop/i18n';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
 
-const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];
+const { tCoastalNavigation, tUntitled, trail } = TOPICS_TEST_DATA;
 
 describe('<TopicBreadcrumb />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();

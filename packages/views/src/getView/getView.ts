@@ -12,6 +12,7 @@ export function getView(id: string): View {
   const view = useViewsStore.getState().views[id];
 
   if (!view) {
+    console.error(id);
     throw new ViewNotRegisteredError();
   }
 

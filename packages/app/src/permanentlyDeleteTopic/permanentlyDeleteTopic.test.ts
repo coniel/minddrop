@@ -1,34 +1,32 @@
-import { TopicNotFoundError, Topics } from '@minddrop/topics';
+import { TopicNotFoundError, Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { ViewInstanceNotFoundError, Views } from '@minddrop/views';
-import { cleanup, core, setup, topic1 } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 import { permanentlyDeleteTopic } from './permanentlyDeleteTopic';
 
-describe('permanentlyDeleteTopic', () => {
-  beforeEach(() => {
-    setup();
-  });
+const { tSailing } = TOPICS_TEST_DATA;
 
-  afterEach(() => {
-    cleanup();
-  });
+describe('permanentlyDeleteTopic', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('deletes the topic', () => {
-    permanentlyDeleteTopic(core, topic1.id);
+    permanentlyDeleteTopic(core, tSailing.id);
 
-    expect(() => Topics.get(topic1.id)).toThrowError(TopicNotFoundError);
+    expect(() => Topics.get(tSailing.id)).toThrowError(TopicNotFoundError);
   });
 
   it("deletes the topic's views", () => {
-    permanentlyDeleteTopic(core, topic1.id);
+    permanentlyDeleteTopic(core, tSailing.id);
 
-    expect(() => Views.getInstance(topic1.views[0])).toThrowError(
+    expect(() => Views.getInstance(tSailing.views[0])).toThrowError(
       ViewInstanceNotFoundError,
     );
   });
 
   it('returns the deleted topic', () => {
-    const topic = permanentlyDeleteTopic(core, topic1.id);
+    const topic = permanentlyDeleteTopic(core, tSailing.id);
 
-    expect(topic).toEqual(topic1);
+    expect(topic).toEqual(tSailing);
   });
 });

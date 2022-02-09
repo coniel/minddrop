@@ -1,6 +1,6 @@
 import { act } from '@minddrop/test-utils';
 import { onDisable, onRun } from './views-extension';
-import { cleanup, core, staticView, viewInstance } from '../tests';
+import { cleanup, core, staticView, viewInstance1 } from '../tests';
 import { Views } from '../Views';
 import { getViewInstance } from '../getViewInstance';
 import { ViewInstanceNotFoundError, ViewNotRegisteredError } from '../errors';
@@ -8,9 +8,7 @@ import { getView } from '../getView';
 import { registerView } from '../registerView';
 
 describe('topics extension', () => {
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   describe('onRun', () => {
     describe('view instance resource registration', () => {
@@ -18,19 +16,19 @@ describe('topics extension', () => {
         onRun(core);
 
         const [connector] = core.getResourceConnectors();
-        connector.onLoad([viewInstance]);
+        connector.onLoad([viewInstance1]);
 
-        expect(getViewInstance(viewInstance.id)).toEqual(viewInstance);
+        expect(getViewInstance(viewInstance1.id)).toEqual(viewInstance1);
       });
 
       it('handles added/updated view instances', () => {
         onRun(core);
 
         const [connector] = core.getResourceConnectors();
-        connector.onChange({ ...viewInstance, foo: 'foo' }, false);
+        connector.onChange({ ...viewInstance1, foo: 'foo' }, false);
 
-        expect(getViewInstance(viewInstance.id)).toEqual({
-          ...viewInstance,
+        expect(getViewInstance(viewInstance1.id)).toEqual({
+          ...viewInstance1,
           foo: 'foo',
         });
       });
@@ -39,10 +37,10 @@ describe('topics extension', () => {
         onRun(core);
 
         const [connector] = core.getResourceConnectors();
-        connector.onLoad([viewInstance]);
-        connector.onChange(viewInstance, true);
+        connector.onLoad([viewInstance1]);
+        connector.onChange(viewInstance1, true);
 
-        expect(() => getViewInstance(viewInstance.id)).toThrowError(
+        expect(() => getViewInstance(viewInstance1.id)).toThrowError(
           ViewInstanceNotFoundError,
         );
       });
@@ -54,12 +52,12 @@ describe('topics extension', () => {
       onRun(core);
 
       const [connector] = core.getResourceConnectors();
-      connector.onLoad([viewInstance]);
+      connector.onLoad([viewInstance1]);
       registerView(core, staticView);
       onDisable(core);
 
       expect(() => getView(staticView.id)).toThrowError(ViewNotRegisteredError);
-      expect(() => getViewInstance(viewInstance.id)).toThrowError(
+      expect(() => getViewInstance(viewInstance1.id)).toThrowError(
         ViewInstanceNotFoundError,
       );
     });

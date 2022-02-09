@@ -1,5 +1,5 @@
 import { renderHook } from '@minddrop/test-utils';
-import { cleanup, setup, viewInstance, viewInstance2 } from '../tests';
+import { cleanup, setup, viewInstance1, viewInstance2 } from '../tests';
 import { useViewInstances } from './useViewInstances';
 
 describe('useViewInstances', () => {
@@ -13,11 +13,11 @@ describe('useViewInstances', () => {
 
   it('returns a view instance map', () => {
     const { result } = renderHook(() =>
-      useViewInstances([viewInstance.id, viewInstance2.id]),
+      useViewInstances([viewInstance1.id, viewInstance2.id]),
     );
 
     expect(result.current).toEqual({
-      [viewInstance.id]: viewInstance,
+      [viewInstance1.id]: viewInstance1,
       [viewInstance2.id]: viewInstance2,
     });
   });

@@ -4,14 +4,25 @@ import { PersistentStore } from '@minddrop/persistent-store';
 import { onRun as onRunApp } from '@minddrop/app';
 import { onRun as onRunTags } from '@minddrop/tags';
 import { onRun as onRunFiles } from '@minddrop/files';
-import { onRun as onRunTopics, Topics } from '@minddrop/topics';
+import {
+  onRun as onRunTopics,
+  Topics,
+  TOPICS_TEST_DATA,
+} from '@minddrop/topics';
 import { Drops, onRun as onRunDrops } from '@minddrop/drops';
-import { topics, rootTopicIds, topicViews } from './topics.data';
+import { Views, VIEWS_TEST_DATA } from '@minddrop/views';
+import { DROPS_TEST_DATA } from '@minddrop/drops';
 import '../app.css';
-import { Views } from '@minddrop/views';
-import { viewInstances, views } from './views.data';
-import { tCoastalNavigationView } from './topics.data';
-import { drops, dropTypeConfigs } from './drops.data';
+
+const { viewInstances, views } = VIEWS_TEST_DATA;
+const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
+const {
+  views: viewsTopics,
+  topics,
+  rootTopicIds,
+  topicViewInstances,
+  tCoastalNavigationView,
+} = TOPICS_TEST_DATA;
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
@@ -19,23 +30,23 @@ export const globalPersistentStore = { topics: rootTopicIds };
 export const localPersistentStore = {
   sidebarWidth: 302,
   expandedTopics: [],
-  view: 'app:topic',
+  view: 'topics:columns-view',
   viewInstance: tCoastalNavigationView.id,
 };
 
 initializeI18n();
 
-views.forEach((view) => Views.register(core, view));
-dropTypeConfigs.forEach((config) => Drops.register(core, config));
-Views.loadInstances(core, [...viewInstances, ...topicViews]);
-Topics.load(core, topics);
-Drops.load(core, drops);
-
 PersistentStore.setGlobalStore(core, globalPersistentStore);
 PersistentStore.setLocalStore(core, localPersistentStore);
+
+[...views, ...viewsTopics].forEach((view) => Views.register(core, view));
+dropTypeConfigs.forEach((config) => Drops.register(core, config));
+Views.loadInstances(core, [...viewInstances, ...topicViewInstances]);
+Drops.load(core, drops);
+Topics.load(core, topics);
 
 onRunApp(core);
 onRunFiles(core);
 onRunTags(core);
-onRunTopics(core);
 onRunDrops(core);
+onRunTopics(core);

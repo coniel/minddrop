@@ -1,7 +1,7 @@
 import { MockDate } from '@minddrop/test-utils';
 import { ViewInstanceNotFoundError } from '../errors';
 import { getViewInstance } from '../getViewInstance';
-import { cleanup, core, setup, viewInstance } from '../tests';
+import { cleanup, core, setup, viewInstance1 } from '../tests';
 import { UpdateViewInstanceData, ViewInstance } from '../types';
 import { updateViewInstance } from './updateViewInstance';
 
@@ -23,7 +23,7 @@ describe('updateViewInstance', () => {
   });
 
   it('returns the updated view instance', () => {
-    const updated = updateViewInstance<Data, Instance>(core, viewInstance.id, {
+    const updated = updateViewInstance<Data, Instance>(core, viewInstance1.id, {
       foo: 'foo',
     });
 
@@ -31,7 +31,7 @@ describe('updateViewInstance', () => {
   });
 
   it('updates the view instance in the store', () => {
-    const updated = updateViewInstance<Data, Instance>(core, viewInstance.id, {
+    const updated = updateViewInstance<Data, Instance>(core, viewInstance1.id, {
       foo: 'foo',
     });
 
@@ -51,7 +51,7 @@ describe('updateViewInstance', () => {
     let updated: Instance;
     const callback = (payload) => {
       expect(payload.data.after).toEqual({ ...updated, updatedAt: new Date() });
-      expect(payload.data.before).toEqual(viewInstance);
+      expect(payload.data.before).toEqual(viewInstance1);
       expect(payload.data.changes).toEqual({
         foo: 'foo',
         updatedAt: new Date(),
@@ -61,7 +61,7 @@ describe('updateViewInstance', () => {
 
     core.addEventListener('views:update-instance', callback);
 
-    updated = updateViewInstance<Data, Instance>(core, viewInstance.id, {
+    updated = updateViewInstance<Data, Instance>(core, viewInstance1.id, {
       foo: 'foo',
     });
   });

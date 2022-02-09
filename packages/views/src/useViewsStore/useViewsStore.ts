@@ -17,11 +17,11 @@ export const useViewsStore = createStore<ViewsStore>((set) => ({
       return { views };
     }),
 
-  setInstance: (viewInstance) =>
+  setInstance: (viewInstance1) =>
     set((state) => ({
       instances: {
         ...state.instances,
-        [viewInstance.id]: viewInstance,
+        [viewInstance1.id]: viewInstance1,
       },
     })),
 

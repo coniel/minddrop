@@ -1,14 +1,12 @@
 import { initializeCore } from '@minddrop/core';
-import { cleanup, textDropConfig } from '../tests';
+import { cleanup, textDropConfig } from '../test-utils';
 import { useDropsStore } from '../useDropsStore';
 import { registerDropType } from './registerDropType';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 describe('registerDropType', () => {
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(cleanup);
 
   it('registers the drop type', () => {
     registerDropType(core, textDropConfig);
