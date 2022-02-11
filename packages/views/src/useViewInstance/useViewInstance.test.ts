@@ -1,5 +1,5 @@
 import { renderHook } from '@minddrop/test-utils';
-import { cleanup, setup, viewInstance1 } from '../tests';
+import { cleanup, setup, viewInstance1 } from '../test-utils';
 import { useViewInstance } from './useViewInstance';
 
 describe('useViewInstance', () => {

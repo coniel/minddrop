@@ -86,6 +86,7 @@ export interface TopicChanges {
   updatedAt: Date;
   title?: string;
   subtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  views?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   drops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   archived?: true | FieldValueDelete;

@@ -1,5 +1,11 @@
 import { getViewInstances } from '../getViewInstances/getViewInstances';
-import { cleanup, core, setup, viewInstance1, viewInstance2 } from '../tests';
+import {
+  cleanup,
+  core,
+  setup,
+  viewInstance1,
+  viewInstance2,
+} from '../test-utils';
 import { loadViewInstances } from './loadViewInstances';
 
 const loaded1 = { ...viewInstance1, id: 'loaded-1' };

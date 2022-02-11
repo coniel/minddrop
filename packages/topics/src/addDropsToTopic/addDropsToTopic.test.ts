@@ -1,5 +1,3 @@
-import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import {
   Drops,
   onRun as onRunDrops,
@@ -9,64 +7,82 @@ import {
   DROPS_TEST_DATA,
 } from '@minddrop/drops';
 import { onRun, onDisable } from '../topics-extension';
+import { createTopicViewInstance } from '../createTopicViewInstance';
+import {
+  cleanup,
+  core,
+  setup,
+  topicViewColumnsConfig,
+  topicViewWithoutCallbacks,
+  tSailing,
+} from '../test-utils';
+import { getTopic } from '../getTopic';
 import { addDropsToTopic } from './addDropsToTopic';
-import { Topic } from '../types';
-import { createTopic } from '../createTopic';
+import { registerTopicView } from '../registerTopicView';
 
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-
-// Run drops extension
-onRunDrops(core);
-// Run topics extension
-onRun(core);
+const viewConfig = {
+  ...topicViewColumnsConfig,
+  id: 'on-create-view-test',
+  onAddDrops: jest.fn(),
+};
 
 describe('addDropsToTopic', () => {
   beforeEach(() => {
+    setup();
+    onRunDrops(core);
+    onRun(core);
     Drops.register(core, DROPS_TEST_DATA.textDropConfig);
   });
 
   afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    act(() => {
-      onDisableDrops(core);
-      onDisable(core);
-      onRunDrops(core);
-      onRun(core);
-    });
+    cleanup();
+    onDisableDrops(core);
+    onDisable(core);
   });
 
   it('adds drops to the topic', async () => {
-    let topic: Topic;
-    let drop: Drop;
+    const drop = await Drops.create(core, { type: 'text' });
+    addDropsToTopic(core, tSailing.id, [drop.id]);
 
-    await act(async () => {
-      drop = await Drops.create(core, { type: 'text' });
-      topic = createTopic(core);
-      topic = addDropsToTopic(core, topic.id, [drop.id]);
-    });
+    const topic = getTopic(tSailing.id);
 
     expect(topic.drops).toBeDefined();
-    expect(topic.drops.length).toBe(1);
-    expect(topic.drops[0]).toBe(drop.id);
+    expect(topic.drops.includes(drop.id)).toBeTruthy();
   });
 
-  it('throws if drop attachement does not exist', async () => {
-    let topic: Topic;
-
-    await act(async () => {
-      topic = createTopic(core);
-    });
-
+  it('throws if drop does not exist', async () => {
     expect(() =>
-      addDropsToTopic(core, topic.id, ['missing-drop-id']),
+      addDropsToTopic(core, tSailing.id, ['missing-drop-id']),
     ).toThrowError(DropNotFoundError);
   });
 
+  it("calls topic view's onAddDrops for each view instance", async () => {
+    const drop = await Drops.create(core, { type: 'text' });
+    registerTopicView(core, viewConfig);
+
+    const instance1 = createTopicViewInstance(core, tSailing.id, viewConfig.id);
+    createTopicViewInstance(core, tSailing.id, topicViewWithoutCallbacks.id);
+
+    const metadata = {
+      viewInstance: instance1.id,
+      column: 2,
+    };
+
+    addDropsToTopic(core, tSailing.id, [drop.id], metadata);
+
+    expect(viewConfig.onAddDrops).toHaveBeenCalledWith(
+      core,
+      instance1,
+      { [drop.id]: drop },
+      metadata,
+    );
+  });
+
   it("dispatches a 'topics:add-drops' event", (done) => {
-    let topic: Topic;
     let drop: Drop;
 
     function callback(payload) {
+      const topic = getTopic(tSailing.id);
       expect(payload.data.topic).toEqual(topic);
       expect(payload.data.drops).toEqual({ [drop.id]: drop });
       done();
@@ -74,10 +90,7 @@ describe('addDropsToTopic', () => {
 
     core.addEventListener('topics:add-drops', callback);
 
-    act(() => {
-      drop = Drops.create(core, { type: 'text' });
-      topic = createTopic(core);
-      topic = addDropsToTopic(core, topic.id, [drop.id]);
-    });
+    drop = Drops.create(core, { type: 'text' });
+    addDropsToTopic(core, tSailing.id, [drop.id]);
   });
 });

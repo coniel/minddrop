@@ -8,13 +8,14 @@ import {
 import { TopicViewOptionsMenu } from './TopicViewOptionsMenu';
 import { cleanup, core, setup } from '../test-utils';
 import { i18n } from '@minddrop/i18n';
-import { App, TopicViewInstance } from '@minddrop/app';
+import { App } from '@minddrop/app';
 import {
   CreateTopicEvent,
   CreateTopicEventData,
   DeleteTopicEvent,
   DeleteTopicEventData,
   TOPICS_TEST_DATA,
+  TopicViewInstance,
 } from '@minddrop/topics';
 
 const { tNavigation, tSailing, tUntitled } = TOPICS_TEST_DATA;
@@ -42,9 +43,9 @@ describe('<TopicViewOptionsMenu />', () => {
     core.addEventListener<CreateTopicEvent, CreateTopicEventData>(
       'topics:create',
       (payload) => {
-        expect(
-          App.getCurrentView<TopicViewInstance>().instance.topicId,
-        ).toEqual(payload.data.id);
+        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
+          payload.data.id,
+        );
         done();
       },
     );
@@ -61,9 +62,9 @@ describe('<TopicViewOptionsMenu />', () => {
     core.addEventListener<DeleteTopicEvent, DeleteTopicEventData>(
       'topics:delete',
       () => {
-        expect(
-          App.getCurrentView<TopicViewInstance>().instance.topicId,
-        ).toEqual(tSailing.id);
+        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
+          tSailing.id,
+        );
         done();
       },
     );
@@ -80,9 +81,9 @@ describe('<TopicViewOptionsMenu />', () => {
     core.addEventListener<DeleteTopicEvent, DeleteTopicEventData>(
       'topics:delete',
       () => {
-        expect(
-          App.getCurrentView<TopicViewInstance>().instance.topicId,
-        ).toEqual(tSailing.id); // tSailing is the first root topic
+        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
+          tSailing.id,
+        ); // tSailing is the first root topic
         done();
       },
     );

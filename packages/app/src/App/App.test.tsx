@@ -8,7 +8,7 @@ import {
 import { App } from './App';
 import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
-import { core, cleanup, setup } from '../tests';
+import { core, cleanup, setup } from '../test-utils';
 import { initializeCore } from '@minddrop/core';
 
 const { viewInstance1, staticView, unregisteredView, instanceView } =

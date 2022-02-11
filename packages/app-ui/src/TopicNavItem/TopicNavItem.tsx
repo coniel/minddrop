@@ -8,9 +8,9 @@ import {
   Popover,
   PopoverAnchor,
 } from '@minddrop/ui';
-import { Topic, useTopic } from '@minddrop/topics';
+import { Topic, useTopic, TopicViewInstance } from '@minddrop/topics';
 import { generateTopicMenu } from '../menus';
-import { useAppCore, useCurrentView, TopicViewInstance } from '@minddrop/app';
+import { useAppCore, useCurrentView } from '@minddrop/app';
 import {
   PersistentStore,
   useLocalPersistentStoreValue,
@@ -42,7 +42,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
       return false;
     }
 
-    return instance.topicId === topicId;
+    return instance.topic === topicId;
   }, [instance, topicId]);
   const [renamePopoverOpen, setRenamePopoverOpen] = useState(false);
 

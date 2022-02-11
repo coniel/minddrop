@@ -1,22 +1,37 @@
 import React from 'react';
-import { ViewInstance, View } from '../types';
+import { ViewInstance, View, ViewConfig } from '../types';
 
-export const staticView: View = {
+export const staticViewConfig: ViewConfig = {
   id: 'static-view',
   type: 'static',
   component: () => <div />,
 };
 
-export const instanceView: View = {
+export const instanceViewConfig: ViewConfig = {
   id: 'instance-view',
   type: 'instance',
   component: () => <div />,
 };
 
-export const unregisteredView: View = {
+export const unregisteredViewConfig: ViewConfig = {
   id: 'unregistered-view',
   type: 'instance',
   component: () => <div />,
+};
+
+export const staticView: View = {
+  extension: 'views',
+  ...staticViewConfig,
+};
+
+export const instanceView: View = {
+  extension: 'views',
+  ...instanceViewConfig,
+};
+
+export const unregisteredView: View = {
+  extension: 'views',
+  ...unregisteredViewConfig,
 };
 
 export const viewInstance1: ViewInstance = {
@@ -33,6 +48,6 @@ export const viewInstance2: ViewInstance = {
   updatedAt: new Date(),
 };
 
-export const views = [staticView, instanceView];
+export const viewConfigs = [staticViewConfig, instanceViewConfig];
 
 export const viewInstances = [viewInstance1, viewInstance2];

@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { View } from './View.types';
+import { ViewConfig } from './ViewConfig.types';
 import {
   CreateViewInstanceData,
   UpdateViewInstanceData,
@@ -59,7 +60,7 @@ export interface ViewsApi {
    * @param core A MindDrop core instance.
    * @param config The config of the view to register.
    */
-  register(core: Core, config: View): void;
+  register(core: Core, view: ViewConfig): void;
 
   /**
    * Unregister's a view from and dispatches a

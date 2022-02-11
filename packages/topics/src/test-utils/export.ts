@@ -1,6 +1,5 @@
 import {
-  topicView,
-  view,
+  topicViewColumns,
   tCoastalNavigationView,
   tOffshoreNavigationView,
   tNavigationView,
@@ -19,15 +18,15 @@ import {
   topics,
   trail,
   topicViewInstances,
-  views,
   tSailingView2,
   tCoastalNavigationView2,
+  unregisteredTopicView,
+  topicViewConfigs,
 } from './topics.data';
 
 export const TOPICS_TEST_DATA = {
-  view,
-  topicView,
-  views,
+  topicViewColumns,
+  unregisteredTopicView,
   topicViewInstances,
   topics,
   trail,
@@ -48,4 +47,5 @@ export const TOPICS_TEST_DATA = {
   tAnchoring,
   tSailing,
   tUntitled,
+  topicViewConfigs,
 };

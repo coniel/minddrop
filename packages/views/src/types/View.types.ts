@@ -7,6 +7,11 @@ export interface View {
   id: string;
 
   /**
+   * The ID of the extension that registered the view.
+   */
+  extension: string;
+
+  /**
    * The type of view.
    * - `static` views simply render the provided component.
    * - `instance` views are rendered using a persistently

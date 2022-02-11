@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { View } from '../types';
+import { ViewConfig } from '../types';
 import { useViewsStore } from '../useViewsStore';
 
 /**
@@ -7,10 +7,15 @@ import { useViewsStore } from '../useViewsStore';
  * event.
  *
  * @param core A MindDrop core instance.
- * @param config The config of the view to register.
+ * @param view The config of the view to register.
  */
-export function registerView(core: Core, config: View): void {
-  useViewsStore.getState().setView(config);
+export function registerView(core: Core, config: ViewConfig): void {
+  // Add extension ID to config
+  const view = { ...config, extension: core.extensionId };
 
-  core.dispatch('views:register', config);
+  // Add view to store
+  useViewsStore.getState().setView(view);
+
+  // Dispatch 'views:register' event
+  core.dispatch('views:register', view);
 }

@@ -12,17 +12,13 @@ import { useAllDrops } from '../useAllDrops';
 import { clearDrops } from '../clearDrops';
 import { registerDropType } from '../registerDropType';
 import { DropTypeNotRegisteredError } from '../errors';
+import { textDropConfig } from '../test-utils';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('createDrop', () => {
   beforeEach(() => {
-    registerDropType(core, {
-      type: 'text',
-      name: 'Text',
-      description: 'Text drop',
-      create: jest.fn(),
-    });
+    registerDropType(core, textDropConfig);
   });
 
   afterEach(() => {

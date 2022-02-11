@@ -34,6 +34,13 @@ View instances can be creqated using the [`Views.createInstance`](/docs/extensio
       description: 'The view ID. Must be unique accross the app.',
     },
     {
+      name: 'extension',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the extension that registered the view.',
+    },
+    {
       name: 'type',
       type: "'static' | 'instance'",
       required: true,

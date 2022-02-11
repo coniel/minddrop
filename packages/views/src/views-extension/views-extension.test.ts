@@ -1,6 +1,6 @@
 import { act } from '@minddrop/test-utils';
 import { onDisable, onRun } from './views-extension';
-import { cleanup, core, staticView, viewInstance1 } from '../tests';
+import { cleanup, core, staticView, viewInstance1 } from '../test-utils';
 import { Views } from '../Views';
 import { getViewInstance } from '../getViewInstance';
 import { ViewInstanceNotFoundError, ViewNotRegisteredError } from '../errors';

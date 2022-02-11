@@ -1,5 +1,5 @@
 import { act, renderHook } from '@minddrop/test-utils';
-import { cleanup, core, setup } from '../tests';
+import { cleanup, core, setup } from '../test-utils';
 import { useViewsStore } from '../useViewsStore';
 import { clear } from './clear';
 

@@ -23,16 +23,26 @@ import {
 import { View, Views, VIEWS_TEST_DATA } from '@minddrop/views';
 import '../app.css';
 
-const { topics, rootTopicIds, topicViewInstances } = TOPICS_TEST_DATA;
-const { staticView, viewInstances, views } = VIEWS_TEST_DATA;
+const { topics, rootTopicIds, topicViewConfigs, topicViewInstances } =
+  TOPICS_TEST_DATA;
+const { staticView, viewInstances, viewConfigs } = VIEWS_TEST_DATA;
 const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
 
 const homeView: View = {
   ...staticView,
+  extension: 'app',
   id: 'app:home',
 };
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
+export const viewsCore = initializeCore({
+  appId: 'app-id',
+  extensionId: 'views',
+});
+export const topicsCore = initializeCore({
+  appId: 'app-id',
+  extensionId: 'topics',
+});
 
 export const globalPersistentStore = { topics: rootTopicIds };
 export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
@@ -41,11 +51,13 @@ initializeI18n();
 
 export function setup() {
   act(() => {
-    [homeView, ...views, ...TOPICS_TEST_DATA.views].forEach((view) =>
-      Views.register(core, view),
-    );
+    Views.register(core, homeView);
+    viewConfigs.forEach((view) => Views.register(viewsCore, view));
     dropTypeConfigs.forEach((config) => Drops.register(core, config));
     Views.loadInstances(core, [...viewInstances, ...topicViewInstances]);
+    topicViewConfigs.forEach((config) => {
+      Topics.registerView(topicsCore, config);
+    });
     Topics.load(core, topics);
     Drops.load(core, drops);
 

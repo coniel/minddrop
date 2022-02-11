@@ -1,5 +1,5 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { viewInstance1, staticView } from '../tests';
+import { viewInstance1, staticView } from '../test-utils';
 import { useViewsStore } from './useViewsStore';
 
 describe('useViewsStore', () => {

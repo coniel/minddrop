@@ -1,4 +1,4 @@
-import { cleanup, setup, staticView, unregisteredView } from '../tests';
+import { cleanup, setup, staticView, unregisteredView } from '../test-utils';
 import { ViewNotRegisteredError } from '../errors';
 import { getView } from './getView';
 

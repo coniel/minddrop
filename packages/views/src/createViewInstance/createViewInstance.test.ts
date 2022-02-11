@@ -1,6 +1,12 @@
 import { ViewNotRegisteredError } from '../errors';
 import { getViewInstance } from '../getViewInstance';
-import { cleanup, core, instanceView, setup, unregisteredView } from '../tests';
+import {
+  cleanup,
+  core,
+  instanceView,
+  setup,
+  unregisteredView,
+} from '../test-utils';
 import { CreateViewInstanceData, ViewInstance } from '../types';
 import { createViewInstance } from './createViewInstance';
 

@@ -2,6 +2,8 @@ import { Drop } from '@minddrop/drops';
 import { Tag } from '@minddrop/tags';
 import { DataInsert, EventListenerCallback } from '@minddrop/core';
 import { Topic, TopicChanges } from './Topic.types';
+import { TopicView } from './TopicView.types';
+import { TopicViewInstance } from './TopicViewInstance.types';
 
 export type CreateTopicEvent = 'topics:create';
 export type UpdateTopicEvent = 'topics:update';
@@ -16,6 +18,10 @@ export type UnarchiveTopicEvent = 'topics:unarchive';
 export type DeleteTopicEvent = 'topics:delete';
 export type RestoreTopicEvent = 'topics:restore';
 export type PermanentlyDeleteTopicEvent = 'topics:delete-permanently';
+export type RegisterViewEvent = 'topics:register-view';
+export type UnregisterViewEvent = 'topics:unregsiter-view';
+export type CreateViewInstanceEvent = 'topics:create-view-instance';
+export type DeleteViewInstanceEvent = 'topics:delete-view-instance';
 export type LoadTopicsEvent = 'topics:load';
 export type ClearTopicsEvent = 'topics:clear';
 export type InsertDataEvent = 'topics:insert-data';
@@ -26,6 +32,10 @@ export type UnarchiveTopicEventData = Topic;
 export type DeleteTopicEventData = Topic;
 export type RestoreTopicEventData = Topic;
 export type PermanentlyDeleteTopicEventData = Topic;
+export type RegisterViewEventData = TopicView;
+export type UnregisterViewEventData = TopicView;
+export type CreateViewInstanceData = TopicViewInstance;
+export type DeleteViewInstanceData = TopicViewInstance;
 export type LoadTopicsEventData = Topic[];
 
 export interface UpdateTopicEventData {
@@ -180,6 +190,22 @@ export type RestoreTopicEventCallback = EventListenerCallback<
 export type PermanentlyDeleteTopicEventCallback = EventListenerCallback<
   PermanentlyDeleteTopicEvent,
   PermanentlyDeleteTopicEventData
+>;
+export type RegisterViewEventCallback = EventListenerCallback<
+  RegisterViewEvent,
+  RegisterViewEventData
+>;
+export type UnregisterViewEventCallback = EventListenerCallback<
+  UnregisterViewEvent,
+  UnregisterViewEventData
+>;
+export type CreateViewInstanceEventCallback = EventListenerCallback<
+  CreateViewInstanceEvent,
+  CreateViewInstanceData
+>;
+export type DeleteViewInstanceEventCallback = EventListenerCallback<
+  DeleteViewInstanceEvent,
+  DeleteViewInstanceData
 >;
 export type InsertDataEventCallback = EventListenerCallback<
   InsertDataEvent,

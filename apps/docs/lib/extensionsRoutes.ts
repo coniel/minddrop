@@ -130,6 +130,18 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/topic',
       },
       {
+        title: 'TopicView',
+        slug: 'docs/extensions/types/topic-view',
+      },
+      {
+        title: 'TopicViewConfig',
+        slug: 'docs/extensions/types/topic-view-config',
+      },
+      {
+        title: 'TopicViewInstance',
+        slug: 'docs/extensions/types/topic-view-instance',
+      },
+      {
         title: 'UiComponentConfig',
         slug: 'docs/extensions/types/ui-component-config',
       },
@@ -140,6 +152,10 @@ export const extensionsRoutes = [
       {
         title: 'View',
         slug: 'docs/extensions/types/view',
+      },
+      {
+        title: 'ViewConfig',
+        slug: 'docs/extensions/types/view-config',
       },
       {
         title: 'ViewInstance',

@@ -4,7 +4,7 @@ import {
   unregisteredView,
   viewInstance1,
   viewInstance2,
-  views,
+  viewConfigs,
   viewInstances,
 } from './views.data';
 
@@ -14,6 +14,6 @@ export const VIEWS_TEST_DATA = {
   unregisteredView,
   viewInstance1,
   viewInstance2,
-  views,
+  viewConfigs,
   viewInstances,
 };

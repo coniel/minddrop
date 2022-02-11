@@ -580,6 +580,128 @@ Topics.insertData(core: Core, topicId: string, data: DataInsert): void
   ]}
 />
 
+### registerView
+
+Registers a `TopicView` and dispaches a `topics:register-view` event. Registering a topic view allows the user to create instances of the view within topics. This method registers the view with the `Views` API (using `Views.register`) internally, so you do not need to do so yourself.
+
+```ts
+Topics.registerView(core: Core, view: TopicViewConfig): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'view',
+      type: 'TopicViewConfig',
+      required: true,
+      description: (
+        <span>
+          The view to register. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config">
+            <Code>TopicViewConfig</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### unregisterView
+
+Unregisters a `TopicView` and dispaches a `topics:unregister-view` event. This method unregisters the view with the `Views` API (using `Views.unregister`) internally, so you do not need to do so yourself.
+
+```ts
+Topics.unregisterView(core: Core, viewId: string): void;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view to unregister.',
+    },
+  ]}
+/>
+
+### getView
+
+Returns a `TopicView` by ID. Throws a `TopicViewNotRegisteredError` if the topic view is not registered.
+
+```ts
+Topics.getView(topicViewId: string): TopicView
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic view to retrieve.',
+    },
+  ]}
+/>
+
+### getViews
+
+Returns a `{ [id]: TopicView }` map of all registered topic views.
+
+```ts
+Topics.getView(): TopicViewMap
+```
+
+### createViewInstance
+
+Creates a new instance of a `TopicView` and adds it to the topic. The topic view must first be registered using `Topics.registerView` or else a `TopicViewNotRegisteredError` will be thrown. Returns the new view instance and dispatches a `topics:create-view-instance` event.
+
+```ts
+Topics.createViewInstance(core: Core, topicId: string, topicViewId: string): ViewInstance;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic into which to add the view.',
+    },
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic view for which to create a new instance.',
+    },
+  ]}
+/>
+
+### deleteViewInstance
+
+Deletes a topic view instance and removes it from the topic. Returns the deleted view instance and dispatches a `topics:delete-view-instance` event.
+
+```ts
+Topics.deleteViewInstance(core: Core, topicViewId: string): ViewInstance
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic view to delete.',
+    },
+  ]}
+/>
+
 ### load
 
 Loads topics into the store and dispatches a `topics:load` event.
@@ -734,6 +856,28 @@ See below the table for more details on the data passed by topic related events.
       name: 'topics:remove-tags',
       data: 'RemoveTagsEventData',
       description: 'Dispatched when tags are removed from a topic.',
+    },
+    {
+      name: 'topics:register-view',
+      data: 'TopicView',
+      description: 'Dispatched when a topic view is registered.',
+    },
+    {
+      name: 'topics:unregister-view',
+      data: 'TopicView',
+      description: 'Dispatched when a topic view is unregistered.',
+    },
+    {
+      name: 'topics:create-view-intance',
+      data: 'TopicViewInstance',
+      description:
+        'Dispatched when a new topic view instance is created.',
+    },
+    {
+      name: 'topics:delete-view-intance',
+      data: 'TopicViewInstance',
+      description:
+        'Dispatched when a topic view instance is deleted.',
     },
     {
       name: 'topics:insert-data',

@@ -39,7 +39,18 @@ import {
   ClearTopicsEventCallback,
   PermanentlyDeleteTopicEventCallback,
   PermanentlyDeleteTopicEvent,
+  RegisterViewEvent,
+  RegisterViewEventCallback,
+  UnregisterViewEvent,
+  UnregisterViewEventCallback,
+  CreateViewInstanceEvent,
+  CreateViewInstanceEventCallback,
+  DeleteViewInstanceEventCallback,
+  DeleteViewInstanceEvent,
 } from './TopicEvents.types';
+import { TopicViewConfig } from './TopicViewConfig.types';
+import { TopicView, TopicViewMap } from './TopicView.types';
+import { TopicViewInstance } from './TopicViewInstance.types';
 
 export interface TopicsApi {
   /**
@@ -228,6 +239,63 @@ export interface TopicsApi {
   removeTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
   /**
+   * Returns a TopicView by ID.
+   *
+   * @param viewId The ID of the topic view to retrieve.
+   */
+  getView(viewId: string): TopicView;
+
+  /**
+   * Returns a `{ [id]: TopicView }` map of all registered topic views.
+   */
+  getViews(): TopicViewMap;
+
+  /**
+   * Registers a topic view and dispatches a `topics:register-view` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param config The config of the topic view to register.
+   */
+  registerView(core: Core, config: TopicViewConfig): void;
+
+  /**
+   * Unregisters a topic view and dispatches a
+   * `topics:unregister-view` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewId The ID of the view to unregister.
+   */
+  unregisterView(core: Core, viewId: string): void;
+
+  /**
+   * Creates a new instance of a TopicView and adds it to the topic.
+   * The topic view must first be registered using `Topics.registerView`
+   * or else a TopicViewNotRegisteredError will be thrown.
+   *
+   * Returns the new view instance and dispatches a
+   * `topics:create-view-instance` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to which to add the view.
+   * @param topicViewId The ID of the topic view for which to create an instance.
+   */
+  createViewInstance<I extends TopicViewInstance = TopicViewInstance>(
+    core: Core,
+    topicId: string,
+    topicViewId: string,
+  ): I;
+
+  /**
+   * Deletes a topic view instance and removes it from the topic.
+   * Returns the deleted view instance and dispatches a
+   * `topics:delete-view-instance` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewInstanceId The ID of the topic view instance to delete.
+   */
+  deleteViewInstance(core: Core, viewInstanceId: string): TopicViewInstance;
+
+  /**
    * Dispatches a `topics:insert-data` event for a given topic.
    *
    * @param core A MindDrop core instance.
@@ -345,6 +413,34 @@ export interface TopicsApi {
     callback: RemoveTagsEventCallback,
   ): void;
 
+  // Add 'topics:register-view' event listener
+  addEventListener(
+    core: Core,
+    type: RegisterViewEvent,
+    callback: RegisterViewEventCallback,
+  ): void;
+
+  // Add 'topics:unregister-view' event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterViewEvent,
+    callback: UnregisterViewEventCallback,
+  ): void;
+
+  // Add 'topics:create-view-instance' event listener
+  addEventListener(
+    core: Core,
+    type: CreateViewInstanceEvent,
+    callback: CreateViewInstanceEventCallback,
+  ): void;
+
+  // Add 'topics:delete-view-instance' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteViewInstanceEvent,
+    callback: DeleteViewInstanceEventCallback,
+  ): void;
+
   // Add 'topics:insert-data' event listener
   addEventListener(
     core: Core,
@@ -459,6 +555,34 @@ export interface TopicsApi {
     core: Core,
     type: RemoveTagsEvent,
     callback: RemoveTagsEventCallback,
+  ): void;
+
+  // Remove 'topics:register-view' event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterViewEvent,
+    callback: RegisterViewEventCallback,
+  ): void;
+
+  // Remove 'topics:unregister-view' event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterViewEvent,
+    callback: UnregisterViewEventCallback,
+  ): void;
+
+  // Remove 'topics:create-view-instance' event listener
+  removeEventListener(
+    core: Core,
+    type: CreateViewInstanceEvent,
+    callback: CreateViewInstanceEventCallback,
+  ): void;
+
+  // Remove 'topics:delete-view-instance' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteViewInstanceEvent,
+    callback: DeleteViewInstanceEventCallback,
   ): void;
 
   // Remove 'topics:load' event listener

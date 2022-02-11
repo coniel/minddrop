@@ -1,7 +1,7 @@
 import { MockDate } from '@minddrop/test-utils';
 import { ViewInstanceNotFoundError } from '../errors';
 import { getViewInstance } from '../getViewInstance';
-import { cleanup, core, setup, viewInstance1 } from '../tests';
+import { cleanup, core, setup, viewInstance1 } from '../test-utils';
 import { UpdateViewInstanceData, ViewInstance } from '../types';
 import { updateViewInstance } from './updateViewInstance';
 

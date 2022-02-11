@@ -4,12 +4,12 @@ export interface TopicViewInstance extends ViewInstance {
   /**
    * The ID of the topic.
    */
-  topicId: string;
+  topic: string;
 }
 
 export interface CreateTopicViewInstanceData extends CreateViewInstanceData {
   /**
    * The ID of the topic.
    */
-  topicId: string;
+  topic: string;
 }

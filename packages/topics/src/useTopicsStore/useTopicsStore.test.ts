@@ -1,10 +1,9 @@
-import { renderHook, act, MockDate } from '@minddrop/test-utils';
-import { generateTopic } from '../generateTopic';
+import { renderHook, act } from '@minddrop/test-utils';
+import { tNavigation, topicViewColumns, tSailing } from '../test-utils';
 import { useTopicsStore } from './useTopicsStore';
 
 describe('useTopicsStore', () => {
   afterEach(() => {
-    MockDate.reset();
     const { result } = renderHook(() => useTopicsStore((state) => state));
     act(() => {
       result.current.clear();
@@ -15,42 +14,67 @@ describe('useTopicsStore', () => {
     const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
-      result.current.loadTopics([generateTopic(), generateTopic()]);
+      result.current.loadTopics([tSailing, tNavigation]);
     });
 
-    expect(Object.keys(result.current.topics).length).toBe(2);
+    expect(result.current.topics).toEqual({
+      [tSailing.id]: tSailing,
+      [tNavigation.id]: tNavigation,
+    });
   });
 
   it('clears the store', () => {
     const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
-      result.current.loadTopics([generateTopic(), generateTopic()]);
+      result.current.loadTopics([tSailing, tNavigation]);
+      result.current.setView(topicViewColumns);
       result.current.clear();
     });
 
-    expect(Object.keys(result.current.topics).length).toBe(0);
+    expect(result.current.topics).toEqual({});
+    expect(result.current.views).toEqual({});
   });
 
   it('sets a topic', () => {
     const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
-      result.current.setTopic(generateTopic());
+      result.current.setTopic(tSailing);
     });
 
-    expect(Object.keys(result.current.topics).length).toBe(1);
+    expect(result.current.topics[tSailing.id]).toEqual(tSailing);
   });
 
   it('removes a topic', () => {
-    const topic = generateTopic();
     const { result } = renderHook(() => useTopicsStore((state) => state));
 
     act(() => {
-      result.current.loadTopics([topic, generateTopic()]);
-      result.current.removeTopic(topic.id);
+      result.current.loadTopics([tSailing]);
+      result.current.removeTopic(tSailing.id);
     });
 
-    expect(Object.keys(result.current.topics).length).toBe(1);
+    expect(result.current.topics[tSailing.id]).not.toBeDefined();
+  });
+
+  it('sets a view', () => {
+    const { result } = renderHook(() => useTopicsStore((state) => state));
+
+    act(() => {
+      result.current.setView(topicViewColumns);
+    });
+
+    expect(result.current.views[topicViewColumns.id]).toEqual(topicViewColumns);
+  });
+
+  it('removes a view', () => {
+    const { result } = renderHook(() => useTopicsStore((state) => state));
+
+    act(() => {
+      result.current.setView(topicViewColumns);
+      result.current.removeView(topicViewColumns.id);
+    });
+
+    expect(result.current.views[topicViewColumns.id]).not.toBeDefined();
   });
 });

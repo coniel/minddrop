@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FC } from 'react';
 import './TopicViewColumns.css';
-import { TopicViewInstance, useAppCore } from '@minddrop/app';
-import { useTopic } from '@minddrop/topics';
+import { useAppCore } from '@minddrop/app';
+import { TopicViewInstance, useTopic } from '@minddrop/topics';
 import { Drops, useDrops } from '@minddrop/drops';
 
 export interface TopicViewColumnsProps extends TopicViewInstance {
@@ -14,7 +14,7 @@ export interface TopicViewColumnsProps extends TopicViewInstance {
 }
 
 export const TopicViewColumns: FC<TopicViewColumnsProps> = ({
-  topicId,
+  topic: topicId,
   columns,
 }) => {
   const core = useAppCore();

@@ -1,0 +1,197 @@
+---
+metaTitle: TopicViewConfig Interface
+metaDescription: A configuration object used to register topic views.
+---
+
+# TopicViewConfig
+
+<Description>
+  A configuration object used to register topic views.
+</Description>
+
+Topics render their content using instances of a special type of view called topic views. Topic views need to be registered using the [`Topics.registerView`](/docs/extensions/api/topics#registerview) method before they can be used.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic view. Must be unique accross the app.',
+    },
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'The name of the view. Dispalyed to users.',
+    },
+    {
+      name: 'description',
+      type: 'string',
+      required: true,
+      description:
+        'A short, single sentence description of the view. Displayed to users.',
+    },
+    {
+      name: 'component',
+      type: 'React.ComponentType',
+      required: true,
+      description: 'The React component rendered by the view.',
+    },
+    {
+      name: 'onCreate',
+      type: 'function',
+      description:
+        'Called when a new instance of the topic view is created. See below for details.',
+    },
+    {
+      name: 'onDelete',
+      type: 'function',
+      description:
+        'Called when an instance of the topic view is deleted. See below for details.',
+    },
+    {
+      name: 'onAddDrop',
+      type: 'function',
+      description:
+        'Called when a drop is added to the topic. See below for details.',
+    },
+    {
+      name: 'onRemoveDrop',
+      type: 'function',
+      description:
+        'Called when a drop is archived, deleted, or permanently deleted from the topic. See below for details.',
+    },
+  ]}
+/>
+
+### onCreate
+
+Called when a new instance of the topic view is created. Should return any custom data used to setup the view.
+
+Note that default `TopicViewInstance` data such as `id`, `view`, `topic`, `createdAt`, etc. are set automatically and should not be returned by this method.
+
+```ts
+onCreate(core: Core, topic: Topic): object
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic for which the view was created.',
+    },
+  ]}
+/>
+
+### onDelete
+
+Called when an instance of the topic view is deleted. Useful for cleaning up any artifacts created by the view instance.
+
+Note that this method does not need to delete the topic view instance itself, just any data that would be left over.
+
+```ts
+onDelete(core: Core, viewInstance: ViewInstance): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The deleted view instance.',
+    },
+  ]}
+/>
+
+### onAddDrops
+
+Called on all of a topic's views when drops are added to the topic.
+
+```ts
+onAddDrop(core: Core, viewInstance: ViewInstance, drops: DropMap, metadata: AddDropMetadata): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The view instance.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were added to the topic.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: 'Metadata about the event. See below for details.',
+    },
+  ]}
+/>
+
+#### AddDropsMetadata
+
+Metadata about the event when a drop is added to a topic. Contains the ID of the view instance into which the drop was added (or `null` if not added by a view) and any other data added by the view which added the drop.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'string | null',
+      required: true,
+      description: (
+        <span>
+          The ID of the view instance into which the drop was
+          inserted.<Code>null</Code> if the drop was not inserted into
+          a view.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+Additionally, the metadata object can contain values added by the view which added the drop.
+
+### onRemoveDrops
+
+Called on all of a topic's views when drops are archived, deleted, or permanently deleted from the topic.
+
+```ts
+onDelete(core: Core, topic: Topic, viewInstance: ViewInstance, drops: DropMap): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the drop was removed.',
+    },
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The view instance.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were removed from the topic.',
+    },
+  ]}
+/>

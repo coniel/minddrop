@@ -2,7 +2,7 @@ import { cleanup } from '@minddrop/test-utils';
 import { ViewInstance } from '../types';
 import { ViewInstanceNotFoundError } from '../errors';
 import { getViewInstance } from '../getViewInstance';
-import { core, setup, viewInstance1 } from '../tests';
+import { core, setup, viewInstance1 } from '../test-utils';
 import { deleteViewInstance } from './deleteViewInstance';
 
 describe('deleteViewInstance', () => {

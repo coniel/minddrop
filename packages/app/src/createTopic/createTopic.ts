@@ -1,8 +1,5 @@
 import { Core } from '@minddrop/core';
 import { CreateTopicData, Topic, Topics } from '@minddrop/topics';
-import { generateId } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
-import { CreateTopicViewInstanceData } from '../types/TopicViewInstance';
 
 /**
  * Creates a new topic along with a default view for it.
@@ -13,20 +10,15 @@ import { CreateTopicViewInstanceData } from '../types/TopicViewInstance';
  * @param data The default topic property values.
  */
 export function createTopic(core: Core, data?: CreateTopicData): Topic {
-  const topicId = generateId();
+  // Create the topic
+  const topic = Topics.create(core, data);
 
   // Create the view instance
-  const viewInstance = Views.createInstance<CreateTopicViewInstanceData>(core, {
-    topicId,
-    view: 'topics:columns-view',
-  });
+  const viewInstance = Topics.createViewInstance(
+    core,
+    topic.id,
+    'topics:columns-view',
+  );
 
-  // Create the topic
-  const topic = Topics.create(core, {
-    ...data,
-    id: topicId,
-    views: [viewInstance.id],
-  });
-
-  return topic;
+  return { ...topic, views: [viewInstance.id] };
 }

@@ -3,16 +3,11 @@ import { render, screen, act, fireEvent } from '@minddrop/test-utils';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
 import { setup, cleanup, core } from '../test-utils';
-import { Topics } from '@minddrop/topics';
-import { App, TopicViewInstance } from '@minddrop/app';
+import { TopicViewInstance } from '@minddrop/topics';
+import { App } from '@minddrop/app';
 
 describe('<AddTopicButton />', () => {
-  beforeEach(() => {
-    setup();
-    act(() => {
-      Topics.clear(core);
-    });
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
@@ -49,7 +44,7 @@ describe('<AddTopicButton />', () => {
     render(<AddTopicButton />);
 
     core.addEventListener('topics:create', (payload) => {
-      expect(App.getCurrentView<TopicViewInstance>().instance.topicId).toBe(
+      expect(App.getCurrentView<TopicViewInstance>().instance.topic).toBe(
         payload.data.id,
       );
       done();

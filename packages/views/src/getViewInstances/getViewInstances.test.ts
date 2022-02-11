@@ -1,4 +1,4 @@
-import { cleanup, setup, viewInstance1, viewInstance2 } from '../tests';
+import { cleanup, setup, viewInstance1, viewInstance2 } from '../test-utils';
 import { getViewInstances } from './getViewInstances';
 
 describe('getInstances', () => {

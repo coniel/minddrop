@@ -6,6 +6,7 @@ import {
   screen,
   act,
   fireEvent,
+  MockDate,
 } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
 import { setup, cleanup, core } from '../../test-utils';
@@ -21,6 +22,14 @@ const options: TopicMenuOptions = {
 describe('generateTopicMenu', () => {
   let Menu;
   let topic: Topic;
+
+  beforeAll(() => {
+    MockDate.set('01/01/2020');
+  });
+
+  afterAll(() => {
+    MockDate.reset();
+  });
 
   beforeEach(() => {
     setup();

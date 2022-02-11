@@ -1,5 +1,11 @@
 import { unregisterView } from './unregisterView';
-import { cleanup, core, setup, staticView, unregisteredView } from '../tests';
+import {
+  cleanup,
+  core,
+  setup,
+  staticView,
+  unregisteredView,
+} from '../test-utils';
 import { getView } from '../getView';
 import { ViewNotRegisteredError } from '../errors';
 

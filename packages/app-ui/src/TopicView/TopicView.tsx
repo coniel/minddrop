@@ -10,12 +10,12 @@ import './TopicView.css';
 import { TopicViewOptionsMenu } from '../TopicViewOptionsMenu';
 
 export interface TopicViewBaseProps {
-  topicId: string;
+  topic: string;
 }
 
 export type TopicViewProps = InstanceViewProps<TopicViewBaseProps>;
 
-export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
+export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
   const titleInput = useRef<HTMLInputElement | null>(null);
   const core = useAppCore();
   const topic = useTopic(topicId);

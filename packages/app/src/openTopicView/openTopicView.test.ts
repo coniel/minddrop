@@ -7,7 +7,7 @@ import { cleanup, setup } from '../test-utils';
 import { openTopicView } from './openTopicView';
 
 const {
-  view,
+  topicViewColumns,
   tCoastalNavigation,
   tNavigation,
   tSailing,
@@ -31,7 +31,7 @@ describe('openTopicView', () => {
     const currentView = App.getCurrentView();
 
     // tCoastalNavigation has tCoastalNavigationView as its first view
-    expect(currentView.view).toEqual(view);
+    expect(currentView.view.id).toEqual(topicViewColumns.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView);
   });
 
@@ -43,7 +43,7 @@ describe('openTopicView', () => {
 
     const currentView = App.getCurrentView();
 
-    expect(currentView.view).toEqual(view);
+    expect(currentView.view.id).toEqual(topicViewColumns.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView2);
   });
 
@@ -54,7 +54,7 @@ describe('openTopicView', () => {
 
     const currentView = App.getCurrentView();
 
-    expect(currentView.view).toEqual(view);
+    expect(currentView.view.id).toEqual(topicViewColumns.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView2);
   });
 

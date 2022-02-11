@@ -1,5 +1,5 @@
 import { ViewInstanceNotFoundError } from '../errors';
-import { cleanup, setup, viewInstance1 } from '../tests';
+import { cleanup, setup, viewInstance1 } from '../test-utils';
 import { getViewInstance } from './getViewInstance';
 
 describe('getInstance', () => {

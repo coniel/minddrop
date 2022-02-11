@@ -115,7 +115,7 @@ Views.getInstances<T extends ViewInstance>(viewInstanceIds: string[]): ViewInsta
 Registers a new view and dispatches a `views:register` event. View need to be registered before they can be opened.
 
 ```ts
-Views.register(core: Core, view: View): void
+Views.register(core: Core, view: ViewConfig): void
 ```
 
 <ArgsTable
@@ -123,13 +123,13 @@ Views.register(core: Core, view: View): void
   data={[
     {
       name: 'view',
-      type: 'View',
+      type: 'ViewConfig',
       required: true,
       description: (
         <span>
           The view to register. See the{' '}
-          <a href="/docs/extensions/types/view">View</a> interface for
-          details.
+          <a href="/docs/extensions/types/view-config">View</a>{' '}
+          interface for details.
         </span>
       ),
     },

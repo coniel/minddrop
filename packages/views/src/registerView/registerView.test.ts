@@ -1,8 +1,12 @@
 import { getView } from '../getView';
-import { cleanup, core, setup, staticView } from '../tests';
+import {
+  cleanup,
+  core,
+  setup,
+  unregisteredView,
+  unregisteredViewConfig,
+} from '../test-utils';
 import { registerView } from './registerView';
-
-const view = { ...staticView, id: 'new-view' };
 
 describe('registerView', () => {
   beforeEach(setup);
@@ -10,19 +14,19 @@ describe('registerView', () => {
   afterEach(cleanup);
 
   it('adds the view to the store', () => {
-    registerView(core, view);
+    registerView(core, unregisteredViewConfig);
 
-    expect(getView(view.id)).toEqual(view);
+    expect(getView(unregisteredViewConfig.id)).toEqual(unregisteredView);
   });
 
   it("dispatches a 'views:register' event", (done) => {
     const callback = (payload) => {
-      expect(payload.data).toEqual(view);
+      expect(payload.data).toEqual(unregisteredView);
       done();
     };
 
     core.addEventListener('views:register', callback);
 
-    registerView(core, view);
+    registerView(core, unregisteredViewConfig);
   });
 });

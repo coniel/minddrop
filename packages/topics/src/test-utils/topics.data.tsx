@@ -1,36 +1,68 @@
 import React from 'react';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
-import { View, Views } from '@minddrop/views';
-import { Topic, TopicView, TopicViewInstance } from '../types';
+import { Topic, TopicView, TopicViewConfig, TopicViewInstance } from '../types';
 
 const { htmlDrop1, textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
 
-export interface TopicColumnsView extends TopicViewInstance {
+export interface TopicColumnsViewData {
   columns: Record<number, string[]>;
 }
 
-export const view: View = {
+export type TopicColumnsView = TopicViewInstance & TopicColumnsViewData;
+
+export const topicViewColumnsConfig: TopicViewConfig = {
   id: 'topics:columns-view',
   type: 'instance',
   component: () => <div />,
-};
-
-export const topicView: TopicView = {
-  id: 'topic-view',
-  view: view.id,
   name: 'Columns',
   description: 'Organise drops into a column based layout.',
-  create: (core) => {
-    const columnsView = Views.createInstance(core, {
-      view: view.id,
-      columns: [[], [], [], []],
-    });
-
-    return columnsView;
+  onCreate: () => {
+    return {
+      columns: { 0: [], 1: [], 2: [], 3: [] },
+    };
   },
   onDelete: () => null,
   onAddDrops: () => null,
   onRemoveDrops: () => null,
+};
+
+export const topicViewWithoutCallbacksConfig: TopicViewConfig = {
+  id: 'topics:no-callbacks',
+  type: 'instance',
+  component: () => <div />,
+  name: 'No callbacks',
+  description: 'This view does not have any of the optional callbacks.',
+};
+
+export const unregisteredTopicViewConfig: TopicViewConfig = {
+  id: 'topics:unregistered-view',
+  type: 'instance',
+  component: () => <div />,
+  name: 'Unregistered',
+  description: 'This view is not registered.',
+  onCreate: () => {
+    return {
+      columns: { 0: [], 1: [], 2: [], 3: [] },
+    };
+  },
+  onDelete: () => null,
+  onAddDrops: () => null,
+  onRemoveDrops: () => null,
+};
+
+export const topicViewColumns: TopicView = {
+  extension: 'topics',
+  ...topicViewColumnsConfig,
+};
+
+export const topicViewWithoutCallbacks: TopicView = {
+  extension: 'topics',
+  ...topicViewWithoutCallbacksConfig,
+};
+
+export const unregisteredTopicView: TopicView = {
+  extension: 'topics',
+  ...unregisteredTopicViewConfig,
 };
 
 export const tCoastalNavigationView: TopicColumnsView = {
@@ -38,7 +70,7 @@ export const tCoastalNavigationView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-coastal-navigation',
+  topic: 't-coastal-navigation',
   columns: {
     0: [],
     1: [],
@@ -52,7 +84,7 @@ export const tCoastalNavigationView2: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-coastal-navigation',
+  topic: 't-coastal-navigation',
   columns: {
     0: [],
     1: [],
@@ -66,7 +98,7 @@ export const tOffshoreNavigationView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-offshore-navigation',
+  topic: 't-offshore-navigation',
   columns: {
     0: [],
     1: [],
@@ -80,7 +112,7 @@ export const tNavigationView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-navigation',
+  topic: 't-navigation',
   columns: {
     0: [],
     1: [],
@@ -94,7 +126,7 @@ export const tBoatsView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-boats',
+  topic: 't-boats',
   columns: {
     0: [],
     1: [],
@@ -108,7 +140,7 @@ export const tAnchoringView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-anchoring',
+  topic: 't-anchoring',
   columns: {
     0: [],
     1: [],
@@ -122,7 +154,7 @@ export const tSailingView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-sailing',
+  topic: 't-sailing',
   columns: {
     0: [textDrop1.id, textDrop2.id],
     1: [textDrop3.id],
@@ -136,7 +168,7 @@ export const tSailingView2: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-sailing',
+  topic: 't-sailing',
   columns: {
     0: [textDrop1.id, textDrop2.id],
     1: [textDrop3.id],
@@ -150,7 +182,7 @@ export const tUntitledView: TopicColumnsView = {
   createdAt: new Date(),
   updatedAt: new Date(),
   view: 'topics:columns-view',
-  topicId: 't-untitled',
+  topic: 't-untitled',
   columns: {
     0: [],
     1: [],
@@ -248,8 +280,6 @@ export const topics = [
   tUntitled,
 ];
 
-export const views = [view];
-
 export const topicViewInstances = [
   tCoastalNavigationView,
   tCoastalNavigationView2,
@@ -263,3 +293,8 @@ export const topicViewInstances = [
 ];
 
 export const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];
+
+export const topicViewConfigs = [
+  topicViewColumnsConfig,
+  topicViewWithoutCallbacksConfig,
+];

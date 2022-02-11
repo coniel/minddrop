@@ -3,6 +3,7 @@ import { TopicsStore } from '../types';
 
 export const useTopicsStore = createStore<TopicsStore>((set) => ({
   topics: {},
+  views: {},
 
   loadTopics: (topics) =>
     set((state) => ({
@@ -18,7 +19,7 @@ export const useTopicsStore = createStore<TopicsStore>((set) => ({
       },
     })),
 
-  clear: () => set(() => ({ topics: {} })),
+  clear: () => set(() => ({ topics: {}, views: {} })),
 
   setTopic: (topic) =>
     set((state) => ({
@@ -33,5 +34,20 @@ export const useTopicsStore = createStore<TopicsStore>((set) => ({
       const topics = { ...state.topics };
       delete topics[id];
       return { topics };
+    }),
+
+  setView: (view) =>
+    set((state) => ({
+      views: {
+        ...state.views,
+        [view.id]: view,
+      },
+    })),
+
+  removeView: (id) =>
+    set((state) => {
+      const views = { ...state.views };
+      delete views[id];
+      return { views };
     }),
 }));
