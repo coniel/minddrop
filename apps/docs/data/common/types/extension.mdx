@@ -1,0 +1,220 @@
+---
+metaTitle: ExtensionAPI Interface
+metaDescription: Extend MindDrop's features.
+---
+
+# Extension
+
+<Description>Extend MindDrop's features.</Description>
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description:
+        'The extension ID, must be unique accross the app.',
+    },
+    {
+      name: 'active',
+      type: 'boolean',
+      required: true,
+      description:
+        'Indicates whether the extension is enabled or not.',
+    },
+    {
+      name: 'topics',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics for which this extension is enabled.',
+    },
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: "The extension's name as displayed to users.",
+    },
+    {
+      name: 'description',
+      type: 'string',
+      required: true,
+      description:
+        'A short description of the extension which will be displayed to users.',
+    },
+    {
+      name: 'scopes',
+      type: "('app' | 'topic')[]",
+      required: true,
+      description: (
+        <div>
+          The scopes within which the extension operates.
+          <ul>
+            <li>
+              <Code>'app'</Code>: the extension provides app wide
+              functionality
+            </li>
+            <li>
+              <Code>'topic'</Code>: the extension provides topic
+              specific functionality
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      name: 'onRun',
+      type: 'function',
+      required: true,
+      description:
+        'Called when the app initializes the extension on startup. See below for details.',
+    },
+    {
+      name: 'onInstall',
+      type: 'function',
+      description:
+        'Called when the extension is installed. See below for details.',
+    },
+    {
+      name: 'onEnable',
+      type: 'function',
+      description:
+        'Called when the extension is enabled globally. See below for details.',
+    },
+    {
+      name: 'onEnableTopics',
+      type: 'function',
+      description:
+        'Called when the extension is enabled for given topics. See below for details.',
+    },
+    {
+      name: 'onUpdate',
+      type: 'function',
+      description:
+        'Called when the extension has been updated. See below for details.',
+    },
+    {
+      name: 'onDisable',
+      type: 'function',
+      description:
+        'Called when the extension is disabled globally. See below for details.',
+    },
+    {
+      name: 'onDisableTopics',
+      type: 'function',
+      description:
+        'Called when the extension is disabled for given topics. See below for details.',
+    },
+    {
+      name: 'onUninstanll',
+      type: 'function',
+      description:
+        'Called when the extension is uninstalled. See below for details.',
+    },
+  ]}
+/>
+
+## Lifecycle methods
+
+MindDrop extensions are defined using a set of lifecycle methods. The app calls these methods at given stages of the extension's life or in response to certain events.
+
+### onRun
+
+The main extension method called when the app initializes the extension on startup. Use to set up event listeners, register drop types, register views, etc...
+
+```ts
+onRun(core: Core) => void
+```
+
+<ArgsTable core />
+
+### onInstall
+
+Called once when the extension is installed. Directly followed by a call to `onEnable`.
+
+```ts
+onInstall(core: Core) => Promise<void>
+```
+
+<ArgsTable core />
+
+### onEnable
+
+Called once when the extension is enabled globally. Called directly after `onInstall`, but can also be called independently at a later stage if the extension was temporarily disabled.
+
+```ts
+onEnable(core: Core) => void
+```
+
+<ArgsTable core />
+
+### onEnableTopics
+
+Called when the extension is enabled in given topics.
+
+```ts
+onEnableTopics(core: Core, topics: Topic[]) => Promise<void>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topics',
+      type: 'Topic[]',
+      required: true,
+      description: 'The topics for which the extension was enabled.',
+    },
+  ]}
+/>
+
+### onUpdate
+
+Called once when the extension has been updated to a new version. Directly followed by a call to `onEnable`.
+
+```ts
+onUpdate(core: Core) => Promise<void>
+```
+
+<ArgsTable core />
+
+### onDisable
+
+Called once when the extension is deenabled globally. Called directly before `onUninstall`, but can also be called independently if the user disables the extension without uninstalling it.
+
+```ts
+onDisable(core: Core) => Promise<void>
+```
+
+<ArgsTable core />
+
+### onDisableTopics
+
+Called when the extension is disabled in given topics.
+
+```ts
+onDisableTopics(core: Core) => Promise<void>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topics',
+      type: 'Topic[]',
+      required: true,
+      description: 'The topics for which the extension was disabled.',
+    },
+  ]}
+/>
+
+### onUninstall
+
+Called once when the extension is uninstalled. Use to clean up any data stored by your extension. Always directly preceeded by a call to `onDisable`.
+
+```ts
+onUninstall(core: Core) => void
+```
+
+<ArgsTable core />

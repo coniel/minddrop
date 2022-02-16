@@ -57,8 +57,8 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/drops',
       },
       {
-        title: 'Extension',
-        slug: 'docs/extensions/api/extension',
+        title: 'Extensions',
+        slug: 'docs/extensions/api/extensions',
       },
       {
         title: 'Files',
@@ -108,6 +108,14 @@ export const extensionsRoutes = [
       {
         title: 'EventListenerCallback',
         slug: 'docs/extensions/types/event-listener-callback',
+      },
+      {
+        title: 'Extension',
+        slug: 'docs/extensions/types/extension',
+      },
+      {
+        title: 'ExtensionConfig',
+        slug: 'docs/extensions/types/extension-config',
       },
       {
         title: 'FileReference',
