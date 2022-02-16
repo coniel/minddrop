@@ -274,6 +274,26 @@ If the data contains files, the files are matched against the drop config's `fil
 
 If the data contains multiple files, a drop will be created for each file unless the first matching drop type supports multiple files. In that case, a single drop will be created from all supported files which have not already been matched. Any left over unsupported files will continue on to be matched against other drop types.
 
+### duplicate
+
+Duplicates the given drops, creating new ones containing the same data. Dispatches a `drops:create` event for each created drop and returns the new drops.
+
+```ts
+Drops.duplicate(core: Core, dropIds: string[]): DropMap
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to duplicate.',
+    },
+  ]}
+/>
+
 ### update
 
 Updates a drop and dispatches a `drops:update` event. Returns the updated drop.

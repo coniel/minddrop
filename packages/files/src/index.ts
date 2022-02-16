@@ -8,3 +8,4 @@ export * from './Files';
 export * from './getImageDimensions';
 export * from './updateFileReference';
 export * from './addAttachments';
+export * as FILES_TEST_DATA from './test-utils/files.data';
