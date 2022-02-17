@@ -14,7 +14,7 @@ export function unregisterDropType(core: Core, type: string): void {
     .registered.find((c) => c.type === type);
 
   if (!config) {
-    throw new DropTypeNotRegisteredError();
+    throw new DropTypeNotRegisteredError(type);
   }
 
   useDropsStore.getState().unregisterDropType(type);

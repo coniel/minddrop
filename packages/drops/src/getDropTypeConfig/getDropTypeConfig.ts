@@ -11,10 +11,10 @@ import { DropConfig } from '../types';
  * @returns A drop config object.
  */
 export function getDropTypeConfig(type: string): DropConfig {
-  const [config] = getRegisteredDropTypes([type]);
+  const [config] = getRegisteredDropTypes({ type: [type] });
 
   if (!config) {
-    throw new DropTypeNotRegisteredError();
+    throw new DropTypeNotRegisteredError(type);
   }
 
   return config;

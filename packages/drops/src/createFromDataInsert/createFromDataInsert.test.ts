@@ -1,11 +1,14 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { imageFile, textFile } from '@minddrop/test-utils';
 import { createFromDataInsert } from './createFromDataInsert';
+import { clearDrops } from '../clearDrops';
 import { htmlDropConfig, imageDropConfig, textDropConfig } from '../test-utils';
+import { registerDropType } from '../registerDropType';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 const textData: DataInsert = {
+  action: 'insert',
   types: ['text/plain', 'text/html'],
   data: {
     'text/plain': 'Hello world',
@@ -15,18 +18,30 @@ const textData: DataInsert = {
 };
 
 const filesData: DataInsert = {
+  action: 'insert',
   types: ['files'],
   data: {},
   files: [imageFile, textFile],
 };
 
 const multiTextFilesData: DataInsert = {
+  action: 'insert',
   types: ['files'],
   data: {},
   files: [textFile, textFile],
 };
 
 describe('createFromDataInsert', () => {
+  beforeAll(() => {
+    registerDropType(core, textDropConfig);
+    registerDropType(core, htmlDropConfig);
+    registerDropType(core, imageDropConfig);
+  });
+
+  beforeEach(() => {
+    clearDrops(core);
+  });
+
   it('creates a drop from the first drop config to match the data type', async () => {
     const drops = await createFromDataInsert(core, textData, [
       imageDropConfig,

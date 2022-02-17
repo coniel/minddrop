@@ -24,10 +24,10 @@ export async function insertData(
   data: DataInsert,
 ): Promise<Drop> {
   const drop = get(dropId);
-  const [config] = getRegisteredDropTypes([drop.type]);
+  const [config] = getRegisteredDropTypes({ type: [drop.type] });
 
   if (!config) {
-    throw new DropTypeNotRegisteredError();
+    throw new DropTypeNotRegisteredError(drop.type);
   }
 
   if (config.insertData) {

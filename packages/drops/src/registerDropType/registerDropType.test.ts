@@ -1,9 +1,12 @@
-import { initializeCore } from '@minddrop/core';
-import { cleanup, textDropConfig } from '../test-utils';
+import { cleanup, core, textDropConfig } from '../test-utils';
+import { RegisteredDropConfig } from '../types';
 import { useDropsStore } from '../useDropsStore';
 import { registerDropType } from './registerDropType';
 
-const core = initializeCore({ appId: 'app', extensionId: 'drops' });
+const registeredConfig: RegisteredDropConfig = {
+  ...textDropConfig,
+  extension: 'drops',
+};
 
 describe('registerDropType', () => {
   afterEach(cleanup);
@@ -12,12 +15,12 @@ describe('registerDropType', () => {
     registerDropType(core, textDropConfig);
 
     expect(useDropsStore.getState().registered.length).toBe(1);
-    expect(useDropsStore.getState().registered[0]).toEqual(textDropConfig);
+    expect(useDropsStore.getState().registered[0]).toEqual(registeredConfig);
   });
 
   it("dispatches a 'drops:register' event", (done) => {
     core.addEventListener('drops:register', (payload) => {
-      expect(payload.data).toEqual(textDropConfig);
+      expect(payload.data).toEqual(registeredConfig);
       done();
     });
 

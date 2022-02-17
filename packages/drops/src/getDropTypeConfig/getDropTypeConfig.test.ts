@@ -1,5 +1,5 @@
 import { DropTypeNotRegisteredError } from '../errors';
-import { cleanup, imageDropConfig, setup } from '../test-utils';
+import { cleanup, registeredImageDropConfig, setup } from '../test-utils';
 import { getDropTypeConfig } from './getDropTypeConfig';
 
 describe('getDropTypeConfig', () => {
@@ -12,7 +12,7 @@ describe('getDropTypeConfig', () => {
   });
 
   it('returns the appropriate config', () => {
-    expect(getDropTypeConfig('image')).toEqual(imageDropConfig);
+    expect(getDropTypeConfig('image')).toEqual(registeredImageDropConfig);
   });
 
   it('throws a DropTypeNotRegisteredError if the drop type is not registered', () => {

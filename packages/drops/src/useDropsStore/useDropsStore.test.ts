@@ -1,7 +1,7 @@
 import { renderHook, act, MockDate } from '@minddrop/test-utils';
 import { generateDrop } from '../generateDrop';
 import { useDropsStore } from './useDropsStore';
-import { textDropConfig } from '../test-utils';
+import { registeredTextDropConfig, textDropConfig } from '../test-utils';
 
 describe('useDropsStore', () => {
   afterEach(() => {
@@ -17,18 +17,18 @@ describe('useDropsStore', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(textDropConfig);
+      result.current.registerDropType(registeredTextDropConfig);
     });
 
     expect(result.current.registered.length).toBe(1);
-    expect(result.current.registered[0]).toEqual(textDropConfig);
+    expect(result.current.registered[0]).toEqual(registeredTextDropConfig);
   });
 
   it('unregisters drop types', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(textDropConfig);
+      result.current.registerDropType(registeredTextDropConfig);
       result.current.unregisterDropType(textDropConfig.type);
     });
 
@@ -66,7 +66,7 @@ describe('useDropsStore', () => {
     const { result } = renderHook(() => useDropsStore((state) => state));
 
     act(() => {
-      result.current.registerDropType(textDropConfig);
+      result.current.registerDropType(registeredTextDropConfig);
       result.current.clearRegistered();
     });
 

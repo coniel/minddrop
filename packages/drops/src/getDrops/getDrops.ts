@@ -19,7 +19,8 @@ export function getDrops(ids: string[], filters?: DropFilters): DropMap {
   );
 
   if (Object.keys(requested).length !== ids.length) {
-    throw new DropNotFoundError();
+    const missingIds = ids.filter((id) => !Object.keys(requested).includes(id));
+    throw new DropNotFoundError(missingIds);
   }
 
   if (filters) {

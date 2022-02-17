@@ -7,4 +7,4 @@ export * from './useAllDrops';
 export * from './useDrop';
 export * from './useDrops';
 export * from './Drops';
-export * from './test-utils/export';
+export * as DROPS_TEST_DATA from './test-utils/drops.data';

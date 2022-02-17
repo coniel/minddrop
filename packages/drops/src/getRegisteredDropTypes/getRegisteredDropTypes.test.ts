@@ -2,10 +2,14 @@ import { getRegisteredDropTypes } from './getRegisteredDropTypes';
 import {
   setup,
   cleanup,
-  dropTypeConfigs,
-  htmlDropConfig,
-  imageDropConfig,
+  registeredHtmlDropConfig,
+  registeredImageDropConfig,
+  registeredDropTypeConfigs,
+  textDropConfig,
 } from '../test-utils';
+import { registerDropType } from '../registerDropType';
+import { initializeCore } from '@minddrop/core';
+import { getDropTypeConfig } from '../getDropTypeConfig';
 
 describe('getRegisteredDropTypes', () => {
   beforeAll(() => {
@@ -19,12 +23,28 @@ describe('getRegisteredDropTypes', () => {
   it('returns the registered drop type configs', () => {
     const configs = getRegisteredDropTypes();
 
-    expect(configs).toEqual(dropTypeConfigs);
+    expect(configs).toEqual(registeredDropTypeConfigs);
   });
 
   it('filters by drop type', () => {
-    const configs = getRegisteredDropTypes(['image', 'html']);
+    const configs = getRegisteredDropTypes({ type: ['image', 'html'] });
 
-    expect(configs).toEqual([htmlDropConfig, imageDropConfig]);
+    expect(configs).toEqual([
+      registeredHtmlDropConfig,
+      registeredImageDropConfig,
+    ]);
+  });
+
+  it('filters by extension ID', () => {
+    const extensionCore = initializeCore({
+      appId: 'app',
+      extensionId: 'my-extension',
+    });
+    registerDropType(extensionCore, { ...textDropConfig, type: 'custom-type' });
+
+    const configs = getRegisteredDropTypes({ extension: ['my-extension'] });
+    const customConfig = getDropTypeConfig('custom-type');
+
+    expect(configs).toEqual([customConfig]);
   });
 });

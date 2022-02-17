@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { DropConfig } from '../types/DropConfig.types';
+import { Drop, DropConfig, RegisteredDropConfig } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
 /**
@@ -9,8 +9,15 @@ import { useDropsStore } from '../useDropsStore';
  * @param core A MindDrop core instance.
  * @param config The configartion of the drop type to register.
  */
-export function registerDropType(core: Core, config: DropConfig): void {
-  useDropsStore.getState().registerDropType(config);
+export function registerDropType<T extends Drop = Drop>(
+  core: Core,
+  config: DropConfig<T>,
+): void {
+  const registeredConfig: RegisteredDropConfig = {
+    ...config,
+    extension: core.extensionId,
+  };
+  useDropsStore.getState().registerDropType(registeredConfig);
 
-  core.dispatch('drops:register', config);
+  core.dispatch('drops:register', registeredConfig);
 }

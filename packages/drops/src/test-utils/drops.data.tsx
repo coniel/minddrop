@@ -1,6 +1,8 @@
 import React from 'react';
-import { Drop, DropConfig } from '../types';
+import { FileReference, FILES_TEST_DATA } from '@minddrop/files';
+import { Drop, DropConfig, RegisteredDropConfig } from '../types';
 import { generateDrop } from '../generateDrop';
+import { createDrop } from '../createDrop';
 
 export interface ImageDrop extends Drop {
   src: string;
@@ -16,11 +18,17 @@ export const textDropConfig: DropConfig = {
   dataTypes: ['text/plain'],
   fileTypes: ['text/plain'],
   component: ({ markdown }) => <div>{markdown}</div>,
-  create: async () => generateDrop({ type: 'text', markdown: '' }),
+  create: async (c, { data }) =>
+    createDrop(c, { type: 'text', markdown: data['text/plain'] }),
   insertData: async (c, drop, { data }) => ({
     ...drop,
     markdown: data['text/plain'],
   }),
+};
+
+export const registeredTextDropConfig: RegisteredDropConfig = {
+  ...textDropConfig,
+  extension: 'drops',
 };
 
 export const htmlDropConfig: DropConfig = {
@@ -33,6 +41,11 @@ export const htmlDropConfig: DropConfig = {
   create: async () => generateDrop({ type: 'html' }),
 };
 
+export const registeredHtmlDropConfig: RegisteredDropConfig = {
+  ...htmlDropConfig,
+  extension: 'drops',
+};
+
 export const imageDropConfig: ImageDropConfig = {
   type: 'image',
   name: 'Image',
@@ -41,6 +54,11 @@ export const imageDropConfig: ImageDropConfig = {
   description: 'An image drop',
   component: ({ src }) => <img src={src} />,
   create: async () => generateDrop({ type: 'image' }),
+};
+
+export const registeredImageDropConfig: RegisteredDropConfig<ImageDrop> = {
+  ...imageDropConfig,
+  extension: 'drops',
 };
 
 export const unregisteredDropConfig: DropConfig = {
@@ -57,7 +75,8 @@ export const textDrop1: Drop = {
   type: 'text',
   createdAt: new Date(),
   updatedAt: new Date(),
-  markdown: 'text drop 1',
+  markdown:
+    'Lorem ipsum dolor sit amet, scripta suavitate iudicabit usu in, pro ei constituto dissentias. Duo voluptua invidunt an. Audire labores duo at. Antiopam necessitatibus mel in, alterum percipitur his id.',
 };
 
 export const textDrop2: Drop = {
@@ -65,7 +84,8 @@ export const textDrop2: Drop = {
   type: 'text',
   createdAt: new Date(),
   updatedAt: new Date(),
-  markdown: 'text drop 2',
+  markdown:
+    'Nam ei nostro tibique aliquando. Consequat consetetur ut duo. Has tempor sententiae ad. Suscipit petentium molestiae ne sed, his augue dolore imperdiet cu.',
 };
 
 export const textDrop3: Drop = {
@@ -73,7 +93,8 @@ export const textDrop3: Drop = {
   type: 'text',
   createdAt: new Date(),
   updatedAt: new Date(),
-  markdown: 'text drop 3',
+  markdown:
+    'Vix ei nostro prodesset, definitionem mediocritatem ne eum. No partem sadipscing contentiones sed, vim at nobis aeterno civibus. Mea tollit meliore in. In mea nostrud eligendi convenire. Mei ex quodsi vocent reprehendunt. Ex eum solet numquam, mel facilis volutpat et.',
 };
 
 export const textDrop4: Drop = {
@@ -81,7 +102,8 @@ export const textDrop4: Drop = {
   type: 'text',
   createdAt: new Date(),
   updatedAt: new Date(),
-  markdown: 'text drop 4',
+  markdown:
+    'Velit iriure incorrupte ad duo. Eu sea constituam neglegentur. Clita ullamcorper te pro. Ne ius alii idque efficiantur, impetus oportere tractatos ea nec, mel munere consulatu rationibus ea. Vis te lucilius principes dignissim.',
 };
 
 export const htmlDrop1: Drop = {
@@ -89,7 +111,8 @@ export const htmlDrop1: Drop = {
   type: 'html',
   createdAt: new Date(),
   updatedAt: new Date(),
-  markdown: 'html drop 1',
+  markdown:
+    'Alia eruditi adolescens at mea, munere equidem comprehensam in vel. Mel vivendo dissentiunt an, pro habeo torquatos cu, ut phaedrum invenire sit. Sea fabulas mediocrem id, his essent liberavisse te. In qui quod dicam ignota. Eu ius persecuti cotidieque. Vix ipsum eruditi placerat id, at mei simul blandit.',
 };
 
 export const imageDrop1: ImageDrop = {
@@ -98,12 +121,24 @@ export const imageDrop1: ImageDrop = {
   createdAt: new Date(),
   updatedAt: new Date(),
   src: 'image.png',
+  files: [FILES_TEST_DATA.imageFileRef.id],
 };
+
+// Create file references for file based drops
+export const dropFiles: FileReference[] = [
+  { ...FILES_TEST_DATA.imageFileRef, attachedTo: [imageDrop1.id] },
+];
 
 export const dropTypeConfigs = [
   textDropConfig,
   htmlDropConfig,
   imageDropConfig,
+];
+
+export const registeredDropTypeConfigs = [
+  registeredTextDropConfig,
+  registeredHtmlDropConfig,
+  registeredImageDropConfig,
 ];
 
 export const drops = [

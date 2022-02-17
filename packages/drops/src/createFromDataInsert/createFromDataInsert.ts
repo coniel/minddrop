@@ -35,7 +35,7 @@ export async function createFromDataInsert(
     drops[drop.id] = drop;
   }
 
-  if (dataInsert.files.length) {
+  if (dataInsert.files && dataInsert.files.length) {
     const fileDropPromises: Promise<Drop>[] = [];
     const fileTypes = dataInsert.files.reduce((types, file) => {
       if (!types.includes(file.type)) {
@@ -71,6 +71,7 @@ export async function createFromDataInsert(
         if (config.multiFile) {
           fileDropPromises.push(
             config.create(core, {
+              action: 'insert',
               types: ['files'],
               data: {},
               files: supportedFiles,
@@ -80,6 +81,7 @@ export async function createFromDataInsert(
           supportedFiles.forEach((file) => {
             fileDropPromises.push(
               config.create(core, {
+                action: 'insert',
                 types: ['files'],
                 data: {},
                 files: [file],

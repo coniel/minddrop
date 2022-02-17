@@ -4,6 +4,7 @@ import { registerDropType } from '../registerDropType';
 import { unregisterDropType } from './unregisterDropType';
 import { DropTypeNotRegisteredError } from '../errors';
 import { cleanup, textDropConfig } from '../test-utils';
+import { getDropTypeConfig } from '../getDropTypeConfig';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -18,12 +19,14 @@ describe('unregisterDropType', () => {
   });
 
   it("dispatches a 'drops:unregister' event", (done) => {
+    registerDropType(core, textDropConfig);
+    const registeredConfig = getDropTypeConfig(textDropConfig.type);
+
     core.addEventListener('drops:unregister', (payload) => {
-      expect(payload.data).toEqual(textDropConfig);
+      expect(payload.data).toEqual(registeredConfig);
       done();
     });
 
-    registerDropType(core, textDropConfig);
     unregisterDropType(core, textDropConfig.type);
   });
 

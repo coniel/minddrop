@@ -12,7 +12,7 @@ export function getDrop(id: string): Drop {
   const drop = useDropsStore.getState().drops[id];
 
   if (!drop) {
-    throw new DropNotFoundError();
+    throw new DropNotFoundError(id);
   }
 
   return drop;

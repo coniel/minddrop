@@ -1,17 +1,30 @@
-import { DropConfig } from '../types';
+import { DropConfigFilters, RegisteredDropConfig } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
 /**
- * Returns registered drop type configs, optionally filtered by drop type.
+ * Returns registered drop type configs, optionally filtered by
+ * drop types or extension IDs.
  *
- * @param types An array of drop types by which to filter the configs.
+ * @param filters Filters to filter the returned cofigs by.
  * @returns Registered drop type configs.
  */
-export function getRegisteredDropTypes(types?: string[]): DropConfig[] {
-  const configs = useDropsStore.getState().registered;
+export function getRegisteredDropTypes(
+  filters?: DropConfigFilters,
+): RegisteredDropConfig[] {
+  let configs = useDropsStore.getState().registered;
 
-  if (types) {
-    return configs.filter(({ type }) => types.includes(type));
+  if (filters) {
+    // Filter by extension ID
+    if (filters.extension) {
+      configs = configs.filter(({ extension }) =>
+        filters.extension.includes(extension),
+      );
+    }
+
+    // Filter by drop type
+    if (filters.type) {
+      configs = configs.filter(({ type }) => filters.type.includes(type));
+    }
   }
 
   return configs;

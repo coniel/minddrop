@@ -4,11 +4,13 @@ import { registerDropType } from '../registerDropType';
 import { useDropsStore } from '../useDropsStore';
 import { Files } from '@minddrop/files';
 import { Tags } from '@minddrop/tags';
-import { dropTypeConfigs } from './drops.data';
+import { dropFiles, drops, dropTypeConfigs } from './drops.data';
+import { loadDrops } from '../loadDrops';
 
 export const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 export const textData: DataInsert = {
+  action: 'insert',
   types: ['text/plain', 'text/html'],
   data: {
     'text/plain': 'Hello world',
@@ -18,12 +20,14 @@ export const textData: DataInsert = {
 };
 
 export const filesData: DataInsert = {
+  action: 'insert',
   types: ['files'],
   data: {},
   files: [imageFile, textFile],
 };
 
 export const multiTextFilesData: DataInsert = {
+  action: 'insert',
   types: ['files'],
   data: {},
   files: [textFile, textFile],
@@ -34,6 +38,8 @@ export function setup() {
     dropTypeConfigs.forEach((config) => {
       registerDropType(core, config);
     });
+    loadDrops(core, drops);
+    Files.load(core, dropFiles);
   });
 }
 

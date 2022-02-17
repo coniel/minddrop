@@ -1,6 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
+import { DropConfigFilters } from '.';
 import { CreateDropData, Drop, DropMap, UpdateDropData } from './Drop.types';
-import { DropConfig } from './DropConfig.types';
+import { DropConfig, RegisteredDropConfig } from './DropConfig.types';
 import {
   RegisterDropTypeEvent,
   RegisterDropTypeEventCallback,
@@ -81,7 +82,7 @@ export interface DropsApi {
    * @param core A MindDrop core instance.
    * @param config The configartion of the drop type to register.
    */
-  register(core: Core, config: DropConfig): void;
+  register<T extends Drop = Drop>(core: Core, config: DropConfig<T>): void;
 
   /**
    * Unregisters a drop type and dispatches a `drops:unregister` event.
@@ -131,6 +132,16 @@ export interface DropsApi {
     dataInsert: DataInsert,
     configs: DropConfig[],
   ): Promise<DropMap>;
+
+  /**
+   * Duplicates the given drops by creating new drops
+   * with the same data.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropIds The IDs of the drops to duplicate.
+   * @returns The new drops.
+   */
+  duplicate(core: Core, dropIds: string[]): DropMap;
 
   /**
    * Updates a drop and dispatches a `drops:update` event.
@@ -292,12 +303,13 @@ export interface DropsApi {
   clearRegisteredDropTypes(core: Core): void;
 
   /**
-   * Returns registered drop type configs, optionally filtered by drop type.
+   * Returns registered drop type configs, optionally filtered by
+   * drop types or extension IDs.
    *
-   * @param types An array of drop types by which to filter the configs.
+   * @param filters Filters to filter the returned cofigs by.
    * @returns Registered drop type configs.
    */
-  getRegisteredDropTypes(types?: string[]): DropConfig[];
+  getRegisteredDropTypes(filters?: DropConfigFilters): RegisteredDropConfig[];
 
   /**
    * Renders a drop using the appropriate component.

@@ -6,6 +6,7 @@ import { createOfType } from './createOfType';
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 const data: DataInsert = {
+  action: 'insert',
   types: ['text/plain'],
   data: {
     'text/plain': 'Hello world',

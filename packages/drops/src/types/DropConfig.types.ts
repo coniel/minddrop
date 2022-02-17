@@ -72,3 +72,11 @@ export interface DropConfig<T extends Drop = Drop> {
    */
   component: React.ComponentType<T>;
 }
+
+export interface RegisteredDropConfig<T extends Drop = Drop>
+  extends DropConfig<T> {
+  /**
+   * The ID of the extension that registered the drop type.
+   */
+  extension: string;
+}

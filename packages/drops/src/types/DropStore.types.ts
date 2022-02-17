@@ -1,11 +1,11 @@
 import { Drop } from './Drop.types';
-import { DropConfig } from './DropConfig.types';
+import { RegisteredDropConfig } from './DropConfig.types';
 
 export interface DropStore {
   /**
    * Registered drop type configs.
    */
-  registered: DropConfig[];
+  registered: RegisteredDropConfig[];
 
   /**
    * The drops, stored as a `{ [dropId]: Drop }` map.
@@ -17,7 +17,7 @@ export interface DropStore {
    *
    * @param config The drop config.
    */
-  registerDropType(config: DropConfig): void;
+  registerDropType(config: RegisteredDropConfig): void;
 
   /**
    * Removes a drop config from the registered drops.

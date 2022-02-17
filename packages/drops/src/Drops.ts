@@ -23,6 +23,7 @@ import { createOfType } from './createOfType';
 import { createFromDataInsert } from './createFromDataInsert';
 import { insertData } from './insertData';
 import { renderDrop } from './renderDrop';
+import { duplicateDrops } from './duplicateDrops';
 
 export const Drops: DropsApi = {
   get,
@@ -33,6 +34,7 @@ export const Drops: DropsApi = {
   create: createDrop,
   createOfType,
   createFromDataInsert,
+  duplicate: duplicateDrops,
   update: updateDrop,
   insertData,
   archive: archiveDrop,

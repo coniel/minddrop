@@ -12,6 +12,7 @@ import {
   unregisteredDropConfig,
 } from '../test-utils';
 import { registerDropType } from '../registerDropType';
+import { getDropTypeConfig } from '../getDropTypeConfig';
 
 describe('insertData', () => {
   let textDrop: Drop;
@@ -32,7 +33,8 @@ describe('insertData', () => {
   });
 
   it("calls the drop config's insertData method", () => {
-    const spy = jest.spyOn(textDropConfig, 'insertData');
+    const config = getDropTypeConfig(textDropConfig.type);
+    const spy = jest.spyOn(config, 'insertData');
 
     insertData(core, textDrop.id, textData);
 
