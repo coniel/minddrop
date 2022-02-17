@@ -19,6 +19,12 @@ export interface AppStore {
   uiExtensions: UiExtension[];
 
   /**
+   * An array of drop IDs containing the currently
+   * selected drops in the app UI.
+   */
+  selectedDrops: string[];
+
+  /**
    * Sets the ID of the currently open view.
    *
    * @param viewId The ID of the view.
@@ -57,6 +63,25 @@ export interface AppStore {
    * @param location The location from which to remove the UI extensions.
    */
   removeAllUiExtensions(source: string, location?: string): void;
+
+  /**
+   * Adds drops to the selected drops.
+   *
+   * @param drops The IDs of the drops to add.
+   */
+  addSelectedDrops(dropIds: string[]): void;
+
+  /**
+   * Removes drops from the selected drops.
+   *
+   * @param dropIds The IDs of the drops to remove.
+   */
+  removeSelectedDrops(dropIds: string[]): void;
+
+  /**
+   * Clears the selected drops.
+   */
+  clearSelectedDrops(): void;
 
   /**
    * Clears the store state.

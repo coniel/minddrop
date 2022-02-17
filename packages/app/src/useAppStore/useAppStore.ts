@@ -7,6 +7,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
   view: 'app:home',
   viewInstance: null,
   uiExtensions: [],
+  selectedDrops: [],
 
   setView: (view) => set({ view }),
 
@@ -36,7 +37,27 @@ export const useAppStore = createStore<AppStore>((set) => ({
       }),
     })),
 
-  clear: () => set({ uiExtensions: [], view: 'app:home', viewInstance: null }),
+  addSelectedDrops: (dropIds) =>
+    set((state) => ({
+      selectedDrops: [...state.selectedDrops, ...dropIds],
+    })),
+
+  removeSelectedDrops: (dropIds) =>
+    set((state) => ({
+      selectedDrops: state.selectedDrops.filter(
+        (dropId) => !dropIds.includes(dropId),
+      ),
+    })),
+
+  clearSelectedDrops: () => set({ selectedDrops: [] }),
+
+  clear: () =>
+    set({
+      uiExtensions: [],
+      selectedDrops: [],
+      view: 'app:home',
+      viewInstance: null,
+    }),
 }));
 
 /**

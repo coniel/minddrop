@@ -7,6 +7,10 @@ import { openTopicView } from '../openTopicView';
 import { createTopic } from '../createTopic';
 import { permanentlyDeleteTopic } from '../permanentlyDeleteTopic';
 import { insertDataIntoTopic } from '../insertDataIntoTopic';
+import { selectDrops } from '../selectDrops';
+import { getSelectedDrops } from '../getSelectedDrops';
+import { clearSelectedDrops } from '../clearSelectedDrops';
+import { unselectDrops } from '../unselectDrops';
 
 export const App: AppApi = {
   addRootTopics,
@@ -14,6 +18,10 @@ export const App: AppApi = {
   createTopic,
   permanentlyDeleteTopic,
   insertDataIntoTopic,
+  selectDrops,
+  unselectDrops,
+  clearSelectedDrops,
+  getSelectedDrops,
   Slot,
 
   openView: (core, viewId) => {

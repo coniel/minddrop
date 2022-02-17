@@ -13,6 +13,15 @@ import {
 } from './AppEvents.types';
 import { View, ViewInstance } from '@minddrop/views';
 import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
+import { DropMap } from '@minddrop/drops';
+import {
+  ClearSelectedDropsEvent,
+  ClearSelectedDropsEventCallback,
+  SelectDropsEvent,
+  SelectDropsEventCallback,
+  UnselectDropsEvent,
+  UnselectDropsEventCallback,
+} from '.';
 
 export interface AppApi {
   /**
@@ -145,6 +154,39 @@ export interface AppApi {
    */
   openTopicView(core: Core, trail: string[], viewInstanceId?: string): void;
 
+  /**
+   * Adds drops to the selected drops list and
+   * dispatches a `app:selected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropIds The IDs of the drops to select.
+   */
+  selectDrops(core: Core, dropIds: string[]): void;
+
+  /**
+   * Removes drops from the selected drops list and
+   * dispatches a `app:unselected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropIds The IDs of the drops to unselect.
+   */
+  unselectDrops(core: Core, dropIds: string[]): void;
+
+  /**
+   * Returns the currently selected drops.
+   *
+   * @returns A DropMap of selected drops.
+   */
+  getSelectedDrops(): DropMap;
+
+  /**
+   * Clears the selected drops from the store and
+   * dispatches a `app:clear-selected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   */
+  clearSelectedDrops(core: Core): void;
+
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
@@ -170,6 +212,27 @@ export interface AppApi {
     callback: RemoveRootTopicsEventCallback,
   );
 
+  // Add 'app:select-drops' event listener
+  addEventListener(
+    core: Core,
+    event: SelectDropsEvent,
+    callback: SelectDropsEventCallback,
+  );
+
+  // Add 'app:unselect-drops' event listener
+  addEventListener(
+    core: Core,
+    event: UnselectDropsEvent,
+    callback: UnselectDropsEventCallback,
+  );
+
+  // Add 'app:clear-selected-drops' event listener
+  addEventListener(
+    core: Core,
+    event: ClearSelectedDropsEvent,
+    callback: ClearSelectedDropsEventCallback,
+  );
+
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
@@ -193,5 +256,26 @@ export interface AppApi {
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
+  );
+
+  // Remove 'app:select-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: SelectDropsEvent,
+    callback: SelectDropsEventCallback,
+  );
+
+  // Remove 'app:unselect-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: UnselectDropsEvent,
+    callback: UnselectDropsEventCallback,
+  );
+
+  // Remove 'app:clear-selected-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: ClearSelectedDropsEvent,
+    callback: ClearSelectedDropsEventCallback,
   );
 }

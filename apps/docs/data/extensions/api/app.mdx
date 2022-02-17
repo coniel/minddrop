@@ -47,6 +47,14 @@ useRootTopics(filters?: TopicFilters): TopicMap
   ]}
 />
 
+### useSelectedDrops
+
+Returns an `{ [id]: Drop }` map of selected drops.
+
+```ts
+useSelectedDrops(): DropMap
+```
+
 ## Static methods
 
 ### getCurrentView
@@ -361,6 +369,64 @@ App.removeGlobalTags(core: Core, tagIds: string[]): void
   ]}
 />
 
+### getSelectedDrops
+
+Returns a `{ [id]: Drop }` map of the currently selected drops.
+
+```ts
+App.getSelectedDrops(): DropMap
+```
+
+### selectDrops
+
+Adds drops to the selected drops list and dispatches a `app:select-drops` event.
+
+```ts
+App.selectDrops(core: Core, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to select.',
+    },
+  ]}
+/>
+
+### unselectDrops
+
+Removes drops from the selected drops list and dispatches a `app:unselect-drops` event.
+
+```ts
+App.selectDrops(core: Core, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to select.',
+    },
+  ]}
+/>
+
+### clearSelectedDrops
+
+Clears the selected drops from the store and dispatches a `app:clear-selected-drops` event.
+
+```ts
+App.clearSelectedDrops(core: Core): void
+```
+
+<ArgsTable core />
+
 ### addEventListener
 
 Adds app specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
@@ -450,6 +516,20 @@ See below the table for more details on the data passed by app related events.
       name: 'app:remove-tags',
       data: 'TagMap',
       description: 'Dispatched when global tags are removed.',
+    },
+    {
+      name: 'app:select-drops',
+      data: 'DropMap',
+      description: 'Dispatched when drops are selected.',
+    },
+    {
+      name: 'app:unselect-drops',
+      data: 'DropMap',
+      description: 'Dispatched when drops are unselected.',
+    },
+    {
+      name: 'app:clear-selected-drops',
+      description: 'Dispatched when the drops selection is cleared.',
     },
   ]}
 />

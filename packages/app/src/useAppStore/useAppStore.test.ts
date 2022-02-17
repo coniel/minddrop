@@ -57,76 +57,102 @@ describe('useAppStore', () => {
     expect(result.current.viewInstance).toBe(viewInstance1);
   });
 
-  it('add a UI extension', () => {
-    const { result } = renderHook(() => useAppStore((state) => state));
-
-    act(() => {
-      result.current.addUiExtension(uiExtension);
-    });
-
-    expect(result.current.uiExtensions.length).toBe(1);
-  });
-
   it('clears the state', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
+      result.current.addSelectedDrops(['drop-id']);
       result.current.setView('some-view');
       result.current.setViewInstance(viewInstance1);
       result.current.clear();
     });
 
     expect(result.current.uiExtensions.length).toBe(0);
+    expect(result.current.selectedDrops.length).toBe(0);
     expect(result.current.view).toBe('app:home');
     expect(result.current.viewInstance).toBeNull();
   });
 
-  it('removes a UI extension', () => {
-    const { result } = renderHook(() => useAppStore((state) => state));
+  describe('UI extensions', () => {
+    it('add a UI extension', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
 
-    act(() => {
-      result.current.addUiExtension(uiExtension);
-      result.current.addUiExtension({
-        ...uiExtension,
-        location: 'Sidebar:Toolbar:Above',
+      act(() => {
+        result.current.addUiExtension(uiExtension);
       });
-      result.current.removeUiExtension(
-        uiExtension.location,
-        uiExtension.element,
-      );
+
+      expect(result.current.uiExtensions.length).toBe(1);
     });
 
-    expect(result.current.uiExtensions.length).toBe(1);
+    it('removes a UI extension', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        result.current.addUiExtension(uiExtension);
+        result.current.addUiExtension({
+          ...uiExtension,
+          location: 'Sidebar:Toolbar:Above',
+        });
+        result.current.removeUiExtension(
+          uiExtension.location,
+          uiExtension.element,
+        );
+      });
+
+      expect(result.current.uiExtensions.length).toBe(1);
+    });
+
+    it('removes all UI extensions for a source at a location', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        result.current.addUiExtension(uiExtension);
+        result.current.addUiExtension(uiExtension2);
+        result.current.addUiExtension(uiExtension3);
+        result.current.removeAllUiExtensions(
+          'extension-id',
+          'Sidebar:Toolbar:Item',
+        );
+      });
+
+      expect(result.current.uiExtensions.length).toBe(2);
+    });
+
+    it('removes all UI extensions for a source', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        result.current.addUiExtension(uiExtension);
+        result.current.addUiExtension(uiExtension2);
+        result.current.addUiExtension(uiExtension3);
+        result.current.removeAllUiExtensions('extension-id');
+      });
+
+      expect(result.current.uiExtensions.length).toBe(1);
+    });
   });
 
-  it('removes all UI extensions for a source at a location', () => {
-    const { result } = renderHook(() => useAppStore((state) => state));
+  describe('selected drops', () => {
+    it('adds selected drops', () => {
+      useAppStore.getState().addSelectedDrops(['drop-id']);
 
-    act(() => {
-      result.current.addUiExtension(uiExtension);
-      result.current.addUiExtension(uiExtension2);
-      result.current.addUiExtension(uiExtension3);
-      result.current.removeAllUiExtensions(
-        'extension-id',
-        'Sidebar:Toolbar:Item',
-      );
+      expect(useAppStore.getState().selectedDrops).toEqual(['drop-id']);
     });
 
-    expect(result.current.uiExtensions.length).toBe(2);
-  });
+    it('removes selected drops', () => {
+      useAppStore.getState().addSelectedDrops(['drop-id', 'drop2-id']);
+      useAppStore.getState().removeSelectedDrops(['drop-id']);
 
-  it('removes all UI extensions for a source', () => {
-    const { result } = renderHook(() => useAppStore((state) => state));
-
-    act(() => {
-      result.current.addUiExtension(uiExtension);
-      result.current.addUiExtension(uiExtension2);
-      result.current.addUiExtension(uiExtension3);
-      result.current.removeAllUiExtensions('extension-id');
+      expect(useAppStore.getState().selectedDrops).toEqual(['drop2-id']);
     });
 
-    expect(result.current.uiExtensions.length).toBe(1);
+    it('clears selected drops', () => {
+      useAppStore.getState().addSelectedDrops(['drop-id', 'drop2-id']);
+      useAppStore.getState().clearSelectedDrops();
+
+      expect(useAppStore.getState().selectedDrops).toEqual([]);
+    });
   });
 });
