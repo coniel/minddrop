@@ -1,4 +1,3 @@
-import { textFile } from '@minddrop/test-utils';
 import { createDataInsertFromDataTransfer } from './createDataInsertFromDataTransfer';
 
 const createFileList = (files: File[]): FileList => {
@@ -82,6 +81,9 @@ describe('createDataInsertFromDataTransfer', () => {
   });
 
   it('adds files if present', () => {
+    const textFile = {
+      name: 'file.txt',
+    } as unknown as File;
     const dataTransfer = createDataTransfer({
       data: {},
       files: createFileList([textFile]),
