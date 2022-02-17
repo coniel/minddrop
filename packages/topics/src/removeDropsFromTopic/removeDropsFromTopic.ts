@@ -1,7 +1,7 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
 import { Drops } from '@minddrop/drops';
-import { Topic } from '../types';
+import { Topic, TopicViewInstance } from '../types';
 import { updateTopic } from '../updateTopic';
 import { Views } from '@minddrop/views';
 import { getTopicView } from '../getTopicView';
@@ -29,7 +29,7 @@ export function removeDropsFromTopic(
   });
 
   // Get the topic's view instances
-  const viewInstances = Views.getInstances(topic.views);
+  const viewInstances = Views.getInstances<TopicViewInstance>(topic.views);
 
   // Call onRemoveDrops on each of the topic's view instances
   Object.values(viewInstances).forEach((viewInstance) => {

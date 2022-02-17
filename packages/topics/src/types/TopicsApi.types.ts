@@ -1,4 +1,4 @@
-import { Core, DataInsert } from '@minddrop/core';
+import { Core } from '@minddrop/core';
 import { TopicFilters } from './TopicFilters.types';
 import {
   CreateTopicData,
@@ -49,8 +49,9 @@ import {
   DeleteViewInstanceEvent,
 } from './TopicEvents.types';
 import { TopicViewConfig } from './TopicViewConfig.types';
-import { TopicView, TopicViewMap } from './TopicView.types';
+import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
 import { TopicViewInstance } from './TopicViewInstance.types';
+import { AddDropMetadata } from '../addDropsToTopic';
 
 export interface TopicsApi {
   /**
@@ -201,9 +202,32 @@ export interface TopicsApi {
    * @param core A MindDrop core instance.
    * @param topicId The ID of the topic to which to add the drops.
    * @param dropIds The IDs of the drops to add to the topic.
+   * @param metadata Optional metadata added by the view instance which invoked the function.
    * @returns The updated topic.
    */
-  addDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+  addDrops<M extends AddDropMetadata = AddDropMetadata>(
+    core: Core,
+    topicId: string,
+    dropIds: string[],
+    metadata?: M,
+  ): Topic;
+
+  /**
+   * Moves drops from one topic to another by removing them
+   * from the source topic and adding them to the target topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param fromTopicId The ID of the topic from which to move the drops.
+   * @param toTopicId The ID of the topic to which to move the drops.
+   * @param dropIds The IDs of the drops to move.
+   */
+  moveDrops(
+    core: Core,
+    fromTopicId: string,
+    toTopicId: string,
+    dropIds: string[],
+    metadata?: AddDropsMetadata,
+  ): void;
 
   /**
    * Removes drops from a topic and dispatches a `topics:remove-drops` event
@@ -294,14 +318,6 @@ export interface TopicsApi {
    * @param viewInstanceId The ID of the topic view instance to delete.
    */
   deleteViewInstance(core: Core, viewInstanceId: string): TopicViewInstance;
-
-  /**
-   * Dispatches a `topics:insert-data` event for a given topic.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The topic into which the data is being inserted.
-   */
-  insertData(core: Core, topicId: string, data: DataInsert): void;
 
   /**
    * Loads topics into the store and dispatches a `topics:load` event.

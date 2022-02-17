@@ -1,0 +1,37 @@
+.topic-view-columns {
+  display: flex;
+  column-gap: 28px;
+  height: 100%;
+}
+
+.topic-view-columns .column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topic-view-columns .column-end {
+  flex: 1;
+  padding-top: 28px;
+}
+
+.topic-view-columns .bottom-drop-zone {
+  border-radius: var(--radiusLg);
+  height: 140px;
+  pointer-events: none;
+}
+
+.topic-view-columns .bottom-drop-zone.active {
+  background-color: var(--bgNeutral);
+}
+
+.topic-view-columns .spacer-drop-zone {
+  height: 2px;
+  padding: 13px 0;
+}
+
+.topic-view-columns .spacer-drop-zone.active .indicator {
+  height: 2px;
+  background-color: var(--primary10);
+  pointer-events: none;
+}

@@ -230,6 +230,55 @@ App.permanentlyDeleteTopic(core: Core, topicId: string): Topic;
   ]}
 />
 
+### insertDataIntoTopic
+
+Handles data inserts into a topic depending on the insert's `action` parameter:
+
+- `insert`: creates drops from the raw data and adds them to the topic
+- `copy`: data insert's drops are duplicated and duplicates added to the topic
+- `cut`: data insert's drops are added to the topic (removal from source is handled at the time of the cut)
+- `move`: data insert's drops are added to the topic and removed from the source topic
+- `add`: data insert's drops are added to the topic
+
+Any other action is ignored. Returns a boolean indicating whether or not the data insert was handled (`false` if action is not one of the ones listed above).
+
+```ts
+App.insertDataIntoTopic(core: Core, topicId: string, data: DataInsert, metada: AddDropsMetadata): Promise<boolean>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic into which to insert the data.',
+    },
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The data insert.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the data insert added by the topic
+          view instance that triggered the event. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ### addRootTopics
 
 Adds topics to the root level and dispaches an `app:add-root-topics` event. Returns the deleted topic.

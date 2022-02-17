@@ -16,7 +16,6 @@ import { archiveTopic } from './archiveTopic';
 import { deleteTopic } from './deleteTopic';
 import { restoreTopic } from './restoreTopic';
 import { deleteTopicPermanently } from './deleteTopicPermanently';
-import { insertData } from './insertData';
 import { loadTopics } from './loadTopics';
 import { clearTopics } from './clearTopics';
 import { registerTopicView } from './registerTopicView';
@@ -25,6 +24,7 @@ import { getTopicView } from './getTopicView';
 import { getTopicViews } from './getTopicViews';
 import { createTopicViewInstance } from './createTopicViewInstance';
 import { deleteTopicViewInstance } from './deleteTopicViewInstance';
+import { moveDropsToTopic } from './moveDropsToTopic';
 
 export const Topics: TopicsApi = {
   get,
@@ -37,6 +37,7 @@ export const Topics: TopicsApi = {
   addSubtopics,
   removeSubtopics,
   addDrops: addDropsToTopic,
+  moveDrops: moveDropsToTopic,
   removeDrops: removeDropsFromTopic,
   addTags: addTagsToTopic,
   removeTags: removeTagsFromTopic,
@@ -50,7 +51,6 @@ export const Topics: TopicsApi = {
   unregisterView: unregisterTopicView,
   createViewInstance: createTopicViewInstance,
   deleteViewInstance: deleteTopicViewInstance,
-  insertData,
   load: loadTopics,
   clear: clearTopics,
   addEventListener: (core, event, callback) =>

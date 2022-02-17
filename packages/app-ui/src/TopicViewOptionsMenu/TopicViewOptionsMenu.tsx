@@ -67,7 +67,10 @@ export const TopicViewOptionsMenu: FC<TopicViewOptionsMenuProps> = ({
       <DropdownMenuTrigger>
         <IconButton icon="more-vertical" label="Topic  options" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent content={dropdownMenu} />
+      <DropdownMenuContent
+        className="topic-menu-content"
+        content={dropdownMenu}
+      />
     </DropdownMenu>
   );
 };

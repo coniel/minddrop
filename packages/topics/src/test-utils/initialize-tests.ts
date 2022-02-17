@@ -1,23 +1,30 @@
 import { initializeCore } from '@minddrop/core';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { act } from '@minddrop/test-utils';
 import { Views } from '@minddrop/views';
-import { Topics } from '../Topics';
+import { clearTopics } from '../clearTopics';
+import { loadTopics } from '../loadTopics';
+import { registerTopicView } from '../registerTopicView';
 import { topics, topicViewConfigs, topicViewInstances } from './topics.data';
+
+const { drops } = DROPS_TEST_DATA;
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 export const setup = () => {
   act(() => {
-    Topics.load(core, topics);
     Views.loadInstances(core, topicViewInstances);
-    topicViewConfigs.forEach((config) => Topics.registerView(core, config));
+    Drops.load(core, drops);
+    loadTopics(core, topics);
+    topicViewConfigs.forEach((config) => registerTopicView(core, config));
   });
 };
 
 export const cleanup = () => {
   act(() => {
-    Topics.clear(core);
+    clearTopics(core);
     Views.clear(core);
     core.removeAllEventListeners();
+    jest.clearAllMocks();
   });
 };

@@ -52,5 +52,37 @@ View instances can be creqated using the [`Views.createInstance`](/docs/extensio
       required: true,
       description: 'The React component rendered by the view.',
     },
+    {
+      name: 'onInsertData',
+      type: 'function',
+      description:
+        'Called when data is inserted into the view, usually in the form of a drag and drop or paste event.',
+    },
+  ]}
+/>
+
+### onInsertData
+
+Called when data is inserted into the view, usually in the from of a drag and drop or paste event.
+
+```ts
+onInsertData(core: Core, data: DataInsert, viewInstance?: ViewInstance): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The inserted data.',
+    },
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      description:
+        'The view instance into which the data was inserted if the view is an instance view.',
+    },
   ]}
 />

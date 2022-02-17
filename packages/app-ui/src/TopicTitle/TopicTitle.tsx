@@ -37,7 +37,7 @@ export const TopicTitle = React.forwardRef<HTMLInputElement, TopicTitleProps>(
 
       if (!topic.title) {
         setTimeout(() => {
-          if (typeof input !== 'function') {
+          if (typeof input !== 'function' && input.current) {
             input.current.focus();
           }
         }, 50);

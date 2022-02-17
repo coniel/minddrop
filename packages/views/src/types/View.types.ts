@@ -1,4 +1,6 @@
+import { Core, DataInsert } from '@minddrop/core';
 import { ComponentType } from 'react';
+import { ViewInstance } from './ViewInstance.types';
 
 export interface View {
   /**
@@ -23,4 +25,18 @@ export interface View {
    * The component rendered by the view.
    */
   component: ComponentType;
+
+  /**
+   * Called when data is inserted into the view, usually in
+   * the from of a drag and drop or paste event.
+   *
+   * @param core A MindDrop core instance.
+   * @param data The inserted data.
+   * @param viewInstance The view instance into which the data was inserterted if the view is an instance view.
+   */
+  onInsertData?(
+    core: Core,
+    data: DataInsert,
+    viewInstance?: ViewInstance,
+  ): void;
 }

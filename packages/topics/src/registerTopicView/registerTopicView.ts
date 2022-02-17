@@ -18,7 +18,11 @@ export function registerTopicView(core: Core, config: TopicViewConfig): void {
   });
 
   // Add extension ID to config to create topic view
-  const topicView: TopicView = { ...config, extension: core.extensionId };
+  const topicView: TopicView = {
+    ...config,
+    type: 'instance',
+    extension: core.extensionId,
+  };
 
   // Registers the topic view
   useTopicsStore.getState().setView(topicView);

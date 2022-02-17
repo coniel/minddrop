@@ -1,7 +1,8 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
-import { InstanceViewProps, View, ViewInstance } from '@minddrop/views';
-import { Topic } from './Topic.types';
+import { InstanceViewProps, View } from '@minddrop/views';
+import { TopicViewInstance } from '.';
+import { Topic, TopicMap } from './Topic.types';
 
 /**
  * Metadata about the event when a drop is added to a topic.
@@ -13,7 +14,10 @@ export interface AddDropsMetadata {
   viewInstance: string | null;
 }
 
-export interface TopicView extends Omit<View, 'type'> {
+export interface TopicView<
+  I extends TopicViewInstance = TopicViewInstance,
+  M extends AddDropsMetadata = AddDropsMetadata,
+> extends Omit<View, 'type'> {
   // All TopicViews are instance views
   type: 'instance';
 
@@ -45,13 +49,13 @@ export interface TopicView extends Omit<View, 'type'> {
    * instance.
    *
    * @param core A MindDrop core instance.
-   * @param topic The topic from which the view instance was deleted.
    * @param viewInstance The deleted view instance.
    */
-  onDelete?(core: Core, viewInstance: ViewInstance): void;
+  onDelete?(core: Core, viewInstance: I): void;
 
   /**
-   * Called on all of a topic's views when drops are added to the topic.
+   * Called on all of a topic's views when drops are added, unarchived,
+   * or restored to the topic.
    *
    * The `metadata` param contains metadata about the event.
    * Contains the ID of the view instance into which the drop
@@ -59,28 +63,46 @@ export interface TopicView extends Omit<View, 'type'> {
    * data added by the view which added the drop.
    *
    * @param core A MindDrop core instance.
-   * @param topic The topic to which the drops were added.
    * @param viewInstance The view instance.
    * @param drops The added drops.
    * @param metadata Metadata about the event.
    */
-  onAddDrops?<T extends AddDropsMetadata = AddDropsMetadata>(
-    core: Core,
-    viewInstance: ViewInstance,
-    drops: DropMap,
-    metadata: T,
-  ): void;
+  onAddDrops?(core: Core, viewInstance: I, drops: DropMap, metadata: M): void;
 
   /**
    * Called on all of a topic's views when drops are archived, deleted,
    * or permanently deleted from the topic.
    *
    * @param core A MindDrop core instance.
-   * @param topic The topic from which the drops were removed.
    * @param viewInstance The view instance.
    * @param drops The removed drops.
    */
-  onRemoveDrops?(core: Core, viewInstance: ViewInstance, drops: DropMap): void;
+  onRemoveDrops?(core: Core, viewInstance: I, drops: DropMap): void;
+
+  /**
+   * Called on all of a topic's views when subtopics are added, unarchived,
+   * or restored to the topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewInstance The view instance.
+   * @param subtopics The added subtopics.
+   */
+  onAddSubtopics?(
+    core: Core,
+    viewInstance: I,
+    subtopics: TopicMap,
+    metadata: M,
+  ): void;
+
+  /**
+   * Called on all of a topic's views when subtopics are archived, deleted,
+   * or permanently deleted from the topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewInstance The view instance.
+   * @param subtopics The removed subtopics.
+   */
+  onRemoveSubtopics?(core: Core, viewInstance: I, subtopics: TopicMap): void;
 }
 
 interface BaseTopicViewProps {

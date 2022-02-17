@@ -52,16 +52,34 @@ Topics render their content using instances of a special type of view called top
         'Called when an instance of the topic view is deleted. See below for details.',
     },
     {
-      name: 'onAddDrop',
+      name: 'onAddDrops',
       type: 'function',
       description:
-        'Called when a drop is added to the topic. See below for details.',
+        'Called when drops are added, unarchived, or restored to the topic. See below for details.',
     },
     {
       name: 'onRemoveDrop',
       type: 'function',
       description:
-        'Called when a drop is archived, deleted, or permanently deleted from the topic. See below for details.',
+        'Called when drops are archived, deleted, or permanently deleted from the topic. See below for details.',
+    },
+    {
+      name: 'onAddSubtopics',
+      type: 'function',
+      description:
+        'Called when subtopics are added, unarchived, or restored to the topic. See below for details.',
+    },
+    {
+      name: 'onRemoveSubtopics',
+      type: 'function',
+      description:
+        'Called when subtopics are archived, deleted, or permanently deleted from the topic. See below for details.',
+    },
+    {
+      name: 'onInsertData',
+      type: 'function',
+      description:
+        'Called when data is inserted into an open topic view instance, usually in the form of a drag and drop or paste event.',
     },
   ]}
 />
@@ -112,10 +130,10 @@ onDelete(core: Core, viewInstance: ViewInstance): void
 
 ### onAddDrops
 
-Called on all of a topic's views when drops are added to the topic.
+Called on all of a topic's views when drops are added, unarchived, or restored to the topic.
 
 ```ts
-onAddDrop(core: Core, viewInstance: ViewInstance, drops: DropMap, metadata: AddDropMetadata): void
+onAddDrops(core: Core, viewInstance: ViewInstance, drops: DropMap, metadata: AddDropMetadata): void
 ```
 
 <ArgsTable
@@ -143,7 +161,7 @@ onAddDrop(core: Core, viewInstance: ViewInstance, drops: DropMap, metadata: AddD
 
 #### AddDropsMetadata
 
-Metadata about the event when a drop is added to a topic. Contains the ID of the view instance into which the drop was added (or `null` if not added by a view) and any other data added by the view which added the drop.
+Metadata about the event when drops are added to a topic. Contains the ID of the view instance into which the drop was added (or `null` if not added by a view) and any other data added by the view which added the drop.
 
 <InterfaceTable
   data={[
@@ -169,7 +187,7 @@ Additionally, the metadata object can contain values added by the view which add
 Called on all of a topic's views when drops are archived, deleted, or permanently deleted from the topic.
 
 ```ts
-onDelete(core: Core, topic: Topic, viewInstance: ViewInstance, drops: DropMap): void
+onRemoveDrops(core: Core, topic: Topic, viewInstance: ViewInstance, drops: DropMap): void
 ```
 
 <ArgsTable
@@ -192,6 +210,88 @@ onDelete(core: Core, topic: Topic, viewInstance: ViewInstance, drops: DropMap): 
       type: 'DropMap',
       required: true,
       description: 'The drops which were removed from the topic.',
+    },
+  ]}
+/>
+
+### onAddSubtopics
+
+Called on all view instances when subtopics are added, unarchived, or restored into a topic.
+
+```ts
+onAddSubtopics(core: Core, viewInstance: ViewInstance, subtopics: TopicMap): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The view instance.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description:
+        'The topics which were added as subtopics to the topic.',
+    },
+  ]}
+/>
+
+### onRemoveSubtopics
+
+Called on all view instances when subtopics are removed, unarchived, or restored from a topic.
+
+```ts
+onRemoveSubtopics(core: Core, viewInstance: ViewInstance, subtopics: TopicMap): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The view instance.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description:
+        'The topics which were removed as subtopics from the topic.',
+    },
+  ]}
+/>
+
+### onInsertData
+
+Called when data is inserted into an open topic view instance, usually in the from of a drag and drop or paste event. Only called on the affected view.
+
+Note that this method is only called when raw data such as text or files are inserted. If the data consists of drops or topics, `onAddDrops` or `onAddTopics` are called instead.
+
+```ts
+onInsertData(core: Core, viewInstance: ViewInstance, data: DataInsert): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstance',
+      type: 'ViewInstance',
+      required: true,
+      description: 'The view instance.',
+    },
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The inserted data.',
     },
   ]}
 />

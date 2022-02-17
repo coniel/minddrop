@@ -6,12 +6,14 @@ import { useAppStore } from '../useAppStore';
 import { openTopicView } from '../openTopicView';
 import { createTopic } from '../createTopic';
 import { permanentlyDeleteTopic } from '../permanentlyDeleteTopic';
+import { insertDataIntoTopic } from '../insertDataIntoTopic';
 
 export const App: AppApi = {
   addRootTopics,
   openTopicView,
   createTopic,
   permanentlyDeleteTopic,
+  insertDataIntoTopic,
   Slot,
 
   openView: (core, viewId) => {

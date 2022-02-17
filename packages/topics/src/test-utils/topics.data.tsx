@@ -2,7 +2,8 @@ import React from 'react';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { Topic, TopicView, TopicViewConfig, TopicViewInstance } from '../types';
 
-const { htmlDrop1, textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
+const { htmlDrop1, textDrop1, textDrop2, textDrop3, textDrop4, imageDrop1 } =
+  DROPS_TEST_DATA;
 
 export interface TopicColumnsViewData {
   columns: Record<number, string[]>;
@@ -12,7 +13,6 @@ export type TopicColumnsView = TopicViewInstance & TopicColumnsViewData;
 
 export const topicViewColumnsConfig: TopicViewConfig = {
   id: 'topics:columns-view',
-  type: 'instance',
   component: () => <div />,
   name: 'Columns',
   description: 'Organise drops into a column based layout.',
@@ -28,7 +28,6 @@ export const topicViewColumnsConfig: TopicViewConfig = {
 
 export const topicViewWithoutCallbacksConfig: TopicViewConfig = {
   id: 'topics:no-callbacks',
-  type: 'instance',
   component: () => <div />,
   name: 'No callbacks',
   description: 'This view does not have any of the optional callbacks.',
@@ -36,7 +35,6 @@ export const topicViewWithoutCallbacksConfig: TopicViewConfig = {
 
 export const unregisteredTopicViewConfig: TopicViewConfig = {
   id: 'topics:unregistered-view',
-  type: 'instance',
   component: () => <div />,
   name: 'Unregistered',
   description: 'This view is not registered.',
@@ -52,16 +50,19 @@ export const unregisteredTopicViewConfig: TopicViewConfig = {
 
 export const topicViewColumns: TopicView = {
   extension: 'topics',
+  type: 'instance',
   ...topicViewColumnsConfig,
 };
 
 export const topicViewWithoutCallbacks: TopicView = {
   extension: 'topics',
+  type: 'instance',
   ...topicViewWithoutCallbacksConfig,
 };
 
 export const unregisteredTopicView: TopicView = {
   extension: 'topics',
+  type: 'instance',
   ...unregisteredTopicViewConfig,
 };
 
@@ -191,6 +192,62 @@ export const tUntitledView: TopicColumnsView = {
   },
 };
 
+export const tNoDropsView: TopicColumnsView = {
+  id: 't-no-drops-view',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  view: 'topics:columns-view',
+  topic: 't-no-drops',
+  columns: {
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+  },
+};
+
+export const tTwoDropsView: TopicColumnsView = {
+  id: 't-two-drops-view',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  view: 'topics:columns-view',
+  topic: 't-two-drops',
+  columns: {
+    0: [textDrop1.id],
+    1: [textDrop2.id],
+    2: [],
+    3: [],
+  },
+};
+
+export const tSixDropsView: TopicColumnsView = {
+  id: 't-six-drops-view',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  view: 'topics:columns-view',
+  topic: 't-six-drops',
+  columns: {
+    0: [textDrop1.id, textDrop2.id],
+    1: [textDrop3.id],
+    2: [textDrop4.id, htmlDrop1.id],
+    3: [imageDrop1.id],
+  },
+};
+
+export const tEmptyView: TopicColumnsView = {
+  id: 't-empty-view',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  view: 'topics:columns-view',
+  topic: 't-empty',
+  columns: {
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+  },
+};
+
 export const tCoastalNavigation: Topic = {
   id: 't-coastal-navigation',
   createdAt: new Date('01/01/2000'),
@@ -258,12 +315,63 @@ export const tSailing: Topic = {
 };
 
 export const tUntitled: Topic = {
-  id: 'topic-untitled',
+  id: 't-untitled',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   title: '',
   subtopics: [],
   views: [tUntitledView.id],
+  drops: [],
+  tags: [],
+};
+
+export const tNoDrops: Topic = {
+  id: 't-no-drops',
+  createdAt: new Date('01/01/2000'),
+  updatedAt: new Date('01/01/2000'),
+  title: '',
+  subtopics: [],
+  views: [tNoDropsView.id],
+  drops: [],
+  tags: [],
+};
+
+export const tTwoDrops: Topic = {
+  id: 't-two-drops',
+  createdAt: new Date('01/01/2000'),
+  updatedAt: new Date('01/01/2000'),
+  title: 'Sailing',
+  subtopics: [],
+  views: [tTwoDropsView.id],
+  drops: [textDrop1.id, textDrop2.id],
+  tags: [],
+};
+
+export const tSixDrops: Topic = {
+  id: 't-six-drops',
+  createdAt: new Date('01/01/2000'),
+  updatedAt: new Date('01/01/2000'),
+  title: 'Sailing',
+  subtopics: [],
+  views: [tSixDropsView.id],
+  drops: [
+    textDrop1.id,
+    textDrop2.id,
+    textDrop3.id,
+    textDrop4.id,
+    htmlDrop1.id,
+    imageDrop1.id,
+  ],
+  tags: [],
+};
+
+export const tEmpty: Topic = {
+  id: 't-empty',
+  createdAt: new Date('01/01/2000'),
+  updatedAt: new Date('01/01/2000'),
+  title: '',
+  subtopics: [],
+  views: [tEmptyView.id],
   drops: [],
   tags: [],
 };
@@ -278,6 +386,10 @@ export const topics = [
   tAnchoring,
   tSailing,
   tUntitled,
+  tNoDrops,
+  tTwoDrops,
+  tSixDrops,
+  tEmpty,
 ];
 
 export const topicViewInstances = [
@@ -290,6 +402,10 @@ export const topicViewInstances = [
   tSailingView,
   tSailingView2,
   tUntitledView,
+  tNoDropsView,
+  tTwoDropsView,
+  tSixDropsView,
+  tEmptyView,
 ];
 
 export const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];

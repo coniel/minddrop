@@ -471,6 +471,68 @@ Topics.addDrops(core: Core, topicId: string, dropIds: string[]): Topic
       required: true,
       description: 'The IDs of the drops to add.',
     },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the event added by the topic view
+          instance that triggered the event. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### moveDrops
+
+Moves drops from one topic to another by removing them from the source topic and adding them to the destination topic.
+
+```ts
+Topics.moveDrops(core: Core, fromTopicId: string, toTopicId: string, dropIds: string[], metadata: AddDropsMetadata): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'fromTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the source topic from which to move the drops.',
+    },
+    {
+      name: 'toTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the target topic into which to move the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to move.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the event added by the topic view
+          instance that triggered the move. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -550,32 +612,6 @@ Topics.removesTags(core: Core, topicId: string, tagIds: string[]): Topic
       type: 'string[]',
       required: true,
       description: 'The IDs of the tags to remove.',
-    },
-  ]}
-/>
-
-### insertData
-
-Dispatches a `topics:insert-data` event.
-
-```ts
-Topics.insertData(core: Core, topicId: string, data: DataInsert): void
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic into which to insert the data.',
-    },
-    {
-      name: 'data',
-      type: 'DataInsert',
-      description: 'The inserted data.',
     },
   ]}
 />
@@ -880,12 +916,6 @@ See below the table for more details on the data passed by topic related events.
         'Dispatched when a topic view instance is deleted.',
     },
     {
-      name: 'topics:insert-data',
-      data: 'DataInsert',
-      description:
-        'Dispatched when data is inserted indiscriminately into a topic (e.g. files dropped into the topic view).',
-    },
-    {
       name: 'topics:load',
       data: 'Topic[]',
       description:
@@ -1112,25 +1142,6 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'TagMap',
       required: true,
       description: 'The tags which were removed from the topic.',
-    },
-  ]}
-/>
-
-#### InsertDataEventData
-
-<InterfaceTable
-  data={[
-    {
-      name: 'topic',
-      type: 'Topic',
-      required: true,
-      description: 'The topic into which the data was inserted.',
-    },
-    {
-      name: 'data',
-      type: 'DataInsert',
-      required: true,
-      description: 'The inserted data.',
     },
   ]}
 />
