@@ -8,3 +8,4 @@ export * from './utils';
 export * from './createTopic';
 export * from './permanentlyDeleteTopic';
 export * from './useSelectedDrops';
+export * from './useDropSelection';
