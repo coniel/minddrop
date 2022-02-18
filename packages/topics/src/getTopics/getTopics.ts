@@ -19,7 +19,8 @@ export function getTopics(ids: string[], filters?: TopicFilters): TopicMap {
   );
 
   if (Object.keys(requested).length !== ids.length) {
-    throw new TopicNotFoundError();
+    const missingIds = ids.filter((id) => !Object.keys(requested).includes(id));
+    throw new TopicNotFoundError(missingIds);
   }
 
   if (filters) {

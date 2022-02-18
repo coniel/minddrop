@@ -12,7 +12,7 @@ export function getTopic(id: string): Topic {
   const topic = useTopicsStore.getState().topics[id];
 
   if (!topic) {
-    throw new TopicNotFoundError();
+    throw new TopicNotFoundError(id);
   }
 
   return topic;
