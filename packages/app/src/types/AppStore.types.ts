@@ -1,6 +1,18 @@
 import { ViewInstance } from '@minddrop/views';
 import { UiExtension } from './UiExtension.types';
 
+export interface DraggedData {
+  /**
+   * The IDs of drops currently being dragged.
+   */
+  drops: string[];
+
+  /**
+   * The IDs of topics currently being dragged.
+   */
+  topics: string[];
+}
+
 export interface AppStore {
   /**
    * The ID of the currently open view.
@@ -23,6 +35,17 @@ export interface AppStore {
    * selected drops in the app UI.
    */
   selectedDrops: string[];
+
+  /**
+   * An array of drop IDs containing the currently
+   * selected topics in the app UI.
+   */
+  selectedTopics: string[];
+
+  /**
+   * Data which is currently being dragged.
+   */
+  draggedData: DraggedData;
 
   /**
    * Sets the ID of the currently open view.
@@ -82,6 +105,42 @@ export interface AppStore {
    * Clears the selected drops.
    */
   clearSelectedDrops(): void;
+
+  /**
+   * Adds topics to the selected topics.
+   *
+   * @param topics The IDs of the topics to add.
+   */
+  addSelectedTopics(topicIds: string[]): void;
+
+  /**
+   * Removes topics from the selected topics.
+   *
+   * @param topicIds The IDs of the topics to remove.
+   */
+  removeSelectedTopics(topicIds: string[]): void;
+
+  /**
+   * Clears the selected topics.
+   */
+  clearSelectedTopics(): void;
+
+  /**
+   * Clears both selected drops and selected topics.
+   */
+  clearSelection(): void;
+
+  /**
+   * Sets dragged data.
+   *
+   * @param data The dragged data.
+   */
+  setDraggedData(data: Partial<DraggedData>): void;
+
+  /**
+   * Clears the dragged data.
+   */
+  clearDraggedData(): void;
 
   /**
    * Clears the store state.

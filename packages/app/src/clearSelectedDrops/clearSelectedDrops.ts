@@ -2,8 +2,8 @@ import { Core } from '@minddrop/core';
 import { useAppStore } from '../useAppStore';
 
 /**
- * Clears the selected drops from the store and
- * dispatches a `app:clear-selected-drops` event.
+ * Clears the selected drops list and dispatches a
+ * `app:clear-selected-drops` event.
  *
  * @param core A MindDrop core instance.
  */

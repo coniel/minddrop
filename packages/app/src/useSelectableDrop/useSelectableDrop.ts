@@ -41,7 +41,7 @@ export interface DropSelection {
  * @param dropId The ID of the drop.
  * @returns Drop selection utilities.
  */
-export function useDropSelection(dropId: string): DropSelection {
+export function useSelectableDrop(dropId: string): DropSelection {
   const core = useAppCore();
   const selectedDrops = useSelectedDrops();
   const isSelected = !!selectedDrops[dropId];

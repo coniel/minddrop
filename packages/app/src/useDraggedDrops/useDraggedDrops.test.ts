@@ -1,29 +1,29 @@
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { act, renderHook } from '@minddrop/test-utils';
 import { mapById } from '@minddrop/utils';
-import { selectDrops } from '../selectDrops';
+import { setDraggedDrops } from '../setDraggedDrops';
 import { setup, cleanup, core } from '../test-utils';
-import { useSelectedDrops } from './useSelectedDrops';
+import { useDraggedDrops } from './useDraggedDrops';
 
 const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
 
-describe('useSelectedDrops', () => {
+describe('useDraggedDrops', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('returns the currently selected drops', () => {
-    const { result } = renderHook(() => useSelectedDrops());
+  it('returns dragged drops', () => {
+    const { result } = renderHook(() => useDraggedDrops());
 
     act(() => {
-      selectDrops(core, [textDrop1.id, textDrop2.id]);
+      setDraggedDrops(core, [textDrop1.id, textDrop2.id]);
     });
 
     expect(result.current).toEqual(mapById([textDrop1, textDrop2]));
   });
 
-  it('returns {} if no drops are selected', () => {
-    const { result } = renderHook(() => useSelectedDrops());
+  it('returns `{}` if no drops are currently being dragged', () => {
+    const { result } = renderHook(() => useDraggedDrops());
 
     expect(result.current).toEqual({});
   });

@@ -8,6 +8,8 @@ export const useAppStore = createStore<AppStore>((set) => ({
   viewInstance: null,
   uiExtensions: [],
   selectedDrops: [],
+  selectedTopics: [],
+  draggedData: { drops: [], topics: [] },
 
   setView: (view) => set({ view }),
 
@@ -51,12 +53,35 @@ export const useAppStore = createStore<AppStore>((set) => ({
 
   clearSelectedDrops: () => set({ selectedDrops: [] }),
 
+  addSelectedTopics: (topicIds) =>
+    set((state) => ({
+      selectedTopics: [...state.selectedTopics, ...topicIds],
+    })),
+
+  removeSelectedTopics: (topicIds) =>
+    set((state) => ({
+      selectedTopics: state.selectedTopics.filter(
+        (topicId) => !topicIds.includes(topicId),
+      ),
+    })),
+
+  clearSelectedTopics: () => set({ selectedTopics: [] }),
+
+  clearSelection: () => set({ selectedDrops: [], selectedTopics: [] }),
+
+  setDraggedData: (data) =>
+    set((state) => ({ draggedData: { ...state.draggedData, ...data } })),
+
+  clearDraggedData: () => set({ draggedData: { drops: [], topics: [] } }),
+
   clear: () =>
     set({
       uiExtensions: [],
       selectedDrops: [],
+      selectedTopics: [],
       view: 'app:home',
       viewInstance: null,
+      draggedData: { drops: [], topics: [] },
     }),
 }));
 

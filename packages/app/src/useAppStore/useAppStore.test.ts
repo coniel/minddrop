@@ -64,15 +64,22 @@ describe('useAppStore', () => {
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
       result.current.addSelectedDrops(['drop-id']);
+      result.current.addSelectedDrops(['topic-id']);
       result.current.setView('some-view');
       result.current.setViewInstance(viewInstance1);
+      result.current.setDraggedData({
+        drops: ['drop-id'],
+        topics: ['topic-id'],
+      });
       result.current.clear();
     });
 
     expect(result.current.uiExtensions.length).toBe(0);
     expect(result.current.selectedDrops.length).toBe(0);
+    expect(result.current.selectedTopics.length).toBe(0);
     expect(result.current.view).toBe('app:home');
     expect(result.current.viewInstance).toBeNull();
+    expect(result.current.draggedData).toEqual({ drops: [], topics: [] });
   });
 
   describe('UI extensions', () => {
@@ -153,6 +160,80 @@ describe('useAppStore', () => {
       useAppStore.getState().clearSelectedDrops();
 
       expect(useAppStore.getState().selectedDrops).toEqual([]);
+    });
+  });
+
+  describe('selected topics', () => {
+    it('adds selected topics', () => {
+      useAppStore.getState().addSelectedTopics(['topic-id']);
+
+      expect(useAppStore.getState().selectedTopics).toEqual(['topic-id']);
+    });
+
+    it('removes selected topics', () => {
+      useAppStore.getState().addSelectedTopics(['topic-id', 'topic2-id']);
+      useAppStore.getState().removeSelectedTopics(['topic-id']);
+
+      expect(useAppStore.getState().selectedTopics).toEqual(['topic2-id']);
+    });
+
+    it('clears selected topics', () => {
+      useAppStore.getState().addSelectedTopics(['topic-id', 'topic2-id']);
+      useAppStore.getState().clearSelectedTopics();
+
+      expect(useAppStore.getState().selectedTopics).toEqual([]);
+    });
+  });
+
+  describe('clearSelection', () => {
+    it('clears selected drops and topics', () => {
+      const store = useAppStore.getState();
+      store.addSelectedDrops(['drop-1']);
+      store.addSelectedTopics(['topic-1']);
+
+      store.clearSelection();
+
+      expect(useAppStore.getState().selectedDrops).toEqual([]);
+      expect(useAppStore.getState().selectedTopics).toEqual([]);
+    });
+  });
+
+  describe('dragged data', () => {
+    it('sets dragged drops', () => {
+      // Set dragged drops
+      useAppStore.getState().setDraggedData({ drops: ['drop-id'] });
+
+      // Should be set in store
+      expect(useAppStore.getState().draggedData).toEqual({
+        drops: ['drop-id'],
+        topics: [],
+      });
+    });
+
+    it('sets dragged topics', () => {
+      // Set dragged topics
+      useAppStore.getState().setDraggedData({ topics: ['topic-id'] });
+
+      // Should be set in store
+      expect(useAppStore.getState().draggedData).toEqual({
+        drops: [],
+        topics: ['topic-id'],
+      });
+    });
+
+    it('clears dragged data', () => {
+      // Set dragged data
+      useAppStore
+        .getState()
+        .setDraggedData({ drops: ['drop-id'], topics: ['topic-id'] });
+      // Clear dragged data
+      useAppStore.getState().clearDraggedData();
+
+      // Store should be cleared
+      expect(useAppStore.getState().draggedData).toEqual({
+        drops: [],
+        topics: [],
+      });
     });
   });
 });

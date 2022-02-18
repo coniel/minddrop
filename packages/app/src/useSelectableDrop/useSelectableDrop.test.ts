@@ -3,18 +3,18 @@ import { act, renderHook } from '@minddrop/test-utils';
 import { setup, cleanup, core } from '../test-utils';
 import { getSelectedDrops } from '../getSelectedDrops';
 import { selectDrops } from '../selectDrops';
-import { useDropSelection } from './useDropSelection';
+import { useSelectableDrop } from './useSelectableDrop';
 import React from 'react';
 
 const { textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
 
-describe('useDropSelection', () => {
+describe('useSelectableDrop', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('returns the drop selected state', () => {
-    const { result } = renderHook(() => useDropSelection(textDrop1.id));
+    const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
     // Not selected
     expect(result.current.isSelected).toBe(false);
@@ -29,7 +29,7 @@ describe('useDropSelection', () => {
   });
 
   it('selects the drop', () => {
-    const { result } = renderHook(() => useDropSelection(textDrop1.id));
+    const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
     act(() => {
       // Select the drop
@@ -41,7 +41,7 @@ describe('useDropSelection', () => {
   });
 
   it('unselects the drop', () => {
-    const { result } = renderHook(() => useDropSelection(textDrop1.id));
+    const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
     act(() => {
       // Select the drop
@@ -64,7 +64,7 @@ describe('useDropSelection', () => {
     } as unknown as React.MouseEvent;
 
     it('clears selected drops and selects the drop', () => {
-      const { result } = renderHook(() => useDropSelection(textDrop1.id));
+      const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
       act(() => {
         // Select other drops
@@ -97,7 +97,7 @@ describe('useDropSelection', () => {
     });
 
     it('toggles the selection if Shift key is pressed', () => {
-      const { result } = renderHook(() => useDropSelection(textDrop1.id));
+      const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
       act(() => {
         // Select other drops
@@ -129,14 +129,14 @@ describe('useDropSelection', () => {
 
   describe('selectedClass', () => {
     it('should be an empty string if drop is not selected', () => {
-      const { result } = renderHook(() => useDropSelection(textDrop1.id));
+      const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
       // Should be an empty string
       expect(result.current.selectedClass).toBe('');
     });
 
     it('should be set if drop is selcted', () => {
-      const { result } = renderHook(() => useDropSelection(textDrop1.id));
+      const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
 
       act(() => {
         // Select the drop
