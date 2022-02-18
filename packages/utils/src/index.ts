@@ -7,3 +7,4 @@ export * from './toKebabCase';
 export * from './createUpdate';
 export * from './FieldValue';
 export * from './mapById';
+export * from './setDataTransferData';
