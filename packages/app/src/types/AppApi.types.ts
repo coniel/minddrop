@@ -137,6 +137,15 @@ export interface AppApi {
   ): Promise<boolean>;
 
   /**
+   * Returns root topics in the order they appear in
+   * the sidebar.
+   *
+   * @param core A MindDrop core instance.
+   * @returns Root topics as an ordered array.
+   */
+  getRootTopics(core: Core): Topic[];
+
+  /**
    * Adds topics to the root level and dispaches an
    * `app:add-root-topics` event.
    *

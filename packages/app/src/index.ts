@@ -15,3 +15,4 @@ export * from './useSelectableDrop';
 export * from './useSelectableTopic';
 export * from './useSelectedDrops';
 export * from './useSelectedTopics';
+export * from './useRootTopics';

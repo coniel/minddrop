@@ -8,9 +8,13 @@ import { PersistentStore } from '@minddrop/persistent-store';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 
 const { extensions } = EXTENSIONS_TEST_DATA;
-const { topicViewConfigs, topicViewInstances, topics } = TOPICS_TEST_DATA;
+const { rootTopicIds, topicViewConfigs, topicViewInstances, topics } =
+  TOPICS_TEST_DATA;
 const { viewInstances, viewConfigs } = VIEWS_TEST_DATA;
 const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
+
+export const globalPersistentStore = { topics: rootTopicIds };
+export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 export const viewsCore = initializeCore({
@@ -26,6 +30,9 @@ export const homeViewConfig: ViewConfig = {
 
 export function setup() {
   act(() => {
+    PersistentStore.setGlobalStore(core, globalPersistentStore);
+    PersistentStore.setLocalStore(core, localPersistentStore);
+
     // Register drop types
     dropTypeConfigs.forEach((config) => Drops.register(core, config));
     // Load drops
@@ -56,6 +63,9 @@ export function setup() {
 
 export function cleanup() {
   act(() => {
+    PersistentStore.clearGlobalCache();
+    PersistentStore.clearLocalCache();
+
     Views.clear(core);
     core.removeAllEventListeners();
     useAppStore.getState().clear();

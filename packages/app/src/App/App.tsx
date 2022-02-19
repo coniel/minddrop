@@ -11,9 +11,11 @@ import { selectDrops } from '../selectDrops';
 import { getSelectedDrops } from '../getSelectedDrops';
 import { clearSelectedDrops } from '../clearSelectedDrops';
 import { unselectDrops } from '../unselectDrops';
+import { getRootTopics } from '../getRootTopics';
 
 export const App: AppApi = {
   addRootTopics,
+  getRootTopics,
   openTopicView,
   createTopic,
   permanentlyDeleteTopic,
