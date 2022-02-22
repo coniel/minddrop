@@ -6,7 +6,7 @@ import {
   MenuTriggerItemProps,
   TooltipMenuItemProps,
 } from '../../types';
-import { TopicSelectionMenuItemProps } from '../../TopicSelectionMenuItem';
+import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 
 export interface MenuComponents {
   Item: React.ElementType<TooltipMenuItemProps>;

@@ -9,7 +9,7 @@ import {
   MenuTopicSelectionItemConfig,
 } from '../../types';
 import { generateMenu } from './generateMenu';
-import { TopicSelectionMenuItemProps } from '../../TopicSelectionMenuItem';
+import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 
 const Item: React.FC<TooltipMenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>

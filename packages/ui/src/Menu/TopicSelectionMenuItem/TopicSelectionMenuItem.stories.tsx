@@ -3,8 +3,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '../DropdownMenu';
-import { Button } from '../Button';
+} from '../../DropdownMenu';
+import { Button } from '../../Button';
 import {
   TopicSelectionMenuItem as TopicSelectionMenuItemPrimitive,
   TopicSelectionMenuItemProps,

@@ -1,9 +1,9 @@
 import React, { ComponentType, useCallback, useMemo, useState } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './TopicSelectionMenuItem.css';
-import { Collapsible, CollapsibleContent } from '../Collapsible';
-import { Text } from '../Text';
-import { Icon } from '../Icon';
+import { Collapsible, CollapsibleContent } from '../../Collapsible';
+import { Text } from '../../Text';
+import { Icon } from '../../Icon';
 import { useTranslation } from '@minddrop/i18n';
 import { DropdownMenuItemProps } from '@radix-ui/react-dropdown-menu';
 import { ContextMenuItemProps } from '@radix-ui/react-context-menu';

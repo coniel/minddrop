@@ -3,7 +3,7 @@ import React from 'react';
 import {
   TopicSelectionMenuItem,
   TopicSelectionMenuItemProps,
-} from '../TopicSelectionMenuItem';
+} from '../Menu/TopicSelectionMenuItem';
 
 export type ContextMenuTopicSelectionItemProps = Omit<
   TopicSelectionMenuItemProps,
