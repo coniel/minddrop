@@ -2,9 +2,11 @@
 import React from 'react';
 import {
   MenuContents,
+  MenuTopicSelectionItemConfig,
   MenuTriggerItemProps,
   TooltipMenuItemProps,
 } from '../../types';
+import { TopicSelectionMenuItemProps } from '../../TopicSelectionMenuItem';
 
 export interface MenuComponents {
   Item: React.ElementType<TooltipMenuItemProps>;
@@ -13,6 +15,9 @@ export interface MenuComponents {
   TriggerItem: React.ElementType<MenuTriggerItemProps>;
   Menu: React.ElementType;
   MenuContent: React.ElementType;
+  TopicSelectionItem: React.ElementType<
+    Omit<TopicSelectionMenuItemProps, 'MenuItemComponent'>
+  >;
 }
 
 /**
@@ -23,7 +28,15 @@ export function generateMenu(
   components: MenuComponents,
   menu: MenuContents,
 ): React.ReactNode[] {
-  const { Item, Label, Separator, Menu, MenuContent, TriggerItem } = components;
+  const {
+    Item,
+    Label,
+    Separator,
+    Menu,
+    MenuContent,
+    TriggerItem,
+    TopicSelectionItem,
+  } = components;
 
   return menu.reduce((items, item, index) => {
     const { type, ...props } = item;
@@ -42,13 +55,17 @@ export function generateMenu(
     if (type === 'menu-item') {
       // Generate submenu
       if ('submenu' in item) {
-        const { submenu, ...otherProps } = item;
+        const { submenu, submenuContentClass, ...otherProps } = item;
 
         return [
           ...items,
           <Menu key={index}>
             <TriggerItem {...otherProps} />
-            <MenuContent>{generateMenu(components, submenu)}</MenuContent>
+            <MenuContent className={submenuContentClass}>
+              {React.isValidElement(submenu)
+                ? submenu
+                : generateMenu(components, submenu)}
+            </MenuContent>
           </Menu>,
         ];
       }
@@ -56,6 +73,24 @@ export function generateMenu(
       return [
         ...items,
         <Item key={index} {...(props as TooltipMenuItemProps)} />,
+      ];
+    }
+
+    // Generate TopicSelectionItem
+    if (type === 'menu-topic-selection-item') {
+      const { label, subtopics, onSelect } =
+        item as MenuTopicSelectionItemConfig;
+
+      return [
+        ...items,
+        <TopicSelectionItem key={index} label={label} onSelect={onSelect}>
+          {
+            generateMenu(
+              components,
+              subtopics,
+            ) as unknown as TopicSelectionMenuItemProps['children']
+          }
+        </TopicSelectionItem>,
       ];
     }
 

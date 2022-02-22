@@ -6,8 +6,10 @@ import {
   MenuSeparatorConfig,
   TooltipMenuItemProps,
   MenuTriggerItemProps,
+  MenuTopicSelectionItemConfig,
 } from '../../types';
 import { generateMenu } from './generateMenu';
+import { TopicSelectionMenuItemProps } from '../../TopicSelectionMenuItem';
 
 const Item: React.FC<TooltipMenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>
@@ -27,8 +29,23 @@ const Menu: React.FC = ({ children }) => (
   <div data-testid="menu">{children}</div>
 );
 
-const MenuContent: React.FC = ({ children }) => (
-  <div data-testid="menu-content">{children}</div>
+const MenuContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  children,
+  className,
+}) => (
+  <div data-testid="menu-content">
+    {children}
+    <div>{className}</div>
+  </div>
+);
+
+const TopicSelectionItem: React.FC<
+  Omit<TopicSelectionMenuItemProps, 'MenuItemComponent'>
+> = ({ label, children }) => (
+  <div data-testid="topic-selection-item">
+    <div>{label}</div>
+    <div>{children}</div>
+  </div>
 );
 
 const item: MenuItemConfig = {
@@ -48,7 +65,29 @@ const separator: MenuSeparatorConfig = {
   type: 'menu-separator',
 };
 
-const components = { Item, TriggerItem, Label, Separator, Menu, MenuContent };
+const topicSelectionItem: MenuTopicSelectionItemConfig = {
+  type: 'menu-topic-selection-item',
+  label: 'topic',
+  subtopics: [
+    {
+      type: 'menu-topic-selection-item',
+      label: 'subtopic',
+      subtopics: [],
+      onSelect: jest.fn(),
+    },
+  ],
+  onSelect: jest.fn(),
+};
+
+const components = {
+  Item,
+  TriggerItem,
+  Label,
+  Separator,
+  Menu,
+  MenuContent,
+  TopicSelectionItem,
+};
 
 describe('generateMenu', () => {
   afterEach(cleanup);
@@ -75,7 +114,12 @@ describe('generateMenu', () => {
 
   it('generates submenus', () => {
     const menu = generateMenu(components, [
-      { ...item, label: 'trigger label', submenu: [item] },
+      {
+        ...item,
+        label: 'trigger label',
+        submenu: [item],
+        submenuContentClass: 'submenu-content-class',
+      },
     ]);
     render(<div>{menu}</div>);
 
@@ -85,6 +129,32 @@ describe('generateMenu', () => {
       'trigger label',
     );
     expect(screen.getByTestId('item')).toHaveTextContent('label');
+    // Sets submenuContentClass as submenu's MenuContent className
+    screen.getByText('submenu-content-class');
+  });
+
+  it('generates component based submenus', () => {
+    const menu = generateMenu(components, [
+      { ...item, label: 'trigger label', submenu: <div>submenu</div> },
+    ]);
+    render(<div>{menu}</div>);
+
+    screen.getByTestId('menu');
+    screen.getByTestId('menu-content');
+    expect(screen.getByTestId('trigger-item')).toHaveTextContent(
+      'trigger label',
+    );
+    screen.getByText('submenu');
+  });
+
+  it('generates topic selection items', () => {
+    const menu = generateMenu(components, [topicSelectionItem]);
+
+    render(<div>{menu}</div>);
+
+    screen.getByText(topicSelectionItem.label);
+    // Generates subtopics
+    screen.getByText(topicSelectionItem.subtopics[0].label);
   });
 
   it('retuns custom components as is', () => {

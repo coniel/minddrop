@@ -58,6 +58,10 @@ const globalStyles = globalCss({
   '.language-tsx ': {
     color: '$violet12',
   },
+
+  '.topic-selection-submenu': {
+    minWidth: 240,
+  },
 });
 
 function App({ Component, pageProps }: AppProps) {
