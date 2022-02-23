@@ -5,7 +5,7 @@ import { onRemoveDrops } from './onRemoveDrops';
 import { TopicViewColumns } from './TopicViewColumns';
 
 export const topicViewColumnsConfig: TopicViewConfig = {
-  id: 'topic:columns',
+  id: 'minddrop/topic-view-columns',
   name: 'Columns',
   description: 'Organise drops into columns.',
   component: TopicViewColumns,

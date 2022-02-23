@@ -8,7 +8,7 @@ import {
   createDataInsertFromDataTransfer,
   mapPropsToClasses,
 } from '@minddrop/utils';
-import { DropContextMenu, TopicView } from '@minddrop/app-ui';
+import { TopicView } from '@minddrop/app-ui';
 import { Views } from '@minddrop/views';
 import { useCore } from '@minddrop/core';
 import {

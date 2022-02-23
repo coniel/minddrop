@@ -15,7 +15,7 @@ export const colItemImageDrop1 = { type: 'drop', id: imageDrop1.id };
 
 export const topicViewColumnsInstance: TopicViewColumnsInstance = {
   id: tSixDropsView.id,
-  view: 'topic:columns',
+  view: 'minddrop/topic-view-columns',
   topic: tSixDrops.id,
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
