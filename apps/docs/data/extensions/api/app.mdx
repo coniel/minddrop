@@ -15,29 +15,13 @@ Hooks and methods for retrieving and managing topics.
 
 ### useRootTopics
 
-Returns an `{ [id]: Topic }` map of root level topics. Returned topics can be filtered by passing in `TopicFilters`.
+Returns root topics as an array ordered according their order of appearance in the app sidebar.
 
 ```ts
-useRootTopics(filters?: TopicFilters): TopicMap
+useRootTopics(core: Core): Topic[]
 ```
 
-<ArgsTable
-  data={[
-    {
-      name: 'filters',
-      type: 'TopicFilters',
-      description: (
-        <span>
-          Allows filtering of returned topics. See the{' '}
-          <a href="/docs/extensions/api/topics#topicfilters">
-            TopicFilters
-          </a>{' '}
-          section of the Topics interface page for more details.
-        </span>
-      ),
-    },
-  ]}
-/>
+<ArgsTable core />
 
 ### useSelectedTopics
 
@@ -218,6 +202,16 @@ App.removeRootTopics(core: Core, topicIds: string[]): void
     },
   ]}
 />
+
+### getRootTopics
+
+Returns root topics as an array ordered according their order of appearance in the app sidebar.
+
+```ts
+App.getRootTopics(core: Core): Topic[]
+```
+
+<ArgsTable core />
 
 ### permanentlyDeleteTopic
 
