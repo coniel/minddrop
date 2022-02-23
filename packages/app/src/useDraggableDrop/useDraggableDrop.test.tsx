@@ -4,7 +4,7 @@ import { act, fireEvent, render, renderHook } from '@minddrop/test-utils';
 import { setup, cleanup, core } from '../test-utils';
 import { getSelectedDrops } from '../getSelectedDrops';
 import { useDraggableDrop } from './useDraggableDrop';
-import { createDataInsertFromDataTransfer } from '@minddrop/utils';
+import { createDataInsertFromDataTransfer, mapById } from '@minddrop/utils';
 import { selectDrops } from '../selectDrops';
 import { setDraggedDrops } from '../setDraggedDrops';
 
@@ -46,17 +46,23 @@ describe('useDropDragging', () => {
   });
 
   describe('onDragStart', () => {
-    it('selects the drop if not selected', () => {
+    it('clears selected drops and selects the drop if not selected', () => {
       const { getByTestId } = render(<Drop />);
+
+      act(() => {
+        // Select another drop
+        selectDrops(core, [textDrop2.id]);
+      });
 
       act(() => {
         fireEvent.dragStart(getByTestId('drop'), dragStartEvent);
       });
 
-      expect(getSelectedDrops()[textDrop1.id]).toBeDefined();
+      // Other drop should no longer be selected
+      expect(getSelectedDrops()).toEqual(mapById([textDrop1]));
     });
 
-    it('sets action and selected drops as drops in data transfer', () => {
+    it('sets action and selected drops in data transfer', () => {
       const { getByTestId } = render(<Drop />);
       const dataTransfer = {
         types: [],
@@ -73,7 +79,12 @@ describe('useDropDragging', () => {
       };
 
       act(() => {
-        selectDrops(core, [textDrop2.id]);
+        // Select the drops
+        selectDrops(core, [textDrop2.id, textDrop1.id]);
+      });
+
+      act(() => {
+        // Drag textDrop1
         fireEvent.dragStart(getByTestId('drop'), event);
       });
 
@@ -81,7 +92,9 @@ describe('useDropDragging', () => {
         dataTransfer as unknown as DataTransfer,
       );
 
+      // Should set action
       expect(dataInsert.action).toEqual('sort');
+      // Should set drops
       expect(dataInsert.drops.includes(textDrop1.id)).toBeTruthy();
       expect(dataInsert.drops.includes(textDrop2.id)).toBeTruthy();
     });
