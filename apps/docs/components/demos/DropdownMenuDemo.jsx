@@ -5,6 +5,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   IconButton,
+  ContentColors,
 } from '@minddrop/ui';
 
 export const DropdownMenuDemo = () => (
@@ -34,6 +35,17 @@ export const DropdownMenuDemo = () => (
             icon: 'note',
             onSelect: () => console.log('Add note'),
             keyboardShortcut: ['Ctrl', 'Shift', 'N'],
+          },
+          {
+            type: 'menu-item',
+            label: 'Color',
+            icon: 'color-palette',
+            submenuContentClass: 'color-selection-submenu',
+            submenu: ContentColors.map((color) => ({
+              type: 'menu-color-selection-item',
+              color: color.value,
+              onSelect: () => console.log(color.value),
+            })),
           },
           {
             type: 'menu-item',

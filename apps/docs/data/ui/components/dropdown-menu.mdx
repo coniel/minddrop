@@ -50,6 +50,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
   DropdownMenuTriggerItem,
+  DropdownMenuTopicSelectionItem,
+  DropdownMenuColorSelectionItem,
+  ContentColors,
 } from '@minddrop/ui';
 
 export default () => {
@@ -71,6 +74,21 @@ export default () => {
           keyboardShortcut={['Ctrl', 'Shift', 'N']}
           onSelect={() => console.log('Add note')}
         />
+        <DropdownMenu>
+          <DropdownMenuTriggerItem
+            label="Color"
+            icon="color-palette"
+          />
+          <DropdownMenuContent className="color-selection-submenu">
+            {ContentColors.map((color) => (
+              <DropdownMenuColorSelectionItem
+                key={color.value}
+                color={color.value}
+                onSelect={() => console.log(color.value)}
+              />
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTriggerItem
             label="Turn into"
@@ -106,19 +124,19 @@ export default () => {
             label="Move to"
             icon="arrow-up-right"
           />
-          <DropdownMenuContent>
-            <TopicSelectionMenuItem
+          <DropdownMenuContent className="topic-selection-submenu">
+            <DropdownMenuTopicSelectionItem
               label="Sailing"
               onSelect={() => console.log("Move to 'Sailing'")}
             >
-              <TopicSelectionMenuItem
+              <DropdownMenuTopicSelectionItem
                 label="Navigation"
                 onSelect={() => console.log("Move to 'Navigation'")}
               >
                 // ...
-              </TopicSelectionMenuItem>
+              </DropdownMenuTopicSelectionItem>
               // ...
-            </TopicSelectionMenuItem>
+            </DropdownMenuTopicSelectionItem>
             // ...
           </DropdownMenuContent>
         </DropdownMenu>
@@ -141,6 +159,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   MenuContent,
+  ContentColors,
 } from '@minddrop/ui';
 
 const menu: MenuContent = [
@@ -157,6 +176,17 @@ const menu: MenuContent = [
     icon: 'note',
     onSelect: () => console.log('Add note'),
     keyboardShortcut: ['Ctrl', 'Shift', 'N'],
+  },
+  {
+    type: 'menu-item',
+    label: 'Color',
+    icon: 'color-palette',
+    submenuContentClass: 'color-selection-submenu',
+    submenu: ContentColors.map((color) => ({
+      type: 'menu-color-selection-item',
+      color: color.value,
+      onSelect: () => console.log(color.value),
+    })),
   },
   {
     type: 'menu-item',
@@ -201,6 +231,7 @@ const menu: MenuContent = [
     type: 'menu-item',
     label: 'Move to',
     icon: 'arrow-up-right',
+    submenuContentClass: 'topic-selection-submenu',
     onSelect: () => console.log('Move to'),
     submenu: [
       {
@@ -737,7 +768,7 @@ A menu item designed for selecting a topic. Can be expanded to reveal subtopics.
           Event handler called when the user selects an item (via
           mouse of keyboard). Calling{' '}
           <Code>event.preventDefault</Code> in this handler will
-          prevent the context menu from closing when selecting that
+          prevent the dropdown menu from closing when selecting that
           item.
         </span>
       ),
@@ -749,6 +780,39 @@ A menu item designed for selecting a topic. Can be expanded to reveal subtopics.
         <span>
           Child <Code>DropdownMenuTopicSelectionItem</Code>s will be
           rendered as the topic's subtopics.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### DropdownMenuColorSelectionItem
+
+A menu item designed for selecting a `ContentColor`.
+
+<PropsTable
+  data={[
+    {
+      name: 'color',
+      type: 'ContentColor',
+      required: true,
+      description: (
+        <span>
+          The color option. Must be a <Code>ContentColor</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onSelect',
+      type: '(event: Event) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the user selects an item (via
+          mouse of keyboard). Calling{' '}
+          <Code>event.preventDefault</Code> in this handler will
+          prevent the dropdown menu from closing when selecting that
+          item.
         </span>
       ),
     },
@@ -1037,13 +1101,69 @@ const menu = [
     {
       name: 'onSelect',
       typeSimple: 'function',
-      type: '(event: Event, topicId: string) => void',
+      type: '(event: Event) => void',
       description: (
         <span>
           Event handler called when the user selects an item (via
           mouse of keyboard). Calling{' '}
           <Code>event.preventDefault</Code> in this handler will
-          prevent the context menu from closing when selecting that
+          prevent the dropdown menu from closing when selecting that
+          item.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### MenuColorSelectionItemConfig
+
+To create a color selection menu item, add a `MenuColorSelectionItemConfig` object to the menu array.
+
+```tsx
+const menu = [
+  // ...
+  {
+    type: 'menu-color-selection-item',
+    color: 'green',
+    onSelect: () => console.log('green'),
+  },
+  // ...
+];
+```
+
+<PropsTable
+  data={[
+    {
+      name: 'type',
+      type: 'menu-color-selection-item',
+      required: true,
+      description: (
+        <span>
+          The type of component to render, always{' '}
+          <Code>'menu-color-selection-item'</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'color',
+      type: 'ContentColor',
+      required: true,
+      description: (
+        <span>
+          The color option. Must be a <Code>ContentColor</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onSelect',
+      typeSimple: 'function',
+      type: '(event: Event) => void',
+      description: (
+        <span>
+          Event handler called when the user selects an item (via
+          mouse of keyboard). Calling{' '}
+          <Code>event.preventDefault</Code> in this handler will
+          prevent the dropdown menu from closing when selecting that
           item.
         </span>
       ),

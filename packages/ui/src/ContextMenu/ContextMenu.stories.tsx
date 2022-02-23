@@ -7,6 +7,8 @@ import { ContextMenuTriggerItem } from './ContextMenuTriggerItem';
 import { ContextMenuLabel } from './ContextMenuLabel';
 import { ContextMenuSeparator } from './ContextMenuSeparator';
 import { ContextMenuTrigger } from './ContextMenuTrigger';
+import { ContextMenuColorSelectionItem } from './ContextMenuColorSelectionItem';
+import { ContentColors } from '../constants';
 
 export default {
   title: 'ui/ContextMenu',
@@ -45,6 +47,16 @@ export const GeneratedFromContentProp: React.FC = () => (
           icon: 'note',
           onSelect: () => console.log('Add note'),
           keyboardShortcut: ['Ctrl', 'Shift', 'N'],
+        },
+        {
+          type: 'menu-item',
+          label: 'Color',
+          icon: 'color-palette',
+          submenu: ContentColors.map((color) => ({
+            type: 'menu-color-selection-item',
+            color: color.value,
+            onSelect: () => console.log(color.value),
+          })),
         },
         {
           type: 'menu-item',
@@ -135,6 +147,18 @@ export const ComposedWithComponents: React.FC = () => (
           keyboardShortcut={['Ctrl', 'Shift', 'N']}
           onSelect={() => console.log('Add note')}
         />
+        <ContextMenu>
+          <ContextMenuTriggerItem label="Color" icon="color-palette" />
+          <ContextMenuContent style={{ minWidth: 220 }}>
+            {ContentColors.map((color) => (
+              <ContextMenuColorSelectionItem
+                key={color.value}
+                color={color.value}
+                onSelect={() => console.log(color.value)}
+              />
+            ))}
+          </ContextMenuContent>
+        </ContextMenu>
         <ContextMenu>
           <ContextMenuTriggerItem label="Turn into" icon="turn-into" />
           <ContextMenuContent>

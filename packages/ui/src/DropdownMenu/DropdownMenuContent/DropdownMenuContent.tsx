@@ -9,6 +9,7 @@ import { DropdownMenuLabel } from '../DropdownMenuLabel';
 import { DropdownMenuSeparator } from '../DropdownMenuSeparator';
 import { DropdownMenu } from '../DropdownMenu';
 import { DropdownMenuTopicSelectionItem } from '../DropdownMenuTopicSelectionItem';
+import { DropdownMenuColorSelectionItem } from '../DropdownMenuColorSelectionItem';
 
 export interface DropdownMenuContentProps
   extends DropdownMenuPrimitives.DropdownMenuContentProps {
@@ -35,6 +36,7 @@ export const DropdownMenuContent: FC<DropdownMenuContentProps> = ({
           Menu: DropdownMenu,
           MenuContent: DropdownMenuContent,
           TopicSelectionItem: DropdownMenuTopicSelectionItem,
+          ColorSelectionItem: DropdownMenuColorSelectionItem,
         },
         content,
       ),

@@ -1,4 +1,6 @@
 import React from 'react';
+import { ContentColors } from '../constants';
+import { ColorSelectionMenuItem } from './ColorSelectionMenuItem';
 import { Menu } from './Menu';
 import { MenuItem } from './MenuItem';
 import { MenuLabel } from './MenuLabel';
@@ -40,6 +42,16 @@ export const Default: React.FC = () => (
         icon="inside"
         keyboardShortcut={['Ctrl', 'Shift', 'A']}
       />
+    </Menu>
+  </div>
+);
+
+export const ColorSelection: React.FC = () => (
+  <div style={{ maxWidth: 240 }}>
+    <Menu>
+      {ContentColors.map((color) => (
+        <ColorSelectionMenuItem color={color.value} />
+      ))}
     </Menu>
   </div>
 );

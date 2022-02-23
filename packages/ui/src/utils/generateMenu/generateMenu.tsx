@@ -1,6 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import {
+  MenuColorSelectionItemConfig,
+  MenuColorSelectionItemProps,
   MenuContents,
   MenuTopicSelectionItemConfig,
   MenuTriggerItemProps,
@@ -18,6 +20,7 @@ export interface MenuComponents {
   TopicSelectionItem: React.ElementType<
     Omit<TopicSelectionMenuItemProps, 'MenuItemComponent'>
   >;
+  ColorSelectionItem: React.ComponentType<MenuColorSelectionItemProps>;
 }
 
 /**
@@ -36,6 +39,7 @@ export function generateMenu(
     MenuContent,
     TriggerItem,
     TopicSelectionItem,
+    ColorSelectionItem,
   } = components;
 
   return menu.reduce((items, item, index) => {
@@ -91,6 +95,16 @@ export function generateMenu(
             ) as unknown as TopicSelectionMenuItemProps['children']
           }
         </TopicSelectionItem>,
+      ];
+    }
+
+    // Generate ColorSelectionItem
+    if (type === 'menu-color-selection-item') {
+      const { color, onSelect } = item as MenuColorSelectionItemConfig;
+
+      return [
+        ...items,
+        <ColorSelectionItem key={index} color={color} onSelect={onSelect} />,
       ];
     }
 

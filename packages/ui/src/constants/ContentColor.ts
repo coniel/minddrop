@@ -14,6 +14,10 @@ export interface ColorValue {
 
 export const ContentColors: ColorValue[] = [
   {
+    labelKey: 'colorDefault',
+    value: 'default',
+  },
+  {
     labelKey: 'colorBlue',
     value: 'blue',
   },

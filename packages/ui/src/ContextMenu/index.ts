@@ -4,5 +4,6 @@ export * from './ContextMenuItem';
 export * from './ContextMenuLabel';
 export * from './ContextMenuSeparator';
 export * from './ContextMenuTopicSelectionItem';
+export * from './ContextMenuColorSelectionItem';
 export * from './ContextMenuTrigger';
 export * from './ContextMenuTriggerItem';

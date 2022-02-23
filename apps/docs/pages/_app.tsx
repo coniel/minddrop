@@ -62,6 +62,10 @@ const globalStyles = globalCss({
   '.topic-selection-submenu': {
     minWidth: 240,
   },
+
+  '.color-selection-submenu': {
+    minWidth: 240,
+  },
 });
 
 function App({ Component, pageProps }: AppProps) {

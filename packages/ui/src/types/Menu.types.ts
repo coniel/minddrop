@@ -4,6 +4,7 @@ import {
   ContextMenuTriggerItemProps,
 } from '@radix-ui/react-context-menu';
 import { IconProp } from '../IconRenderer';
+import { ContentColor } from './Content.types';
 
 export interface MenuItemConfig {
   type: 'menu-item';
@@ -102,6 +103,7 @@ export interface MenuTriggerItemConfig extends MenuTriggerItemProps {
         | MenuItemConfig
         | MenuTriggerItemConfig
         | MenuTopicSelectionItemConfig
+        | MenuColorSelectionItemConfig
         | React.ReactElement
       )[]
     | React.ReactElement;
@@ -109,6 +111,7 @@ export interface MenuTriggerItemConfig extends MenuTriggerItemProps {
 
 export interface MenuTopicSelectionItemConfig {
   type: 'menu-topic-selection-item';
+
   /**
    * The menu item label, typically the topic's title.
    */
@@ -131,11 +134,37 @@ export interface MenuTopicSelectionItemConfig {
   onSelect?(event: Event): void;
 }
 
+export interface MenuColorSelectionItemConfig {
+  type: 'menu-color-selection-item';
+
+  /**
+   * The color option which the menu item represents.
+   * Must be a `ContentColor`.
+   */
+  color: ContentColor;
+
+  /**
+   * Event handler called when the user selects an item
+   * (via mouse of keyboard). Calling `event.preventDefault`
+   * in this handler will prevent the dropdown menu from
+   * closing when selecting that item.
+   *
+   * @param event The event.
+   */
+  onSelect?(event: Event): void;
+}
+
+export type MenuColorSelectionItemProps = Omit<
+  MenuColorSelectionItemConfig,
+  'type'
+>;
+
 export type MenuContents = (
   | MenuItemConfig
   | MenuTriggerItemConfig
   | MenuLabelConfig
   | MenuSeparatorConfig
   | MenuTopicSelectionItemConfig
+  | MenuColorSelectionItemConfig
   | React.ReactElement
 )[];

@@ -7,6 +7,8 @@ import {
   TooltipMenuItemProps,
   MenuTriggerItemProps,
   MenuTopicSelectionItemConfig,
+  MenuColorSelectionItemConfig,
+  MenuColorSelectionItemProps,
 } from '../../types';
 import { generateMenu } from './generateMenu';
 import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
@@ -48,6 +50,10 @@ const TopicSelectionItem: React.FC<
   </div>
 );
 
+const ColorSelectionItem: React.FC<MenuColorSelectionItemProps> = ({
+  color,
+}) => <div>{color}</div>;
+
 const item: MenuItemConfig = {
   type: 'menu-item',
   label: 'label',
@@ -79,6 +85,12 @@ const topicSelectionItem: MenuTopicSelectionItemConfig = {
   onSelect: jest.fn(),
 };
 
+const colorSelectionItem: MenuColorSelectionItemConfig = {
+  type: 'menu-color-selection-item',
+  color: 'red',
+  onSelect: jest.fn(),
+};
+
 const components = {
   Item,
   TriggerItem,
@@ -87,6 +99,7 @@ const components = {
   Menu,
   MenuContent,
   TopicSelectionItem,
+  ColorSelectionItem,
 };
 
 describe('generateMenu', () => {
@@ -155,6 +168,14 @@ describe('generateMenu', () => {
     screen.getByText(topicSelectionItem.label);
     // Generates subtopics
     screen.getByText(topicSelectionItem.subtopics[0].label);
+  });
+
+  it('generates color selection items', () => {
+    const menu = generateMenu(components, [colorSelectionItem]);
+
+    render(<div>{menu}</div>);
+
+    screen.getByText(colorSelectionItem.color);
   });
 
   it('retuns custom components as is', () => {

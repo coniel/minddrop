@@ -8,6 +8,8 @@ import { DropdownMenuLabel } from './DropdownMenuLabel';
 import { DropdownMenuSeparator } from './DropdownMenuSeparator';
 import { DropdownMenuTrigger } from './DropdownMenuTrigger';
 import { IconButton } from '../IconButton';
+import { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';
+import { ContentColors } from '../constants';
 
 export default {
   title: 'ui/DropdownMenu',
@@ -36,6 +38,16 @@ export const GeneratedFromContentProp: React.FC = () => (
           icon: 'note',
           onSelect: () => console.log('Add note'),
           keyboardShortcut: ['Ctrl', 'Shift', 'N'],
+        },
+        {
+          type: 'menu-item',
+          label: 'Color',
+          icon: 'color-palette',
+          submenu: ContentColors.map((color) => ({
+            type: 'menu-color-selection-item',
+            color: color.value,
+            onSelect: () => console.log(color.value),
+          })),
         },
         {
           type: 'menu-item',
@@ -115,6 +127,18 @@ export const ComposedWithComponents: React.FC = () => (
           keyboardShortcut={['Ctrl', 'Shift', 'N']}
           onSelect={() => console.log('Add note')}
         />
+        <DropdownMenu>
+          <DropdownMenuTriggerItem label="Color" icon="color-palette" />
+          <DropdownMenuContent style={{ minWidth: 220 }}>
+            {ContentColors.map((color) => (
+              <DropdownMenuColorSelectionItem
+                key={color.value}
+                color={color.value}
+                onSelect={() => console.log(color.value)}
+              />
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTriggerItem label="Turn into" icon="turn-into" />
           <DropdownMenuContent>
