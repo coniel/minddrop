@@ -6,9 +6,16 @@
   "topicsNavigation": "Topics",
   "createTopic": "Add topic",
   "addSubtopic": "Add subtopic",
+  "edit": "Edit",
   "delete": "Delete",
+  "archive": "Archive",
   "rename": "Rename",
   "topicName": "Topic name",
+
+  "moveTo": "Move to",
+  "addTo": "Add to",
+  "color": "Colour",
+  "duplicate": "Duplicate",
 
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
@@ -16,5 +23,17 @@
   "subtopicCount_interval": "(0)[No subtopics];(1)[1 subtopic];(2-inf)[{{count}} subtopics];",
   "untitled": "Untitled",
   "openTopic": "Open {{topic}}",
-  "expandSubtopics": "Expand subtopics"
+  "expandSubtopics": "Expand subtopics",
+
+  "colorDefault": "Default",
+  "colorBlue": "Blue",
+  "colorCyan": "Cyan",
+  "colorRed": "Red",
+  "colorPink": "Pink",
+  "colorPurple": "Purple",
+  "colorGreen": "Green",
+  "colorOrange": "Orange",
+  "colorYellow": "Yellow",
+  "colorBrown": "Brown",
+  "colorGray": "Gray"
 }

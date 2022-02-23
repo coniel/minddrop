@@ -1,7 +1,11 @@
 import { initializeCore } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { PersistentStore } from '@minddrop/persistent-store';
-import { onRun as onRunApp } from '@minddrop/app';
+import {
+  onRun as onRunApp,
+  useDraggableDrop,
+  useSelectableDrop,
+} from '@minddrop/app';
 import { onRun as onRunTags } from '@minddrop/tags';
 import { onRun as onRunFiles } from '@minddrop/files';
 import {
@@ -9,11 +13,11 @@ import {
   Topics,
   TOPICS_TEST_DATA,
 } from '@minddrop/topics';
-import { DropConfig, Drops, onRun as onRunDrops } from '@minddrop/drops';
+import { Drop, DropConfig, Drops, onRun as onRunDrops } from '@minddrop/drops';
 import { Views, VIEWS_TEST_DATA } from '@minddrop/views';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import '../app.css';
-import { Drop } from '@minddrop/ui';
+import { Drop as DropComponent, DropNote } from '@minddrop/ui';
 import React from 'react';
 
 const { viewInstances, viewConfigs } = VIEWS_TEST_DATA;
@@ -59,10 +63,27 @@ export const columnViewInstance = {
   columns: [[textDrop1.id, textDrop2.id], [textDrop3.id], [htmlDrop1.id], []],
 };
 
+const TextDrop: React.FC<Drop> = ({ id, markdown, color }) => {
+  const { selectedClass, onClick } = useSelectableDrop(id);
+  const { onDragStart } = useDraggableDrop(id);
+
+  return (
+    <DropComponent
+      draggable
+      color={color}
+      className={selectedClass}
+      onClick={onClick}
+      onDragStart={onDragStart}
+    >
+      <DropNote>{markdown}</DropNote>
+    </DropComponent>
+  );
+};
+
 const customTextDropConfig: DropConfig = {
   ...textDropConfig,
   type: 'text-2',
-  component: ({ markdown }) => <Drop>{markdown}</Drop>,
+  component: TextDrop,
 };
 
 initializeI18n();
@@ -74,22 +95,7 @@ viewConfigs.forEach((view) => Views.register(viewsCore, view));
 [...dropTypeConfigs, customTextDropConfig].forEach((config) =>
   Drops.register(core, {
     ...config,
-    component: ({ markdown, id }) => (
-      <div
-        draggable
-        style={{ userSelect: 'auto' }}
-        onDragOver={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-        }}
-        onDragStart={(event: React.DragEvent<HTMLDivElement>) => {
-          event.dataTransfer.setData('minddrop/drops', `["${id}"]`);
-          event.dataTransfer.setData('minddrop/action', 'sort');
-        }}
-      >
-        <Drop>{markdown}</Drop>
-      </div>
-    ),
+    component: TextDrop,
   }),
 );
 Views.loadInstances(core, [
