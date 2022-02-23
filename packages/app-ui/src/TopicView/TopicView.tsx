@@ -43,7 +43,7 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
             Drops.delete(core, dropId);
           });
         }
-      } else if (event.key === 'd' && event.metaKey) {
+      } else if (['D', 'd'].includes(event.key) && event.metaKey) {
         event.preventDefault();
 
         // Duplicate the drops

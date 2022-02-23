@@ -16,7 +16,7 @@ import {
 } from '@minddrop/utils';
 
 const { tSixDropsView } = TOPICS_TEST_DATA;
-const { textDrop1 } = DROPS_TEST_DATA;
+const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
 
 describe('<TopicView />', () => {
   beforeEach(() => {
@@ -244,7 +244,7 @@ describe('<TopicView />', () => {
     expect(params[2].drops).toEqual([textDrop1.id]);
   });
 
-  it('duplicates selected drops on metaKey+D keypress', () => {
+  it('duplicates selected drops on metaKey+D/d keypress', () => {
     setup();
 
     act(() => {
@@ -257,11 +257,27 @@ describe('<TopicView />', () => {
       fireEvent.keyDown(document, { key: 'D', metaKey: true });
     });
 
-    // Should have duplicated the drop
+    act(() => {
+      // Select another drop
+      App.clearSelectedDrops(core);
+      App.selectDrops(core, [textDrop2.id]);
+    });
+
+    act(() => {
+      // Fire metaKey+d keydown
+      fireEvent.keyDown(document, { key: 'd', metaKey: true });
+    });
+
+    // Topic should have two new drops
     const topic = Topics.get(tSixDropsView.topic);
-    expect(topic.drops.length).toEqual(7);
+    expect(topic.drops.length).toEqual(8);
+    // Should have duplicated the first drop
     const dropId = topic.drops[6];
     const drop = Drops.get(dropId);
     expect(drop.duplicatedFrom).toBe(textDrop1.id);
+    // Should have duplicated the first drop
+    const dropId2 = topic.drops[7];
+    const drop2 = Drops.get(dropId2);
+    expect(drop2.duplicatedFrom).toBe(textDrop2.id);
   });
 });
