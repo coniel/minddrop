@@ -14,11 +14,11 @@ export interface ColumnItem {
   id: string;
 }
 
-export type Columns = Record<number, ColumnItem[]>;
+export type Columns = ColumnItem[][];
 
 export interface TopicViewColumnsData {
   /**
-   * A { [colNumber]: dropIds[] } map.
+   * The columns, stored as an array of ColumnItem arrays.
    */
   columns: Columns;
 }

@@ -29,11 +29,11 @@ describe('onRemoveDrops', () => {
       topicViewColumnsInstance.id,
     );
 
-    expect(instance.columns).toEqual({
-      0: [],
-      1: [colItemTextDrop2],
-      2: [colItemTextDrop4],
-      3: [],
-    });
+    expect(instance.columns).toEqual([
+      [],
+      [colItemTextDrop2],
+      [colItemTextDrop4],
+      [],
+    ]);
   });
 });

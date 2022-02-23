@@ -16,14 +16,12 @@ export function moveColumnItems(
   toIndex: number,
 ): Columns {
   const itemIds = items.map((item) => item.id);
-  const updated = { ...columns };
+  const updated = [...columns];
 
   // Remove items from non target columns
-  Object.keys(columns).forEach((column) => {
-    const columnIndex = parseInt(column, 10);
-
-    if (columnIndex !== toColumn) {
-      updated[columnIndex] = columns[columnIndex].filter(
+  columns.forEach((column, index) => {
+    if (index !== toColumn) {
+      updated[index] = columns[index].filter(
         (item) => !itemIds.includes(item.id),
       );
     }

@@ -19,11 +19,11 @@ export function onRemoveDrops(
   drops: DropMap,
 ): void {
   const dropIds = Object.keys(drops);
-  const columns = { ...viewInstance.columns };
+  const columns = [...viewInstance.columns];
 
   // Loop through columns and filter out removed drop IDs
-  Object.keys(columns).forEach((column) => {
-    columns[column] = columns[column].filter(
+  columns.forEach((column, index) => {
+    columns[index] = columns[index].filter(
       (item) => !dropIds.includes(item.id),
     );
   });

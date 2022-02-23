@@ -33,12 +33,7 @@ describe('onCreate', () => {
     const data = onCreate(core, tNoDrops);
 
     expect(data).toEqual({
-      columns: {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-      },
+      columns: [[], [], [], []],
     });
   });
 });

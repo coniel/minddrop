@@ -1,6 +1,5 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
-import { FieldValue } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { distributeItemsBetweenColumns } from '../distributeItemsBetweenColumns';
 import {
@@ -45,9 +44,8 @@ export function onAddDrops(
       .slice(0, metadata.index)
       .concat(items, column.slice(metadata.index));
 
-    columns = FieldValue.objectUnion({
-      [metadata.column]: updatedColumn,
-    });
+    columns = [...viewInstance.columns];
+    columns[metadata.column] = updatedColumn;
   }
 
   // Update the instance

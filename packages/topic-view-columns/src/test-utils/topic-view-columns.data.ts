@@ -19,10 +19,10 @@ export const topicViewColumnsInstance: TopicViewColumnsInstance = {
   topic: tSixDrops.id,
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
-  columns: {
-    0: [colItemTextDrop1],
-    1: [colItemTextDrop2],
-    2: [colItemTextDrop3, colItemTextDrop4],
-    3: [],
-  },
+  columns: [
+    [colItemTextDrop1],
+    [colItemTextDrop2],
+    [colItemTextDrop3, colItemTextDrop4],
+    [],
+  ],
 };

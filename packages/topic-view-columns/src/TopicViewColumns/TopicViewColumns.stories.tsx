@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
-import { useViewInstance } from '@minddrop/views';
+import { useViewInstance, Views } from '@minddrop/views';
 import '../test-utils/initialize-stories';
 import { TopicViewColumns } from './TopicViewColumns';
 import { TopicViewColumnsInstance } from '../types';
 import { topicViewColumnsInstance } from '../test-utils/topic-view-columns.data';
-import { Topics } from '@minddrop/topics';
-import { createDataInsertFromDataTransfer } from '@minddrop/utils';
+import {
+  createDataInsertFromDataTransfer,
+  mapById,
+  setDataTransferData,
+} from '@minddrop/utils';
 import { core } from '../test-utils/initialize-stories';
-import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { App } from '@minddrop/app';
-
-const { dropTypeConfigs } = DROPS_TEST_DATA;
+import { DropMap, Drops } from '@minddrop/drops';
+import { Topics, TopicViewConfig, TopicViewInstance } from '@minddrop/topics';
 
 export default {
   title: 'topic views/TopicViewColumns',
@@ -23,18 +25,18 @@ export const Default: React.FC = () => {
   );
 
   useEffect(() => {
-    const callback = (event: ClipboardEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'SPAN') {
-        return;
-      }
-      const dataInsert = createDataInsertFromDataTransfer(event.clipboardData);
-      App.insertDataIntoTopic(core, viewInstance.topic, dataInsert);
-    };
+    Drops.addEventListener(core, 'drops:delete', (payload) => {
+      const drop = payload.data;
+      console.log(Topics.getAll());
+      const topic = Topics.get(viewInstance.topic);
 
-    document.addEventListener('paste', callback);
+      topic.views.forEach((viewId) => {
+        const instance = Views.getInstance<TopicViewInstance>(viewId);
+        const view = Topics.getView(instance.view);
 
-    return () => document.removeEventListener('paste', callback);
+        view.onRemoveDrops(core, instance, { [drop.id]: drop });
+      });
+    });
   }, []);
 
   return <TopicViewColumns {...viewInstance} />;

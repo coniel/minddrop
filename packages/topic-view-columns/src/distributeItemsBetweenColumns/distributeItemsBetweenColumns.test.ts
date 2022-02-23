@@ -25,12 +25,7 @@ describe('distributeDropsBetweenColumns', () => {
   afterEach(cleanup);
 
   it('fills out empty columns evenly from the left', () => {
-    const columns = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-    };
+    const columns = [[], [], [], []];
 
     const result = distributeItemsBetweenColumns(columns, items);
 
@@ -41,16 +36,16 @@ describe('distributeDropsBetweenColumns', () => {
   });
 
   it('fills out columns evenly from the left', () => {
-    const columns = {
-      0: [],
-      1: [{ type: 'drop', id: 'first-drop' }],
-      2: [
+    const columns = [
+      [],
+      [{ type: 'drop', id: 'first-drop' }],
+      [
         { type: 'drop', id: 'second-drop' },
         { type: 'drop', id: 'third-drop' },
         { type: 'drop', id: 'fourth-drop' },
       ],
-      3: [],
-    };
+      [],
+    ];
 
     const result = distributeItemsBetweenColumns(columns, items);
 
