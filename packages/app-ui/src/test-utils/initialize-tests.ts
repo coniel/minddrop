@@ -82,5 +82,7 @@ export function cleanup() {
     onDisableFiles(core);
     onDisableDrops(core);
     onDisableTopics(core);
+
+    jest.clearAllMocks();
   });
 }

@@ -244,6 +244,48 @@ describe('<TopicView />', () => {
     expect(params[2].drops).toEqual([textDrop1.id]);
   });
 
+  it('ignores data pasted into INPUT and SPAN', () => {
+    jest.spyOn(App, 'insertDataIntoTopic');
+    setup();
+
+    const clipboardData = {
+      types: [],
+      data: {},
+      getData: (key) => clipboardData.data[key],
+    };
+    const event = {
+      target: {
+        tagName: 'INPUT',
+      },
+      clipboardData: {
+        types: [],
+        data: {},
+        getData: (key) => event.clipboardData.data[key],
+        clearData: jest.fn(),
+        setData: (key, value) => {
+          event.clipboardData.data[key] = value;
+          event.clipboardData.types.push(key);
+        },
+      },
+    };
+
+    act(() => {
+      // Add the new drop to the clipboard event data
+      setDataTransferData(event as unknown as ClipboardEvent, {
+        action: 'copy',
+        drops: [textDrop1.id],
+      });
+      // Fire a paste event into INPUT using the clipboard event
+      fireEvent.paste(document, event);
+      // Fire a paste event into SPAN using the clipboard event
+      event.target.tagName = 'SPAN';
+      fireEvent.paste(document, event);
+    });
+
+    // Should not insert data into topic
+    expect(App.insertDataIntoTopic).not.toHaveBeenCalled();
+  });
+
   it('duplicates selected drops on metaKey+D/d keypress', () => {
     setup();
 

@@ -97,10 +97,15 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
 
     const pasteCallback = (event: ClipboardEvent) => {
       const target = event.target as HTMLElement;
+      // Ignore paste event on inputs and spans (spans used as inputs in rich text editor)
       if (target.tagName === 'INPUT' || target.tagName === 'SPAN') {
         return;
       }
+
+      // Create data insert
       const dataInsert = createDataInsertFromDataTransfer(event.clipboardData);
+
+      // Insert data into the topic
       App.insertDataIntoTopic(core, topicId, dataInsert);
     };
 
