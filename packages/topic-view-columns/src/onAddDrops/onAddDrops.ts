@@ -4,6 +4,7 @@ import { Views } from '@minddrop/views';
 import { distributeItemsBetweenColumns } from '../distributeItemsBetweenColumns';
 import {
   ColumnItem,
+  Columns,
   ColumnsAddDropsMetadata,
   TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
@@ -32,20 +33,22 @@ export function onAddDrops(
     id: dropId,
   }));
 
-  let { columns }: UpdateTopicViewColumnsInstanceData = viewInstance;
+  let columns: Columns = JSON.parse(JSON.stringify(viewInstance.columns));
 
   if (ignoreMetadata) {
     // Distribute drops between the columns
     columns = distributeItemsBetweenColumns(viewInstance.columns, items);
-  } else {
+  } else if (metadata.action === 'insert-into-column') {
     // Merge into column at specified index
     const column = viewInstance.columns[metadata.column];
     const updatedColumn = column
       .slice(0, metadata.index)
       .concat(items, column.slice(metadata.index));
 
-    columns = [...viewInstance.columns];
     columns[metadata.column] = updatedColumn;
+  } else if (metadata.action === 'create-column') {
+    // Insert items array in at specified column index to create a new column
+    columns.splice(metadata.column, 0, items);
   }
 
   // Update the instance

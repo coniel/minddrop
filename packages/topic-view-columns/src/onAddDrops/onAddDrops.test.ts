@@ -8,7 +8,12 @@ import {
   colItemTextDrop3,
   colItemTextDrop4,
 } from '../test-utils';
-import { ColumnsAddDropsMetadata, TopicViewColumnsInstance } from '../types';
+import {
+  ColumnsAddDropsMetadata,
+  CreateColumnMetadata,
+  InsertIntoColumnMetadata,
+  TopicViewColumnsInstance,
+} from '../types';
 import { onAddDrops } from './onAddDrops';
 
 const { textDrop4, imageDrop1 } = DROPS_TEST_DATA;
@@ -18,12 +23,22 @@ const addedItems = [
   { type: 'drop', id: imageDrop1.id },
 ];
 
-const metadata = (
-  data: Partial<ColumnsAddDropsMetadata>,
-): ColumnsAddDropsMetadata => ({
+const insertIntoColumnMetadata = (
+  data: Partial<InsertIntoColumnMetadata>,
+): InsertIntoColumnMetadata => ({
+  action: 'insert-into-column',
   viewInstance: instanceId,
   column: 0,
   index: topicViewColumnsInstance.columns[0].length,
+  ...data,
+});
+
+const createColumnMetadata = (
+  data: Partial<CreateColumnMetadata>,
+): CreateColumnMetadata => ({
+  action: 'create-column',
+  viewInstance: instanceId,
+  column: 1,
   ...data,
 });
 
@@ -57,7 +72,7 @@ describe('onAddDrops', () => {
 
   it('adds drops to the end of the columm', () => {
     call(
-      metadata({
+      insertIntoColumnMetadata({
         column: 2,
         index: topicViewColumnsInstance.columns[2].length,
       }),
@@ -69,7 +84,7 @@ describe('onAddDrops', () => {
   });
 
   it('adds drops to the specified column index', () => {
-    call(metadata({ column: 2, index: 1 }));
+    call(insertIntoColumnMetadata({ column: 2, index: 1 }));
 
     const instance = getInstance();
 
@@ -81,8 +96,19 @@ describe('onAddDrops', () => {
     ]);
   });
 
+  it('creates a new column at specified index', () => {
+    call(createColumnMetadata({ column: 1 }));
+
+    const instance = getInstance();
+
+    expect(instance.columns.length).toBe(5);
+    expect(instance.columns[1]).toEqual(addedItems);
+  });
+
   it('ignores metadata if metadata.viewInstance !== viewInstance.id', () => {
-    call(metadata({ column: 2, index: 0, viewInstance: 'other' }));
+    call(
+      insertIntoColumnMetadata({ column: 2, index: 0, viewInstance: 'other' }),
+    );
 
     const instance = getInstance();
 

@@ -5,6 +5,7 @@ import {
   TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
 } from '../types';
+import { removeItemsFromColumns } from '../removeItemsFromColumns';
 
 /**
  * The view's onRemoveDrops callback.
@@ -18,15 +19,11 @@ export function onRemoveDrops(
   viewInstance: TopicViewColumnsInstance,
   drops: DropMap,
 ): void {
-  const dropIds = Object.keys(drops);
-  const columns = [...viewInstance.columns];
-
-  // Loop through columns and filter out removed drop IDs
-  columns.forEach((column, index) => {
-    columns[index] = columns[index].filter(
-      (item) => !dropIds.includes(item.id),
-    );
-  });
+  // Remove drops from columns
+  const columns = removeItemsFromColumns(
+    viewInstance.columns,
+    Object.keys(drops),
+  );
 
   // Update the view instance
   Views.updateInstance<UpdateTopicViewColumnsInstanceData>(

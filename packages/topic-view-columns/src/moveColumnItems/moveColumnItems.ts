@@ -16,7 +16,8 @@ export function moveColumnItems(
   toIndex: number,
 ): Columns {
   const itemIds = items.map((item) => item.id);
-  const updated = [...columns];
+  // Clone item to remove nested references
+  const updated = JSON.parse(JSON.stringify([...columns]));
 
   // Remove items from non target columns
   columns.forEach((column, index) => {

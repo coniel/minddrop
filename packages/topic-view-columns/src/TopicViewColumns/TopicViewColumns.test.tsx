@@ -106,5 +106,67 @@ describe('<TopicViewColumns />', () => {
     );
 
     expect(viewInstance.columns[2][1].id).toBe(movedDropId);
+    expect(viewInstance.columns[0][0]).not.toBeDefined();
+  });
+
+  describe('vertical drop zone', () => {
+    it('inserts drops into a new column at the specified index', (done) => {
+      const { getByTestId } = init();
+
+      Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
+        const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
+          topicViewColumnsInstance.id,
+        );
+        const topic = Topics.get(viewInstance.topic);
+
+        expect(viewInstance.columns.length).toBe(
+          topicViewColumnsInstance.columns.length + 1,
+        );
+        expect(viewInstance.columns[1][0].id).toBe(drop.id);
+        expect(topic.drops.includes(drop.id)).toBeTruthy();
+        done();
+      });
+
+      act(() => {
+        // Insert between column 0 and 1
+        fireEvent.drop(getByTestId('vertical-drop-zone-1'), {
+          dataTransfer: {
+            types: ['text/plain'],
+            getData: () => 'Hello world',
+          },
+        });
+      });
+    });
+
+    it("moves drops into new column when data insert action === 'sort'", () => {
+      const { getByTestId } = init();
+      const movedDropId = topicViewColumnsInstance.columns[0][0].id;
+
+      act(() => {
+        // Insert from col 0:0 to new col 1
+        fireEvent.drop(getByTestId('vertical-drop-zone-1'), {
+          dataTransfer: {
+            types: ['minddrop/action', 'minddrop/drops'],
+            getData: (key) => {
+              switch (key) {
+                case 'minddrop/action':
+                  return 'sort';
+                case 'minddrop/drops':
+                  return `["${movedDropId}"]`;
+                default:
+                  return undefined;
+              }
+            },
+          },
+        });
+      });
+
+      const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
+        topicViewColumnsInstance.id,
+      );
+
+      expect(viewInstance.columns[1][0].id).toBe(movedDropId);
+      expect(viewInstance.columns[0][0]).not.toBeDefined();
+    });
   });
 });
