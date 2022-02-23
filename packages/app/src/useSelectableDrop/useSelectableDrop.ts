@@ -17,6 +17,11 @@ export interface DropSelection {
   select(): void;
 
   /**
+   * Unselects other drops and selects the drop.
+   */
+  selectAsOnly(): void;
+
+  /**
    * Unselects the drop.
    */
   unselect(): void;
@@ -70,6 +75,12 @@ export function useSelectableDrop(dropId: string): DropSelection {
   return {
     isSelected,
     select: () => selectDrops(core, [dropId]),
+    selectAsOnly: () => {
+      // Unselect other drops
+      clearSelectedDrops(core);
+      // Select this drop
+      selectDrops(core, [dropId]);
+    },
     unselect: () => unselectDrops(core, [dropId]),
     onClick: handleClick,
     selectedClass: isSelected ? 'drop-selected' : '',

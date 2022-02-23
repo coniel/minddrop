@@ -39,7 +39,7 @@ Returns a `{ [id]: Topic }` map of the topics currently being dragged.
 useDraggedTopics(): TopicMap
 ```
 
-### useSelectaleTopic
+### useSelectableTopic
 
 Returns utilities for handling topic selection.
 
@@ -386,7 +386,7 @@ Returns a `{ [id]: Drop }` map of the drops currently being dragged.
 useDraggedDrops(): DropMap
 ```
 
-### useSelectaleDrop
+### useSelectableDrop
 
 Returns utilities for handling drop selection.
 
@@ -419,6 +419,12 @@ useDropSelection(dropId: string): DropSelection
       name: 'select',
       type: 'function',
       description: 'Selects the drop when called.',
+    },
+    {
+      name: 'selectAsOnly',
+      type: 'function',
+      description:
+        'Clears drops selection and selects the drop as the only selected drop when called.',
     },
     {
       name: 'unselect',

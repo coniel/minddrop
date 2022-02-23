@@ -5,6 +5,7 @@ import { getSelectedDrops } from '../getSelectedDrops';
 import { selectDrops } from '../selectDrops';
 import { useSelectableDrop } from './useSelectableDrop';
 import React from 'react';
+import { mapById } from '@minddrop/utils';
 
 const { textDrop1, textDrop2, textDrop3 } = DROPS_TEST_DATA;
 
@@ -38,6 +39,23 @@ describe('useSelectableDrop', () => {
 
     // Should be selected
     expect(result.current.isSelected).toBe(true);
+  });
+
+  it('selects only the drop', () => {
+    const { result } = renderHook(() => useSelectableDrop(textDrop1.id));
+
+    act(() => {
+      // Select other drops
+      selectDrops(core, [textDrop2.id, textDrop3.id]);
+    });
+
+    act(() => {
+      // Select only the drop
+      result.current.selectAsOnly();
+    });
+
+    // Should be the only selected drop
+    expect(getSelectedDrops()).toEqual(mapById([textDrop1]));
   });
 
   it('unselects the drop', () => {
