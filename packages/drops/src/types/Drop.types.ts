@@ -48,6 +48,13 @@ export interface Drop {
   color?: ContentColor;
 
   /**
+   * The ID of the original drop from which this drop was created if
+   * it is a duplicate drop. Only set if the drop was created through
+   * duplication.
+   */
+  duplicatedFrom?: string;
+
+  /**
    * `true` if the drop is archived.
    */
   archived?: boolean;

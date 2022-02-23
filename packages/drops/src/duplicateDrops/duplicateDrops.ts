@@ -18,7 +18,7 @@ export function duplicateDrops(core: Core, dropIds: string[]): DropMap {
   // Create new drops
   const newDrops = Object.values(drops).map((drop) => {
     // Copy drop data
-    const data = { ...drop };
+    const data = { ...drop, duplicatedFrom: drop.id };
     // Remove ID
     delete data.id;
     // Create the new drop
