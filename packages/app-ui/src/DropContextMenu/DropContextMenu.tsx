@@ -5,7 +5,7 @@ import {
   ContextMenuContent,
   ContextMenuTrigger,
 } from '@minddrop/ui';
-import { App, useAppCore, useSelectableDrop } from '@minddrop/app';
+import { useSelectableDrop } from '@minddrop/app';
 
 export interface DropContextMenuProps extends Omit<DropMenuProps, 'menuType'> {
   /**
@@ -24,15 +24,13 @@ export const DropContextMenu: FC<DropContextMenuProps> = ({
   drop,
   ...other
 }) => {
-  const core = useAppCore();
-  const { isSelected, select } = useSelectableDrop(drop);
+  const { isSelected, selectAsOnly } = useSelectableDrop(drop);
 
   return (
     <ContextMenu
       onOpenChange={() => {
         if (!isSelected) {
-          App.clearSelectedDrops(core);
-          select();
+          selectAsOnly();
         }
       }}
     >
