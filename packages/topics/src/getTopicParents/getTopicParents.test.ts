@@ -11,8 +11,8 @@ describe('getTopicParents', () => {
     const topic2 = generateTopic({ subtopics: [topic1.id] });
     const topic3 = generateTopic({
       subtopics: [topic1.id, topic2.id],
-      archived: true,
-      archivedAt: new Date(),
+      deleted: true,
+      deletedAt: new Date(),
     });
     const topic4 = generateTopic();
 
@@ -34,8 +34,8 @@ describe('getTopicParents', () => {
     const topic2 = generateTopic({ subtopics: [topic1.id] });
     const topic3 = generateTopic({
       subtopics: [topic1.id, topic2.id],
-      archived: true,
-      archivedAt: new Date(),
+      deleted: true,
+      deletedAt: new Date(),
     });
     const topic4 = generateTopic();
 
@@ -43,7 +43,7 @@ describe('getTopicParents', () => {
       result.current.loadTopics([topic1, topic2, topic3, topic4]);
     });
 
-    const parents = getTopicParents(topic1.id, { archived: true });
+    const parents = getTopicParents(topic1.id, { deleted: true });
 
     expect(Object.keys(parents).length).toBe(1);
     expect(parents[topic2.id]).not.toBeDefined();

@@ -4,7 +4,7 @@ import { onRun, onDisable } from '../topics-extension';
 import { generateTopic } from '../generateTopic';
 import { getDropParents } from './getDropParents';
 import { loadTopics } from '../loadTopics';
-import { archiveTopic } from '../archiveTopic';
+import { deleteTopic } from '../deleteTopic';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
@@ -41,10 +41,10 @@ describe('getDropParents', () => {
 
     act(() => {
       loadTopics(core, [topic1, topic2]);
-      archiveTopic(core, topic2.id);
+      deleteTopic(core, topic2.id);
     });
 
-    const parents = getDropParents('drop-id', { archived: true });
+    const parents = getDropParents('drop-id', { deleted: true });
 
     expect(Object.keys(parents).length).toBe(1);
     expect(parents[topic1.id]).not.toBeDefined();

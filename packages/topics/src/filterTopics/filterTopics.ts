@@ -1,10 +1,10 @@
 import { TopicMap, TopicFilters } from '../types';
 
 /**
- * Filters topics by active, archived, and deleted state.
+ * Filters topics by active and deleted state.
  * If no filters are set, returns active topics.
- * If either archived or deleted filters are `true`, active
- * topics are not included unless specifically set to `true`.
+ * If deleted filters is `true`, active topics are
+ * not included unless specifically set to `true`.
  *
  * @param topics The topics to filter.
  * @param filters The filters by which to filter the topics.
@@ -20,11 +20,7 @@ export function filterTopics(
 
   return Object.values(topics)
     .filter((topic) => {
-      if (includeActive && !topic.archived && !topic.deleted) {
-        return true;
-      }
-
-      if (filters.archived && topic.archived) {
+      if (includeActive && !topic.deleted) {
         return true;
       }
 

@@ -12,7 +12,6 @@ import { addDropsToTopic } from './addDropsToTopic';
 import { removeDropsFromTopic } from './removeDropsFromTopic';
 import { addTagsToTopic } from './addTagsToTopic';
 import { removeTagsFromTopic } from './removeTagsFromTopic';
-import { archiveTopic } from './archiveTopic';
 import { deleteTopic } from './deleteTopic';
 import { restoreTopic } from './restoreTopic';
 import { deleteTopicPermanently } from './deleteTopicPermanently';
@@ -41,7 +40,6 @@ export const Topics: TopicsApi = {
   removeDrops: removeDropsFromTopic,
   addTags: addTagsToTopic,
   removeTags: removeTagsFromTopic,
-  archive: archiveTopic,
   delete: deleteTopic,
   restore: restoreTopic,
   deletePermanently: deleteTopicPermanently,

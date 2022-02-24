@@ -13,8 +13,6 @@ export type AddDropsEvent = 'topics:add-drops';
 export type RemoveDropsEvent = 'topics:remove-drops';
 export type AddTagsEvent = 'topics:add-tags';
 export type RemoveTagsEvent = 'topics:remove-tags';
-export type ArchiveTopicEvent = 'topics:archive';
-export type UnarchiveTopicEvent = 'topics:unarchive';
 export type DeleteTopicEvent = 'topics:delete';
 export type RestoreTopicEvent = 'topics:restore';
 export type PermanentlyDeleteTopicEvent = 'topics:delete-permanently';
@@ -27,8 +25,6 @@ export type ClearTopicsEvent = 'topics:clear';
 export type InsertDataEvent = 'topics:insert-data';
 
 export type CreateTopicEventData = Topic;
-export type ArchiveTopicEventData = Topic;
-export type UnarchiveTopicEventData = Topic;
 export type DeleteTopicEventData = Topic;
 export type RestoreTopicEventData = Topic;
 export type PermanentlyDeleteTopicEventData = Topic;
@@ -170,14 +166,6 @@ export type AddTagsEventCallback = EventListenerCallback<
 export type RemoveTagsEventCallback = EventListenerCallback<
   RemoveTagsEvent,
   RemoveTagsEventData
->;
-export type ArchiveTopicEventCallback = EventListenerCallback<
-  ArchiveTopicEvent,
-  ArchiveTopicEventData
->;
-export type UnarchiveTopicEventCallback = EventListenerCallback<
-  UnarchiveTopicEvent,
-  UnarchiveTopicEventData
 >;
 export type DeleteTopicEventCallback = EventListenerCallback<
   DeleteTopicEvent,

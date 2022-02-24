@@ -46,16 +46,6 @@ export interface Topic {
   updatedAt: Date;
 
   /**
-   * If `true`, the topic is archived.
-   */
-  archived?: boolean;
-
-  /**
-   * Timestamp at which the topic was archived.
-   */
-  archivedAt?: Date;
-
-  /**
    * If `true`, the topic is deleted.
    */
   deleted?: boolean;
@@ -89,8 +79,6 @@ export interface TopicChanges {
   views?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   drops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
-  archived?: true | FieldValueDelete;
-  archivedAt?: Date | FieldValueDelete;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
   hidden?: true | FieldValueDelete;

@@ -27,20 +27,14 @@ describe('useAllTopics', () => {
       useTopicsStore((state) => state),
     );
     const topic1 = generateTopic();
-    const topic2 = {
-      ...generateTopic(),
-      archived: true,
-      archivedAt: new Date(),
-    };
     const topic3 = { ...generateTopic(), deleted: true, deletedAt: new Date() };
     const { result } = renderHook(() => useAllTopics({ deleted: true }));
 
     act(() => {
-      store.current.loadTopics([topic1, topic2, topic3]);
+      store.current.loadTopics([topic1, topic3]);
     });
 
     expect(result.current[topic1.id]).not.toBeDefined();
-    expect(result.current[topic2.id]).not.toBeDefined();
     expect(result.current[topic3.id]).toEqual(topic3);
   });
 });

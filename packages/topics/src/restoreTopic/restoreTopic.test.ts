@@ -4,7 +4,6 @@ import { onDisable, onRun } from '../topics-extension';
 import { createTopic } from '../createTopic';
 import { Topic } from '../types';
 import { restoreTopic } from './restoreTopic';
-import { archiveTopic } from '../archiveTopic';
 import { deleteTopic } from '../deleteTopic';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
@@ -18,20 +17,6 @@ describe('restoreTopic', () => {
     onDisable(core);
     core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
     onRun(core);
-  });
-
-  it('restores archived topics', () => {
-    let topic: Topic;
-
-    act(() => {
-      topic = createTopic(core);
-      archiveTopic(core, topic.id);
-    });
-
-    const restored = restoreTopic(core, topic.id);
-
-    expect(restored.archived).not.toBeDefined();
-    expect(restored.archivedAt).not.toBeDefined();
   });
 
   it('restores deleted topics', () => {

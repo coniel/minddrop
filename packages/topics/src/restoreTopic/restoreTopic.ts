@@ -4,8 +4,8 @@ import { Topic } from '../types';
 import { updateTopic } from '../updateTopic';
 
 /**
- * Restores an archived or deleted topic and dispatches
- * a `topics:restore` event and an `topics:update` event.
+ * Restores a deleted topic and dispatches a
+ * `topics:restore` event and an `topics:update` event.
  *
  * @param core A MindDrop core instance.
  * @param topicId The ID of the topic to restore.
@@ -14,8 +14,6 @@ import { updateTopic } from '../updateTopic';
 export function restoreTopic(core: Core, topicId: string): Topic {
   // Update the topic
   const updated = updateTopic(core, topicId, {
-    archived: FieldValue.delete(),
-    archivedAt: FieldValue.delete(),
     deleted: FieldValue.delete(),
     deletedAt: FieldValue.delete(),
   });

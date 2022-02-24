@@ -3,11 +3,6 @@ import { TopicMap } from '../types';
 import { filterTopics } from './filterTopics';
 
 const activeTopic = generateTopic();
-const archivedTopic = {
-  ...generateTopic(),
-  archived: true,
-  archivedAt: new Date(),
-};
 const deletedTopic = {
   ...generateTopic(),
   deleted: true,
@@ -16,7 +11,6 @@ const deletedTopic = {
 
 const topics: TopicMap = {
   [activeTopic.id]: activeTopic,
-  [archivedTopic.id]: archivedTopic,
   [deletedTopic.id]: deletedTopic,
 };
 
@@ -39,13 +33,6 @@ describe('filterTopics', () => {
 
     expect(Object.keys(result).length).toBe(1);
     expect(result[activeTopic.id]).toBeDefined();
-  });
-
-  it('filters in archived topics', () => {
-    const result = filterTopics(topics, { archived: true });
-
-    expect(Object.keys(result).length).toBe(1);
-    expect(result[archivedTopic.id]).toBeDefined();
   });
 
   it('filters in deleted topics', () => {

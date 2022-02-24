@@ -9,8 +9,6 @@ import {
 import {
   CreateTopicEvent,
   UpdateTopicEvent,
-  ArchiveTopicEvent,
-  UnarchiveTopicEvent,
   DeleteTopicEvent,
   RestoreTopicEvent,
   AddSubtopicsEvent,
@@ -24,7 +22,6 @@ import {
   AddDropsEventCallback,
   AddSubtopicsEventCallback,
   AddTagsEventCallback,
-  ArchiveTopicEventCallback,
   CreateTopicEventCallback,
   DeleteTopicEventCallback,
   InsertDataEventCallback,
@@ -33,7 +30,6 @@ import {
   RemoveSubtopicsEventCallback,
   RemoveTagsEventCallback,
   RestoreTopicEventCallback,
-  UnarchiveTopicEventCallback,
   UpdateTopicEventCallback,
   ClearTopicsEvent,
   ClearTopicsEventCallback,
@@ -99,10 +95,10 @@ export interface TopicsApi {
   dropParents(dropId: string): TopicMap;
 
   /**
-   * Filters topics by active, archived, and deleted state.
+   * Filters topics by active and deleted state.
    * If no filters are set, returns active topics.
-   * If either archived or deleted filters are `true`, active
-   * topics are not included unless specifically set to `true`.
+   * If deleted filters is `true`, active topics are
+   * not included unless specifically set to `true`.
    *
    * @param topics The topics to filter.
    * @param filters The filters by which to filter the topics.
@@ -132,16 +128,6 @@ export interface TopicsApi {
   update(core: Core, id: string, data: UpdateTopicData): Topic;
 
   /**
-   * Archives a topic and dispatches a `topics:archive`
-   * event and an `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to archive.
-   * @returns The archived topic.
-   */
-  archive(core: Core, topicId: string): Topic;
-
-  /**
    * Deletes a topic and dispatches a `topics:delete`
    * event and an `topics:update` event.
    *
@@ -152,8 +138,8 @@ export interface TopicsApi {
   delete(core: Core, topicId: string): Topic;
 
   /**
-   * Restores an archived or deleted topic and dispatches
-   * a `topics:restore` event and an `topics:update` event.
+   * Restores a deleted topic and dispatches a
+   * `topics:restore` event and an `topics:update` event.
    *
    * @param core A MindDrop core instance.
    * @param topicId The ID of the topic to restore.
@@ -352,20 +338,6 @@ export interface TopicsApi {
     callback: UpdateTopicEventCallback,
   ): void;
 
-  // Add 'topics:archive' event listener
-  addEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Add 'topics:unarchive' event listener
-  addEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
-  ): void;
-
   // Add 'topics:delete' event listener
   addEventListener(
     core: Core,
@@ -494,20 +466,6 @@ export interface TopicsApi {
     core: Core,
     type: UpdateTopicEvent,
     callback: UpdateTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:archive' event listener
-  removeEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:unarchive' event listener
-  removeEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
   ): void;
 
   // Remove 'topics:delete' event listener
