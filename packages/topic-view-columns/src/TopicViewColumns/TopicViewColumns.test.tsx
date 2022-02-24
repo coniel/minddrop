@@ -62,14 +62,14 @@ describe('<TopicViewColumns />', () => {
       );
       const topic = Topics.get(viewInstance.topic);
 
-      expect(viewInstance.columns[2][1].id).toBe(drop.id);
+      expect(viewInstance.columns[1][1].id).toBe(drop.id);
       expect(topic.drops.includes(drop.id)).toBeTruthy();
       done();
     });
 
     act(() => {
       // Insert at column 2 between the first two drops
-      fireEvent.drop(getByTestId('spacer-2:1'), {
+      fireEvent.drop(getByTestId('spacer-1:1'), {
         dataTransfer: {
           types: ['text/plain'],
           getData: () => 'Hello world',
@@ -83,8 +83,8 @@ describe('<TopicViewColumns />', () => {
     const movedDropId = topicViewColumnsInstance.columns[0][0].id;
 
     act(() => {
-      // Insert from col 0:0 to col 2:1 (between the first two drops)
-      fireEvent.drop(getByTestId('spacer-2:1'), {
+      // Insert from col 0:0 to col 1:1 (between the first two drops)
+      fireEvent.drop(getByTestId('spacer-1:1'), {
         dataTransfer: {
           types: ['minddrop/action', 'minddrop/drops'],
           getData: (key) => {
@@ -105,7 +105,7 @@ describe('<TopicViewColumns />', () => {
       topicViewColumnsInstance.id,
     );
 
-    expect(viewInstance.columns[2][1].id).toBe(movedDropId);
+    expect(viewInstance.columns[1][1].id).toBe(movedDropId);
     expect(viewInstance.columns[0][0]).not.toBeDefined();
   });
 

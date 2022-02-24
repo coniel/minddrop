@@ -1,12 +1,13 @@
-import { DROPS_TEST_DATA } from '@minddrop/drops';
+import { DropMap, DROPS_TEST_DATA } from '@minddrop/drops';
+import { mapById } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import {
   setup,
   cleanup,
   core,
   topicViewColumnsInstance,
+  colItemTextDrop2,
   colItemTextDrop3,
-  colItemTextDrop4,
 } from '../test-utils';
 import {
   ColumnsAddDropsMetadata,
@@ -16,11 +17,12 @@ import {
 } from '../types';
 import { onAddDrops } from './onAddDrops';
 
-const { textDrop4, imageDrop1 } = DROPS_TEST_DATA;
+const { textDrop4, imageDrop1, htmlDrop1 } = DROPS_TEST_DATA;
 const instanceId = topicViewColumnsInstance.id;
 const addedItems = [
   { type: 'drop', id: textDrop4.id },
   { type: 'drop', id: imageDrop1.id },
+  { type: 'drop', id: htmlDrop1.id },
 ];
 
 const insertIntoColumnMetadata = (
@@ -46,7 +48,7 @@ const call = (metadata?: ColumnsAddDropsMetadata) =>
   onAddDrops(
     core,
     topicViewColumnsInstance,
-    { [textDrop4.id]: textDrop4, [imageDrop1.id]: imageDrop1 },
+    mapById([textDrop4, imageDrop1, htmlDrop1]) as DropMap,
     metadata,
   );
 
@@ -63,11 +65,10 @@ describe('onAddDrops', () => {
 
     const instance = getInstance();
 
-    // Initial column drop counts are 0: 1, 1: 1, 2: 2, 3: 0
-    expect(instance.columns[0].length).toEqual(2);
-    expect(instance.columns[1].length).toEqual(1);
+    // Initial column drop counts are 0: 1, 1: 2, 2: 1
+    expect(instance.columns[0].length).toEqual(3);
+    expect(instance.columns[1].length).toEqual(2);
     expect(instance.columns[2].length).toEqual(2);
-    expect(instance.columns[3].length).toEqual(1);
   });
 
   it('adds drops to the end of the columm', () => {
@@ -80,19 +81,19 @@ describe('onAddDrops', () => {
 
     const instance = getInstance();
 
-    expect(instance.columns[2].slice(-2)).toEqual(addedItems);
+    expect(instance.columns[2].slice(-3)).toEqual(addedItems);
   });
 
   it('adds drops to the specified column index', () => {
-    call(insertIntoColumnMetadata({ column: 2, index: 1 }));
+    call(insertIntoColumnMetadata({ column: 1, index: 1 }));
 
     const instance = getInstance();
 
-    // Original column 2 contains [colItemTextDrop3, colItemTextDrop4]
-    expect(instance.columns[2]).toEqual([
-      colItemTextDrop3,
+    // Original column 1 contains [colItemTextDrop2, colItemTextDrop3]
+    expect(instance.columns[1]).toEqual([
+      colItemTextDrop2,
       ...addedItems,
-      colItemTextDrop4,
+      colItemTextDrop3,
     ]);
   });
 
@@ -101,7 +102,7 @@ describe('onAddDrops', () => {
 
     const instance = getInstance();
 
-    expect(instance.columns.length).toBe(5);
+    expect(instance.columns.length).toBe(4);
     expect(instance.columns[1]).toEqual(addedItems);
   });
 
@@ -112,10 +113,9 @@ describe('onAddDrops', () => {
 
     const instance = getInstance();
 
-    // Initial column drop counts are 0: 1, 1: 1, 2: 2, 3: 0
-    expect(instance.columns[0].length).toEqual(2);
-    expect(instance.columns[1].length).toEqual(1);
+    // Initial column drop counts are 0: 1, 1: 2, 2: 1
+    expect(instance.columns[0].length).toEqual(3);
+    expect(instance.columns[1].length).toEqual(2);
     expect(instance.columns[2].length).toEqual(2);
-    expect(instance.columns[3].length).toEqual(1);
   });
 });

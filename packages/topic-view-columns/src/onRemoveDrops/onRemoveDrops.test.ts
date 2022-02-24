@@ -11,7 +11,7 @@ import {
 import { TopicViewColumnsInstance } from '../types';
 import { onRemoveDrops } from './onRemoveDrops';
 
-const { textDrop1, textDrop3, htmlDrop1 } = DROPS_TEST_DATA;
+const { textDrop1, textDrop3 } = DROPS_TEST_DATA;
 
 describe('onRemoveDrops', () => {
   beforeEach(setup);
@@ -22,7 +22,6 @@ describe('onRemoveDrops', () => {
     onRemoveDrops(core, topicViewColumnsInstance, {
       [textDrop1.id]: textDrop1,
       [textDrop3.id]: textDrop3,
-      [htmlDrop1.id]: htmlDrop1,
     });
 
     const instance = Views.getInstance<TopicViewColumnsInstance>(
@@ -33,7 +32,6 @@ describe('onRemoveDrops', () => {
       [],
       [colItemTextDrop2],
       [colItemTextDrop4],
-      [],
     ]);
   });
 });

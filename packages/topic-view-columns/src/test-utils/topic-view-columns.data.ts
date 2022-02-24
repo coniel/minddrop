@@ -21,8 +21,7 @@ export const topicViewColumnsInstance: TopicViewColumnsInstance = {
   updatedAt: new Date('01/01/2000'),
   columns: [
     [colItemTextDrop1],
-    [colItemTextDrop2],
-    [colItemTextDrop3, colItemTextDrop4],
-    [],
+    [colItemTextDrop2, colItemTextDrop3],
+    [colItemTextDrop4],
   ],
 };
