@@ -55,17 +55,6 @@ export interface Drop {
   duplicatedFrom?: string;
 
   /**
-   * `true` if the drop is archived.
-   */
-  archived?: boolean;
-
-  /**
-   * Timestamp at which the drop was archived.
-   * Only set if `archived` is `true`.
-   */
-  archivedAt?: Date;
-
-  /**
    * `true` if the drop is  in the trash.
    */
   deleted?: boolean;
@@ -106,8 +95,6 @@ export interface DropChanges {
     | FieldValueArrayUnion
     | FieldValueArrayRemove;
   color?: ContentColor | FieldValueDelete;
-  archived?: true | FieldValueDelete;
-  archivedAt?: Date | FieldValueDelete;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
 }

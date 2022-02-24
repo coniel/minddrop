@@ -6,7 +6,6 @@ import { registerDropType } from './registerDropType';
 import { unregisterDropType } from './unregisterDropType';
 import { createDrop } from './createDrop';
 import { updateDrop } from './updateDrop';
-import { archiveDrop } from './archiveDrop';
 import { deleteDrop } from './deleteDrop';
 import { restoreDrop } from './restoreDrop';
 import { deleteDropPermanently } from './deleteDropPermanently';
@@ -37,7 +36,6 @@ export const Drops: DropsApi = {
   duplicate: duplicateDrops,
   update: updateDrop,
   insertData,
-  archive: archiveDrop,
   delete: deleteDrop,
   restore: restoreDrop,
   addTags: addTagsToDrop,

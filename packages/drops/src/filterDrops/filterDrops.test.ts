@@ -3,11 +3,6 @@ import { DropMap } from '../types';
 import { filterDrops } from './filterDrops';
 
 const activeDrop = generateDrop({ type: 'text' });
-const archivedDrop = {
-  ...generateDrop({ type: 'text' }),
-  archived: true,
-  archivedAt: new Date(),
-};
 const deletedDrop = {
   ...generateDrop({ type: 'text' }),
   deleted: true,
@@ -16,7 +11,6 @@ const deletedDrop = {
 
 const drops: DropMap = {
   [activeDrop.id]: activeDrop,
-  [archivedDrop.id]: archivedDrop,
   [deletedDrop.id]: deletedDrop,
 };
 
@@ -39,13 +33,6 @@ describe('filterDrops', () => {
 
     expect(Object.keys(result).length).toBe(1);
     expect(result[activeDrop.id]).toBeDefined();
-  });
-
-  it('filters in archived drops', () => {
-    const result = filterDrops(drops, { archived: true });
-
-    expect(Object.keys(result).length).toBe(1);
-    expect(result[archivedDrop.id]).toBeDefined();
   });
 
   it('filters in deleted drops', () => {

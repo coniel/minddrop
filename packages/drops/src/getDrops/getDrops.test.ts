@@ -3,7 +3,6 @@ import { initializeCore } from '@minddrop/core';
 import { getDrops } from './getDrops';
 import { DropNotFoundError } from '../errors';
 import { onDisable, onRun } from '../drops-extension';
-import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 import { generateDrop } from '../generateDrop';
 import { loadDrops } from '../loadDrops';
@@ -45,7 +44,6 @@ describe('getDrops', () => {
 
     act(() => {
       loadDrops(core, [drop1, drop2, drop3]);
-      archiveDrop(core, drop2.id);
       drop3 = deleteDrop(core, drop3.id);
     });
 

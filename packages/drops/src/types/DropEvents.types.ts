@@ -8,7 +8,6 @@ export type RegisterDropTypeEvent = 'drops:register';
 export type UnregisterDropTypeEvent = 'drops:unregister';
 export type CreateDropEvent = 'drops:create';
 export type UpdateDropEvent = 'drops:update';
-export type ArchiveDropEvent = 'drops:archive';
 export type DeleteDropEvent = 'drops:delete';
 export type RestoreDropEvent = 'drops:restore';
 export type PermanentlyDeleteDropEvent = 'drops:delete-permanently';
@@ -24,7 +23,6 @@ export type ClearRegisteredDropTypesEvent = 'drops:clear-register';
 export type RegisterDropTypeEventData = DropConfig;
 export type UnregisterDropTypeEventData = DropConfig;
 export type CreateDropEventData = Drop;
-export type ArchiveDropEventData = Drop;
 export type DeleteDropEventData = Drop;
 export type RestoreDropEventData = Drop;
 export type PermanentlyDeleteDropEventData = Drop;
@@ -132,10 +130,6 @@ export type CreateDropEventCallback = EventListenerCallback<
 export type UpdateDropEventCallback = EventListenerCallback<
   UpdateDropEvent,
   UpdateDropEventData
->;
-export type ArchiveDropEventCallback = EventListenerCallback<
-  ArchiveDropEvent,
-  ArchiveDropEventData
 >;
 export type DeleteDropEventCallback = EventListenerCallback<
   DeleteDropEvent,

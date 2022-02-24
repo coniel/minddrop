@@ -2,7 +2,6 @@ import { act } from '@minddrop/test-utils';
 import { createDrop } from '../createDrop';
 import { Drop } from '../types';
 import { restoreDrop } from './restoreDrop';
-import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 import { cleanup, core, setup } from '../test-utils';
 
@@ -10,20 +9,6 @@ describe('restoreDrop', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
-
-  it('restores archived drops', () => {
-    let drop: Drop;
-
-    act(() => {
-      drop = createDrop(core, { type: 'text' });
-      archiveDrop(core, drop.id);
-    });
-
-    const restored = restoreDrop(core, drop.id);
-
-    expect(restored.archived).not.toBeDefined();
-    expect(restored.archivedAt).not.toBeDefined();
-  });
 
   it('restores deleted drops', () => {
     let drop: Drop;

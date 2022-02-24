@@ -9,7 +9,6 @@ import {
   UnregisterDropTypeEventCallback,
   CreateDropEvent,
   UpdateDropEvent,
-  ArchiveDropEvent,
   DeleteDropEvent,
   RestoreDropEvent,
   CreateDropEventCallback,
@@ -17,7 +16,6 @@ import {
   AddTagsEventCallback,
   RemoveTagsEvent,
   RemoveTagsEventCallback,
-  ArchiveDropEventCallback,
   ClearDropsEvent,
   ClearDropsEventCallback,
   ClearRegisteredDropTypesEvent,
@@ -64,10 +62,10 @@ export interface DropsApi {
   getAll(filters?: DropFilters): DropMap;
 
   /**
-   * Filters drops by type, active, archived, and deleted states.
+   * Filters drops by type, active, and deleted states.
    * If no filters are set, returns active drops.
-   * If either archived or deleted filters are `true`, active
-   * drops are not included unless specifically set to `true`.
+   * If deleted filters is `true`, active drops are not
+   * included unless specifically set to `true`.
    *
    * @param drops The drops to filter.
    * @param filters The filters by which to filter the drops.
@@ -171,16 +169,6 @@ export interface DropsApi {
   insertData(core: Core, dropId: string, data: DataInsert): Promise<Drop>;
 
   /**
-   * Archives a drop and dispatches a `drops:archive`
-   * event and a `drops:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop to archive.
-   * @returns The archived drop.
-   */
-  archive(core: Core, dropId: string): Drop;
-
-  /**
    * Deletes a drop and dispatches a `drops:delete`
    * event and a `drops:update` event.
    *
@@ -191,8 +179,8 @@ export interface DropsApi {
   delete(core: Core, dropId: string): Drop;
 
   /**
-   * Restores an archived or deleted drop and dispatches
-   * a `drops:restore` event and a `drops:update` event.
+   * Restores a deleted drop and dispatches a
+   * `drops:restore` event and a `drops:update` event.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to restore.
@@ -351,13 +339,6 @@ export interface DropsApi {
     callback: UpdateDropEventCallback,
   ): void;
 
-  // Add drops:archive event listener
-  addEventListener(
-    core: Core,
-    type: ArchiveDropEvent,
-    callback: ArchiveDropEventCallback,
-  ): void;
-
   // Add drops:delete event listener
   addEventListener(
     core: Core,
@@ -465,13 +446,6 @@ export interface DropsApi {
     core: Core,
     type: UpdateDropEvent,
     callback: UpdateDropEventCallback,
-  ): void;
-
-  // Remove drops:archive event listener
-  removeEventListener(
-    core: Core,
-    type: ArchiveDropEvent,
-    callback: ArchiveDropEventCallback,
   ): void;
 
   // Remove drops:delete event listener

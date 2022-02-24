@@ -2,7 +2,6 @@ import { initializeCore } from '@minddrop/core';
 import { act, renderHook } from '@minddrop/test-utils';
 import { get } from './get';
 import { onDisable, onRun } from '../drops-extension';
-import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 import { generateDrop } from '../generateDrop';
 import { loadDrops } from '../loadDrops';
@@ -45,7 +44,6 @@ describe('get', () => {
 
       act(() => {
         loadDrops(core, [drop1, drop2, drop3]);
-        archiveDrop(core, drop2.id);
         drop3 = deleteDrop(core, drop3.id);
       });
 

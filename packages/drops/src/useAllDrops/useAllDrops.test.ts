@@ -40,11 +40,6 @@ describe('useAllDrops', () => {
   it('filters drops', () => {
     const { result: store } = renderHook(() => useDropsStore((state) => state));
     const drop1 = generateDrop({ type: 'text' });
-    const drop2 = {
-      ...generateDrop({ type: 'text' }),
-      archived: true,
-      archivedAt: new Date(),
-    };
     const drop3 = {
       ...generateDrop({ type: 'text' }),
       deleted: true,
@@ -53,11 +48,10 @@ describe('useAllDrops', () => {
     const { result } = renderHook(() => useAllDrops({ deleted: true }));
 
     act(() => {
-      store.current.loadDrops([drop1, drop2, drop3]);
+      store.current.loadDrops([drop1, drop3]);
     });
 
     expect(result.current[drop1.id]).not.toBeDefined();
-    expect(result.current[drop2.id]).not.toBeDefined();
     expect(result.current[drop3.id]).toEqual(drop3);
   });
 });

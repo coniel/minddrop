@@ -5,15 +5,9 @@ export interface DropFilters {
   type?: string[];
 
   /**
-   * Include active drops (drops which are not archived,
-   * deleted, nor hidden).
+   * Include active drops (drops which are not deleted).
    */
   active?: boolean;
-
-  /**
-   * Include archived drops.
-   */
-  archived?: boolean;
 
   /**
    * Include deleted drops.

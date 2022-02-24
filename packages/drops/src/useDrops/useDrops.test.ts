@@ -1,6 +1,5 @@
 import { initializeCore } from '@minddrop/core';
 import { renderHook, act } from '@minddrop/test-utils';
-import { archiveDrop } from '../archiveDrop';
 import { deleteDrop } from '../deleteDrop';
 import { onDisable, onRun } from '../drops-extension';
 import { generateDrop } from '../generateDrop';
@@ -52,21 +51,18 @@ describe('useDrops', () => {
 
   it('filters drops', () => {
     const drop1 = generateDrop({ type: 'text' });
-    const drop2 = generateDrop({ type: 'text' });
     let drop3 = generateDrop({ type: 'text' });
 
     const { result } = renderHook(() =>
-      useDrops([drop1.id, drop2.id, drop3.id], { deleted: true }),
+      useDrops([drop1.id, drop3.id], { deleted: true }),
     );
 
     act(() => {
-      loadDrops(core, [drop1, drop2, drop3]);
-      archiveDrop(core, drop2.id);
+      loadDrops(core, [drop1, drop3]);
       drop3 = deleteDrop(core, drop3.id);
     });
 
     expect(result.current[drop1.id]).not.toBeDefined();
-    expect(result.current[drop2.id]).not.toBeDefined();
     expect(result.current[drop3.id]).toEqual(drop3);
   });
 });
