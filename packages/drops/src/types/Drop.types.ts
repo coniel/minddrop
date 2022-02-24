@@ -28,6 +28,11 @@ export interface Drop {
   updatedAt: Date;
 
   /**
+   * The IDs of the drop's parents, typically topics.
+   */
+  parents: string[];
+
+  /**
    * The IDs of the tags applied to the drop.
    */
   tags?: string[];

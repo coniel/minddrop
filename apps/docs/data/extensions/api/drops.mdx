@@ -331,6 +331,10 @@ Drops.update(core: Core, dropId: string, data: UpdateDropData): Drop
       description: 'The drop type.',
     },
     {
+      name: 'parents',
+      type: 'string | ArrayUnion | ArrayRemove',
+    },
+    {
       name: 'markdown',
       type: 'string | Delete',
       description: "The drop's markdown text content.",
@@ -376,28 +380,6 @@ Drops.insertData(core: Core, dropId: string, data: DataInsert): Promise<Drop>;
   ]}
 />
 
-### archive
-
-Archives a drop and dispatches a `drops:archive` event and an `drops:update` event. Returns the updated drop.
-
-Archived drops can be restored using the `Drops.restore` method.
-
-```ts
-Drops.archive(core: Core, dropId: string): Drop
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'dropId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the drop to archive.',
-    },
-  ]}
-/>
-
 ### delete
 
 Deletes a drop and dispatches a `drops:delete` event and an `drops:update` event. Returns the deleted drop.
@@ -422,7 +404,7 @@ Drops.delete(core: Core, dropId: string): Drop
 
 ### restore
 
-Restores an archived or deleted drop and dispatches a `drops:restore` event and an `drops:update` event. Returns the restored drop.
+Restores a deleted drop and dispatches a `drops:restore` event and an `drops:update` event. Returns the restored drop.
 
 ```ts
 Drops.restore(core: Core, dropId: string): Drop
@@ -763,11 +745,6 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when a drop is updated.',
     },
     {
-      name: 'drops:archive',
-      data: 'Drop',
-      description: 'Dispatched when a drop is archived.',
-    },
-    {
       name: 'drops:delete',
       data: 'Drop',
       description: 'Dispatched when a drop is deleted.',
@@ -775,8 +752,7 @@ See below the table for more details on the data passed by drop related events.
     {
       name: 'drops:restore',
       data: 'Drop',
-      description:
-        'Dispatched when an archived/deleted drop is restored.',
+      description: 'Dispatched when a deleted drop is restored.',
     },
     {
       name: 'drops:delete-permanently',
@@ -910,20 +886,6 @@ See the [Drop](/docs/extensions/types/drop) interface page.
       ),
     },
     {
-      name: 'archived',
-      type: 'boolean',
-      description: (
-        <span>
-          If <Code>true</Code>, the drop is archived.
-        </span>
-      ),
-    },
-    {
-      name: 'archivedAt',
-      type: 'Date',
-      description: 'Timestamp at which the drop was archived.',
-    },
-    {
       name: 'deleted',
       type: 'boolean',
       description: (
@@ -1044,9 +1006,9 @@ See the [Drop](/docs/extensions/types/drop) interface page.
 
 Drops can be filtered using one or more of the options below.
 
-By default, archived and deleted drops are filtered out. If either `archived` or `deleted` is set to `true`, active drops will be filtered out by default unless `active` is also set to `true`.
+By default, deleted drops are filtered out. If `deleted` is set to `true`, active drops will be filtered out by default unless `active` is also set to `true`.
 
-A drop is considered active if it is neither archived nor deleted.
+A drop is considered active if it is not deleted.
 
 <PropsTable
   data={[
@@ -1059,14 +1021,7 @@ A drop is considered active if it is neither archived nor deleted.
       name: 'active',
       type: 'boolean',
       default: 'true',
-      description:
-        'Include active drops (drops which are neither archived nor deleted).',
-    },
-    {
-      name: 'archived',
-      type: 'boolean',
-      default: 'false',
-      description: 'Include archived drops.',
+      description: 'Include active drops (drops which not deleted).',
     },
     {
       name: 'deleted',

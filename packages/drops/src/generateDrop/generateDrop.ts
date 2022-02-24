@@ -7,10 +7,13 @@ import { Drop, GenerateDropData } from '../types';
  * @param data The drop data, `type` being the only required value.
  * @returns A new drop.
  */
-export function generateDrop(data: GenerateDropData): Drop {
+export function generateDrop<D extends GenerateDropData = GenerateDropData>(
+  data: D,
+): Drop & D {
   return {
     createdAt: new Date(),
     updatedAt: new Date(),
+    parents: [],
     id: generateId(),
     ...data,
   };

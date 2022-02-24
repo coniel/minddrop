@@ -47,6 +47,12 @@ All drops share a basic interface which can be extended to suit your extension's
       ),
     },
     {
+      name: 'parents',
+      type: 'string[]',
+      required: true,
+      description: "The IDs of the drop's parents, typically topics.",
+    },
+    {
       name: 'tags',
       type: 'string[]',
       description: 'The IDs of the tags applied to the drop.',
@@ -70,26 +76,6 @@ All drops share a basic interface which can be extended to suit your extension's
           The drop's highlight color. See the{' '}
           <a href="color#content-colors">Color</a> page for available
           content colors.
-        </span>
-      ),
-    },
-    {
-      name: 'archived',
-      type: 'true',
-      description: (
-        <span>
-          If <Code>true</Code>, the drop is archived. Not present if
-          the drop is not archived.
-        </span>
-      ),
-    },
-    {
-      name: 'archivedAt',
-      type: 'Date',
-      description: (
-        <span>
-          Timestamp at which the drop was archived. Only set if
-          <Code>archived</Code> is <Code>true</Code>.
         </span>
       ),
     },
