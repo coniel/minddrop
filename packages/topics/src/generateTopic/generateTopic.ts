@@ -13,6 +13,7 @@ export function generateTopic(data?: Partial<Topic>): Topic {
     subtopics: [],
     views: [],
     drops: [],
+    archivedDrops: [],
     tags: [],
     createdAt: new Date(),
     updatedAt: new Date(),

@@ -43,6 +43,10 @@ import {
   CreateViewInstanceEventCallback,
   DeleteViewInstanceEventCallback,
   DeleteViewInstanceEvent,
+  ArchiveDropsEvent,
+  ArchiveDropsEventCallback,
+  UnarchiveDropsEvent,
+  UnarchiveDropsEventCallback,
 } from './TopicEvents.types';
 import { TopicViewConfig } from './TopicViewConfig.types';
 import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
@@ -216,6 +220,30 @@ export interface TopicsApi {
   ): void;
 
   /**
+   * Archives the specified drops in a topic and dispatches
+   * a `topics:archive-drops` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic on which to archive the drops.
+   * @param dropIds The IDs of the drops to archive.
+   * @returns The updated topic.
+   */
+  archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
+   * Unarchives the specified drops in a topic and dispatches
+   * a `topics:unarchive-drops` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic on which to unarchive the drops.
+   * @param dropIds The IDs of the drops to unarchive.
+   * @returns The updated topic.
+   */
+  unarchiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
    * Removes drops from a topic and dispatches a `topics:remove-drops` event
    * and a `topics:update` event.
    *
@@ -380,6 +408,20 @@ export interface TopicsApi {
     callback: AddDropsEventCallback,
   ): void;
 
+  // Add 'topics:archive-drops' event listener
+  addEventListener(
+    core: Core,
+    type: ArchiveDropsEvent,
+    callback: ArchiveDropsEventCallback,
+  ): void;
+
+  // Add 'topics:unarchive-drops' event listener
+  addEventListener(
+    core: Core,
+    type: UnarchiveDropsEvent,
+    callback: UnarchiveDropsEventCallback,
+  ): void;
+
   // Add 'topics:remove-drops' event listener
   addEventListener(
     core: Core,
@@ -508,6 +550,20 @@ export interface TopicsApi {
     core: Core,
     type: AddDropsEvent,
     callback: AddDropsEventCallback,
+  ): void;
+
+  // Remove 'topics:archive-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: ArchiveDropsEvent,
+    callback: ArchiveDropsEventCallback,
+  ): void;
+
+  // Remove 'topics:unarchive-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: UnarchiveDropsEvent,
+    callback: UnarchiveDropsEventCallback,
   ): void;
 
   // Remove 'topics:remove-drops' event listener

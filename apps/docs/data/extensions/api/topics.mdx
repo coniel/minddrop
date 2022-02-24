@@ -312,31 +312,9 @@ Topics.update(core: Core, topicId: string, data: UpdateTopicData): Topic
   ]}
 />
 
-### archive
-
-Archives a topic and dispatches a `topics:archive` event and an `topics:update` event. Returns the updated topic.
-
-Archived topics can be restored using the `Topics.restore` method.
-
-```ts
-Topics.archive(core: Core, topicId: string): Topic
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description: 'The ID of the topic to archive.',
-    },
-  ]}
-/>
-
 ### delete
 
-Deletes a topic and dispatches a `topics:delete` event and an `topics:update` event. Returns the deleted topic.
+Deletes a topic and dispatches a `topics:delete` event and a `topics:update` event. Returns the deleted topic.
 
 Deleted topics are not removed from the store but instead marked as deleted using `deleted: true` and `deletedAt: Date` properties. Deleted topics can be restored using the `Topics.restore` method. To permanently delete a topic and remove it from the store, use `Topics.deletePermanently`.
 
@@ -358,7 +336,7 @@ Topics.delete(core: Core, topicId: string): Topic
 
 ### restore
 
-Restores an archived/deleted topic and dispatches a `topics:restore` event and an `topics:update` event. Returns the restored topic.
+Restores a deleted topic and dispatches a `topics:restore` event and a `topics:update` event. Returns the restored topic.
 
 ```ts
 Topics.restore(core: Core, topicId: string): Topic
@@ -450,7 +428,7 @@ Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Top
 
 ### addDrops
 
-Adds drops to a topic, dispaches an `topics:add-drops` event and an `topics:update` event. Returns the updated topic.
+Adds drops to a topic, dispaches an `topics:add-drops` event and a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.addDrops(core: Core, topicId: string, dropIds: string[]): Topic
@@ -536,9 +514,63 @@ Topics.moveDrops(core: Core, fromTopicId: string, toTopicId: string, dropIds: st
   ]}
 />
 
+### archiveDrops
+
+Archives drops in a topic and dirspatches a `topics:archive-drops` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to archive the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to archive.',
+    },
+  ]}
+/>
+
+### unarchiveDrops
+
+Unarchives drops in a topic and dirspatches a `topics:unarchive-drops` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to unarchive the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to unarchive.',
+    },
+  ]}
+/>
+
 ### removeDrops
 
-Removes drops from a topic and dispatches a `topics:remove-drops` event as well as an `topics:update` event. Returns the updated topic.
+Removes drops from a topic and dispatches a `topics:remove-drops` event as well as a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.removeDrops(core: Core, topicId: string, dropIds: string[]): Topic
@@ -565,7 +597,7 @@ Topics.removeDrops(core: Core, topicId: string, dropIds: string[]): Topic
 
 ### addTags
 
-Adds tags to a topic, dispaches an `topics:add-tags` event and an `topics:update` event. Returns the updated topic.
+Adds tags to a topic, dispaches an `topics:add-tags` event and a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.addTags(core: Core, topicId: string, tagIds: string[]): Topic
@@ -591,7 +623,7 @@ Topics.addTags(core: Core, topicId: string, tagIds: string[]): Topic
 
 ### removeTags
 
-Removes tags from a topic and dispatches a `topics:remove-tags` event as well as an `topics:update` event. Returns the updated topic.
+Removes tags from a topic and dispatches a `topics:remove-tags` event as well as a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.removesTags(core: Core, topicId: string, tagIds: string[]): Topic
@@ -842,11 +874,6 @@ See below the table for more details on the data passed by topic related events.
       description: 'Dispatched when a topic is updated.',
     },
     {
-      name: 'topics:archive',
-      data: 'Topic',
-      description: 'Dispatched when a topic is archived.',
-    },
-    {
       name: 'topics:delete',
       data: 'Topic',
       description: 'Dispatched when a topic is deleted.',
@@ -877,6 +904,18 @@ See below the table for more details on the data passed by topic related events.
       name: 'topics:add-drops',
       data: 'AddDropsEventData',
       description: 'Dispatched when drops are added to a topic.',
+    },
+    {
+      name: 'topics:archive-drops',
+      data: 'ArchiveDropsEventData',
+      description:
+        'Dispatched when drops inside a topic are archived.',
+    },
+    {
+      name: 'topics:unarchive-drops',
+      data: 'UnarchiveDropsEventData',
+      description:
+        'Dispatched when drops inside a topic are unarchived.',
     },
     {
       name: 'topics:remove-drops',
@@ -993,20 +1032,6 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       description: 'IDs of the tags belonging to the topic.',
     },
     {
-      name: 'archived',
-      type: 'boolean | Delete',
-      description: (
-        <span>
-          If <Code>true</Code>, the topic is archived.
-        </span>
-      ),
-    },
-    {
-      name: 'archivedAt',
-      type: 'Date | Delete',
-      description: 'Timestamp at which the topic was archived.',
-    },
-    {
       name: 'deleted',
       type: 'boolean | Delete',
       description: (
@@ -1085,6 +1110,44 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'DropMap',
       required: true,
       description: 'The drops which were added to the topic.',
+    },
+  ]}
+/>
+
+#### ArchiveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic in which the drops were archived.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were archived.',
+    },
+  ]}
+/>
+
+#### UnarchiveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic in which the drops were unarchived.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were unarchived.',
     },
   ]}
 />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
-import { Topic, TopicView, TopicViewConfig, TopicViewInstance } from '../types';
+import { TopicView, TopicViewConfig, TopicViewInstance } from '../types';
+import { generateTopic } from '../generateTopic';
 
 const { htmlDrop1, textDrop1, textDrop2, textDrop3, textDrop4, imageDrop1 } =
   DROPS_TEST_DATA;
@@ -248,111 +249,73 @@ export const tEmptyView: TopicColumnsView = {
   },
 };
 
-export const tCoastalNavigation: Topic = {
+export const tCoastalNavigation = generateTopic({
   id: 't-coastal-navigation',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Coastal navigation',
-  subtopics: [],
   views: [tCoastalNavigationView.id, tCoastalNavigationView2.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tOffshoreNavigation: Topic = {
+export const tOffshoreNavigation = generateTopic({
   id: 't-offshore-navigation',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Offshore navigation',
-  subtopics: [],
   views: [tOffshoreNavigationView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tNavigation: Topic = {
+export const tNavigation = generateTopic({
   id: 't-navigation',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Navigation',
   subtopics: [tCoastalNavigation.id, tOffshoreNavigation.id],
   views: [tNavigationView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tBoats: Topic = {
+export const tBoats = generateTopic({
   id: 't-boats',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Boats',
-  subtopics: [],
   views: [tBoatsView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tAnchoring: Topic = {
+export const tAnchoring = generateTopic({
   id: 't-anchoring',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Anchoring',
-  subtopics: [],
   views: [tAnchoringView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tSailing: Topic = {
+export const tSailing = generateTopic({
   id: 't-sailing',
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
   subtopics: [tNavigation.id, tBoats.id, tAnchoring.id],
   views: [tSailingView.id, tSailingView2.id],
   drops: [textDrop1.id, textDrop2.id, textDrop3.id, htmlDrop1.id],
-  tags: [],
-};
+});
 
-export const tUntitled: Topic = {
+export const tUntitled = generateTopic({
   id: 't-untitled',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
-  title: '',
-  subtopics: [],
   views: [tUntitledView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tNoDrops: Topic = {
+export const tNoDrops = generateTopic({
   id: 't-no-drops',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
-  title: '',
-  subtopics: [],
   views: [tNoDropsView.id],
-  drops: [],
-  tags: [],
-};
+});
 
-export const tTwoDrops: Topic = {
+export const tTwoDrops = generateTopic({
   id: 't-two-drops',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
-  subtopics: [],
   views: [tTwoDropsView.id],
   drops: [textDrop1.id, textDrop2.id],
-  tags: [],
-};
+});
 
-export const tSixDrops: Topic = {
+export const tSixDrops = generateTopic({
   id: 't-six-drops',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
-  subtopics: [],
   views: [tSixDropsView.id],
   drops: [
     textDrop1.id,
@@ -362,19 +325,14 @@ export const tSixDrops: Topic = {
     htmlDrop1.id,
     imageDrop1.id,
   ],
-  tags: [],
-};
+});
 
-export const tEmpty: Topic = {
+export const tEmpty = generateTopic({
   id: 't-empty',
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
-  title: '',
-  subtopics: [],
   views: [tEmptyView.id],
-  drops: [],
-  tags: [],
-};
+});
 
 export const rootTopicIds = [tSailing.id, tUntitled.id];
 

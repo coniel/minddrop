@@ -1,7 +1,7 @@
-import { Drop } from '@minddrop/drops';
-import { Tag } from '@minddrop/tags';
+import { DropMap } from '@minddrop/drops';
+import { TagMap } from '@minddrop/tags';
 import { DataInsert, EventListenerCallback } from '@minddrop/core';
-import { Topic, TopicChanges } from './Topic.types';
+import { Topic, TopicChanges, TopicMap } from './Topic.types';
 import { TopicView } from './TopicView.types';
 import { TopicViewInstance } from './TopicViewInstance.types';
 
@@ -10,6 +10,8 @@ export type UpdateTopicEvent = 'topics:update';
 export type AddSubtopicsEvent = 'topics:add-subtopics';
 export type RemoveSubtopicsEvent = 'topics:remove-subtopics';
 export type AddDropsEvent = 'topics:add-drops';
+export type ArchiveDropsEvent = 'topics:archive-drops';
+export type UnarchiveDropsEvent = 'topics:unarchive-drops';
 export type RemoveDropsEvent = 'topics:remove-drops';
 export type AddTagsEvent = 'topics:add-tags';
 export type RemoveTagsEvent = 'topics:remove-tags';
@@ -60,7 +62,7 @@ export interface AddSubtopicsEventData {
   /**
    * The subtopics which were added to the topic.
    */
-  subtopics: Topic[];
+  subtopics: TopicMap;
 }
 
 export interface RemoveSubtopicsEventData {
@@ -72,7 +74,7 @@ export interface RemoveSubtopicsEventData {
   /**
    * The subtopics which were removed from the topic.
    */
-  subtopics: Topic[];
+  subtopics: TopicMap;
 }
 
 export interface AddDropsEventData {
@@ -84,7 +86,31 @@ export interface AddDropsEventData {
   /**
    * The drops which were added to the topic.
    */
-  drops: Drop[];
+  drops: DropMap;
+}
+
+export interface ArchiveDropsEventData {
+  /**
+   * The topic in which the drops were archived.
+   */
+  topic: Topic;
+
+  /**
+   * The drops which were archvied.
+   */
+  drops: DropMap;
+}
+
+export interface UnarchiveDropsEventData {
+  /**
+   * The topic in which the drops were unarchived.
+   */
+  topic: Topic;
+
+  /**
+   * The drops which were unarchvied.
+   */
+  drops: DropMap;
 }
 
 export interface RemoveDropsEventData {
@@ -96,7 +122,7 @@ export interface RemoveDropsEventData {
   /**
    * The drops which were removed from the topic.
    */
-  drops: Drop[];
+  drops: DropMap;
 }
 
 export interface AddTagsEventData {
@@ -108,7 +134,7 @@ export interface AddTagsEventData {
   /**
    * The tags which were added to the topic.
    */
-  tags: Tag[];
+  tags: TagMap;
 }
 
 export interface RemoveTagsEventData {
@@ -120,7 +146,7 @@ export interface RemoveTagsEventData {
   /**
    * The tags which were removed from the topic.
    */
-  tags: Tag[];
+  tags: TagMap;
 }
 
 export interface InsertDataEventData {
@@ -154,6 +180,14 @@ export type RemoveSubtopicsEventCallback = EventListenerCallback<
 export type AddDropsEventCallback = EventListenerCallback<
   AddDropsEvent,
   AddDropsEventData
+>;
+export type ArchiveDropsEventCallback = EventListenerCallback<
+  ArchiveDropsEvent,
+  ArchiveDropsEventData
+>;
+export type UnarchiveDropsEventCallback = EventListenerCallback<
+  UnarchiveDropsEvent,
+  UnarchiveDropsEventData
 >;
 export type RemoveDropsEventCallback = EventListenerCallback<
   RemoveDropsEvent,

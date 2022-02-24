@@ -26,9 +26,14 @@ export interface Topic {
   views: string[];
 
   /**
-   * The IDs of the drops inside the topic.
+   * The IDs of the (active) drops inside the topic.
    */
   drops: string[];
+
+  /**
+   * The IDs of the archived drops inside the topic.
+   */
+  archivedDrops: string[];
 
   /**
    * The IDs of the tags belonging to the topic.
@@ -78,6 +83,7 @@ export interface TopicChanges {
   subtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   views?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   drops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  archivedDrops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
