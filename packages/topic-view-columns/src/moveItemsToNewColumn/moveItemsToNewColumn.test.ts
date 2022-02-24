@@ -46,4 +46,27 @@ describe('moveItemsToNewColumn', () => {
       [{ id: 'drop-8', type: 'drop' }],
     ]);
   });
+
+  it('removes excess emptied columns', () => {
+    expect(
+      moveItemsToNewColumn(columns, ['drop-4', 'drop-5', 'drop-6'], 3),
+    ).toEqual([
+      [
+        { id: 'drop-1', type: 'drop' },
+        { id: 'drop-2', type: 'drop' },
+        { id: 'drop-3', type: 'drop' },
+      ],
+      // Emptied column removed
+      [
+        { id: 'drop-7', type: 'drop' },
+        { id: 'drop-8', type: 'drop' },
+        { id: 'drop-9', type: 'drop' },
+      ],
+      [
+        { id: 'drop-4', type: 'drop' },
+        { id: 'drop-5', type: 'drop' },
+        { id: 'drop-6', type: 'drop' },
+      ],
+    ]);
+  });
 });

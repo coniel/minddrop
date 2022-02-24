@@ -80,11 +80,11 @@ describe('<TopicViewColumns />', () => {
 
   it("moves drops when data insert action === 'sort'", () => {
     const { getByTestId } = init();
-    const movedDropId = topicViewColumnsInstance.columns[0][0].id;
+    const movedDropId = topicViewColumnsInstance.columns[1][1].id;
 
     act(() => {
-      // Insert from col 0:0 to col 1:1 (between the first two drops)
-      fireEvent.drop(getByTestId('spacer-1:1'), {
+      // Insert from col 1:1 to col 0:0 (between the first two drops)
+      fireEvent.drop(getByTestId('spacer-0:0'), {
         dataTransfer: {
           types: ['minddrop/action', 'minddrop/drops'],
           getData: (key) => {
@@ -105,8 +105,8 @@ describe('<TopicViewColumns />', () => {
       topicViewColumnsInstance.id,
     );
 
-    expect(viewInstance.columns[1][1].id).toBe(movedDropId);
-    expect(viewInstance.columns[0][0]).not.toBeDefined();
+    expect(viewInstance.columns[0][0].id).toBe(movedDropId);
+    expect(viewInstance.columns[1][1]).not.toBeDefined();
   });
 
   describe('vertical drop zone', () => {
@@ -140,11 +140,11 @@ describe('<TopicViewColumns />', () => {
 
     it("moves drops into new column when data insert action === 'sort'", () => {
       const { getByTestId } = init();
-      const movedDropId = topicViewColumnsInstance.columns[0][0].id;
+      const movedDropId = topicViewColumnsInstance.columns[2][0].id;
 
       act(() => {
-        // Insert from col 0:0 to new col 1
-        fireEvent.drop(getByTestId('vertical-drop-zone-1'), {
+        // Insert from col 2:0 to new col 0
+        fireEvent.drop(getByTestId('vertical-drop-zone-0'), {
           dataTransfer: {
             types: ['minddrop/action', 'minddrop/drops'],
             getData: (key) => {
@@ -165,8 +165,7 @@ describe('<TopicViewColumns />', () => {
         topicViewColumnsInstance.id,
       );
 
-      expect(viewInstance.columns[1][0].id).toBe(movedDropId);
-      expect(viewInstance.columns[0][0]).not.toBeDefined();
+      expect(viewInstance.columns[0][0].id).toBe(movedDropId);
     });
   });
 });

@@ -6,6 +6,7 @@ import {
   UpdateTopicViewColumnsInstanceData,
 } from '../types';
 import { removeItemsFromColumns } from '../removeItemsFromColumns';
+import { removeEmptiedColumns } from '../removeEmptiedColumns';
 
 /**
  * The view's onRemoveDrops callback.
@@ -20,10 +21,13 @@ export function onRemoveDrops(
   drops: DropMap,
 ): void {
   // Remove drops from columns
-  const columns = removeItemsFromColumns(
+  let columns = removeItemsFromColumns(
     viewInstance.columns,
     Object.keys(drops),
   );
+
+  // Remove emptied columns
+  columns = removeEmptiedColumns(viewInstance.columns, columns);
 
   // Update the view instance
   Views.updateInstance<UpdateTopicViewColumnsInstanceData>(

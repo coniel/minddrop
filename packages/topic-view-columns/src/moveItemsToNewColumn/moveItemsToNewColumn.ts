@@ -1,3 +1,4 @@
+import { removeEmptiedColumns } from '../removeEmptiedColumns';
 import { removeItemsFromColumns } from '../removeItemsFromColumns';
 import { Columns } from '../types';
 
@@ -21,10 +22,17 @@ export function moveItemsToNewColumn(
     .filter((item) => itemIds.includes(item.id));
 
   // Remove moved items from existing columns
-  const updatedColumns = removeItemsFromColumns(columns, itemIds);
+  let updatedColumns = removeItemsFromColumns(columns, itemIds);
 
   // Insert moved intems as new column
   updatedColumns.splice(newColumnIndex, 0, movedItems);
+
+  // Remove emptied columns
+  updatedColumns = removeEmptiedColumns(
+    columns,
+    updatedColumns,
+    newColumnIndex,
+  );
 
   return updatedColumns;
 }
