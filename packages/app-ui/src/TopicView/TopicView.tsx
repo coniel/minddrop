@@ -49,6 +49,11 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
 
         // Add duplicate drops to the topic
         Topics.addDrops(core, topicId, Object.keys(drops));
+      } else if (['A', 'a'].includes(event.key) && event.metaKey) {
+        event.preventDefault();
+
+        // Select all of the topic's drops
+        App.selectDrops(core, topic.drops);
       }
     };
 

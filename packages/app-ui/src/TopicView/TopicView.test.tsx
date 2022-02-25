@@ -12,10 +12,11 @@ import { App } from '@minddrop/app';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
+  isEqual,
   setDataTransferData,
 } from '@minddrop/utils';
 
-const { tSixDropsView } = TOPICS_TEST_DATA;
+const { tSixDropsView, tSixDrops } = TOPICS_TEST_DATA;
 const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
 
 describe('<TopicView />', () => {
@@ -327,5 +328,36 @@ describe('<TopicView />', () => {
     const dropId2 = topic.drops[7];
     const drop2 = Drops.get(dropId2);
     expect(drop2.duplicatedFrom).toBe(textDrop2.id);
+  });
+
+  it('selects all drops on metaKey+A/a keypress', () => {
+    setup();
+
+    act(() => {
+      // Fire metaKey+A keydown
+      fireEvent.keyDown(document, { key: 'A', metaKey: true });
+    });
+
+    // Get selected drop IDs
+    let selected = Object.keys(App.getSelectedDrops());
+
+    // All of the topic's drops should be selected
+    expect(isEqual(tSixDrops.drops, selected)).toBeTruthy();
+
+    act(() => {
+      // Clear selected drops
+      App.clearSelectedDrops(core);
+    });
+
+    act(() => {
+      // Fire metaKey+a keydown
+      fireEvent.keyDown(document, { key: 'a', metaKey: true });
+    });
+
+    // Get selected drop IDs
+    selected = Object.keys(App.getSelectedDrops());
+
+    // All of the topic's drops should be selected
+    expect(isEqual(tSixDrops.drops, selected)).toBeTruthy();
   });
 });
