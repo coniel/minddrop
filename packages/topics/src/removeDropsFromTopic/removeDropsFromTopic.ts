@@ -28,6 +28,18 @@ export function removeDropsFromTopic(
     drops: FieldValue.arrayRemove(dropIds),
   });
 
+  // Remove topic as parent from drops
+  Object.values(drops).forEach((drop) => {
+    // Don't remove topic as parent from deleted drops so that they
+    // can be restored to the topic.
+    if (!drop.deleted) {
+      // Remove the parent
+      const updatedDrop = Drops.removeParents(core, drop.id, [topicId]);
+      // Update drop in DropMap
+      drops[drop.id] = updatedDrop;
+    }
+  });
+
   // Get the topic's view instances
   const viewInstances = Views.getInstances<TopicViewInstance>(topic.views);
 

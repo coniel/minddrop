@@ -11,8 +11,9 @@ import {
 import { registerTopicView } from '../registerTopicView';
 import { createTopicViewInstance } from '../createTopicViewInstance';
 import { getTopic } from '../getTopic';
+import { addDropsToTopic } from '../addDropsToTopic';
 
-const { textDrop1 } = DROPS_TEST_DATA;
+const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
 
 describe('removeDropsFromTopic', () => {
   beforeEach(setup);
@@ -39,6 +40,43 @@ describe('removeDropsFromTopic', () => {
 
     // Returned topic should match updated topic
     expect(result).toEqual(topic);
+  });
+
+  it('removes the topic as a parent of the drops', () => {
+    // Create a new drop
+    let drop = Drops.create(core, { type: textDropConfig.type });
+
+    // Add new drop to topic
+    addDropsToTopic(core, tSixDrops.id, [drop.id]);
+
+    // Remove drop from topic
+    removeDropsFromTopic(core, tSixDrops.id, [drop.id]);
+
+    // Get updated drop
+    drop = Drops.get(drop.id);
+
+    // Drop should no longer have topic as a parent
+    expect(drop.parents.includes(tSixDrops.id)).toBeFalsy();
+  });
+
+  it('does not remove the topic as a parent if the drop is deleted', () => {
+    // Create a new drop
+    let drop = Drops.create(core, { type: textDropConfig.type });
+
+    // Add new drop to topic
+    addDropsToTopic(core, tSixDrops.id, [drop.id]);
+
+    // Delete the drop
+    Drops.delete(core, drop.id);
+
+    // Remove drop from topic
+    removeDropsFromTopic(core, tSixDrops.id, [drop.id]);
+
+    // Get updated drop
+    drop = Drops.get(drop.id);
+
+    // Drop should still have topic as a parent
+    expect(drop.parents.includes(tSixDrops.id)).toBeTruthy();
   });
 
   it("calls topic view's onRemoveDrops for each view instance", () => {

@@ -7,12 +7,15 @@ import { loadTopics } from '../loadTopics';
 import { registerTopicView } from '../registerTopicView';
 import { topics, topicViewConfigs, topicViewInstances } from './topics.data';
 
-const { drops } = DROPS_TEST_DATA;
+const { drops, dropTypeConfigs } = DROPS_TEST_DATA;
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 
 export const setup = () => {
   act(() => {
+    dropTypeConfigs.forEach((config) => {
+      Drops.register(core, config);
+    });
     Views.loadInstances(core, topicViewInstances);
     Drops.load(core, drops);
     loadTopics(core, topics);
