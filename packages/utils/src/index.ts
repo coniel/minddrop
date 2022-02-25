@@ -6,6 +6,7 @@ export * from './mapPropsToClasses';
 export * from './toKebabCase';
 export * from './createUpdate';
 export * from './isSubset';
+export * from './isEqual';
 export * from './FieldValue';
 export * from './mapById';
 export * from './setDataTransferData';
