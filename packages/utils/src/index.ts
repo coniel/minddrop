@@ -5,6 +5,7 @@ export * from './createDataInsertFromDataTransfer';
 export * from './mapPropsToClasses';
 export * from './toKebabCase';
 export * from './createUpdate';
+export * from './isSubsetOf';
 export * from './FieldValue';
 export * from './mapById';
 export * from './setDataTransferData';
