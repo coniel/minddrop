@@ -26,6 +26,8 @@ import { deleteTopicViewInstance } from './deleteTopicViewInstance';
 import { moveDropsToTopic } from './moveDropsToTopic';
 import { archiveDropsInTopic } from './archiveDropsInTopic';
 import { unarchiveDropsInTopic } from './unarchiveDropsInTopic';
+import { archiveSubtopics } from './archiveSubtopics';
+import { unarchiveSubtopics } from './unarchiveSubtopics';
 
 export const Topics: TopicsApi = {
   get,
@@ -37,11 +39,13 @@ export const Topics: TopicsApi = {
   update: updateTopic,
   addSubtopics,
   removeSubtopics,
+  archiveSubtopics,
+  unarchiveSubtopics,
   addDrops: addDropsToTopic,
+  removeDrops: removeDropsFromTopic,
   moveDrops: moveDropsToTopic,
   archiveDrops: archiveDropsInTopic,
   unarchiveDrops: unarchiveDropsInTopic,
-  removeDrops: removeDropsFromTopic,
   addTags: addTagsToTopic,
   removeTags: removeTagsFromTopic,
   delete: deleteTopic,

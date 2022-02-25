@@ -8,6 +8,8 @@ import { TopicViewInstance } from './TopicViewInstance.types';
 export type CreateTopicEvent = 'topics:create';
 export type UpdateTopicEvent = 'topics:update';
 export type AddSubtopicsEvent = 'topics:add-subtopics';
+export type ArchiveSubtopicsEvent = 'topics:archive-subtopics';
+export type UnarchiveSubtopicsEvent = 'topics:unarchive-subtopics';
 export type RemoveSubtopicsEvent = 'topics:remove-subtopics';
 export type AddDropsEvent = 'topics:add-drops';
 export type ArchiveDropsEvent = 'topics:archive-drops';
@@ -61,6 +63,30 @@ export interface AddSubtopicsEventData {
 
   /**
    * The subtopics which were added to the topic.
+   */
+  subtopics: TopicMap;
+}
+
+export interface ArchiveSubtopicsEventData {
+  /**
+   * The topic in which the subtopics were archived.
+   */
+  topic: Topic;
+
+  /**
+   * The subtopics which were archvied.
+   */
+  subtopics: TopicMap;
+}
+
+export interface UnarchiveSubtopicsEventData {
+  /**
+   * The topic in which the subtopics were unarchived.
+   */
+  topic: Topic;
+
+  /**
+   * The subtopics which were unarchvied.
    */
   subtopics: TopicMap;
 }

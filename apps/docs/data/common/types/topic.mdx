@@ -33,7 +33,13 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       name: 'subtopics',
       type: 'string[]',
       required: true,
-      description: 'The IDs of the topics inside the topic.',
+      description: 'The IDs of the (active) topics inside the topic.',
+    },
+    {
+      name: 'archivedSubtopics',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the archived topics inside the topic.',
     },
     {
       name: 'drops',

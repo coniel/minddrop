@@ -426,6 +426,60 @@ Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Top
 
 ]} />
 
+### archiveSubtopics
+
+Archives subtopics in a topic and dispatches a `topics:archive-subtopics` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to archive the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to archive.',
+    },
+  ]}
+/>
+
+### unarchiveSubtopics
+
+Unarchives subtopics in a topic and dispatches a `topics:unarchive-subtopics` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to unarchive the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to unarchive.',
+    },
+  ]}
+/>
+
 ### addDrops
 
 Adds drops to a topic, dispaches an `topics:add-drops` event and a `topics:update` event. Returns the updated topic.
@@ -516,7 +570,7 @@ Topics.moveDrops(core: Core, fromTopicId: string, toTopicId: string, dropIds: st
 
 ### archiveDrops
 
-Archives drops in a topic and dirspatches a `topics:archive-drops` event as well as a `topics:update` event. Returns the updated topic.
+Archives drops in a topic and dispatches a `topics:archive-drops` event as well as a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
@@ -543,7 +597,7 @@ Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
 
 ### unarchiveDrops
 
-Unarchives drops in a topic and dirspatches a `topics:unarchive-drops` event as well as a `topics:update` event. Returns the updated topic.
+Unarchives drops in a topic and dispatches a `topics:unarchive-drops` event as well as a `topics:update` event. Returns the updated topic.
 
 ```ts
 Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
@@ -901,9 +955,26 @@ See below the table for more details on the data passed by topic related events.
         'Dispatched when subtopics are removed from a topic.',
     },
     {
+      name: 'topics:archive-subtopics',
+      data: 'ArchiveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are archived inside a topic.',
+    },
+    {
+      name: 'topics:unarchive-subtopics',
+      data: 'UnarchiveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are unarchived inside a topic.',
+    },
+    {
       name: 'topics:add-drops',
       data: 'AddDropsEventData',
       description: 'Dispatched when drops are added to a topic.',
+    },
+    {
+      name: 'topics:remove-drops',
+      data: 'RemoveDropsEventData',
+      description: 'Dispatched when drops are removed from a topic.',
     },
     {
       name: 'topics:archive-drops',
@@ -916,11 +987,6 @@ See below the table for more details on the data passed by topic related events.
       data: 'UnarchiveDropsEventData',
       description:
         'Dispatched when drops inside a topic are unarchived.',
-    },
-    {
-      name: 'topics:remove-drops',
-      data: 'RemoveDropsEventData',
-      description: 'Dispatched when drops are removed from a topic.',
     },
     {
       name: 'topics:add-tags',
@@ -1072,6 +1138,46 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'TopicMap',
       required: true,
       description: 'The subtopics added to the topic.',
+    },
+  ]}
+/>
+
+#### ArchiveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description:
+        'The topic inside which the subtopics were archived.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The archived subtopics.',
+    },
+  ]}
+/>
+
+#### UnarchiveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description:
+        'The topic inside which the subtopics were unarchived.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The unarchived subtopics.',
     },
   ]}
 />

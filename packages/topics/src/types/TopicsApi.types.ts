@@ -186,6 +186,30 @@ export interface TopicsApi {
   removeSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
 
   /**
+   * Archives the specified subtopics in a topic and dispatches
+   * a `topics:archive-subtopics` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindSubtopic core instance.
+   * @param topicId The ID of the topic on which to archive the subtopics.
+   * @param subtopicIds The IDs of the subtopics to archive.
+   * @returns The updated topic.
+   */
+  archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+
+  /**
+   * Unarchives the specified subtopics in a topic and dispatches
+   * a `topics:unarchive-subtopics` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindSubtopic core instance.
+   * @param topicId The ID of the topic on which to unarchive the subtopics.
+   * @param subtopicIds The IDs of the subtopics to unarchive.
+   * @returns The updated topic.
+   */
+  unarchiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+
+  /**
    * Adds drops to a topic and dispatches a `topics:add-drops` event
    * and a `topics:update` event.
    *
@@ -220,6 +244,17 @@ export interface TopicsApi {
   ): void;
 
   /**
+   * Removes drops from a topic and dispatches a `topics:remove-drops` event
+   * and a `topics:update` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic from which to remove the drops.
+   * @param dropIds The IDs of the drops to remove.
+   * @returns The updated topic.
+   */
+  removeDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
    * Archives the specified drops in a topic and dispatches
    * a `topics:archive-drops` event.
    * Returns the updated topic.
@@ -242,17 +277,6 @@ export interface TopicsApi {
    * @returns The updated topic.
    */
   unarchiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
-
-  /**
-   * Removes drops from a topic and dispatches a `topics:remove-drops` event
-   * and a `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic from which to remove the drops.
-   * @param dropIds The IDs of the drops to remove.
-   * @returns The updated topic.
-   */
-  removeDrops(core: Core, topicId: string, dropIds: string[]): Topic;
 
   /**
    * Adds tags to a topic and dispatches a `topics:add-tags` event

@@ -16,9 +16,14 @@ export interface Topic {
   title: string;
 
   /**
-   * The IDs of the subtopics inside to the topic.
+   * The IDs of the (active) subtopics inside to the topic.
    */
   subtopics: string[];
+
+  /**
+   * The IDs of the archived subtopics inside to the topic.
+   */
+  archivedSubtopics: string[];
 
   /**
    * The IDs of the views belonging to the topic.
@@ -81,6 +86,7 @@ export interface TopicChanges {
   updatedAt: Date;
   title?: string;
   subtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  archivedSubtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   views?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   drops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   archivedDrops?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
