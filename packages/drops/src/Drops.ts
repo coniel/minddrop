@@ -23,6 +23,8 @@ import { createFromDataInsert } from './createFromDataInsert';
 import { insertData } from './insertData';
 import { renderDrop } from './renderDrop';
 import { duplicateDrops } from './duplicateDrops';
+import { addParentsToDrop } from './addParentsToDrop';
+import { removeParentsFromDrop } from './removeParentsFromDrop';
 
 export const Drops: DropsApi = {
   get,
@@ -38,6 +40,8 @@ export const Drops: DropsApi = {
   insertData,
   delete: deleteDrop,
   restore: restoreDrop,
+  addParents: addParentsToDrop,
+  removeParents: removeParentsFromDrop,
   addTags: addTagsToDrop,
   removeTags: removeTagsFromDrop,
   addFiles: addFilesToDrop,

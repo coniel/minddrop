@@ -1,7 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { DropConfigFilters } from '.';
 import { CreateDropData, Drop, DropMap, UpdateDropData } from './Drop.types';
 import { DropConfig, RegisteredDropConfig } from './DropConfig.types';
+import { DropConfigFilters } from './DropConfigFilters.types';
 import {
   RegisterDropTypeEvent,
   RegisterDropTypeEventCallback,
@@ -33,6 +33,10 @@ import {
   RemoveFilesEventCallback,
   ReplaceFilesEvent,
   ReplaceFilesEventCallback,
+  AddParentsEvent,
+  AddParentsEventCallback,
+  RemoveParentsEvent,
+  RemoveParentsEventCallback,
 } from './DropEvents.types';
 import { DropFilters } from './DropFilters.types';
 
@@ -199,6 +203,26 @@ export interface DropsApi {
   deletePermanently(core: Core, dropId: string): Drop;
 
   /**
+   * Adds parent IDs to a drop and dispatches a
+   * `drops:add-parents` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropId The ID of the drop to which to add the parents.
+   * @param parentIds The IDs of the parents to add.
+   */
+  addParents(core: Core, dropId: string, parentIds: string[]): Drop;
+
+  /**
+   * Removes parent IDs from a drop and dispatches a
+   * `drops:remove-parents` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropId The ID of the drop from which to remove the parents.
+   * @param parentIds The IDs of the parents to remove.
+   */
+  removeParents(core: Core, dropId: string, parentIds: string[]): Drop;
+
+  /**
    * Adds tags to a drop and dispatches a `drops:add-tags` event
    * and a `drops:update` event.
    *
@@ -360,6 +384,20 @@ export interface DropsApi {
     callback: PermanentlyDeleteDropEventCallback,
   ): void;
 
+  // Add drops:add-parents event listener
+  addEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  );
+
+  // Add drops:remove-parents event listener
+  addEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
+  );
+
   // Add drops:add-tags event listener
   addEventListener(
     core: Core,
@@ -468,6 +506,20 @@ export interface DropsApi {
     type: PermanentlyDeleteDropEvent,
     callback: PermanentlyDeleteDropEventCallback,
   ): void;
+
+  // Remove drops:add-parents event listener
+  removeEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  );
+
+  // Remove drops:remove-parents event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
+  );
 
   // Remove drops:add-tags event listener
   removeEventListener(

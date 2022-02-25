@@ -102,6 +102,7 @@ export interface DropChanges {
   color?: ContentColor | FieldValueDelete;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
+  parents?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
 }
 
 export type DropMap = Record<string, Drop>;

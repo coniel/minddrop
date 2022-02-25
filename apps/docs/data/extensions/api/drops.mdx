@@ -444,6 +444,59 @@ Drops.deletePermanently(core: Core, dropId: string): Drop
   ]}
 />
 
+### addParents
+
+Adds parent IDs to a drop and dispatches a `drops:add-parents` event and a `drops:update` event. Returns the updated drop.
+
+```ts
+Drops.addParents(core: Core, dropId: string, parentIds: string[]): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop to which to add the parents.',
+    },
+    {
+      name: 'parentIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the parents to add to the drop.',
+    },
+  ]}
+/>
+
+### removeParents
+
+Remove parent IDs from a drop and dispatches a `drops:remove-parents` event and a `drops:update` event. Returns the updated drop.
+
+```ts
+Drops.removeParents(core: Core, dropId: string, parentIds: string[]): Drop
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop from which to remove the parents.',
+    },
+    {
+      name: 'parentIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the parents to remove from the drop.',
+    },
+  ]}
+/>
+
 ### addTags
 
 Adds tags to a drop, dispaches an `drops:add-tags` event and a `drops:update` event. Returns the updated drop.
@@ -760,6 +813,16 @@ See below the table for more details on the data passed by drop related events.
       description: 'Dispatched when a drop is permanently deleted.',
     },
     {
+      name: 'drops:add-parents',
+      data: 'AddParentsEventData',
+      description: 'Dispatched when parents are added to a drop.',
+    },
+    {
+      name: 'drops:remove-parents',
+      data: 'RemoveParentsEventData',
+      description: 'Dispatched when parents are removed from a drop.',
+    },
+    {
       name: 'drops:add-tags',
       data: 'AddTagsEventData',
       description: 'Dispatched when tags are added to a drop.',
@@ -902,6 +965,46 @@ See the [Drop](/docs/extensions/types/drop) interface page.
   ]}
 />
 
+#### AddParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to which the parents were added.',
+    },
+    {
+      name: 'parents',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the parents which were added to the drop.',
+    },
+  ]}
+/>
+
+#### RemoveParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop from which the parents were removed.',
+    },
+    {
+      name: 'parents',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the parents which were removed from the drop.',
+    },
+  ]}
+/>
+
 #### AddTagsEventData
 
 <InterfaceTable
@@ -914,10 +1017,9 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'tags',
-      type: 'string[]',
+      type: 'TagMap',
       required: true,
-      description:
-        'The IDs of the tags which were added to the drop.',
+      description: 'The tags which were added to the drop.',
     },
   ]}
 />
@@ -934,10 +1036,9 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'tags',
-      type: 'string[]',
+      type: 'TagMap',
       required: true,
-      description:
-        'The IDs of the tags which were removed from the drop.',
+      description: 'The tags which were removed from the drop.',
     },
   ]}
 />
@@ -954,10 +1055,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'files',
-      type: 'string[]',
+      type: 'FileReferenceMap',
       required: true,
       description:
-        'The IDs of the files which were added to the drop.',
+        'The file references of the files which were added to the drop.',
     },
   ]}
 />
@@ -974,10 +1075,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'files',
-      type: 'string[]',
+      type: 'FileReferenceMap',
       required: true,
       description:
-        'The IDs of the files which were removed from the drop.',
+        'The files references of the files which were removed from the drop.',
     },
   ]}
 />
@@ -994,10 +1095,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'files',
-      type: 'string[]',
+      type: 'FileReferenceMap',
       required: true,
       description:
-        'The IDs of the files which were added to the drop.',
+        'The file references of the files which were added to the drop.',
     },
   ]}
 />

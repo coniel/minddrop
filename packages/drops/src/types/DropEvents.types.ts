@@ -11,6 +11,8 @@ export type UpdateDropEvent = 'drops:update';
 export type DeleteDropEvent = 'drops:delete';
 export type RestoreDropEvent = 'drops:restore';
 export type PermanentlyDeleteDropEvent = 'drops:delete-permanently';
+export type AddParentsEvent = 'drops:add-parents';
+export type RemoveParentsEvent = 'drops:remove-parents';
 export type AddTagsEvent = 'drops:add-tags';
 export type RemoveTagsEvent = 'drops:remove-tags';
 export type AddFilesEvent = 'drops:add-files';
@@ -48,6 +50,30 @@ export interface UpdateDropEventData {
    * The drop's files. Only set if files were added to the drop during the update.
    */
   files?: File[];
+}
+
+export interface AddParentsEventData {
+  /**
+   * The drop to which the prants were added.
+   */
+  drop: Drop;
+
+  /**
+   * The IDs of the parents added to the drop.
+   */
+  parents: string[];
+}
+
+export interface RemoveParentsEventData {
+  /**
+   * The drop from which the parents were removed.
+   */
+  drop: Drop;
+
+  /**
+   * The IDs of the parents which were removed from the drop.
+   */
+  parents: string[];
 }
 
 export interface AddTagsEventData {
@@ -142,6 +168,14 @@ export type RestoreDropEventCallback = EventListenerCallback<
 export type PermanentlyDeleteDropEventCallback = EventListenerCallback<
   PermanentlyDeleteDropEvent,
   PermanentlyDeleteDropEventData
+>;
+export type AddParentsEventCallback = EventListenerCallback<
+  AddParentsEvent,
+  AddParentsEventData
+>;
+export type RemoveParentsEventCallback = EventListenerCallback<
+  RemoveParentsEvent,
+  RemoveParentsEventData
 >;
 export type AddTagsEventCallback = EventListenerCallback<
   AddTagsEvent,
