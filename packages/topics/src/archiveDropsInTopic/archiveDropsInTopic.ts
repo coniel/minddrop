@@ -1,7 +1,9 @@
 import { Core } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
-import { Topic } from '../types';
+import { Views } from '@minddrop/views';
+import { getTopicView } from '../getTopicView';
+import { Topic, TopicViewInstance } from '../types';
 import { updateTopic } from '../updateTopic';
 
 /**
@@ -28,6 +30,20 @@ export function archiveDropsInTopic(
     drops: FieldValue.arrayRemove(dropIds),
     // Add drop IDs to 'archivedDrops'
     archivedDrops: FieldValue.arrayUnion(dropIds),
+  });
+
+  // Get the topic's view instances
+  const viewInstances = Views.getInstances<TopicViewInstance>(topic.views);
+
+  // Call onAddDrops on each of the topic's view instances
+  Object.values(viewInstances).forEach((viewInstance) => {
+    // Get the topic view
+    const view = getTopicView(viewInstance.view);
+
+    if (view.onRemoveDrops) {
+      // Call onRemoveDrops with removed drops
+      view.onRemoveDrops(core, viewInstance, drops);
+    }
   });
 
   // Dispatch 'topics:archive-drops' event

@@ -1,7 +1,15 @@
 import { Drops } from '@minddrop/drops';
 import { getTopic } from '../getTopic';
-import { setup, cleanup, core, tSixDrops } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  core,
+  tSixDrops,
+  topicViewColumnsConfig,
+} from '../test-utils';
+import { registerTopicView } from '../registerTopicView';
 import { archiveDropsInTopic } from './archiveDropsInTopic';
+import { createTopicViewInstance } from '../createTopicViewInstance';
 
 describe('archiveDropsInTopic', () => {
   beforeEach(setup);
@@ -51,5 +59,35 @@ describe('archiveDropsInTopic', () => {
 
     // Arhive the drops
     archiveDropsInTopic(core, tSixDrops.id, dropIds);
+  });
+
+  it("calls onRemoveDrops on the topic's view instances", () => {
+    const viewConfig = {
+      ...topicViewColumnsConfig,
+      id: 'on-create-view-test',
+      onRemoveDrops: jest.fn(),
+    };
+
+    // Register test topic view
+    registerTopicView(core, viewConfig);
+
+    // Archive 2 first drops in topic
+    const dropIds = tSixDrops.drops.slice(0, 2);
+
+    // Get the drops
+    const drops = Drops.get(dropIds);
+
+    // Create a test topic view instance
+    const instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
+
+    // Archive the drops
+    archiveDropsInTopic(core, tSixDrops.id, dropIds);
+
+    // Should call onRemoveDrops on the view instance
+    expect(viewConfig.onRemoveDrops).toHaveBeenCalledWith(
+      core,
+      instance,
+      drops,
+    );
   });
 });
