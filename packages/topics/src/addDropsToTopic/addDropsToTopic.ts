@@ -38,6 +38,13 @@ export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
     drops: FieldValue.arrayUnion(dropIds),
   });
 
+  // Adds the topic as a parent to the drops
+  Object.keys(drops).forEach((dropId) => {
+    const drop = Drops.addParents(core, dropId, [topicId]);
+    // Update the drop in the DropMap
+    drops[drop.id] = drop;
+  });
+
   // Get the topic's view instances
   const viewInstances = Views.getInstances<TopicViewInstance>(topic.views);
 
