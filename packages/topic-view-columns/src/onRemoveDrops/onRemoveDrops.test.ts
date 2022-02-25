@@ -33,9 +33,9 @@ describe('onRemoveDrops', () => {
     );
 
     expect(instance.columns).toEqual([
-      [colItemTextDrop1],
-      [colItemTextDrop2],
-      [colItemTextDrop4],
+      { id: 'column-0', items: [colItemTextDrop1] },
+      { id: 'column-1', items: [colItemTextDrop2] },
+      { id: 'column-2', items: [colItemTextDrop4] },
     ]);
   });
 
@@ -45,7 +45,10 @@ describe('onRemoveDrops', () => {
       UpdateTopicViewColumnsInstanceData,
       TopicViewColumnsInstance
     >(core, topicViewColumnsInstance.id, {
-      columns: FieldValue.arrayUnion([[], []]),
+      columns: FieldValue.arrayUnion([
+        { id: 'column-3', items: [] },
+        { id: 'column-4', items: [] },
+      ]),
     });
 
     // Remove drops
@@ -61,10 +64,10 @@ describe('onRemoveDrops', () => {
 
     // Should remove column from which drops were removed
     expect(instance.columns).toEqual([
-      [colItemTextDrop2],
-      [colItemTextDrop4],
-      [],
-      [],
+      { id: 'column-1', items: [colItemTextDrop2] },
+      { id: 'column-2', items: [colItemTextDrop4] },
+      { id: 'column-3', items: [] },
+      { id: 'column-4', items: [] },
     ]);
   });
 });

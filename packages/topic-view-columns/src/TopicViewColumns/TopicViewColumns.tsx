@@ -12,21 +12,18 @@ import { TopicView } from '@minddrop/app-ui';
 import { Views } from '@minddrop/views';
 import { useCore } from '@minddrop/core';
 import {
-  Columns,
   ColumnsAddDropsMetadata,
   CreateColumnMetadata,
+  TopicViewColumnsData,
   TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
 } from '../types';
 import { moveColumnItems } from '../moveColumnItems';
 import { moveItemsToNewColumn } from '../moveItemsToNewColumn';
 
-export interface TopicViewColumnsProps extends TopicViewInstance {
-  /**
-   * The column contents.
-   */
-  columns: Columns;
-}
+export interface TopicViewColumnsProps
+  extends TopicViewInstance,
+    TopicViewColumnsData {}
 
 export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
   const { topic: topicId, id: viewInstanceId, columns } = props;
@@ -185,7 +182,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
               <div className="indicator" />
             </div>
             <div className="column-content">
-              {column.map((item, dropIndex) =>
+              {column.items.map((item, dropIndex) =>
                 drops[item.id] ? (
                   <div key={`spacer-${item.id}`}>
                     <div
@@ -221,7 +218,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
                 onDragOver={(event) => handleDragEnter(event, columnIndex)}
                 onDragLeave={(event) => handleDragLeave(event)}
                 onDrop={(event) =>
-                  handleDrop(event, columnIndex, column.length)
+                  handleDrop(event, columnIndex, columns.length)
                 }
                 onClick={clearSelectedDrops}
               >

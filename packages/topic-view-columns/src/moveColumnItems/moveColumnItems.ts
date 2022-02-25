@@ -23,7 +23,7 @@ export function moveColumnItems(
   // Remove items from non target columns
   columns.forEach((column, index) => {
     if (index !== toColumn) {
-      updated[index] = columns[index].filter(
+      updated[index].items = columns[index].items.filter(
         (item) => !itemIds.includes(item.id),
       );
     }
@@ -31,15 +31,15 @@ export function moveColumnItems(
 
   // Split target column at insert index and remove moved
   // items from each half
-  const firstHalf = columns[toColumn]
+  const firstHalf = columns[toColumn].items
     .slice(0, toIndex)
     .filter((item) => !itemIds.includes(item.id));
-  const secondHalf = columns[toColumn]
+  const secondHalf = columns[toColumn].items
     .slice(toIndex)
     .filter((item) => !itemIds.includes(item.id));
 
   // Merge target columns halfs with inserted items in between
-  updated[toColumn] = [...firstHalf, ...items, ...secondHalf];
+  updated[toColumn].items = [...firstHalf, ...items, ...secondHalf];
 
   // Remove emptied columns
   updated = removeEmptiedColumns(columns, updated);

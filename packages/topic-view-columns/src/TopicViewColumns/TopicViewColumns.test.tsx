@@ -9,15 +9,16 @@ import { TopicViewColumnsInstance } from '../types';
 
 const { textDrop1 } = DROPS_TEST_DATA;
 
+const getViewInstance = () =>
+  Views.getInstance<TopicViewColumnsInstance>(topicViewColumnsInstance.id);
+
 describe('<TopicViewColumns />', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   const init = () => {
-    const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-      topicViewColumnsInstance.id,
-    );
+    const viewInstance = getViewInstance();
     const utils = render(<TopicViewColumns {...viewInstance} />);
 
     return utils;
@@ -30,20 +31,24 @@ describe('<TopicViewColumns />', () => {
   });
 
   it('inserts drop at end of column when data is dropped there', (done) => {
+    const { getByTestId } = init();
+
     Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
-      const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-        topicViewColumnsInstance.id,
-      );
+      // Get the updated view instance
+      const viewInstance = getViewInstance();
+      // Get the updated topic
       const topic = Topics.get(viewInstance.topic);
 
-      expect(viewInstance.columns[0].slice(-1)[0].id).toBe(drop.id);
+      // Should add drop to the end of 0
+      const { items } = viewInstance.columns[0];
+      expect(items.slice(-1)[0].id).toBe(drop.id);
+      // Should add drop to the topic
       expect(topic.drops.includes(drop.id)).toBeTruthy();
       done();
     });
 
-    const { getByTestId } = init();
-
     act(() => {
+      // Drop plain text data at the end of 0
       fireEvent.drop(getByTestId('column-end-0'), {
         dataTransfer: {
           types: ['text/plain'],
@@ -57,18 +62,21 @@ describe('<TopicViewColumns />', () => {
     const { getByTestId } = init();
 
     Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
-      const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-        topicViewColumnsInstance.id,
-      );
+      // Get updated view instance
+      const viewInstance = getViewInstance();
+      // Get updated topics
       const topic = Topics.get(viewInstance.topic);
 
-      expect(viewInstance.columns[1][1].id).toBe(drop.id);
+      // Should add drop to index 1 of 1
+      const { items } = viewInstance.columns[1];
+      expect(items[1].id).toBe(drop.id);
+      // Should add drop to topic
       expect(topic.drops.includes(drop.id)).toBeTruthy();
       done();
     });
 
     act(() => {
-      // Insert at column 2 between the first two drops
+      // Insert plain text data at column 1, index 1
       fireEvent.drop(getByTestId('spacer-1:1'), {
         dataTransfer: {
           types: ['text/plain'],
@@ -80,10 +88,11 @@ describe('<TopicViewColumns />', () => {
 
   it("moves drops when data insert action === 'sort'", () => {
     const { getByTestId } = init();
-    const movedDropId = topicViewColumnsInstance.columns[1][1].id;
+    // Move drop from 1, index 1
+    const movedDropId = topicViewColumnsInstance.columns[1].items[1].id;
 
     act(() => {
-      // Insert from col 1:1 to col 0:0 (between the first two drops)
+      // Insert to column 0, index 0
       fireEvent.drop(getByTestId('spacer-0:0'), {
         dataTransfer: {
           types: ['minddrop/action', 'minddrop/drops'],
@@ -101,12 +110,14 @@ describe('<TopicViewColumns />', () => {
       });
     });
 
-    const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-      topicViewColumnsInstance.id,
-    );
+    // Get the updated view instance
+    const viewInstance = getViewInstance();
 
-    expect(viewInstance.columns[0][0].id).toBe(movedDropId);
-    expect(viewInstance.columns[1][1]).not.toBeDefined();
+    // Should add drop to column 0, index 0
+    expect(viewInstance.columns[0].items[0].id).toBe(movedDropId);
+    // Should remove drop from 1, index 1
+    const movedDrop = Drops.get(movedDropId);
+    expect(viewInstance.columns[1].items[1]).not.toEqual(movedDrop);
   });
 
   describe('vertical drop zone', () => {
@@ -114,15 +125,17 @@ describe('<TopicViewColumns />', () => {
       const { getByTestId } = init();
 
       Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
-        const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-          topicViewColumnsInstance.id,
-        );
+        // Get the updated view instance
+        const viewInstance = getViewInstance();
+        // Get the updated topic
         const topic = Topics.get(viewInstance.topic);
 
+        // Should have an extra column
         expect(viewInstance.columns.length).toBe(
           topicViewColumnsInstance.columns.length + 1,
         );
-        expect(viewInstance.columns[1][0].id).toBe(drop.id);
+        //
+        expect(viewInstance.columns[1].items[0].id).toBe(drop.id);
         expect(topic.drops.includes(drop.id)).toBeTruthy();
         done();
       });
@@ -140,7 +153,7 @@ describe('<TopicViewColumns />', () => {
 
     it("moves drops into new column when data insert action === 'sort'", () => {
       const { getByTestId } = init();
-      const movedDropId = topicViewColumnsInstance.columns[2][0].id;
+      const movedDropId = topicViewColumnsInstance.columns[2].items[0].id;
 
       act(() => {
         // Insert from col 2:0 to new col 0
@@ -165,7 +178,7 @@ describe('<TopicViewColumns />', () => {
         topicViewColumnsInstance.id,
       );
 
-      expect(viewInstance.columns[0][0].id).toBe(movedDropId);
+      expect(viewInstance.columns[0].items[0].id).toBe(movedDropId);
     });
   });
 });

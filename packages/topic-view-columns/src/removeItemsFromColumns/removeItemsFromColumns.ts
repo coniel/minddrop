@@ -16,7 +16,7 @@ export function removeItemsFromColumns(
 
   // Loop through columns and filter out removed drop IDs
   clonedColumns.forEach((column, index) => {
-    clonedColumns[index] = columns[index].filter(
+    clonedColumns[index].items = columns[index].items.filter(
       (item) => !itemIds.includes(item.id),
     );
   });

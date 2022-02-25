@@ -14,11 +14,23 @@ export interface ColumnItem {
   id: string;
 }
 
-export type Columns = ColumnItem[][];
+export interface Column {
+  /**
+   * A universaliy unique ID.
+   */
+  id: string;
+
+  /**
+   * The column's contents.
+   */
+  items: ColumnItem[];
+}
+
+export type Columns = Column[];
 
 export interface TopicViewColumnsData {
   /**
-   * The columns, stored as an array of ColumnItem arrays.
+   * The columns;
    */
   columns: Columns;
 }

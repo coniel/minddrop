@@ -20,8 +20,8 @@ export const topicViewColumnsInstance: TopicViewColumnsInstance = {
   createdAt: new Date('01/01/2000'),
   updatedAt: new Date('01/01/2000'),
   columns: [
-    [colItemTextDrop1],
-    [colItemTextDrop2, colItemTextDrop3],
-    [colItemTextDrop4],
+    { id: 'column-0', items: [colItemTextDrop1] },
+    { id: 'column-1', items: [colItemTextDrop2, colItemTextDrop3] },
+    { id: 'column-2', items: [colItemTextDrop4] },
   ],
 };

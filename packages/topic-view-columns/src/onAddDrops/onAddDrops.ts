@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
+import { generateId } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { distributeItemsBetweenColumns } from '../distributeItemsBetweenColumns';
 import {
@@ -41,14 +42,14 @@ export function onAddDrops(
   } else if (metadata.action === 'insert-into-column') {
     // Merge into column at specified index
     const column = viewInstance.columns[metadata.column];
-    const updatedColumn = column
+    const updatedColumnItems = column.items
       .slice(0, metadata.index)
-      .concat(items, column.slice(metadata.index));
+      .concat(items, column.items.slice(metadata.index));
 
-    columns[metadata.column] = updatedColumn;
+    columns[metadata.column] = { ...column, items: updatedColumnItems };
   } else if (metadata.action === 'create-column') {
     // Insert items array in at specified column index to create a new column
-    columns.splice(metadata.column, 0, items);
+    columns.splice(metadata.column, 0, { id: generateId(), items });
   }
 
   // Update the instance

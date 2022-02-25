@@ -31,7 +31,7 @@ const insertIntoColumnMetadata = (
   action: 'insert-into-column',
   viewInstance: instanceId,
   column: 0,
-  index: topicViewColumnsInstance.columns[0].length,
+  index: topicViewColumnsInstance.columns[0].items.length,
   ...data,
 });
 
@@ -66,22 +66,22 @@ describe('onAddDrops', () => {
     const instance = getInstance();
 
     // Initial column drop counts are 0: 1, 1: 2, 2: 1
-    expect(instance.columns[0].length).toEqual(3);
-    expect(instance.columns[1].length).toEqual(2);
-    expect(instance.columns[2].length).toEqual(2);
+    expect(instance.columns[0].items.length).toEqual(3);
+    expect(instance.columns[1].items.length).toEqual(2);
+    expect(instance.columns[2].items.length).toEqual(2);
   });
 
   it('adds drops to the end of the columm', () => {
     call(
       insertIntoColumnMetadata({
         column: 2,
-        index: topicViewColumnsInstance.columns[2].length,
+        index: topicViewColumnsInstance.columns[2].items.length,
       }),
     );
 
     const instance = getInstance();
 
-    expect(instance.columns[2].slice(-3)).toEqual(addedItems);
+    expect(instance.columns[2].items.slice(-3)).toEqual(addedItems);
   });
 
   it('adds drops to the specified column index', () => {
@@ -90,7 +90,7 @@ describe('onAddDrops', () => {
     const instance = getInstance();
 
     // Original column 1 contains [colItemTextDrop2, colItemTextDrop3]
-    expect(instance.columns[1]).toEqual([
+    expect(instance.columns[1].items).toEqual([
       colItemTextDrop2,
       ...addedItems,
       colItemTextDrop3,
@@ -103,7 +103,7 @@ describe('onAddDrops', () => {
     const instance = getInstance();
 
     expect(instance.columns.length).toBe(4);
-    expect(instance.columns[1]).toEqual(addedItems);
+    expect(instance.columns[1].items).toEqual(addedItems);
   });
 
   it('ignores metadata if metadata.viewInstance !== viewInstance.id', () => {
@@ -114,8 +114,8 @@ describe('onAddDrops', () => {
     const instance = getInstance();
 
     // Initial column drop counts are 0: 1, 1: 2, 2: 1
-    expect(instance.columns[0].length).toEqual(3);
-    expect(instance.columns[1].length).toEqual(2);
-    expect(instance.columns[2].length).toEqual(2);
+    expect(instance.columns[0].items.length).toEqual(3);
+    expect(instance.columns[1].items.length).toEqual(2);
+    expect(instance.columns[2].items.length).toEqual(2);
   });
 });

@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Topic } from '@minddrop/topics';
+import { generateId } from '@minddrop/utils';
 import { ColumnItem, Columns, TopicViewColumnsData } from '../types';
 
 /**
@@ -17,7 +18,7 @@ export function onCreate(core: Core, topic: Topic): TopicViewColumnsData {
       .splice(0, Math.ceil(topic.drops.length / i))
       .map((dropId) => ({ type: 'drop', id: dropId }));
 
-    columns.push(items);
+    columns.push({ id: generateId(), items });
   }
 
   return {
