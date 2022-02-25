@@ -155,9 +155,7 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     const selectedDrops = App.getSelectedDrops();
 
     // Archive selected drops
-    Object.keys(selectedDrops).forEach((dropId) => {
-      Drops.archive(core, dropId);
-    });
+    Topics.archiveDrops(core, topic, Object.keys(selectedDrops));
 
     // Unselect the drops
     App.clearSelectedDrops(core);

@@ -3,10 +3,11 @@ import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { i18n } from '@minddrop/i18n';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
-import { cleanup, core, setup } from '../../test-utils';
-import { DropMenu, DropMenuProps } from './DropMenu';
 import { DropdownMenu, DropdownMenuContent } from '@minddrop/ui';
 import { App } from '@minddrop/app';
+import { isSubsetOf } from '@minddrop/utils';
+import { cleanup, core, setup } from '../../test-utils';
+import { DropMenu, DropMenuProps } from './DropMenu';
 
 const { tSailing, tUntitled } = TOPICS_TEST_DATA;
 const { textDrop1 } = DROPS_TEST_DATA;
@@ -212,7 +213,7 @@ describe('<DropMenu />', () => {
   });
 
   describe('Archive', () => {
-    it('archives the selected drops', () => {
+    it('archives the selected drops in the topic', () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
       // Select both drops
@@ -225,12 +226,10 @@ describe('<DropMenu />', () => {
         fireEvent.click(getByItemLabel('archive'));
       });
 
-      // Get the updated drops
-      const archived1 = Drops.get(drop.id);
-      const archived2 = Drops.get(drop2.id);
-      // Both should be archived
-      expect(archived1.archived).toBe(true);
-      expect(archived2.archived).toBe(true);
+      // Get the updated topic
+      const topic = Topics.get(tUntitled.id);
+      // Both drops should be archived
+      expect(isSubsetOf([drop.id, drop2.id], topic.archivedDrops)).toBeTruthy();
       // Drops should be unselected
       expect(App.getSelectedDrops()).toEqual({});
     });

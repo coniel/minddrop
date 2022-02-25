@@ -34,9 +34,7 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
       if (event.key === 'Delete' || event.key === 'Backspace') {
         if (event.shiftKey) {
           // Archive selected drops is Shift key was pressed
-          Object.keys(selectedDrops).forEach((dropId) => {
-            Drops.archive(core, dropId);
-          });
+          Topics.archiveDrops(core, topicId, Object.keys(selectedDrops));
         } else {
           // Delete selected drops
           Object.keys(selectedDrops).forEach((dropId) => {

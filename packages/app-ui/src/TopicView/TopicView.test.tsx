@@ -95,11 +95,14 @@ describe('<TopicView />', () => {
       fireEvent.keyDown(document, { key: 'Delete', shiftKey: true });
     });
 
+    // Get the updated topic
+    const topic = Topics.get(tSixDropsView.topic);
     // Get the drop
     const drop = Drops.get(textDrop1.id);
-    // Should be archived
-    expect(drop.archived).toBe(true);
-    // Should not be deleted
+
+    // Drop should be archived in the topic
+    expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
+    // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
   });
 
@@ -116,11 +119,14 @@ describe('<TopicView />', () => {
       fireEvent.keyDown(document, { key: 'Backspace', shiftKey: true });
     });
 
+    // Get the updated topic
+    const topic = Topics.get(tSixDropsView.topic);
     // Get the drop
     const drop = Drops.get(textDrop1.id);
-    // Should be archived
-    expect(drop.archived).toBe(true);
-    // Should not be deleted
+
+    // Drop should be archived in the topic
+    expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
+    // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
   });
 
