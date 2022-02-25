@@ -36,7 +36,7 @@ const update = {
 Merges items into an array or creates the array if it does not exist. Does not merge in items which are already present in the existing array.
 
 ```ts
-FieldValue.arrayUnion(values: any[]): FieldValueArrayUnion
+FieldValue.arrayUnion<T>(values: T[]): FieldValueArrayUnion
 ```
 
 #### Example
@@ -52,7 +52,7 @@ const update = {
 Removes items from an array.
 
 ```ts
-FieldValue.arrayRemove(values: any[]): FieldValueArrayRemove
+FieldValue.arrayRemove<T>(values: T[]): FieldValueArrayRemove
 ```
 
 #### Example
@@ -60,6 +60,22 @@ FieldValue.arrayRemove(values: any[]): FieldValueArrayRemove
 ```ts
 const update = {
   someArray: FieldValue.arrayRemove([1, 2]),
+};
+```
+
+### arrayFilter
+
+Filters an array.
+
+```ts
+FieldValue.arrayFilter<T>(callback: (item: T) => boolean): FieldValueArrayFilter
+```
+
+#### Example
+
+```ts
+const update = {
+  someArray: FieldValue.arrayFilter((item) => item.id !== 'some-id'),
 };
 ```
 

@@ -41,4 +41,14 @@ describe('applyFieldValues', () => {
 
     expect(result.field.length).toBe(3);
   });
+
+  it('handles FieldValue.arrayFilter', () => {
+    const object = { field: [{ id: 'id-1' }, { id: 'id-2' }] };
+    const changes = {
+      field: FieldValue.arrayFilter((item) => item.id !== 'id-1'),
+    };
+    const result = applyFieldValues(object, changes);
+
+    expect(result.field).toEqual([{ id: 'id-2' }]);
+  });
 });
