@@ -37,8 +37,45 @@ export function onAddDrops(
   let columns: Columns = JSON.parse(JSON.stringify(viewInstance.columns));
 
   if (ignoreMetadata) {
-    // Distribute drops between the columns
-    columns = distributeItemsBetweenColumns(viewInstance.columns, items);
+    // Create an array containing all of the columns item IDs
+    const allDropIds = viewInstance.columns.reduce(
+      (ids, columns) => [...ids, ...columns.items.map((item) => item.id)],
+      [],
+    );
+    // Check the 'duplicatedFrom' property of all added drops
+    // against the list of existing drop IDs. If every added
+    // drop was duplicated from an existing drop, all added
+    // drops are duplicates.
+    const allDuplicates = Object.values(drops).reduce(
+      (allDuplicates, drop) =>
+        allDropIds.includes(drop.duplicatedFrom) ? allDuplicates : false,
+      true,
+    );
+
+    // If all drops are duplicates, place added drops directly below their originals
+    if (allDuplicates) {
+      columns = columns.map((column) => ({
+        ...column,
+        // Loop through the column's items
+        items: column.items.reduce((columnItems, item) => {
+          // Check for added duplicate drop
+          const duplicate = Object.values(drops).find(
+            (drop) => drop.duplicatedFrom === item.id,
+          );
+
+          // If it has an added duplicate drop, insert it directly below
+          if (duplicate) {
+            return [...columnItems, item, { id: duplicate.id, type: 'drop' }];
+          }
+
+          // If there is not duplicate drop, do nothing
+          return [...columnItems, item];
+        }, []),
+      }));
+    } else {
+      // Distribute drops between the columns
+      columns = distributeItemsBetweenColumns(viewInstance.columns, items);
+    }
   } else if (metadata.action === 'insert-into-column') {
     // Merge into column at specified index
     const column = viewInstance.columns[metadata.column];

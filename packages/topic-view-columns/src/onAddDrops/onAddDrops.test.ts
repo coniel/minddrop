@@ -1,4 +1,4 @@
-import { DropMap, DROPS_TEST_DATA } from '@minddrop/drops';
+import { DropMap, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { mapById } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import {
@@ -60,7 +60,45 @@ describe('onAddDrops', () => {
 
   afterEach(cleanup);
 
-  it('distributes drops between columns if metadata is not present', () => {
+  it.only('places duplciated drops below their originals', () => {
+    // Duplicate drops in column 1
+    const dropIds = topicViewColumnsInstance.columns[1].items.map(
+      (item) => item.id,
+    );
+    const duplicateDrops = Drops.duplicate(core, dropIds);
+
+    // Add the duplicate drops
+    onAddDrops(core, topicViewColumnsInstance, duplicateDrops);
+
+    // Get the updated view instance
+    const instance = getInstance();
+
+    // Column 0 and 2 should be equal original state
+    expect(instance.columns[0].items).toEqual(
+      topicViewColumnsInstance.columns[0].items,
+    );
+    expect(instance.columns[2].items).toEqual(
+      topicViewColumnsInstance.columns[2].items,
+    );
+    // Original drop Is
+    const [dropId0, dropId1] = dropIds;
+    // Get matching duplicate drops
+    const duplicateDrop0 = Object.values(duplicateDrops).find(
+      (drop) => drop.duplicatedFrom === dropId0,
+    );
+    const duplicateDrop1 = Object.values(duplicateDrops).find(
+      (drop) => drop.duplicatedFrom === dropId1,
+    );
+    // Duplicate drops should be placed directly below their original
+    expect(instance.columns[1].items).toEqual([
+      { id: dropId0, type: 'drop' },
+      { id: duplicateDrop0.id, type: 'drop' },
+      { id: dropId1, type: 'drop' },
+      { id: duplicateDrop1.id, type: 'drop' },
+    ]);
+  });
+
+  it('distributes drops between columns if metadata is not present and is not duplication', () => {
     call();
 
     const instance = getInstance();
