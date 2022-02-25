@@ -6,6 +6,7 @@ import {
   core,
   tSixDrops,
   topicViewColumnsConfig,
+  topicViewWithoutCallbacks,
 } from '../test-utils';
 import { registerTopicView } from '../registerTopicView';
 import { archiveDropsInTopic } from './archiveDropsInTopic';
@@ -77,8 +78,10 @@ describe('archiveDropsInTopic', () => {
     // Get the drops
     const drops = Drops.get(dropIds);
 
-    // Create a test topic view instance
+    // Create an instance of test topic view
     const instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
+    // Create an instance of a topic view with no onRemoveDrops callback
+    createTopicViewInstance(core, tSixDrops.id, topicViewWithoutCallbacks.id);
 
     // Archive the drops
     archiveDropsInTopic(core, tSixDrops.id, dropIds);
