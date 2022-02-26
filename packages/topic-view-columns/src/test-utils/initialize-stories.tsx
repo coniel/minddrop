@@ -9,8 +9,9 @@ import { Drop } from '@minddrop/ui';
 import { Extensions, EXTENSIONS_TEST_DATA } from '@minddrop/extensions';
 
 const { topicExtension } = EXTENSIONS_TEST_DATA;
-const { topics } = TOPICS_TEST_DATA;
-const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
+const { topics, tSixDrops } = TOPICS_TEST_DATA;
+const { dropTypeConfigs, textDrop1, textDrop2, textDrop3, textDrop4 } =
+  DROPS_TEST_DATA;
 
 // Initialize core instances
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
@@ -37,7 +38,12 @@ Extensions.register(core, {
 });
 
 // Load test drops into drops store
-Drops.load(core, drops);
+Drops.load(core, [
+  { ...textDrop1, parents: [{ type: 'topic', id: tSixDrops.id }] },
+  { ...textDrop2, parents: [{ type: 'topic', id: tSixDrops.id }] },
+  { ...textDrop3, parents: [{ type: 'topic', id: tSixDrops.id }] },
+  { ...textDrop4, parents: [{ type: 'topic', id: tSixDrops.id }] },
+]);
 
 // Load test topics into topics store
 Topics.load(topicsCore, topics);
