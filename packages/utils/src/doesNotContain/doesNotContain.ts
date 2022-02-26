@@ -9,7 +9,9 @@ type ComparisonItem =
 
 /**
  * Checks that an array does not contain any of the items
- * in another array.
+ * in another array. Supports items of type: string,
+ * number, null, boolean, and objects containing the
+ * above types.
  *
  * @param haystack The array against which to check for items.
  * @param needles The array of items to check.
