@@ -5,7 +5,9 @@ import { act, renderHook } from '@minddrop/test-utils';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup, core } from '../test-utils';
 import { VIEWS_TEST_DATA } from '@minddrop/views';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
 
+const { rootTopicIds } = TOPICS_TEST_DATA;
 const { viewInstance1, instanceView, viewInstance2, staticView } =
   VIEWS_TEST_DATA;
 
@@ -18,6 +20,16 @@ describe('app-extension', () => {
   });
 
   describe('onRun', () => {
+    it('loads the root topics from the global persistent store', () => {
+      useAppStore.getState().clear();
+
+      onRun(core);
+
+      expect(App.getRootTopics().map((topic) => topic.id)).toEqual(
+        rootTopicIds,
+      );
+    });
+
     it('loads current view from the local persistent store', () => {
       PersistentStore.setLocalValue(core, 'view', staticView.id);
       PersistentStore.setLocalValue(core, 'viewInstance', null);

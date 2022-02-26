@@ -18,10 +18,8 @@ Hooks and methods for retrieving and managing topics.
 Returns root topics as an array ordered according their order of appearance in the app sidebar.
 
 ```ts
-useRootTopics(core: Core): Topic[]
+useRootTopics(): Topic[]
 ```
-
-<ArgsTable core />
 
 ### useSelectedTopics
 
@@ -208,10 +206,8 @@ App.removeRootTopics(core: Core, topicIds: string[]): void
 Returns root topics as an array ordered according their order of appearance in the app sidebar.
 
 ```ts
-App.getRootTopics(core: Core): Topic[]
+App.getRootTopics(): Topic[]
 ```
-
-<ArgsTable core />
 
 ### permanentlyDeleteTopic
 
@@ -846,13 +842,13 @@ See below the table for more details on the data passed by app related events.
       description: 'Dispatched when a view is opened.',
     },
     {
-      name: 'app:add-topics',
+      name: 'app:add-root-topics',
       data: 'TopicMap',
       description:
         'Dispatched when topics are added to the root level.',
     },
     {
-      name: 'app:remove-topics',
+      name: 'app:remove-root-topics',
       data: 'TopicMap',
       description:
         'Dispatched when topics are removed from the root level.',

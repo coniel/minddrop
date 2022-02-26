@@ -13,7 +13,7 @@ const { rootTopicIds, topicViewConfigs, topicViewInstances, topics } =
 const { viewInstances, viewConfigs } = VIEWS_TEST_DATA;
 const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
 
-export const globalPersistentStore = { topics: rootTopicIds };
+export const globalPersistentStore = { rootTopics: rootTopicIds };
 export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
 export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
@@ -40,6 +40,9 @@ export function setup() {
 
     // Load topics
     Topics.load(core, topics);
+
+    // Set root topics
+    useAppStore.getState().addRootTopics(rootTopicIds);
 
     // Register extensions
     extensions.forEach((extension) => Extensions.register(core, extension));

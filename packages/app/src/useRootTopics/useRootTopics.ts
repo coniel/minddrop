@@ -1,19 +1,15 @@
-import { useGlobalPersistentStoreValue } from '@minddrop/persistent-store';
 import { Topic, Topics } from '@minddrop/topics';
-import { useAppCore } from '../utils';
+import { useAppStore } from '../useAppStore';
 
 /**
  * Returns root topics in the order they appear in
  * the sidebar.
  *
- * @param core A MindDrop core instance.
  * @returns Root topics as an ordered array.
  */
 export function useRootTopics(): Topic[] {
-  const core = useAppCore();
-
   // Get root topic IDs
-  const rootTopics = useGlobalPersistentStoreValue(core, 'topics', []);
+  const { rootTopics } = useAppStore();
 
   // Get the topics
   const topics = Topics.get(rootTopics);

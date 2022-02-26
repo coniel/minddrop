@@ -4,12 +4,23 @@ import shallow from 'zustand/shallow';
 import { AppStore } from '../types';
 
 export const useAppStore = createStore<AppStore>((set) => ({
+  rootTopics: [],
   view: 'app:home',
   viewInstance: null,
   uiExtensions: [],
   selectedDrops: [],
   selectedTopics: [],
   draggedData: { drops: [], topics: [] },
+
+  addRootTopics: (topicIds) =>
+    set((state) => ({ rootTopics: [...state.rootTopics, ...topicIds] })),
+
+  removeRootTopics: (topicIds) =>
+    set((state) => ({
+      rootTopics: state.rootTopics.filter(
+        (topicId) => !topicIds.includes(topicId),
+      ),
+    })),
 
   setView: (view) => set({ view }),
 
@@ -76,6 +87,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
 
   clear: () =>
     set({
+      rootTopics: [],
       uiExtensions: [],
       selectedDrops: [],
       selectedTopics: [],

@@ -5,6 +5,11 @@ import { App } from '../App';
 import { OpenViewEvent, OpenViewEventData } from '../types';
 
 export function onRun(core: Core) {
+  // Get root topics from the global persistent store
+  const rootTopics = PersistentStore.getGlobalValue(core, 'rootTopics', []);
+  // Load root topics into app store
+  useAppStore.getState().addRootTopics(rootTopics);
+
   const viewId = PersistentStore.getLocalValue<string>(
     core,
     'view',

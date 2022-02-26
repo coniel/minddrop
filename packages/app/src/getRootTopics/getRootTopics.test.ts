@@ -1,5 +1,5 @@
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import { setup, cleanup, core } from '../test-utils';
+import { setup, cleanup } from '../test-utils';
 import { getRootTopics } from './getRootTopics';
 
 const { rootTopicIds } = TOPICS_TEST_DATA;
@@ -10,7 +10,7 @@ describe('getRootTopics', () => {
   afterEach(cleanup);
 
   it('returns the root topics in order', () => {
-    const rootTopics = getRootTopics(core);
+    const rootTopics = getRootTopics();
 
     expect(rootTopics.length).toEqual(rootTopicIds.length);
     rootTopics.forEach((topic, index) => {

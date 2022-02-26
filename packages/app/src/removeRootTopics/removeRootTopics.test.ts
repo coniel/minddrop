@@ -5,20 +5,21 @@ import {
   useGlobalPersistentStoreValue,
 } from '@minddrop/persistent-store';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import { addRootTopics } from './addRootTopics';
+import { removeRootTopics } from './removeRootTopics';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup } from '../test-utils';
-import { contains } from '@minddrop/utils';
+import { doesNotContain } from '@minddrop/utils';
+import { addRootTopics } from '../addRootTopics';
 
 const { tSailing, tAnchoring, tNavigation } = TOPICS_TEST_DATA;
 
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
-describe('addRootTopics', () => {
+describe('removeRootTopics', () => {
   beforeEach(() => {
     setup();
     act(() => {
-      PersistentStore.setGlobalValue(core, 'topics', [tSailing.id]);
+      addRootTopics(core, [tSailing.id, tAnchoring.id, tNavigation.id]);
     });
   });
 
@@ -29,35 +30,36 @@ describe('addRootTopics', () => {
     });
   });
 
-  it('adds topic IDs to the app store', () => {
+  it('removes topic IDs from the app store', () => {
     const { result } = renderHook(() => useAppStore());
 
     act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
+      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
 
     expect(
-      contains(result.current.rootTopics, [tAnchoring.id, tNavigation.id]),
+      doesNotContain(result.current.rootTopics, [
+        tAnchoring.id,
+        tNavigation.id,
+      ]),
     ).toBeTruthy();
   });
 
-  it('adds topic IDs to the persistent store', () => {
+  it('removes topic IDs from the persistent store', () => {
     const { result } = renderHook(() =>
       useGlobalPersistentStoreValue(core, 'topics'),
     );
 
     act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
+      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
 
-    expect(result.current).toEqual([
-      tSailing.id,
-      tAnchoring.id,
-      tNavigation.id,
-    ]);
+    expect(
+      doesNotContain(result.current, [tAnchoring.id, tNavigation.id]),
+    ).toBeTruthy();
   });
 
-  it("dispatches a 'app:add-root-topics' event", (done) => {
+  it("dispatches a 'app:remove-root-topics' event", (done) => {
     function callback(payload) {
       expect(payload.data).toEqual({
         [tAnchoring.id]: tAnchoring,
@@ -66,10 +68,10 @@ describe('addRootTopics', () => {
       done();
     }
 
-    core.addEventListener('app:add-root-topics', callback);
+    core.addEventListener('app:remove-root-topics', callback);
 
     act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
+      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
   });
 });

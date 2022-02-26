@@ -37,6 +37,27 @@ describe('useAppStore', () => {
     });
   });
 
+  it('adds root topics', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.addRootTopics(['topic-1', 'topic-2']);
+    });
+
+    expect(result.current.rootTopics).toEqual(['topic-1', 'topic-2']);
+  });
+
+  it('removes root topics', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.addRootTopics(['topic-1', 'topic-2', 'topic-3']);
+      result.current.removeRootTopics(['topic-1', 'topic-2']);
+    });
+
+    expect(result.current.rootTopics).toEqual(['topic-3']);
+  });
+
   it('sets the view', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
@@ -61,6 +82,7 @@ describe('useAppStore', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
+      result.current.addRootTopics(['topic-id']);
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
       result.current.addSelectedDrops(['drop-id']);
@@ -74,6 +96,7 @@ describe('useAppStore', () => {
       result.current.clear();
     });
 
+    expect(result.current.rootTopics.length).toBe(0);
     expect(result.current.uiExtensions.length).toBe(0);
     expect(result.current.selectedDrops.length).toBe(0);
     expect(result.current.selectedTopics.length).toBe(0);

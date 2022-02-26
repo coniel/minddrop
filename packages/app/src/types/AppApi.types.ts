@@ -140,19 +140,27 @@ export interface AppApi {
    * Returns root topics in the order they appear in
    * the sidebar.
    *
-   * @param core A MindDrop core instance.
    * @returns Root topics as an ordered array.
    */
-  getRootTopics(core: Core): Topic[];
+  getRootTopics(): Topic[];
 
   /**
    * Adds topics to the root level and dispaches an
    * `app:add-root-topics` event.
    *
    * @param core A MindDrop core instance.
-   * @param topicIds The IDs of the topics to be added to the root level.
+   * @param topicIds The IDs of the topics to add to the root level.
    */
   addRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Removes topics from the root level and dispaches an
+   * `app:remove-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to remove from the root level.
+   */
+  removeRootTopics(core: Core, topicIds: string[]): void;
 
   /**
    * Opens a topic's view.

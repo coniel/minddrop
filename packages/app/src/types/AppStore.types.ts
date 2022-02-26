@@ -15,6 +15,11 @@ export interface DraggedData {
 
 export interface AppStore {
   /**
+   * The IDs of the root level topics.
+   */
+  rootTopics: string[];
+
+  /**
    * The ID of the currently open view.
    */
   view: string;
@@ -46,6 +51,20 @@ export interface AppStore {
    * Data which is currently being dragged.
    */
   draggedData: DraggedData;
+
+  /**
+   * Adds topics to the root topics list.
+   *
+   * @param topicIds The IDs of the root topics to add.
+   */
+  addRootTopics(topicIds: string[]): void;
+
+  /**
+   * Removes topics from the root topics list.
+   *
+   * @param topicIds The IDs oof the topics to remove.
+   */
+  removeRootTopics(topicIds: string[]): void;
 
   /**
    * Sets the ID of the currently open view.
