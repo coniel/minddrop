@@ -66,9 +66,32 @@ export async function insertDataIntoTopic<
     return true;
   }
 
-  if (action === 'cut' || action === 'add') {
+  if (action === 'add') {
     // Adds drops to the topic
     Topics.addDrops(core, topicId, data.drops, metadata);
+
+    return true;
+  }
+
+  if (action === 'cut') {
+    // Get the topic
+    const topic = Topics.get(topicId);
+    // Get drops already in the topic
+    const duplicateDropIds = data.drops.filter((id) =>
+      topic.drops.includes(id),
+    );
+    // Get the drops not in the topic
+    let addDropIds = data.drops.filter((id) => !topic.drops.includes(id));
+
+    if (duplicateDropIds.length) {
+      // Duplicate the drops already in the topic
+      const drops = Drops.duplicate(core, duplicateDropIds);
+      // Add duplicated drops to list of drops to add to the topic
+      addDropIds = addDropIds.concat(Object.keys(drops));
+    }
+
+    // Adds drops to the topic
+    Topics.addDrops(core, topicId, addDropIds, metadata);
 
     return true;
   }

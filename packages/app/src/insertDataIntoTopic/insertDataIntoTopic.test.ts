@@ -165,6 +165,25 @@ describe('insertData', () => {
 
   describe("action === 'cut'", () => {
     it('adds drops to the topic', async () => {
+      const addDrops = jest.spyOn(Topics, 'addDrops');
+
+      // Add textDrop1 to the topic
+      Topics.addDrops(core, tEmpty.id, [textDrop1.id]);
+
+      // Insert the cut data into the topic
+      await insertDataIntoTopic(core, tEmpty.id, cutDropsDataInsert, metadata);
+
+      // Adds textDrop2 as is
+      expect(addDrops.mock.calls[1][2].includes(textDrop2.id)).toBeTruthy();
+      // Adds a duplicate of textDrop1
+      const [duplicateDropId] = addDrops.mock.calls[1][2].filter(
+        (id) => id !== textDrop2.id,
+      );
+      const duplicateDrop = Drops.get(duplicateDropId);
+      expect(duplicateDrop.duplicatedFrom).toBe(textDrop1.id);
+    });
+
+    it('duplicates drops which are already in the topic', async () => {
       jest.spyOn(Topics, 'addDrops');
 
       await insertDataIntoTopic(core, tEmpty.id, cutDropsDataInsert, metadata);
