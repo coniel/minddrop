@@ -62,6 +62,8 @@ describe('<TopicView />', () => {
     const drop = Drops.get(textDrop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
+    // Should unselect drops
+    expect(App.getSelectedDrops()).toEqual({});
   });
 
   it('deletes selected drops on Backspace keydown', () => {
@@ -81,6 +83,8 @@ describe('<TopicView />', () => {
     const drop = Drops.get(textDrop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
+    // Should unselect drops
+    expect(App.getSelectedDrops()).toEqual({});
   });
 
   it('archives selected drops on Shift+Delete keydown', () => {
@@ -105,6 +109,8 @@ describe('<TopicView />', () => {
     expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
+    // Should unselect drops
+    expect(App.getSelectedDrops()).toEqual({});
   });
 
   it('archives selected drops on Shift+Backspace keydown', () => {
@@ -129,6 +135,8 @@ describe('<TopicView />', () => {
     expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
+    // Should unselect drops
+    expect(App.getSelectedDrops()).toEqual({});
   });
 
   it('adds selected drops and action to clipboardData on copy', () => {

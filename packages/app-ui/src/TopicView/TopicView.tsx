@@ -41,6 +41,9 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
             Drops.delete(core, dropId);
           });
         }
+
+        // Unselect drops
+        App.clearSelectedDrops(core);
       } else if (['D', 'd'].includes(event.key) && event.metaKey) {
         event.preventDefault();
 
