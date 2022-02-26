@@ -1,5 +1,7 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
+import { getDrop } from '../getDrop';
+import { restoreDrop } from '../restoreDrop';
 import { Drop, DropParentReference } from '../types';
 import { updateDrop } from '../updateDrop';
 
@@ -16,10 +18,22 @@ export function addParentsToDrop(
   dropId: string,
   parentReferences: DropParentReference[],
 ): Drop {
-  // Add new parent references to the drop
-  const drop = updateDrop(core, dropId, {
-    parents: FieldValue.arrayUnion(parentReferences),
-  });
+  // Get the drop
+  let drop = getDrop(dropId);
+
+  if (drop.deleted) {
+    // Restore the drop if deleted
+    restoreDrop(core, drop.id);
+    // Replace old parents with new ones
+    drop = updateDrop(core, dropId, {
+      parents: parentReferences,
+    });
+  } else {
+    // Add new parent references to the drop
+    drop = updateDrop(core, dropId, {
+      parents: FieldValue.arrayUnion(parentReferences),
+    });
+  }
 
   // Dispatch 'drops:add-parents' event
   core.dispatch('drops:add-parents', { drop, parents: parentReferences });
