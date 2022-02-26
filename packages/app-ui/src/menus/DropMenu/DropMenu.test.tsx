@@ -5,7 +5,7 @@ import { act, fireEvent, render } from '@minddrop/test-utils';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { DropdownMenu, DropdownMenuContent } from '@minddrop/ui';
 import { App } from '@minddrop/app';
-import { isSubset } from '@minddrop/utils';
+import { contains } from '@minddrop/utils';
 import { cleanup, core, setup } from '../../test-utils';
 import { DropMenu, DropMenuProps } from './DropMenu';
 
@@ -229,7 +229,7 @@ describe('<DropMenu />', () => {
       // Get the updated topic
       const topic = Topics.get(tUntitled.id);
       // Both drops should be archived
-      expect(isSubset([drop.id, drop2.id], topic.archivedDrops)).toBeTruthy();
+      expect(contains(topic.archivedDrops, [drop.id, drop2.id])).toBeTruthy();
       // Drops should be unselected
       expect(App.getSelectedDrops()).toEqual({});
     });
