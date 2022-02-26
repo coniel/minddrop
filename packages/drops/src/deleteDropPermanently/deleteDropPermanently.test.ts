@@ -1,9 +1,11 @@
-import { act, renderHook } from '@minddrop/test-utils';
+import { act, renderHook, textFile } from '@minddrop/test-utils';
 import { deleteDropPermanently } from './deleteDropPermanently';
 import { Drop } from '../types';
 import { createDrop } from '../createDrop';
+import { addFilesToDrop } from '../addFilesToDrop';
 import { useAllDrops } from '../useAllDrops';
 import { cleanup, core, setup } from '../test-utils';
+import { Files } from '@minddrop/files';
 
 describe('deleteDrop', () => {
   beforeEach(setup);
@@ -47,5 +49,24 @@ describe('deleteDrop', () => {
       drop = createDrop(core, { type: 'text' });
       deleteDropPermanently(core, drop.id);
     });
+  });
+
+  it('removes the drop from attached file referenes', async () => {
+    // Create a drop
+    const drop = createDrop(core, { type: 'text' });
+    // Create a file reference
+    let file = await Files.create(core, textFile, ['attachment-id']);
+
+    // Add the file reference to the drop
+    addFilesToDrop(core, drop.id, [file.id]);
+
+    // Permanently delete the drop
+    deleteDropPermanently(core, drop.id);
+
+    // Get the updated file reference
+    file = Files.get(file.id);
+
+    // Should remove drop ID from file reference
+    expect(file.attachedTo.includes(drop.id)).toBeFalsy();
   });
 });
