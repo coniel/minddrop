@@ -7,13 +7,14 @@ import {
   topicViewColumnsConfig,
   topicViewWithoutCallbacks,
   tNoDrops,
+  tSixDrops,
 } from '../test-utils';
 import { getTopic } from '../getTopic';
 import { addDropsToTopic } from './addDropsToTopic';
 import { registerTopicView } from '../registerTopicView';
 import { contains } from '@minddrop/utils';
 
-const { textDrop1 } = DROPS_TEST_DATA;
+const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
 
 describe('addDropsToTopic', () => {
   beforeEach(setup);
@@ -104,5 +105,28 @@ describe('addDropsToTopic', () => {
 
     // Add drop to the topic
     addDropsToTopic(core, tNoDrops.id, [textDrop1.id]);
+  });
+
+  it('does not add drops already in the topic', () => {
+    // Create a new drop to add
+    const newDrop = Drops.create(core, { type: textDropConfig.type });
+    // Add new and existing drop (already in topic) to the topic
+    addDropsToTopic(core, tSixDrops.id, [textDrop1.id, newDrop.id]);
+
+    // Get the updated topic
+    const topic = getTopic(tSixDrops.id);
+
+    // Shoould have addded only 1 drop
+    expect(topic.drops.length).toBe(7);
+  });
+
+  it('does nothing if there are no drops to add', () => {
+    jest.spyOn(core, 'dispatch');
+
+    // Add drop which is already in the topic
+    addDropsToTopic(core, tSixDrops.id, [textDrop1.id]);
+
+    // Should not end up dispatching anything
+    expect(core.dispatch).not.toHaveBeenCalled();
   });
 });

@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
+import { getTopic } from '../getTopic';
 import { getTopicView } from '../getTopicView';
 import { Topic, TopicViewInstance } from '../types';
 import { updateTopic } from '../updateTopic';
@@ -16,7 +17,8 @@ export interface AddDropMetadata {
 
 /**
  * Adds drops to a topic and dispatches a `topics:add-drops` event
- * and a `topics:update` event.
+ * and a `topics:update` event. Does not add drops which are already
+ * in the topic.
  *
  * @param core A MindDrop core instance.
  * @param topicId The ID of the topic to which to add the drops.
@@ -30,12 +32,23 @@ export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
   dropIds: string[],
   metadata?: M,
 ): Topic {
-  // Check that drops exist
-  const drops = Drops.get(dropIds);
+  // Get the topic
+  let topic = getTopic(topicId);
+
+  // Filter out drops already in topic to avoid duplicates
+  const newDropIds = dropIds.filter((dropId) => !topic.drops.includes(dropId));
+
+  // Don't do anything if there are no drops to add
+  if (!newDropIds.length) {
+    return topic;
+  }
+
+  // Get the drops
+  const drops = Drops.get(newDropIds);
 
   // Update the topic
-  const topic = updateTopic(core, topicId, {
-    drops: FieldValue.arrayUnion(dropIds),
+  topic = updateTopic(core, topicId, {
+    drops: FieldValue.arrayUnion(newDropIds),
   });
 
   // Adds the topic as a parent to the drops
