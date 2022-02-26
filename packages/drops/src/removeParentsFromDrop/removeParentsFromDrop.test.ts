@@ -66,4 +66,16 @@ describe('removeParentsToDrop', () => {
       { type: 'topic', id: 'parent-1' },
     ]);
   });
+
+  it('deletes the drop when the last parent is removed', () => {
+    // Remove all parents from the drop
+    const drop = removeParentsFromDrop(core, textDrop1.id, [
+      { type: 'topic', id: 'parent-1' },
+      { type: 'topic', id: 'parent-2' },
+      { type: 'topic', id: 'parent-3' },
+    ]);
+
+    // Drop should be deleted
+    expect(drop.deleted).toBeTruthy();
+  });
 });

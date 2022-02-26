@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
+import { deleteDrop } from '../deleteDrop';
 import { Drop, DropParentReference } from '../types';
 import { updateDrop } from '../updateDrop';
 
@@ -17,7 +18,7 @@ export function removeParentsFromDrop(
   parentReferences: DropParentReference[],
 ): Drop {
   // Remove parent references from the drop
-  const drop = updateDrop(core, dropId, {
+  let drop = updateDrop(core, dropId, {
     parents: FieldValue.arrayFilter<DropParentReference>(
       (reference) =>
         !parentReferences.find(
@@ -26,6 +27,11 @@ export function removeParentsFromDrop(
         ),
     ),
   });
+
+  // Delete the drop if no longer has any parents
+  if (drop.parents.length === 0) {
+    drop = deleteDrop(core, dropId);
+  }
 
   // Dispatch 'drops:remove-parents' event
   core.dispatch('drops:remove-parents', { drop, parents: parentReferences });
