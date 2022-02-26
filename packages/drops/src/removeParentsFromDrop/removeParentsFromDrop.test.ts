@@ -1,4 +1,4 @@
-import { contains, doesNotContain } from '@minddrop/utils';
+import { doesNotContain } from '@minddrop/utils';
 import { Drop } from '../types';
 import { getDrop } from '../getDrop';
 import { setup, cleanup, core, textDrop1 } from '../test-utils';
