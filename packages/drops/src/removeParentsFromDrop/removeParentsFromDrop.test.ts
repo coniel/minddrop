@@ -1,4 +1,4 @@
-import { doesNotContain } from '@minddrop/utils';
+import { contains, doesNotContain } from '@minddrop/utils';
 import { Drop } from '../types';
 import { getDrop } from '../getDrop';
 import { setup, cleanup, core, textDrop1 } from '../test-utils';
@@ -46,8 +46,8 @@ describe('removeParentsToDrop', () => {
 
     // Should be the updated drop
     expect(
-      drop.parents.includes({ type: 'topic', id: 'parent-1' }),
-    ).toBeFalsy();
+      doesNotContain(drop.parents, [{ type: 'topic', id: 'parent-1' }]),
+    ).toBeTruthy();
   });
 
   it('dispatches a `drops:remove-parents` event', (done) => {
