@@ -5,7 +5,7 @@ export * from './createDataInsertFromDataTransfer';
 export * from './mapPropsToClasses';
 export * from './toKebabCase';
 export * from './createUpdate';
-export * from './isSubset';
+export * from './contains';
 export * from './isEqual';
 export * from './doesNotContain';
 export * from './FieldValue';
