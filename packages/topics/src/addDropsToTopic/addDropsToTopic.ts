@@ -40,7 +40,9 @@ export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
 
   // Adds the topic as a parent to the drops
   Object.keys(drops).forEach((dropId) => {
-    const drop = Drops.addParents(core, dropId, [topicId]);
+    const drop = Drops.addParents(core, dropId, [
+      { type: 'topic', id: topicId },
+    ]);
     // Update the drop in the DropMap
     drops[drop.id] = drop;
   });

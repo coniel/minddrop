@@ -34,7 +34,9 @@ export function removeDropsFromTopic(
     // can be restored to the topic.
     if (!drop.deleted) {
       // Remove the parent
-      const updatedDrop = Drops.removeParents(core, drop.id, [topicId]);
+      const updatedDrop = Drops.removeParents(core, drop.id, [
+        { type: 'topic', id: topicId },
+      ]);
       // Update drop in DropMap
       drops[drop.id] = updatedDrop;
     }

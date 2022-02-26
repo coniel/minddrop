@@ -12,6 +12,7 @@ import { registerTopicView } from '../registerTopicView';
 import { createTopicViewInstance } from '../createTopicViewInstance';
 import { getTopic } from '../getTopic';
 import { addDropsToTopic } from '../addDropsToTopic';
+import { contains, doesNotContain } from '@minddrop/utils';
 
 const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
 
@@ -56,7 +57,9 @@ describe('removeDropsFromTopic', () => {
     drop = Drops.get(drop.id);
 
     // Drop should no longer have topic as a parent
-    expect(drop.parents.includes(tSixDrops.id)).toBeFalsy();
+    expect(
+      doesNotContain(drop.parents, [{ type: 'topic', id: tSixDrops.id }]),
+    ).toBeTruthy();
   });
 
   it('does not remove the topic as a parent if the drop is deleted', () => {
@@ -76,7 +79,9 @@ describe('removeDropsFromTopic', () => {
     drop = Drops.get(drop.id);
 
     // Drop should still have topic as a parent
-    expect(drop.parents.includes(tSixDrops.id)).toBeTruthy();
+    expect(
+      contains(drop.parents, [{ type: 'topic', id: tSixDrops.id }]),
+    ).toBeTruthy();
   });
 
   it("calls topic view's onRemoveDrops for each view instance", () => {

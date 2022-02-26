@@ -11,6 +11,7 @@ import {
 import { getTopic } from '../getTopic';
 import { addDropsToTopic } from './addDropsToTopic';
 import { registerTopicView } from '../registerTopicView';
+import { contains } from '@minddrop/utils';
 
 const { textDrop1 } = DROPS_TEST_DATA;
 
@@ -38,7 +39,9 @@ describe('addDropsToTopic', () => {
     const drop = Drops.get(textDrop1.id);
 
     // Should have added topic ID to drop's parents
-    expect(drop.parents.includes(tNoDrops.id)).toBeTruthy();
+    expect(
+      contains(drop.parents, [{ type: 'topic', id: tNoDrops.id }]),
+    ).toBeTruthy();
   });
 
   it('throws if drop does not exist', async () => {
