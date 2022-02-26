@@ -1,4 +1,6 @@
 import { Core } from '@minddrop/core';
+import { Drops } from '@minddrop/drops';
+import { removeDropsFromTopic } from '../removeDropsFromTopic';
 import { Topic } from '../types';
 import { useTopicsStore } from '../useTopicsStore';
 
@@ -18,6 +20,16 @@ export function onRun(core: Core) {
         store.setTopic(topic);
       }
     },
+  });
+
+  // Listen for drop deletions and remove deleted drops from topics
+  Drops.addEventListener(core, 'drops:delete', ({ data }) => {
+    console.log(data);
+    data.parents
+      .filter((parent) => parent.type === 'topic')
+      .forEach(({ id }) => {
+        removeDropsFromTopic(core, id, [data.id]);
+      });
   });
 }
 

@@ -4,8 +4,14 @@ import { onDisable, onRun } from './topics-extension';
 import { generateTopic } from '../generateTopic';
 import { useAllTopics } from '../useAllTopics';
 import { Topics } from '../Topics';
+import { createTopic } from '../createTopic';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { addDropsToTopic } from '../addDropsToTopic';
+import { getTopic } from '../getTopic';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
+
+const { textDropConfig } = DROPS_TEST_DATA;
 
 describe('topics extension', () => {
   describe('onRun', () => {
@@ -59,6 +65,30 @@ describe('topics extension', () => {
 
         expect(result.current[topic.id]).not.toBeDefined();
       });
+    });
+
+    it('removes deleted drops from parent topics', (done) => {
+      onRun(core);
+
+      // Create a topic
+      const topic = createTopic(core);
+
+      // Create a drop
+      Drops.register(core, textDropConfig);
+      const drop = Drops.create(core, { type: textDropConfig.type });
+
+      // Add the drop to the topic
+      addDropsToTopic(core, topic.id, [drop.id]);
+
+      // Listen for remove-drops event
+      Topics.addEventListener(core, 'topics:remove-drops', ({ data }) => {
+        if (data.topic.id === topic.id && data.drops[drop.id]) {
+          done();
+        }
+      });
+
+      // Delete the drop
+      Drops.delete(core, drop.id);
     });
   });
 
