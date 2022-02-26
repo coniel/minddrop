@@ -112,7 +112,7 @@ export interface DropsApi {
    * @param data The default drop property values.
    * @returns The newly created drop.
    */
-  create(core: Core, data?: CreateDropData): Drop;
+  create(core: Core, data: CreateDropData): Drop;
 
   /**
    * Creates a drop of the specified type and dispatches
