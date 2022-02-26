@@ -1,6 +1,6 @@
 import { contains } from './contains';
 
-describe('isSubset', () => {
+describe('contains', () => {
   it('returns true if array is a subset', () => {
     expect(
       contains(['a', 'b', 1, 2, null, false], ['a', 1, null, false]),

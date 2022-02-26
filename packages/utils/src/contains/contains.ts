@@ -3,7 +3,7 @@ type ComparisonItem =
   | number
   | null
   | boolean
-  | Record<string, string | number | null | boolean>;
+  | Record<any, string | number | null | boolean>;
 
 /**
  * Checks whether all items in an array are present
