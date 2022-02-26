@@ -1,9 +1,22 @@
 import { ContentColor } from '@minddrop/core';
 import {
+  FieldValueArrayFilter,
   FieldValueArrayRemove,
   FieldValueArrayUnion,
   FieldValueDelete,
 } from '@minddrop/utils';
+
+export type DropParentReference = {
+  /**
+   * The type of parent, e.g. 'topic'.
+   */
+  type: string;
+
+  /**
+   * The ID of the parent.
+   */
+  id: string;
+};
 
 export interface Drop {
   /**
@@ -28,9 +41,10 @@ export interface Drop {
   updatedAt: Date;
 
   /**
-   * The IDs of the drop's parents, typically topics.
+   * References of the drop's parents (thigs which contain the drop).
+   * Eeach reference has a `type` field (e.g. 'topic'), and an `id` field.
    */
-  parents: string[];
+  parents: DropParentReference[];
 
   /**
    * The IDs of the tags applied to the drop.
@@ -102,7 +116,10 @@ export interface DropChanges {
   color?: ContentColor | FieldValueDelete;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
-  parents?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+  parents?:
+    | DropParentReference[]
+    | FieldValueArrayUnion
+    | FieldValueArrayFilter;
 }
 
 export type DropMap = Record<string, Drop>;

@@ -10,28 +10,44 @@ describe('removeParentsToDrop', () => {
     setup();
 
     // Add three parents to the drop
-    addParentsToDrop(core, textDrop1.id, ['parent-1', 'parent-2', 'parent-3']);
+    addParentsToDrop(core, textDrop1.id, [
+      { type: 'topic', id: 'parent-1' },
+      { type: 'topic', id: 'parent-2' },
+      { type: 'topic', id: 'parent-3' },
+    ]);
   });
 
   afterEach(cleanup);
 
   it('removes the parents to the drop', () => {
     // Remove two parents from the drop
-    removeParentsFromDrop(core, textDrop1.id, ['parent-1', 'parent-2']);
+    removeParentsFromDrop(core, textDrop1.id, [
+      { type: 'topic', id: 'parent-1' },
+      { type: 'topic', id: 'parent-2' },
+    ]);
 
     // Get the updated drop
     const drop = getDrop(textDrop1.id);
 
     // Should no longer contain the two first parents
-    expect(doesNotContain(drop.parents, ['parent-1', 'parent-2']));
+    expect(
+      doesNotContain(drop.parents, [
+        { type: 'topic', id: 'parent-1' },
+        { type: 'topic', id: 'parent-2' },
+      ]),
+    ).toBeTruthy();
   });
 
   it('returns the updated drop', () => {
     // Remove parents from the drop
-    const drop = removeParentsFromDrop(core, textDrop1.id, ['parent-1']);
+    const drop = removeParentsFromDrop(core, textDrop1.id, [
+      { type: 'topic', id: 'parent-1' },
+    ]);
 
     // Should be the updated drop
-    expect(drop.parents.includes('parent-1')).toBeFalsy();
+    expect(
+      drop.parents.includes({ type: 'topic', id: 'parent-1' }),
+    ).toBeFalsy();
   });
 
   it('dispatches a `drops:remove-parents` event', (done) => {
@@ -40,12 +56,14 @@ describe('removeParentsToDrop', () => {
     core.addEventListener('drops:remove-parents', (payload) => {
       // Payload data should contain updated drop
       expect(payload.data.drop).toEqual(drop);
-      // Payload data should contain removeed parent IDs
-      expect(payload.data.parents).toEqual(['parent-1']);
+      // Payload data should contain removed parent references
+      expect(payload.data.parents).toEqual([{ type: 'topic', id: 'parent-1' }]);
       done();
     });
 
     // Remove the parent
-    drop = removeParentsFromDrop(core, textDrop1.id, ['parent-1']);
+    drop = removeParentsFromDrop(core, textDrop1.id, [
+      { type: 'topic', id: 'parent-1' },
+    ]);
   });
 });

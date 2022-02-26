@@ -1,7 +1,7 @@
 import { EventListenerCallback } from '@minddrop/core';
 import { TagMap } from '@minddrop/tags';
 import { FileReferenceMap } from '@minddrop/files';
-import { Drop, DropChanges } from './Drop.types';
+import { Drop, DropChanges, DropParentReference } from './Drop.types';
 import { DropConfig } from './DropConfig.types';
 
 export type RegisterDropTypeEvent = 'drops:register';
@@ -59,9 +59,9 @@ export interface AddParentsEventData {
   drop: Drop;
 
   /**
-   * The IDs of the parents added to the drop.
+   * The references of the parents added to the drop.
    */
-  parents: string[];
+  parents: DropParentReference[];
 }
 
 export interface RemoveParentsEventData {
@@ -71,9 +71,9 @@ export interface RemoveParentsEventData {
   drop: Drop;
 
   /**
-   * The IDs of the parents which were removed from the drop.
+   * The references of the parents which were removed from the drop.
    */
-  parents: string[];
+  parents: DropParentReference[];
 }
 
 export interface AddTagsEventData {

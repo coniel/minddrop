@@ -446,10 +446,10 @@ Drops.deletePermanently(core: Core, dropId: string): Drop
 
 ### addParents
 
-Adds parent IDs to a drop and dispatches a `drops:add-parents` event and a `drops:update` event. Returns the updated drop.
+Adds parent references to a drop and dispatches a `drops:add-parents` event and a `drops:update` event. Returns the updated drop.
 
 ```ts
-Drops.addParents(core: Core, dropId: string, parentIds: string[]): Drop
+Drops.addParents(core: Core, dropId: string, parentReferences: DropParentReference[]): Drop
 ```
 
 <ArgsTable
@@ -462,20 +462,28 @@ Drops.addParents(core: Core, dropId: string, parentIds: string[]): Drop
       description: 'The ID of the drop to which to add the parents.',
     },
     {
-      name: 'parentIds',
-      type: 'string[]',
+      name: 'parentReferences',
+      type: 'DropParentReference[]',
       required: true,
-      description: 'The IDs of the parents to add to the drop.',
+      description: (
+        <span>
+          The parent references to add to the drop. See the{' '}
+          <a href="/docs/extensions/types/drop#dropparentreference">
+            <Code>DropParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
     },
   ]}
 />
 
 ### removeParents
 
-Remove parent IDs from a drop and dispatches a `drops:remove-parents` event and a `drops:update` event. Returns the updated drop.
+Remove parent references from a drop and dispatches a `drops:remove-parents` event and a `drops:update` event. Returns the updated drop.
 
 ```ts
-Drops.removeParents(core: Core, dropId: string, parentIds: string[]): Drop
+Drops.removeParents(core: Core, dropId: string, parentReferences: DropParentReference[]): Drop
 ```
 
 <ArgsTable
@@ -489,10 +497,18 @@ Drops.removeParents(core: Core, dropId: string, parentIds: string[]): Drop
         'The ID of the drop from which to remove the parents.',
     },
     {
-      name: 'parentIds',
-      type: 'string[]',
+      name: 'parentReferences',
+      type: 'DropParentReference[]',
       required: true,
-      description: 'The IDs of the parents to remove from the drop.',
+      description: (
+        <span>
+          The parent references to remove from the drop. See the{' '}
+          <a href="/docs/extensions/types/drop#dropparentreference">
+            <Code>DropParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
     },
   ]}
 />
@@ -878,6 +894,10 @@ See the [DropConfig](/docs/extensions/types/drop-config) interface page.
 
 See the [Drop](/docs/extensions/types/drop) interface page.
 
+#### DropParentReference
+
+See the [DropParentReference](/docs/extensions/types/drop#dropparentreference) interface.
+
 #### UpdateDropEventData
 
 <InterfaceTable
@@ -921,8 +941,13 @@ See the [Drop](/docs/extensions/types/drop) interface page.
         'The drop type. Determines which component will be used to render it.',
     },
     {
+      name: 'parents',
+      type: 'DropParentReference[] | ArrayUnion | ArrayFilter',
+      description: "The references of the drops's parents.",
+    },
+    {
       name: 'tags',
-      type: 'string[]',
+      type: 'string[] | ArrayUnion | ArrayRemove',
       description: 'The IDs of the tags applied to the drop.',
     },
     {
@@ -977,10 +1002,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'parents',
-      type: 'string[]',
+      type: 'DropParentReference[]',
       required: true,
       description:
-        'The IDs of the parents which were added to the drop.',
+        'The references of the parents which were added to the drop.',
     },
   ]}
 />
@@ -997,10 +1022,10 @@ See the [Drop](/docs/extensions/types/drop) interface page.
     },
     {
       name: 'parents',
-      type: 'string[]',
+      type: 'DropParentReference[]',
       required: true,
       description:
-        'The IDs of the parents which were removed from the drop.',
+        'The references of the parents which were removed from the drop.',
     },
   ]}
 />

@@ -48,9 +48,10 @@ All drops share a basic interface which can be extended to suit your extension's
     },
     {
       name: 'parents',
-      type: 'string[]',
+      type: 'DropParentReference[]',
       required: true,
-      description: "The IDs of the drop's parents, typically topics.",
+      description:
+        "The references of the drop's parents, see below for details.",
     },
     {
       name: 'tags',
@@ -98,6 +99,25 @@ All drops share a basic interface which can be extended to suit your extension's
           <Code>deleted</Code> is <Code>true</Code>.
         </span>
       ),
+    },
+  ]}
+/>
+
+### DropParentReference
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: "The type of parent, e.g. 'topic'",
+    },
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent.',
     },
   ]}
 />

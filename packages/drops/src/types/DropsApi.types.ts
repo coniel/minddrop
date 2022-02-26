@@ -1,5 +1,11 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { CreateDropData, Drop, DropMap, UpdateDropData } from './Drop.types';
+import {
+  CreateDropData,
+  Drop,
+  DropMap,
+  DropParentReference,
+  UpdateDropData,
+} from './Drop.types';
 import { DropConfig, RegisteredDropConfig } from './DropConfig.types';
 import { DropConfigFilters } from './DropConfigFilters.types';
 import {
@@ -203,24 +209,32 @@ export interface DropsApi {
   deletePermanently(core: Core, dropId: string): Drop;
 
   /**
-   * Adds parent IDs to a drop and dispatches a
+   * Adds parent references to a drop and dispatches a
    * `drops:add-parents` event.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the parents.
-   * @param parentIds The IDs of the parents to add.
+   * @param parentReferences The parent references to add.
    */
-  addParents(core: Core, dropId: string, parentIds: string[]): Drop;
+  addParents(
+    core: Core,
+    dropId: string,
+    parentReferences: DropParentReference[],
+  ): Drop;
 
   /**
-   * Removes parent IDs from a drop and dispatches a
+   * Removes parent references from a drop and dispatches a
    * `drops:remove-parents` event.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop from which to remove the parents.
-   * @param parentIds The IDs of the parents to remove.
+   * @param parentReferences The parent references to remove.
    */
-  removeParents(core: Core, dropId: string, parentIds: string[]): Drop;
+  removeParents(
+    core: Core,
+    dropId: string,
+    parentReferences: DropParentReference[],
+  ): Drop;
 
   /**
    * Adds tags to a drop and dispatches a `drops:add-tags` event
