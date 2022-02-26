@@ -7,7 +7,6 @@ import { Topics } from '../Topics';
 import { createTopic } from '../createTopic';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { addDropsToTopic } from '../addDropsToTopic';
-import { getTopic } from '../getTopic';
 
 let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 

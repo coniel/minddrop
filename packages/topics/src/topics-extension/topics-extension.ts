@@ -24,7 +24,6 @@ export function onRun(core: Core) {
 
   // Listen for drop deletions and remove deleted drops from topics
   Drops.addEventListener(core, 'drops:delete', ({ data }) => {
-    console.log(data);
     data.parents
       .filter((parent) => parent.type === 'topic')
       .forEach(({ id }) => {
