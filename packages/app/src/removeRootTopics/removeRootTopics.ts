@@ -18,7 +18,7 @@ export function removeRootTopics(core: Core, topicIds: string[]): void {
   // Remove topic IDs to global persistent store
   PersistentStore.setGlobalValue(
     core,
-    'topics',
+    'rootTopics',
     FieldValue.arrayRemove(topicIds),
   );
 

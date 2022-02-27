@@ -47,7 +47,7 @@ describe('removeRootTopics', () => {
 
   it('removes topic IDs from the persistent store', () => {
     const { result } = renderHook(() =>
-      useGlobalPersistentStoreValue(core, 'topics'),
+      useGlobalPersistentStoreValue(core, 'rootTopics'),
     );
 
     act(() => {

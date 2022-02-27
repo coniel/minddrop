@@ -18,7 +18,7 @@ describe('addRootTopics', () => {
   beforeEach(() => {
     setup();
     act(() => {
-      PersistentStore.setGlobalValue(core, 'topics', [tSailing.id]);
+      PersistentStore.setGlobalValue(core, 'rootTopics', [tSailing.id]);
     });
   });
 
@@ -43,7 +43,7 @@ describe('addRootTopics', () => {
 
   it('adds topic IDs to the persistent store', () => {
     const { result } = renderHook(() =>
-      useGlobalPersistentStoreValue(core, 'topics'),
+      useGlobalPersistentStoreValue(core, 'rootTopics'),
     );
 
     act(() => {

@@ -18,7 +18,7 @@ export function addRootTopics(core: Core, topicIds: string[]): void {
   // Add topic IDs to global persistent store
   PersistentStore.setGlobalValue(
     core,
-    'topics',
+    'rootTopics',
     FieldValue.arrayUnion(topicIds),
   );
 
