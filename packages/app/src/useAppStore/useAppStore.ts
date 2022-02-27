@@ -5,6 +5,7 @@ import { AppStore } from '../types';
 
 export const useAppStore = createStore<AppStore>((set) => ({
   rootTopics: [],
+  archivedRootTopics: [],
   view: 'app:home',
   viewInstance: null,
   uiExtensions: [],
@@ -18,6 +19,18 @@ export const useAppStore = createStore<AppStore>((set) => ({
   removeRootTopics: (topicIds) =>
     set((state) => ({
       rootTopics: state.rootTopics.filter(
+        (topicId) => !topicIds.includes(topicId),
+      ),
+    })),
+
+  addArchivedRootTopics: (topicIds) =>
+    set((state) => ({
+      archivedRootTopics: [...state.archivedRootTopics, ...topicIds],
+    })),
+
+  removeArchivedRootTopics: (topicIds) =>
+    set((state) => ({
+      archivedRootTopics: state.archivedRootTopics.filter(
         (topicId) => !topicIds.includes(topicId),
       ),
     })),

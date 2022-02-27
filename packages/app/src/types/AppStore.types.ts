@@ -20,6 +20,11 @@ export interface AppStore {
   rootTopics: string[];
 
   /**
+   * The IDs of archived root level topics.
+   */
+  archivedRootTopics: string[];
+
+  /**
    * The ID of the currently open view.
    */
   view: string;
@@ -62,9 +67,23 @@ export interface AppStore {
   /**
    * Removes topics from the root topics list.
    *
-   * @param topicIds The IDs oof the topics to remove.
+   * @param topicIds The IDs of the topics to remove.
    */
   removeRootTopics(topicIds: string[]): void;
+
+  /**
+   * Adds topics to the archived topics list.
+   *
+   * @param topicIds The IDs of the archived topics to add.
+   */
+  addArchivedRootTopics(topicIds: string[]): void;
+
+  /**
+   * Removes topics from the archived topics list.
+   *
+   * @param topicIds The IDs of the archived topics to remove.
+   */
+  removeArchivedRootTopics(topicIds: string[]): void;
 
   /**
    * Sets the ID of the currently open view.

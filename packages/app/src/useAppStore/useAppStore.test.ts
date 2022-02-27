@@ -58,6 +58,27 @@ describe('useAppStore', () => {
     expect(result.current.rootTopics).toEqual(['topic-3']);
   });
 
+  it('adds archived root topics', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.addArchivedRootTopics(['topic-1', 'topic-2']);
+    });
+
+    expect(result.current.archivedRootTopics).toEqual(['topic-1', 'topic-2']);
+  });
+
+  it('removes archived root topics', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.addArchivedRootTopics(['topic-1', 'topic-2', 'topic-3']);
+      result.current.removeArchivedRootTopics(['topic-1', 'topic-2']);
+    });
+
+    expect(result.current.archivedRootTopics).toEqual(['topic-3']);
+  });
+
   it('sets the view', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 

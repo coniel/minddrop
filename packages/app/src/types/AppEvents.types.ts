@@ -6,6 +6,8 @@ import { View, ViewInstance } from '@minddrop/views';
 export type OpenViewEvent = 'app:open-view';
 export type AddRootTopicsEvent = 'app:add-root-topics';
 export type RemoveRootTopicsEvent = 'app:remove-root-topics';
+export type ArchiveRootTopicsEvent = 'app:archive-root-topics';
+export type UnarchiveRootTopicsEvent = 'app:unarchive-root-topics';
 export type SelectDropsEvent = 'app:select-drops';
 export type UnselectDropsEvent = 'app:unselect-drops';
 export type ClearSelectedDropsEvent = 'app:clear-selected-drops';
@@ -16,6 +18,8 @@ export interface OpenViewEventData {
 }
 export type AddRootTopicsEventData = TopicMap;
 export type RemoveRootTopicsEventData = TopicMap;
+export type ArchiveRootTopicsEventData = TopicMap;
+export type UnarchiveRootTopicsEventData = TopicMap;
 export type SelectDropsEventData = DropMap;
 export type UnselectDropsEventData = DropMap;
 
@@ -30,6 +34,14 @@ export type AddRootTopicsEventCallback = EventListenerCallback<
 export type RemoveRootTopicsEventCallback = EventListenerCallback<
   RemoveRootTopicsEvent,
   RemoveRootTopicsEventData
+>;
+export type ArchiveRootTopicsEventCallback = EventListenerCallback<
+  ArchiveRootTopicsEvent,
+  RemoveRootTopicsEventData
+>;
+export type UnarchiveRootTopicsEventCallback = EventListenerCallback<
+  UnarchiveRootTopicsEvent,
+  UnarchiveRootTopicsEventData
 >;
 export type SelectDropsEventCallback = EventListenerCallback<
   SelectDropsEvent,

@@ -10,11 +10,15 @@ import {
   AddRootTopicsEventCallback,
   RemoveRootTopicsEvent,
   RemoveRootTopicsEventCallback,
+  UnarchiveRootTopicsEvent,
+  UnarchiveRootTopicsEventCallback,
 } from './AppEvents.types';
 import { View, ViewInstance } from '@minddrop/views';
 import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
 import { DropMap } from '@minddrop/drops';
 import {
+  ArchiveRootTopicsEvent,
+  ArchiveRootTopicsEventCallback,
   ClearSelectedDropsEvent,
   ClearSelectedDropsEventCallback,
   SelectDropsEvent,
@@ -229,6 +233,20 @@ export interface AppApi {
     callback: RemoveRootTopicsEventCallback,
   );
 
+  // Add 'app:unarchive-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: UnarchiveRootTopicsEvent,
+    callback: UnarchiveRootTopicsEventCallback,
+  );
+
+  // Add 'app:archive-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: ArchiveRootTopicsEvent,
+    callback: ArchiveRootTopicsEventCallback,
+  );
+
   // Add 'app:select-drops' event listener
   addEventListener(
     core: Core,
@@ -273,6 +291,20 @@ export interface AppApi {
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
+  );
+
+  // Remove 'app:remove-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: RemoveRootTopicsEvent,
+    callback: RemoveRootTopicsEventCallback,
+  );
+
+  // Remove 'app:unarchive-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: UnarchiveRootTopicsEvent,
+    callback: UnarchiveRootTopicsEventCallback,
   );
 
   // Remove 'app:select-drops' event listener
