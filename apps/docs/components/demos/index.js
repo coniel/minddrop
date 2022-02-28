@@ -21,3 +21,4 @@ export { BreadcrumbsDemo } from './BreadcrumbsDemo';
 export { DropDemo } from './DropDemo';
 export { TagDemo } from './TagDemo';
 export { IconRendererDemo } from './IconRendererDemo';
+export { DialogDemo } from './DialogDemo';

@@ -24,3 +24,4 @@ export * from './Drop';
 export * from './Tag';
 export * from './IconRenderer';
 export * from './utils';
+export * from './Dialog';

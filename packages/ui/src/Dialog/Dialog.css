@@ -1,0 +1,65 @@
+.dialog {
+  background-color: var(--bgNeutral);
+}
+
+.dialog-overlay {
+  background-color: rgba(0, 0, 0, 0.44);
+  position: fixed;
+  inset: 0;
+  transition: opacity 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes contentShow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.dialog-content {
+  background-color: var(--appBackground);
+  border-radius: 6px;
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-height: 85vh;
+  padding: 25px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  outline: none;
+}
+
+.dialog-content.width-sm {
+  max-width: 440px;
+}
+
+.dialog-content.width-md {
+  max-width: 800px;
+}
+
+.dialog-content.width-lg {
+  max-width: 90vw;
+}
+
+.dialog-title {
+  font-size: var(--fsTitle);
+  font-weight: var(--fwSemibold);
+  color: var(--textNeutral);
+  margin-bottom: 12px;
+}
+
+.dialog-description {
+  font-size: var(--fsLarge);
+  font-weight: var(--fwMedium);
+  color: var(--textNeutralLight);
+  line-height: 1.4;
+}

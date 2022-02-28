@@ -19,6 +19,7 @@ export const uiRoutes = [
       { title: 'Button', slug: 'docs/ui/components/button' },
       { title: 'Collapsible', slug: 'docs/ui/components/collapsible' },
       { title: 'ContextMenu', slug: 'docs/ui/components/context-menu' },
+      { title: 'Dialog', slug: 'docs/ui/components/dialog' },
       { title: 'Drop', slug: 'docs/ui/components/drop' },
       { title: 'DropdownMenu', slug: 'docs/ui/components/dropdown-menu' },
       { title: 'Icon', slug: 'docs/ui/components/icon' },
