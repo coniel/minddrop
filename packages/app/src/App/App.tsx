@@ -13,11 +13,17 @@ import { clearSelectedDrops } from '../clearSelectedDrops';
 import { unselectDrops } from '../unselectDrops';
 import { getRootTopics } from '../getRootTopics';
 import { removeRootTopics } from '../removeRootTopics';
+import { archiveRootTopics } from '../archiveRootTopics';
+import { unarchiveRootTopics } from '../unarchiveRootTopics';
+import { getArchivedRootTopics } from '../getArchivedRootTopics';
 
 export const App: AppApi = {
   addRootTopics,
   removeRootTopics,
   getRootTopics,
+  archiveRootTopics,
+  unarchiveRootTopics,
+  getArchivedRootTopics,
   openTopicView,
   createTopic,
   permanentlyDeleteTopic,

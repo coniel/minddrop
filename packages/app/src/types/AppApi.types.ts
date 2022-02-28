@@ -167,6 +167,32 @@ export interface AppApi {
   removeRootTopics(core: Core, topicIds: string[]): void;
 
   /**
+   * Returns archived root topics in the order in which
+   * they appear in the app sidebar.
+   *
+   * @returns Archived root topics.
+   */
+  getArchivedRootTopics(): Topic[];
+
+  /**
+   * Archives root level topics and dispatches an
+   * `app:archive-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the root level topics to archive.
+   */
+  archiveRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Unarchives root level topics and dispatches an
+   * `app:remove-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to remove from the root level.
+   */
+  unarchiveRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
    * Opens a topic's view.
    *
    * @param core A MindDrop core instance.
