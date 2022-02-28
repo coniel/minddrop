@@ -11,8 +11,11 @@ import {
 import { i18n } from '@minddrop/i18n';
 import { setup, cleanup, core } from '../../test-utils';
 import { DropdownMenuContent, DropdownMenu } from '@minddrop/ui';
-import { Topic, Topics } from '@minddrop/topics';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { generateTopicMenu, TopicMenuOptions } from './generateTopicMenu';
+
+const { trail, tCoastalNavigation } = TOPICS_TEST_DATA;
+
 const options: TopicMenuOptions = {
   onAddSubtopic: jest.fn(),
   onDelete: jest.fn(),
@@ -21,7 +24,6 @@ const options: TopicMenuOptions = {
 
 describe('generateTopicMenu', () => {
   let Menu;
-  let topic: Topic;
 
   beforeAll(() => {
     MockDate.set('01/01/2020');
@@ -33,11 +35,10 @@ describe('generateTopicMenu', () => {
 
   beforeEach(() => {
     setup();
-    topic = Topics.create(core);
     Menu = () => (
       <DropdownMenu defaultOpen>
         <DropdownMenuContent
-          content={generateTopicMenu(core, topic, options)}
+          content={generateTopicMenu(core, trail, options)}
         />
       </DropdownMenu>
     );
@@ -59,7 +60,7 @@ describe('generateTopicMenu', () => {
       fireEvent.click(screen.getByText(label));
     });
 
-    const updatedTopic = Topics.get(topic.id);
+    const updatedTopic = Topics.get(tCoastalNavigation.id);
     const subtopic = Topics.get(updatedTopic.subtopics[0]);
     // Adds subtopic to topic
     expect(updatedTopic.subtopics.length).toBe(1);
@@ -77,7 +78,7 @@ describe('generateTopicMenu', () => {
       fireEvent.click(screen.getByText(label));
     });
 
-    const deletedTopic = Topics.get(topic.id);
+    const deletedTopic = Topics.get(tCoastalNavigation.id);
 
     // Deletes to the topic
     expect(deletedTopic.deleted).toBe(true);
@@ -93,7 +94,7 @@ describe('generateTopicMenu', () => {
       fireEvent.click(screen.getByText(label));
     });
 
-    expect(options.onRename).toHaveBeenCalledWith(topic);
+    expect(options.onRename).toHaveBeenCalledWith(tCoastalNavigation);
   });
 
   it('does not incldue rename option if options.onRename is not defined', () => {
@@ -103,7 +104,7 @@ describe('generateTopicMenu', () => {
     render(
       <DropdownMenu defaultOpen>
         <DropdownMenuContent
-          content={generateTopicMenu(core, topic, noRenameOptions)}
+          content={generateTopicMenu(core, trail, noRenameOptions)}
         />
       </DropdownMenu>,
     );

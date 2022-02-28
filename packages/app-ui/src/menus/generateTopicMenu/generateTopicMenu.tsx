@@ -64,9 +64,12 @@ function handleDelete(
 
 export function generateTopicMenu(
   core: Core,
-  topic: Topic,
+  trail: string[],
   options: TopicMenuOptions,
 ): MenuContents {
+  // Get the topic
+  const topic = Topics.get(trail.slice(-1)[0]);
+
   const menu: MenuContents = [
     {
       type: 'menu-item',

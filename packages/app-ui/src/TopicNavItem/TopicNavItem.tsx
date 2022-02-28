@@ -97,7 +97,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
         </ContextMenuTrigger>
         <ContextMenuContent
           className="topic-menu-content"
-          content={generateTopicMenu(core, topic, {
+          content={generateTopicMenu(core, trail, {
             onRename: openRenamePopover,
             onAddSubtopic,
           })}

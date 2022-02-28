@@ -55,7 +55,7 @@ export const TopicViewOptionsMenu: FC<TopicViewOptionsMenuProps> = ({
 
   const dropdownMenu = useMemo(
     () =>
-      generateTopicMenu(core, topic, {
+      generateTopicMenu(core, trail, {
         onAddSubtopic,
         onDelete,
       }),
