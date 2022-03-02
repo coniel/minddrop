@@ -107,14 +107,6 @@ export interface AppApi {
   createTopic(core: Core, data?: CreateTopicData): Topic;
 
   /**
-   * Permanently deletes a topic along with its associated views.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to delete.
-   */
-  permanentlyDeleteTopic(core: Core, topicId: string): Topic;
-
-  /**
    * Handles data inserts into a topic depending on the insert's `action` parameter:
    * - `insert`: creates drops from the raw data and adds them to the topic
    * - `copy`: data insert's drops are duplicated and duplicates added to the topic

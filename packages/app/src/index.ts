@@ -6,7 +6,6 @@ export * from './Slot';
 export * from './openTopicView';
 export * from './utils';
 export * from './createTopic';
-export * from './permanentlyDeleteTopic';
 export * from './useDraggableDrop';
 export * from './useDraggableTopic';
 export * from './useDraggedDrops';

@@ -5,7 +5,6 @@ import { addRootTopics } from '../addRootTopics';
 import { useAppStore } from '../useAppStore';
 import { openTopicView } from '../openTopicView';
 import { createTopic } from '../createTopic';
-import { permanentlyDeleteTopic } from '../permanentlyDeleteTopic';
 import { insertDataIntoTopic } from '../insertDataIntoTopic';
 import { selectDrops } from '../selectDrops';
 import { getSelectedDrops } from '../getSelectedDrops';
@@ -26,7 +25,6 @@ export const App: AppApi = {
   getArchivedRootTopics,
   openTopicView,
   createTopic,
-  permanentlyDeleteTopic,
   insertDataIntoTopic,
   selectDrops,
   unselectDrops,
