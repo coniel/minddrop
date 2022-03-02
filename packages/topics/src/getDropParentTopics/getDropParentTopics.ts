@@ -1,5 +1,5 @@
-import { filterTopics } from '../filterTopics';
-import { getAllTopics } from '../getAllTopics';
+import { Drops } from '@minddrop/drops';
+import { getTopics } from '../getTopics';
 import { TopicFilters, TopicMap } from '../types';
 
 /**
@@ -10,18 +10,20 @@ import { TopicFilters, TopicMap } from '../types';
  * @param filters Filters to filter the parent topics by.
  * @returns A `{ [id]: Topic }` map of the drop's parent topics.
  */
-export function getDropParents(
+export function getDropParentTopics(
   dropId: string,
   filters?: TopicFilters,
 ): TopicMap {
-  const allTopics = getAllTopics();
-  const parents = Object.values(allTopics)
-    .filter((topic) => topic.drops.includes(dropId))
-    .reduce((map, topic) => ({ ...map, [topic.id]: topic }), {});
+  // Get the drop
+  const drop = Drops.get(dropId);
 
-  if (filters) {
-    return filterTopics(parents, filters);
-  }
+  // Get the drop's parent topic IDs
+  const parentTopicIds = drop.parents
+    .filter((parent) => parent.type === 'topic')
+    .map((parent) => parent.id);
+
+  // Get the parent topics with possible filters applied
+  const parents = getTopics(parentTopicIds, filters);
 
   return parents;
 }

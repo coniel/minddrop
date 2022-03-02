@@ -91,7 +91,7 @@ export interface TopicsApi {
    * @param filters Filters to filter the parent topics by.
    * @returns A `{ [id]: Topic }` map of the drop's parent topics.
    */
-  dropParents(dropId: string): TopicMap;
+  getDropParentTopics(dropId: string): TopicMap;
 
   /**
    * Filters topics by active and deleted state.

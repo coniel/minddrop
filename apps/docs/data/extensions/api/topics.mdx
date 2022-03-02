@@ -174,12 +174,12 @@ Topics.getAll(filters?: TopicFilters): Topic | TopicMap
   ]}
 />
 
-### dropParents
+### getDropParentTopics
 
 Retrieves a drop's parent topics returned as a `TopicMap`. Returned topics can be filtered by passing in `TopicFilters`.
 
 ```ts
-Topics.dropParents(topicId: string, filters?: TopicFilters): TopicMap
+Topics.getDropParentTopics(topicId: string, filters?: TopicFilters): TopicMap
 ```
 
 <ArgsTable
