@@ -13,12 +13,14 @@ import { setup, cleanup, core } from '../../test-utils';
 import { DropdownMenuContent, DropdownMenu } from '@minddrop/ui';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { generateTopicMenu, TopicMenuOptions } from './generateTopicMenu';
+import { App } from '@minddrop/app';
 
-const { trail, tCoastalNavigation } = TOPICS_TEST_DATA;
+const { trail, tCoastalNavigation, tNavigation, tSailing } = TOPICS_TEST_DATA;
 
 const options: TopicMenuOptions = {
   onAddSubtopic: jest.fn(),
   onDelete: jest.fn(),
+  onArchive: jest.fn(),
   onRename: jest.fn(),
 };
 
@@ -84,6 +86,48 @@ describe('generateTopicMenu', () => {
     expect(deletedTopic.deleted).toBe(true);
     // Calls the onDelete callback
     expect(options.onDelete).toHaveBeenCalledWith(deletedTopic);
+  });
+
+  it('allows archiving subtopics', () => {
+    render(<Menu />);
+
+    act(() => {
+      // Click on the 'Archive' item
+      const label = i18n.t('archive');
+      fireEvent.click(screen.getByText(label));
+    });
+
+    // Get the parent topic
+    const parent = Topics.get(tNavigation.id);
+
+    // It archives the subtopic in the parent
+    expect(
+      parent.archivedSubtopics.includes(tCoastalNavigation.id),
+    ).toBeTruthy();
+    // Should call onArchive callback
+    expect(options.onArchive).toHaveBeenCalled();
+  });
+
+  it('allows archiving root level topics', () => {
+    // Render a root topic menu
+    render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuContent
+          content={generateTopicMenu(core, [tSailing.id], options)}
+        />
+      </DropdownMenu>,
+    );
+
+    act(() => {
+      // Click on the 'Archive' item
+      const label = i18n.t('archive');
+      fireEvent.click(screen.getByText(label));
+    });
+
+    // Root topic should be archived
+    expect(App.getArchivedRootTopics()).toEqual([tSailing]);
+    // Should call onArchive callback
+    expect(options.onArchive).toHaveBeenCalled();
   });
 
   it('calls options.onRename when clicking rename option', () => {

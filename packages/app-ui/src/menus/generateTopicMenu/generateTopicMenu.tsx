@@ -16,6 +16,12 @@ export interface TopicMenuOptions {
   onAddSubtopic?(topic: Topic, subtopic: Topic): void;
 
   /**
+   * Callback fired when the topic is archived using the
+   * 'Archive' option.
+   */
+  onArchive?(): void;
+
+  /**
    * Callback fired when the topic is deleted using the
    * 'Delete' option.
    *
@@ -48,6 +54,25 @@ function handleAddSubtopic(
   }
 }
 
+function handleArchive(
+  core: Core,
+  trail: string[],
+  callback?: TopicMenuOptions['onArchive'],
+) {
+  if (trail.length === 1) {
+    // Topic is a root level topic, archive it at the root level
+    App.archiveRootTopics(core, trail);
+  } else {
+    // Topic is a subtopic, archive it in its parent
+    const [parentId, subtopicId] = trail.slice(-2);
+    Topics.archiveSubtopics(core, parentId, [subtopicId]);
+  }
+
+  if (callback) {
+    callback();
+  }
+}
+
 function handleDelete(
   core: Core,
   topic: Topic,
@@ -76,6 +101,12 @@ export function generateTopicMenu(
       label: i18n.t('addSubtopic'),
       onSelect: () => handleAddSubtopic(core, topic, options.onAddSubtopic),
       icon: 'inside',
+    },
+    {
+      type: 'menu-item',
+      label: i18n.t('archive'),
+      onSelect: () => handleArchive(core, trail, options.onArchive),
+      icon: 'archive',
     },
     {
       type: 'menu-item',
