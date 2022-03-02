@@ -1,62 +1,58 @@
-import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../topics-extension';
-import { createTopic } from '../createTopic';
-import { Topic } from '../types';
 import { deleteTopicPermanently } from './deleteTopicPermanently';
 import { getTopic } from '../getTopic';
 import { TopicNotFoundError } from '../errors';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-
-// Set up extension
-onRun(core);
+import { Drops } from '@minddrop/drops';
+import { addDropsToTopic } from '../addDropsToTopic';
+import { setup, cleanup, core } from '../test-utils';
+import { tNoDrops, tSailing } from '../test-utils/topics.data';
 
 describe('deleteTopicPermanently', () => {
-  afterEach(() => {
-    // Reset extension
-    onDisable(core);
-    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    onRun(core);
-  });
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('returns the deleted topic', () => {
-    let topic: Topic;
-    let deletedTopic: Topic;
+    // Permanently delete the topic
+    const deletedTopic = deleteTopicPermanently(core, tSailing.id);
 
-    act(() => {
-      topic = createTopic(core);
-      deletedTopic = deleteTopicPermanently(core, topic.id);
-    });
-
-    expect(deletedTopic).toEqual(topic);
+    // Should return the deleted topic
+    expect(deletedTopic).toEqual(tSailing);
   });
 
   it('removes topic from the store', () => {
-    let topic: Topic;
+    // Permanently delete the topic
+    deleteTopicPermanently(core, tSailing.id);
 
-    act(() => {
-      topic = createTopic(core);
-      deleteTopicPermanently(core, topic.id);
-    });
+    // Should throw TopicNotFoundError when attempting to get it
+    expect(() => getTopic(tSailing.id)).toThrowError(TopicNotFoundError);
+  });
 
-    expect(() => getTopic(topic.id)).toThrowError(TopicNotFoundError);
+  it('removes the topic as a parent from its drops', () => {
+    // Create a drop
+    let drop = Drops.create(core, { type: 'text' });
+
+    // Add drop to topic
+    addDropsToTopic(core, tNoDrops.id, [drop.id]);
+
+    // Permanently delete the topic
+    deleteTopicPermanently(core, tNoDrops.id);
+
+    // Get the updated drop
+    drop = Drops.get(drop.id);
+
+    // Drop should not have topic as parent
+    expect(drop.parents.length).toBe(0);
   });
 
   it("dispatches a 'topics:delete-permanently' event", (done) => {
-    let topic: Topic;
-
-    function callback(payload) {
-      expect(payload.data).toEqual(topic);
+    // Listen to 'topics:delete-permanently' events
+    core.addEventListener('topics:delete-permanently', (payload) => {
+      // Payload data should be the deleted topic
+      expect(payload.data).toEqual(tSailing);
       done();
-    }
-
-    core.addEventListener('topics:delete-permanently', callback);
-
-    act(() => {
-      topic = createTopic(core);
     });
 
-    deleteTopicPermanently(core, topic.id);
+    // Permanently delete the topic
+    deleteTopicPermanently(core, tSailing.id);
   });
 });
