@@ -252,18 +252,21 @@ export const tEmptyView: TopicColumnsView = {
 export const tCoastalNavigation = generateTopic({
   id: 't-coastal-navigation',
   title: 'Coastal navigation',
+  parents: [{ type: 'topic', id: 't-navigation' }],
   views: [tCoastalNavigationView.id, tCoastalNavigationView2.id],
 });
 
 export const tOffshoreNavigation = generateTopic({
   id: 't-offshore-navigation',
   title: 'Offshore navigation',
+  parents: [{ type: 'topic', id: 't-navigation' }],
   views: [tOffshoreNavigationView.id],
 });
 
 export const tNavigation = generateTopic({
   id: 't-navigation',
   title: 'Navigation',
+  parents: [{ type: 'topic', id: 't-sailing' }],
   subtopics: [tCoastalNavigation.id, tOffshoreNavigation.id],
   views: [tNavigationView.id],
 });
@@ -271,12 +274,14 @@ export const tNavigation = generateTopic({
 export const tBoats = generateTopic({
   id: 't-boats',
   title: 'Boats',
+  parents: [{ type: 'topic', id: 't-sailing' }],
   views: [tBoatsView.id],
 });
 
 export const tAnchoring = generateTopic({
   id: 't-anchoring',
   title: 'Anchoring',
+  parents: [{ type: 'topic', id: 't-sailing' }],
   views: [tAnchoringView.id],
 });
 

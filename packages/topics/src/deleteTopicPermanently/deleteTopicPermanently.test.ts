@@ -4,7 +4,9 @@ import { TopicNotFoundError } from '../errors';
 import { Drops } from '@minddrop/drops';
 import { addDropsToTopic } from '../addDropsToTopic';
 import { setup, cleanup, core } from '../test-utils';
-import { tNoDrops, tSailing } from '../test-utils/topics.data';
+import { tAnchoring, tNoDrops, tSailing } from '../test-utils/topics.data';
+import { ViewInstanceNotFoundError, Views } from '@minddrop/views';
+import { doesNotContain } from '@minddrop/utils';
 
 describe('deleteTopicPermanently', () => {
   beforeEach(setup);
@@ -42,6 +44,29 @@ describe('deleteTopicPermanently', () => {
 
     // Drop should not have topic as parent
     expect(drop.parents.length).toBe(0);
+  });
+
+  it('removes the topic as a parent on the subtopics', () => {
+    // Permanently delete the topic
+    deleteTopicPermanently(core, tSailing.id);
+
+    // Get an updated subtopic
+    const subtopic = getTopic(tAnchoring.id);
+
+    // Subtopic should no longer have topic as a parent
+    expect(
+      doesNotContain(subtopic.parents, [{ type: 'topic', id: tSailing.id }]),
+    ).toBeTruthy();
+  });
+
+  it("deletes the topic's views", () => {
+    // Permanently delete the topic
+    deleteTopicPermanently(core, tSailing.id);
+
+    // Should have deleted the topic's view instances
+    expect(() => Views.getInstance(tSailing.views[0])).toThrowError(
+      ViewInstanceNotFoundError,
+    );
   });
 
   it("dispatches a 'topics:delete-permanently' event", (done) => {

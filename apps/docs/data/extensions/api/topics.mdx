@@ -85,6 +85,37 @@ useAllTopics(filters?: TopicFilters): TopicMap
   ]}
 />
 
+### useTopicParents
+
+Returns an `{ [id]: Topic }` map of a given topic's parents. The results can be filtered by passing in `TopicFilters``.
+
+```ts
+useTopicParents(topicId: string, filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the parents.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ## Static methods
 
 ### get
@@ -129,37 +160,6 @@ Topics.getAll(filters?: TopicFilters): Topic | TopicMap
 
 <ArgsTable
   data={[
-    {
-      name: 'filters',
-      type: 'TopicFilters',
-      description: (
-        <span>
-          Allows filtering of returned topics. See the{' '}
-          <a href="#topicfilters">TopicFilters</a> section for more
-          details.
-        </span>
-      ),
-    },
-  ]}
-/>
-
-### parents
-
-Retrieves a topic's parents returned as a `TopicMap`. Returned topics can be filtered by passing in `TopicFilters`.
-
-```ts
-Topics.parents(topicId: string, filters?: TopicFilters): TopicMap
-```
-
-<ArgsTable
-  data={[
-    {
-      name: 'topicId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the topic for which to retrieve the parent topics.',
-    },
     {
       name: 'filters',
       type: 'TopicFilters',
@@ -356,7 +356,7 @@ Topics.restore(core: Core, topicId: string): Topic
 
 ### deletePermanently
 
-Permanently deletes a topic and dispatches a `topics:delete-permanently` event. Returns the deleted topic.
+Permanently deletes a topic and all of its view instances and dispatches a `topics:delete-permanently` event. The topic is also removed as a parent from its drops and subtopics. Returns the deleted topic.
 
 Permanently deleted topics cannot be restored.
 
@@ -645,6 +645,106 @@ Topics.removeDrops(core: Core, topicId: string, dropIds: string[]): Topic
       type: 'string[]',
       required: true,
       description: 'The IDs of the drops to remove.',
+    },
+  ]}
+/>
+
+### addParents
+
+Adds parent references to a topic and dispatches a `topics:add-parents` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.addParents(core: Core, topicId: string, parentReferences: TopicParentReference[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'TopicParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to add to the topic. See the{' '}
+          <a href="/docs/extensions/types/topic#topicparentreference">
+            <Code>TopicParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeParents
+
+Remove parent references from a topic and dispatches a `topics:remove-parents` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.removeParents(core: Core, topicId: string, parentReferences: TopicParentReference[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'TopicParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to remove from the topic. See the{' '}
+          <a href="/docs/extensions/types/topic#topicparentreference">
+            <Code>TopicParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### getParents
+
+Returns an `{ [id]: Topic }` map of a given topic's parents. The results can be filtered by passing in `TopicFilters``.
+
+```ts
+Topics.getParents(topicId: string, filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the parents.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
     },
   ]}
 />
@@ -989,6 +1089,17 @@ See below the table for more details on the data passed by topic related events.
         'Dispatched when drops inside a topic are unarchived.',
     },
     {
+      name: 'topics:add-parents',
+      data: 'AddParentsEventData',
+      description: 'Dispatched when parents are added to a topic.',
+    },
+    {
+      name: 'topics:remove-parents',
+      data: 'RemoveParentsEventData',
+      description:
+        'Dispatched when parents are removed from a topic.',
+    },
+    {
       name: 'topics:add-tags',
       data: 'AddTagsEventData',
       description: 'Dispatched when tags are added to a topic.',
@@ -1081,6 +1192,11 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       name: 'title',
       type: 'string',
       description: 'The topic title.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[] | ArrayUnion | ArrayFilter',
+      description: "The references of the topic's parents.",
     },
     {
       name: 'subtopics',
@@ -1273,6 +1389,46 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'DropMap',
       required: true,
       description: 'The drops which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### AddParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the parents were added.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were added to the topic.',
+    },
+  ]}
+/>
+
+#### RemoveParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the parents were removed.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were removed from the topic.',
     },
   ]}
 />

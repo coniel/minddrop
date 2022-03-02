@@ -1,74 +1,74 @@
-import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
-import { onDisable, onRun } from '../topics-extension';
-import { createTopic } from '../createTopic';
-import { Topic } from '../types';
 import { removeSubtopics } from './removeSubtopics';
-import { addSubtopics } from '../addSubtopics';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-
-// Set up extension
-onRun(core);
+import {
+  cleanup,
+  core,
+  setup,
+  tAnchoring,
+  tBoats,
+  tSailing,
+} from '../test-utils';
+import { getTopic } from '../getTopic';
+import { doesNotContain } from '@minddrop/utils';
+import { getTopics } from '../getTopics';
 
 describe('removeSubtopics', () => {
-  afterEach(() => {
-    // Reset extension
-    onDisable(core);
-    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    onRun(core);
-  });
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('removes subtopics from the topic', () => {
-    let topic: Topic;
-    let subtopic1: Topic;
-    let subtopic2: Topic;
-    let subtopic3: Topic;
+    // Remove the subtopics
+    removeSubtopics(core, tSailing.id, [tAnchoring.id, tBoats.id]);
 
-    act(() => {
-      topic = createTopic(core);
-      subtopic1 = createTopic(core);
-      subtopic2 = createTopic(core);
-      subtopic3 = createTopic(core);
-      addSubtopics(core, topic.id, [subtopic1.id, subtopic2.id, subtopic3.id]);
-    });
+    // Get the updated topic
+    const topic = getTopic(tSailing.id);
 
-    const updated = removeSubtopics(core, topic.id, [
-      subtopic1.id,
-      subtopic2.id,
-    ]);
+    // Topic should no longer contain removed subtopics
+    expect(
+      doesNotContain(topic.subtopics, [tAnchoring.id, tBoats.id]),
+    ).toBeTruthy();
+  });
 
-    expect(updated.subtopics.length).toBe(1);
-    expect(updated.subtopics.includes(subtopic1.id)).toBe(false);
-    expect(updated.subtopics.includes(subtopic2.id)).toBe(false);
-    expect(updated.subtopics.includes(subtopic3.id)).toBe(true);
+  it('returns the updated topic', () => {
+    // Remove a subtopic
+    const result = removeSubtopics(core, tSailing.id, [tAnchoring.id]);
+
+    // Get the updated topic
+    const topic = getTopic(tSailing.id);
+
+    // Returned value should match updated topic
+    expect(result).toEqual(topic);
+  });
+
+  it('removes the topic as a parent on the subtopics', () => {
+    // Remove a subtopic
+    removeSubtopics(core, tSailing.id, [tAnchoring.id]);
+
+    // Get the updated subtopic
+    const subtopic = getTopic(tAnchoring.id);
+
+    // Subtopic should no longer have topic as a parent
+    expect(
+      doesNotContain(subtopic.parents, [{ type: 'topic', id: tSailing.id }]),
+    ).toBeTruthy();
   });
 
   it("dispatches a 'topics:remove-subtopics' event", (done) => {
-    let topic: Topic;
-    let subtopic1: Topic;
-    let subtopic2: Topic;
-    let subtopic3: Topic;
+    // Listen to 'topics:remove-subtopics' event
+    core.addEventListener('topics:remove-subtopics', (payload) => {
+      // Get the updated topic
+      const topic = getTopic(tSailing.id);
+      // Get the updated subtopics
+      const subtopics = getTopics([tAnchoring.id, tBoats.id]);
 
-    function callback(payload) {
+      // Payload data should contain updated topic
       expect(payload.data.topic).toEqual(topic);
-      expect(payload.data.subtopics).toEqual({
-        [subtopic1.id]: subtopic1,
-        [subtopic2.id]: subtopic2,
-      });
+      // Payload data should contain updated subtopics
+      expect(payload.data.subtopics).toEqual(subtopics);
       done();
-    }
-
-    core.addEventListener('topics:remove-subtopics', callback);
-
-    act(() => {
-      topic = createTopic(core);
-      subtopic1 = createTopic(core);
-      subtopic2 = createTopic(core);
-      subtopic3 = createTopic(core);
-      addSubtopics(core, topic.id, [subtopic1.id, subtopic2.id, subtopic3.id]);
     });
 
-    topic = removeSubtopics(core, topic.id, [subtopic1.id, subtopic2.id]);
+    // Remove the subtopics
+    removeSubtopics(core, tSailing.id, [tAnchoring.id, tBoats.id]);
   });
 });

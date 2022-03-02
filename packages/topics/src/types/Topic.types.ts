@@ -1,10 +1,11 @@
 import {
+  FieldValueArrayFilter,
   FieldValueArrayRemove,
   FieldValueArrayUnion,
   FieldValueDelete,
 } from '@minddrop/utils';
 
-export interface TopicParentReference {
+export type TopicParentReference = {
   /**
    * The type of parent, typically 'topic'.
    */
@@ -14,7 +15,7 @@ export interface TopicParentReference {
    * The ID of the parent.
    */
   id: string;
-}
+};
 
 export interface Topic {
   /**
@@ -102,6 +103,10 @@ export interface UpdateTopicData {
 export interface TopicChanges {
   updatedAt: Date;
   title?: string;
+  parents?:
+    | TopicParentReference[]
+    | FieldValueArrayUnion
+    | FieldValueArrayFilter;
   subtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   archivedSubtopics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   views?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;

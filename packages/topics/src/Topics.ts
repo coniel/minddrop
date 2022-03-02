@@ -28,11 +28,13 @@ import { archiveDropsInTopic } from './archiveDropsInTopic';
 import { unarchiveDropsInTopic } from './unarchiveDropsInTopic';
 import { archiveSubtopics } from './archiveSubtopics';
 import { unarchiveSubtopics } from './unarchiveSubtopics';
+import { addParentsToTopic } from './addParentsToTopic';
+import { removeParentsFromTopic } from './removeParentsFromTopic';
 
 export const Topics: TopicsApi = {
   get,
   getAll: getAllTopics,
-  parents: getTopicParents,
+  getParents: getTopicParents,
   dropParents: getDropParents,
   filter: filterTopics,
   create: createTopic,
@@ -46,6 +48,8 @@ export const Topics: TopicsApi = {
   moveDrops: moveDropsToTopic,
   archiveDrops: archiveDropsInTopic,
   unarchiveDrops: unarchiveDropsInTopic,
+  addParents: addParentsToTopic,
+  removeParents: removeParentsFromTopic,
   addTags: addTagsToTopic,
   removeTags: removeTagsFromTopic,
   delete: deleteTopic,

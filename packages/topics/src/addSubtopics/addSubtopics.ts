@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
+import { addParentsToTopic } from '../addParentsToTopic';
 import { getTopics } from '../getTopics';
 import { Topic } from '../types';
 import { updateTopic } from '../updateTopic';
@@ -19,11 +20,23 @@ export function addSubtopics(
   topicId: string,
   subtopicIds: string[],
 ): Topic {
+  // Get the subtopics
   const subtopics = getTopics(subtopicIds);
 
   // Update the topic
   const updated = updateTopic(core, topicId, {
     subtopics: FieldValue.arrayUnion(subtopicIds),
+  });
+
+  // Add the topic as a parent on the subtopics
+  subtopicIds.forEach((subtopicId) => {
+    // Add the topic as a parent
+    const subtopic = addParentsToTopic(core, subtopicId, [
+      { type: 'topic', id: topicId },
+    ]);
+
+    // Update the subtopic in the subtopic map
+    subtopics[subtopicId] = subtopic;
   });
 
   // Dispatch 'topics:add-subtopics' event

@@ -4,6 +4,7 @@ import {
   CreateTopicData,
   Topic,
   TopicMap,
+  TopicParentReference,
   UpdateTopicData,
 } from './Topic.types';
 import {
@@ -47,6 +48,10 @@ import {
   ArchiveDropsEventCallback,
   UnarchiveDropsEvent,
   UnarchiveDropsEventCallback,
+  AddParentsEvent,
+  AddParentsEventCallback,
+  RemoveParentsEvent,
+  RemoveParentsEventCallback,
 } from './TopicEvents.types';
 import { TopicViewConfig } from './TopicViewConfig.types';
 import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
@@ -77,16 +82,6 @@ export interface TopicsApi {
    * @returns A `{ [id]: Topic }` map.
    */
   getAll(filters?: TopicFilters): TopicMap;
-
-  /**
-   * Returns an `{ [id]: Topic }` map of a given topic's parents. The results
-   * can be filtered using TopicFilters.
-   *
-   * @param topicId The ID of the topic for which to retrieve the parents.
-   * @param filters Filters to filter the parents by.
-   * @returns A `{ [id]: Topic }` map of the topic's parents.
-   */
-  parents(topicId: string, filters?: TopicFilters): TopicMap;
 
   /**
    * Returns an `{ [id]: Topic }` map of a given drop's parent topics. The results
@@ -279,6 +274,44 @@ export interface TopicsApi {
   unarchiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
 
   /**
+   * Adds parent references to a topic and dispatches a
+   * `topics:add-parents` event.
+   *
+   * @param core A MindTopic core instance.
+   * @param topicId The ID of the topic to which to add the parents.
+   * @param parentReferences The parent references to add.
+   */
+  addParents(
+    core: Core,
+    topicId: string,
+    parentReferences: TopicParentReference[],
+  ): Topic;
+
+  /**
+   * Removes parent references from a topic and dispatches a
+   * `topics:remove-parents` event.
+   *
+   * @param core A MindTopic core instance.
+   * @param topicId The ID of the topic from which to remove the parents.
+   * @param parentReferences The parent references to remove.
+   */
+  removeParents(
+    core: Core,
+    topicId: string,
+    parentReferences: TopicParentReference[],
+  ): Topic;
+
+  /**
+   * Returns an `{ [id]: Topic }` map of a given topic's parents. The results
+   * can be filtered using TopicFilters.
+   *
+   * @param topicId The ID of the topic for which to retrieve the parents.
+   * @param filters Filters to filter the parents by.
+   * @returns A `{ [id]: Topic }` map of the topic's parents.
+   */
+  getParents(topicId: string, filters?: TopicFilters): TopicMap;
+
+  /**
    * Adds tags to a topic and dispatches a `topics:add-tags` event
    * and a `topics:update` event.
    *
@@ -453,6 +486,20 @@ export interface TopicsApi {
     callback: RemoveDropsEventCallback,
   ): void;
 
+  // Add topics:add-parents event listener
+  addEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  );
+
+  // Add topics:remove-parents event listener
+  addEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
+  );
+
   // Add 'topics:add-tags' event listener
   addEventListener(
     core: Core,
@@ -596,6 +643,20 @@ export interface TopicsApi {
     type: RemoveDropsEvent,
     callback: RemoveDropsEventCallback,
   ): void;
+
+  // Remove topics:add-parents event listener
+  removeEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  );
+
+  // Remove topics:remove-parents event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
+  );
 
   // Remove 'topics:add-tags' event listener
   removeEventListener(

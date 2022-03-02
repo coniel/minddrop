@@ -1,7 +1,12 @@
 import { DropMap } from '@minddrop/drops';
 import { TagMap } from '@minddrop/tags';
 import { DataInsert, EventListenerCallback } from '@minddrop/core';
-import { Topic, TopicChanges, TopicMap } from './Topic.types';
+import {
+  Topic,
+  TopicChanges,
+  TopicMap,
+  TopicParentReference,
+} from './Topic.types';
 import { TopicView } from './TopicView.types';
 import { TopicViewInstance } from './TopicViewInstance.types';
 
@@ -15,6 +20,8 @@ export type AddDropsEvent = 'topics:add-drops';
 export type ArchiveDropsEvent = 'topics:archive-drops';
 export type UnarchiveDropsEvent = 'topics:unarchive-drops';
 export type RemoveDropsEvent = 'topics:remove-drops';
+export type AddParentsEvent = 'topics:add-parents';
+export type RemoveParentsEvent = 'topics:remove-parents';
 export type AddTagsEvent = 'topics:add-tags';
 export type RemoveTagsEvent = 'topics:remove-tags';
 export type DeleteTopicEvent = 'topics:delete';
@@ -151,6 +158,30 @@ export interface RemoveDropsEventData {
   drops: DropMap;
 }
 
+export interface AddParentsEventData {
+  /**
+   * The topic to which the prants were added.
+   */
+  topic: Topic;
+
+  /**
+   * The references of the parents added to the topic.
+   */
+  parents: TopicParentReference[];
+}
+
+export interface RemoveParentsEventData {
+  /**
+   * The topic from which the parents were removed.
+   */
+  topic: Topic;
+
+  /**
+   * The references of the parents which were removed from the topic.
+   */
+  parents: TopicParentReference[];
+}
+
 export interface AddTagsEventData {
   /**
    * The topic to which the tags were added.
@@ -218,6 +249,14 @@ export type UnarchiveDropsEventCallback = EventListenerCallback<
 export type RemoveDropsEventCallback = EventListenerCallback<
   RemoveDropsEvent,
   RemoveDropsEventData
+>;
+export type AddParentsEventCallback = EventListenerCallback<
+  AddParentsEvent,
+  AddParentsEventData
+>;
+export type RemoveParentsEventCallback = EventListenerCallback<
+  RemoveParentsEvent,
+  RemoveParentsEventData
 >;
 export type AddTagsEventCallback = EventListenerCallback<
   AddTagsEvent,

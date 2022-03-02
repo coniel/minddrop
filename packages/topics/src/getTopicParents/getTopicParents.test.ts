@@ -1,52 +1,43 @@
-import { act, renderHook } from '@minddrop/test-utils';
-import { useTopicsStore } from '../useTopicsStore';
-import { generateTopic } from '../generateTopic';
 import { getTopicParents } from './getTopicParents';
+import {
+  cleanup,
+  core,
+  setup,
+  tNavigation,
+  tSailing,
+  tUntitled,
+} from '../test-utils';
+import { mapById } from '@minddrop/utils';
+import { addSubtopics } from '../addSubtopics';
+import { deleteTopic } from '../deleteTopic';
 
 describe('getTopicParents', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
   it("gets a topic's parents", () => {
-    const { result } = renderHook(() => useTopicsStore());
+    // Add 'Untitled' topic as a second parent to 'Navigation' topic
+    const secondParent = addSubtopics(core, tUntitled.id, [tNavigation.id]);
 
-    const topic1 = generateTopic();
-    const topic2 = generateTopic({ subtopics: [topic1.id] });
-    const topic3 = generateTopic({
-      subtopics: [topic1.id, topic2.id],
-      deleted: true,
-      deletedAt: new Date(),
-    });
-    const topic4 = generateTopic();
+    // Get the parents
+    const parents = getTopicParents(tNavigation.id);
 
-    act(() => {
-      result.current.loadTopics([topic1, topic2, topic3, topic4]);
-    });
-
-    const parents = getTopicParents(topic1.id);
-
-    expect(Object.keys(parents).length).toBe(2);
-    expect(parents[topic2.id]).toEqual(topic2);
-    expect(parents[topic3.id]).toEqual(topic3);
+    // Should have 'Sailing' and 'Untitled' topics as parents
+    expect(parents).toEqual(mapById([tSailing, secondParent]));
   });
 
   it('filters results', () => {
-    const { result } = renderHook(() => useTopicsStore());
+    // Add 'Untitled' topic as a second parent to 'Navigation' topic
+    let secondParent = addSubtopics(core, tUntitled.id, [tNavigation.id]);
 
-    const topic1 = generateTopic();
-    const topic2 = generateTopic({ subtopics: [topic1.id] });
-    const topic3 = generateTopic({
-      subtopics: [topic1.id, topic2.id],
-      deleted: true,
-      deletedAt: new Date(),
-    });
-    const topic4 = generateTopic();
+    // Delete 'Untitled' topic
+    secondParent = deleteTopic(core, tUntitled.id);
 
-    act(() => {
-      result.current.loadTopics([topic1, topic2, topic3, topic4]);
-    });
+    // Get deleted parents
+    const parents = getTopicParents(tNavigation.id, { deleted: true });
 
-    const parents = getTopicParents(topic1.id, { deleted: true });
-
-    expect(Object.keys(parents).length).toBe(1);
-    expect(parents[topic2.id]).not.toBeDefined();
-    expect(parents[topic3.id]).toEqual(topic3);
+    // Should return only 'Untitled' topic
+    expect(parents).toEqual(mapById([secondParent]));
   });
 });
