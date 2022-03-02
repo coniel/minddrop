@@ -10,6 +10,7 @@ import { Topic } from '../types';
 export function generateTopic(data?: Partial<Topic>): Topic {
   return {
     title: '',
+    parents: [],
     subtopics: [],
     archivedSubtopics: [],
     views: [],

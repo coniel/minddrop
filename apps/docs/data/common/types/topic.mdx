@@ -30,6 +30,13 @@ Topics which appear at the top level of the hierarchy are referred to as root to
       description: 'The topic title.',
     },
     {
+      name: 'parents',
+      type: 'TopicParentReference',
+      required: true,
+      description:
+        "The references of the topic's parents, see below for details.",
+    },
+    {
       name: 'subtopics',
       type: 'string[]',
       required: true,
@@ -126,6 +133,25 @@ Topics which appear at the top level of the hierarchy are referred to as root to
           if the topic is not hidden.
         </span>
       ),
+    },
+  ]}
+/>
+
+### TopicParentReference
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: "The type of parent, e.g. 'topic'",
+    },
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent.',
     },
   ]}
 />

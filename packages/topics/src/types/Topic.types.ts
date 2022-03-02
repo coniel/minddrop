@@ -4,6 +4,18 @@ import {
   FieldValueDelete,
 } from '@minddrop/utils';
 
+export interface TopicParentReference {
+  /**
+   * The type of parent, typically 'topic'.
+   */
+  type: string;
+
+  /**
+   * The ID of the parent.
+   */
+  id: string;
+}
+
 export interface Topic {
   /**
    * Universally unique ID.
@@ -14,6 +26,11 @@ export interface Topic {
    * The topic title.
    */
   title: string;
+
+  /**
+   * The parents to which this topic belongs.
+   */
+  parents: TopicParentReference[];
 
   /**
    * The IDs of the (active) subtopics inside to the topic.
