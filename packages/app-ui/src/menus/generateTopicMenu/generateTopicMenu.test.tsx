@@ -63,12 +63,14 @@ describe('generateTopicMenu', () => {
     });
 
     const updatedTopic = Topics.get(tCoastalNavigation.id);
-    const subtopic = Topics.get(updatedTopic.subtopics[0]);
+
     // Adds subtopic to topic
     expect(updatedTopic.subtopics.length).toBe(1);
-    // Creates the subtopic
-    expect(subtopic).toBeDefined();
-    // Calls onAddSubtopic callback
+
+    // Subtopic should exist
+    const subtopic = Topics.get(updatedTopic.subtopics[0]);
+
+    // Should call onAddSubtopic callback
     expect(options.onAddSubtopic).toHaveBeenCalledWith(updatedTopic, subtopic);
   });
 

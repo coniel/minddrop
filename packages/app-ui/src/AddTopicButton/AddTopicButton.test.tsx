@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from '@minddrop/test-utils';
-import { PersistentStore } from '@minddrop/persistent-store';
 import { AddTopicButton } from './AddTopicButton';
 import { setup, cleanup, core } from '../test-utils';
 import { TopicViewInstance } from '@minddrop/topics';
@@ -27,11 +26,13 @@ describe('<AddTopicButton />', () => {
     render(<AddTopicButton />);
 
     core.addEventListener('topics:create', (payload) => {
+      // Get root topics
+      const rootTopics = App.getRootTopics();
+
+      // Topic should be included as a root topic
       expect(
-        PersistentStore.getGlobalValue(core, 'topics', []).includes(
-          payload.data.id,
-        ),
-      ).toBe(true);
+        rootTopics.find((topic) => topic.id === payload.data.id),
+      ).toBeDefined();
       done();
     });
 

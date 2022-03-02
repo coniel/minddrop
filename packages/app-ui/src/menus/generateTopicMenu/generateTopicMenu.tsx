@@ -43,10 +43,13 @@ function handleAddSubtopic(
   callback?: TopicMenuOptions['onAddSubtopic'],
 ) {
   // Create the subtopic
-  const subtopic = App.createTopic(core);
+  let subtopic = App.createTopic(core);
 
   // Add the new subtopic to the topic
   const updatedTopic = Topics.addSubtopics(core, topic.id, [subtopic.id]);
+
+  // Get the updated subtopic
+  subtopic = Topics.get(subtopic.id);
 
   // Call the onAddSubtopic callback
   if (callback) {

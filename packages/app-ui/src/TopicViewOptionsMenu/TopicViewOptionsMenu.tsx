@@ -43,12 +43,12 @@ export const TopicViewOptionsMenu: FC<TopicViewOptionsMenuProps> = ({
       // If the topic has a parent, open the parent topic view
       App.openTopicView(core, trail.slice(0, -1));
     } else {
-      const rootTopics = PersistentStore.getGlobalValue(core, 'topics', []);
+      const rootTopics = App.getRootTopics();
 
       if (rootTopics.length > 1) {
         // If the topic has no parent, open the first root topic view
         // if there is one.
-        App.openTopicView(core, [rootTopics[0]]);
+        App.openTopicView(core, [rootTopics[0].id]);
       }
     }
   }, [trail]);

@@ -1,13 +1,11 @@
 import React, { FC, useCallback } from 'react';
 import { Sidebar, NavGroup, Toolbar } from '@minddrop/ui';
 import { useTranslation } from '@minddrop/i18n';
-import { useTopics } from '@minddrop/topics';
 import {
   PersistentStore,
-  useGlobalPersistentStoreValue,
   useLocalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import { useAppCore } from '@minddrop/app';
+import { useAppCore, useRootTopics } from '@minddrop/app';
 import { TopicNavItem } from '../TopicNavItem';
 import { AddTopicButton } from '../AddTopicButton';
 import './AppSidebar.css';
@@ -15,9 +13,8 @@ import './AppSidebar.css';
 export const AppSidebar: FC = () => {
   const { t } = useTranslation();
   const core = useAppCore();
-  const topicIds = useGlobalPersistentStoreValue(core, 'topics');
   const width = useLocalPersistentStoreValue(core, 'sidebarWidth');
-  const topics = useTopics(topicIds, { active: true });
+  const topics = useRootTopics();
 
   const handleResize = useCallback(
     (value: number) =>
