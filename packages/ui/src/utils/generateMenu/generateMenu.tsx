@@ -6,12 +6,12 @@ import {
   MenuContents,
   MenuTopicSelectionItemConfig,
   MenuTriggerItemProps,
-  TooltipMenuItemProps,
 } from '../../types';
+import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
 import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 
 export interface MenuComponents {
-  Item: React.ElementType<TooltipMenuItemProps>;
+  Item: React.ElementType<InteractiveMenuItemProps>;
   Label: React.ElementType;
   Separator: React.ElementType;
   TriggerItem: React.ElementType<MenuTriggerItemProps>;
@@ -59,7 +59,7 @@ export function generateMenu(
     if (type === 'menu-item') {
       // Generate submenu
       if ('submenu' in item) {
-        const { submenu, submenuContentClass, ...otherProps } = item;
+        const { type, submenu, submenuContentClass, ...otherProps } = item;
 
         return [
           ...items,
@@ -76,7 +76,7 @@ export function generateMenu(
 
       return [
         ...items,
-        <Item key={index} {...(props as TooltipMenuItemProps)} />,
+        <Item key={index} {...(props as InteractiveMenuItemProps)} />,
       ];
     }
 

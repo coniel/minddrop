@@ -6,7 +6,7 @@ import { IconProp, IconRenderer } from '../../IconRenderer';
 import './MenuItem.css';
 import { Icon } from '../../Icon';
 
-export interface MenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MenuItemProps {
   /**
    * The item label.
    */
@@ -31,6 +31,11 @@ export interface MenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
    * When `true`, prevents the user from interacting with the item.
    */
   disabled?: boolean;
+
+  /**
+   * Class name applied to the root element.
+   */
+  className?: string;
 }
 
 export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(

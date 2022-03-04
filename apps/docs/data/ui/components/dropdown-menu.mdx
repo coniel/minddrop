@@ -30,6 +30,7 @@ name: dropdown-menu
     'Focus is fully managed.',
     'Full keyboard navigation.',
     'Typeahead support.',
+    'Secondary action support when holidng Shift key',
     'Triggers with a long-press on touch devices',
   ]}
 />
@@ -40,7 +41,7 @@ name: dropdown-menu
 
 You can compose a menu using the available components.
 
-```jsx
+```ts
 import {
   IconButton,
   DropdownMenu,
@@ -140,6 +141,14 @@ export default () => {
             // ...
           </DropdownMenuContent>
         </DropdownMenu>
+        <ContextMenuItem
+          label="Delete"
+          icon="trash"
+          keyboardShortcut={['Del']}
+          onSelect={() => console.log('Delete')}
+          tooltipTitle="Delete drop"
+          tooltipDescription="Shift + Click to delete from all topics"
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -252,6 +261,17 @@ const menu: MenuContent = [
       },
       // ...
     ],
+  },
+  {
+    type: 'menu-item',
+    label: 'Delete',
+    icon: 'trash',
+    onSelect: () => console.log('Delete'),
+    keyboardShortcut: ['Del'],
+    secondaryLabel: 'Delete everywhere',
+    secondaryOnSelect: () => console.log('Delete everywhere'),
+    tooltipTitle: 'Delete drop',
+    tooltipDescription: 'Shift + Click to delete from all topics',
   },
 ];
 
@@ -588,7 +608,7 @@ The component that pops out in an open dropdown menu.
 
 ### DropdownMenuItem
 
-An item in the menu.
+An item in the menu. Items can be selected using the mouse or keyboard. Items can be given a secondary action which is enabled when the Shift key is held down.
 
 <PropsTable
   data={[
@@ -623,6 +643,36 @@ An item in the menu.
       name: 'keyboardShortcut',
       type: 'string[]',
       description: 'The keyboard shortcut for the action.',
+    },
+    {
+      name: 'secondaryLabel',
+      type: 'node',
+      description:
+        'The item label when it is in its secondary state.',
+    },
+    {
+      name: 'secondaryOnSelect',
+      type: '(event: Event) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the user selects an item (via
+          mouse of keyboard) in its secondary state. Calling{' '}
+          <Code>event.preventDefault</Code> in this handler will
+          prevent the context menu from closing when selecting that
+          item.
+        </span>
+      ),
+    },
+    {
+      name: 'secondaryIcon',
+      type: 'IconName | ReactElement',
+      description: 'The item icon when it is in its secondary state.',
+    },
+    {
+      name: 'secondaryKeyboardShortcut',
+      type: 'string[]',
+      description: 'The keyboard shortcut for the secondary action.',
     },
     {
       name: 'tooltipTitle',
@@ -949,6 +999,18 @@ const menu = [
       },
     ],
   },
+  // With secondary action
+  {
+    type: 'menu-item',
+    label: 'Delete',
+    icon: 'trash',
+    onSelect: () => console.log('Delete'),
+    keyboardShortcut: ['Del'],
+    secondaryLabel: 'Delete everywhere',
+    secondaryOnSelect: () => console.log('Delete everywhere'),
+    tooltipTitle: 'Delete drop',
+    tooltipDescription: 'Shift + Click to delete from all topics',
+  },
   // ...
 ];
 ```
@@ -996,6 +1058,36 @@ const menu = [
       name: 'keyboardShortcut',
       type: 'string[]',
       description: 'The keyboard shortcut for the action.',
+    },
+    {
+      name: 'secondaryLabel',
+      type: 'node',
+      description:
+        'The item label when it is in its secondary state.',
+    },
+    {
+      name: 'secondaryOnSelect',
+      type: '(event: Event) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the user selects an item (via
+          mouse of keyboard) in its secondary state. Calling{' '}
+          <Code>event.preventDefault</Code> in this handler will
+          prevent the context menu from closing when selecting that
+          item.
+        </span>
+      ),
+    },
+    {
+      name: 'secondaryIcon',
+      type: 'IconName | ReactElement',
+      description: 'The item icon when it is in its secondary state.',
+    },
+    {
+      name: 'secondaryKeyboardShortcut',
+      type: 'string[]',
+      description: 'The keyboard shortcut for the secondary action.',
     },
     {
       name: 'tooltipTitle',

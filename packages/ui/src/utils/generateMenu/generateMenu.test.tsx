@@ -4,7 +4,6 @@ import {
   MenuItemConfig,
   MenuLabelConfig,
   MenuSeparatorConfig,
-  TooltipMenuItemProps,
   MenuTriggerItemProps,
   MenuTopicSelectionItemConfig,
   MenuColorSelectionItemConfig,
@@ -12,8 +11,9 @@ import {
 } from '../../types';
 import { generateMenu } from './generateMenu';
 import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
+import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
 
-const Item: React.FC<TooltipMenuItemProps> = ({ label }) => (
+const Item: React.FC<InteractiveMenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>
 );
 

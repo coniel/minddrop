@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
-import { TooltipMenuItemProps } from '../../types';
+import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
 import {
   ColorSelectionMenuItem,
   ColorSelectionMenuItemProps,
@@ -8,8 +8,8 @@ import {
 
 export interface ContextMenuColorSelectionItemProps
   extends Omit<ColorSelectionMenuItemProps, 'onSelect'> {
-  onSelect?: TooltipMenuItemProps['onSelect'];
-  disabled?: TooltipMenuItemProps['disabled'];
+  onSelect?: InteractiveMenuItemProps['onSelect'];
+  disabled?: InteractiveMenuItemProps['disabled'];
 }
 
 export const ContextMenuColorSelectionItem: FC<ContextMenuColorSelectionItemProps> =

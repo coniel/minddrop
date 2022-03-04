@@ -160,6 +160,17 @@ export const DropdownMenuDemo = () => (
               },
             ],
           },
+          {
+            type: 'menu-item',
+            label: 'Delete',
+            icon: 'trash',
+            onSelect: () => console.log('Delete'),
+            keyboardShortcut: ['Del'],
+            secondaryLabel: 'Delete everywhere',
+            secondaryOnSelect: () => console.log('Delete everywhere'),
+            tooltipTitle: 'Delete drop',
+            tooltipDescription: 'Shift + Click to delete from all topics',
+          },
         ]}
       />
     </DropdownMenu>

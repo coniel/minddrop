@@ -2,13 +2,8 @@
 import React from 'react';
 import { DropdownMenu } from './DropdownMenu';
 import { DropdownMenuContent } from './DropdownMenuContent';
-import { DropdownMenuItem } from './DropdownMenuItem';
-import { DropdownMenuTriggerItem } from './DropdownMenuTriggerItem';
-import { DropdownMenuLabel } from './DropdownMenuLabel';
-import { DropdownMenuSeparator } from './DropdownMenuSeparator';
 import { DropdownMenuTrigger } from './DropdownMenuTrigger';
 import { IconButton } from '../IconButton';
-import { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';
 import { ContentColors } from '../constants';
 
 export default {
@@ -16,7 +11,7 @@ export default {
   component: DropdownMenu,
 };
 
-export const GeneratedFromContentProp: React.FC = () => (
+export const Default: React.FC = () => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <IconButton icon="more-vertical" label="Drop options" />
@@ -43,6 +38,7 @@ export const GeneratedFromContentProp: React.FC = () => (
           type: 'menu-item',
           label: 'Color',
           icon: 'color-palette',
+          submenuContentClass: 'color-selection-submenu',
           submenu: ContentColors.map((color) => ({
             type: 'menu-color-selection-item',
             color: color.value,
@@ -90,96 +86,183 @@ export const GeneratedFromContentProp: React.FC = () => (
           label: 'Move to',
           icon: 'arrow-up-right',
           onSelect: () => console.log('Move to'),
-          keyboardShortcut: ['Ctrl', 'M'],
-          tooltipTitle: 'Move drop to another topic',
+          submenuContentClass: 'topic-selection-submenu',
+          submenu: [
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Sailing',
+              onSelect: () => console.log("Move to 'Sailing'"),
+              subtopics: [
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Navigation',
+                  onSelect: () => console.log("Move to 'Navigation'"),
+                  subtopics: [
+                    {
+                      type: 'menu-topic-selection-item',
+                      label: 'Coastal navigation',
+                      onSelect: () =>
+                        console.log("Move to 'Coastal navigation'"),
+                      subtopics: [],
+                    },
+                    {
+                      type: 'menu-topic-selection-item',
+                      label: 'Offshore navigation',
+                      onSelect: () =>
+                        console.log("Move to 'Offshore navigation'"),
+                      subtopics: [],
+                    },
+                  ],
+                },
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Anchoring',
+                  onSelect: () => console.log("Move to 'Anchoring'"),
+                  subtopics: [],
+                },
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Sailboats',
+                  onSelect: () => console.log("Move to 'Sailboats'"),
+                  subtopics: [],
+                },
+              ],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Home',
+              onSelect: () => console.log("Move to 'Home'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Tea',
+              onSelect: () => console.log("Move to 'Tea'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Work',
+              onSelect: () => console.log("Move to 'work'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Japanese',
+              onSelect: () => console.log("Move to 'Japanese'"),
+              subtopics: [],
+            },
+          ],
         },
         {
           type: 'menu-item',
           label: 'Add to',
           icon: 'inside',
           onSelect: () => console.log('Add to'),
-          keyboardShortcut: ['Ctrl', 'A'],
-          tooltipTitle: 'Add drop to another topic',
-          tooltipDescription:
-            'Drops appearing in multiple topics are kept in sync.',
+          submenuContentClass: 'topic-selection-submenu',
+          submenu: [
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Sailing',
+              onSelect: () => console.log("Move to 'Sailing'"),
+              subtopics: [
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Navigation',
+                  onSelect: () => console.log("Move to 'Navigation'"),
+                  subtopics: [
+                    {
+                      type: 'menu-topic-selection-item',
+                      label: 'Coastal navigation',
+                      onSelect: () =>
+                        console.log("Move to 'Coastal navigation'"),
+                      subtopics: [],
+                    },
+                    {
+                      type: 'menu-topic-selection-item',
+                      label: 'Offshore navigation',
+                      onSelect: () =>
+                        console.log("Move to 'Offshore navigation'"),
+                      subtopics: [],
+                    },
+                  ],
+                },
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Anchoring',
+                  onSelect: () => console.log("Move to 'Anchoring'"),
+                  subtopics: [],
+                },
+                {
+                  type: 'menu-topic-selection-item',
+                  label: 'Sailboats',
+                  onSelect: () => console.log("Move to 'Sailboats'"),
+                  subtopics: [],
+                },
+              ],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Home',
+              onSelect: () => console.log("Move to 'Home'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Tea',
+              onSelect: () => console.log("Move to 'Tea'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Work',
+              onSelect: () => console.log("Move to 'work'"),
+              subtopics: [],
+            },
+            {
+              type: 'menu-topic-selection-item',
+              label: 'Japanese',
+              onSelect: () => console.log("Move to 'Japanese'"),
+              subtopics: [],
+            },
+          ],
+        },
+        {
+          type: 'menu-separator',
+        },
+        {
+          type: 'menu-item',
+          label: 'Archive',
+          icon: 'archive',
+          onSelect: () => console.log('Archive'),
+          secondaryLabel: 'Archive everywhere',
+          secondaryOnSelect: () => console.log('Archive everywhere'),
+          tooltipTitle: 'Archive drop',
+          keyboardShortcut: ['Shift', 'Del'],
+          tooltipDescription: (
+            <span>
+              <span style={{ fontWeight: 'bold' }}>Shift + Click</span> to
+              archive in all topics
+            </span>
+          ),
+        },
+        {
+          type: 'menu-item',
+          label: 'Delete',
+          icon: 'trash',
+          onSelect: () => console.log('Delete'),
+          secondaryLabel: 'Delete everywhere',
+          secondaryOnSelect: () => console.log('Delete everywhere'),
+          keyboardShortcut: ['Del'],
+          tooltipTitle: 'Delete drop',
+          tooltipDescription: (
+            <span>
+              <span style={{ fontWeight: 'bold' }}>Shift + Click</span> to
+              delete from all topics
+            </span>
+          ),
         },
       ]}
     />
   </DropdownMenu>
-);
-
-export const ComposedWithComponents: React.FC = () => (
-  <div>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <IconButton icon="more-vertical" label="Drop options" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" style={{ width: 240 }}>
-        <DropdownMenuItem
-          label="Add title"
-          icon="title"
-          keyboardShortcut={['Ctrl', 'T']}
-          onSelect={() => console.log('Add title')}
-        />
-        <DropdownMenuItem
-          label="Add note"
-          icon="note"
-          keyboardShortcut={['Ctrl', 'Shift', 'N']}
-          onSelect={() => console.log('Add note')}
-        />
-        <DropdownMenu>
-          <DropdownMenuTriggerItem label="Color" icon="color-palette" />
-          <DropdownMenuContent style={{ minWidth: 220 }}>
-            {ContentColors.map((color) => (
-              <DropdownMenuColorSelectionItem
-                key={color.value}
-                color={color.value}
-                onSelect={() => console.log(color.value)}
-              />
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTriggerItem label="Turn into" icon="turn-into" />
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              label="Text"
-              onSelect={() => console.log('Turn into text')}
-            />
-            <DropdownMenuItem
-              label="Image"
-              onSelect={() => console.log('Turn into image')}
-            />
-            <DropdownMenuItem
-              label="Equation"
-              onSelect={() => console.log('Turn into equation')}
-            />
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          label="Copy link"
-          icon="link"
-          keyboardShortcut={['Ctrl', 'Shift', 'C']}
-          onSelect={() => console.log('Copy link')}
-        />
-        <DropdownMenuItem
-          label="Move to"
-          icon="arrow-up-right"
-          keyboardShortcut={['Ctrl', 'M']}
-          onSelect={() => console.log('Move to')}
-          tooltipTitle="Move drop to another topic"
-        />
-        <DropdownMenuItem
-          label="Add to"
-          icon="inside"
-          keyboardShortcut={['Ctrl', 'A']}
-          onSelect={() => console.log('Add to')}
-          tooltipTitle="Add drop to another topic"
-          tooltipDescription="Drops appearing in multiple topics are kept in sync."
-        />
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </div>
 );
