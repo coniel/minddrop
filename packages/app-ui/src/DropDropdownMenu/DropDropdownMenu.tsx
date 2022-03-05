@@ -13,19 +13,19 @@ export interface DropDropdownMenuProps extends Omit<DropMenuProps, 'menuType'> {
   /**
    * The ID of the drop.
    */
-  drop: string;
+  dropId: string;
 
   /**
    * The ID of the parent topic.
    */
-  topic: string;
+  topicId: string;
 }
 
 export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
-  drop,
+  dropId,
   ...other
 }) => {
-  const { isSelected, selectAsOnly } = useSelectableDrop(drop);
+  const { isSelected, selectAsOnly } = useSelectableDrop(dropId);
 
   return (
     <DropdownMenu
@@ -39,7 +39,7 @@ export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
         <IconButton icon="more-vertical" label={i18n.t('dropOptions')} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="drop-menu-content">
-        <DropMenu menuType="dropdown" drop={drop} {...other} />
+        <DropMenu menuType="dropdown" dropId={dropId} {...other} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

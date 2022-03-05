@@ -28,7 +28,7 @@ describe('<DropDropdownMenu />', () => {
 
   const init = () => {
     const utils = render(
-      <DropDropdownMenu drop={textDrop1.id} topic={tSailing.id} />,
+      <DropDropdownMenu dropId={textDrop1.id} topicId={tSailing.id} />,
     );
 
     const getTriggerButton = () => {

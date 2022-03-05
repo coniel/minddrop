@@ -49,7 +49,7 @@ export const topicsCore = initializeCore({
   extensionId: 'topics',
 });
 
-export const globalPersistentStore = { topics: rootTopicIds };
+export const globalPersistentStore = { rootTopics: rootTopicIds };
 export const localPersistentStore = {
   sidebarWidth: 302,
   expandedTopics: [],

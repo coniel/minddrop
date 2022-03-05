@@ -11,20 +11,20 @@ export interface DropContextMenuProps extends Omit<DropMenuProps, 'menuType'> {
   /**
    * The ID of the drop.
    */
-  drop: string;
+  dropId: string;
 
   /**
    * The ID of the parent topic.
    */
-  topic: string;
+  topicId: string;
 }
 
 export const DropContextMenu: FC<DropContextMenuProps> = ({
   children,
-  drop,
+  dropId,
   ...other
 }) => {
-  const { isSelected, selectAsOnly } = useSelectableDrop(drop);
+  const { isSelected, selectAsOnly } = useSelectableDrop(dropId);
 
   return (
     <ContextMenu
@@ -36,7 +36,7 @@ export const DropContextMenu: FC<DropContextMenuProps> = ({
     >
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="drop-menu-content">
-        <DropMenu menuType="context" drop={drop} {...other} />
+        <DropMenu menuType="context" dropId={dropId} {...other} />
       </ContextMenuContent>
     </ContextMenu>
   );

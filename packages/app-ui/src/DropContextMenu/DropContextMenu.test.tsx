@@ -27,7 +27,7 @@ describe('<DropContextMenu />', () => {
 
   const init = () => {
     const utils = render(
-      <DropContextMenu drop={textDrop1.id} topic={tSailing.id}>
+      <DropContextMenu dropId={textDrop1.id} topicId={tSailing.id}>
         <div>trigger</div>
       </DropContextMenu>,
     );
