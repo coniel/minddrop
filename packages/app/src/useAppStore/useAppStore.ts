@@ -101,6 +101,7 @@ export const useAppStore = createStore<AppStore>((set) => ({
   clear: () =>
     set({
       rootTopics: [],
+      archivedRootTopics: [],
       uiExtensions: [],
       selectedDrops: [],
       selectedTopics: [],

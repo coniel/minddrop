@@ -104,6 +104,7 @@ describe('useAppStore', () => {
 
     act(() => {
       result.current.addRootTopics(['topic-id']);
+      result.current.addArchivedRootTopics(['archived-topic-id']);
       result.current.addUiExtension(uiExtension);
       result.current.addUiExtension(uiExtension);
       result.current.addSelectedDrops(['drop-id']);
@@ -118,6 +119,7 @@ describe('useAppStore', () => {
     });
 
     expect(result.current.rootTopics.length).toBe(0);
+    expect(result.current.archivedRootTopics.length).toBe(0);
     expect(result.current.uiExtensions.length).toBe(0);
     expect(result.current.selectedDrops.length).toBe(0);
     expect(result.current.selectedTopics.length).toBe(0);
