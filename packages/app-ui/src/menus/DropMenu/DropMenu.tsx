@@ -23,8 +23,6 @@ import {
   DropdownMenuTopicSelectionItem,
   ContextMenuColorSelectionItem,
   DropdownMenuColorSelectionItem,
-  MenuItemProps,
-  InteractiveMenuItemProps,
 } from '@minddrop/ui';
 import { App, useAppCore, useAppStore, useRootTopics } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
