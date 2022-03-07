@@ -28,10 +28,8 @@ describe('<TopicViewOptionsMenu />', () => {
     cleanup();
   });
 
-  const init = (topic = tNavigation, trail = [tSailing.id, tNavigation.id]) => {
-    const utils = render(
-      <TopicViewOptionsMenu defaultOpen topic={topic} trail={trail} />,
-    );
+  const init = (trail = [tSailing.id, tNavigation.id]) => {
+    const utils = render(<TopicViewOptionsMenu defaultOpen trail={trail} />);
 
     return utils;
   };
@@ -75,7 +73,7 @@ describe('<TopicViewOptionsMenu />', () => {
   });
 
   it('opens first root level topic when deleted if topic has no parent topic', (done) => {
-    const { getByText } = init(tUntitled, [tUntitled.id]);
+    const { getByText } = init([tUntitled.id]);
     const label = i18n.t('delete');
 
     core.addEventListener<DeleteTopicEvent, DeleteTopicEventData>(

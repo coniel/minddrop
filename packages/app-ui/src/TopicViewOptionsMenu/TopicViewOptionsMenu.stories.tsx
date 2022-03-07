@@ -1,15 +1,26 @@
-import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import React from 'react';
+import { initializeCore } from '@minddrop/core';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
+import React, { useEffect } from 'react';
 import '../test-utils/initialize-stories';
 import { TopicViewOptionsMenu } from './TopicViewOptionsMenu';
 
-const { tSailing } = TOPICS_TEST_DATA;
+const { tSailing, tCoastalNavigation, tUntitled } = TOPICS_TEST_DATA;
+
+const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export default {
   title: 'app/TopicViewOptionsMenu',
   component: TopicViewOptionsMenu,
 };
 
-export const Default: React.FC = () => (
-  <TopicViewOptionsMenu topic={tSailing} trail={[tSailing.id]} />
+export const WithSingleParent: React.FC = () => (
+  <TopicViewOptionsMenu trail={[tSailing.id]} />
 );
+
+export const WithMultipleParent: React.FC = () => {
+  useEffect(() => {
+    Topics.addSubtopics(core, tUntitled.id, [tCoastalNavigation.id]);
+  }, []);
+
+  return <TopicViewOptionsMenu trail={[tCoastalNavigation.id]} />;
+};

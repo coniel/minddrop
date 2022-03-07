@@ -137,7 +137,7 @@ export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
         <TopicTitle ref={titleInput} topic={topic} />
         <Toolbar className="actions">
           <IconButton icon="add" label="Add content" />
-          <TopicViewOptionsMenu topic={topic} trail={trail} />
+          <TopicViewOptionsMenu trail={trail} />
         </Toolbar>
       </div>
       <div className="content">{children}</div>

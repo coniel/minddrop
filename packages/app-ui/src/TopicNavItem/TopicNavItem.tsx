@@ -8,8 +8,8 @@ import {
   Popover,
   PopoverAnchor,
 } from '@minddrop/ui';
+import { App } from '@minddrop/app';
 import { Topic, useTopic, TopicViewInstance } from '@minddrop/topics';
-import { generateTopicMenu } from '../menus';
 import { useAppCore, useCurrentView } from '@minddrop/app';
 import {
   PersistentStore,
@@ -17,7 +17,7 @@ import {
 } from '@minddrop/persistent-store';
 import { FieldValue } from '@minddrop/utils';
 import { RenameTopicPopover } from '../RenameTopicPopover';
-import { App } from '@minddrop/app';
+import { TopicMenu } from '../TopicMenu';
 
 export interface TopicNavItemProps
   extends Omit<TopicNavItemPrimitiveProps, 'label'> {
@@ -63,7 +63,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
     App.openTopicView(core, topicTrail);
   }
 
-  function onAddSubtopic(t: Topic, subtopic: Topic) {
+  function onAddSubtopic(subtopic: Topic) {
     handleExpandedChange(true);
     openTopicView([...trail, subtopic.id]);
   }
@@ -95,13 +95,14 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
             </TopicNavItemPrimitive>
           </PopoverAnchor>
         </ContextMenuTrigger>
-        <ContextMenuContent
-          className="topic-menu-content"
-          content={generateTopicMenu(core, trail, {
-            onRename: openRenamePopover,
-            onAddSubtopic,
-          })}
-        />
+        <ContextMenuContent className="topic-menu-content">
+          <TopicMenu
+            menuType="context"
+            trail={trail}
+            onRename={openRenamePopover}
+            onAddSubtopic={onAddSubtopic}
+          />
+        </ContextMenuContent>
       </ContextMenu>
       <RenameTopicPopover topic={topic} onClose={closeRenamePopover} />
     </Popover>

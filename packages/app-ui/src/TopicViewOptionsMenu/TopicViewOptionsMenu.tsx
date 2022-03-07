@@ -8,16 +8,9 @@ import {
   DropdownMenuTrigger,
   IconButton,
 } from '@minddrop/ui';
-import { useTranslation } from '@minddrop/i18n';
-import { generateTopicMenu } from '../menus';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { TopicMenu } from '../TopicMenu';
 
 export interface TopicViewOptionsMenuProps extends DropdownMenuProps {
-  /**
-   * The topic.
-   */
-  topic: Topic;
-
   /**
    * The trail of topic IDs leading up to and including the active one.
    */
@@ -25,14 +18,13 @@ export interface TopicViewOptionsMenuProps extends DropdownMenuProps {
 }
 
 export const TopicViewOptionsMenu: FC<TopicViewOptionsMenuProps> = ({
-  topic,
   trail,
   ...other
 }) => {
   const core = useAppCore();
 
   const onAddSubtopic = useCallback(
-    (t: Topic, subtopic: Topic) => {
+    (subtopic: Topic) => {
       App.openTopicView(core, [...trail, subtopic.id]);
     },
     [trail],
@@ -53,24 +45,19 @@ export const TopicViewOptionsMenu: FC<TopicViewOptionsMenuProps> = ({
     }
   }, [trail]);
 
-  const dropdownMenu = useMemo(
-    () =>
-      generateTopicMenu(core, trail, {
-        onAddSubtopic,
-        onDelete,
-      }),
-    [core, topic, onAddSubtopic],
-  );
-
   return (
     <DropdownMenu {...other}>
       <DropdownMenuTrigger>
         <IconButton icon="more-vertical" label="Topic  options" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="topic-menu-content"
-        content={dropdownMenu}
-      />
+      <DropdownMenuContent className="topic-menu-content">
+        <TopicMenu
+          menuType="dropdown"
+          trail={trail}
+          onAddSubtopic={onAddSubtopic}
+          onDelete={onDelete}
+        />
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 };
