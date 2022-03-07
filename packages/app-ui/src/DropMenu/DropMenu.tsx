@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { i18n } from '@minddrop/i18n';
 import {
   MenuContents,
@@ -24,11 +24,11 @@ import {
   ContextMenuColorSelectionItem,
   DropdownMenuColorSelectionItem,
 } from '@minddrop/ui';
-import { App, useAppCore, useAppStore, useRootTopics } from '@minddrop/app';
+import { App, useAppCore } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
-import { Drops, useDrop } from '@minddrop/drops';
+import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
-import { generateTopicSelectionMenu } from '../generateTopicSelectionMenu';
+import { generateTopicSelectionMenu } from '../utils';
 
 // Components used to generate a context menu
 const ContextMenuComponents: MenuComponents = {

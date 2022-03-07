@@ -6,7 +6,7 @@ import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { DropdownMenu, DropdownMenuContent } from '@minddrop/ui';
 import { App } from '@minddrop/app';
 import { contains } from '@minddrop/utils';
-import { cleanup, core, setup } from '../../test-utils';
+import { cleanup, core, setup } from '../test-utils';
 import { DropMenu, DropMenuProps } from './DropMenu';
 
 const { tSailing, tUntitled, tNoDrops } = TOPICS_TEST_DATA;

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { DropMenu, DropMenuProps } from '../menus';
+import { DropMenu, DropMenuProps } from '../DropMenu';
 import {
   DropdownMenu,
   DropdownMenuContent,
