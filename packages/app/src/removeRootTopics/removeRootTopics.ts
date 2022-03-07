@@ -22,7 +22,14 @@ export function removeRootTopics(core: Core, topicIds: string[]): void {
     FieldValue.arrayRemove(topicIds),
   );
 
-  // Dispatch app:remove-root-topics event
+  // Remove app as parent on topics
+  topicIds.forEach((topicId) => {
+    Topics.removeParents(core, topicId, [{ type: 'app', id: 'root' }]);
+  });
+
+  // Get the updated topics
   const topics = Topics.get(topicIds);
+
+  // Dispatch app:remove-root-topics event
   core.dispatch('app:remove-root-topics', topics);
 }

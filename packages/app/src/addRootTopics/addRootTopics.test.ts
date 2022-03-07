@@ -4,7 +4,7 @@ import {
   PersistentStore,
   useGlobalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { addRootTopics } from './addRootTopics';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup } from '../test-utils';
@@ -57,12 +57,24 @@ describe('addRootTopics', () => {
     ]);
   });
 
+  it('adds app as parent to the topic', () => {
+    // Add root topic
+    addRootTopics(core, [tAnchoring.id]);
+
+    // Get the updated topic
+    const topic = Topics.get(tAnchoring.id);
+
+    // Should have app as parent
+    expect(contains(topic.parents, [{ type: 'app', id: 'root' }])).toBeTruthy();
+  });
+
   it("dispatches a 'app:add-root-topics' event", (done) => {
     function callback(payload) {
-      expect(payload.data).toEqual({
-        [tAnchoring.id]: tAnchoring,
-        [tNavigation.id]: tNavigation,
-      });
+      // Get updated topic
+      const topics = Topics.get([tAnchoring.id, tNavigation.id]);
+
+      // Payload data should be updated topics
+      expect(payload.data).toEqual(topics);
       done();
     }
 

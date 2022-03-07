@@ -22,7 +22,14 @@ export function addRootTopics(core: Core, topicIds: string[]): void {
     FieldValue.arrayUnion(topicIds),
   );
 
-  // Dispatch app:add-root-topics event
+  // Add app as parent on topics
+  topicIds.forEach((topicId) => {
+    Topics.addParents(core, topicId, [{ type: 'app', id: 'root' }]);
+  });
+
+  // Get the updated topics
   const topics = Topics.get(topicIds);
+
+  // Dispatch app:add-root-topics event
   core.dispatch('app:add-root-topics', topics);
 }

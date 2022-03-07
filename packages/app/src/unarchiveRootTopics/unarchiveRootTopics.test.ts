@@ -4,7 +4,7 @@ import {
   PersistentStore,
   useGlobalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { unarchiveRootTopics } from './unarchiveRootTopics';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup } from '../test-utils';
@@ -63,10 +63,11 @@ describe('unarchiveRootTopics', () => {
 
   it("dispatches a 'app:unarchive-root-topics' event", (done) => {
     function callback(payload) {
-      expect(payload.data).toEqual({
-        [tAnchoring.id]: tAnchoring,
-        [tNavigation.id]: tNavigation,
-      });
+      // Get the updated topics
+      const topics = Topics.get([tAnchoring.id, tNavigation.id]);
+
+      // Data payload should be updated topics
+      expect(payload.data).toEqual(topics);
       done();
     }
 

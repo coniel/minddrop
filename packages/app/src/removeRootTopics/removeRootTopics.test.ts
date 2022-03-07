@@ -4,7 +4,7 @@ import {
   PersistentStore,
   useGlobalPersistentStoreValue,
 } from '@minddrop/persistent-store';
-import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { removeRootTopics } from './removeRootTopics';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup } from '../test-utils';
@@ -59,12 +59,27 @@ describe('removeRootTopics', () => {
     ).toBeTruthy();
   });
 
+  it('removes app as a parent on the topics', () => {
+    // Remove a root topic
+    removeRootTopics(core, [tAnchoring.id]);
+
+    // Get the updated root topic
+    const topic = Topics.get(tAnchoring.id);
+
+    // Should no longer have app as a parent
+    expect(
+      doesNotContain(topic.parents, [{ type: 'app', id: 'root' }]),
+    ).toBeTruthy();
+  });
+
   it("dispatches a 'app:remove-root-topics' event", (done) => {
     function callback(payload) {
-      expect(payload.data).toEqual({
-        [tAnchoring.id]: tAnchoring,
-        [tNavigation.id]: tNavigation,
-      });
+      // Get updated topic
+      const topics = Topics.get([tAnchoring.id, tNavigation.id]);
+
+      // Payload data should be updated topics
+      expect(payload.data).toEqual(topics);
+
       done();
     }
 
