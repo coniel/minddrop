@@ -15,14 +15,24 @@ export function archiveRootTopics(core: Core, topicIds: string[]): void {
   // Get the topics
   const topics = Topics.get(topicIds);
 
-  // Add the archived topic IDs to the app store
+  // Add the archived topic IDs to the app store's archivedRootTopics
   useAppStore.getState().addArchivedRootTopics(topicIds);
 
-  // Add the archived topic IDs to global persistent store
+  // Remove the archived topic IDs from the app store's rootTopics
+  useAppStore.getState().removeRootTopics(topicIds);
+
+  // Add the archived topic IDs to global persistent store's archivedRootTopics
   PersistentStore.setGlobalValue(
     core,
     'archivedRootTopics',
     FieldValue.arrayUnion(topicIds),
+  );
+
+  // Remove the archived topic IDs from global persistent store's rootTopics
+  PersistentStore.setGlobalValue(
+    core,
+    'rootTopics',
+    FieldValue.arrayRemove(topicIds),
   );
 
   // Dispatch app:archive-root-topics event
