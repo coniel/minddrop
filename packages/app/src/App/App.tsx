@@ -15,10 +15,12 @@ import { removeRootTopics } from '../removeRootTopics';
 import { archiveRootTopics } from '../archiveRootTopics';
 import { unarchiveRootTopics } from '../unarchiveRootTopics';
 import { getArchivedRootTopics } from '../getArchivedRootTopics';
+import { moveSubtopicsToRoot } from '../moveSubtopicsToRoot';
 
 export const App: AppApi = {
   addRootTopics,
   removeRootTopics,
+  moveSubtopicsToRoot,
   getRootTopics,
   archiveRootTopics,
   unarchiveRootTopics,

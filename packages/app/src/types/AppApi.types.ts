@@ -159,6 +159,20 @@ export interface AppApi {
   removeRootTopics(core: Core, topicIds: string[]): void;
 
   /**
+   * Removes subtopics from a parent topic and adds them to the
+   * root level. Dispatches a `app:move-subtopics-root` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param parentTopicId The ID of the parent topic containg the subtopics.
+   * @param subtopicIds The IDs of the subtopics to move to the root level.
+   */
+  moveSubtopicsToRoot(
+    core: Core,
+    parentTopicId: string,
+    subtopicIds: string[],
+  ): void;
+
+  /**
    * Returns archived root topics in the order in which
    * they appear in the app sidebar.
    *

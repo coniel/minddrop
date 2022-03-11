@@ -209,6 +209,34 @@ App.removeRootTopics(core: Core, topicIds: string[]): void
   ]}
 />
 
+### moveSubtopicsToRoot
+
+Removes subtopics from a parent topic and adds them to the root level. Dispatches an `app:move-subtopics-root` event.
+
+```ts
+App.moveSubtopicsToRoot(core: Core, parentTopicId: string, subtopicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'parentTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the parent topic from which to move the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the subtopics to move to the root level.',
+    },
+  ]}
+/>
+
 ### archiveRootTopics
 
 Archives root level topics and dispaches an `app:archive-root-topics` event.
@@ -888,6 +916,12 @@ See below the table for more details on the data passed by app related events.
       data: 'TopicMap',
       description:
         'Dispatched when topics are removed from the root level.',
+    },
+    {
+      name: 'app:move-subtopics-root',
+      data: 'TopicMap',
+      description:
+        'Dispatched when subtopics are moved to the root level.',
     },
     {
       name: 'app:archive-root-topics',
