@@ -130,7 +130,6 @@ export const TopicSelectionMenuItem = React.forwardRef<
                 aria-hidden="true"
                 className="spacer-button"
                 tabIndex={-1}
-                onClick={handleSelect}
                 style={{ paddingLeft: level * 16, height: 24 }}
               />
             )}
@@ -156,12 +155,7 @@ export const TopicSelectionMenuItem = React.forwardRef<
                 />
               )}
             </div>
-            <div
-              role="button"
-              tabIndex={0}
-              className="label-button"
-              onClick={handleSelect}
-            >
+            <div role="button" tabIndex={0} className="label-button">
               <Text as="div" className="label" size="regular">
                 {title}
               </Text>
