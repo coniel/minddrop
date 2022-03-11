@@ -12,6 +12,8 @@ import {
   RemoveRootTopicsEventCallback,
   UnarchiveRootTopicsEvent,
   UnarchiveRootTopicsEventCallback,
+  MoveSubtopicsToRootEvent,
+  MoveSubtopicsToRootEventData,
 } from './AppEvents.types';
 import { View, ViewInstance } from '@minddrop/views';
 import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
@@ -265,6 +267,13 @@ export interface AppApi {
     callback: RemoveRootTopicsEventCallback,
   );
 
+  // Add 'app:move-subtopics-root' event listener
+  addEventListener(
+    core: Core,
+    event: MoveSubtopicsToRootEvent,
+    callback: MoveSubtopicsToRootEventData,
+  );
+
   // Add 'app:unarchive-root-topics' event listener
   addEventListener(
     core: Core,
@@ -325,11 +334,18 @@ export interface AppApi {
     callback: RemoveRootTopicsEventCallback,
   );
 
-  // Remove 'app:remove-root-topics' event listener
+  // Remove 'app:move-subtopics-root' event listener
   removeEventListener(
     core: Core,
-    event: RemoveRootTopicsEvent,
-    callback: RemoveRootTopicsEventCallback,
+    event: MoveSubtopicsToRootEvent,
+    callback: MoveSubtopicsToRootEventData,
+  );
+
+  // Remove 'app:archive-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: ArchiveRootTopicsEvent,
+    callback: ArchiveRootTopicsEventCallback,
   );
 
   // Remove 'app:unarchive-root-topics' event listener
