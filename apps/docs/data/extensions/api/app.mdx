@@ -237,6 +237,34 @@ App.moveSubtopicsToRoot(core: Core, parentTopicId: string, subtopicIds: string[]
   ]}
 />
 
+### moveRootTopicsToParentTopic
+
+Removes topics from the root level and adds them as subtopics to a specified topic. Dispatches a `app:move-root-topics` event.
+
+```ts
+App.moveRootTopicsToParentTopic(core: Core, parentTopicId: string, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'parentTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the parent topic into which to move the topics.',
+    },
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics to move to from root level.',
+    },
+  ]}
+/>
+
 ### archiveRootTopics
 
 Archives root level topics and dispaches an `app:archive-root-topics` event.
@@ -924,6 +952,12 @@ See below the table for more details on the data passed by app related events.
         'Dispatched when subtopics are moved to the root level.',
     },
     {
+      name: 'app:move-root-topics',
+      data: 'MoveRootTopicsEventData',
+      description:
+        'Dispatched when root level topics are moved into a parent topic.',
+    },
+    {
       name: 'app:archive-root-topics',
       data: 'TopicMap',
       description: 'Dispatched when root level topics are archived.',
@@ -1001,8 +1035,26 @@ See below the table for more details on the data passed by app related events.
       name: 'subtopics',
       type: 'TopicMap',
       required: true,
-      description:
-        'The subtopics which were moved to the root level.',
+      description: 'The moved subtopics.',
+    },
+  ]}
+/>
+
+### MoveRootTopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic into which the topics were moved.',
+    },
+    {
+      name: 'topics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The moved topics.',
     },
   ]}
 />

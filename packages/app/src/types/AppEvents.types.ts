@@ -7,6 +7,7 @@ export type OpenViewEvent = 'app:open-view';
 export type AddRootTopicsEvent = 'app:add-root-topics';
 export type RemoveRootTopicsEvent = 'app:remove-root-topics';
 export type MoveSubtopicsToRootEvent = 'app:move-subtopics-root';
+export type MoveRootTopicsEvent = 'app:move-root-topics';
 export type ArchiveRootTopicsEvent = 'app:archive-root-topics';
 export type UnarchiveRootTopicsEvent = 'app:unarchive-root-topics';
 export type SelectDropsEvent = 'app:select-drops';
@@ -37,6 +38,18 @@ export interface MoveSubtopicsToRootEventData {
   subtopics: TopicMap;
 }
 
+export interface MoveRootTopicsEventData {
+  /**
+   * The topic into which the topics were moved.
+   */
+  toTopic: Topic;
+
+  /**
+   * The moved topics.
+   */
+  topics: TopicMap;
+}
+
 export type OpenViewEventCallback = EventListenerCallback<
   OpenViewEvent,
   OpenViewEventData
@@ -52,6 +65,10 @@ export type RemoveRootTopicsEventCallback = EventListenerCallback<
 export type MoveSubtopicsToRootEventCallback = EventListenerCallback<
   MoveSubtopicsToRootEvent,
   RemoveRootTopicsEventData
+>;
+export type MoveRootTopicsEventCallback = EventListenerCallback<
+  MoveRootTopicsEvent,
+  MoveRootTopicsEventData
 >;
 export type ArchiveRootTopicsEventCallback = EventListenerCallback<
   ArchiveRootTopicsEvent,

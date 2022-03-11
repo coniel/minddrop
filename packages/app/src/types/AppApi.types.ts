@@ -14,6 +14,8 @@ import {
   UnarchiveRootTopicsEventCallback,
   MoveSubtopicsToRootEvent,
   MoveSubtopicsToRootEventData,
+  MoveRootTopicsEvent,
+  MoveRootTopicsEventCallback,
 } from './AppEvents.types';
 import { View, ViewInstance } from '@minddrop/views';
 import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
@@ -175,6 +177,21 @@ export interface AppApi {
   ): void;
 
   /**
+   * Removes topics from the root level and adds them as
+   * subtopics into a specified topic.
+   * Dispatches a `app:move-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param toTopicId The ID of the topic into which to move the topics.
+   * @param topicIds The IDs of the root level topics to move.
+   */
+  moveRootTopicsToParentTopic(
+    core: Core,
+    toTopicId: string,
+    topicIds: string[],
+  ): void;
+
+  /**
    * Returns archived root topics in the order in which
    * they appear in the app sidebar.
    *
@@ -274,6 +291,13 @@ export interface AppApi {
     callback: MoveSubtopicsToRootEventData,
   );
 
+  // Add 'app:move-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: MoveRootTopicsEvent,
+    callback: MoveRootTopicsEventCallback,
+  );
+
   // Add 'app:unarchive-root-topics' event listener
   addEventListener(
     core: Core,
@@ -339,6 +363,13 @@ export interface AppApi {
     core: Core,
     event: MoveSubtopicsToRootEvent,
     callback: MoveSubtopicsToRootEventData,
+  );
+
+  // Remove 'app:move-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: MoveRootTopicsEvent,
+    callback: MoveRootTopicsEventCallback,
   );
 
   // Remove 'app:archive-root-topics' event listener
