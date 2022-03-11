@@ -53,6 +53,20 @@ describe('addSubtopics', () => {
     ).toBeTruthy();
   });
 
+  it('does not add subtopic if already present', () => {
+    // Add a subtopic
+    addSubtopics(core, tNoDrops.id, [tTwoDrops.id]);
+
+    // Add the subtopic again along with another one
+    const result = addSubtopics(core, tNoDrops.id, [
+      tTwoDrops.id,
+      tSixDrops.id,
+    ]);
+
+    // Returned value should equal updated topic
+    expect(result.subtopics.length).toBe(2);
+  });
+
   it("dispatches a 'topics:add-subtopics' event", (done) => {
     // Listen to 'topics:add-subtopics' events
     core.addEventListener('topics:add-subtopics', (payload) => {

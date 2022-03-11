@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
 import { addParentsToTopic } from '../addParentsToTopic';
+import { getTopic } from '../getTopic';
 import { getTopics } from '../getTopics';
 import { Topic } from '../types';
 import { updateTopic } from '../updateTopic';
@@ -20,16 +21,24 @@ export function addSubtopics(
   topicId: string,
   subtopicIds: string[],
 ): Topic {
+  // Get the topic
+  const topic = getTopic(topicId);
+
+  // Filter out subtopic IDs already in the topic to prevent duplicates
+  const newSubtopicIds = subtopicIds.filter(
+    (id) => !topic.subtopics.includes(id),
+  );
+
   // Get the subtopics
-  const subtopics = getTopics(subtopicIds);
+  const subtopics = getTopics(newSubtopicIds);
 
   // Update the topic
   const updated = updateTopic(core, topicId, {
-    subtopics: FieldValue.arrayUnion(subtopicIds),
+    subtopics: FieldValue.arrayUnion(newSubtopicIds),
   });
 
   // Add the topic as a parent on the subtopics
-  subtopicIds.forEach((subtopicId) => {
+  newSubtopicIds.forEach((subtopicId) => {
     // Add the topic as a parent
     const subtopic = addParentsToTopic(core, subtopicId, [
       { type: 'topic', id: topicId },
