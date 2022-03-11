@@ -16,7 +16,7 @@ export function moveSubtopicsToRoot(
   subtopicIds: string[],
 ): void {
   // Remove subtopics from parent topic
-  Topics.removeSubtopics(core, parentTopicId, subtopicIds);
+  const fromTopic = Topics.removeSubtopics(core, parentTopicId, subtopicIds);
 
   // Add subtopics to the root level
   addRootTopics(core, subtopicIds);
@@ -25,5 +25,5 @@ export function moveSubtopicsToRoot(
   const subtopics = Topics.get(subtopicIds);
 
   // Dispatch an 'app:move-subtopics-root' event
-  core.dispatch('app:move-subtopics-root', subtopics);
+  core.dispatch('app:move-subtopics-root', { fromTopic, subtopics });
 }

@@ -919,7 +919,7 @@ See below the table for more details on the data passed by app related events.
     },
     {
       name: 'app:move-subtopics-root',
-      data: 'TopicMap',
+      data: 'MoveSubtopicsEventData',
       description:
         'Dispatched when subtopics are moved to the root level.',
     },
@@ -983,6 +983,26 @@ See below the table for more details on the data passed by app related events.
           instance is included.
         </span>
       ),
+    },
+  ]}
+/>
+
+### MoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were moved.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description:
+        'The subtopics which were moved to the root level.',
     },
   ]}
 />

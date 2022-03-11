@@ -38,11 +38,15 @@ describe('moveSubtopicsToRoot', () => {
   it('dispatches a `app:move-subtopics-root` event', (done) => {
     // Listen to 'app:move-subtopics-root' events
     core.addEventListener('app:move-subtopics-root', (payload) => {
-      // Get the updated topics
-      const topics = Topics.get([tAnchoring.id, tNavigation.id]);
+      // Get the updated former parent topic
+      const topic = Topics.get(tSailing.id);
+      // Get the updated subtopics
+      const subtopics = Topics.get([tAnchoring.id, tNavigation.id]);
 
-      // Payload data should be updated subtopics
-      expect(payload.data).toEqual(topics);
+      // Payload data should include former parent
+      expect(payload.data.fromTopic).toEqual(topic);
+      // Payload data should include updated subtopics
+      expect(payload.data.subtopics).toEqual(subtopics);
       done();
     });
 
