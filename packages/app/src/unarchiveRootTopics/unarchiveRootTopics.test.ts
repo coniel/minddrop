@@ -1,63 +1,67 @@
 import { renderHook, act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
-import {
-  PersistentStore,
-  useGlobalPersistentStoreValue,
-} from '@minddrop/persistent-store';
+import { useGlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { unarchiveRootTopics } from './unarchiveRootTopics';
 import { useAppStore } from '../useAppStore';
-import { cleanup, setup } from '../test-utils';
-import { doesNotContain } from '@minddrop/utils';
+import { cleanup, core, setup } from '../test-utils';
+import { contains, doesNotContain } from '@minddrop/utils';
 import { addRootTopics } from '../addRootTopics';
 import { archiveRootTopics } from '../archiveRootTopics';
 
 const { tSailing, tAnchoring, tNavigation } = TOPICS_TEST_DATA;
 
-const core = initializeCore({ appId: 'app', extensionId: 'app' });
-
 describe('unarchiveRootTopics', () => {
   beforeEach(() => {
     setup();
     act(() => {
+      // Add some root topics
       addRootTopics(core, [tSailing.id, tAnchoring.id, tNavigation.id]);
+      // Archive added root topics
       archiveRootTopics(core, [tSailing.id, tAnchoring.id, tNavigation.id]);
     });
   });
 
-  afterEach(() => {
-    cleanup();
-    act(() => {
-      PersistentStore.clearGlobalCache();
-    });
-  });
+  afterEach(cleanup);
 
-  it('removes archived topic IDs from the app store', () => {
+  it('updates the app store archivedRootTopics and rootTopics', () => {
     const { result } = renderHook(() => useAppStore());
 
     act(() => {
+      // Unarchive a couple of root topics
       unarchiveRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
 
+    // App store's archivedRootTopics should no longer contain the topic IDs
     expect(
       doesNotContain(result.current.archivedRootTopics, [
         tAnchoring.id,
         tNavigation.id,
       ]),
     ).toBeTruthy();
+    // App store's rootTopics should contain the topic IDs
+    expect(
+      contains(result.current.rootTopics, [tAnchoring.id, tNavigation.id]),
+    ).toBeTruthy();
   });
 
-  it('removes archived topic IDs from the persistent store', () => {
-    const { result } = renderHook(() =>
-      useGlobalPersistentStoreValue(core, 'archivedRootTopics'),
-    );
+  it('updates the global persistent store archivedRootTopics and rootTopics', () => {
+    const { result } = renderHook(() => useGlobalPersistentStore(core));
 
     act(() => {
+      // Unarchive a couple of root topics
       unarchiveRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
 
+    // Global persistent store's archivedRootTopics should no longer contain the topic IDs
     expect(
-      doesNotContain(result.current, [tAnchoring.id, tNavigation.id]),
+      doesNotContain(result.current.archivedRootTopics, [
+        tAnchoring.id,
+        tNavigation.id,
+      ]),
+    ).toBeTruthy();
+    // Global persistent store's rootTopics should contain the topic IDs
+    expect(
+      contains(result.current.rootTopics, [tAnchoring.id, tNavigation.id]),
     ).toBeTruthy();
   });
 
