@@ -52,6 +52,8 @@ import {
   AddParentsEventCallback,
   RemoveParentsEvent,
   RemoveParentsEventCallback,
+  MoveSubtopicsEvent,
+  MoveSubtopicsEventCallback,
 } from './TopicEvents.types';
 import { TopicViewConfig } from './TopicViewConfig.types';
 import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
@@ -179,6 +181,22 @@ export interface TopicsApi {
    * @returns The updated topic.
    */
   removeSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+
+  /**
+   * Moves subtopics from one topic to another and dispaches
+   * a `topics:move-subtopics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param fromTopicId The ID of the topic from which to move the subtopics.
+   * @param toTopicId The ID of the topic into which to move the subtopics.
+   * @param subtopicIds The IDs of the subtopics to remove.
+   */
+  moveSubtopics(
+    core: Core,
+    fromTopicId: string,
+    toTopicId: string,
+    subtopicIds: string[],
+  ): void;
 
   /**
    * Archives the specified subtopics in a topic and dispatches
@@ -458,6 +476,13 @@ export interface TopicsApi {
     callback: RemoveSubtopicsEventCallback,
   ): void;
 
+  // Add 'topics:move-topics' event listener
+  addEventListener(
+    core: Core,
+    type: MoveSubtopicsEvent,
+    callback: MoveSubtopicsEventCallback,
+  );
+
   // Add 'topics:add-drops' event listener
   addEventListener(
     core: Core,
@@ -615,6 +640,13 @@ export interface TopicsApi {
     type: RemoveSubtopicsEvent,
     callback: RemoveSubtopicsEventCallback,
   ): void;
+
+  // Remove 'topics:move-topics' event listener
+  removeEventListener(
+    core: Core,
+    type: MoveSubtopicsEvent,
+    callback: MoveSubtopicsEventCallback,
+  );
 
   // Remove 'topics:add-drops' event listener
   removeEventListener(

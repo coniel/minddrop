@@ -385,7 +385,6 @@ Topics.addSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
 ```
 
 <ArgsTable core data={[
-
     {
       name: 'topicId',
       type: 'string',
@@ -410,7 +409,6 @@ Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Top
 ```
 
 <ArgsTable core data={[
-
     {
       name: 'parentId',
       type: 'string',
@@ -422,6 +420,36 @@ Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Top
       type: 'string[]',
       required: true,
       description: 'The IDs of the subtopics to remove.',
+    },
+
+]} />
+
+### moveSubtopics
+
+Moves subtopics from one topic to another and dispaches a `topics:move-subtopics` event.
+
+```ts
+Topics.moveSubtopics(core: Core, fromTopicId: string, toTopicId: string, subtopicIds: string[]): void
+```
+
+<ArgsTable core data={[
+    {
+      name: 'fromTopicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic from which to remove the subtopics.',
+    },
+    {
+      name: 'toTopicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic into which to add the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to move.',
     },
 
 ]} />
@@ -1055,6 +1083,12 @@ See below the table for more details on the data passed by topic related events.
         'Dispatched when subtopics are removed from a topic.',
     },
     {
+      name: 'topics:move-subtopics',
+      data: 'MoveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are moved from one topic to another.',
+    },
+    {
       name: 'topics:archive-subtopics',
       data: 'ArchiveSubtopicsEventData',
       description:
@@ -1258,6 +1292,50 @@ See the [Topic](/docs/extensions/types/topic) interface page.
   ]}
 />
 
+#### RemoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were removed.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The subtopics which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### MoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were removed.',
+    },
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the subtopics were added.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The subtopics which were moved.',
+    },
+  ]}
+/>
+
 #### ArchiveSubtopicsEventData
 
 <InterfaceTable
@@ -1294,25 +1372,6 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'TopicMap',
       required: true,
       description: 'The unarchived subtopics.',
-    },
-  ]}
-/>
-
-#### RemoveSubtopicsEventData
-
-<InterfaceTable
-  data={[
-    {
-      name: 'topic',
-      type: 'Topic',
-      required: true,
-      description: 'The topic from which the subtopics were removed.',
-    },
-    {
-      name: 'subtopics',
-      type: 'TopicMap',
-      required: true,
-      description: 'The subtopics which were removed from the topic.',
     },
   ]}
 />
@@ -1475,9 +1534,9 @@ See the [Topic](/docs/extensions/types/topic) interface page.
 
 Topics can be filtered using one or more of the options below.
 
-By default, archived and deleted topics are filtered out. If either `archived` or `deleted` is set to `true`, active topics will be filtered out by default unless `active` is also set to `true`.
+By default, deleted topics are filtered out. If `deleted` is set to `true`, active topics will be filtered out by default unless `active` is also set to `true`.
 
-A topic is considered active if it is neither archived nor deleted.
+A topic is considered active if it is not deleted.
 
 <PropsTable
   data={[
@@ -1489,22 +1548,10 @@ A topic is considered active if it is neither archived nor deleted.
         'Include active topics (topics which are neither archived nor deleted).',
     },
     {
-      name: 'archived',
-      type: 'boolean',
-      default: 'false',
-      description: 'Include archived topics.',
-    },
-    {
       name: 'deleted',
       type: 'boolean',
       default: 'false',
       description: 'Include deleted topics.',
-    },
-    {
-      name: 'hidden',
-      type: 'boolean',
-      default: 'false',
-      description: 'Include hidden topics.',
     },
   ]}
 />

@@ -30,6 +30,7 @@ import { archiveSubtopics } from './archiveSubtopics';
 import { unarchiveSubtopics } from './unarchiveSubtopics';
 import { addParentsToTopic } from './addParentsToTopic';
 import { removeParentsFromTopic } from './removeParentsFromTopic';
+import { moveSubtopics } from './moveSubtopics';
 
 export const Topics: TopicsApi = {
   get,
@@ -41,6 +42,7 @@ export const Topics: TopicsApi = {
   update: updateTopic,
   addSubtopics,
   removeSubtopics,
+  moveSubtopics,
   archiveSubtopics,
   unarchiveSubtopics,
   addDrops: addDropsToTopic,

@@ -16,6 +16,7 @@ export type AddSubtopicsEvent = 'topics:add-subtopics';
 export type ArchiveSubtopicsEvent = 'topics:archive-subtopics';
 export type UnarchiveSubtopicsEvent = 'topics:unarchive-subtopics';
 export type RemoveSubtopicsEvent = 'topics:remove-subtopics';
+export type MoveSubtopicsEvent = 'topics:move-subtopics';
 export type AddDropsEvent = 'topics:add-drops';
 export type ArchiveDropsEvent = 'topics:archive-drops';
 export type UnarchiveDropsEvent = 'topics:unarchive-drops';
@@ -103,6 +104,23 @@ export interface RemoveSubtopicsEventData {
    * The topic from which the subtopics were removed.
    */
   topic: Topic;
+
+  /**
+   * The subtopics which were removed from the topic.
+   */
+  subtopics: TopicMap;
+}
+
+export interface MoveSubtopicsEventData {
+  /**
+   * The topic from which the subtopics were removed.
+   */
+  fromTopic: Topic;
+
+  /**
+   * The topic to which the subtopics were added.
+   */
+  toTopic: Topic;
 
   /**
    * The subtopics which were removed from the topic.
@@ -233,6 +251,10 @@ export type AddSubtopicsEventCallback = EventListenerCallback<
 export type RemoveSubtopicsEventCallback = EventListenerCallback<
   RemoveSubtopicsEvent,
   RemoveSubtopicsEventData
+>;
+export type MoveSubtopicsEventCallback = EventListenerCallback<
+  MoveSubtopicsEvent,
+  MoveSubtopicsEventData
 >;
 export type AddDropsEventCallback = EventListenerCallback<
   AddDropsEvent,
