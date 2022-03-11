@@ -21,9 +21,11 @@ import {
   ContextMenuColorSelectionItem,
   DropdownMenuColorSelectionItem,
   MenuItemConfig,
+  SubmenuContents,
 } from '@minddrop/ui';
 import { i18n } from '@minddrop/i18n';
 import { App, useAppCore } from '@minddrop/app';
+import { generateTopicSelectionMenu } from '../utils';
 
 // Components used to generate a context menu
 const ContextMenuComponents: MenuComponents = {
@@ -103,14 +105,14 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
   const core = useAppCore();
   // The last item in the trail is the current topic ID
   const topic = Topics.get(trail.slice(-1)[0]);
+  // Get the root level topic IDs
+  const rootTopicIds = App.getRootTopics().map((topic) => topic.id);
   // The topic's parent topics
   const parentTopics = topic.parents.filter(
     (parent) => parent.type === 'topic',
   );
   // Does the topic appear at the root level
-  const isRootTopic = topic.parents.find(
-    (parent) => parent.type === 'app' && parent.id === 'root',
-  );
+  const isRootTopic = rootTopicIds.includes(topic.id);
 
   const handleAddSubtopic = useCallback(() => {
     // Create the subtopic
@@ -127,6 +129,46 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       onAddSubtopic(subtopic);
     }
   }, [topic.id, onAddSubtopic]);
+
+  const handleAddTo = useCallback(
+    (event: Event, selectedTopicId: string) => {
+      // Add topic as sutopic in selectd topic
+      Topics.addSubtopics(core, selectedTopicId, [topic.id]);
+    },
+    [topic.id],
+  );
+
+  const handleAddToRoot = useCallback(
+    (event: Event) => {
+      // Add topic to the root level
+      App.addRootTopics(core, [topic.id]);
+    },
+    [topic.id],
+  );
+
+  const handleMoveTo = useCallback(
+    (event: Event, selectedTopicId: string) => {
+      if (isRootTopic) {
+        // Move the topic from the root level into the selected topic
+        App.moveRootTopicsToParentTopic(core, selectedTopicId, [topic.id]);
+      } else {
+        // Get the parent topic ID
+        const [parentId] = trail.slice(-2);
+
+        // Move the topic from its parent topic into the selected topic
+        Topics.moveSubtopics(core, parentId, selectedTopicId, [topic.id]);
+      }
+    },
+    [trail, topic.id],
+  );
+
+  const handleMoveToRoot = useCallback(() => {
+    // Get the parent topic ID
+    const [parentId] = trail.slice(-2);
+
+    // Move the topic to the root level
+    App.moveSubtopicsToRoot(core, parentId, [topic.id]);
+  }, [trail, topic.id]);
 
   const handleArchive = useCallback(() => {
     if (trail.length === 1) {
@@ -186,13 +228,13 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
     }
   }, [topic.id, onDelete]);
 
-  const items: MenuContents = [
+  let items: MenuContents = [
     // Add subtopic
     {
       type: 'menu-item',
       label: i18n.t('addSubtopic'),
       onSelect: handleAddSubtopic,
-      icon: 'inside',
+      icon: 'add',
     },
   ];
 
@@ -205,6 +247,63 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       icon: 'edit',
     });
   }
+
+  // Submenu for the 'Add to' item
+  const addToSubmenu: SubmenuContents = generateTopicSelectionMenu(
+    rootTopicIds,
+    handleAddTo,
+    [topic.id],
+  );
+  // Submenu for the 'Move to' item
+  const moveToSubmenu: SubmenuContents = generateTopicSelectionMenu(
+    rootTopicIds,
+    handleMoveTo,
+    [topic.id],
+  );
+
+  // If the topic is not a root level topic, add a 'Add/Move to Topics'
+  // item to the above sumbenus.
+  if (!isRootTopic) {
+    addToSubmenu.push({
+      type: 'menu-item',
+      label: i18n.t('addToTopics'),
+      tooltipTitle: i18n.t('addToTopicsTooltip'),
+      onSelect: handleAddToRoot,
+    });
+
+    moveToSubmenu.push({
+      type: 'menu-item',
+      label: i18n.t('moveToTopics'),
+      tooltipTitle: i18n.t('moveToTopicsTooltip'),
+      onSelect: handleMoveToRoot,
+    });
+  }
+
+  items = [
+    ...items,
+    {
+      type: 'menu-separator',
+    },
+    // Add to
+    {
+      type: 'menu-item',
+      label: i18n.t('addTo'),
+      icon: 'inside',
+      submenuContentClass: 'topic-selection-submenu',
+      submenu: addToSubmenu,
+    },
+    // Move to
+    {
+      type: 'menu-item',
+      label: i18n.t('moveTo'),
+      icon: 'arrow-up-right',
+      submenuContentClass: 'topic-selection-submenu',
+      submenu: moveToSubmenu,
+    },
+    {
+      type: 'menu-separator',
+    },
+  ];
 
   // Archive item
   const archiveItem: MenuItemConfig = {

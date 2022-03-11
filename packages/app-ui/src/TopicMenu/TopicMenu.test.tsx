@@ -70,6 +70,173 @@ describe('TopicMenu', () => {
     });
   });
 
+  describe('Add to', () => {
+    it('adds the topic to the selected topic', () => {
+      // Create a new topic
+      const topic = Topics.create(core);
+      // Add new topic to the root level
+      App.addRootTopics(core, [topic.id]);
+
+      // Render with new topic as the target
+      const { getByItemLabel, getByText } = init({ trail: [topic.id] });
+
+      act(() => {
+        // Click 'Add to' item
+        fireEvent.click(getByItemLabel('addTo'));
+      });
+
+      act(() => {
+        // Click on 'Sailing' topic
+        fireEvent.click(getByText(tSailing.title));
+      });
+
+      // Get the updated 'Sailing' topic
+      const parent = Topics.get(tSailing.id);
+
+      // Should have new topic as a subtopic
+      expect(parent.subtopics.includes(topic.id)).toBeTruthy();
+    });
+
+    it('adds the topic to the root level', () => {
+      // Render subtopic topic as the target
+      const { getByItemLabel } = init({ trail: [tSailing.id, tNavigation.id] });
+
+      act(() => {
+        // Click the 'Add to' item
+        fireEvent.click(getByItemLabel('addTo'));
+      });
+
+      act(() => {
+        // Click the 'Add to Topics' item
+        fireEvent.click(getByItemLabel('addToTopics'));
+      });
+
+      // Get root topics
+      const rootTopics = App.getRootTopics();
+
+      // Root topics should contain added topic
+      expect(
+        rootTopics.find((topic) => topic.id === tNavigation.id),
+      ).toBeDefined();
+    });
+
+    it("does not render 'Add to Topics' if target is a root level topic", () => {
+      // Render with root level topic as target
+      const { getByItemLabel, queryByItemLabel } = init({
+        trail: [tSailing.id],
+      });
+
+      act(() => {
+        // Click the 'Add to' item
+        fireEvent.click(getByItemLabel('addTo'));
+      });
+
+      // Should not render 'Add to Topics'
+      expect(queryByItemLabel('addToTopics')).toBeNull();
+    });
+  });
+
+  describe('Move to', () => {
+    it('moves root topic to the selected topic', () => {
+      // Create a new topic
+      const topic = Topics.create(core);
+      // Add new topic to the root level
+      App.addRootTopics(core, [topic.id]);
+
+      // Render with new root topic as the target
+      const { getByItemLabel, getByText } = init({ trail: [topic.id] });
+
+      act(() => {
+        // Click 'Move to' item
+        fireEvent.click(getByItemLabel('moveTo'));
+      });
+
+      act(() => {
+        // Click on 'Sailing' topic
+        fireEvent.click(getByText(tSailing.title));
+      });
+
+      // Get the updated target parent topic
+      const parent = Topics.get(tSailing.id);
+      // Get root topics
+      const rootTopics = App.getRootTopics();
+
+      // Target parent topic should have new topic as a subtopic
+      expect(parent.subtopics.includes(topic.id)).toBeTruthy();
+      // Root topics should no longer contain the new topic
+      expect(rootTopics.find((t) => t.id === topic.id)).not.toBeDefined();
+    });
+
+    it('moves subtopic to the selected topic', () => {
+      // Render with a subtopic as the target
+      const { getByItemLabel, getByText } = init({
+        trail,
+      });
+
+      act(() => {
+        // Click 'Move to' item
+        fireEvent.click(getByItemLabel('moveTo'));
+      });
+
+      act(() => {
+        // Click on 'Sailing' topic
+        fireEvent.click(getByText(tSailing.title));
+      });
+
+      // Get the updated source parent topic
+      const fromTopic = Topics.get(tNavigation.id);
+      // Get the updated target parent topic
+      const toTopic = Topics.get(tSailing.id);
+
+      // Source parent topic should no longer contain the subtopic
+      expect(fromTopic.subtopics.includes(tCoastalNavigation.id)).toBeFalsy();
+      // Target parent topic should contain the subtopic
+      expect(toTopic.subtopics.includes(tCoastalNavigation.id)).toBeTruthy();
+    });
+
+    it('moves subtopic to the root level', () => {
+      // Render with subtopic as the target
+      const { getByItemLabel } = init({ trail: [tSailing.id, tNavigation.id] });
+
+      act(() => {
+        // Click the 'Move to' item
+        fireEvent.click(getByItemLabel('moveTo'));
+      });
+
+      act(() => {
+        // Click the 'Move to Topics' item
+        fireEvent.click(getByItemLabel('moveToTopics'));
+      });
+
+      // Get the source parent topic
+      const fromTopic = Topics.get(tSailing.id);
+      // Get root topics
+      const rootTopics = App.getRootTopics();
+
+      // Source parent topic should no longer contain the subtopic
+      expect(fromTopic.subtopics.includes(tNavigation.id)).toBeFalsy();
+      // Root topics should contain moveed topic
+      expect(
+        rootTopics.find((topic) => topic.id === tNavigation.id),
+      ).toBeDefined();
+    });
+
+    it("does not render 'Move to Topics' if target is a root level topic", () => {
+      // Render with root level topic as target
+      const { getByItemLabel, queryByItemLabel } = init({
+        trail: [tSailing.id],
+      });
+
+      act(() => {
+        // Click the 'Move to' item
+        fireEvent.click(getByItemLabel('moveTo'));
+      });
+
+      // Should not render 'Move to Topics'
+      expect(queryByItemLabel('moveToTopics')).toBeNull();
+    });
+  });
+
   describe('Archive/Archive everywhere', () => {
     it('does not provide secondary action when subtopic has only a single parent', () => {
       const { getByItemLabel, queryByItemLabel } = init();

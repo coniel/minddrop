@@ -23,6 +23,10 @@
 
   "moveTo": "Move to",
   "addTo": "Add to",
+  "moveToTopics": "Move to Topics",
+  "addToTopics": "Add to Topics",
+  "addToTopicsTooltip": "Add to the root topics list in the sidebar",
+  "moveToTopicsTooltip": "Move to the root topics list in the sidebar",
   "color": "Colour",
   "duplicate": "Duplicate",
   "dropOptions": "Drop options",
