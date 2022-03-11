@@ -21,6 +21,7 @@ export type AddDropsEvent = 'topics:add-drops';
 export type ArchiveDropsEvent = 'topics:archive-drops';
 export type UnarchiveDropsEvent = 'topics:unarchive-drops';
 export type RemoveDropsEvent = 'topics:remove-drops';
+export type MoveDropsEvent = 'topics:move-drops';
 export type AddParentsEvent = 'topics:add-parents';
 export type RemoveParentsEvent = 'topics:remove-parents';
 export type AddTagsEvent = 'topics:add-tags';
@@ -176,6 +177,23 @@ export interface RemoveDropsEventData {
   drops: DropMap;
 }
 
+export interface MoveDropsEventData {
+  /**
+   * The topic from which the drops were removed.
+   */
+  fromTopic: Topic;
+
+  /**
+   * The topic to which the drops were added.
+   */
+  toTopic: Topic;
+
+  /**
+   * The drops which were moved.
+   */
+  drops: DropMap;
+}
+
 export interface AddParentsEventData {
   /**
    * The topic to which the prants were added.
@@ -271,6 +289,10 @@ export type UnarchiveDropsEventCallback = EventListenerCallback<
 export type RemoveDropsEventCallback = EventListenerCallback<
   RemoveDropsEvent,
   RemoveDropsEventData
+>;
+export type MoveDropsEventCallback = EventListenerCallback<
+  MoveDropsEvent,
+  MoveDropsEventData
 >;
 export type AddParentsEventCallback = EventListenerCallback<
   AddParentsEvent,

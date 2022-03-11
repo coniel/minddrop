@@ -54,6 +54,8 @@ import {
   RemoveParentsEventCallback,
   MoveSubtopicsEvent,
   MoveSubtopicsEventCallback,
+  MoveDropsEvent,
+  MoveDropsEventCallback,
 } from './TopicEvents.types';
 import { TopicViewConfig } from './TopicViewConfig.types';
 import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
@@ -511,6 +513,13 @@ export interface TopicsApi {
     callback: RemoveDropsEventCallback,
   ): void;
 
+  // Add 'topics:move-drops' event listener
+  addEventListener(
+    core: Core,
+    type: MoveDropsEvent,
+    callback: MoveDropsEventCallback,
+  ): void;
+
   // Add topics:add-parents event listener
   addEventListener(
     core: Core,
@@ -674,6 +683,13 @@ export interface TopicsApi {
     core: Core,
     type: RemoveDropsEvent,
     callback: RemoveDropsEventCallback,
+  ): void;
+
+  // Remove 'topics:move-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: MoveDropsEvent,
+    callback: MoveDropsEventCallback,
   ): void;
 
   // Remove topics:add-parents event listener

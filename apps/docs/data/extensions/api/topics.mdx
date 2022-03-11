@@ -550,7 +550,7 @@ Topics.addDrops(core: Core, topicId: string, dropIds: string[]): Topic
 
 ### moveDrops
 
-Moves drops from one topic to another by removing them from the source topic and adding them to the destination topic.
+Moves drops from one topic to another by removing them from the source topic and adding them to the destination topic. Dispatches a `topics:move-drops` event.
 
 ```ts
 Topics.moveDrops(core: Core, fromTopicId: string, toTopicId: string, dropIds: string[], metadata: AddDropsMetadata): void
@@ -1111,6 +1111,12 @@ See below the table for more details on the data passed by topic related events.
       description: 'Dispatched when drops are removed from a topic.',
     },
     {
+      name: 'topics:move-drops',
+      data: 'MoveDropsEventData',
+      description:
+        'Dispatched when drops are moved from one topic to another.',
+    },
+    {
       name: 'topics:archive-drops',
       data: 'ArchiveDropsEventData',
       description:
@@ -1448,6 +1454,31 @@ See the [Topic](/docs/extensions/types/topic) interface page.
       type: 'DropMap',
       required: true,
       description: 'The drops which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### MoveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the drops were removed.',
+    },
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the drops were added.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were moved.',
     },
   ]}
 />

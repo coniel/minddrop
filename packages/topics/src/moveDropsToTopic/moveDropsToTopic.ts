@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { AddDropsMetadata } from '../types';
 import { addDropsToTopic } from '../addDropsToTopic';
 import { removeDropsFromTopic } from '../removeDropsFromTopic';
+import { Drops } from '@minddrop/drops';
 
 /**
  * Moves drops from one topic to another by removing them
@@ -20,8 +21,14 @@ export function moveDropsToTopic(
   metadata?: AddDropsMetadata,
 ): void {
   // Add drops to target topic
-  addDropsToTopic(core, toTopicId, dropIds, metadata);
+  const toTopic = addDropsToTopic(core, toTopicId, dropIds, metadata);
 
   // Remove drops from source topic
-  removeDropsFromTopic(core, fromTopicId, dropIds);
+  const fromTopic = removeDropsFromTopic(core, fromTopicId, dropIds);
+
+  // Get the updated drops
+  const drops = Drops.get(dropIds);
+
+  // Dispatch a `topics:move-drops` event
+  core.dispatch('topics:move-drops', { fromTopic, toTopic, drops });
 }
