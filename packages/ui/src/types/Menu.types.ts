@@ -38,15 +38,7 @@ export interface MenuTriggerItemConfig extends MenuTriggerItemProps {
    * An array of MenuContents which will be used to
    * generate the submenu.
    */
-  submenu:
-    | (
-        | MenuItemConfig
-        | MenuTriggerItemConfig
-        | MenuTopicSelectionItemConfig
-        | MenuColorSelectionItemConfig
-        | React.ReactElement
-      )[]
-    | React.ReactElement;
+  submenu: SubmenuContents;
 }
 
 export interface MenuTopicSelectionItemConfig {
@@ -98,6 +90,16 @@ export type MenuColorSelectionItemProps = Omit<
   MenuColorSelectionItemConfig,
   'type'
 >;
+
+export type SubmenuContents =
+  | (
+      | MenuItemConfig
+      | MenuTriggerItemConfig
+      | MenuTopicSelectionItemConfig
+      | MenuColorSelectionItemConfig
+      | React.ReactElement
+    )[]
+  | React.ReactElement;
 
 export type MenuContents = (
   | MenuItemConfig
