@@ -1,6 +1,5 @@
-.drop-note {
-  color: inherit;
-  font-weight: var(--fwRegular);
+.paragraph-element {
   font-size: var(--fsContentRegular);
   line-height: var(--lhContentRegular);
+  font-weight: var(--fwRegular);
 }
