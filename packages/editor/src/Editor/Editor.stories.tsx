@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { EditorContent } from '../types';
 import { Editor } from './Editor';
-import { TitlePlugin } from '../Title';
-import { ParagraphPlugin } from '../Paragraph';
+import { TitlePlugin } from '../TitlePlugin';
+import { ParagraphPlugin } from '../ParagraphPlugin';
 
 export default {
   title: 'editor/Editor',
