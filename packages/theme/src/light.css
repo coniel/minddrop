@@ -42,6 +42,7 @@
   --appBackground: #ffffff;
   --contrastColor: #ffffff;
   --contrastLightColor: #82817f;
+  --transparentBackground: rgba(255, 255, 255, 0.6);
 
   /* Elevation */
   --el2Background: #ffffff;
