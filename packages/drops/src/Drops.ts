@@ -25,10 +25,12 @@ import { renderDrop } from './renderDrop';
 import { duplicateDrops } from './duplicateDrops';
 import { addParentsToDrop } from './addParentsToDrop';
 import { removeParentsFromDrop } from './removeParentsFromDrop';
+import { getDropTypeConfig } from './getDropTypeConfig';
 
 export const Drops: DropsApi = {
   get,
   getAll: getAllDrops,
+  getConfig: getDropTypeConfig,
   filter: filterDrops,
   register: registerDropType,
   unregister: unregisterDropType,

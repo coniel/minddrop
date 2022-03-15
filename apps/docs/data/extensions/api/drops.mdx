@@ -118,6 +118,25 @@ Drops.getAll(filters?: DropFilters): DropMap
   ]}
 />
 
+### getConfig
+
+Returns the `DropConfig` for a given drop type.
+
+```ts
+Drops.getConfig(type: string): DropConfig
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The drop type for which to retrieve the config.',
+    },
+  ]}
+/>
+
 ### filter
 
 Filters drops according to provided filters.

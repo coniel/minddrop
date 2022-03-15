@@ -60,7 +60,10 @@ export interface DropsApi {
    * @returns The requested drop(s).
    */
   get<T extends Drop = Drop>(dropId: string): T;
-  get(dropIds: string[], filters?: DropFilters): DropMap;
+  get<T extends Drop = Drop>(
+    dropIds: string[],
+    filters?: DropFilters,
+  ): DropMap<T>;
 
   /**
    * Retrieves all drops from the drops store as a `{ [id]: Drop }` map.
@@ -70,6 +73,13 @@ export interface DropsApi {
    * @returns A `{ [id]: Drop }` map.
    */
   getAll(filters?: DropFilters): DropMap;
+
+  /**
+   * Returns the `DropConfig` for a given drop type.
+   *
+   * @param type The drop type for which to retrieve the config.
+   */
+  getConfig(type: string): DropConfig;
 
   /**
    * Filters drops by type, active, and deleted states.
