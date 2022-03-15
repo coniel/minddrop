@@ -1,5 +1,16 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { Drop } from './Drop.types';
+import { Drop, DropParentReference } from './Drop.types';
+
+export interface DropComponentProps extends Drop {
+  /**
+   * The parent reference of the parent inside which the
+   * component is being rendered.
+   *
+   * For example, when rendered inside a topic view, the
+   * parent would be { type: 'topic', id: 'topic-id' }.
+   */
+  parent?: DropParentReference;
+}
 
 export interface DropConfig<T extends Drop = Drop> {
   /**
@@ -70,7 +81,7 @@ export interface DropConfig<T extends Drop = Drop> {
   /**
    * The component used to render the drop.
    */
-  component: React.ComponentType<T>;
+  component: React.ComponentType<{ parent?: DropParentReference } & T>;
 }
 
 export interface RegisteredDropConfig<T extends Drop = Drop>

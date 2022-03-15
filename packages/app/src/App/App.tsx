@@ -17,6 +17,7 @@ import { unarchiveRootTopics } from '../unarchiveRootTopics';
 import { getArchivedRootTopics } from '../getArchivedRootTopics';
 import { moveSubtopicsToRoot } from '../moveSubtopicsToRoot';
 import { moveRootTopicsToParentTopic } from '../moveRootTopicsToParentTopic';
+import { renderDrop } from '../renderDrop';
 
 export const App: AppApi = {
   addRootTopics,
@@ -34,6 +35,7 @@ export const App: AppApi = {
   unselectDrops,
   clearSelectedDrops,
   getSelectedDrops,
+  renderDrop,
   Slot,
 
   openView: (core, viewId) => {

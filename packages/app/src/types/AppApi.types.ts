@@ -19,7 +19,7 @@ import {
 } from './AppEvents.types';
 import { View, ViewInstance } from '@minddrop/views';
 import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
-import { DropMap } from '@minddrop/drops';
+import { Drop, DropMap, DropParentReference } from '@minddrop/drops';
 import {
   ArchiveRootTopicsEvent,
   ArchiveRootTopicsEventCallback,
@@ -258,6 +258,15 @@ export interface AppApi {
    * @param core A MindDrop core instance.
    */
   clearSelectedDrops(core: Core): void;
+
+  /**
+   * Renders a drop using the appropriate component.
+   *
+   * @param drop The drop to render.
+   * @param parent The `DropParentReference` of the parent inside which the drop is being rendered.
+   * @returns The rendered drop element.
+   */
+  renderDrop(drop: Drop, parent?: DropParentReference): React.ReactElement;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
