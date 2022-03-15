@@ -89,7 +89,7 @@ metaDescription: An interface for describing drop types.
       type: 'function',
       required: true,
       description:
-        'Creates a new drop of this type. See below for details.',
+        'Called to create a new drop of this type. See below for details.',
     },
     {
       name: 'insertData',
@@ -102,13 +102,24 @@ metaDescription: An interface for describing drop types.
 
 ### create
 
-Creates a new drop of this type. Must return a promise resolving to the new drop. If a drop could not be created due to invalid or missing data, a `InvalidDropDataError` should be thrown.
+Called to create a new drop of this type. Should return an object containing the drop type as well as any custom data used by the drop.
 
-- Should make use of the [`Drops.create`](/docs/extensions/api/drops#create) method in order to actually create the drop.
-- A [`FileReference`](/docs/extensions/types/file-reference) must be created for any files from the data which need to be preserved using the [`Files.create`](/docs/extensions/api/files#create) method.
+For example, imagine a web bookmark drop which has a `url` and `title` property. The `create` method should return an object defining these properties:
 
 ```ts
-create(core: Core, data?: DataInsert): Promise<Drop>;
+{
+  type: 'bookmark',
+  url: 'https://minddrop.app',
+  title: "MindDrop - Your mind's visual workspace",
+}
+```
+
+- A [`FileReference`](/docs/extensions/types/file-reference) must be created for any files from the data which need to be preserved using the [`Files.create`](/docs/extensions/api/files#create) method.
+- If a drop cannot be created due to invalid or missing data, a `InvalidDropDataError` should be thrown.
+- A promise resolving to the drop's data can be returned if an asyncronous action is required to create it.
+
+```ts
+create(core: Core, data?: DataInsert): CreateDropData | Promise<CreateDropData>
 ```
 
 <ArgsTable

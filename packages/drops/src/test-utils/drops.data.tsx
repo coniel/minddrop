@@ -2,7 +2,6 @@ import React from 'react';
 import { FileReference, FILES_TEST_DATA } from '@minddrop/files';
 import { Drop, DropConfig, RegisteredDropConfig } from '../types';
 import { generateDrop } from '../generateDrop';
-import { createDrop } from '../createDrop';
 
 export interface ImageDrop extends Drop {
   src: string;
@@ -18,8 +17,7 @@ export const textDropConfig: DropConfig = {
   dataTypes: ['text/plain'],
   fileTypes: ['text/plain'],
   component: ({ markdown }) => <div>{markdown}</div>,
-  create: async (c, { data }) =>
-    createDrop(c, { type: 'text', markdown: data['text/plain'] }),
+  create: (c, { data }) => ({ type: 'text', markdown: data['text/plain'] }),
   insertData: async (c, drop, { data }) => ({
     ...drop,
     markdown: data['text/plain'],
@@ -38,7 +36,7 @@ export const htmlDropConfig: DropConfig = {
   fileTypes: ['text/plain'],
   description: 'An HTML drop',
   component: ({ markdown }) => <div>{markdown}</div>,
-  create: async () => generateDrop({ type: 'html' }),
+  create: () => ({ type: 'html' }),
 };
 
 export const registeredHtmlDropConfig: RegisteredDropConfig = {
@@ -53,7 +51,7 @@ export const imageDropConfig: ImageDropConfig = {
   requiresFile: true,
   description: 'An image drop',
   component: ({ src }) => <img src={src} />,
-  create: async () => generateDrop({ type: 'image' }),
+  create: () => ({ type: 'image' }),
 };
 
 export const registeredImageDropConfig: RegisteredDropConfig<ImageDrop> = {
@@ -67,7 +65,7 @@ export const unregisteredDropConfig: DropConfig = {
   dataTypes: ['text/plain'],
   description: 'An unregistered drop type',
   component: ({ markdown }) => <div>{markdown}</div>,
-  create: async () => generateDrop({ type: 'unregistered' }),
+  create: () => ({ type: 'unregistered' }),
 };
 
 export const textDrop1 = generateDrop({

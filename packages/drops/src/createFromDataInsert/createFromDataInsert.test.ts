@@ -1,9 +1,11 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { imageFile, textFile } from '@minddrop/test-utils';
+import { getDrops } from '../getDrops';
 import { createFromDataInsert } from './createFromDataInsert';
 import { clearDrops } from '../clearDrops';
 import { htmlDropConfig, imageDropConfig, textDropConfig } from '../test-utils';
 import { registerDropType } from '../registerDropType';
+import { getDrop } from '../getDrop';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
@@ -51,8 +53,13 @@ describe('createFromDataInsert', () => {
 
     // Should only create a single drop
     expect(Object.keys(drops).length).toBe(1);
+
+    const [drop] = Object.values(drops);
+
     // Should create a 'text' drop
-    expect(Object.values(drops)[0].type).toBe('text');
+    expect(drop.type).toBe('text');
+    // Should save the drop
+    expect(getDrop(drop.id)).toEqual(drop);
   });
 
   it('creates a drop from each file using the first drop config to match the file type', async () => {
@@ -72,6 +79,8 @@ describe('createFromDataInsert', () => {
     expect(
       Object.values(drops).find((drop) => drop.type === 'text'),
     ).toBeDefined();
+    // Should save the drops
+    expect(getDrops(Object.keys(drops))).toEqual(drops);
   });
 
   it('creates a single drop from multiple files if drop type supports multiFile', async () => {
@@ -82,9 +91,12 @@ describe('createFromDataInsert', () => {
 
     // Should create 1 drop
     expect(Object.keys(drops).length).toBe(1);
+
+    const [drop] = Object.values(drops);
+
     // Should create a 'text' drop
-    expect(
-      Object.values(drops).find((drop) => drop.type === 'text'),
-    ).toBeDefined();
+    expect(drop.type).toBe('text');
+    // Should save the drop
+    expect(getDrop(drop.id)).toEqual(drop);
   });
 });

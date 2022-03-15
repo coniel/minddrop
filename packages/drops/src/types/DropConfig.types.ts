@@ -1,5 +1,5 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { Drop, DropParentReference } from './Drop.types';
+import { CreateDropData, Drop, DropParentReference } from './Drop.types';
 
 export interface DropComponentProps extends Drop {
   /**
@@ -12,7 +12,10 @@ export interface DropComponentProps extends Drop {
   parent?: DropParentReference;
 }
 
-export interface DropConfig<T extends Drop = Drop> {
+export interface DropConfig<
+  T extends Drop = Drop,
+  D extends CreateDropData = CreateDropData,
+> {
   /**
    * The drop type.
    */
@@ -64,7 +67,7 @@ export interface DropConfig<T extends Drop = Drop> {
    * @param data The data from which the drop is to be created.
    * @returns A promise which resolves to the new drop.
    */
-  create(core: Core, data?: DataInsert): Promise<Drop>;
+  create(core: Core, data?: DataInsert): D | Promise<D>;
 
   /**
    * Called when data is dropped or pasted onto the drop.

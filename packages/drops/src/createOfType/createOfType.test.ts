@@ -1,6 +1,7 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { DropTypeNotRegisteredError } from '../errors';
 import { cleanup, setup } from '../test-utils';
+import { getDrop } from '../getDrop';
 import { createOfType } from './createOfType';
 
 const core = initializeCore({ appId: 'app', extensionId: 'drops' });
@@ -34,5 +35,15 @@ describe('createOfType', () => {
 
     expect(drop).toBeDefined();
     expect(drop.type).toBe('text');
+  });
+
+  it('saves the new drop', async () => {
+    const drop = await createOfType(core, 'text', data);
+
+    // Get the created drop
+    const saved = getDrop(drop.id);
+
+    // Should match returned drop
+    expect(saved).toEqual(drop);
   });
 });

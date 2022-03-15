@@ -1,5 +1,21 @@
 import { Core, DataInsert } from '@minddrop/core';
+import { createDrop } from '../createDrop';
 import { Drop, DropConfig, DropMap } from '../types';
+
+async function createFromFiles(
+  core: Core,
+  config: DropConfig,
+  files: File[],
+): Promise<Drop> {
+  const dropData = await config.create(core, {
+    action: 'insert',
+    types: ['files'],
+    data: {},
+    files,
+  });
+
+  return createDrop(core, dropData);
+}
 
 /**
  * Creates drops of the appropriate type given a `DataInsert` object
@@ -30,7 +46,8 @@ export async function createFromDataInsert(
   // If there are matching drop configs, use the
   // first match to create the drop.
   if (matchedDataConfigs.length) {
-    const drop = await matchedDataConfigs[0].create(core, dataInsert);
+    const dropData = await matchedDataConfigs[0].create(core, dataInsert);
+    const drop = createDrop(core, dropData);
 
     drops[drop.id] = drop;
   }
@@ -69,24 +86,10 @@ export async function createFromDataInsert(
         }, [] as File[]);
 
         if (config.multiFile) {
-          fileDropPromises.push(
-            config.create(core, {
-              action: 'insert',
-              types: ['files'],
-              data: {},
-              files: supportedFiles,
-            }),
-          );
+          fileDropPromises.push(createFromFiles(core, config, supportedFiles));
         } else {
           supportedFiles.forEach((file) => {
-            fileDropPromises.push(
-              config.create(core, {
-                action: 'insert',
-                types: ['files'],
-                data: {},
-                files: [file],
-              }),
-            );
+            fileDropPromises.push(createFromFiles(core, config, [file]));
           });
         }
       }
