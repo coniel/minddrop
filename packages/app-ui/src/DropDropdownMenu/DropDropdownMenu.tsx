@@ -19,19 +19,30 @@ export interface DropDropdownMenuProps extends Omit<DropMenuProps, 'menuType'> {
    * The ID of the parent topic.
    */
   topicId: string;
+
+  /**
+   * Callback fired when the open state of the
+   * menu changes.
+   */
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
   dropId,
+  onOpenChange,
   ...other
 }) => {
   const { isSelected, selectAsOnly } = useSelectableDrop(dropId);
 
   return (
     <DropdownMenu
-      onOpenChange={() => {
+      onOpenChange={(open) => {
         if (!isSelected) {
           selectAsOnly();
+        }
+
+        if (onOpenChange) {
+          onOpenChange(open);
         }
       }}
     >

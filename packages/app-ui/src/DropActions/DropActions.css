@@ -1,0 +1,22 @@
+.drop:hover .drop-actions,
+.drop .drop-actions.visible {
+  opacity: 1;
+}
+
+.drop .drop-actions {
+  padding: 2px;
+  border-radius: var(--radiusMd);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: var(--transparentBackground);
+  transition-property: opacity;
+  transition-duration: 0.15s;
+}
+
+.drop .drop-actions .icon-button {
+  outline: none;
+}

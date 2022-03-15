@@ -9,3 +9,4 @@ export * from './TopicBreadcrumbs';
 export * from './TopicViewOptionsMenu';
 export * from './DropContextMenu';
 export * from './DropDropdownMenu';
+export * from './DropActions';

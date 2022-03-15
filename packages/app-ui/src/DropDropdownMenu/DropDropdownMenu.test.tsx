@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   render,
-  cleanup as cleanupRender,
   fireEvent,
   act,
+  cleanup as cleanupRender,
 } from '@minddrop/test-utils';
 import { cleanup, core, setup } from '../test-utils';
-import { DropDropdownMenu } from './DropDropdownMenu';
+import { DropDropdownMenu, DropDropdownMenuProps } from './DropDropdownMenu';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { i18n } from '@minddrop/i18n';
@@ -17,18 +17,20 @@ const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
 
 describe('<DropDropdownMenu />', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(() => {
     cleanupRender();
     cleanup();
   });
 
-  const init = () => {
+  const init = (props: Partial<DropDropdownMenuProps> = {}) => {
     const utils = render(
-      <DropDropdownMenu dropId={textDrop1.id} topicId={tSailing.id} />,
+      <DropDropdownMenu
+        dropId={textDrop1.id}
+        topicId={tSailing.id}
+        {...props}
+      />,
     );
 
     const getTriggerButton = () => {
@@ -54,5 +56,20 @@ describe('<DropDropdownMenu />', () => {
 
     // Should have target drop as only selected drop
     expect(App.getSelectedDrops()).toEqual(mapById([textDrop1]));
+  });
+
+  it('calls onOpenChange', () => {
+    const onOpenChange = jest.fn();
+
+    // Render with an onOpenChange callback
+    const { getTriggerButton } = init({ onOpenChange });
+
+    act(() => {
+      // Click the menu trigger button
+      fireEvent.click(getTriggerButton());
+    });
+
+    // Should call onOpenChange callback
+    expect(onOpenChange).toHaveBeenCalledWith(true);
   });
 });
