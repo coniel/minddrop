@@ -21,7 +21,6 @@ import { clearRegisteredDropTypes } from './clearRegisteredDropTypes';
 import { createOfType } from './createOfType';
 import { createFromDataInsert } from './createFromDataInsert';
 import { insertData } from './insertData';
-import { renderDrop } from './renderDrop';
 import { duplicateDrops } from './duplicateDrops';
 import { addParentsToDrop } from './addParentsToDrop';
 import { removeParentsFromDrop } from './removeParentsFromDrop';
@@ -54,7 +53,6 @@ export const Drops: DropsApi = {
   clearDrops,
   clearRegisteredDropTypes,
   getRegisteredDropTypes,
-  render: renderDrop,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>
