@@ -100,6 +100,7 @@ export interface CreateDropData {
 export interface UpdateDropData {
   type?: string;
   markdown?: string | FieldValueDelete;
+  content?: string | FieldValueDelete;
   color?: ContentColor | FieldValueDelete;
 }
 
@@ -122,4 +123,4 @@ export interface DropChanges {
     | FieldValueArrayFilter;
 }
 
-export type DropMap = Record<string, Drop>;
+export type DropMap<T extends Drop = Drop> = Record<string, T>;

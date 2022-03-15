@@ -18,7 +18,7 @@ Hooks provide access to drops and related data from inside React components. Unl
 Returns a drop by ID or `null` if no drop was found.
 
 ```ts
-useDrop(dropId: string): Drop | null
+useDrop<T = Drop>(dropId: string): T | null
 ```
 
 <ArgsTable
@@ -69,7 +69,7 @@ useDrops(dropIds: string[], filters?: DropFilters): Record<string, Drop>
 Retrieves drops by ID. If provided a single ID string, returns the drop or `null` if not found. If provided an array of IDs, returns a `{ [id]: Drop }` of the corresponding drops.
 
 ```ts
-Drops.get(dropId: string | string[], filters?: DropFilters): Drop | DropMap | null
+Drops.get<T = Drop>(dropId: string | string[], filters?: DropFilters): T | DropMap<T> | null
 ```
 
 <ArgsTable

@@ -7,7 +7,7 @@ import { useDropsStore } from '../useDropsStore';
  * @param dropId The ID of the drop to retrieve.
  * @returns The requested drop or null.
  */
-export function useDrop(dropId: string): Drop | null {
+export function useDrop<T extends Drop = Drop>(dropId: string): T | null {
   const { drops } = useDropsStore();
-  return drops[dropId] || null;
+  return (drops[dropId] as T) || null;
 }

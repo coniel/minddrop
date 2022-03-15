@@ -59,7 +59,7 @@ export interface DropsApi {
    * @param filters Filters to filter to the drops by, only supported when getting multiple drops.
    * @returns The requested drop(s).
    */
-  get(dropId: string): Drop | null;
+  get<T extends Drop = Drop>(dropId: string): T;
   get(dropIds: string[], filters?: DropFilters): DropMap;
 
   /**
@@ -160,7 +160,11 @@ export interface DropsApi {
    * @param data The changes to apply to the drop.
    * @returns The updated drop.
    */
-  update(core: Core, id: string, data: UpdateDropData): Drop;
+  update<D extends UpdateDropData = UpdateDropData, R extends Drop = Drop>(
+    core: Core,
+    id: string,
+    data: D,
+  ): R;
 
   /**
    * Inserts data into a drop.

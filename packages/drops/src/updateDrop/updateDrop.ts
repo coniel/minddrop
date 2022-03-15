@@ -4,6 +4,8 @@ import { getDrop } from '../getDrop';
 import { Drop, DropChanges } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
+type Data = Omit<DropChanges, 'updatedAt'>;
+
 /**
  * Updates a drop and dispatches a `drops:update` event.
  * Returns the updated drop.
@@ -13,13 +15,13 @@ import { useDropsStore } from '../useDropsStore';
  * @param data The changes to apply to the drop.
  * @returns The updated drop.
  */
-export function updateDrop(
+export function updateDrop<D extends Data = Data, R extends Drop = Drop>(
   core: Core,
   id: string,
-  data: Omit<DropChanges, 'updatedAt'>,
-): Drop {
-  const drop = getDrop(id);
-  const update = createUpdate(drop, data, {
+  data: D,
+): R {
+  const drop = getDrop<R>(id);
+  const update = createUpdate<D, R>(drop, data, {
     setUpdatedAt: true,
     deleteEmptyFields: ['files'],
   });

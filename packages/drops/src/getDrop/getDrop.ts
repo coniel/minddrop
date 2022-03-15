@@ -8,8 +8,8 @@ import { DropNotFoundError } from '../errors';
  * @param id The drop ID.
  * @returns The requested drop.
  */
-export function getDrop(id: string): Drop {
-  const drop = useDropsStore.getState().drops[id];
+export function getDrop<T extends Drop = Drop>(id: string): T {
+  const drop = useDropsStore.getState().drops[id] as T;
 
   if (!drop) {
     throw new DropNotFoundError(id);
