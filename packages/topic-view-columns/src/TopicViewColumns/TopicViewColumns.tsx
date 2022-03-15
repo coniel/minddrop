@@ -3,7 +3,7 @@ import React, { FC, useCallback, useState } from 'react';
 import './TopicViewColumns.css';
 import { App } from '@minddrop/app';
 import { TopicViewInstance, useTopic } from '@minddrop/topics';
-import { Drops, useDrops } from '@minddrop/drops';
+import { useDrops } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
   mapPropsToClasses,
@@ -205,7 +205,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
                     >
                       <div className="indicator" />
                     </div>
-                    {Drops.render(drops[item.id])}
+                    {App.renderDrop(drops[item.id])}
                   </div>
                 ) : (
                   ''
