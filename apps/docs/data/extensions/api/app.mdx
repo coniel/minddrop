@@ -662,6 +662,40 @@ Returns a `{ [id]: Drop }` map of the drops currently being dragged.
 App.getDraggedDrops(): DropMap
 ```
 
+### renderDrop
+
+Renders a drop using the appropriate component.
+
+```ts
+Drops.render(drop: Drop, parent?: DropParentReference): ReactElement;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to render.',
+    },
+    {
+      name: 'parent',
+      type: 'DropParentReference',
+      required: true,
+      description: (
+        <span>
+          The reference of the parent inside which the drop is being
+          rendered. See the{' '}
+          <a href="/docs/extensions/types/drop#dropparentreference">
+            Drop interface
+          </a>
+          docs for more details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ## Tags
 
 ### addGlobalTags

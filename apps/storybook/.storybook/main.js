@@ -7,6 +7,7 @@ module.exports = {
     '../../../packages/app-ui/**/*.stories.@(ts|tsx)',
     '../../../packages/editor/**/*.stories.@(ts|tsx)',
     '../../../packages/topic-view-columns/**/*.stories.@(ts|tsx)',
+    '../../../extensions/**/*.stories.@(ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
