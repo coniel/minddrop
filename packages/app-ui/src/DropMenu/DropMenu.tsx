@@ -29,6 +29,7 @@ import { Topics } from '@minddrop/topics';
 import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
 import { generateTopicSelectionMenu } from '../utils';
+import './DropMenu.css';
 
 // Components used to generate a context menu
 const ContextMenuComponents: MenuComponents = {

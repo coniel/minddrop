@@ -26,6 +26,7 @@ import {
 import { i18n } from '@minddrop/i18n';
 import { App, useAppCore } from '@minddrop/app';
 import { generateTopicSelectionMenu } from '../utils';
+import './TopicMenu.css';
 
 // Components used to generate a context menu
 const ContextMenuComponents: MenuComponents = {
