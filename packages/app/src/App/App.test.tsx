@@ -78,7 +78,7 @@ describe('App', () => {
         App.openViewInstance(core, viewInstance1.id);
       });
 
-      expect(result.current.viewInstance).toEqual(viewInstance1);
+      expect(result.current.viewInstance).toEqual(viewInstance1.id);
     });
 
     it("dispatches a 'app:open-view' event", (done) => {

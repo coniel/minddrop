@@ -42,7 +42,7 @@ describe('app-extension', () => {
       });
     });
 
-    it('loads current view instance from the local persistent store', () => {
+    it('loads current view instance ID from the local persistent store', () => {
       PersistentStore.setLocalValue(core, 'view', viewInstance1.view);
       PersistentStore.setLocalValue(core, 'viewInstance', viewInstance1.id);
 

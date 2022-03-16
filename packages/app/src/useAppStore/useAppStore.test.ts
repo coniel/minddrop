@@ -89,14 +89,14 @@ describe('useAppStore', () => {
     expect(result.current.view).toBe('my-view');
   });
 
-  it('sets the view instance', () => {
+  it('sets the view instance ID', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 
     act(() => {
-      result.current.setViewInstance(viewInstance1);
+      result.current.setViewInstance(viewInstance1.id);
     });
 
-    expect(result.current.viewInstance).toBe(viewInstance1);
+    expect(result.current.viewInstance).toBe(viewInstance1.id);
   });
 
   it('clears the state', () => {
@@ -110,7 +110,7 @@ describe('useAppStore', () => {
       result.current.addSelectedDrops(['drop-id']);
       result.current.addSelectedDrops(['topic-id']);
       result.current.setView('some-view');
-      result.current.setViewInstance(viewInstance1);
+      result.current.setViewInstance(viewInstance1.id);
       result.current.setDraggedData({
         drops: ['drop-id'],
         topics: ['topic-id'],

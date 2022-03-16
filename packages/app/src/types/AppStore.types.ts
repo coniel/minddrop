@@ -1,4 +1,3 @@
-import { ViewInstance } from '@minddrop/views';
 import { UiExtension } from './UiExtension.types';
 
 export interface DraggedData {
@@ -30,10 +29,10 @@ export interface AppStore {
   view: string;
 
   /**
-   * The currently open view instance.
+   * The ID of the currently open view instance.
    * `null` if a static view is open.
    */
-  viewInstance: ViewInstance | null;
+  viewInstance: string | null;
 
   /**
    * The UI extensions added by extensions.
@@ -93,12 +92,12 @@ export interface AppStore {
   setView(viewId: string): void;
 
   /**
-   * Sets the currently open view instance. Can be set
+   * Sets the currently open view instance ID. Can be set
    * to `null` if no view instance is open.
    *
-   * @param viewInstance The view instance or null to clear.
+   * @param viewInstanceId The ID of the view instance or null to clear.
    */
-  setViewInstance(viewInstance: ViewInstance | null): void;
+  setViewInstance(viewInstanceId: string | null): void;
 
   /**
    * Adds a UI extension to the store.

@@ -1,6 +1,5 @@
-import { View, ViewInstance, Views } from '@minddrop/views';
+import { useViewInstance, View, ViewInstance, Views } from '@minddrop/views';
 import createStore from 'zustand';
-import shallow from 'zustand/shallow';
 import { AppStore } from '../types';
 
 export const useAppStore = createStore<AppStore>((set) => ({
@@ -112,18 +111,24 @@ export const useAppStore = createStore<AppStore>((set) => ({
 }));
 
 /**
- * A hook which returns the current view.
+ * A hook which returns the current view and view
+ * instance (or `null` if there is no view instance).
  *
  * @returns The current view.
  */
-export const useCurrentView = <I extends ViewInstance>() =>
-  useAppStore(
-    (state): { view: View; instance: I | null } => ({
-      view: Views.get(state.view),
-      instance: state.viewInstance as I,
-    }),
-    shallow,
-  );
+export const useCurrentView = <I extends ViewInstance = ViewInstance>(): {
+  view: View;
+  instance: I | null;
+} => {
+  const { view: viewId, viewInstance: viewInstanceId } = useAppStore();
+
+  const viewInstance = useViewInstance<I>(viewInstanceId || '');
+
+  return {
+    view: Views.get(viewId),
+    instance: viewInstance,
+  };
+};
 
 /**
  * A hook which returns UI extensions for a given location.
