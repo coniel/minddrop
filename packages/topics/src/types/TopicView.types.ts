@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
-import { InstanceViewProps, View } from '@minddrop/views';
+import { InstanceView, InstanceViewProps } from '@minddrop/views';
 import { TopicViewInstance } from '.';
 import { Topic, TopicMap } from './Topic.types';
 
@@ -17,7 +17,7 @@ export interface AddDropsMetadata {
 export interface TopicView<
   I extends TopicViewInstance = TopicViewInstance,
   M extends AddDropsMetadata = AddDropsMetadata,
-> extends Omit<View, 'type'> {
+> extends Omit<InstanceView, 'type'> {
   // All TopicViews are instance views
   type: 'instance';
 

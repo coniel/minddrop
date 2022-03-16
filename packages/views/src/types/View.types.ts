@@ -2,7 +2,7 @@ import { Core, DataInsert } from '@minddrop/core';
 import { ComponentType } from 'react';
 import { ViewInstance } from './ViewInstance.types';
 
-export interface View {
+export interface BaseView {
   /**
    * The unique ID of the view.
    */
@@ -22,11 +22,6 @@ export interface View {
   type: 'static' | 'instance';
 
   /**
-   * The component rendered by the view.
-   */
-  component: ComponentType;
-
-  /**
    * Called when data is inserted into the view, usually in
    * the from of a drag and drop or paste event.
    *
@@ -40,3 +35,29 @@ export interface View {
     viewInstance?: ViewInstance,
   ): void;
 }
+
+export interface StaticView extends BaseView {
+  /**
+   * The type of view.
+   */
+  type: 'static';
+
+  /**
+   * The component rendered by the view.
+   */
+  component: ComponentType;
+}
+
+export interface InstanceView extends BaseView {
+  /**
+   * The type of view.
+   */
+  type: 'instance';
+
+  /**
+   * The component rendered by the view.
+   */
+  component: ComponentType<ViewInstance>;
+}
+
+export type View = StaticView | InstanceView;

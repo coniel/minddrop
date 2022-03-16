@@ -50,7 +50,8 @@ View instances can be creqated using the [`Views.createInstance`](/docs/extensio
       name: 'component',
       type: 'React.ComponentType',
       required: true,
-      description: 'The React component rendered by the view.',
+      description:
+        'The React component rendered by the view. If the view is an instance view, the component will receive the view instance data as its props.',
     },
     {
       name: 'onInsertData',
