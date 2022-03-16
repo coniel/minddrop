@@ -13,7 +13,7 @@ export interface TopicColumnsViewData {
 export type TopicColumnsView = TopicViewInstance & TopicColumnsViewData;
 
 export const topicViewColumnsConfig: TopicViewConfig = {
-  id: 'topics:columns-view',
+  id: 'minddrop/topic-view-columns',
   component: () => <div />,
   name: 'Columns',
   description: 'Organise drops into a column based layout.',
@@ -71,7 +71,7 @@ export const tCoastalNavigationView: TopicColumnsView = {
   id: 't-coastal-navigation-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-coastal-navigation',
   columns: {
     0: [],
@@ -85,7 +85,7 @@ export const tCoastalNavigationView2: TopicColumnsView = {
   id: 't-coastal-navigation-view-2',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-coastal-navigation',
   columns: {
     0: [],
@@ -99,7 +99,7 @@ export const tOffshoreNavigationView: TopicColumnsView = {
   id: 't-offshore-navigation-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-offshore-navigation',
   columns: {
     0: [],
@@ -113,7 +113,7 @@ export const tNavigationView: TopicColumnsView = {
   id: 't-navigation-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-navigation',
   columns: {
     0: [],
@@ -127,7 +127,7 @@ export const tBoatsView: TopicColumnsView = {
   id: 't-boats-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-boats',
   columns: {
     0: [],
@@ -141,7 +141,7 @@ export const tAnchoringView: TopicColumnsView = {
   id: 't-anchoring-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-anchoring',
   columns: {
     0: [],
@@ -155,7 +155,7 @@ export const tSailingView: TopicColumnsView = {
   id: 't-sailing-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-sailing',
   columns: {
     0: [textDrop1.id, textDrop2.id],
@@ -169,7 +169,7 @@ export const tSailingView2: TopicColumnsView = {
   id: 't-sailing-view-2',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-sailing',
   columns: {
     0: [textDrop1.id, textDrop2.id],
@@ -183,7 +183,7 @@ export const tUntitledView: TopicColumnsView = {
   id: 't-untitled-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-untitled',
   columns: {
     0: [],
@@ -197,7 +197,7 @@ export const tNoDropsView: TopicColumnsView = {
   id: 't-no-drops-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-no-drops',
   columns: {
     0: [],
@@ -211,7 +211,7 @@ export const tTwoDropsView: TopicColumnsView = {
   id: 't-two-drops-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-two-drops',
   columns: {
     0: [textDrop1.id],
@@ -225,7 +225,7 @@ export const tSixDropsView: TopicColumnsView = {
   id: 't-six-drops-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-six-drops',
   columns: {
     0: [textDrop1.id, textDrop2.id],
@@ -239,7 +239,7 @@ export const tEmptyView: TopicColumnsView = {
   id: 't-empty-view',
   createdAt: new Date(),
   updatedAt: new Date(),
-  view: 'topics:columns-view',
+  view: 'minddrop/topic-view-columns',
   topic: 't-empty',
   columns: {
     0: [],

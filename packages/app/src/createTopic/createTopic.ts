@@ -17,7 +17,7 @@ export function createTopic(core: Core, data?: CreateTopicData): Topic {
   const viewInstance = Topics.createViewInstance(
     core,
     topic.id,
-    'topics:columns-view',
+    'minddrop/topic-view-columns',
   );
 
   return { ...topic, views: [viewInstance.id] };
