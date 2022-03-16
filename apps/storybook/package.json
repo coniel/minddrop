@@ -9,8 +9,20 @@
     "chromatic": "npx chromatic"
   },
   "dependencies": {
-    "@minddrop/i18n": "^0.2.0",
-    "@minddrop/theme": "^0.4.0"
+    "@minddrop/app": "^0.1.1",
+    "@minddrop/app-ui": "^0.1.0",
+    "@minddrop/core": "^0.3.1",
+    "@minddrop/drops": "^0.1.1",
+    "@minddrop/extensions": "^0.1.0",
+    "@minddrop/files": "^0.1.1",
+    "@minddrop/i18n": "^0.2.1",
+    "@minddrop/icons": "^0.3.1",
+    "@minddrop/persistent-store": "^0.1.0",
+    "@minddrop/theme": "^0.4.0",
+    "@minddrop/text-drop": "^0.1.0",
+    "@minddrop/topics": "^0.1.1",
+    "@minddrop/topic-view-columns": "^0.1.0",
+    "@minddrop/views": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

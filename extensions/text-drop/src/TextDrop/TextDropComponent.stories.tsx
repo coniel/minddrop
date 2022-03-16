@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { initializeCore } from '@minddrop/core';
 import { Drops, generateDrop, useDrop } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
@@ -17,8 +17,6 @@ const core = initializeCore({
   appId: 'app',
   extensionId: 'minddrop/text-drop',
 });
-
-onRunTextDrop(core);
 
 const drop = generateDrop({
   type: 'text',
@@ -39,6 +37,10 @@ const drop = generateDrop({
 Drops.load(core, [drop]);
 
 export const Default: React.FC = () => {
+  useEffect(() => {
+    onRunTextDrop(core);
+  }, []);
+
   const liveDrop = useDrop<TextDrop>(drop.id);
 
   return (

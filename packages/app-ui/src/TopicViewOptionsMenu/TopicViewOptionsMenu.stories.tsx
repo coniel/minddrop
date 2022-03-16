@@ -1,7 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import React, { useEffect } from 'react';
-import '../test-utils/initialize-stories';
 import { TopicViewOptionsMenu } from './TopicViewOptionsMenu';
 
 const { tSailing, tCoastalNavigation, tUntitled } = TOPICS_TEST_DATA;

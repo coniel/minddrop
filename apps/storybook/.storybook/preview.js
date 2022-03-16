@@ -7,6 +7,7 @@ import '../../../packages/theme/src/animations.css';
 import { initializeI18n } from '../../../packages/i18n';
 import { IconsProvider } from '../../../packages/icons';
 import { CoreProvider } from '../../../packages/core';
+import '../src/initialize-stories.tsx';
 
 initializeI18n(true);
 

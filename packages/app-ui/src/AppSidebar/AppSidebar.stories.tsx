@@ -1,6 +1,5 @@
 import React from 'react';
 import { AppSidebar } from './AppSidebar';
-import '../test-utils/initialize-stories';
 
 export default {
   title: 'app-ui/AppSidebar',

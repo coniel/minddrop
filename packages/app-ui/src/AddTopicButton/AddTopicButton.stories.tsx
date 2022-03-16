@@ -1,6 +1,5 @@
 import React from 'react';
 import { AddTopicButton } from './AddTopicButton';
-import '../test-utils/initialize-stories';
 
 export default {
   title: 'app-ui/AddTopicButton',
