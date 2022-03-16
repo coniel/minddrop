@@ -23,7 +23,11 @@ describe('<DropActions />', () => {
   });
 
   const init = (props?: Partial<DropActionsProps>) => {
-    const utils = render(<DropActions dropId={textDrop1.id} {...props} />);
+    const utils = render(
+      <div className="drop" data-testid="drop">
+        <DropActions dropId={textDrop1.id} {...props} />
+      </div>,
+    );
 
     return utils;
   };
@@ -73,10 +77,14 @@ describe('<DropActions />', () => {
     });
 
     it('stays visible when opening the drop options menu', () => {
-      const { getByTestId } = init();
+      const { getByTestId, getByLabelText } = init({
+        parent: { type: 'topic', id: tSixDrops.id },
+      });
 
       act(() => {
-        fireEvent.mouseEnter(getByTestId('drop-actions'));
+        // Click the drop options menu
+        const dropOptionsLabel = i18n.t('dropOptions');
+        fireEvent.click(getByLabelText(dropOptionsLabel));
       });
 
       expect(getByTestId('drop-actions')).toHaveClass('visible');
