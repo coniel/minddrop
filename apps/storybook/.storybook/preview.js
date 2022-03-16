@@ -28,7 +28,7 @@ export const parameters = {
 export const decorators = [
   (Story) => (
     <IconsProvider>
-      <CoreProvider>
+      <CoreProvider appId="app">
         <Story />
       </CoreProvider>
     </IconsProvider>
