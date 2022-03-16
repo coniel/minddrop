@@ -2,7 +2,7 @@ import { ExtensionConfig } from '@minddrop/extensions';
 import { Topics } from '@minddrop/topics';
 import { topicViewColumnsConfig } from '../config';
 
-const extension: ExtensionConfig = {
+export const Extension: ExtensionConfig = {
   id: 'minddrop/topic-view-columns',
   name: 'Columns Topic View',
   description: 'A column based layout.',
@@ -12,5 +12,3 @@ const extension: ExtensionConfig = {
     Topics.registerView(core, topicViewColumnsConfig);
   },
 };
-
-export default extension;
