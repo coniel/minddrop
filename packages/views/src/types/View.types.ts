@@ -48,6 +48,13 @@ export interface StaticView extends BaseView {
   component: ComponentType;
 }
 
+export interface InstanceViewProps {
+  /**
+   * The ID of the view instance.
+   */
+  instanceId: string;
+}
+
 export interface InstanceView extends BaseView {
   /**
    * The type of view.
@@ -57,7 +64,7 @@ export interface InstanceView extends BaseView {
   /**
    * The component rendered by the view.
    */
-  component: ComponentType<ViewInstance>;
+  component: ComponentType<InstanceViewProps>;
 }
 
 export type View = StaticView | InstanceView;

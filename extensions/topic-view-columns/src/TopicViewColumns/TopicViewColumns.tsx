@@ -2,31 +2,27 @@
 import React, { FC, useCallback, useState } from 'react';
 import './TopicViewColumns.css';
 import { App } from '@minddrop/app';
-import { TopicViewInstance, useTopic } from '@minddrop/topics';
+import { useTopic } from '@minddrop/topics';
 import { useDrops } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
   mapPropsToClasses,
 } from '@minddrop/utils';
 import { TopicView } from '@minddrop/app-ui';
-import { Views } from '@minddrop/views';
+import { InstanceViewProps, useViewInstance, Views } from '@minddrop/views';
 import { useCore } from '@minddrop/core';
 import {
   ColumnsAddDropsMetadata,
   CreateColumnMetadata,
-  TopicViewColumnsData,
   TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
 } from '../types';
 import { moveColumnItems } from '../moveColumnItems';
 import { moveItemsToNewColumn } from '../moveItemsToNewColumn';
 
-export interface TopicViewColumnsProps
-  extends TopicViewInstance,
-    TopicViewColumnsData {}
-
-export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
-  const { topic: topicId, id: viewInstanceId, columns } = props;
+export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
+  const { columns, topic: topicId } =
+    useViewInstance<TopicViewColumnsInstance>(instanceId);
   const core = useCore('@minddrop/topic-view-columns');
   const topic = useTopic(topicId);
   const drops = useDrops(topic.drops);
@@ -85,8 +81,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
       if (!dataInsert.drops) {
         return;
       }
-      const instance =
-        Views.getInstance<TopicViewColumnsInstance>(viewInstanceId);
+      const instance = Views.getInstance<TopicViewColumnsInstance>(instanceId);
 
       // Move the dropped items into a new column
       const updatedColumns = moveItemsToNewColumn(
@@ -97,7 +92,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
 
       Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
         core,
-        viewInstanceId,
+        instanceId,
         {
           columns: updatedColumns,
         },
@@ -105,7 +100,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
     } else {
       const metadata: CreateColumnMetadata = {
         action: 'create-column',
-        viewInstance: viewInstanceId,
+        viewInstance: instanceId,
         column,
       };
 
@@ -125,12 +120,11 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
 
     if (dataInsert.action === 'sort') {
-      const instance =
-        Views.getInstance<TopicViewColumnsInstance>(viewInstanceId);
+      const instance = Views.getInstance<TopicViewColumnsInstance>(instanceId);
 
       Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
         core,
-        viewInstanceId,
+        instanceId,
         {
           columns: moveColumnItems(
             instance.columns,
@@ -143,7 +137,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
     } else {
       const metadata: ColumnsAddDropsMetadata = {
         action: 'insert-into-column',
-        viewInstance: viewInstanceId,
+        viewInstance: instanceId,
         column,
         index,
       };
@@ -153,7 +147,7 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
   };
 
   return (
-    <TopicView {...props}>
+    <TopicView topicId={topicId}>
       <div className="topic-view-columns">
         {columns.map((column, columnIndex) => (
           <div key={columnIndex} className="column">
@@ -205,7 +199,10 @@ export const TopicViewColumns: FC<TopicViewColumnsProps> = (props) => {
                     >
                       <div className="indicator" />
                     </div>
-                    {App.renderDrop(drops[item.id])}
+                    {App.renderDrop(drops[item.id], {
+                      type: 'topic',
+                      id: topicId,
+                    })}
                   </div>
                 ) : (
                   ''

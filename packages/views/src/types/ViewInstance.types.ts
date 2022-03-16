@@ -45,5 +45,3 @@ export type ViewInstanceMap<T extends ViewInstance = ViewInstance> = Record<
   string,
   T | null
 >;
-
-export type InstanceViewProps<P = {}> = P & ViewInstance;

@@ -25,7 +25,9 @@ export const MindDrop: React.FC<MindDropProps> = ({ appId }) => {
       <IconsProvider>
         <div className="minddrop">
           <AppSidebar />
-          <div className="app-content">{view && <View {...instance} />}</div>
+          <div className="app-content">
+            {view && <View instanceId={instance ? instance.id : undefined} />}
+          </div>
         </div>
       </IconsProvider>
     </CoreProvider>
