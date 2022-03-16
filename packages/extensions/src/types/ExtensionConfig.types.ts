@@ -35,7 +35,7 @@ export interface ExtensionConfig {
    * Called once when the extesion is installed.
    * Directly followed by a call to `onEnable`.
    */
-  onInstall?(core: Core): Promise<void>;
+  onInstall?(core: Core): void | Promise<void>;
 
   /**
    * Called once when the extension is enabled
@@ -43,7 +43,7 @@ export interface ExtensionConfig {
    * also be called independently at a later stage if the
    * extension was temporarily disabled.
    */
-  onEnable?(core: Core): Promise<void>;
+  onEnable?(core: Core): void | Promise<void>;
 
   /**
    * Called when the extension is enabled on given topics.
@@ -51,13 +51,13 @@ export interface ExtensionConfig {
    * @param core A MindDrop core instance.
    * @param topics The topics for which the extension was enabled.
    */
-  onEnableTopics?(core: Core, topics: TopicMap): Promise<void>;
+  onEnableTopics?(core: Core, topics: TopicMap): void | Promise<void>;
 
   /**
    * Called once when the extension has been
    * updated to a new version.
    */
-  onUpdate?(core: Core): void;
+  onUpdate?(core: Core): void | void;
 
   /**
    * Called once when the extension is disabled
@@ -65,7 +65,7 @@ export interface ExtensionConfig {
    * can also be called independently if the user disables
    * the extension without uninstalling it.
    */
-  onDisable?(core: Core): Promise<void>;
+  onDisable?(core: Core): void | Promise<void>;
 
   /**
    * Called when the extension is disabled on given topics.
@@ -73,12 +73,12 @@ export interface ExtensionConfig {
    * @param core A MindDrop core instance.
    * @param topics The topics for which the extension was disabled.
    */
-  onDisableTopics?(core: Core, topics: TopicMap): Promise<void>;
+  onDisableTopics?(core: Core, topics: TopicMap): void | Promise<void>;
 
   /**
    * Called once when the extension is uninstalled.
    * Use to clean up any data stored by your extension.
    * Always preceeded by a call to `onDisable`.
    */
-  onUninstall?(core: Core): Promise<void>;
+  onUninstall?(core: Core): void | Promise<void>;
 }

@@ -120,7 +120,7 @@ onRun(core: Core) => void
 Called once when the extension is installed. Directly followed by a call to `onEnable`.
 
 ```ts
-onInstall(core: Core) => Promise<void>
+onInstall(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable core />
@@ -130,7 +130,7 @@ onInstall(core: Core) => Promise<void>
 Called once when the extension is enabled globally. Called directly after `onInstall`, but can also be called independently at a later stage if the extension was temporarily disabled.
 
 ```ts
-onEnable(core: Core) => void
+onEnable(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable core />
@@ -140,7 +140,7 @@ onEnable(core: Core) => void
 Called when the extension is enabled in given topics.
 
 ```ts
-onEnableTopics(core: Core, topics: Topic[]) => Promise<void>
+onEnableTopics(core: Core, topics: Topic[]) => void | Promise<void>
 ```
 
 <ArgsTable
@@ -160,7 +160,7 @@ onEnableTopics(core: Core, topics: Topic[]) => Promise<void>
 Called once when the extension has been updated to a new version. Directly followed by a call to `onEnable`.
 
 ```ts
-onUpdate(core: Core) => Promise<void>
+onUpdate(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable core />
@@ -170,7 +170,7 @@ onUpdate(core: Core) => Promise<void>
 Called once when the extension is deenabled globally. Called directly before `onUninstall`, but can also be called independently if the user disables the extension without uninstalling it.
 
 ```ts
-onDisable(core: Core) => Promise<void>
+onDisable(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable core />
@@ -180,7 +180,7 @@ onDisable(core: Core) => Promise<void>
 Called when the extension is disabled in given topics.
 
 ```ts
-onDisableTopics(core: Core) => Promise<void>
+onDisableTopics(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable
@@ -200,7 +200,7 @@ onDisableTopics(core: Core) => Promise<void>
 Called once when the extension is uninstalled. Use to clean up any data stored by your extension. Always directly preceeded by a call to `onDisable`.
 
 ```ts
-onUninstall(core: Core) => void
+onUninstall(core: Core) => void | Promise<void>
 ```
 
 <ArgsTable core />
