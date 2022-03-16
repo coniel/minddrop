@@ -8,7 +8,7 @@ const { textDrop1 } = DROPS_TEST_DATA;
 const { tSixDrops } = TOPICS_TEST_DATA;
 
 export default {
-  title: 'app/DropActions',
+  title: 'app-ui/DropActions',
   component: DropActions,
 };
 

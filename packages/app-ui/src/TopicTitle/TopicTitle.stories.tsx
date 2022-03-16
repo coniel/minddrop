@@ -6,7 +6,7 @@ import '../test-utils/initialize-stories';
 const { tSailing } = TOPICS_TEST_DATA;
 
 export default {
-  title: 'app/TopicTitle',
+  title: 'app-ui/TopicTitle',
   component: TopicTitle,
 };
 

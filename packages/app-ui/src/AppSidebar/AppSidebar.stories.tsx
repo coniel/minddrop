@@ -3,7 +3,7 @@ import { AppSidebar } from './AppSidebar';
 import '../test-utils/initialize-stories';
 
 export default {
-  title: 'app/AppSidebar',
+  title: 'app-ui/AppSidebar',
   component: AppSidebar,
 };
 

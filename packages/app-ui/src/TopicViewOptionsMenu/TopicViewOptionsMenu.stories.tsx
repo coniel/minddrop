@@ -9,7 +9,7 @@ const { tSailing, tCoastalNavigation, tUntitled } = TOPICS_TEST_DATA;
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export default {
-  title: 'app/TopicViewOptionsMenu',
+  title: 'app-ui/TopicViewOptionsMenu',
   component: TopicViewOptionsMenu,
 };
 

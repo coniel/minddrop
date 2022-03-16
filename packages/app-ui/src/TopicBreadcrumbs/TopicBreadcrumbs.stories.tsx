@@ -6,7 +6,7 @@ import '../test-utils/initialize-stories';
 const { trail } = TOPICS_TEST_DATA;
 
 export default {
-  title: 'app/TopicBreadcrumbs',
+  title: 'app-ui/TopicBreadcrumbs',
   component: TopicBreadcrumbs,
 };
 

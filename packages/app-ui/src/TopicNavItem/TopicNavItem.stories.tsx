@@ -6,7 +6,7 @@ import { TOPICS_TEST_DATA } from '@minddrop/topics';
 const { tSailing } = TOPICS_TEST_DATA;
 
 export default {
-  title: 'app/TopicNavItem',
+  title: 'app-ui/TopicNavItem',
   component: TopicNavItem,
 };
 

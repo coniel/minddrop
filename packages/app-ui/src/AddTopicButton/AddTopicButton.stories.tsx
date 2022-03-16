@@ -3,7 +3,7 @@ import { AddTopicButton } from './AddTopicButton';
 import '../test-utils/initialize-stories';
 
 export default {
-  title: 'app/AddTopicButton',
+  title: 'app-ui/AddTopicButton',
   component: AddTopicButton,
 };
 

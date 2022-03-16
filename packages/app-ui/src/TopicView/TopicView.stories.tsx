@@ -9,7 +9,7 @@ import { TOPICS_TEST_DATA } from '@minddrop/topics';
 const { trail } = TOPICS_TEST_DATA;
 
 export default {
-  title: 'app/TopicView',
+  title: 'app-ui/TopicView',
   component: TopicView,
 };
 

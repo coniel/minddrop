@@ -11,7 +11,7 @@ const { tSailing, tUntitled } = TOPICS_TEST_DATA;
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export default {
-  title: 'app/DropContextMenu',
+  title: 'app-ui/DropContextMenu',
   component: DropContextMenu,
 };
 
