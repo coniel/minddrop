@@ -18,8 +18,9 @@ describe('<TopicViewColumns />', () => {
   afterEach(cleanup);
 
   const init = () => {
-    const viewInstance = getViewInstance();
-    const utils = render(<TopicViewColumns {...viewInstance} />);
+    const utils = render(
+      <TopicViewColumns instanceId={topicViewColumnsInstance.id} />,
+    );
 
     return utils;
   };
@@ -39,8 +40,8 @@ describe('<TopicViewColumns />', () => {
       // Get the updated topic
       const topic = Topics.get(viewInstance.topic);
 
-      // Should add drop to the end of 0
-      const { items } = viewInstance.columns[0];
+      // Should add drop to the end of 1
+      const { items } = viewInstance.columns[1];
       expect(items.slice(-1)[0].id).toBe(drop.id);
       // Should add drop to the topic
       expect(topic.drops.includes(drop.id)).toBeTruthy();
@@ -48,8 +49,8 @@ describe('<TopicViewColumns />', () => {
     });
 
     act(() => {
-      // Drop plain text data at the end of 0
-      fireEvent.drop(getByTestId('column-end-0'), {
+      // Drop plain text data at the end of 1
+      fireEvent.drop(getByTestId('column-end-1'), {
         dataTransfer: {
           types: ['text/plain'],
           getData: () => 'Hello world',

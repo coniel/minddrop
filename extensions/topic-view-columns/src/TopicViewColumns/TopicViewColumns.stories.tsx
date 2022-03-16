@@ -1,7 +1,5 @@
 import React from 'react';
-import { Views } from '@minddrop/views';
 import { TopicViewColumns } from './TopicViewColumns';
-import { TopicViewColumnsInstance } from '../types';
 import { topicViewColumnsInstance } from '../test-utils/topic-view-columns.data';
 
 export default {
@@ -10,9 +8,5 @@ export default {
 };
 
 export const Default: React.FC = () => {
-  const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-    topicViewColumnsInstance.id,
-  );
-
-  return <TopicViewColumns {...viewInstance} />;
+  return <TopicViewColumns instanceId={topicViewColumnsInstance.id} />;
 };
