@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
-import { InstanceView, InstanceViewProps } from '@minddrop/views';
+import { InstanceView } from '@minddrop/views';
 import { TopicViewInstance } from '.';
 import { Topic, TopicMap } from './Topic.types';
 
@@ -105,13 +105,5 @@ export interface TopicView<
   onRemoveSubtopics?(core: Core, viewInstance: I, subtopics: TopicMap): void;
 }
 
-interface BaseTopicViewProps {
-  /**
-   * The ID of the topic.
-   */
-  topicId: string;
-}
-
-export type TopicViewProps = InstanceViewProps<BaseTopicViewProps>;
 export type RegisterTopicViewData = Omit<TopicView, 'extension'>;
 export type TopicViewMap = Record<string, TopicView>;

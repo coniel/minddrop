@@ -31,7 +31,7 @@ describe('<TopicView />', () => {
 
   const setup = () => {
     const utils = render(
-      <TopicView {...tSixDropsView}>
+      <TopicView topicId={tSixDrops.id}>
         <div>children</div>
       </TopicView>,
     );

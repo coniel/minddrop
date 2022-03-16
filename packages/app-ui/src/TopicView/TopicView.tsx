@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { Topics, useTopic } from '@minddrop/topics';
-import { InstanceViewProps } from '@minddrop/views';
 import { IconButton, Toolbar } from '@minddrop/ui';
 import { App, useAppCore } from '@minddrop/app';
 import { TopicTitle } from '../TopicTitle';
@@ -14,13 +13,14 @@ import {
   setDataTransferData,
 } from '@minddrop/utils';
 
-export interface TopicViewBaseProps {
-  topic: string;
+export interface TopicViewProps {
+  /**
+   * The ID of the topic.
+   */
+  topicId: string;
 }
 
-export type TopicViewProps = InstanceViewProps<TopicViewBaseProps>;
-
-export const TopicView: FC<TopicViewProps> = ({ topic: topicId, children }) => {
+export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
   const titleInput = useRef<HTMLInputElement | null>(null);
   const core = useAppCore();
   const topic = useTopic(topicId);
