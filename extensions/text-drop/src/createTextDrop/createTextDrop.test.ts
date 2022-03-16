@@ -18,7 +18,7 @@ describe('createTextDrop', () => {
 
     // Should return a document with a single empty paragraph
     expect(data.content).toEqual(
-      JSON.stringify([{ type: 'paragraph', content: [{ text: '' }] }]),
+      JSON.stringify([{ type: 'paragraph', children: [{ text: '' }] }]),
     );
   });
 
@@ -28,7 +28,7 @@ describe('createTextDrop', () => {
     // Should return a document containing the inserted text
     expect(data.content).toEqual(
       JSON.stringify([
-        { type: 'paragraph', content: [{ text: 'Hello world' }] },
+        { type: 'paragraph', children: [{ text: 'Hello world' }] },
       ]),
     );
   });
