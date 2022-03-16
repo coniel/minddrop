@@ -16,13 +16,16 @@ export function createTextDrop(
   const drop: CreateTextDropData = {
     type: 'text',
     contentRevision: generateId(),
-    content: JSON.stringify([{ type: 'paragraph', content: [{ text: '' }] }]),
+    content: JSON.stringify([{ type: 'paragraph', children: [{ text: '' }] }]),
   };
 
   if (dataInsert && dataInsert.types.includes('text/plain')) {
     // Set the inserted plain text as the content
     drop.content = JSON.stringify([
-      { type: 'paragraph', content: [{ text: dataInsert.data['text/plain'] }] },
+      {
+        type: 'paragraph',
+        children: [{ text: dataInsert.data['text/plain'] }],
+      },
     ]);
   }
 
