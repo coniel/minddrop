@@ -5,7 +5,7 @@ import * as DropsExtension from '@minddrop/drops';
 import * as ViewExtension from '@minddrop/views';
 import * as AppExtension from '@minddrop/app';
 import * as PersistentStoreExtension from '@minddrop/persistent-store';
-import { Extension as ExtensionTextDrop } from '@minddrop/text-drop';
+import ExtensionTextDrop from '@minddrop/text-drop';
 import ExtensionTopicViewColumns, {
   TOPIC_VIEW_COLUMNS_TEST_DATA,
 } from '@minddrop/topic-view-columns';
