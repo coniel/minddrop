@@ -36,6 +36,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   const expandedTopics = useLocalPersistentStoreValue<string[]>(
     core,
     'expandedTopics',
+    [],
   );
   const isActive = useMemo(() => {
     if (!instance) {
