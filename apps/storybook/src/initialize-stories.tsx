@@ -60,7 +60,6 @@ Drops.load(
   })),
 );
 Topics.load(core, TOPICS_TEST_DATA.topics);
-Views.loadInstances(core, TOPICS_TEST_DATA.topicViewInstances);
 Views.loadInstances(core, [
   TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance,
 ]);

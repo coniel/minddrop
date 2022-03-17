@@ -2,7 +2,7 @@ import { TopicViewColumnsInstance } from '../types';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 
-const { tSixDrops, tSixDropsView } = TOPICS_TEST_DATA;
+const { tSixDrops } = TOPICS_TEST_DATA;
 const { textDrop1, textDrop2, textDrop3, textDrop4, htmlDrop1, imageDrop1 } =
   DROPS_TEST_DATA;
 
@@ -14,7 +14,7 @@ export const colItemHtmlDrop1 = { type: 'drop', id: htmlDrop1.id };
 export const colItemImageDrop1 = { type: 'drop', id: imageDrop1.id };
 
 export const topicViewColumnsInstance: TopicViewColumnsInstance = {
-  id: tSixDropsView.id,
+  id: 'columns-view-instance',
   view: 'minddrop/topic-view-columns',
   topic: tSixDrops.id,
   createdAt: new Date('01/01/2000'),
