@@ -36,6 +36,10 @@ export function setValue<T = any>(
   core.dispatch(`persistent-store:update-${scope}`, {
     before: scopeData,
     after: {
+      // The ID of the global scope document is the same for all
+      // app instances. The ID of the local scope document is the
+      // app instance ID.
+      id: scope === 'global' ? 'global-persistent-store' : core.appId,
       ...scopeData,
       [core.extensionId]: { ...extensionData, ...update.after },
     },

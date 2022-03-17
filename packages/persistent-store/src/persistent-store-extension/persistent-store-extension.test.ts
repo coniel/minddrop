@@ -1,7 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { renderHook, act } from '@minddrop/test-utils';
 import { onRun } from './persistent-store-extension';
-import { PersistentStoreDocument } from '../types';
 import { usePersistentStore } from '../usePersistentStore';
 
 const core = initializeCore({
@@ -22,10 +21,9 @@ describe('persistent-store-extension', () => {
     describe('global store resource', () => {
       it('loads data into the global store', () => {
         const { result } = renderHook(() => usePersistentStore().global);
-        const data = { app: { topics: ['topic-id'] } };
-        const doc: PersistentStoreDocument = {
+        const doc = {
           id: 'global-id',
-          data,
+          app: { topics: ['topic-id'] },
         };
 
         onRun(core);
@@ -39,7 +37,7 @@ describe('persistent-store-extension', () => {
           connector.onLoad([doc]);
         });
 
-        expect(result.current).toEqual(data);
+        expect(result.current).toEqual(doc);
       });
 
       it('works with no docs', () => {
@@ -63,14 +61,12 @@ describe('persistent-store-extension', () => {
     describe('local store resource', () => {
       it('loads data into the local store', () => {
         const { result } = renderHook(() => usePersistentStore().local);
-        const data = { app: { sidebarWidth: 300 } };
-        const doc1: PersistentStoreDocument = {
+        const doc1 = {
           id: 'other-app-id',
-          data: {},
         };
-        const doc2: PersistentStoreDocument = {
+        const doc2 = {
           id: core.appId,
-          data,
+          app: { sidebarWidth: 300 },
         };
 
         onRun(core);
@@ -84,7 +80,7 @@ describe('persistent-store-extension', () => {
           connector.onLoad([doc1, doc2]);
         });
 
-        expect(result.current).toEqual(data);
+        expect(result.current).toEqual(doc2);
       });
 
       it('works with no store docs', () => {

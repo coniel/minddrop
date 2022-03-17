@@ -48,7 +48,11 @@ describe('setValue', () => {
     function callback(payload) {
       expect(payload.data).toEqual({
         before: { extension2: { bar: 'bar' } },
-        after: { test: { foo: ['foo'] }, extension2: { bar: 'bar' } },
+        after: {
+          id: 'global-persistent-store',
+          test: { foo: ['foo'] },
+          extension2: { bar: 'bar' },
+        },
         changes: { test: { foo: value } },
       });
       done();
@@ -71,7 +75,7 @@ describe('setValue', () => {
     function callback(payload) {
       expect(payload.data).toEqual({
         before: {},
-        after: { test: { foo: ['foo'] } },
+        after: { id: 'app', test: { foo: ['foo'] } },
         changes: { test: { foo: value } },
       });
       done();
