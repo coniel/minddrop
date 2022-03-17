@@ -144,10 +144,6 @@ img {
   -webkit-user-drag: none;
 }
 
-.draggable {
-  -webkit-app-region: drag;
-}
-
 .selectable {
   -webkit-user-select: auto;
   user-select: auto;
@@ -164,4 +160,9 @@ img {
   -webkit-app-region: drag;
   height: 34px;
   width: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
