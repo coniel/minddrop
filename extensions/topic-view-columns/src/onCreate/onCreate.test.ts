@@ -16,8 +16,7 @@ describe('onCreate', () => {
 
     expect(data.columns[0].items.length).toBe(2);
     expect(data.columns[1].items.length).toBe(2);
-    expect(data.columns[2].items.length).toBe(1);
-    expect(data.columns[3].items.length).toBe(1);
+    expect(data.columns[2].items.length).toBe(2);
   });
 
   it("spreads the topic's drops between the first columns when drops count < columns count", () => {
@@ -26,7 +25,6 @@ describe('onCreate', () => {
     expect(data.columns[0].items.length).toBe(1);
     expect(data.columns[1].items.length).toBe(1);
     expect(data.columns[2].items.length).toBe(0);
-    expect(data.columns[3].items.length).toBe(0);
   });
 
   it('returns empty columns if topic has no drops', () => {
@@ -35,6 +33,5 @@ describe('onCreate', () => {
     expect(data.columns[0].items).toEqual([]);
     expect(data.columns[1].items).toEqual([]);
     expect(data.columns[2].items).toEqual([]);
-    expect(data.columns[3].items).toEqual([]);
   });
 });
