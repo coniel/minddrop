@@ -54,30 +54,49 @@ describe('initiaizePouchDB', () => {
     );
   });
 
-  it('updates resources in the database', async () => {
+  it('updates resources in the database', (done) => {
     const pouch = initializePouchDB(db);
 
-    await pouch.update<ItemResource>(item1._id, { markdown: 'Updated' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Updated' });
 
-    const item = await db.get<ItemResource>(item1._id);
+    setTimeout(async () => {
+      const item = await db.get<ItemResource>(item1._id);
 
-    expect(item.markdown).toBe('Updated');
+      expect(item.markdown).toBe('Updated');
+      done();
+    }, 200);
   });
 
   it('deletes resources in the database', (done) => {
-    const run = async () => {
-      const pouch = initializePouchDB(db);
+    const pouch = initializePouchDB(db);
 
-      await pouch.delete(item1._id);
+    pouch.delete(item1._id);
 
+    setTimeout(async () => {
       try {
         await db.get(item1._id);
       } catch (err) {
         expect(err.message).toBe('missing');
         done();
       }
-    };
+    }, 200);
+  });
 
-    run();
+  it('executes actions sequentially to prevent conflicts', (done) => {
+    const pouch = initializePouchDB(db);
+
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 1' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 2' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 3' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 4' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 5' });
+    pouch.update<ItemResource>(item1._id, { markdown: 'Update 6' });
+
+    setTimeout(async () => {
+      const item = await db.get<ItemResource>(item1._id);
+
+      expect(item.markdown).toBe('Update 6');
+      done();
+    }, 200);
   });
 });
