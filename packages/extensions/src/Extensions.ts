@@ -5,6 +5,7 @@ import { getEnabledExtensions } from './getEnabledExtensions';
 import { getExtension } from './getExtension';
 import { getRegisteredExtensions } from './getRegisteredExtensions';
 import { getTopicExtensions } from './getTopicExtensions';
+import { initializeExtensions } from './initializeExtensions';
 import { registerExtension } from './registerExtension';
 import { ExtensionsApi } from './types';
 import { unregisterExtension } from './unregisterExtension';
@@ -18,6 +19,7 @@ export const Extensions: ExtensionsApi = {
   enableOnTopics: enableExtensionOnTopics,
   disableOnTopics: disableExtensionOnTopics,
   getTopicExtensions,
+  initialize: initializeExtensions,
   clear: clearExtensions,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),

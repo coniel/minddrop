@@ -95,6 +95,15 @@ export interface ExtensionsApi {
   disableOnTopics(core: Core, extensionId: string, topicIds: string[]): void;
 
   /**
+   * Initializes the given extensions and runs
+   * the enabled ones.
+   *
+   * @param core A MindDrop core instance.
+   * @param extensionConfigs The extension configs to initialize.
+   */
+  initialize(core: Core, extensionConfigs: ExtensionConfig[]): void;
+
+  /**
    * Clears the extensions store.
    *
    * @param core A MindDrop core extension.
