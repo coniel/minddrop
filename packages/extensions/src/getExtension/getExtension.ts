@@ -1,6 +1,6 @@
 import { Extension } from '../types';
-import { ExtensionNotRegisteredError } from '../errors';
-import { useExtensionsStore } from '../useExtensionsStore';
+import { getExtensionConfig } from '../getExtensionConfig';
+import { getExtensionDocument } from '../getExtensionDocument';
 
 /**
  * Returns an extension by ID. Throws an ExtensionNotRegisteredError
@@ -9,11 +9,15 @@ import { useExtensionsStore } from '../useExtensionsStore';
  * @param extensionId The ID of the extension to retrieve.
  */
 export function getExtension(extensionId: string): Extension {
-  const extension = useExtensionsStore.getState().extensions[extensionId];
+  // Get the extension config
+  const config = getExtensionConfig(extensionId);
 
-  if (!extension) {
-    throw new ExtensionNotRegisteredError(extensionId);
-  }
+  // Get the extension document
+  const document = getExtensionDocument(extensionId);
 
-  return extension;
+  return {
+    ...document,
+    ...config,
+    document: document.id,
+  };
 }

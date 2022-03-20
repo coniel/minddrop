@@ -1,11 +1,12 @@
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { contains, mapById } from '@minddrop/utils';
 import { getExtension } from '../getExtension';
 import {
   setup,
   cleanup,
   core,
-  topicExtension,
-  topicExtensionNoCallbacks,
+  topicExtensionConfig,
+  topicNoCallbacksExtension,
 } from '../test-utils';
 import { enableExtensionOnTopics } from './enableExtensionOnTopics';
 
@@ -17,40 +18,59 @@ describe('enableExtensionsOnTopics', () => {
   afterEach(cleanup);
 
   it("adds the topic IDs to the extension's topics list", () => {
-    enableExtensionOnTopics(core, topicExtension.id, [
+    // Enable the extension on two topics
+    enableExtensionOnTopics(core, topicExtensionConfig.id, [
       tCoastalNavigation.id,
       tOffshoreNavigation.id,
     ]);
 
-    const extension = getExtension(topicExtension.id);
+    // Get the updated extension
+    const extension = getExtension(topicExtensionConfig.id);
 
-    expect(extension.topics.includes(tCoastalNavigation.id)).toBeTruthy();
-    expect(extension.topics.includes(tOffshoreNavigation.id)).toBeTruthy();
+    // Extension should contain the topics
+    expect(
+      contains(extension.topics, [
+        tCoastalNavigation.id,
+        tOffshoreNavigation.id,
+      ]),
+    ).toBeTruthy();
   });
 
   it("calls the extension's onEnableTopics callback", () => {
-    jest.spyOn(topicExtension, 'onEnableTopics');
+    jest.spyOn(topicExtensionConfig, 'onEnableTopics');
 
-    enableExtensionOnTopics(core, topicExtension.id, [tCoastalNavigation.id]);
-    // Should work with extension which have no onEnableTopics callback
-    enableExtensionOnTopics(core, topicExtensionNoCallbacks.id, [
+    // Enable topics on an extension wich has a onEnableTopics callback
+    enableExtensionOnTopics(core, topicExtensionConfig.id, [
+      tCoastalNavigation.id,
+    ]);
+    // Enable topics on an extension wich does not have a onEnableTopics
+    //  callback,(should do nothing).
+    enableExtensionOnTopics(core, topicNoCallbacksExtension.id, [
       tCoastalNavigation.id,
     ]);
 
-    expect(topicExtension.onEnableTopics).toHaveBeenCalledWith(core, {
+    // Should call the onEnableTopics callback
+    expect(topicExtensionConfig.onEnableTopics).toHaveBeenCalledWith(core, {
       [tCoastalNavigation.id]: tCoastalNavigation,
     });
   });
 
   it('dispatches a `extensions:enable-topics` event', (done) => {
+    // Listen to 'extensions:enable-topics' events
     core.addEventListener('extensions:enable-topics', (payload) => {
-      expect(payload.data.extension.id).toEqual(topicExtension.id);
-      expect(payload.data.topics[tCoastalNavigation.id]).toEqual(
-        tCoastalNavigation,
-      );
+      // Get the extension
+      const extension = getExtension(topicExtensionConfig.id);
+
+      // Payload data should contain the extension
+      expect(payload.data.extension).toEqual(extension);
+      // Payload data should contain the topics
+      expect(payload.data.topics).toEqual(mapById([tCoastalNavigation]));
       done();
     });
 
-    enableExtensionOnTopics(core, topicExtension.id, [tCoastalNavigation.id]);
+    // Enable the extension on a topic
+    enableExtensionOnTopics(core, topicExtensionConfig.id, [
+      tCoastalNavigation.id,
+    ]);
   });
 });

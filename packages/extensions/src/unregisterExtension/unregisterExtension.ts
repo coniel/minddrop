@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { deleteExtensionDocument } from '../deleteExtensionDocument';
 import { getExtension } from '../getExtension';
 import { useExtensionsStore } from '../useExtensionsStore';
 
@@ -13,8 +14,11 @@ export function unregisterExtension(core: Core, extensionId: string): void {
   // Get the extension
   const extension = getExtension(extensionId);
 
-  // Remove the extension from the store
-  useExtensionsStore.getState().removeExtension(extensionId);
+  // Remove the extension config from the store
+  useExtensionsStore.getState().removeExtensionConfig(extensionId);
+
+  // Delete the extension document
+  deleteExtensionDocument(core, extensionId);
 
   // Dispatch a 'extensions:unregister' event
   core.dispatch('extensions:unregister', extension);

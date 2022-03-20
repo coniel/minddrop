@@ -2,6 +2,10 @@ import { Core } from '@minddrop/core';
 import {
   ClearExtensionsEvent,
   ClearExtensionsEventCallback,
+  CreateExtensionDocumentEvent,
+  CreateExtensionDocumentEventCallback,
+  DeleteExtensionDocumentEvent,
+  DeleteExtensionDocumentEventCallback,
   DisableExtensionOnTopicsEvent,
   DisableExtensionOnTopicsEventCallback,
   EnableExtensionOnTopicsEvent,
@@ -10,8 +14,11 @@ import {
   RegisterExtensionEventCallback,
   UnregisterExtensionEvent,
   UnregisterExtensionEventCallback,
+  UpdateExtensionDocumentEvent,
+  UpdateExtensionDocumentEventCallback,
 } from './ExtensionEvents.types';
 import { Extension } from './Extension.types';
+import { ExtensionConfig } from './ExtensionConfig.types';
 
 export interface ExtensionsApi {
   /**
@@ -23,6 +30,14 @@ export interface ExtensionsApi {
   get(extensionId: string): Extension;
 
   /**
+   * Returns an array of all registered extensions,
+   * including disabled ones.
+   *
+   * @returns An array containing all registered extensions.
+   */
+  getRegistered(): Extension[];
+
+  /**
    * Returns an array of all enabled extensions.
    *
    * @returns An array containing all enabled extensions.
@@ -30,13 +45,17 @@ export interface ExtensionsApi {
   getEnabled(): Extension[];
 
   /**
-   * Registers a new extension and dispatches a
-   * `extensions:register` event.
+   * Registers a new extension and dispatches a `extensions:register`
+   * event. If the extension was not previously registered, creates
+   * an associated ExtensionDocument for it.
+   *
+   * Returns the registered extension.
    *
    * @param core A MindDrop core instance.
-   * @param extension The extension to register.
+   * @param extensionConfig The config of extension to register.
+   * @returns The registered extension.
    */
-  register(core: Core, extension: Extension): void;
+  register(core: Core, extensionConfig: ExtensionConfig): Extension;
 
   /**
    * Removes an extension from the extensions store and
@@ -121,6 +140,27 @@ export interface ExtensionsApi {
     callback: ClearExtensionsEventCallback,
   ): void;
 
+  // Add 'extensions:create-document' event listener
+  addEventListener(
+    core: Core,
+    type: CreateExtensionDocumentEvent,
+    callback: CreateExtensionDocumentEventCallback,
+  ): void;
+
+  // Add 'extensions:update-document' event listener
+  addEventListener(
+    core: Core,
+    type: UpdateExtensionDocumentEvent,
+    callback: UpdateExtensionDocumentEventCallback,
+  ): void;
+
+  // Add 'extensions:delete-document' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteExtensionDocumentEvent,
+    callback: DeleteExtensionDocumentEventCallback,
+  ): void;
+
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
@@ -158,5 +198,26 @@ export interface ExtensionsApi {
     core: Core,
     type: ClearExtensionsEvent,
     callback: ClearExtensionsEventCallback,
+  ): void;
+
+  // Remove 'extensions:create-document' event listener
+  removeEventListener(
+    core: Core,
+    type: CreateExtensionDocumentEvent,
+    callback: CreateExtensionDocumentEventCallback,
+  ): void;
+
+  // Remove 'extensions:update-document' event listener
+  removeEventListener(
+    core: Core,
+    type: UpdateExtensionDocumentEvent,
+    callback: UpdateExtensionDocumentEventCallback,
+  ): void;
+
+  // Remove 'extensions:delete-document' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteExtensionDocumentEvent,
+    callback: DeleteExtensionDocumentEventCallback,
   ): void;
 }

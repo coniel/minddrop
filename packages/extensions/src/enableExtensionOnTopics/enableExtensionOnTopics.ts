@@ -1,7 +1,8 @@
 import { Core } from '@minddrop/core';
 import { Topics } from '@minddrop/topics';
+import { FieldValue } from '@minddrop/utils';
 import { getExtension } from '../getExtension';
-import { useExtensionsStore } from '../useExtensionsStore';
+import { updateExtensionDocument } from '../updateExtensionDocument';
 
 /**
  * Enables an extension on topics and dispatches a
@@ -16,28 +17,26 @@ export function enableExtensionOnTopics(
   extensionId: string,
   topicsIds: string[],
 ): void {
-  // Get the extension
-  const extension = getExtension(extensionId);
   // Get the topics
   const topics = Topics.get(topicsIds);
 
-  // Add the topics to the extension's topic list
-  const updated = {
-    ...extension,
-    topics: [...extension.topics, ...topicsIds],
-  };
+  // Update the extension document
+  updateExtensionDocument(core, extensionId, {
+    // Add the topic IDs
+    topics: FieldValue.arrayUnion(topicsIds),
+  });
 
-  // Update the extension in the store
-  useExtensionsStore.getState().setExtension(updated);
+  // Get the updated extension
+  const extension = getExtension(extensionId);
 
-  // Call the extension's onEnableTopics callback
   if (extension.onEnableTopics) {
+    // Call the extension's onEnableTopics callback
     extension.onEnableTopics(core, topics);
   }
 
   // Dispatch a 'extensions:enable-topics' event
   core.dispatch('extensions:enable-topics', {
-    extension: updated,
+    extension,
     topics,
   });
 }

@@ -1,24 +1,51 @@
-import { Extension } from './Extension.types';
+import { ExtensionConfig } from './ExtensionConfig.types';
+import { ExtensionDocument } from './ExtensionDocument.types';
 
 export interface ExtensionsStore {
   /**
-   * An { [id]: Extension } map of extensions.
+   * An {extensionId]: ExtensionConfig } map of extension configs.
    */
-  extensions: Record<string, Extension>;
+  extensionConfigs: Record<string, ExtensionConfig>;
 
   /**
-   * Adds a new extension to the store.
-   *
-   * @param config The extension.
+   * An { [extensionId]: ExtensionDocument } map of extension documents.
    */
-  setExtension(config: Extension): void;
+  extensionDocuments: Record<string, ExtensionDocument>;
 
   /**
-   * Removes a extension from the store.
+   * Sets and extension config in the store.
    *
-   * @param id The ID of the extension to remove.
+   * @param config The extension config.
    */
-  removeExtension(id: string): void;
+  setExtensionConfig(config: ExtensionConfig): void;
+
+  /**
+   * Removes an extension config from the store.
+   *
+   * @param id The ID of the extension for which to remove the config.
+   */
+  removeExtensionConfig(id: string): void;
+
+  /**
+   * Loads extension documents into the store.
+   *
+   * @param docs The extension documents to load.
+   */
+  loadExtensionDocuments(docs: ExtensionDocument[]): void;
+
+  /**
+   * Sets and extension document in the store.
+   *
+   * @param doc The extension document.
+   */
+  setExtensionDocument(document: ExtensionDocument): void;
+
+  /**
+   * Removes an extension document from the store.
+   *
+   * @param id The ID of the extension for which to remove the document.
+   */
+  removeExtensionDocument(id: string): void;
 
   /**
    * Clears all data from the store.

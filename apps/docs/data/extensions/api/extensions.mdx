@@ -28,6 +28,14 @@ Extensions.get(extensionId: string): Extension
   ]}
 />
 
+### getRegistered
+
+Returns an array of all registered extensions, including disabled ones.
+
+```ts
+Extensions.getRegistered(): Extension[]
+```
+
 ### getEnabled
 
 Returns an array of all enabled extensions.
@@ -61,7 +69,7 @@ Extensions.getTopicExtensions(topicId: string): Extension[]
 Registers a new extension and dispatches a `extensions:register` event.
 
 ```ts
-Extensions.register(core: Core, extension: Extension): void
+Extensions.register(core: Core, extension: ExtensionConfig): void
 ```
 
 <ArgsTable
@@ -69,9 +77,9 @@ Extensions.register(core: Core, extension: Extension): void
   data={[
     {
       name: 'extension',
-      type: 'Extension',
+      type: 'ExtensionConfig',
       required: true,
-      description: 'The extension to register.',
+      description: 'The config object of the extension to register.',
     },
   ]}
 />
@@ -147,6 +155,27 @@ Extensions.disableOnTopics(core: Core, extensionId: string, topicIds: string[]):
       required: true,
       description:
         'The IDs of the topics for which to disable the extension.',
+    },
+  ]}
+/>
+
+### initialize
+
+Initializes extensions for a given application instance.
+
+```ts
+Extensions.initialize(core: Core, extensionConfigs: extensionConfig[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extensionConfigs',
+      type: 'ExtensionConfig[]',
+      required: true,
+      description:
+        'The configuration objects for the extensions to initialize.',
     },
   ]}
 />
@@ -250,6 +279,36 @@ See below the table for more details on the data passed by extension related eve
       name: 'extensions:clear',
       description: 'Dispatched when the extensions store is cleared.',
     },
+    {
+      name: 'extensions:create-document',
+      data: 'ExtensionDocument',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          created.
+        </span>
+      ),
+    },
+    {
+      name: 'extensions:update-document',
+      data: 'UpdateExtensionDocumentEventData',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          updated.
+        </span>
+      ),
+    },
+    {
+      name: 'extensions:create-document',
+      data: 'ExtensionDocument',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          deleted.
+        </span>
+      ),
+    },
   ]}
 />
 
@@ -260,6 +319,10 @@ Extension events are dispatched with one of the following types of data.
 #### Extension
 
 See the [Extension](/docs/extensions/types/extension) interface page.
+
+#### ExtensionDocument
+
+See the [ExtensionDocument](/docs/extensions/types/extension-document) interface page.
 
 ### EnableExtensionOnTopicsEventData
 
@@ -295,6 +358,53 @@ See the [Extension](/docs/extensions/types/extension) interface page.
       type: 'TopicMap',
       required: true,
       description: 'The topics in which the extension was disabled.',
+    },
+  ]}
+/>
+
+### UpdateExtensionDocumentEventData
+
+<ArgsTable
+  data={[
+    {
+      name: 'before',
+      type: 'ExtensionDocument',
+      required: true,
+      description: 'The extension document before it was updated.',
+    },
+    {
+      name: 'after',
+      type: 'ExtensionDocument',
+      required: true,
+      description: 'The extension document after it was updated.',
+    },
+    {
+      name: 'changes',
+      type: 'ExtensionDocumentChanges',
+      required: true,
+      description:
+        'The changes made to the extension document. See below for details.',
+    },
+  ]}
+/>
+
+`ExtensionDocumentChanges`
+
+<ArgsTable
+  data={[
+    {
+      name: 'enabled',
+      type: 'boolean',
+      required: true,
+      description:
+        'Indicates whether the extension is enabled or not.',
+    },
+    {
+      name: 'topics',
+      type: 'string[] | ArrayUnion | ArrayRemove',
+      required: true,
+      description:
+        'The IDs of the topics for which this extension is enabled.',
     },
   ]}
 />

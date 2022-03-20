@@ -1,7 +1,8 @@
 import { Core } from '@minddrop/core';
 import { Topics } from '@minddrop/topics';
+import { FieldValue } from '@minddrop/utils';
 import { getExtension } from '../getExtension';
-import { useExtensionsStore } from '../useExtensionsStore';
+import { updateExtensionDocument } from '../updateExtensionDocument';
 
 /**
  * Disables an extension on topics and dispatches a
@@ -16,28 +17,26 @@ export function disableExtensionOnTopics(
   extensionId: string,
   topicIds: string[],
 ): void {
-  // Get the extension
-  const extension = getExtension(extensionId);
   // Get the topics
   const topics = Topics.get(topicIds);
 
-  // Remove the topics from the extension's topics list
-  const updated = {
-    ...extension,
-    topics: extension.topics.filter((topicId) => !topicIds.includes(topicId)),
-  };
+  // Update the extension document
+  updateExtensionDocument(core, extensionId, {
+    // Remove the given topics
+    topics: FieldValue.arrayRemove(topicIds),
+  });
 
-  // Update the topic in the store
-  useExtensionsStore.getState().setExtension(updated);
+  // Get the updated extension
+  const extension = getExtension(extensionId);
 
-  // Call the extension's onDisableTopics callback
   if (extension.onDisableTopics) {
+    // Call the extension's onDisableTopics callback
     extension.onDisableTopics(core, topics);
   }
 
   // Dispatch a 'extensions:disable-topics' event
   core.dispatch('extensions:disable-topics', {
-    extension: updated,
+    extension,
     topics,
   });
 }

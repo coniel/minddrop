@@ -1,6 +1,7 @@
 import { ExtensionNotRegisteredError } from '../errors';
 import { getExtension } from '../getExtension';
-import { setup, cleanup, topicExtension, core } from '../test-utils';
+import { setup, cleanup, topicExtensionConfig, core } from '../test-utils';
+import { useExtensionsStore } from '../useExtensionsStore';
 import { unregisterExtension } from './unregisterExtension';
 
 describe('unregisterExtension', () => {
@@ -9,19 +10,37 @@ describe('unregisterExtension', () => {
   afterEach(cleanup);
 
   it('removes the extension from the store', () => {
-    unregisterExtension(core, topicExtension.id);
+    // Unregister an extension
+    unregisterExtension(core, topicExtensionConfig.id);
 
-    expect(() => getExtension(topicExtension.id)).toThrowError(
+    // Extension should no longer be registered
+    expect(() => getExtension(topicExtensionConfig.id)).toThrowError(
       ExtensionNotRegisteredError,
     );
   });
 
+  it('deletes the extension document', () => {
+    // Unregister an extension
+    unregisterExtension(core, topicExtensionConfig.id);
+
+    // Store should no longer contain the extension document
+    expect(
+      useExtensionsStore.getState().extensionDocuments[topicExtensionConfig.id],
+    ).not.toBeDefined();
+  });
+
   it('dispatches a `extensions:unregister` event', (done) => {
+    // Get the extension
+    const extension = getExtension(topicExtensionConfig.id);
+
+    // Listen to 'extensions:unregister' events
     core.addEventListener('extensions:unregister', (payload) => {
-      expect(payload.data.id).toBe(topicExtension.id);
+      // Payload should be the unregistered extension
+      expect(payload.data).toEqual(extension);
       done();
     });
 
-    unregisterExtension(core, topicExtension.id);
+    // Unregister the extension
+    unregisterExtension(core, topicExtensionConfig.id);
   });
 });

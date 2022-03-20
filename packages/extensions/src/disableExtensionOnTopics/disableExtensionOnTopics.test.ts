@@ -1,11 +1,12 @@
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { doesNotContain, mapById } from '@minddrop/utils';
 import { getExtension } from '../getExtension';
 import {
   setup,
   cleanup,
-  topicExtension,
+  topicExtensionConfig,
   core,
-  topicExtensionNoCallbacks,
+  topicNoCallbacksExtension,
 } from '../test-utils';
 import { disableExtensionOnTopics } from './disableExtensionOnTopics';
 
@@ -17,35 +18,51 @@ describe('disableExtensionOnTopics', () => {
   afterEach(cleanup);
 
   it("removes the topics from the extension's topic list", () => {
-    disableExtensionOnTopics(core, topicExtension.id, [tSailing.id, tBoats.id]);
+    // Disable the extension on two topics
+    disableExtensionOnTopics(core, topicExtensionConfig.id, [
+      tSailing.id,
+      tBoats.id,
+    ]);
 
-    const extension = getExtension(topicExtension.id);
+    // Get the updated extension
+    const extension = getExtension(topicExtensionConfig.id);
 
-    expect(extension.topics.includes(tSailing.id)).toBeFalsy();
-    expect(extension.topics.includes(tBoats.id)).toBeFalsy();
+    // Should no longer contain the topics
+    expect(
+      doesNotContain(extension.topics, [tSailing.id, tBoats.id]),
+    ).toBeTruthy();
   });
 
   it("calls the extension's onDisableTopics callback", () => {
-    jest.spyOn(topicExtension, 'onDisableTopics');
+    jest.spyOn(topicExtensionConfig, 'onDisableTopics');
 
-    disableExtensionOnTopics(core, topicExtension.id, [tSailing.id]);
-    // Should work with extension which have no onDisableTopics callback
-    disableExtensionOnTopics(core, topicExtensionNoCallbacks.id, [tSailing.id]);
+    // Disable the extension on a topic with a onDisableTopics callback
+    disableExtensionOnTopics(core, topicExtensionConfig.id, [tSailing.id]);
+    // Disable the extension on a topic without a onDisableTopics callback,
+    // (should not do anything).
+    disableExtensionOnTopics(core, topicNoCallbacksExtension.id, [tSailing.id]);
 
-    expect(topicExtension.onDisableTopics).toHaveBeenCalledWith(core, {
-      [tSailing.id]: tSailing,
-    });
+    // Should call the extension's onDisableTopics callback with the affted topics
+    expect(topicExtensionConfig.onDisableTopics).toHaveBeenCalledWith(
+      core,
+      mapById([tSailing]),
+    );
   });
 
   it('dispatches a `extensions:diable-topics` event', (done) => {
+    // Listen to 'extensions:disable-topics' events
     core.addEventListener('extensions:disable-topics', (payload) => {
-      const { extension, topics } = payload.data;
-      expect(extension.id).toBe(topicExtension.id);
-      expect(extension.topics.includes(tSailing.id)).toBeFalsy();
-      expect(topics[tSailing.id]).toEqual(tSailing);
+      // Get the extension
+      const extension = getExtension(topicExtensionConfig.id);
+
+      // Payload data should contain the extension
+      expect(payload.data.extension).toEqual(extension);
+      // Payload data should contain the topics
+      expect(payload.data.topics).toEqual(mapById([tSailing]));
       done();
     });
 
-    disableExtensionOnTopics(core, topicExtension.id, [tSailing.id]);
+    // Disable the extension on a topic
+    disableExtensionOnTopics(core, topicExtensionConfig.id, [tSailing.id]);
   });
 });

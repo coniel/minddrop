@@ -1,5 +1,5 @@
+import { getRegisteredExtensions } from '../getRegisteredExtensions';
 import { Extension } from '../types';
-import { useExtensionsStore } from '../useExtensionsStore';
 
 /**
  * Returns an array of all enabled extensions.
@@ -7,7 +7,7 @@ import { useExtensionsStore } from '../useExtensionsStore';
  * @returns An array containing all enabled extensions.
  */
 export function getEnabledExtensions(): Extension[] {
-  const { extensions } = useExtensionsStore.getState();
+  const extensions = getRegisteredExtensions();
 
-  return Object.values(extensions).filter((extension) => extension.enabled);
+  return extensions.filter((extension) => extension.enabled);
 }

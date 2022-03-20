@@ -2,20 +2,43 @@ import createStore from 'zustand';
 import { ExtensionsStore } from '../types';
 
 export const useExtensionsStore = createStore<ExtensionsStore>((set) => ({
-  extensions: {},
+  extensionConfigs: {},
 
-  setExtension: (config) =>
+  extensionDocuments: {},
+
+  setExtensionConfig: (config) =>
     set((state) => ({
-      extensions: { ...state.extensions, [config.id]: config },
+      extensionConfigs: { ...state.extensionConfigs, [config.id]: config },
     })),
 
-  removeExtension: (id) =>
+  removeExtensionConfig: (id) =>
     set((state) => {
-      const extensions = { ...state.extensions };
-      delete extensions[id];
+      const extensionConfigs = { ...state.extensionConfigs };
+      delete extensionConfigs[id];
 
-      return { extensions };
+      return { extensionConfigs };
     }),
 
-  clear: () => set(() => ({ extensions: {} })),
+  loadExtensionDocuments: (docs) =>
+    set((state) => ({
+      extensionDocuments: {
+        ...state.extensionDocuments,
+        ...docs.reduce((map, doc) => ({ ...map, [doc.extension]: doc }), {}),
+      },
+    })),
+
+  setExtensionDocument: (doc) =>
+    set((state) => ({
+      extensionDocuments: { ...state.extensionDocuments, [doc.extension]: doc },
+    })),
+
+  removeExtensionDocument: (id) =>
+    set((state) => {
+      const extensionDocuments = { ...state.extensionDocuments };
+      delete extensionDocuments[id];
+
+      return { extensionDocuments };
+    }),
+
+  clear: () => set(() => ({ extensionConfigs: {}, extensionDocuments: {} })),
 }));

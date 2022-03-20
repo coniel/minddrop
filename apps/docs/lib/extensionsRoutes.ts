@@ -118,6 +118,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/extension-config',
       },
       {
+        title: 'ExtensionDocument',
+        slug: 'docs/extensions/types/extension-document',
+      },
+      {
         title: 'FileReference',
         slug: 'docs/extensions/types/file-reference',
       },
