@@ -403,6 +403,18 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
 <EventsTable
   data={[
     {
+      name: 'persistent-store:create-global',
+      data: 'PersistentStoreDocument',
+      description:
+        'Dispatched when the global store document is created.',
+    },
+    {
+      name: 'persistent-store:create-local',
+      data: 'PersistentStoreDocument',
+      description:
+        'Dispatched when the local store document is created.',
+    },
+    {
       name: 'persistent-store:update-global',
       data: 'UpdateGlobalStoreEventData',
       description: 'Dispatched when the global store is updated.',
@@ -421,13 +433,13 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
   data={[
     {
       name: 'before',
-      type: 'PersistentStoreData',
+      type: 'PersistentStoreDocument',
       required: true,
       description: 'Global store data before it was changed.',
     },
     {
       name: 'after',
-      type: 'PersistentStoreData',
+      type: 'PersistentStoreDocument',
       required: true,
       description: 'Updated global store data.',
     },
@@ -447,13 +459,13 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
   data={[
     {
       name: 'before',
-      type: 'PersistentStoreData',
+      type: 'PersistentStoreDocument',
       required: true,
       description: 'Local store data before it was changed.',
     },
     {
       name: 'after',
-      type: 'PersistentStoreData',
+      type: 'PersistentStoreDocument',
       required: true,
       description: 'Updated local store data.',
     },
@@ -467,34 +479,37 @@ Tags.removeEventListener(core: Core, event: PersistentStoreEvent, callback: Even
   ]}
 />
 
-`PersistentStoreData`
+`PersistentStoreDocument`
 
-An object containing key-value pairs namespaced by extension ID.
+An object containing the store document ID an a `data` attribute consisting of key-value pairs namespaced by extension ID.
 
 Example
 
 ```ts
-data = {
-  app: {
-    topics: ['topic-1-id', 'topic-2-id'],
-    tags: ['tag-id'],
-  },
-  extensionId: {
-    foo: 'bar',
+globalStore = {
+  id: 'global-persistent-store',
+  data: {
+    app: {
+      topics: ['topic-1-id', 'topic-2-id'],
+      tags: ['tag-id'],
+    },
+    extensionId: {
+      foo: 'bar',
+    },
   },
 };
 ```
 
 `PersistentStoreChanges`
 
-An object containing new field values namespaced by the extension ID which caused the update, supports [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations.
+An object describing the changes applied to the store document. Makes use of [`FieldValue`](/docs/extensions/api/utils#fieldvalue) mutations to update the nested namespaced data. The values themselves can also consist of `FieldValue` mutations.
 
 Example
 
 ```ts
 changes = {
-  extensionId: {
-    foo: 'bar',
-  },
+  data: FieldValue.objectUnion({
+    extensionId: FieldValue.objectUnion({ key: 'new-value' }),
+  }),
 };
 ```

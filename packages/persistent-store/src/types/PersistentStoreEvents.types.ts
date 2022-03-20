@@ -1,46 +1,57 @@
 import { EventListenerCallback } from '@minddrop/core';
-import {
-  PersistentStoreChanges,
-  PersistentStoreData,
-} from './PersistentStoreStore.types';
+import { PersistentStoreDocument } from './PersistentStoreDocument.types';
+import { PersistentStoreChanges } from './PersistentStoreStore.types';
 
+export type CreateGlobalStoreEvent = 'persistent-store:create-global';
+export type CreateLocalStoreEvent = 'persistent-store:create-local';
 export type UpdateGlobalStoreEvent = 'persistent-store:update-global';
 export type UpdateLocalStoreEvent = 'persistent-store:update-local';
 
+export type CreateGlobalStoreEventData = PersistentStoreDocument;
+export type CreateLocalStoreEventData = PersistentStoreDocument;
+
 export interface UpdateGlobalStoreEventData {
   /**
-   * The sotre data before it was updated.
+   * The store before it was updated.
    */
-  before: PersistentStoreData;
+  before: PersistentStoreDocument;
 
   /**
-   * The updated store data.
+   * The updated store.
    */
-  after: PersistentStoreData;
+  after: PersistentStoreDocument;
 
   /**
-   * Changes applied to the store data.
+   * Changes applied to the store.
    */
   changes: PersistentStoreChanges;
 }
 
 export interface UpdateLocalStoreEventData {
   /**
-   * The sotre data before it was updated.
+   * The store before it was updated.
    */
-  before: PersistentStoreData;
+  before: PersistentStoreDocument;
 
   /**
-   * The updated store data.
+   * The updated store.
    */
-  after: PersistentStoreData;
+  after: PersistentStoreDocument;
 
   /**
-   * Changes applied to the store data.
+   * Changes applied to the store.
    */
   changes: PersistentStoreChanges;
 }
 
+export type CreateGlobalStoreEventCallback = EventListenerCallback<
+  CreateGlobalStoreEvent,
+  CreateGlobalStoreEventData
+>;
+export type CreateLocalStoreEventCallback = EventListenerCallback<
+  CreateLocalStoreEvent,
+  CreateLocalStoreEventData
+>;
 export type UpdateGlobalStoreEventCallback = EventListenerCallback<
   UpdateGlobalStoreEvent,
   UpdateGlobalStoreEventData
