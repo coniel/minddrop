@@ -16,7 +16,7 @@ describe('persistent-store-extension', () => {
       it('loads data into the global store', () => {
         // The global store document
         const doc = {
-          id: 'global-id',
+          id: 'global-persistent-store',
           data: { app: { topics: ['topic-id'] } },
         };
 
@@ -54,6 +54,29 @@ describe('persistent-store-extension', () => {
           id: null,
           data: {},
         });
+      });
+
+      it('updates the store on change', () => {
+        // The updated global store document
+        const updated = {
+          id: 'global-persistent-store',
+          data: { app: { topics: ['topic-id', 'topic-2-id'] } },
+        };
+
+        // Run the extension
+        onRun(core);
+
+        // Get the registered resource connector
+        const connector = core
+          .getResourceConnectors()
+          .find((c) => c.type === 'persistent-store:global-stores');
+
+        // Call the resource connector's onChange method with an updated global
+        // store document, simulating an onChange event from the storage-adapter.
+        connector.onChange(updated, false);
+
+        // Should set the updated global store document in the store
+        expect(usePersistentStore.getState().global).toEqual(updated);
       });
     });
 

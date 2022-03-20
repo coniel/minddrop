@@ -17,6 +17,10 @@ export function onRun(core: Core) {
         usePersistentStore.getState().load('global', doc);
       }
     },
+    onChange: (document) => {
+      // Set the global store in the store
+      usePersistentStore.getState().load('global', document);
+    },
   });
 
   // Register local store resource
