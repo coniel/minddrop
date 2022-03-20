@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
+import { cleanup } from '../test-utils';
 import { getStoreValue } from '../getStoreValue';
 import { setStore } from '../setStore';
 import { usePersistentStore } from '../usePersistentStore';
@@ -8,51 +8,60 @@ import { deleteValue } from './deleteValue';
 const core = initializeCore({ appId: 'app', extensionId: 'test' });
 
 describe('deleteValue', () => {
-  afterEach(() => {
-    act(() => {
-      usePersistentStore.getState().clearScope('global');
-      usePersistentStore.getState().clearScope('local');
-    });
-  });
+  afterEach(cleanup);
 
   it('deletes a value from the store', () => {
-    act(() => {
-      setStore('global', core, { foo: 'bar' });
-      deleteValue('global', core, 'foo');
-    });
+    // Set the store
+    setStore('global', core, { foo: 'bar' });
 
+    // Delete a value from the store
+    deleteValue('global', core, 'foo');
+
+    // Deleted value should no longer exist
     expect(getStoreValue('global', core, 'foo')).toBeUndefined();
   });
 
   it("dispatches a 'persistent-store:update-global' event", (done) => {
-    const data = { bar: 'foo', foo: 'bar' };
+    // Set the extension's store
+    setStore('global', core, { bar: 'foo', foo: 'bar' });
 
-    function callback(payload) {
-      expect(payload.data).toEqual({ test: { bar: 'foo' } });
+    // Get the original global store
+    const before = usePersistentStore.getState().global;
+
+    // Listen to 'persistent-store:update-global' events
+    core.addEventListener('persistent-store:update-global', (payload) => {
+      // Get the updated global store
+      const after = usePersistentStore.getState().global;
+
+      // Payload data should be an update object
+      expect(payload.data.before).toEqual(before);
+      expect(payload.data.after).toEqual(after);
       done();
-    }
-
-    core.addEventListener('persistent-store:update-global', callback);
-
-    act(() => {
-      setStore('global', core, data);
-      deleteValue('global', core, 'foo');
     });
+
+    // Delete a value from the store
+    deleteValue('global', core, 'foo');
   });
 
   it("dispatches a 'persistent-store:update-local' event", (done) => {
-    const data = { bar: 'foo', foo: 'bar' };
+    // Set the extension's store
+    setStore('local', core, { bar: 'foo', foo: 'bar' });
 
-    function callback(payload) {
-      expect(payload.data).toEqual({ test: { bar: 'foo' } });
+    // Get the original local store
+    const before = usePersistentStore.getState().local;
+
+    // Listen to 'persistent-store:update-local' events
+    core.addEventListener('persistent-store:update-local', (payload) => {
+      // Get the updated local store
+      const after = usePersistentStore.getState().local;
+
+      // Payload data should be an update object
+      expect(payload.data.before).toEqual(before);
+      expect(payload.data.after).toEqual(after);
       done();
-    }
-
-    core.addEventListener('persistent-store:update-local', callback);
-
-    act(() => {
-      setStore('local', core, data);
-      deleteValue('local', core, 'foo');
     });
+
+    // Delete a value from the store
+    deleteValue('local', core, 'foo');
   });
 });

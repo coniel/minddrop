@@ -1,11 +1,11 @@
 import { Core } from '@minddrop/core';
-import { createUpdate } from '@minddrop/utils';
+import { createUpdate, FieldValue } from '@minddrop/utils';
 import { PersistentStoreScope } from '../types';
 import { usePersistentStore } from '../usePersistentStore';
 
 /**
  * Sets a value in a store and dispaches a
- * `persistent-store:update-[global/local]` event.
+ * `persistent-store:update-[scope]` event.
  *
  * @param scope The scope for which to set the value.
  * @param core A MindDrop core instance.
@@ -18,31 +18,22 @@ export function setValue<T = any>(
   key: string,
   value: T,
 ): void {
-  // Get data for the entire scope (e.g. 'local' store)
-  const scopeData = usePersistentStore.getState()[scope];
-  // Get the calling extension's data
-  const extensionData = scopeData[core.extensionId] || {};
-  // Create a data update object
-  const dataUpdate = { [key]: value };
+  // Get the scope store (e.g. 'local' store)
+  const store = usePersistentStore.getState()[scope];
+
   // Create the update object
-  const update = createUpdate(extensionData, dataUpdate);
+  const update = createUpdate(store, {
+    data: FieldValue.objectUnion({
+      [core.extensionId]: FieldValue.objectUnion({ [key]: value }),
+    }),
+  });
+
+  // Get the updated value
+  const updatedValue = update.after.data[core.extensionId][key];
 
   // Set the updated value in the store
-  usePersistentStore
-    .getState()
-    .set(scope, core.extensionId, key, update.after[key]);
+  usePersistentStore.getState().set(scope, core.extensionId, key, updatedValue);
 
   // Dispatch 'persistent-store:update-[scope]' event
-  core.dispatch(`persistent-store:update-${scope}`, {
-    before: scopeData,
-    after: {
-      // The ID of the global scope document is the same for all
-      // app instances. The ID of the local scope document is the
-      // app instance ID.
-      id: scope === 'global' ? 'global-persistent-store' : core.appId,
-      ...scopeData,
-      [core.extensionId]: { ...extensionData, ...update.after },
-    },
-    changes: { [core.extensionId]: update.changes },
-  });
+  core.dispatch(`persistent-store:update-${scope}`, update);
 }

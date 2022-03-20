@@ -22,24 +22,28 @@ describe('usePersistentStore', () => {
 
   it('loads in data', () => {
     const { result } = renderHook(() => usePersistentStore((state) => state));
-    const data = { app: { loaded: 'loaded' } };
+    const store = { id: 'doc-id', data: { app: { loaded: 'loaded' } } };
 
     act(() => {
       // Global
-      result.current.load('global', data);
+      result.current.load('global', store);
       // Local
-      result.current.load('local', data);
+      result.current.load('local', store);
     });
 
     // Global
     expect(result.current.global).toEqual({
-      app: { loaded: 'loaded' },
-      test: { foo: 'foo', bar: 'bar' },
+      id: 'doc-id',
+      data: {
+        app: { loaded: 'loaded' },
+      },
     });
     // Local
     expect(result.current.local).toEqual({
-      app: { loaded: 'loaded' },
-      test: { foo: 'foo', bar: 'bar' },
+      id: 'doc-id',
+      data: {
+        app: { loaded: 'loaded' },
+      },
     });
   });
 
@@ -56,11 +60,11 @@ describe('usePersistentStore', () => {
     });
 
     // Global
-    expect(result.current.global.app.foo).toBe('foo');
-    expect(result.current.global.app.bar).toBe('bar');
+    expect(result.current.global.data.app.foo).toBe('foo');
+    expect(result.current.global.data.app.bar).toBe('bar');
     // Local
-    expect(result.current.local.app.foo).toBe('foo');
-    expect(result.current.local.app.bar).toBe('bar');
+    expect(result.current.local.data.app.foo).toBe('foo');
+    expect(result.current.local.data.app.bar).toBe('bar');
   });
 
   it('deletes a value', () => {
@@ -79,11 +83,11 @@ describe('usePersistentStore', () => {
     });
 
     // Global
-    expect(result.current.global.test.foo).not.toBeDefined();
-    expect(result.current.global.test.bar).toBe('bar');
+    expect(result.current.global.data.test.foo).not.toBeDefined();
+    expect(result.current.global.data.test.bar).toBe('bar');
     // Local
-    expect(result.current.local.test.foo).not.toBeDefined();
-    expect(result.current.local.test.bar).toBe('bar');
+    expect(result.current.local.data.test.foo).not.toBeDefined();
+    expect(result.current.local.data.test.bar).toBe('bar');
   });
 
   it('clears the data for a namespace', () => {
@@ -102,9 +106,9 @@ describe('usePersistentStore', () => {
     });
 
     // Global
-    expect(result.current.global.test).not.toBeDefined();
+    expect(result.current.global.data.test).not.toBeDefined();
     // Local
-    expect(result.current.local.test).not.toBeDefined();
+    expect(result.current.local.data.test).not.toBeDefined();
   });
 
   it('clears all data', () => {
@@ -118,8 +122,8 @@ describe('usePersistentStore', () => {
     });
 
     // Global
-    expect(result.current.global).toEqual({});
+    expect(result.current.global).toEqual({ id: null, data: {} });
     // Local
-    expect(result.current.local).toEqual({});
+    expect(result.current.local).toEqual({ id: null, data: {} });
   });
 });

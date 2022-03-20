@@ -2,39 +2,48 @@ import createStore from 'zustand';
 import { PersistentStoreStore } from '../types';
 
 export const usePersistentStore = createStore<PersistentStoreStore>((set) => ({
-  global: {},
+  global: {
+    id: null,
+    data: {},
+  },
 
-  local: {},
+  local: {
+    id: null,
+    data: {},
+  },
 
-  load: (scope, data) =>
-    set((state) => ({
-      [scope as 'global']: {
-        ...state[scope],
-        ...data,
-      },
+  load: (scope, store) =>
+    set(() => ({
+      [scope as 'global']: store,
     })),
 
   set: (scope, namespace, key, value) =>
     set((state) => ({
       [scope as 'global']: {
         ...state[scope],
-        [namespace]: {
-          ...(state[scope][namespace] || {}),
-          [key]: value,
+        data: {
+          ...state[scope].data,
+          [namespace]: {
+            ...(state[scope].data[namespace] || {}),
+            [key]: value,
+          },
         },
       },
     })),
 
   delete: (scope, namespace, key) =>
     set((state) => {
-      const data = state[scope][namespace] || {};
+      const data = state[scope].data[namespace] || {};
 
       delete data[key];
 
       return {
         [scope as 'global']: {
           ...state[scope],
-          [namespace]: data,
+          data: {
+            ...state[scope].data,
+            [namespace]: data,
+          },
         },
       };
     }),
@@ -44,15 +53,17 @@ export const usePersistentStore = createStore<PersistentStoreStore>((set) => ({
       const { global, local } = state;
 
       if (scope === 'global') {
-        delete global[namespace];
+        delete global.data[namespace];
       } else {
-        delete local[namespace];
+        delete local.data[namespace];
       }
 
       return {
+        global,
         local,
       };
     }),
 
-  clearScope: (scope) => set(() => ({ [scope as 'global']: {} })),
+  clearScope: (scope) =>
+    set(() => ({ [scope as 'global']: { id: null, data: {} } })),
 }));

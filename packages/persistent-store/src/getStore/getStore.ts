@@ -11,7 +11,7 @@ import { usePersistentStore } from '../usePersistentStore';
  * @returns Extension's global store data.
  */
 export function getStore<T>(scope: PersistentStoreScope, core: Core): T {
-  const store = usePersistentStore.getState()[scope][core.extensionId];
+  const store = usePersistentStore.getState()[scope].data[core.extensionId];
 
   return (store || {}) as T;
 }

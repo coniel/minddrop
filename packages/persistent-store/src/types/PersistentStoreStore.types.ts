@@ -1,25 +1,38 @@
-export type PersistentStoreData = Record<string, Record<string, any>>;
+export type ScopeStore = {
+  /**
+   * The document ID. In the case of a local store,
+   * the ID is the application ID.
+   *
+   * If no document has been loaded, the ID is `null`.
+   */
+  id: string | null;
+
+  /**
+   * The store data, namespaced by extension ID.
+   */
+  data: Record<string, Record<string, any>>;
+};
 
 export type PersistentStoreScope = 'global' | 'local';
 
 export interface PersistentStoreStore {
   /**
-   * The global store data. Namespaced by extension ID.
+   * The global store.
    */
-  global: PersistentStoreData;
+  global: ScopeStore;
 
   /**
-   * The local store data. Namedspaced by extension ID.
+   * The local store.
    */
-  local: PersistentStoreData;
+  local: ScopeStore;
 
   /**
-   * Loads data into the store.
+   * Loads a persistent store into the store.
    *
    * @param scope The scope into which to load the data.
-   * @param data The data to load.
+   * @param store The store to load.
    */
-  load(scope: PersistentStoreScope, data: PersistentStoreData): void;
+  load(scope: PersistentStoreScope, store: ScopeStore): void;
 
   /**
    * Sets a value in the store.

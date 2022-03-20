@@ -13,5 +13,5 @@ export function useGlobalPersistentStore<T = Record<string, any>>(
 ): T {
   const { global } = usePersistentStore();
 
-  return (global[core.extensionId] || {}) as T;
+  return (global.data[core.extensionId] || {}) as T;
 }

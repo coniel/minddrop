@@ -1,28 +1,25 @@
-import { act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
+import { cleanup } from '../test-utils';
 import { getStoreValue } from './getStoreValue';
 import { usePersistentStore } from '../usePersistentStore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 describe('getStoreValue', () => {
-  afterEach(() => {
-    act(() => {
-      usePersistentStore.getState().clearScope('global');
-      usePersistentStore.getState().clearScope('local');
-    });
-  });
+  afterEach(cleanup);
 
   it('returns the value', () => {
-    const data = { app: { foo: 'foo' } };
+    // The store
+    const store = { id: 'doc-id', data: { app: { foo: 'foo' } } };
 
-    act(() => {
-      usePersistentStore.getState().load('local', data);
-    });
+    // Load the store as the local store
+    usePersistentStore.getState().load('local', store);
 
+    // Get a value from the 'app' extension's local store
     const result = getStoreValue('local', core, 'foo');
 
-    expect(result).toEqual(data.app.foo);
+    // Should return the value from the extension's local store
+    expect(result).toEqual(store.data.app.foo);
   });
 
   it('returns undefined if store does not exist', () => {
@@ -32,20 +29,24 @@ describe('getStoreValue', () => {
   });
 
   it('returns default value if store does not exist', () => {
+    // Get a value from a store which does not exist
     const result = getStoreValue('global', core, 'foo', 'bar');
 
+    // Should return the default value
     expect(result).toEqual('bar');
   });
 
   it('returns default value if value is not set', () => {
-    const data = { app: {} };
+    // The store
+    const store = { id: 'doc-id', data: { app: {} } };
 
-    act(() => {
-      usePersistentStore.getState().load('local', data);
-    });
+    // Load the store as the local store
+    usePersistentStore.getState().load('local', store);
 
-    const result = getStoreValue('global', core, 'foo', 'bar');
+    // Get a missing value from the 'app' extension's local store
+    const result = getStoreValue('local', core, 'foo', 'bar');
 
+    // Should return the default value
     expect(result).toEqual('bar');
   });
 });

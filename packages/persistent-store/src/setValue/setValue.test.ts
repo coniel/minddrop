@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { act } from '@minddrop/test-utils';
+import { cleanup } from '../test-utils';
 import { FieldValue } from '@minddrop/utils';
 import { getStoreValue } from '../getStoreValue';
 import { setStore } from '../setStore';
@@ -7,84 +7,75 @@ import { usePersistentStore } from '../usePersistentStore';
 import { setValue } from './setValue';
 
 const core = initializeCore({ appId: 'app', extensionId: 'test' });
-const core2 = initializeCore({ appId: 'app', extensionId: 'extension2' });
 
 describe('setValue', () => {
-  afterEach(() => {
-    act(() => {
-      usePersistentStore.getState().clearScope('global');
-      usePersistentStore.getState().clearScope('local');
-    });
-  });
+  afterEach(cleanup);
 
   it('sets a value in an existing store', () => {
-    act(() => {
-      setStore('global', core, { foo: 'bar' });
-      setValue('global', core, 'bar', 'foo');
-    });
+    // Set the global store
+    setStore('global', core, { foo: 'bar' });
+    // Set a new value on the global store
+    setValue('global', core, 'bar', 'foo');
 
+    // New value should be set
     expect(getStoreValue('global', core, 'bar')).toBe('foo');
   });
 
   it('sets a value in a non-existing store', () => {
-    act(() => {
-      setValue('global', core, 'bar', 'foo');
-    });
+    // Set a new value on the global store
+    setValue('global', core, 'bar', 'foo');
 
+    // New value should be set
     expect(getStoreValue('global', core, 'bar')).toBe('foo');
   });
 
   it('supports FieldValues', () => {
-    act(() => {
-      setValue('global', core, 'foo', FieldValue.arrayUnion('foo'));
-    });
+    // Set a FieldValue on the global store
+    setValue('global', core, 'foo', FieldValue.arrayUnion('foo'));
 
+    // Should apply the FieldValue mutation to the field
     expect(getStoreValue('global', core, 'foo')).toEqual(['foo']);
   });
 
   it("dispatches a 'persistent-store:update-global' event", (done) => {
+    // The original global store
+    const before = usePersistentStore.getState().global;
+    // The value to set
     const value = FieldValue.arrayUnion('foo');
 
-    function callback(payload) {
-      expect(payload.data).toEqual({
-        before: { extension2: { bar: 'bar' } },
-        after: {
-          id: 'global-persistent-store',
-          test: { foo: ['foo'] },
-          extension2: { bar: 'bar' },
-        },
-        changes: { test: { foo: value } },
-      });
+    // Listen to 'persistent-store:update-global' events
+    core.addEventListener('persistent-store:update-global', (payload) => {
+      // The updated store value
+      const after = usePersistentStore.getState().global;
+
+      // Payload data should be an update object
+      expect(payload.data.before).toEqual(before);
+      expect(payload.data.after).toEqual(after);
       done();
-    }
-
-    act(() => {
-      setValue('global', core2, 'bar', 'bar');
     });
 
-    core.addEventListener('persistent-store:update-global', callback);
-
-    act(() => {
-      setValue('global', core, 'foo', value);
-    });
+    // Set the value
+    setValue('global', core, 'foo', value);
   });
 
   it("dispatches a 'persistent-store:update-local' event", (done) => {
+    // The original local store
+    const before = usePersistentStore.getState().local;
+    // The value to set
     const value = FieldValue.arrayUnion('foo');
 
-    function callback(payload) {
-      expect(payload.data).toEqual({
-        before: {},
-        after: { id: 'app', test: { foo: ['foo'] } },
-        changes: { test: { foo: value } },
-      });
+    // Listen to 'persistent-store:update-local' events
+    core.addEventListener('persistent-store:update-local', (payload) => {
+      // The updated store value
+      const after = usePersistentStore.getState().local;
+
+      // Payload data should be an update object
+      expect(payload.data.before).toEqual(before);
+      expect(payload.data.after).toEqual(after);
       done();
-    }
-
-    core.addEventListener('persistent-store:update-local', callback);
-
-    act(() => {
-      setValue('local', core, 'foo', value);
     });
+
+    // Set the value
+    setValue('local', core, 'foo', value);
   });
 });

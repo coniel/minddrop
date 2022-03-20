@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { renderHook, act } from '@minddrop/test-utils';
+import { cleanup } from '../test-utils';
 import { onRun } from './persistent-store-extension';
 import { usePersistentStore } from '../usePersistentStore';
 
@@ -10,94 +10,101 @@ const core = initializeCore({
 
 describe('persistent-store-extension', () => {
   describe('onRun', () => {
-    afterEach(() => {
-      core.unregisterResource('persistent-store:stores');
-      act(() => {
-        usePersistentStore.getState().clearScope('global');
-        usePersistentStore.getState().clearScope('local');
-      });
-    });
+    afterEach(cleanup);
 
     describe('global store resource', () => {
       it('loads data into the global store', () => {
-        const { result } = renderHook(() => usePersistentStore().global);
+        // The global store document
         const doc = {
           id: 'global-id',
-          app: { topics: ['topic-id'] },
+          data: { app: { topics: ['topic-id'] } },
         };
 
+        // Run the extension
         onRun(core);
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:global-stores');
-          connector.onLoad([doc]);
-        });
+        // Get the registered resource connector
+        const connector = core
+          .getResourceConnectors()
+          .find((c) => c.type === 'persistent-store:global-stores');
 
-        expect(result.current).toEqual(doc);
+        // Call the resource connector's onLoad method with the global store
+        // document, simulating an onLoad event from the storage-adapter.
+        connector.onLoad([doc]);
+
+        // Should load the global store document into the store
+        expect(usePersistentStore.getState().global).toEqual(doc);
       });
 
       it('works with no docs', () => {
-        const { result } = renderHook(() => usePersistentStore().global);
-
+        // Run the extension
         onRun(core);
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:global-stores');
-          connector.onLoad([]);
-        });
+        // Get the registered resource connector
+        const connector = core
+          .getResourceConnectors()
+          .find((c) => c.type === 'persistent-store:global-stores');
 
-        expect(result.current).toEqual({});
+        // Call the resource connector's onLoad method with no documents,
+        // simulating an onLoad event from the storage-adapter.
+        connector.onLoad([]);
+
+        // Should keep default data in the store
+        expect(usePersistentStore.getState().global).toEqual({
+          id: null,
+          data: {},
+        });
       });
     });
 
     describe('local store resource', () => {
       it('loads data into the local store', () => {
-        const { result } = renderHook(() => usePersistentStore().local);
+        // The local store document for another application instance
         const doc1 = {
           id: 'other-app-id',
+          data: {},
         };
+        // The local store document for this application instance
         const doc2 = {
           id: core.appId,
-          app: { sidebarWidth: 300 },
+          data: { app: { sidebarWidth: 300 } },
         };
 
+        // Run the extension
         onRun(core);
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:local-stores');
-          connector.onLoad([doc1, doc2]);
-        });
+        // Get the registered resource connector and run its onLoad method,
+        // simulating an onLoad event from the storage-adapter.
+        const connector = core
+          .getResourceConnectors()
+          .find((c) => c.type === 'persistent-store:local-stores');
 
-        expect(result.current).toEqual(doc2);
+        // Call the resource connector's onLoad method with multiple local store
+        // documents, simulating an onLoad event from the storage-adapter.
+        connector.onLoad([doc1, doc2]);
+
+        // Should load the appropriate local store document into the store
+        expect(usePersistentStore.getState().local).toEqual(doc2);
       });
 
       it('works with no store docs', () => {
-        const { result } = renderHook(() => usePersistentStore().local);
-
+        // Run the extension
         onRun(core);
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:local-stores');
-          connector.onLoad([]);
-        });
+        // Get the registered resource connector
+        const connector = core
+          .getResourceConnectors()
+          .find((c) => c.type === 'persistent-store:local-stores');
 
-        expect(result.current).toEqual({});
+        // Call the resource connector's onLoad method with no documents,
+        // simulating an onLoad event from the storage-adapter.
+        connector.onLoad([]);
+
+        // Should keep default data in the store
+        expect(usePersistentStore.getState().local).toEqual({
+          id: null,
+          data: {},
+        });
       });
     });
   });
