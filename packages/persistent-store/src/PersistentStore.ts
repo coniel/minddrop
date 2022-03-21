@@ -6,6 +6,7 @@ import { setValue } from './setValue';
 import { deleteValue } from './deleteValue';
 import { deleteStore } from './deleteStore';
 import { clearCache } from './clearCache';
+import { initializePersistentStores } from './initializePersistentStores';
 
 export const PersistentStore: PersistentStoreApi = {
   getGlobalStore: (core) => getStore('global', core),
@@ -24,6 +25,7 @@ export const PersistentStore: PersistentStoreApi = {
   deleteLocalStore: (core) => deleteStore('local', core),
   clearGlobalCache: () => clearCache('global'),
   clearLocalCache: () => clearCache('local'),
+  initialize: initializePersistentStores,
   addEventListener: (core, type, data) => core.addEventListener(type, data),
   removeEventListener: (core, type, data) =>
     core.removeEventListener(type, data),

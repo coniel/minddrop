@@ -154,6 +154,17 @@ export interface PersistentStoreApi {
    */
   clearLocalCache(): void;
 
+  /**
+   * Creates persistent store documents if they do not
+   * already exist.
+   *
+   * This function is called within the app and should
+   * not be used by extensions.
+   *
+   * @param core A MindDrop core instance.
+   */
+  initialize(core: Core): void;
+
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
