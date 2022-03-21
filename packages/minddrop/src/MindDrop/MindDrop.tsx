@@ -7,6 +7,7 @@ import { useCurrentView } from '@minddrop/app';
 import { DBApi } from '@minddrop/pouchdb';
 import { ExtensionConfig } from '@minddrop/extensions';
 import { initializeApp, registerViews } from '../initializeApp';
+import '@minddrop/theme';
 import './MindDrop.css';
 
 export interface MindDropProps {
@@ -26,7 +27,10 @@ export interface MindDropProps {
   extensions: ExtensionConfig[];
 }
 
+// Initialize internationalization
 initializeI18n();
+
+// Register the default views
 registerViews();
 
 export const MindDrop: React.FC<MindDropProps> = ({
