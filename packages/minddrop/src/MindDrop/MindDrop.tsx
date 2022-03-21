@@ -1,22 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppSidebar } from '@minddrop/app-ui';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
-import './MindDrop.css';
 import { useCurrentView } from '@minddrop/app';
+import { DBApi } from '@minddrop/pouchdb';
+import { ExtensionConfig } from '@minddrop/extensions';
+import { initializeApp, registerViews } from '../initializeApp';
+import './MindDrop.css';
 
 export interface MindDropProps {
   /**
    * The application instance ID.
    */
   appId: string;
+
+  /**
+   * The database API.
+   */
+  dbApi: DBApi;
+
+  /**
+   * The extension configs of installed extensions.
+   */
+  extensions: ExtensionConfig[];
 }
 
 initializeI18n();
+registerViews();
 
-export const MindDrop: React.FC<MindDropProps> = ({ appId }) => {
+export const MindDrop: React.FC<MindDropProps> = ({
+  appId,
+  dbApi,
+  extensions,
+}) => {
   const { view, instance } = useCurrentView();
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    async function initialize() {
+      await initializeApp(dbApi, extensions);
+      setInitialized(true);
+    }
+
+    initialize();
+  }, []);
+
+  if (!initialized) {
+    return <div>Loading</div>;
+  }
 
   const View = view.component;
 

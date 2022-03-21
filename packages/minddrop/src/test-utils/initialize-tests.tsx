@@ -1,9 +1,9 @@
-import React from 'react';
 import { initializeCore } from '@minddrop/core';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import { ViewConfig, Views } from '@minddrop/views';
+import { Views } from '@minddrop/views';
+import { registerViews } from '../initializeApp';
 
 const { rootTopicIds } = TOPICS_TEST_DATA;
 
@@ -12,19 +12,13 @@ export const localPersistentStore = { sidebarWidth: 300, expandedTopics: [] };
 
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
-export const homeViewConfig: ViewConfig = {
-  id: 'app:home',
-  type: 'static',
-  component: () => <div>Home view</div>,
-};
-
 export function setup() {
+  // Register default views
+  registerViews();
+
   // Load persistent store data
   PersistentStore.setGlobalStore(core, globalPersistentStore);
   PersistentStore.setLocalStore(core, localPersistentStore);
-
-  // Regsiter a default view
-  Views.register(core, homeViewConfig);
 }
 
 export function cleanup() {
