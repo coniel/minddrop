@@ -7,6 +7,7 @@ import {
   EditorPluginConfig,
   ElementProps,
 } from '../types';
+import { withElementIds } from '../withElementIds';
 import './Editor.css';
 
 interface EditorProps {
@@ -31,7 +32,7 @@ export const Editor: React.FC<EditorProps> = ({
   onChange,
   plugins = [],
 }) => {
-  const [editor] = useState(() => withReact(createEditor()));
+  const [editor] = useState(() => withElementIds(withReact(createEditor())));
   const elementConfigs = useMemo<EditorElementConfig[]>(
     () =>
       plugins.reduce(

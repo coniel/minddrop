@@ -18,7 +18,7 @@ const TestPluging: EditorPluginConfig = {
 };
 
 const value: EditorContent = [
-  { type: 'test-element', children: [{ text: '' }] },
+  { id: 'id', type: 'test-element', children: [{ text: '' }] },
 ];
 
 describe('Editor', () => {

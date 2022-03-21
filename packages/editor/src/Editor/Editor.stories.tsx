@@ -3,6 +3,7 @@ import { EditorContent } from '../types';
 import { Editor } from './Editor';
 import { TitlePlugin } from '../TitlePlugin';
 import { ParagraphPlugin } from '../ParagraphPlugin';
+import { generateId } from '@minddrop/utils';
 
 export default {
   title: 'editor/Editor',
@@ -11,8 +12,13 @@ export default {
 
 export const BareEditor: React.FC = () => {
   const [value, setValue] = useState<EditorContent>([
-    { type: 'title', children: [{ text: 'Vivamus elementum ' }] },
     {
+      id: generateId(),
+      type: 'title',
+      children: [{ text: 'Vivamus elementum ' }],
+    },
+    {
+      id: generateId(),
       type: 'paragraph',
       children: [
         {
@@ -31,8 +37,13 @@ export const BareEditor: React.FC = () => {
 
 export const WithPlugins: React.FC = () => {
   const [value, setValue] = useState<EditorContent>([
-    { type: 'title', children: [{ text: 'Vivamus elementum ' }] },
     {
+      id: generateId(),
+      type: 'title',
+      children: [{ text: 'Vivamus elementum ' }],
+    },
+    {
+      id: generateId(),
       type: 'paragraph',
       children: [
         {
