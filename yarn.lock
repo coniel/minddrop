@@ -2679,31 +2679,6 @@
     "@minddrop/core" "^0.3.0"
     pouchdb "^7.2.2"
 
-"@minddrop/tags@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@minddrop/tags/-/tags-0.1.0.tgz#c5c56d753d3ace12fe1ef929d2118cc59ae85e95"
-  integrity sha512-scqR0+7ppOwbbpzfHSN8McyiubWNXJA+9StbAVhN1i+lpsXAt5zxEKmZB59dxbvukhrvB8HTLpXasj6Z60cy3g==
-  dependencies:
-    "@minddrop/core" "^0.3.0"
-    "@minddrop/utils" "^0.3.0"
-    zustand "^3.6.5"
-
-"@minddrop/theme@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@minddrop/theme/-/theme-0.2.0.tgz#8b9f63fe818417b36d52e499d2da1b99807aca3d"
-  integrity sha512-ydESt9WPlbwGqjamFDkG/E14uy1yo2me4TfNKV/lnXLutfmU+lJLtvWSm3hKu8apUDmd8fNz5Bj/EtVr60vmtg==
-
-"@minddrop/topics@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@minddrop/topics/-/topics-0.1.0.tgz#98419f6a98bfd1da097608de5a7caed69bb793c7"
-  integrity sha512-ucH7TG4PPFokbTnEzGsw45/b9L4SicVsENMjx4QOsC6um91ECBYSRe8XTwDIhFMyyEEb0SIUFlrZHeEUE61ICw==
-  dependencies:
-    "@minddrop/core" "^0.3.0"
-    "@minddrop/drops" "^0.1.0"
-    "@minddrop/tags" "^0.1.0"
-    "@minddrop/utils" "^0.3.0"
-    zustand "^3.6.5"
-
 "@minddrop/ui@0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@minddrop/ui/-/ui-0.2.0.tgz#a40fc532832a8e1a2bca4206e11c584bdc7f35a6"
@@ -20734,6 +20709,15 @@ slate@^0.73.1:
   version "0.73.1"
   resolved "https://registry.yarnpkg.com/slate/-/slate-0.73.1.tgz#ba77e6efe80afb6b9bef32bb0f3784616bc22a6c"
   integrity sha512-MpBbw14g7D2expa9F2/hRRVucwl9jYDJp4qWC2NPGrDCJ6O0X1tWfxja5oVedWQDjfBj/QQFPx00EKxNQTn12A==
+  dependencies:
+    immer "^9.0.6"
+    is-plain-object "^5.0.0"
+    tiny-warning "^1.0.3"
+
+slate@^0.75.0:
+  version "0.75.0"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.75.0.tgz#0687785d8beb1088250397db8b6a8fa6fbaab5c8"
+  integrity sha512-ZLejJN1S9VXZPj1Si4BIoiJSwYS6rMwSyOTHVQQGiASLvstLZFS4jPrk3cx+MrHRYXvt72TlYMTd/U3Mgn7Uhw==
   dependencies:
     immer "^9.0.6"
     is-plain-object "^5.0.0"
