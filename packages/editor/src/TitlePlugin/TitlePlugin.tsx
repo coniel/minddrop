@@ -1,12 +1,13 @@
-import { EditorPluginConfig, EditorText } from '../types';
+import { RichText } from '@minddrop/rich-text';
+import { RichTextEditorPluginConfig } from '../types';
 import { TitleElement } from './TitleElement';
 
 export interface TitleElement {
   type: 'title';
-  children: EditorText;
+  children: RichText[];
 }
 
-export const TitlePlugin: EditorPluginConfig = {
+export const TitlePlugin: RichTextEditorPluginConfig = {
   elements: [
     {
       type: 'title',

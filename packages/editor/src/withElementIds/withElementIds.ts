@@ -1,19 +1,20 @@
 /* eslint-disable no-param-reassign */
-import { Element, Text, Editor } from 'slate';
+import { Element, Text } from 'slate';
 import { generateId } from '@minddrop/utils';
-import { EditorElement } from '../types';
+import { RichTextElement } from '@minddrop/rich-text';
+import { EditorApi } from '../types';
 
 /**
  * Does something useful.
  */
-export function withElementIds(editor: Editor): Editor {
+export function withElementIds(editor: EditorApi): EditorApi {
   const { apply } = editor;
 
   // Add ID to new nodes
   editor.apply = (operation): void => {
     if (
       operation.type === 'split_node' &&
-      (operation.properties as EditorElement).type
+      (operation.properties as RichTextElement).type
     ) {
       return apply({
         ...operation,

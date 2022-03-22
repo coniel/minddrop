@@ -1,6 +1,6 @@
-import { ElementProps } from './Editor.types';
+import { RichTextElementProps } from './RichTextElementProps.types';
 
-export interface EditorElementConfig {
+export interface RichTextElementConfig {
   /**
    * The element type identifier, e.g. 'paragraph'.
    */
@@ -9,7 +9,7 @@ export interface EditorElementConfig {
   /**
    * The component used to render the element.
    */
-  component: React.ElementType<ElementProps>;
+  component: React.ElementType<RichTextElementProps>;
 
   /**
    * In a not "void" element, Slate handles the rendering of

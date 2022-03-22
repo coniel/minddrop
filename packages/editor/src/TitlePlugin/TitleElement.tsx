@@ -1,8 +1,8 @@
 import React from 'react';
-import { ElementProps } from '../types';
+import { RichTextElementProps } from '../types';
 import './TitleElement.css';
 
-export const TitleElement: React.FC<ElementProps> = ({
+export const TitleElement: React.FC<RichTextElementProps> = ({
   children,
   attributes,
 }) => (
