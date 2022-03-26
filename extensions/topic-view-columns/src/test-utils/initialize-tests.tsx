@@ -31,17 +31,14 @@ export function setup() {
   // they are tied to the extension
   dropTypeConfigs.forEach((config) => Drops.register(extensionCore, config));
 
-  // Register extension enabled for all topics
-  Extensions.register(core, {
-    ...topicExtension,
-    topics: [topicWithView.id],
-  });
-  Extensions.register(core, {
-    ...Extension,
-    enabled: true,
-    topics: [topicWithView.id],
-  });
+  // Register extensions
+  Extensions.register(core, topicExtension);
+  Extensions.register(core, Extension);
   Extension.onRun(core);
+
+  // Enable extensions on the topic
+  Extensions.enableOnTopics(core, topicExtension.id, [topicWithView.id]);
+  Extensions.enableOnTopics(core, Extension.id, [topicWithView.id]);
 
   // Load test drops into drops store
   Drops.load(core, drops);
