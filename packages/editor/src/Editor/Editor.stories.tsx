@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { EditorContent } from '../types';
+/* eslint-disable no-console */
+import React, { useEffect, useState } from 'react';
+import { RichTextDocument } from '@minddrop/rich-text';
 import { Editor } from './Editor';
 import { TitlePlugin } from '../TitlePlugin';
 import { ParagraphPlugin } from '../ParagraphPlugin';
@@ -10,8 +11,9 @@ export default {
   component: Editor,
 };
 
-export const BareEditor: React.FC = () => {
-  const [value, setValue] = useState<EditorContent>([
+const document: RichTextDocument = {
+  revision: 'rev-id',
+  content: [
     {
       id: generateId(),
       type: 'title',
@@ -26,40 +28,65 @@ export const BareEditor: React.FC = () => {
         },
       ],
     },
-  ]);
+  ],
+};
 
+const document2: RichTextDocument = {
+  revision: 'rev-2-id',
+  content: [
+    {
+      id: document.content[0].id,
+      type: 'title',
+      children: [{ text: 'Vivamus elementum edited' }],
+    },
+    {
+      id: document.content[1].id,
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.',
+        },
+      ],
+    },
+    {
+      id: generateId(),
+      type: 'paragraph',
+      children: [
+        {
+          text: 'New paragraph',
+        },
+      ],
+    },
+  ],
+};
+
+export const BareEditor: React.FC = () => {
   return (
     <div>
-      <Editor value={value} onChange={setValue} />
+      <Editor document={document} onChange={(doc) => console.log(doc)} />
     </div>
   );
 };
 
 export const WithPlugins: React.FC = () => {
-  const [value, setValue] = useState<EditorContent>([
-    {
-      id: generateId(),
-      type: 'title',
-      children: [{ text: 'Vivamus elementum ' }],
-    },
-    {
-      id: generateId(),
-      type: 'paragraph',
-      children: [
-        {
-          text: 'Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.',
-        },
-      ],
-    },
-  ]);
+  const [value, setValue] = useState(document);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setValue(document2);
+    }, 4000);
+  }, []);
 
   return (
     <div>
       <Editor
-        value={value}
+        document={value}
         onChange={setValue}
         plugins={[TitlePlugin, ParagraphPlugin]}
       />
+      <button type="button" onClick={() => setValue(document2)}>
+        Load value
+      </button>
     </div>
   );
 };

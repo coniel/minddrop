@@ -1,9 +1,10 @@
 import React from 'react';
 import { cleanup, render } from '@minddrop/test-utils';
-import { EditorContent, EditorPluginConfig } from '../types';
+import { RichTextDocument } from '@minddrop/rich-text';
+import { RichTextEditorPluginConfig } from '../types';
 import { Editor } from './Editor';
 
-const TestPluging: EditorPluginConfig = {
+const TestPluging: RichTextEditorPluginConfig = {
   elements: [
     {
       type: 'test-element',
@@ -17,16 +18,21 @@ const TestPluging: EditorPluginConfig = {
   ],
 };
 
-const value: EditorContent = [
-  { id: 'id', type: 'test-element', children: [{ text: '' }] },
-];
+const document: RichTextDocument = {
+  revision: 'rev-id',
+  content: [{ id: 'id', type: 'test-element', children: [{ text: '' }] }],
+};
 
 describe('Editor', () => {
   afterEach(cleanup);
 
   it('renders plugin elements', () => {
     const { getByText } = render(
-      <Editor value={value} onChange={jest.fn()} plugins={[TestPluging]} />,
+      <Editor
+        document={document}
+        onChange={jest.fn()}
+        plugins={[TestPluging]}
+      />,
     );
 
     getByText('test-element');
