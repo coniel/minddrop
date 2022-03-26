@@ -1,5 +1,5 @@
 import { RichText } from './RichText.types';
-import { RichTextElement } from './RichTextElement.types';
+import { RichTextElement } from './RichTextBlockElement.types';
 
 declare module 'slate' {
   interface CustomTypes {
