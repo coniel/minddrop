@@ -1,0 +1,571 @@
+---
+metaTitle: RichTextElementConfig Interface
+metaDescription: Configuration for registering rich text element types.
+---
+
+# RichTextElementConfig
+
+<Description>
+  Configuration for registering rich text element types.
+</Description>
+
+In rich text documents, elements such as paragraphs, images, links, etc. are created using `RichTextElement` objects. Before such elements can be created, the element type needs to be registered using the `RichTextElements.register` method.
+
+## RichTextBlockElementConfig
+
+The configuration object for block level elements. See below the table for additioal details.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'level',
+      type: "'block'",
+      required: true,
+      description:
+        "The level at which the element is rendered, always 'block'.",
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: "The element type, such as 'paragraph'.",
+    },
+    {
+      name: 'component',
+      type: 'React.ComponentType',
+      required: true,
+      description: 'The component used to render the element.',
+    },
+    {
+      name: 'create',
+      type: 'function',
+      required: true,
+      description:
+        'Function called to create an element of this type.',
+    },
+    {
+      name: 'convert',
+      type: 'function',
+      description: (
+        <p>
+          Function called when an existing rich text element is
+          converted into this type. Required if{' '}
+          <Code>allowConversion</Code> is <Code>true</Code>.
+        </p>
+      ),
+    },
+    {
+      name: 'toPlainText',
+      type: 'function',
+      description:
+        "Function which returns a plain text version of the element's content.",
+    },
+    {
+      name: 'void',
+      type: 'boolean',
+      default: 'false',
+      description: 'Determines whether the element is editable.',
+    },
+    {
+      name: 'allowConversion',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Whether the element can be converted to and from other element types.',
+    },
+    {
+      name: 'allowNesting',
+      type: 'boolean',
+      default: 'true',
+      description: (
+        <p>
+          Whether other block level elements can indented below this
+          one. Indented block IDs will be set as the element's{' '}
+          <Code>nestedElements</Code> parameter.
+        </p>
+      ),
+    },
+    {
+      name: 'returnBehaviour',
+      type: "'break-out' | 'line-break' | 'same-type'",
+      default: "'break-out'",
+      description:
+        'Determines the bahviour when the Return key is pressed at the end of an element of this type.',
+    },
+    {
+      name: 'dataTypes',
+      type: 'string[]',
+      description: (
+        <p>
+          The data types from which this type of element can be
+          created (e.g. <Code>'text/plain'</Code>).
+        </p>
+      ),
+    },
+    {
+      name: 'fileTypes',
+      type: 'string[]',
+      description: (
+        <p>
+          The file types from which this type of element can be
+          created (e.g. <Code>'image/png'</Code>).
+        </p>
+      ),
+    },
+    {
+      name: 'multiFile',
+      type: 'boolean',
+      default: 'false',
+      description: (
+        <p>
+          When <Code>true</Code>, indicates that this element type
+          supports multiple files at once.
+        </p>
+      ),
+    },
+    {
+      name: 'domains',
+      type: '(string | UrlValidator)[]',
+      description: (
+        <p>
+          The domains from which this type of element can be created.
+        </p>
+      ),
+    },
+    {
+      name: 'shortcuts',
+      type: 'string[]',
+      description:
+        'An array of markdown style shorcuts which trigger the creation of an element of this type',
+    },
+    {
+      name: 'hotkeys',
+      type: 'BlockHotkeyConfig[]',
+      description: 'The hotkeys related to this element.',
+    },
+    {
+      name: 'htmlDeserializers',
+      type: 'HtmlDeserializerMap',
+      description:
+        'Deserializer functions used to deserialize pasted HTML into this type of element.',
+    },
+  ]}
+/>
+
+### component
+
+Rich text element components are just simple React components. However, there are two required props which need to be applied correctly in order for the element to function:
+
+- `attributes`: must be spread onto the root HTML element
+- `children`: must be rendered at the location at which the text will be edited
+
+Below is an example of a non-void (in which text can be edited) paragraph element. It will render a paragraph inside which the text is editable.
+
+```tsx
+const ParagraphElement: React.FC<RichTextBlockElementProps> = ({
+  attributes,
+  children,
+}) => <p {...attributes}>{children}</p>;
+```
+
+Below is an example of a void (in which there is no text to edit) image element. Note that `children` must be rendered even though the image doesn't actaully have editable children (it renders an empty span element required for editor functionality).
+
+```tsx
+interface ImageElementProps extends RichTextBlockElementProps {
+  /**
+   * The image src.
+   */
+  src: string;
+}
+
+const ImageElement: React.FC<ImageElementProps> = ({
+  attributes,
+  children,
+  element,
+}) => (
+  <div {...attributes}>
+    <img src={element.src} />
+    {children}
+  </div>
+);
+```
+
+#### RichTextBlockElementProps
+
+The props passed to block element components.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'attributes',
+      type: 'Record<string, string>',
+      required: true,
+      description:
+        'HTML attributes required for the editor to function. Should be spread onto the root HTML element of the component.',
+    },
+    {
+      name: 'children',
+      type: 'React Children',
+      required: true,
+      description:
+        'Renders the editable rich text content. Must be rendered even if the element is void and does not support rich text content (it renders an empty span element required for editor functionality).',
+    },
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The rich text element being rendered.',
+    },
+  ]}
+/>
+
+### create
+
+Called to create a new rich text element of this type. Should return an object containing the element `type` as well as any data used by the element.
+
+For example, imagine a web bookmark element which has a `url` and `title` property. The `create` method should return an object defining these properties:
+
+```ts
+{
+  type: 'bookmark',
+  url: 'https://minddrop.app',
+  title: "MindDrop - Your mind's visual workspace",
+}
+```
+
+If the element makes use of files, a [FileReference](/docs/extensions/types/file-reference) must be created for each attached file using the [`Files.create`](/docs/extensions/api/files#create) method and the file reference IDs set as the element's `files` property.
+
+```ts
+create<TData extends CreateRichTextBlockElementData>(core: Core, data?: DataInsert): TData
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'DataInsert',
+      description:
+        'A data insert object present if the element is being created as a result of a data insert.',
+    },
+  ]}
+/>
+
+#### CreateRichTextBlockElementData
+
+In addition to the data below, you should include any custom data used by your element.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The element type indentifier.',
+    },
+    {
+      name: 'children',
+      type: '(RichText | RichTextElement)[]',
+      description: 'The rich text content of the element.',
+    },
+    {
+      name: 'nestedElements',
+      type: 'string[]',
+      description: (
+        <span>
+          The IDs of nested block level <Code>RichTextElement</Code>s.
+        </span>
+      ),
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      description: (
+        <span>
+          The <Code>FileReference</Code> IDs of the files attached to
+          the element.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### convert
+
+Called when an existing rich text element of a different type is converted into this type (e.g. converting a 'paragraph' element into a 'quote' element). Required if `allowConversion` is `true`.
+
+Should return an object containing the element `type` as well as any data used by the element (see the `create` method above for details).
+
+When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (consiting of `RichText` and inline `RichTextElement` nodes). Other fields (e.g. `nestedElements`) may or may not be preserved depending on the data structure of the element type into which the element is converted.
+
+All non-void elements must support conversion.
+
+Elements which are not text based (e.g. images) should not support conversion.
+
+```ts
+convert<D extends CreateRichTextBlockElementData>(core: Core, element: RichTextElement): D
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      description: 'The element being converted.',
+    },
+  ]}
+/>
+
+### toPlainText
+
+A function which returns a plain text version of the element's content. Only needed for void elements which use text based data (e.g. a 'equation' element in which the equation expression is edited in a popup field).
+
+Providing a `toPlainText` method is strongly recommended for void elements which contain any text based data. The method has several uses:
+
+- **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
+- **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data to support pasting outside of MindDrop.
+- **Extension uninstall**: When an extension which registers a block element type is uninstalled, the elements of that type are converted into `RichText` nodes with the plain text set as their text value.
+
+```ts
+toPlainText(element: RichTextInlineElement): string
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextInlineElement',
+      required: true,
+      description: 'The element to convert to plain text.',
+    },
+  ]}
+/>
+
+### void
+
+Void elements are elements which do not involve text (e.g. an 'image' element), or elements in wich the text is not directly a part of the editor (e.g. an 'equation' element in which the equation expression is edited in a popup field).
+
+Non-void elements must have a `children` field consisting of `RichText` and `RichTextInlineElement`s nodes.
+
+### allowConversion
+
+Whether the element can be converted to and from other element types. For example, converting a 'paragraph' element into a 'quote' element.
+
+When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (consiting of `RichText` and `RichTextInlineElement` nodes). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
+
+All non-void elements must support conversion.
+
+Void elements which contain text based data should implement the `toPlainText` method, as the plain text will be used to generate a `children` value when converting to a non-void element type.
+
+Elements which are not text based (e.g. an 'image' element) should not support conversion.
+
+### returnBehaviour
+
+What happens when the Return key is pressed at the end of a block element:
+
+- `'break-out'` inserts a new element of the default type below
+- `'line-break'` inserts a soft line break into the current element
+- `'same-type'` inserts a new element of the same type as this one below
+
+If the Return key is pressed within the element's text, the element is split in two, creating a second element of the same type below, unless returnBehaviour is set to `'line-break'` in which case a line break is insterted.
+
+### dataTypes
+
+The data types from which this kind of element can be created (e.g. `'text/plain'`). Used to decide which type of element to create when data is inserted into the editor (e.g. from a paste event).
+
+When a data insert contains a matching data type, the `create` method will be called with the inserted data. If there are multiple registered rich text element types that support the same data type, only a single element will be created (the element type that was registered first).
+
+Omit if this element type does not support being created from data.
+
+Note that `'text/html'` data is ommited as creating elements from HTML is handled separately using `htmlDeserializers`.
+
+### fileTypes
+
+The file types from which this kind of element can be created (e.g. `'image/png'`). Used to decide which type of element to create when data containg files is inserted into the editor (e.g. from a paste event).
+
+When a data insert contains a matching file type, the `create` method will be called with the inserted file(s). If there are multiple registered rich text element types that support the same file type, only a single element will be created (the element type that was registered first).
+
+Omit if this element type does not support being created from files.
+
+### multiFile
+
+Determnies the behaviour when creating elements of this type from files.
+
+When `true`, indicates that this element type supports multiple files at once, resulting in the `create` method being called once with all supported files included in the data parameter.
+
+When `false`, indicates that this element type only supports a single file per element. In this case, the `create` method will called for each inserted file, with a signle file being included in the data parameter.
+
+### domains
+
+The domains from which this type of element can be created. Used to decide which type of element to create when a URL is inserted (e.g. pasted) into the editor.
+
+The `domains` value can contain one or more of the following:
+
+- A domain name, such as `'minddrop.app'`. This will match against any page on the 'minddrop.app' domain as well as 'www.minddrop.app', but not any other subdomains (e.g. 'docs.minddrop.app'). An asterisk can be used as a wildcard to match againt any subdomain or top level domain (e.g. `'*.minddrop.com'` and `'minddrop.*'`).
+- An asterisk (`'*'`) to match against all domains.
+- A `UrlValidator` function, which receives the URL as its only parameter and returns a boolean indicating whether an element should be created from the URL.
+
+If there are multiple registered rich text element types that support the same domains, only a single element will be created (the element type that was registered first).
+
+#### UrlValidator
+
+A function which validates a URL, return a boolean indicating whether the URL matches requirements.
+
+```ts
+(url: string) => boolean;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'url',
+      type: 'string',
+      required: true,
+      description: 'The URL to validate.',
+    },
+  ]}
+/>
+
+### shortcuts
+
+An array of markdown style shorcuts which trigger the creation of an element of this type (e.g. `'* '` to create a list item when typing an asterisk followed by a space).
+
+The shortcut is only triggered if it was typed at the start of the currently focused element. When triggered, calls the `convert` method on the focused element. Therefor, shortcuts are only supported in elements which allow conversion.
+
+The shortcut text is automatically removed when the shortcut is triggered.
+
+### hotkeys
+
+The hotkeys related to this element. Hotkeys are configured using objects with a `keys` property, which is the list of keys which when pressed together trigger the action, and an `action` property. The action property can be one of two types:
+
+- `'convert'`: setting the action to 'convert' will cause the currently selected/focused block(s) to be converted to this type when triggered.
+- `BlockHotkeyCallback`: setting the action a function will call the function when triggered. It is only triggered if the currently selected/focused block(s) are of this type. The function should return the updated element (or the original if no changes were made). If multiple elements are selected, the function is called once per element of this type.
+
+Modifier keys:
+
+- Use `'Ctrl'` for the Control key (maps to Command key on Mac)
+- Use `'Alt'` from the Alt key (maps to the Option key on Mac).
+- Use `'Shift'`for the Shift key.
+
+For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`). These are case insensitive.
+
+For instance, the hotkey `['Ctrl', 'Shift', '1']` would trigger when the `Control` + `Shift` + `1` (`Command` + `Shift` + `1` on Mac) keys are pressed in unison.
+
+#### BlockHotkeyConfig
+
+<InterfaceTable
+  data={[
+    {
+      name: 'keys',
+      type: 'string[]',
+      required: true,
+      description: 'List of keys used to trigger the action.',
+    },
+    {
+      name: 'action',
+      type: "'convert' | BlockHotkeyCallback",
+      description: 'The action triggered by the hotkey.',
+    },
+  ]}
+/>
+
+#### BlockHotkeyCallback
+
+Callback fired when a block hotkey is triggered. Should return the updated element.
+
+```ts
+(core: Core, element: RichTextElement): RichTextBlockElement;
+```
+
+<ArgsTable
+  code
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The target element on which the hotkey was triggered.',
+    },
+  ]}
+/>
+
+### htmlDeserializers
+
+HTML deserializers are called when HTML data is inserted into the editor, usually as a result of text being copy pasted into the editor from a web page. They should return an object (or array of objects) containing the element `type` as well as any data used by the element, or `null` if an element should not be created.
+
+HTML deserializers are configured using a `{ [node name]: HtmlDeserializer }` map, where `[node name]` corresponds to an HTML element node name (in all caps), such a SPAN, A, IMG, etc. Use an asterisk (\*) as the node name in order to match against all HTML element types. If multiple registered rich text element types configure a deserializer for the same HTML element, the deserializers will be run one after the other (in the order they were registered) until a non `null` value is returned. HTML deserializers bubble up, meaning that the most deeply nested elements are deserialized first, followed by their parent element.
+
+For non-void elements, `children` will be automatically added to the resulting element.
+
+The example below demonstrates an HTML deserializer which turns ordered list item elements into an 'ordered-list' element. The deserialization happens in two stages. First, the individual `<li>` elements are deserialized into `{ type: 'ordered-list' }` elements. Then, when the deserializer moves up to the parent `<ol>` element, the list item number is added to the previously deserialized list items based on their index.
+
+```ts
+deserializers = {
+  LI: (element, parent) => {
+    // Only create an 'ordered-list' element if
+    // the parent is an `<ol>` element
+    if (parent && parent.nodeName === 'OL') {
+      return { type: 'ordered-list' };
+    }
+
+    // Don't create an 'ordered-list' element if
+    // the parent is not an `<ol>` element
+    return null;
+  },
+  OL: (element, parent, children) =>
+    // The `children` in this case are the elements
+    // deserialized by the LI deserializer above.
+    // Here, we add the number to the list items.
+    children.map((child, index) => ({
+      ...child,
+      number: index + 1,
+    })),
+};
+```
+
+#### HtmlDeserializer
+
+Callback used to deserialize an HTML element.
+
+```ts
+deserializeHtmlElement(
+  element: HTMLElement,
+  parent: HTMLElement,
+  children: (RichText | RichTextInlineElement)[]
+): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'element',
+      type: 'HTMLElement',
+      required: true,
+      description: <span>The HTML element to deserialize.</span>,
+    },
+    {
+      name: 'parent',
+      type: 'HTMLElement | null',
+      required: true,
+      description: (
+        <span>
+          The element's parent element, or <Code>null</Code> if it has
+          no parent.
+        </span>
+      ),
+    },
+    {
+      name: 'children',
+      type: '(RichText | RichTextInlineElement)[] | null',
+      required: true,
+      description: (
+        <span>
+          The element's deserialized child elements or{' '}
+          <Code>null</Code> if the element has no children.
+        </span>
+      ),
+    },
+  ]}
+/>

@@ -1,0 +1,702 @@
+---
+metaTitle: RichTextElements API Reference
+metaDescription: An interface for retrieving and managing rich text elements.
+---
+
+# RichTextElements
+
+<Description>
+  An interface for retrieving and managing rich text elements.
+</Description>
+
+## Hooks
+
+Hooks provide access to rich text elements and related data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useRichTextElement
+
+Returns a rich text element by ID or `null` if it does not exist.
+
+```ts
+useRichTextElement<T extends RichTextElement>(id: string): T | null;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text element to retrieve.',
+    },
+  ]}
+/>
+
+### useRichTextElements
+
+Returns a `{ [id]: RichTextElement }` map of rich text elements by ID.
+
+```ts
+useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextElementMap<T>;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'elementIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the rich text elements to retrieve.',
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RichTextElement }` of the corresponding rich text elements.
+
+Throws a `RichTextElementNotFoundError` if a element does not exist.
+
+```ts
+RichTextElements.get<T extends RichTextElement>(elementId: string | string[]): T | RichTextElementMap<T>
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'elementId',
+      type: 'string | string[]',
+      required: true,
+      description:
+        'The ID(s) of the rich text element(s) to retrieve.',
+    },
+  ]}
+/>
+
+### getAll
+
+Retrieves all rich text elements as a `RichTextElementMap`.
+
+```ts
+RichTextElements.getAll<T extends RichTextElement>(): RichTextElementMap<T>
+```
+
+### create
+
+Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the new rich text element.
+
+```ts
+RichTextElements.create<
+  D extends CreateRichTextElementData,
+  T extends RichTextElement,
+>(core: Core, data: D): T;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateRichTextElementData',
+      required: true,
+      description:
+        'The rich text element data. See below for details.',
+    },
+  ]}
+/>
+
+`CreateRichTextElementData`
+
+In addition to the data below, you can include any custom data required by your rich text element.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The rich text element type indentifier.',
+    },
+    {
+      name: 'parent',
+      type: 'RichTextElementParentReference',
+      required: true,
+      description: (
+        <span>
+          An object containing the parent type (either 'document' or
+          'element') and the parent ID. See the{' '}
+          <a href="/docs/extensions/types/rich-text-element#richtextelementparentreference">
+            RichTextElementParentReference
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+    {
+      name: 'children',
+      type: '(RichText | InlineElementReference)[]',
+      description: (
+        <span>
+          The rich text content of the element. Can be a combination
+          of <Code>RichText</Code> nodes and{' '}
+          <Code>InlineElementReference</Code>s. See the{' '}
+          <a href="/docs/extensions/types/rich-text-element#richtext">
+            RichTextElement
+          </a>{' '}
+          page for details.
+
+        </span>
+      ),
+    },
+    {
+      name: 'nestedElements',
+      type: 'string[]',
+      description: <span>The IDs of nested <Code>RichTextElement</Code>s.</span>
+    }
+
+]} />
+
+### update
+
+Updates a rich text element and dispaches a `rich-text-element:update` event. Returns the updated rich text element.
+
+Throws a `RichTextElementNotFoundError` if the element does not exist.
+
+```ts
+RichTextElements.update<
+  D extends UpdateRichTextElementData,
+  T extends RichTextElement,
+>(core: Core, elementId: string, data: D): T
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text element to update.',
+    },
+    {
+      name: 'data',
+      type: 'UpdateRichTextElementData',
+      required: true,
+      description:
+        'The changes to make to the rich text element. See below for details.',
+    },
+  ]}
+/>
+
+`UpdateRichTextElementData`
+
+In addition to the data below, you can include any custom data required by your rich text element.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'parent',
+      type: 'RichTextElementParentReference',
+      description: (
+        <span>
+          An object containing the parent type (either 'document' or
+          'element') and the parent ID. See the{' '}
+          <a href="/docs/extensions/types/rich-text-element#richtextelementparentreference">
+            RichTextElementParentReference
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+    {
+      name: 'children',
+      type: '(RichText | InlineElementReference)[]',
+      description: (
+        <span>
+          The rich text content of the element. Can be a combination
+          of <Code>RichText</Code> nodes and{' '}
+          <Code>InlineElementReference</Code>s. See the{' '}
+          <a href="/docs/extensions/types/rich-text-element#richtext">
+            RichTextElement
+          </a>{' '}
+          page for details.
+
+        </span>
+      ),
+    },
+    {
+      name: 'nestedElements',
+      type: 'string[] | ArrayUnion | ArrayRemove',
+      description: <span>The IDs of nested <Code>RichTextElement</Code>s.</span>
+    }
+
+]}
+/>
+
+### delete
+
+Deletes a rich text element and dispaches a `rich-text-element:delete` event. Returns the deleted element.
+
+Deleted rich text elements can be restored using the `RichTextElements.restore` method.
+
+```ts
+RichTextElements.delete(core: Core, elementId: string): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text element to delete.',
+    },
+  ]}
+/>
+
+### restore
+
+Restores a deleted rich text element and dispatches a `rich-text-elements:restore` event and an `rich-text-elements:update` event. Returns the restored element.
+
+```ts
+RichTextElements.restore(core: Core, elementId: string): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text element to restore.',
+    },
+  ]}
+/>
+
+### deletePermanently
+
+Permanently deletes a rich text element and dispatches a `rich-text-elements:delete-permanently` event. Returns the deleted element.
+
+Permanently deleted rich text elements cannot be restored.
+
+```ts
+RichTextElement.deletePermanently(core: Core, elementId: string): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text element to delete.',
+    },
+  ]}
+/>
+
+### addFiles
+
+Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+
+The file references of the added files will be automatically updated to include the rich text element's ID in their `attachedTo` value.
+
+```ts
+RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element to which to add the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
+### removeFiles
+
+Removes files from a rich text element and dispatches a `rich-text-elements:remove-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+
+The file references of the removed files will be automatically updated to remove the rich text element's ID from their `attachedTo` value, and deleted if the element was their only attachment.
+
+```ts
+RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element from which to remove the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to remove.',
+    },
+  ]}
+/>
+
+### replaceFiles
+
+Replaces files in a rich text element (removing current files and adding given files) and dispatches a `rich-text-elements:replace-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+
+The file references of the added files will be automatically updated to include the rich text element's ID in their `attachedTo` value.
+
+The file references of the removed files will be automatically updated to remove the rich text element's ID from their `attachedTo` value, and deleted if the element was their only attachment.
+
+```ts
+RichTextElements.replaceFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element for which to replace the files.',
+    },
+    {
+      name: 'fileIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the files to add.',
+    },
+  ]}
+/>
+
+### register
+
+Registers a new rich text element type and dispaches a `rich-text-elements:register` event.
+
+```ts
+RichTextElements.register(core: Core, config: RichTextElementConfig): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'config',
+      type: 'RichTextElementConfig',
+      required: true,
+      description: (
+        <span>
+          The config of the rich text element to register. See the{' '}
+          <a href="/docs/extensions/types/rich-text-element-config">
+            RichTextElementConfig interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### unregister
+
+Unregisters a rich text element type and dispaches a `rich-text-elements:unregister` event.
+
+```ts
+RichTextElements.unregister(core: Core, type: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The type of the rich text element to unregister.',
+    },
+  ]}
+/>
+
+### load
+
+Loads rich text elements into the store and dispatches a `rich-text-elements:load` event.
+
+```ts
+RichTextElements.load(core: Core, elements: RichTextElement[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elements',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The rich text elements to load.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears all rich text elements and registered rich text element configs from the store. This method is **only intended for use in tests**, do not use within your extension code.
+
+```ts
+RichTextElements.clear(): void
+```
+
+## RichTextElement events
+
+See below the table for more details on the data passed by rich text element related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'rich-text-elements:create',
+      data: 'RichTextElement',
+      description: 'Dispatched when a rich text element is created.',
+    },
+    {
+      name: 'rich-text-elements:update',
+      data: 'UpdateRichTextElementEventData',
+      description: 'Dispatched when a rich text element is updated.',
+    },
+    {
+      name: 'rich-text-elements:delete',
+      data: 'RichTextElement',
+      description: 'Dispatched when a rich text element is deleted.',
+    },
+    {
+      name: 'rich-text-elements:restore',
+      data: 'RichTextElement',
+      description:
+        'Dispatched when a deleted rich text element is restored.',
+    },
+    {
+      name: 'rich-text-elements:delete-permanently',
+      data: 'RichTextElement',
+      description:
+        'Dispatched when a rich text element is permanently deleted.',
+    },
+    {
+      name: 'rich-text-elements:add-files',
+      data: 'AddRichTextElementFilesEventData',
+      description:
+        'Dispatched when files are added to a rich text element.',
+    },
+    {
+      name: 'rich-text-elements:remove-files',
+      data: 'RemoveRichTextElementFilesEventData',
+      description:
+        'Dispatched when files are removed from a rich text element.',
+    },
+    {
+      name: 'rich-text-elements:replaced-files',
+      data: 'ReplaceRichTextElementFilesEventData',
+      description:
+        "Dispatched when a rich text element's files are replaced with new ones.",
+    },
+    {
+      name: 'rich-text-elements:register',
+      data: 'RichTextElementConfig',
+      description:
+        'Dispatched when a new rich text element type is registered.',
+    },
+    {
+      name: 'rich-text-elements:unregister',
+      data: 'RichTextElementConfig',
+      description:
+        'Dispatched when a rich text element type is unregistered.',
+    },
+    {
+      name: 'rich-text-elements:load',
+      data: 'RichTextElement[]',
+      description:
+        'Dispatched when rich text elements are loaded into the store.',
+    },
+  ]}
+/>
+
+### RichTextElement event data types
+
+RichTextElement events are dispatched with one of the following types of data.
+
+#### RichTextElement
+
+See the [RichTextElement](/docs/extensions/types/rich-text-element) interface page.
+
+#### RichTextElementConfig
+
+See the [RichTextElementConfig](/docs/extensions/types/rich-text-element-config) interface page.
+
+#### UpdateRichTextElementEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The rich text element before it was updated.',
+    },
+    {
+      name: 'after',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The updated rich text element.',
+    },
+    {
+      name: 'changes',
+      type: 'RichTextElementChanges',
+      required: true,
+      description:
+        'The changes applied to the rich text element. See below for details.',
+    },
+  ]}
+/>
+
+`RichTextElementChanges`
+
+In addition to the data below, the changes data may include custom data according to the rich text element type.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description:
+        'Timestamp at which the rich text element was updated.',
+    },
+    {
+      name: 'children',
+      type: '(RichText | RichTextElement)[] | Delete',
+      description: 'The rich text content of the element.',
+    },
+    {
+      name: 'nestedElements',
+      type: 'string[] | ArrayUnion | ArrayRemove | Delete',
+      description: (
+        <span>
+          The IDs of nested block level <Code>RichTextElement</Code>s.
+        </span>
+      ),
+    },
+    {
+      name: 'files',
+      type: 'string[] | ArrayUnion | ArrayRemove | Delete',
+      description:
+        "The IDs of the element's files. All files attached to the element are listed here.",
+    },
+    {
+      name: 'deleted',
+      type: 'true',
+      description: (
+        <span>
+          If <Code>true</Code>, the rich text element is deleted. Not
+          present if the rich text element is not deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the rich text element was deleted. Only
+          set if
+          <Code>deleted</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### AddRichTextElementFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The rich text element to which the files were added.',
+    },
+    {
+      name: 'files',
+      type: 'FileReferenceMap',
+      required: true,
+      description:
+        'The file references of the files which were added to the rich text element.',
+    },
+  ]}
+/>
+
+#### RemoveRichTextElementFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The rich text element from which the files were removed.',
+    },
+    {
+      name: 'files',
+      type: 'FileReferenceMap',
+      required: true,
+      description:
+        'The files references of the files which were removed from the rich text element.',
+    },
+  ]}
+/>
+
+#### ReplaceRichTextElementFilesEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The rich text element in which the files were replaced.',
+    },
+    {
+      name: 'addedFiles',
+      type: 'FileReferenceMap',
+      required: true,
+      description:
+        'The file references of the files which were added to the rich text element.',
+    },
+    {
+      name: 'removedFiles',
+      type: 'FileReferenceMap',
+      required: true,
+      description:
+        'The files references of the files which were removed from the rich text element.',
+    },
+  ]}
+/>

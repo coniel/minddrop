@@ -69,6 +69,14 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/persistent-store',
       },
       {
+        title: 'RichTextDocuments',
+        slug: 'docs/extensions/api/rich-text-documents',
+      },
+      {
+        title: 'RichTextElements',
+        slug: 'docs/extensions/api/rich-text-elements',
+      },
+      {
         title: 'Tags',
         slug: 'docs/extensions/api/tags',
       },
@@ -126,8 +134,36 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/file-reference',
       },
       {
+        title: 'ParentReference',
+        slug: 'docs/extensions/types/parent-reference',
+      },
+      {
         title: 'ResourceConnector',
         slug: 'docs/extensions/types/resource-connector',
+      },
+      {
+        title: 'RichText',
+        slug: '/docs/extensions/types/rich-text',
+      },
+      {
+        title: 'RichTextDocument',
+        slug: 'docs/extensions/types/rich-text-document',
+      },
+      {
+        title: 'RichTextBlockElement',
+        slug: 'docs/extensions/types/rich-text-block-element',
+      },
+      {
+        title: 'RichTextInlineElement',
+        slug: 'docs/extensions/types/rich-text-inline-element',
+      },
+      {
+        title: 'RichTextBlockElementConfig',
+        slug: 'docs/extensions/types/rich-text-block-element-config',
+      },
+      {
+        title: 'RichTextInlineElementConfig',
+        slug: 'docs/extensions/types/rich-text-inline-element-config',
       },
       {
         title: 'Slot',

@@ -1,0 +1,45 @@
+---
+metaTitle: ParentReference Interface
+metaDescription: An object used to reference a resource's parent resource.
+---
+
+# ParentReference
+
+<Description>
+  An object used to reference a resource's parent resource.
+</Description>
+
+Parent references are used to keep track of a resource's parents, such as which topics a drop belongs to.
+
+## ParentReference
+
+<InterfaceTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: "The parent type, such as 'topic'.",
+    },
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The parent resource ID.',
+    },
+  ]}
+/>
+
+## Example
+
+A drop with two parent topics (other fields ommited).
+
+```ts
+const drop = {
+  // ...
+  parents: [
+    { type: 'topic', id: '9315f3d2-71ff-420f-8e28-2e1da4812126' },
+    { type: 'topic', id: '557824ae-0219-46aa-a669-9afef7f07096' },
+  ],
+};
+```

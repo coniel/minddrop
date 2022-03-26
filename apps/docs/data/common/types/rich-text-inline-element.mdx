@@ -1,0 +1,135 @@
+---
+metaTitle: RichTextElement Interface
+metaDescription: An object used to define inline elements in a rich text document.
+---
+
+# RichTextInlineElement
+
+<Description>
+  An object used to define inline elements in a rich text document.
+</Description>
+
+In rich text documents, elements such as links, equations, etc. are created using `RichTextInlineElement` objects.
+
+### RichTextInlineElement
+
+In addition to the fields below, inline rich text elements can contain custom fields for any custom data they require (e.g. a `url` field for a 'link' element).
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The element ID.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description: (
+        <p>
+          The references of the element's parents. Typically, will
+          contain a reference to a <Code>RichTextBlockElement</Code>{' '}
+          (the rich text block in which the element is found) and a{' '}
+          <Code>RichTextDocument</Code> (the rich text document in
+          which the element is found).
+        </p>
+      ),
+    },
+    {
+      name: 'children',
+      type: '(RichText | RichTextElement)[]',
+      description: 'The rich text content of the element.',
+    },
+    {
+      name: 'files',
+      type: 'string[]',
+      description: (
+        <p>
+          The IDs of the <Code>FileReference</Code>s attached to this
+          element. All files attached to the element must be listed
+          here.
+        </p>
+      ),
+    },
+    {
+      name: 'deleted',
+      type: 'true',
+      description: (
+        <p>
+          When <Code>true</Code>, the element is deleted. Not present
+          if the element is not deleted.
+        </p>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description:
+        'Timestamp at which the element was deleted. Not present if the element is not deleted.',
+    },
+  ]}
+/>
+
+### Examples
+
+A 'link' element.
+
+```ts
+interface LinkElement extends RichTextInlineElement {
+  /**
+   * The element type, always 'link'.
+   */
+  type: 'link';
+
+  /**
+   * The link URL.
+   */
+  url: string;
+}
+
+const element: LinkElement = {
+  type: 'link',
+  id: '01e1fe7d-58b3-4fa1-b0b4-1b1bc5d2f926',
+  parents: [
+    // The parent rich text document in which this element is found
+    { type: 'document', id: '9315f3d2-71ff-420f-8e28-2e1da4812126' },
+    // The parent rich text block element in which this element is found
+    { type: 'element', id: '557824ae-0219-46aa-a669-9afef7f07096' },
+  ],
+  // The link text
+  children: [{ text: 'MindDrop website' }],
+  // Custom 'url' field which stores the link address
+  url: 'https://minddrop.app',
+};
+```
+
+A void 'equation' element (the expression is edited in a popup field).
+
+```ts
+interface EquationElement extends RichTextInlineElement {
+  /**
+   * The element type, always 'equation'.
+   */
+  type: 'equation';
+
+  /**
+   * The equation expression.
+   */
+  expression: string;
+}
+
+const element: EquationElement = {
+  type: 'equation',
+  id: '0f9c522c-99ab-4017-942b-fbf132c18f84',
+  parents: [
+    // The parent rich text document in which this element is found
+    { type: 'document', id: '9315f3d2-71ff-420f-8e28-2e1da4812126' },
+    // The parent rich text block element in which this element is found
+    { type: 'element', id: '557824ae-0219-46aa-a669-9afef7f07096' },
+  ],
+  // Custom 'expression' field which stores the equation expression
+  expression: 'e=mc^2',
+};
+```
