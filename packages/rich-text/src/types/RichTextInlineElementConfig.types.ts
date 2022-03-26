@@ -8,8 +8,8 @@ import {
 } from './RichTextInlineElement.types';
 
 export interface RichTextInlineElementConfig<
-  TData extends CreateRichTextInlineElementData = CreateRichTextInlineElementData,
   TElement extends RichTextInlineElement = RichTextInlineElement,
+  TData extends CreateRichTextInlineElementData = CreateRichTextInlineElementData,
 > {
   /**
    * The level at which the element is rendered, always 'inline'.
