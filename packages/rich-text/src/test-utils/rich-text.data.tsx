@@ -156,18 +156,19 @@ export const paragraphElement4: RichTextBlockElement = {
 /* Rich text inline elements */
 /* ************************* */
 
+export const linkElement1PlainText = 'MindDrop website';
 export const linkElement1: TestLinkElement = {
   type: 'link',
   id: generateId(),
   url: 'https://minddrop.app',
   parents: [],
-  children: [{ text: 'MindDrop website' }],
+  children: [{ text: linkElement1PlainText }],
 };
-
-export const equationElement1: TestInlineEquationElement = {
+export const inlineEquationElement1PlainText = 'e=mc^2';
+export const inlineEquationElement1: TestInlineEquationElement = {
   type: 'inline-equation',
   id: generateId(),
-  expression: 'e=mc^2',
+  expression: inlineEquationElement1PlainText,
   parents: [],
 };
 
@@ -217,7 +218,7 @@ export const elements = [
   paragraphElement3,
   paragraphElement4,
   linkElement1,
-  equationElement1,
+  inlineEquationElement1,
 ];
 
 // Rich text documents
