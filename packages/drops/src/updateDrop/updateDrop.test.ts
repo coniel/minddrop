@@ -1,68 +1,61 @@
-import { act, MockDate, renderHook } from '@minddrop/test-utils';
+import { act, MockDate } from '@minddrop/test-utils';
 import { updateDrop } from './updateDrop';
-import { createDrop } from '../createDrop';
-import { Drop } from '../types';
-import { useAllDrops } from '../useAllDrops';
-import { cleanup, core, setup } from '../test-utils';
+import { UpdateDropData } from '../types';
+import { cleanup, core, setup, textDrop1 } from '../test-utils';
+import { getDrop } from '../getDrop';
+
+const changes: UpdateDropData = {
+  color: 'blue',
+};
 
 describe('updateDrop', () => {
   beforeEach(setup);
 
-  afterEach(cleanup);
-
-  it('returns the updated drop', () => {
-    MockDate.set('01/01/2000');
-    const changes = { markdown: 'Updated' };
-    let drop: Drop;
-
-    act(() => {
-      drop = createDrop(core, { type: 'text' });
-    });
-
-    MockDate.set('01/02/2000');
-
-    const updated = updateDrop(core, drop.id, changes);
-
-    expect(updated.markdown).toBe('Updated');
-    // Updates the updatedAt timestamp
-    expect(updated.updatedAt.getTime()).toBe(new Date('01/02/2000').getTime());
-
+  afterEach(() => {
+    cleanup();
     MockDate.reset();
   });
 
+  it('returns the updated drop', () => {
+    MockDate.set('01/02/2000');
+
+    // Update the drop
+    const updated = updateDrop(core, textDrop1.id, changes);
+
+    // Should return updated drop
+    expect(updated.color).toBe('blue');
+    // Updates the updatedAt timestamp
+    expect(updated.updatedAt.getTime()).toBe(new Date('01/02/2000').getTime());
+  });
+
   it('updates the drop in the store', () => {
-    const { result } = renderHook(() => useAllDrops());
-    let drop: Drop;
+    // Update the drop
+    const updated = updateDrop(core, textDrop1.id, changes);
 
-    act(() => {
-      drop = createDrop(core, { type: 'text' });
-      drop = updateDrop(core, drop.id, { markdown: 'Updated' });
-    });
+    // Get the drop from the store
+    const drop = getDrop(textDrop1.id);
 
-    expect(result.current[drop.id]).toEqual(drop);
+    // Store drop should match returned drop
+    expect(drop).toEqual(updated);
   });
 
   it("dispatches a 'drops:update' event", (done) => {
-    MockDate.set('01/01/2000');
-    const changes = { markdown: 'My drop' };
-    let drop: Drop;
+    // Listen to 'drops:update' events
+    core.addEventListener('drops:update', (payload) => {
+      // Get the updated drop
+      const updated = getDrop(textDrop1.id);
 
-    function callback(payload) {
       expect(payload.data).toEqual({
-        before: drop,
-        after: { ...drop, ...changes, updatedAt: new Date('01/02/2000') },
+        before: textDrop1,
+        after: updated,
         changes: { ...changes, updatedAt: new Date('01/02/2000') },
       });
       done();
-    }
-
-    core.addEventListener('drops:update', callback);
+    });
 
     act(() => {
-      drop = createDrop(core, { type: 'text' });
       MockDate.set('01/02/2000');
-      updateDrop(core, drop.id, changes);
-      MockDate.reset();
+      updateDrop(core, textDrop1.id, changes);
     });
   });
 });
