@@ -47,14 +47,14 @@ export interface Drop {
   parents: DropParentReference[];
 
   /**
+   * The ID of the `RichTextDocument` containing the drop's rich text content.
+   */
+  richTextDocument?: string;
+
+  /**
    * The IDs of the tags applied to the drop.
    */
   tags?: string[];
-
-  /**
-   * The drop's markdown text content.
-   */
-  markdown?: string;
 
   /**
    * IDs of the drop's files. All files attached to the drop must be listed here.
@@ -91,7 +91,7 @@ export interface GenerateDropData extends Partial<Drop> {
 
 export interface CreateDropData {
   type: string;
-  markdown?: string;
+  richTextDocument?: string;
   color?: ContentColor;
   files?: string[];
   tags?: string[];
@@ -99,15 +99,12 @@ export interface CreateDropData {
 
 export interface UpdateDropData {
   type?: string;
-  markdown?: string | FieldValueDelete;
-  content?: string | FieldValueDelete;
   color?: ContentColor | FieldValueDelete;
 }
 
 export interface DropChanges {
   updatedAt: Date;
   type?: string;
-  markdown?: string | FieldValueDelete;
   tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
   files?:
     | string[]

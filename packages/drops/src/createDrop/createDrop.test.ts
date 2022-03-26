@@ -31,11 +31,14 @@ describe('createDrop', () => {
   });
 
   it('creates a drop', () => {
-    const drop = createDrop(core, { type: 'text', markdown: 'Hello' });
+    const drop = createDrop(core, {
+      type: 'text',
+      richTextDocument: 'document-id',
+    });
 
     expect(drop).toBeDefined();
     expect(drop.type).toBe('text');
-    expect(drop.markdown).toBe('Hello');
+    expect(drop.richTextDocument).toBe('document-id');
     expect(drop.files).not.toBeDefined();
   });
 
