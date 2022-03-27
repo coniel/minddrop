@@ -1,6 +1,8 @@
 import { RichTextDocument } from './RichTextDocument.types';
-import { RichTextElement } from './RichTextBlockElement.types';
-import { RichTextElementConfig } from './RichTextInlineElementConfig.types';
+import { RichTextBlockElement } from './RichTextBlockElement.types';
+import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
+import { RichTextInlineElement } from './RichTextInlineElement.types';
+import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
 export interface RichTextStore {
   /**
@@ -11,12 +13,15 @@ export interface RichTextStore {
   /**
    * A `{ [id]: RichTextElement }` map of rich text elements.
    */
-  elements: Record<string, RichTextElement>;
+  elements: Record<string, RichTextBlockElement | RichTextInlineElement>;
 
   /**
    * A { [type]: RichTextElementConfig } map of registered rich text elements.
    */
-  elementConfigs: Record<string, RichTextElementConfig>;
+  elementConfigs: Record<
+    string,
+    RichTextBlockElementConfig | RichTextInlineElementConfig
+  >;
 
   /**
    * Loads rich text documents into the store.
@@ -44,14 +49,16 @@ export interface RichTextStore {
    *
    * @param elements The rich text elements to load.
    */
-  loadElements(elements: RichTextElement[]): void;
+  loadElements(
+    elements: (RichTextBlockElement | RichTextInlineElement)[],
+  ): void;
 
   /**
    * Sets a rich text element in the store.
    *
    * @param element The element to set.
    */
-  setElement(element: RichTextElement): void;
+  setElement(element: RichTextBlockElement | RichTextInlineElement): void;
 
   /**
    * Removes a rich text element from the store.
@@ -65,7 +72,9 @@ export interface RichTextStore {
    *
    * @param config The config to add.
    */
-  setElementConfig(config: RichTextElementConfig): void;
+  setElementConfig(
+    config: RichTextBlockElementConfig | RichTextInlineElementConfig,
+  ): void;
 
   /**
    * Removes an element config from the store.

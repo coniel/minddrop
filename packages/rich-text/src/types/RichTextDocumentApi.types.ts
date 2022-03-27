@@ -1,13 +1,14 @@
-import { RichTextDocument } from './RichTextDocument.types';
+import { RichTextBlockElement } from './RichTextBlockElement.types';
+import { RichTextInlineElement } from './RichTextInlineElement.types';
 
 export interface RichTextDocumentApi {
   /**
-   * Returns the text contents of a rich text documents
-   * as a plain text string. Adds a line break between
-   * the text of block elements.
+   * Converts rich text elements into a plain text string.
    *
    * @param document The rich text document.
    * @returns The plain text.
    */
-  toPlainText(document: RichTextDocument): string;
+  toPlainText(
+    elements: (RichTextBlockElement | RichTextInlineElement)[],
+  ): string;
 }
