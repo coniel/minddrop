@@ -1,14 +1,32 @@
-import { Node } from 'slate';
-import { RichTextDocument } from '../types';
+import { Node, Element } from 'slate';
+import { getRichTextElementConfig } from '../getRichTextElementConfig';
+import { RichTextBlockElement, RichTextInlineElement } from '../types';
 
 /**
- * Returns the text contents of a rich text documents
- * as a plain text string. Adds a line break between
- * the text of block elements.
+ * Converts rich text elements into a plain text string.
  *
  * @param document The rich text document.
  * @returns The plain text.
  */
-export function toPlainText(document: RichTextDocument): string {
-  return document.content.map((node) => Node.string(node)).join('\n\n');
+export function toPlainText(
+  elements: (RichTextBlockElement | RichTextInlineElement)[],
+): string {
+  return elements
+    .map((element) => {
+      if (element.children) {
+        // If the element has children, convert the children to plain text
+        return Node.string(element as Element);
+      }
+
+      // Get the element's configuration object
+      const config = getRichTextElementConfig(element.type);
+
+      if (config.toPlainText) {
+        // If the element has a 'toPlainText' method, use it
+        return config.toPlainText(element);
+      }
+
+      return '';
+    })
+    .join('\n\n');
 }
