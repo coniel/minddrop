@@ -199,8 +199,8 @@ export const richTextDocument4 = {
 /* Combined exports */
 /* **************** */
 
-// Rich text configs
-export const configs = [
+// Rich text element configs
+export const richTextElementConfigs = [
   headingElementConfig,
   paragraphElementConfig,
   linkElementConfig,
@@ -208,7 +208,7 @@ export const configs = [
 ];
 
 // Rich text elements
-export const elements = [
+export const richTextElements = [
   headingElement1,
   headingElement2,
   headingElement3,
@@ -222,7 +222,7 @@ export const elements = [
 ];
 
 // Rich text documents
-export const documents = [
+export const richTextElementDocuments = [
   richTextDocument1,
   richTextDocument2,
   richTextDocument3,
