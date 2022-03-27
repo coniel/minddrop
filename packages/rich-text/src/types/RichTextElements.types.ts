@@ -17,4 +17,17 @@ export interface RichTextElementsApi {
     core: Core,
     config: RichTextBlockElementConfig | RichTextInlineElementConfig,
   ): void;
+
+  /**
+   * Returns an element type's configuration object.
+   *
+   * Throws a `RichTextElementTypeNotRegisteredError` if the element
+   * type is not registered.
+   *
+   * @param type The type of the element for wich to retrieve the config.
+   * @returns The element's config object.
+   */
+  getConfig(
+    type: string,
+  ): RichTextBlockElementConfig | RichTextInlineElementConfig;
 }
