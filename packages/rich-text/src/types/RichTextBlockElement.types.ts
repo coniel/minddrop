@@ -40,7 +40,7 @@ export interface RichTextBlockElement {
    * When `true`, the element is deleted. Not present if
    * the element is not deleted.
    */
-  deleted?: boolean;
+  deleted?: true;
 
   /**
    * Timestamp at which the element was deleted. Not

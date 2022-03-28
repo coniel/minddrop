@@ -1,7 +1,11 @@
 import { initializeCore } from '@minddrop/core';
 import { registerRichTextElementType } from '../registerRichTextElementType';
 import { useRichTextStore } from '../useRichTextStore';
-import { richTextElementConfigs, richTextElements } from './rich-text.data';
+import {
+  richTextDocuments,
+  richTextElementConfigs,
+  richTextElements,
+} from './rich-text.data';
 
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
@@ -13,6 +17,9 @@ export function setup() {
 
   // Load rich text elements into the store
   useRichTextStore.getState().loadElements(richTextElements);
+
+  // Load rich text documents into the store
+  useRichTextStore.getState().loadDocuments(richTextDocuments);
 }
 
 export function cleanup() {

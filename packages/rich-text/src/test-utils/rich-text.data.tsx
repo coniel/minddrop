@@ -18,6 +18,7 @@ const richTextDoc4Id = generateId();
 /* Rich text block element configs */
 /* ******************************* */
 
+// Heading element
 export const headingElementConfig: RichTextBlockElementConfig = {
   type: 'heading-1',
   level: 'block',
@@ -26,6 +27,7 @@ export const headingElementConfig: RichTextBlockElementConfig = {
   ),
 };
 
+// Paragraph element
 export const paragraphElementConfig: RichTextBlockElementConfig = {
   type: 'paragraph',
   level: 'block',
@@ -33,6 +35,25 @@ export const paragraphElementConfig: RichTextBlockElementConfig = {
     <div {...attributes}>{children}</div>
   ),
 };
+
+// Equation element (void)
+export interface TestBlockEquationElement extends RichTextBlockElement {
+  type: 'block-equation';
+  expression: string;
+}
+
+export const blockEquationElementConfig: RichTextBlockElementConfig<TestBlockEquationElement> =
+  {
+    type: 'block-equation',
+    level: 'block',
+    void: true,
+    component: ({ attributes, children, element }) => (
+      <div {...attributes}>
+        {element}
+        {children}
+      </div>
+    ),
+  };
 
 /* ******************************** */
 /* Rich text inline element configs */
@@ -115,6 +136,7 @@ export const paragraphElement3PlainText =
   'An object at rest remains at rest, and an object that is moving will continue to move straight and with constant velocity, if and only if there is no net force acting on that object.';
 export const paragraphElement4PlainText =
   'The acceleration, or rate of change of velocity, is the derivative of the velocity with respect to time.';
+export const blockEquationElement1PlainText = 'e=mc^2';
 export const paragraphElement1: RichTextBlockElement = {
   id: generateId(),
   type: 'paragraph',
@@ -150,6 +172,12 @@ export const paragraphElement4: RichTextBlockElement = {
       text: paragraphElement4PlainText,
     },
   ],
+};
+export const blockEquationElement1: TestBlockEquationElement = {
+  id: generateId(),
+  type: 'block-equation',
+  parents: [],
+  expression: blockEquationElement1PlainText,
 };
 
 /* ************************* */
@@ -203,6 +231,7 @@ export const richTextDocument4 = {
 export const richTextElementConfigs = [
   headingElementConfig,
   paragraphElementConfig,
+  blockEquationElementConfig,
   linkElementConfig,
   inlineEquationElementConfig,
 ];
@@ -217,6 +246,7 @@ export const richTextBlockElements = [
   paragraphElement2,
   paragraphElement3,
   paragraphElement4,
+  blockEquationElement1,
 ];
 
 // Inline level rich text elements
@@ -229,7 +259,7 @@ export const richTextElements = [
 ];
 
 // Rich text documents
-export const richTextElementDocuments = [
+export const richTextDocuments = [
   richTextDocument1,
   richTextDocument2,
   richTextDocument3,

@@ -5,6 +5,7 @@ export * from './RichTextBlockElementConfig.types';
 export * from './RichTextDocument.types';
 export * from './RichTextDocumentApi.types';
 export * from './RichTextElement.types';
+export * from './RichTextElementConfig.types';
 export * from './RichTextElementFilters.types';
 export * from './RichTextElementProps.types';
 export * from './RichTextElementsApi.types';

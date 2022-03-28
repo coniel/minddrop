@@ -1,5 +1,11 @@
-import { RichTextBlockElement } from './RichTextBlockElement.types';
-import { RichTextInlineElement } from './RichTextInlineElement.types';
+import {
+  CreateRichTextBlockElementData,
+  RichTextBlockElement,
+} from './RichTextBlockElement.types';
+import {
+  CreateRichTextInlineElementData,
+  RichTextInlineElement,
+} from './RichTextInlineElement.types';
 
 export type RichTextElement = RichTextBlockElement | RichTextInlineElement;
 
@@ -8,3 +14,7 @@ export type RichTextElement = RichTextBlockElement | RichTextInlineElement;
  */
 export type RichTextElementMap<T extends RichTextElement = RichTextElement> =
   Record<string, T>;
+
+export type CreateRichTextElementData =
+  | CreateRichTextBlockElementData
+  | CreateRichTextInlineElementData;
