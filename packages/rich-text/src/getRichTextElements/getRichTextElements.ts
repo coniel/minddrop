@@ -45,7 +45,7 @@ export function getRichTextElements<
 
   if (filters) {
     // If filters were provided, return filtered elements
-    return filterRichTextElements(mapById(requestedElements), filters);
+    return filterRichTextElements<T>(mapById(requestedElements), filters);
   }
 
   // Return a map of the requested elements
