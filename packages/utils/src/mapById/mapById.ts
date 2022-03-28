@@ -12,6 +12,8 @@ interface Item {
  * @param items The items to map.
  * @returns A map of items.
  */
-export function mapById(items: Item[]): Record<string, Item> {
+export function mapById<TItem extends Item = Item>(
+  items: TItem[],
+): Record<string, TItem> {
   return items.reduce((map, item) => ({ ...map, [item.id]: item }), {});
 }
