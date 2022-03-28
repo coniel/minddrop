@@ -30,4 +30,15 @@ describe('getRichTextElements', () => {
       getRichTextElements([headingElement1.id, 'missing-1', 'missing-2']),
     ).toThrowError(RichTextElementNotFoundError);
   });
+
+  it('filters returned elements', () => {
+    // Get elements and filter out non 'heading-1' elements
+    const elements = getRichTextElements(
+      [headingElement1.id, paragraphElement1.id],
+      { type: ['heading-1'] },
+    );
+
+    // Should be a map of the request 'heading-1' elements
+    expect(elements).toEqual(mapById([headingElement1]));
+  });
 });

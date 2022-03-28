@@ -46,20 +46,29 @@ export interface RichTextElementsApi {
   ): RichTextBlockElementConfig | RichTextInlineElementConfig;
 
   /**
-   * Retrieves rich text elements by ID.
+   * Retrieves a rich text element by ID.
    *
-   * If provided a single ID string, returns the matching rich text element.
-   * If provided an array of IDs, returns a `{ [id]: RichTextElement }` map of
-   * the corresponding rich text elements.
+   * Throws a `RichTextElementNotFoundError` if the requested element does not exist.
    *
-   * Throws a RichTextElementNotFoundError if a requested element does not exist.
-   *
-   * @param elementId The ID(s) of the element to retrieve.
-   * @rturns The requested rich text element(s)
+   * @param elementId The ID of the element to retrieve.
+   * @rturns The requested rich text element.
    */
   get<T extends RichTextElement = RichTextElement>(elementId: string): T;
+
+  /**
+   * Retrieves rich text elements by ID.
+   *
+   * Returns a `{ [id]: RichTextElement }` map of the corresponding rich text elements.
+   *
+   * Throws a `RichTextElementNotFoundError` if a requested element does not exist.
+   *
+   * @param elementIds The IDs of the elements to retrieve.
+   * @param filters Filtering options by which to filter returned elements.
+   * @rturns A `{ [id]: RichTextElement }` map of the requested rich text elements.
+   */
   get<T extends RichTextElement = RichTextElement>(
     elementIds: string[],
+    filters?: RichTextElementFilters,
   ): RichTextElementMap<T>;
 
   /**

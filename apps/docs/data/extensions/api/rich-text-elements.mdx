@@ -57,13 +57,19 @@ useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextEl
 
 Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RichTextElement }` map of the corresponding rich text elements.
 
+Optionally, when getting multiple rich text elements, the returned elements can be filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
+
 Throws a `RichTextElementNotFoundError` if a requested element does not exist.
 
 ```ts
 // Get a single element
 RichTextElements.get<T extends RichTextElement>(elementId: string): T
+
 // Get multiple elements
-RichTextElements.get<T extends RichTextElement>(elementId: string[]): RichTextElementMap<T>
+RichTextElements.get<T extends RichTextElement>(
+  elementId: string[],
+  filters?: RichTextElementFilters
+): RichTextElementMap<T>
 ```
 
 <ArgsTable
@@ -74,6 +80,20 @@ RichTextElements.get<T extends RichTextElement>(elementId: string[]): RichTextEl
       required: true,
       description:
         'The ID(s) of the rich text element(s) to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'RichTextElementFilters',
+      description: (
+        <p>
+          When present, filters the returned elements according to the
+          provided filters. Only supported when getting multiple
+          elements. See the
+          <a href="#richtextelementfilters">
+            RichTextElementFilters
+          </a> section for filtering options.
+        </p>
+      ),
     },
   ]}
 />
