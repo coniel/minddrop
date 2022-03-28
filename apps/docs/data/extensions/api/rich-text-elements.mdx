@@ -55,12 +55,15 @@ useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextEl
 
 ### get
 
-Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RichTextElement }` of the corresponding rich text elements.
+Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RichTextElement }` map of the corresponding rich text elements.
 
-Throws a `RichTextElementNotFoundError` if a element does not exist.
+Throws a `RichTextElementNotFoundError` if a requested element does not exist.
 
 ```ts
-RichTextElements.get<T extends RichTextElement>(elementId: string | string[]): T | RichTextElementMap<T>
+// Get a single element
+RichTextElements.get<T extends RichTextElement>(elementId: string): T
+// Get multiple elements
+RichTextElements.get<T extends RichTextElement>(elementId: string[]): RichTextElementMap<T>
 ```
 
 <ArgsTable

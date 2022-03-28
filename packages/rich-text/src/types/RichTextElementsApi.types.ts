@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
+import { RichTextElement, RichTextElementMap } from './RichTextElement.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
 export interface RichTextElementsApi {
@@ -42,4 +43,20 @@ export interface RichTextElementsApi {
   getConfig(
     type: string,
   ): RichTextBlockElementConfig | RichTextInlineElementConfig;
+
+  /**
+   * Retrieves rich text elements by ID.
+   *
+   * If provided a single ID string, returns the matching rich text element.
+   * If provided an array of IDs, returns a `{ [id]: RichTextElement }` map of
+   * the corresponding rich text elements.
+   *
+   * Throws a RichTextElementNotFoundError if a requested element does not exist.
+   *
+   * @param elementId The ID(s) of the element to retrieve.
+   */
+  get<T extends RichTextElement = RichTextElement>(elementId: string): T;
+  get<T extends RichTextElement = RichTextElement>(
+    elementIds: string[],
+  ): RichTextElementMap<T>;
 }
