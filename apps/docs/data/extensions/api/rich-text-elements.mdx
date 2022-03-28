@@ -136,17 +136,14 @@ In addition to the data below, you can include any custom data required by your 
     },
     {
       name: 'children',
-      type: '(RichTextNode| InlineElementReference)[]',
+      type: 'RichTextFragment',
       description: (
         <span>
-          The rich text content of the element. Can be a combination
-          of <Code>RichTextNode</Code>s and{' '}
-          <Code>InlineElementReference</Code>s. See the{' '}
-          <a href="/docs/extensions/types/rich-text-element#richtext">
-            RichTextElement
+          The rich text content of the element.  See the{' '}
+          <a href="/docs/extensions/types/rich-text-fragment">
+            RichTextFragment
           </a>{' '}
           page for details.
-
         </span>
       ),
     },
@@ -212,17 +209,14 @@ In addition to the data below, you can include any custom data required by your 
     },
     {
       name: 'children',
-      type: '(RichTextNode| InlineElementReference)[]',
+      type: 'RichTextFragment',
       description: (
         <span>
-          The rich text content of the element. Can be a combination
-          of <Code>RichTextNode</Code>s and{' '}
-          <Code>InlineElementReference</Code>s. See the{' '}
-          <a href="/docs/extensions/types/rich-text-element#richtext">
-            RichTextElement
+          The rich text content of the element.  See the{' '}
+          <a href="/docs/extensions/types/rich-text-fragment">
+            RichTextFragment
           </a>{' '}
           page for details.
-
         </span>
       ),
     },
@@ -589,7 +583,7 @@ In addition to the data below, the changes data may include custom data accordin
     },
     {
       name: 'children',
-      type: '(RichTextNode| RichTextElement)[] | Delete',
+      type: 'RichTextFragment | ArrayUnion | ArrayRemove',
       description: 'The rich text content of the element.',
     },
     {

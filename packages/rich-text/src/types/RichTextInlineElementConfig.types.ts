@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { HtmlDeserializerMap } from './HtmlDeserializer.types';
-import { RichTextNode } from './RichTextNode.types';
+import { RichTextFragment } from './RichTextFragment.types';
 import { RichTextInlineElementProps } from './RichTextElementProps.types';
 import {
   CreateRichTextInlineElementData,
@@ -39,10 +39,7 @@ export interface RichTextInlineElementConfig<
    * @param core A MindDrop core instance.
    * @param fragment The text fragment selected in the editor.
    */
-  create?(
-    core: Core,
-    fragment?: (RichTextNode | RichTextInlineElement)[],
-  ): TData;
+  create?(core: Core, fragment?: RichTextFragment): TData;
 
   /**
    * A function which returns a plain text version of the element's content.

@@ -1,12 +1,12 @@
 ---
-metaTitle: RichTextElementConfig Interface
-metaDescription: Configuration for registering rich text element types.
+metaTitle: RichTextBlockElementConfig Interface
+metaDescription: Configuration for registering block level rich text element types.
 ---
 
-# RichTextElementConfig
+# RichTextBlockElementConfig
 
 <Description>
-  Configuration for registering rich text element types.
+  Configuration for registering block level rich text element types.
 </Description>
 
 In rich text documents, elements such as paragraphs, images, links, etc. are created using `RichTextElement` objects. Before such elements can be created, the element type needs to be registered using the `RichTextElements.register` method.
@@ -265,7 +265,7 @@ In addition to the data below, you should include any custom data used by your e
     },
     {
       name: 'children',
-      type: '(RichTextNode| RichTextElement)[]',
+      type: 'RichTextFragment',
       description: 'The rich text content of the element.',
     },
     {
@@ -296,7 +296,7 @@ Called when an existing rich text element of a different type is converted into 
 
 Should return an object containing the element `type` as well as any data used by the element (see the `create` method above for details).
 
-When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (consiting of `RichTextNode`s and inline `RichTextElement`s). Other fields (e.g. `nestedElements`) may or may not be preserved depending on the data structure of the element type into which the element is converted.
+When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (set to a `RichTextFragment`). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
 
 All non-void elements must support conversion.
 
@@ -325,7 +325,6 @@ Providing a `toPlainText` method is strongly recommended for void elements which
 
 - **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
 - **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data to support pasting outside of MindDrop.
-- **Extension uninstall**: When an extension which registers a block element type is uninstalled, the elements of that type are converted into `RichTextNode`s with the plain text set as their text value.
 
 ```ts
 toPlainText(element: RichTextInlineElement): string
@@ -346,13 +345,13 @@ toPlainText(element: RichTextInlineElement): string
 
 Void elements are elements which do not involve text (e.g. an 'image' element), or elements in wich the text is not directly a part of the editor (e.g. an 'equation' element in which the equation expression is edited in a popup field).
 
-Non-void elements must have a `children` field consisting of `RichTextNode`s and `RichTextInlineElement`s.
+Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
 
 ### allowConversion
 
 Whether the element can be converted to and from other element types. For example, converting a 'paragraph' element into a 'quote' element.
 
-When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (consiting of `RichTextNode`s and `RichTextInlineElement`s). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
+When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (set to a `RichTextFragment`). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
 
 All non-void elements must support conversion.
 
@@ -532,8 +531,8 @@ Callback used to deserialize an HTML element.
 ```ts
 deserializeHtmlElement(
   element: HTMLElement,
-  parent: HTMLElement,
-  children: (RichTextNode| RichTextInlineElement)[]
+  parent: HTMLElement | null,
+  children: RichTextFragment | RichTextBlockElement[] | null,
 ): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
 ```
 
@@ -558,7 +557,7 @@ deserializeHtmlElement(
     },
     {
       name: 'children',
-      type: '(RichTextNode| RichTextInlineElement)[] | null',
+      type: 'RichTextFragment | RichTextBlockElement[] | null',
       required: true,
       description: (
         <span>

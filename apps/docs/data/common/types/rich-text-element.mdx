@@ -1,5 +1,5 @@
 ---
-metaTitle: RichTextElement Interface
+metaTitle: RichTextElement
 metaDescription: An object used to define a rich text element.
 ---
 
@@ -29,6 +29,6 @@ Void elements are elements which either do not contain text (e.g. an image eleme
 
 ## Children
 
-The `children` property is an array consiting of `RichTextNode`s and/or `RichTextInlineElement`s which constitutes the actual text content of the element. Block level elements are not permitted in `children`.
+The `children` property is an array consiting of `RichTextNode`s and `RichTextInlineElement`s (known as a [RichTextFragment](/rich-text-fragment)) which constitutes the actual text content of the element. Block level elements are not permitted in `children`.
 
-All non-void elements must have a `children` property. If the element doesn't yet have text (e.g. an empty paragraph element), `children` must contain a single, empty (`text` set to an empty string), `RichTextNode`. Void elements should not have a `children` property.
+All non-void elements must have a `children` property. Void elements should not have a `children` property.

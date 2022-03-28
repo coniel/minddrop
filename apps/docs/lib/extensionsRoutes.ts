@@ -150,6 +150,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/rich-text-element',
       },
       {
+        title: 'RichTextFragment',
+        slug: 'docs/extensions/types/rich-text-fragment',
+      },
+      {
         title: 'RichTextDocument',
         slug: 'docs/extensions/types/rich-text-document',
       },

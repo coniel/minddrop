@@ -1,9 +1,9 @@
-import { RichTextNode } from './RichTextNode.types';
-import { CreateRichTextBlockElementData } from './RichTextBlockElement.types';
 import {
-  CreateRichTextInlineElementData,
-  RichTextInlineElement,
-} from './RichTextInlineElement.types';
+  CreateRichTextBlockElementData,
+  RichTextBlockElement,
+} from './RichTextBlockElement.types';
+import { CreateRichTextInlineElementData } from './RichTextInlineElement.types';
+import { RichTextFragment } from './RichTextFragment.types';
 
 /**
  * Function called to deserialize an HTML element.
@@ -25,7 +25,7 @@ export type HtmlDeserializer<
 > = (
   element: THtmlElement,
   parent: HTMLElement | null,
-  children: (RichTextNode | RichTextInlineElement)[] | null,
+  children: RichTextFragment | RichTextBlockElement[] | null,
 ) => TData | TData[] | null;
 
 /**

@@ -1,6 +1,5 @@
 import { ParentReference } from '@minddrop/core';
-import { RichTextNode } from './RichTextNode.types';
-import { RichTextInlineElement } from './RichTextInlineElement.types';
+import { RichTextFragment } from './RichTextFragment.types';
 
 export interface RichTextBlockElement {
   /**
@@ -23,7 +22,7 @@ export interface RichTextBlockElement {
    * An array of `RichText` nodes and inline `RichTextElement`s,
    * which make up the element's rich text content.
    */
-  children?: (RichTextNode | RichTextInlineElement)[];
+  children?: RichTextFragment;
 
   /**
    * The IDs of nested block level `RichTextElements`. Only present
@@ -54,7 +53,7 @@ export interface CreateRichTextBlockElementData {
   /**
    * The rich text content of the element.
    */
-  children?: (RichTextNode | RichTextInlineElement)[];
+  children?: RichTextFragment;
 
   /**
    * The IDs of nested block level `RichTextElements`.

@@ -83,7 +83,7 @@ The configuration object for registering new inline level element types. See bel
 Inline rich text element components are just simple React components. However, there are two required props which need to be applied correctly in order for the element to function:
 
 - `attributes`: contains HTML attributes used internally by the editor, must be spread onto the root HTML element.
-- `children`: renders the child `RichTextNode`s and `RichTextInlineElement`s. Must be rendered within the component, **even if the component does not have children**.
+- `children`: renders the `RichTextFragment` containing the text content. Must be rendered within the component, **even if the component does not have children**.
 
 Below is an example of a non-void (in which text can be edited) link element. It will render a link for which the text can be edited.
 
@@ -171,10 +171,10 @@ For example, imagine a link element which has a `url` property. The `create` met
 
 If the element makes use of files, a [FileReference](/docs/extensions/types/file-reference) must be created for each attached file using the [`Files.create`](/docs/extensions/api/files#create) method and the file reference IDs set as the element's `files` property.
 
-If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain the selected `RichTextNode`s and inline `RichTextElement`s in the selection. These will automatically be set as the element's `children` field.
+If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). These will automatically be set as the element's `children` field.
 
 ```ts
-create<TData extends CreateRichTextInlineElementData>(core: Core, fragment?: (RichTextNode| RichTextElement)[]): TData
+create<TData extends CreateRichTextInlineElementData>(core: Core, fragment?: RichTextFragment): TData
 ```
 
 <ArgsTable
@@ -182,7 +182,7 @@ create<TData extends CreateRichTextInlineElementData>(core: Core, fragment?: (Ri
   data={[
     {
       name: 'fragment',
-      type: '(RichTextNode| RichTextElement)[]',
+      type: 'RichTextFragment',
       description: 'The text fragment selected in the editor.',
     },
   ]}
@@ -202,7 +202,7 @@ In addition to the data below, you should include any custom data used by your e
     },
     {
       name: 'children',
-      type: '(RichTextNode| RichTextElement)[]',
+      type: 'RichTextFragment',
       description: 'The rich text content of the element.',
     },
     {
@@ -226,7 +226,7 @@ Providing a `toPlainText` method is strongly recommended for void elements which
 
 - **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
 - **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data.
-- **Extension uninstall**: When an extension which registers an inline element type is uninstalled, the elements of that type are converted into `RichTextNode`s with the plain text set as their text value.
+- **Unregister**: When an inline rich text element type is unregistered (e.g. because the extension was uninstalled), the elements of that type are converted into `RichTextNode`s with the plain text set as their text value.
 
 ```ts
 toPlainText(element: RichTextInlineElement): string
@@ -247,7 +247,7 @@ toPlainText(element: RichTextInlineElement): string
 
 Void elements are elements which do not involve text (e.g. an image element), or elements in wich the text is not edited as part of the editor text flow (e.g. an equation element in which the equation expression is edited in a popup field).
 
-Non-void elements must have a `children` field consisting of `RichTextNode`s and `RichTextInlineElement`s.
+Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
 
 ### shortcuts
 
@@ -327,8 +327,8 @@ Callback used to deserialize an HTML element.
 ```ts
 deserializeHtmlElement(
   element: HTMLElement,
-  parent: HTMLElement,
-  children: (RichTextNode| RichTextInlineElement)[]
+  parent: HTMLElement | null,
+  children: RichTextFragment | RichTextBlockElement[] | null,
 ): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
 ```
 
@@ -353,7 +353,7 @@ deserializeHtmlElement(
     },
     {
       name: 'children',
-      type: '(RichTextNode| RichTextInlineElement)[] | null',
+      type: 'RichTextFragment | RichTextBlockElement[] | null',
       required: true,
       description: (
         <span>
