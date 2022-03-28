@@ -142,8 +142,8 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/resource-connector',
       },
       {
-        title: 'RichText',
-        slug: '/docs/extensions/types/rich-text',
+        title: 'RichTextNode',
+        slug: '/docs/extensions/types/rich-text-node',
       },
       {
         title: 'RichTextDocument',

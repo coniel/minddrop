@@ -1,4 +1,4 @@
-import { RichText } from './RichText.types';
+import { RichTextNode } from './RichTextNode.types';
 import { CreateRichTextBlockElementData } from './RichTextBlockElement.types';
 import {
   CreateRichTextInlineElementData,
@@ -25,7 +25,7 @@ export type HtmlDeserializer<
 > = (
   element: THtmlElement,
   parent: HTMLElement | null,
-  children: (RichText | RichTextInlineElement)[] | null,
+  children: (RichTextNode | RichTextInlineElement)[] | null,
 ) => TData | TData[] | null;
 
 /**

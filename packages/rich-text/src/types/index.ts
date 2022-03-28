@@ -1,5 +1,5 @@
 export * from './HtmlDeserializer.types';
-export * from './RichText.types';
+export * from './RichTextNode.types';
 export * from './RichTextBlockElement.types';
 export * from './RichTextBlockElementConfig.types';
 export * from './RichTextDocument.types';

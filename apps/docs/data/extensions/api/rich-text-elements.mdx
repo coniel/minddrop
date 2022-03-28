@@ -136,11 +136,11 @@ In addition to the data below, you can include any custom data required by your 
     },
     {
       name: 'children',
-      type: '(RichText | InlineElementReference)[]',
+      type: '(RichTextNode| InlineElementReference)[]',
       description: (
         <span>
           The rich text content of the element. Can be a combination
-          of <Code>RichText</Code> nodes and{' '}
+          of <Code>RichTextNode</Code>s and{' '}
           <Code>InlineElementReference</Code>s. See the{' '}
           <a href="/docs/extensions/types/rich-text-element#richtext">
             RichTextElement
@@ -212,11 +212,11 @@ In addition to the data below, you can include any custom data required by your 
     },
     {
       name: 'children',
-      type: '(RichText | InlineElementReference)[]',
+      type: '(RichTextNode| InlineElementReference)[]',
       description: (
         <span>
           The rich text content of the element. Can be a combination
-          of <Code>RichText</Code> nodes and{' '}
+          of <Code>RichTextNode</Code>s and{' '}
           <Code>InlineElementReference</Code>s. See the{' '}
           <a href="/docs/extensions/types/rich-text-element#richtext">
             RichTextElement
@@ -589,7 +589,7 @@ In addition to the data below, the changes data may include custom data accordin
     },
     {
       name: 'children',
-      type: '(RichText | RichTextElement)[] | Delete',
+      type: '(RichTextNode| RichTextElement)[] | Delete',
       description: 'The rich text content of the element.',
     },
     {
