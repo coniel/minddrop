@@ -207,8 +207,8 @@ export const richTextElementConfigs = [
   inlineEquationElementConfig,
 ];
 
-// Rich text elements
-export const richTextElements = [
+// Block level rich text elements
+export const richTextBlockElements = [
   headingElement1,
   headingElement2,
   headingElement3,
@@ -217,8 +217,15 @@ export const richTextElements = [
   paragraphElement2,
   paragraphElement3,
   paragraphElement4,
-  linkElement1,
-  inlineEquationElement1,
+];
+
+// Inline level rich text elements
+export const richTextInlineElements = [linkElement1, inlineEquationElement1];
+
+// All rich text elements
+export const richTextElements = [
+  ...richTextBlockElements,
+  ...richTextInlineElements,
 ];
 
 // Rich text documents
@@ -227,4 +234,18 @@ export const richTextElementDocuments = [
   richTextDocument2,
   richTextDocument3,
   richTextDocument4,
+];
+
+// Block level rich text element IDs
+export const richTextBlockElementIds = richTextBlockElements.map(
+  (element) => element.id,
+);
+// Inline level rich text element IDs
+export const richTextInlineElementIds = richTextInlineElements.map(
+  (element) => element.id,
+);
+// All rich text element IDs
+export const richTextElementIds = [
+  ...richTextBlockElementIds,
+  ...richTextInlineElementIds,
 ];

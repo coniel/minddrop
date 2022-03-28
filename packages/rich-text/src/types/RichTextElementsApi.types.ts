@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import { RichTextElement, RichTextElementMap } from './RichTextElement.types';
+import { RichTextElementFilters } from './RichTextElementFilters.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
 export interface RichTextElementsApi {
@@ -54,9 +55,25 @@ export interface RichTextElementsApi {
    * Throws a RichTextElementNotFoundError if a requested element does not exist.
    *
    * @param elementId The ID(s) of the element to retrieve.
+   * @rturns The requested rich text element(s)
    */
   get<T extends RichTextElement = RichTextElement>(elementId: string): T;
   get<T extends RichTextElement = RichTextElement>(
     elementIds: string[],
+  ): RichTextElementMap<T>;
+
+  /**
+   * Filters rich text elements according to the provided filters.
+   *
+   * Provided elements must be of registered types, or a
+   * `RichTextElementTypeNotRegisteredError` will be thrown.
+   *
+   * @param elements The rich text elements to filter.
+   * @param filters The filtering options.
+   * @returns The filtered rich text elements.
+   */
+  filter<T extends RichTextElement = RichTextElement>(
+    elements: RichTextElementMap<T>,
+    filters: RichTextElementFilters,
   ): RichTextElementMap<T>;
 }

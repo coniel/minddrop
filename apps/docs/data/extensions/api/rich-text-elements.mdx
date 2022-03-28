@@ -86,6 +86,83 @@ Retrieves all rich text elements as a `RichTextElementMap`.
 RichTextElements.getAll<T extends RichTextElement>(): RichTextElementMap<T>
 ```
 
+### filter
+
+Filters rich text elements according to the provided filters.
+
+The provided elements must be of registered types, or a `RichTextElementTypeNotRegisteredError` will be thrown.
+
+```ts
+RichTextElements.filter<T extends RichTextElement>(
+  elements: RichTextElementMap<T>,
+  filters: RichTextElementFilters
+): RichTextElementMap<T>
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'elements',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The rich text elements to filter.',
+    },
+    {
+      name: 'filters',
+      type: 'RichTextElementFilters',
+      required: true,
+      description:
+        'Filtering options. See the table below for details.',
+    },
+  ]}
+/>
+
+#### RichTextElementFilters
+
+Options for filtering rich text elements.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'level',
+      type: "'block' | 'inline'",
+      description:
+        'Filters by the element level, returning only elements of the given level.',
+    },
+    {
+      name: 'type',
+      type: 'string[]',
+      description:
+        'Filter elements by type, returning only elements which match one of the given types.',
+    },
+    {
+      name: 'void',
+      type: 'boolean',
+      description: (
+        <span>
+          Filter elements based on whether they are void elements.
+          When <Code>true</Code>, returns only void elements. When{' '}
+          <Code>false</Code>, returns only non-void elements. If
+          omitted, returns both kinds of elements.
+        </span>
+      ),
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      description: (
+        <span>
+          Filters elements based on whether they are deleted. When{' '}
+          <Code>true</Code>, returns only deleted elements. When{' '}
+          <Code>false</Code>, returns only elements which are not
+          deleted. Omit to include both deleted and non-deleted
+          elements.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ### create
 
 Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the new rich text element.
