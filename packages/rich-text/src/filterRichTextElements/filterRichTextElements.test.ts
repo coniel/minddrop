@@ -9,6 +9,7 @@ import {
   linkElement1,
   inlineEquationElement1,
 } from '../test-utils';
+import { RichTextInlineElement } from '../types';
 import { filterRichTextElements } from './filterRichTextElements';
 
 describe('filterRichTextElements', () => {
@@ -79,7 +80,11 @@ describe('filterRichTextElements', () => {
       // Not deleted
       linkElement1,
       // Deleted
-      { ...inlineEquationElement1, deleted: true, deletedAt: new Date() },
+      {
+        ...inlineEquationElement1,
+        deleted: true,
+        deletedAt: new Date(),
+      } as RichTextInlineElement,
     ]);
 
     // Get deleted elements
