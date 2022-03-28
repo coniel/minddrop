@@ -1,4 +1,5 @@
 import { filterRichTextElements } from './filterRichTextElements';
+import { getAllRichTextElements } from './getAllRichTextElements';
 import { getRichTextElement } from './getRichTextElement';
 import { getRichTextElementConfig } from './getRichTextElementConfig';
 import { getRichTextElements } from './getRichTextElements';
@@ -14,5 +15,6 @@ export const RichTextElements: RichTextElementsApi = {
     Array.isArray(elementId)
       ? getRichTextElements(elementId)
       : getRichTextElement(elementId),
+  getAll: getAllRichTextElements,
   filter: filterRichTextElements,
 };

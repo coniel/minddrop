@@ -72,6 +72,18 @@ export interface RichTextElementsApi {
   ): RichTextElementMap<T>;
 
   /**
+   * Returns all rich text elements as a `{ [id]: RichTextElement }` map.
+   *
+   * Optionally, the returned elements can by filtered by passing in
+   * `RichTextElementFilters`.
+   *
+   * @param filters Optional filters by which to filter the returned elements.
+   */
+  getAll<T extends RichTextElement = RichTextElement>(
+    filters?: RichTextElementFilters,
+  ): RichTextElementMap<T>;
+
+  /**
    * Filters rich text elements according to the provided filters.
    *
    * Provided elements must be of registered types, or a

@@ -100,11 +100,31 @@ RichTextElements.get<T extends RichTextElement>(
 
 ### getAll
 
-Retrieves all rich text elements as a `RichTextElementMap`.
+Retrieves all rich text elements as a `{ [id]: RichTextElement }` map.
+
+Optionally, the returned elements can by filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
 
 ```ts
-RichTextElements.getAll<T extends RichTextElement>(): RichTextElementMap<T>
+RichTextElements.getAll<T extends RichTextElement>(filters?: RichTextElementFilters): RichTextElementMap<T>
 ```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'RichTextElementFilters',
+      description: (
+        <p>
+          When present, filters the returned elements according to the
+          provided filters. See the
+          <a href="#richtextelementfilters">
+            RichTextElementFilters
+          </a> section for filtering options.t by which to filter the returned
+        </p>
+      ),
+    },
+  ]}
+/>
 
 ### filter
 
