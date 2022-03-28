@@ -1,5 +1,4 @@
-import { RichTextBlockElement } from './RichTextBlockElement.types';
-import { RichTextInlineElement } from './RichTextInlineElement.types';
+import { RichTextElement } from './RichTextElement.types';
 
 export interface RichTextDocumentApi {
   /**
@@ -8,7 +7,5 @@ export interface RichTextDocumentApi {
    * @param document The rich text document.
    * @returns The plain text.
    */
-  toPlainText(
-    elements: (RichTextBlockElement | RichTextInlineElement)[],
-  ): string;
+  toPlainText(elements: RichTextElement[]): string;
 }

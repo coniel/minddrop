@@ -146,6 +146,10 @@ export const extensionsRoutes = [
         slug: '/docs/extensions/types/rich-text-node',
       },
       {
+        title: 'RichTextElement',
+        slug: 'docs/extensions/types/rich-text-element',
+      },
+      {
         title: 'RichTextDocument',
         slug: 'docs/extensions/types/rich-text-document',
       },

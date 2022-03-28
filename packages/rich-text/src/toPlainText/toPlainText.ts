@@ -1,6 +1,6 @@
 import { Node, Element } from 'slate';
 import { getRichTextElementConfig } from '../getRichTextElementConfig';
-import { RichTextBlockElement, RichTextInlineElement } from '../types';
+import { RichTextElement } from '../types';
 
 /**
  * Converts rich text elements into a plain text string.
@@ -8,9 +8,7 @@ import { RichTextBlockElement, RichTextInlineElement } from '../types';
  * @param document The rich text document.
  * @returns The plain text.
  */
-export function toPlainText(
-  elements: (RichTextBlockElement | RichTextInlineElement)[],
-): string {
+export function toPlainText(elements: RichTextElement[]): string {
   return elements
     .map((element) => {
       if (element.children) {

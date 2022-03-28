@@ -1,0 +1,34 @@
+---
+metaTitle: RichTextElement Interface
+metaDescription: An object used to define a rich text element.
+---
+
+# RichTextElement
+
+<Description>
+  An object used to define a rich text element.
+</Description>
+
+In rich text documents, elements such as paragraphs, images, links, etc. are defined using `RichTextElement` objects.
+
+## Level
+
+There are two 'levels' of rich text elements: `block` and `inline`. 'block' level elements are rendered as blocks (e.g. paragraphs). 'inline' level elements, are rendered inline with text (e.g. links).
+
+See the [RichTextBlockElement interface](rich-text-block-element) and [RichTextInlineElement interface](rich-text-inline-element) for details on each level of element.
+
+## Type
+
+Every rich text element has a 'type' property (e.g. 'paragraph' or 'link'). To create elements of a given type, the element type must first be registered using the [RichTextElements.register](/docs/extensions/api/rich-text-elements) method, which takes a rich text element type configuration object.
+
+See the [RichTextBlockElementConfig interface](rich-text-block-element-config) and [RichTextInlineElementConfig interface](rich-text-inline-element-config) for details on the configuration options for each level of element.
+
+## Void
+
+Void elements are elements which either do not contain text (e.g. an image element), or elements in which the text is not edited as part of the editor's text flow (e.g. edited in a popup).
+
+## Children
+
+The `children` property is an array consiting of `RichTextNode`s and/or `RichTextInlineElement`s which constitutes the actual text content of the element. Block level elements are not permitted in `children`.
+
+All non-void elements must have a `children` property. If the element doesn't yet have text (e.g. an empty paragraph element), `children` must contain a single, empty (`text` set to an empty string), `RichTextNode`. Void elements should not have a `children` property.

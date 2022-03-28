@@ -1,8 +1,7 @@
 import { RichTextDocument } from './RichTextDocument.types';
-import { RichTextBlockElement } from './RichTextBlockElement.types';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
-import { RichTextInlineElement } from './RichTextInlineElement.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
+import { RichTextElement } from './RichTextElement.types';
 
 export interface RichTextStore {
   /**
@@ -13,7 +12,7 @@ export interface RichTextStore {
   /**
    * A `{ [id]: RichTextElement }` map of rich text elements.
    */
-  elements: Record<string, RichTextBlockElement | RichTextInlineElement>;
+  elements: Record<string, RichTextElement>;
 
   /**
    * A { [type]: RichTextElementConfig } map of registered rich text elements.
@@ -49,16 +48,14 @@ export interface RichTextStore {
    *
    * @param elements The rich text elements to load.
    */
-  loadElements(
-    elements: (RichTextBlockElement | RichTextInlineElement)[],
-  ): void;
+  loadElements(elements: RichTextElement[]): void;
 
   /**
    * Sets a rich text element in the store.
    *
    * @param element The element to set.
    */
-  setElement(element: RichTextBlockElement | RichTextInlineElement): void;
+  setElement(element: RichTextElement): void;
 
   /**
    * Removes a rich text element from the store.
