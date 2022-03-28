@@ -19,6 +19,18 @@ export interface RichTextElementsApi {
   ): void;
 
   /**
+   * Unregisters a rich text element type and dispaches a
+   * `rich-text-elements:unregister` event.
+   *
+   * Throws a `RichTextElementTypeNotRegisteredError` if the
+   * rich text element type is not registered.
+   *
+   * @param core A MindDrop core instance.
+   * @param type The type of the rich text element to unregister.
+   */
+  unregister(core: Core, type: string): void;
+
+  /**
    * Returns an element type's configuration object.
    *
    * Throws a `RichTextElementTypeNotRegisteredError` if the element
