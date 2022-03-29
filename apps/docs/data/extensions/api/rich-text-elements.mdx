@@ -456,6 +456,39 @@ RichTextElements.addParents<
   ]}
 />
 
+### nest
+
+Nests rich text block elements into another rich text block element and dispatches a `rich-text-elements:nest` event. Returns the updated element.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `RichTextElementValidationError` if the element is not a block level element.
+- Throws a `RichTextElementValidationError` if any of the nested elements do not exist or are not block level elements.
+
+```ts
+RichTextElements.nest<
+  TElement extends RichTextBlockElement
+>(core: Core, elementId: string, nestElementIds: string[]): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element into which to nest the elements.',
+    },
+    {
+      name: 'nestElementIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the elements to nest.',
+    },
+  ]}
+/>
+
 ### removeParents
 
 Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.

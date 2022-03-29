@@ -118,10 +118,10 @@ export type AddParentsToRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Remove parents to rich text element event
-export type RemoveParentsToRichTextElementEvent =
+export type RemoveParentsFromRichTextElementEvent =
   'rich-test-elements:remove-parents';
 
-export type RemoveParentsToRichTextElementEventData = {
+export type RemoveParentsFromRichTextElementEventData = {
   /**
    * The updated element.
    */
@@ -133,7 +133,28 @@ export type RemoveParentsToRichTextElementEventData = {
   parents: ParentReference[];
 };
 
-export type RemoveParentsToRichTextElementEventCallback = EventListenerCallback<
+export type RemoveParentsFromRichTextElementEventCallback =
+  EventListenerCallback<
+    AddParentsToRichTextElementEvent,
+    AddParentsToRichTextElementEventData
+  >;
+
+// Nest rich text elements event
+export type NestRichTextElementEvent = 'rich-test-elements:nest';
+
+export type NestRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The IDs of the elements that were nested.
+   */
+  nestedElements: string[];
+};
+
+export type NestRichTextElementEventCallback = EventListenerCallback<
   AddParentsToRichTextElementEvent,
   AddParentsToRichTextElementEventData
 >;

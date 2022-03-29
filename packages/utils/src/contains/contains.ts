@@ -1,10 +1,3 @@
-type ComparisonItem =
-  | string
-  | number
-  | null
-  | boolean
-  | Record<any, string | number | null | boolean>;
-
 /**
  * Checks whether all items in an array are present
  * in another array. Supports items of type: string,
@@ -14,10 +7,7 @@ type ComparisonItem =
  * @param haystack The array against which to check.
  * @param needle The items to check for.
  */
-export function contains<TItem extends ComparisonItem = ComparisonItem>(
-  haystack: TItem[],
-  needle: TItem[],
-): boolean {
+export function contains(haystack: any[], needle: any[]): boolean {
   return needle.every((item) => {
     if (typeof item === 'object' && item !== null) {
       // If the item is an object, compare all of its properties

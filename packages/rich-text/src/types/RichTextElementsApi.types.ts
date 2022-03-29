@@ -1,4 +1,5 @@
 import { Core, ParentReference } from '@minddrop/core';
+import { RichTextBlockElement } from './RichTextBlockElement.types';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import {
   CreateRichTextElementData,
@@ -14,12 +15,14 @@ import {
   CreateRichTextElementEventCallback,
   DeleteRichTextElementEvent,
   DeleteRichTextElementEventCallback,
+  NestRichTextElementEvent,
+  NestRichTextElementEventCallback,
   PermanentlyDeleteRichTextElementEvent,
   PermanentlyDeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
-  RemoveParentsToRichTextElementEvent,
-  RemoveParentsToRichTextElementEventCallback,
+  RemoveParentsFromRichTextElementEvent,
+  RemoveParentsFromRichTextElementEventCallback,
   RestoreRichTextElementEvent,
   RestoreRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
@@ -262,6 +265,30 @@ export interface RichTextElementsApi {
     parents: ParentReference[],
   ): TElement;
 
+  /**
+   * Nests rich text block elements into another rich text
+   * block element and dispatches a `rich-text-elements:nest`
+   * event. Returns the updated element.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element
+   *   does not exist.
+   * - Throws a `RichTextElementValidationError` if the element
+   *   is not a block level element.
+   * - Throws a `RichTextElementValidationError` if any of the
+   *   nested elements do not exist or are not block level
+   *   elements.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element into which to nest elements.
+   * @param nestElementIds The IDs of the elements to nest.
+   * @returns The updated element.
+   */
+  nest<TElement extends RichTextBlockElement = RichTextBlockElement>(
+    core: Core,
+    elementId: string,
+    nestElementIds: string[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -325,8 +352,15 @@ export interface RichTextElementsApi {
   // Add 'rich-text-elements:remove-parents' event listener
   removeEventListener(
     core: Core,
-    type: RemoveParentsToRichTextElementEvent,
-    callback: RemoveParentsToRichTextElementEventCallback,
+    type: RemoveParentsFromRichTextElementEvent,
+    callback: RemoveParentsFromRichTextElementEventCallback,
+  ): void;
+
+  // Add 'rich-text-elements:nest' event listener
+  removeEventListener(
+    core: Core,
+    type: NestRichTextElementEvent,
+    callback: NestRichTextElementEventCallback,
   ): void;
 
   /* ***************************** */
@@ -392,7 +426,14 @@ export interface RichTextElementsApi {
   // Remove 'rich-text-elements:remove-parents' event listener
   removeEventListener(
     core: Core,
-    type: RemoveParentsToRichTextElementEvent,
-    callback: RemoveParentsToRichTextElementEventCallback,
+    type: RemoveParentsFromRichTextElementEvent,
+    callback: RemoveParentsFromRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:nest' event listener
+  removeEventListener(
+    core: Core,
+    type: NestRichTextElementEvent,
+    callback: NestRichTextElementEventCallback,
   ): void;
 }
