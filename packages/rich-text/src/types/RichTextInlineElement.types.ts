@@ -45,7 +45,7 @@ export interface RichTextInlineElement {
 
 export interface CreateRichTextInlineElementData {
   /**
-   * The element type identifier, e.g. 'paragraph'.
+   * The element type identifier, e.g. 'link'.
    */
   type: string;
 

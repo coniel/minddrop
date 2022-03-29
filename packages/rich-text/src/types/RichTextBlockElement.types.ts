@@ -51,6 +51,11 @@ export interface RichTextBlockElement {
 
 export interface CreateRichTextBlockElementData {
   /**
+   * The element type identifier, e.g. 'paragraph'.
+   */
+  type: string;
+
+  /**
    * The rich text content of the element.
    */
   children?: RichTextFragment;

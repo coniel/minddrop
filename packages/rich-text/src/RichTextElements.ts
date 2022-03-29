@@ -1,3 +1,4 @@
+import { createRichTextElement } from './createRichTextElement';
 import { filterRichTextElements } from './filterRichTextElements';
 import { getAllRichTextElements } from './getAllRichTextElements';
 import { getRichTextElement } from './getRichTextElement';
@@ -17,4 +18,9 @@ export const RichTextElements: RichTextElementsApi = {
       : getRichTextElement(elementId),
   getAll: getAllRichTextElements,
   filter: filterRichTextElements,
+  create: createRichTextElement,
+  addEventListener: (core, type, callback) =>
+    core.addEventListener(type, callback),
+  removeEventListener: (core, type, callback) =>
+    core.removeEventListener(type, callback),
 };

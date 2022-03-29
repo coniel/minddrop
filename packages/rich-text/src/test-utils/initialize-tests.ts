@@ -1,4 +1,5 @@
 import { initializeCore } from '@minddrop/core';
+import { Files, FILES_TEST_DATA } from '@minddrop/files';
 import { registerRichTextElementType } from '../registerRichTextElementType';
 import { useRichTextStore } from '../useRichTextStore';
 import {
@@ -7,6 +8,8 @@ import {
   richTextElements,
 } from './rich-text.data';
 
+const { imageFileRef } = FILES_TEST_DATA;
+
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export function setup() {
@@ -14,6 +17,9 @@ export function setup() {
   richTextElementConfigs.forEach((config) => {
     registerRichTextElementType(core, config);
   });
+
+  // Load file references
+  Files.load(core, [imageFileRef]);
 
   // Load rich text elements into the store
   useRichTextStore.getState().loadElements(richTextElements);

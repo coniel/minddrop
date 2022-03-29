@@ -205,13 +205,21 @@ Options for filtering rich text elements.
 
 ### create
 
-Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the new rich text element.
+Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the newly created element.
+
+To create an element, the element type must first be registered using the [`RichTextElements.register`](#register) method.
+
+If the element has attached files, the IDs of the file references must be listed as the `files` property. The element will automatically be added as a parent on the attached files.
+
+If the element has nested elements (only supported on 'block' level elements), the element will automatically be added as a parent on those elements.
+
+Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered. Throws a `RichTextElementValidationError` if the element contains invalid data or is missing required fields.
 
 ```ts
 RichTextElements.create<
-  D extends CreateRichTextElementData,
-  T extends RichTextElement,
->(core: Core, data: D): T;
+  TData extends CreateRichTextElementData,
+  TElement extends RichTextElement,
+>(core: Core, data: TData): TElement;
 ```
 
 <ArgsTable
@@ -231,6 +239,8 @@ RichTextElements.create<
 
 In addition to the data below, you can include any custom data required by your rich text element.
 
+Note that the `parents` property cannot be set directly. The element must be added as a child to its parents after being created (e.g. using [`RichTextDocument.addElements`](rich-text-documents#addelements) or [`RichTextElements.nest`](#nest))
+
 <InterfaceTable
   data={[
     {
@@ -240,40 +250,38 @@ In addition to the data below, you can include any custom data required by your 
       description: 'The rich text element type indentifier.',
     },
     {
-      name: 'parent',
-      type: 'RichTextElementParentReference',
-      required: true,
-      description: (
-        <span>
-          An object containing the parent type (either 'document' or
-          'element') and the parent ID. See the{' '}
-          <a href="/docs/extensions/types/rich-text-element#richtextelementparentreference">
-            RichTextElementParentReference
-          </a>{' '}
-          interface for details.
-        </span>
-      ),
-    },
-    {
       name: 'children',
       type: 'RichTextFragment',
       description: (
         <span>
-          The rich text content of the element.  See the{' '}
+          The rich text content of the element. See the{' '}
           <a href="/docs/extensions/types/rich-text-fragment">
             RichTextFragment
           </a>{' '}
-          page for details.
+          page for details. If omitted on non-void elements, an empty{' '}
+          <Code>RichTextNode</Code> will be set as the only child. Not
+          supported on void nodes.
         </span>
       ),
     },
     {
+      name: 'files',
+      type: 'string[]',
+      description:
+        'The IDs of the file reference for all attached files.',
+    },
+    {
       name: 'nestedElements',
       type: 'string[]',
-      description: <span>The IDs of nested <Code>RichTextElement</Code>s.</span>
-    }
-
-]} />
+      description: (
+        <span>
+          The IDs of nested <Code>RichTextBlockElement</Code>s. Only
+          supported for 'block' level elements.
+        </span>
+      ),
+    },
+  ]}
+/>
 
 ### update
 
@@ -314,40 +322,22 @@ In addition to the data below, you can include any custom data required by your 
 <InterfaceTable
   data={[
     {
-      name: 'parent',
-      type: 'RichTextElementParentReference',
-      description: (
-        <span>
-          An object containing the parent type (either 'document' or
-          'element') and the parent ID. See the{' '}
-          <a href="/docs/extensions/types/rich-text-element#richtextelementparentreference">
-            RichTextElementParentReference
-          </a>{' '}
-          interface for details.
-        </span>
-      ),
-    },
-    {
       name: 'children',
-      type: 'RichTextFragment',
+      type: 'RichTextFragment | ArrayUnion | ArrayRemove',
       description: (
         <span>
-          The rich text content of the element.  See the{' '}
+          The rich text content of the element. See the{' '}
           <a href="/docs/extensions/types/rich-text-fragment">
             RichTextFragment
           </a>{' '}
-          page for details.
+          page for details. Only supported on non-void elements.
         </span>
       ),
     },
-    {
-      name: 'nestedElements',
-      type: 'string[] | ArrayUnion | ArrayRemove',
-      description: <span>The IDs of nested <Code>RichTextElement</Code>s.</span>
-    }
-
-]}
+  ]}
 />
+
+Note that setting other default fields (such as `parents`) using the `update` method is not allowed. Use the appropriate methods (such as `RichTextElements.addParents`) instead.
 
 ### delete
 
