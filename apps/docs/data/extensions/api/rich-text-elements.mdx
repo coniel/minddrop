@@ -213,7 +213,8 @@ If the element has attached files, the IDs of the file references must be listed
 
 If the element has nested elements (only supported on 'block' level elements), the element will automatically be added as a parent on those elements.
 
-Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered. Throws a `RichTextElementValidationError` if the element contains invalid data or is missing required fields.
+- Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered.
+- Throws a `RichTextElementValidationError` if the element contains invalid data or is missing required fields.
 
 ```ts
 RichTextElements.create<
@@ -287,13 +288,15 @@ Note that the `parents` property cannot be set directly. The element must be add
 
 Updates a rich text element and dispaches a `rich-text-element:update` event. Returns the updated rich text element.
 
-Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `RichTextElementTypeNotRegistered` if the element type is not registered
+- Throws a `RichTextElementValidationError` if the updated element is invalid.
 
 ```ts
 RichTextElements.update<
-  D extends UpdateRichTextElementData,
-  T extends RichTextElement,
->(core: Core, elementId: string, data: D): T
+  TData extends CreateRichTextElementData,
+  TElement extends RichTextElement,
+>(core: Core, elementId: string, data: TData): TElement
 ```
 
 <ArgsTable

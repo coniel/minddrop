@@ -4,6 +4,7 @@ import {
   CreateRichTextElementData,
   RichTextElement,
   RichTextElementMap,
+  UpdateRichTextElementData,
 } from './RichTextElement.types';
 import { RichTextElementFilters } from './RichTextElementFilters.types';
 import {
@@ -13,6 +14,8 @@ import {
   RegisterRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
   UnregisterRichTextElementEventCallback,
+  UpdateRichTextElementEvent,
+  UpdateRichTextElementEventCallback,
 } from './RichTextEvents.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
@@ -136,6 +139,31 @@ export interface RichTextElementsApi {
     data: TData,
   ): TElement;
 
+  /**
+   * Updates a rich text element and dispatches a
+   * `rich-text-elemets:update` event. Returns the updated element.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element does
+   *   not exist.
+   * - Throws a `RichTextElementTypeNotRegistered` if the element
+   *   type is not registered
+   * - Throws a `RichTextElementValidationError` if the updated
+   *   element is invalid.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to update.
+   * @param data The changes to apply to the element.
+   * @returns The updated element.
+   */
+  update<
+    TData extends UpdateRichTextElementData = UpdateRichTextElementData,
+    TElement extends RichTextElement = RichTextElement,
+  >(
+    core: Core,
+    elementId: string,
+    data: TData,
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -161,6 +189,13 @@ export interface RichTextElementsApi {
     callback: CreateRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:update' event listener
+  addEventListener(
+    core: Core,
+    type: UpdateRichTextElementEvent,
+    callback: UpdateRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -184,5 +219,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: CreateRichTextElementEvent,
     callback: CreateRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:update' event listener
+  removeEventListener(
+    core: Core,
+    type: UpdateRichTextElementEvent,
+    callback: UpdateRichTextElementEventCallback,
   ): void;
 }

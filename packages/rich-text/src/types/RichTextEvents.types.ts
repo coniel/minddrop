@@ -1,6 +1,9 @@
 import { EventListenerCallback } from '@minddrop/core';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
-import { RichTextElement } from './RichTextElement.types';
+import {
+  RichTextElement,
+  RichTextElementChanges,
+} from './RichTextElement.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
 // Register rich text element type event
@@ -35,4 +38,31 @@ export type CreateRichTextElementEventData = RichTextElement;
 export type CreateRichTextElementEventCallback = EventListenerCallback<
   CreateRichTextElementEvent,
   CreateRichTextElementEventData
+>;
+
+// Update rich text element event
+export type UpdateRichTextElementEvent = 'rich-test-elements:update';
+
+export interface UpdateRichTextElementEventData<
+  TElement extends RichTextElement = RichTextElement,
+> {
+  /**
+   * The element data before it was updated.
+   */
+  before: TElement;
+
+  /**
+   * The element data after it was updated.
+   */
+  after: TElement;
+
+  /**
+   * The changes applied to the element data.
+   */
+  changes: RichTextElementChanges;
+}
+
+export type UpdateRichTextElementEventCallback = EventListenerCallback<
+  UpdateRichTextElementEvent,
+  UpdateRichTextElementEventData
 >;
