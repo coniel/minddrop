@@ -1,4 +1,5 @@
 import { createRichTextElement } from '../createRichTextElement';
+import { deleteRichTextElement } from '../deleteRichTextElement';
 import { filterRichTextElements } from '../filterRichTextElements';
 import { getAllRichTextElements } from '../getAllRichTextElements';
 import { getRichTextElement } from '../getRichTextElement';
@@ -29,6 +30,7 @@ export const RichTextElements: RichTextElementsApi = {
     // Update the element
     return updateRichTextElement(core, elementId, data);
   },
+  delete: deleteRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

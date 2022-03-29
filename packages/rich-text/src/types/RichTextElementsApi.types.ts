@@ -10,6 +10,8 @@ import { RichTextElementFilters } from './RichTextElementFilters.types';
 import {
   CreateRichTextElementEvent,
   CreateRichTextElementEventCallback,
+  DeleteRichTextElementEvent,
+  DeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
@@ -164,6 +166,21 @@ export interface RichTextElementsApi {
     data: TData,
   ): TElement;
 
+  /**
+   * Deletes a rich text element and dispatches a
+   * `rich-text-elements:delete` event.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to delete.
+   */
+  delete<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -196,6 +213,13 @@ export interface RichTextElementsApi {
     callback: UpdateRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:delete' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteRichTextElementEvent,
+    callback: DeleteRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -226,5 +250,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: UpdateRichTextElementEvent,
     callback: UpdateRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:delete' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteRichTextElementEvent,
+    callback: DeleteRichTextElementEventCallback,
   ): void;
 }

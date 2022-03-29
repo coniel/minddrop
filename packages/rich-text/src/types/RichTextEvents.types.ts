@@ -64,3 +64,13 @@ export type UpdateRichTextElementEventCallback = EventListenerCallback<
   UpdateRichTextElementEvent,
   UpdateRichTextElementEventData
 >;
+
+// Delete rich text element event
+export type DeleteRichTextElementEvent = 'rich-test-elements:delete';
+
+export type DeleteRichTextElementEventData = RichTextElement;
+
+export type DeleteRichTextElementEventCallback = EventListenerCallback<
+  DeleteRichTextElementEvent,
+  DeleteRichTextElementEventData
+>;
