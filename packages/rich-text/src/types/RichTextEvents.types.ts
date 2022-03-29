@@ -43,18 +43,16 @@ export type CreateRichTextElementEventCallback = EventListenerCallback<
 // Update rich text element event
 export type UpdateRichTextElementEvent = 'rich-test-elements:update';
 
-export interface UpdateRichTextElementEventData<
-  TElement extends RichTextElement = RichTextElement,
-> {
+export interface UpdateRichTextElementEventData {
   /**
    * The element data before it was updated.
    */
-  before: TElement;
+  before: RichTextElement;
 
   /**
    * The element data after it was updated.
    */
-  after: TElement;
+  after: RichTextElement;
 
   /**
    * The changes applied to the element data.
