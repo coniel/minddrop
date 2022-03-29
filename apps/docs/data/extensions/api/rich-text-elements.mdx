@@ -456,6 +456,37 @@ RichTextElements.addParents<
   ]}
 />
 
+### removeParents
+
+Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+
+```ts
+RichTextElements.removeParents<
+  TElement extends RichTextElement
+>(core: Core, elementId: string, parents: ParentReference[]): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element from which to remove the parents.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references to remove.',
+    },
+  ]}
+/>
+
 ### addFiles
 
 Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.

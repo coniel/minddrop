@@ -116,3 +116,24 @@ export type AddParentsToRichTextElementEventCallback = EventListenerCallback<
   AddParentsToRichTextElementEvent,
   AddParentsToRichTextElementEventData
 >;
+
+// Remove parents to rich text element event
+export type RemoveParentsToRichTextElementEvent =
+  'rich-test-elements:remove-parents';
+
+export type RemoveParentsToRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The parent references removed from the element.
+   */
+  parents: ParentReference[];
+};
+
+export type RemoveParentsToRichTextElementEventCallback = EventListenerCallback<
+  AddParentsToRichTextElementEvent,
+  AddParentsToRichTextElementEventData
+>;

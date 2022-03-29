@@ -88,7 +88,11 @@ export interface RichTextInlineElementChanges {
    * References of the element's parents (typically a
    * `RichTextBlockElement` and a `RichTextDocument`).
    */
-  parents?: ParentReference[] | FieldValueArrayUnion | FieldValueArrayFilter;
+  parents?:
+    | ParentReference[]
+    | FieldValueArrayUnion
+    | FieldValueArrayRemove
+    | FieldValueArrayFilter;
 
   /**
    * An array of `RichText` nodes and inline `RichTextElement`s,

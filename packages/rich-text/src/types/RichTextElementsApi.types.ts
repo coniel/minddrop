@@ -18,6 +18,8 @@ import {
   PermanentlyDeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
+  RemoveParentsToRichTextElementEvent,
+  RemoveParentsToRichTextElementEventCallback,
   RestoreRichTextElementEvent,
   RestoreRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
@@ -242,6 +244,24 @@ export interface RichTextElementsApi {
     parents: ParentReference[],
   ): TElement;
 
+  /**
+   * Removes parent references from a rich text element and dispatches
+   * a `rich-text-elements:remove-parents` event.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the rich text element
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element from which to remove the parents.
+   * @param parents The parent references to remove from the element.
+   * @returns The updated element.
+   */
+  removeParents<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+    parents: ParentReference[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -302,6 +322,13 @@ export interface RichTextElementsApi {
     callback: AddParentsToRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:remove-parents' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsToRichTextElementEvent,
+    callback: RemoveParentsToRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -360,5 +387,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: AddParentsToRichTextElementEvent,
     callback: AddParentsToRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:remove-parents' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsToRichTextElementEvent,
+    callback: RemoveParentsToRichTextElementEventCallback,
   ): void;
 }
