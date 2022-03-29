@@ -11,6 +11,7 @@ describe('contains', () => {
     expect(contains(['a', 'b'], ['b', 'c'])).toBe(false);
     expect(contains([1, 2], [2, 3])).toBe(false);
     expect(contains(['a', 'b'], [null])).toBe(false);
+    // @ts-ignore
     expect(contains(['a', 'b'], [false])).toBe(false);
   });
 

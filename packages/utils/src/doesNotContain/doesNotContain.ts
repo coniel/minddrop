@@ -17,9 +17,9 @@ type ComparisonItem =
  * @param needles The array of items to check.
  * @returns `true` if the array does not contain any of the items.
  */
-export function doesNotContain(
-  haystack: ComparisonItem[],
-  needles: ComparisonItem[],
+export function doesNotContain<TItem extends ComparisonItem = ComparisonItem>(
+  haystack: TItem[],
+  needles: TItem[],
 ): boolean {
   // Check if the haystack contains any of the needles
   const doesContain = needles.some((item) => {

@@ -14,9 +14,9 @@ type ComparisonItem =
  * @param haystack The array against which to check.
  * @param needle The items to check for.
  */
-export function contains(
-  haystack: ComparisonItem[],
-  needle: ComparisonItem[],
+export function contains<TItem extends ComparisonItem = ComparisonItem>(
+  haystack: TItem[],
+  needle: TItem[],
 ): boolean {
   return needle.every((item) => {
     if (typeof item === 'object' && item !== null) {
