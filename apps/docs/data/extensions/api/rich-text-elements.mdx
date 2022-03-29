@@ -416,6 +416,46 @@ RichTextElement.deletePermanently<
   ]}
 />
 
+### addParents
+
+Adds parent references to a rich text element and dispaches a `rich-text-elements:add-parents` event. Returns the updated rich text element.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `ParentReferenceValidationError` if any of the parent references are invalid.
+
+```ts
+RichTextElements.addParents<
+  TElement extends RichTextElement
+>(core: Core, elementId: string, parents: ParentReference[]): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element to which to add the parents.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The references of the parents to add. See the{' '}
+          <a href="/docs/extensions/types/parent-reference">
+            ParentReference
+          </a>{' '}
+          page for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
 ### addFiles
 
 Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.

@@ -1,4 +1,4 @@
-import { EventListenerCallback } from '@minddrop/core';
+import { EventListenerCallback, ParentReference } from '@minddrop/core';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import {
   RichTextElement,
@@ -85,7 +85,7 @@ export type RestoreRichTextElementEventCallback = EventListenerCallback<
   RestoreRichTextElementEventData
 >;
 
-// PermanentlyDelete rich text element event
+// Permanently delete rich text element event
 export type PermanentlyDeleteRichTextElementEvent =
   'rich-test-elements:delete-permanently';
 
@@ -96,3 +96,23 @@ export type PermanentlyDeleteRichTextElementEventCallback =
     PermanentlyDeleteRichTextElementEvent,
     PermanentlyDeleteRichTextElementEventData
   >;
+
+// Add parents to rich text element event
+export type AddParentsToRichTextElementEvent = 'rich-test-elements:add-parents';
+
+export type AddParentsToRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The parent references added to the element.
+   */
+  parents: ParentReference[];
+};
+
+export type AddParentsToRichTextElementEventCallback = EventListenerCallback<
+  AddParentsToRichTextElementEvent,
+  AddParentsToRichTextElementEventData
+>;

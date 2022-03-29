@@ -1,3 +1,4 @@
+import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
 import { createRichTextElement } from '../createRichTextElement';
 import { deleteRichTextElement } from '../deleteRichTextElement';
 import { filterRichTextElements } from '../filterRichTextElements';
@@ -35,6 +36,7 @@ export const RichTextElements: RichTextElementsApi = {
   delete: deleteRichTextElement,
   restore: restoreRichTextElement,
   deletePermanently: permanentlyDeleteRichTextElement,
+  addParents: addParentsToRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

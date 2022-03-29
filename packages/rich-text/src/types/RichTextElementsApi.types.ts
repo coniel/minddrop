@@ -1,4 +1,4 @@
-import { Core } from '@minddrop/core';
+import { Core, ParentReference } from '@minddrop/core';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import {
   CreateRichTextElementData,
@@ -8,6 +8,8 @@ import {
 } from './RichTextElement.types';
 import { RichTextElementFilters } from './RichTextElementFilters.types';
 import {
+  AddParentsToRichTextElementEvent,
+  AddParentsToRichTextElementEventCallback,
   CreateRichTextElementEvent,
   CreateRichTextElementEventCallback,
   DeleteRichTextElementEvent,
@@ -219,6 +221,27 @@ export interface RichTextElementsApi {
     elementId: string,
   ): TElement;
 
+  /**
+   * Adds parent references to a rich text element and dispatches a
+   * `rich-text-elements:add-parents` event. Returns the updated
+   * element.
+   *
+   * - Throws a `RichTextElementNotFound` error if the element does
+   *   not exist.
+   * - Throws a `ParentReferenceValidationError` if any of the parent
+   *   references are invalid.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to which to add the parents.
+   * @param parents The references of the parents to add.
+   * @returns The updated rich text element.
+   */
+  addParents<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+    parents: ParentReference[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -272,6 +295,13 @@ export interface RichTextElementsApi {
     callback: PermanentlyDeleteRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:add-parents' event listener
+  addEventListener(
+    core: Core,
+    type: AddParentsToRichTextElementEvent,
+    callback: AddParentsToRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -323,5 +353,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: PermanentlyDeleteRichTextElementEvent,
     callback: PermanentlyDeleteRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:add-parents' event listener
+  removeEventListener(
+    core: Core,
+    type: AddParentsToRichTextElementEvent,
+    callback: AddParentsToRichTextElementEventCallback,
   ): void;
 }
