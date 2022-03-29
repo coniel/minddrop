@@ -1,0 +1,134 @@
+---
+metaTitle: ParentReferences API Interface
+metaDescription: Utilities for working with parent references.
+---
+
+# ParentReferences
+
+<Description>
+  Utilities for working with parent references.
+</Description>
+
+Parent references are used to keep track of a resource's parents, such as which topics a drop belongs to. See the [ParentReference](/docs/extensions/types/parent-reference) interface for more details.
+
+### get
+
+Returns all parent references of the given type from the provided parent references.
+
+```ts
+ParentReferences.get(type: string, references: ParentReference[]): ParentReference[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description:
+        'The type of parent for which to get the references.',
+    },
+    {
+      name: 'references',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references from which to get.',
+    },
+  ]}
+/>
+
+### getIds
+
+Returns the IDs of all the parents of the given type from the provided parent references.
+
+```ts
+ParentReferences.getIds(type: string, references: ParentReference[]): string[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The type of parent for which to get the IDs.',
+    },
+    {
+      name: 'references',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references from which to get the IDs.',
+    },
+  ]}
+/>
+
+### contains
+
+Checks whether the provided parent references contain one or more references of the given type.
+
+```ts
+ParentReferences.contains(type: string, references: ParentReference[]): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The type of parent to check for.',
+    },
+    {
+      name: 'references',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references in which to check.',
+    },
+  ]}
+/>
+
+### generate
+
+Generates a parent reference given a parent type and ID.
+
+```ts
+ParentReferences.generate(type: string, id: string): ParentReference
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The parent type.',
+    },
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The parent ID.',
+    },
+  ]}
+/>
+
+### validate
+
+Validates parents references, checking that they have valid `type` and `id` properties, and no other properties.
+
+Throws a `ParentReferenceValidationError` if the validation fails.
+
+```ts
+ParentReferences.validate(references: ParentReference[]): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'references',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references to validate.',
+    },
+  ]}
+/>
