@@ -22,6 +22,16 @@ describe('applyFieldValueArrayRemove', () => {
     expect(result.field).toEqual([0, 1, 3, 4]);
   });
 
+  it('supports basic objects', () => {
+    const object = { field: [{ id: 'id-1' }, { id: 'id-2' }] };
+    const changes = {
+      field: FieldValue.arrayRemove({ id: 'id-1' }),
+    };
+    const result = applyFieldValueArrayRemove(object, changes);
+
+    expect(result.field).toEqual([{ id: 'id-2' }]);
+  });
+
   it('does nothing if field does not exist', () => {
     const object: { field?: number[] } = {};
     const changes = { field: FieldValue.arrayRemove([1, 2]) };
