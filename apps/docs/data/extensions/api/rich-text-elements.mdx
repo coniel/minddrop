@@ -368,10 +368,14 @@ RichTextElements.delete<TElement extends Element>(core: Core, elementId: string)
 
 ### restore
 
-Restores a deleted rich text element and dispatches a `rich-text-elements:restore` event and an `rich-text-elements:update` event. Returns the restored element.
+Restores a deleted rich text element and dispatches a `rich-text-elements:restore` event. Returns the restored element.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
 
 ```ts
-RichTextElements.restore(core: Core, elementId: string): RichTextElement
+RichTextElements.restore<
+  TElement extends RichTextElement,
+>(core: Core, elementId: string): TElement
 ```
 
 <ArgsTable

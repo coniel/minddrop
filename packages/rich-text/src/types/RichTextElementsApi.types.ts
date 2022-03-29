@@ -14,6 +14,8 @@ import {
   DeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
+  RestoreRichTextElementEvent,
+  RestoreRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
   UnregisterRichTextElementEventCallback,
   UpdateRichTextElementEvent,
@@ -167,6 +169,23 @@ export interface RichTextElementsApi {
   ): TElement;
 
   /**
+   * Restores a rich text element and dispatches a
+   * `rich-text-elements:restore` event. Returns the restored
+   * element.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to restore.
+   * @returns The restored element.
+   */
+  restore<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+  ): TElement;
+
+  /**
    * Deletes a rich text element and dispatches a
    * `rich-text-elements:delete` event.
    *
@@ -220,6 +239,13 @@ export interface RichTextElementsApi {
     callback: DeleteRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:restore' event listener
+  addEventListener(
+    core: Core,
+    type: RestoreRichTextElementEvent,
+    callback: RestoreRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -257,5 +283,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: DeleteRichTextElementEvent,
     callback: DeleteRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:restore' event listener
+  removeEventListener(
+    core: Core,
+    type: RestoreRichTextElementEvent,
+    callback: RestoreRichTextElementEventCallback,
   ): void;
 }

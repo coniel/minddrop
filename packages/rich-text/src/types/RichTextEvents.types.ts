@@ -74,3 +74,13 @@ export type DeleteRichTextElementEventCallback = EventListenerCallback<
   DeleteRichTextElementEvent,
   DeleteRichTextElementEventData
 >;
+
+// Restore rich text element event
+export type RestoreRichTextElementEvent = 'rich-test-elements:restore';
+
+export type RestoreRichTextElementEventData = RichTextElement;
+
+export type RestoreRichTextElementEventCallback = EventListenerCallback<
+  RestoreRichTextElementEvent,
+  RestoreRichTextElementEventData
+>;

@@ -6,6 +6,7 @@ import { getRichTextElement } from '../getRichTextElement';
 import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { getRichTextElements } from '../getRichTextElements';
 import { registerRichTextElementType } from '../registerRichTextElementType';
+import { restoreRichTextElement } from '../restoreRichTextElement';
 import { RichTextElementsApi } from '../types';
 import { unregisterRichTextElementType } from '../unregisterRichTextElementType';
 import { updateRichTextElement } from '../updateRichTextElement';
@@ -31,6 +32,7 @@ export const RichTextElements: RichTextElementsApi = {
     return updateRichTextElement(core, elementId, data);
   },
   delete: deleteRichTextElement,
+  restore: restoreRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>
