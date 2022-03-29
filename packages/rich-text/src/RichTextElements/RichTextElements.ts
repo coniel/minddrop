@@ -5,6 +5,7 @@ import { getAllRichTextElements } from '../getAllRichTextElements';
 import { getRichTextElement } from '../getRichTextElement';
 import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { getRichTextElements } from '../getRichTextElements';
+import { permanentlyDeleteRichTextElement } from '../permanentlyDeleteRichTextElement';
 import { registerRichTextElementType } from '../registerRichTextElementType';
 import { restoreRichTextElement } from '../restoreRichTextElement';
 import { RichTextElementsApi } from '../types';
@@ -33,6 +34,7 @@ export const RichTextElements: RichTextElementsApi = {
   },
   delete: deleteRichTextElement,
   restore: restoreRichTextElement,
+  deletePermanently: permanentlyDeleteRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

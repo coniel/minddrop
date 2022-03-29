@@ -394,10 +394,14 @@ RichTextElements.restore<
 
 Permanently deletes a rich text element and dispatches a `rich-text-elements:delete-permanently` event. Returns the deleted element.
 
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+
 Permanently deleted rich text elements cannot be restored.
 
 ```ts
-RichTextElement.deletePermanently(core: Core, elementId: string): RichTextElement
+RichTextElement.deletePermanently<
+  TElement extends RichTextElement,
+>(core: Core, elementId: string): TElement
 ```
 
 <ArgsTable

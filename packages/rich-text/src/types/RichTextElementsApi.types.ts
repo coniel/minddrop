@@ -12,6 +12,8 @@ import {
   CreateRichTextElementEventCallback,
   DeleteRichTextElementEvent,
   DeleteRichTextElementEventCallback,
+  PermanentlyDeleteRichTextElementEvent,
+  PermanentlyDeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
   RestoreRichTextElementEvent,
@@ -200,6 +202,23 @@ export interface RichTextElementsApi {
     elementId: string,
   ): TElement;
 
+  /**
+   * Permanently deletes a rich text element and dispatches a
+   * `rich-text-elements:delete-permanently` event. Returns the
+   * permanently deleted element.
+   *
+   * - Trhows a `RichTextElementNotFoundError` if the element
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to permanently delete.
+   * @returns The permanently deleted element.
+   */
+  deletePermanently<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -246,6 +265,13 @@ export interface RichTextElementsApi {
     callback: RestoreRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:delete-permanently' event listener
+  addEventListener(
+    core: Core,
+    type: PermanentlyDeleteRichTextElementEvent,
+    callback: PermanentlyDeleteRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -290,5 +316,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: RestoreRichTextElementEvent,
     callback: RestoreRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:delete-permanently' event listener
+  removeEventListener(
+    core: Core,
+    type: PermanentlyDeleteRichTextElementEvent,
+    callback: PermanentlyDeleteRichTextElementEventCallback,
   ): void;
 }

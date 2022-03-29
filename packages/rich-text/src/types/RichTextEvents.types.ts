@@ -84,3 +84,15 @@ export type RestoreRichTextElementEventCallback = EventListenerCallback<
   RestoreRichTextElementEvent,
   RestoreRichTextElementEventData
 >;
+
+// PermanentlyDelete rich text element event
+export type PermanentlyDeleteRichTextElementEvent =
+  'rich-test-elements:delete-permanently';
+
+export type PermanentlyDeleteRichTextElementEventData = RichTextElement;
+
+export type PermanentlyDeleteRichTextElementEventCallback =
+  EventListenerCallback<
+    PermanentlyDeleteRichTextElementEvent,
+    PermanentlyDeleteRichTextElementEventData
+  >;
