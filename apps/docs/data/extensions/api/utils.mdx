@@ -243,3 +243,49 @@ const changes = {
 
 const updated = createUpdate(resource, changes);
 ```
+
+## removeObjectsFromArray
+
+Filters the given objects out of the provided array by shalowly comapring all of their properties. Does not support objects with objects as properties.
+
+```ts
+removeObjectsFromArray<TObject extends Object>(objects: TObject[], objectsToRemove[]): TObject[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'objects',
+      type: 'Object[]',
+      required: true,
+      description:
+        'The array of objects from which to remove objects.',
+    },
+    {
+      name: 'objectsToRemove',
+      type: 'Object[]',
+      required: true,
+      description: 'The objects to remove from the array.',
+    },
+  ]}
+/>
+
+#### Example
+
+```ts
+// The objects
+let parents = [
+  { type: 'topic', id: 'topic-id-1' },
+  { type: 'topic', id: 'topic-id-2' },
+  { type: 'topic', id: 'topic-id-3' },
+  { type: 'topic', id: 'topic-id-4' },
+];
+
+// Remove 'topic-id-1' and 'topic-id-3' objects
+parents = removeObjectsFromArray(parents, [
+  { type: 'topic', id: 'topic-id-1' },
+  { type: 'topic', id: 'topic-id-3' },
+]);
+
+// Result: [{ type: 'topic', id: 'topic-id-2' }, { type: 'topic', id: 'topic-id-4' }]
+```

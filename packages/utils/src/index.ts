@@ -11,3 +11,4 @@ export * from './doesNotContain';
 export * from './FieldValue';
 export * from './mapById';
 export * from './setDataTransferData';
+export * from './removeObjectsFromArray';
