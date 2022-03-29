@@ -49,7 +49,7 @@ const update = {
 
 ### arrayRemove
 
-Removes items from an array.
+Removes items from an array. Supports removing primitives (strings, numbers, etc.) and shallow objects (objects without nested objects).
 
 ```ts
 FieldValue.arrayRemove<T>(values: T[]): FieldValueArrayRemove
@@ -288,4 +288,41 @@ parents = removeObjectsFromArray(parents, [
 ]);
 
 // Result: [{ type: 'topic', id: 'topic-id-2' }, { type: 'topic', id: 'topic-id-4' }]
+```
+
+## arrayContainsObject
+
+Checks whether an array contains the given object. For an object to be considered a part of the array, an object in the array must contain the same keys with the same values. Only performs a shallow comparison of objects.
+
+```ts
+arrayContainsObject(array: unknown[], object: Object): boolean
+```
+
+#### Example
+
+```ts
+// The objects
+const parents = [
+  { type: 'topic', id: 'topic-id-1' },
+  { type: 'topic', id: 'topic-id-2' },
+  { type: 'topic', id: 'topic-id-3' },
+  { type: 'topic', id: 'topic-id-4' },
+];
+
+// true
+const contains = removeObjectsFromArray(parents, {
+  type: 'topic',
+  id: 'topic-id-3',
+});
+
+// false
+const contains = removeObjectsFromArray(parents, {
+  type: 'topic',
+  id: 'topic-id-5',
+});
+
+// false
+const contains = removeObjectsFromArray(parents, {
+  id: 'topic-id-3',
+});
 ```
