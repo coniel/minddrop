@@ -132,8 +132,8 @@ export interface RichTextElementsApi {
    * @returns The newly created rich text element.
    */
   create<
-    TData extends CreateRichTextElementData = CreateRichTextElementData,
     TElement extends RichTextElement = RichTextElement,
+    TData extends CreateRichTextElementData = CreateRichTextElementData,
   >(
     core: Core,
     data: TData,
@@ -156,8 +156,8 @@ export interface RichTextElementsApi {
    * @returns The updated element.
    */
   update<
-    TData extends UpdateRichTextElementData = UpdateRichTextElementData,
     TElement extends RichTextElement = RichTextElement,
+    TData extends UpdateRichTextElementData = UpdateRichTextElementData,
   >(
     core: Core,
     elementId: string,

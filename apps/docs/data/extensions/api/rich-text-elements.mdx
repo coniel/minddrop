@@ -218,8 +218,8 @@ If the element has nested elements (only supported on 'block' level elements), t
 
 ```ts
 RichTextElements.create<
-  TData extends CreateRichTextElementData,
   TElement extends RichTextElement,
+  TData extends CreateRichTextElementData,
 >(core: Core, data: TData): TElement;
 ```
 
@@ -294,8 +294,8 @@ Updates a rich text element and dispaches a `rich-text-element:update` event. Re
 
 ```ts
 RichTextElements.update<
-  TData extends CreateRichTextElementData,
   TElement extends RichTextElement,
+  TData extends CreateRichTextElementData,
 >(core: Core, elementId: string, data: TData): TElement
 ```
 
@@ -346,10 +346,12 @@ Note that setting other default fields (such as `parents`) using the `update` me
 
 Deletes a rich text element and dispaches a `rich-text-element:delete` event. Returns the deleted element.
 
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+
 Deleted rich text elements can be restored using the `RichTextElements.restore` method.
 
 ```ts
-RichTextElements.delete(core: Core, elementId: string): RichTextElement
+RichTextElements.delete<TElement extends Element>(core: Core, elementId: string): TElement
 ```
 
 <ArgsTable

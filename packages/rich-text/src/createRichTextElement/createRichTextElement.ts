@@ -26,8 +26,8 @@ import { validateRichTextElement } from '../validateRichTextElement';
  * @returns The newly created rich text element.
  */
 export function createRichTextElement<
-  TData extends CreateRichTextElementData = CreateRichTextElementData,
   TElement extends RichTextElement = RichTextElement,
+  TData extends CreateRichTextElementData = CreateRichTextElementData,
 >(core: Core, data: TData): TElement {
   // Get the element's config object
   const config = getRichTextElementConfig(data.type);

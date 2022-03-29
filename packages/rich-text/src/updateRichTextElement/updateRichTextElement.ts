@@ -22,8 +22,8 @@ import { validateRichTextElement } from '../validateRichTextElement';
  * @returns The updated element.
  */
 export function updateRichTextElement<
-  TData extends RichTextElementChanges = RichTextElementChanges,
   TElement extends RichTextElement = RichTextElement,
+  TData extends RichTextElementChanges = RichTextElementChanges,
 >(core: Core, elementId: string, data: TData): TElement {
   // Get the element
   const element = getRichTextElement<TElement>(elementId);
