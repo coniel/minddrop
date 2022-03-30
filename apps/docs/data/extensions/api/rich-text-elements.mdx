@@ -456,9 +456,42 @@ RichTextElements.addParents<
   ]}
 />
 
+### removeParents
+
+Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+
+```ts
+RichTextElements.removeParents<
+  TElement extends RichTextElement
+>(core: Core, elementId: string, parents: ParentReference[]): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element from which to remove the parents.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description: 'The parent references to remove.',
+    },
+  ]}
+/>
+
 ### nest
 
 Nests rich text block elements into another rich text block element and dispatches a `rich-text-elements:nest` event. Returns the updated element.
+
+The elements is added as a parent on the nested elements.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 - Throws a `RichTextElementValidationError` if the element is not a block level element.
@@ -493,6 +526,8 @@ RichTextElements.nest<
 
 Unnests rich text block elements from another rich text block element and dispatches a `rich-text-elements:unnest` event. Returns the updated element.
 
+The elements is removed as a parent from the nested elements.
+
 - Throws a `RichTextElementNotFoundError` if the element or any of the nested elements do not exist.
 
 ```ts
@@ -520,42 +555,11 @@ RichTextElements.unnest<
   ]}
 />
 
-### removeParents
-
-Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.
-
-- Throws a `RichTextElementNotFoundError` if the element does not exist.
-
-```ts
-RichTextElements.removeParents<
-  TElement extends RichTextElement
->(core: Core, elementId: string, parents: ParentReference[]): TElement
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'elementId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the rich text element from which to remove the parents.',
-    },
-    {
-      name: 'parents',
-      type: 'ParentReference[]',
-      required: true,
-      description: 'The parent references to remove.',
-    },
-  ]}
-/>
-
 ### addFiles
 
-Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event. Returns the updated rich text element.
 
-The file references of the added files will be automatically updated to include the rich text element's ID in their `attachedTo` value.
+The element is added as a parent on the file references.
 
 ```ts
 RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
@@ -582,9 +586,12 @@ RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): Ric
 
 ### removeFiles
 
-Removes files from a rich text element and dispatches a `rich-text-elements:remove-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+Removes files from a rich text element and dispatches a `rich-text-elements:remove-files`. Returns the updated rich text element.
 
-The file references of the removed files will be automatically updated to remove the rich text element's ID from their `attachedTo` value, and deleted if the element was their only attachment.
+The element is removed as a parent from the file references.
+
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
 
 ```ts
 RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
@@ -611,11 +618,12 @@ RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): 
 
 ### replaceFiles
 
-Replaces files in a rich text element (removing current files and adding given files) and dispatches a `rich-text-elements:replace-files` event as well as a `rich-text-elements:update` event. Returns the updated rich text element.
+Replaces files in a rich text element (removing current files and adding given files) and dispatches a `rich-text-elements:replace-files` event. Returns the updated rich text element.
 
-The file references of the added files will be automatically updated to include the rich text element's ID in their `attachedTo` value.
+The element will be added as a parent onto the added files, and removed as a parent from the removed files.
 
-The file references of the removed files will be automatically updated to remove the rich text element's ID from their `attachedTo` value, and deleted if the element was their only attachment.
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
 
 ```ts
 RichTextElements.replaceFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
@@ -750,20 +758,44 @@ See below the table for more details on the data passed by rich text element rel
         'Dispatched when a rich text element is permanently deleted.',
     },
     {
+      name: 'rich-text-elements:add-parents',
+      data: 'AddParentsToRichTextElementEventData',
+      description:
+        'Dispatched when parents are added to a rich text element.',
+    },
+    {
+      name: 'rich-text-elements:remove-parents',
+      data: 'RemoveParentsFromRichTextElementEventData',
+      description:
+        'Dispatched when parents are removed from a rich text element.',
+    },
+    {
+      name: 'rich-text-elements:nest',
+      data: 'NestRichTextElementEventData',
+      description:
+        'Dispatched when rich text elements are nested into another element.',
+    },
+    {
+      name: 'rich-text-elements:unnest',
+      data: 'UnnestRichTextElementEventData',
+      description:
+        'Dispatched when rich text elements are unnested from another element.',
+    },
+    {
       name: 'rich-text-elements:add-files',
-      data: 'AddRichTextElementFilesEventData',
+      data: 'AddFilesToRichTextElementEventData',
       description:
         'Dispatched when files are added to a rich text element.',
     },
     {
       name: 'rich-text-elements:remove-files',
-      data: 'RemoveRichTextElementFilesEventData',
+      data: 'RemoveFilesFromRichTextElementEventData',
       description:
         'Dispatched when files are removed from a rich text element.',
     },
     {
-      name: 'rich-text-elements:replaced-files',
-      data: 'ReplaceRichTextElementFilesEventData',
+      name: 'rich-text-elements:replace-files',
+      data: 'ReplaceFilesInRichTextElementEventData',
       description:
         "Dispatched when a rich text element's files are replaced with new ones.",
     },
@@ -883,7 +915,90 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### AddRichTextElementFilesEventData
+#### AddParentsToRichTextElementEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The rich text element to which the parents were added.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description:
+        'The parent references of the parents added to the element.',
+    },
+  ]}
+/>
+
+#### RemoveParentsFromRichTextElementEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description:
+        'The rich text element from which the parents were removed.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description:
+        'The parent references of the parents removed from the element.',
+    },
+  ]}
+/>
+
+#### NestRichTextElementEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextBlockElement',
+      required: true,
+      description:
+        'The rich text block element into which the elements were nested.',
+    },
+    {
+      name: 'nestedElements',
+      type: 'RichTextBlockElementMap',
+      required: true,
+      description: 'The rich text block elements which were nested.',
+    },
+  ]}
+/>
+
+#### RemoveParentsFromRichTextElementEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextBlockElement',
+      required: true,
+      description:
+        'The rich text block element from which the elements were unnested.',
+    },
+    {
+      name: 'unnestedElements',
+      type: 'RichTextBlockElementMap',
+      required: true,
+      description:
+        'The rich text block elements which were unnested.',
+    },
+  ]}
+/>
+
+#### AddFilesToRichTextElementEventData
 
 <InterfaceTable
   data={[
@@ -904,7 +1019,7 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### RemoveRichTextElementFilesEventData
+#### RemoveFilesFromRichTextElementEventData
 
 <InterfaceTable
   data={[
@@ -925,7 +1040,7 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### ReplaceRichTextElementFilesEventData
+#### ReplaceFilesInRichTextElementEventData
 
 <InterfaceTable
   data={[
