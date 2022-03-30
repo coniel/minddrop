@@ -489,6 +489,37 @@ RichTextElements.nest<
   ]}
 />
 
+### unnest
+
+Unnests rich text block elements from another rich text block element and dispatches a `rich-text-elements:unnest` event. Returns the updated element.
+
+- Throws a `RichTextElementNotFoundError` if the element or any of the nested elements do not exist.
+
+```ts
+RichTextElements.unnest<
+  TElement extends RichTextBlockElement
+>(core: Core, elementId: string, unnestElementIds: string[]): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'elementId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text element from which to unnest the elements.',
+    },
+    {
+      name: 'unnestElementIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the elements to unnest.',
+    },
+  ]}
+/>
+
 ### removeParents
 
 Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.

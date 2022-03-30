@@ -25,6 +25,8 @@ import {
   RemoveParentsFromRichTextElementEventCallback,
   RestoreRichTextElementEvent,
   RestoreRichTextElementEventCallback,
+  UnnestRichTextElementEvent,
+  UnnestRichTextElementEventCallback,
   UnregisterRichTextElementEvent,
   UnregisterRichTextElementEventCallback,
   UpdateRichTextElementEvent,
@@ -289,6 +291,25 @@ export interface RichTextElementsApi {
     nestElementIds: string[],
   ): TElement;
 
+  /**
+   * Unnests rich text block elements from another rich text
+   * block element and dispatches a `rich-text-elements:unnest`
+   * event. Returns the updated element.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element
+   *   or any of the nested elements do not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element from which to unnest elements.
+   * @param unnestElementIds The IDs of the elements to unnest.
+   * @returns The updated element.
+   */
+  unnest<TElement extends RichTextBlockElement = RichTextBlockElement>(
+    core: Core,
+    elementId: string,
+    unnestElementIds: string[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -363,6 +384,13 @@ export interface RichTextElementsApi {
     callback: NestRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:unnest' event listener
+  removeEventListener(
+    core: Core,
+    type: UnnestRichTextElementEvent,
+    callback: UnnestRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -435,5 +463,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: NestRichTextElementEvent,
     callback: NestRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:unnest' event listener
+  removeEventListener(
+    core: Core,
+    type: UnnestRichTextElementEvent,
+    callback: UnnestRichTextElementEventCallback,
   ): void;
 }

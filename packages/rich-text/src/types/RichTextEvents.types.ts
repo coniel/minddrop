@@ -135,8 +135,8 @@ export type RemoveParentsFromRichTextElementEventData = {
 
 export type RemoveParentsFromRichTextElementEventCallback =
   EventListenerCallback<
-    AddParentsToRichTextElementEvent,
-    AddParentsToRichTextElementEventData
+    RemoveParentsFromRichTextElementEvent,
+    RemoveParentsFromRichTextElementEventData
   >;
 
 // Nest rich text elements event
@@ -155,6 +155,26 @@ export type NestRichTextElementEventData = {
 };
 
 export type NestRichTextElementEventCallback = EventListenerCallback<
-  AddParentsToRichTextElementEvent,
-  AddParentsToRichTextElementEventData
+  NestRichTextElementEvent,
+  NestRichTextElementEventData
+>;
+
+// Unnest rich text elements event
+export type UnnestRichTextElementEvent = 'rich-test-elements:unnest';
+
+export type UnnestRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The IDs of the elements that were unnested.
+   */
+  unnestedElements: string[];
+};
+
+export type UnnestRichTextElementEventCallback = EventListenerCallback<
+  UnnestRichTextElementEvent,
+  UnnestRichTextElementEventData
 >;
