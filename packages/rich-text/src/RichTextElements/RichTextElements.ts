@@ -10,6 +10,7 @@ import { getRichTextElements } from '../getRichTextElements';
 import { nestRichTextElements } from '../nestRichTextElements';
 import { permanentlyDeleteRichTextElement } from '../permanentlyDeleteRichTextElement';
 import { registerRichTextElementType } from '../registerRichTextElementType';
+import { removeFilesFromRichTextElement } from '../removeFilesFromRichTextElement';
 import { removeParentsFromRichTextElement } from '../removeParentsFromRichTextElement';
 import { restoreRichTextElement } from '../restoreRichTextElement';
 import { RichTextElementsApi } from '../types';
@@ -45,6 +46,7 @@ export const RichTextElements: RichTextElementsApi = {
   nest: nestRichTextElements,
   unnest: unnestRichTextElements,
   addFiles: addFilesToRichTextElement,
+  removeFiles: removeFilesFromRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

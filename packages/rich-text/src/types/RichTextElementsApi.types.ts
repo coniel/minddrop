@@ -23,6 +23,8 @@ import {
   PermanentlyDeleteRichTextElementEventCallback,
   RegisterRichTextElementEvent,
   RegisterRichTextElementEventCallback,
+  RemoveFilesFromRichTextElementEvent,
+  RemoveFilesFromRichTextElementEventCallback,
   RemoveParentsFromRichTextElementEvent,
   RemoveParentsFromRichTextElementEventCallback,
   RestoreRichTextElementEvent,
@@ -331,6 +333,27 @@ export interface RichTextElementsApi {
     fileIds: string[],
   ): TElement;
 
+  /**
+   * Removes files from an element and dispatches a
+   * `rich-text-elements:remove-files` event. Returns the updated
+   * element.
+   *
+   * Removes the element as a parent from the file references.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element does not exist.
+   * - Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element from which to remove the files.
+   * @param fileIds The IDs of the files to remove.
+   * @returns The updated element.
+   */
+  removeFiles<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+    fileIds: string[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -419,6 +442,13 @@ export interface RichTextElementsApi {
     callback: AddFilesToRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:remove-files' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveFilesFromRichTextElementEvent,
+    callback: RemoveFilesFromRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -505,5 +535,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: AddFilesToRichTextElementEvent,
     callback: AddFilesToRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:remove-files' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsFromRichTextElementEvent,
+    callback: RemoveParentsFromRichTextElementEventCallback,
   ): void;
 }

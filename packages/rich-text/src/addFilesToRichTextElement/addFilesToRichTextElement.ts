@@ -8,6 +8,8 @@ import { updateRichTextElement } from '../updateRichTextElement';
  * Adds fils to a rich text element and dispatches a
  * `rich-text-element:add-files` event. Returns the updated element.
  *
+ * Adds the element as a parent on the files references.
+ *
  * - Throws a `RichTextElementNotFoundError` if the element does not exist.
  * - Throws a `FileReferenceNotFoundError` if any of the file references
  *   do not exist.

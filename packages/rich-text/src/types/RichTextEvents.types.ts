@@ -1,4 +1,5 @@
 import { EventListenerCallback, ParentReference } from '@minddrop/core';
+import { FileReference } from '@minddrop/files';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import {
   RichTextElement,
@@ -117,7 +118,7 @@ export type AddParentsToRichTextElementEventCallback = EventListenerCallback<
   AddParentsToRichTextElementEventData
 >;
 
-// Remove parents to rich text element event
+// Remove parents from rich text element event
 export type RemoveParentsFromRichTextElementEvent =
   'rich-test-elements:remove-parents';
 
@@ -189,12 +190,33 @@ export type AddFilesToRichTextElementEventData = {
   element: RichTextElement;
 
   /**
-   * The parent references added to the element.
+   * The file references added to the element.
    */
-  files: ParentReference[];
+  files: FileReference[];
 };
 
 export type AddFilesToRichTextElementEventCallback = EventListenerCallback<
   AddFilesToRichTextElementEvent,
   AddFilesToRichTextElementEventData
+>;
+
+// Remove files from rich text element event
+export type RemoveFilesFromRichTextElementEvent =
+  'rich-test-elements:remove-files';
+
+export type RemoveFilesFromRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The file references removed from the element.
+   */
+  files: FileReference[];
+};
+
+export type RemoveFilesFromRichTextElementEventCallback = EventListenerCallback<
+  RemoveFilesFromRichTextElementEvent,
+  RemoveFilesFromRichTextElementEventData
 >;
