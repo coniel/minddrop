@@ -559,6 +559,9 @@ RichTextElements.unnest<
 
 Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event. Returns the updated rich text element.
 
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
+
 The element is added as a parent on the file references.
 
 ```ts

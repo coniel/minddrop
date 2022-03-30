@@ -1,3 +1,4 @@
+import { addFilesToRichTextElement } from '../addFilesToRichTextElement';
 import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
 import { createRichTextElement } from '../createRichTextElement';
 import { deleteRichTextElement } from '../deleteRichTextElement';
@@ -43,6 +44,7 @@ export const RichTextElements: RichTextElementsApi = {
   removeParents: removeParentsFromRichTextElement,
   nest: nestRichTextElements,
   unnest: unnestRichTextElements,
+  addFiles: addFilesToRichTextElement,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

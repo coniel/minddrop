@@ -9,6 +9,8 @@ import {
 } from './RichTextElement.types';
 import { RichTextElementFilters } from './RichTextElementFilters.types';
 import {
+  AddFilesToRichTextElementEvent,
+  AddFilesToRichTextElementEventCallback,
   AddParentsToRichTextElementEvent,
   AddParentsToRichTextElementEventCallback,
   CreateRichTextElementEvent,
@@ -310,6 +312,25 @@ export interface RichTextElementsApi {
     unnestElementIds: string[],
   ): TElement;
 
+  /**
+   * Adds fils to a rich text element and dispatches a
+   * `rich-text-element:add-files` event. Returns the updated element.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element does not exist.
+   * - Throws a `FileReferenceNotFoundError` if any of the file references
+   *   do not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element to which to add the files.
+   * @param fileIds The IDs of the file references of the files to add.
+   * @returns The updated element.
+   */
+  addFiles<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+    fileIds: string[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -391,6 +412,13 @@ export interface RichTextElementsApi {
     callback: UnnestRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:add-files' event listener
+  addEventListener(
+    core: Core,
+    type: AddFilesToRichTextElementEvent,
+    callback: AddFilesToRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -470,5 +498,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: UnnestRichTextElementEvent,
     callback: UnnestRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:add-files' event listener
+  removeEventListener(
+    core: Core,
+    type: AddFilesToRichTextElementEvent,
+    callback: AddFilesToRichTextElementEventCallback,
   ): void;
 }

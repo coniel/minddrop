@@ -178,3 +178,23 @@ export type UnnestRichTextElementEventCallback = EventListenerCallback<
   UnnestRichTextElementEvent,
   UnnestRichTextElementEventData
 >;
+
+// Add files to rich text element event
+export type AddFilesToRichTextElementEvent = 'rich-test-elements:add-files';
+
+export type AddFilesToRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The parent references added to the element.
+   */
+  files: ParentReference[];
+};
+
+export type AddFilesToRichTextElementEventCallback = EventListenerCallback<
+  AddFilesToRichTextElementEvent,
+  AddFilesToRichTextElementEventData
+>;
