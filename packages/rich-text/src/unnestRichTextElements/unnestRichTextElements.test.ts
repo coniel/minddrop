@@ -12,6 +12,7 @@ import { getRichTextElement } from '../getRichTextElement';
 import { RichTextBlockElement } from '../types';
 import { arrayContainsObject } from '@minddrop/utils';
 import { ParentReferences } from '@minddrop/core';
+import { getRichTextElements } from '../getRichTextElements';
 
 describe('unnestRichTextElements', () => {
   beforeEach(() => {
@@ -78,15 +79,23 @@ describe('unnestRichTextElements', () => {
     core.addEventListener('rich-text-elements:unnest', (payload) => {
       // Get the updated element
       const element = getRichTextElement(headingElement1.id);
+      // Get the updated unnested elements
+      const unnestedElements = getRichTextElements([
+        paragraphElement1.id,
+        paragraphElement2.id,
+      ]);
 
       // Event payload should contain the element
       expect(payload.data.element).toEqual(element);
-      // Event payload should contain the unnested element IDs
-      expect(payload.data.unnestedElements).toEqual([paragraphElement1.id]);
+      // Event payload should contain the unnested elements as a map
+      expect(payload.data.unnestedElements).toEqual(unnestedElements);
       done();
     });
 
-    // Unnest an element
-    unnestRichTextElements(core, headingElement1.id, [paragraphElement1.id]);
+    // Unnest elements
+    unnestRichTextElements(core, headingElement1.id, [
+      paragraphElement1.id,
+      paragraphElement2.id,
+    ]);
   });
 });

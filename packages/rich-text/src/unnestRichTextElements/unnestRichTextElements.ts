@@ -1,5 +1,6 @@
 import { Core, ParentReferences } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
+import { getRichTextElements } from '../getRichTextElements';
 import { removeParentsFromRichTextElement } from '../removeParentsFromRichTextElement';
 import { RichTextBlockElement } from '../types';
 import { updateRichTextElement } from '../updateRichTextElement';
@@ -32,10 +33,13 @@ export function unnestRichTextElements<
     ]);
   });
 
+  // Get the updated unnested elements
+  const unnestedElements = getRichTextElements(unnestElementIds);
+
   // Dispatch a 'rich-text-elements:unnest'
   core.dispatch('rich-text-elements:unnest', {
     element,
-    unnestedElements: unnestElementIds,
+    unnestedElements,
   });
 
   // Return the updated element

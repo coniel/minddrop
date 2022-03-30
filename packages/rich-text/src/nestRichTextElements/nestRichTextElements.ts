@@ -1,6 +1,7 @@
 import { Core, ParentReferences } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
 import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
+import { getRichTextElements } from '../getRichTextElements';
 import { RichTextBlockElement } from '../types';
 import { updateRichTextElement } from '../updateRichTextElement';
 
@@ -41,10 +42,13 @@ export function nestRichTextElements<
     addParentsToRichTextElement(core, id, [parentReference]);
   });
 
+  // Get the nested elements
+  const nestedElements = getRichTextElements(nestElementIds);
+
   // Dispatch a 'rich-text-elements:nest' event
   core.dispatch('rich-text-elements:nest', {
     element,
-    nestedElements: nestElementIds,
+    nestedElements,
   });
 
   // Return the updated element
