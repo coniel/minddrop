@@ -1,3 +1,4 @@
+import { act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
 import { Files, FILES_TEST_DATA } from '@minddrop/files';
 import { registerRichTextElementType } from '../registerRichTextElementType';
@@ -13,22 +14,26 @@ const { fileReferences } = FILES_TEST_DATA;
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export function setup() {
-  // Register test rich text element types
-  richTextElementConfigs.forEach((config) => {
-    registerRichTextElementType(core, config);
+  act(() => {
+    // Register test rich text element types
+    richTextElementConfigs.forEach((config) => {
+      registerRichTextElementType(core, config);
+    });
+
+    // Load file references
+    Files.load(core, fileReferences);
+
+    // Load rich text elements into the store
+    useRichTextStore.getState().loadElements(richTextElements);
+
+    // Load rich text documents into the store
+    useRichTextStore.getState().loadDocuments(richTextDocuments);
   });
-
-  // Load file references
-  Files.load(core, fileReferences);
-
-  // Load rich text elements into the store
-  useRichTextStore.getState().loadElements(richTextElements);
-
-  // Load rich text documents into the store
-  useRichTextStore.getState().loadDocuments(richTextDocuments);
 }
 
 export function cleanup() {
-  // Clear the rich text store
-  useRichTextStore.getState().clear();
+  act(() => {
+    // Clear the rich text store
+    useRichTextStore.getState().clear();
+  });
 }

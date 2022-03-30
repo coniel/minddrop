@@ -15,7 +15,7 @@ Hooks provide access to rich text elements and related data from inside React co
 
 ### useRichTextElement
 
-Returns a rich text element by ID or `null` if it does not exist.
+Returns a rich text element by ID or `null` if the element does not exist.
 
 ```ts
 useRichTextElement<T extends RichTextElement>(id: string): T | null;
@@ -34,7 +34,7 @@ useRichTextElement<T extends RichTextElement>(id: string): T | null;
 
 ### useRichTextElements
 
-Returns a `{ [id]: RichTextElement }` map of rich text elements by ID.
+Returns a `{ [id]: RichTextElement }` map of rich text elements by ID. If a requested element does not exist, it is ommited from the map.
 
 ```ts
 useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextElementMap<T>;
