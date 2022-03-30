@@ -1,6 +1,7 @@
 import { useRichTextStore } from './useRichTextStore';
 import { mapById } from '@minddrop/utils';
 import {
+  headingElementConfig,
   paragraphElement1,
   paragraphElement2,
   paragraphElementConfig,
@@ -55,6 +56,19 @@ describe('useRichTextStore', () => {
         useRichTextStore.getState().documents[richTextDocument1.id],
       ).toBeUndefined();
     });
+
+    it('clears documents', () => {
+      // Load documents
+      useRichTextStore
+        .getState()
+        .loadDocuments([richTextDocument1, richTextDocument2]);
+
+      // Clear documents
+      useRichTextStore.getState().clearDocuments();
+
+      // Documents should be cleared
+      expect(useRichTextStore.getState().documents).toEqual({});
+    });
   });
 
   describe('elements', () => {
@@ -98,6 +112,19 @@ describe('useRichTextStore', () => {
         useRichTextStore.getState().elements[paragraphElement1.id],
       ).toBeUndefined();
     });
+
+    it('clears elements', () => {
+      // Load elements
+      useRichTextStore
+        .getState()
+        .loadElements([paragraphElement1, paragraphElement2]);
+
+      // Clear elements
+      useRichTextStore.getState().clearElements();
+
+      // Elements should be cleared
+      expect(useRichTextStore.getState().elements).toEqual({});
+    });
   });
 
   describe('element configs', () => {
@@ -124,6 +151,18 @@ describe('useRichTextStore', () => {
       expect(
         useRichTextStore.getState().elementConfigs[paragraphElementConfig.type],
       ).toBeUndefined();
+    });
+
+    it('clears element configs', () => {
+      // Set a couple of element configs
+      useRichTextStore.getState().setElementConfig(headingElementConfig);
+      useRichTextStore.getState().setElementConfig(paragraphElementConfig);
+
+      // Clear element configs
+      useRichTextStore.getState().clearElementConfigs();
+
+      // Element configs should be cleared
+      expect(useRichTextStore.getState().elementConfigs).toEqual({});
     });
   });
 

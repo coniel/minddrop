@@ -32,6 +32,8 @@ export const useRichTextStore = createStore<RichTextStore>((set) => ({
       return { documents };
     }),
 
+  clearDocuments: () => set({ documents: {} }),
+
   loadElements: (elements) =>
     set((state) => ({
       elements: {
@@ -61,6 +63,8 @@ export const useRichTextStore = createStore<RichTextStore>((set) => ({
       return { elements };
     }),
 
+  clearElements: () => set({ elements: {} }),
+
   setElementConfig: (config) =>
     set((state) => ({
       elementConfigs: {
@@ -75,6 +79,8 @@ export const useRichTextStore = createStore<RichTextStore>((set) => ({
       delete elementConfigs[type];
       return { elementConfigs };
     }),
+
+  clearElementConfigs: () => set({ elementConfigs: {} }),
 
   clear: () => set(() => ({ documents: {}, elements: {}, elementConfigs: {} })),
 }));

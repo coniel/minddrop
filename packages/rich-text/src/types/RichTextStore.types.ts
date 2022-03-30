@@ -44,6 +44,11 @@ export interface RichTextStore {
   removeDocument(id: string): void;
 
   /**
+   * Clears all rich text documents from the store.
+   */
+  clearDocuments(): void;
+
+  /**
    * Loads rich text elements into the store.
    *
    * @param elements The rich text elements to load.
@@ -65,6 +70,11 @@ export interface RichTextStore {
   removeElement(id: string): void;
 
   /**
+   * Clears all rich text elements from the store.
+   */
+  clearElements(): void;
+
+  /**
    * Adds a new element config to the store.
    *
    * @param config The config to add.
@@ -79,6 +89,11 @@ export interface RichTextStore {
    * @param type The type of the config to remove.
    */
   removeElementConfig(type: string): void;
+
+  /**
+   * Clears all rich text element configs from the store.
+   */
+  clearElementConfigs(): void;
 
   /**
    * Clears all data from the store.
