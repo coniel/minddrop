@@ -36,8 +36,10 @@ useRichTextElement<T extends RichTextElement>(id: string): T | null;
 
 Returns a `{ [id]: RichTextElement }` map of rich text elements by ID. If a requested element does not exist, it is ommited from the map.
 
+Optionally, the returned elements can be filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
+
 ```ts
-useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextElementMap<T>;
+useRichTextElements<T extends RichTextElement>(elementIds: string[], filters?: RichTextElementFilters): RichTextElementMap<T>;
 ```
 
 <ArgsTable
@@ -47,6 +49,19 @@ useRichTextElements<T extends RichTextElement>(elementIds: string[]): RichTextEl
       type: 'string[]',
       required: true,
       description: 'The IDs of the rich text elements to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'RichTextElementFilters',
+      description: (
+        <p>
+          When present, filters the returned elements according to the
+          provided filters. See the
+          <a href="#richtextelementfilters">
+            RichTextElementFilters
+          </a> section for filtering options.
+        </p>
+      ),
     },
   ]}
 />
