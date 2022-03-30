@@ -8,7 +8,7 @@ import {
   richTextElements,
 } from './rich-text.data';
 
-const { imageFileRef } = FILES_TEST_DATA;
+const { fileReferences } = FILES_TEST_DATA;
 
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
@@ -19,7 +19,7 @@ export function setup() {
   });
 
   // Load file references
-  Files.load(core, [imageFileRef]);
+  Files.load(core, fileReferences);
 
   // Load rich text elements into the store
   useRichTextStore.getState().loadElements(richTextElements);

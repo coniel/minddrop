@@ -27,6 +27,8 @@ import {
   RemoveFilesFromRichTextElementEventCallback,
   RemoveParentsFromRichTextElementEvent,
   RemoveParentsFromRichTextElementEventCallback,
+  ReplaceFilesInRichTextElementEvent,
+  ReplaceFilesInRichTextElementEventCallback,
   RestoreRichTextElementEvent,
   RestoreRichTextElementEventCallback,
   UnnestRichTextElementEvent,
@@ -354,6 +356,28 @@ export interface RichTextElementsApi {
     fileIds: string[],
   ): TElement;
 
+  /**
+   * Replaces the files in a rich text element by removing its
+   * current files and adding the provided ones. Dispatches a
+   * `rich-text-elements:replace-files` event and returns the
+   * updated element.
+   *
+   * The element will be added as a parent onto the added files, and removed as a parent from the removed files.
+   *
+   * - Throws a `RichTextElementNotFoundError` if the element does not exist.
+   * - Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param elementId The ID of the element in which to replace the files.
+   * @param fileIds The IDs of the files to add to the element.
+   * @returns The updated element.
+   */
+  replaceFiles<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    elementId: string,
+    fileIds: string[],
+  ): TElement;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -449,6 +473,13 @@ export interface RichTextElementsApi {
     callback: RemoveFilesFromRichTextElementEventCallback,
   ): void;
 
+  // Add 'rich-text-elements:replace-files' event listener
+  addEventListener(
+    core: Core,
+    type: ReplaceFilesInRichTextElementEvent,
+    callback: ReplaceFilesInRichTextElementEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -540,7 +571,14 @@ export interface RichTextElementsApi {
   // Remove 'rich-text-elements:remove-files' event listener
   removeEventListener(
     core: Core,
-    type: RemoveParentsFromRichTextElementEvent,
-    callback: RemoveParentsFromRichTextElementEventCallback,
+    type: RemoveFilesFromRichTextElementEvent,
+    callback: RemoveFilesFromRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:replace-files' event listener
+  removeEventListener(
+    core: Core,
+    type: ReplaceFilesInRichTextElementEvent,
+    callback: ReplaceFilesInRichTextElementEventCallback,
   ): void;
 }

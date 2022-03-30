@@ -220,3 +220,29 @@ export type RemoveFilesFromRichTextElementEventCallback = EventListenerCallback<
   RemoveFilesFromRichTextElementEvent,
   RemoveFilesFromRichTextElementEventData
 >;
+
+// Replace files in rich text element event
+export type ReplaceFilesInRichTextElementEvent =
+  'rich-test-elements:replace-files';
+
+export type ReplaceFilesInRichTextElementEventData = {
+  /**
+   * The updated element.
+   */
+  element: RichTextElement;
+
+  /**
+   * The file references removed from the element.
+   */
+  removedFiles: FileReference[];
+
+  /**
+   * The file references added to the element.
+   */
+  addedFiles: FileReference[];
+};
+
+export type ReplaceFilesInRichTextElementEventCallback = EventListenerCallback<
+  ReplaceFilesInRichTextElementEvent,
+  ReplaceFilesInRichTextElementEventData
+>;
