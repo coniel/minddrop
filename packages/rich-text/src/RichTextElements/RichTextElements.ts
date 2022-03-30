@@ -1,5 +1,7 @@
 import { addFilesToRichTextElement } from '../addFilesToRichTextElement';
 import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
+import { clearRegisteredRichTextElementTypes } from '../clearRegisteredRichTextElementTypes';
+import { clearRichTextElements } from '../clearRichTextElements';
 import { createRichTextElement } from '../createRichTextElement';
 import { deleteRichTextElement } from '../deleteRichTextElement';
 import { filterRichTextElements } from '../filterRichTextElements';
@@ -51,6 +53,8 @@ export const RichTextElements: RichTextElementsApi = {
   removeFiles: removeFilesFromRichTextElement,
   replaceFiles: replaceFilesInRichTextElement,
   load: loadRichTextElements,
+  clearElements: clearRichTextElements,
+  clearRegistered: clearRegisteredRichTextElementTypes,
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),
   removeEventListener: (core, type, callback) =>

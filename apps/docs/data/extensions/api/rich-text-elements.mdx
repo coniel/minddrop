@@ -719,12 +719,20 @@ RichTextElements.load(core: Core, elements: RichTextElement[]): void
   ]}
 />
 
-### clear
+### clearElements
 
-Clears all rich text elements and registered rich text element configs from the store. This method is **only intended for use in tests**, do not use within your extension code.
+Clears all rich text elements from the store. This method is **only intended for use in tests**, do not use within your extension code.
 
 ```ts
-RichTextElements.clear(): void
+RichTextElements.clearElements(): void
+```
+
+### clearRegistered
+
+Clears all registered rich text element configs from the store. This method is **only intended for use in tests**, do not use within your extension code.
+
+```ts
+RichTextElements.clearRegistered(): void
 ```
 
 ## RichTextElement events

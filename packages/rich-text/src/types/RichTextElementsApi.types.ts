@@ -389,6 +389,20 @@ export interface RichTextElementsApi {
    */
   load(core: Core, elements: RichTextElement[]): void;
 
+  /**
+   * Clears all rich text elements from the store.
+   * This method is **only intended for use in
+   * tests**, do not use within your extension code.
+   */
+  clearElements(): void;
+
+  /**
+   * Clears registered rich text element configs from the store.
+   * This method is **only intended for use in tests**, do not
+   * use within your extension code.
+   */
+  clearRegistered(): void;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
