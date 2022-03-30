@@ -246,3 +246,13 @@ export type ReplaceFilesInRichTextElementEventCallback = EventListenerCallback<
   ReplaceFilesInRichTextElementEvent,
   ReplaceFilesInRichTextElementEventData
 >;
+
+// Load rich text elements event
+export type LoadRichTextElementsEvent = 'rich-test-elements:load';
+
+export type LoadRichTextElementsEventData = RichTextElement[];
+
+export type LoadRichTextElementsEventCallback = EventListenerCallback<
+  LoadRichTextElementsEvent,
+  LoadRichTextElementsEventData
+>;

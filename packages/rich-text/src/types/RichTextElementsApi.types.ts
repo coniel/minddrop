@@ -17,6 +17,8 @@ import {
   CreateRichTextElementEventCallback,
   DeleteRichTextElementEvent,
   DeleteRichTextElementEventCallback,
+  LoadRichTextElementsEvent,
+  LoadRichTextElementsEventCallback,
   NestRichTextElementEvent,
   NestRichTextElementEventCallback,
   PermanentlyDeleteRichTextElementEvent,
@@ -378,6 +380,15 @@ export interface RichTextElementsApi {
     fileIds: string[],
   ): TElement;
 
+  /**
+   * Loads rich text elements into the store and dispatches a
+   * `rich-text-elements:load` envent.
+   *
+   * @param core A MindDrop core instance.
+   * @param elements The elements to load.
+   */
+  load(core: Core, elements: RichTextElement[]): void;
+
   /* ************************** */
   /* addEventListener overloads */
   /* ************************** */
@@ -439,21 +450,21 @@ export interface RichTextElementsApi {
   ): void;
 
   // Add 'rich-text-elements:remove-parents' event listener
-  removeEventListener(
+  addEventListener(
     core: Core,
     type: RemoveParentsFromRichTextElementEvent,
     callback: RemoveParentsFromRichTextElementEventCallback,
   ): void;
 
   // Add 'rich-text-elements:nest' event listener
-  removeEventListener(
+  addEventListener(
     core: Core,
     type: NestRichTextElementEvent,
     callback: NestRichTextElementEventCallback,
   ): void;
 
   // Add 'rich-text-elements:unnest' event listener
-  removeEventListener(
+  addEventListener(
     core: Core,
     type: UnnestRichTextElementEvent,
     callback: UnnestRichTextElementEventCallback,
@@ -467,7 +478,7 @@ export interface RichTextElementsApi {
   ): void;
 
   // Add 'rich-text-elements:remove-files' event listener
-  removeEventListener(
+  addEventListener(
     core: Core,
     type: RemoveFilesFromRichTextElementEvent,
     callback: RemoveFilesFromRichTextElementEventCallback,
@@ -478,6 +489,13 @@ export interface RichTextElementsApi {
     core: Core,
     type: ReplaceFilesInRichTextElementEvent,
     callback: ReplaceFilesInRichTextElementEventCallback,
+  ): void;
+
+  // Add 'rich-text-elements:load' event listener
+  addEventListener(
+    core: Core,
+    type: LoadRichTextElementsEvent,
+    callback: LoadRichTextElementsEventCallback,
   ): void;
 
   /* ***************************** */
@@ -580,5 +598,12 @@ export interface RichTextElementsApi {
     core: Core,
     type: ReplaceFilesInRichTextElementEvent,
     callback: ReplaceFilesInRichTextElementEventCallback,
+  ): void;
+
+  // Remove 'rich-text-elements:load' event listener
+  removeEventListener(
+    core: Core,
+    type: LoadRichTextElementsEvent,
+    callback: LoadRichTextElementsEventCallback,
   ): void;
 }
