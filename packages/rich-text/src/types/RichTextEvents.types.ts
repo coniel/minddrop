@@ -37,7 +37,7 @@ export type UnregisterRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Create rich text element event
-export type CreateRichTextElementEvent = 'rich-test-elements:create';
+export type CreateRichTextElementEvent = 'rich-text-elements:create';
 
 export type CreateRichTextElementEventData = RichTextElement;
 
@@ -47,7 +47,7 @@ export type CreateRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Update rich text element event
-export type UpdateRichTextElementEvent = 'rich-test-elements:update';
+export type UpdateRichTextElementEvent = 'rich-text-elements:update';
 
 export interface UpdateRichTextElementEventData {
   /**
@@ -72,7 +72,7 @@ export type UpdateRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Delete rich text element event
-export type DeleteRichTextElementEvent = 'rich-test-elements:delete';
+export type DeleteRichTextElementEvent = 'rich-text-elements:delete';
 
 export type DeleteRichTextElementEventData = RichTextElement;
 
@@ -82,7 +82,7 @@ export type DeleteRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Restore rich text element event
-export type RestoreRichTextElementEvent = 'rich-test-elements:restore';
+export type RestoreRichTextElementEvent = 'rich-text-elements:restore';
 
 export type RestoreRichTextElementEventData = RichTextElement;
 
@@ -93,7 +93,7 @@ export type RestoreRichTextElementEventCallback = EventListenerCallback<
 
 // Permanently delete rich text element event
 export type PermanentlyDeleteRichTextElementEvent =
-  'rich-test-elements:delete-permanently';
+  'rich-text-elements:delete-permanently';
 
 export type PermanentlyDeleteRichTextElementEventData = RichTextElement;
 
@@ -104,7 +104,7 @@ export type PermanentlyDeleteRichTextElementEventCallback =
   >;
 
 // Add parents to rich text element event
-export type AddParentsToRichTextElementEvent = 'rich-test-elements:add-parents';
+export type AddParentsToRichTextElementEvent = 'rich-text-elements:add-parents';
 
 export type AddParentsToRichTextElementEventData = {
   /**
@@ -125,7 +125,7 @@ export type AddParentsToRichTextElementEventCallback = EventListenerCallback<
 
 // Remove parents from rich text element event
 export type RemoveParentsFromRichTextElementEvent =
-  'rich-test-elements:remove-parents';
+  'rich-text-elements:remove-parents';
 
 export type RemoveParentsFromRichTextElementEventData = {
   /**
@@ -146,7 +146,7 @@ export type RemoveParentsFromRichTextElementEventCallback =
   >;
 
 // Nest rich text elements event
-export type NestRichTextElementEvent = 'rich-test-elements:nest';
+export type NestRichTextElementEvent = 'rich-text-elements:nest';
 
 export type NestRichTextElementEventData = {
   /**
@@ -166,7 +166,7 @@ export type NestRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Unnest rich text elements event
-export type UnnestRichTextElementEvent = 'rich-test-elements:unnest';
+export type UnnestRichTextElementEvent = 'rich-text-elements:unnest';
 
 export type UnnestRichTextElementEventData = {
   /**
@@ -186,7 +186,7 @@ export type UnnestRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Add files to rich text element event
-export type AddFilesToRichTextElementEvent = 'rich-test-elements:add-files';
+export type AddFilesToRichTextElementEvent = 'rich-text-elements:add-files';
 
 export type AddFilesToRichTextElementEventData = {
   /**
@@ -207,7 +207,7 @@ export type AddFilesToRichTextElementEventCallback = EventListenerCallback<
 
 // Remove files from rich text element event
 export type RemoveFilesFromRichTextElementEvent =
-  'rich-test-elements:remove-files';
+  'rich-text-elements:remove-files';
 
 export type RemoveFilesFromRichTextElementEventData = {
   /**
@@ -228,7 +228,7 @@ export type RemoveFilesFromRichTextElementEventCallback = EventListenerCallback<
 
 // Replace files in rich text element event
 export type ReplaceFilesInRichTextElementEvent =
-  'rich-test-elements:replace-files';
+  'rich-text-elements:replace-files';
 
 export type ReplaceFilesInRichTextElementEventData = {
   /**
@@ -253,7 +253,7 @@ export type ReplaceFilesInRichTextElementEventCallback = EventListenerCallback<
 >;
 
 // Load rich text elements event
-export type LoadRichTextElementsEvent = 'rich-test-elements:load';
+export type LoadRichTextElementsEvent = 'rich-text-elements:load';
 
 export type LoadRichTextElementsEventData = RichTextElement[];
 
@@ -263,7 +263,7 @@ export type LoadRichTextElementsEventCallback = EventListenerCallback<
 >;
 
 // Create rich text document event
-export type CreateRichTextDocumentEvent = 'rich-test-documents:create';
+export type CreateRichTextDocumentEvent = 'rich-text-documents:create';
 
 export type CreateRichTextDocumentEventData = RichTextDocument;
 
@@ -273,7 +273,7 @@ export type CreateRichTextDocumentEventCallback = EventListenerCallback<
 >;
 
 // Update rich text document event
-export type UpdateRichTextDocumentEvent = 'rich-test-documents:update';
+export type UpdateRichTextDocumentEvent = 'rich-text-documents:update';
 
 export interface UpdateRichTextDocumentEventData {
   /**
@@ -298,7 +298,7 @@ export type UpdateRichTextDocumentEventCallback = EventListenerCallback<
 >;
 
 // Delete rich text document event
-export type DeleteRichTextDocumentEvent = 'rich-test-documents:delete';
+export type DeleteRichTextDocumentEvent = 'rich-text-documents:delete';
 
 export type DeleteRichTextDocumentEventData = RichTextDocument;
 
@@ -308,7 +308,7 @@ export type DeleteRichTextDocumentEventCallback = EventListenerCallback<
 >;
 
 // Restore rich text document event
-export type RestoreRichTextDocumentEvent = 'rich-test-documents:restore';
+export type RestoreRichTextDocumentEvent = 'rich-text-documents:restore';
 
 export type RestoreRichTextDocumentEventData = RichTextDocument;
 
@@ -319,7 +319,7 @@ export type RestoreRichTextDocumentEventCallback = EventListenerCallback<
 
 // Permanently delete rich text document event
 export type PermanentlyDeleteRichTextDocumentEvent =
-  'rich-test-documents:delete-permanently';
+  'rich-text-documents:delete-permanently';
 
 export type PermanentlyDeleteRichTextDocumentEventData = RichTextDocument;
 
@@ -357,7 +357,7 @@ export type SetChildrenInRichTextDocumentEventCallback = EventListenerCallback<
 
 // Add parents to rich text document event
 export type AddParentsToRichTextDocumentEvent =
-  'rich-test-documents:add-parents';
+  'rich-text-documents:add-parents';
 
 export type AddParentsToRichTextDocumentEventData = {
   /**
@@ -378,7 +378,7 @@ export type AddParentsToRichTextDocumentEventCallback = EventListenerCallback<
 
 // Remove parents from rich text document event
 export type RemoveParentsFromRichTextDocumentEvent =
-  'rich-test-documents:remove-parents';
+  'rich-text-documents:remove-parents';
 
 export type RemoveParentsFromRichTextDocumentEventData = {
   /**
@@ -399,7 +399,7 @@ export type RemoveParentsFromRichTextDocumentEventCallback =
   >;
 
 // Load rich text documents event
-export type LoadRichTextDocumentsEvent = 'rich-test-documents:load';
+export type LoadRichTextDocumentsEvent = 'rich-text-documents:load';
 
 export type LoadRichTextDocumentsEventData = RichTextDocument[];
 
