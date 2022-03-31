@@ -5,40 +5,42 @@ import { Drop } from '../types';
 import { updateDrop } from '../updateDrop';
 
 /**
- * Adds files to a drop and dispatches a `drops:add-files` event
- * and a `drops:update` event.
+ * Adds files to a drop and dispatches a `drops:add-files`.
+ * Returns the updated drop.
  *
- * The file references of the attached files will be automatically
- * updated to include the drop ID in their `attachedTo` value.
+ * The drop is added as a parent on the files.
+ *
+ * - Throws a `DropNotFoundError` if the drop does not exist.
+ * - Throws a `FileReferenceNotFoundError` if any of the file
+ *   references do not exist.
  *
  * @param core A MindDrop core instance.
  * @param dropId The ID of the drop to which to add the files.
  * @param fileIds The IDs of the files to add to the drop.
  * @returns The updated drop.
  */
-export function addFilesToDrop(
+export function addFilesToDrop<TDrop extends Drop = Drop>(
   core: Core,
   dropId: string,
   fileIds: string[],
-): Drop {
+): TDrop {
   // Check that files exist
   const files = Files.get(fileIds);
 
-  // Update the drop
-  const drop = updateDrop(core, dropId, {
+  // Update the drop, adding the file IDs to its files
+  const drop = updateDrop<TDrop>(core, dropId, {
     files: FieldValue.arrayUnion(fileIds),
   });
 
-  // Adds drop at attachment to the files
+  // Add drop as a parent on the files
   fileIds.forEach((fileId) => {
-    Files.addAttachments(core, fileId, [dropId]);
+    // Update the file in the files map
+    files[fileId] = Files.addAttachments(core, fileId, [dropId]);
   });
 
-  // Dispatch 'dropd:add-files' event
-  core.dispatch('drops:add-files', {
-    drop,
-    files,
-  });
+  // Dispatch a 'dropd:add-files' event
+  core.dispatch('drops:add-files', { drop, files });
 
+  // Return the updated drop
   return drop;
 }

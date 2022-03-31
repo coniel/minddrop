@@ -5,3 +5,4 @@ export * from './useTagsStore';
 export * from './generateTag';
 export * from './errors/TagNotFoundError';
 export * from './Tags';
+export * as TAGS_TEXT_DATA from './test-utils/tags.data';

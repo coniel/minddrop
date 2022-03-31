@@ -1,4 +1,4 @@
-import { DropMap, DropFilters } from '../types';
+import { DropMap, DropFilters, Drop } from '../types';
 
 /**
  * Filters drops by type, active, and deleted states.
@@ -10,7 +10,10 @@ import { DropMap, DropFilters } from '../types';
  * @param filters The filters by which to filter the drops.
  * @returns The filtered drops.
  */
-export function filterDrops(drops: DropMap, filters: DropFilters): DropMap {
+export function filterDrops<TDrop extends Drop = Drop>(
+  drops: DropMap,
+  filters: DropFilters,
+): DropMap<TDrop> {
   // Active drops are included if `active = true` or if `deleted`
   // `deleted` filter is not set.
   const includeActive =

@@ -4,6 +4,8 @@ import { getDrop } from '../getDrop';
 import { Drop, DropChanges } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
+// Updated at is set automatically and should not
+// be specified in the udapte data.
 type Data = Omit<DropChanges, 'updatedAt'>;
 
 /**
@@ -15,13 +17,15 @@ type Data = Omit<DropChanges, 'updatedAt'>;
  * @param data The changes to apply to the drop.
  * @returns The updated drop.
  */
-export function updateDrop<D extends Data = Data, R extends Drop = Drop>(
-  core: Core,
-  id: string,
-  data: D,
-): R {
-  const drop = getDrop<R>(id);
-  const update = createUpdate<D, R>(drop, data, {
+export function updateDrop<
+  TDrop extends Drop = Drop,
+  TData extends Data = Data,
+>(core: Core, id: string, data: TData): TDrop {
+  // Get the drop
+  const drop = getDrop<TDrop>(id);
+
+  // Create an update object
+  const update = createUpdate(drop, data, {
     setUpdatedAt: true,
     deleteEmptyFields: ['files'],
   });
@@ -32,5 +36,6 @@ export function updateDrop<D extends Data = Data, R extends Drop = Drop>(
   // Dispatch 'drops:update' event
   core.dispatch('drops:update', update);
 
+  // Return the updated drop
   return update.after;
 }

@@ -6,23 +6,35 @@ import { unregisterDropType } from '../unregisterDropType';
 import {
   cleanup,
   core,
+  ImageDrop,
   setup,
-  textData,
+  TextDrop,
   textDropConfig,
   unregisteredDropConfig,
 } from '../test-utils';
 import { registerDropType } from '../registerDropType';
 import { getDropTypeConfig } from '../getDropTypeConfig';
+import { DataInsert } from '@minddrop/core';
+
+export const textData: DataInsert = {
+  action: 'insert',
+  types: ['text/plain', 'text/html'],
+  data: {
+    'text/plain': 'Hello world',
+    'text/html': '<p>Hello world</p>',
+  },
+  files: [],
+};
 
 describe('insertData', () => {
-  let textDrop: Drop;
-  let imageDrop: Drop;
+  let textDrop: TextDrop;
+  let imageDrop: ImageDrop;
   let unregisteredDrop: Drop;
 
   beforeAll(() => {
     setup();
     registerDropType(core, unregisteredDropConfig);
-    textDrop = createDrop(core, { type: 'text', markdown: '' });
+    textDrop = createDrop(core, { type: 'text', text: '' });
     imageDrop = createDrop(core, { type: 'image' });
     unregisteredDrop = createDrop(core, { type: 'unregistered' });
     unregisterDropType(core, unregisteredDropConfig.type);
@@ -44,10 +56,10 @@ describe('insertData', () => {
   });
 
   it('returns the updated drop', async () => {
-    const drop = await insertData(core, textDrop.id, textData);
+    const drop = await insertData<TextDrop>(core, textDrop.id, textData);
 
     expect(drop.id).toEqual(textDrop.id);
-    expect(drop.markdown).toEqual(textData.data['text/plain']);
+    expect(drop.text).toEqual(textData.data['text/plain']);
   });
 
   it('returns the original drop if data insert is not supported', async () => {

@@ -226,6 +226,10 @@ export interface DropsApi {
    * Adds parent references to a drop and dispatches a
    * `drops:add-parents` event.
    *
+   * - Throws a `DropNotFoundError` if the drop does not exist.
+   * - Throws a `ParentReferenceValidationError` if any of the
+   *   parents are invalid.
+   *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the parents.
    * @param parentReferences The parent references to add.
@@ -251,8 +255,10 @@ export interface DropsApi {
   ): Drop;
 
   /**
-   * Adds tags to a drop and dispatches a `drops:add-tags` event
-   * and a `drops:update` event.
+   * Adds tags to a drop and dispatches a `drops:add-tags` event.
+   *
+   * - Throws a `DropNotFoundError` if the drop does not exist.
+   * - Throws a `TagNotFoundError` if any of the tags do not exist.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the tags.
@@ -273,11 +279,14 @@ export interface DropsApi {
   removeTags(core: Core, dropId: string, tagIds: string[]): Drop;
 
   /**
-   * Adds files to a drop and dispatches a `drops:add-files` event
-   * and a `drops:update` event.
+   * Adds files to a drop and dispatches a `drops:add-files`.
+   * Returns the updated drop.
    *
-   * The file references of the attached files will be automatically
-   * updated to include the drop ID in their `attachedTo` value.
+   * The drop is added as a parent on the files.
+   *
+   * - Throws a `DropNotFoundError` if the drop does not exist.
+   * - Throws a `FileReferenceNotFoundError` if any of the file
+   *   references do not exist.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to which to add the files.

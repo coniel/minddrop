@@ -18,13 +18,13 @@ import { Drop } from '../types';
  * @param data The data to be inserted into the drop.
  * @returns A promise resolving to the updated drop.
  */
-export async function insertData(
+export async function insertData<TDrop extends Drop = Drop>(
   core: Core,
   dropId: string,
   data: DataInsert,
-): Promise<Drop> {
-  const drop = get(dropId);
-  const [config] = getRegisteredDropTypes({ type: [drop.type] });
+): Promise<TDrop> {
+  const drop = get<TDrop>(dropId);
+  const [config] = getRegisteredDropTypes<TDrop>({ type: [drop.type] });
 
   if (!config) {
     throw new DropTypeNotRegisteredError(drop.type);

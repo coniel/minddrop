@@ -1,54 +1,50 @@
-import { DataInsert, initializeCore } from '@minddrop/core';
-import { act, imageFile, textFile } from '@minddrop/test-utils';
+import { initializeCore } from '@minddrop/core';
+import { act } from '@minddrop/test-utils';
+import { Files, FILES_TEST_DATA } from '@minddrop/files';
+import { Tags, TAGS_TEXT_DATA } from '@minddrop/tags';
 import { registerDropType } from '../registerDropType';
 import { useDropsStore } from '../useDropsStore';
-import { Files } from '@minddrop/files';
-import { Tags } from '@minddrop/tags';
-import { dropFiles, drops, dropTypeConfigs } from './drops.data';
 import { loadDrops } from '../loadDrops';
+import { DropConfig } from '../types';
+import { dropFiles, drops, dropTypeConfigs } from './drops.data';
+
+const { fileReferences } = FILES_TEST_DATA;
+const { tags } = TAGS_TEXT_DATA;
 
 export const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
-export const textData: DataInsert = {
-  action: 'insert',
-  types: ['text/plain', 'text/html'],
-  data: {
-    'text/plain': 'Hello world',
-    'text/html': '<p>Hello world</p>',
-  },
-  files: [],
-};
-
-export const filesData: DataInsert = {
-  action: 'insert',
-  types: ['files'],
-  data: {},
-  files: [imageFile, textFile],
-};
-
-export const multiTextFilesData: DataInsert = {
-  action: 'insert',
-  types: ['files'],
-  data: {},
-  files: [textFile, textFile],
-};
-
 export function setup() {
   act(() => {
+    // Register all test drop configs
     dropTypeConfigs.forEach((config) => {
-      registerDropType(core, config);
+      registerDropType(core, config as DropConfig);
     });
+
+    // Load the test drops
     loadDrops(core, drops);
+
+    // Load the test files
+    Files.load(core, fileReferences);
+    // Load the test files attached to drops
     Files.load(core, dropFiles);
+    // Load test tags
+    Tags.load(core, tags);
   });
 }
 
 export function cleanup() {
   act(() => {
+    // Clear registered drop types
     useDropsStore.getState().clearRegistered();
+
+    // Clear drops
     useDropsStore.getState().clearDrops();
-    core.removeAllEventListeners();
+    // Clear files
     Files.clear(core);
+    // Clear tags
     Tags.clear(core);
+
+    // Remove all of the extension's event listeners
+    core.removeAllEventListeners();
   });
 }

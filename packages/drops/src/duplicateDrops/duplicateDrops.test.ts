@@ -5,6 +5,7 @@ import {
   textDrop1,
   textDrop2,
   imageDrop1,
+  TextDrop,
 } from '../test-utils';
 import { getDrop } from '../getDrop';
 import { duplicateDrops } from './duplicateDrops';
@@ -18,12 +19,12 @@ describe('duplicateDrops', () => {
   afterEach(cleanup);
 
   it('creates new drops', () => {
-    const drops = duplicateDrops(core, [textDrop1.id, textDrop2.id]);
+    const drops = duplicateDrops<TextDrop>(core, [textDrop1.id, textDrop2.id]);
     const drop1Id = Object.values(drops).find(
-      (drop) => drop.markdown === textDrop1.markdown,
+      (drop) => drop.text === textDrop1.text,
     ).id;
     const drop2Id = Object.values(drops).find(
-      (drop) => drop.markdown === textDrop2.markdown,
+      (drop) => drop.text === textDrop2.text,
     ).id;
 
     const drop1 = getDrop(drop1Id);
@@ -34,12 +35,12 @@ describe('duplicateDrops', () => {
   });
 
   it('adds the `duplicatedFrom` property', () => {
-    const drops = duplicateDrops(core, [textDrop1.id, textDrop2.id]);
+    const drops = duplicateDrops<TextDrop>(core, [textDrop1.id, textDrop2.id]);
     const drop1Id = Object.values(drops).find(
-      (drop) => drop.markdown === textDrop1.markdown,
+      (drop) => drop.text === textDrop1.text,
     ).id;
     const drop2Id = Object.values(drops).find(
-      (drop) => drop.markdown === textDrop2.markdown,
+      (drop) => drop.text === textDrop2.text,
     ).id;
 
     const drop1 = getDrop(drop1Id);
@@ -50,7 +51,7 @@ describe('duplicateDrops', () => {
   });
 
   it('adds new drops as attachment to file references', () => {
-    const drops = duplicateDrops(core, [imageDrop1.id]);
+    const drops = duplicateDrops<TextDrop>(core, [imageDrop1.id]);
     const [newDrop] = Object.values(drops);
 
     const fileRef = Files.get(imageDrop1.files[0]);

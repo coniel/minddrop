@@ -1,100 +1,66 @@
-import { act, textFile } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
+import { mapById } from '@minddrop/utils';
 import {
   Files,
-  FileReference,
   FileReferenceNotFoundError,
+  FILES_TEST_DATA,
 } from '@minddrop/files';
 import { addFilesToDrop } from './addFilesToDrop';
-import { Drop } from '../types';
-import { createDrop } from '../createDrop';
-import { clearDrops } from '../clearDrops';
-import { cleanup, setup } from '../test-utils';
+import { cleanup, core, setup, textDrop1 } from '../test-utils';
+import { getDrop } from '../getDrop';
 
-let core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+const { textFileRef1 } = FILES_TEST_DATA;
 
 describe('addFilesToDrop', () => {
-  beforeAll(() => {
-    setup();
-  });
+  beforeEach(setup);
 
-  afterAll(() => {
-    cleanup();
-  });
-
-  afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
-    act(() => {
-      Files.clear(core);
-      clearDrops(core);
-    });
-  });
+  afterEach(cleanup);
 
   it('adds files to the drop', async () => {
-    let drop: Drop;
-    let fileRef: FileReference;
+    // Add a file to a drop
+    addFilesToDrop(core, textDrop1.id, [textFileRef1.id]);
 
-    await act(async () => {
-      fileRef = await Files.create(core, textFile);
-      drop = createDrop(core, { type: 'text' });
-      drop = addFilesToDrop(core, drop.id, [fileRef.id]);
-    });
+    // Get the updated drop
+    const drop = getDrop(textDrop1.id);
 
-    expect(drop.files).toBeDefined();
-    expect(drop.files.length).toBe(1);
-    expect(drop.files[0]).toBe(fileRef.id);
+    // Drop should contain the file ID
+    expect(drop.files).toContain(textFileRef1.id);
   });
 
-  it('adds the drop as an attachment to the files', async () => {
-    let drop: Drop;
-    let file1Ref: FileReference;
-    let file2Ref: FileReference;
+  it('adds the drop as parent on the files', async () => {
+    // Add a file to a drop
+    addFilesToDrop(core, textDrop1.id, [textFileRef1.id]);
 
-    await act(async () => {
-      file1Ref = await Files.create(core, textFile);
-      file2Ref = await Files.create(core, textFile);
-      drop = createDrop(core, { type: 'text' });
-      drop = addFilesToDrop(core, drop.id, [file1Ref.id, file2Ref.id]);
-    });
+    // Get the updated file reference
+    const file = Files.get(textFileRef1.id);
 
-    expect(Files.get(file1Ref.id).attachedTo).toEqual([drop.id]);
-    expect(Files.get(file2Ref.id).attachedTo).toEqual([drop.id]);
+    // File should have the drop as a parent
+    expect(file.attachedTo).toContain(textDrop1.id);
   });
 
   it('throws if file attachement does not exist', async () => {
-    let drop: Drop;
-
-    await act(async () => {
-      drop = createDrop(core, { type: 'text' });
-    });
-
+    // Attempt to add a non-existent file to a drop. Should
+    // throw a `FileReferenceNotFoundError`.
     expect(() =>
-      addFilesToDrop(core, drop.id, ['missing-file-id']),
+      addFilesToDrop(core, textDrop1.id, ['missing-file-id']),
     ).toThrowError(FileReferenceNotFoundError);
   });
 
-  it("dispatches a 'drops:add-files' event", (done) => {
-    let drop: Drop;
-    let fileRef: FileReference;
+  it('dispatches a `drops:add-files` event', (done) => {
+    // Listen to 'drops:add-files' events
+    core.addEventListener('drops:add-files', (payload) => {
+      // Get the updated drop
+      const drop = getDrop(textDrop1.id);
+      // Get the updated file reference
+      const file = Files.get(textFileRef1.id);
 
-    function callback(payload) {
-      expect(payload.data).toEqual({
-        drop,
-        files: { [fileRef.id]: { ...fileRef, attachedTo: [drop.id] } },
-      });
+      // Payload data should contain the updated drop
+      expect(payload.data.drop).toEqual(drop);
+      // Payload data should contain the added files
+      expect(payload.data.files).toEqual(mapById([file]));
       done();
-    }
+    });
 
-    async function run() {
-      await act(async () => {
-        fileRef = await Files.create(core, textFile);
-        drop = createDrop(core, { type: 'text', files: [fileRef.id] });
-        drop = addFilesToDrop(core, drop.id, [fileRef.id]);
-      });
-    }
-
-    core.addEventListener('drops:add-files', callback);
-
-    run();
+    // Add a file to a drop
+    addFilesToDrop(core, textDrop1.id, [textFileRef1.id]);
   });
 });

@@ -1,4 +1,4 @@
-import { DropConfigFilters, RegisteredDropConfig } from '../types';
+import { Drop, DropConfigFilters, RegisteredDropConfig } from '../types';
 import { useDropsStore } from '../useDropsStore';
 
 /**
@@ -8,10 +8,11 @@ import { useDropsStore } from '../useDropsStore';
  * @param filters Filters to filter the returned cofigs by.
  * @returns Registered drop type configs.
  */
-export function getRegisteredDropTypes(
+export function getRegisteredDropTypes<TDrop extends Drop = Drop>(
   filters?: DropConfigFilters,
-): RegisteredDropConfig[] {
-  let configs = useDropsStore.getState().registered;
+): RegisteredDropConfig<TDrop>[] {
+  let configs = useDropsStore.getState()
+    .registered as RegisteredDropConfig<TDrop>[];
 
   if (filters) {
     // Filter by extension ID

@@ -13,8 +13,8 @@ export interface DropComponentProps extends Drop {
 }
 
 export interface DropConfig<
-  T extends Drop = Drop,
-  D extends CreateDropData = CreateDropData,
+  TDrop extends Drop = Drop,
+  TCreateData extends CreateDropData = CreateDropData,
 > {
   /**
    * The drop type.
@@ -67,7 +67,7 @@ export interface DropConfig<
    * @param data The data from which the drop is to be created.
    * @returns A promise which resolves to the new drop.
    */
-  create(core: Core, data?: DataInsert): D | Promise<D>;
+  create(core: Core, data?: DataInsert): TCreateData | Promise<TCreateData>;
 
   /**
    * Called when data is dropped or pasted onto the drop.
@@ -79,16 +79,16 @@ export interface DropConfig<
    * @param data The data inserted into the drop.
    * @returns A promsie which resolves to the updated drop (or original drop if it was not updated).
    */
-  insertData?(core: Core, drop: Drop, data: DataInsert): Promise<Drop>;
+  insertData?(core: Core, drop: Drop, data: DataInsert): Promise<TDrop>;
 
   /**
    * The component used to render the drop.
    */
-  component: React.ComponentType<{ parent?: DropParentReference } & T>;
+  component: React.ComponentType<{ parent?: DropParentReference } & TDrop>;
 }
 
-export interface RegisteredDropConfig<T extends Drop = Drop>
-  extends DropConfig<T> {
+export interface RegisteredDropConfig<TDrop extends Drop = Drop>
+  extends DropConfig<TDrop> {
   /**
    * The ID of the extension that registered the drop type.
    */

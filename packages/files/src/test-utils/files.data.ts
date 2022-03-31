@@ -1,6 +1,14 @@
 import { generateId } from '@minddrop/utils';
 import { FileReference } from '../types';
 
+export const textFileRef1: FileReference = {
+  id: generateId(),
+  name: 'text.txt',
+  type: 'text/plain',
+  size: 39,
+  attachedTo: [],
+};
+
 export const imageFileRef: FileReference = {
   id: generateId(),
   name: 'image.png',
@@ -25,4 +33,9 @@ export const imageFileRef3: FileReference = {
   attachedTo: [],
 };
 
-export const fileReferences = [imageFileRef, imageFileRef2, imageFileRef3];
+export const fileReferences = [
+  textFileRef1,
+  imageFileRef,
+  imageFileRef2,
+  imageFileRef3,
+];

@@ -18,7 +18,10 @@ import { useDropsStore } from '../useDropsStore';
  * @param data The default drop property values.
  * @returns A promise which resolves to the newly created drop.
  */
-export function createDrop(core: Core, data: CreateDropData): Drop {
+export function createDrop<
+  TDrop extends Drop = Drop,
+  TData extends CreateDropData = CreateDropData,
+>(core: Core, data: TData): TDrop {
   const drop = generateDrop(data);
 
   // Verify that drop type is registered
@@ -42,5 +45,5 @@ export function createDrop(core: Core, data: CreateDropData): Drop {
   // Dispatch 'drops:create' event
   core.dispatch('drops:create', drop);
 
-  return drop;
+  return drop as unknown as TDrop;
 }

@@ -1,7 +1,7 @@
 import { Core } from '@minddrop/core';
 import { createDrop } from '../createDrop';
 import { getDrops } from '../getDrops';
-import { DropMap } from '../types';
+import { Drop, DropMap } from '../types';
 
 /**
  * Duplicates the given drops by creating new drops
@@ -11,7 +11,10 @@ import { DropMap } from '../types';
  * @param dropIds The IDs of the drops to duplicate.
  * @returns The new drops.
  */
-export function duplicateDrops(core: Core, dropIds: string[]): DropMap {
+export function duplicateDrops<TDrop extends Drop = Drop>(
+  core: Core,
+  dropIds: string[],
+): DropMap<TDrop> {
   // Get the drops
   const drops = getDrops(dropIds);
 

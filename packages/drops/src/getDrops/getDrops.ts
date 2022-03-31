@@ -1,4 +1,4 @@
-import { DropFilters, DropMap } from '../types';
+import { Drop, DropFilters, DropMap } from '../types';
 import { useDropsStore } from '../useDropsStore';
 import { DropNotFoundError } from '../errors';
 import { filterDrops } from '../filterDrops';
@@ -11,7 +11,10 @@ import { filterDrops } from '../filterDrops';
  * @param filters Filters to filter to the drops by.
  * @returns A `{ [id]: Drop }` map of the requested drops.
  */
-export function getDrops(ids: string[], filters?: DropFilters): DropMap {
+export function getDrops<TDrop extends Drop = Drop>(
+  ids: string[],
+  filters?: DropFilters,
+): DropMap<TDrop> {
   const { drops } = useDropsStore.getState();
   let requested = ids.reduce(
     (map, id) => (drops[id] ? { ...map, [id]: drops[id] } : map),
