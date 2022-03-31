@@ -18,13 +18,13 @@ import {
 } from '../types';
 import { Transforms } from '../Transforms';
 import { withElementIds } from '../withElementIds';
-import './Editor.css';
+import './RichTextEditor.css';
 
 interface EditorProps {
   /**
-   * The editor document.
+   * The ID of the rich textdocument to edit.
    */
-  document: RichTextDocument;
+  documentId: string;
 
   /**
    * Callback fired when the editor value changes.
@@ -37,8 +37,8 @@ interface EditorProps {
   plugins?: RichTextEditorPluginConfig[];
 }
 
-export const Editor: React.FC<EditorProps> = ({
-  document,
+export const RichTextEditor: React.FC<EditorProps> = ({
+  documentId,
   onChange,
   plugins = [],
 }) => {

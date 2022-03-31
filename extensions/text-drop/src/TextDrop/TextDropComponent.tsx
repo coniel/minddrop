@@ -9,7 +9,7 @@ import {
   EditorContent,
   ParagraphPlugin,
   TitlePlugin,
-} from '@minddrop/editor';
+} from '@minddrop/rich-text-editor';
 import { TextDrop, TextDropUpdateData } from '../types';
 import './TextDropComponent.css';
 import { DropComponentProps, Drops } from '@minddrop/drops';

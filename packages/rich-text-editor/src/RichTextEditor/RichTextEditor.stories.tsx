@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 import React, { useEffect, useState } from 'react';
 import { RichTextDocument } from '@minddrop/rich-text';
-import { Editor } from './Editor';
+import { RichTextEditor } from './RichTextEditor';
 import { TitlePlugin } from '../TitlePlugin';
 import { ParagraphPlugin } from '../ParagraphPlugin';
 import { generateId } from '@minddrop/utils';
 
 export default {
   title: 'editor/Editor',
-  component: Editor,
+  component: RichTextEditor,
 };
 
 const document: RichTextDocument = {
@@ -63,7 +63,10 @@ const document2: RichTextDocument = {
 export const BareEditor: React.FC = () => {
   return (
     <div>
-      <Editor document={document} onChange={(doc) => console.log(doc)} />
+      <RichTextEditor
+        document={document}
+        onChange={(doc) => console.log(doc)}
+      />
     </div>
   );
 };
@@ -79,7 +82,7 @@ export const WithPlugins: React.FC = () => {
 
   return (
     <div>
-      <Editor
+      <RichTextEditor
         document={value}
         onChange={setValue}
         plugins={[TitlePlugin, ParagraphPlugin]}
