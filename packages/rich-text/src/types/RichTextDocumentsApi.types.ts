@@ -7,6 +7,8 @@ import {
 import {
   CreateRichTextDocumentEvent,
   CreateRichTextDocumentEventCallback,
+  DeleteRichTextDocumentEvent,
+  DeleteRichTextDocumentEventCallback,
   UpdateRichTextDocumentEvent,
   UpdateRichTextDocumentEventCallback,
 } from './RichTextEvents.types';
@@ -53,6 +55,17 @@ export interface RichTextDocumentsApi {
   create(core: Core, data?: CreateRichTextDocumentData): RichTextDocument;
 
   /**
+   * Deletes a rich text document and dispatches a
+   * `rich-text-documents:delete` event. Returns the updated
+   * document.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the document to delete.
+   * @returns The updated document.
+   */
+  delete(core: Core, documentId: string): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -76,11 +89,18 @@ export interface RichTextDocumentsApi {
     callback: CreateRichTextDocumentEventCallback,
   ): void;
 
-  // Remove 'rich-text-documents:update' event listener
-  removeEventListener(
+  // Add 'rich-text-documents:update' event listener
+  addEventListener(
     core: Core,
     type: UpdateRichTextDocumentEvent,
     callback: UpdateRichTextDocumentEventCallback,
+  ): void;
+
+  // Add 'rich-text-documents:delete' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteRichTextDocumentEvent,
+    callback: DeleteRichTextDocumentEventCallback,
   ): void;
 
   /* ***************************** */
@@ -99,5 +119,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: UpdateRichTextDocumentEvent,
     callback: UpdateRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:delete' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteRichTextDocumentEvent,
+    callback: DeleteRichTextDocumentEventCallback,
   ): void;
 }

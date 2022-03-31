@@ -295,3 +295,13 @@ export type UpdateRichTextDocumentEventCallback = EventListenerCallback<
   UpdateRichTextDocumentEvent,
   UpdateRichTextDocumentEventData
 >;
+
+// Delete rich text document event
+export type DeleteRichTextDocumentEvent = 'rich-test-documents:delete';
+
+export type DeleteRichTextDocumentEventData = RichTextDocument;
+
+export type DeleteRichTextDocumentEventCallback = EventListenerCallback<
+  DeleteRichTextDocumentEvent,
+  DeleteRichTextDocumentEventData
+>;
