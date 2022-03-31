@@ -45,3 +45,8 @@ export interface RichTextDocument {
    */
   deletedAt?: Date;
 }
+
+/**
+ * A { [id]: RichTextDocument } map of rich text documents.
+ */
+export type RichTextDocumentMap = Record<string, RichTextDocument>;

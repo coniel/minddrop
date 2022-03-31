@@ -206,6 +206,8 @@ export const inlineEquationElement1: TestInlineEquationElement = {
 
 export const richTextDocument1PlainText = `${headingElement1PlainText}\n\n${paragraphElement1PlainText}`;
 export const richTextDocument2PlainText = `${headingElement2PlainText}\n\n${paragraphElement2PlainText}`;
+export const richTextDocument3PlainText = `${headingElement3PlainText}\n\n${paragraphElement3PlainText}`;
+export const richTextDocument4PlainText = `${headingElement4PlainText}\n\n${paragraphElement4PlainText}`;
 export const richTextDocument1 = {
   ...generateRichTextDocument([headingElement1.id, paragraphElement1.id]),
   id: richTextDoc1Id,
@@ -216,11 +218,11 @@ export const richTextDocument2 = {
 };
 export const richTextDocument3 = {
   ...generateRichTextDocument([headingElement3.id, paragraphElement3.id]),
-  id: richTextDoc1Id,
+  id: richTextDoc3Id,
 };
 export const richTextDocument4 = {
   ...generateRichTextDocument([headingElement4.id, paragraphElement4.id]),
-  id: richTextDoc2Id,
+  id: richTextDoc4Id,
 };
 
 /* **************** */
