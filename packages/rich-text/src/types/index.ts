@@ -3,7 +3,7 @@ export * from './RichTextNode.types';
 export * from './RichTextBlockElement.types';
 export * from './RichTextBlockElementConfig.types';
 export * from './RichTextDocument.types';
-export * from './RichTextDocumentApi.types';
+export * from './RichTextDocumentsApi.types';
 export * from './RichTextElement.types';
 export * from './RichTextElementConfig.types';
 export * from './RichTextElementFilters.types';
