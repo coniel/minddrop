@@ -305,3 +305,13 @@ export type DeleteRichTextDocumentEventCallback = EventListenerCallback<
   DeleteRichTextDocumentEvent,
   DeleteRichTextDocumentEventData
 >;
+
+// Restore rich text document event
+export type RestoreRichTextDocumentEvent = 'rich-test-documents:restore';
+
+export type RestoreRichTextDocumentEventData = RichTextDocument;
+
+export type RestoreRichTextDocumentEventCallback = EventListenerCallback<
+  RestoreRichTextDocumentEvent,
+  RestoreRichTextDocumentEventData
+>;

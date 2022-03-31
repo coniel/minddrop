@@ -1,5 +1,9 @@
 import { ParentReference } from '@minddrop/core';
-import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
+import {
+  FieldValueArrayRemove,
+  FieldValueArrayUnion,
+  FieldValueDelete,
+} from '@minddrop/utils';
 
 export interface RichTextDocument {
   /**
@@ -38,7 +42,7 @@ export interface RichTextDocument {
    * When `true`, the rich text document is deleted. Not present
    * if the document is not deleted.
    */
-  deleted?: boolean;
+  deleted?: true;
 
   /**
    * Timestamp at which the rich text document was deleted. Not
@@ -95,11 +99,11 @@ export interface RichTextDocumentChanges {
    * When `true`, the rich text document is deleted. Not present
    * if the document is not deleted.
    */
-  deleted?: boolean;
+  deleted?: true | FieldValueDelete;
 
   /**
    * Timestamp at which the rich text document was deleted. Not
    * present if the document is not deleted.
    */
-  deletedAt?: Date;
+  deletedAt?: Date | FieldValueDelete;
 }
