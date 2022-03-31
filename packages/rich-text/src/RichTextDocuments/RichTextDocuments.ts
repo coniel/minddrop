@@ -1,3 +1,4 @@
+import { getAllRichTextDocuments } from '../getAllRichTextDocuments';
 import { getRichTextDocument } from '../getRichTextDocument';
 import { getRichTextDocuments } from '../getRichTextDocuments';
 import { getRichTextElements } from '../getRichTextElements';
@@ -9,6 +10,7 @@ export const RichTextDocuments: RichTextDocumentsApi = {
     Array.isArray(elementId)
       ? getRichTextDocuments(elementId)
       : getRichTextDocument(elementId),
+  getAll: getAllRichTextDocuments,
   toPlainText: (document) => {
     // Get the document's children
     const children = getRichTextElements(document.children);

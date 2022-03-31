@@ -19,6 +19,12 @@ export interface RichTextDocumentsApi {
   get(documentId: string | string[]): RichTextDocument | RichTextDocumentMap;
 
   /**
+   * Retrurns all rich text documents from the store as a
+   * `{ [id]: RichTextDocument }` map.
+   */
+  getAll(): RichTextDocumentMap;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
