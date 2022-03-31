@@ -1,4 +1,5 @@
-import { Core } from '@minddrop/core';
+import { Core, ParentReferences } from '@minddrop/core';
+import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
 import { RichTextDocumentValidationError } from '../errors';
 import { generateRichTextDocument } from '../generateRichTextDocument';
 import { CreateRichTextDocumentData, RichTextDocument } from '../types';
@@ -42,6 +43,17 @@ export function createRichTextDocument(
 
   // Add the document to the rich text store
   useRichTextStore.getState().setDocument(document);
+
+  // Generate a parent reference
+  const parentReference = ParentReferences.generate(
+    'rich-text-document',
+    document.id,
+  );
+
+  // Add the document as a parent on its child elements
+  document.children.forEach((id) => {
+    addParentsToRichTextElement(core, id, [parentReference]);
+  });
 
   // Dispatch a 'rich-text-documents:create' event
   core.dispatch('rich-text-documents:create', document);

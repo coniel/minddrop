@@ -3,9 +3,18 @@ import {
   RichTextDocumentValidationError,
   RichTextElementNotFoundError,
 } from '../errors';
-import { setup, cleanup, core } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  core,
+  headingElement1,
+  paragraphElement1,
+} from '../test-utils';
 import { getRichTextDocument } from '../getRichTextDocument';
 import { createRichTextDocument } from './createRichTextDocument';
+import { ParentReferences } from '@minddrop/core';
+import { getRichTextElements } from '../getRichTextElements';
+import { contains } from '@minddrop/utils';
 
 describe('createRichTextDocument', () => {
   beforeEach(setup);
@@ -47,6 +56,33 @@ describe('createRichTextDocument', () => {
     expect(() => getRichTextDocument(document.id)).not.toThrowError(
       RichTextDocumentNotFoundError,
     );
+  });
+
+  it('adds the document as a parent on its child elements', () => {
+    // Create a new document
+    const document = createRichTextDocument(core, {
+      children: [headingElement1.id, paragraphElement1.id],
+    });
+
+    // The document's parent reference
+    const parentReference = ParentReferences.generate(
+      'rich-text-document',
+      document.id,
+    );
+
+    // Get the updated child elements
+    const elements = getRichTextElements([
+      headingElement1.id,
+      paragraphElement1.id,
+    ]);
+
+    // Elements should have the document as a parent
+    expect(
+      contains(elements[headingElement1.id].parents, [parentReference]),
+    ).toBeTruthy();
+    expect(
+      contains(elements[paragraphElement1.id].parents, [parentReference]),
+    ).toBeTruthy();
   });
 
   it('dispatches a `rich-text-documents:create` event', (done) => {
