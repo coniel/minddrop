@@ -397,3 +397,13 @@ export type RemoveParentsFromRichTextDocumentEventCallback =
     RemoveParentsFromRichTextDocumentEvent,
     RemoveParentsFromRichTextDocumentEventData
   >;
+
+// Load rich text documents event
+export type LoadRichTextDocumentsEvent = 'rich-test-documents:load';
+
+export type LoadRichTextDocumentsEventData = RichTextDocument[];
+
+export type LoadRichTextDocumentsEventCallback = EventListenerCallback<
+  LoadRichTextDocumentsEvent,
+  LoadRichTextDocumentsEventData
+>;

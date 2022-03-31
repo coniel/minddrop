@@ -11,6 +11,8 @@ import {
   CreateRichTextDocumentEventCallback,
   DeleteRichTextDocumentEvent,
   DeleteRichTextDocumentEventCallback,
+  LoadRichTextDocumentsEvent,
+  LoadRichTextDocumentsEventCallback,
   PermanentlyDeleteRichTextDocumentEvent,
   PermanentlyDeleteRichTextDocumentEventCallback,
   RemoveParentsFromRichTextDocumentEvent,
@@ -147,6 +149,15 @@ export interface RichTextDocumentsApi {
   ): RichTextDocument;
 
   /**
+   * Loads rich text documents into the store and dispatches a
+   * `rich-text-documents:load` envent.
+   *
+   * @param core A MindDrop core instance.
+   * @param documents The documents to load.
+   */
+  load(core: Core, documents: RichTextDocument[]): void;
+
+  /**
    * Removes parent references from a rich text document and dispatches
    * a `rich-text-documents:remove-parents` event.
    *
@@ -237,6 +248,13 @@ export interface RichTextDocumentsApi {
     callback: RemoveParentsFromRichTextDocumentEventCallback,
   ): void;
 
+  // Add 'rich-text-documents:load' event listener
+  addEventListener(
+    core: Core,
+    type: LoadRichTextDocumentsEvent,
+    callback: LoadRichTextDocumentsEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -295,5 +313,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: RemoveParentsFromRichTextDocumentEvent,
     callback: RemoveParentsFromRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:load' event listener
+  removeEventListener(
+    core: Core,
+    type: LoadRichTextDocumentsEvent,
+    callback: LoadRichTextDocumentsEventCallback,
   ): void;
 }
