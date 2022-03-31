@@ -8,6 +8,7 @@ import {
 import {
   RichTextElement,
   RichTextElementChanges,
+  RichTextElementMap,
 } from './RichTextElement.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
@@ -156,7 +157,7 @@ export type NestRichTextElementEventData = {
   /**
    * The IDs of the elements that were nested.
    */
-  nestedElements: string[];
+  nestedElements: RichTextElementMap;
 };
 
 export type NestRichTextElementEventCallback = EventListenerCallback<
@@ -176,7 +177,7 @@ export type UnnestRichTextElementEventData = {
   /**
    * The IDs of the elements that were unnested.
    */
-  unnestedElements: string[];
+  unnestedElements: RichTextElementMap;
 };
 
 export type UnnestRichTextElementEventCallback = EventListenerCallback<
@@ -327,3 +328,29 @@ export type PermanentlyDeleteRichTextDocumentEventCallback =
     PermanentlyDeleteRichTextDocumentEvent,
     PermanentlyDeleteRichTextDocumentEventData
   >;
+
+// Set children in rich text document event
+export type SetChildrenInRichTextDocumentEvent =
+  'rich-text-documents:set-children';
+
+export interface SetChildrenInRichTextDocumentEventData {
+  /**
+   * The document in which the children were set.
+   */
+  document: RichTextDocument;
+
+  /**
+   * The elements that were removed from the document.
+   */
+  removedElements: RichTextElementMap;
+
+  /**
+   * The elements that were added to the document.
+   */
+  addedElements: RichTextElementMap;
+}
+
+export type SetChildrenInRichTextDocumentEventCallback = EventListenerCallback<
+  SetChildrenInRichTextDocumentEvent,
+  SetChildrenInRichTextDocumentEventData
+>;

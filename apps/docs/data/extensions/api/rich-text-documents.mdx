@@ -186,21 +186,21 @@ RichTextDocuments.deletePermanently(core: Core, documentId: string): RichTextDoc
   ]}
 />
 
-### addElements
+### setChildren
 
-Adds rich text block elements to the document's children and dispatches a `rich-text-documents:add-elements` event. Returns the updated document.
+Sets the child elements of a rich text document and dispatches a `rich-text-documents:set-children` event. Returns the updated document.
 
-Sets the document as a parent on the added elements.
+Adds the document as a parent on any added child elements and removes the document as a parent from any removed child elements.
 
 - Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
 - Throws a `RichTextElementNotFoundError` if any of the rich text block elements do not exist.
 - Throws a `RichTextDocumentValidationError` if any of the added elements are not block level elements.
 
 ```ts
-RichTextDocuments.addElements(
+RichTextDocuments.setChildren(
   core: Core,
   documentId: string,
-  elementIds: string,
+  children: string[],
 ): RichTextDocument
 ```
 
@@ -215,85 +215,11 @@ RichTextDocuments.addElements(
         'The ID of the rich text document into which to add the elements.',
     },
     {
-      name: 'elementIds',
+      name: 'children',
       type: 'string[]',
       required: true,
       description:
-        'The IDs of the rich text block elements to add to the document.',
-    },
-  ]}
-/>
-
-### removeElements
-
-Removes rich text block elements from the document's children and dispatches a `rich-text-documents:remove-elements` event. Returns the updated document.
-
-Removes the document as a parent from the removed elements.
-
-- Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
-- Throws a `RichTextElementNotFoundError` if any of the rich text block elements do not exist.
-
-```ts
-RichTextDocuments.removeElements(
-  core: Core,
-  documentId: string,
-  elementIds: string,
-): RichTextDocument
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'documentId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the rich text document from which to remove the elements.',
-    },
-    {
-      name: 'elementIds',
-      type: 'string[]',
-      required: true,
-      description:
-        'The IDs of the rich text block elements to remove from the document.',
-    },
-  ]}
-/>
-
-### reorderElements
-
-Reorders a document's children and dispatches a `rich-text-documents:reorder-elements` event. Returns the updated document.
-
-The `reorderedElementIds` parameter must contain exactly the same IDs as the current version of the document contains in `children`, only in a different order.
-
-- Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
-- Throws a `RichTextDocumentValidationError` if `reorderedElementIds` does not contain the same IDs as currently found in the document's `children`.
-
-```ts
-RichTextDocuments.reorderElements(
-  core: Core,
-  documentId: string,
-  reorderedElementIds: string,
-): RichTextDocument
-```
-
-<ArgsTable
-  core
-  data={[
-    {
-      name: 'documentId',
-      type: 'string',
-      required: true,
-      description:
-        'The ID of the rich text document in which to reorder the elements.',
-    },
-    {
-      name: 'reorderedElementIds',
-      type: 'string[]',
-      required: true,
-      description:
-        "The reordered IDs of the rich text block elements making up the document's root level content.",
+        'The IDs of the rich text block elements which make up the root level elements of the document.',
     },
   ]}
 />
@@ -467,22 +393,10 @@ See below the table for more details on the data passed by rich text document re
         'Dispatched when a rich text document is permanently deleted.',
     },
     {
-      name: 'rich-text-documents:add-elements',
-      data: 'AddRichTextDocumentElementsEventData',
+      name: 'rich-text-documents:set-children',
+      data: 'SetRichTextDocumentChildrenEventData',
       description:
-        "Dispatched when rich text block elements are added to a rich text document's children.",
-    },
-    {
-      name: 'rich-text-documents:remove-elements',
-      data: 'RemoveRichTextDocumentElementsEventData',
-      description:
-        "Dispatched when rich text block elements are removed from the rich text document's children.",
-    },
-    {
-      name: 'rich-text-documents:reorder-elements',
-      data: 'ReorderElementsInRichTextDocumentEventData',
-      description:
-        "Dispatched when a rich text document's children are reordered.",
+        "Dispatched when a rich text document's children are set.",
     },
     {
       name: 'rich-text-documents:add-parents',
@@ -595,7 +509,7 @@ See the [ParentReference](/docs/extensions/types/parent-reference) interface pag
   ]}
 />
 
-#### AddElementsToRichTextDocumentEventData
+#### SetRichTextDocumentChildrenEventData
 
 <InterfaceTable
   data={[
@@ -604,63 +518,21 @@ See the [ParentReference](/docs/extensions/types/parent-reference) interface pag
       type: 'RichTextDocument',
       required: true,
       description:
-        'The rich text document to which the elements were added.',
+        'The rich text document in which the elements were set.',
     },
     {
-      name: 'elements',
-      type: 'RichTextBlockElementMap',
-      required: true,
-      description:
-        'The rich text block elements which were added to the document.',
-    },
-  ]}
-/>
-
-#### RemoveElementsFromRichTextDocumentEventData
-
-<InterfaceTable
-  data={[
-    {
-      name: 'document',
-      type: 'RichTextDocument',
-      required: true,
-      description:
-        'The rich text document from which the elements were removed.',
-    },
-    {
-      name: 'elements',
+      name: 'removedElements',
       type: 'RichTextBlockElementMap',
       required: true,
       description:
         'The rich text block elements which were removed from the document.',
     },
-  ]}
-/>
-
-#### ReorderElementsInRichTextDocumentEventData
-
-<InterfaceTable
-  data={[
     {
-      name: 'document',
-      type: 'RichTextDocument',
+      name: 'addedElements',
+      type: 'RichTextBlockElementMap',
       required: true,
       description:
-        'The rich text document in which the elements were reordered.',
-    },
-    {
-      name: 'elementsBefore',
-      type: 'RichTextBlockElement[]',
-      required: true,
-      description:
-        "The document's rich text block elements in the order which they appeared before being reordered.",
-    },
-    {
-      name: 'elementsAfter',
-      type: 'RichTextBlockElement[]',
-      required: true,
-      description:
-        "The document's rich text block elements in the order which they appear after being reordered.",
+        'The rich text block elements which were added to the document.',
     },
   ]}
 />

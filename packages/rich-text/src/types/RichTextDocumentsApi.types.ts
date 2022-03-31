@@ -13,6 +13,8 @@ import {
   PermanentlyDeleteRichTextDocumentEventCallback,
   RestoreRichTextDocumentEvent,
   RestoreRichTextDocumentEventCallback,
+  SetChildrenInRichTextDocumentEvent,
+  SetChildrenInRichTextDocumentEventCallback,
   UpdateRichTextDocumentEvent,
   UpdateRichTextDocumentEventCallback,
 } from './RichTextEvents.types';
@@ -95,6 +97,31 @@ export interface RichTextDocumentsApi {
   deletePermanently(core: Core, documentId: string): RichTextDocument;
 
   /**
+   * Sets the child elements of a rich text document and dispatches a
+   * `rich-text-documents:set-children` event. Returns the updated document.
+   *
+   * Adds the document as a parent on any added child elements and removes
+   * the document as a parent from any removed child elements.
+   *
+   * - Throws a `RichTextDocumentNotFoundError` if the rich text document does
+   *   not exist.
+   * - Throws a `RichTextElementNotFoundError` if any of the rich text block
+   * - elements do not exist.
+   * - Throws a `RichTextDocumentValidationError` if any of the added elements
+   * - are not block level elements.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the document in which to set the children.
+   * @param children The IDs of the document's children.
+   * @returns The updated document.
+   */
+  setChildren(
+    core: Core,
+    documentId: string,
+    children: string[],
+  ): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -146,6 +173,13 @@ export interface RichTextDocumentsApi {
     callback: PermanentlyDeleteRichTextDocumentEventCallback,
   ): void;
 
+  // Add 'rich-text-documents:set-children' event listener
+  addEventListener(
+    core: Core,
+    type: SetChildrenInRichTextDocumentEvent,
+    callback: SetChildrenInRichTextDocumentEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -183,5 +217,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: PermanentlyDeleteRichTextDocumentEvent,
     callback: PermanentlyDeleteRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:set-children' event listener
+  removeEventListener(
+    core: Core,
+    type: SetChildrenInRichTextDocumentEvent,
+    callback: SetChildrenInRichTextDocumentEventCallback,
   ): void;
 }
