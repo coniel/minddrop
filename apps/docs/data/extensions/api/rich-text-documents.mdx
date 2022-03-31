@@ -75,6 +75,7 @@ Creates a new rich text document and dispaches a `rich-text-documents:create` ev
 Adds the document as a parent on all rich text block elements listen in `children`.
 
 - Throws a `RichTextElementNotFoundError` if any of the rich text elements listed in `children` do not exist.
+- Throws a `RichTextElementTypeNotRegistered` if any of the rich text elements listed in `children` are of an unregistered type.
 - Throws a `RichTextDocumentValidationError` if any of the elements listen in `children` are not block level elements.
 
 ```ts

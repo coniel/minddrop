@@ -50,3 +50,19 @@ export interface RichTextDocument {
  * A { [id]: RichTextDocument } map of rich text documents.
  */
 export type RichTextDocumentMap = Record<string, RichTextDocument>;
+
+/**
+ * Data supplied when creating a new rich text document.
+ */
+export interface CreateRichTextDocumentData {
+  /**
+   * A UUID used to track different versions of the document.
+   */
+  revision?: string;
+
+  /**
+   * The IDs of the `RichTextElement`s which make up the content
+   * of the document.
+   */
+  children?: string[];
+}

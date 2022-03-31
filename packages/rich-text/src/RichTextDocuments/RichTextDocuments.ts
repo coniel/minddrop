@@ -1,3 +1,4 @@
+import { createRichTextDocument } from '../createRichTextDocument';
 import { getAllRichTextDocuments } from '../getAllRichTextDocuments';
 import { getRichTextDocument } from '../getRichTextDocument';
 import { getRichTextDocuments } from '../getRichTextDocuments';
@@ -11,6 +12,7 @@ export const RichTextDocuments: RichTextDocumentsApi = {
       ? getRichTextDocuments(elementId)
       : getRichTextDocument(elementId),
   getAll: getAllRichTextDocuments,
+  create: createRichTextDocument,
   toPlainText: (document) => {
     // Get the document's children
     const children = getRichTextElements(document.children);
@@ -24,4 +26,8 @@ export const RichTextDocuments: RichTextDocumentsApi = {
     // Return the children as plain text
     return toPlainText(orderedChildren);
   },
+  addEventListener: (core, type, callback) =>
+    core.addEventListener(type, callback),
+  removeEventListener: (core, type, callback) =>
+    core.addEventListener(type, callback),
 };

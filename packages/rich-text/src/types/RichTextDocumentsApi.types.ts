@@ -1,7 +1,13 @@
+import { Core } from '@minddrop/core';
 import {
+  CreateRichTextDocumentData,
   RichTextDocument,
   RichTextDocumentMap,
 } from './RichTextDocument.types';
+import {
+  CreateRichTextDocumentEvent,
+  CreateRichTextDocumentEventCallback,
+} from './RichTextEvents.types';
 
 export interface RichTextDocumentsApi {
   /**
@@ -25,6 +31,26 @@ export interface RichTextDocumentsApi {
   getAll(): RichTextDocumentMap;
 
   /**
+   * Creates a new rich text document and dispatches a
+   * `rich-text-documents:create' event. Returns the newly created document.
+   *
+   * Adds the document as a parent on all rich text block elements listen in
+   * `children`.
+   *
+   * - Throws a `RichTextElementTypeNotRegistered` error if any of the child
+   *   element types are not registered.
+   * - Throws a `RichTextElementNotFoundError` if any of the children do not
+   *   exist.
+   * - Throws a `RichTextDocumentValidationError` if any of the children are
+   *   not block level rich text elements.
+   *
+   * @param core A MindDrop core instance.
+   * @param data The document data.
+   * @returns The newly created document.
+   */
+  create(core: Core, data?: CreateRichTextDocumentData): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -36,4 +62,26 @@ export interface RichTextDocumentsApi {
    * @returns The plain text.
    */
   toPlainText(document: RichTextDocument): string;
+
+  /* ************************** */
+  /* addEventListener overloads */
+  /* ************************** */
+
+  // Add 'rich-text-documents:create' event listener
+  addEventListener(
+    core: Core,
+    type: CreateRichTextDocumentEvent,
+    callback: CreateRichTextDocumentEventCallback,
+  ): void;
+
+  /* ***************************** */
+  /* removeEventListener overloads */
+  /* ***************************** */
+
+  // Remove 'rich-text-documents:create' event listener
+  removeEventListener(
+    core: Core,
+    type: CreateRichTextDocumentEvent,
+    callback: CreateRichTextDocumentEventCallback,
+  ): void;
 }

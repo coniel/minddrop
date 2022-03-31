@@ -1,6 +1,7 @@
 import { EventListenerCallback, ParentReference } from '@minddrop/core';
 import { FileReference } from '@minddrop/files';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
+import { RichTextDocument } from './RichTextDocument.types';
 import {
   RichTextElement,
   RichTextElementChanges,
@@ -255,4 +256,14 @@ export type LoadRichTextElementsEventData = RichTextElement[];
 export type LoadRichTextElementsEventCallback = EventListenerCallback<
   LoadRichTextElementsEvent,
   LoadRichTextElementsEventData
+>;
+
+// Create rich text document event
+export type CreateRichTextDocumentEvent = 'rich-test-documents:create';
+
+export type CreateRichTextDocumentEventData = RichTextDocument;
+
+export type CreateRichTextDocumentEventCallback = EventListenerCallback<
+  CreateRichTextDocumentEvent,
+  CreateRichTextDocumentEventData
 >;
