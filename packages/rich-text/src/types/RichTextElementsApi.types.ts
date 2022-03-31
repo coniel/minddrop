@@ -381,6 +381,19 @@ export interface RichTextElementsApi {
   ): TElement;
 
   /**
+   * Converts rich text elements to a plain text string.
+   * Void elements are converted using their `toPlainText`method.
+   * If they do not have such a method, they are omited.
+   *
+   * - Throws a `RichTextElementNotFoundError` if any of the
+   *   elements' nested elements do not exist.
+   *
+   * @param elements The elements to convert into plain text.
+   * @returns The plain text.
+   */
+  toPlainText(elements: RichTextElement[]): string;
+
+  /**
    * Loads rich text elements into the store and dispatches a
    * `rich-text-elements:load` envent.
    *

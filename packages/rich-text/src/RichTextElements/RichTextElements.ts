@@ -17,6 +17,7 @@ import { removeFilesFromRichTextElement } from '../removeFilesFromRichTextElemen
 import { removeParentsFromRichTextElement } from '../removeParentsFromRichTextElement';
 import { replaceFilesInRichTextElement } from '../replaceFilesInRichTextElement';
 import { restoreRichTextElement } from '../restoreRichTextElement';
+import { toPlainText } from '../toPlainText';
 import { RichTextElementsApi } from '../types';
 import { unnestRichTextElements } from '../unnestRichTextElements';
 import { unregisterRichTextElementType } from '../unregisterRichTextElementType';
@@ -52,6 +53,7 @@ export const RichTextElements: RichTextElementsApi = {
   addFiles: addFilesToRichTextElement,
   removeFiles: removeFilesFromRichTextElement,
   replaceFiles: replaceFilesInRichTextElement,
+  toPlainText,
   load: loadRichTextElements,
   clearElements: clearRichTextElements,
   clearRegistered: clearRegisteredRichTextElementTypes,
