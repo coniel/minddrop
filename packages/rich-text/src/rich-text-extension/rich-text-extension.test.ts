@@ -1,4 +1,6 @@
 import { onDisable, onRun } from './rich-text-extension';
+import { MockDate } from '@minddrop/test-utils';
+import { generateId } from '@minddrop/utils';
 import {
   setup,
   cleanup,
@@ -8,16 +10,12 @@ import {
   headingElement1,
   headingElement2,
 } from '../test-utils';
-import { clearRichTextElements } from '../clearRichTextElements';
-import { getRichTextElements } from '../getRichTextElements';
+import { RichTextDocuments } from '../RichTextDocuments';
+import { RichTextElements } from '../RichTextElements';
 import {
   RichTextDocumentNotFoundError,
   RichTextElementNotFoundError,
 } from '../errors';
-import { generateId } from '@minddrop/utils';
-import { getRichTextElement } from '../getRichTextElement';
-import { getRichTextDocuments } from '../getRichTextDocuments';
-import { getRichTextDocument } from '../getRichTextDocument';
 import { useRichTextStore } from '../useRichTextStore';
 
 function getElementResourceConnector() {
@@ -49,7 +47,7 @@ describe('rich text extension', () => {
 
       it('handles document loading', () => {
         // Clear rich text elements from the store
-        clearRichTextElements();
+        RichTextElements.clearElements();
 
         // Run the extension
         onRun(core);
@@ -63,7 +61,7 @@ describe('rich text extension', () => {
 
         // Should load documents into the store
         expect(() =>
-          getRichTextElements([headingElement1.id, headingElement2.id]),
+          RichTextElements.get([headingElement1.id, headingElement2.id]),
         ).not.toThrowError(RichTextElementNotFoundError);
       });
 
@@ -83,7 +81,7 @@ describe('rich text extension', () => {
         connector.onChange(element, false);
 
         // New element should be in the store
-        expect(() => getRichTextElement(element.id)).not.toThrowError(
+        expect(() => RichTextElements.get(element.id)).not.toThrowError(
           RichTextElementNotFoundError,
         );
       });
@@ -107,7 +105,7 @@ describe('rich text extension', () => {
         connector.onChange(element, false);
 
         // Get the element from the store
-        const storeElement = getRichTextElement(headingElement1.id);
+        const storeElement = RichTextElements.get(headingElement1.id);
 
         // Element should be updated in the store
         expect(storeElement).toEqual(element);
@@ -126,7 +124,7 @@ describe('rich text extension', () => {
         connector.onChange(headingElement1, true);
 
         // Element should no longer be in the store
-        expect(() => getRichTextElement(headingElement1.id)).toThrowError(
+        expect(() => RichTextElements.get(headingElement1.id)).toThrowError(
           RichTextElementNotFoundError,
         );
       });
@@ -143,7 +141,7 @@ describe('rich text extension', () => {
 
       it('handles document loading', () => {
         // Clear rich text documents from the store
-        clearRichTextElements();
+        RichTextDocuments.clear();
 
         // Run the extension
         onRun(core);
@@ -157,7 +155,7 @@ describe('rich text extension', () => {
 
         // Should load documents into the store
         expect(() =>
-          getRichTextDocuments([richTextDocument1.id, richTextDocument2.id]),
+          RichTextDocuments.get([richTextDocument1.id, richTextDocument2.id]),
         ).not.toThrowError(RichTextDocumentNotFoundError);
       });
 
@@ -177,7 +175,7 @@ describe('rich text extension', () => {
         connector.onChange(document, false);
 
         // New document should be in the store
-        expect(() => getRichTextDocument(document.id)).not.toThrowError(
+        expect(() => RichTextDocuments.get(document.id)).not.toThrowError(
           RichTextDocumentNotFoundError,
         );
       });
@@ -201,7 +199,7 @@ describe('rich text extension', () => {
         connector.onChange(document, false);
 
         // Get the document from the store
-        const storeDocument = getRichTextDocument(richTextDocument1.id);
+        const storeDocument = RichTextDocuments.get(richTextDocument1.id);
 
         // Document should be updated in the store
         expect(storeDocument).toEqual(document);
@@ -220,9 +218,50 @@ describe('rich text extension', () => {
         connector.onChange(richTextDocument1, true);
 
         // Document should no longer be in the store
-        expect(() => getRichTextDocument(richTextDocument1.id)).toThrowError(
+        expect(() => RichTextDocuments.get(richTextDocument1.id)).toThrowError(
           RichTextDocumentNotFoundError,
         );
+      });
+    });
+  });
+
+  describe('event listeners', () => {
+    it("updates a document's `updatedAt` timestamp when one of its children is updated", (done) => {
+      // Set the date to '01/01/2000'
+      MockDate.set('01/01/2000');
+
+      // Run the extension
+      onRun(core);
+
+      // Create a new rich text document with an element. It will have
+      // an `updatedAt` timestamp of equaivalent to '01/01/2000'.
+      const document = RichTextDocuments.create(core, {
+        children: [headingElement1.id],
+      });
+
+      // Move date forward by a day
+      MockDate.set('01/02/2000');
+
+      // The expected updated at timestamp
+      const updatedAt = new Date();
+
+      // Listen to 'rich-text-documents:update' events
+      RichTextDocuments.addEventListener(
+        core,
+        'rich-text-documents:update',
+        () => {
+          // Get the updated document from the store
+          const updatedDocument = RichTextDocuments.get(document.id);
+
+          // The `upadetedAt` timestamp of the document should be set to '01/02/2000'
+          expect(updatedDocument.updatedAt).toEqual(updatedAt);
+          done();
+        },
+      );
+
+      // Update the element
+      RichTextElements.update(core, headingElement1.id, {
+        children: [{ text: 'Updated text' }],
       });
     });
   });
@@ -256,6 +295,14 @@ describe('rich text extension', () => {
       expect(useRichTextStore.getState().elements).toEqual({});
       // Store should no longer contain documents
       expect(useRichTextStore.getState().documents).toEqual({});
+    });
+
+    it('clears all event listeners', () => {
+      // Disable the extension
+      onDisable(core);
+
+      // There should no longer be any rich text related event listeners
+      expect(core.hasEventListeners()).toBeFalsy();
     });
   });
 });

@@ -35,5 +35,8 @@ export function cleanup() {
   act(() => {
     // Clear the rich text store
     useRichTextStore.getState().clear();
+
+    // Remove event listeners
+    core.removeAllEventListeners();
   });
 }

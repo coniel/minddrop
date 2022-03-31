@@ -1,10 +1,12 @@
-import { Core } from '@minddrop/core';
+import { Core, ParentReferences } from '@minddrop/core';
 import { clearRegisteredRichTextElementTypes } from '../clearRegisteredRichTextElementTypes';
 import { clearRichTextDocuments } from '../clearRichTextDocuments';
 import { clearRichTextElements } from '../clearRichTextElements';
 import { loadRichTextDocuments } from '../loadRichTextDocuments';
 import { loadRichTextElements } from '../loadRichTextElements';
+import { RichTextElements } from '../RichTextElements';
 import { RichTextDocument, RichTextElement } from '../types';
+import { updateRichTextDocument } from '../updateRichTextDocument';
 import { useRichTextStore } from '../useRichTextStore';
 
 export function onRun(core: Core): void {
@@ -45,6 +47,25 @@ export function onRun(core: Core): void {
       }
     },
   });
+
+  // Listen to rich text element update events and update the
+  // `updatedAt` timestamp of their parent documents.
+  RichTextElements.addEventListener(
+    core,
+    'rich-text-elements:update',
+    (payload) => {
+      // Get the element's parent document IDs
+      const documentIds = ParentReferences.getIds(
+        'rich-text-document',
+        payload.data.after.parents,
+      );
+
+      // Update the `updatedAt` value on each parent document
+      documentIds.forEach((id) => {
+        updateRichTextDocument(core, id, { updatedAt: new Date() });
+      });
+    },
+  );
 }
 
 export function onDisable(core: Core): void {
@@ -59,4 +80,7 @@ export function onDisable(core: Core): void {
   core.unregisterResource('rich-text:element');
   // Unregsiter the 'rich-text:document' resource
   core.unregisterResource('rich-text:document');
+
+  // Remove all event listeners added by this extension
+  core.removeAllEventListeners();
 }
