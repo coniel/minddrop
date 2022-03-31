@@ -1,4 +1,5 @@
 import { ParentReference } from '@minddrop/core';
+import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
 
 export interface RichTextDocument {
   /**
@@ -65,4 +66,40 @@ export interface CreateRichTextDocumentData {
    * of the document.
    */
   children?: string[];
+}
+
+export interface RichTextDocumentChanges {
+  /**
+   * Timestamp at which the document was last updated. Equal to
+   * the `createdAt` value if the document has not been updated.
+   */
+  updatedAt: Date;
+
+  /**
+   * A UUID used to track different versions of the document.
+   */
+  revision?: string;
+
+  /**
+   * References of the document's parents.
+   */
+  parents?: ParentReference[] | FieldValueArrayUnion | FieldValueArrayRemove;
+
+  /**
+   * The IDs of the `RichTextElement`s which make up the content
+   * of the document.
+   */
+  children?: string[] | FieldValueArrayUnion | FieldValueArrayUnion;
+
+  /**
+   * When `true`, the rich text document is deleted. Not present
+   * if the document is not deleted.
+   */
+  deleted?: boolean;
+
+  /**
+   * Timestamp at which the rich text document was deleted. Not
+   * present if the document is not deleted.
+   */
+  deletedAt?: Date;
 }

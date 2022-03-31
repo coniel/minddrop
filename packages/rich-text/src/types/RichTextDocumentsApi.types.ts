@@ -7,6 +7,8 @@ import {
 import {
   CreateRichTextDocumentEvent,
   CreateRichTextDocumentEventCallback,
+  UpdateRichTextDocumentEvent,
+  UpdateRichTextDocumentEventCallback,
 } from './RichTextEvents.types';
 
 export interface RichTextDocumentsApi {
@@ -74,6 +76,13 @@ export interface RichTextDocumentsApi {
     callback: CreateRichTextDocumentEventCallback,
   ): void;
 
+  // Remove 'rich-text-documents:update' event listener
+  removeEventListener(
+    core: Core,
+    type: UpdateRichTextDocumentEvent,
+    callback: UpdateRichTextDocumentEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -83,5 +92,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: CreateRichTextDocumentEvent,
     callback: CreateRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:update' event listener
+  removeEventListener(
+    core: Core,
+    type: UpdateRichTextDocumentEvent,
+    callback: UpdateRichTextDocumentEventCallback,
   ): void;
 }

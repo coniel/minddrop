@@ -1,7 +1,10 @@
 import { EventListenerCallback, ParentReference } from '@minddrop/core';
 import { FileReference } from '@minddrop/files';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
-import { RichTextDocument } from './RichTextDocument.types';
+import {
+  RichTextDocument,
+  RichTextDocumentChanges,
+} from './RichTextDocument.types';
 import {
   RichTextElement,
   RichTextElementChanges,
@@ -266,4 +269,29 @@ export type CreateRichTextDocumentEventData = RichTextDocument;
 export type CreateRichTextDocumentEventCallback = EventListenerCallback<
   CreateRichTextDocumentEvent,
   CreateRichTextDocumentEventData
+>;
+
+// Update rich text document event
+export type UpdateRichTextDocumentEvent = 'rich-test-documents:update';
+
+export interface UpdateRichTextDocumentEventData {
+  /**
+   * The document data before it was updated.
+   */
+  before: RichTextDocument;
+
+  /**
+   * The document data after it was updated.
+   */
+  after: RichTextDocument;
+
+  /**
+   * The changes applied to the document data.
+   */
+  changes: RichTextDocumentChanges;
+}
+
+export type UpdateRichTextDocumentEventCallback = EventListenerCallback<
+  UpdateRichTextDocumentEvent,
+  UpdateRichTextDocumentEventData
 >;
