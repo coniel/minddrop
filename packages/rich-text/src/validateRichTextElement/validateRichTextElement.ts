@@ -1,3 +1,4 @@
+import { ParentReferences } from '@minddrop/core';
 import { Files } from '@minddrop/files';
 import {
   RichTextElementNotFoundError,
@@ -19,8 +20,11 @@ import { useRichTextStore } from '../useRichTextStore';
  * - If the element has parent documents, the documents exist
  * - If the element has parent elements, the elements exist
  *
- * If validation fails, one of the following errors will be thrown:
- * - `RichTextElementTypeNotRegistered` error if the element type is not registered.
+ * Throws one of the following errors if validation fails:
+ * - `RichTextElementTypeNotRegistered` error if the element typeis
+ *   not registered.
+ * - `ParentReferenceValidationError` if any of the parent references
+ *   are invalid.
  * - `RichTextElementValidationError` if any of the other checks fail.
  *
  * @param element The rich text element to validate.
@@ -61,6 +65,9 @@ export function validateRichTextElement(element: RichTextElement): void {
       'property `parents` must be an array of `ParentReference` objects (set to an empty array if element has no parents)',
     );
   }
+
+  // Ensure that all parents are valid `ParentReference` objects
+  ParentReferences.validate(element.parents);
 
   // Get the element's configuration object
   const config = getRichTextElementConfig(element.type);

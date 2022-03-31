@@ -20,8 +20,17 @@ describe('validateRichTextDocument', () => {
 
   afterEach(cleanup);
 
-  it('does something useful', () => {
-    //
+  it('does not throw an error given a valid document', () => {
+    // Validate a valid document
+    expect(() => validateRichTextDocument(richTextDocument1)).not.toThrow();
+    // Validate a valid deleted document
+    expect(() =>
+      validateRichTextDocument({
+        ...richTextDocument1,
+        deleted: true,
+        deletedAt: new Date(),
+      }),
+    ).not.toThrow();
   });
 
   it('throws if the document has no `id`', () => {
@@ -114,14 +123,6 @@ describe('validateRichTextDocument', () => {
   });
 
   it('throws if `parents` contains an invalid parent', () => {
-    // Validate a document with no `parents` property, should
-    // throw a `RichTextDocumentValidationError`.
-    const document = { ...richTextDocument1 };
-    delete document.parents;
-    expect(() => validateRichTextDocument(document)).toThrowError(
-      RichTextDocumentValidationError,
-    );
-
     // Validate a document with an invalid parent in its `parents`
     // property, should throw a `RichTextDocumentValidationError`.
     expect(() =>

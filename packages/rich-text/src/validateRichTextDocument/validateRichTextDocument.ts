@@ -5,7 +5,23 @@ import { getRichTextElements } from '../getRichTextElements';
 import { RichTextDocument } from '../types';
 
 /**
- * Does something useful.
+ * Validates a rich text document, checking that:
+ * - The document contains all required fields
+ * - The document does not contain additional fields
+ * - The document's parent reference are valid
+ * - The document's deleted/deletedAt properties are set correctly
+ * - The document's children are all registered block level elements
+ *
+ * Throws one of the following errors if validation fails:
+ * - `ParentReferenceValidationError` if any of the parent references
+ *   are invalid.
+ * - `RichTextElementNotFoundError` if any of the child elements do
+ *   not exist.
+ * - `RichTextElementTypeNotRegisteredError` if any of the child
+ *   elements are not of a registered type.
+ * - `RichTextDocumentValidationError` if any of the other checks fail.
+ *
+ * @param document The rich text document to validate.
  */
 export function validateRichTextDocument(document: RichTextDocument): void {
   // Check that the document has an `id` property
@@ -74,7 +90,7 @@ export function validateRichTextDocument(document: RichTextDocument): void {
     );
   }
 
-  // Check that all parents are valid `ParentReference` objects
+  // Ensure that all parents are valid `ParentReference` objects
   ParentReferences.validate(document.parents);
 
   // Validate the deleted state

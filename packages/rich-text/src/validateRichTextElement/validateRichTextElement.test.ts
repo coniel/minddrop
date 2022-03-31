@@ -1,3 +1,4 @@
+import { ParentReferenceValidationError } from '@minddrop/core';
 import {
   RichTextElementTypeNotRegisteredError,
   RichTextElementValidationError,
@@ -116,6 +117,19 @@ describe('validateRichTextElement', () => {
       // @ts-ignore
       validateRichTextElement({ ...headingElement1, parents: 'parent-id' }),
     ).toThrowError(RichTextElementValidationError);
+  });
+
+  it('throws if `parents` contains an invalid parent', () => {
+    // Validate a element with an invalid parent in its `parents`
+    // property, should throw a `RichTextElementValidationError`.
+    expect(() =>
+      // @ts-ignore
+      validateRichTextElement({
+        ...headingElement1,
+        // @ts-ignore
+        parents: [{ id: 'parent-id' }],
+      }),
+    ).toThrowError(ParentReferenceValidationError);
   });
 
   it('throws if a parent rich text element does not exist', () => {
