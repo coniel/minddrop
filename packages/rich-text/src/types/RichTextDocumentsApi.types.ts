@@ -13,6 +13,8 @@ import {
   DeleteRichTextDocumentEventCallback,
   PermanentlyDeleteRichTextDocumentEvent,
   PermanentlyDeleteRichTextDocumentEventCallback,
+  RemoveParentsFromRichTextDocumentEvent,
+  RemoveParentsFromRichTextDocumentEventCallback,
   RestoreRichTextDocumentEvent,
   RestoreRichTextDocumentEventCallback,
   SetChildrenInRichTextDocumentEvent,
@@ -145,6 +147,24 @@ export interface RichTextDocumentsApi {
   ): RichTextDocument;
 
   /**
+   * Removes parent references from a rich text document and dispatches
+   * a `rich-text-documents:remove-parents` event.
+   *
+   * - Throws a `RichTextDocumentNotFoundError` if the rich text document
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the document from which to remove the parents.
+   * @param parents The parent references to remove from the document.
+   * @returns The updated document.
+   */
+  removeParents(
+    core: Core,
+    documentId: string,
+    parents: ParentReference[],
+  ): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -210,6 +230,13 @@ export interface RichTextDocumentsApi {
     callback: AddParentsToRichTextDocumentEventCallback,
   ): void;
 
+  // Add 'rich-text-documents:remove-parents' event listener
+  addEventListener(
+    core: Core,
+    type: RemoveParentsFromRichTextDocumentEvent,
+    callback: RemoveParentsFromRichTextDocumentEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -261,5 +288,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: AddParentsToRichTextDocumentEvent,
     callback: AddParentsToRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:remove-parents' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsFromRichTextDocumentEvent,
+    callback: RemoveParentsFromRichTextDocumentEventCallback,
   ): void;
 }

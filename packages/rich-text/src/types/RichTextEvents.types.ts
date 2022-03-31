@@ -375,3 +375,25 @@ export type AddParentsToRichTextDocumentEventCallback = EventListenerCallback<
   AddParentsToRichTextDocumentEvent,
   AddParentsToRichTextDocumentEventData
 >;
+
+// Remove parents from rich text document event
+export type RemoveParentsFromRichTextDocumentEvent =
+  'rich-test-documents:remove-parents';
+
+export type RemoveParentsFromRichTextDocumentEventData = {
+  /**
+   * The updated document.
+   */
+  document: RichTextDocument;
+
+  /**
+   * The parent references removed from the document.
+   */
+  parents: ParentReference[];
+};
+
+export type RemoveParentsFromRichTextDocumentEventCallback =
+  EventListenerCallback<
+    RemoveParentsFromRichTextDocumentEvent,
+    RemoveParentsFromRichTextDocumentEventData
+  >;
