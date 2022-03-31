@@ -5,8 +5,6 @@ import { RichTextDocument, RichTextDocumentChanges } from '../types';
 import { useRichTextStore } from '../useRichTextStore';
 import { validateRichTextDocument } from '../validateRichTextDocument';
 
-type Data = Omit<RichTextDocumentChanges, 'updatedAt'>;
-
 /**
  * Updates a rich text document and dispatches a
  * `rich-text-documents:update' event. Returns the updated document.
@@ -30,7 +28,7 @@ type Data = Omit<RichTextDocumentChanges, 'updatedAt'>;
 export function updateRichTextDocument(
   core: Core,
   documentId: string,
-  data: Data,
+  data: Partial<RichTextDocumentChanges>,
 ): RichTextDocument {
   // Get the document
   const document = getRichTextDocument(documentId);
