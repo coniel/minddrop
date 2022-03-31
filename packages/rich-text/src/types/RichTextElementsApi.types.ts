@@ -1,4 +1,4 @@
-import { Core, ParentReference } from '@minddrop/core';
+import { Core, DataInsert, ParentReference } from '@minddrop/core';
 import { RichTextBlockElement } from './RichTextBlockElement.types';
 import { RichTextBlockElementConfig } from './RichTextBlockElementConfig.types';
 import {
@@ -40,6 +40,7 @@ import {
   UpdateRichTextElementEvent,
   UpdateRichTextElementEventCallback,
 } from './RichTextEvents.types';
+import { RichTextFragment } from './RichTextFragment.types';
 import { RichTextInlineElementConfig } from './RichTextInlineElementConfig.types';
 
 export interface RichTextElementsApi {
@@ -160,6 +161,26 @@ export interface RichTextElementsApi {
   >(
     core: Core,
     data: TData,
+  ): TElement;
+
+  /**
+   * Creates a new rich text element of the given type by calling
+   * the element config's `create` method. Dispatches a
+   * `rich-text-elements:create` event and returns the newly
+   * created element.
+   *
+   * - Throws a `RichTextElementTypeNotRegisteredError` if the
+   *   element type is not registered.
+   *
+   * @param core A MindDrop core instance.
+   * @param type The element type to create.
+   * @param data A data insert object from which to create the element.
+   * @returns The new element.
+   */
+  createOfType<TElement extends RichTextElement = RichTextElement>(
+    core: Core,
+    type: string,
+    data?: DataInsert | RichTextFragment,
   ): TElement;
 
   /**

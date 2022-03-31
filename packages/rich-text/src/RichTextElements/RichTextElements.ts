@@ -3,6 +3,7 @@ import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
 import { clearRegisteredRichTextElementTypes } from '../clearRegisteredRichTextElementTypes';
 import { clearRichTextElements } from '../clearRichTextElements';
 import { createRichTextElement } from '../createRichTextElement';
+import { createRichTextElementOfType } from '../createRichTextElementOfType';
 import { deleteRichTextElement } from '../deleteRichTextElement';
 import { filterRichTextElements } from '../filterRichTextElements';
 import { getAllRichTextElements } from '../getAllRichTextElements';
@@ -35,6 +36,7 @@ export const RichTextElements: RichTextElementsApi = {
   getAll: getAllRichTextElements,
   filter: filterRichTextElements,
   create: createRichTextElement,
+  createOfType: createRichTextElementOfType,
   update: (core, elementId, data) => {
     // Prevents special fields like `parents` from being updated directly
     // via the public API.

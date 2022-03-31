@@ -299,6 +299,36 @@ Note that the `parents` property cannot be set directly. The element must be add
   ]}
 />
 
+### createOfType
+
+Creates a new rich text element of the given type by calling the element config's `create` method. Dispatches a `rich-text-elements:create` event and returns the newly created element.
+
+- Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered.
+
+```ts
+RichTextElements.createOfType<
+  TElement extends RichTextElement,
+>(core: Core, type: string, data?: DataInsert): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: 'The element type to create. Must be registered.',
+    },
+    {
+      name: 'data',
+      type: 'string',
+      description:
+        'A data insert object from which to create the element.',
+    },
+  ]}
+/>
+
 ### update
 
 Updates a rich text element and dispaches a `rich-text-element:update` event. Returns the updated rich text element.
