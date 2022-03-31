@@ -1,4 +1,5 @@
 export * from './types';
+export * from './rich-text-extension';
 export * from './RichTextElements';
 export * from './RichTextDocuments';
 export * from './useRichTextDocument';
