@@ -1,10 +1,12 @@
-import { Core } from '@minddrop/core';
+import { Core, ParentReference } from '@minddrop/core';
 import {
   CreateRichTextDocumentData,
   RichTextDocument,
   RichTextDocumentMap,
 } from './RichTextDocument.types';
 import {
+  AddParentsToRichTextDocumentEvent,
+  AddParentsToRichTextDocumentEventCallback,
   CreateRichTextDocumentEvent,
   CreateRichTextDocumentEventCallback,
   DeleteRichTextDocumentEvent,
@@ -122,6 +124,27 @@ export interface RichTextDocumentsApi {
   ): RichTextDocument;
 
   /**
+   * Adds parent references to a rich text document and dispatches a
+   * `rich-text-documents:add-parents` event. Returns the updated
+   * document.
+   *
+   * - Throws a `RichTextDocumentNotFound` error if the document does
+   *   not exist.
+   * - Throws a `ParentReferenceValidationError` if any of the parent
+   *   references are invalid.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the document to which to add the parents.
+   * @param parents The references of the parents to add.
+   * @returns The updated rich text document.
+   */
+  addParents(
+    core: Core,
+    documentId: string,
+    parents: ParentReference[],
+  ): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -180,6 +203,13 @@ export interface RichTextDocumentsApi {
     callback: SetChildrenInRichTextDocumentEventCallback,
   ): void;
 
+  // Add 'rich-text-documents:add-parents' event listener
+  addEventListener(
+    core: Core,
+    type: AddParentsToRichTextDocumentEvent,
+    callback: AddParentsToRichTextDocumentEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -224,5 +254,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: SetChildrenInRichTextDocumentEvent,
     callback: SetChildrenInRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:add-parents' event listener
+  removeEventListener(
+    core: Core,
+    type: AddParentsToRichTextDocumentEvent,
+    callback: AddParentsToRichTextDocumentEventCallback,
   ): void;
 }

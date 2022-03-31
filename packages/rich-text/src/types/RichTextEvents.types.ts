@@ -354,3 +354,24 @@ export type SetChildrenInRichTextDocumentEventCallback = EventListenerCallback<
   SetChildrenInRichTextDocumentEvent,
   SetChildrenInRichTextDocumentEventData
 >;
+
+// Add parents to rich text document event
+export type AddParentsToRichTextDocumentEvent =
+  'rich-test-documents:add-parents';
+
+export type AddParentsToRichTextDocumentEventData = {
+  /**
+   * The updated document.
+   */
+  document: RichTextDocument;
+
+  /**
+   * The parent references added to the document.
+   */
+  parents: ParentReference[];
+};
+
+export type AddParentsToRichTextDocumentEventCallback = EventListenerCallback<
+  AddParentsToRichTextDocumentEvent,
+  AddParentsToRichTextDocumentEventData
+>;

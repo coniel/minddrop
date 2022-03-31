@@ -1,3 +1,4 @@
+import { addParentsToRichTextDocument } from '../addParentsToRichTextDocument';
 import { createRichTextDocument } from '../createRichTextDocument';
 import { deleteRichTextDocument } from '../deleteRichTextDocument';
 import { getAllRichTextDocuments } from '../getAllRichTextDocuments';
@@ -21,6 +22,7 @@ export const RichTextDocuments: RichTextDocumentsApi = {
   restore: restoreRichTextDocument,
   deletePermanently: permanentlyDeleteRichTextDocument,
   setChildren: setChildrenInRichTextDocument,
+  addParents: addParentsToRichTextDocument,
   toPlainText: (document) => {
     // Get the document's children
     const children = getRichTextElements(document.children);
