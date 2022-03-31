@@ -315,3 +315,15 @@ export type RestoreRichTextDocumentEventCallback = EventListenerCallback<
   RestoreRichTextDocumentEvent,
   RestoreRichTextDocumentEventData
 >;
+
+// Permanently delete rich text document event
+export type PermanentlyDeleteRichTextDocumentEvent =
+  'rich-test-documents:delete-permanently';
+
+export type PermanentlyDeleteRichTextDocumentEventData = RichTextDocument;
+
+export type PermanentlyDeleteRichTextDocumentEventCallback =
+  EventListenerCallback<
+    PermanentlyDeleteRichTextDocumentEvent,
+    PermanentlyDeleteRichTextDocumentEventData
+  >;

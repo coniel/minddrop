@@ -9,6 +9,8 @@ import {
   CreateRichTextDocumentEventCallback,
   DeleteRichTextDocumentEvent,
   DeleteRichTextDocumentEventCallback,
+  PermanentlyDeleteRichTextDocumentEvent,
+  PermanentlyDeleteRichTextDocumentEventCallback,
   RestoreRichTextDocumentEvent,
   RestoreRichTextDocumentEventCallback,
   UpdateRichTextDocumentEvent,
@@ -79,6 +81,20 @@ export interface RichTextDocumentsApi {
   restore(core: Core, documentId: string): RichTextDocument;
 
   /**
+   * Permanently deletes a rich text document and dispatches a
+   * `rich-text-documents:delete-permanently` event. Returns the
+   * deleted document.
+   *
+   * - Throws a `RichTextDocumentNotFoundError` if the document
+   *   does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the docuemnt to permanently delete.
+   * @returns The deleted docuemnt.
+   */
+  deletePermanently(core: Core, documentId: string): RichTextDocument;
+
+  /**
    * Converts a rich text document to a plain text string.
    * Void documentsare converted using their toPlainText method.
    * If they do not have such a method, they are omited.
@@ -123,6 +139,13 @@ export interface RichTextDocumentsApi {
     callback: RestoreRichTextDocumentEventCallback,
   ): void;
 
+  // Add 'rich-text-documents:delete-permanently' event listener
+  addEventListener(
+    core: Core,
+    type: PermanentlyDeleteRichTextDocumentEvent,
+    callback: PermanentlyDeleteRichTextDocumentEventCallback,
+  ): void;
+
   /* ***************************** */
   /* removeEventListener overloads */
   /* ***************************** */
@@ -153,5 +176,12 @@ export interface RichTextDocumentsApi {
     core: Core,
     type: RestoreRichTextDocumentEvent,
     callback: RestoreRichTextDocumentEventCallback,
+  ): void;
+
+  // Remove 'rich-text-documents:delete-permanently' event listener
+  removeEventListener(
+    core: Core,
+    type: PermanentlyDeleteRichTextDocumentEvent,
+    callback: PermanentlyDeleteRichTextDocumentEventCallback,
   ): void;
 }
