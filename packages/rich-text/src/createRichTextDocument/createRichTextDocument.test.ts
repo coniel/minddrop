@@ -1,6 +1,5 @@
 import {
   RichTextDocumentNotFoundError,
-  RichTextDocumentValidationError,
   RichTextElementNotFoundError,
 } from '../errors';
 import {
@@ -20,17 +19,6 @@ describe('createRichTextDocument', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
-
-  it('throws if the data contains `parents`', () => {
-    // Attempt to create an document with a `parents` value in data.
-    // Should throw a `RichTextDocumentValidationError`.
-    expect(() =>
-      createRichTextDocument(core, {
-        // @ts-ignore
-        parents: [],
-      }),
-    ).toThrowError(RichTextDocumentValidationError);
-  });
 
   it('validates the document', () => {
     // Attempt to create a document with a missing child. Should

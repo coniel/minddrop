@@ -70,6 +70,11 @@ export interface CreateRichTextDocumentData {
    * of the document.
    */
   children?: string[];
+
+  /**
+   * References of the document's parents.
+   */
+  parents?: ParentReference[];
 }
 
 export interface RichTextDocumentChanges {

@@ -14,9 +14,9 @@ export function generateRichTextDocument(
     id: generateId(),
     revision: generateId(),
     children: [],
+    parents: [],
     ...data,
     createdAt: new Date(),
     updatedAt: new Date(),
-    parents: [],
   };
 }

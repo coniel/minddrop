@@ -1,6 +1,5 @@
 import { Core, ParentReferences } from '@minddrop/core';
 import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
-import { RichTextDocumentValidationError } from '../errors';
 import { generateRichTextDocument } from '../generateRichTextDocument';
 import { CreateRichTextDocumentData, RichTextDocument } from '../types';
 import { useRichTextStore } from '../useRichTextStore';
@@ -28,13 +27,6 @@ export function createRichTextDocument(
   core: Core,
   data: CreateRichTextDocumentData = {},
 ): RichTextDocument {
-  // Throw an error if the data contains the `parents` property
-  if ('parents' in data) {
-    throw new RichTextDocumentValidationError(
-      'creating a rich text document with a `parents` property is forbidden, parents must be added after creation',
-    );
-  }
-
   // Generate a new rich text document
   const document = generateRichTextDocument(data);
 
