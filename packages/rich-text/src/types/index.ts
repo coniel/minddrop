@@ -1,5 +1,4 @@
 export * from './HtmlDeserializer.types';
-export * from './RichTextNode.types';
 export * from './RichTextBlockElement.types';
 export * from './RichTextBlockElementConfig.types';
 export * from './RichTextDocument.types';
@@ -10,6 +9,8 @@ export * from './RichTextElementFilters.types';
 export * from './RichTextElementProps.types';
 export * from './RichTextElementsApi.types';
 export * from './RichTextEvents.types';
+export * from './RichTextFragment.types';
 export * from './RichTextInlineElement.types';
 export * from './RichTextInlineElementConfig.types';
+export * from './RichTextNode.types';
 export * from './RichTextStore.types';
