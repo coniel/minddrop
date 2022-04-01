@@ -1,5 +1,4 @@
 import { Node, Point, Editor, Transforms } from 'slate';
-import { EditorApi } from '../../types';
 
 // This fuction is based off of https://github.com/ianstormtaylor/slate/pull/4540#issuecomment-951903419
 
@@ -10,7 +9,7 @@ import { EditorApi } from '../../types';
  * Selection can be restored by providing the `at` option.
  */
 export function resetNodes(
-  editor: EditorApi,
+  editor: Editor,
   options: {
     nodes?: Node | Node[];
     at?: Location;

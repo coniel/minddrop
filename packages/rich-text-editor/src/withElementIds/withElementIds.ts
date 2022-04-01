@@ -2,12 +2,12 @@
 import { Element, Text } from 'slate';
 import { generateId } from '@minddrop/utils';
 import { RichTextElement } from '@minddrop/rich-text';
-import { EditorApi } from '../types';
+import { Editor } from '../types';
 
 /**
  * Does something useful.
  */
-export function withElementIds(editor: EditorApi): EditorApi {
+export function withElementIds(editor: Editor): Editor {
   const { apply } = editor;
 
   // Add ID to new nodes
