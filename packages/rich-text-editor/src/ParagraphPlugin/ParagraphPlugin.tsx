@@ -1,10 +1,10 @@
-import { RichText } from '@minddrop/rich-text';
+import { RichTextFragment } from '@minddrop/rich-text';
 import { RichTextEditorPluginConfig } from '../types';
 import { ParagraphElement } from './ParagraphElement';
 
 export interface ParagraphElement {
   type: 'paragraph';
-  children: RichText[];
+  children: RichTextFragment;
 }
 
 export const ParagraphPlugin: RichTextEditorPluginConfig = {
