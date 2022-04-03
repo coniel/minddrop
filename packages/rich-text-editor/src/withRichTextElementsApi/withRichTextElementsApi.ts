@@ -94,7 +94,6 @@ export function withRichTextElementsApi(
       const element = node as RichTextElement;
 
       // Update the element, setting its updated properties
-
       api.updateElement(
         element.id,
         operation.newProperties as UpdateRichTextElementData,
