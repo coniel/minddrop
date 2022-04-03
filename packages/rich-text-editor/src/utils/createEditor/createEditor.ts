@@ -3,6 +3,7 @@ import { createEditor as createSlateEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../../types';
+import { withElementIds } from '../../withElementIds';
 
 /**
  * Creates a new editor configured with the React and History
@@ -12,7 +13,7 @@ import { Editor } from '../../types';
  */
 export function createEditor(): Editor {
   // Create a Slate editor with the React and History plugins
-  const editor = withReact(withHistory(createSlateEditor()));
+  const editor = withElementIds(withReact(withHistory(createSlateEditor())));
 
   // Checks if an element is an inline level element
   editor.isInline = (element) => {
