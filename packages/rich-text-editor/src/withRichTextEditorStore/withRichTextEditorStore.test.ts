@@ -1,4 +1,3 @@
-import { renderHook } from '@minddrop/test-utils';
 import {
   RichTextBlockElement,
   RichTextInlineElement,
@@ -17,11 +16,7 @@ interface LinkElement extends RichTextInlineElement {
 }
 
 const createEditor = (content: RichTextBlockElement[]) => {
-  const { result } = renderHook(() =>
-    withRichTextEditorStore(createTestEditor(content)),
-  );
-
-  return result.current;
+  return withRichTextEditorStore(createTestEditor(content));
 };
 
 describe('withDebouncedRichTextElementsApi', () => {
