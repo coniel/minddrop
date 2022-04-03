@@ -1,7 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Files } from '@minddrop/files';
 import { generateId } from '@minddrop/utils';
-import { RichTextElementValidationError } from '../errors';
 import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { CreateRichTextElementData, RichTextElement } from '../types';
 import { useRichTextStore } from '../useRichTextStore';
@@ -31,14 +30,6 @@ export function createRichTextElement<
 >(core: Core, data: TData): TElement {
   // Get the element's config object
   const config = getRichTextElementConfig(data.type);
-
-  if ('parents' in data) {
-    // If the data contains a `parents` field, throw a
-    // `RichTextElementValidationError`.
-    throw new RichTextElementValidationError(
-      'creating a rich text element with a `parents` property is forbidden, parents must be added after creation',
-    );
-  }
 
   // Generate a rich text element using the provided data
   const element: RichTextElement = {

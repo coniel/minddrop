@@ -82,16 +82,6 @@ export interface CreateRichTextBlockElementData {
 }
 
 /**
- * Data supplied when updating a rich text block element via the API.
- */
-export interface UpdateRichTextBlockElementData {
-  /**
-   * The rich text content of the element.
-   */
-  children?: RichTextFragment | FieldValueArrayUnion | FieldValueArrayFilter;
-}
-
-/**
  * Changes that can be applied to a rich text block element's fields.
  */
 export interface RichTextBlockElementChanges {
@@ -136,3 +126,8 @@ export interface RichTextBlockElementChanges {
    */
   deletedAt?: Date | FieldValueDelete;
 }
+
+/**
+ * Data supplied when updating a rich text block element via the API.
+ */
+export type UpdateRichTextBlockElementData = RichTextBlockElementChanges;

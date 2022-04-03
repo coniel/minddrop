@@ -1,8 +1,6 @@
 import { mapById } from '@minddrop/utils';
-import { RichTextElementValidationError } from '../errors';
 import {
   cleanup,
-  core,
   headingElement1,
   paragraphElement1,
   setup,
@@ -43,19 +41,6 @@ describe('RichTextElements API', () => {
 
       // Should return an element map containing only the 'heading-1' type
       expect(result).toEqual(mapById([headingElement1]));
-    });
-  });
-
-  describe('update', () => {
-    it('validates the update data', () => {
-      // Attempt to update a forbidden field on an element, should throw
-      // a `RichTextElementValidationError`.
-      expect(() =>
-        RichTextElements.update(core, headingElement1.id, {
-          // @ts-ignore
-          parents: [],
-        }),
-      ).toThrowError(RichTextElementValidationError);
     });
   });
 });

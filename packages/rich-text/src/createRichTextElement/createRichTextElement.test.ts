@@ -77,17 +77,6 @@ describe('createRichTextElement', () => {
     expect(fileReference.attachedTo.includes(element.id)).toBeTruthy();
   });
 
-  it('throws a RichTextElementValidationError if the data contains `parents`', () => {
-    // Create an element with `parents` set in the data.
-    // Should throw a `RichTextElementValidationError`.
-    expect(() =>
-      createRichTextElement(core, {
-        type: headingElementConfig.type,
-        parents: [],
-      }),
-    ).toThrowError(RichTextElementValidationError);
-  });
-
   it('validates the element', () => {
     // Create an invalid element, should throw a
     // `RichTextElementValidationError`.

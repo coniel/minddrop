@@ -23,7 +23,6 @@ import { RichTextElementsApi } from '../types';
 import { unnestRichTextElements } from '../unnestRichTextElements';
 import { unregisterRichTextElementType } from '../unregisterRichTextElementType';
 import { updateRichTextElement } from '../updateRichTextElement';
-import { validateUpdateRichTextElementData } from '../validateUpdateRichTextElementData';
 
 export const RichTextElements: RichTextElementsApi = {
   register: registerRichTextElementType,
@@ -37,14 +36,7 @@ export const RichTextElements: RichTextElementsApi = {
   filter: filterRichTextElements,
   create: createRichTextElement,
   createOfType: createRichTextElementOfType,
-  update: (core, elementId, data) => {
-    // Prevents special fields like `parents` from being updated directly
-    // via the public API.
-    validateUpdateRichTextElementData(data);
-
-    // Update the element
-    return updateRichTextElement(core, elementId, data);
-  },
+  update: updateRichTextElement,
   delete: deleteRichTextElement,
   restore: restoreRichTextElement,
   deletePermanently: permanentlyDeleteRichTextElement,

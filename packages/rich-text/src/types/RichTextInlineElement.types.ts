@@ -71,16 +71,6 @@ export interface CreateRichTextInlineElementData {
 }
 
 /**
- * Data supplied when updating an inline rich text element via the API.
- */
-export interface UpdateRichTextInlineElementData {
-  /**
-   * The rich text content of the element.
-   */
-  children?: RichTextFragment | FieldValueArrayUnion | FieldValueArrayFilter;
-}
-
-/**
  * Changes that can be applied to an inline rich text element's fields.
  */
 export interface RichTextInlineElementChanges {
@@ -118,3 +108,8 @@ export interface RichTextInlineElementChanges {
    */
   deletedAt?: Date | FieldValueDelete;
 }
+
+/**
+ * Data supplied when updating an inline rich text element via the API.
+ */
+export type UpdateRichTextInlineElementData = RichTextInlineElementChanges;
