@@ -1,0 +1,238 @@
+import { act, renderHook } from '@minddrop/test-utils';
+import {
+  RichTextBlockElement,
+  RichTextDocuments,
+  RichTextElements,
+  RICH_TEXT_TEST_DATA,
+} from '@minddrop/rich-text';
+import { setup, cleanup, createTestEditor, core } from '../test-utils';
+import { Transforms } from '../Transforms';
+import { useRichTextEditorStore } from '../useRichTextEditorStore';
+import { withRichTextEditorStore } from '../withRichTextEditorStore';
+import { useDebouncedUpdates } from './useDebouncedUpdates';
+import { Editor } from '../types';
+
+const {
+  paragraphElement1,
+  paragraphElement2,
+  paragraphElement3,
+  paragraphElement4,
+} = RICH_TEXT_TEST_DATA;
+
+// The editor session ID
+const sessionId = 'session-id';
+
+const createEditor = (content: RichTextBlockElement[]): [Editor, string] => {
+  // Create a new rich text document
+  const document = RichTextDocuments.create(core, {
+    children: content.map((element) => element.id),
+  });
+
+  // Create an editor session
+  useRichTextEditorStore.getState().addSession(sessionId);
+
+  // Create an editor with the plugin applied, using the session
+  // created above, retuning the editor and document ID.
+  return [
+    withRichTextEditorStore(createTestEditor(content), sessionId),
+    document.id,
+  ];
+};
+
+describe('withDebouncedUpdates', () => {
+  jest.useFakeTimers();
+
+  beforeEach(() => {
+    setup();
+  });
+
+  afterEach(cleanup);
+
+  it('clears the store when running the update', () => {
+    // Create an editor containing a paragraph element
+    const [editor, documentId] = createEditor([paragraphElement1]);
+
+    // Render the hook to simulate it being used in the editor component.
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    act(() => {
+      // Insert a second paragraph element
+      Transforms.insertNodes(editor, paragraphElement2, { at: [1] });
+    });
+
+    // Store should contain the created element
+    expect(
+      useRichTextEditorStore.getState().sessions['session-id'].createdElements[
+        paragraphElement2.id
+      ],
+    ).toBeDefined();
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Store should no longer contain the created element
+    expect(
+      useRichTextEditorStore.getState().sessions['session-id'].createdElements[
+        paragraphElement2.id
+      ],
+    ).toBeUndefined();
+  });
+
+  it('creates elements in sequence', () => {
+    // Spy on the RichTextElements.create method to determine
+    // the order in which the inserted elements will be created.
+    jest.spyOn(RichTextElements, 'create');
+
+    // Create an editor containing a paragraph element
+    const [editor, documentId] = createEditor([paragraphElement1]);
+
+    // Render the hook to simulate it being used in the editor component
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    const paragraph2 = { ...paragraphElement2, id: 'paragraph-2' };
+    const paragraph3 = { ...paragraphElement3, id: 'paragraph-3' };
+    const paragraph4 = { ...paragraphElement4, id: 'paragraph-4' };
+
+    act(() => {
+      // Insert three new paragraph elements in sequence
+      Transforms.insertNodes(editor, paragraph2, { at: [1] });
+      Transforms.insertNodes(editor, paragraph3, { at: [2] });
+      Transforms.insertNodes(editor, paragraph4, { at: [3] });
+    });
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Should have created 3 elements
+    expect(RichTextElements.create).toHaveBeenCalledTimes(3);
+    // Should have created paragraph 2 first
+    expect(RichTextElements.create).toHaveBeenNthCalledWith(
+      1,
+      core,
+      paragraph2,
+    );
+    // Should have created paragraph 3 second
+    expect(RichTextElements.create).toHaveBeenNthCalledWith(
+      2,
+      core,
+      paragraph3,
+    );
+    // Should have created paragraph 4 third
+    expect(RichTextElements.create).toHaveBeenNthCalledWith(
+      3,
+      core,
+      paragraph4,
+    );
+  });
+
+  it('updates elements', () => {
+    // Create an editor containing an empty paragraph element
+    const [editor, documentId] = createEditor([
+      { ...paragraphElement1, children: [{ text: '' }] },
+    ]);
+
+    // Render the hook to simulate it being used in the editor component
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    act(() => {
+      // Add text to the paragraph
+      Transforms.insertText(editor, 'Hello world', { at: [0, 0] });
+    });
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Get the updated element
+    const element = RichTextElements.get(paragraphElement1.id);
+
+    // Element should contain the updated text
+    expect(element.children).toEqual([{ text: 'Hello world' }]);
+  });
+
+  it('deletes elements', () => {
+    // Create an editor containing two paragraph elements
+    const [editor, documentId] = createEditor([
+      paragraphElement1,
+      paragraphElement2,
+    ]);
+
+    // Render the hook to simulate it being used in the editor component
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    act(() => {
+      // Remove the second paragraph
+      Transforms.removeNodes(editor, { at: [1] });
+    });
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Get the deleted element
+    const element = RichTextElements.get(paragraphElement2.id);
+
+    // Element should be deleted
+    expect(element.deleted).toBe(true);
+  });
+
+  it('sets document children', () => {
+    // Create an editor containing a paragraph element
+    const [editor, documentId] = createEditor([paragraphElement1]);
+
+    // Render the hook to simulate it being used in the editor component
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    act(() => {
+      // Insert a second paragraph element
+      Transforms.insertNodes(editor, paragraphElement2, { at: [1] });
+    });
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Get the updated document
+    const document = RichTextDocuments.get(documentId);
+
+    // Document children should be updated
+    expect(document.children).toEqual([
+      paragraphElement1.id,
+      paragraphElement2.id,
+    ]);
+  });
+
+  it('does not set document children if empty', () => {
+    // Spy on RichTextDocuments.setChildren to check if it was called
+    jest.spyOn(RichTextDocuments, 'setChildren');
+
+    // Create an editor containing an empty paragraph element
+    const [editor, documentId] = createEditor([
+      { ...paragraphElement1, children: [{ text: '' }] },
+    ]);
+
+    // Render the hook to simulate it being used in the editor component
+    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+
+    act(() => {
+      // Add text to the paragraph, causing an update which does not
+      // affect document children.
+      Transforms.insertText(editor, 'Hello world', { at: [0, 0] });
+    });
+
+    act(() => {
+      // Run timers to call the debounced update function
+      jest.runAllTimers();
+    });
+
+    // Should not set document children
+    expect(RichTextDocuments.setChildren).not.toHaveBeenCalled();
+  });
+});
