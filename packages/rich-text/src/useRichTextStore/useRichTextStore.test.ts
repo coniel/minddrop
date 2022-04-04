@@ -136,6 +136,10 @@ describe('useRichTextStore', () => {
       expect(
         useRichTextStore.getState().elementConfigs[paragraphElementConfig.type],
       ).toBe(paragraphElementConfig);
+      // Adds the type to the end of `registrationOrder`
+      expect(useRichTextStore.getState().registrationOrder.slice(-1)[0]).toBe(
+        paragraphElementConfig.type,
+      );
     });
 
     it('removes an element config', () => {
@@ -151,6 +155,10 @@ describe('useRichTextStore', () => {
       expect(
         useRichTextStore.getState().elementConfigs[paragraphElementConfig.type],
       ).toBeUndefined();
+      // Removes the element type from `registrationOrder`
+      expect(useRichTextStore.getState().registrationOrder).not.toContain(
+        paragraphElementConfig.type,
+      );
     });
 
     it('clears element configs', () => {
@@ -163,6 +171,8 @@ describe('useRichTextStore', () => {
 
       // Element configs should be cleared
       expect(useRichTextStore.getState().elementConfigs).toEqual({});
+      // Registration order should be cleared
+      expect(useRichTextStore.getState().registrationOrder).toEqual([]);
     });
   });
 
@@ -178,7 +188,8 @@ describe('useRichTextStore', () => {
     useRichTextStore.getState().clear();
 
     // Get the store data
-    const { documents, elements, elementConfigs } = useRichTextStore.getState();
+    const { documents, elements, elementConfigs, registrationOrder } =
+      useRichTextStore.getState();
 
     // Should clear documents
     expect(documents).toEqual({});
@@ -186,5 +197,7 @@ describe('useRichTextStore', () => {
     expect(elements).toEqual({});
     // Should clear element configs
     expect(elementConfigs).toEqual({});
+    // Should clear registration order
+    expect(registrationOrder).toEqual([]);
   });
 });

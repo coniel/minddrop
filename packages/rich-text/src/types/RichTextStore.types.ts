@@ -15,12 +15,19 @@ export interface RichTextStore {
   elements: Record<string, RichTextElement>;
 
   /**
-   * A { [type]: RichTextElementConfig } map of registered rich text elements.
+   * A { [type]: RichTextElementConfig } map of registered rich
+   * text elements.
    */
   elementConfigs: Record<
     string,
     RichTextBlockElementConfig | RichTextInlineElementConfig
   >;
+
+  /**
+   * The types of registered rich text element types in the order
+   * in which they were registered.
+   */
+  registrationOrder: string[];
 
   /**
    * Loads rich text documents into the store.

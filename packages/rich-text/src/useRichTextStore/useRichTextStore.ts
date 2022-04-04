@@ -5,6 +5,7 @@ export const useRichTextStore = createStore<RichTextStore>((set) => ({
   documents: {},
   elements: {},
   elementConfigs: {},
+  registrationOrder: [],
 
   loadDocuments: (documents) =>
     set((state) => ({
@@ -71,16 +72,26 @@ export const useRichTextStore = createStore<RichTextStore>((set) => ({
         ...state.elementConfigs,
         [config.type]: config,
       },
+      registrationOrder: [...state.registrationOrder, config.type],
     })),
 
   removeElementConfig: (type) =>
     set((state) => {
       const elementConfigs = { ...state.elementConfigs };
       delete elementConfigs[type];
-      return { elementConfigs };
+      return {
+        elementConfigs,
+        registrationOrder: state.registrationOrder.filter((t) => t !== type),
+      };
     }),
 
-  clearElementConfigs: () => set({ elementConfigs: {} }),
+  clearElementConfigs: () => set({ elementConfigs: {}, registrationOrder: [] }),
 
-  clear: () => set(() => ({ documents: {}, elements: {}, elementConfigs: {} })),
+  clear: () =>
+    set(() => ({
+      documents: {},
+      elements: {},
+      elementConfigs: {},
+      registrationOrder: [],
+    })),
 }));
