@@ -1,5 +1,5 @@
 import { useDebounce } from 'use-debounce';
-import { Core } from '@minddrop/core';
+import { Core, useCore } from '@minddrop/core';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
 import { useEffect } from 'react';
 import { RichTextDocuments, RichTextElements } from '@minddrop/rich-text';
@@ -8,23 +8,26 @@ import { RichTextDocuments, RichTextElements } from '@minddrop/rich-text';
  * Updates the rich text document and the document's rich text elements
  * as they are modified in a debounced manner.
  *
- * @param core A MindDrop core instance.
  * @param documentId The ID of the document being edited.
  * @param sessionId The editor session ID.
  */
 export function useDebouncedUpdates(
-  core: Core,
   documentId: string,
   sessionId: string,
 ): void {
+  // Create a MindDrop core instance
+  const core = useCore('rich-text-editor');
+  // Get the session's revision ID from the rich text store
   const sessionRevision = useRichTextEditorStore(
     (state) => state.sessions[sessionId].sessionRevision,
   );
-
-  const [debouncedState] = useDebounce(sessionRevision, 1500, {
+  // Debounce the session revision ID
+  const [debouncedSessionRevision] = useDebounce(sessionRevision, 1500, {
     maxWait: 5000,
   });
 
+  // Update the rich text document and elements when the
+  // debounced session revision value changes.
   useEffect(() => {
     const {
       createdElements,
@@ -56,5 +59,5 @@ export function useDebouncedUpdates(
       // Set document children if the value has changed
       RichTextDocuments.setChildren(core, documentId, documentChildren);
     }
-  }, [debouncedState, sessionId]);
+  }, [debouncedSessionRevision, sessionId]);
 }

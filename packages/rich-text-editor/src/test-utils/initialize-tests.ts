@@ -10,7 +10,10 @@ import { useRichTextEditorStore } from '../useRichTextEditorStore';
 const { richTextElementConfigs, richTextElements, richTextDocuments } =
   RICH_TEXT_TEST_DATA;
 
-export const core = initializeCore({ appId: 'app', extensionId: 'app' });
+export const core = initializeCore({
+  appId: 'app',
+  extensionId: 'rich-text-editor',
+});
 
 export function setup() {
   act(() => {

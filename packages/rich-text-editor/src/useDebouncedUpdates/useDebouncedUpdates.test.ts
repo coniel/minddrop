@@ -53,7 +53,7 @@ describe('withDebouncedUpdates', () => {
     const [editor, documentId] = createEditor([paragraphElement1]);
 
     // Render the hook to simulate it being used in the editor component.
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     act(() => {
       // Insert a second paragraph element
@@ -89,7 +89,7 @@ describe('withDebouncedUpdates', () => {
     const [editor, documentId] = createEditor([paragraphElement1]);
 
     // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     const paragraph2 = { ...paragraphElement2, id: 'paragraph-2' };
     const paragraph3 = { ...paragraphElement3, id: 'paragraph-3' };
@@ -109,24 +109,13 @@ describe('withDebouncedUpdates', () => {
 
     // Should have created 3 elements
     expect(RichTextElements.create).toHaveBeenCalledTimes(3);
-    // Should have created paragraph 2 first
-    expect(RichTextElements.create).toHaveBeenNthCalledWith(
-      1,
-      core,
-      paragraph2,
-    );
-    // Should have created paragraph 3 second
-    expect(RichTextElements.create).toHaveBeenNthCalledWith(
-      2,
-      core,
-      paragraph3,
-    );
-    // Should have created paragraph 4 third
-    expect(RichTextElements.create).toHaveBeenNthCalledWith(
-      3,
-      core,
-      paragraph4,
-    );
+    // Should create the elements in the order in which they were inserted
+    // @ts-ignore
+    expect(RichTextElements.create.mock.calls[0][1]).toEqual(paragraph2);
+    // @ts-ignore
+    expect(RichTextElements.create.mock.calls[1][1]).toEqual(paragraph3);
+    // @ts-ignore
+    expect(RichTextElements.create.mock.calls[2][1]).toEqual(paragraph4);
   });
 
   it('updates elements', () => {
@@ -136,7 +125,7 @@ describe('withDebouncedUpdates', () => {
     ]);
 
     // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     act(() => {
       // Add text to the paragraph
@@ -163,7 +152,7 @@ describe('withDebouncedUpdates', () => {
     ]);
 
     // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     act(() => {
       // Remove the second paragraph
@@ -187,7 +176,7 @@ describe('withDebouncedUpdates', () => {
     const [editor, documentId] = createEditor([paragraphElement1]);
 
     // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     act(() => {
       // Insert a second paragraph element
@@ -219,7 +208,7 @@ describe('withDebouncedUpdates', () => {
     ]);
 
     // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(core, documentId, sessionId));
+    renderHook(() => useDebouncedUpdates(documentId, sessionId));
 
     act(() => {
       // Add text to the paragraph, causing an update which does not
