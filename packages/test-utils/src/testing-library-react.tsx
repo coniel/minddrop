@@ -6,6 +6,10 @@ import { initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
 import '@testing-library/jest-dom';
+import {
+  renderHook,
+  RenderHookOptions as BaseRenderHookOptions,
+} from '@testing-library/react-hooks';
 
 class ResizeObserver {
   observe() {}
@@ -34,5 +38,21 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, { wrapper: WithProviders, ...options });
 
+interface RenderHookOptions<TProps> extends BaseRenderHookOptions<TProps> {
+  appId?: string;
+}
+
+const customRenderHook = <TProps, TResult>(
+  hook: (props: TProps) => TResult,
+  options?: RenderHookOptions<TProps | undefined>,
+) =>
+  renderHook(hook, {
+    wrapper: (props) => (
+      <CoreProvider appId={options ? options.appId : 'app'} {...props} />
+    ),
+    ...options,
+  });
+
 export * from '@testing-library/react';
 export { customRender as render };
+export { customRenderHook as renderHook };
