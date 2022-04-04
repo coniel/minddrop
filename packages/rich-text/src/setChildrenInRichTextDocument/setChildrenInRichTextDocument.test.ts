@@ -106,6 +106,35 @@ describe('setChildrenInRichTextDocument', () => {
     expect(arrayContainsObject(element.parents, parentReference)).toBeTruthy();
   });
 
+  it('sets the new document revision if provided', () => {
+    // Set children on a document
+    setChildrenInRichTextDocument(
+      core,
+      richTextDocument1.id,
+      [headingElement1.id],
+      'new-revision-id',
+    );
+
+    // Get the updated document
+    const document = getRichTextDocument(richTextDocument1.id);
+
+    // Document revision should be updated
+    expect(document.revision).toEqual('new-revision-id');
+  });
+
+  it('does not modify revision if not provided', () => {
+    // Set children on a document
+    setChildrenInRichTextDocument(core, richTextDocument1.id, [
+      headingElement1.id,
+    ]);
+
+    // Get the updated document
+    const document = getRichTextDocument(richTextDocument1.id);
+
+    // Document revision should be unchanged
+    expect(document.revision).toEqual(document.revision);
+  });
+
   it('dispatches a `rich-text-documents:set-children` event', (done) => {
     // Listen to 'rich-text-documents:set-children' events
     core.addEventListener('rich-text-documents:set-children', (payload) => {

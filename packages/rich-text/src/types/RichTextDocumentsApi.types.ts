@@ -119,12 +119,14 @@ export interface RichTextDocumentsApi {
    * @param core A MindDrop core instance.
    * @param documentId The ID of the document in which to set the children.
    * @param children The IDs of the document's children.
+   * @param revision The document's new revision ID.
    * @returns The updated document.
    */
   setChildren(
     core: Core,
     documentId: string,
     children: string[],
+    revision?: string,
   ): RichTextDocument;
 
   /**

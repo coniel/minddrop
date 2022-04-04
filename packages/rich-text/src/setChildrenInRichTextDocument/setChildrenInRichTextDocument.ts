@@ -23,12 +23,14 @@ import { updateRichTextDocument } from '../updateRichTextDocument';
  * @param core A MindDrop core instance.
  * @param documentId The ID of the document in which to set the children.
  * @param children The IDs of the document's children.
+ * @param revision The document's new revision ID.
  * @returns The updated document.
  */
 export function setChildrenInRichTextDocument(
   core: Core,
   documentId: string,
   children: string[],
+  revision?: string,
 ): RichTextDocument {
   // Get the document
   const document = getRichTextDocument(documentId);
@@ -44,6 +46,7 @@ export function setChildrenInRichTextDocument(
   // Set the updated children in the document
   const updatedDocument = updateRichTextDocument(core, documentId, {
     children,
+    revision: revision || document.revision,
   });
 
   // Generate a parent reference for the document
