@@ -10,14 +10,14 @@ import { withRichTextEditorStore } from '../withRichTextEditorStore';
 
 /**
  * Returns an editor instance configured with an editor
- * session which updates the rich text document and its
- * elements as it is edited.
+ * session which trackes changes made to the document's
+ * contents in the rich text editor store.
  *
  * @param core A MindDrop core instance.
  * @param documentId The ID of the document being edited.
- * @returns An editor instance.
+ * @returns An editor and the session ID instance.
  */
-export function useEditorSession(core: Core, documentId: string): Editor {
+export function useEditorSession(documentId: string): [Editor, string] {
   // Set up the editor session
   const sessionId = useMemo(() => {
     // Generate a session ID
@@ -30,18 +30,11 @@ export function useEditorSession(core: Core, documentId: string): Editor {
     return id;
   }, [documentId]);
 
-  // Update the document and its elements as it is edited
-  useDebouncedUpdates(core, documentId, sessionId);
-
   // Create the editor instance
   const editor = useMemo(
-    () =>
-      withRichTextEditorStore(
-        withParentReferences(createEditor(), documentId),
-        sessionId,
-      ),
+    () => withRichTextEditorStore(createEditor(documentId), sessionId),
     [documentId],
   );
 
-  return editor;
+  return [editor, sessionId];
 }

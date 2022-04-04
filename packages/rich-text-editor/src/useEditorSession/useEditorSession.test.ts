@@ -1,81 +1,44 @@
-import { ParentReferences } from '@minddrop/core';
-import {
-  RichTextElement,
-  RichTextElements,
-  RICH_TEXT_TEST_DATA,
-} from '@minddrop/rich-text';
-import { act, renderHook } from '@minddrop/test-utils';
-import { Node } from 'slate';
-import { setup, cleanup, core } from '../test-utils';
+import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { renderHook } from '@minddrop/test-utils';
+import { setup, cleanup } from '../test-utils';
 import { Transforms } from '../Transforms';
-import { Editor } from '../types';
+import { useRichTextEditorStore } from '../useRichTextEditorStore';
 import { useEditorSession } from './useEditorSession';
 
 const { richTextDocument1, paragraphElement1 } = RICH_TEXT_TEST_DATA;
-
-/**
- * Create a new editor instance using the `useEditorSession`
- * hook.
- *
- * @returns An editor instance.
- */
-function createEditorSession(): Editor {
-  const { result } = renderHook(() =>
-    useEditorSession(core, richTextDocument1.id),
-  );
-
-  return result.current;
-}
 
 describe('useEditorSession', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('configures the `withParentReferences` plugin', () => {
-    // Create an editor
-    const editor = createEditorSession();
+  it('creates an editor session', () => {
+    // Run the hook
+    const { result } = renderHook(() => useEditorSession(richTextDocument1.id));
 
-    act(() => {
-      // Add a new paragraph element
-      Transforms.insertNodes(editor, {
-        ...paragraphElement1,
-        parents: [],
-        id: 'new-paragraph',
-      });
-    });
+    // Get the session ID
+    const sessionId = result.current[1];
 
-    // Get the inserted element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
-
-    // The element should have the document as a parent
-    expect(
-      ParentReferences.contains('rich-text-document', element.parents),
-    ).toBeTruthy();
+    // Rich text editor store should contain the session
+    expect(useRichTextEditorStore.getState().sessions[sessionId]).toBeDefined();
   });
 
-  it('configures the `useDebouncedUpdates` hook', () => {
-    jest.useFakeTimers();
+  it('configures the `withRichTextEditorStore` plugin', () => {
+    // Run the hook
+    const { result } = renderHook(() => useEditorSession(richTextDocument1.id));
 
-    // Create an editor
-    const editor = createEditorSession();
+    // Get the editor and session ID
+    const [editor, sessionId] = result.current;
 
-    act(() => {
-      // Add a new paragraph element
-      Transforms.insertNodes(editor, {
-        ...paragraphElement1,
-        parents: [],
-        id: 'new-paragraph',
-      });
-    });
+    // Insert an element into the document
+    Transforms.insertNodes(editor, paragraphElement1, { at: [0] });
 
-    act(() => {
-      // Run timers to call the debounced update function
-      jest.runAllTimers();
-    });
-
-    // The element should be created as a RichTextElement,
-    // getting it should not throw an error.
-    expect(() => RichTextElements.get('new-paragraph')).not.toThrow();
+    // Rich text editor store session should contain
+    // the created element.
+    expect(
+      useRichTextEditorStore.getState().sessions[sessionId].createdElements[
+        paragraphElement1.id
+      ],
+    ).toBeDefined();
   });
 });
