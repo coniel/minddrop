@@ -190,7 +190,7 @@ RichTextDocuments.deletePermanently(core: Core, documentId: string): RichTextDoc
 
 Sets the child elements of a rich text document and dispatches a `rich-text-documents:set-children` event. Returns the updated document.
 
-Adds the document as a parent on any added child elements and removes the document as a parent from any removed child elements.
+Adds the document as a parent on any added child elements and removes the document as a parent from any removed child elements. Optionally, a new revision ID can be passed to update the document's revision.
 
 - Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
 - Throws a `RichTextElementNotFoundError` if any of the rich text block elements do not exist.
@@ -201,6 +201,7 @@ RichTextDocuments.setChildren(
   core: Core,
   documentId: string,
   children: string[],
+  revision?: string
 ): RichTextDocument
 ```
 
@@ -212,7 +213,7 @@ RichTextDocuments.setChildren(
       type: 'string',
       required: true,
       description:
-        'The ID of the rich text document into which to add the elements.',
+        'The ID of the rich text document for which to set the children.',
     },
     {
       name: 'children',
@@ -220,6 +221,43 @@ RichTextDocuments.setChildren(
       required: true,
       description:
         'The IDs of the rich text block elements which make up the root level elements of the document.',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      description: 'The document revision ID.',
+    },
+  ]}
+/>
+
+### setRevision
+
+Sets a new reivsion on the document and dispaches a `rich-text-documents:update` event. Returns the updated document.
+
+- Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
+
+```ts
+RichTextDocuments.setRevision(
+  core: Core,
+  documentId: string,
+  revision: string
+): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document for which to set the revision.',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      description: 'The document revision ID.',
     },
   ]}
 />

@@ -11,6 +11,7 @@ import { permanentlyDeleteRichTextDocument } from '../permanentlyDeleteRichTextD
 import { removeParentsFromRichTextDocument } from '../removeParentsFromRichTextDocument';
 import { restoreRichTextDocument } from '../restoreRichTextDocument';
 import { setChildrenInRichTextDocument } from '../setChildrenInRichTextDocument';
+import { setRevisionInRichTextDocument } from '../setRevisionInRichTextDocument';
 import { toPlainText } from '../toPlainText';
 import { RichTextDocumentsApi } from '../types/RichTextDocumentsApi.types';
 
@@ -25,6 +26,7 @@ export const RichTextDocuments: RichTextDocumentsApi = {
   restore: restoreRichTextDocument,
   deletePermanently: permanentlyDeleteRichTextDocument,
   setChildren: setChildrenInRichTextDocument,
+  setRevision: setRevisionInRichTextDocument,
   addParents: addParentsToRichTextDocument,
   removeParents: removeParentsFromRichTextDocument,
   load: loadRichTextDocuments,

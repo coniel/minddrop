@@ -130,6 +130,23 @@ export interface RichTextDocumentsApi {
   ): RichTextDocument;
 
   /**
+   * Sets a new reivsion on the document and dispaches a
+   * `rich-text-documents:update` event. Returns the updated document.
+   *
+   * - Throws a `RichTextDocumentNotFoundError` if the rich text
+   *   document does not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param documentId The ID of the document for which to set the revision.
+   * @param revision The new revision ID to set.
+   */
+  setRevision(
+    core: Core,
+    documentId: string,
+    revision: string,
+  ): RichTextDocument;
+
+  /**
    * Adds parent references to a rich text document and dispatches a
    * `rich-text-documents:add-parents` event. Returns the updated
    * document.
