@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { RichTextDocument, RichTextDocuments } from '@minddrop/rich-text';
 import { generateId } from '@minddrop/utils';
 import { useMemo } from 'react';
 import { Editor } from '../types';
@@ -22,9 +23,12 @@ export function useEditorSession(documentId: string): [Editor, string] {
   const sessionId = useMemo(() => {
     // Generate a session ID
     const id = generateId();
+    // Get the rich text document
+    const document = RichTextDocuments.get(documentId) as RichTextDocument;
 
-    // Create the session in the rich text editor store
-    useRichTextEditorStore.getState().addSession(id);
+    // Create the session in the rich text editor store with the
+    // current document revision.
+    useRichTextEditorStore.getState().addSession(id, document.revision);
 
     // Return the session ID
     return id;

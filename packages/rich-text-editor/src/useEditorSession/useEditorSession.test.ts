@@ -12,7 +12,7 @@ describe('useEditorSession', () => {
 
   afterEach(cleanup);
 
-  it('creates an editor session', () => {
+  it('creates an editor session with the document revision', () => {
     // Run the hook
     const { result } = renderHook(() => useEditorSession(richTextDocument1.id));
 
@@ -21,6 +21,10 @@ describe('useEditorSession', () => {
 
     // Rich text editor store should contain the session
     expect(useRichTextEditorStore.getState().sessions[sessionId]).toBeDefined();
+    // Session should contain the current document revision
+    expect(
+      useRichTextEditorStore.getState().sessions[sessionId].documentRevisions,
+    ).toContain(richTextDocument1.revision);
   });
 
   it('configures the `withRichTextEditorStore` plugin', () => {
