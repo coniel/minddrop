@@ -5,7 +5,10 @@ import {
 } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
-import { useRichTextEditorStore } from '../useRichTextEditorStore';
+import {
+  EditorSession,
+  useRichTextEditorStore,
+} from '../useRichTextEditorStore';
 import { withRichTextEditorStore } from './withRichTextEditorStore';
 
 const { paragraphElement1, paragraphElement2, linkElement1 } =
@@ -15,11 +18,21 @@ interface LinkElement extends RichTextInlineElement {
   url: string;
 }
 
+function getEditorSessionValue(key: keyof EditorSession) {
+  // Return the session data
+  return useRichTextEditorStore.getState().sessions['session-id'][key];
+}
+
 const createEditor = (content: RichTextBlockElement[]) => {
-  return withRichTextEditorStore(createTestEditor(content));
+  // Create an editor session
+  useRichTextEditorStore.getState().addSession('session-id');
+
+  // Create an editor with the plugin applied, using the
+  // session created above.
+  return withRichTextEditorStore(createTestEditor(content), 'session-id');
 };
 
-describe('withDebouncedRichTextElementsApi', () => {
+describe('withRichTextEditorStore', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
@@ -34,7 +47,7 @@ describe('withDebouncedRichTextElementsApi', () => {
 
       // The inserted element should be in the store's `createdElements`
       expect(
-        useRichTextEditorStore.getState().createdElements[paragraphElement2.id],
+        getEditorSessionValue('createdElements')[paragraphElement2.id],
       ).toEqual(paragraphElement2);
     });
 
@@ -49,7 +62,7 @@ describe('withDebouncedRichTextElementsApi', () => {
       Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
 
       // The inserted element ID should no longer be in the store's `deletedElements`
-      expect(useRichTextEditorStore.getState().deletedElements).not.toContain(
+      expect(getEditorSessionValue('deletedElements')).not.toContain(
         paragraphElement2.id,
       );
     });
@@ -70,9 +83,7 @@ describe('withDebouncedRichTextElementsApi', () => {
 
         // The updated element data should be in the store's `updatedElements`
         expect(
-          useRichTextEditorStore.getState().updatedElements[
-            paragraphElement1.id
-          ],
+          getEditorSessionValue('updatedElements')[paragraphElement1.id],
         ).toEqual({ children: [{ text: 'added text' }] });
       });
 
@@ -110,7 +121,7 @@ describe('withDebouncedRichTextElementsApi', () => {
         // The updated element data in the store should contain the data
         // from both updates.
         expect(
-          useRichTextEditorStore.getState().updatedElements[linkElement1.id],
+          getEditorSessionValue('updatedElements')[linkElement1.id],
         ).toEqual({
           url: 'https://minddrop.app',
           children: [{ text: 'MindDrop website' }],
@@ -135,15 +146,12 @@ describe('withDebouncedRichTextElementsApi', () => {
 
         // Update data should be updated in the store's `createdElements`
         expect(
-          useRichTextEditorStore.getState().createdElements[
-            paragraphElement2.id
-          ].children,
+          getEditorSessionValue('createdElements')[paragraphElement2.id]
+            .children,
         ).toEqual([{ text: 'added text' }]);
         // Update data should not be added to the store's `updatedElements`
         expect(
-          useRichTextEditorStore.getState().updatedElements[
-            paragraphElement2.id
-          ],
+          getEditorSessionValue('updatedElements')[paragraphElement2.id],
         ).not.toBeDefined();
       });
     });
@@ -158,7 +166,7 @@ describe('withDebouncedRichTextElementsApi', () => {
       Transforms.removeNodes(editor, { at: [1] });
 
       // The removed element's ID should be in the store's `deletedElements`
-      expect(useRichTextEditorStore.getState().deletedElements).toContain(
+      expect(getEditorSessionValue('deletedElements')).toContain(
         paragraphElement2.id,
       );
     });
@@ -176,10 +184,10 @@ describe('withDebouncedRichTextElementsApi', () => {
       // The deleted element should no longer be in the store's
       // `createdElements`.
       expect(
-        useRichTextEditorStore.getState().createdElements[paragraphElement2.id],
+        getEditorSessionValue('createdElements')[paragraphElement2.id],
       ).not.toBeDefined();
       // It should not add the element ID to the store's `deletedElements`
-      expect(useRichTextEditorStore.getState().deletedElements).not.toContain(
+      expect(getEditorSessionValue('deletedElements')).not.toContain(
         paragraphElement2.id,
       );
     });
@@ -196,7 +204,7 @@ describe('withDebouncedRichTextElementsApi', () => {
 
       // The deleted element should no longer be in the store's `updatedElements`
       expect(
-        useRichTextEditorStore.getState().updatedElements[paragraphElement2.id],
+        getEditorSessionValue('updatedElements')[paragraphElement2.id],
       ).not.toBeDefined();
     });
   });
@@ -210,7 +218,7 @@ describe('withDebouncedRichTextElementsApi', () => {
       Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
 
       // Store's `documentChildren` should be updated to the new value
-      expect(useRichTextEditorStore.getState().documentChildren).toEqual([
+      expect(getEditorSessionValue('documentChildren')).toEqual([
         paragraphElement1.id,
         paragraphElement2.id,
       ]);
