@@ -57,6 +57,17 @@ describe('useRichTextEditorStore', () => {
           .sessionRevision,
       ).toBeDefined();
     });
+
+    it('initializes `documentRevisions` with the provided revision ID', () => {
+      // Add a session
+      addSession('new-session-id', 'doc-rev-id');
+
+      // Session `documentRevisions` should contain the provided revision ID
+      expect(
+        useRichTextEditorStore.getState().sessions['new-session-id']
+          .documentRevisions,
+      ).toContain('doc-rev-id');
+    });
   });
 
   describe('removeSession', () => {

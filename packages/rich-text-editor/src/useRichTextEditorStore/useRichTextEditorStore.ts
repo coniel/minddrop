@@ -60,11 +60,13 @@ export interface RichTextEditorStore {
   sessions: Record<string, EditorSession>;
 
   /**
-   * Adds a new editor session the store.
+   * Adds a new editor session the store. Initializes `documentRevisions`
+   * with the current document revision ID if provided.
    *
    * @param sessionId The ID of the session.
+   * @param documentRevision The current document revision ID.
    */
-  addSession(sessionId: string): void;
+  addSession(sessionId: string, documentRevision?: string): void;
 
   /**
    * Removes an editor session from the store.
@@ -190,7 +192,7 @@ export const useRichTextEditorStore = createStore<RichTextEditorStore>(
   (set) => ({
     sessions: {},
 
-    addSession: (sessionId) =>
+    addSession: (sessionId, documentRevision) =>
       set((state) => ({
         sessions: {
           ...state.sessions,
@@ -202,7 +204,7 @@ export const useRichTextEditorStore = createStore<RichTextEditorStore>(
             updatedElements: {},
             deletedElements: [],
             documentChildren: [],
-            documentRevisions: [],
+            documentRevisions: documentRevision ? [documentRevision] : [],
           },
         },
       })),
