@@ -3,7 +3,7 @@ import { Transforms } from '../Transforms';
 import { addChildrenToVoidElements, createEditor } from '../utils';
 
 /**
- * Creates a new editor with the given content.s
+ * Creates a new editor with the given content.
  *
  * @param content The editor's content.
  * @returns A new editor.
