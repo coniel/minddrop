@@ -1,8 +1,9 @@
 import { Core } from '@minddrop/core';
 import { RichTextElementTypeAlreadyRegisteredError } from '../errors';
 import {
-  RichTextBlockElementConfig,
-  RichTextInlineElementConfig,
+  CreateRichTextElementData,
+  RichTextElement,
+  RichTextElementConfig,
 } from '../types';
 import { useRichTextStore } from '../useRichTextStore';
 
@@ -16,10 +17,10 @@ import { useRichTextStore } from '../useRichTextStore';
  * @param core A MindDrop core instance.
  * @param config The configuration of the rich text element type to register.
  */
-export function registerRichTextElementType(
-  core: Core,
-  config: RichTextBlockElementConfig | RichTextInlineElementConfig,
-): void {
+export function registerRichTextElementType<
+  TElement extends RichTextElement = RichTextElement,
+  TData extends CreateRichTextElementData = CreateRichTextElementData,
+>(core: Core, config: RichTextElementConfig<TElement, TData>): void {
   // Check if element type is already registered
   const alreadyRegistered =
     !!useRichTextStore.getState().elementConfigs[config.type];

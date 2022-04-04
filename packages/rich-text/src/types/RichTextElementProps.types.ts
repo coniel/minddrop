@@ -1,5 +1,6 @@
 import { RenderElementProps } from 'slate-react';
 import { RichTextBlockElement } from './RichTextBlockElement.types';
+import { RichTextElement } from './RichTextElement.types';
 import { RichTextInlineElement } from './RichTextInlineElement.types';
 
 export type RichTextElementAttributes = RenderElementProps['attributes'] & {
@@ -9,8 +10,9 @@ export type RichTextElementAttributes = RenderElementProps['attributes'] & {
   id: string;
 };
 
-export interface RichTextElementProps<TElement>
-  extends Omit<RenderElementProps, 'element'> {
+export interface RichTextElementProps<
+  TElement extends RichTextElement = RichTextElement,
+> extends Omit<RenderElementProps, 'element'> {
   attributes: RichTextElementAttributes;
   element: TElement;
 }
