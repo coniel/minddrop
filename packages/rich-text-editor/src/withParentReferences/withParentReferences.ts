@@ -41,20 +41,44 @@ export function withParentReferences(
           : null;
 
       // The node is a rich text element
-      const element = operation.node as RichTextElement;
+      let element = operation.node as RichTextElement;
 
-      // Add the document as a parent on the element
-      element.parents = [
-        ...element.parents,
-        ParentReferences.generate('rich-text-document', documentId),
-      ];
+      // Check if the document is already present as a parent on the element
+      const hasDocumentAsParent = ParentReferences.getIds(
+        'rich-text-document',
+        element.parents,
+      ).includes(documentId);
+
+      if (!hasDocumentAsParent) {
+        // Add the document as a parent on the element if not already present
+        element = {
+          ...element,
+          parents: [
+            ...element.parents,
+            ParentReferences.generate('rich-text-document', documentId),
+          ],
+        };
+      }
 
       if (parent) {
-        // If there is a parent element, add a reference to it in the element
-        element.parents = [
-          ...element.parents,
-          ParentReferences.generate('rich-text-element', parent.id),
-        ];
+        // Check if the parent element is already present as a parent
+        // on the element.
+        const hasParentReference = ParentReferences.getIds(
+          'rich-text-element',
+          element.parents,
+        ).includes(parent.id);
+
+        if (!hasParentReference) {
+          // If there is a parent element, add a reference to it in the
+          // element if not already present.
+          element = {
+            ...element,
+            parents: [
+              ...element.parents,
+              ParentReferences.generate('rich-text-element', parent.id),
+            ],
+          };
+        }
       }
 
       // Apply the operation to actually insert the element node

@@ -43,6 +43,39 @@ describe('withParentReferences', () => {
     expect(arrayContainsObject(element.parents, parentReference)).toBeTruthy();
   });
 
+  it('does not add the document as a parent if already present', () => {
+    // Create an editor with the plugin applied, containg a
+    // paragraph element.
+    const editor = withParentReferences(
+      createTestEditor([paragraphElement1]),
+      richTextDocument1.id,
+    );
+
+    // Insert a new inline element which already has the document as
+    // a parent into the paragraph.
+    Transforms.insertNodes(
+      editor,
+      {
+        ...linkElement1,
+
+        parents: [
+          ParentReferences.generate('rich-text-document', richTextDocument1.id),
+        ],
+      },
+      { at: [0, 0] },
+    );
+
+    // Get the inserted element, it has index 1 because a text
+    // node will be inserted before it during normalization.
+    const element = Node.get(editor, [0, 1]) as RichTextElement;
+
+    // The inserted element should only contain a signel reference
+    // to the document.
+    expect(
+      ParentReferences.get('rich-text-document', element.parents).length,
+    ).toBe(1);
+  });
+
   it('adds the parent element as a parent on inline elements', () => {
     // Create an editor with the plugin applied,
     // containg a paragraph element.
@@ -66,6 +99,38 @@ describe('withParentReferences', () => {
 
     // The inserted element should have the parent reference
     expect(arrayContainsObject(element.parents, parentReference)).toBeTruthy();
+  });
+
+  it('does not add the parent element as a parent if already preset', () => {
+    // Create an editor with the plugin applied, containg a paragraph
+    // paragraph element.
+    const editor = withParentReferences(
+      createTestEditor([paragraphElement1]),
+      richTextDocument1.id,
+    );
+
+    // Insert a new inline element which already has the paragraph as
+    // a parent into the paragraph.
+    Transforms.insertNodes(
+      editor,
+      {
+        ...linkElement1,
+        parents: [
+          ParentReferences.generate('rich-text-element', paragraphElement1.id),
+        ],
+      },
+      { at: [0, 0] },
+    );
+
+    // Get the inserted element, it has index 1 because a text
+    // node will be inserted before it during normalization.
+    const element = Node.get(editor, [0, 1]) as RichTextElement;
+
+    // The inserted element should contain only a single refernece to
+    // the parent element.
+    expect(
+      ParentReferences.getIds('rich-text-element', element.parents).length,
+    ).toBe(1);
   });
 
   it('updates the parent element reference on children of a split off element', () => {
