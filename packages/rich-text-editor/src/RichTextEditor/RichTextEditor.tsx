@@ -8,6 +8,7 @@ import { useDebouncedUpdates } from '../useDebouncedUpdates';
 import { useExternalUpdates } from '../useExternalUpdates';
 import './RichTextEditor.css';
 import { withBlockShortcuts } from '../withBlockShortcuts';
+import { withBlockReset } from '../withBlockReset';
 
 export interface RichTextEditorProps {
   /**
@@ -38,7 +39,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   );
   // Add plugins to editor
   const editorWithPlugins = useMemo(
-    () => withBlockShortcuts(editor, configs),
+    () => withBlockReset(withBlockShortcuts(editor, configs)),
     [editor, configs.length],
   );
 
