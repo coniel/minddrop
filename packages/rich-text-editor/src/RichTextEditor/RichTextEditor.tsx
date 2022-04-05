@@ -7,6 +7,7 @@ import { createRenderElement } from '../utils';
 import { useDebouncedUpdates } from '../useDebouncedUpdates';
 import { useExternalUpdates } from '../useExternalUpdates';
 import './RichTextEditor.css';
+import { withBlockShortcuts } from '../withBlockShortcuts';
 
 export interface RichTextEditorProps {
   /**
@@ -20,7 +21,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 }) => {
   // Create a session based editor instance
   const [editor, sessionId] = useEditorSession(documentId);
-  // Get the editor's initial value
+  // Create the editor's initial value
   const initialValue = useEditorInitialValue(documentId);
   // Get the configuration objects of all registered rich
   // text element types.
@@ -35,11 +36,16 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     () => createRenderElement(configs),
     [configs.length],
   );
+  // Add plugins to editor
+  const editorWithPlugins = useMemo(
+    () => withBlockShortcuts(editor, configs),
+    [editor, configs.length],
+  );
 
   return (
     // The editor does nothing `onChange` because updates are handled
     // by the `useEditorSession` hook.
-    <Slate editor={editor} value={initialValue} onChange={() => null}>
+    <Slate editor={editorWithPlugins} value={initialValue}>
       <Editable className="editor" renderElement={renderElement} />
     </Slate>
   );
