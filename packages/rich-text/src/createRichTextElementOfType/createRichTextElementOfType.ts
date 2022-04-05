@@ -30,7 +30,7 @@ export function createRichTextElementOfType<
   if (config.create && config.level === 'block' && !Array.isArray(data)) {
     // If the element is a block level element, and the data
     // is a DataInsert, create the element using the data.
-    elementData = config.create(core, data);
+    elementData = config.create(data);
   } else if (
     config.create &&
     config.level === 'inline' &&
@@ -38,12 +38,12 @@ export function createRichTextElementOfType<
   ) {
     // If the element is an inline level element, and the data
     // is a RichTextFragment, create the element using the data.
-    elementData = config.create(core, data);
+    elementData = config.create(data);
   } else {
     // If there is no data, or the data type does not match the
     // element level's expected data type, or the element config
     // has no `create` method, create the element without data.
-    elementData = config.create ? config.create(core) : { type: config.type };
+    elementData = config.create ? config.create() : { type: config.type };
   }
 
   // Create the element

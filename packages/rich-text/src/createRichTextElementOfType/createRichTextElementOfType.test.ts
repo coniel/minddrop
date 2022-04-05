@@ -20,7 +20,7 @@ const blockConfig: RichTextBlockElementConfig = {
   type: 'block-element',
   level: 'block',
   component: paragraphElementConfig.component,
-  create: (core, dataInsert) => ({
+  create: (dataInsert) => ({
     type: 'block-element',
     children: [
       { text: dataInsert ? dataInsert.data['text/plain'] : 'Hello world' },
@@ -33,7 +33,7 @@ const inlineConfig: RichTextInlineElementConfig = {
   type: 'inline-element',
   level: 'inline',
   component: paragraphElementConfig.component,
-  create: (core, fragment) => ({
+  create: (fragment) => ({
     type: 'inline-element',
     children: fragment || [{ text: 'Hello world' }],
   }),

@@ -174,11 +174,10 @@ If the element makes use of files, a [FileReference](/docs/extensions/types/file
 If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). These will automatically be set as the element's `children` field.
 
 ```ts
-create<TData extends CreateRichTextInlineElementData>(core: Core, fragment?: RichTextFragment): TData
+create<TData extends CreateRichTextInlineElementData>(fragment?: RichTextFragment): TData
 ```
 
 <ArgsTable
-  core
   data={[
     {
       name: 'fragment',

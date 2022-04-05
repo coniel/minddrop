@@ -31,7 +31,7 @@ export const headingElementConfig: RichTextBlockElementConfig = {
 export const paragraphElementConfig: RichTextBlockElementConfig = {
   type: 'paragraph',
   level: 'block',
-  create: (core, dataInsert) => ({
+  create: (dataInsert) => ({
     type: 'paragraph',
     children: [{ text: dataInsert ? dataInsert.data['text/plain'] : '' }],
   }),

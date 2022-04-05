@@ -235,11 +235,10 @@ For example, imagine a web bookmark element which has a `url` and `title` proper
 If the element makes use of files, a [FileReference](/docs/extensions/types/file-reference) must be created for each attached file using the [`Files.create`](/docs/extensions/api/files#create) method and the file reference IDs set as the element's `files` property.
 
 ```ts
-create<TData extends CreateRichTextBlockElementData>(core: Core, data?: DataInsert): TData
+create<TData extends CreateRichTextBlockElementData>(data?: DataInsert): TData
 ```
 
 <ArgsTable
-  core
   data={[
     {
       name: 'data',

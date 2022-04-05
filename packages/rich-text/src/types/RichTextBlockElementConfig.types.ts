@@ -1,4 +1,4 @@
-import { Core, DataInsert } from '@minddrop/core';
+import { DataInsert } from '@minddrop/core';
 import { Editor } from 'slate';
 import {
   CreateRichTextBlockElementData,
@@ -33,10 +33,9 @@ export interface RichTextBlockElementConfig<
    * If the element is being created as the result of a data insert (such as a
    * paste event), the `data` parameter will contain the inserted data.
    *
-   * @param core A MindDrop core instance.
    * @param data A data insert object.
    */
-  create?(core: Core, data?: DataInsert): TData;
+  create?(data?: DataInsert): TData;
 
   /**
    * Called when an existing rich text element is converted into this type.
