@@ -28,7 +28,7 @@ describe('<TopicViewColumns />', () => {
   it('renders drops', () => {
     const { getByText } = init();
 
-    getByText(textDrop1.markdown);
+    getByText(textDrop1.text);
   });
 
   it('inserts drop at end of column when data is dropped there', (done) => {
