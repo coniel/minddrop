@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { act } from '@minddrop/test-utils';
 import { Views } from '@minddrop/views';
 import { clearTopics } from '../clearTopics';
@@ -14,7 +14,7 @@ export const core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
 export const setup = () => {
   act(() => {
     dropTypeConfigs.forEach((config) => {
-      Drops.register(core, config);
+      Drops.register<Drop>(core, config);
     });
     Views.loadInstances(core, topicViewInstances);
     Drops.load(core, drops);

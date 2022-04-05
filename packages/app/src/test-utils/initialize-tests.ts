@@ -5,7 +5,7 @@ import { Extensions, EXTENSIONS_TEST_DATA } from '@minddrop/extensions';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { useAppStore } from '../useAppStore';
 import { PersistentStore } from '@minddrop/persistent-store';
-import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 
 const { extensions } = EXTENSIONS_TEST_DATA;
 const { rootTopicIds, topicViewConfigs, topicViewInstances, topics } =
@@ -34,7 +34,7 @@ export function setup() {
     PersistentStore.setLocalStore(core, localPersistentStore);
 
     // Register drop types
-    dropTypeConfigs.forEach((config) => Drops.register(core, config));
+    dropTypeConfigs.forEach((config) => Drops.register<Drop>(core, config));
     // Load drops
     Drops.load(core, drops);
 

@@ -15,7 +15,7 @@ import { insertDataIntoTopic } from './insertDataIntoTopic';
 const { textDropConfig, imageDropConfig, textDrop1, textDrop2 } =
   DROPS_TEST_DATA;
 const { tCoastalNavigation, tOffshoreNavigation, tEmpty } = TOPICS_TEST_DATA;
-const { topicExtension } = EXTENSIONS_TEST_DATA;
+const { topicExtensionConfig } = EXTENSIONS_TEST_DATA;
 
 const sourceTopic: Topic = {
   ...tEmpty,
@@ -74,19 +74,18 @@ describe('insertData', () => {
     // is tied to the 'text' drop type
     const core1 = initializeCore({ appId: 'app', extensionId: 'extension-1' });
     Extensions.register(core, {
-      ...topicExtension,
+      ...topicExtensionConfig,
       id: 'extension-1',
-      topics: [tEmpty.id],
     });
     Drops.register(core1, textDropConfig);
+    Extensions.enableOnTopics(core, 'extension-1', [tEmpty.id]);
 
     // Set up extension 2, which is not enabled on the topic and
     // is tied to the 'image' drop type
     const core2 = initializeCore({ appId: 'app', extensionId: 'extension-2' });
     Extensions.register(core, {
-      ...topicExtension,
+      ...topicExtensionConfig,
       id: 'extension-2',
-      topics: [],
     });
     Drops.register(core2, imageDropConfig);
 

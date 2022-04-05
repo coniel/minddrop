@@ -19,6 +19,7 @@ import {
   onDisable as onDisableDrops,
   Drops,
   DROPS_TEST_DATA,
+  Drop,
 } from '@minddrop/drops';
 import { View, Views, VIEWS_TEST_DATA } from '@minddrop/views';
 import '../app.css';
@@ -53,7 +54,7 @@ export function setup() {
   act(() => {
     Views.register(core, homeView);
     viewConfigs.forEach((view) => Views.register(viewsCore, view));
-    dropTypeConfigs.forEach((config) => Drops.register(core, config));
+    dropTypeConfigs.forEach((config) => Drops.register<Drop>(core, config));
     Views.loadInstances(core, [...viewInstances, ...topicViewInstances]);
     topicViewConfigs.forEach((config) => {
       Topics.registerView(topicsCore, config);

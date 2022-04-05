@@ -2,15 +2,19 @@ import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Topic, Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { initializeCore } from '@minddrop/core';
+import { Views } from '@minddrop/views';
+import {
+  ExtensionConfig,
+  Extensions,
+  EXTENSIONS_TEST_DATA,
+} from '@minddrop/extensions';
 import { Extension } from '../topic-view-columns-extension';
 import { topicViewColumnsConfig } from '../config';
 import { topicViewColumnsInstance } from './topic-view-columns.data';
-import { Views } from '@minddrop/views';
-import { Extensions, EXTENSIONS_TEST_DATA } from '@minddrop/extensions';
 
 const { topicExtension } = EXTENSIONS_TEST_DATA;
 const { tSixDrops, topicViewInstances } = TOPICS_TEST_DATA;
-const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
+const { dropTypeConfigs, textDropConfig, drops } = DROPS_TEST_DATA;
 
 export const topicWithView: Topic = {
   ...tSixDrops,
@@ -26,6 +30,16 @@ const extensionCore = initializeCore({
 const topicsCore = initializeCore({ appId: 'app', extensionId: 'topics' });
 const viewsCore = initializeCore({ appId: 'app', extensionId: 'views' });
 
+const textDropExtension: ExtensionConfig = {
+  id: 'text-drop',
+  name: 'Text drop',
+  description: 'Adds a text drop type',
+  scopes: ['topic'],
+  onRun: (core) => {
+    Drops.register(core, { ...textDropConfig, type: 'test-text-drop' });
+  },
+};
+
 export function setup() {
   act(() => {
     // Register drop types using the extensionCore so that
@@ -36,8 +50,10 @@ export function setup() {
 
     // Register extensions
     Extensions.register(core, topicExtension);
+    Extensions.register(core, textDropExtension);
     Extensions.register(core, Extension);
     Extension.onRun(core);
+    textDropExtension.onRun({ ...core, extensionId: textDropExtension.id });
 
     // Load test drops into drops store
     Drops.load(core, drops);
@@ -60,6 +76,7 @@ export function setup() {
 
     // Enable extensions on the topic
     Extensions.enableOnTopics(core, topicExtension.id, [topicWithView.id]);
+    Extensions.enableOnTopics(core, textDropExtension.id, [topicWithView.id]);
     Extensions.enableOnTopics(core, Extension.id, [topicWithView.id]);
   });
 }
