@@ -302,11 +302,10 @@ All non-void elements must support conversion.
 Elements which are not text based (e.g. images) should not support conversion.
 
 ```ts
-convert<D extends CreateRichTextBlockElementData>(core: Core, element: RichTextElement): D
+convert<D extends CreateRichTextBlockElementData>(element: RichTextElement): D
 ```
 
 <ArgsTable
-  core
   data={[
     {
       name: 'element',

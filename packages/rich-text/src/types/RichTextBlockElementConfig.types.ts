@@ -4,7 +4,6 @@ import {
   CreateRichTextBlockElementData,
   RichTextBlockElement,
 } from './RichTextBlockElement.types';
-import { RichTextInlineElement } from './RichTextInlineElement.types';
 import { RichTextBlockElementProps } from './RichTextElementProps.types';
 import { HtmlDeserializerMap } from './HtmlDeserializer.types';
 
@@ -46,10 +45,9 @@ export interface RichTextBlockElementConfig<
    * Should return an object containing the element `type` as well as any
    * data used by the element.
    *
-   * @param core A MindDrop core instance.
    * @param element The element being converted.
    */
-  convert?(core: Core, element: RichTextInlineElement): TData;
+  convert?(element: RichTextBlockElement): TData;
 
   /**
    * A function which returns a plain text version of the element's content.
