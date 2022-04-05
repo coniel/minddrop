@@ -177,6 +177,12 @@ export const paragraphElement4: RichTextBlockElement = {
     },
   ],
 };
+export const emptyParagraphElement: RichTextBlockElement = {
+  id: generateId(),
+  type: 'paragraph',
+  parents: [],
+  children: [{ text: '' }],
+};
 export const blockEquationElement1: TestBlockEquationElement = {
   id: generateId(),
   type: 'block-equation',
@@ -260,6 +266,7 @@ export const richTextBlockElements = [
   paragraphElement2,
   paragraphElement3,
   paragraphElement4,
+  emptyParagraphElement,
   blockEquationElement1,
 ];
 
