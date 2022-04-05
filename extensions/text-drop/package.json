@@ -33,6 +33,7 @@
     "@minddrop/app-ui": "^0.1.0",
     "@minddrop/core": "^0.3.1",
     "@minddrop/drops": "^0.1.1",
+    "@minddrop/rich-text": "^0.1.0",
     "@minddrop/rich-text-editor": "^0.1.0",
     "@minddrop/extensions": "^0.1.0",
     "@minddrop/ui": "^0.2.2",

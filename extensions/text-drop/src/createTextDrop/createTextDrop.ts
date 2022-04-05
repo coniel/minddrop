@@ -1,5 +1,5 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { generateId } from '@minddrop/utils';
+import { RichTextDocuments, RichTextElements } from '@minddrop/rich-text';
 import { CreateTextDropData } from '../types';
 
 /**
@@ -13,21 +13,29 @@ export function createTextDrop(
   core: Core,
   dataInsert?: DataInsert,
 ): CreateTextDropData {
-  const drop: CreateTextDropData = {
-    type: 'text',
-    contentRevision: generateId(),
-    content: JSON.stringify([{ type: 'paragraph', children: [{ text: '' }] }]),
-  };
+  // The IDs of the drop document's elements
+  const children: string[] = [];
 
   if (dataInsert && dataInsert.types.includes('text/plain')) {
     // Set the inserted plain text as the content
-    drop.content = JSON.stringify([
-      {
-        type: 'paragraph',
-        children: [{ text: dataInsert.data['text/plain'] }],
-      },
-    ]);
+    children.push(
+      RichTextElements.createOfType(core, 'paragraph', dataInsert).id,
+    );
+  } else {
+    // Create empty 'heading-1' and 'paragraph' elements as
+    // the drop's content.
+    children.push(RichTextElements.createOfType(core, 'heading-1').id);
+    children.push(RichTextElements.createOfType(core, 'paragraph').id);
   }
+
+  // Create the drop's rich text document
+  const document = RichTextDocuments.create(core, { children });
+
+  // Create tge drop data
+  const drop: CreateTextDropData = {
+    type: 'text',
+    richTextDocument: document.id,
+  };
 
   return drop;
 }

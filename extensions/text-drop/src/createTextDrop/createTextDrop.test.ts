@@ -1,5 +1,10 @@
 import { DataInsert } from '@minddrop/core';
-import { core } from '../test-utils';
+import {
+  RichTextDocument,
+  RichTextDocuments,
+  RichTextElements,
+} from '@minddrop/rich-text';
+import { cleanup, core, setup } from '../test-utils';
 import { createTextDrop } from './createTextDrop';
 
 const textData: DataInsert = {
@@ -13,23 +18,51 @@ const textData: DataInsert = {
 };
 
 describe('createTextDrop', () => {
-  it('returns an empty text drop without data insert', () => {
-    const data = createTextDrop(core);
+  beforeEach(setup);
 
-    // Should return a document with a single empty paragraph
-    expect(data.content).toEqual(
-      JSON.stringify([{ type: 'paragraph', children: [{ text: '' }] }]),
-    );
+  afterEach(cleanup);
+
+  describe('without data insert', () => {
+    it('returns a drop containing an empty heading and paragraph', () => {
+      const data = createTextDrop(core);
+
+      // Get the drop document
+      const document = RichTextDocuments.get(
+        data.richTextDocument,
+      ) as RichTextDocument;
+
+      // Get the document's child elements
+      const elements = RichTextElements.get(document.children);
+
+      // Document should have 2 children
+      expect(document.children.length).toBe(2);
+      // First child should be a 'heading-1' element
+      expect(elements[document.children[0]].type).toBe('heading-1');
+      // Second child should be a 'paragraph' element
+      expect(elements[document.children[1]].type).toBe('paragraph');
+    });
   });
 
-  it('creates a text drop using plain text data', () => {
-    const data = createTextDrop(core, textData);
+  describe('with plain text data insert', () => {
+    it('returns a drop containing a paragraph with the plain text', () => {
+      const data = createTextDrop(core, textData);
 
-    // Should return a document containing the inserted text
-    expect(data.content).toEqual(
-      JSON.stringify([
-        { type: 'paragraph', children: [{ text: 'Hello world' }] },
-      ]),
-    );
+      // Get the drop document
+      const document = RichTextDocuments.get(
+        data.richTextDocument,
+      ) as RichTextDocument;
+
+      // Get the document's child elements
+      const elements = RichTextElements.get(document.children);
+
+      // Document should have 1 child
+      expect(document.children.length).toBe(1);
+      // Child should be a 'paragraph' element
+      expect(elements[document.children[0]].type).toBe('paragraph');
+      // Paragraph should contain the plain text
+      expect(elements[document.children[0]].children).toEqual([
+        { text: textData.data['text/plain'] },
+      ]);
+    });
   });
 });
