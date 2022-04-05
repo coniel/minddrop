@@ -14,8 +14,20 @@ import { DROPS_TEST_DATA, Drops } from '@minddrop/drops';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { ViewConfig, Views, VIEWS_TEST_DATA } from '@minddrop/views';
 import { PersistentStore } from '@minddrop/persistent-store';
+import {
+  RichTextDocuments,
+  RichTextElements,
+  RICH_TEXT_TEST_DATA,
+} from '@minddrop/rich-text';
 
 const { rootTopicIds, topics } = TOPICS_TEST_DATA;
+
+const {
+  richTextElementConfigs,
+  richTextElements,
+  richTextDocuments,
+  richTextDocument1,
+} = RICH_TEXT_TEST_DATA;
 
 const topicIds = topics.map((topic) => topic.id);
 
@@ -51,6 +63,7 @@ Drops.load(
   core,
   DROPS_TEST_DATA.drops.map((drop) => ({
     ...drop,
+    richTextDocument: richTextDocument1.id,
     parents: [
       {
         type: 'topic',
@@ -67,11 +80,7 @@ Views.loadInstances(core, [
 ([ExtensionTopicViewColumns, ExtensionTextDrop] as ExtensionConfig[]).forEach(
   (extension) => {
     const core = initializeCore({ appId: 'app', extensionId: extension.id });
-    Extensions.register(core, {
-      ...extension,
-      enabled: true,
-      topics: topicIds,
-    });
+    Extensions.register(core, extension);
 
     if (extension.onRun) {
       extension.onRun(core);
@@ -80,5 +89,16 @@ Views.loadInstances(core, [
     Extensions.enableOnTopics(core, extension.id, topicIds);
   },
 );
+
+// Register element types
+richTextElementConfigs.forEach((config) => {
+  RichTextElements.register(core, config);
+});
+
+// Load rich text elements
+RichTextElements.load(core, richTextElements);
+
+// Load rich text documents
+RichTextDocuments.load(core, richTextDocuments);
 
 AppExtension.onRun(core);
