@@ -39,9 +39,8 @@ The configuration object for block level elements. See below the table for addit
     {
       name: 'create',
       type: 'function',
-      required: true,
       description:
-        'Function called to create an element of this type.',
+        'Called when creating a new element of this type. Should return any custom data used in the element. Omit if the element does not use custom data.',
     },
     {
       name: 'convert',
@@ -221,7 +220,7 @@ The props passed to block element components.
 
 ### create
 
-Called to create a new rich text element of this type. Should return an object containing the element `type` as well as any data used by the element.
+Called to create a new rich text element of this type. Should return an object containing the element `type` as well as any data used by the element. Omit if the element does not use any custom data.
 
 For example, imagine a web bookmark element which has a `url` and `title` property. The `create` method should return an object defining these properties:
 
