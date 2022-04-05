@@ -4,6 +4,8 @@ export type IconName =
   | 'arrow-back'
   | 'arrow-forward'
   | 'arrow-up-right'
+  | 'checkbox-square-checked'
+  | 'checkbox-square-unchecked'
   | 'cloud-upload'
   | 'color-palette'
   | 'drop'
