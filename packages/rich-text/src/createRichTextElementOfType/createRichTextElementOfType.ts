@@ -1,6 +1,6 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { createRichTextElement } from '../createRichTextElement/createRichTextElement';
-import { createRichTextElementData } from '../createRichTextElementData';
+import { initializeRichTextElementData } from '../initializeRichTextElementData';
 import { RichTextElement } from '../types';
 import { RichTextFragment } from '../types/RichTextFragment.types';
 
@@ -21,10 +21,13 @@ export function createRichTextElementOfType<
   TElement extends RichTextElement = RichTextElement,
 >(core: Core, type: string, data?: DataInsert | RichTextFragment): TElement {
   // Create the element data
-  const elementData = createRichTextElementData(type, data);
+  const elementData = initializeRichTextElementData(type, data);
 
   // Create the element
-  const element = createRichTextElement<TElement>(core, elementData);
+  const element = createRichTextElement<TElement>(core, {
+    ...elementData,
+    type,
+  });
 
   // Return the new element
   return element;

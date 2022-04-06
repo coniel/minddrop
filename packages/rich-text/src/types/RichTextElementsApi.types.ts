@@ -138,6 +138,23 @@ export interface RichTextElementsApi {
   ): RichTextElementMap<T>;
 
   /**
+   * Returns an element's initial data, initialized using the
+   * element type config's `initializeData` method if present
+   * or an empty object otherwise.
+   *
+   * - Throws a `RichTextElementTypeNotRegisteredError` if the
+   *   element type is not registered.
+   *
+   * @param type The element type.
+   * @param data The data from which to create the element.
+   * @returns The element's creation data.
+   */
+  initializeData<TData = {}>(
+    type: string,
+    data?: DataInsert | RichTextFragment,
+  ): TData;
+
+  /**
    * Creates a new rich text element and dispatches a `rich-text-elements:create`
    * event.
    *

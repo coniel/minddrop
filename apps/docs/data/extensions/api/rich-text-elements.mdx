@@ -218,6 +218,48 @@ Options for filtering rich text elements.
   ]}
 />
 
+### initializeData
+
+Returns the initialzed custom data for a new rich text element. The data is initialized using the element type config's `initializeData` method if present, otherwise, returns an empty object.
+
+- Throws a `RichTextElementTypeNotRegistered` error if the element type is not registered.
+
+```ts
+RichTextElements.initializeData<TData = {}>(
+  type: string,
+  fromData?: DataInsert | RichTextFragment
+): TData
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description:
+        'The element type for which to initialize the data.',
+    },
+    {
+      name: 'fromData',
+      type: 'DataInsert | RichTextFragment',
+      description: (
+        <div>
+          <p>The data from which to initialize the element data.</p>
+          <p>
+            If initializing the data for a 'block' level element, must
+            be a <Code>DataInsert</Code>.
+          </p>
+          <p>
+            If initializing the data for an 'inline' level element,
+            must be a <Code>RichTextFragment</Code>.
+          </p>
+        </div>
+      ),
+    },
+  ]}
+/>
+
 ### create
 
 Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the newly created element.
@@ -254,8 +296,6 @@ RichTextElements.create<
 `CreateRichTextElementData`
 
 In addition to the data below, you can include any custom data required by your rich text element.
-
-Note that the `parents` property cannot be set directly. The element must be added as a child to its parents after being created (e.g. using [`RichTextDocument.addElements`](rich-text-documents#addelements) or [`RichTextElements.nest`](#nest))
 
 <InterfaceTable
   data={[
@@ -328,11 +368,11 @@ RichTextElements.createOfType<
           <p>The data from which to create the element.</p>
           <p>
             If creating a 'block' level element, the data must be a
-            `DataInsert`.
+            <Code>DataInsert</Code>.
           </p>
           <p>
             If creating an 'inline' level element, the data must be a
-            `RichTextFragment`.
+            <Code>RichTextFragment</Code>.
           </p>
         </div>
       ),
@@ -396,7 +436,48 @@ In addition to the data below, you can include any custom data required by your 
   ]}
 />
 
-Note that setting other default fields (such as `parents`) using the `update` method is not allowed. Use the appropriate methods (such as `RichTextElements.addParents`) instead.
+### convert
+
+Converts a rich text block element to a different type. Dispatches a `rich-text-elements:update` event and returns the updated element.
+
+The conversion of an element from one type to another happens in six steps:
+
+1. The default data for the new element type is generated using the element's `initializeData` method (if defined).
+2. The conversion data is generated using the new element's `convertData` method (if defined).
+3. The element's custom data fields (if present) are removed. The `children` field is also removed if the element is being converted into a void element.
+4. The element's type is changed to the new type.
+5. The default data (generated in step 1) is merged into the element.
+6. The conversion data (generated in step 2) is merged into the element.
+
+- Throws a `RichTextElementTypeNotRegistered` if the new element type is not registered
+- Throws a `RichTextElementNotFoundError` if the element does not exist.
+- Throws a `InvalidParameterError` if the either the element or the new element type are not 'block' level elements.
+- Throws a `RichTextElementValidationError` if the updated element is invalid.
+
+```ts
+RichTextElements.convert<
+  TElement extends RichTextBlockElement,
+>(core: Core, element: RichTextBlockElement, type: string): TElement
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextBlockElement',
+      required: true,
+      description: 'The rich text block element to convert.',
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description:
+        'The rich text block element type into which to convert the element.',
+    },
+  ]}
+/>
 
 ### delete
 

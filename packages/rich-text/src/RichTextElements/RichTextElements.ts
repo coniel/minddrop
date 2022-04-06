@@ -10,6 +10,7 @@ import { getAllRichTextElements } from '../getAllRichTextElements';
 import { getRichTextElement } from '../getRichTextElement';
 import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { getRichTextElements } from '../getRichTextElements';
+import { initializeRichTextElementData } from '../initializeRichTextElementData';
 import { loadRichTextElements } from '../loadRichTextElements';
 import { nestRichTextElements } from '../nestRichTextElements';
 import { permanentlyDeleteRichTextElement } from '../permanentlyDeleteRichTextElement';
@@ -34,6 +35,7 @@ export const RichTextElements: RichTextElementsApi = {
       : getRichTextElement(elementId),
   getAll: getAllRichTextElements,
   filter: filterRichTextElements,
+  initializeData: initializeRichTextElementData,
   create: createRichTextElement,
   createOfType: createRichTextElementOfType,
   update: updateRichTextElement,
