@@ -7,6 +7,7 @@ import {
   RichTextInlineElement,
   RichTextInlineElementConfig,
 } from '../types';
+import { toPlainText } from '../toPlainText';
 
 // Rich text document IDs
 const richTextDoc1Id = generateId();
@@ -71,6 +72,7 @@ export const blockEquationElementConfig: RichTextBlockElementConfig<
   level: 'block',
   void: true,
   initializeData: () => ({ expression: '' }),
+  convertData: (element) => ({ expression: toPlainText(element) }),
   component: ({ attributes, children, element }) => (
     <div {...attributes}>
       {element}
@@ -238,6 +240,15 @@ export const toDoElementIncomplete1: TestToDoElement = {
   type: 'to-do',
   parents: [],
   done: true,
+  children: [{ text: '' }],
+};
+
+// Unregistered element type
+
+export const unregisteredElement: RichTextBlockElement = {
+  id: generateId(),
+  type: 'no-registered',
+  parents: [],
   children: [{ text: '' }],
 };
 
