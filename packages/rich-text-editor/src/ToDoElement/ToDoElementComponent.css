@@ -1,10 +1,12 @@
 .to-do-element {
   display: flex;
-  align-items: center;
 }
 
 .to-do-element .rich-text-content {
   padding-left: 6px;
+  font-size: var(--fsContentRegular);
+  line-height: var(--lhContentRegular);
+  font-weight: var(--fwRegular);
 }
 
 .to-do-element .icon {
