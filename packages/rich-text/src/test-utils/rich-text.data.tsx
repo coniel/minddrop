@@ -71,6 +71,7 @@ export const blockEquationElementConfig: RichTextBlockElementConfig<
   type: 'block-equation',
   level: 'block',
   void: true,
+  toPlainText: (element) => element.expression,
   initializeData: () => ({ expression: '' }),
   convertData: (element) => ({ expression: toPlainText(element) }),
   component: ({ attributes, children, element }) => (

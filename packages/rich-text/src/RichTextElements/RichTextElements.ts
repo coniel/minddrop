@@ -2,6 +2,7 @@ import { addFilesToRichTextElement } from '../addFilesToRichTextElement';
 import { addParentsToRichTextElement } from '../addParentsToRichTextElement';
 import { clearRegisteredRichTextElementTypes } from '../clearRegisteredRichTextElementTypes';
 import { clearRichTextElements } from '../clearRichTextElements';
+import { convertRichTextElement } from '../convertRichTextElement';
 import { createRichTextElement } from '../createRichTextElement';
 import { createRichTextElementOfType } from '../createRichTextElementOfType';
 import { deleteRichTextElement } from '../deleteRichTextElement';
@@ -35,7 +36,6 @@ export const RichTextElements: RichTextElementsApi = {
       : getRichTextElement(elementId),
   getAll: getAllRichTextElements,
   filter: filterRichTextElements,
-  initializeData: initializeRichTextElementData,
   create: createRichTextElement,
   createOfType: createRichTextElementOfType,
   update: updateRichTextElement,
@@ -50,6 +50,8 @@ export const RichTextElements: RichTextElementsApi = {
   removeFiles: removeFilesFromRichTextElement,
   replaceFiles: replaceFilesInRichTextElement,
   toPlainText,
+  initializeData: initializeRichTextElementData,
+  convert: convertRichTextElement,
   load: loadRichTextElements,
   clearElements: clearRichTextElements,
   clearRegistered: clearRegisteredRichTextElementTypes,

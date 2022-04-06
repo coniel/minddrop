@@ -138,23 +138,6 @@ export interface RichTextElementsApi {
   ): RichTextElementMap<T>;
 
   /**
-   * Returns an element's initial data, initialized using the
-   * element type config's `initializeData` method if present
-   * or an empty object otherwise.
-   *
-   * - Throws a `RichTextElementTypeNotRegisteredError` if the
-   *   element type is not registered.
-   *
-   * @param type The element type.
-   * @param data The data from which to create the element.
-   * @returns The element's creation data.
-   */
-  initializeData<TData = {}>(
-    type: string,
-    data?: DataInsert | RichTextFragment,
-  ): TData;
-
-  /**
    * Creates a new rich text element and dispatches a `rich-text-elements:create`
    * event.
    *
@@ -433,6 +416,42 @@ export interface RichTextElementsApi {
    * @returns The plain text.
    */
   toPlainText(element: RichTextElement | RichTextElement[]): string;
+
+  /**
+   * Returns an element's initial data, initialized using the
+   * element type config's `initializeData` method if present
+   * or an empty object otherwise.
+   *
+   * - Throws a `RichTextElementTypeNotRegisteredError` if the
+   *   element type is not registered.
+   *
+   * @param type The element type.
+   * @param data The data from which to create the element.
+   * @returns The element's creation data.
+   */
+  initializeData<TData = {}>(
+    type: string,
+    data?: DataInsert | RichTextFragment,
+  ): TData;
+
+  /**
+   * Converts a rich text block element from one type to another.
+   *
+   * - Throws a `RichTextElementTypeNotRegistered` if the current
+   *   or new element type is not registered
+   * - Throws a `InvalidParameterError` if the either the element
+   *   or the new element type are not 'block' level elements.
+   * - Throws a `RichTextElementValidationError` if the updated
+   *   element is invalid.
+   *
+   * @param element The element to convert.
+   * @param type The element type to convert to.
+   * @returns The converted element.
+   */
+  convert<TElement extends RichTextBlockElement = RichTextBlockElement>(
+    element: RichTextBlockElement,
+    type: string,
+  ): TElement;
 
   /**
    * Loads rich text elements into the store and dispatches a
