@@ -20,7 +20,7 @@ const blockConfig: RichTextBlockElementConfig = {
   type: 'block-element',
   level: 'block',
   component: paragraphElementConfig.component,
-  create: (dataInsert) => ({
+  initializeData: (dataInsert) => ({
     type: 'block-element',
     children: [
       { text: dataInsert ? dataInsert.data['text/plain'] : 'Hello world' },
@@ -33,14 +33,14 @@ const inlineConfig: RichTextInlineElementConfig = {
   type: 'inline-element',
   level: 'inline',
   component: paragraphElementConfig.component,
-  create: (fragment) => ({
+  initializeData: (fragment) => ({
     type: 'inline-element',
     children: fragment || [{ text: 'Hello world' }],
   }),
 };
 
 // A test block level element config which does not
-// have a `create` method.
+// have a `initializeData` method.
 const noCreateBlockConfig: RichTextBlockElementConfig = {
   type: 'no-create-block-element',
   level: 'block',
@@ -48,7 +48,7 @@ const noCreateBlockConfig: RichTextBlockElementConfig = {
 };
 
 // A test inline level element config which does not
-// have a `create` method.
+// have a `initializeData` method.
 const noCreateInlineConfig: RichTextInlineElementConfig = {
   type: 'no-create-inline-element',
   level: 'inline',
@@ -81,7 +81,7 @@ describe('createRichTextElementOfType', () => {
 
   describe('block level element', () => {
     describe('without data', () => {
-      it("creates an element using the config's `create` method", () => {
+      it("creates an element using the config's `initializeData` method", () => {
         // Create a 'block-element'
         createRichTextElementOfType(core, 'block-element');
 
@@ -107,7 +107,7 @@ describe('createRichTextElementOfType', () => {
         expect(element.children).toEqual([{ text: 'Hello world' }]);
       });
 
-      it('creates an element for which the config has no `create` method', () => {
+      it('creates an element for which the config has no `initializeData` method', () => {
         // Create a 'no-create-block-element'
         const element = createRichTextElementOfType(
           core,
@@ -122,7 +122,7 @@ describe('createRichTextElementOfType', () => {
     });
 
     describe('with data', () => {
-      it('passes the data insert to the `create` method', () => {
+      it('passes the data insert to the `initializeData` method', () => {
         // Create a 'block-element' with a DataInsert as data
         const element = createRichTextElementOfType(
           core,
@@ -143,7 +143,7 @@ describe('createRichTextElementOfType', () => {
         expect(element.children).toEqual([{ text: 'Hello world' }]);
       });
 
-      it('ignores data if the element has no `create` method', () => {
+      it('ignores data if the element has no `initializeData` method', () => {
         // Create a 'no-create-block-element'
         const element = createRichTextElementOfType(
           core,
@@ -161,7 +161,7 @@ describe('createRichTextElementOfType', () => {
 
   describe('inline level element', () => {
     describe('without data', () => {
-      it("creates an element using the config's `create` method", () => {
+      it("creates an element using the config's `initializeData` method", () => {
         // Create a 'inline-element'
         createRichTextElementOfType(core, 'inline-element');
 
@@ -187,7 +187,7 @@ describe('createRichTextElementOfType', () => {
         expect(element.children).toEqual([{ text: 'Hello world' }]);
       });
 
-      it('ignores data if the element has no `create` method', () => {
+      it('ignores data if the element has no `initializeData` method', () => {
         // Create a 'no-create-inline-element'
         const element = createRichTextElementOfType(
           core,
@@ -202,7 +202,7 @@ describe('createRichTextElementOfType', () => {
     });
 
     describe('with data', () => {
-      it('passes the fragment to the `create` method', () => {
+      it('passes the fragment to the `initializeData` method', () => {
         // Create a 'inline-element' with a RichTextFragment as data
         const element = createRichTextElementOfType(core, 'inline-element', [
           { text: 'Fragment text' },
@@ -224,7 +224,7 @@ describe('createRichTextElementOfType', () => {
         expect(element.children).toEqual([{ text: 'Hello world' }]);
       });
 
-      it('ignores data if the element has no `create` method', () => {
+      it('ignores data if the element has no `initializeData` method', () => {
         // Create a 'no-create-inline-element'
         const element = createRichTextElementOfType(
           core,

@@ -301,14 +301,14 @@ Note that the `parents` property cannot be set directly. The element must be add
 
 ### createOfType
 
-Creates a new rich text element of the given type by calling the element config's `create` method. Dispatches a `rich-text-elements:create` event and returns the newly created element.
+Creates a new rich text element of the given type. Dispatches a `rich-text-elements:create` event and returns the newly created element.
 
 - Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered.
 
 ```ts
 RichTextElements.createOfType<
   TElement extends RichTextElement,
->(core: Core, type: string, data?: DataInsert): TElement
+>(core: Core, type: string, data?: DataInsert | RichTextFragment): TElement
 ```
 
 <ArgsTable
@@ -322,9 +322,20 @@ RichTextElements.createOfType<
     },
     {
       name: 'data',
-      type: 'string',
-      description:
-        'A data insert object from which to create the element.',
+      type: 'DataInsert | RichTextFragment',
+      description: (
+        <div>
+          <p>The data from which to create the element.</p>
+          <p>
+            If creating a 'block' level element, the data must be a
+            `DataInsert`.
+          </p>
+          <p>
+            If creating an 'inline' level element, the data must be a
+            `RichTextFragment`.
+          </p>
+        </div>
+      ),
     },
   ]}
 />

@@ -164,17 +164,20 @@ export interface RichTextElementsApi {
   ): TElement;
 
   /**
-   * Creates a new rich text element of the given type by calling
-   * the element config's `initializeData` method. Dispatches a
-   * `rich-text-elements:create` event and returns the newly
-   * created element.
+   * Creates a new rich text element of the given type. Dispatches a
+   * `rich-text-elements:create` event and returns the newly created
+   * element.
    *
+   * - If creating a 'block' level element from data, the data must be
+   *   a `DataInsert`.
+   * - If creating an 'inline' level element, the data must be a
+   *   `RichTextFragment`.
    * - Throws a `RichTextElementTypeNotRegisteredError` if the
    *   element type is not registered.
    *
    * @param core A MindDrop core instance.
    * @param type The element type to create.
-   * @param data A data insert object from which to create the element.
+   * @param data The data from which to create the element.
    * @returns The new element.
    */
   createOfType<TElement extends RichTextElement = RichTextElement>(
