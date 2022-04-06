@@ -290,7 +290,7 @@ describe('withRichTextElements', () => {
     });
   });
 
-  describe('split element', () => {
+  describe('split node', () => {
     it('updates the split element children', () => {
       const updateElement = jest.fn();
 
@@ -319,7 +319,7 @@ describe('withRichTextElements', () => {
       });
     });
 
-    it('creates an element from the second part of the split', () => {
+    it('creates an element from the second half of the split', () => {
       const createElement = jest.fn();
 
       // Create an editor with the plugin applied,
