@@ -1,5 +1,6 @@
 import { Editor as SlateEditor, Path, Range, Text } from 'slate';
 import {
+  RichTextBlockElement,
   RichTextBlockElementConfig,
   RichTextElementConfig,
   RichTextElements,
@@ -29,24 +30,25 @@ export function withBlockShortcuts(
 
   // Create a `{ [shortcutString]: convertFn }` map of
   // shortcuts and their action.
-  const shortcuts: Record<string, RichTextBlockElementConfig['convert']> =
-    blockConfigs.reduce((map, config) => {
-      if (!config.shortcuts) {
-        // If the config has no shortcuts, there is nothing to add
-        return map;
-      }
+  const shortcuts: Record<
+    string,
+    (element: RichTextBlockElement) => RichTextBlockElement
+  > = blockConfigs.reduce((map, config) => {
+    if (!config.shortcuts) {
+      // If the config has no shortcuts, there is nothing to add
+      return map;
+    }
+    //
 
-      return config.shortcuts.reduce(
-        (nextMap, shortcut) => ({
-          // Shortcut triggers the config's `convert` method or
-          // returns an object with the element type if the
-          // config does not have a `convert` method.
-          [shortcut]: config.convert || (() => ({ type: config.type })),
-          ...nextMap,
-        }),
-        map,
-      );
-    }, {});
+    return config.shortcuts.reduce(
+      (nextMap, shortcut) => ({
+        // Shortcut converts the element into the config's element type
+        [shortcut]: (element) => RichTextElements.convert(element, config.type),
+        ...nextMap,
+      }),
+      map,
+    );
+  }, {});
 
   // eslint-disable-next-line no-param-reassign
   editor.apply = (operation) => {
