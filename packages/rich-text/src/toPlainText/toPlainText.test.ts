@@ -6,6 +6,7 @@ import {
   inlineEquationElement1PlainText,
   setup,
   cleanup,
+  headingElement1PlainText,
 } from '../test-utils';
 import { toPlainText } from './toPlainText';
 
@@ -22,9 +23,17 @@ describe('toPlainText', () => {
     expect(plainText).toBe(richTextDocument1PlainText);
   });
 
+  it('supports passing in a single element', () => {
+    // Convert to plain text
+    const plainText = toPlainText(headingElement1);
+
+    // Should match plain text value
+    expect(plainText).toBe(headingElement1PlainText);
+  });
+
   it('converts void elements with a toPlainText callback to plain text', () => {
     // Convert to plain text
-    const plainText = toPlainText([inlineEquationElement1]);
+    const plainText = toPlainText(inlineEquationElement1);
 
     // Should match plain text value
     expect(plainText).toBe(inlineEquationElement1PlainText);

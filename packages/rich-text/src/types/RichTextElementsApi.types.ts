@@ -429,10 +429,10 @@ export interface RichTextElementsApi {
    * - Throws a `RichTextElementNotFoundError` if any of the
    *   elements' nested elements do not exist.
    *
-   * @param elements The elements to convert into plain text.
+   * @param element The rich text element(s) to convert to plain text.
    * @returns The plain text.
    */
-  toPlainText(elements: RichTextElement[]): string;
+  toPlainText(element: RichTextElement | RichTextElement[]): string;
 
   /**
    * Loads rich text elements into the store and dispatches a

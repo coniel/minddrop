@@ -3,12 +3,19 @@ import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { RichTextElement } from '../types';
 
 /**
- * Converts rich text elements into a plain text string.
+ * Converts rich text elements to a plain text string.
+ * Void elements are converted using their `toPlainText`method.
+ * If they do not have such a method, they are omited.
  *
- * @param document The rich text document.
+ * @param element The rich text element(s) to convert to plain text.
  * @returns The plain text.
  */
-export function toPlainText(elements: RichTextElement[]): string {
+export function toPlainText(
+  element: RichTextElement | RichTextElement[],
+): string {
+  // Wrap a single element into an array
+  const elements = Array.isArray(element) ? element : [element];
+
   return elements
     .map((element) => {
       if (element.children) {
