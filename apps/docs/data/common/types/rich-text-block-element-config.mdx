@@ -252,14 +252,15 @@ convert<TCustomData extends {}>(element: RichTextBlockElement): TCustomData
   ]}
 />
 
-The conversion of an element from one type to another happens in six steps:
+The conversion of an element from one type to another follows these steps:
 
 1. The default data for the new element type is generated using the element's `initializeData` method (if defined).
 2. The conversion data is generated using the new element's `convertData` method (if defined).
-3. The element's custom data fields (if present) are removed. The `children` field is also removed if the element is being converted into a void element.
-4. The element's type is changed to the new type.
+3. The element's custom data fields (if present) are removed.
+4. If converting to a void element type, `children` is removed. Conversly, if converting from a void element type to a non-void element type, `children` (consisting of a `RichTextFragment` containing the original element's plain text value) is added.
 5. The default data (generated in step 1) is merged into the element.
 6. The conversion data (generated in step 2) is merged into the element.
+7. The element's `type` is changed to the new type.
 
 #### Example
 
