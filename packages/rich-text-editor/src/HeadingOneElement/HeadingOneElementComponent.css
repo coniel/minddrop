@@ -1,4 +1,9 @@
 .heading-1-element {
   font-size: var(--fsContentTitle);
   font-weight: var(--fwSemibold);
+  padding-top: 16px;
+}
+
+.heading-1-element:first-child {
+  padding-top: 0;
 }
