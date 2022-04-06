@@ -1,8 +1,23 @@
 import React from 'react';
 import { RichTextEditor } from './RichTextEditor';
-import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RichTextElements, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { ParagraphElementConfig } from '../ParagraphElement';
+import { HeadingOneElementConfig } from '../HeadingOneElement';
+import { ToDoElementConfig } from '../ToDoElement';
+import { initializeCore } from '@minddrop/core';
 
 const { richTextDocument1 } = RICH_TEXT_TEST_DATA;
+
+const core = initializeCore({ appId: 'app', extensionId: 'app' });
+
+RichTextElements.clearRegistered();
+
+// Register element types
+[ParagraphElementConfig, HeadingOneElementConfig, ToDoElementConfig].forEach(
+  (config) => {
+    RichTextElements.register(core, config);
+  },
+);
 
 export default {
   title: 'editor/Editor',

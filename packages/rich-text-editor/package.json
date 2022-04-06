@@ -30,6 +30,7 @@
   "dependencies": {
     "@minddrop/core": "^0.3.1",
     "@minddrop/rich-text": "^0.1.0",
+    "@minddrop/ui": "^0.2.2",
     "@minddrop/utils": "^0.4.0",
     "slate": "^0.76.1",
     "slate-react": "^0.76.1",
