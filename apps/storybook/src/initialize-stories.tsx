@@ -22,16 +22,13 @@ import {
 import {
   ParagraphElementConfig,
   HeadingOneElementConfig,
+  ToDoElementConfig,
 } from '@minddrop/rich-text-editor';
 
 const { rootTopicIds, topics } = TOPICS_TEST_DATA;
 
-const {
-  richTextElementConfigs,
-  richTextElements,
-  richTextDocuments,
-  richTextDocument1,
-} = RICH_TEXT_TEST_DATA;
+const { richTextElements, richTextDocuments, richTextDocument1 } =
+  RICH_TEXT_TEST_DATA;
 
 const topicIds = topics.map((topic) => topic.id);
 
@@ -95,9 +92,11 @@ Views.loadInstances(core, [
 );
 
 // Register element types
-[ParagraphElementConfig, HeadingOneElementConfig].forEach((config) => {
-  RichTextElements.register(core, config);
-});
+[ParagraphElementConfig, HeadingOneElementConfig, ToDoElementConfig].forEach(
+  (config) => {
+    RichTextElements.register(core, config);
+  },
+);
 
 // Load rich text elements
 RichTextElements.load(core, richTextElements);
