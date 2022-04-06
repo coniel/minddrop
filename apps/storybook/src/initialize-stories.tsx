@@ -19,11 +19,7 @@ import {
   RichTextElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
-import {
-  ParagraphElementConfig,
-  HeadingOneElementConfig,
-  ToDoElementConfig,
-} from '@minddrop/rich-text-editor';
+import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 
 const { rootTopicIds, topics } = TOPICS_TEST_DATA;
 
@@ -91,12 +87,8 @@ Views.loadInstances(core, [
   },
 );
 
-// Register element types
-[ParagraphElementConfig, HeadingOneElementConfig, ToDoElementConfig].forEach(
-  (config) => {
-    RichTextElements.register(core, config);
-  },
-);
+// Register default rich text element types
+registerDefaultRichTextElementTypes(core);
 
 // Load rich text elements
 RichTextElements.load(core, richTextElements);
