@@ -6,12 +6,14 @@ import * as TagsExtension from '@minddrop/tags';
 import * as DropsExtension from '@minddrop/drops';
 import * as TopicsExtension from '@minddrop/topics';
 import * as AppExtension from '@minddrop/app';
+import * as RichTextExtension from '@minddrop/rich-text';
 import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
 import { DBApi, initializeResourceConnectors } from '@minddrop/pouchdb';
 import { PersistentStore } from '@minddrop/persistent-store';
+import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 import { Topics } from '@minddrop/topics';
 import { Views } from '@minddrop/views';
 import { HomeView } from '../HomeView';
@@ -44,11 +46,15 @@ export async function initializeApp(
   ViewsExtension.onRun(core);
   FilesExtension.onRun(core);
   TagsExtension.onRun(core);
+  RichTextExtension.onRun(core);
   DropsExtension.onRun(core);
   TopicsExtension.onRun(core);
 
   // Inistialize registered resource connectors
   await initializeResourceConnectors(core, database);
+
+  // Register default rich text element types
+  registerDefaultRichTextElementTypes(core);
 
   // Initialize non-core extensions
   Extensions.initialize(core, extensions);

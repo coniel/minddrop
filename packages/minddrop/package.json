@@ -38,6 +38,8 @@
     "@minddrop/icons": "^0.3.1",
     "@minddrop/persistent-store": "^0.1.0",
     "@minddrop/pouchdb": "^0.1.1",
+    "@minddrop/rich-text": "^0.1.0",
+    "@minddrop/rich-text-editor": "^0.1.0",
     "@minddrop/tags": "^0.1.1",
     "@minddrop/theme": "^0.4.0",
     "@minddrop/text-drop": "^0.1.0",
