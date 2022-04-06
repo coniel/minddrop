@@ -1,8 +1,5 @@
 /* eslint-disable no-param-reassign */
-import {
-  RichTextBlockElementConfig,
-  RichTextElements,
-} from '@minddrop/rich-text';
+import { RichTextElements } from '@minddrop/rich-text';
 import { Editor as SlateEditor } from 'slate';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
@@ -23,15 +20,7 @@ export function withBlockReset(
 ): Editor {
   const { insertBreak, deleteBackward } = editor;
 
-  // Get the config for the default element type
-  const config = RichTextElements.getConfig(
-    defaultType,
-  ) as RichTextBlockElementConfig;
-
-  // Use the element config's convert function or a function
-  // which returns an object containing the default type.
-  const convert = config.convert || (() => ({ type: defaultType }));
-
+  // Overwride default insertBreak behaviour
   editor.insertBreak = () => {
     // Get the element entry in which the break was inserted
     const element = getElementAbove(editor);
@@ -45,13 +34,16 @@ export function withBlockReset(
       RichTextElements.toPlainText([element[0]]) === ''
     ) {
       // Convert the element to the default type
-      Transforms.setNodes(editor, convert(element[0]));
+      const converted = RichTextElements.convert(element[0], defaultType);
+      // Set the converted element data
+      Transforms.setNodes(editor, converted);
     } else {
       // Insert a break as normal
       insertBreak();
     }
   };
 
+  // Overwride default deleteBackward behaviour
   editor.deleteBackward = (unit) => {
     const element = getElementAbove(editor);
 
@@ -61,11 +53,14 @@ export function withBlockReset(
       element[0].type !== defaultType &&
       SlateEditor.isStart(editor, editor.selection.focus, editor.selection)
     ) {
-      // Convert the elemen to the default type
-      Transforms.setNodes(editor, convert(element[0]));
+      // Convert the element to the default type
+      const converted = RichTextElements.convert(element[0], defaultType);
+      // Set the converted element data
+      Transforms.setNodes(editor, converted);
     } else {
       deleteBackward(unit);
     }
   };
+
   return editor;
 }
