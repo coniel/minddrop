@@ -1,14 +1,11 @@
 import { HtmlDeserializerMap } from './HtmlDeserializer.types';
 import { RichTextFragment } from './RichTextFragment.types';
 import { RichTextInlineElementProps } from './RichTextElementProps.types';
-import {
-  CreateRichTextInlineElementData,
-  RichTextInlineElement,
-} from './RichTextInlineElement.types';
+import { RichTextInlineElement } from './RichTextInlineElement.types';
 
 export interface RichTextInlineElementConfig<
   TElement extends RichTextInlineElement = RichTextInlineElement,
-  TData extends CreateRichTextInlineElementData = CreateRichTextInlineElementData,
+  TData = {},
 > {
   /**
    * The level at which the element is rendered, always 'inline'.
@@ -26,8 +23,9 @@ export interface RichTextInlineElementConfig<
   component: React.ElementType<RichTextInlineElementProps<TElement>>;
 
   /**
-   * Called when creating a new element of this type. Should return any custom
-   * data used in the element. Omit if the element does not use custom data.
+   * Called when creating a new element of this type. Should return an object
+   * containing the initial state of the custom data used in the element.
+   * Omit if the element does not use custom data.
    *
    * If there is a selection in the editor when the element is created (e.g.
    * the user selects text and presses the element's creation hotkey), the
@@ -37,7 +35,7 @@ export interface RichTextInlineElementConfig<
    *
    * @param fragment The text fragment selected in the editor.
    */
-  create?(fragment?: RichTextFragment): TData;
+  initializeData?(fragment?: RichTextFragment): TData;
 
   /**
    * A function which returns a plain text version of the element's content.
@@ -74,9 +72,9 @@ export interface RichTextInlineElementConfig<
    *   some time after the `start` string (e.g. '**bold text**' where both
    *   `start` and `end` are set to '**').
    *
-   * When triggered, it calls the `create` method and inserts the new element.
+   * When triggered, it calls the `initializeData` method and inserts the new element.
    * In the case of a start-end combo shortcut, the nodes between the two
-   * shortcut strings will be set as the `create` method's `fragment` parameter.
+   * shortcut strings will be set as the `initializeData` method's `fragment` parameter.
    *
    * The shortcut text is automatically removed when the shortcut is triggered.
    */

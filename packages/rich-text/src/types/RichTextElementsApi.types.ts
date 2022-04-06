@@ -165,7 +165,7 @@ export interface RichTextElementsApi {
 
   /**
    * Creates a new rich text element of the given type by calling
-   * the element config's `create` method. Dispatches a
+   * the element config's `initializeData` method. Dispatches a
    * `rich-text-elements:create` event and returns the newly
    * created element.
    *

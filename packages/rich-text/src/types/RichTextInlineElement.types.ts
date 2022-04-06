@@ -7,7 +7,7 @@ import {
 } from '@minddrop/utils';
 import { RichTextFragment } from './RichTextFragment.types';
 
-export interface RichTextInlineElement {
+export interface RichTextInlineElement<TType = string> {
   /**
    * The element ID.
    */
@@ -16,7 +16,7 @@ export interface RichTextInlineElement {
   /**
    * The element type identifier, e.g. 'link'.
    */
-  type: string;
+  type: TType;
 
   /**
    * References of the element's parents (typically a
@@ -52,11 +52,11 @@ export interface RichTextInlineElement {
 /**
  * Data supplied when creating an inline rich text element via the API.
  */
-export interface CreateRichTextInlineElementData {
+export interface CreateRichTextInlineElementData<TType = string> {
   /**
    * The element type identifier, e.g. 'link'.
    */
-  type: string;
+  type: TType;
 
   /**
    * The rich text content of the element.

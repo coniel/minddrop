@@ -1,15 +1,12 @@
 import { DataInsert } from '@minddrop/core';
 import { Editor } from 'slate';
-import {
-  CreateRichTextBlockElementData,
-  RichTextBlockElement,
-} from './RichTextBlockElement.types';
+import { RichTextBlockElement } from './RichTextBlockElement.types';
 import { RichTextBlockElementProps } from './RichTextElementProps.types';
 import { HtmlDeserializerMap } from './HtmlDeserializer.types';
 
 export interface RichTextBlockElementConfig<
   TElement extends RichTextBlockElement = RichTextBlockElement,
-  TData extends CreateRichTextBlockElementData = CreateRichTextBlockElementData,
+  TData = {},
 > {
   /**
    * The level at which the element is rendered, always 'block'.
@@ -27,26 +24,29 @@ export interface RichTextBlockElementConfig<
   component: React.ElementType<RichTextBlockElementProps<TElement>>;
 
   /**
-   * Called when creating a new element of this type. Should return any custom
-   * data used in the element. Omit if the element does not use custom data.
+   * Called when creating a new element of this type. Should return an object
+   * containing the initial state of the custom data used in the element.
+   * Omit if the element does not use custom data.
    *
    * If the element is being created as the result of a data insert (such as a
    * paste event), the `data` parameter will contain the inserted data.
    *
    * @param data A data insert object.
    */
-  create?(data?: DataInsert): TData;
+  initializeData?(data?: DataInsert): TData;
 
   /**
-   * Called when an existing rich text element is converted into this type.
-   * Required if `allowConversion` is `true`.
+   * Called when an existing rich text element of a different type is converted
+   * into this type (e.g. converting a 'paragraph' element into an 'equation'
+   * element). Should return an object containing the initial state of custom
+   * data used in the element.
    *
-   * Should return an object containing the element `type` as well as any
-   * data used by the element.
+   * Omit if the element does not need to perform additional logic during
+   * element conversions.
    *
    * @param element The element being converted.
    */
-  convert?(element: RichTextBlockElement): TData;
+  convertData?(element: RichTextBlockElement): TData;
 
   /**
    * A function which returns a plain text version of the element's content.
@@ -69,24 +69,6 @@ export interface RichTextBlockElementConfig<
   void?: boolean;
 
   /**
-   * Whether the element can be converted to and from other element types.
-   * For example, converting a 'paragraph' element into a 'quote' element.
-   *
-   * When an element is converted to another type, its `children` field is
-   * preserved. For an element to support conversion, it must contain a
-   * `children` field (consiting of `RichText` and inline `RichTextElement`
-   * nodes). Other fields (e.g. `nestedElements`) may or may not be preserved
-   * depending on the data structure of the element type into which the element
-   * is converted.
-   *
-   * All non-void elements must support conversion.
-   *
-   * Elements which are not text based (e.g. images) should not support
-   * conversion.
-   */
-  allowConversion?: boolean;
-
-  /**
    * Whether other block level elements can indented below this one. Indented
    * block IDs will be set as the element's `nestedElements` parameter.
    */
@@ -94,9 +76,9 @@ export interface RichTextBlockElementConfig<
 
   /**
    * What happens when the Return key is pressed at the end of a block element:
-   * - `break-out` inserts a new element of the default type below
-   * - `line-break` inserts a soft line break into the current element
-   * - `same-type` inserts a new element of the same type as this one below
+   * - `break-out` inserts a new element of the default type below (default).
+   * - `same-type` inserts a new element of the same type as this one below.
+   * - `line-break` inserts a soft line break into the current element.
    */
   returnBehaviour?: 'break-out' | 'line-break' | 'same-type';
 
@@ -105,7 +87,7 @@ export interface RichTextBlockElementConfig<
    * 'text/plain'). Used to decide which type of element to create when data
    * is inserted into the editor (e.g. from a paste event).
    *
-   * When a data insert contains a matching data type, the `create` method will
+   * When a data insert contains a matching data type, the `initializeData` method will
    * be called with the inserted data. If there are multiple registered rich text
    * element types that support the same data type, only a single element will be
    * created (the element type that was registered first).
@@ -122,7 +104,7 @@ export interface RichTextBlockElementConfig<
    * 'image/png'). Used to decide which type of element to create when data
    * containing files is inserted into the editor (e.g. from a paste event).
    *
-   * When a data insert contains a matching file type, the `create` method will
+   * When a data insert contains a matching file type, the `initializeData` method will
    * be called with the inserted file(s). If there are multiple registered rich
    * text element types that support the same file type, only a single element
    * will be created (the element type that was registered first).
@@ -135,11 +117,11 @@ export interface RichTextBlockElementConfig<
    * Determnies the behaviour when creating elements of this type from files.
    *
    * When `true`, indicates that this element type supports multiple
-   * files at once, resulting in the config's `create` method being called
+   * files at once, resulting in the config's `initializeData` method being called
    * once with all supported files included in the `data` parameter.
    *
    * When `false`, indicates that this element type only supports a single
-   * file per element. In this case, the `create` method will called for each
+   * file per element. In this case, the `initializeData` method will called for each
    * inserted file, with a signle file being included in the `data` parameter.
    */
   multiFile?: boolean;

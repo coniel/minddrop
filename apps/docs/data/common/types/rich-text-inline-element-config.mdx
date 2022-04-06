@@ -39,10 +39,10 @@ The configuration object for registering new inline level element types. See bel
       description: 'The component used to render the element.',
     },
     {
-      name: 'create',
+      name: 'initializeData',
       type: 'function',
       description:
-        'Called when creating a new element of this type. Should return any custom data used in the element. Omit if the element does not use custom data.',
+        'Called when creating a new element of this type. Should return the initial state of any custom data used in the element. Omit if the element does not use custom data.',
     },
     {
       name: 'toPlainText',
@@ -157,24 +157,12 @@ The props passed to inline element components.
   ]}
 />
 
-### create
+### initializeData
 
-Called when creating a new element of this type. Should return any custom data used in the element. Omit if the element does not use custom data.
-
-For example, imagine a link element which has a `url` property. The `create` method should return an object defining these properties:
+Called when creating a new element of this type. Should return an object containing the initial state of the custom data used in the element. Omit if the element does not use custom data.
 
 ```ts
-{
-  url: 'https://minddrop.app',
-}
-```
-
-If the element makes use of files, a [FileReference](/docs/extensions/types/file-reference) must be created for each attached file using the [`Files.create`](/docs/extensions/api/files#create) method and the file reference IDs set as the element's `files` property.
-
-If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). These will automatically be set as the element's `children` field.
-
-```ts
-create<TData extends CreateRichTextInlineElementData>(fragment?: RichTextFragment): TData
+initializeData<TData extends {}>(fragment?: RichTextFragment): TData
 ```
 
 <ArgsTable
@@ -187,35 +175,19 @@ create<TData extends CreateRichTextInlineElementData>(fragment?: RichTextFragmen
   ]}
 />
 
-#### CreateRichTextInlineElementData
+If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). The fragment will automatically be set as the element's `children` field unless the element is void.
 
-In addition to the data below, you should include any custom data used by your element.
+#### Example
 
-<InterfaceTable
-  data={[
-    {
-      name: 'type',
-      type: 'string',
-      required: true,
-      description: 'The element type indentifier.',
-    },
-    {
-      name: 'children',
-      type: 'RichTextFragment',
-      description: 'The rich text content of the element.',
-    },
-    {
-      name: 'files',
-      type: 'string[]',
-      description: (
-        <span>
-          The <Code>FileReference</Code> IDs of the files attached to
-          the element.
-        </span>
-      ),
-    },
-  ]}
-/>
+For an 'equation' element which stores the equation expression under a field called `expression`, the `initializeData` method should return an object initializing the property:
+
+```ts
+initializeData: (fragment) => ({
+  expression: fragment ? RichTextElements.toPlainText(fragment) : '',
+});
+```
+
+In this example, if a fragment is present, `expression` is initialized with the fragment's plain text value (and an empty string otherwise).
 
 ### toPlainText
 
@@ -257,7 +229,7 @@ Inline element shortcuts can be one of two types:
 - A simple string, which triggers the shortcut as soon as it is typed.
 - A `{ start: string; end: string; }` combo, which is triggered when the `end` string is typed some time after the `start` string (e.g. \*\*bold text\*\* where both `start` and `end` are set to `'**'`).
 
-When triggered, it calls the `create` method and inserts the new element. In the case of a start-end combo shortcut, the nodes between the two shortcut strings will be set as the `create` method's `fragment` parameter.
+When triggered, it calls the `initializeData` method and inserts the new element. In the case of a start-end combo shortcut, the nodes between the two shortcut strings will be set as the `initializeData` method's `fragment` parameter.
 
 The shortcut text is automatically removed when the shortcut is triggered.
 
@@ -285,7 +257,7 @@ An object defining a start-end combo shortcut.
 
 ### hotkey
 
-A list of keys, which when pressed together, insert an element of this type by calling the `create` method. If text is selected in the editor when the hotkey is triggered, the selected nodes will be passed as the `fragment` parameter.
+A list of keys, which when pressed together, insert an element of this type by calling the `initializeData` method. If text is selected in the editor when the hotkey is triggered, the selected nodes will be passed as the `fragment` parameter.
 
 Modifier keys:
 

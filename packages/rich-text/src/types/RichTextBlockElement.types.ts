@@ -7,7 +7,7 @@ import {
 } from '@minddrop/utils';
 import { RichTextFragment } from './RichTextFragment.types';
 
-export interface RichTextBlockElement {
+export interface RichTextBlockElement<TType = string> {
   /**
    * The element ID.
    */
@@ -16,7 +16,7 @@ export interface RichTextBlockElement {
   /**
    * The element type identifier, e.g. 'paragraph'.
    */
-  type: string;
+  type: TType;
 
   /**
    * References of the element's parents (typically a
@@ -58,11 +58,11 @@ export interface RichTextBlockElement {
 /**
  * Data supplied when creating a rich text block element via the API.
  */
-export interface CreateRichTextBlockElementData {
+export interface CreateRichTextBlockElementData<TType = string> {
   /**
-   * The element type identifier, e.g. 'paragraph'.
+   * The element type identifier, e.g. 'link'.
    */
-  type: string;
+  type: TType;
 
   /**
    * The rich text content of the element.

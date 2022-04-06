@@ -37,21 +37,16 @@ The configuration object for block level elements. See below the table for addit
       description: 'The component used to render the element.',
     },
     {
-      name: 'create',
+      name: 'initializeData',
       type: 'function',
       description:
-        'Called when creating a new element of this type. Should return any custom data used in the element. Omit if the element does not use custom data.',
+        'Called when creating a new element of this type. Should return the initial state of any custom data used in the element. Omit if the element does not use custom data.',
     },
     {
-      name: 'convert',
+      name: 'convertData',
       type: 'function',
-      description: (
-        <p>
-          Function called when an existing rich text element is
-          converted into this type. Required if{' '}
-          <Code>allowConversion</Code> is <Code>true</Code>.
-        </p>
-      ),
+      description:
+        'Called when an existing rich text element of a different type is converted into this type.  Omit if the element does not need to perform additional logic during element conversions.',
     },
     {
       name: 'toPlainText',
@@ -64,13 +59,6 @@ The configuration object for block level elements. See below the table for addit
       type: 'boolean',
       default: 'false',
       description: 'Determines whether the element is editable.',
-    },
-    {
-      name: 'allowConversion',
-      type: 'boolean',
-      default: 'true',
-      description:
-        'Whether the element can be converted to and from other element types.',
     },
     {
       name: 'allowNesting',
@@ -218,24 +206,12 @@ The props passed to block element components.
   ]}
 />
 
-### create
+### initializeData
 
-Called to create a new rich text element of this type. Should return an object containing the element `type` as well as any data used by the element. Omit if the element does not use any custom data.
-
-For example, imagine a web bookmark element which has a `url` and `title` property. The `create` method should return an object defining these properties:
+Called when creating a new rich text element of this type. Should return an object containing the initial state of the custom data used by the element. Omit if the element does not use any custom data.
 
 ```ts
-{
-  type: 'bookmark',
-  url: 'https://minddrop.app',
-  title: "MindDrop - Your mind's visual workspace",
-}
-```
-
-If the element makes use of files, a [FileReference](/docs/extensions/types/file-reference) must be created for each attached file using the [`Files.create`](/docs/extensions/api/files#create) method and the file reference IDs set as the element's `files` property.
-
-```ts
-create<TData extends CreateRichTextBlockElementData>(data?: DataInsert): TData
+initializeData<TCustomData extends {}>(data?: DataInsert): TCustomData
 ```
 
 <ArgsTable
@@ -249,70 +225,51 @@ create<TData extends CreateRichTextBlockElementData>(data?: DataInsert): TData
   ]}
 />
 
-#### CreateRichTextBlockElementData
+#### Example
 
-In addition to the data below, you should include any custom data used by your element.
-
-<InterfaceTable
-  data={[
-    {
-      name: 'type',
-      type: 'string',
-      required: true,
-      description: 'The element type indentifier.',
-    },
-    {
-      name: 'children',
-      type: 'RichTextFragment',
-      description: 'The rich text content of the element.',
-    },
-    {
-      name: 'nestedElements',
-      type: 'string[]',
-      description: (
-        <span>
-          The IDs of nested block level <Code>RichTextElement</Code>s.
-        </span>
-      ),
-    },
-    {
-      name: 'files',
-      type: 'string[]',
-      description: (
-        <span>
-          The <Code>FileReference</Code> IDs of the files attached to
-          the element.
-        </span>
-      ),
-    },
-  ]}
-/>
-
-### convert
-
-Called when an existing rich text element of a different type is converted into this type (e.g. converting a 'paragraph' element into a 'quote' element). Required if `allowConversion` is `true`.
-
-Should return an object containing the element `type` as well as any data used by the element (see the `create` method above for details).
-
-When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (set to a `RichTextFragment`). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
-
-All non-void elements must support conversion.
-
-Elements which are not text based (e.g. images) should not support conversion.
+For a 'to-do' element which has a `done` property, the `initializeData` method should return an object initializing the property:
 
 ```ts
-convert<D extends CreateRichTextBlockElementData>(element: RichTextElement): D
+initializeData: () => ({ done: false });
+```
+
+### convertData
+
+Called when an existing rich text element of a different type is converted into this type (e.g. converting a 'paragraph' element into an 'equation' element). Omit if the element does not need to perform additional logic during element conversions.
+
+```ts
+convert<TCustomData extends {}>(element: RichTextBlockElement): TCustomData
 ```
 
 <ArgsTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
-      description: 'The element being converted.',
+      type: 'RichTextBlockElement',
+      description:
+        'The rich text element being converted, always a block level element.',
     },
   ]}
 />
+
+The conversion of an element from one type to another happens in six steps:
+
+1. The default data for the new element type is generated using the element's `initializeData` method (if defined).
+2. The conversion data is generated using the new element's `convertData` method (if defined).
+3. The element's custom data fields (if present) are removed. The `children` field is also removed if the element is being converted into a void element.
+4. The element's type is changed to the new type.
+5. The default data (generated in step 1) is merged into the element.
+6. The conversion data (generated in step 2) is merged into the element.
+
+#### Example
+
+For an 'equation' element which stores the equation expression under a field called `expression`, conversion could be done by setting the converted element's plain text value as the `expression`.
+
+```ts
+convertData: (element) => ({
+  expression: RichTextElements.toPlainText(element),
+});
+```
 
 ### toPlainText
 
@@ -322,16 +279,18 @@ Providing a `toPlainText` method is strongly recommended for void elements which
 
 - **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
 - **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data to support pasting outside of MindDrop.
+- **Unregister**: When a void rich text element type is unregistered (e.g. because the extension was uninstalled), the elements of that type are converted into the default element type using the plain text value as the content.
+- **Conversion**: Some element types use the plain text content to initialize custom data fields during conversion (see [convertData](#convertdata) above).
 
 ```ts
-toPlainText(element: RichTextInlineElement): string
+toPlainText(element: RichTextBlockElement): string
 ```
 
 <ArgsTable
   data={[
     {
       name: 'element',
-      type: 'RichTextInlineElement',
+      type: 'RichTextBlockElement',
       required: true,
       description: 'The element to convert to plain text.',
     },
@@ -344,25 +303,13 @@ Void elements are elements which do not involve text (e.g. an 'image' element), 
 
 Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
 
-### allowConversion
-
-Whether the element can be converted to and from other element types. For example, converting a 'paragraph' element into a 'quote' element.
-
-When an element is converted to another type, its `children` field is preserved. For an element to support conversion, it must contain a `children` field (set to a `RichTextFragment`). Other fields may or may not be preserved depending on the data structure of the element type into which the element is converted.
-
-All non-void elements must support conversion.
-
-Void elements which contain text based data should implement the `toPlainText` method, as the plain text will be used to generate a `children` value when converting to a non-void element type.
-
-Elements which are not text based (e.g. an 'image' element) should not support conversion.
-
 ### returnBehaviour
 
 What happens when the Return key is pressed at the end of a block element:
 
-- `'break-out'` inserts a new element of the default type below
-- `'line-break'` inserts a soft line break into the current element
-- `'same-type'` inserts a new element of the same type as this one below
+- `'break-out'` inserts a new element of the default type below, this is the default behaviour.
+- `'same-type'` inserts a new element of the same type as this one below.
+- `'line-break'` inserts a soft line break (`\n`) into the current element.
 
 If the Return key is pressed within the element's text, the element is split in two, creating a second element of the same type below, unless returnBehaviour is set to `'line-break'` in which case a line break is insterted.
 
@@ -370,7 +317,7 @@ If the Return key is pressed within the element's text, the element is split in 
 
 The data types from which this kind of element can be created (e.g. `'text/plain'`). Used to decide which type of element to create when data is inserted into the editor (e.g. from a paste event).
 
-When a data insert contains a matching data type, the `create` method will be called with the inserted data. If there are multiple registered rich text element types that support the same data type, only a single element will be created (the element type that was registered first).
+When a data insert contains a matching data type, the `initializeData` method will be called with the inserted data. If there are multiple registered rich text element types that support the same data type, only a single element will be created (the element type that was registered first).
 
 Omit if this element type does not support being created from data.
 
@@ -380,7 +327,7 @@ Note that `'text/html'` data is ommited as creating elements from HTML is handle
 
 The file types from which this kind of element can be created (e.g. `'image/png'`). Used to decide which type of element to create when data containg files is inserted into the editor (e.g. from a paste event).
 
-When a data insert contains a matching file type, the `create` method will be called with the inserted file(s). If there are multiple registered rich text element types that support the same file type, only a single element will be created (the element type that was registered first).
+When a data insert contains a matching file type, the `initializeData` method will be called with the inserted file(s). If there are multiple registered rich text element types that support the same file type, only a single element will be created (the element type that was registered first).
 
 Omit if this element type does not support being created from files.
 
@@ -388,9 +335,9 @@ Omit if this element type does not support being created from files.
 
 Determnies the behaviour when creating elements of this type from files.
 
-When `true`, indicates that this element type supports multiple files at once, resulting in the `create` method being called once with all supported files included in the data parameter.
+When `true`, indicates that this element type supports multiple files at once, resulting in the `initializeData` method being called once with all supported files included in the data parameter.
 
-When `false`, indicates that this element type only supports a single file per element. In this case, the `create` method will called for each inserted file, with a signle file being included in the data parameter.
+When `false`, indicates that this element type only supports a single file per element. In this case, the `initializeData` method will called for each inserted file, with a signle file being included in the data parameter.
 
 ### domains
 
@@ -530,7 +477,7 @@ deserializeHtmlElement(
   element: HTMLElement,
   parent: HTMLElement | null,
   children: RichTextFragment | RichTextBlockElement[] | null,
-): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
+): CreateRichTextBlockElementData | CreateRichTextBlockElementData[] | null
 ```
 
 <ArgsTable

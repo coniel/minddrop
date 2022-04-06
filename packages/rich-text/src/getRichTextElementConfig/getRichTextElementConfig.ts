@@ -1,8 +1,5 @@
 import { RichTextElementTypeNotRegisteredError } from '../errors';
-import {
-  RichTextBlockElementConfig,
-  RichTextInlineElementConfig,
-} from '../types';
+import { RichTextElementConfig } from '../types';
 import { useRichTextStore } from '../useRichTextStore';
 
 /**
@@ -14,9 +11,9 @@ import { useRichTextStore } from '../useRichTextStore';
  * @param type The type of the element for wich to retrieve the config.
  * @returns The element's config object.
  */
-export function getRichTextElementConfig(
-  type: string,
-): RichTextBlockElementConfig | RichTextInlineElementConfig {
+export function getRichTextElementConfig<
+  TConfig extends RichTextElementConfig = RichTextElementConfig,
+>(type: string): TConfig {
   // Get the config from the store
   const config = useRichTextStore.getState().elementConfigs[type];
 
@@ -27,5 +24,5 @@ export function getRichTextElementConfig(
   }
 
   // Return the config
-  return config;
+  return config as TConfig;
 }

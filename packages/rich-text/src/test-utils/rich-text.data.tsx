@@ -31,8 +31,7 @@ export const headingElementConfig: RichTextBlockElementConfig = {
 export const paragraphElementConfig: RichTextBlockElementConfig = {
   type: 'paragraph',
   level: 'block',
-  create: (dataInsert) => ({
-    type: 'paragraph',
+  initializeData: (dataInsert) => ({
     children: [{ text: dataInsert ? dataInsert.data['text/plain'] : '' }],
   }),
   component: ({ children, attributes }) => (
@@ -40,37 +39,64 @@ export const paragraphElementConfig: RichTextBlockElementConfig = {
   ),
 };
 
-// Equation element (void)
-export interface TestBlockEquationElement extends RichTextBlockElement {
-  type: 'block-equation';
-  expression: string;
+// To-do element (interactive)
+export interface TestToDoElementData {
+  done: boolean;
 }
 
-export const blockEquationElementConfig: RichTextBlockElementConfig<TestBlockEquationElement> =
-  {
-    type: 'block-equation',
-    level: 'block',
-    void: true,
-    component: ({ attributes, children, element }) => (
-      <div {...attributes}>
-        {element}
-        {children}
-      </div>
-    ),
-  };
+export type TestToDoElement = RichTextBlockElement<'to-do'> &
+  TestToDoElementData;
+
+export const toDoElementConfig: RichTextBlockElementConfig<TestToDoElement> = {
+  type: 'to-do',
+  level: 'block',
+  initializeData: () => ({ done: false }),
+  component: ({ attributes, children }) => (
+    <div {...attributes}>{children}</div>
+  ),
+};
+
+// Equation element (void)
+export interface TestBlockEquationElementData {
+  expression: string;
+}
+export type TestBlockEquationElement = RichTextBlockElement<'block-equation'> &
+  TestBlockEquationElementData;
+
+export const blockEquationElementConfig: RichTextBlockElementConfig<
+  TestBlockEquationElement,
+  TestBlockEquationElementData
+> = {
+  type: 'block-equation',
+  level: 'block',
+  void: true,
+  initializeData: () => ({ expression: '' }),
+  component: ({ attributes, children, element }) => (
+    <div {...attributes}>
+      {element}
+      {children}
+    </div>
+  ),
+};
 
 /* ******************************** */
 /* Rich text inline element configs */
 /* ******************************** */
 
-export interface TestLinkElement extends RichTextInlineElement {
-  type: 'link';
+export interface TestLinkElementData {
   url: string;
 }
 
-export const linkElementConfig: RichTextInlineElementConfig<TestLinkElement> = {
+export type TestLinkElement = RichTextInlineElement<'link'> &
+  TestLinkElementData;
+
+export const linkElementConfig: RichTextInlineElementConfig<
+  TestLinkElement,
+  TestLinkElementData
+> = {
   level: 'inline',
   type: 'link',
+  initializeData: () => ({ url: '' }),
   component: ({ attributes, children, element }) => (
     <a {...attributes} href={element.url}>
       {children}
@@ -78,24 +104,29 @@ export const linkElementConfig: RichTextInlineElementConfig<TestLinkElement> = {
   ),
 };
 
-export interface TestInlineEquationElement extends RichTextInlineElement {
-  type: 'inline-equation';
+export interface TestInlineEquationElementData {
   expression: string;
 }
 
-export const inlineEquationElementConfig: RichTextInlineElementConfig<TestInlineEquationElement> =
-  {
-    level: 'inline',
-    type: 'inline-equation',
-    void: true,
-    toPlainText: (element) => element.expression,
-    component: ({ attributes, children, element }) => (
-      <span {...attributes}>
-        {element.expression}
-        {children}
-      </span>
-    ),
-  };
+export type TestInlineEquationElement =
+  RichTextInlineElement<'inline-equation'> & TestInlineEquationElementData;
+
+export const inlineEquationElementConfig: RichTextInlineElementConfig<
+  TestInlineEquationElement,
+  TestBlockEquationElementData
+> = {
+  level: 'inline',
+  type: 'inline-equation',
+  void: true,
+  initializeData: () => ({ expression: '' }),
+  toPlainText: (element) => element.expression,
+  component: ({ attributes, children, element }) => (
+    <span {...attributes}>
+      {element.expression}
+      {children}
+    </span>
+  ),
+};
 
 /* ************************ */
 /* Rich text block elements */
@@ -183,11 +214,31 @@ export const emptyParagraphElement: RichTextBlockElement = {
   parents: [],
   children: [{ text: '' }],
 };
+
+// Block equations
 export const blockEquationElement1: TestBlockEquationElement = {
   id: generateId(),
   type: 'block-equation',
   parents: [],
   expression: blockEquationElement1PlainText,
+};
+
+// To-dos
+
+export const toDoElementCompleted1: TestToDoElement = {
+  id: generateId(),
+  type: 'to-do',
+  parents: [],
+  done: true,
+  children: [{ text: '' }],
+};
+
+export const toDoElementIncomplete1: TestToDoElement = {
+  id: generateId(),
+  type: 'to-do',
+  parents: [],
+  done: true,
+  children: [{ text: '' }],
 };
 
 /* ************************* */
@@ -252,6 +303,7 @@ export const richTextElementConfigs = [
   headingElementConfig,
   paragraphElementConfig,
   blockEquationElementConfig,
+  toDoElementConfig,
   linkElementConfig,
   inlineEquationElementConfig,
 ];
@@ -268,6 +320,8 @@ export const richTextBlockElements = [
   paragraphElement4,
   emptyParagraphElement,
   blockEquationElement1,
+  toDoElementCompleted1,
+  toDoElementIncomplete1,
 ];
 
 // Inline level rich text elements
