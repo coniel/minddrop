@@ -1,4 +1,5 @@
 export * from './api';
+export * from './errors';
 export * from './applyFieldValues';
 export * from './createContext';
 export * from './createDataInsertFromDataTransfer';
