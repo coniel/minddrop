@@ -1,6 +1,5 @@
 import { cleanup, core, headingElementConfig } from '../test-utils';
 import { useRichTextStore } from '../useRichTextStore';
-import { RichTextElementTypeAlreadyRegisteredError } from '../errors';
 import { registerRichTextElementType } from './registerRichTextElementType';
 
 describe('registerRichTextElementType', () => {
@@ -14,16 +13,6 @@ describe('registerRichTextElementType', () => {
     expect(
       useRichTextStore.getState().elementConfigs[headingElementConfig.type],
     ).toBeDefined();
-  });
-
-  it('throws a `RichTextElementTypeAlreadyRegistered` error if the type is already registered', () => {
-    // Register a new element type
-    registerRichTextElementType(core, headingElementConfig);
-
-    // Registering the same type again should throw an error
-    expect(() =>
-      registerRichTextElementType(core, headingElementConfig),
-    ).toThrowError(RichTextElementTypeAlreadyRegisteredError);
   });
 
   it('dispatches a `rich-text-elements:register` event', (done) => {
