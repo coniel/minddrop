@@ -1,5 +1,5 @@
 import { EventListenerCallback } from './EventListener.types';
-import { ResourceConnector } from './ResourceConnector.types';
+import { ResourceConfig } from './ResourceConfig.types';
 
 export interface Core {
   /**
@@ -96,7 +96,7 @@ export interface Core {
    *
    * @param connector The connector of the resource to register.
    */
-  registerResource<R>(connector: ResourceConnector<R>): void;
+  registerResource<R>(connector: ResourceConfig<R>): void;
 
   /**
    * Unregisters a resource type. All resources of the specified
@@ -120,5 +120,5 @@ export interface Core {
    *
    * @returns All resource connectors.
    */
-  getResourceConnectors(): ResourceConnector[];
+  getResourceConfigs(): ResourceConfig[];
 }

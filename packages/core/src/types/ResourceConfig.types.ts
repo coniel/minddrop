@@ -1,4 +1,4 @@
-export interface ResourceConnector<R = {}> {
+export interface ResourceConfig<R = {}> {
   /**
    * A unique identifier for the type of the resource
    * composed using the extension ID and resource type:

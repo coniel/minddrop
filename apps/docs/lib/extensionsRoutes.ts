@@ -142,8 +142,8 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/parent-reference',
       },
       {
-        title: 'ResourceConnector',
-        slug: 'docs/extensions/types/resource-connector',
+        title: 'ResourceConfig',
+        slug: 'docs/extensions/types/resource-config',
       },
       {
         title: 'RichTextNode',

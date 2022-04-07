@@ -21,7 +21,7 @@ describe('drops extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([drop]);
         });
 
@@ -35,7 +35,7 @@ describe('drops extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onChange(drop, false);
         });
 
@@ -49,7 +49,7 @@ describe('drops extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([drop]);
           connector.onChange(drop, true);
         });

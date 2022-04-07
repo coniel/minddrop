@@ -15,7 +15,7 @@ describe('topics extension', () => {
       it('loads view instances', () => {
         onRun(core);
 
-        const [connector] = core.getResourceConnectors();
+        const [connector] = core.getResourceConfigs();
         connector.onLoad([viewInstance1]);
 
         expect(getViewInstance(viewInstance1.id)).toEqual(viewInstance1);
@@ -24,7 +24,7 @@ describe('topics extension', () => {
       it('handles added/updated view instances', () => {
         onRun(core);
 
-        const [connector] = core.getResourceConnectors();
+        const [connector] = core.getResourceConfigs();
         connector.onChange({ ...viewInstance1, foo: 'foo' }, false);
 
         expect(getViewInstance(viewInstance1.id)).toEqual({
@@ -36,7 +36,7 @@ describe('topics extension', () => {
       it('handles deleted view instances', () => {
         onRun(core);
 
-        const [connector] = core.getResourceConnectors();
+        const [connector] = core.getResourceConfigs();
         connector.onLoad([viewInstance1]);
         connector.onChange(viewInstance1, true);
 
@@ -51,7 +51,7 @@ describe('topics extension', () => {
     it('clears the store', () => {
       onRun(core);
 
-      const [connector] = core.getResourceConnectors();
+      const [connector] = core.getResourceConfigs();
       connector.onLoad([viewInstance1]);
       registerView(core, staticView);
       onDisable(core);

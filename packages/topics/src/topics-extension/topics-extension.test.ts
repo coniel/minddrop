@@ -29,7 +29,7 @@ describe('topics extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([topic]);
         });
 
@@ -43,7 +43,7 @@ describe('topics extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onChange(topic, false);
         });
 
@@ -57,7 +57,7 @@ describe('topics extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([topic]);
           connector.onChange(topic, true);
         });

@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-import { Core, ResourceChange, ResourceConnector } from '@minddrop/core';
+import { Core, ResourceChange, ResourceConfig } from '@minddrop/core';
 import { ResourceDocument, DBApi, GroupedResources } from '../types';
 
 function initializeConnector(
   core: Core,
   db: DBApi,
-  connector: ResourceConnector,
+  connector: ResourceConfig,
   resourceDocs: GroupedResources,
 ) {
   // Load existing docs
@@ -47,17 +47,17 @@ function initializeConnector(
   }
 }
 
-export async function initializeResourceConnectors(core: Core, db: DBApi) {
+export async function initializeResourceConfigs(core: Core, db: DBApi) {
   // Fetch all documents
   const resourceDocs = await db.getAllDocs();
 
-  core.getResourceConnectors().forEach((connector) => {
+  core.getResourceConfigs().forEach((connector) => {
     initializeConnector(core, db, connector, resourceDocs);
   });
 
   // Listen to 'core:register-resource' and initialize
   // new resources.
-  core.addEventListener<string, ResourceConnector>(
+  core.addEventListener<string, ResourceConfig>(
     'core:register-resource',
     (payload) => {
       initializeConnector(core, db, payload.data, resourceDocs);
@@ -66,7 +66,7 @@ export async function initializeResourceConnectors(core: Core, db: DBApi) {
 
   // Listen to 'core:unregister-resource' and remove
   // the resource.
-  core.addEventListener<string, ResourceConnector>(
+  core.addEventListener<string, ResourceConfig>(
     'core:unregister-resource',
     (payload) => {
       const { data } = payload;

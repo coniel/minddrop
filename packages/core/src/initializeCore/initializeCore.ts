@@ -1,7 +1,7 @@
-import { EventListener, Core, ResourceConnector } from '../types';
+import { EventListener, Core, ResourceConfig } from '../types';
 
 let eventListeners: EventListener[] = [];
-let resourceConnectors: ResourceConnector[] = [];
+let resourceConfigs: ResourceConfig[] = [];
 
 export interface InitializeCoreOptions {
   /**
@@ -99,12 +99,12 @@ export function initializeCore({
         }),
 
     registerResource: (connector) => {
-      resourceConnectors.push(connector);
+      resourceConfigs.push(connector);
       core.dispatch('core:register-resource', connector);
     },
 
     unregisterResource: (type) => {
-      const connector = resourceConnectors.find(
+      const connector = resourceConfigs.find(
         (connector) => connector.type === type,
       );
 
@@ -112,14 +112,14 @@ export function initializeCore({
         return;
       }
 
-      resourceConnectors = resourceConnectors.filter((c) => c.type !== type);
+      resourceConfigs = resourceConfigs.filter((c) => c.type !== type);
       core.dispatch('core:unregister-resource', connector);
     },
 
     isResourceRegistered: (type) =>
-      !!resourceConnectors.find((connector) => connector.type === type),
+      !!resourceConfigs.find((connector) => connector.type === type),
 
-    getResourceConnectors: () => resourceConnectors,
+    getResourceConfigs: () => resourceConfigs,
   };
 
   return core;

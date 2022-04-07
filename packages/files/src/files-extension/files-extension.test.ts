@@ -24,7 +24,7 @@ describe('files extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([filleReference]);
         });
 
@@ -38,7 +38,7 @@ describe('files extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onChange(filleReference, false);
         });
 
@@ -52,7 +52,7 @@ describe('files extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([filleReference]);
           connector.onChange(filleReference, true);
         });

@@ -11,7 +11,7 @@ import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
-import { DBApi, initializeResourceConnectors } from '@minddrop/pouchdb';
+import { DBApi, initializeResourceConfigs } from '@minddrop/pouchdb';
 import { PersistentStore } from '@minddrop/persistent-store';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 import { Topics } from '@minddrop/topics';
@@ -51,7 +51,7 @@ export async function initializeApp(
   TopicsExtension.onRun(core);
 
   // Inistialize registered resource connectors
-  await initializeResourceConnectors(core, database);
+  await initializeResourceConfigs(core, database);
 
   // Register default rich text element types
   registerDefaultRichTextElementTypes(core);

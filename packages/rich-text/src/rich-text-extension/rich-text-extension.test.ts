@@ -18,15 +18,15 @@ import {
 } from '../errors';
 import { useRichTextStore } from '../useRichTextStore';
 
-function getElementResourceConnector() {
+function getElementResourceConfig() {
   return core
-    .getResourceConnectors()
+    .getResourceConfigs()
     .find(({ type }) => type === 'rich-text:element');
 }
 
-function getDocumentResourceConnector() {
+function getDocumentResourceConfig() {
   return core
-    .getResourceConnectors()
+    .getResourceConfigs()
     .find(({ type }) => type === 'rich-text:document');
 }
 
@@ -42,7 +42,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // 'rich-text:element' resource should be registerd
-        expect(getElementResourceConnector()).toBeDefined();
+        expect(getElementResourceConfig()).toBeDefined();
       });
 
       it('handles document loading', () => {
@@ -53,7 +53,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:element' resource connector
-        const connector = getElementResourceConnector();
+        const connector = getElementResourceConfig();
 
         // Call the connector's `onLoad` method, simulating an onLoad
         // event from the storage adapter.
@@ -70,7 +70,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:element' resource connector
-        const connector = getElementResourceConnector();
+        const connector = getElementResourceConfig();
 
         // The new element to add
         const element = { ...headingElement1, id: generateId() };
@@ -91,7 +91,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:element' resource connector
-        const connector = getElementResourceConnector();
+        const connector = getElementResourceConfig();
 
         // The updated element
         const element = {
@@ -116,7 +116,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:element' resource connector
-        const connector = getElementResourceConnector();
+        const connector = getElementResourceConfig();
 
         // Call the connector's `onChange` method with the `deleted` parameter
         // set to true, simulating an onChange event fired when a document is
@@ -136,7 +136,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // 'rich-text:document' resource should be registerd
-        expect(getDocumentResourceConnector()).toBeDefined();
+        expect(getDocumentResourceConfig()).toBeDefined();
       });
 
       it('handles document loading', () => {
@@ -147,7 +147,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:document' resource connector
-        const connector = getDocumentResourceConnector();
+        const connector = getDocumentResourceConfig();
 
         // Call the connector's `onLoad` method, simulating an onLoad
         // event from the storage adapter.
@@ -164,7 +164,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:document' resource connector
-        const connector = getDocumentResourceConnector();
+        const connector = getDocumentResourceConfig();
 
         // The new document to add
         const document = { ...richTextDocument1, id: generateId() };
@@ -185,7 +185,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:document' resource connector
-        const connector = getDocumentResourceConnector();
+        const connector = getDocumentResourceConfig();
 
         // The updated document
         const document = {
@@ -210,7 +210,7 @@ describe('rich text extension', () => {
         onRun(core);
 
         // Get the 'rich-text:document' resource connector
-        const connector = getDocumentResourceConnector();
+        const connector = getDocumentResourceConfig();
 
         // Call the connector's `onChange` method with the `deleted` parameter
         // set to true, simulating an onChange event fired when a document is
@@ -274,7 +274,7 @@ describe('rich text extension', () => {
       onDisable(core);
 
       // 'rich-text:element' resource should no longer be registered
-      expect(getElementResourceConnector()).toBeUndefined();
+      expect(getElementResourceConfig()).toBeUndefined();
     });
 
     it('unregisters the `rich-text:document` resource', () => {
@@ -282,7 +282,7 @@ describe('rich text extension', () => {
       onDisable(core);
 
       // 'rich-text:document' resource should no longer be registered
-      expect(getDocumentResourceConnector()).toBeUndefined();
+      expect(getDocumentResourceConfig()).toBeUndefined();
     });
 
     it('clears all data from the store', () => {

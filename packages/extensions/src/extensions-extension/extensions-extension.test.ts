@@ -13,9 +13,9 @@ import { getExtensionDocument } from '../getExtensionDocument';
 import { registerExtension } from '../registerExtension';
 import { useExtensionsStore } from '../useExtensionsStore';
 
-function getExtensionResourceConnector() {
+function getExtensionResourceConfig() {
   return core
-    .getResourceConnectors()
+    .getResourceConfigs()
     .find(({ type }) => type === 'extensions:extension');
 }
 
@@ -32,7 +32,7 @@ describe('extensions extension', () => {
         onRun(core);
 
         // Get the extensions resource connector
-        const connector = getExtensionResourceConnector();
+        const connector = getExtensionResourceConfig();
 
         // Call the resource connector's onLoad method, simulating
         // an onLoad event from the storage-adapter.
@@ -51,7 +51,7 @@ describe('extensions extension', () => {
         const document = generateExtensionDocument('extension-id');
 
         // Get the extensions resource connector
-        const connector = getExtensionResourceConnector();
+        const connector = getExtensionResourceConfig();
 
         // Call the resource connector's onChange method with the new
         // document, simulating an onChange event from the storage-adapter.
@@ -75,7 +75,7 @@ describe('extensions extension', () => {
         document.enabled = false;
 
         // Get the extensions resource connector
-        const connector = getExtensionResourceConnector();
+        const connector = getExtensionResourceConfig();
 
         // Call the resource connector's onChange method with the modified
         // document, simulating an onChange event from the storage-adapter.
@@ -96,7 +96,7 @@ describe('extensions extension', () => {
         const document = getExtensionDocument(topicExtensionConfig.id);
 
         // Get the extensions resource connector
-        const connector = getExtensionResourceConnector();
+        const connector = getExtensionResourceConfig();
 
         // Call the resource connector's onChange method with the delete
         // parameter set to `true`, simulating an onChange event from the
@@ -134,7 +134,7 @@ describe('extensions extension', () => {
       onDisable(core);
 
       // Resource should no longer be registered
-      expect(getExtensionResourceConnector()).not.toBeDefined();
+      expect(getExtensionResourceConfig()).not.toBeDefined();
     });
   });
 });

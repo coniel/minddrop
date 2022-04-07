@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
-import { Core, initializeCore, ResourceConnector } from '@minddrop/core';
+import { Core, initializeCore, ResourceConfig } from '@minddrop/core';
 import PouchDB from 'pouchdb';
 import { initializePouchDB } from '../initializePouchDB';
 import { deserializeResourceDocument } from '../deserializeResourceDocument';
 import { DBResourceDocument, DBApi } from '../types';
-import { initializeResourceConnectors } from './initializeResourceConnectors';
+import { initializeResourceConfigs } from './initializeResources';
 
 const item1 = {
   _id: 'item-1',
@@ -25,13 +25,13 @@ const newItem = {
   markdown: 'New',
 };
 
-describe('initializeResourceConnectors', () => {
+describe('initializeResourceConfigs', () => {
   let db: PouchDB.Database<DBResourceDocument>;
   let dbApi: DBApi;
   let core: Core;
   const onLoad = jest.fn();
   const onChange = jest.fn();
-  const connector: ResourceConnector = {
+  const connector: ResourceConfig = {
     type: 'items:item',
     onLoad,
     onChange,
@@ -41,7 +41,7 @@ describe('initializeResourceConnectors', () => {
   };
 
   beforeEach(async () => {
-    db = new PouchDB<DBResourceDocument>('initializeResourceConnectors');
+    db = new PouchDB<DBResourceDocument>('initializeResourceConfigs');
     dbApi = initializePouchDB(db);
     core = initializeCore({ appId: 'app-id', extensionId: 'pouchdb' });
     await Promise.all([db.put(item1), db.put(item2), db.put(item3)]);
@@ -57,7 +57,7 @@ describe('initializeResourceConnectors', () => {
 
   it('loads resources', async () => {
     core.registerResource(connector);
-    await initializeResourceConnectors(core, dbApi);
+    await initializeResourceConfigs(core, dbApi);
     const item1Dirty = await db.get<DBResourceDocument>(item1._id);
     const item2Dirty = await db.get<DBResourceDocument>(item2._id);
     const item1Cleaned = deserializeResourceDocument(item1Dirty);
@@ -79,7 +79,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, dbApi);
+      await initializeResourceConfigs(core, dbApi);
 
       core.dispatch(connector.createEvent, newItem);
     }
@@ -100,7 +100,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, dbApi);
+      await initializeResourceConfigs(core, dbApi);
       const item = deserializeResourceDocument(item1);
       core.dispatch(connector.updateEvent, {
         before: item,
@@ -128,7 +128,7 @@ describe('initializeResourceConnectors', () => {
 
     async function run() {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, dbApi);
+      await initializeResourceConfigs(core, dbApi);
       core.dispatch(connector.deleteEvent, deserializeResourceDocument(item1));
     }
 
@@ -146,7 +146,7 @@ describe('initializeResourceConnectors', () => {
       }
 
       async function run() {
-        await initializeResourceConnectors(core, dbApi);
+        await initializeResourceConfigs(core, dbApi);
         const item1Dirty = await db.get<DBResourceDocument>(item1._id);
         const item2Dirty = await db.get<DBResourceDocument>(item2._id);
         item1Cleaned = deserializeResourceDocument(item1Dirty);
@@ -168,7 +168,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, dbApi);
+        await initializeResourceConfigs(core, dbApi);
         core.registerResource(connector);
         setTimeout(() => {
           core.dispatch(connector.createEvent, newItem);
@@ -190,7 +190,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, dbApi);
+        await initializeResourceConfigs(core, dbApi);
         core.registerResource(connector);
         const item = deserializeResourceDocument(item1);
         setTimeout(() => {
@@ -220,7 +220,7 @@ describe('initializeResourceConnectors', () => {
       );
 
       async function run() {
-        await initializeResourceConnectors(core, dbApi);
+        await initializeResourceConfigs(core, dbApi);
         core.registerResource(connector);
         setTimeout(() => {
           core.dispatch(
@@ -237,7 +237,7 @@ describe('initializeResourceConnectors', () => {
   describe('resources unregistered after init', () => {
     it('no longer reacts to createEvent, updateEvent, and deleteEvent', async () => {
       core.registerResource(connector);
-      await initializeResourceConnectors(core, dbApi);
+      await initializeResourceConfigs(core, dbApi);
       core.unregisterResource('items:item');
 
       setTimeout(() => {

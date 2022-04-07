@@ -1,4 +1,4 @@
-export * from './initializeResourceConnectors';
+export * from './initializeResources';
 export * from './deserializeResourceDocument';
 export * from './serializeResouceDocument';
 export * from './subscribeToChanges';

@@ -14,7 +14,7 @@ export function createResourceChangeHandler(
     deleted: boolean,
   ) => {
     const connector = core
-      .getResourceConnectors()
+      .getResourceConfigs()
       .find((c) => c.type === resourceType);
 
     if (connector && connector.onChange) {

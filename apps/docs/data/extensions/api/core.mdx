@@ -209,14 +209,14 @@ Registers a new resource type. Fires a `core:register-resource` event.
 You can pass in the resource's Typescript interface for better type support.
 
 ```ts
-core.registerResource<Resource>(resource: ResourceConnector<Resource>): void
+core.registerResource<Resource>(resource: ResourceConfig<Resource>): void
 ```
 
 <ArgsTable
   data={[
     {
       name: 'resource',
-      type: 'ResourceConnector',
+      type: 'ResourceConfig',
       description: 'The connector of the resource to register.',
     },
   ]}
@@ -240,12 +240,12 @@ core.unregisterResource(resourceType: string): void
   ]}
 />
 
-### getResourceConnectors
+### getResourceConfigs
 
 Returns all registered resource connectors as an array.
 
 ```ts
-core.getResourceConnectors(resourceType: string): ResourceConnector[]
+core.getResourceConfigs(resourceType: string): ResourceConfig[]
 ```
 
 ### isResourceRegistered
@@ -274,7 +274,7 @@ Core events are prefixed with the namespace `core`.
   data={[
     {
       name: 'core:register-resource',
-      data: 'ResourceConnector',
+      data: 'ResourceConfig',
       description: 'Dispatched when a new resource is registered.',
     },
     {

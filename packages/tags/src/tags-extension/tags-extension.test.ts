@@ -24,7 +24,7 @@ describe('tags extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([tag]);
         });
 
@@ -38,7 +38,7 @@ describe('tags extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onChange(tag, false);
         });
 
@@ -52,7 +52,7 @@ describe('tags extension', () => {
         onRun(core);
 
         act(() => {
-          const [connector] = core.getResourceConnectors();
+          const [connector] = core.getResourceConfigs();
           connector.onLoad([tag]);
           connector.onChange(tag, true);
         });

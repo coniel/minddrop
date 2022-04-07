@@ -1,4 +1,4 @@
-import { ResourceConnector } from '../types';
+import { ResourceConfig } from '../types';
 import { initializeCore } from './initializeCore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
@@ -153,21 +153,21 @@ describe('initializeCore', () => {
   });
 
   it('adds and removes resource connectors', () => {
-    const connector: ResourceConnector = {
+    const connector: ResourceConfig = {
       type: 'test',
     };
 
     core.registerResource(connector);
 
-    expect(core.getResourceConnectors().length).toBe(1);
+    expect(core.getResourceConfigs().length).toBe(1);
 
     core.unregisterResource('test');
 
-    expect(core.getResourceConnectors().length).toBe(0);
+    expect(core.getResourceConfigs().length).toBe(0);
   });
 
   it("dispatches a 'core:register-resource' event", (done) => {
-    const connector: ResourceConnector = {
+    const connector: ResourceConfig = {
       type: 'test',
     };
 
@@ -182,7 +182,7 @@ describe('initializeCore', () => {
   });
 
   it("dispatches a 'core:unregister-resource' event", (done) => {
-    const connector: ResourceConnector = {
+    const connector: ResourceConfig = {
       type: 'test',
     };
 

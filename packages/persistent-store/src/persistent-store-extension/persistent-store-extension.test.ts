@@ -25,7 +25,7 @@ describe('persistent-store-extension', () => {
 
         // Get the registered resource connector
         const connector = core
-          .getResourceConnectors()
+          .getResourceConfigs()
           .find((c) => c.type === 'persistent-store:global-stores');
 
         // Call the resource connector's onLoad method with the global store
@@ -42,7 +42,7 @@ describe('persistent-store-extension', () => {
 
         // Get the registered resource connector
         const connector = core
-          .getResourceConnectors()
+          .getResourceConfigs()
           .find((c) => c.type === 'persistent-store:global-stores');
 
         // Call the resource connector's onLoad method with no documents,
@@ -68,7 +68,7 @@ describe('persistent-store-extension', () => {
 
         // Get the registered resource connector
         const connector = core
-          .getResourceConnectors()
+          .getResourceConfigs()
           .find((c) => c.type === 'persistent-store:global-stores');
 
         // Call the resource connector's onChange method with an updated global
@@ -99,7 +99,7 @@ describe('persistent-store-extension', () => {
         // Get the registered resource connector and run its onLoad method,
         // simulating an onLoad event from the storage-adapter.
         const connector = core
-          .getResourceConnectors()
+          .getResourceConfigs()
           .find((c) => c.type === 'persistent-store:local-stores');
 
         // Call the resource connector's onLoad method with multiple local store
@@ -116,7 +116,7 @@ describe('persistent-store-extension', () => {
 
         // Get the registered resource connector
         const connector = core
-          .getResourceConnectors()
+          .getResourceConfigs()
           .find((c) => c.type === 'persistent-store:local-stores');
 
         // Call the resource connector's onLoad method with no documents,
