@@ -10,7 +10,7 @@ export class ParentReferenceValidationError extends Error {
     }
 
     this.name = 'ParentReferenceValidationError';
-    this.message = `${reason}.`;
+    this.message = `${reason}`;
 
     Object.setPrototypeOf(this, ParentReferenceValidationError.prototype);
   }

@@ -1,4 +1,6 @@
-export interface ResourceConfig<R = {}> {
+import { Resource } from './Resource.types';
+
+export interface ResourceConfig<TResource extends Resource = Resource> {
   /**
    * A unique identifier for the type of the resource
    * composed using the extension ID and resource type:
@@ -7,13 +9,22 @@ export interface ResourceConfig<R = {}> {
   type: string;
 
   /**
+   * Retrieves a resource from the local store.
+   * Should return a resource by ID or `null` if
+   * the resource does not exist.
+   *
+   * @param id The ID of the resource to retrieve.
+   */
+  get(id: string): TResource | null;
+
+  /**
    * A callback fired once when the resources are loaded
    * on app startup.
    *
    * @param core A MindDrop core instance.
    * @param resources The loaded resources.
    */
-  onLoad?(resources: R[]): void;
+  onLoad?(resources: TResource[]): void;
 
   /**
    * A callback fired whenever a resource matching the
@@ -23,7 +34,7 @@ export interface ResourceConfig<R = {}> {
    * @param resource The changed resource.
    * @param deleted If `true`, the resource was permanently deleted.
    */
-  onChange?(resource: R, deleted: boolean): void;
+  onChange?(resource: TResource, deleted: boolean): void;
 
   /**
    * If provided, an event listener will be added for this

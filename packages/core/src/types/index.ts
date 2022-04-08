@@ -3,5 +3,8 @@ export * from './Core.types';
 export * from './DataInsert.types';
 export * from './EventListener.types';
 export * from './ParentReference.types';
+export * from './Resource.types';
 export * from './ResourceChange.types';
 export * from './ResourceConfig.types';
+export * from './ResourceValidation.types';
+export * from './Validation.types';
