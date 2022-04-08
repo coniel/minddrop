@@ -9,15 +9,6 @@ export interface ResourceConfig<TResource extends Resource = Resource> {
   type: string;
 
   /**
-   * Retrieves a resource from the local store.
-   * Should return a resource by ID or `null` if
-   * the resource does not exist.
-   *
-   * @param id The ID of the resource to retrieve.
-   */
-  get(id: string): TResource | null;
-
-  /**
    * A callback fired once when the resources are loaded
    * on app startup.
    *

@@ -1,4 +1,5 @@
 import { EventListenerCallback } from './EventListener.types';
+import { Resource } from './Resource.types';
 import { ResourceConfig } from './ResourceConfig.types';
 
 export interface Core {
@@ -94,9 +95,11 @@ export interface Core {
    * Registers a new resource type. Fires a
    * `core:register-resource` event.
    *
-   * @param connector The connector of the resource to register.
+   * @param resourceConfig The resourceConfig of the resource to register.
    */
-  registerResource<R>(connector: ResourceConfig<R>): void;
+  registerResource<TResource extends Resource = Resource>(
+    resourceConfig: ResourceConfig<TResource>,
+  ): void;
 
   /**
    * Unregisters a resource type. All resources of the specified
@@ -116,9 +119,9 @@ export interface Core {
   isResourceRegistered(type: string): boolean;
 
   /**
-   * Fetches all resource connectors.
+   * Returns all registered resource configs.
    *
-   * @returns All resource connectors.
+   * @returns An array of resource configs.
    */
   getResourceConfigs(): ResourceConfig[];
 }

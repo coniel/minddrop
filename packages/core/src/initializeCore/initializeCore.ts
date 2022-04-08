@@ -98,26 +98,26 @@ export function initializeCore({
           );
         }),
 
-    registerResource: (connector) => {
-      resourceConfigs.push(connector);
-      core.dispatch('core:register-resource', connector);
+    registerResource: (resourceConfig) => {
+      resourceConfigs.push(resourceConfig);
+      core.dispatch('core:register-resource', resourceConfig);
     },
 
     unregisterResource: (type) => {
-      const connector = resourceConfigs.find(
-        (connector) => connector.type === type,
+      const resourceConfig = resourceConfigs.find(
+        (resourceConfig) => resourceConfig.type === type,
       );
 
-      if (!connector) {
+      if (!resourceConfig) {
         return;
       }
 
       resourceConfigs = resourceConfigs.filter((c) => c.type !== type);
-      core.dispatch('core:unregister-resource', connector);
+      core.dispatch('core:unregister-resource', resourceConfig);
     },
 
     isResourceRegistered: (type) =>
-      !!resourceConfigs.find((connector) => connector.type === type),
+      !!resourceConfigs.find((resourceConfig) => resourceConfig.type === type),
 
     getResourceConfigs: () => resourceConfigs,
   };

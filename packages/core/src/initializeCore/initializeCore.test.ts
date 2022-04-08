@@ -152,12 +152,12 @@ describe('initializeCore', () => {
     core.dispatch('test-2');
   });
 
-  it('adds and removes resource connectors', () => {
-    const connector: ResourceConfig = {
+  it('adds and removes resource configs', () => {
+    const resourceConfig: ResourceConfig = {
       type: 'test',
     };
 
-    core.registerResource(connector);
+    core.registerResource(resourceConfig);
 
     expect(core.getResourceConfigs().length).toBe(1);
 
@@ -167,33 +167,33 @@ describe('initializeCore', () => {
   });
 
   it("dispatches a 'core:register-resource' event", (done) => {
-    const connector: ResourceConfig = {
+    const resourceConfig: ResourceConfig = {
       type: 'test',
     };
 
     function callback(payload) {
-      expect(payload.data).toBe(connector);
+      expect(payload.data).toBe(resourceConfig);
       done();
     }
 
     core.addEventListener('core:register-resource', callback);
 
-    core.registerResource(connector);
+    core.registerResource(resourceConfig);
   });
 
   it("dispatches a 'core:unregister-resource' event", (done) => {
-    const connector: ResourceConfig = {
+    const resourceConfig: ResourceConfig = {
       type: 'test',
     };
 
     function callback(payload) {
-      expect(payload.data).toEqual(connector);
+      expect(payload.data).toEqual(resourceConfig);
       done();
     }
 
     core.addEventListener('core:unregister-resource', callback);
 
-    core.registerResource(connector);
-    core.unregisterResource(connector.type);
+    core.registerResource(resourceConfig);
+    core.unregisterResource(resourceConfig.type);
   });
 });
