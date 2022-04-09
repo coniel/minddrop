@@ -6,5 +6,6 @@ export * from './ParentReference.types';
 export * from './Resource.types';
 export * from './ResourceChange.types';
 export * from './ResourceConfig.types';
+export * from './ResourceStore.types';
 export * from './ResourceValidation.types';
 export * from './Validation.types';
