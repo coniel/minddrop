@@ -47,6 +47,16 @@ export interface ResourceStore<TResource> {
   clear(): void;
 
   /**
+   * Returns a boolean indicating whether a given
+   * revision of a resource document is currently
+   * or has previously been in the store.
+   *
+   * @param documentId The ID of the document for which to check.
+   * @param revisionId The revision ID to check for.
+   */
+  containsRevision(documentId: string, revisionId: string): boolean;
+
+  /**
    * A hook which returns a resource document by ID.
    *
    * @param id The ID of the resource document to retrieve.

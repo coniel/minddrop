@@ -8,6 +8,13 @@ interface Store<TResource> {
   documents: Record<string, TResource>;
 
   /**
+   * A `{ [id]: revisionId[] }` map of each resource
+   * document's past and current revision IDs, created
+   * during the current session.
+   */
+  revisions: Record<string, string[]>;
+
+  /**
    * Loads documents into the store.
    *
    * @param documents The documents to load.
@@ -24,9 +31,9 @@ interface Store<TResource> {
   /**
    * Removes a document from the store.
    *
-   * @param id The ID of the document to remove.
+   * @param documentId The ID of the document to remove.
    */
-  removeDocument(id: string): void;
+  removeDocument(documentId: string): void;
 
   /**
    * Clears all documents from the store.
@@ -35,13 +42,16 @@ interface Store<TResource> {
 }
 
 /**
- * Does something useful.
+ * Creates a new resource store.
+ *
+ * @returns The resource store.
  */
 export function createResourceStore<
   TResource extends Resource,
 >(): ResourceStore<TResource> {
   const useResourceStore = createStore<Store<TResource>>((set) => ({
     documents: {},
+    revisions: {},
 
     loadDocuments: (documents) =>
       set((state) => ({
@@ -56,30 +66,52 @@ export function createResourceStore<
             {},
           ),
         },
+        // Add the document revisions
+        revisions: {
+          ...state.revisions,
+          ...documents.reduce(
+            (map, document) => ({ ...map, [document.id]: [document.revision] }),
+            {},
+          ),
+        },
       })),
 
     setDocument: (document) =>
       set((state) => ({
-        // Add the document to `documents`
+        // Add the document
         documents: { ...state.documents, [document.id]: document },
+        // Add the document revision
+        revisions: {
+          ...state.revisions,
+          [document.id]: [
+            ...(state.revisions[document.id] || []),
+            document.revision,
+          ],
+        },
       })),
 
     removeDocument: (id) =>
       set((state) => {
         // Clone store documents
         const documents = { ...state.documents };
+        // Clone store revisions
+        const revisions = { ...state.revisions };
 
-        // Delete the doucment
+        // Delete the document
         delete documents[id];
+        // Delete the document revisions
+        delete revisions[id];
 
-        // Set the updated documents
-        return { documents };
+        // Set the updated documents and revisions
+        return { documents, revisions };
       }),
 
     clearDocuments: () =>
       set({
         // Clear documents
         documents: {},
+        // Clear revisions
+        revisions: {},
       }),
   }));
 
@@ -105,6 +137,10 @@ export function createResourceStore<
     remove: (id) => useResourceStore.getState().removeDocument(id),
     load: (documents) => useResourceStore.getState().loadDocuments(documents),
     clear: () => useResourceStore.getState().clearDocuments(),
+    containsRevision: (documentId, revisionId) =>
+      (useResourceStore.getState().revisions[documentId] || []).includes(
+        revisionId,
+      ),
     useResource: (id) =>
       useResourceStore(({ documents }) => documents[id] || null),
     useResources: (ids) =>
