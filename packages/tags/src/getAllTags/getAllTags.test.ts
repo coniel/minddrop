@@ -1,32 +1,17 @@
-import { act, renderHook } from '@minddrop/test-utils';
 import { getAllTags } from './getAllTags';
-import { useTagsStore } from '../useTagsStore';
-import { generateTag } from '../generateTag';
+import { cleanup, setup } from '../test-utils';
+import { TagsStore } from '../TagsStore';
 
 describe('getAllTags', () => {
-  afterEach(() => {
-    const { result } = renderHook(() => useTagsStore());
+  beforeAll(setup);
 
-    act(() => {
-      result.current.clear();
-    });
-  });
+  afterAll(cleanup);
 
   it('returns all tags', () => {
-    const { result } = renderHook(() => useTagsStore());
+    // Get all tags
+    const allTags = getAllTags();
 
-    const tag1 = generateTag({ label: 'Book' });
-    const tag2 = generateTag({ label: 'Link' });
-    const tag3 = generateTag({ label: 'Important' });
-
-    act(() => {
-      result.current.setTag(tag1);
-      result.current.setTag(tag2);
-      result.current.setTag(tag3);
-    });
-
-    const tags = getAllTags();
-
-    expect(Object.keys(tags).length).toBe(3);
+    // Should return all tags from the store
+    expect(allTags).toEqual(TagsStore.getAll());
   });
 });

@@ -1,15 +1,11 @@
-import { Core } from '@minddrop/core';
-import { useTagsStore } from '../useTagsStore';
+import { TagsStore } from '../TagsStore';
 
 /**
- * Clears tags from the store and dispatches a `tags:clear` event.
- *
- * @param core A MindDrop core instance.
+ * Clears tags from the store.
+ * This method is **only intended for use in
+ * tests**, do not use within your extension code.
  */
-export function clearTags(core: Core): void {
+export function clearTags(): void {
   // Clear tags from the store
-  useTagsStore.getState().clear();
-
-  // Dispatch 'tags:clear' event
-  core.dispatch('tags:clear');
+  TagsStore.clear();
 }

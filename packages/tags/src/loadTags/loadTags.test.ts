@@ -1,47 +1,31 @@
-import { act, renderHook } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
 import { loadTags } from './loadTags';
-import { generateTag } from '../generateTag';
-import { useAllTags } from '../useAllTags';
-import { clearTags } from '../clearTags';
-
-const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
+import { cleanup, core, tag1, tag2 } from '../test-utils';
+import { TagsStore } from '../TagsStore';
+import { mapById } from '@minddrop/utils';
 
 describe('loadTags', () => {
-  afterEach(() => {
-    core.removeAllEventListeners();
-    act(() => {
-      clearTags(core);
-    });
+  // Clear tags ffrom the store before tests
+  beforeEach(cleanup);
+
+  afterEach(cleanup);
+
+  it('loads tags into the tags store', () => {
+    // Load tags
+    loadTags(core, [tag1, tag2]);
+
+    // Tags should be in the store
+    expect(TagsStore.getAll()).toEqual(mapById([tag1, tag2]));
   });
 
-  it('loads tags into the store', () => {
-    const { result } = renderHook(() => useAllTags());
-    const tag1 = generateTag({ label: 'Book' });
-    const tag2 = generateTag({ label: 'Link' });
-
-    act(() => {
-      loadTags(core, [tag1, tag2]);
-    });
-
-    expect(result.current[tag1.id]).toEqual(tag1);
-    expect(result.current[tag2.id]).toEqual(tag2);
-  });
-
-  it("dispatches a 'tags:load' event", (done) => {
-    const tag1 = generateTag({ label: 'Book' });
-    const tag2 = generateTag({ label: 'Link' });
-    const tags = [tag1, tag2];
-
-    function callback(payload) {
-      expect(payload.data).toEqual(tags);
+  it('dispatches a `tags:load` event', (done) => {
+    // Listen to 'tags:load' events
+    core.addEventListener('tags:load', (payload) => {
+      // Payload data should be the loaded tags
+      expect(payload.data).toEqual([tag1, tag2]);
       done();
-    }
-
-    core.addEventListener('tags:load', callback);
-
-    act(() => {
-      loadTags(core, tags);
     });
+
+    // Load tags
+    loadTags(core, [tag1, tag2]);
   });
 });

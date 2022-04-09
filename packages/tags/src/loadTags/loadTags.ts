@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
+import { TagsStore } from '../TagsStore';
 import { Tag } from '../types';
-import { useTagsStore } from '../useTagsStore';
 
 /**
  * Loads tags into the store and dispatches a `tags:load` event.
@@ -10,7 +10,7 @@ import { useTagsStore } from '../useTagsStore';
  */
 export function loadTags(core: Core, tags: Tag[]): void {
   // Loads tags into the store
-  useTagsStore.getState().loadTags(tags);
+  TagsStore.load(tags);
 
   // Dispatch 'tags:load' event
   core.dispatch('tags:load', tags);

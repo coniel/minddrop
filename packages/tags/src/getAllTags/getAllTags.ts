@@ -1,13 +1,13 @@
+import { TagsStore } from '../TagsStore';
 import { TagMap } from '../types';
-import { useTagsStore } from '../useTagsStore';
 
 /**
- * Retrieves all tags from the tags store as a `{ [id]: Tag }` map.
+ * Retrieves all tags from the tags store as
+ * a `{ [id]: Tag }` map.
  *
- * @returns A `{ [id]: Tag }` map.
+ * @returns A map of all tags.
  */
 export function getAllTags(): TagMap {
-  const { tags } = useTagsStore.getState();
-
-  return tags;
+  // Return all tags from the store
+  return TagsStore.getAll();
 }

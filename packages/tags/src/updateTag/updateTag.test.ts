@@ -1,64 +1,45 @@
-import { act, renderHook } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
 import { updateTag } from './updateTag';
-import { Tag, UpdateTagData } from '../types';
-import { useAllTags } from '../useAllTags';
-import { createTag } from '../createTag';
-import { clearTags } from '../clearTags';
+import { cleanup, setup, tag1 } from '../test-utils';
+import { TagsStore } from '../TagsStore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('updateTag', () => {
-  afterEach(() => {
-    core.removeAllEventListeners();
-    act(() => {
-      clearTags(core);
-    });
-  });
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('returns the updated tag', () => {
-    const changes: UpdateTagData = { color: 'red' };
-    let tag: Tag;
+    // Update a tag
+    const tag = updateTag(core, tag1.id, { color: 'cyan' });
 
-    act(() => {
-      tag = createTag(core, { label: 'Tag', color: 'blue' });
-      tag = updateTag(core, tag.id, changes);
-    });
-
-    expect(tag.color).toBe('red');
+    // Should return the updated tag
+    expect(tag).toEqual({ ...tag1, color: 'cyan' });
   });
 
   it('updates the tag in the store', () => {
-    const { result } = renderHook(() => useAllTags());
-    let tag: Tag;
+    // Update a tag
+    const tag = updateTag(core, tag1.id, { color: 'cyan' });
 
-    act(() => {
-      tag = createTag(core, { label: 'Tag' });
-      tag = updateTag(core, tag.id, { lable: 'Updated tag' });
-    });
-
-    expect(result.current[tag.id]).toEqual(tag);
+    // Should update the tag in the store
+    expect(TagsStore.get(tag1.id)).toEqual(tag);
   });
 
-  it("dispatches a 'tags:update' event", (done) => {
-    const changes: UpdateTagData = { label: 'My tag' };
-    let tag: Tag;
-    let updated: Tag;
+  it('dispatches a `tags:update` event', (done) => {
+    const changes = { label: 'New label' };
 
-    function callback(payload) {
-      expect(payload.data).toEqual({
-        before: tag,
-        after: updated,
-        changes,
-      });
+    // Listen to 'tags:update' events
+    core.addEventListener('tags:update', (payload) => {
+      // Get the updated tag
+      const after = TagsStore.get(tag1.id);
+
+      // Payload data should be an update object
+      expect(payload.data).toEqual({ before: tag1, after, changes });
       done();
-    }
-
-    core.addEventListener('tags:update', callback);
-
-    act(() => {
-      tag = createTag(core, { label: 'Tag' });
-      updated = updateTag(core, tag.id, changes);
     });
+
+    // Update a tag
+    updateTag(core, tag1.id, changes);
   });
 });

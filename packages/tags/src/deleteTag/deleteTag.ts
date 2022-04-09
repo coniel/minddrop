@@ -1,7 +1,7 @@
 import { Core } from '@minddrop/core';
 import { getTag } from '../getTag';
+import { TagsStore } from '../TagsStore';
 import { Tag } from '../types';
-import { useTagsStore } from '../useTagsStore';
 
 /**
  * Permanently deletes a tag and dispatches a
@@ -12,10 +12,11 @@ import { useTagsStore } from '../useTagsStore';
  * @returns The deleted tag.
  */
 export function deleteTag(core: Core, tagId: string): Tag {
+  // Get the tag
   const tag = getTag(tagId);
 
   // Remove tag from the store
-  useTagsStore.getState().removeTag(tagId);
+  TagsStore.remove(tagId);
 
   // Dispatch 'tags:delete' event
   core.dispatch('tags:delete', tag);

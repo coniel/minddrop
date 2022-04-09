@@ -45,7 +45,7 @@ export interface TagChanges {
   /**
    * The tag label text.
    */
-  lable?: string;
+  label?: string;
 
   /**
    * The tag color.

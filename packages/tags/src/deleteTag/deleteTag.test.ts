@@ -1,46 +1,40 @@
 import { initializeCore } from '@minddrop/core';
-import { act, renderHook } from '@minddrop/test-utils';
-import { createTag } from '../createTag';
-import { Tag } from '../types';
 import { deleteTag } from './deleteTag';
-import { clearTags } from '../clearTags';
-import { useAllTags } from '../useAllTags';
+import { cleanup, setup, tag1 } from '../test-utils';
+import { TagsStore } from '../TagsStore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
 
 describe('deleteTag', () => {
-  afterEach(() => {
-    core.removeAllEventListeners();
-    act(() => {
-      clearTags(core);
-    });
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
+  it('removes the tag from the store', () => {
+    // Delete a tag
+    deleteTag(core, tag1.id);
+
+    // Tag should no longer be in the store
+    expect(TagsStore.get(tag1.id)).toBeUndefined();
   });
 
-  it('removes tag from the store', () => {
-    const { result } = renderHook(() => useAllTags());
-    let tag: Tag;
+  it('returns the deleted tag', () => {
+    // Delete a tag
+    const tag = deleteTag(core, tag1.id);
 
-    act(() => {
-      tag = createTag(core, { label: 'Tag' });
-      deleteTag(core, tag.id);
-    });
-
-    expect(result.current[tag.id]).not.toBeDefined();
+    // Should return the deleted tag
+    expect(tag).toEqual(tag1);
   });
 
   it("dispatches a 'tags:delete' event", (done) => {
-    let tag: Tag;
-
-    function callback(payload) {
-      expect(payload.data).toEqual(tag);
+    // Listen to 'tags:delete' evenets
+    core.addEventListener('tags:delete', (payload) => {
+      // Payload data should be the deleted tag
+      expect(payload.data).toEqual(tag1);
       done();
-    }
-
-    core.addEventListener('tags:delete', callback);
-
-    act(() => {
-      tag = createTag(core, { label: 'Book' });
-      tag = deleteTag(core, tag.id);
     });
+
+    // Delete a tag
+    deleteTag(core, tag1.id);
   });
 });

@@ -1,39 +1,24 @@
-import { act, renderHook } from '@minddrop/test-utils';
 import { getTags } from './getTags';
-import { useTagsStore } from '../useTagsStore';
-import { generateTag } from '../generateTag';
 import { TagNotFoundError } from '../errors';
+import { cleanup, setup, tag1, tag2 } from '../test-utils';
+import { mapById } from '@minddrop/utils';
 
 describe('getTags', () => {
-  afterEach(() => {
-    const { result } = renderHook(() => useTagsStore());
+  beforeEach(setup);
 
-    act(() => {
-      result.current.clear();
-    });
-  });
+  afterEach(cleanup);
 
-  it('returns the tags matching the ids', () => {
-    const { result } = renderHook(() => useTagsStore());
-
-    const tag1 = generateTag({ label: 'Book' });
-    const tag2 = generateTag({ label: 'Link' });
-    const tag3 = generateTag({ label: 'Important' });
-
-    act(() => {
-      result.current.setTag(tag1);
-      result.current.setTag(tag2);
-      result.current.setTag(tag3);
-    });
-
+  it('returns the requested tags', () => {
+    // Get some tags
     const tags = getTags([tag1.id, tag2.id]);
 
-    expect(Object.keys(tags).length).toBe(2);
-    expect(tags[tag1.id]).toEqual(tag1);
-    expect(tags[tag2.id]).toEqual(tag2);
+    // Should return the requested tags
+    expect(tags).toEqual(mapById([tag1, tag2]));
   });
 
   it('throws a TagNotFoundError if the tag does not exist', () => {
-    expect(() => getTags(['id'])).toThrowError(TagNotFoundError);
+    // Attempt to get tags of which one does not exist.
+    // Should throw a `TagNotFoundError`.
+    expect(() => getTags([tag1.id, 'missing'])).toThrowError(TagNotFoundError);
   });
 });

@@ -1,51 +1,44 @@
-import { initializeCore } from '@minddrop/core';
-import { act, renderHook } from '@minddrop/test-utils';
-import { clearTags } from '../clearTags';
-import { Tag } from '../types';
-import { useAllTags } from '../useAllTags';
+import { TagsStore } from '../TagsStore';
+import { cleanup, core, setup } from '../test-utils';
 import { createTag } from './createTag';
 
-const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
-
 describe('createTag', () => {
-  afterEach(() => {
-    core.removeAllEventListeners();
-    act(() => {
-      clearTags(core);
-    });
-  });
+  beforeEach(setup);
 
-  it('creates a tag', () => {
+  afterEach(cleanup);
+
+  it('returns the new tag', () => {
+    // Create a tag
     const tag = createTag(core, { label: 'Book', color: 'red' });
 
-    expect(tag).toBeDefined();
+    // Tag should have an ID
+    expect(typeof tag.id).toBe('string');
+    // Tag should have the given label
     expect(tag.label).toBe('Book');
+    // Tag should have the given color
     expect(tag.color).toBe('red');
   });
 
-  it('adds tag to the store', () => {
-    const { result } = renderHook(() => useAllTags());
-    let tag: Tag;
+  it('adds tag to the tags store', () => {
+    // Create a tag
+    const tag = createTag(core, { label: 'Book', color: 'red' });
 
-    act(() => {
-      tag = createTag(core, { label: 'Tag' });
-    });
-
-    expect(result.current[tag.id]).toEqual(tag);
+    // Tags should be in the tags store
+    expect(TagsStore.get(tag.id)).toEqual(tag);
   });
 
   it("dispatches a 'tags:create' event", (done) => {
-    let tag: Tag;
+    // Listen to 'tags:create' events
+    core.addEventListener('tags:create', (payload) => {
+      // Get the created tag
+      const tag = TagsStore.get(payload.data.id);
 
-    function callback(payload) {
+      // Payload data should be the created tag
       expect(payload.data).toEqual(tag);
       done();
-    }
-
-    core.addEventListener('tags:create', callback);
-
-    act(() => {
-      tag = createTag(core, { label: 'My tag' });
     });
+
+    // Create a tag
+    createTag(core, { label: 'Book', color: 'red' });
   });
 });

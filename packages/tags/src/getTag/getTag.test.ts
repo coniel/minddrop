@@ -1,31 +1,23 @@
-import { act, renderHook } from '@minddrop/test-utils';
 import { getTag } from './getTag';
-import { useTagsStore } from '../useTagsStore';
-import { generateTag } from '../generateTag';
 import { TagNotFoundError } from '../errors';
+import { cleanup, setup, tag1 } from '../test-utils';
 
 describe('getTag', () => {
-  afterEach(() => {
-    const { result } = renderHook(() => useTagsStore());
+  beforeEach(setup);
 
-    act(() => {
-      result.current.clear();
-    });
+  afterEach(cleanup);
+
+  it('returns the requested tag', () => {
+    // Get a tag
+    const tag = getTag(tag1.id);
+
+    // Should return the requested tag
+    expect(tag).toEqual(tag1);
   });
 
-  it('returns the tag matching the id', () => {
-    const { result } = renderHook(() => useTagsStore());
-
-    const tag = generateTag({ label: 'Books' });
-
-    act(() => {
-      result.current.setTag(tag);
-    });
-
-    expect(getTag(tag.id)).toBe(tag);
-  });
-
-  it('throws a TagNotFoundError if the tag does not exist', () => {
-    expect(() => getTag('id')).toThrowError(TagNotFoundError);
+  it('throws a `TagNotFoundError` if the tag does not exist', () => {
+    // Attempt to get a missing tag. Should throw
+    // a `TagNotFoundError`.
+    expect(() => getTag('missing')).toThrowError(TagNotFoundError);
   });
 });

@@ -1,44 +1,17 @@
-import { initializeCore } from '@minddrop/core';
-import { act, renderHook } from '@minddrop/test-utils';
-import { createTag } from '../createTag';
-import { Tag } from '../types';
-import { useAllTags } from '../useAllTags';
+import { cleanup, setup } from '../test-utils';
 import { clearTags } from './clearTags';
-
-const core = initializeCore({ appId: 'app-id', extensionId: 'tags' });
+import { TagsStore } from '../TagsStore';
 
 describe('clearTags', () => {
-  afterEach(() => {
-    core.removeAllEventListeners();
-    act(() => {
-      clearTags(core);
-    });
-  });
+  beforeEach(setup);
 
-  it('clears the topics from the store', () => {
-    const { result } = renderHook(() => useAllTags());
-    let tag1: Tag;
-    let tag2: Tag;
+  afterEach(cleanup);
 
-    act(() => {
-      tag1 = createTag(core, { label: 'tag 1' });
-      tag2 = createTag(core, { label: 'tag 2' });
-      clearTags(core);
-    });
+  it('clears the tags from the store', () => {
+    // Clear the tags
+    clearTags();
 
-    expect(result.current[tag1.id]).not.toBeDefined();
-    expect(result.current[tag2.id]).not.toBeDefined();
-  });
-
-  it("dispatches a 'tags:clear' event", (done) => {
-    function callback() {
-      done();
-    }
-
-    core.addEventListener('tags:clear', callback);
-
-    act(() => {
-      clearTags(core);
-    });
+    // Store should no longer contain any tags
+    expect(TagsStore.getAll()).toEqual({});
   });
 });
