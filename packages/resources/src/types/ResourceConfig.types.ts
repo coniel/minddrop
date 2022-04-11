@@ -54,10 +54,7 @@ export interface ResourceConfig<TData> {
    *
    * @param update The resource update.
    */
-  onUpdate?(
-    core: Core,
-    update: ResourceDocumentUpdate<TData>,
-  ): ResourceDocument<TData>;
+  onUpdate?(core: Core, update: ResourceDocumentUpdate<TData>): Partial<TData>;
 
   /**
    * Callback fired when a resource is soft deleted.
