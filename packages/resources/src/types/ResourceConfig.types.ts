@@ -1,6 +1,7 @@
 import { ResourceDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
 import { ResourceDocument } from './ResourceDocument.types';
+import { ResourceDocumentUpdate } from './ResourceChange.types';
 
 export interface ResourceConfig<TData> {
   /**
@@ -51,9 +52,12 @@ export interface ResourceConfig<TData> {
    *
    * Must return the updated document.
    *
-   * @param data The resource update data.
+   * @param update The resource update.
    */
-  onUpdate?(document: ResourceDocument<TData>): ResourceDocument<TData>;
+  onUpdate?(
+    core: Core,
+    update: ResourceDocumentUpdate<TData>,
+  ): ResourceDocument<TData>;
 
   /**
    * Callback fired when a resource is soft deleted.

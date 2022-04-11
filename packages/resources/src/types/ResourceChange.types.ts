@@ -1,16 +1,33 @@
-export interface ResourceChange<R, C> {
+import { ResourceDocument } from './ResourceDocument.types';
+
+export interface BaseResourceDocumentChanges {
   /**
-   * The resource data before it was changed.
+   * The document's new revision ID.
    */
-  before: R;
+  revision: string;
 
   /**
-   * The resource data after it was changed.
+   * The timestamp at which the update occured.
    */
-  after: R;
+  updatedAt: Date;
+}
+
+export type ResourceDocumentChanges<TData> = BaseResourceDocumentChanges &
+  Partial<TData>;
+
+export interface ResourceDocumentUpdate<TData> {
+  /**
+   * The resource document before it was changed.
+   */
+  before: ResourceDocument<TData>;
 
   /**
-   * The changes applied to the resource data.
+   * The resource document after it was changed.
    */
-  changes: C;
+  after: ResourceDocument<TData>;
+
+  /**
+   * The changes applied to the resource document.
+   */
+  changes: ResourceDocumentChanges<TData>;
 }
