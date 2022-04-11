@@ -85,36 +85,21 @@ export interface ResourceConfig<TData> {
    * `get` method. Allows for performing modifications to the
    * document before it is returned.
    *
-   * Returning `null` will cause the function to throw a
-   * `ResourceDocumentNotFoundError`.
-   *
-   * @param document The document which was retrieved, `null` if it does not exist.
-   * @param documentId The ID of the requested document.
-   * @returns The requested document or `null`.
+   * @param document The requested document.
+   * @returns The requested document.
    */
-  onGetOne?(
-    document: ResourceDocument<TData> | null,
-    documentId: string,
-  ): ResourceDocument<TData> | null;
+  onGetOne?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when multiple documents are fetched using
    * the `get` method. Allows for performing modifications to
    * the documents before they are returned.
    *
-   * If a requested document does not exist, it's value is set
-   * to `null` in the `documents` parameter.
-   *
-   * Returning a map containing any `null` values will cause the
-   * function to throw a `ResourceDocumentNotFoundError`.
-   *
-   * @param documents A `{ [id]: ResourceDocument | null }` map of the requested documents (`null` if document does not exist).
-   * @param documentIds The IDs of the requested documents.
-   * @returns A `{ [id]: ResourceDocument | null }` map of the requested documents (`null` if document does not exist).
+   * @param documents A `{ [id]: ResourceDocument }` map of the requested documents.
+   * @returns A `{ [id]: ResourceDocument }` map of the requested documents.
    */
   onGetMany?(
     documents: Record<string, ResourceDocument<TData>>,
-    documentIds: string[],
   ): Record<string, ResourceDocument<TData>>;
 
   /**
