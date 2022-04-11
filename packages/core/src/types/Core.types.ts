@@ -1,6 +1,4 @@
 import { EventListenerCallback } from './EventListener.types';
-import { Resource } from './Resource.types';
-import { ResourceConfig } from './ResourceConfig.types';
 
 export interface Core {
   /**
@@ -90,38 +88,4 @@ export interface Core {
    * @param data The data associated with the event.
    */
   dispatch(type: string, data?: any): void;
-
-  /**
-   * Registers a new resource type. Fires a
-   * `core:register-resource` event.
-   *
-   * @param resourceConfig The resourceConfig of the resource to register.
-   */
-  registerResource<TResource extends Resource = Resource>(
-    resourceConfig: ResourceConfig<TResource>,
-  ): void;
-
-  /**
-   * Unregisters a resource type. All resources of the specified
-   * type will be permanently deleted. Fires a
-   * `core:unregister-resource` event.
-   *
-   * @param resourceType The type of resource to unregister.
-   */
-  unregisterResource(resourceType: string): void;
-
-  /**
-   * Checks whether a specified resource is registrerd.
-   *
-   * @param type The resource type.
-   * @returns `true` if the resource is registered, otherwise `false`.
-   */
-  isResourceRegistered(type: string): boolean;
-
-  /**
-   * Returns all registered resource configs.
-   *
-   * @returns An array of resource configs.
-   */
-  getResourceConfigs(): ResourceConfig[];
 }

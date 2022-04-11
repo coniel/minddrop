@@ -1,7 +1,6 @@
-import { EventListener, Core, ResourceConfig } from '../types';
+import { EventListener, Core } from '../types';
 
 let eventListeners: EventListener[] = [];
-let resourceConfigs: ResourceConfig[] = [];
 
 export interface InitializeCoreOptions {
   /**
@@ -97,29 +96,6 @@ export function initializeCore({
             0,
           );
         }),
-
-    registerResource: (resourceConfig) => {
-      resourceConfigs.push(resourceConfig);
-      core.dispatch('core:register-resource', resourceConfig);
-    },
-
-    unregisterResource: (type) => {
-      const resourceConfig = resourceConfigs.find(
-        (resourceConfig) => resourceConfig.type === type,
-      );
-
-      if (!resourceConfig) {
-        return;
-      }
-
-      resourceConfigs = resourceConfigs.filter((c) => c.type !== type);
-      core.dispatch('core:unregister-resource', resourceConfig);
-    },
-
-    isResourceRegistered: (type) =>
-      !!resourceConfigs.find((resourceConfig) => resourceConfig.type === type),
-
-    getResourceConfigs: () => resourceConfigs,
   };
 
   return core;

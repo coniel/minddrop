@@ -1,4 +1,3 @@
-import { ResourceConfig } from '../types';
 import { initializeCore } from './initializeCore';
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
@@ -150,50 +149,5 @@ describe('initializeCore', () => {
 
     core.dispatch('test');
     core.dispatch('test-2');
-  });
-
-  it('adds and removes resource configs', () => {
-    const resourceConfig: ResourceConfig = {
-      type: 'test',
-    };
-
-    core.registerResource(resourceConfig);
-
-    expect(core.getResourceConfigs().length).toBe(1);
-
-    core.unregisterResource('test');
-
-    expect(core.getResourceConfigs().length).toBe(0);
-  });
-
-  it("dispatches a 'core:register-resource' event", (done) => {
-    const resourceConfig: ResourceConfig = {
-      type: 'test',
-    };
-
-    function callback(payload) {
-      expect(payload.data).toBe(resourceConfig);
-      done();
-    }
-
-    core.addEventListener('core:register-resource', callback);
-
-    core.registerResource(resourceConfig);
-  });
-
-  it("dispatches a 'core:unregister-resource' event", (done) => {
-    const resourceConfig: ResourceConfig = {
-      type: 'test',
-    };
-
-    function callback(payload) {
-      expect(payload.data).toEqual(resourceConfig);
-      done();
-    }
-
-    core.addEventListener('core:unregister-resource', callback);
-
-    core.registerResource(resourceConfig);
-    core.unregisterResource(resourceConfig.type);
   });
 });
