@@ -1,11 +1,11 @@
 import createStore from 'zustand';
 import { ResourceDocument, ResourceStore } from '../types';
 
-interface Store<TResource> {
+interface Store<TResourceDocument> {
   /**
    * A `{ [id]: Resource }` map of resource documents.
    */
-  documents: Record<string, TResource>;
+  documents: Record<string, TResourceDocument>;
 
   /**
    * A `{ [id]: revisionId[] }` map of each resource
@@ -19,14 +19,14 @@ interface Store<TResource> {
    *
    * @param documents The documents to load.
    */
-  loadDocuments(documents: TResource[]): void;
+  loadDocuments(documents: TResourceDocument[]): void;
 
   /**
    * Sets a document in the store.
    *
    * @param document The document to set.
    */
-  setDocument(document: TResource): void;
+  setDocument(document: TResourceDocument): void;
 
   /**
    * Removes a document from the store.
