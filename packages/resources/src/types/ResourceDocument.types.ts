@@ -11,19 +11,6 @@ export interface ResourceDocumentData {
   revision: string;
 
   /**
-   * The resource API's version number at the time the
-   * document was created or last mutated.
-   */
-  apiVersion: number;
-
-  /**
-   * The resource extension API's version number at the
-   * time the document was created, converted or last
-   * mutated.
-   */
-  extensionApiVersion?: number;
-
-  /**
    * The timestamp at which the resource document was
    * createed.
    */

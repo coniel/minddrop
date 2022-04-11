@@ -1,28 +1,20 @@
-import { ResourceSchema } from './ResourceValidation.types';
+import { ResourceDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
 import { ResourceDocument } from './ResourceDocument.types';
 
 export interface ResourceConfig<TData> {
   /**
-   * A unique identifier for the type of the resource
-   * composed using the extension ID and resource type:
-   * [extensionId]:[resourceType].
+   * A unique identifier for the resource composed
+   * using the extension ID and resource type:
+   * `[extension-id]:[resource-name]`.
    */
-  type: string;
+  resource: string;
 
   /**
-   * The version number of the API. Should be incremented
-   * every time changes are made to the API. Used to version
-   * the resource documents, in case data migrations need to
-   * be performed on documents created by specific API versions.
+   * The schema used to validate the resource
+   * document data.
    */
-  apiVersion: number;
-
-  /**
-   * The resource schema used to validate the resource
-   * documents.
-   */
-  schema: ResourceSchema<TData>;
+  dataSchema: ResourceDataSchema<TData>;
 
   /**
    * The default data used when creating a new document.
