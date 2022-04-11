@@ -1,10 +1,10 @@
-export interface ResourceStore<TResource> {
+export interface ResourceStore<TDocument> {
   /**
    * Retrieves a resource document by ID.
    *
    * @param id The ID of the resource document to get.
    */
-  get(id: string): TResource;
+  get(id: string): TDocument;
 
   /**
    * Returns a `{ [id]: Resource }` map of the requested
@@ -13,26 +13,26 @@ export interface ResourceStore<TResource> {
    *
    * @param ids The IDs of the resource documents to get.
    */
-  get(id: string[]): Record<string, TResource>;
+  get(id: string[]): Record<string, TDocument>;
 
   /**
    * Returns all resource documents.
    */
-  getAll(): Record<string, TResource>;
+  getAll(): Record<string, TDocument>;
 
   /**
    * Loads the resource documents into the store.
    *
    * @param documents The documents to load.
    */
-  load(documents: TResource[]): void;
+  load(documents: TDocument[]): void;
 
   /**
    * Sets a resource document in the store.
    *
    * @param document The document to set.
    */
-  set(document: TResource): void;
+  set(document: TDocument): void;
 
   /**
    * Removes a resource document from the store.
@@ -61,7 +61,7 @@ export interface ResourceStore<TResource> {
    *
    * @param id The ID of the resource document to retrieve.
    */
-  useResource(id: string): TResource | null;
+  useResource(id: string): TDocument | null;
 
   /**
    * A hook which returns an `{ [id]: Resource | null }` map
@@ -70,11 +70,11 @@ export interface ResourceStore<TResource> {
    *
    * @param ids The IDs of the resources to retrieve.
    */
-  useResources(ids: string[]): Record<string, TResource | null>;
+  useResources(ids: string[]): Record<string, TDocument | null>;
 
   /**
    * A hook which returns a `{ [id]: Resource }` map of all
    * the resource documents.
    */
-  useAllResources(): Record<string, TResource>;
+  useAllResources(): Record<string, TDocument>;
 }

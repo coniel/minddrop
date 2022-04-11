@@ -1,7 +1,8 @@
 import { ResourceSchema } from './ResourceValidation.types';
+import { Core } from '@minddrop/core';
 import { ResourceDocument } from './ResourceDocument.types';
 
-export interface ResourceConfig<TData, TCreateData, TUpdateData> {
+export interface ResourceConfig<TData> {
   /**
    * A unique identifier for the type of the resource
    * composed using the extension ID and resource type:
@@ -10,10 +11,18 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
   type: string;
 
   /**
+   * The version number of the API. Should be incremented
+   * every time changes are made to the API. Used to version
+   * the resource documents, in case data migrations need to
+   * be performed on documents created by specific API versions.
+   */
+  apiVersion: number;
+
+  /**
    * The resource schema used to validate the resource
    * documents.
    */
-  schema: ResourceSchema;
+  schema: ResourceSchema<TData>;
 
   /**
    * The default data used when creating a new document.
@@ -32,11 +41,15 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * database. Allows for performing modifications and
    * validation on the document data before creation.
    *
-   * Should return the resource data.
+   * Must return the new document.
    *
-   * @param data The resource creation data.
+   * @param document The new document.
+   * @returns The new document, with modifications.
    */
-  onCreate?(data: TCreateData): TData;
+  onCreate?(
+    core: Core,
+    document: ResourceDocument<TData>,
+  ): ResourceDocument<TData>;
 
   /**
    * Callback fired when a resource is updated.
@@ -44,12 +57,11 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * and database. Allows for performing modifications and
    * validation on the document before it is updated.
    *
-   * Should return the data changes to be applied to the
-   * document.
+   * Must return the updated document.
    *
    * @param data The resource update data.
    */
-  onUpdate?(data: TUpdateData): Partial<TData>;
+  onUpdate?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when a resource is soft deleted.
@@ -57,7 +69,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * and database. Allows for performing cleanup operations
    * before a resource is soft deleted.
    */
-  onDelete(document: ResourceDocument<TData>): Partial<TData>;
+  onDelete?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when a resource is permanently deleted.
@@ -65,7 +77,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * and database. Allows for performing cleanup operations
    * before a resource is deleted.
    */
-  onDeletePermanently(document: ResourceDocument<TData>): void;
+  onDeletePermanently?(document: ResourceDocument<TData>): void;
 
   /**
    * Callback fired when a resource is restored after from being
@@ -73,7 +85,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * the store and database. Allows for performing modifications
    * to the restore document before it is restored.
    */
-  onRestore(document: ResourceDocument<TData>): Partial<TData>;
+  onRestore?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when a single document is fetched using the
@@ -87,7 +99,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * @param documentId The ID of the requested document.
    * @returns The requested document or `null`.
    */
-  onGetOne(
+  onGetOne?(
     document: ResourceDocument<TData> | null,
     documentId: string,
   ): ResourceDocument<TData> | null;
@@ -107,7 +119,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * @param documentIds The IDs of the requested documents.
    * @returns A `{ [id]: ResourceDocument | null }` map of the requested documents (`null` if document does not exist).
    */
-  onGetMany(
+  onGetMany?(
     documents: Record<string, ResourceDocument<TData>>,
     documentIds: string[],
   ): Record<string, ResourceDocument<TData>>;
@@ -120,7 +132,7 @@ export interface ResourceConfig<TData, TCreateData, TUpdateData> {
    * @param documents A `{ [id]: ResourceDocument }` map of the all the documents.
    * @returns A `{ [id]: ResourceDocument }` map of the all the documents.
    */
-  onGetAll(
+  onGetAll?(
     documents: Record<string, ResourceDocument<TData>>,
   ): Record<string, ResourceDocument<TData>>;
 

@@ -1,2 +1,2 @@
-export * from './validateResource';
+export * from './validateResourceDocument';
 export * from './validateResourceReference';

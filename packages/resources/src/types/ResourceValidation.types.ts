@@ -1,5 +1,4 @@
-import { ContentColor } from './Color.types';
-import { ParentReference } from './ParentReference.types';
+import { ContentColor } from '@minddrop/core';
 import {
   ArrayValidator,
   BooleanValidator,
@@ -12,7 +11,8 @@ import {
   SetValidator,
   SetValue,
   StringValidator,
-} from './Validation.types';
+} from '@minddrop/utils';
+import { ResourceReference } from '../types';
 
 export interface ResourceIdValidator {
   /**
@@ -97,9 +97,9 @@ export type ResourceResourceIdFieldValidator = ResourceIdValidator &
 export type ResourceResourceIdsFieldValidator = ResourceIdsValidator &
   ResourceFieldValidator<string[]>;
 export type ResourceParentReferenceFieldValidator = ParentReferenceValidator &
-  ResourceFieldValidator<ParentReference>;
+  ResourceFieldValidator<ResourceReference>;
 export type ResourceParentReferencesFieldValidator = ParentReferencesValidator &
-  ResourceFieldValidator<ParentReference[]>;
+  ResourceFieldValidator<ResourceReference[]>;
 export type ResourceContentColorFieldValidator = ContentColorValidator &
   ResourceFieldValidator<ContentColor>;
 
@@ -118,4 +118,7 @@ export type ResourceSchemaFieldValidator =
   | ResourceParentReferencesFieldValidator
   | ResourceContentColorFieldValidator;
 
-export type ResourceSchema = Record<string, ResourceSchemaFieldValidator>;
+export type ResourceSchema<TData> = Record<
+  keyof TData,
+  ResourceSchemaFieldValidator
+>;
