@@ -6,8 +6,8 @@ import {
 
 export interface ResourceApi<
   TData extends ResourceDocumentCustomData,
-  TCreateData extends Partial<ResourceDocumentCustomData> = TData,
-  TUpdateData extends Partial<ResourceDocumentCustomData> = Partial<TData>,
+  TCreateData extends Partial<TData> & ResourceDocumentCustomData,
+  TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
 > {
   // Setters
   create(core: Core, data: TCreateData): ResourceDocument<TData>;
