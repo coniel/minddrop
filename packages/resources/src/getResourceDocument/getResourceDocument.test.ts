@@ -52,7 +52,7 @@ describe('getResourceDocument', () => {
     // Add an `onGetOne` callback to the resource config
     const onGetOneConfig: ResourceConfig<Data> = {
       ...config,
-      onGetOne: (doc) => ({ ...doc, foo: 'bar' }),
+      onGet: (doc) => ({ ...doc, foo: 'bar' }),
     };
 
     // Get a document

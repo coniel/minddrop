@@ -45,14 +45,7 @@ describe('getAllResourceDocuments', () => {
     // Add an `onGetAll` callback to the resource config
     const onGetAllConfig: ResourceConfig<Data> = {
       ...config,
-      onGetAll: (docs) =>
-        Object.values(docs).reduce(
-          (modifiedDocs, doc) => ({
-            ...modifiedDocs,
-            [doc.id]: { ...doc, foo: 'bar' },
-          }),
-          {},
-        ),
+      onGet: (document) => ({ ...document, foo: 'bar' }),
     };
 
     // Get all documents

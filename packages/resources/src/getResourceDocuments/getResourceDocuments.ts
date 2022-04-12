@@ -1,3 +1,4 @@
+import { mapById } from '@minddrop/utils';
 import { ResourceDocumentNotFoundError } from '../errors';
 import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
 
@@ -33,10 +34,12 @@ export function getResourceDocuments<TData>(
     );
   }
 
-  if (config.onGetMany) {
-    // Call the config's `onGetMany` method which will return
+  if (config.onGet) {
+    // Call the config's `onGet` method which will return
     // possibly modidfied version of the documents.
-    documents = config.onGetMany(documents);
+    documents = mapById(
+      Object.values(documents).map((document) => config.onGet(document)),
+    );
   }
 
   // Return the documents

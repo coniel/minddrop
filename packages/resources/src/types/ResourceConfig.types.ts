@@ -60,38 +60,15 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
   onUpdate?(core: Core, update: ResourceDocumentUpdate<TData>): Partial<TData>;
 
   /**
-   * Callback fired when a single document is fetched using the
-   * `get` method. Allows for performing modifications to the
-   * document before it is returned.
+   * Callback fired when a document is retrieved from the store.
+   * Allows for performing modifications to the document before
+   * it is returned. When multiple documents are fetched at once,
+   * the callback is called on each returned document.
    *
    * @param document The requested document.
    * @returns The requested document.
    */
-  onGetOne?(document: ResourceDocument<TData>): ResourceDocument<TData>;
-
-  /**
-   * Callback fired when multiple documents are fetched using
-   * the `get` method. Allows for performing modifications to
-   * the documents before they are returned.
-   *
-   * @param documents A `{ [id]: ResourceDocument }` map of the requested documents.
-   * @returns A `{ [id]: ResourceDocument }` map of the requested documents.
-   */
-  onGetMany?(
-    documents: Record<string, ResourceDocument<TData>>,
-  ): Record<string, ResourceDocument<TData>>;
-
-  /**
-   * Callback fired when all documents are fetched using
-   * the `getAll` method. Allows for performing modifications to
-   * the documents before they are returned.
-   *
-   * @param documents A `{ [id]: ResourceDocument }` map of the all the documents.
-   * @returns A `{ [id]: ResourceDocument }` map of the all the documents.
-   */
-  onGetAll?(
-    documents: Record<string, ResourceDocument<TData>>,
-  ): Record<string, ResourceDocument<TData>>;
+  onGet?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when the store is cleared. Only called

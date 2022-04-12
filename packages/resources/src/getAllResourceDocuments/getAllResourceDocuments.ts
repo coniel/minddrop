@@ -1,3 +1,4 @@
+import { mapById } from '@minddrop/utils';
 import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
 
 /**
@@ -15,10 +16,12 @@ export function getAllResourceDocuments<TData>(
   // Get all resource documents from the store
   let documents = store.getAll();
 
-  if (config.onGetAll) {
-    // Call the config's `onGetAll` method which will return
+  if (config.onGet) {
+    // Call the config's `onGet` method which will return
     // possibly modidfied version of the documents.
-    documents = config.onGetAll(documents);
+    documents = mapById(
+      Object.values(documents).map((document) => config.onGet(document)),
+    );
   }
 
   // Return the documents

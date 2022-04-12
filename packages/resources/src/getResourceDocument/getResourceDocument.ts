@@ -25,10 +25,10 @@ export function getResourceDocument<TData>(
     throw new ResourceDocumentNotFoundError(config.resource, documentId);
   }
 
-  if (config.onGetOne) {
-    // Call the config's `onGetOne` method which will return
+  if (config.onGet) {
+    // Call the config's `onGet` method which will return
     // a possibly modidfied version of the document.
-    document = config.onGetOne(document);
+    document = config.onGet(document);
   }
 
   // Return the document

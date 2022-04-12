@@ -58,14 +58,7 @@ describe('getResourceDocuments', () => {
     // Add an `onGetMany` callback to the resource config
     const onGetManyConfig: ResourceConfig<Data> = {
       ...config,
-      onGetMany: (docs) =>
-        Object.values(docs).reduce(
-          (modifiedDocs, doc) => ({
-            ...modifiedDocs,
-            [doc.id]: { ...doc, foo: 'bar' },
-          }),
-          {},
-        ),
+      onGet: (doc) => ({ ...doc, foo: 'bar' }),
     };
 
     // Get some documents
