@@ -1,3 +1,4 @@
+import { ContentColor } from '@minddrop/core';
 import {
   InvalidResourceSchemaError,
   ResourceValidationError,
@@ -35,6 +36,23 @@ describe('validateResource', () => {
     expect(() =>
       validateResourceDocument('test', dataSchema, { ...document, foo: '' }),
     ).toThrowError(ResourceValidationError);
+  });
+
+  it('validates `content-color` fields', () => {
+    // Validate a document contaning an invalid content-color value.
+    // Should throw a `ResourceValidatiorError`.
+    expect(() =>
+      validateResourceDocument<{ color: ContentColor }>(
+        'test',
+        {
+          color: { type: 'content-color', allowedColors: ['red', 'green'] },
+        },
+        {
+          ...document,
+          color: 'blue',
+        },
+      ),
+    );
   });
 
   it('validates `static` fields', () => {

@@ -7,8 +7,15 @@ import {
   InvalidSchemaError,
   validateObject,
   ValidationError,
+  ValidatorFunction,
 } from '@minddrop/utils';
 import { generateResourceDocumentSchema } from '../generateResourceDocumentSchema';
+import { validateContentColor } from '../validateContentColor';
+
+// Validator functions for special resource document fields
+const resourceFieldValidators: Record<string, ValidatorFunction> = {
+  'content-color': validateContentColor,
+};
 
 /**
  * Validates a resource document against its data schema
@@ -33,7 +40,11 @@ export function validateResourceDocument<TData>(
 
   try {
     // Validate the resource object against the document schema
-    validateObject({ type: 'object', schema }, document);
+    validateObject(
+      { type: 'object', schema },
+      document,
+      resourceFieldValidators,
+    );
   } catch (error) {
     if (error instanceof ValidationError) {
       // Catch validation errors and re-throw them as a
