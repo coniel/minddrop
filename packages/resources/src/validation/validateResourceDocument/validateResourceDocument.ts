@@ -15,8 +15,7 @@ import { generateResourceDocumentSchema } from '../generateResourceDocumentSchem
  * as well as default resource document properties.
  *
  * - Throws a `ResourceValidationError` if the resource document is invalid.
- * - Throws a `InvalidSchemaError` if the schema is invalid.
- * - Throws a `InvalidValidatorError` if a validator is invalid.
+ * - Throws a `InvalidResourceSchemaError` if the schema is invalid.
  *
  * @param resource The resource identifier.
  * @param dataSchema The resource data schema.
