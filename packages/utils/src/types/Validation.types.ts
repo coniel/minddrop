@@ -6,7 +6,7 @@ export type ValidatorFunction<TType = unknown> = (
   validator: Validator,
   value: TType,
   customValidators?: Record<string, ValidatorFunction>,
-) => boolean;
+) => void;
 
 export interface StringValidator {
   /**
