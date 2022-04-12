@@ -8,17 +8,17 @@ import { loadResourceDocuments } from './loadResourceDocuments';
 // Test resource config
 const config: ResourceConfig<{}> = {
   resource: 'tests',
-  dataSchema: { foo: { type: 'string' } },
+  dataSchema: {},
 };
 
 // Create a resource store for the test resource
 const store = createResourceStore<{}>();
 
-// Test document to restore
-const document1 = generateResourceDocument({ foo: 'foo' });
-const document2 = generateResourceDocument({ foo: 'foo' });
+// Test document to load
+const document1 = generateResourceDocument({});
+const document2 = generateResourceDocument({});
 
-describe('getAllResourceDocuments', () => {
+describe('loadResourceDocuments', () => {
   beforeEach(setup);
 
   afterEach(() => {
