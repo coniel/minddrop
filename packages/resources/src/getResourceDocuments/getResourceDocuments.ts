@@ -10,7 +10,7 @@ import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
  *
  * @param store The resource store.
  * @param config The resource config.
- * @param documentIda The IDs of the documenta to retrieve.
+ * @param documentIds The IDs of the documenta to retrieve.
  * @returns The requested documenta.
  */
 export function getResourceDocuments<TData>(
