@@ -23,7 +23,14 @@ export interface ResourceApi<
   get(documentId: string): ResourceDocument<TData>;
   get(documentIds: string[]): Record<string, ResourceDocument<TData>>;
   getAll(): Record<string, ResourceDocument<TData>>;
-  // Testing
-  load(core: Core, documents: ResourceDocument<TData>[]): void;
-  clear(): void;
+  store: {
+    get(documentId: string): ResourceDocument<TData>;
+    get(documentIds: string[]): Record<string, ResourceDocument<TData>>;
+    getAll(): Record<string, ResourceDocument<TData>>;
+    add(core: Core, document: ResourceDocument<TData>): void;
+    set(core: Core, document: ResourceDocument<TData>): void;
+    remove(core: Core, documentId: string): void;
+    load(core: Core, documents: ResourceDocument<TData>[]): void;
+    clear(): void;
+  };
 }
