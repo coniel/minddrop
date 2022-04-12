@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { createResourceStore } from '../createResourceStore';
+import { ResourceDocumentNotFoundError } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup, core } from '../test-utils';
 import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
@@ -41,6 +42,14 @@ describe('permanentlyDeleteResourceDocument', () => {
 
     // Document should no longer be in the store
     expect(store.get(document.id)).toBeUndefined();
+  });
+
+  it('throws if the document does not exist', () => {
+    // Attempt to permanently delete a document which does not
+    // exist. Should throw a `ResourceDocumentNotFoundError`.
+    expect(() =>
+      permanentlyDeleteResourceDocument(core, store, config, 'missing'),
+    ).toThrowError(ResourceDocumentNotFoundError);
   });
 
   it('dispatches a `[resource]:delete-permanently` event', (done) => {

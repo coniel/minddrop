@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { getResourceDocument } from '../getResourceDocument';
+import { ResourceDocumentNotFoundError } from '../errors';
 import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
 
 /**
@@ -18,7 +18,13 @@ export function permanentlyDeleteResourceDocument<TData>(
   documentId: string,
 ): ResourceDocument<TData> {
   // Get the document
-  const document = getResourceDocument(store, config, documentId);
+  const document = store.get(documentId);
+
+  if (!document) {
+    // Throw a `ResourceDocumentNotFoundError` if the document
+    // does not exist.
+    throw new ResourceDocumentNotFoundError(config.resource, documentId);
+  }
 
   // Remove the document from the store
   store.remove(documentId);
