@@ -124,19 +124,20 @@ export function createResourceStore<
     }),
   );
 
-  function get(id: string): ResourceDocument<TData>;
-  function get(ids: string[]): Record<string, ResourceDocument<TData>>;
-  function get(id: string | string[]) {
+  // Create the `get` function which returns one or multiple documents
+  // based on the whether `documentId` argument is a string or an array.
+  function get(documentId: string): ResourceDocument<TData>;
+  function get(documentIds: string[]): Record<string, ResourceDocument<TData>>;
+  function get(documentId: string | string[]) {
     const { documents } = useResourceStore.getState();
-    if (Array.isArray(id)) {
-      return Object.values(documents).reduce(
-        (map, document) =>
-          id.includes(document.id) ? { ...map, [document.id]: document } : map,
+    if (Array.isArray(documentId)) {
+      return documentId.reduce(
+        (map, id) => ({ ...map, [id]: documents[id] }),
         {},
       );
     }
 
-    return documents[id];
+    return documents[documentId];
   }
 
   return {
