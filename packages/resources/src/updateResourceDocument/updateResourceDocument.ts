@@ -77,7 +77,8 @@ export function updateResourceDocument<
   const document = store.get(documentId);
 
   if (!document) {
-    // Throw a `ResourceNotFoundError` if the document does not exist
+    // Throw a `ResourceDocumentNotFoundError` if the document
+    // does not exist.
     throw new ResourceDocumentNotFoundError(config.resource, documentId);
   }
 
