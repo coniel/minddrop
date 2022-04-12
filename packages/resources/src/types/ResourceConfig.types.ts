@@ -94,40 +94,6 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
   ): Record<string, ResourceDocument<TData>>;
 
   /**
-   * Callback fired when resource documents are loaded into
-   * the store from the database. Called before the documents
-   * are loaded into the store. Allows for performing side
-   * effects when documents are loaded into the store.
-   *
-   * @param documents The loaded docuemnts.
-   */
-  onLoad?(documents: ResourceDocument<TData>[]): void;
-
-  /**
-   * Callback fired when a resource documents is set in the
-   * store from the database (as a result of being created/
-   * updated outside the current app window during runtime).
-   * Called before the document is set in the store. Allows
-   * for performing side effects when documents are set in
-   * the store.
-   *
-   * @param document The set document.
-   */
-  onSet?(document: ResourceDocument<TData>): void;
-
-  /**
-   * Callback fired when a resource documents is removed from
-   * the store (as a result of being permanently deleted from
-   * outside the current app window during runtime). Called
-   * before the document is removed from the store. Allows for
-   * performing side effects when documents are removed from
-   * the store.
-   *
-   * @param document The removed document.
-   */
-  onRemove?(document: ResourceDocument<TData>): void;
-
-  /**
    * Callback fired when the store is cleared. Only called
    * within tests. Allows for performing side effects such
    * as clearning other related data.
