@@ -1,4 +1,7 @@
-import { ResourceValidationError } from '../../errors';
+import {
+  InvalidResourceSchemaError,
+  ResourceValidationError,
+} from '../../errors';
 import { generateResourceDocument } from '../../generateResourceDocument';
 import { ResourceDataSchema } from '../../types';
 import { validateResourceDocument } from './validateResourceDocument';
@@ -69,10 +72,42 @@ describe('validateResource', () => {
   });
 
   it('rethrows a `ValidationError` as a `ResourceValidationError`', () => {
-    // Validate an invalid resource, should throw a `ResourceValidationError`.
+    // Validate an invalid resource. Should throw a `ResourceValidationError`.
     expect(() =>
       // @ts-ignore
       validateResourceDocument<Data>('test', {}, { ...document, foo: 'foo' }),
     ).toThrowError(ResourceValidationError);
+  });
+
+  it('rethrows a `InvalidSchemaError` as a `InvalidResourceSchemaError`', () => {
+    // Validate a resource using an invalid schema. Should throw a
+    // `InvalidResourceSchemaError`.
+    expect(() =>
+      validateResourceDocument<Data>(
+        'test',
+        // @ts-ignore
+        { foo: { type: 'invalid' } },
+        document,
+      ),
+    ).toThrowError(InvalidResourceSchemaError);
+  });
+
+  it('rethrows other errors as they are', () => {
+    // Validate a resource using a validator which throws a random error.
+    // Should rethrow the error as is.
+    expect(() =>
+      validateResourceDocument<Data>(
+        'test',
+        {
+          foo: {
+            type: 'string',
+            validatorFn: () => {
+              throw new Error('error');
+            },
+          },
+        },
+        document,
+      ),
+    ).toThrowError(Error);
   });
 });

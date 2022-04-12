@@ -57,6 +57,6 @@ export function validateValue<
       break;
     default:
       // Invalid validator `type`
-      throw new InvalidValidatorError(`invalid validator type '${type}'`);
+      throw new InvalidValidatorError(`unknown validator type '${type}'`);
   }
 }

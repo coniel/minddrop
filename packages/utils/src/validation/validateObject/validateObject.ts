@@ -1,4 +1,8 @@
-import { ValidationError } from '../../errors';
+import {
+  InvalidSchemaError,
+  InvalidValidatorError,
+  ValidationError,
+} from '../../errors';
 import {
   FieldValidator,
   ObjectValidator,
@@ -109,7 +113,15 @@ export function validateObject(
         throw new ValidationError(`property '${fieldName}' ${error.message}`);
       }
 
-      // Error is not a `ValidationError`, throw it as is
+      // Re-throw `InvalidValidatorError` as a `InvalidSchemaError`,
+      // adding additional context.
+      if (error instanceof InvalidValidatorError) {
+        throw new InvalidSchemaError(
+          `${error.message} for property '${fieldName}'`,
+        );
+      }
+
+      // Throw other errors as they are
       throw error;
     }
   });

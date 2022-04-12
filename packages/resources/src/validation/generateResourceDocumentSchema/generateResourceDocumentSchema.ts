@@ -1,4 +1,4 @@
-import { InvalidSchemaError } from '@minddrop/utils';
+import { InvalidResourceSchemaError } from '../../errors';
 import { ResourceDataSchema, ResourceDocumentSchema } from '../../types';
 
 // The default resource document fields
@@ -19,6 +19,7 @@ const defaultFields = [
  * @returns A resource document schema.
  */
 export function generateResourceDocumentSchema<TData>(
+  resource: string,
   dataSchema: ResourceDataSchema<TData>,
 ): ResourceDocumentSchema<TData> {
   // Ensure that the provided schema does not contain any
@@ -30,8 +31,8 @@ export function generateResourceDocumentSchema<TData>(
   if (schemaDefaultKeys.length) {
     // Throw an `InvalidSchemaError` if the data schema contains
     // any default resource field validators.
-    throw new InvalidSchemaError(
-      `${
+    throw new InvalidResourceSchemaError(
+      `[${resource}] ${
         schemaDefaultKeys.length > 1 ? 'properties' : 'property'
       } '${schemaDefaultKeys.join("', '")}' ${
         schemaDefaultKeys.length > 1 ? 'are' : 'is'

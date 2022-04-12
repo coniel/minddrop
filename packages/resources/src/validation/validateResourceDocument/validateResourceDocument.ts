@@ -1,6 +1,13 @@
-import { ResourceValidationError } from '../../errors';
+import {
+  InvalidResourceSchemaError,
+  ResourceValidationError,
+} from '../../errors';
 import { ResourceDataSchema, ResourceDocument } from '../../types';
-import { validateObject } from '@minddrop/utils';
+import {
+  InvalidSchemaError,
+  validateObject,
+  ValidationError,
+} from '@minddrop/utils';
 import { generateResourceDocumentSchema } from '../generateResourceDocumentSchema';
 
 /**
@@ -23,17 +30,28 @@ export function validateResourceDocument<TData>(
   originalDocument?: object,
 ): void {
   // Create a resource document schema from the resource data schema
-  const schema = generateResourceDocumentSchema(dataSchema);
+  const schema = generateResourceDocumentSchema(resource, dataSchema);
 
   try {
     // Validate the resource object against the document schema
     validateObject({ type: 'object', schema }, document);
   } catch (error) {
-    // Catch validation errors and re-throw them as a
-    // `ResourceValidationError`, adding additional context.
-    throw new ResourceValidationError(
-      `[${resource}:${document.id}] ${error.message}`,
-    );
+    if (error instanceof ValidationError) {
+      // Catch validation errors and re-throw them as a
+      // `ResourceValidationError`, adding additional context.
+      throw new ResourceValidationError(
+        `[${resource}:${document.id}] ${error.message}`,
+      );
+    }
+
+    if (error instanceof InvalidSchemaError) {
+      // Catch invalid schema errors and re-throw them as a
+      // `InvalidResourceSchemaError` with additional context.
+      throw new InvalidResourceSchemaError(`[${resource}] ${error.message}`);
+    }
+
+    // Rethrow other errors as they are
+    throw error;
   }
 
   // Validate static fields

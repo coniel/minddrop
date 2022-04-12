@@ -1,4 +1,8 @@
-import { InvalidValidatorError, ValidationError } from '../../errors';
+import {
+  InvalidSchemaError,
+  InvalidValidatorError,
+  ValidationError,
+} from '../../errors';
 import { StringValidator } from '../../types';
 import * as ValidateValue from '../validateValue';
 import { validateObject } from './validateObject';
@@ -342,16 +346,7 @@ describe('validateResource', () => {
         throw new ValidationError('error message');
       });
 
-      // Validate an array with an invalid item. Should rethrow the thrown
-      // `ValidationError`.
-      expect(() =>
-        validateObject(
-          { type: 'object', schema: { foo: { type: 'string' } } },
-          { foo: 1 },
-        ),
-      ).toThrowError(ValidationError);
-
-      // Validate an array with an invalid item. Should add context to
+      // Validate an object containing an invalid value. Should add context to
       // the rethrown `ValidationError`.
       try {
         validateObject(
@@ -359,6 +354,29 @@ describe('validateResource', () => {
           { foo: 1 },
         );
       } catch (error) {
+        // Should rethrow a `ValidationError`
+        expect(error instanceof ValidationError).toBeTruthy();
+        // Error message should differ from the thrown error
+        expect(error.message).not.toBe('error message');
+      }
+    });
+
+    it('rethrows `InvalidValidatorError`s, adding additional context', () => {
+      jest.spyOn(ValidateValue, 'validateValue').mockImplementation(() => {
+        throw new InvalidValidatorError('error message');
+      });
+
+      // Validate an object using a schema with an invalid validator.
+      // Should rethrow the thrown `InvalidValidatorError` as a
+      // `InvalidSchemaError` with additional context.
+      try {
+        validateObject(
+          { type: 'object', schema: { foo: { type: 'string' } } },
+          { foo: 1 },
+        );
+      } catch (error) {
+        // Error should be an `InvalidSchemaError`
+        expect(error instanceof InvalidSchemaError).toBeTruthy();
         // Error message should differ from the thrown error
         expect(error.message).not.toBe('error message');
       }
@@ -366,20 +384,10 @@ describe('validateResource', () => {
 
     it('rethrows other item validation errors as is', () => {
       jest.spyOn(ValidateValue, 'validateValue').mockImplementation(() => {
-        throw new InvalidValidatorError('error message');
+        throw new Error('error message');
       });
 
-      // Validate an array with an invalid item. Should rethrow the
-      // `InvalidValidationError`.
-      expect(() =>
-        validateObject(
-          { type: 'object', schema: { foo: { type: 'string' } } },
-          { foo: 'foo' },
-        ),
-      ).toThrowError(InvalidValidatorError);
-
-      // Validate an array with an invalid item. Should rethrow the
-      // `InvalidValidatorError` without modifying it.
+      // Throw a random error during validation. Should be rethrown as is.
       try {
         validateObject(
           { type: 'object', schema: { foo: { type: 'string' } } },
