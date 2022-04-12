@@ -36,7 +36,7 @@ const config: ResourceConfig<Data> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<ResourceDocument<Data>>();
+const store = createResourceStore<Data>();
 
 // Test document to update
 const document = generateResourceDocument<Data>({
@@ -52,7 +52,7 @@ const updateResourceDocument = (
   config: ResourceConfig<Data>,
   documentId: string,
   data: Partial<Data>,
-) => rawUpdateResourceDocument(core, store, config, documentId, data);
+) => rawUpdateResourceDocument<Data>(core, store, config, documentId, data);
 
 describe('updateResourceDocument', () => {
   beforeEach(() => {
@@ -153,5 +153,71 @@ describe('updateResourceDocument', () => {
 
     // Update a document
     updateResourceDocument(core, store, config, document.id, changes);
+  });
+
+  describe('internal updates', () => {
+    it('throws if `revision` is updated without `isInternalUpdate`', () => {
+      // Attempt to update a document's `revision` field without the
+      // `isInternalUpdate` flag being set. Should throw a
+      // `ResourceValidationError`.
+      expect(() =>
+        updateResourceDocument(core, store, config, document.id, {
+          // @ts-ignore
+          revision: 'new-rev',
+        }),
+      ).toThrowError(ResourceValidationError);
+    });
+
+    it('throws if `updatedAt` is updated without `isInternalUpdate`', () => {
+      // Attempt to update a document's `updatedAt` field without the
+      // `isInternalUpdate` flag being set. Should throw a
+      // `ResourceValidationError`.
+      expect(() =>
+        updateResourceDocument(core, store, config, document.id, {
+          // @ts-ignore
+          updatedAt: new Date(),
+        }),
+      ).toThrowError(ResourceValidationError);
+    });
+
+    it('throws if `deleted` is updated without `isInternalUpdate`', () => {
+      // Attempt to update a document's `deleted` field without the
+      // `isInternalUpdate` flag being set. Should throw a
+      // `ResourceValidationError`.
+      expect(() =>
+        updateResourceDocument(core, store, config, document.id, {
+          // @ts-ignore
+          deleted: true,
+        }),
+      ).toThrowError(ResourceValidationError);
+    });
+
+    it('throws if `deletedAt` is updated without `isInternalUpdate`', () => {
+      // Attempt to update a document's `deletedAt` field without the
+      // `isInternalUpdate` flag being set. Should throw a
+      // `ResourceValidationError`.
+      expect(() =>
+        updateResourceDocument(core, store, config, document.id, {
+          // @ts-ignore
+          deletedAt: true,
+        }),
+      ).toThrowError(ResourceValidationError);
+    });
+
+    it('allows internal only prperties to be updated if `isInternalUpdate` is true', () => {
+      // Update a document's `deleted` and `deletedAt` properties with the
+      // `isInternalUpdate` flag set to true.
+      const updated = rawUpdateResourceDocument(
+        core,
+        store,
+        config,
+        document.id,
+        { deleted: true, deletedAt: new Date() },
+        true,
+      );
+
+      // Document should be updated
+      expect(updated.deleted).toBe(true);
+    });
   });
 });

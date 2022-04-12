@@ -1,12 +1,18 @@
 import { Core } from '@minddrop/core';
 import { createUpdate, generateId } from '@minddrop/utils';
-import { ResourceDocumentNotFoundError } from '../errors';
 import {
+  ResourceDocumentNotFoundError,
+  ResourceValidationError,
+} from '../errors';
+import {
+  DeleteUpdateData,
   ResourceConfig,
   ResourceDocument,
   ResourceDocumentChanges,
+  ResourceDocumentCustomData,
   ResourceDocumentUpdateData,
   ResourceStore,
+  RestoreUpdateData,
 } from '../types';
 import { validateResourceDocument } from '../validation';
 
@@ -36,13 +42,36 @@ function createChanges<TData>(
  * @param config The resource config.
  * @param documentId The ID of the document to update.
  * @param data The update data.
+ * @param isInternalUpdate Whether the function is being called internally within the API.
  */
-export function updateResourceDocument<TData>(
+export function updateResourceDocument<
+  TData extends ResourceDocumentCustomData,
+>(
+  core: Core,
+  store: ResourceStore<ResourceDocument<TData>>,
+  config: ResourceConfig<TData>,
+  documentId: string,
+  data: DeleteUpdateData | RestoreUpdateData,
+  isInternalUpdate: true,
+): ResourceDocument<TData>;
+export function updateResourceDocument<
+  TData extends ResourceDocumentCustomData,
+>(
+  core: Core,
+  store: ResourceStore<ResourceDocument<TData>>,
+  config: ResourceConfig<TData>,
+  documentId: string,
+  data: Partial<TData>,
+): ResourceDocument<TData>;
+export function updateResourceDocument<
+  TData extends ResourceDocumentCustomData,
+>(
   core: Core,
   store: ResourceStore<ResourceDocument<TData>>,
   config: ResourceConfig<TData>,
   documentId: string,
   data: ResourceDocumentUpdateData<TData>,
+  isInternalUpdate?: true,
 ): ResourceDocument<TData> {
   // Get the document from the store
   const document = store.get(documentId);
@@ -50,6 +79,24 @@ export function updateResourceDocument<TData>(
   if (!document) {
     // Throw a `ResourceNotFoundError` if the document does not exist
     throw new ResourceDocumentNotFoundError(config.resource, documentId);
+  }
+
+  if (!isInternalUpdate) {
+    // Ensure that the update data does not contain properties which
+    // can only be updated by the internal API.
+    const internalFields = Object.keys(data).filter((key) =>
+      ['revision', 'updatedAt', 'deleted', 'deletedAt'].includes(key),
+    );
+
+    if (internalFields.length) {
+      // Throw an `ResourceValidationError` if the data contains any
+      // internal only properties.
+      throw new ResourceValidationError(
+        `${
+          internalFields.length > 1 ? 'properties' : 'property'
+        } '${internalFields.join("', '")}' cannot be updated directly`,
+      );
+    }
   }
 
   // Create an update using the provided data and default
