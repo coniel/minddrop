@@ -1,7 +1,14 @@
 import { Core } from '@minddrop/core';
-import { ResourceDocument } from './ResourceDocument.types';
+import {
+  ResourceDocument,
+  ResourceDocumentCustomData,
+} from './ResourceDocument.types';
 
-export interface ResourceApi<TData, TCreateData, TUpdateData> {
+export interface ResourceApi<
+  TData extends ResourceDocumentCustomData,
+  TCreateData extends Partial<ResourceDocumentCustomData> = TData,
+  TUpdateData extends Partial<ResourceDocumentCustomData> = Partial<TData>,
+> {
   // Setters
   create(core: Core, data: TCreateData): ResourceDocument<TData>;
   update(

@@ -2,10 +2,11 @@ import { ResourceDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
 import {
   ResourceDocument,
+  ResourceDocumentCustomData,
   ResourceDocumentUpdate,
 } from './ResourceDocument.types';
 
-export interface ResourceConfig<TData> {
+export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
   /**
    * A unique identifier for the resource composed
    * using the extension ID and resource type:

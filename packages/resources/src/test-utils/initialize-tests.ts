@@ -7,5 +7,6 @@ export function setup() {
 }
 
 export function cleanup() {
-  //
+  // Remove all event listeners for this extension
+  core.removeAllEventListeners();
 }

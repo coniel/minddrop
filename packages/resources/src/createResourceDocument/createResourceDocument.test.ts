@@ -35,7 +35,7 @@ const baseConfig: ResourceConfig<Data> = {
   defaultData: { bar: 'bar', baz: 'baz' },
 };
 
-const store = createResourceStore<ResourceDocument<Data>>();
+const store = createResourceStore<Data>();
 
 // Create a typed version of the function
 const createResourceDocument = (

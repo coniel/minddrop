@@ -13,7 +13,10 @@ import {
   StringValidator,
 } from '@minddrop/utils';
 import { ResourceReference } from '../types';
-import { ResourceDocument } from './ResourceDocument.types';
+import {
+  ResourceDocument,
+  ResourceDocumentCustomData,
+} from './ResourceDocument.types';
 
 export interface ResourceIdValidator {
   /**
@@ -119,14 +122,8 @@ export type ResourceSchemaFieldValidator =
   | ResourceParentReferencesFieldValidator
   | ResourceContentColorFieldValidator;
 
-export type ResourceDocumentSchema<TData> = Record<
-  keyof TData,
-  ResourceSchemaFieldValidator
-> &
-  Record<keyof ResourceDocument, ResourceSchemaFieldValidator>;
+export type ResourceDocumentSchema<TData extends ResourceDocumentCustomData> =
+  Record<keyof ResourceDocument<TData>, ResourceSchemaFieldValidator>;
 
-export type ResourceDataSchema<TData> = Record<
-  keyof TData,
-  ResourceSchemaFieldValidator
-> &
-  Partial<Record<keyof ResourceDocument, never>>;
+export type ResourceDataSchema<TData extends ResourceDocumentCustomData> =
+  Record<keyof TData, ResourceSchemaFieldValidator>;

@@ -25,6 +25,7 @@ export function deleteResourceDocument<TData>(
     config,
     documentId,
     { deleted: true, deletedAt: new Date() },
+    true,
   );
 
   // Dispatch a '[resource]:delete' event

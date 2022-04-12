@@ -39,11 +39,14 @@ export interface BaseResourceDocumentData {
   deletedAt?: Date;
 }
 
+export type ResourceDocumentCustomData = Object &
+  Partial<Record<keyof ResourceDocument<{}>, never>>;
+
 /**
  * A resource document consists of the base resource document
  * data, and custom data.
  */
-export type ResourceDocument<TData extends Object = {}> =
+export type ResourceDocument<TData extends ResourceDocumentCustomData> =
   BaseResourceDocumentData & TData;
 
 /**
@@ -101,23 +104,24 @@ export interface RestoreUpdateData {
  * of part of the custom data, the delete update data, or the
  * restore update data.
  */
-export type ResourceDocumentUpdateData<TData> =
-  | Partial<TData>
-  | DeleteUpdateData
-  | RestoreUpdateData;
+export type ResourceDocumentUpdateData<
+  TData extends ResourceDocumentCustomData,
+> = Partial<TData> | DeleteUpdateData | RestoreUpdateData;
 
 /**
  * When updating a resource document, the changes consist of the
  * base document changes (which are set for every update), and
  * the custom data changes or delete/restore data changes.
  */
-export type ResourceDocumentChanges<TData> = BaseResourceDocumentChanges &
-  ResourceDocumentUpdateData<TData>;
+export type ResourceDocumentChanges<TData extends ResourceDocumentCustomData> =
+  BaseResourceDocumentChanges & ResourceDocumentUpdateData<TData>;
 
 /**
  * Describes the changes made to an updated resource document.
  */
-export interface ResourceDocumentUpdate<TData> {
+export interface ResourceDocumentUpdate<
+  TData extends ResourceDocumentCustomData,
+> {
   /**
    * The resource document before it was changed.
    */
