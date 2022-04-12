@@ -2,7 +2,14 @@ import { InvalidSchemaError } from '@minddrop/utils';
 import { ResourceDataSchema, ResourceDocumentSchema } from '../../types';
 
 // The default resource document fields
-const defaultFields = ['id', 'revision', 'createdAt', 'updatedAt'];
+const defaultFields = [
+  'id',
+  'revision',
+  'createdAt',
+  'updatedAt',
+  'deleted',
+  'deletedAt',
+];
 
 /**
  * Generate a resource document schema given the
@@ -57,6 +64,15 @@ export function generateResourceDocumentSchema<TData>(
     updatedAt: {
       type: 'date',
       required: true,
+    },
+    deleted: {
+      type: 'enum',
+      options: [true],
+    },
+    deletedAt: {
+      type: 'date',
+      forbidenWithout: ['deleted'],
+      requiredWith: ['deleted'],
     },
   };
 }

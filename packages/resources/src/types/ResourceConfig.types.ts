@@ -1,7 +1,9 @@
 import { ResourceDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
-import { ResourceDocument } from './ResourceDocument.types';
-import { ResourceDocumentUpdate } from './ResourceChange.types';
+import {
+  ResourceDocument,
+  ResourceDocumentUpdate,
+} from './ResourceDocument.types';
 
 export interface ResourceConfig<TData> {
   /**
@@ -55,30 +57,6 @@ export interface ResourceConfig<TData> {
    * @param update The resource update.
    */
   onUpdate?(core: Core, update: ResourceDocumentUpdate<TData>): Partial<TData>;
-
-  /**
-   * Callback fired when a resource is soft deleted.
-   * Called before the soft deletion is performed in the store
-   * and database. Allows for performing cleanup operations
-   * before a resource is soft deleted.
-   */
-  onDelete?(document: ResourceDocument<TData>): ResourceDocument<TData>;
-
-  /**
-   * Callback fired when a resource is permanently deleted.
-   * Called before the document is deleted from the store
-   * and database. Allows for performing cleanup operations
-   * before a resource is deleted.
-   */
-  onDeletePermanently?(document: ResourceDocument<TData>): void;
-
-  /**
-   * Callback fired when a resource is restored after from being
-   * soft deleted. Called before the restoration is performed in
-   * the store and database. Allows for performing modifications
-   * to the restore document before it is restored.
-   */
-  onRestore?(document: ResourceDocument<TData>): ResourceDocument<TData>;
 
   /**
    * Callback fired when a single document is fetched using the

@@ -47,6 +47,24 @@ describe('generateResourceDocumentSchema', () => {
         generateResourceDocumentSchema({ updatedAt: { type: 'date' } }),
       ).toThrowError(InvalidSchemaError);
     });
+
+    it('throws if the schema contains the `deleted` property', () => {
+      // Generate a resource document using a schema which contains a `deleted`
+      // field validator. Should throw a `InvalidSchemaError`.
+      expect(() =>
+        // @ts-ignore
+        generateResourceDocumentSchema({ deleted: { type: 'boolean' } }),
+      ).toThrowError(InvalidSchemaError);
+    });
+
+    it('throws if the schema contains the `deletedAt` property', () => {
+      // Generate a resource document using a schema which contains a `deletedAt`
+      // field validator. Should throw a `InvalidSchemaError`.
+      expect(() =>
+        // @ts-ignore
+        generateResourceDocumentSchema({ deletedAt: { type: 'date' } }),
+      ).toThrowError(InvalidSchemaError);
+    });
   });
 
   it('returns a schema containing default field validators and data field validators', () => {

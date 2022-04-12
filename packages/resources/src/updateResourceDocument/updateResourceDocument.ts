@@ -5,6 +5,7 @@ import {
   ResourceConfig,
   ResourceDocument,
   ResourceDocumentChanges,
+  ResourceDocumentUpdateData,
   ResourceStore,
 } from '../types';
 import { validateResourceDocument } from '../validation';
@@ -17,7 +18,7 @@ import { validateResourceDocument } from '../validation';
  * @returns Resource document changes.
  */
 function createChanges<TData>(
-  data: Partial<TData>,
+  data: ResourceDocumentUpdateData<TData>,
 ): ResourceDocumentChanges<TData> {
   return {
     ...data,
@@ -41,7 +42,7 @@ export function updateResourceDocument<TData>(
   store: ResourceStore<ResourceDocument<TData>>,
   config: ResourceConfig<TData>,
   documentId: string,
-  data: Partial<TData>,
+  data: ResourceDocumentUpdateData<TData>,
 ): ResourceDocument<TData> {
   // Get the document from the store
   const document = store.get(documentId);
