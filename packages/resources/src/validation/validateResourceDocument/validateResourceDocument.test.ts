@@ -34,35 +34,35 @@ describe('validateResource', () => {
     ).toThrowError(ResourceValidationError);
   });
 
-  it('validates `protected` fields', () => {
-    // Validate a object in which a protected field has changed.
+  it('validates `static` fields', () => {
+    // Validate a object in which a static field has changed.
     // Should throw a `ValidationError`.
     expect(() =>
       validateResourceDocument<Data>(
         'test',
-        { foo: { type: 'string', protected: true } },
+        { foo: { type: 'string', static: true } },
         { ...document, foo: 'New value' },
         { ...document, foo: 'Old value' },
       ),
     ).toThrowError(ResourceValidationError);
 
-    // Validate a object in which a protected field has not changed.
+    // Validate a object in which a static field has not changed.
     // Should not throw an error.
     expect(() =>
       validateResourceDocument<Data>(
         'test',
-        { foo: { type: 'string', protected: true } },
+        { foo: { type: 'string', static: true } },
         { ...document, foo: 'Old value' },
         { ...document, foo: 'Old value' },
       ),
     ).not.toThrow();
 
-    // Validate a object whith a protected field without providing
+    // Validate a object whith a static field without providing
     // an original object. Should not throw an error.
     expect(() =>
       validateResourceDocument<Data>(
         'test',
-        { foo: { type: 'string', protected: true } },
+        { foo: { type: 'string', static: true } },
         { ...document, foo: 'Old value' },
       ),
     ).not.toThrow();

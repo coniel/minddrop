@@ -36,18 +36,18 @@ export function validateResourceDocument<TData>(
     );
   }
 
-  // Validate protected fields
+  // Validate static fields
   if (originalDocument) {
-    // Ensure that protected fields have not changed
+    // Ensure that static fields have not changed
     Object.keys(schema).forEach((field) => {
       if (
-        // Field is a protected field
-        schema[field].protected &&
+        // Field is a static field
+        schema[field].static &&
         // Original value does not match new value
         originalDocument[field] !== document[field]
       ) {
         throw new ResourceValidationError(
-          `[${resource}:${document.id}] updating protected field '${field}' is forbiden`,
+          `[${resource}:${document.id}] updating static field '${field}' is forbiden`,
         );
       }
     });

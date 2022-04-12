@@ -74,10 +74,10 @@ export interface ContentColorValidator {
 export interface ResourceFieldValidator<TType = any>
   extends FieldValidator<TType> {
   /**
-   * Whether the field is protected. Protected fields
+   * Whether the field is static. Static fields
    * cannot be updated. Defaults to `false`.
    */
-  protected?: boolean;
+  static?: boolean;
 }
 
 export type ResourceStringFieldValidator = StringValidator &

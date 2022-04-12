@@ -25,7 +25,7 @@ interface Data {
 const dataSchema: ResourceDataSchema<Data> = {
   foo: { type: 'string' },
   bar: { type: 'string' },
-  baz: { type: 'string', protected: true },
+  baz: { type: 'string', static: true },
 };
 
 // Test resource config
@@ -106,7 +106,7 @@ describe('updateResourceDocument', () => {
   });
 
   it('validates the updated document', () => {
-    // Attempt to update a protected field on a document.
+    // Attempt to update a static field on a document.
     // Should throw a `ResourceValidationError`.
     expect(() =>
       updateResourceDocument(core, store, config, document.id, {

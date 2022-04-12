@@ -47,7 +47,7 @@ export function generateResourceDocumentSchema<TData>(
     id: {
       type: 'string',
       required: true,
-      protected: true,
+      static: true,
     },
     // Validate the `revision` property
     revision: {
@@ -58,7 +58,7 @@ export function generateResourceDocumentSchema<TData>(
     createdAt: {
       type: 'date',
       required: true,
-      protected: true,
+      static: true,
     },
     // Validate the `id` property
     updatedAt: {

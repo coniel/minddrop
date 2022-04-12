@@ -113,7 +113,7 @@ export function updateResourceDocument<
   }
 
   // Validate the updated document, providing the original
-  // document to validate protected fields.
+  // document to validate static fields.
   validateResourceDocument(
     config.resource,
     config.dataSchema,
