@@ -1,8 +1,8 @@
 import { ValidationError } from '@minddrop/utils';
-import { ResourceApisStore } from '../ResourceApisStore';
-import { setup, cleanup, core } from '../test-utils';
-import { ResourceConfig, ResourceIdsValidator } from '../types';
-import { createResource } from '../createResource';
+import { ResourceApisStore } from '../../ResourceApisStore';
+import { setup, cleanup, core } from '../../test-utils';
+import { ResourceConfig, ResourceIdsValidator } from '../../types';
+import { createResource } from '../../createResource';
 import { validateResourceIds } from './validateResourceIds';
 
 const validator: ResourceIdsValidator = {

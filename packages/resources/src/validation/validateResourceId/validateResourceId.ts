@@ -1,6 +1,6 @@
 import { validateString, ValidationError } from '@minddrop/utils';
-import { ResourceApisStore } from '../ResourceApisStore';
-import { ResourceIdValidator } from '../types';
+import { ResourceApisStore } from '../../ResourceApisStore';
+import { ResourceIdValidator } from '../../types';
 
 /**
  * Validates a resource ID.

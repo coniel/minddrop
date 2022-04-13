@@ -1,5 +1,5 @@
 import { validateArray } from '@minddrop/utils';
-import { ResourceIdsValidator } from '../types';
+import { ResourceIdsValidator } from '../../types';
 import { validateResourceId } from '../validateResourceId/validateResourceId';
 
 /**
