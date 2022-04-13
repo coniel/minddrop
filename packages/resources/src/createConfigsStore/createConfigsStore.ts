@@ -19,7 +19,7 @@ interface Store<TConfig> {
    *
    * @param id The ID of the config to remove.
    */
-  removeConfig(id: string): void;
+  removeConfig(config: TConfig): void;
 
   /**
    * Clears all configs from the store.
@@ -44,11 +44,9 @@ export function createConfigsStore<TConfig>({
         configs: [...state.configs, config],
       })),
 
-    removeConfig: (id) =>
+    removeConfig: (config) =>
       set((state) => ({
-        configs: state.configs.filter(
-          (config) => (config[idField] as unknown as string) !== id,
-        ),
+        configs: state.configs.filter((c) => c[idField] !== config[idField]),
       })),
 
     clearConfigs: () =>
@@ -73,9 +71,9 @@ export function createConfigsStore<TConfig>({
     );
   }
 
-  function add(config: TConfig): void;
-  function add(configs: TConfig[]): void;
-  function add(config: TConfig | TConfig[]): void {
+  function register(config: TConfig): void;
+  function register(configs: TConfig[]): void;
+  function register(config: TConfig | TConfig[]): void {
     if (Array.isArray(config)) {
       config.forEach((c) => {
         useConfigStore.getState().addConfig(c);
@@ -85,11 +83,23 @@ export function createConfigsStore<TConfig>({
     }
   }
 
+  function unregister(config: TConfig): void;
+  function unregister(configs: TConfig[]): void;
+  function unregister(config: TConfig | TConfig[]): void {
+    if (Array.isArray(config)) {
+      config.forEach((c) => {
+        useConfigStore.getState().removeConfig(c);
+      });
+    } else {
+      useConfigStore.getState().removeConfig(config);
+    }
+  }
+
   return {
     get,
-    add,
     getAll: () => useConfigStore.getState().configs,
-    remove: (id) => useConfigStore.getState().removeConfig(id),
+    register,
+    unregister,
     clear: () => useConfigStore.getState().clearConfigs(),
     useConfig: (id) => useConfigStore(({ configs }) => configs[id] || null),
     useConfigs: (ids) =>

@@ -1,6 +1,7 @@
 export interface ConfigStore<TConfig> {
   /**
-   * Retrieves a config by ID.
+   * Retrieves a config by ID. The config 'ID' field is determined
+   * by the `idField` option provided when the store was created.
    *
    * @param id The ID of the config to get.
    */
@@ -8,7 +9,9 @@ export interface ConfigStore<TConfig> {
 
   /**
    * Returns an array of configs sorted according to their
-   * order of addition (most recently added last).
+   * order of addition (most recently added last). The config 'ID'
+   * field is determined by the `idField` option provided when the
+   * store was created.
    *
    * @param ids The IDs of the configs to get.
    */
@@ -22,25 +25,18 @@ export interface ConfigStore<TConfig> {
   getAll(): TConfig[];
 
   /**
-   * Sets the provided config to the store.
+   * Adds the provided config(s) to the store.
    *
-   * @param config The config to set.
+   * @param config The config to register.
    */
-  add(config: TConfig): void;
+  register(config: TConfig | TConfig[]): void;
 
   /**
-   * Adds the provided configs to the store.
+   * Removes the provided config(s) from the store.
    *
-   * @param configs The configs to add.
+   * @param config The config(s) to unregister.
    */
-  add(configs: TConfig[]): void;
-
-  /**
-   * Removes a config from the store.
-   *
-   * @param id The ID of the config to remove.
-   */
-  remove(id: string): void;
+  unregister(config: TConfig | TConfig[]): void;
 
   /**
    * Clears all configs from the store.
@@ -49,7 +45,9 @@ export interface ConfigStore<TConfig> {
 
   /**
    * A hook which returns a config by ID or `null`
-   * if the config is not registered.
+   * if the config is not registered. The config 'ID'
+   * field is determined by the `idField` option
+   * provided when the store was created.
    *
    * @param id The ID of the config to retrieve.
    */
@@ -58,7 +56,9 @@ export interface ConfigStore<TConfig> {
   /**
    * A hook that returns an array of configs sorted
    * according to their order of addition (most
-   * recently registered last).
+   * recently registered last). The config 'ID' field
+   * is determined by the `idField` option provided
+   * when the store was created.
    *
    * @param ids The IDs of the configs to retrieve.
    */
