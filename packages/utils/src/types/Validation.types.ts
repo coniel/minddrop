@@ -208,5 +208,7 @@ export type SchemaFieldValidator =
   | ArrayFieldValidator
   | ObjectFieldValidator;
 
-export type Schema<TCustomValidator extends FieldValidator = FieldValidator> =
-  Record<string, SchemaFieldValidator | TCustomValidator>;
+export type Schema<TCustomValidator extends Validator = Validator> = Record<
+  string,
+  SchemaFieldValidator | (TCustomValidator & FieldValidator)
+>;
