@@ -1,46 +1,44 @@
-import { ResourceValidationError } from '../../errors';
-import { ResourceReference } from '../../types';
+import { Schema, validateObject } from '@minddrop/utils';
+import {
+  ResourceIdValidator,
+  ResourceReference,
+  ResourceReferenceValidator,
+} from '../../types';
+import { validateResourceId } from '../validateResourceId';
 
 /**
- * Validates a resource reference, checking that it has valid
- * `resource` and `id` properties, and no other properties.
+ * Validates a resource reference. Throws a `ValidationError` if:
+ * - The `resource` or `id` properties are missing or not strings.
+ * - The reference contains properties other than `resource` and `id`.
+ * - The resource is not registered.
+ * - The resource document does not exist.
  *
- * @param resourceReference The resource reference to validate.
+ * @param validator A resource-reference validator.
+ * @param value The value to validate.
  */
 export function validateResourceReference(
-  resourceReference: ResourceReference,
+  validator: ResourceReferenceValidator,
+  value: unknown,
 ): void {
-  // Verify that the reference has a `resource`
-  if (!resourceReference.resource) {
-    throw new ResourceValidationError('property `resource` is required');
-  }
+  // Get the value as an object in order to ensure that
+  // the function doesn't fail when creating the schema.
+  const resourceReference =
+    typeof value === 'object' && value !== null
+      ? (value as ResourceReference)
+      : { resource: '' };
 
-  // Verify that `resource` is a string
-  if (typeof resourceReference.resource !== 'string') {
-    throw new ResourceValidationError('property `resource` must be a string');
-  }
+  // Create a schema to validate the resource reference object with
+  const schema: Schema<ResourceIdValidator> = {
+    resource: { type: 'string', required: true, allowEmpty: false },
+    id: {
+      type: 'resource-id',
+      required: true,
+      resource: resourceReference.resource,
+    },
+  };
 
-  // Verify that the reference has an `id`
-  if (!resourceReference.id) {
-    throw new ResourceValidationError('property `id` is required');
-  }
-
-  // Verify that `id` is a string
-  if (typeof resourceReference.id !== 'string') {
-    throw new ResourceValidationError('property `id` must be a string');
-  }
-
-  // Verify that the reference does not have any additional fields
-  if (Object.keys(resourceReference).length > 2) {
-    // Get the extra key names
-    const extraKeys = Object.keys(resourceReference).filter(
-      (key) => !['resource', 'id'].includes(key),
-    );
-
-    throw new ResourceValidationError(
-      `only \`resource\` and \`id\` properties are allowed, found additional properties: \`${extraKeys.join(
-        '`, `',
-      )}\``,
-    );
-  }
+  // Validate the value using the schema
+  validateObject({ type: 'object', schema }, resourceReference, {
+    'resource-id': validateResourceId,
+  });
 }
