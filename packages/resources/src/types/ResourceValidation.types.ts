@@ -44,18 +44,18 @@ export interface ResourceIdsValidator {
   resource: string;
 }
 
-export interface ParentReferenceValidator {
+export interface ResourceReferenceValidator {
   /**
    * The field value type.
    */
-  type: 'parent-reference';
+  type: 'resource-reference';
 }
 
-export interface ParentReferencesValidator {
+export interface ResourceReferencesValidator {
   /**
    * The field value type.
    */
-  type: 'parent-references';
+  type: 'resource-references';
 }
 
 export interface ContentColorValidator {
@@ -100,10 +100,10 @@ export type ResourceResourceIdFieldValidator = ResourceIdValidator &
   ResourceFieldValidator<string>;
 export type ResourceResourceIdsFieldValidator = ResourceIdsValidator &
   ResourceFieldValidator<string[]>;
-export type ResourceParentReferenceFieldValidator = ParentReferenceValidator &
-  ResourceFieldValidator<ResourceReference>;
-export type ResourceParentReferencesFieldValidator = ParentReferencesValidator &
-  ResourceFieldValidator<ResourceReference[]>;
+export type ResourceResourceReferenceFieldValidator =
+  ResourceReferenceValidator & ResourceFieldValidator<ResourceReference>;
+export type ResourceResourceReferencesFieldValidator =
+  ResourceReferencesValidator & ResourceFieldValidator<ResourceReference[]>;
 export type ResourceContentColorFieldValidator = ContentColorValidator &
   ResourceFieldValidator<ContentColor>;
 
@@ -118,8 +118,8 @@ export type ResourceSchemaFieldValidator =
   | ResourceObjectFieldValidator
   | ResourceResourceIdFieldValidator
   | ResourceResourceIdsFieldValidator
-  | ResourceParentReferenceFieldValidator
-  | ResourceParentReferencesFieldValidator
+  | ResourceResourceReferenceFieldValidator
+  | ResourceResourceReferencesFieldValidator
   | ResourceContentColorFieldValidator;
 
 export type ResourceDocumentSchema<TData extends ResourceDocumentCustomData> =

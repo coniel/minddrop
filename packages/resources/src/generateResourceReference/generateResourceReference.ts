@@ -6,7 +6,7 @@ import { ResourceReference } from '../types';
  *
  * @param resource The resource type.
  * @param id The document ID.
- * @returns A parent reference.
+ * @returns A resource reference.
  */
 export function generateResourceReference(
   resource: string,

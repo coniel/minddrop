@@ -2,38 +2,38 @@ import { ResourceValidationError } from '../../errors';
 import { ResourceReference } from '../../types';
 
 /**
- * Validates a parent reference, checking that it has valid
+ * Validates a resource reference, checking that it has valid
  * `resource` and `id` properties, and no other properties.
  *
- * @param parentReference The parent reference to validate.
+ * @param resourceReference The resource reference to validate.
  */
 export function validateResourceReference(
-  parentReference: ResourceReference,
+  resourceReference: ResourceReference,
 ): void {
   // Verify that the reference has a `resource`
-  if (!parentReference.resource) {
+  if (!resourceReference.resource) {
     throw new ResourceValidationError('property `resource` is required');
   }
 
   // Verify that `resource` is a string
-  if (typeof parentReference.resource !== 'string') {
+  if (typeof resourceReference.resource !== 'string') {
     throw new ResourceValidationError('property `resource` must be a string');
   }
 
   // Verify that the reference has an `id`
-  if (!parentReference.id) {
+  if (!resourceReference.id) {
     throw new ResourceValidationError('property `id` is required');
   }
 
   // Verify that `id` is a string
-  if (typeof parentReference.id !== 'string') {
+  if (typeof resourceReference.id !== 'string') {
     throw new ResourceValidationError('property `id` must be a string');
   }
 
   // Verify that the reference does not have any additional fields
-  if (Object.keys(parentReference).length > 2) {
+  if (Object.keys(resourceReference).length > 2) {
     // Get the extra key names
-    const extraKeys = Object.keys(parentReference).filter(
+    const extraKeys = Object.keys(resourceReference).filter(
       (key) => !['resource', 'id'].includes(key),
     );
 
