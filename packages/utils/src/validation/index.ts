@@ -6,4 +6,5 @@ export * from './validateNumber';
 export * from './validateObject';
 export * from './validateSet';
 export * from './validateString';
+export * from './validateValidator';
 export * from './validateValue';
