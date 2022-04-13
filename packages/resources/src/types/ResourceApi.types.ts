@@ -17,6 +17,11 @@ export interface ResourceApi<
   TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
 > {
   /**
+   * The resource identifier.
+   */
+  resource: string;
+
+  /**
    * Creates a new resource document and dispatches a `[resource]:create`
    * event. The document is validated before creation. Returns the new
    * document.

@@ -47,6 +47,7 @@ export function createResource<
 
   // Return the resource API
   return {
+    resource: config.resource,
     get,
     getAll: () => getAllResourceDocuments(store, config),
     create: (core, data) => createResourceDocument(core, store, config, data),
