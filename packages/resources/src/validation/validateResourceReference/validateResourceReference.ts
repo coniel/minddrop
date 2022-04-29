@@ -1,4 +1,4 @@
-import { Schema, validateObject } from '@minddrop/utils';
+import { Schema, StringValidator, validateValue } from '@minddrop/utils';
 import {
   ResourceIdValidator,
   ResourceReference,
@@ -20,25 +20,36 @@ export function validateResourceReference(
   validator: ResourceReferenceValidator,
   value: unknown,
 ): void {
-  // Get the value as an object in order to ensure that
-  // the function doesn't fail when creating the schema.
-  const resourceReference =
-    typeof value === 'object' && value !== null
-      ? (value as ResourceReference)
-      : { resource: '' };
+  const reference = value as ResourceReference;
+
+  // Ensure that the validator is valid
+  validateValue(
+    { type: 'validator', allowedTypes: ['resource-reference'] },
+    validator,
+  );
 
   // Create a schema to validate the resource reference object with
-  const schema: Schema<ResourceIdValidator> = {
-    resource: { type: 'string', required: true, allowEmpty: false },
-    id: {
-      type: 'resource-id',
+  const schema: Schema<ResourceIdValidator | StringValidator> = {
+    resource: {
+      type: 'string',
       required: true,
-      resource: resourceReference.resource,
+      allowEmpty: false,
+    },
+    id: {
+      type: 'string',
+      required: true,
+      allowEmpty: false,
     },
   };
 
-  // Validate the value using the schema
-  validateObject({ type: 'object', schema }, resourceReference, {
+  // Ensure that the value conforms to the resource reference schema
+  validateValue({ type: 'object', schema }, value, {
     'resource-id': validateResourceId,
   });
+
+  // Ensure that the value references a valid resource
+  validateResourceId(
+    { type: 'resource-id', resource: reference.resource },
+    reference.id,
+  );
 }

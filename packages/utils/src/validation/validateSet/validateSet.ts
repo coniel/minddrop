@@ -1,26 +1,47 @@
-import { InvalidValidatorError, ValidationError } from '../../errors';
-import { SetValue, SetValidator } from '../../types';
+import { ValidationError } from '../../errors';
+import { SetValue, SetValidator, ValidatorOptionsSchema } from '../../types';
 import { validateArray } from '../validateArray';
+import { validateValidator } from '../validateValidator';
+
+export const SetValidatorOptionsSchema: ValidatorOptionsSchema<SetValidator> = {
+  options: {
+    type: 'array',
+    required: true,
+    allowEmpty: false,
+    items: {
+      type: [
+        { type: 'string' },
+        { type: 'number' },
+        { type: 'boolean' },
+        { type: 'null' },
+      ],
+    },
+  },
+  allowEmpty: {
+    type: 'boolean',
+  },
+};
 
 /**
  * Validates a set.
  *
+ * Throws a `ValidationError` if any of the values are not
+ * listed in `options` or is empty when the `allowEmpty`
+ * option is `false`.
+ *
  * @param validator A set validator.
  * @param value The value to validate.
  */
-export function validateSet(validator: SetValidator, value: unknown[]): void {
-  // Ensure that the set `options` contains only string, number,
-  // boolean, or null values.
-  validator.options.forEach((option) => {
-    if (
-      option !== null &&
-      !['string', 'number', 'boolean'].includes(typeof option)
-    ) {
-      throw new InvalidValidatorError(
-        `sets can only contain of a string, number, boolean, or null value. Reveived '${typeof option}'`,
-      );
-    }
-  });
+export function validateSet(validator: SetValidator, value: unknown): void {
+  // Ensure that the validator is valid
+  validateValidator(
+    {
+      type: 'validator',
+      allowedTypes: ['set'],
+      optionsSchemas: { set: SetValidatorOptionsSchema },
+    },
+    validator,
+  );
 
   // Validate the set array
   validateArray(

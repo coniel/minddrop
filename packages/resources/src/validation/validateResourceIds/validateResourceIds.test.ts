@@ -1,4 +1,4 @@
-import { ValidationError } from '@minddrop/utils';
+import { InvalidValidatorError, ValidationError } from '@minddrop/utils';
 import { ResourceApisStore } from '../../ResourceApisStore';
 import { setup, cleanup, core } from '../../test-utils';
 import { ResourceConfig, ResourceIdsValidator } from '../../types';
@@ -10,9 +10,14 @@ const validator: ResourceIdsValidator = {
   resource: 'tests:test',
 };
 
-const config: ResourceConfig<{}> = {
+const config: ResourceConfig<{ foo: string }> = {
   resource: 'tests:test',
-  dataSchema: {},
+  dataSchema: {
+    foo: {
+      type: 'string',
+      required: false,
+    },
+  },
 };
 
 const ResourceApi = createResource(config);
@@ -72,6 +77,48 @@ describe('validateResourceId', () => {
       expect(() =>
         validateResourceIds(validator, [document1.id, document2.id]),
       ).not.toThrow();
+    });
+  });
+
+  describe('invalid validator', () => {
+    it('throws if the validator is not a `resource-ids` validator', () => {
+      // Call with a non `resource-ids` validator.
+      // Should throw a `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateResourceIds({ type: 'string' }, ['test']),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if the validator does not contain `resource`', () => {
+      // Call with a validator missing the `resource` property.
+      // Should throw an `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateResourceIds({ type: 'resource-ids' }, ['document-id']),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if `resource` is not a string', () => {
+      // Call with a validator with an invalid `resource` property.
+      // Should throw an `InvalidValidatorError`.
+      expect(() =>
+        validateResourceIds(
+          // @ts-ignore
+          { type: 'resource-ids', resource: 1234 },
+          ['document-id'],
+        ),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if `resource` is an empty string', () => {
+      // Call with a validator with an empty `resource` property.
+      // Should throw an `InvalidValidatorError`.
+      expect(() =>
+        validateResourceIds({ type: 'resource-ids', resource: '' }, [
+          'document-id',
+        ]),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

@@ -18,6 +18,24 @@ describe('validateResource', () => {
     jest.clearAllMocks();
   });
 
+  describe('invalid value', () => {
+    it('throws if the value is not an object', () => {
+      // Validate a value that is not an object. Should throw a
+      // `ValidationError`.
+      expect(() =>
+        validateObject({ type: 'object', schema: {} }, 1234),
+      ).toThrowError(ValidationError);
+    });
+
+    it('throws if the value is null', () => {
+      // Validate a value that is null. Should throw a
+      // `ValidationError`.
+      expect(() =>
+        validateObject({ type: 'object', schema: {} }, null),
+      ).toThrowError(ValidationError);
+    });
+  });
+
   describe('all fields', () => {
     it('throws if a object field does not appear in the schema', () => {
       // Validate a object containing a field which does not appear
@@ -327,7 +345,7 @@ describe('validateResource', () => {
       );
     });
 
-    it("validates using the validator's `validationFn", () => {
+    it("validates using the validator's `validationFn`", () => {
       // The validatorFn
       const validatorFn = jest.fn();
 
@@ -340,7 +358,9 @@ describe('validateResource', () => {
       // Should call the `validatorFn`.
       expect(validatorFn).toHaveBeenCalled();
     });
+  });
 
+  describe('error handling', () => {
     it('rethrows item `ValidationError`s, adding additional context', () => {
       jest.spyOn(ValidateValue, 'validateValue').mockImplementation(() => {
         throw new ValidationError('error message');
@@ -397,6 +417,17 @@ describe('validateResource', () => {
         // Error message should not be modified
         expect(error.message).toBe('error message');
       }
+    });
+  });
+
+  describe('validator validation', () => {
+    it('throws if the validator is not an object validator', () => {
+      // Call with a non-object validator. Should throw a
+      // `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateObject({ type: 'number', schema: {} }, {}),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

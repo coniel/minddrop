@@ -1,4 +1,4 @@
-import { ResourceValidationError } from '../errors';
+import { ValidationError } from '@minddrop/utils';
 import { ResourceReferences } from './ResourceReferences';
 
 describe('ResourceReferences', () => {
@@ -60,7 +60,7 @@ describe('ResourceReferences', () => {
           // @ts-ignore
           { resource: 'topic' },
         ]),
-      ).toThrowError(ResourceValidationError);
+      ).toThrowError(ValidationError);
     });
   });
 });

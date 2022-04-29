@@ -1,6 +1,20 @@
-import { validateArray } from '@minddrop/utils';
+import {
+  validateValue,
+  ValidatorOptionsSchema,
+  ValidatorValidator,
+  ArrayValidator,
+} from '@minddrop/utils';
 import { ResourceIdsValidator } from '../../types';
 import { validateResourceId } from '../validateResourceId/validateResourceId';
+
+export const ResourceIdsValidatorOptionsSchema: ValidatorOptionsSchema<ResourceIdsValidator> =
+  {
+    resource: {
+      type: 'string',
+      required: true,
+      allowEmpty: false,
+    },
+  };
 
 /**
  * Validates an array of resource IDs.
@@ -16,8 +30,18 @@ export function validateResourceIds(
   validator: ResourceIdsValidator,
   value: unknown,
 ): void {
-  // Ensure that the value is an array
-  validateArray(
+  // Ensure that the validator is valid
+  validateValue<ValidatorValidator>(
+    {
+      type: 'validator',
+      allowedTypes: ['resource-ids'],
+      optionsSchemas: { 'resource-ids': ResourceIdsValidatorOptionsSchema },
+    },
+    validator,
+  );
+
+  // Ensure that the value is an array of resource IDs
+  validateValue<ArrayValidator>(
     {
       type: 'array',
       itemValidatorFn: (item) =>

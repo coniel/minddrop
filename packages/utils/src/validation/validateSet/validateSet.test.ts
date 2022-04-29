@@ -61,9 +61,35 @@ describe('validateSet', () => {
         validateSet({ type: 'set', options: ['red', 'blue'] }, []),
       ).not.toThrow();
     });
+
+    it('supports `null` as an option', () => {
+      // Validate a set for which the validator's options contains
+      // `null`. Should not throw a `InvalidValidatorError` error.
+      expect(() =>
+        // @ts-ignore
+        validateSet({ type: 'set', options: ['red', null] }, [null]),
+      ).not.toThrowError(InvalidValidatorError);
+    });
   });
 
-  describe('validator options', () => {
+  describe('validator validation', () => {
+    it('throws if the validator is not a set validator', () => {
+      // Call with a non-set validator. Should throw a
+      // `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateSet({ type: 'string', options: ['red'] }, ['red']),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if options is empty', () => {
+      // Validate a set for which the validator's `options`
+      // parameter is empty. Should throw a `InvalidValidatorError`.
+      expect(() =>
+        validateSet({ type: 'set', options: [] }, 'red'),
+      ).toThrowError(InvalidValidatorError);
+    });
+
     it('throws if options contains an invalid type', () => {
       // Validate a set for which the validator's options contains
       // an object. Should throw a `InvalidValidatorError`.
@@ -73,13 +99,20 @@ describe('validateSet', () => {
       ).toThrowError(InvalidValidatorError);
     });
 
-    it('supports `null` as an option', () => {
-      // Validate a set for which the validator's options contains
-      // `null`. Should not throw a `InvalidValidatorError` error.
+    it('throws if `allowEmpty` is not a boolean', () => {
+      // Validate a set using a validator with an invalid `allowEmpty`
+      // option. Should throw a `InvalidValidatorError`.
       expect(() =>
-        // @ts-ignore
-        validateSet({ type: 'set', options: ['red', null] }, [null]),
-      ).not.toThrowError(InvalidValidatorError);
+        validateSet(
+          {
+            type: 'set',
+            options: ['red'],
+            // @ts-ignore
+            allowEmpty: 'sure',
+          },
+          [],
+        ),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

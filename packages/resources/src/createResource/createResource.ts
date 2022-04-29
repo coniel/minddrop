@@ -18,6 +18,7 @@ import { updateResourceDocument } from '../updateResourceDocument';
 import { addResourceDocument } from '../addResourceDocument';
 import { setResourceDocument } from '../setResourceDocument';
 import { removeResourceDocument } from '../removeResourceDocument';
+import { validateResourceDataSchema } from '../validation/validateResourceDataSchema';
 
 /**
  * Creates a new resource type, returning its API.
@@ -30,6 +31,9 @@ export function createResource<
   TCreateData extends Partial<TData> & ResourceDocumentCustomData,
   TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
 >(config: ResourceConfig<TData>): ResourceApi<TData, TCreateData, TUpdateData> {
+  // Validate the data schema
+  validateResourceDataSchema(config.resource, config.dataSchema);
+
   // Create the resource document store
   const store = createResourceStore<TData>();
 

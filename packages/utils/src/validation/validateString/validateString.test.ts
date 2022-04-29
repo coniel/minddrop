@@ -1,8 +1,8 @@
-import { ValidationError } from '../../errors';
-import { StringFieldValidator } from '../../types';
+import { InvalidValidatorError, ValidationError } from '../../errors';
+import { StringValidator } from '../../types';
 import { validateString } from './validateString';
 
-const validator: StringFieldValidator = {
+const validator: StringValidator = {
   type: 'string',
 };
 
@@ -32,6 +32,32 @@ describe('validateString', () => {
       expect(() =>
         validateString({ ...validator, allowEmpty: true }, ''),
       ).not.toThrow();
+    });
+  });
+
+  describe('validator validation', () => {
+    it('throws if the validator is not a string validator', () => {
+      // Call with a non-string validator. Should throw a
+      // `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateString({ type: 'number' }, ['red']),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if `allowEmpty` is not a boolean', () => {
+      // Validate a string using a validator with an invalid `allowEmpty`
+      // option. Should throw a `InvalidValidatorError`.
+      expect(() =>
+        validateString(
+          {
+            type: 'string',
+            // @ts-ignore
+            allowEmpty: 'sure',
+          },
+          'hello',
+        ),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

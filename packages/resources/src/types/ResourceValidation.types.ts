@@ -1,18 +1,18 @@
 import { ContentColor } from '@minddrop/core';
 import {
-  ArrayValidator,
+  BaseFieldValidator,
+  StringValidator,
+  NumberValidator,
   BooleanValidator,
   DateValidator,
+  NullValidator,
   EnumValidator,
-  EnumValue,
-  FieldValidator,
-  NumberValidator,
-  ObjectValidator,
   SetValidator,
-  SetValue,
-  StringValidator,
+  RecordValidator,
+  ArrayValidator,
+  ObjectValidator,
+  MultiTypeValidator,
 } from '@minddrop/utils';
-import { ResourceReference } from '../types';
 import {
   ResourceDocument,
   ResourceDocumentCustomData,
@@ -56,6 +56,12 @@ export interface ResourceReferencesValidator {
    * The field value type.
    */
   type: 'resource-references';
+
+  /**
+   * When `true`, the array can be empty.
+   * `true` by default.
+   */
+  allowEmpty?: boolean;
 }
 
 export interface ContentColorValidator {
@@ -71,8 +77,7 @@ export interface ContentColorValidator {
   allowedColors?: ContentColor[];
 }
 
-export interface ResourceFieldValidator<TType = any>
-  extends FieldValidator<TType> {
+export interface BaseResourceFieldValidator extends BaseFieldValidator {
   /**
    * Whether the field is static. Static fields
    * cannot be updated. Defaults to `false`.
@@ -80,50 +85,30 @@ export interface ResourceFieldValidator<TType = any>
   static?: boolean;
 }
 
-export type ResourceStringFieldValidator = StringValidator &
-  ResourceFieldValidator<string>;
-export type ResourceNumberFieldValidator = NumberValidator &
-  ResourceFieldValidator<number>;
-export type ResourceBooleanFieldValidator = BooleanValidator &
-  ResourceFieldValidator<boolean>;
-export type ResourceDateFieldValidator = DateValidator &
-  ResourceFieldValidator<Date>;
-export type ResourceEnumFieldValidator = EnumValidator &
-  ResourceFieldValidator<EnumValue>;
-export type ResourceSetFieldValidator = SetValidator &
-  ResourceFieldValidator<SetValue>;
-export type ResourceArrayFieldValidator = ArrayValidator &
-  ResourceFieldValidator<unknown[]>;
-export type ResourceObjectFieldValidator = ObjectValidator &
-  ResourceFieldValidator<Object>;
-export type ResourceResourceIdFieldValidator = ResourceIdValidator &
-  ResourceFieldValidator<string>;
-export type ResourceResourceIdsFieldValidator = ResourceIdsValidator &
-  ResourceFieldValidator<string[]>;
-export type ResourceResourceReferenceFieldValidator =
-  ResourceReferenceValidator & ResourceFieldValidator<ResourceReference>;
-export type ResourceResourceReferencesFieldValidator =
-  ResourceReferencesValidator & ResourceFieldValidator<ResourceReference[]>;
-export type ResourceContentColorFieldValidator = ContentColorValidator &
-  ResourceFieldValidator<ContentColor>;
-
-export type ResourceSchemaFieldValidator =
-  | ResourceStringFieldValidator
-  | ResourceNumberFieldValidator
-  | ResourceBooleanFieldValidator
-  | ResourceDateFieldValidator
-  | ResourceEnumFieldValidator
-  | ResourceSetFieldValidator
-  | ResourceArrayFieldValidator
-  | ResourceObjectFieldValidator
-  | ResourceResourceIdFieldValidator
-  | ResourceResourceIdsFieldValidator
-  | ResourceResourceReferenceFieldValidator
-  | ResourceResourceReferencesFieldValidator
-  | ResourceContentColorFieldValidator;
+export type ResourceFieldValidator = (
+  | StringValidator
+  | NumberValidator
+  | BooleanValidator
+  | DateValidator
+  | NullValidator
+  | EnumValidator
+  | SetValidator
+  | RecordValidator
+  | ArrayValidator
+  | ObjectValidator
+  | MultiTypeValidator<ResourceFieldValidator>
+  // Resource validator types
+  | ResourceIdValidator
+  | ResourceIdsValidator
+  | ResourceReferenceValidator
+  | ResourceReferencesValidator
+  | ContentColorValidator
+) &
+  BaseResourceFieldValidator;
 
 export type ResourceDocumentSchema<TData extends ResourceDocumentCustomData> =
-  Record<keyof ResourceDocument<TData>, ResourceSchemaFieldValidator>;
+  Record<keyof ResourceDocument<TData>, ResourceFieldValidator>;
 
-export type ResourceDataSchema<TData extends ResourceDocumentCustomData> =
-  Record<keyof TData, ResourceSchemaFieldValidator>;
+export type ResourceDocumentDataSchema<
+  TData extends ResourceDocumentCustomData,
+> = Record<keyof TData, ResourceFieldValidator>;

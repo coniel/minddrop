@@ -1,8 +1,8 @@
 import { InvalidValidatorError, ValidationError } from '../../errors';
-import { NumberFieldValidator } from '../../types';
+import { NumberValidator } from '../../types';
 import { validateNumber } from './validateNumber';
 
-const validator: NumberFieldValidator = {
+const validator: NumberValidator = {
   type: 'number',
 };
 
@@ -57,8 +57,17 @@ describe('validateNumber', () => {
     });
   });
 
-  describe('invalid validator', () => {
-    it('throws if `min` is set to anything but a number', () => {
+  describe('validator validation', () => {
+    it('throws if validator is not a number validator', () => {
+      // Call with a non-number validator. Should throw a
+      // `InvalidValidatorError`.
+      // @ts-ignore
+      expect(() => validateNumber({ type: 'string' }, 123)).toThrowError(
+        InvalidValidatorError,
+      );
+    });
+
+    it('throws if `min` is not a number', () => {
       // Validate a number using a validator in which `min` is set to
       // a string. Should throw a `InvalidValidationError`.
       expect(() =>
@@ -67,7 +76,7 @@ describe('validateNumber', () => {
       ).toThrowError(InvalidValidatorError);
     });
 
-    it('throws if `max` is set to anything but a number', () => {
+    it('throws if `max` is not a number', () => {
       // Validate a number using a validator in which `max` is set to
       // a string. Should throw a `InvalidValidationError`.
       expect(() =>

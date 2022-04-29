@@ -2,12 +2,12 @@ import {
   InvalidResourceSchemaError,
   ResourceValidationError,
 } from '../../errors';
-import { ResourceDataSchema, ResourceDocument } from '../../types';
+import { ResourceDocumentDataSchema, ResourceDocument } from '../../types';
 import {
   InvalidSchemaError,
-  validateObject,
   ValidationError,
   ValidatorFunction,
+  validateValue,
 } from '@minddrop/utils';
 import { generateResourceDocumentSchema } from '../generateResourceDocumentSchema';
 import { validateContentColor } from '../validateContentColor';
@@ -21,26 +21,31 @@ const resourceFieldValidators: Record<string, ValidatorFunction> = {
  * Validates a resource document against its data schema
  * as well as default resource document properties.
  *
- * - Throws a `ResourceValidationError` if the resource document is invalid.
- * - Throws a `InvalidResourceSchemaError` if the schema is invalid.
- *
  * @param resource The resource identifier.
  * @param dataSchema The resource data schema.
  * @param document The document to validate.
  * @param originalDocument The original document against which to validate (when validating an update).
+ *
+ * @throws ResourceValidationError
+ * Thrown if the resource document is invalid.
+ *
+ * @throws InvalidSchemaError
+ * Thrown if the resource data schema is invalid.
  */
 export function validateResourceDocument<TData>(
   resource: string,
-  dataSchema: ResourceDataSchema<TData>,
+  dataSchema: ResourceDocumentDataSchema<TData>,
   document: ResourceDocument<TData>,
   originalDocument?: object,
 ): void {
   // Create a resource document schema from the resource data schema
-  const schema = generateResourceDocumentSchema(resource, dataSchema);
+  const schema = generateResourceDocumentSchema(dataSchema);
+
+  // Validate the schema
 
   try {
     // Validate the resource object against the document schema
-    validateObject(
+    validateValue(
       { type: 'object', schema },
       document,
       resourceFieldValidators,

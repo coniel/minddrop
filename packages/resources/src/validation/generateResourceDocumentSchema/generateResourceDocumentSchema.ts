@@ -1,15 +1,7 @@
-import { InvalidResourceSchemaError } from '../../errors';
-import { ResourceDataSchema, ResourceDocumentSchema } from '../../types';
-
-// The default resource document fields
-const defaultFields = [
-  'id',
-  'revision',
-  'createdAt',
-  'updatedAt',
-  'deleted',
-  'deletedAt',
-];
+import {
+  ResourceDocumentDataSchema,
+  ResourceDocumentSchema,
+} from '../../types';
 
 /**
  * Generate a resource document schema given the
@@ -19,27 +11,8 @@ const defaultFields = [
  * @returns A resource document schema.
  */
 export function generateResourceDocumentSchema<TData>(
-  resource: string,
-  dataSchema: ResourceDataSchema<TData>,
+  dataSchema: ResourceDocumentDataSchema<TData>,
 ): ResourceDocumentSchema<TData> {
-  // Ensure that the provided schema does not contain any
-  // default resource document field validators.
-  const schemaDefaultKeys = Object.keys(dataSchema).filter((key) =>
-    defaultFields.includes(key),
-  );
-
-  if (schemaDefaultKeys.length) {
-    // Throw an `InvalidSchemaError` if the data schema contains
-    // any default resource field validators.
-    throw new InvalidResourceSchemaError(
-      `[${resource}] ${
-        schemaDefaultKeys.length > 1 ? 'properties' : 'property'
-      } '${schemaDefaultKeys.join("', '")}' ${
-        schemaDefaultKeys.length > 1 ? 'are' : 'is'
-      } validated automatically and should not be inlcuded in the resource's data schema`,
-    );
-  }
-
   // Merge the data schema with default field validators
   // to create the document schema.
   return {

@@ -4,25 +4,46 @@ import {
   ValidationError,
 } from '../../errors';
 import {
+  CoreFieldValidator,
   FieldValidator,
   ObjectValidator,
   ValidatorFunction,
+  ValidatorOptionsSchema,
 } from '../../types';
+import { validateValidator } from '../validateValidator';
 import { validateValue } from '../validateValue';
+
+export const ObjectValidatorOptionsSchema: ValidatorOptionsSchema<ObjectValidator> =
+  {
+    schema: {
+      type: 'string',
+    },
+  };
 
 /**
  * Validates an object.
  *
  * @param validator An object validator.
- * @param value The value to validate.
- * @param customValidatorFns A { [type]: ValidatorFunction } map of custom validator types.
+ * @param object The value to validate.
+ * @param customValidatorFns A `{ [type]: ValidatorFunction }` record of custom validator types.
  */
-export function validateObject(
-  validator: ObjectValidator,
-  object: object,
+export function validateObject<
+  TValidator extends FieldValidator = CoreFieldValidator,
+>(
+  validator: ObjectValidator<TValidator>,
+  value: unknown,
   customValidatorFns?: Record<string, ValidatorFunction>,
 ): void {
+  const object = value as Object;
   const { schema } = validator;
+
+  // Ensure that the validator is valid
+  validateValidator({ type: 'validator', allowedTypes: ['object'] }, validator);
+
+  // Ensure that the value is a non-null object
+  if (typeof value !== 'object' || value === null) {
+    throw new ValidationError('must be an object');
+  }
 
   // Loop through the schema's fieldNames to validate every field
   Object.keys(schema).forEach((fieldName) => {

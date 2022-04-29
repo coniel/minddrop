@@ -1,4 +1,4 @@
-import { ValidationError } from '../../errors';
+import { InvalidValidatorError, ValidationError } from '../../errors';
 import { validateFunction } from './validateFunction';
 
 describe('validateFunction', () => {
@@ -13,12 +13,23 @@ describe('validateFunction', () => {
   });
 
   describe('valid', () => {
-    it('passes if the value is a . function', () => {
+    it('passes if the value is a function', () => {
       // Validate a value which is a function. Should not throw
       // an error.
       expect(() =>
         validateFunction({ type: 'function' }, () => null),
       ).not.toThrow();
+    });
+  });
+
+  describe('validator validation', () => {
+    it('throws if the validator is not an function validator', () => {
+      // Call with a non-function validator. Should throw a
+      // `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateFunction({ type: 'string' }, () => null),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

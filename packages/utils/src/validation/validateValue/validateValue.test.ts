@@ -45,6 +45,53 @@ describe('validateValue', () => {
     );
   });
 
+  it('validates `enum` field', () => {
+    // Validate an invalid enum value. Should throw a `ValidationError`.
+    expect(() =>
+      validateValue({ type: 'enum', options: ['red', 'blue'] }, 'purple'),
+    ).toThrowError(ValidationError);
+  });
+
+  it('validates `set` field', () => {
+    // Validate an invalid set value. Should throw a `ValidationError`.
+    expect(() =>
+      validateValue({ type: 'set', options: ['red', 'blue'] }, ['purple']),
+    ).toThrowError(ValidationError);
+  });
+
+  it('validates `function` value', () => {
+    // Validate an invalid function value. Should throw a `ValidationError`.
+    expect(() =>
+      validateValue({ type: 'function' }, 'doSomething()'),
+    ).toThrowError(ValidationError);
+  });
+
+  it('validates `record` field', () => {
+    // Validate an invalid record value. Should throw a `ValidationError`.
+    expect(() =>
+      validateValue(
+        { type: 'record', values: { type: 'string' } },
+        { foo: 123 },
+      ),
+    ).toThrowError(ValidationError);
+  });
+
+  it('validates `record` field with custom validators', () => {
+    // Validate an invalid record value with a custom validator. Should
+    // throw a `ValidationError`.
+    expect(() =>
+      validateValue(
+        { type: 'record', values: { type: 'custom' } },
+        { foo: 123 },
+        {
+          custom: () => {
+            throw new ValidationError('error');
+          },
+        },
+      ),
+    ).toThrowError(ValidationError);
+  });
+
   it('validates `array` field', () => {
     // Validate an invalid array value. Should throw a `ValidationError`.
     expect(() =>
@@ -90,18 +137,14 @@ describe('validateValue', () => {
     ).toThrowError(ValidationError);
   });
 
-  it('validates `enum` field', () => {
-    // Validate an invalid enum value. Should throw a `ValidationError`.
+  it('validates `validator` field', () => {
+    // Validate an invalid validator value. Should throw a `InvalidValidatorError`.
     expect(() =>
-      validateValue({ type: 'enum', options: ['red', 'blue'] }, 'purple'),
-    ).toThrowError(ValidationError);
-  });
-
-  it('validates `set` field', () => {
-    // Validate an invalid set value. Should throw a `ValidationError`.
-    expect(() =>
-      validateValue({ type: 'set', options: ['red', 'blue'] }, ['purple']),
-    ).toThrowError(ValidationError);
+      validateValue(
+        { type: 'validator', allowedTypes: ['string'] },
+        { type: 'number' },
+      ),
+    ).toThrowError(InvalidValidatorError);
   });
 
   it('validates custom fields with custom validator', () => {
@@ -119,5 +162,23 @@ describe('validateValue', () => {
       'foo',
       customValidatorFns,
     );
+  });
+
+  describe('multiple validators', () => {
+    it('throws if all of the validators fail', () => {
+      // Validate a valid value which can be one of two values.
+      // Should not throw an error.
+      expect(() =>
+        validateValue({ type: [{ type: 'string' }, { type: 'number' }] }, true),
+      ).toThrowError(ValidationError);
+    });
+
+    it('passes if one of the validators passes', () => {
+      // Validate a valid value which can be one of two values.
+      // Should not throw an error.
+      expect(() =>
+        validateValue({ type: [{ type: 'string' }, { type: 'number' }] }, 1234),
+      ).not.toThrow();
+    });
   });
 });

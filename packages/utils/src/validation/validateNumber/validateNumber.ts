@@ -1,5 +1,16 @@
 import { InvalidValidatorError, ValidationError } from '../../errors';
-import { NumberFieldValidator } from '../../types';
+import { NumberValidator, ValidatorOptionsSchema } from '../../types';
+import { validateValidator } from '../validateValidator';
+
+export const NumberValidatorOptionsSchema: ValidatorOptionsSchema<NumberValidator> =
+  {
+    min: {
+      type: 'number',
+    },
+    max: {
+      type: 'number',
+    },
+  };
 
 /**
  * Validates a number.
@@ -8,24 +19,20 @@ import { NumberFieldValidator } from '../../types';
  * @param value The value to validate.
  */
 export function validateNumber(
-  validator: NumberFieldValidator,
+  validator: NumberValidator,
   value: unknown,
 ): void {
   const { min, max } = validator;
 
-  // Ensure that `min` is a number if set
-  if (typeof min !== 'undefined' && typeof min !== 'number') {
-    throw new InvalidValidatorError(
-      `'min' must be a number, received '${typeof min}'`,
-    );
-  }
-
-  // Ensure that `max` is a number if set
-  if (typeof max !== 'undefined' && typeof max !== 'number') {
-    throw new InvalidValidatorError(
-      `'max' must be a number, received '${typeof max}'`,
-    );
-  }
+  // Ensure that the validator is valid
+  validateValidator(
+    {
+      type: 'validator',
+      allowedTypes: ['number'],
+      optionsSchemas: { number: NumberValidatorOptionsSchema },
+    },
+    validator,
+  );
 
   // Ensure that the `min` value is less than the `max` value
   // if both are set.

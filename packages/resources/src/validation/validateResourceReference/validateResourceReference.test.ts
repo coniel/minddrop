@@ -13,9 +13,14 @@ const validator: ResourceReferenceValidator = {
   type: 'resource-reference',
 };
 
-const config: ResourceConfig<{}> = {
+const config: ResourceConfig<{ foo: string }> = {
   resource: 'tests:test',
-  dataSchema: {},
+  dataSchema: {
+    foo: {
+      type: 'string',
+      required: false,
+    },
+  },
 };
 
 const ResourceApi = createResource(config);

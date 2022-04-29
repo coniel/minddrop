@@ -4,7 +4,7 @@ import { ResourceValidationError } from '../errors';
 import { setup, cleanup, core } from '../test-utils';
 import {
   ResourceConfig,
-  ResourceDataSchema,
+  ResourceDocumentDataSchema,
   ResourceDocument,
   ResourceStore,
 } from '../types';
@@ -23,7 +23,7 @@ interface CreateData {
 
 type TestDocument = ResourceDocument<Data>;
 
-const dataSchema: ResourceDataSchema<Data> = {
+const dataSchema: ResourceDocumentDataSchema<Data> = {
   foo: { type: 'string' },
   bar: { type: 'string' },
   baz: { type: 'string' },

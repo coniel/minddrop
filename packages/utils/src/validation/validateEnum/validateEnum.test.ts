@@ -28,17 +28,6 @@ describe('validateEnum', () => {
         validateEnum({ type: 'enum', options: ['red', 'blue'] }, 'red'),
       ).not.toThrow();
     });
-  });
-
-  describe('validator options', () => {
-    it('throws if options contains an invalid type', () => {
-      // Validate an enum for which the validator's options contains
-      // an object. Should throw a `InvalidValidatorError`.
-      expect(() =>
-        // @ts-ignore
-        validateEnum({ type: 'enum', options: ['red', {}] }, 'red'),
-      ).toThrowError(InvalidValidatorError);
-    });
 
     it('supports `null` as an option', () => {
       // Validate an enum for which the validator's options contains
@@ -47,6 +36,34 @@ describe('validateEnum', () => {
         // @ts-ignore
         validateEnum({ type: 'enum', options: ['red', null] }, null),
       ).not.toThrowError(InvalidValidatorError);
+    });
+  });
+
+  describe('validator validation', () => {
+    it('throws if the validator is not an enum validator', () => {
+      // Call with a non-enum validator. Should throw a
+      // `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateEnum({ type: 'string', options: ['red'] }, 'red'),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if options is empty', () => {
+      // Validate an enum for which the validator's `options`
+      // parameter is empty. Should throw a `InvalidValidatorError`.
+      expect(() =>
+        validateEnum({ type: 'enum', options: [] }, 'red'),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if options contains an invalid type', () => {
+      // Validate an enum for which the validator's `options` parameter
+      // contains an object. Should throw a `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateEnum({ type: 'enum', options: ['red', {}] }, 'red'),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

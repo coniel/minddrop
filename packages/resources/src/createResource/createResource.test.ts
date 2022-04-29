@@ -1,11 +1,16 @@
 import { mapById } from '@minddrop/utils';
 import {
+  InvalidResourceSchemaError,
   ResourceDocumentNotFoundError,
   ResourceValidationError,
 } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { cleanup, core } from '../test-utils';
-import { ResourceApi, ResourceDataSchema, ResourceDocument } from '../types';
+import {
+  ResourceApi,
+  ResourceDocumentDataSchema,
+  ResourceDocument,
+} from '../types';
 import { createResource } from './createResource';
 
 interface Data {
@@ -25,7 +30,7 @@ interface UpdateData {
   bar?: string;
 }
 
-const dataSchema: ResourceDataSchema<Data> = {
+const dataSchema: ResourceDocumentDataSchema<Data> = {
   foo: {
     type: 'string',
     required: true,
@@ -78,6 +83,18 @@ describe('resource API', () => {
     // Create a couple of test documents
     existingDoc1 = ResourceApi.create(core, {});
     existingDoc2 = ResourceApi.create(core, {});
+  });
+
+  it('validates the data schema', () => {
+    // Create a resource using an invalid data schema.
+    // Should throw a `InvalidResourceDocumentSchema` error.
+    expect(() =>
+      createResource({
+        resource: 'test',
+        // @ts-ignore
+        dataSchema: { foo: { type: 'string', allowEmpty: 1 } },
+      }),
+    ).toThrowError(InvalidResourceSchemaError);
   });
 
   describe('create', () => {

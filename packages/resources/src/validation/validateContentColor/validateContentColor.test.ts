@@ -1,4 +1,4 @@
-import { ValidationError } from '@minddrop/utils';
+import { InvalidValidatorError, ValidationError } from '@minddrop/utils';
 import { setup, cleanup } from '../../test-utils';
 import { validateContentColor } from './validateContentColor';
 
@@ -28,6 +28,59 @@ describe('validateContentColor', () => {
           'blue',
         ),
       ).toThrowError(ValidationError);
+    });
+  });
+
+  describe('valid value', () => {
+    it('passes if the value is valid and `allowedColors` was omitted', () => {
+      // Validate a valid and content color. Should not throw.
+      expect(() =>
+        validateContentColor(
+          {
+            type: 'content-color',
+          },
+          'blue',
+        ),
+      ).not.toThrow();
+    });
+
+    it('passes if the value is a valid and allowed content color', () => {
+      // Validate a valid and allowed content color. Should not throw.
+      expect(() =>
+        validateContentColor(
+          {
+            type: 'content-color',
+            allowedColors: ['red', 'blue'],
+          },
+          'blue',
+        ),
+      ).not.toThrow();
+    });
+  });
+
+  describe('invalid validator', () => {
+    it('throws if the validator is not a `content-color` validator', () => {
+      // Validate a value using a non `content-color` validator.
+      // Should throw a `InvalidValidatorError`.
+      expect(() =>
+        // @ts-ignore
+        validateContentColor({ type: 'string' }, 'blue'),
+      ).toThrowError(InvalidValidatorError);
+    });
+
+    it('throws if the validator lists an invalid allowed color', () => {
+      // Call using a validator which contains an invalid `allowedColors` value.
+      // Should throw an `InvalidValidatorError`.
+      expect(() =>
+        validateContentColor(
+          {
+            type: 'content-color',
+            // @ts-ignore
+            allowedColors: ['invalid'],
+          },
+          'blue',
+        ),
+      ).toThrowError(InvalidValidatorError);
     });
   });
 });

@@ -58,6 +58,8 @@ export const ResourceReferences = {
    * @param resourceReference The resource reference to validate.
    */
   validate: (references: ResourceReference[]) => {
-    references.forEach((reference) => validateResourceReference(reference));
+    references.forEach((reference) =>
+      validateResourceReference({ type: 'resource-reference' }, reference),
+    );
   },
 };

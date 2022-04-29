@@ -1,4 +1,4 @@
-import { ResourceDataSchema } from './ResourceValidation.types';
+import { ResourceDocumentDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
 import {
   ResourceDocument,
@@ -18,7 +18,7 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: ResourceDataSchema<TData>;
+  dataSchema: ResourceDocumentDataSchema<TData>;
 
   /**
    * The default data used when creating a new document.

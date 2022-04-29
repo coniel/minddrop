@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.build.json",
+
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@minddrop/*": ["packages/*/src", "extensions/*/src"],
+      "*.css": ["jest/mocks/styleMock.js"]
+    },
+    "noEmit": true,
+    "types": ["jest"]
+  }
+}

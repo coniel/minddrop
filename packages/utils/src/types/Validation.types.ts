@@ -1,5 +1,32 @@
-export interface Validator {
-  type: string;
+export interface BaseValidator<
+  TType extends string = string,
+  TDataType = unknown,
+> {
+  /**
+   * The value type.
+   */
+  type: TType;
+
+  /**
+   * A custom validation function called after the
+   * regular validation is performed.
+   *
+   * Must throw a `ValidationError` if the validation
+   * fails.
+   *
+   * @param value The value of the field being validated.
+   */
+  validatorFn?(value: TDataType, object?: object): void;
+}
+
+export interface MultiTypeValidator<
+  TValidator extends Validator = Validator,
+  TDataType = unknown,
+> extends Omit<BaseValidator<string, TDataType>, 'type'> {
+  /**
+   * Validators validating the allowed types.
+   */
+  type: TValidator[];
 }
 
 export type ValidatorFunction<TType = unknown> = (
@@ -8,12 +35,11 @@ export type ValidatorFunction<TType = unknown> = (
   customValidators?: Record<string, ValidatorFunction>,
 ) => void;
 
-export interface StringValidator {
-  /**
-   * The field value type.
-   */
-  type: 'string';
+export type Validator<TType extends string = string, TDataType = unknown> =
+  | BaseValidator<TType, TDataType>
+  | MultiTypeValidator;
 
+export interface StringValidator extends BaseValidator<'string', string> {
   /**
    * Whether an empty string value is allowed.
    * Defaults to `false`.
@@ -21,12 +47,7 @@ export interface StringValidator {
   allowEmpty?: boolean;
 }
 
-export interface NumberValidator {
-  /**
-   * The field value type.
-   */
-  type: 'number';
-
+export interface NumberValidator extends BaseValidator<'number', number> {
   /**
    * The mininmum allowed value (inclusive).
    */
@@ -38,29 +59,16 @@ export interface NumberValidator {
   max?: number;
 }
 
-export interface BooleanValidator {
-  /**
-   * The field value type.
-   */
-  type: 'boolean';
-}
+export interface BooleanValidator extends BaseValidator<'boolean', boolean> {}
 
-export interface DateValidator {
-  /**
-   * The field value type.
-   */
-  type: 'date';
-}
+export interface DateValidator extends BaseValidator<'date', Date> {}
+
+export interface NullValidator extends BaseValidator<'null', null> {}
 
 // The values allowed in an enum
 export type EnumValue = string | boolean | number | null;
 
-export interface EnumValidator {
-  /**
-   * The field value type.
-   */
-  type: 'enum';
-
+export interface EnumValidator extends BaseValidator<'enum', EnumValue> {
   /**
    * The possible enum values. Validation will fail if the
    * field's value is not equal to one of these values.
@@ -71,12 +79,7 @@ export interface EnumValidator {
 // The values allowed in a set
 export type SetValue = string | boolean | number | null;
 
-export interface SetValidator {
-  /**
-   * The field value type.
-   */
-  type: 'set';
-
+export interface SetValidator extends BaseValidator<'set', SetValue> {
   /**
    * The possible set values. Validation will fail if the
    * field contains a value which is not listed here.
@@ -90,17 +93,15 @@ export interface SetValidator {
   allowEmpty?: boolean;
 }
 
-export interface ArrayValidator<TItemType = unknown> {
+export interface ArrayValidator<
+  TItemValidator extends Validator = CoreValidator,
+  TItemType = unknown,
+> extends BaseValidator<'array', TItemType[]> {
   /**
-   * The field value type.
-   */
-  type: 'array';
-
-  /**
-   * The field validator used to validate the array items.
+   * The validator used to validate the array items.
    * Can be omited if using the `itemValidatorFn` instead.
    */
-  items?: Validator;
+  items?: TItemValidator | MultiTypeValidator<TItemValidator>;
 
   /**
    * A function used to validate the items. Called on each
@@ -116,42 +117,101 @@ export interface ArrayValidator<TItemType = unknown> {
   allowEmpty?: boolean;
 }
 
-export interface ObjectValidator {
+export interface RecordValidator<
+  TValueValidator extends BaseValidator | MultiTypeValidator = CoreValidator,
+> extends BaseValidator<'record', object> {
   /**
-   * The field value type.
+   * The validator used to validate the record values.
    */
-  type: 'object';
+  values: TValueValidator;
 
+  /**
+   * Whether an empty record is allowed.
+   * Defaults to `true`.
+   */
+  allowEmpty?: boolean;
+}
+
+export interface ObjectValidator<
+  TValidator extends FieldValidator = CoreFieldValidator,
+> extends BaseValidator<'object', object> {
   /**
    * The schema used to validate the object.
    */
-  schema: Schema;
+  schema: Schema<TValidator>;
 }
 
-export interface FieldValidator<TType = unknown> extends Validator {
+export interface ValidatorValidator<TValidator extends Validator = Validator>
+  extends BaseValidator<'validator', TValidator> {
+  /**
+   * The types of validators allowed. If omitted, any
+   * type is allowed.
+   */
+  allowedTypes?: string[];
+
+  /**
+   * When `true`, the validator can be a multi-type
+   * validator.
+   *
+   * Default is `false`.
+   */
+  allowMultiType?: boolean;
+
+  /**
+   * When `true`, options not listed in the validator's
+   * options schema will not cause validation to fail.
+   *
+   * Default is `true`.
+   */
+  ignoreExtraneousOptions?: boolean;
+
+  /**
+   * A `{ [validator-type]: Schema }` record of validator
+   * options schemas for the allowed validator types.
+   *
+   * If present, the validator's options are validated
+   * against the corresponding schema.
+   */
+  optionsSchemas?: Record<string, ValidatorOptionsSchema>;
+}
+
+export interface FunctionValidator
+  extends BaseValidator<'function', Function> {}
+
+export interface SchemaValidator<
+  TValidator extends FieldValidator = CoreFieldValidator,
+> extends BaseValidator<'schema', Schema<TValidator>> {
+  /**
+   * The value type.
+   */
+  type: 'schema';
+
+  /**
+   * The validator types which are allowed to appear
+   * in the schema. Validator types are unrestricted
+   * if omited or left empty.
+   */
+  allowedTypes?: string[];
+
+  /**
+   * The schemas for the options of allowed validators.
+   */
+  validatorOptionsSchemas?: Record<string, ValidatorOptionsSchema<TValidator>>;
+
+  /**
+   * The validators for custom field options.
+   * If set, the provided options will be enabled on each
+   * of the schema's fields.
+   */
+  customFieldOptions?: Record<string, FieldValidator>;
+}
+
+export interface BaseFieldValidator {
   /**
    * Whether the field is required.
    * Defaults to `false`.
    */
   required?: boolean;
-
-  /**
-   * Whether the field value can be set to `null`.
-   * Defaults to `false`.
-   */
-  allowNull?: boolean;
-
-  /**
-   * A custom validation function called after the
-   * regular validation is performed.
-   *
-   * Must throw a `ValidationError` if the validation
-   * fails.
-   *
-   * @param value The value of the field being validated.
-   * @param previousValue The original value of the field, only present if it is being updated.
-   */
-  validatorFn?(value: TType, object: object): void;
 
   /**
    * Required only if one of more of the following
@@ -178,37 +238,34 @@ export interface FieldValidator<TType = unknown> extends Validator {
   forbidenWithout?: string[];
 }
 
-export type PrimitiveValidator =
+export type FieldValidator = Validator & BaseFieldValidator;
+
+export type CoreValidator =
   | StringValidator
   | NumberValidator
   | BooleanValidator
   | DateValidator
+  | NullValidator
   | EnumValidator
   | SetValidator
+  | RecordValidator
   | ArrayValidator
-  | ObjectValidator;
+  | ObjectValidator
+  | ValidatorValidator
+  | FunctionValidator
+  | SchemaValidator
+  | MultiTypeValidator<CoreFieldValidator>;
 
-export type StringFieldValidator = StringValidator & FieldValidator<string>;
-export type NumberFieldValidator = NumberValidator & FieldValidator<number>;
-export type BooleanFieldValidator = BooleanValidator & FieldValidator<boolean>;
-export type DateFieldValidator = DateValidator & FieldValidator<Date>;
-export type EnumFieldValidator = EnumValidator & FieldValidator<EnumValue>;
-export type SetFieldValidator = SetValidator & FieldValidator<SetValue>;
-export type ArrayFieldValidator<TItemType = unknown> =
-  ArrayValidator<TItemType> & FieldValidator<TItemType[]>;
-export type ObjectFieldValidator = ObjectValidator & FieldValidator<Object>;
+export type CoreFieldValidator = CoreValidator & BaseFieldValidator;
 
-export type SchemaFieldValidator =
-  | StringFieldValidator
-  | NumberFieldValidator
-  | BooleanFieldValidator
-  | DateFieldValidator
-  | EnumFieldValidator
-  | SetFieldValidator
-  | ArrayFieldValidator
-  | ObjectFieldValidator;
+export type ValidatorOptionsSchema<
+  TValue extends FieldValidator = CoreFieldValidator,
+  TValidator extends FieldValidator = CoreFieldValidator,
+> = Record<keyof Omit<TValue, keyof FieldValidator>, TValidator> & {
+  type?: never | string[];
+};
 
-export type Schema<TCustomValidator extends Validator = Validator> = Record<
+export type Schema<TValidator extends Validator = CoreValidator> = Record<
   string,
-  SchemaFieldValidator | (TCustomValidator & FieldValidator)
+  TValidator & FieldValidator
 >;

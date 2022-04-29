@@ -1,6 +1,18 @@
 import { ContentColor, ContentColors } from '@minddrop/core';
-import { ValidationError } from '@minddrop/utils';
+import {
+  ValidatorOptionsSchema,
+  ValidationError,
+  validateValue,
+} from '@minddrop/utils';
 import { ContentColorValidator } from '../../types';
+
+export const ContentColorValidatorOptionsSchema: ValidatorOptionsSchema<ContentColorValidator> =
+  {
+    allowedColors: {
+      type: 'set',
+      options: ContentColors,
+    },
+  };
 
 /**
  * Validates a content-color.
@@ -15,6 +27,16 @@ export function validateContentColor(
   validator: ContentColorValidator,
   value: unknown,
 ): void {
+  // Ensure that the validator is valid
+  validateValue(
+    {
+      type: 'validator',
+      allowedTypes: ['content-color'],
+      optionsSchemas: { 'content-color': ContentColorValidatorOptionsSchema },
+    },
+    validator,
+  );
+
   // The allowed content colors. Either the ones specified in
   // the validator or all content-colors.
   const allowedColors = validator.allowedColors || ContentColors;
