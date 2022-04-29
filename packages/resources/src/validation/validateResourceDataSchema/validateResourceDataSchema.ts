@@ -38,7 +38,13 @@ const allowedDataTypes = [
 ];
 
 /**
- * Does something useful.
+ * Validates a resource's data schema.
+ *
+ * @param resource - The resource name.
+ * @param schema - The resource data schema.
+ *
+ * @throws InvalidResourceSchemaError
+ * Thrown if the schema is invalid.
  */
 export function validateResourceDataSchema<
   TData extends ResourceDocumentCustomData,

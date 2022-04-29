@@ -28,7 +28,7 @@ interface Store<TConfig> {
 }
 
 /**
- * Does something useful.
+ * Creates a store for storing configuration objects.
  */
 export function createConfigsStore<TConfig>({
   idField,
