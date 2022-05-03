@@ -1,4 +1,5 @@
 import { mapById } from '@minddrop/utils';
+import { createResourceStore } from '../createResourceStore';
 import {
   InvalidResourceSchemaError,
   ResourceDocumentNotFoundError,
@@ -95,6 +96,26 @@ describe('resource API', () => {
         dataSchema: { foo: { type: 'string', allowEmpty: 1 } },
       }),
     ).toThrowError(InvalidResourceSchemaError);
+  });
+
+  it('accepts a custom store', () => {
+    // Create a resource store
+    const store = createResourceStore<ResourceDocument<{ foo: string }>>();
+
+    // Create a resource using the custom store
+    const withCustomStore = createResource(
+      {
+        resource: 'tests:test',
+        dataSchema: { foo: { type: 'string' } },
+      },
+      store,
+    );
+
+    // Create a document
+    const document = withCustomStore.create(core, { foo: 'foo' });
+
+    // Should have set the document in the provided store
+    expect(store.get(document.id)).toEqual(document);
   });
 
   describe('create', () => {

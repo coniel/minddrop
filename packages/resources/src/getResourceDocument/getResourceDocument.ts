@@ -1,22 +1,32 @@
 import { ResourceDocumentNotFoundError } from '../errors';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 
 /**
  * Returns a resource document by ID.
  *
- * - Throws a `ResourceDocumentNotFoundError` if the
- *   document does not exist.
- *
- * @param store The resource store.
- * @param config The resource config.
- * @param documentId The ID of the document to retrieve.
+ * @param store - The resource store.
+ * @param config - The resource config.
+ * @param documentId - The ID of the document to retrieve.
+ * @param skipOnGet - When `true`, does not call the config's `onGet` callback.
  * @returns The requested document.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the document does not exist.
  */
-export function getResourceDocument<TData>(
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+export function getResourceDocument<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-): ResourceDocument<TData> {
+  skipOnGet?: boolean,
+): TResourceDocument {
   // Get the document from the store
   let document = store.get(documentId);
 
@@ -25,7 +35,7 @@ export function getResourceDocument<TData>(
     throw new ResourceDocumentNotFoundError(config.resource, documentId);
   }
 
-  if (config.onGet) {
+  if (config.onGet && !skipOnGet) {
     // Call the config's `onGet` method which will return
     // a possibly modidfied version of the document.
     document = config.onGet(document);

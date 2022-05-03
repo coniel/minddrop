@@ -1,5 +1,10 @@
 import { Core } from '@minddrop/core';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 import { updateResourceDocument } from '../updateResourceDocument';
 
 /**
@@ -11,15 +16,18 @@ import { updateResourceDocument } from '../updateResourceDocument';
  * @param config The resource config.
  * @param documentId The ID of the document to delete.
  */
-export function deleteResourceDocument<TData>(
+export function deleteResourceDocument<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-): ResourceDocument<TData> {
+): TResourceDocument {
   // Mark document as deleted by adding `deleted` and
   // `deletedAt` proprties.
-  const document = updateResourceDocument<TData>(
+  const document = updateResourceDocument<TData, TResourceDocument>(
     core,
     store,
     config,

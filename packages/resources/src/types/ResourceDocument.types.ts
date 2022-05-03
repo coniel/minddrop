@@ -46,7 +46,7 @@ export type ResourceDocumentCustomData = Object &
  * A resource document consists of the base resource document
  * data, and custom data.
  */
-export type ResourceDocument<TData extends ResourceDocumentCustomData> =
+export type ResourceDocument<TData extends ResourceDocumentCustomData = {}> =
   BaseResourceDocumentData & TData;
 
 /**
@@ -121,16 +121,17 @@ export type ResourceDocumentChanges<TData extends ResourceDocumentCustomData> =
  */
 export interface ResourceDocumentUpdate<
   TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData>,
 > {
   /**
    * The resource document before it was changed.
    */
-  before: ResourceDocument<TData>;
+  before: TResourceDocument;
 
   /**
    * The resource document after it was changed.
    */
-  after: ResourceDocument<TData>;
+  after: TResourceDocument;
 
   /**
    * The changes applied to the resource document.

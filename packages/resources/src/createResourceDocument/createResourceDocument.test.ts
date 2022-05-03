@@ -7,6 +7,7 @@ import {
   ResourceDocumentDataSchema,
   ResourceDocument,
   ResourceStore,
+  ResourceDocumentCustomData,
 } from '../types';
 import { createResourceDocument as rawCreateResourceDocument } from './createResourceDocument';
 
@@ -16,7 +17,7 @@ interface Data {
   baz: string;
 }
 
-interface CreateData {
+interface CreateData extends ResourceDocumentCustomData {
   foo: string;
   bar?: string;
 }
@@ -35,7 +36,7 @@ const baseConfig: ResourceConfig<Data> = {
   defaultData: { bar: 'bar', baz: 'baz' },
 };
 
-const store = createResourceStore<Data>();
+const store = createResourceStore<TestDocument>();
 
 // Create a typed version of the function
 const createResourceDocument = (
@@ -43,7 +44,7 @@ const createResourceDocument = (
   store: ResourceStore<TestDocument>,
   config: ResourceConfig<Data>,
   data: CreateData,
-) => rawCreateResourceDocument(core, store, config, data);
+) => rawCreateResourceDocument<Data, CreateData>(core, store, config, data);
 
 describe('createResourceDocument', () => {
   beforeEach(setup);

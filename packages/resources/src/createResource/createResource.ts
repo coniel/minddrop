@@ -3,6 +3,7 @@ import {
   ResourceConfig,
   ResourceDocument,
   ResourceDocumentCustomData,
+  ResourceStore,
 } from '../types';
 import { clearResourceDocuments } from '../clearResourceDocuments';
 import { createResourceDocument } from '../createResourceDocument';
@@ -30,17 +31,21 @@ export function createResource<
   TData extends ResourceDocumentCustomData,
   TCreateData extends Partial<TData> & ResourceDocumentCustomData,
   TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
->(config: ResourceConfig<TData>): ResourceApi<TData, TCreateData, TUpdateData> {
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
+  config: ResourceConfig<TData, TResourceDocument>,
+  customStore?: ResourceStore<TResourceDocument>,
+): ResourceApi<TData, TCreateData, TUpdateData, TResourceDocument> {
   // Validate the data schema
   validateResourceDataSchema(config.resource, config.dataSchema);
 
   // Create the resource document store
-  const store = createResourceStore<TData>();
+  const store = customStore || createResourceStore<TResourceDocument>();
 
   // Create the `get` function which returns one or multiple documents
   // based on the whether `documentId` argument is a string or an array.
-  function get(documentId: string): ResourceDocument<TData>;
-  function get(documentIds: string[]): Record<string, ResourceDocument<TData>>;
+  function get(documentId: string): TResourceDocument;
+  function get(documentIds: string[]): Record<string, TResourceDocument>;
   function get(documentId: string | string[]) {
     if (Array.isArray(documentId)) {
       return getResourceDocuments(store, config, documentId);

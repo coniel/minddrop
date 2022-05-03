@@ -1,5 +1,10 @@
 import { mapById } from '@minddrop/utils';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 
 /**
  * Returns a `{ [id]: ResourceDocument }` map of all
@@ -9,10 +14,13 @@ import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
  * @param config The resource config.
  * @returns The requested documenta.
  */
-export function getAllResourceDocuments<TData>(
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
-): Record<string, ResourceDocument<TData>> {
+export function getAllResourceDocuments<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
+): Record<string, TResourceDocument> {
   // Get all resource documents from the store
   let documents = store.getAll();
 

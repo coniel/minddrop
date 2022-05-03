@@ -36,7 +36,7 @@ const config: ResourceConfig<Data> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<Data>();
+const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to update
 const document = generateResourceDocument<Data>({
@@ -52,7 +52,14 @@ const updateResourceDocument = (
   config: ResourceConfig<Data>,
   documentId: string,
   data: Partial<Data>,
-) => rawUpdateResourceDocument<Data>(core, store, config, documentId, data);
+) =>
+  rawUpdateResourceDocument<Data, ResourceDocument<Data>>(
+    core,
+    store,
+    config,
+    documentId,
+    data,
+  );
 
 describe('updateResourceDocument', () => {
   beforeEach(() => {

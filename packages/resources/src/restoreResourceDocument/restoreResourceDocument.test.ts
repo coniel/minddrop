@@ -2,8 +2,9 @@ import { Core } from '@minddrop/core';
 import { createResourceStore } from '../createResourceStore';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup, core } from '../test-utils';
+import { deleteResourceDocument } from '../deleteResourceDocument';
 import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
-import { restoreResourceDocument as rawDeleteResourceDocument } from './restoreResourceDocument';
+import { restoreResourceDocument as rawRestoreResourceDocument } from './restoreResourceDocument';
 
 // Test resource config
 const config: ResourceConfig<{}> = {
@@ -12,13 +13,10 @@ const config: ResourceConfig<{}> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<{}>();
+const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to restore
-const document = generateResourceDocument({
-  deleted: true,
-  deletedAt: new Date(),
-});
+const document = generateResourceDocument({});
 
 // Create a typed version of the function
 const restoreResourceDocument = (
@@ -26,7 +24,7 @@ const restoreResourceDocument = (
   store: ResourceStore<ResourceDocument<{}>>,
   config: ResourceConfig<{}>,
   documentId: string,
-) => rawDeleteResourceDocument(core, store, config, documentId);
+) => rawRestoreResourceDocument(core, store, config, documentId);
 
 describe('restoreResourceDocument', () => {
   beforeEach(() => {
@@ -34,6 +32,8 @@ describe('restoreResourceDocument', () => {
 
     // Set test document in the store
     store.set(document);
+    // Delete the document
+    deleteResourceDocument(core, store, config, document.id);
   });
 
   afterEach(cleanup);

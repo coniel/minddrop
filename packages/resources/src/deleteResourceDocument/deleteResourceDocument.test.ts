@@ -12,7 +12,7 @@ const config: ResourceConfig<{}> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<{}>();
+const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to delete
 const document = generateResourceDocument({});

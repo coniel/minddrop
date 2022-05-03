@@ -23,7 +23,7 @@ import { validateResourceDocument } from '../validation';
  * @param data The update data.
  * @returns Resource document changes.
  */
-function createChanges<TData>(
+export function createChanges<TData>(
   data: ResourceDocumentUpdateData<TData>,
 ): ResourceDocumentChanges<TData> {
   return {
@@ -31,6 +31,33 @@ function createChanges<TData>(
     revision: generateId(),
     updatedAt: new Date(),
   };
+}
+
+/**
+ * Validates data from external updates, ensuring that
+ * internal update only fields are not included.
+ *
+ * @param data - The update data
+ *
+ * @throws ResourceValidationError
+ * Thrown if the update data contains restricted fields.
+ */
+export function validateExtermalUpdateData<TData>(data: TData) {
+  // Ensure that the update data does not contain properties which
+  // can only be updated by the internal API.
+  const internalFields = Object.keys(data).filter((key) =>
+    ['revision', 'updatedAt', 'deleted', 'deletedAt'].includes(key),
+  );
+
+  if (internalFields.length) {
+    // Throw an `ResourceValidationError` if the data contains any
+    // internal only properties.
+    throw new ResourceValidationError(
+      `${
+        internalFields.length > 1 ? 'properties' : 'property'
+      } '${internalFields.join("', '")}' cannot be updated directly`,
+    );
+  }
 }
 
 /**
@@ -46,33 +73,36 @@ function createChanges<TData>(
  */
 export function updateResourceDocument<
   TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
   data: DeleteUpdateData | RestoreUpdateData,
   isInternalUpdate: true,
-): ResourceDocument<TData>;
+): TResourceDocument;
 export function updateResourceDocument<
   TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData>,
 >(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
   data: Partial<TData>,
-): ResourceDocument<TData>;
+): TResourceDocument;
 export function updateResourceDocument<
   TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData>,
 >(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
   data: ResourceDocumentUpdateData<TData>,
   isInternalUpdate?: true,
-): ResourceDocument<TData> {
+): TResourceDocument {
   // Get the document from the store
   const document = store.get(documentId);
 
@@ -83,21 +113,9 @@ export function updateResourceDocument<
   }
 
   if (!isInternalUpdate) {
-    // Ensure that the update data does not contain properties which
-    // can only be updated by the internal API.
-    const internalFields = Object.keys(data).filter((key) =>
-      ['revision', 'updatedAt', 'deleted', 'deletedAt'].includes(key),
-    );
-
-    if (internalFields.length) {
-      // Throw an `ResourceValidationError` if the data contains any
-      // internal only properties.
-      throw new ResourceValidationError(
-        `${
-          internalFields.length > 1 ? 'properties' : 'property'
-        } '${internalFields.join("', '")}' cannot be updated directly`,
-      );
-    }
+    // Ensure that external updates do not include any
+    // restricted fields.
+    validateExtermalUpdateData(data);
   }
 
   // Create an update using the provided data and default

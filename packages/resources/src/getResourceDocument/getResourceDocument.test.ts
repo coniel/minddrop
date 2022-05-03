@@ -2,7 +2,7 @@ import { createResourceStore } from '../createResourceStore';
 import { ResourceDocumentNotFoundError } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup } from '../test-utils';
-import { ResourceConfig } from '../types';
+import { ResourceConfig, ResourceDocument } from '../types';
 import { getResourceDocument } from './getResourceDocument';
 
 // Test document custom data
@@ -17,7 +17,7 @@ const config: ResourceConfig<Data> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<Data>();
+const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to restore
 const storeDoc = generateResourceDocument({ foo: 'foo' });
@@ -48,7 +48,7 @@ describe('getResourceDocument', () => {
     );
   });
 
-  it("calls the config's `onGetOne` callback", () => {
+  it("calls the config's `onGet` callback", () => {
     // Add an `onGetOne` callback to the resource config
     const onGetOneConfig: ResourceConfig<Data> = {
       ...config,
@@ -60,5 +60,24 @@ describe('getResourceDocument', () => {
 
     // Should return the document returned by the `onGetOne` callback
     expect(document).toEqual({ ...storeDoc, foo: 'bar' });
+  });
+
+  it("does not call the config's `onGet` callback if `skipOnGet` is true", () => {
+    // Add an `onGetOne` callback to the resource config
+    const onGetOneConfig: ResourceConfig<Data> = {
+      ...config,
+      onGet: (doc) => ({ ...doc, foo: 'bar' }),
+    };
+
+    // Get a document
+    const document = getResourceDocument(
+      store,
+      onGetOneConfig,
+      storeDoc.id,
+      true,
+    );
+
+    // Should return the document returned by the `onGetOne` callback
+    expect(document).toEqual(storeDoc);
   });
 });

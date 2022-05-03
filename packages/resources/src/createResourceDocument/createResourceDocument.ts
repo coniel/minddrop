@@ -1,6 +1,11 @@
 import { Core } from '@minddrop/core';
 import { generateResourceDocument } from '../generateResourceDocument';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 import { validateResourceDocument } from '../validation';
 
 /**
@@ -13,22 +18,28 @@ import { validateResourceDocument } from '../validation';
  * @param data The document creation data.
  * @returns A new resource document.
  */
-export function createResourceDocument<TData, TCreateData>(
+export function createResourceDocument<
+  TData extends ResourceDocumentCustomData,
+  TCreateData extends Partial<ResourceDocumentCustomData>,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   data?: TCreateData,
-): ResourceDocument<TData> {
+): TResourceDocument {
   // Merge the default and provided data to create
   // the complete document data.
   const completeData = { ...config.defaultData, ...data } as unknown as TData;
 
   // Generate a document using the complete data
-  let document = generateResourceDocument(completeData);
+  let document = generateResourceDocument<TData, TResourceDocument>(
+    completeData,
+  );
 
   if (config.onCreate) {
     // Call `onCreate` callback if defined
-    document = config.onCreate(core, document);
+    document = config.onCreate<TResourceDocument>(core, document);
   }
 
   // Validate the document

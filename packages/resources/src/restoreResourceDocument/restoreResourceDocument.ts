@@ -1,26 +1,38 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 import { updateResourceDocument } from '../updateResourceDocument';
 
 /**
- * Restores a soft-deleted a resource document and
+ * Restores a soft-deleted resource document and
  * dispatches a `[resource]:restore` event.
  *
- * @param core A MindDrop core instance.
- * @param store The resource store.
- * @param config The resource config.
- * @param documentId The ID of the document to restore.
+ * @param core - A MindDrop core instance.
+ * @param store - The resource store.
+ * @param config - The resource config.
+ * @param documentId - The ID of the document to restore.
+ * @returns The restored resource document.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the resource document does not exist.
  */
-export function restoreResourceDocument<TData>(
+export function restoreResourceDocument<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
-  config: ResourceConfig<TData>,
+  store: ResourceStore<TResourceDocument>,
+  config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-): ResourceDocument<TData> {
+): TResourceDocument {
   // Restore the document by removing the `deleted` and
   // `deletedAt` proprties.
-  const document = updateResourceDocument<TData>(
+  const document = updateResourceDocument<TData, TResourceDocument>(
     core,
     store,
     config,

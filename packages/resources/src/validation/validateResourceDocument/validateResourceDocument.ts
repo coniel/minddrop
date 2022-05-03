@@ -42,7 +42,6 @@ export function validateResourceDocument<TData>(
   const schema = generateResourceDocumentSchema(dataSchema);
 
   // Validate the schema
-
   try {
     // Validate the resource object against the document schema
     validateValue(

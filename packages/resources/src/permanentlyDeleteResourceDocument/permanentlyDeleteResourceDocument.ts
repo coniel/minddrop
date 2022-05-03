@@ -1,6 +1,11 @@
 import { Core } from '@minddrop/core';
 import { ResourceDocumentNotFoundError } from '../errors';
-import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
+import {
+  ResourceConfig,
+  ResourceDocument,
+  ResourceDocumentCustomData,
+  ResourceStore,
+} from '../types';
 
 /**
  * Permanently deletes a resource document and dispatches a
@@ -11,12 +16,15 @@ import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
  * @param config The resource config.
  * @param documentId The ID of the document to delete permanently.
  */
-export function permanentlyDeleteResourceDocument<TData>(
+export function permanentlyDeleteResourceDocument<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+>(
   core: Core,
-  store: ResourceStore<ResourceDocument<TData>>,
+  store: ResourceStore<TResourceDocument>,
   config: ResourceConfig<TData>,
   documentId: string,
-): ResourceDocument<TData> {
+): TResourceDocument {
   // Get the document
   const document = store.get(documentId);
 

@@ -6,7 +6,10 @@ import {
   ResourceDocumentUpdate,
 } from './ResourceDocument.types';
 
-export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
+export interface ResourceConfig<
+  TData extends ResourceDocumentCustomData,
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
+> {
   /**
    * A unique identifier for the resource composed
    * using the extension ID and resource type:
@@ -42,10 +45,10 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
    * @param document The new document.
    * @returns The new document, with modifications.
    */
-  onCreate?(
+  onCreate?<T extends TResourceDocument = TResourceDocument>(
     core: Core,
-    document: ResourceDocument<TData>,
-  ): ResourceDocument<TData>;
+    document: T,
+  ): T;
 
   /**
    * Callback fired when a resource is updated.
@@ -57,7 +60,10 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
    *
    * @param update The resource update.
    */
-  onUpdate?(core: Core, update: ResourceDocumentUpdate<TData>): Partial<TData>;
+  onUpdate?(
+    core: Core,
+    update: ResourceDocumentUpdate<TData, TResourceDocument>,
+  ): Partial<TData>;
 
   /**
    * Callback fired when a document is retrieved from the store.
@@ -68,7 +74,7 @@ export interface ResourceConfig<TData extends ResourceDocumentCustomData> {
    * @param document The requested document.
    * @returns The requested document.
    */
-  onGet?(document: ResourceDocument<TData>): ResourceDocument<TData>;
+  onGet?(document: TResourceDocument): TResourceDocument;
 
   /**
    * Callback fired when the store is cleared. Only called

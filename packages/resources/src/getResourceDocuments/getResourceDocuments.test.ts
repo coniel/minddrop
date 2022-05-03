@@ -3,7 +3,7 @@ import { createResourceStore } from '../createResourceStore';
 import { ResourceDocumentNotFoundError } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup } from '../test-utils';
-import { ResourceConfig } from '../types';
+import { ResourceConfig, ResourceDocument } from '../types';
 import { getResourceDocuments } from './getResourceDocuments';
 
 // Test document custom data
@@ -18,7 +18,7 @@ const config: ResourceConfig<Data> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<Data>();
+const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to restore
 const storeDoc1 = generateResourceDocument({ foo: 'foo' });

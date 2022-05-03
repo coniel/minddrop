@@ -1,7 +1,7 @@
 import { createResourceStore } from '../createResourceStore';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup } from '../test-utils';
-import { ResourceConfig } from '../types';
+import { ResourceConfig, ResourceDocument } from '../types';
 import { clearResourceDocuments } from './clearResourceDocuments';
 
 // Test resource config
@@ -11,7 +11,7 @@ const config: ResourceConfig<{}> = {
 };
 
 // Create a resource store for the test resource
-const store = createResourceStore<{}>();
+const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to restore
 const document1 = generateResourceDocument({ foo: 'foo' });

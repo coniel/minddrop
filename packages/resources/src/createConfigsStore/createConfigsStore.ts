@@ -97,17 +97,20 @@ export function createConfigsStore<TConfig>({
 
   return {
     get,
-    getAll: () => useConfigStore.getState().configs,
+    getAll: <T extends TConfig = TConfig>() =>
+      useConfigStore.getState().configs as T[],
     register,
     unregister,
     clear: () => useConfigStore.getState().clearConfigs(),
     useConfig: (id) => useConfigStore(({ configs }) => configs[id] || null),
-    useConfigs: (ids) =>
-      useConfigStore(({ configs }) =>
-        configs.filter((config) =>
-          ids.includes(config[idField] as unknown as string),
-        ),
+    useConfigs: <T extends TConfig = TConfig>(ids: string[]) =>
+      useConfigStore(
+        ({ configs }) =>
+          configs.filter((config) =>
+            ids.includes(config[idField] as unknown as string),
+          ) as T[],
       ),
-    useAllConfigs: () => useConfigStore(({ configs }) => configs),
+    useAllConfigs: <T extends TConfig = TConfig>() =>
+      useConfigStore(({ configs }) => configs) as T[],
   };
 }

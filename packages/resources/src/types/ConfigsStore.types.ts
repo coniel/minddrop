@@ -5,7 +5,7 @@ export interface ConfigStore<TConfig> {
    *
    * @param id The ID of the config to get.
    */
-  get(id: string): TConfig;
+  get<T extends TConfig = TConfig>(id: string): T;
 
   /**
    * Returns an array of configs sorted according to their
@@ -15,28 +15,28 @@ export interface ConfigStore<TConfig> {
    *
    * @param ids The IDs of the configs to get.
    */
-  get(ids: string[]): TConfig[];
+  get<T extends TConfig = TConfig>(ids: string[]): T[];
 
   /**
    * Returns an array of all configs sorted according
    * to their order of addition (most recently
    * registered last).
    */
-  getAll(): TConfig[];
+  getAll<T extends TConfig = TConfig>(): T[];
 
   /**
    * Adds the provided config(s) to the store.
    *
    * @param config The config to register.
    */
-  register(config: TConfig | TConfig[]): void;
+  register<T extends TConfig = TConfig>(config: T | T[]): void;
 
   /**
    * Removes the provided config(s) from the store.
    *
    * @param config The config(s) to unregister.
    */
-  unregister(config: TConfig | TConfig[]): void;
+  unregister<T extends TConfig = TConfig>(config: T | T[]): void;
 
   /**
    * Clears all configs from the store.
@@ -51,7 +51,7 @@ export interface ConfigStore<TConfig> {
    *
    * @param id The ID of the config to retrieve.
    */
-  useConfig(id: string): TConfig | null;
+  useConfig<T extends TConfig = TConfig>(id: string): T | null;
 
   /**
    * A hook that returns an array of configs sorted
@@ -62,12 +62,12 @@ export interface ConfigStore<TConfig> {
    *
    * @param ids The IDs of the configs to retrieve.
    */
-  useConfigs(ids: string[]): TConfig[];
+  useConfigs<T extends TConfig = TConfig>(ids: string[]): T[];
 
   /**
    * A hook that returns an array of all registered
    * configs sorted according to order of addition
    * (most recently registered last).
    */
-  useAllConfigs(): TConfig[];
+  useAllConfigs<T extends TConfig = TConfig>(): T[];
 }
