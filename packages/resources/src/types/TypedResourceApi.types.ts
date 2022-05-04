@@ -1,6 +1,9 @@
 import { Core } from '@minddrop/core';
 import { ResourceApi } from './ResourceApi.types';
-import { ResourceTypeConfig } from './ResourceTypeConfig.types';
+import {
+  ResourceTypeConfig,
+  TypedResourceTypeConfigsStore,
+} from './ResourceTypeConfig.types';
 import {
   TypedResourceDocument,
   TypedResourceDocumentBaseCustomData,
@@ -66,6 +69,13 @@ export interface TypedResourceApi<
   >(
     type: string,
   ): TTypeConfig;
+
+  /**
+   * Returns all registered resource type configs for this resource.
+   *
+   * @returns An array of resource type configs.
+   */
+  getAllTypeConfigs(): ResourceTypeConfig[];
 
   /**
    * Creates a new resource document of the given typeand dispatches a
@@ -212,4 +222,10 @@ export interface TypedResourceApi<
   getAll<
     TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
   >(): Record<string, TypedResourceDocument<TBaseData, TTypeData>>;
+
+  /**
+   * The resource type config's store. Intended for use in tests
+   * only.
+   */
+  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData>;
 }

@@ -141,5 +141,7 @@ export function createTypedResource<
         typeConfigsStore,
         type,
       ) as TTypeConfig,
+    getAllTypeConfigs: typeConfigsStore.getAll,
+    typeConfigsStore,
   };
 }

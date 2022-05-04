@@ -78,11 +78,15 @@ const Api = createTypedResource<BaseData, BaseCreateData, BaseUpdateData>({
 describe('createTypedResource', () => {
   beforeEach(setup);
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    Api.store.clear();
+    Api.typeConfigsStore.clear();
+  });
 
   describe('register', () => {
     it('registers a new resource type', () => {
-      // Register a new resource type.
+      // Register a new resource type
       Api.register(core, typeConfig);
 
       // Type should be registered
@@ -92,7 +96,7 @@ describe('createTypedResource', () => {
 
   describe('unregister', () => {
     it('unregisters a resource type', () => {
-      // Register a new resource type.
+      // Register a new resource type
       Api.register(core, typeConfig);
       // Unregister the resource type
       Api.unregister(core, typeConfig);
@@ -101,6 +105,35 @@ describe('createTypedResource', () => {
       expect(() => Api.getTypeConfig('test-type')).toThrowError(
         ResourceTypeNotRegisteredError,
       );
+    });
+  });
+
+  describe('getTypeConfig', () => {
+    it('returns the type config', () => {
+      // Register a new resource type
+      Api.register(core, typeConfig);
+
+      // Get all type configs
+      const config = Api.getTypeConfig('test-type');
+
+      // Should return all registered types
+      expect(config).toEqual(typeConfig);
+    });
+  });
+
+  describe('getAllTypeConfig', () => {
+    it('returns all registered type configs', () => {
+      const typeConfig2 = { ...typeConfig, type: 'test-type-2' };
+
+      // Register two resource types
+      Api.register(core, typeConfig);
+      Api.register(core, typeConfig2);
+
+      // Get the type config
+      const configs = Api.getAllTypeConfigs();
+
+      // Should return the requested config
+      expect(configs).toEqual([typeConfig, typeConfig2]);
     });
   });
 
