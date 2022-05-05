@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { ResourceApi } from './ResourceApi.types';
 import {
   ResourceTypeConfig,
+  RegisteredResourceTypeConfig,
   ResourceTypeConfigsStore,
 } from './ResourceTypeConfig.types';
 import {
@@ -19,8 +20,8 @@ import {
  */
 export interface TypedResourceApi<
   TBaseData extends TRDBaseData,
-  TCreateData extends Partial<TBaseData> & TRDBaseData,
-  TUpdateData extends Partial<TBaseData> & TRDBaseData,
+  TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
+  TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
 > extends Omit<ResourceApi<TBaseData, TCreateData, TUpdateData>, 'create'> {
   /**
    * Registers a new resource type and dispatches a
@@ -64,14 +65,16 @@ export interface TypedResourceApi<
     TTypeConfig extends ResourceTypeConfig<TBaseData> = ResourceTypeConfig<TBaseData>,
   >(
     type: string,
-  ): TTypeConfig;
+  ): RegisteredResourceTypeConfig<TTypeConfig>;
 
   /**
    * Returns all registered resource type configs for this resource.
    *
    * @returns An array of resource type configs.
    */
-  getAllTypeConfigs(): ResourceTypeConfig[];
+  getAllTypeConfigs<
+    TTypeConfig extends ResourceTypeConfig<TBaseData> = ResourceTypeConfig<TBaseData>,
+  >(): RegisteredResourceTypeConfig<TTypeConfig>[];
 
   /**
    * Creates a new resource document of the given typeand dispatches a

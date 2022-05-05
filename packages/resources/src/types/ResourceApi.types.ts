@@ -10,8 +10,8 @@ import { ResourceDocument, RDData } from './ResourceDocument.types';
  */
 export interface ResourceApi<
   TData extends RDData,
-  TCreateData extends Partial<TData> & RDData,
-  TUpdateData extends Partial<TData> & RDData,
+  TCreateData extends Partial<Record<keyof TData, any>> & RDData,
+  TUpdateData extends Partial<Record<keyof TData, any>> & RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**

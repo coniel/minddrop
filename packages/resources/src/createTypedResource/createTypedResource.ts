@@ -28,8 +28,8 @@ import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
  */
 export function createTypedResource<
   TBaseData extends TRDBaseData,
-  TCreateData extends Partial<TBaseData> & TRDBaseData,
-  TUpdateData extends Partial<TBaseData> & TRDBaseData,
+  TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
+  TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
 >(
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
 ): TypedResourceApi<TBaseData, TCreateData, TUpdateData> {
