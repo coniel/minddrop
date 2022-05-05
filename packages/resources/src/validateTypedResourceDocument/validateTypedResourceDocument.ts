@@ -1,8 +1,8 @@
 import {
-  TypedResourceBaseDocumentDataSchema,
-  TypedResourceTypeDocumentDataSchema,
+  TRDBaseDataSchema,
+  TRDTypeDataSchema,
   TypedResourceDocument,
-  TypedResourceDocumentDataSchema,
+  TRDDataSchema,
 } from '../types';
 import { validateResourceDocument } from '../validation';
 
@@ -23,18 +23,15 @@ import { validateResourceDocument } from '../validation';
  */
 export function validateTypedResourceDocument<TBaseData, TTypeData>(
   resource: string,
-  baseDataSchema: TypedResourceBaseDocumentDataSchema<TBaseData>,
-  typeDataSchema: TypedResourceTypeDocumentDataSchema<TBaseData, TTypeData>,
+  baseDataSchema: TRDBaseDataSchema<TBaseData>,
+  typeDataSchema: TRDTypeDataSchema<TBaseData, TTypeData>,
   document: TypedResourceDocument<TBaseData, TTypeData>,
   originalDocument?: object,
 ): void {
   // Merge the base resource custom data schema and the type
   // specific data schema, to create the resource document's
   // custom data schema.
-  const customDataSchema: TypedResourceDocumentDataSchema<
-    TBaseData,
-    TTypeData
-  > = {
+  const customDataSchema: TRDDataSchema<TBaseData, TTypeData> = {
     ...baseDataSchema,
     ...typeDataSchema,
   };

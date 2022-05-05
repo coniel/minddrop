@@ -1,16 +1,16 @@
 import { Core } from '@minddrop/core';
 import { ConfigStore } from './ConfigsStore.types';
-import { TypedResourceTypeDocumentDataSchema } from './ResourceValidation.types';
+import { TRDTypeDataSchema } from './ResourceValidation.types';
 import {
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
+  TRDBaseData,
+  TRDTypeData,
   TypedResourceDocument,
-  TypedResourceDocumentUpdate,
+  TRDUpdate,
 } from './TypedResourceDocument.types';
 
 export interface ResourceTypeConfig<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
 > {
   /**
    * A unique identifier for the resource type composed
@@ -23,7 +23,7 @@ export interface ResourceTypeConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: TypedResourceTypeDocumentDataSchema<TBaseData, TTypeData>;
+  dataSchema: TRDTypeDataSchema<TBaseData, TTypeData>;
 
   /**
    * The default data used when creating a new document.
@@ -64,7 +64,7 @@ export interface ResourceTypeConfig<
    */
   onUpdate?(
     core: Core,
-    update: TypedResourceDocumentUpdate<TBaseData, TTypeData>,
+    update: TRDUpdate<TBaseData, TTypeData>,
   ): Partial<TBaseData & TTypeData>;
 
   /**
@@ -89,7 +89,7 @@ export interface ResourceTypeConfig<
   onClear?(): void;
 }
 
-export type TypedResourceTypeConfigsStore<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
+export type ResourceTypeConfigsStore<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
 > = ConfigStore<ResourceTypeConfig<TBaseData, TTypeData>>;

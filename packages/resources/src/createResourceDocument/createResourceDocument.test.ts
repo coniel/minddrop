@@ -4,10 +4,10 @@ import { ResourceValidationError } from '../errors';
 import { setup, cleanup, core } from '../test-utils';
 import {
   ResourceConfig,
-  ResourceDocumentDataSchema,
+  RDDataSchema,
   ResourceDocument,
   ResourceStore,
-  ResourceDocumentCustomData,
+  RDData,
 } from '../types';
 import { createResourceDocument as rawCreateResourceDocument } from './createResourceDocument';
 
@@ -17,14 +17,14 @@ interface Data {
   baz: string;
 }
 
-interface CreateData extends ResourceDocumentCustomData {
+interface CreateData extends RDData {
   foo: string;
   bar?: string;
 }
 
 type TestDocument = ResourceDocument<Data>;
 
-const dataSchema: ResourceDocumentDataSchema<Data> = {
+const dataSchema: RDDataSchema<Data> = {
   foo: { type: 'string' },
   bar: { type: 'string' },
   baz: { type: 'string' },

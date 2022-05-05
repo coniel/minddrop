@@ -3,7 +3,7 @@ import { FieldValue } from '@minddrop/utils';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 import { updateResourceDocument } from '../updateResourceDocument';
@@ -22,7 +22,7 @@ import { updateResourceDocument } from '../updateResourceDocument';
  * Thrown if the resource document does not exist.
  */
 export function restoreResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,

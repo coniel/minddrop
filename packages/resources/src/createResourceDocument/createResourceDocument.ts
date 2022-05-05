@@ -3,7 +3,7 @@ import { generateResourceDocument } from '../generateResourceDocument';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 import { validateResourceDocument } from '../validation';
@@ -19,8 +19,8 @@ import { validateResourceDocument } from '../validation';
  * @returns A new resource document.
  */
 export function createResourceDocument<
-  TData extends ResourceDocumentCustomData,
-  TCreateData extends Partial<ResourceDocumentCustomData>,
+  TData extends RDData,
+  TCreateData extends Partial<RDData>,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,

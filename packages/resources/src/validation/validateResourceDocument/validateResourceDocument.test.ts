@@ -4,7 +4,7 @@ import {
   ResourceValidationError,
 } from '../../errors';
 import { generateResourceDocument } from '../../generateResourceDocument';
-import { ResourceDocumentDataSchema } from '../../types';
+import { RDDataSchema } from '../../types';
 import { validateResourceDocument } from './validateResourceDocument';
 
 interface Data {
@@ -13,7 +13,7 @@ interface Data {
 
 const document = generateResourceDocument<Data>({ foo: 'foo' });
 
-const dataSchema: ResourceDocumentDataSchema<Data> = {
+const dataSchema: RDDataSchema<Data> = {
   foo: { type: 'string', allowEmpty: false },
 };
 

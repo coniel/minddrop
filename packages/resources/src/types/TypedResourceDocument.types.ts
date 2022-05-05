@@ -1,60 +1,69 @@
 import {
   ResourceDocument,
-  BaseResourceDocumentChanges,
-  DeleteUpdateData,
-  RestoreUpdateData,
+  RDRootChanges,
+  RDDeleteUpdateData,
+  RDRestoreUpdateData,
 } from './ResourceDocument.types';
+
+/**
+ * Note: the TRD prefix stands for TypedResourceDocument.
+ */
+
+/**
+ * Typed resource document data common to all typed resource
+ * documents.
+ */
+export interface TRDRootData {
+  /**
+   * The resource type identifier.
+   */
+  type: string;
+}
 
 /**
  * The custom data for the base resource document
  * which is shared by all types.
  */
-export type TypedResourceDocumentBaseCustomData = Object &
+export type TRDBaseData = Object &
   Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;
 
 /**
  * The type specific custom resource document data.
  */
-export type TypedResourceDocumentTypeCustomData<TBaseData> = Object &
+export type TRDTypeData<TBaseData> = Object &
   Partial<Record<keyof (TypedResourceDocument<{}, {}> & TBaseData), never>>;
 
 export type TypedResourceDocument<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-> = ResourceDocument<TBaseData & TTypeData> & {
-  /**
-   * The resource type identifier.
-   */
-  type: string;
-};
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+> = ResourceDocument<TRDRootData & TBaseData & TTypeData>;
 
 /**
  * When updating a resource document, the update data can consist
  * of part of the custom data, the delete update data, or the
  * restore update data.
  */
-export type TypedResourceDocumentUpdateData<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-> = Partial<TBaseData & TTypeData> | DeleteUpdateData | RestoreUpdateData;
+export type TRDUpdateData<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+> = Partial<TBaseData & TTypeData> | RDDeleteUpdateData | RDRestoreUpdateData;
 
 /**
  * When updating a resource document, the changes consist of the
  * base document changes (which are set for every update), and
  * the custom data changes or delete/restore data changes.
  */
-export type TypedResourceDocumentChanges<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-> = BaseResourceDocumentChanges &
-  TypedResourceDocumentUpdateData<TBaseData, TTypeData>;
+export type TRDChanges<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+> = RDRootChanges & TRDUpdateData<TBaseData, TTypeData>;
 
 /**
  * Describes the changes made to an updated resource document.
  */
-export interface TypedResourceDocumentUpdate<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
+export interface TRDUpdate<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
 > {
   /**
    * The resource document before it was changed.
@@ -69,5 +78,5 @@ export interface TypedResourceDocumentUpdate<
   /**
    * The changes applied to the resource document.
    */
-  changes: TypedResourceDocumentChanges<TBaseData, TTypeData>;
+  changes: TRDChanges<TBaseData, TTypeData>;
 }

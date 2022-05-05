@@ -13,8 +13,8 @@ import {
   TypedResourceApi,
   TypedResourceConfig,
   TypedResourceDocument,
-  TypedResourceDocumentTypeCustomData,
-  TypedResourceDocumentBaseCustomData,
+  TRDTypeData,
+  TRDBaseData,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
@@ -26,9 +26,9 @@ import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
  * @returns A typed resource API.
  */
 export function createTypedResource<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TCreateData extends Partial<TBaseData> & TypedResourceDocumentBaseCustomData,
-  TUpdateData extends Partial<TBaseData> & TypedResourceDocumentBaseCustomData,
+  TBaseData extends TRDBaseData,
+  TCreateData extends Partial<TBaseData> & TRDBaseData,
+  TUpdateData extends Partial<TBaseData> & TRDBaseData,
 >(
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
 ): TypedResourceApi<TBaseData, TCreateData, TUpdateData> {
@@ -50,7 +50,7 @@ export function createTypedResource<
     ...Api,
     create: <
       TTypeCreateData = {},
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
+      TTypeData extends TRDTypeData<TBaseData> = {},
     >(
       core: Core,
       type: string,
@@ -64,7 +64,7 @@ export function createTypedResource<
       >(core, store, typeConfigsStore, config, type, data),
     update: <
       TTypeUpdateData = {},
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
+      TTypeData extends TRDTypeData<TBaseData> = {},
     >(
       core: Core,
       documentId: string,
@@ -76,9 +76,7 @@ export function createTypedResource<
         TBaseData,
         TTypeUpdateData
       >(core, store, typeConfigsStore, config, documentId, data),
-    delete: <
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-    >(
+    delete: <TTypeData extends TRDTypeData<TBaseData> = {}>(
       core: Core,
       documentId: string,
     ) =>
@@ -89,9 +87,7 @@ export function createTypedResource<
         config,
         documentId,
       ),
-    restore: <
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-    >(
+    restore: <TTypeData extends TRDTypeData<TBaseData> = {}>(
       core: Core,
       documentId: string,
     ) =>
@@ -102,9 +98,7 @@ export function createTypedResource<
         config,
         documentId,
       ),
-    deletePermanently: <
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-    >(
+    deletePermanently: <TTypeData extends TRDTypeData<TBaseData> = {}>(
       core: Core,
       documentId: string,
     ) =>
@@ -112,16 +106,12 @@ export function createTypedResource<
         TBaseData,
         TTypeData
       >,
-    getAll: <
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-    >() =>
+    getAll: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
       Api.getAll() as Record<
         string,
         TypedResourceDocument<TBaseData, TTypeData>
       >,
-    register: <
-      TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
-    >(
+    register: <TTypeData extends TRDTypeData<TBaseData>>(
       core: Core,
       typeConfig: ResourceTypeConfig<TBaseData, TTypeData>,
     ) =>

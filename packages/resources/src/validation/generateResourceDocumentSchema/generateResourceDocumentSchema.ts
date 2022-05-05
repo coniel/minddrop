@@ -1,7 +1,4 @@
-import {
-  ResourceDocumentDataSchema,
-  ResourceDocumentSchema,
-} from '../../types';
+import { RDDataSchema, RDSchema } from '../../types';
 
 /**
  * Generate a resource document schema given the
@@ -11,8 +8,8 @@ import {
  * @returns A resource document schema.
  */
 export function generateResourceDocumentSchema<TData>(
-  dataSchema: ResourceDocumentDataSchema<TData>,
-): ResourceDocumentSchema<TData> {
+  dataSchema: RDDataSchema<TData>,
+): RDSchema<TData> {
   // Merge the data schema with default field validators
   // to create the document schema.
   return {

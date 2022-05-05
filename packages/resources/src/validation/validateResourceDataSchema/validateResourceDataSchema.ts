@@ -1,8 +1,5 @@
 import { validateValue, SchemaValidator } from '@minddrop/utils';
-import {
-  ResourceDocumentDataSchema,
-  ResourceDocumentCustomData,
-} from '../../types';
+import { RDDataSchema, RDData } from '../../types';
 import { InvalidResourceSchemaError } from '../../errors';
 import { ContentColorValidatorOptionsSchema } from '../validateContentColor';
 import { ResourceIdValidatorOptionsSchema } from '../validateResourceId';
@@ -46,9 +43,10 @@ const allowedDataTypes = [
  * @throws InvalidResourceSchemaError
  * Thrown if the schema is invalid.
  */
-export function validateResourceDataSchema<
-  TData extends ResourceDocumentCustomData,
->(resource: string, schema: ResourceDocumentDataSchema<TData>): void {
+export function validateResourceDataSchema<TData extends RDData>(
+  resource: string,
+  schema: RDDataSchema<TData>,
+): void {
   // Ensure that the provided schema does not contain any
   // default resource document field validators.
   const schemaDefaultKeys = Object.keys(schema).filter((key) =>

@@ -1,5 +1,5 @@
 import { generateId } from '@minddrop/utils';
-import { ResourceDocument, ResourceDocumentCustomData } from '../types';
+import { ResourceDocument, RDData } from '../types';
 
 /**
  * Generates a new resource document containing
@@ -9,7 +9,7 @@ import { ResourceDocument, ResourceDocumentCustomData } from '../types';
  * @returns A new resource document.
  */
 export function generateResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument = ResourceDocument<TData>,
 >(data: TData): TResourceDocument {
   const document = {

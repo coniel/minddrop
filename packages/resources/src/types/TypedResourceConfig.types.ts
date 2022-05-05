@@ -1,13 +1,13 @@
-import { TypedResourceBaseDocumentDataSchema } from './ResourceValidation.types';
+import { TRDBaseDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
 import {
-  TypedResourceDocumentBaseCustomData,
+  TRDBaseData,
   TypedResourceDocument,
-  TypedResourceDocumentUpdate,
+  TRDUpdate,
 } from './TypedResourceDocument.types';
 
 export interface TypedResourceConfig<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
+  TBaseData extends TRDBaseData = {},
   TResourceDocument extends TypedResourceDocument<TBaseData> = TypedResourceDocument<TBaseData>,
 > {
   /**
@@ -21,7 +21,7 @@ export interface TypedResourceConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: TypedResourceBaseDocumentDataSchema<TBaseData>;
+  dataSchema: TRDBaseDataSchema<TBaseData>;
 
   /**
    * The default data used when creating a new document.
@@ -60,10 +60,7 @@ export interface TypedResourceConfig<
    *
    * @param update The resource update.
    */
-  onUpdate?(
-    core: Core,
-    update: TypedResourceDocumentUpdate<TBaseData>,
-  ): Partial<TBaseData>;
+  onUpdate?(core: Core, update: TRDUpdate<TBaseData>): Partial<TBaseData>;
 
   /**
    * Callback fired when a document is retrieved from the store.

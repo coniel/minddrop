@@ -1,12 +1,12 @@
 import { validateResourceDataSchema } from './validateResourceDataSchema';
 import { InvalidResourceSchemaError } from '../../errors';
-import { ResourceDocumentDataSchema } from '../../types';
+import { RDDataSchema } from '../../types';
 
 interface Data {
   foo?: string;
 }
 
-const schema: ResourceDocumentDataSchema<Data> = {
+const schema: RDDataSchema<Data> = {
   foo: {
     type: 'string',
     // Ensure core field options work

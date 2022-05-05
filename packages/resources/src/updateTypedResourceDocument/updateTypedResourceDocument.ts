@@ -1,15 +1,15 @@
 import { Core } from '@minddrop/core';
 import { createUpdate } from '@minddrop/utils';
 import {
-  DeleteUpdateData,
+  RDDeleteUpdateData,
   ResourceStore,
-  TypedResourceTypeConfigsStore,
-  RestoreUpdateData,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
+  ResourceTypeConfigsStore,
+  RDRestoreUpdateData,
+  TRDBaseData,
+  TRDTypeData,
   TypedResourceDocument,
   TypedResourceConfig,
-  TypedResourceDocumentUpdate,
+  TRDUpdate,
 } from '../types';
 import {
   createChanges,
@@ -39,45 +39,45 @@ import { validateTypedResourceDocument } from '../validateTypedResourceDocument'
  * Thrown if the resulting resource data is invalid.
  */
 export function updateTypedResourceDocument<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData>>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
-  data: DeleteUpdateData | RestoreUpdateData,
+  data: RDDeleteUpdateData | RDRestoreUpdateData,
   isInternalUpdate: true,
 ): TypedResourceDocument<TBaseData, TTypeData>;
 export function updateTypedResourceDocument<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
   TBaseUpdateData extends Partial<TBaseData>,
   TTypeUpdateData extends Partial<TTypeData>,
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData>>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
   data: TBaseUpdateData & TTypeUpdateData,
 ): TypedResourceDocument<TBaseData, TTypeData>;
 export function updateTypedResourceDocument<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
   TBaseUpdateData extends Partial<TBaseData>,
   TTypeUpdateData extends Partial<TTypeData>,
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData, TTypeData>>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
   data:
     | (TBaseUpdateData & TTypeUpdateData)
-    | DeleteUpdateData
-    | RestoreUpdateData,
+    | RDDeleteUpdateData
+    | RDRestoreUpdateData,
   isInternalUpdate?: true,
 ): TypedResourceDocument<TBaseData, TTypeData> {
   // Get the document from the store
@@ -91,8 +91,10 @@ export function updateTypedResourceDocument<
 
   // Get the type specific and base document update data
   const typeData: Partial<TTypeData> = {};
-  const baseData: Partial<TBaseData> | DeleteUpdateData | RestoreUpdateData =
-    {};
+  const baseData:
+    | Partial<TBaseData>
+    | RDDeleteUpdateData
+    | RDRestoreUpdateData = {};
   Object.keys(data).forEach((key) => {
     if (typeConfig.dataSchema[key]) {
       typeData[key] = data[key];
@@ -112,7 +114,7 @@ export function updateTypedResourceDocument<
   let baseUpdate = createUpdate(
     document,
     createChanges(baseData),
-  ) as TypedResourceDocumentUpdate<TBaseData>;
+  ) as TRDUpdate<TBaseData>;
 
   if (config.onUpdate) {
     // Call the config's `onUpdate` method which will return
@@ -129,10 +131,10 @@ export function updateTypedResourceDocument<
     TBaseData,
     TTypeData
   >;
-  let update = createUpdate(
-    documentWithBaseUpdate,
-    typeData,
-  ) as TypedResourceDocumentUpdate<TBaseData, TTypeData>;
+  let update = createUpdate(documentWithBaseUpdate, typeData) as TRDUpdate<
+    TBaseData,
+    TTypeData
+  >;
 
   if (typeConfig.onUpdate) {
     // Call the config's `onUpdate` method which will return

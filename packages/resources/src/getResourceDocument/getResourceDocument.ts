@@ -2,7 +2,7 @@ import { ResourceDocumentNotFoundError } from '../errors';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 
@@ -19,7 +19,7 @@ import {
  * Thrown if the document does not exist.
  */
 export function getResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   store: ResourceStore<TResourceDocument>,

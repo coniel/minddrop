@@ -4,9 +4,9 @@ import {
   ResourceStore,
   TypedResourceConfig,
   TypedResourceDocument,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
-  TypedResourceTypeConfigsStore,
+  TRDBaseData,
+  TRDTypeData,
+  ResourceTypeConfigsStore,
 } from '../types';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
 
@@ -25,12 +25,12 @@ import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
  * Thrown if the resource document does not exist.
  */
 export function restoreTypedResourceDocument<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData>>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
 ): TypedResourceDocument<TBaseData, TTypeData> {

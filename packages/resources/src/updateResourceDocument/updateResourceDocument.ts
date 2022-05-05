@@ -5,14 +5,14 @@ import {
   ResourceValidationError,
 } from '../errors';
 import {
-  DeleteUpdateData,
+  RDDeleteUpdateData,
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentChanges,
-  ResourceDocumentCustomData,
-  ResourceDocumentUpdateData,
+  RDChanges,
+  RDData,
+  RDUpdateData,
   ResourceStore,
-  RestoreUpdateData,
+  RDRestoreUpdateData,
 } from '../types';
 import { validateResourceDocument } from '../validation';
 
@@ -24,8 +24,8 @@ import { validateResourceDocument } from '../validation';
  * @returns Resource document changes.
  */
 export function createChanges<TData>(
-  data: ResourceDocumentUpdateData<TData>,
-): ResourceDocumentChanges<TData> {
+  data: RDUpdateData<TData>,
+): RDChanges<TData> {
   return {
     ...data,
     revision: generateId(),
@@ -72,18 +72,18 @@ export function validateExtermalUpdateData<TData>(data: TData) {
  * @param isInternalUpdate Whether the function is being called internally within the API.
  */
 export function updateResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,
   store: ResourceStore<TResourceDocument>,
   config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-  data: DeleteUpdateData | RestoreUpdateData,
+  data: RDDeleteUpdateData | RDRestoreUpdateData,
   isInternalUpdate: true,
 ): TResourceDocument;
 export function updateResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData>,
 >(
   core: Core,
@@ -93,14 +93,14 @@ export function updateResourceDocument<
   data: Partial<TData>,
 ): TResourceDocument;
 export function updateResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData>,
 >(
   core: Core,
   store: ResourceStore<TResourceDocument>,
   config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-  data: ResourceDocumentUpdateData<TData>,
+  data: RDUpdateData<TData>,
   isInternalUpdate?: true,
 ): TResourceDocument {
   // Get the document from the store

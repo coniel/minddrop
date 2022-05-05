@@ -7,8 +7,8 @@ import {
 import { generateResourceDocument } from '../generateResourceDocument';
 import { setup, cleanup, core } from '../test-utils';
 import {
-  TypedResourceBaseDocumentDataSchema,
-  TypedResourceTypeDocumentDataSchema,
+  TRDBaseDataSchema,
+  TRDTypeDataSchema,
   TypedResourceDocument,
   ResourceTypeConfig,
   ResourceStore,
@@ -42,18 +42,17 @@ interface TypeUpdateData {
 
 type TestDocument = TypedResourceDocument<BaseData, TypeData>;
 
-const resourceDataSchema: TypedResourceBaseDocumentDataSchema<BaseData> = {
+const resourceDataSchema: TRDBaseDataSchema<BaseData> = {
   baseFoo: { type: 'string' },
   baseBar: { type: 'string' },
   baseBaz: { type: 'string', static: true },
 };
 
-const typeDataSchema: TypedResourceTypeDocumentDataSchema<BaseData, TypeData> =
-  {
-    typeFoo: { type: 'string' },
-    typeBar: { type: 'string' },
-    typeBaz: { type: 'string', static: true },
-  };
+const typeDataSchema: TRDTypeDataSchema<BaseData, TypeData> = {
+  typeFoo: { type: 'string' },
+  typeBar: { type: 'string' },
+  typeBaz: { type: 'string', static: true },
+};
 
 // Test resource config
 const config: TypedResourceConfig<BaseData> = {

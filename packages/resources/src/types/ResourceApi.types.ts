@@ -1,8 +1,5 @@
 import { Core } from '@minddrop/core';
-import {
-  ResourceDocument,
-  ResourceDocumentCustomData,
-} from './ResourceDocument.types';
+import { ResourceDocument, RDData } from './ResourceDocument.types';
 
 /**
  * The API for a resource.
@@ -12,9 +9,9 @@ import {
  * @param TUpdateData The data that can be supplied to the `update` method when updating a resource document. Should be a subset of `TData`.
  */
 export interface ResourceApi<
-  TData extends ResourceDocumentCustomData,
-  TCreateData extends Partial<TData> & ResourceDocumentCustomData,
-  TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
+  TData extends RDData,
+  TCreateData extends Partial<TData> & RDData,
+  TUpdateData extends Partial<TData> & RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**

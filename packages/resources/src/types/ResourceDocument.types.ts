@@ -1,9 +1,13 @@
 import { FieldValueDelete } from '@minddrop/utils';
 
 /**
+ * Note: the RD prefix stands for ResourceDocument.
+ */
+
+/**
  * Resource document data common to all documents.
  */
-export interface BaseResourceDocumentData {
+export interface RDRootData {
   /**
    * The resource document's ID.
    */
@@ -39,21 +43,20 @@ export interface BaseResourceDocumentData {
   deletedAt?: Date;
 }
 
-export type ResourceDocumentCustomData = Object &
+export type RDData = Object &
   Partial<Record<keyof ResourceDocument<{}>, never>>;
 
 /**
  * A resource document consists of the base resource document
  * data, and custom data.
  */
-export type ResourceDocument<TData extends ResourceDocumentCustomData = {}> =
-  BaseResourceDocumentData & TData;
+export type ResourceDocument<TData extends RDData = {}> = RDRootData & TData;
 
 /**
  * When updating a resource document, the following properties
  * are always updated.
  */
-export interface BaseResourceDocumentChanges {
+export interface RDRootChanges {
   /**
    * The document's new revision ID.
    */
@@ -69,7 +72,7 @@ export interface BaseResourceDocumentChanges {
  * When soft-deleting a resource document, the following
  * properties are updated.
  */
-export interface DeleteUpdateData {
+export interface RDDeleteUpdateData {
   /**
    * Marks the document as deleted.
    */
@@ -85,7 +88,7 @@ export interface DeleteUpdateData {
  * When restoring a soft-deleted resource document, the following
  * properties are updated.
  */
-export interface RestoreUpdateData {
+export interface RDRestoreUpdateData {
   /**
    * Removes the deleted property so that the document is no longer
    * marked as deleted.
@@ -104,23 +107,24 @@ export interface RestoreUpdateData {
  * of part of the custom data, the delete update data, or the
  * restore update data.
  */
-export type ResourceDocumentUpdateData<
-  TData extends ResourceDocumentCustomData,
-> = Partial<TData> | DeleteUpdateData | RestoreUpdateData;
+export type RDUpdateData<TData extends RDData> =
+  | Partial<TData>
+  | RDDeleteUpdateData
+  | RDRestoreUpdateData;
 
 /**
  * When updating a resource document, the changes consist of the
  * base document changes (which are set for every update), and
  * the custom data changes or delete/restore data changes.
  */
-export type ResourceDocumentChanges<TData extends ResourceDocumentCustomData> =
-  BaseResourceDocumentChanges & ResourceDocumentUpdateData<TData>;
+export type RDChanges<TData extends RDData> = RDRootChanges &
+  RDUpdateData<TData>;
 
 /**
  * Describes the changes made to an updated resource document.
  */
-export interface ResourceDocumentUpdate<
-  TData extends ResourceDocumentCustomData,
+export interface RDUpdate<
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData>,
 > {
   /**
@@ -136,5 +140,5 @@ export interface ResourceDocumentUpdate<
   /**
    * The changes applied to the resource document.
    */
-  changes: ResourceDocumentChanges<TData>;
+  changes: RDChanges<TData>;
 }

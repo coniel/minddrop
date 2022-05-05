@@ -4,7 +4,7 @@ import { generateResourceDocument } from '../generateResourceDocument';
 import {
   TypedResourceConfig,
   ResourceStore,
-  TypedResourceTypeConfigsStore,
+  ResourceTypeConfigsStore,
   TypedResourceDocument,
   ResourceTypeConfig,
 } from '../types';
@@ -33,7 +33,7 @@ export function createTypedResourceDocument<
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData>>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   type: string,
   data?: TBaseCreateData & TTypeCreateData,

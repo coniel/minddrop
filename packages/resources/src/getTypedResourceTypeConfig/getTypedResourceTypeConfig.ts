@@ -1,9 +1,9 @@
 import { ResourceTypeNotRegisteredError } from '../errors';
 import {
   ResourceTypeConfig,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
-  TypedResourceTypeConfigsStore,
+  TRDBaseData,
+  TRDTypeData,
+  ResourceTypeConfigsStore,
 } from '../types';
 
 /**
@@ -18,11 +18,11 @@ import {
  * Thrown if the resource type is not registered.
  */
 export function getTypedResourceTypeConfig<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 >(
   resource: string,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   type: string,
 ): ResourceTypeConfig<TBaseData, TTypeData> {
   // Get the config from the store

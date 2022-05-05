@@ -2,9 +2,9 @@ import { Core } from '@minddrop/core';
 import {
   ResourceTypeConfig,
   TypedResourceConfig,
-  TypedResourceTypeConfigsStore,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
+  ResourceTypeConfigsStore,
+  TRDBaseData,
+  TRDTypeData,
 } from '../types';
 import { validateTypedResourceDataSchema } from '../validateTypedResourceDataSchema';
 
@@ -20,12 +20,12 @@ import { validateTypedResourceDataSchema } from '../validateTypedResourceDataSch
  * Thrown if the type's data schema is invalid.
  */
 export function registerResourceType<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 >(
   core: Core,
   resourceConfig: TypedResourceConfig<TBaseData>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData>,
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData>,
   typeConfig: ResourceTypeConfig<TBaseData, TTypeData>,
 ): void {
   // Ensure that the data schema is valid

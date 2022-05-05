@@ -2,12 +2,12 @@ import { Core } from '@minddrop/core';
 import { ResourceApi } from './ResourceApi.types';
 import {
   ResourceTypeConfig,
-  TypedResourceTypeConfigsStore,
+  ResourceTypeConfigsStore,
 } from './ResourceTypeConfig.types';
 import {
   TypedResourceDocument,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
+  TRDBaseData,
+  TRDTypeData,
 } from './TypedResourceDocument.types';
 
 /**
@@ -18,9 +18,9 @@ import {
  * @param TUpdateData The data that can be supplied to the `update` method when updating a resource document. Should be a subset of `TBaseData`.
  */
 export interface TypedResourceApi<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TCreateData extends Partial<TBaseData> & TypedResourceDocumentBaseCustomData,
-  TUpdateData extends Partial<TBaseData> & TypedResourceDocumentBaseCustomData,
+  TBaseData extends TRDBaseData,
+  TCreateData extends Partial<TBaseData> & TRDBaseData,
+  TUpdateData extends Partial<TBaseData> & TRDBaseData,
 > extends Omit<ResourceApi<TBaseData, TCreateData, TUpdateData>, 'create'> {
   /**
    * Registers a new resource type and dispatches a
@@ -32,9 +32,7 @@ export interface TypedResourceApi<
    * @throws InvalidResourceSchemaError
    * Thrown if the type's data schema is invalid.
    */
-  register<
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  register<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     config: ResourceTypeConfig<TBaseData, TTypeData>,
   ): void;
@@ -49,9 +47,7 @@ export interface TypedResourceApi<
    * @throws ResourceTypeNotRegistered
    * Thrown if the resource type is not registered.
    */
-  unregister<
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  unregister<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     config: ResourceTypeConfig<TBaseData, TTypeData>,
   ): void;
@@ -92,10 +88,7 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentValidationError
    * Thrown if the resulting document is invalid.
    */
-  create<
-    TTypeCreateData = {},
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  create<TTypeCreateData = {}, TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     type: string,
     data?: TCreateData & TTypeCreateData,
@@ -125,10 +118,7 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentValidationError
    * Thrown if the resulting document is invalid.
    */
-  update<
-    TTypeUpdateData = {},
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  update<TTypeUpdateData = {}, TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
     data: TUpdateData & TTypeUpdateData,
@@ -147,7 +137,7 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  delete<TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {}>(
+  delete<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
   ): TypedResourceDocument<TBaseData, TTypeData>;
@@ -165,9 +155,7 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  restore<
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  restore<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
   ): TypedResourceDocument<TBaseData, TTypeData>;
@@ -186,9 +174,7 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  deletePermanently<
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(
+  deletePermanently<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
   ): TypedResourceDocument<TBaseData, TTypeData>;
@@ -206,10 +192,10 @@ export interface TypedResourceApi<
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  get<TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {}>(
+  get<TTypeData extends TRDTypeData<TBaseData> = {}>(
     documentId: string,
   ): TypedResourceDocument<TBaseData, TTypeData>;
-  get<TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {}>(
+  get<TTypeData extends TRDTypeData<TBaseData> = {}>(
     documentIds: string[],
   ): Record<string, TypedResourceDocument<TBaseData, TTypeData>>;
 
@@ -219,13 +205,14 @@ export interface TypedResourceApi<
    *
    * @returns All of the resource documents.
    */
-  getAll<
-    TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-  >(): Record<string, TypedResourceDocument<TBaseData, TTypeData>>;
+  getAll<TTypeData extends TRDTypeData<TBaseData> = {}>(): Record<
+    string,
+    TypedResourceDocument<TBaseData, TTypeData>
+  >;
 
   /**
    * The resource type config's store. Intended for use in tests
    * only.
    */
-  typeConfigsStore: TypedResourceTypeConfigsStore<TBaseData>;
+  typeConfigsStore: ResourceTypeConfigsStore<TBaseData>;
 }

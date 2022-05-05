@@ -2,7 +2,7 @@ import { mapById } from '@minddrop/utils';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 
@@ -15,7 +15,7 @@ import {
  * @returns The requested documenta.
  */
 export function getAllResourceDocuments<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   store: ResourceStore<TResourceDocument>,

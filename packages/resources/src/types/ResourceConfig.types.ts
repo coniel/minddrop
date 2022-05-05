@@ -1,13 +1,9 @@
-import { ResourceDocumentDataSchema } from './ResourceValidation.types';
+import { RDDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
-import {
-  ResourceDocument,
-  ResourceDocumentCustomData,
-  ResourceDocumentUpdate,
-} from './ResourceDocument.types';
+import { ResourceDocument, RDData, RDUpdate } from './ResourceDocument.types';
 
 export interface ResourceConfig<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**
@@ -21,7 +17,7 @@ export interface ResourceConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: ResourceDocumentDataSchema<TData>;
+  dataSchema: RDDataSchema<TData>;
 
   /**
    * The default data used when creating a new document.
@@ -62,7 +58,7 @@ export interface ResourceConfig<
    */
   onUpdate?(
     core: Core,
-    update: ResourceDocumentUpdate<TData, TResourceDocument>,
+    update: RDUpdate<TData, TResourceDocument>,
   ): Partial<TData>;
 
   /**

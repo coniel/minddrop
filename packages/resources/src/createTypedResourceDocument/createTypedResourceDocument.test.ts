@@ -6,12 +6,12 @@ import {
 } from '../errors';
 import { createResourceStore } from '../createResourceStore';
 import {
-  TypedResourceTypeConfigsStore,
+  ResourceTypeConfigsStore,
   TypedResourceDocument,
   ResourceStore,
   ResourceTypeConfig,
-  TypedResourceBaseDocumentDataSchema,
-  TypedResourceTypeDocumentDataSchema,
+  TRDBaseDataSchema,
+  TRDTypeDataSchema,
   TypedResourceConfig,
 } from '../types';
 import { createTypedResourceDocument as rawCreateTypedResourceDocument } from './createTypedResourceDocument';
@@ -41,18 +41,17 @@ interface TypeCreateData {
 
 type TestDocument = TypedResourceDocument<BaseData, TypeData>;
 
-const resourceDataSchema: TypedResourceBaseDocumentDataSchema<BaseData> = {
+const resourceDataSchema: TRDBaseDataSchema<BaseData> = {
   resourceFoo: { type: 'string' },
   resourceBar: { type: 'string' },
   resourceBaz: { type: 'string' },
 };
 
-const typeDataSchema: TypedResourceTypeDocumentDataSchema<BaseData, TypeData> =
-  {
-    typeFoo: { type: 'string' },
-    typeBar: { type: 'string' },
-    typeBaz: { type: 'string' },
-  };
+const typeDataSchema: TRDTypeDataSchema<BaseData, TypeData> = {
+  typeFoo: { type: 'string' },
+  typeBar: { type: 'string' },
+  typeBaz: { type: 'string' },
+};
 
 const config: TypedResourceConfig<BaseData> = {
   resource: 'tests',
@@ -78,7 +77,7 @@ typeConfigsStore.register({
 const createTypedResourceDocument = (
   core: Core,
   store: ResourceStore<TestDocument>,
-  typeConfigsStore: TypedResourceTypeConfigsStore<BaseData, TypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<BaseData, TypeData>,
   config: TypedResourceConfig<BaseData>,
   type: string,
   data?: BaseCreateData & TypeCreateData,

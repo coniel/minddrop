@@ -1,9 +1,9 @@
 import { InvalidResourceSchemaError } from '../errors';
 import {
-  TypedResourceBaseDocumentDataSchema,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
-  TypedResourceTypeDocumentDataSchema,
+  TRDBaseDataSchema,
+  TRDBaseData,
+  TRDTypeData,
+  TRDTypeDataSchema,
 } from '../types';
 import { validateResourceDataSchema } from '../validation/validateResourceDataSchema';
 
@@ -17,13 +17,13 @@ import { validateResourceDataSchema } from '../validation/validateResourceDataSc
  * Thrown if the schema is invalid.
  */
 export function validateTypedResourceDataSchema<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 >(
   resource: string,
   schema:
-    | TypedResourceBaseDocumentDataSchema<TBaseData>
-    | TypedResourceTypeDocumentDataSchema<TBaseData, TTypeData>,
+    | TRDBaseDataSchema<TBaseData>
+    | TRDTypeDataSchema<TBaseData, TTypeData>,
   skipBaseValidation?: boolean,
 ): void {
   // Ensure that the schema does not have a `type` validator

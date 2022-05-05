@@ -2,9 +2,9 @@ import { setup, cleanup, core } from '../test-utils';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import {
   ResourceTypeConfig,
-  TypedResourceBaseDocumentDataSchema,
+  TRDBaseDataSchema,
   TypedResourceDocument,
-  TypedResourceTypeDocumentDataSchema,
+  TRDTypeDataSchema,
 } from '../types';
 import { createTypedResource } from './createTypedResource';
 
@@ -38,7 +38,7 @@ interface TypeUpdateData {
   typeBar?: string;
 }
 
-const baseDataSchema: TypedResourceBaseDocumentDataSchema<BaseData> = {
+const baseDataSchema: TRDBaseDataSchema<BaseData> = {
   baseFoo: {
     type: 'string',
   },
@@ -47,15 +47,14 @@ const baseDataSchema: TypedResourceBaseDocumentDataSchema<BaseData> = {
   },
 };
 
-const typeDataScehma: TypedResourceTypeDocumentDataSchema<BaseData, TypeData> =
-  {
-    typeFoo: {
-      type: 'string',
-    },
-    typeBar: {
-      type: 'string',
-    },
-  };
+const typeDataScehma: TRDTypeDataSchema<BaseData, TypeData> = {
+  typeFoo: {
+    type: 'string',
+  },
+  typeBar: {
+    type: 'string',
+  },
+};
 
 const typeConfig: ResourceTypeConfig<BaseData, TypeData> = {
   type: 'test-type',

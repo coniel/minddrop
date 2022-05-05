@@ -1,5 +1,5 @@
 import { ResourceValidationError } from '../errors';
-import { ResourceDocumentDataSchema, TypedResourceDocument } from '../types';
+import { RDDataSchema, TypedResourceDocument } from '../types';
 import { validateTypedResourceDocument } from './validateTypedResourceDocument';
 
 interface BaseData {
@@ -10,14 +10,14 @@ interface TypeData {
   typeField: string;
 }
 
-const baseSchema: ResourceDocumentDataSchema<BaseData> = {
+const baseSchema: RDDataSchema<BaseData> = {
   baseField: {
     type: 'string',
     required: true,
   },
 };
 
-const typeSchema: ResourceDocumentDataSchema<TypeData> = {
+const typeSchema: RDDataSchema<TypeData> = {
   typeField: {
     type: 'string',
     required: true,

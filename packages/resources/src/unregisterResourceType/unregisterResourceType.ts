@@ -3,7 +3,7 @@ import { ResourceTypeNotRegisteredError } from '../errors';
 import {
   ResourceTypeConfig,
   TypedResourceConfig,
-  TypedResourceTypeConfigsStore,
+  ResourceTypeConfigsStore,
 } from '../types';
 
 /**
@@ -20,7 +20,7 @@ import {
 export function unregisterResourceType(
   core: Core,
   resourceConfig: TypedResourceConfig,
-  typeConfigsStore: TypedResourceTypeConfigsStore,
+  typeConfigsStore: ResourceTypeConfigsStore,
   typeConfig: ResourceTypeConfig,
 ): void {
   // Ensure that the type is registered

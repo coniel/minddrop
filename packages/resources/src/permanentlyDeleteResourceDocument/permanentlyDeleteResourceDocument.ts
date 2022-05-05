@@ -3,7 +3,7 @@ import { ResourceDocumentNotFoundError } from '../errors';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 
@@ -17,7 +17,7 @@ import {
  * @param documentId The ID of the document to delete permanently.
  */
 export function permanentlyDeleteResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,

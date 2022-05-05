@@ -7,11 +7,7 @@ import {
 } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { cleanup, core } from '../test-utils';
-import {
-  ResourceApi,
-  ResourceDocumentDataSchema,
-  ResourceDocument,
-} from '../types';
+import { ResourceApi, RDDataSchema, ResourceDocument } from '../types';
 import { createResource } from './createResource';
 
 interface Data {
@@ -31,7 +27,7 @@ interface UpdateData {
   bar?: string;
 }
 
-const dataSchema: ResourceDocumentDataSchema<Data> = {
+const dataSchema: RDDataSchema<Data> = {
   foo: {
     type: 'string',
     required: true,

@@ -2,7 +2,7 @@ import {
   InvalidResourceSchemaError,
   ResourceValidationError,
 } from '../../errors';
-import { ResourceDocumentDataSchema, ResourceDocument } from '../../types';
+import { RDDataSchema, ResourceDocument } from '../../types';
 import {
   InvalidSchemaError,
   ValidationError,
@@ -34,7 +34,7 @@ const resourceFieldValidators: Record<string, ValidatorFunction> = {
  */
 export function validateResourceDocument<TData>(
   resource: string,
-  dataSchema: ResourceDocumentDataSchema<TData>,
+  dataSchema: RDDataSchema<TData>,
   document: ResourceDocument<TData>,
   originalDocument?: object,
 ): void {

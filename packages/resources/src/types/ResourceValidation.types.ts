@@ -13,14 +13,11 @@ import {
   ObjectValidator,
   MultiTypeValidator,
 } from '@minddrop/utils';
-import {
-  ResourceDocument,
-  ResourceDocumentCustomData,
-} from './ResourceDocument.types';
+import { ResourceDocument, RDData } from './ResourceDocument.types';
 import {
   TypedResourceDocument,
-  TypedResourceDocumentBaseCustomData,
-  TypedResourceDocumentTypeCustomData,
+  TRDBaseData,
+  TRDTypeData,
 } from './TypedResourceDocument.types';
 
 export interface ResourceIdValidator {
@@ -112,25 +109,34 @@ export type ResourceFieldValidator = (
   BaseResourceFieldValidator;
 
 /**
+ * Note:
+ * The RD prefix stands for ResourceDocument.
+ * The TRD prefix stands for TypedResourceDocument.
+ */
+
+/**
  * The schema for resource documents.
  */
-export type ResourceDocumentSchema<TData extends ResourceDocumentCustomData> =
-  Record<keyof ResourceDocument<TData>, ResourceFieldValidator>;
+export type RDSchema<TData extends RDData> = Record<
+  keyof ResourceDocument<TData>,
+  ResourceFieldValidator
+>;
 
 /**
  * The schema for the custom data of resource
  * documents.
  */
-export type ResourceDocumentDataSchema<
-  TData extends ResourceDocumentCustomData = {},
-> = Record<keyof TData, ResourceFieldValidator>;
+export type RDDataSchema<TData extends RDData = {}> = Record<
+  keyof TData,
+  ResourceFieldValidator
+>;
 
 /**
  * The schema for typed resource documents.
  */
-export type TypedResourceDocumentSchema<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+export type TRDSchema<
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 > = Record<
   keyof TypedResourceDocument<TBaseData, TTypeData>,
   ResourceFieldValidator
@@ -140,18 +146,19 @@ export type TypedResourceDocumentSchema<
  * The schema for the base custom data of typed
  * resource documents.
  */
-export type TypedResourceBaseDocumentDataSchema<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-> = Record<keyof TBaseData, ResourceFieldValidator> &
+export type TRDBaseDataSchema<TBaseData extends TRDBaseData> = Record<
+  keyof TBaseData,
+  ResourceFieldValidator
+> &
   Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;
 
 /**
  * The schema for the type specific custom data
  * of typed resource documents.
  */
-export type TypedResourceTypeDocumentDataSchema<
-  TBaseData extends TypedResourceDocumentBaseCustomData,
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData>,
+export type TRDTypeDataSchema<
+  TBaseData extends TRDBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
 > = Record<keyof TTypeData, ResourceFieldValidator> &
   Partial<Record<keyof TypedResourceDocument<TBaseData, {}>, never>>;
 
@@ -159,9 +166,9 @@ export type TypedResourceTypeDocumentDataSchema<
  * The combined base and type scpecific custom
  * data schema for a typed resource document.
  */
-export type TypedResourceDocumentDataSchema<
-  TBaseData extends TypedResourceDocumentBaseCustomData = {},
-  TTypeData extends TypedResourceDocumentTypeCustomData<TBaseData> = {},
-> = TypedResourceBaseDocumentDataSchema<TBaseData> &
-  TypedResourceTypeDocumentDataSchema<TBaseData, TTypeData> &
+export type TRDDataSchema<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+> = TRDBaseDataSchema<TBaseData> &
+  TRDTypeDataSchema<TBaseData, TTypeData> &
   Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;

@@ -8,8 +8,8 @@ import {
   TypedResourceDocument,
   ResourceStore,
   TypedResourceConfig,
-  TypedResourceBaseDocumentDataSchema,
-  TypedResourceTypeDocumentDataSchema,
+  TRDBaseDataSchema,
+  TRDTypeDataSchema,
   ResourceTypeConfig,
   ConfigStore,
 } from '../types';
@@ -25,14 +25,13 @@ interface TypeData {
 
 type TestDocument = TypedResourceDocument<BaseData, TypeData>;
 
-const resourceDataSchema: TypedResourceBaseDocumentDataSchema<BaseData> = {
+const resourceDataSchema: TRDBaseDataSchema<BaseData> = {
   baseFoo: { type: 'string' },
 };
 
-const typeDataSchema: TypedResourceTypeDocumentDataSchema<BaseData, TypeData> =
-  {
-    typeFoo: { type: 'string' },
-  };
+const typeDataSchema: TRDTypeDataSchema<BaseData, TypeData> = {
+  typeFoo: { type: 'string' },
+};
 
 // Test resource config
 const config: TypedResourceConfig<BaseData> = {

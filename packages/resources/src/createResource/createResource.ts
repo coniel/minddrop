@@ -2,7 +2,7 @@ import {
   ResourceApi,
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 import { clearResourceDocuments } from '../clearResourceDocuments';
@@ -28,9 +28,9 @@ import { validateResourceDataSchema } from '../validation/validateResourceDataSc
  * @returns A resource API.
  */
 export function createResource<
-  TData extends ResourceDocumentCustomData,
-  TCreateData extends Partial<TData> & ResourceDocumentCustomData,
-  TUpdateData extends Partial<TData> & ResourceDocumentCustomData,
+  TData extends RDData,
+  TCreateData extends Partial<TData> & RDData,
+  TUpdateData extends Partial<TData> & RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   config: ResourceConfig<TData, TResourceDocument>,

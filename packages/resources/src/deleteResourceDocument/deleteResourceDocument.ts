@@ -2,7 +2,7 @@ import { Core } from '@minddrop/core';
 import {
   ResourceConfig,
   ResourceDocument,
-  ResourceDocumentCustomData,
+  RDData,
   ResourceStore,
 } from '../types';
 import { updateResourceDocument } from '../updateResourceDocument';
@@ -17,7 +17,7 @@ import { updateResourceDocument } from '../updateResourceDocument';
  * @param documentId The ID of the document to delete.
  */
 export function deleteResourceDocument<
-  TData extends ResourceDocumentCustomData,
+  TData extends RDData,
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 >(
   core: Core,

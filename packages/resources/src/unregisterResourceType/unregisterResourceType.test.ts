@@ -2,7 +2,7 @@ import { core } from '../test-utils';
 import {
   TypedResourceConfig,
   ResourceTypeConfig,
-  TypedResourceTypeDocumentDataSchema,
+  TRDTypeDataSchema,
 } from '../types';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import { registerResourceType } from '../registerResourceType';
@@ -13,7 +13,7 @@ interface Data {
   foo: string;
 }
 
-const schema: TypedResourceTypeDocumentDataSchema<{}, Data> = {
+const schema: TRDTypeDataSchema<{}, Data> = {
   foo: {
     type: 'string',
   },

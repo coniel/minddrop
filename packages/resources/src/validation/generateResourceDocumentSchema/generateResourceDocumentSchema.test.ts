@@ -1,11 +1,11 @@
-import { ResourceDocumentDataSchema } from '../../types';
+import { RDDataSchema } from '../../types';
 import { generateResourceDocumentSchema } from './generateResourceDocumentSchema';
 
 interface Data {
   foo: string;
 }
 
-const dataSchema: ResourceDocumentDataSchema<Data> = {
+const dataSchema: RDDataSchema<Data> = {
   foo: { type: 'string' },
 };
 
