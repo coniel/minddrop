@@ -10,6 +10,7 @@ import { restoreTypedResourceDocument } from '../restoreTypedResourceDocument';
 import {
   ResourceConfig,
   ResourceTypeConfig,
+  RegisteredResourceTypeConfig,
   TypedResourceApi,
   TypedResourceConfig,
   TypedResourceDocument,
@@ -42,7 +43,9 @@ export function createTypedResource<
   );
 
   // Create a store for the type configurations
-  const typeConfigsStore = createConfigsStore<ResourceTypeConfig<TBaseData>>({
+  const typeConfigsStore = createConfigsStore<
+    RegisteredResourceTypeConfig<ResourceTypeConfig>
+  >({
     idField: 'type',
   });
 
@@ -130,7 +133,7 @@ export function createTypedResource<
         config.resource,
         typeConfigsStore,
         type,
-      ) as TTypeConfig,
+      ) as RegisteredResourceTypeConfig<TTypeConfig>,
     getAllTypeConfigs: typeConfigsStore.getAll,
     typeConfigsStore,
   };

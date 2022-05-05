@@ -3,7 +3,7 @@ export interface ConfigStore<TConfig> {
    * Retrieves a config by ID. The config 'ID' field is determined
    * by the `idField` option provided when the store was created.
    *
-   * @param id The ID of the config to get.
+   * @param id - The ID of the config to get.
    */
   get<T extends TConfig = TConfig>(id: string): T;
 
@@ -13,7 +13,7 @@ export interface ConfigStore<TConfig> {
    * field is determined by the `idField` option provided when the
    * store was created.
    *
-   * @param ids The IDs of the configs to get.
+   * @param ids - The IDs of the configs to get.
    */
   get<T extends TConfig = TConfig>(ids: string[]): T[];
 
@@ -27,7 +27,7 @@ export interface ConfigStore<TConfig> {
   /**
    * Adds the provided config(s) to the store.
    *
-   * @param config The config to register.
+   * @param config - The config to register.
    */
   register<T extends TConfig = TConfig>(config: T | T[]): void;
 
@@ -49,7 +49,7 @@ export interface ConfigStore<TConfig> {
    * field is determined by the `idField` option
    * provided when the store was created.
    *
-   * @param id The ID of the config to retrieve.
+   * @param id - The ID of the config to retrieve.
    */
   useConfig<T extends TConfig = TConfig>(id: string): T | null;
 
@@ -60,7 +60,7 @@ export interface ConfigStore<TConfig> {
    * is determined by the `idField` option provided
    * when the store was created.
    *
-   * @param ids The IDs of the configs to retrieve.
+   * @param ids - The IDs of the configs to retrieve.
    */
   useConfigs<T extends TConfig = TConfig>(ids: string[]): T[];
 

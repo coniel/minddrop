@@ -89,7 +89,18 @@ export interface ResourceTypeConfig<
   onClear?(): void;
 }
 
+export type RegisteredResourceTypeConfig<
+  TTypeConfig extends ResourceTypeConfig,
+> = TTypeConfig & {
+  /**
+   * The ID of the extension that registered the resource type.
+   */
+  extension: string;
+};
+
 export type ResourceTypeConfigsStore<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
-> = ConfigStore<ResourceTypeConfig<TBaseData, TTypeData>>;
+> = ConfigStore<
+  RegisteredResourceTypeConfig<ResourceTypeConfig<TBaseData, TTypeData>>
+>;

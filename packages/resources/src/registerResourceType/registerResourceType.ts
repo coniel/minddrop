@@ -34,8 +34,9 @@ export function registerResourceType<
     typeConfig.dataSchema,
   );
 
-  // Register the config in the type configs store
-  typeConfigsStore.register(typeConfig);
+  // Add the extension ID to the config and register it
+  // into the type configs store.
+  typeConfigsStore.register({ ...typeConfig, extension: core.extensionId });
 
   // Dispatch a `[resource]:register` event
   core.dispatch(`${resourceConfig.resource}:register`, typeConfig);

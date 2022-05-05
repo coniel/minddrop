@@ -3,6 +3,7 @@ import {
   TypedResourceConfig,
   ResourceTypeConfig,
   TRDTypeDataSchema,
+  RegisteredResourceTypeConfig,
 } from '../types';
 import { InvalidResourceSchemaError } from '../errors';
 import { createConfigsStore } from '../createConfigsStore';
@@ -25,7 +26,9 @@ const resourceConfig: TypedResourceConfig = {
 };
 
 // Create a configs store for the test resource type configs
-const typeConfigsStore = createConfigsStore<ResourceTypeConfig>({
+const typeConfigsStore = createConfigsStore<
+  RegisteredResourceTypeConfig<ResourceTypeConfig>
+>({
   idField: 'type',
 });
 
@@ -41,6 +44,14 @@ describe('registerResourceType', () => {
 
     // Config should be in the type configs store
     expect(typeConfigsStore.get('test')).toEqual(typeConfig);
+  });
+
+  it('adds the extension ID to the config', () => {
+    // Register a new resource type
+    registerResourceType(core, resourceConfig, typeConfigsStore, typeConfig);
+
+    // Store config should contain extension ID
+    expect(typeConfigsStore.get('test').extension).toEqual(core.extensionId);
   });
 
   it('dispatches a `[resource]:register` event', (done) => {
