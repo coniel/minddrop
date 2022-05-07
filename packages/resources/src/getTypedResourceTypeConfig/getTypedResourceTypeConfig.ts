@@ -20,9 +20,14 @@ import {
 export function getTypedResourceTypeConfig<
   TBaseData extends TRDBaseData,
   TTypeData extends TRDTypeData<TBaseData>,
+  TCustomTypeConfigOptions = {},
 >(
   resource: string,
-  typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
+  typeConfigsStore: ResourceTypeConfigsStore<
+    TBaseData,
+    TTypeData,
+    TCustomTypeConfigOptions
+  >,
   type: string,
 ): ResourceTypeConfig<TBaseData, TTypeData> {
   // Get the config from the store

@@ -3,6 +3,7 @@ import {
   TypedResourceConfig,
   ResourceTypeConfig,
   TRDTypeDataSchema,
+  RegisteredResourceTypeConfig,
 } from '../types';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import { registerResourceType } from '../registerResourceType';
@@ -36,9 +37,13 @@ const typeConfig: ResourceTypeConfig<{}, Data> = {
 };
 
 describe('unregisterResourceType', () => {
+  let registeredTypeConfig: RegisteredResourceTypeConfig<{}, Data>;
+
   beforeEach(() => {
     // Register a resource type
     registerResourceType(core, resourceConfig, typeConfigsStore, typeConfig);
+    // Get the registered type config
+    registeredTypeConfig = typeConfigsStore.get('test');
   });
 
   it('unregisters the config from the type configs store', () => {
@@ -52,8 +57,8 @@ describe('unregisterResourceType', () => {
   it('dispatches a `[resource]:unregister` event', (done) => {
     // Listen to `tests:test:unregister` events
     core.addEventListener('tests:test:unregister', (payload) => {
-      // Payload data should be the type config
-      expect(payload.data).toEqual(typeConfig);
+      // Payload data should be the registered type config
+      expect(payload.data).toEqual(registeredTypeConfig);
       done();
     });
 

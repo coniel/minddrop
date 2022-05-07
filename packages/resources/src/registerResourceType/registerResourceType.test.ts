@@ -27,7 +27,7 @@ const resourceConfig: TypedResourceConfig = {
 
 // Create a configs store for the test resource type configs
 const typeConfigsStore = createConfigsStore<
-  RegisteredResourceTypeConfig<ResourceTypeConfig>
+  RegisteredResourceTypeConfig<{}, Data>
 >({
   idField: 'type',
 });
@@ -43,7 +43,7 @@ describe('registerResourceType', () => {
     registerResourceType(core, resourceConfig, typeConfigsStore, typeConfig);
 
     // Config should be in the type configs store
-    expect(typeConfigsStore.get('test')).toEqual(typeConfig);
+    expect(typeConfigsStore.get('test')).toBeDefined();
   });
 
   it('adds the extension ID to the config', () => {
@@ -51,14 +51,20 @@ describe('registerResourceType', () => {
     registerResourceType(core, resourceConfig, typeConfigsStore, typeConfig);
 
     // Store config should contain extension ID
-    expect(typeConfigsStore.get('test').extension).toEqual(core.extensionId);
+    expect(typeConfigsStore.get('test')).toEqual({
+      ...typeConfig,
+      extension: core.extensionId,
+    });
   });
 
   it('dispatches a `[resource]:register` event', (done) => {
     // Listen to `tests:test:register` events
     core.addEventListener('tests:test:register', (payload) => {
       // Payload data should be the type config
-      expect(payload.data).toEqual(typeConfig);
+      expect(payload.data).toEqual({
+        ...typeConfig,
+        extension: core.extensionId,
+      });
       done();
     });
 

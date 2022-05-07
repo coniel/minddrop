@@ -6,7 +6,7 @@ import {
   ResourceStore,
   ResourceTypeConfigsStore,
   TypedResourceDocument,
-  ResourceTypeConfig,
+  RegisteredResourceTypeConfig,
 } from '../types';
 import { validateTypedResourceDocument } from '../validateTypedResourceDocument';
 
@@ -42,7 +42,9 @@ export function createTypedResourceDocument<
 
   // Get the type's config object
   const typeConfig =
-    typeConfigsStore.get<ResourceTypeConfig<TBaseData, TTypeData>>(type);
+    typeConfigsStore.get<RegisteredResourceTypeConfig<TBaseData, TTypeData>>(
+      type,
+    );
 
   // Ensure that the resource type is registered
   if (!typeConfig) {

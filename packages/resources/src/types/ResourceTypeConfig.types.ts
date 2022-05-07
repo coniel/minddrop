@@ -8,10 +8,11 @@ import {
   TRDUpdate,
 } from './TypedResourceDocument.types';
 
-export interface ResourceTypeConfig<
+export type ResourceTypeConfig<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
-> {
+  TCustomOptions = {},
+> = TCustomOptions & {
   /**
    * A unique identifier for the resource type composed
    * using the extension ID and resource type:
@@ -87,11 +88,13 @@ export interface ResourceTypeConfig<
    * as clearning other related data.
    */
   onClear?(): void;
-}
+};
 
 export type RegisteredResourceTypeConfig<
-  TTypeConfig extends ResourceTypeConfig,
-> = TTypeConfig & {
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+  TCustomOptions = {},
+> = ResourceTypeConfig<TBaseData, TTypeData, TCustomOptions> & {
   /**
    * The ID of the extension that registered the resource type.
    */
@@ -101,6 +104,7 @@ export type RegisteredResourceTypeConfig<
 export type ResourceTypeConfigsStore<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
+  TCustomOptions = {},
 > = ConfigStore<
-  RegisteredResourceTypeConfig<ResourceTypeConfig<TBaseData, TTypeData>>
+  RegisteredResourceTypeConfig<TBaseData, TTypeData, TCustomOptions>
 >;

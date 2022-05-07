@@ -89,7 +89,10 @@ describe('createTypedResource', () => {
       Api.register(core, typeConfig);
 
       // Type should be registered
-      expect(Api.getTypeConfig('test-type')).toEqual(typeConfig);
+      expect(Api.getTypeConfig('test-type')).toEqual({
+        ...typeConfig,
+        extension: core.extensionId,
+      });
     });
   });
 
@@ -116,7 +119,7 @@ describe('createTypedResource', () => {
       const config = Api.getTypeConfig('test-type');
 
       // Should return all registered types
-      expect(config).toEqual(typeConfig);
+      expect(config).toEqual({ ...typeConfig, extension: core.extensionId });
     });
   });
 
@@ -132,7 +135,10 @@ describe('createTypedResource', () => {
       const configs = Api.getAllTypeConfigs();
 
       // Should return the requested config
-      expect(configs).toEqual([typeConfig, typeConfig2]);
+      expect(configs).toEqual([
+        { ...typeConfig, extension: core.extensionId },
+        { ...typeConfig2, extension: core.extensionId },
+      ]);
     });
   });
 

@@ -22,6 +22,7 @@ export interface TypedResourceApi<
   TBaseData extends TRDBaseData,
   TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
   TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
+  TCustomTypeConfigOptions = {},
 > extends Omit<ResourceApi<TBaseData, TCreateData, TUpdateData>, 'create'> {
   /**
    * Registers a new resource type and dispatches a
@@ -35,7 +36,7 @@ export interface TypedResourceApi<
    */
   register<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
-    config: ResourceTypeConfig<TBaseData, TTypeData>,
+    config: ResourceTypeConfig<TBaseData, TTypeData, TCustomTypeConfigOptions>,
   ): void;
 
   /**
@@ -50,7 +51,7 @@ export interface TypedResourceApi<
    */
   unregister<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
-    config: ResourceTypeConfig<TBaseData, TTypeData>,
+    config: ResourceTypeConfig<TBaseData, TTypeData, TCustomTypeConfigOptions>,
   ): void;
 
   /**
@@ -61,11 +62,13 @@ export interface TypedResourceApi<
    * @throws ResourceTypeNotRegisteredError
    * Thrown if the type is not registered.
    */
-  getTypeConfig<
-    TTypeConfig extends ResourceTypeConfig<TBaseData> = ResourceTypeConfig<TBaseData>,
-  >(
+  getTypeConfig<TTypeData extends TRDTypeData<TBaseData> = {}>(
     type: string,
-  ): RegisteredResourceTypeConfig<TTypeConfig>;
+  ): RegisteredResourceTypeConfig<
+    TBaseData,
+    TTypeData,
+    TCustomTypeConfigOptions
+  >;
 
   /**
    * Returns all registered resource type configs for this resource.
@@ -73,8 +76,12 @@ export interface TypedResourceApi<
    * @returns An array of resource type configs.
    */
   getAllTypeConfigs<
-    TTypeConfig extends ResourceTypeConfig<TBaseData> = ResourceTypeConfig<TBaseData>,
-  >(): RegisteredResourceTypeConfig<TTypeConfig>[];
+    TTypeData extends TRDTypeData<TBaseData> = {},
+  >(): RegisteredResourceTypeConfig<
+    TBaseData,
+    TTypeData,
+    TCustomTypeConfigOptions
+  >[];
 
   /**
    * Creates a new resource document of the given typeand dispatches a

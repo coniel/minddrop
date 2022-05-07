@@ -30,9 +30,15 @@ export function createTypedResource<
   TBaseData extends TRDBaseData,
   TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
   TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
+  TCustomTypeConfigOptions = {},
 >(
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
-): TypedResourceApi<TBaseData, TCreateData, TUpdateData> {
+): TypedResourceApi<
+  TBaseData,
+  TCreateData,
+  TUpdateData,
+  TCustomTypeConfigOptions
+> {
   // Create a resource store
   const store = createResourceStore<TypedResourceDocument<TBaseData>>();
 
@@ -44,7 +50,7 @@ export function createTypedResource<
 
   // Create a store for the type configurations
   const typeConfigsStore = createConfigsStore<
-    RegisteredResourceTypeConfig<ResourceTypeConfig>
+    RegisteredResourceTypeConfig<TBaseData, {}, TCustomTypeConfigOptions>
   >({
     idField: 'type',
   });
@@ -116,9 +122,13 @@ export function createTypedResource<
       >,
     register: <TTypeData extends TRDTypeData<TBaseData>>(
       core: Core,
-      typeConfig: ResourceTypeConfig<TBaseData, TTypeData>,
+      typeConfig: ResourceTypeConfig<
+        TBaseData,
+        TTypeData,
+        TCustomTypeConfigOptions
+      >,
     ) =>
-      registerResourceType<TBaseData, TTypeData>(
+      registerResourceType<TBaseData, TTypeData, TCustomTypeConfigOptions>(
         core,
         config,
         typeConfigsStore,
@@ -126,15 +136,24 @@ export function createTypedResource<
       ),
     unregister: (core, typeConfig) =>
       unregisterResourceType(core, config, typeConfigsStore, typeConfig),
-    getTypeConfig: <TTypeConfig extends ResourceTypeConfig<TBaseData>>(
+    getTypeConfig: <TTypeData extends TRDTypeData<TBaseData> = {}>(
       type: string,
     ) =>
       getTypedResourceTypeConfig(
         config.resource,
         typeConfigsStore,
         type,
-      ) as RegisteredResourceTypeConfig<TTypeConfig>,
-    getAllTypeConfigs: typeConfigsStore.getAll,
+      ) as RegisteredResourceTypeConfig<
+        TBaseData,
+        TTypeData,
+        TCustomTypeConfigOptions
+      >,
+    getAllTypeConfigs: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
+      typeConfigsStore.getAll() as RegisteredResourceTypeConfig<
+        TBaseData,
+        TTypeData,
+        TCustomTypeConfigOptions
+      >[],
     typeConfigsStore,
   };
 }

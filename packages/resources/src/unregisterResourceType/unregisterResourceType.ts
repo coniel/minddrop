@@ -12,7 +12,7 @@ import {
  *
  * @param resourceConfig - The resource config.
  * @param typeConfigsStore - The resource type configs store.
- * @param type- The type of the resource type to unrgister.
+ * @param typeConfig - The resource type config to unregister.
  *
  * @throws ResourceTypeNotRegistered
  * Thrown if the resource type is not registered.
@@ -23,8 +23,11 @@ export function unregisterResourceType(
   typeConfigsStore: ResourceTypeConfigsStore,
   typeConfig: ResourceTypeConfig,
 ): void {
+  // Get the registered type config
+  const registeredConfig = typeConfigsStore.get(typeConfig.type);
+
   // Ensure that the type is registered
-  if (!typeConfigsStore.get(typeConfig.type)) {
+  if (!registeredConfig) {
     // Throw a `ResourceTypeNotRegisteredError` if the type
     // is not registered.
     throw new ResourceTypeNotRegisteredError(
@@ -34,8 +37,8 @@ export function unregisterResourceType(
   }
 
   // Register the config in the type configs store
-  typeConfigsStore.unregister(typeConfig);
+  typeConfigsStore.unregister(registeredConfig);
 
   // Dispatch a `[resource]:umregister` event
-  core.dispatch(`${resourceConfig.resource}:unregister`, typeConfig);
+  core.dispatch(`${resourceConfig.resource}:unregister`, registeredConfig);
 }

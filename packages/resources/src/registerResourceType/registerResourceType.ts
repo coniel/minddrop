@@ -22,11 +22,16 @@ import { validateTypedResourceDataSchema } from '../validateTypedResourceDataSch
 export function registerResourceType<
   TBaseData extends TRDBaseData,
   TTypeData extends TRDTypeData<TBaseData>,
+  TCustomTypeConfigOptions = {},
 >(
   core: Core,
   resourceConfig: TypedResourceConfig<TBaseData>,
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData>,
-  typeConfig: ResourceTypeConfig<TBaseData, TTypeData>,
+  typeConfig: ResourceTypeConfig<
+    TBaseData,
+    TTypeData,
+    TCustomTypeConfigOptions
+  >,
 ): void {
   // Ensure that the data schema is valid
   validateTypedResourceDataSchema(
@@ -34,10 +39,12 @@ export function registerResourceType<
     typeConfig.dataSchema,
   );
 
-  // Add the extension ID to the config and register it
+  // Add the extension ID to the config
+  const registeredTypeConfig = { ...typeConfig, extension: core.extensionId };
+
   // into the type configs store.
-  typeConfigsStore.register({ ...typeConfig, extension: core.extensionId });
+  typeConfigsStore.register(registeredTypeConfig);
 
   // Dispatch a `[resource]:register` event
-  core.dispatch(`${resourceConfig.resource}:register`, typeConfig);
+  core.dispatch(`${resourceConfig.resource}:register`, registeredTypeConfig);
 }
