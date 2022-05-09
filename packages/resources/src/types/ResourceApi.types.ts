@@ -1,5 +1,10 @@
 import { Core } from '@minddrop/core';
-import { ResourceDocument, RDData } from './ResourceDocument.types';
+import {
+  ResourceDocument,
+  ResourceDocumentMap,
+  RDData,
+} from './ResourceDocument.types';
+import { ResourceDocumentFilters } from './ResourceDocumentFilters.types';
 
 /**
  * The API for a resource.
@@ -116,6 +121,11 @@ export interface ResourceApi<
    * @returns All of the resource documents.
    */
   getAll(): Record<string, TResourceDocument>;
+
+  filter(
+    documents: ResourceDocumentMap<TResourceDocument>,
+    filters: ResourceDocumentFilters,
+  ): ResourceDocumentMap<TResourceDocument>;
 
   hooks: {
     /*

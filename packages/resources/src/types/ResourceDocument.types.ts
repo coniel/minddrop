@@ -142,3 +142,10 @@ export interface RDUpdate<
    */
   changes: RDChanges<TData>;
 }
+
+/**
+ * A `[id]: ResourceDocument` map.
+ */
+export type ResourceDocumentMap<
+  TDocument extends ResourceDocument = ResourceDocument,
+> = Record<string, TDocument>;
