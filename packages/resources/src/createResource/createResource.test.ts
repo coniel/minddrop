@@ -476,6 +476,7 @@ describe('resource API', () => {
       });
 
       describe('hooks', () => {
+        // Create some test documents, including a delted one
         const document1 = document;
         const document2 = { ...document, id: 'doc-2' };
         const deletedDocument: ResourceDocument<Data> = {
@@ -486,7 +487,9 @@ describe('resource API', () => {
         };
 
         beforeEach(() => {
-          // Load some documents, including a delted one
+          // Clear the store
+          ResourceApi.store.clear();
+          // Load test documents
           ResourceApi.store.load(core, [document1, document2, deletedDocument]);
         });
 
@@ -536,6 +539,32 @@ describe('resource API', () => {
 
             // Returned map should contain only the active document
             expect(result.current).toEqual(mapById([document1]));
+          });
+        });
+
+        describe('useAllDocuments', () => {
+          it('returns all documents', () => {
+            // Get a all documents
+            const { result } = renderHook(() =>
+              ResourceApi.hooks.useAllDocuments(),
+            );
+
+            // Should return all documents
+            expect(result.current).toEqual(
+              mapById([document1, document2, deletedDocument]),
+            );
+          });
+
+          it('filters the results', () => {
+            // Get all documents, filtering out deleted ones
+            const { result } = renderHook(() =>
+              ResourceApi.hooks.useAllDocuments({
+                deleted: false,
+              }),
+            );
+
+            // Returned map should contain only the active documents
+            expect(result.current).toEqual(mapById([document1, document2]));
           });
         });
       });

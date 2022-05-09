@@ -23,6 +23,7 @@ import { validateResourceDataSchema } from '../validation/validateResourceDataSc
 import { useResourceDocument } from '../useResourceDocument';
 import { filterResourceDocuments } from '../filterResourceDocuments';
 import { useResourceDocuments } from '../useResourceDocuments';
+import { useAllResourceDocuments } from '../useAllResourceDocuments';
 
 /**
  * Creates a new resource type, returning its API.
@@ -76,6 +77,7 @@ export function createResource<
       useDocument: (documentId) => useResourceDocument(store, documentId),
       useDocuments: (documentIds, filters) =>
         useResourceDocuments(store, documentIds, filters),
+      useAllDocuments: (filters) => useAllResourceDocuments(store, filters),
     },
     store: {
       get: store.get,

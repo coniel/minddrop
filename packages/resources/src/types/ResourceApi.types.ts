@@ -163,6 +163,17 @@ export interface ResourceApi<
       documentIds: string[],
       filters?: ResourceDocumentFilters,
     ): ResourceDocumentMap<TResourceDocument>;
+
+    /**
+     * Returns a `{ [id]: ResourceDocument }` map of all
+     * resource documents.
+     *
+     * @param filters - Optional filters by which to filter the returned docuemnts.
+     * @returns A `{ [id]: ResourceDocument }` map of all resource documents.
+     */
+    useAllDocuments(
+      filters?: ResourceDocumentFilters,
+    ): ResourceDocumentMap<TResourceDocument>;
   };
 
   /**

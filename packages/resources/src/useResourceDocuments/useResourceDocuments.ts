@@ -10,6 +10,7 @@ import {
  * Returns a `{ [id]: ResourceDocument }` map of resource
  * documents by ID.
  *
+ * @param store - The resource documents store.
  * @param documentIds - The IDs of the documents to retrieve.
  * @param filters - Optional filters by which to filter the returned docuemnts.
  * @returns A `{ [id]: ResourceDocument }` map of the requested documents.

@@ -4,6 +4,7 @@ import { ResourceDocument, ResourceStore } from '../types';
  * Returns a resource document by ID or `null` if
  * the document does not exist.
  *
+ * @param store - The resource documents store.
  * @param documentId - The ID of the document to retrieve.
  * @returns The requested document or `null`.
  */
