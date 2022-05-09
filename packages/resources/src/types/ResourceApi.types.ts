@@ -117,6 +117,14 @@ export interface ResourceApi<
    */
   getAll(): Record<string, TResourceDocument>;
 
+  hooks: {
+    /*
+     * Returns a resource document by ID or `null`
+     * if it does not exist.
+     */
+    useDocument(documentId: string): TResourceDocument;
+  };
+
   /**
    * Store methods work directly on the resource's document store.
    * They are intended for use only by storage adapters and in

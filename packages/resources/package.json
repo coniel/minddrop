@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@jest/types": "^27.2.5",
+    "@minddrop/test-utils": "0.3.1",
     "@types/node": "^16.11.6",
     "jest": "^27.3.1",
     "rimraf": "~3.0.2",

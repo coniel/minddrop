@@ -1,6 +1,5 @@
 import { Core } from '@minddrop/core';
 import { Drop } from '../types';
-import { useDropsStore } from '../useDropsStore';
 
 export function onRun(core: Core) {
   // Register the drops:drop resource

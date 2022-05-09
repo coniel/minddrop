@@ -1,3 +1,4 @@
+import { renderHook } from '@minddrop/test-utils';
 import { mapById } from '@minddrop/utils';
 import { createResourceStore } from '../createResourceStore';
 import {
@@ -451,101 +452,132 @@ describe('resource API', () => {
       });
     });
 
-    describe('load', () => {
-      it('loads documents into the store', () => {
-        // Load a document
-        ResourceApi.store.load(core, [document]);
+    describe('store', () => {
+      describe('load', () => {
+        it('loads documents into the store', () => {
+          // Load a document
+          ResourceApi.store.load(core, [document]);
 
-        // Document should be in the store
-        expect(ResourceApi.store.get(document.id)).toEqual(document);
-      });
-
-      it('dispatches a `tests:test:load` event', (done) => {
-        // Listen to 'tests:test:load' events
-        core.addEventListener('tests:test:load', (payload) => {
-          // Payload data should be the loaded documents
-          expect(payload.data).toEqual([document]);
-          done();
+          // Document should be in the store
+          expect(ResourceApi.store.get(document.id)).toEqual(document);
         });
 
-        // Load a document
-        ResourceApi.store.load(core, [document]);
+        it('dispatches a `tests:test:load` event', (done) => {
+          // Listen to 'tests:test:load' events
+          core.addEventListener('tests:test:load', (payload) => {
+            // Payload data should be the loaded documents
+            expect(payload.data).toEqual([document]);
+            done();
+          });
+
+          // Load a document
+          ResourceApi.store.load(core, [document]);
+        });
       });
-    });
 
-    describe('add', () => {
-      it('adds a document to the store', () => {
-        // Add a document
-        ResourceApi.store.add(core, document);
-
-        // Document should be in the store
-        expect(ResourceApi.store.get(document.id)).toEqual(document);
-      });
-
-      it('dispatches a `tests:test:add` event', (done) => {
-        // Listen to 'tests:test:add' events
-        core.addEventListener('tests:test:add', (payload) => {
-          // Payload data should be the added document
-          expect(payload.data).toEqual(document);
-          done();
+      describe('hooks', () => {
+        beforeAll(() => {
+          // Load a document
+          ResourceApi.store.load(core, [document]);
         });
 
-        // Add a document
-        ResourceApi.store.add(core, document);
+        describe('useDocument', () => {
+          it('returns the requested document', () => {
+            // Get a document
+            const { result } = renderHook(() =>
+              ResourceApi.hooks.useDocument(document.id),
+            );
+
+            // Should return the document
+            expect(result.current).toEqual(document);
+          });
+
+          it('returns null if the document does not exist', () => {
+            // Get a missing document
+            const { result } = renderHook(() =>
+              ResourceApi.hooks.useDocument('missing'),
+            );
+
+            // Should return null
+            expect(result.current).toBeNull();
+          });
+        });
       });
-    });
 
-    describe('set', () => {
-      it('sets a document in the store', () => {
-        // Set a document
-        ResourceApi.store.set(core, document);
+      describe('add', () => {
+        it('adds a document to the store', () => {
+          // Add a document
+          ResourceApi.store.add(core, document);
 
-        // Document should be in the store
-        expect(ResourceApi.store.get(document.id)).toEqual(document);
-      });
-
-      it('dispatches a `tests:test:set` event', (done) => {
-        // Listen to 'tests:test:set' events
-        core.addEventListener('tests:test:set', (payload) => {
-          // Payload data should be the set document
-          expect(payload.data).toEqual(document);
-          done();
+          // Document should be in the store
+          expect(ResourceApi.store.get(document.id)).toEqual(document);
         });
 
-        // Set a document
-        ResourceApi.store.set(core, document);
+        it('dispatches a `tests:test:add` event', (done) => {
+          // Listen to 'tests:test:add' events
+          core.addEventListener('tests:test:add', (payload) => {
+            // Payload data should be the added document
+            expect(payload.data).toEqual(document);
+            done();
+          });
+
+          // Add a document
+          ResourceApi.store.add(core, document);
+        });
       });
-    });
 
-    describe('remove', () => {
-      it('removes a document from the store', () => {
-        // Remove a document
-        ResourceApi.store.remove(core, existingDoc1.id);
+      describe('set', () => {
+        it('sets a document in the store', () => {
+          // Set a document
+          ResourceApi.store.set(core, document);
 
-        // Document should no longer be in the store
-        expect(ResourceApi.store.get(existingDoc1.id)).toBeUndefined();
-      });
-
-      it('dispatches a `tests:test:remove` event', (done) => {
-        // Listen to 'tests:test:remove' events
-        core.addEventListener('tests:test:remove', (payload) => {
-          // Payload data should be the removed document
-          expect(payload.data).toEqual(existingDoc1);
-          done();
+          // Document should be in the store
+          expect(ResourceApi.store.get(document.id)).toEqual(document);
         });
 
-        // Remove a document
-        ResourceApi.store.remove(core, existingDoc1.id);
+        it('dispatches a `tests:test:set` event', (done) => {
+          // Listen to 'tests:test:set' events
+          core.addEventListener('tests:test:set', (payload) => {
+            // Payload data should be the set document
+            expect(payload.data).toEqual(document);
+            done();
+          });
+
+          // Set a document
+          ResourceApi.store.set(core, document);
+        });
       });
-    });
 
-    describe('clear', () => {
-      it('clears the store', () => {
-        // Clear the store
-        ResourceApi.store.clear();
+      describe('remove', () => {
+        it('removes a document from the store', () => {
+          // Remove a document
+          ResourceApi.store.remove(core, existingDoc1.id);
 
-        // Store should be empty
-        expect(ResourceApi.store.getAll()).toEqual({});
+          // Document should no longer be in the store
+          expect(ResourceApi.store.get(existingDoc1.id)).toBeUndefined();
+        });
+
+        it('dispatches a `tests:test:remove` event', (done) => {
+          // Listen to 'tests:test:remove' events
+          core.addEventListener('tests:test:remove', (payload) => {
+            // Payload data should be the removed document
+            expect(payload.data).toEqual(existingDoc1);
+            done();
+          });
+
+          // Remove a document
+          ResourceApi.store.remove(core, existingDoc1.id);
+        });
+      });
+
+      describe('clear', () => {
+        it('clears the store', () => {
+          // Clear the store
+          ResourceApi.store.clear();
+
+          // Store should be empty
+          expect(ResourceApi.store.getAll()).toEqual({});
+        });
       });
     });
   });

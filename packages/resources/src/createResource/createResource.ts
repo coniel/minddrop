@@ -20,6 +20,7 @@ import { addResourceDocument } from '../addResourceDocument';
 import { setResourceDocument } from '../setResourceDocument';
 import { removeResourceDocument } from '../removeResourceDocument';
 import { validateResourceDataSchema } from '../validation/validateResourceDataSchema';
+import { useResourceDocument } from '../useResourceDocument';
 
 /**
  * Creates a new resource type, returning its API.
@@ -68,6 +69,10 @@ export function createResource<
       restoreResourceDocument(core, store, config, documentId),
     deletePermanently: (core, documentId) =>
       permanentlyDeleteResourceDocument(core, store, config, documentId),
+    hooks: {
+      useDocument: (documentId: string) =>
+        useResourceDocument(store, documentId),
+    },
     store: {
       get: store.get,
       getAll: store.getAll,
