@@ -3,6 +3,9 @@ import { ResourceDocument, ResourceStore } from '../types';
 /**
  * Returns a resource document by ID or `null` if
  * the document does not exist.
+ *
+ * @param documentId - The ID of the document to retrieve.
+ * @returns The requested document or `null`.
  */
 export function useResourceDocument<
   TDocument extends ResourceDocument = ResourceDocument,

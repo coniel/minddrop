@@ -122,6 +122,20 @@ export interface ResourceApi<
    */
   getAll(): Record<string, TResourceDocument>;
 
+  /**
+   * Filters are resource document map according the
+   * the provided filters.
+   *
+   * Filtering operates in one of two modes:
+   * - Exclusive filtering: setting filter values to `false`
+   *   will remove the filtered documents from the result.
+   * - Inclusive filtering: setting filter values to `true`
+   *   will include only the filtered documents in the result.
+   *
+   * @param documents - The documents to filter.
+   * @param filters - The filters by which to filter.
+   * @returns The filtered documents.
+   */
   filter(
     documents: ResourceDocumentMap<TResourceDocument>,
     filters: ResourceDocumentFilters,
@@ -131,6 +145,9 @@ export interface ResourceApi<
     /*
      * Returns a resource document by ID or `null`
      * if it does not exist.
+     *
+     * @param documentId - The ID of the document to retrieve.
+     * @returns The requested document or `null`.
      */
     useDocument(documentId: string): TResourceDocument;
   };
