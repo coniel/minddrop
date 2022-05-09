@@ -11,7 +11,7 @@ export function useResourceDocument<
   TDocument extends ResourceDocument = ResourceDocument,
 >(store: ResourceStore<TDocument>, documentId: string): TDocument | null {
   // Get the document from the store
-  const document = store.get(documentId);
+  const document = store.useStore.getState().documents[documentId];
 
   // Return the document or null if it does not exist
   return document || null;
