@@ -1,45 +1,9 @@
 import createStore from 'zustand';
-import { ResourceDocument, ResourceStore } from '../types';
-
-interface Store<TResourceDocument> {
-  /**
-   * A `{ [id]: Resource }` map of resource documents.
-   */
-  documents: Record<string, TResourceDocument>;
-
-  /**
-   * A `{ [id]: revisionId[] }` map of each resource
-   * document's past and current revision IDs, created
-   * during the current session.
-   */
-  revisions: Record<string, string[]>;
-
-  /**
-   * Loads documents into the store.
-   *
-   * @param documents The documents to load.
-   */
-  loadDocuments(documents: TResourceDocument[]): void;
-
-  /**
-   * Sets a document in the store.
-   *
-   * @param document The document to set.
-   */
-  setDocument(document: TResourceDocument): void;
-
-  /**
-   * Removes a document from the store.
-   *
-   * @param documentId The ID of the document to remove.
-   */
-  removeDocument(documentId: string): void;
-
-  /**
-   * Clears all documents from the store.
-   */
-  clearDocuments(): void;
-}
+import {
+  ResourceDocument,
+  ResourceStore,
+  ResourceStoreInternalApi,
+} from '../types';
 
 /**
  * Creates a new resource store.
@@ -49,74 +13,76 @@ interface Store<TResourceDocument> {
 export function createResourceStore<
   TDocument extends ResourceDocument,
 >(): ResourceStore<TDocument> {
-  const useResourceStore = createStore<Store<TDocument>>((set) => ({
-    documents: {},
-    revisions: {},
+  const useResourceStore = createStore<ResourceStoreInternalApi<TDocument>>(
+    (set) => ({
+      documents: {},
+      revisions: {},
 
-    loadDocuments: (documents) =>
-      set((state) => ({
-        // Merge loaded documents into the store
-        documents: {
-          ...state.documents,
-          ...documents.reduce(
-            (map, document) => ({
-              ...map,
-              [document.id]: document,
-            }),
-            {},
-          ),
-        },
-        // Add the document revisions
-        revisions: {
-          ...state.revisions,
-          ...documents.reduce(
-            (map, document) => ({
-              ...map,
-              [document.id]: [document.revision],
-            }),
-            {},
-          ),
-        },
-      })),
+      loadDocuments: (documents) =>
+        set((state) => ({
+          // Merge loaded documents into the store
+          documents: {
+            ...state.documents,
+            ...documents.reduce(
+              (map, document) => ({
+                ...map,
+                [document.id]: document,
+              }),
+              {},
+            ),
+          },
+          // Add the document revisions
+          revisions: {
+            ...state.revisions,
+            ...documents.reduce(
+              (map, document) => ({
+                ...map,
+                [document.id]: [document.revision],
+              }),
+              {},
+            ),
+          },
+        })),
 
-    setDocument: (document) =>
-      set((state) => ({
-        // Add the document
-        documents: { ...state.documents, [document.id]: document },
-        // Add the document revision
-        revisions: {
-          ...state.revisions,
-          [document.id]: [
-            ...(state.revisions[document.id] || []),
-            document.revision,
-          ],
-        },
-      })),
+      setDocument: (document) =>
+        set((state) => ({
+          // Add the document
+          documents: { ...state.documents, [document.id]: document },
+          // Add the document revision
+          revisions: {
+            ...state.revisions,
+            [document.id]: [
+              ...(state.revisions[document.id] || []),
+              document.revision,
+            ],
+          },
+        })),
 
-    removeDocument: (id) =>
-      set((state) => {
-        // Clone store documents
-        const documents = { ...state.documents };
-        // Clone store revisions
-        const revisions = { ...state.revisions };
+      removeDocument: (id) =>
+        set((state) => {
+          // Clone store documents
+          const documents = { ...state.documents };
+          // Clone store revisions
+          const revisions = { ...state.revisions };
 
-        // Delete the document
-        delete documents[id];
-        // Delete the document revisions
-        delete revisions[id];
+          // Delete the document
+          delete documents[id];
+          // Delete the document revisions
+          delete revisions[id];
 
-        // Set the updated documents and revisions
-        return { documents, revisions };
-      }),
+          // Set the updated documents and revisions
+          return { documents, revisions };
+        }),
 
-    clearDocuments: () =>
-      set({
-        // Clear documents
-        documents: {},
-        // Clear revisions
-        revisions: {},
-      }),
-  }));
+      clearDocuments: () =>
+        set({
+          // Clear documents
+          documents: {},
+          // Clear revisions
+          revisions: {},
+        }),
+    }),
+  );
 
   // Create the `get` function which returns one or multiple documents
   // based on the whether `documentId` argument is a string or an array.
@@ -135,6 +101,7 @@ export function createResourceStore<
   }
 
   return {
+    useStore: useResourceStore,
     get,
     getAll: () => useResourceStore.getState().documents,
     set: (document) => useResourceStore.getState().setDocument(document),

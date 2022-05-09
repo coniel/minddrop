@@ -5,7 +5,7 @@ import { useResourceDocument } from './useResourceDocument';
 
 const store = createResourceStore();
 
-// Add a document to the store
+// Create a test document
 const document: ResourceDocument = {
   id: 'document-id',
   revision: 'rev-1',

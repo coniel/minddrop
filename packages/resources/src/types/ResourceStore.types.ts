@@ -1,4 +1,48 @@
-export interface ResourceStore<TDocument> {
+import { UseBoundStore } from 'zustand';
+
+export interface ResourceStoreInternalApi<TResourceDocument extends object> {
+  /**
+   * A `{ [id]: Resource }` map of resource documents.
+   */
+  documents: Record<string, TResourceDocument>;
+
+  /**
+   * A `{ [id]: revisionId[] }` map of each resource
+   * document's past and current revision IDs, created
+   * during the current session.
+   */
+  revisions: Record<string, string[]>;
+
+  /**
+   * Loads documents into the store.
+   *
+   * @param documents The documents to load.
+   */
+  loadDocuments(documents: TResourceDocument[]): void;
+
+  /**
+   * Sets a document in the store.
+   *
+   * @param document The document to set.
+   */
+  setDocument(document: TResourceDocument): void;
+
+  /**
+   * Removes a document from the store.
+   *
+   * @param documentId The ID of the document to remove.
+   */
+  removeDocument(documentId: string): void;
+
+  /**
+   * Clears all documents from the store.
+   */
+  clearDocuments(): void;
+}
+
+export interface ResourceStore<TDocument extends object> {
+  useStore: UseBoundStore<ResourceStoreInternalApi<TDocument>>;
+
   /**
    * Retrieves a resource document by ID.
    *

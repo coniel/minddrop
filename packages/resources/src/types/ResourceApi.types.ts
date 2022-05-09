@@ -150,6 +150,19 @@ export interface ResourceApi<
      * @returns The requested document or `null`.
      */
     useDocument(documentId: string): TResourceDocument;
+
+    /**
+     * Returns a `{ [id]: ResourceDocument }` map of resource
+     * documents by ID.
+     *
+     * @param documentIds - The IDs of the documents to retrieve.
+     * @param filters - Optional filters by which to filter the returned docuemnts.
+     * @returns A `{ [id]: ResourceDocument }` map of the requested documents.
+     */
+    useDocuments(
+      documentIds: string[],
+      filters?: ResourceDocumentFilters,
+    ): ResourceDocumentMap<TResourceDocument>;
   };
 
   /**
