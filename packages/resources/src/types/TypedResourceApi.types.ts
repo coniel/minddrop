@@ -7,9 +7,11 @@ import {
 } from './ResourceTypeConfig.types';
 import {
   TypedResourceDocument,
+  TypedResourceDocumentMap,
   TRDBaseData,
   TRDTypeData,
 } from './TypedResourceDocument.types';
+import { TypedResourceDocumentFilters } from './ResourceDocumentFilters.types';
 
 /**
  * The API for a typed resource.
@@ -23,7 +25,10 @@ export interface TypedResourceApi<
   TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
   TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
   TCustomTypeConfigOptions = {},
-> extends Omit<ResourceApi<TBaseData, TCreateData, TUpdateData>, 'create'> {
+> extends Omit<
+    ResourceApi<TBaseData, TCreateData, TUpdateData>,
+    'create' | 'filter'
+  > {
   /**
    * Registers a new resource type and dispatches a
    * `[resource]:register-type` event.
@@ -225,4 +230,25 @@ export interface TypedResourceApi<
    * only.
    */
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData>;
+
+  /**
+   * Filters are resource document map according the
+   * the provided filters.
+   *
+   * Boolean filters operate in one of two modes:
+   * - Exclusive filtering: setting filter values to `false`
+   *   will remove the filtered documents from the result.
+   * - Inclusive filtering: setting filter values to `true`
+   *   will include only the filtered documents in the result.
+   *
+   * @param documents - The documents to filter.
+   * @param filters - The filters by which to filter.
+   * @returns The filtered documents.
+   */
+  filter<TTypeData extends TRDTypeData<TBaseData> = {}>(
+    documents: TypedResourceDocumentMap<
+      TypedResourceDocument<TBaseData, TTypeData>
+    >,
+    filters: TypedResourceDocumentFilters,
+  ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
 }

@@ -4,6 +4,7 @@ import { createResource } from '../createResource';
 import { createResourceStore } from '../createResourceStore';
 import { createTypedResourceDocument } from '../createTypedResourceDocument';
 import { deleteTypedResourceDocument } from '../deleteTypedResourceDocument';
+import { filterTypedResourceDocuments } from '../filterTypedResourceDocuments';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
 import { registerResourceType } from '../registerResourceType';
 import { restoreTypedResourceDocument } from '../restoreTypedResourceDocument';
@@ -154,6 +155,7 @@ export function createTypedResource<
         TTypeData,
         TCustomTypeConfigOptions
       >[],
+    filter: filterTypedResourceDocuments,
     typeConfigsStore,
   };
 }

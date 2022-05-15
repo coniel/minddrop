@@ -80,3 +80,10 @@ export interface TRDUpdate<
    */
   changes: TRDChanges<TBaseData, TTypeData>;
 }
+
+/**
+ * A `[id]: TypedResourceDocument` map.
+ */
+export type TypedResourceDocumentMap<
+  TDocument extends TypedResourceDocument = TypedResourceDocument,
+> = Record<string, TDocument>;
