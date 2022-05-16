@@ -36,6 +36,10 @@ export function generateResourceDocumentSchema<TData>(
       type: 'date',
       required: true,
     },
+    parents: {
+      type: 'resource-references',
+      allowEmpty: true,
+    },
     deleted: {
       type: 'enum',
       options: [true],

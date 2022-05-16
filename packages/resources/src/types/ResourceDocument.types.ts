@@ -1,4 +1,5 @@
 import { FieldValueDelete } from '@minddrop/utils';
+import { ResourceReference } from './ResourceReference.types';
 
 /**
  * Note: the RD prefix stands for ResourceDocument.
@@ -30,6 +31,11 @@ export interface RDRootData {
    * last updated.
    */
   updatedAt: Date;
+
+  /**
+   * References to the document's parent documents.
+   */
+  parents?: ResourceReference[];
 
   /**
    * When `true`, the document is deleted.
