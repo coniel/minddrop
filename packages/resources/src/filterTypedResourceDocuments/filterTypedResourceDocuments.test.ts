@@ -54,7 +54,9 @@ describe('filterTypedResourceDocuments', () => {
 
   it('filters documents by type', () => {
     // Filter documents by type
-    const result = filterTypedResourceDocuments(documents, { type: 'type-2' });
+    const result = filterTypedResourceDocuments(documents, {
+      type: ['type-2'],
+    });
 
     // Should only return 'type-2' documents
     expect(result).toEqual(mapById([type2Document]));
@@ -64,7 +66,7 @@ describe('filterTypedResourceDocuments', () => {
     // Filter for active 'type-1' documents
     const result = filterTypedResourceDocuments(documents, {
       active: true,
-      type: 'type-1',
+      type: ['type-1'],
     });
 
     expect(result).toEqual(mapById([type1Document, activeDocument]));

@@ -17,10 +17,12 @@ import {
   TypedResourceDocument,
   TRDTypeData,
   TRDBaseData,
+  TypedResourceDocumentFilters,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
 import { useTypedResourceDocument } from '../useTypedResourceDocument';
+import { useTypedResourceDocuments } from '../useTypedResourceDocuments';
 
 /**
  * Creates a new typed resource type, returning its API.
@@ -161,6 +163,15 @@ export function createTypedResource<
       useDocument: <TTypeData extends TRDTypeData<TBaseData> = {}>(
         documentId: string,
       ) => useTypedResourceDocument<TBaseData, TTypeData>(store, documentId),
+      useDocuments: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+        documentIds: string[],
+        filters: TypedResourceDocumentFilters,
+      ) =>
+        useTypedResourceDocuments<TBaseData, TTypeData>(
+          store,
+          documentIds,
+          filters,
+        ),
     },
     typeConfigsStore,
   };

@@ -263,5 +263,18 @@ export interface TypedResourceApi<
     useDocument<TTypeData extends TRDTypeData<TBaseData> = {}>(
       documentId: string,
     ): TypedResourceDocument<TBaseData, TTypeData>;
+
+    /**
+     * Returns a `{ [id]: ResourceDocument }` map of resource
+     * documents by ID.
+     *
+     * @param documentIds - The IDs of the documents to retrieve.
+     * @param filters - Optional filters by which to filter the returned docuemnts.
+     * @returns A `{ [id]: ResourceDocument }` map of the requested documents.
+     */
+    useDocuments<TTypeData extends TRDTypeData<TBaseData> = {}>(
+      documentIds: string[],
+      filters?: TypedResourceDocumentFilters,
+    ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
   };
 }

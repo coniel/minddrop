@@ -14,5 +14,5 @@ export interface TypedResourceDocumentFilters extends ResourceDocumentFilters {
   /**
    * Include only resources documents of the given types.
    */
-  type?: string;
+  type?: string[];
 }

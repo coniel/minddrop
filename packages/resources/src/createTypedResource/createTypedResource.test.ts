@@ -1,4 +1,5 @@
 import { renderHook } from '@minddrop/test-utils';
+import { mapById } from '@minddrop/utils';
 import { setup, cleanup, core } from '../test-utils';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import {
@@ -216,7 +217,7 @@ describe('createTypedResource', () => {
   });
 
   describe('hooks', () => {
-    // Create some test documents, including a delted one
+    // Create some test documents
     const document1: TypedResourceDocument<BaseData, TypeData> = {
       id: 'doc-1',
       revision: 'rev-1',
@@ -256,6 +257,30 @@ describe('createTypedResource', () => {
 
         // Should return null
         expect(result.current).toBeNull();
+      });
+    });
+
+    describe('useDocuments', () => {
+      it('returns the requested documents', () => {
+        // Get a couple of documents
+        const { result } = renderHook(() =>
+          Api.hooks.useDocuments([document1.id, document2.id]),
+        );
+
+        // Should return the requested docuemnts
+        expect(result.current).toEqual(mapById([document1, document2]));
+      });
+
+      it('filters the results', () => {
+        // Get a couple of documents and filter for 'type-1'
+        const { result } = renderHook(() =>
+          Api.hooks.useDocuments([document1.id, document2.id], {
+            type: ['type-1'],
+          }),
+        );
+
+        // Returned map should contain only the active document
+        expect(result.current).toEqual(mapById([document1]));
       });
     });
   });
