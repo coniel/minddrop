@@ -21,6 +21,7 @@ import {
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
+import { useAllTypedResourceDocuments } from '../useAllTypedResourceDocuments';
 import { useTypedResourceDocument } from '../useTypedResourceDocument';
 import { useTypedResourceDocuments } from '../useTypedResourceDocuments';
 
@@ -172,6 +173,9 @@ export function createTypedResource<
           documentIds,
           filters,
         ),
+      useAllDocuments: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+        filters: TypedResourceDocumentFilters,
+      ) => useAllTypedResourceDocuments<TBaseData, TTypeData>(store, filters),
     },
     typeConfigsStore,
   };

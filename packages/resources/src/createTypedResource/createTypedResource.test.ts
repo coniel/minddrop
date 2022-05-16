@@ -283,5 +283,27 @@ describe('createTypedResource', () => {
         expect(result.current).toEqual(mapById([document1]));
       });
     });
+
+    describe('useAllDocuments', () => {
+      it('returns all documents', () => {
+        // Get a all documents
+        const { result } = renderHook(() => Api.hooks.useAllDocuments());
+
+        // Should return all documents
+        expect(result.current).toEqual(mapById([document1, document2]));
+      });
+
+      it('filters the results', () => {
+        // Get all documents, filtering for 'type-1'
+        const { result } = renderHook(() =>
+          Api.hooks.useAllDocuments({
+            type: ['type-1'],
+          }),
+        );
+
+        // Returned map should contain only the active documents
+        expect(result.current).toEqual(mapById([document1]));
+      });
+    });
   });
 });

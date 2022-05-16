@@ -276,5 +276,16 @@ export interface TypedResourceApi<
       documentIds: string[],
       filters?: TypedResourceDocumentFilters,
     ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
+
+    /**
+     * Returns a `{ [id]: ResourceDocument }` map of all
+     * resource documents.
+     *
+     * @param filters - Optional filters by which to filter the returned docuemnts.
+     * @returns A `{ [id]: ResourceDocument }` map of all resource documents.
+     */
+    useAllDocuments<TTypeData extends TRDTypeData<TBaseData> = {}>(
+      filters?: TypedResourceDocumentFilters,
+    ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
   };
 }
