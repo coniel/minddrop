@@ -365,6 +365,24 @@ describe('resource API', () => {
     });
   });
 
+  describe('removeParents', () => {
+    it('removes parents from the document', () => {
+      // Create a parent reference
+      const parentRef = { id: existingDoc2.id, resource: ResourceApi.resource };
+
+      // Add a parent to a document
+      ResourceApi.addParents(core, existingDoc1.id, [parentRef]);
+      // Remove the parent from a document
+      ResourceApi.removeParents(core, existingDoc1.id, [parentRef]);
+
+      // Get the updated document
+      const document = ResourceApi.get(existingDoc1.id);
+
+      // Document should not contain the parent
+      expect(document.parents).toEqual([]);
+    });
+  });
+
   describe('get', () => {
     describe('single document', () => {
       it('returns the requested document given a single ID', () => {
