@@ -1,4 +1,8 @@
-import { FieldValueDelete } from '@minddrop/utils';
+import {
+  FieldValueDelete,
+  FieldValueArrayUnion,
+  FieldValueArrayRemove,
+} from '@minddrop/utils';
 import { ResourceReference } from './ResourceReference.types';
 
 /**
@@ -109,6 +113,16 @@ export interface RDRestoreUpdateData {
 }
 
 /**
+ * Data used to update a resource documen't parents.
+ */
+export interface RDParentsUpdateData {
+  /**
+   * Parents can only be updated using field value mutators.
+   */
+  parents: FieldValueArrayUnion | FieldValueArrayRemove;
+}
+
+/**
  * When updating a resource document, the update data can consist
  * of part of the custom data, the delete update data, or the
  * restore update data.
@@ -116,7 +130,8 @@ export interface RDRestoreUpdateData {
 export type RDUpdateData<TData extends RDData> =
   | Partial<TData>
   | RDDeleteUpdateData
-  | RDRestoreUpdateData;
+  | RDRestoreUpdateData
+  | RDParentsUpdateData;
 
 /**
  * When updating a resource document, the changes consist of the

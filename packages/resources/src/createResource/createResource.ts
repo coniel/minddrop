@@ -24,6 +24,7 @@ import { useResourceDocument } from '../useResourceDocument';
 import { filterResourceDocuments } from '../filterResourceDocuments';
 import { useResourceDocuments } from '../useResourceDocuments';
 import { useAllResourceDocuments } from '../useAllResourceDocuments';
+import { addParentsToResourceDocument } from '../addParentsToResourceDocument';
 
 /**
  * Creates a new resource type, returning its API.
@@ -72,6 +73,14 @@ export function createResource<
       restoreResourceDocument(core, store, config, documentId),
     deletePermanently: (core, documentId) =>
       permanentlyDeleteResourceDocument(core, store, config, documentId),
+    addParents: (core, documentId, parentreferences) =>
+      addParentsToResourceDocument(
+        core,
+        store,
+        config,
+        documentId,
+        parentreferences,
+      ),
     filter: filterResourceDocuments,
     hooks: {
       useDocument: (documentId) => useResourceDocument(store, documentId),

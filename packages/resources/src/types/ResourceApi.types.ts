@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { ResourceReference } from '.';
 import {
   ResourceDocument,
   ResourceDocumentMap,
@@ -97,6 +98,27 @@ export interface ResourceApi<
    * @param documentId The ID of the document to delete permanently.
    */
   deletePermanently(core: Core, documentId: string): TResourceDocument;
+
+  /**
+   * Adds parent resource references to a resource document.
+   *
+   * @param core - A MindDrop core instance.
+   * @param documentId - The ID of the document.
+   * @param parentReferences - The resource references of the parent documents to add.
+   * @returns The updated resource document.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the resource document does not exist.
+   *
+   * @throws ResourceValidationError
+   * Thrown if one of the parent references is invalid or a
+   * parent document does not exist.
+   */
+  addParents(
+    core: Core,
+    documentId: string,
+    parentReferences: ResourceReference[],
+  ): TResourceDocument;
 
   /**
    * Retrieves one or more resource documents by ID.

@@ -7,6 +7,7 @@ import {
   ResourceValidationError,
 } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
+import { ResourceApisStore } from '../ResourceApisStore';
 import { cleanup, core } from '../test-utils';
 import { ResourceApi, RDDataSchema, ResourceDocument } from '../types';
 import { createResource } from './createResource';
@@ -78,6 +79,8 @@ describe('resource API', () => {
   });
 
   beforeEach(() => {
+    // Register the test resource type
+    ResourceApisStore.register(ResourceApi);
     // Create a couple of test documents
     existingDoc1 = ResourceApi.create(core, {});
     existingDoc2 = ResourceApi.create(core, {});
@@ -343,6 +346,22 @@ describe('resource API', () => {
 
       // Should return the document
       expect(document).toEqual(existingDoc1);
+    });
+  });
+
+  describe('addParents', () => {
+    it('adds parents to the document', () => {
+      // Create a parent reference
+      const parentRef = { id: existingDoc2.id, resource: ResourceApi.resource };
+
+      // Add a parent to a document
+      ResourceApi.addParents(core, existingDoc1.id, [parentRef]);
+
+      // Get the updated document
+      const document = ResourceApi.get(existingDoc1.id);
+
+      // Document should contain the parent
+      expect(document.parents).toEqual([parentRef]);
     });
   });
 

@@ -13,6 +13,7 @@ import {
   RDUpdateData,
   ResourceStore,
   RDRestoreUpdateData,
+  RDParentsUpdateData,
 } from '../types';
 import { validateResourceDocument } from '../validation';
 
@@ -79,7 +80,7 @@ export function updateResourceDocument<
   store: ResourceStore<TResourceDocument>,
   config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
-  data: RDDeleteUpdateData | RDRestoreUpdateData,
+  data: RDDeleteUpdateData | RDRestoreUpdateData | RDParentsUpdateData,
   isInternalUpdate: true,
 ): TResourceDocument;
 export function updateResourceDocument<

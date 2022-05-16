@@ -11,10 +11,18 @@ import {
 } from '@minddrop/utils';
 import { generateResourceDocumentSchema } from '../generateResourceDocumentSchema';
 import { validateContentColor } from '../validateContentColor';
+import { validateResourceId } from '../validateResourceId';
+import { validateResourceIds } from '../validateResourceIds';
+import { validateResourceReference } from '../validateResourceReference';
+import { validateResourceReferences } from '../validateResourceReferences';
 
 // Validator functions for special resource document fields
 const resourceFieldValidators: Record<string, ValidatorFunction> = {
   'content-color': validateContentColor,
+  'resource-id': validateResourceId,
+  'resource-ids': validateResourceIds,
+  'resource-reference': validateResourceReference,
+  'resource-references': validateResourceReferences,
 };
 
 /**

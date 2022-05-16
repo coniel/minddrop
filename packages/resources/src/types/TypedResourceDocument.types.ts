@@ -3,6 +3,7 @@ import {
   RDRootChanges,
   RDDeleteUpdateData,
   RDRestoreUpdateData,
+  RDParentsUpdateData,
 } from './ResourceDocument.types';
 
 /**
@@ -46,7 +47,11 @@ export type TypedResourceDocument<
 export type TRDUpdateData<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
-> = Partial<TBaseData & TTypeData> | RDDeleteUpdateData | RDRestoreUpdateData;
+> =
+  | Partial<TBaseData & TTypeData>
+  | RDDeleteUpdateData
+  | RDRestoreUpdateData
+  | RDParentsUpdateData;
 
 /**
  * When updating a resource document, the changes consist of the
