@@ -42,11 +42,11 @@ export function createChanges<TData>(
  * @throws ResourceValidationError
  * Thrown if the update data contains restricted fields.
  */
-export function validateExtermalUpdateData<TData>(data: TData) {
+export function validateExternalUpdateData<TData>(data: TData) {
   // Ensure that the update data does not contain properties which
   // can only be updated by the internal API.
   const internalFields = Object.keys(data).filter((key) =>
-    ['revision', 'updatedAt', 'deleted', 'deletedAt'].includes(key),
+    ['revision', 'updatedAt', 'deleted', 'deletedAt', 'parents'].includes(key),
   );
 
   if (internalFields.length) {
@@ -115,7 +115,7 @@ export function updateResourceDocument<
   if (!isInternalUpdate) {
     // Ensure that external updates do not include any
     // restricted fields.
-    validateExtermalUpdateData(data);
+    validateExternalUpdateData(data);
   }
 
   // Create an update using the provided data and default

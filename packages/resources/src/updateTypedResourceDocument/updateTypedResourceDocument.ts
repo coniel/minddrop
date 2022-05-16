@@ -13,7 +13,7 @@ import {
 } from '../types';
 import {
   createChanges,
-  validateExtermalUpdateData,
+  validateExternalUpdateData,
 } from '../updateResourceDocument';
 import { getResourceDocument } from '../getResourceDocument';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
@@ -106,7 +106,7 @@ export function updateTypedResourceDocument<
   if (!isInternalUpdate) {
     // Ensure that external updates do not include any
     // restricted fields.
-    validateExtermalUpdateData(data);
+    validateExternalUpdateData(data);
   }
 
   // Create an update using the provided base data and default
