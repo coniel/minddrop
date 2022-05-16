@@ -20,6 +20,7 @@ import {
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
+import { useTypedResourceDocument } from '../useTypedResourceDocument';
 
 /**
  * Creates a new typed resource type, returning its API.
@@ -156,6 +157,11 @@ export function createTypedResource<
         TCustomTypeConfigOptions
       >[],
     filter: filterTypedResourceDocuments,
+    hooks: {
+      useDocument: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+        documentId: string,
+      ) => useTypedResourceDocument<TBaseData, TTypeData>(store, documentId),
+    },
     typeConfigsStore,
   };
 }

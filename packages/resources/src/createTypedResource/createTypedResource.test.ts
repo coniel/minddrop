@@ -1,3 +1,4 @@
+import { renderHook } from '@minddrop/test-utils';
 import { setup, cleanup, core } from '../test-utils';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import {
@@ -211,6 +212,51 @@ describe('createTypedResource', () => {
 
       // Document should no longer be deleted
       expect(updated.deleted).toBeUndefined();
+    });
+  });
+
+  describe('hooks', () => {
+    // Create some test documents, including a delted one
+    const document1: TypedResourceDocument<BaseData, TypeData> = {
+      id: 'doc-1',
+      revision: 'rev-1',
+      type: 'type-1',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      baseFoo: 'foo',
+      baseBar: 'bar',
+      typeFoo: 'foo',
+      typeBar: 'bar',
+    };
+    const document2 = { ...document1, id: 'doc-2', type: 'type-2' };
+
+    beforeEach(() => {
+      // Clear the store
+      Api.store.clear();
+      // Register a test resource type
+      Api.register(core, typeConfig);
+      // Load test documents
+      Api.store.load(core, [document1, document2]);
+    });
+
+    describe('useDocument', () => {
+      it('returns the requested document', () => {
+        // Get a document
+        const { result } = renderHook(() =>
+          Api.hooks.useDocument(document1.id),
+        );
+
+        // Should return the document
+        expect(result.current).toEqual(document1);
+      });
+
+      it('returns null if the document does not exist', () => {
+        // Get a missing document
+        const { result } = renderHook(() => Api.hooks.useDocument('missing'));
+
+        // Should return null
+        expect(result.current).toBeNull();
+      });
     });
   });
 });

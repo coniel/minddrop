@@ -27,7 +27,7 @@ export interface TypedResourceApi<
   TCustomTypeConfigOptions = {},
 > extends Omit<
     ResourceApi<TBaseData, TCreateData, TUpdateData>,
-    'create' | 'filter'
+    'create' | 'filter' | 'hooks'
   > {
   /**
    * Registers a new resource type and dispatches a
@@ -251,4 +251,17 @@ export interface TypedResourceApi<
     >,
     filters: TypedResourceDocumentFilters,
   ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
+
+  hooks: {
+    /*
+     * Returns a resource document by ID or `null`
+     * if it does not exist.
+     *
+     * @param documentId - The ID of the document to retrieve.
+     * @returns The requested document or `null`.
+     */
+    useDocument<TTypeData extends TRDTypeData<TBaseData> = {}>(
+      documentId: string,
+    ): TypedResourceDocument<TBaseData, TTypeData>;
+  };
 }
