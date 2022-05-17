@@ -7,6 +7,7 @@ import {
   TRDBaseDataSchema,
   TypedResourceDocument,
   TRDTypeDataSchema,
+  ResourceReference,
 } from '../types';
 import { createTypedResource } from './createTypedResource';
 import { ResourceApisStore } from '../ResourceApisStore';
@@ -217,9 +218,10 @@ describe('createTypedResource', () => {
     });
   });
 
-  describe('addParents', () => {
+  describe('parents', () => {
     let childDocument: TypedResourceDocument<BaseData, TypeData>;
     let parentDocument: TypedResourceDocument<BaseData, TypeData>;
+    let parentRef: ResourceReference;
 
     beforeEach(() => {
       // Register the resource
@@ -229,20 +231,36 @@ describe('createTypedResource', () => {
       // Create test documents
       childDocument = Api.create<TypeCreateData, TypeData>(core, 'test-type');
       parentDocument = Api.create<TypeCreateData, TypeData>(core, 'test-type');
+      // Create a parent reference
+      parentRef = { id: parentDocument.id, resource: Api.resource };
     });
 
-    it('adds parents to the document', () => {
-      // Create a parent reference
-      const parentRef = { id: parentDocument.id, resource: Api.resource };
+    describe('addParents', () => {
+      it('adds parents to the document', () => {
+        // Add a parent to a document
+        Api.addParents(core, childDocument.id, [parentRef]);
 
-      // Add a parent to a document
-      Api.addParents(core, childDocument.id, [parentRef]);
+        // Get the updated document
+        const document = Api.get(childDocument.id);
 
-      // Get the updated document
-      const document = Api.get(childDocument.id);
+        // Document should contain the parent
+        expect(document.parents).toEqual([parentRef]);
+      });
+    });
 
-      // Document should contain the parent
-      expect(document.parents).toEqual([parentRef]);
+    describe('removeParents', () => {
+      it('removes parents from the document', () => {
+        // Add a parent to a document
+        Api.addParents(core, childDocument.id, [parentRef]);
+        // Remove the parent from a document
+        Api.removeParents(core, childDocument.id, [parentRef]);
+
+        // Get the updated document
+        const document = Api.get(childDocument.id);
+
+        // Document should not contain the parent
+        expect(document.parents).toEqual([]);
+      });
     });
   });
 

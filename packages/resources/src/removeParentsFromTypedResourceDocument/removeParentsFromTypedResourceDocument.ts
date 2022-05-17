@@ -12,16 +12,16 @@ import {
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
 
 /**
- * Adds parent resource references to a resource document.
+ * Removes parent resource references from a resource document.
  *
  * @param core - A MindDrop core instance.
  * @param store - The resource store.
  * @param typeConfigsStore - The resource type configs store.
  * @param config - The resource config.
- * @param documentId - The ID of the document to which to add the parents.
- * @param parentReferences - The resource references of the parents to add.
+ * @param documentId - The ID of the document from which to remove the parents.
+ * @param parentReferences - The resource references of the parents to remove.
  */
-export function addParentsToTypedResourceDocument<
+export function removeParentsFromTypedResourceDocument<
   TBaseData extends TRDBaseData,
   TTypeData extends TRDTypeData<TBaseData>,
 >(
@@ -32,7 +32,7 @@ export function addParentsToTypedResourceDocument<
   documentId: string,
   parentReferences: ResourceReference[],
 ): TypedResourceDocument<TBaseData, TTypeData> {
-  // Update the document, adding the new parent references
+  // Update the document, removing the specified parent references
   const document = updateTypedResourceDocument<TBaseData, TTypeData>(
     core,
     store,
@@ -40,7 +40,7 @@ export function addParentsToTypedResourceDocument<
     config,
     documentId,
     {
-      parents: FieldValue.arrayUnion(parentReferences),
+      parents: FieldValue.arrayRemove(parentReferences),
     },
     true,
   );

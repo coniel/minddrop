@@ -8,6 +8,7 @@ import { deleteTypedResourceDocument } from '../deleteTypedResourceDocument';
 import { filterTypedResourceDocuments } from '../filterTypedResourceDocuments';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
 import { registerResourceType } from '../registerResourceType';
+import { removeParentsFromTypedResourceDocument } from '../removeParentsFromTypedResourceDocument';
 import { restoreTypedResourceDocument } from '../restoreTypedResourceDocument';
 import {
   ResourceConfig,
@@ -128,6 +129,19 @@ export function createTypedResource<
       parentReferences: ResourceReference[],
     ) =>
       addParentsToTypedResourceDocument<TBaseData, TTypeData>(
+        core,
+        store,
+        typeConfigsStore,
+        config,
+        documentId,
+        parentReferences,
+      ),
+    removeParents: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+      core: Core,
+      documentId: string,
+      parentReferences: ResourceReference[],
+    ) =>
+      removeParentsFromTypedResourceDocument<TBaseData, TTypeData>(
         core,
         store,
         typeConfigsStore,

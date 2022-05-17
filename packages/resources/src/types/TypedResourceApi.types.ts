@@ -217,6 +217,23 @@ export interface TypedResourceApi<
   ): TypedResourceDocument<TBaseData, TTypeData>;
 
   /**
+   * Removes parent resource references to a resource document.
+   *
+   * @param core - A MindDrop core instance.
+   * @param documentId - The ID of the document.
+   * @param parentReferences - The resource references of the parent documents to remove.
+   * @returns The updated resource document.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the resource document does not exist.
+   */
+  removeParents<TTypeData extends TRDTypeData<TBaseData> = {}>(
+    core: Core,
+    documentId: string,
+    parentReferences: ResourceReference[],
+  ): TypedResourceDocument<TBaseData, TTypeData>;
+
+  /**
    * Retrieves one or more resource documents by ID.
    *
    * If provided a single ID, returns the requested document.
