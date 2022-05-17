@@ -14,7 +14,7 @@ const config: ResourceConfig<{}> = {
 const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to remove
-const document = generateResourceDocument({});
+const document = generateResourceDocument('tests', {});
 
 describe('removeResourceDocument', () => {
   beforeEach(() => {

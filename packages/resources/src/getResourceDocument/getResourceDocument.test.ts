@@ -20,7 +20,7 @@ const config: ResourceConfig<Data> = {
 const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to restore
-const storeDoc = generateResourceDocument({ foo: 'foo' });
+const storeDoc = generateResourceDocument('tests', { foo: 'foo' });
 
 describe('getResourceDocument', () => {
   beforeAll(() => {

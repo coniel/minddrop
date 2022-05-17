@@ -447,7 +447,7 @@ describe('resource API', () => {
 
   describe('store', () => {
     // Generate a test document that is not in the store
-    const document = generateResourceDocument<Data>({
+    const document = generateResourceDocument<Data>('tests:test', {
       foo: 'foo',
       bar: 'bar',
       baz: 'baz',

@@ -8,6 +8,7 @@ const store = createResourceStore<TypedResourceDocument>();
 
 // Create a couple of test documents
 const document1: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-1',
   revision: 'rev-1',
   type: 'type-1',
@@ -15,6 +16,7 @@ const document1: TypedResourceDocument = {
   updatedAt: new Date(),
 };
 const document2: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-2',
   revision: 'rev-1',
   type: 'type-2',

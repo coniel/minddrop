@@ -39,7 +39,7 @@ const config: ResourceConfig<Data> = {
 const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to update
-const document = generateResourceDocument<Data>({
+const document = generateResourceDocument<Data>('tests', {
   foo: 'foo',
   bar: 'bar',
   baz: 'baz',

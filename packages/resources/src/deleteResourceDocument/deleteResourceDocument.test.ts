@@ -15,7 +15,7 @@ const config: ResourceConfig<{}> = {
 const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to delete
-const document = generateResourceDocument({});
+const document = generateResourceDocument('tests', {});
 
 // Create a typed version of the function
 const deleteResourceDocument = (

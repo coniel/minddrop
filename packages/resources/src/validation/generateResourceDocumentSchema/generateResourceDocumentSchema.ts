@@ -14,6 +14,12 @@ export function generateResourceDocumentSchema<TData>(
   // to create the document schema.
   return {
     ...dataSchema,
+    // Validate the `resource` property
+    resource: {
+      type: 'string',
+      required: true,
+      allowEmpty: false,
+    },
     // Validate the `id` property
     id: {
       type: 'string',

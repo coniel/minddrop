@@ -35,11 +35,11 @@ const config: ResourceConfig<Data> = {
 const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test document to which to add the parents
-const document = generateResourceDocument<Data>({});
+const document = generateResourceDocument<Data>('tests', {});
 
 // Test parent documents
-const parent1 = generateResourceDocument<Data>({});
-const parent2 = generateResourceDocument<Data>({});
+const parent1 = generateResourceDocument<Data>('tests', {});
+const parent2 = generateResourceDocument<Data>('tests', {});
 
 // The parent resource references
 const parent1Ref: ResourceReference = { resource: 'tests', id: parent1.id };

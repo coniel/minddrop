@@ -61,7 +61,7 @@ typeConfigsStore.register({
 // Generate a test document
 const document = generateResourceDocument<
   BaseData & TypeData & { type: string }
->({
+>('tests', {
   type: 'test-type',
   baseFoo: 'foo',
   typeFoo: 'foo',
@@ -70,14 +70,14 @@ const document = generateResourceDocument<
 // Generate test parent documents
 const parent1 = generateResourceDocument<
   BaseData & TypeData & { type: string }
->({
+>('tests', {
   type: 'test-type',
   baseFoo: 'foo',
   typeFoo: 'foo',
 });
 const parent2 = generateResourceDocument<
   BaseData & TypeData & { type: string }
->({
+>('tests', {
   type: 'test-type',
   baseFoo: 'foo',
   typeFoo: 'foo',

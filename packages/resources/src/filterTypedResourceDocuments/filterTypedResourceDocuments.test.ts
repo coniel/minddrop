@@ -3,6 +3,7 @@ import { TypedResourceDocument, TypedResourceDocumentMap } from '../types';
 import { filterTypedResourceDocuments } from './filterTypedResourceDocuments';
 
 const type1Document: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-1',
   revision: 'rev-1',
   type: 'type-1',
@@ -11,6 +12,7 @@ const type1Document: TypedResourceDocument = {
 };
 
 const type2Document: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-2',
   revision: 'rev-1',
   type: 'type-2',
@@ -19,6 +21,7 @@ const type2Document: TypedResourceDocument = {
 };
 
 const activeDocument: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-3',
   revision: 'rev-1',
   type: 'type-1',
@@ -27,6 +30,7 @@ const activeDocument: TypedResourceDocument = {
 };
 
 const deletedDocument: TypedResourceDocument = {
+  resource: 'tests',
   id: 'doc-4',
   revision: 'rev-1',
   type: 'type-1',

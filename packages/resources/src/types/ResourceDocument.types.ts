@@ -14,6 +14,11 @@ import { ResourceReference } from './ResourceReference.types';
  */
 export interface RDRootData {
   /**
+   * The name of the resource.
+   */
+  resource: string;
+
+  /**
    * The resource document's ID.
    */
   id: string;

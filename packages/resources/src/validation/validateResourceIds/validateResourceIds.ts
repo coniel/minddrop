@@ -14,6 +14,10 @@ export const ResourceIdsValidatorOptionsSchema: ValidatorOptionsSchema<ResourceI
       required: true,
       allowEmpty: false,
     },
+    addAsParent: {
+      type: 'boolean',
+      required: false,
+    },
   };
 
 /**

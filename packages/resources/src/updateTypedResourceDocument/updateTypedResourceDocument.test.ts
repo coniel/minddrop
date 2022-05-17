@@ -100,7 +100,7 @@ typeConfigsStore.register({
 // Test document to update
 const document = generateResourceDocument<
   BaseData & TypeData & { type: string }
->({
+>('tests', {
   type: 'test-type',
   baseFoo: 'foo',
   baseBar: 'bar',

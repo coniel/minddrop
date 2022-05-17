@@ -8,12 +8,14 @@ const store = createResourceStore();
 
 // Create a couple of test documents
 const document1: ResourceDocument = {
+  resource: 'tests',
   id: 'doc-1',
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 const document2: ResourceDocument = {
+  resource: 'tests',
   id: 'doc-2',
   revision: 'rev-1',
   createdAt: new Date(),
@@ -21,6 +23,7 @@ const document2: ResourceDocument = {
 };
 // Create a test deleted document
 const deletedDocument: ResourceDocument = {
+  resource: 'tests',
   id: 'doc-3',
   revision: 'rev-1',
   createdAt: new Date(),

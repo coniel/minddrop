@@ -11,7 +11,7 @@ interface Data {
   foo?: string;
 }
 
-const document = generateResourceDocument<Data>({ foo: 'foo' });
+const document = generateResourceDocument<Data>('tests', { foo: 'foo' });
 
 const dataSchema: RDDataSchema<Data> = {
   foo: { type: 'string', allowEmpty: false },

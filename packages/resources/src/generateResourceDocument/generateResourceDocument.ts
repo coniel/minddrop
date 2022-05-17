@@ -5,14 +5,16 @@ import { ResourceDocument, RDData } from '../types';
  * Generates a new resource document containing
  * the provided data.
  *
- * @param data The resource data.
+ * @param resource - The resource name.
+ * @param data - The resource document data.
  * @returns A new resource document.
  */
 export function generateResourceDocument<
   TData extends RDData,
   TResourceDocument extends ResourceDocument = ResourceDocument<TData>,
->(data: TData): TResourceDocument {
+>(resource: string, data: TData): TResourceDocument {
   const document = {
+    resource,
     id: generateId(),
     revision: generateId(),
     createdAt: new Date(),

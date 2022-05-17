@@ -15,6 +15,7 @@ const store = createResourceStore<TypedResourceDocument<BaseData, TypeData>>();
 
 // Create a test document
 const document: TypedResourceDocument<BaseData, TypeData> = {
+  resource: 'tests',
   id: 'document-id',
   revision: 'rev-1',
   type: 'type-1',

@@ -7,6 +7,7 @@ const store = createResourceStore();
 
 // Create a test document
 const document: ResourceDocument = {
+  resource: 'tests',
   id: 'document-id',
   revision: 'rev-1',
   createdAt: new Date(),

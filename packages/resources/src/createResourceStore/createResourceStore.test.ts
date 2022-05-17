@@ -7,7 +7,7 @@ interface TestResource {
 }
 
 const document1: ResourceDocument<TestResource> = {
-  ...generateResourceDocument<TestResource>({
+  ...generateResourceDocument<TestResource>('tests:test', {
     foo: 'foo',
   }),
   id: 'doc-1',
@@ -15,7 +15,7 @@ const document1: ResourceDocument<TestResource> = {
 };
 
 const document2: ResourceDocument<TestResource> = {
-  ...generateResourceDocument<TestResource>({
+  ...generateResourceDocument<TestResource>('tests:test', {
     foo: 'foo',
   }),
   id: 'doc-2',

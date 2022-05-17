@@ -267,6 +267,7 @@ describe('createTypedResource', () => {
   describe('hooks', () => {
     // Create some test documents
     const document1: TypedResourceDocument<BaseData, TypeData> = {
+      resource: 'tests',
       id: 'doc-1',
       revision: 'rev-1',
       type: 'type-1',

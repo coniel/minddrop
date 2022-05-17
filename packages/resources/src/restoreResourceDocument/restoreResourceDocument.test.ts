@@ -16,7 +16,7 @@ const config: ResourceConfig<{}> = {
 const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to restore
-const document = generateResourceDocument({});
+const document = generateResourceDocument('tests', {});
 
 // Create a typed version of the function
 const restoreResourceDocument = (

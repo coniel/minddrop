@@ -3,6 +3,7 @@ import { ResourceDocument, ResourceDocumentMap } from '../types';
 import { filterResourceDocuments } from './filterResourceDocuments';
 
 const activeDocument: ResourceDocument = {
+  resource: 'tests',
   id: 'doc-1',
   revision: 'rev-1',
   createdAt: new Date(),
@@ -10,6 +11,7 @@ const activeDocument: ResourceDocument = {
 };
 
 const deletedDocument: ResourceDocument = {
+  resource: 'tests',
   id: 'doc-2',
   revision: 'rev-1',
   createdAt: new Date(),

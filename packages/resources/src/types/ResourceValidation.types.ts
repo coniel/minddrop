@@ -31,6 +31,12 @@ export interface ResourceIdValidator {
    * the ID.
    */
   resource: string;
+
+  /**
+   * When `true`, the resource is added as a parent
+   * on the referenced resource.
+   */
+  addAsParent?: boolean;
 }
 
 export interface ResourceIdsValidator {
@@ -44,6 +50,12 @@ export interface ResourceIdsValidator {
    * the IDs.
    */
   resource: string;
+
+  /**
+   * When `true`, the resource is added as a parent
+   * on the referenced resources.
+   */
+  addAsParent?: boolean;
 }
 
 export interface ResourceReferenceValidator {
@@ -117,7 +129,7 @@ export type ResourceFieldValidator = (
 /**
  * The schema for resource documents.
  */
-export type RDSchema<TData extends RDData> = Record<
+export type RDSchema<TData extends RDData = {}> = Record<
   keyof ResourceDocument<TData>,
   ResourceFieldValidator
 >;
@@ -135,8 +147,8 @@ export type RDDataSchema<TData extends RDData = {}> = Record<
  * The schema for typed resource documents.
  */
 export type TRDSchema<
-  TBaseData extends TRDBaseData,
-  TTypeData extends TRDTypeData<TBaseData>,
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
 > = Record<
   keyof TypedResourceDocument<TBaseData, TTypeData>,
   ResourceFieldValidator

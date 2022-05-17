@@ -62,7 +62,7 @@ export function createTypedResourceDocument<
   let baseDocument = generateResourceDocument<
     TBaseData,
     TypedResourceDocument<TBaseData>
-  >(completeData);
+  >(config.resource, completeData);
 
   if (config.onCreate) {
     // Call the resource config's `onCreate` callback if defined

@@ -36,15 +36,15 @@ const config: ResourceConfig<Data> = {
 const store = createResourceStore<ResourceDocument<Data>>();
 
 // Test parent documents
-const parent1 = generateResourceDocument<Data>({});
-const parent2 = generateResourceDocument<Data>({});
+const parent1 = generateResourceDocument<Data>('tests', {});
+const parent2 = generateResourceDocument<Data>('tests', {});
 
 // The parent resource references
 const parent1Ref: ResourceReference = { resource: 'tests', id: parent1.id };
 const parent2Ref: ResourceReference = { resource: 'tests', id: parent2.id };
 
 // Test document to which to add the parents
-const document = generateResourceDocument<Data>({});
+const document = generateResourceDocument<Data>('tests', {});
 
 // Create a typed version of the function
 const removeParentsFromResourceDocument = (

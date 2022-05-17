@@ -14,7 +14,7 @@ const config: ResourceConfig<{}> = {
 const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to add
-const document = generateResourceDocument({});
+const document = generateResourceDocument('tests', {});
 
 describe('addResourceDocument', () => {
   beforeEach(setup);

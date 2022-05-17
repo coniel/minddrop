@@ -34,6 +34,7 @@ export function createResourceDocument<
 
   // Generate a document using the complete data
   let document = generateResourceDocument<TData, TResourceDocument>(
+    config.resource,
     completeData,
   );
 

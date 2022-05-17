@@ -27,6 +27,7 @@ const typeSchema: RDDataSchema<TypeData> = {
 const document: TypedResourceDocument<BaseData, TypeData> = {
   baseField: 'foo',
   typeField: 'foo',
+  resource: 'tests',
   type: 'test-type',
   id: 'document-id',
   revision: 'rev-1',

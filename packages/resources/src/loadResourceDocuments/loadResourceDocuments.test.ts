@@ -15,8 +15,8 @@ const config: ResourceConfig<{}> = {
 const store = createResourceStore<ResourceDocument<{}>>();
 
 // Test document to load
-const document1 = generateResourceDocument({});
-const document2 = generateResourceDocument({});
+const document1 = generateResourceDocument('tests', {});
+const document2 = generateResourceDocument('tests', {});
 
 describe('loadResourceDocuments', () => {
   beforeEach(setup);
