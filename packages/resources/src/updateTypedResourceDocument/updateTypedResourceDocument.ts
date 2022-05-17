@@ -5,6 +5,7 @@ import {
   ResourceStore,
   ResourceTypeConfigsStore,
   RDRestoreUpdateData,
+  RDParentsUpdateData,
   TRDBaseData,
   TRDTypeData,
   TypedResourceDocument,
@@ -47,7 +48,7 @@ export function updateTypedResourceDocument<
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
-  data: RDDeleteUpdateData | RDRestoreUpdateData,
+  data: RDDeleteUpdateData | RDRestoreUpdateData | RDParentsUpdateData,
   isInternalUpdate: true,
 ): TypedResourceDocument<TBaseData, TTypeData>;
 export function updateTypedResourceDocument<

@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { addParentsToTypedResourceDocument } from '../addParentsToTypedResourceDocument';
 import { createConfigsStore } from '../createConfigsStore';
 import { createResource } from '../createResource';
 import { createResourceStore } from '../createResourceStore';
@@ -18,6 +19,7 @@ import {
   TRDTypeData,
   TRDBaseData,
   TypedResourceDocumentFilters,
+  ResourceReference,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
@@ -120,6 +122,19 @@ export function createTypedResource<
         TBaseData,
         TTypeData
       >,
+    addParents: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+      core: Core,
+      documentId: string,
+      parentReferences: ResourceReference[],
+    ) =>
+      addParentsToTypedResourceDocument<TBaseData, TTypeData>(
+        core,
+        store,
+        typeConfigsStore,
+        config,
+        documentId,
+        parentReferences,
+      ),
     getAll: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
       Api.getAll() as Record<
         string,

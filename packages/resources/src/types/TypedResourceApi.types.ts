@@ -12,6 +12,7 @@ import {
   TRDTypeData,
 } from './TypedResourceDocument.types';
 import { TypedResourceDocumentFilters } from './ResourceDocumentFilters.types';
+import { ResourceReference } from './ResourceReference.types';
 
 /**
  * The API for a typed resource.
@@ -192,6 +193,27 @@ export interface TypedResourceApi<
   deletePermanently<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
+  ): TypedResourceDocument<TBaseData, TTypeData>;
+
+  /**
+   * Adds parent resource references to a resource document.
+   *
+   * @param core - A MindDrop core instance.
+   * @param documentId - The ID of the document.
+   * @param parentReferences - The resource references of the parent documents to add.
+   * @returns The updated resource document.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the resource document does not exist.
+   *
+   * @throws ResourceValidationError
+   * Thrown if one of the parent references is invalid or a
+   * parent document does not exist.
+   */
+  addParents<TTypeData extends TRDTypeData<TBaseData> = {}>(
+    core: Core,
+    documentId: string,
+    parentReferences: ResourceReference[],
   ): TypedResourceDocument<TBaseData, TTypeData>;
 
   /**

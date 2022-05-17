@@ -9,6 +9,7 @@ import {
   TRDTypeDataSchema,
 } from '../types';
 import { createTypedResource } from './createTypedResource';
+import { ResourceApisStore } from '../ResourceApisStore';
 
 interface BaseData {
   baseFoo: string;
@@ -213,6 +214,35 @@ describe('createTypedResource', () => {
 
       // Document should no longer be deleted
       expect(updated.deleted).toBeUndefined();
+    });
+  });
+
+  describe('addParents', () => {
+    let childDocument: TypedResourceDocument<BaseData, TypeData>;
+    let parentDocument: TypedResourceDocument<BaseData, TypeData>;
+
+    beforeEach(() => {
+      // Register the resource
+      ResourceApisStore.register(Api);
+      // Register a test resource type
+      Api.register(core, typeConfig);
+      // Create test documents
+      childDocument = Api.create<TypeCreateData, TypeData>(core, 'test-type');
+      parentDocument = Api.create<TypeCreateData, TypeData>(core, 'test-type');
+    });
+
+    it('adds parents to the document', () => {
+      // Create a parent reference
+      const parentRef = { id: parentDocument.id, resource: Api.resource };
+
+      // Add a parent to a document
+      Api.addParents(core, childDocument.id, [parentRef]);
+
+      // Get the updated document
+      const document = Api.get(childDocument.id);
+
+      // Document should contain the parent
+      expect(document.parents).toEqual([parentRef]);
     });
   });
 
