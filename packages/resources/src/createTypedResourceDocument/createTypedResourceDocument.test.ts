@@ -13,9 +13,14 @@ import {
   TRDBaseDataSchema,
   TRDTypeDataSchema,
   TypedResourceConfig,
+  ResourceConfig,
 } from '../types';
-import { createTypedResourceDocument as rawCreateTypedResourceDocument } from './createTypedResourceDocument';
 import { createConfigsStore } from '../createConfigsStore';
+import { createTypedResource } from '../createTypedResource';
+import { createResource } from '../createResource';
+import { generateResourceDocument } from '../generateResourceDocument';
+import { ResourceApisStore } from '../ResourceApisStore';
+import { createTypedResourceDocument as rawCreateTypedResourceDocument } from './createTypedResourceDocument';
 
 interface BaseData {
   resourceFoo: string;
@@ -66,12 +71,15 @@ const typeConfigsStore = createConfigsStore<
   idField: 'type',
 });
 
-// Register a test type
-typeConfigsStore.register({
+// Create a test resource type config
+const typeConfig = {
   type: 'test-type',
   dataSchema: typeDataSchema,
   defaultData: { typeBar: 'bar', typeBaz: 'baz' },
-});
+};
+
+// Register the test resource type
+typeConfigsStore.register(typeConfig);
 
 // Create a typed version of the function
 const createTypedResourceDocument = (
@@ -354,6 +362,67 @@ describe('createTypedResourceDocument', () => {
 
     // Document should be in the store
     expect(store.get(document.id)).toEqual(document);
+  });
+
+  it('runs schema create hooks', () => {
+    // The config of the parent document (document being created)
+    const parentConfig: TypedResourceConfig<{ childId: string }> = {
+      resource: 'parent',
+      dataSchema: {
+        childId: {
+          type: 'resource-id',
+          resource: 'child',
+          addAsParent: true,
+        },
+      },
+    };
+    // The config of the child document (referenced in the document
+    // being created).
+    const childConfig: ResourceConfig<{ foo?: string }> = {
+      resource: 'child',
+      dataSchema: {
+        foo: {
+          type: 'string',
+          required: false,
+        },
+      },
+    };
+
+    // Create and register the test resources
+    const parentStore =
+      createResourceStore<TypedResourceDocument<{ childId: string }>>();
+    const parentResource = createTypedResource(parentConfig, parentStore);
+    const childResource = createResource(childConfig);
+    ResourceApisStore.register([parentResource, childResource]);
+
+    // Register the 'test-type' parent resource type
+    parentResource.register(core, typeConfig);
+
+    // Generate a 'child' document
+    const childDocument = generateResourceDocument('child', {});
+
+    // Load the child document into the 'child' resource store
+    childResource.store.load(core, [childDocument]);
+
+    // Create a 'parent' document that references the child document
+    // created above.
+    const parentDocument = rawCreateTypedResourceDocument<
+      { childId: string },
+      { foo: 'string' },
+      {},
+      {}
+    >(core, parentStore, typeConfigsStore, parentConfig, 'test-type', {
+      childId: childDocument.id,
+      typeFoo: 'foo',
+    });
+
+    // Get the updated 'child' document
+    const child = childResource.get(childDocument.id);
+
+    // 'child' document should have the created document as a parent
+    expect(child.parents).toEqual([
+      { resource: 'parent', id: parentDocument.id },
+    ]);
   });
 
   it('dispatches a `[resource]:create` event', (done) => {

@@ -19,6 +19,7 @@ import {
 import { getResourceDocument } from '../getResourceDocument';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
 import { validateTypedResourceDocument } from '../validateTypedResourceDocument';
+import { runSchemaUpdateHooks } from '../runSchemaUpdateHooks';
 
 /**
  * Updates a typed resource document and dispatches a
@@ -161,6 +162,14 @@ export function updateTypedResourceDocument<
 
   // Set the updated document in the store
   store.set(update.after);
+
+  // Run schema update hooks
+  runSchemaUpdateHooks(
+    core,
+    { ...config.dataSchema, ...typeConfig.dataSchema },
+    document,
+    update.after,
+  );
 
   // Dispatch a `[resource]:update` event
   core.dispatch(`${config.resource}:update`, {

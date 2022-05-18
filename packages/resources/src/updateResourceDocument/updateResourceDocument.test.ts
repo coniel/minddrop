@@ -12,6 +12,8 @@ import {
   ResourceDocument,
   ResourceStore,
 } from '../types';
+import { createResource } from '../createResource';
+import { ResourceApisStore } from '../ResourceApisStore';
 import { updateResourceDocument as rawUpdateResourceDocument } from './updateResourceDocument';
 
 // Test resource data
@@ -134,6 +136,67 @@ describe('updateResourceDocument', () => {
 
     // Store document should be updated
     expect(updated.foo).toBe('updated foo');
+  });
+
+  it('runs schema update hooks', () => {
+    // Parent document data
+    type ParentData = { childId?: string };
+
+    // The config of the parent document (document being created)
+    const parentConfig: ResourceConfig<ParentData> = {
+      resource: 'parent',
+      dataSchema: {
+        childId: {
+          type: 'resource-id',
+          resource: 'child',
+          addAsParent: true,
+        },
+      },
+    };
+    // The config of the child document (referenced in the document
+    // being created).
+    const childConfig: ResourceConfig<{ foo?: string }> = {
+      resource: 'child',
+      dataSchema: {
+        foo: {
+          type: 'string',
+          required: false,
+        },
+      },
+    };
+
+    // Create and register the test resources
+    const parentStore = createResourceStore<ResourceDocument<ParentData>>();
+    const parentResource = createResource(parentConfig, parentStore);
+    const childResource = createResource(childConfig);
+    ResourceApisStore.register([parentResource, childResource]);
+
+    // Generate test documents
+    const parentDocument = generateResourceDocument('parent', {});
+    const childDocument = generateResourceDocument('child', {});
+
+    // Load the test documents into their respective stores
+    parentResource.store.load(core, [parentDocument]);
+    childResource.store.load(core, [childDocument]);
+
+    // Update the 'parent' document, adding the 'child' document as a child
+    rawUpdateResourceDocument(
+      core,
+      parentStore,
+      parentConfig,
+      parentDocument.id,
+      {
+        childId: childDocument.id,
+      },
+    );
+
+    // Get the updated 'child' document
+    const child = childResource.get(childDocument.id);
+
+    // 'child' document should have the updated document as a parent
+    expect(child.parents).toEqual([
+      { resource: 'parent', id: parentDocument.id },
+    ]);
   });
 
   it('dispatches a `[resource]:update` event', (done) => {

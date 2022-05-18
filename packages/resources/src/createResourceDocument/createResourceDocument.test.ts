@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { createResourceStore } from '../createResourceStore';
+import { createResource } from '../createResource';
 import { ResourceValidationError } from '../errors';
 import { setup, cleanup, core } from '../test-utils';
 import {
@@ -9,7 +10,9 @@ import {
   ResourceStore,
   RDData,
 } from '../types';
+import { generateResourceDocument } from '../generateResourceDocument';
 import { createResourceDocument as rawCreateResourceDocument } from './createResourceDocument';
+import { ResourceApisStore } from '../ResourceApisStore';
 
 interface Data {
   foo: string;
@@ -127,6 +130,64 @@ describe('createResourceDocument', () => {
 
     // Document should be in the store
     expect(store.get(document.id)).toEqual(document);
+  });
+
+  it('runs schema create hooks', () => {
+    type ParentData = { childId: string };
+
+    // The config of the parent document (document being created)
+    const parentConfig: ResourceConfig<ParentData> = {
+      resource: 'parent',
+      dataSchema: {
+        childId: {
+          type: 'resource-id',
+          resource: 'child',
+          addAsParent: true,
+        },
+      },
+    };
+    // The config of the child document (referenced in the document
+    // being created).
+    const childConfig: ResourceConfig<{ foo?: string }> = {
+      resource: 'child',
+      dataSchema: {
+        foo: {
+          type: 'string',
+          required: false,
+        },
+      },
+    };
+
+    // Create and register the test resources
+    const parentStore = createResourceStore<ResourceDocument<ParentData>>();
+    const parentResource = createResource(parentConfig, parentStore);
+    const childResource = createResource(childConfig);
+    ResourceApisStore.register([parentResource, childResource]);
+
+    // Generate a 'child' document
+    const childDocument = generateResourceDocument('child', {});
+
+    // Load the child document into the 'child' resource store
+    childResource.store.load(core, [childDocument]);
+
+    // Create a 'parent' document that references the child document
+    // created above.
+    const parentDocument = rawCreateResourceDocument<ParentData, {}>(
+      core,
+      parentStore,
+      parentConfig,
+      {
+        childId: childDocument.id,
+      },
+    );
+
+    // Get the updated 'child' document
+    const child = childResource.get(childDocument.id);
+
+    // 'child' document should have the created document as a parent
+    expect(child.parents).toEqual([
+      { resource: 'parent', id: parentDocument.id },
+    ]);
   });
 
   it('dispatches a `[resource]:create` event', (done) => {

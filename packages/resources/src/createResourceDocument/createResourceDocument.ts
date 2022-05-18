@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { generateResourceDocument } from '../generateResourceDocument';
+import { runSchemaCreateHooks } from '../runSchemaCreateHooks';
 import {
   ResourceConfig,
   ResourceDocument,
@@ -48,6 +49,9 @@ export function createResourceDocument<
 
   // Add the document to the store
   store.set(document);
+
+  // Run schema create hooks
+  runSchemaCreateHooks(core, config.dataSchema, document);
 
   // Dispatch a `[resource]:create` event
   core.dispatch(`${config.resource}:create`, document);

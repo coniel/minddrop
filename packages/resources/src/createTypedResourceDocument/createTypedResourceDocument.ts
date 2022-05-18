@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { ResourceTypeNotRegisteredError } from '../errors';
 import { generateResourceDocument } from '../generateResourceDocument';
+import { runSchemaCreateHooks } from '../runSchemaCreateHooks';
 import {
   TypedResourceConfig,
   ResourceStore,
@@ -104,6 +105,13 @@ export function createTypedResourceDocument<
 
   // Add the document to the store
   store.set(document);
+
+  // Run schema create hooks
+  runSchemaCreateHooks(
+    core,
+    { ...config.dataSchema, ...typeConfig.dataSchema },
+    document,
+  );
 
   // Dispatch a `[resource]:create` event
   core.dispatch(`${config.resource}:create`, document);
