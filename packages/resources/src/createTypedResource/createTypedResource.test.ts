@@ -9,6 +9,7 @@ import {
   TRDTypeDataSchema,
   ResourceReference,
 } from '../types';
+import { createResourceStore } from '../createResourceStore';
 import { createTypedResource } from './createTypedResource';
 import { ResourceApisStore } from '../ResourceApisStore';
 
@@ -262,6 +263,39 @@ describe('createTypedResource', () => {
         expect(document.parents).toEqual([]);
       });
     });
+  });
+
+  it('accepts a custom store', () => {
+    // Create a resource store
+    const store = createResourceStore<TypedResourceDocument<BaseData>>();
+
+    // Create a resource using the custom store
+    const withCustomStore = createTypedResource<
+      BaseData,
+      BaseCreateData,
+      BaseUpdateData
+    >(
+      {
+        resource: 'tests:test',
+        dataSchema: {
+          baseFoo: { type: 'string' },
+          baseBar: { type: 'string' },
+        },
+      },
+      store,
+    );
+
+    // Register the 'test-type' resource type
+    withCustomStore.register(core, typeConfig);
+
+    // Create a document
+    const document = withCustomStore.create(core, 'test-type', {
+      baseFoo: 'foo',
+      typeFoo: 'foo',
+    });
+
+    // Should have set the document in the provided store
+    expect(store.get(document.id)).toEqual(document);
   });
 
   describe('hooks', () => {

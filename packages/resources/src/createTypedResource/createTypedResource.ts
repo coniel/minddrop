@@ -21,6 +21,7 @@ import {
   TRDBaseData,
   TypedResourceDocumentFilters,
   ResourceReference,
+  ResourceStore,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
@@ -41,6 +42,7 @@ export function createTypedResource<
   TCustomTypeConfigOptions = {},
 >(
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
+  customStore?: ResourceStore<TypedResourceDocument<TBaseData>>,
 ): TypedResourceApi<
   TBaseData,
   TCreateData,
@@ -48,7 +50,8 @@ export function createTypedResource<
   TCustomTypeConfigOptions
 > {
   // Create a resource store
-  const store = createResourceStore<TypedResourceDocument<TBaseData>>();
+  const store =
+    customStore || createResourceStore<TypedResourceDocument<TBaseData>>();
 
   // Create a resource
   const Api = createResource<TBaseData, TCreateData, TUpdateData>(
