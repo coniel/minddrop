@@ -13,6 +13,7 @@ import {
 } from './TypedResourceDocument.types';
 import { TypedResourceDocumentFilters } from './ResourceDocumentFilters.types';
 import { ResourceReference } from './ResourceReference.types';
+import { ResourceTypeConfigFilters } from './ResourceTypeConfigFilters.types';
 
 /**
  * The API for a typed resource.
@@ -79,11 +80,12 @@ export interface TypedResourceApi<
   /**
    * Returns all registered resource type configs for this resource.
    *
+   * @params filters - Optional filters by which to filter the returned configs.
    * @returns An array of resource type configs.
    */
-  getAllTypeConfigs<
-    TTypeData extends TRDTypeData<TBaseData> = {},
-  >(): RegisteredResourceTypeConfig<
+  getAllTypeConfigs<TTypeData extends TRDTypeData<TBaseData> = {}>(
+    filters?: ResourceTypeConfigFilters,
+  ): RegisteredResourceTypeConfig<
     TBaseData,
     TTypeData,
     TCustomTypeConfigOptions

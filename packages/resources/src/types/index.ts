@@ -7,6 +7,7 @@ export * from './ResourceReference.types';
 export * from './ResourceStore.types';
 export * from './ResourceValidation.types';
 export * from './ResourceTypeConfig.types';
+export * from './ResourceTypeConfigFilters.types';
 export * from './TypedResourceApi.types';
 export * from './TypedResourceConfig.types';
 export * from './TypedResourceDocument.types';

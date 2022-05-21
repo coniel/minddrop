@@ -128,7 +128,7 @@ describe('createTypedResource', () => {
     });
   });
 
-  describe('getAllTypeConfig', () => {
+  describe('getAllTypeConfigs', () => {
     it('returns all registered type configs', () => {
       const typeConfig2 = { ...typeConfig, type: 'test-type-2' };
 
@@ -142,6 +142,22 @@ describe('createTypedResource', () => {
       // Should return the requested config
       expect(configs).toEqual([
         { ...typeConfig, extension: core.extensionId },
+        { ...typeConfig2, extension: core.extensionId },
+      ]);
+    });
+
+    it('supports filtering', () => {
+      const typeConfig2 = { ...typeConfig, type: 'test-type-2' };
+
+      // Register two resource types
+      Api.register(core, typeConfig);
+      Api.register(core, typeConfig2);
+
+      // Get the type config
+      const configs = Api.getAllTypeConfigs({ type: [typeConfig2.type] });
+
+      // Should return only the filtered configs
+      expect(configs).toEqual([
         { ...typeConfig2, extension: core.extensionId },
       ]);
     });

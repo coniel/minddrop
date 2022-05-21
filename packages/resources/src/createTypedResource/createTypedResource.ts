@@ -6,6 +6,7 @@ import { createResourceStore } from '../createResourceStore';
 import { createTypedResourceDocument } from '../createTypedResourceDocument';
 import { deleteTypedResourceDocument } from '../deleteTypedResourceDocument';
 import { filterTypedResourceDocuments } from '../filterTypedResourceDocuments';
+import { getAllResourceTypeConfigs } from '../getAllResourceTypeConfigs';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
 import { registerResourceType } from '../registerResourceType';
 import { removeParentsFromTypedResourceDocument } from '../removeParentsFromTypedResourceDocument';
@@ -22,6 +23,7 @@ import {
   TypedResourceDocumentFilters,
   ResourceReference,
   ResourceStore,
+  ResourceTypeConfigFilters,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
@@ -185,12 +187,13 @@ export function createTypedResource<
         TTypeData,
         TCustomTypeConfigOptions
       >,
-    getAllTypeConfigs: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
-      typeConfigsStore.getAll() as RegisteredResourceTypeConfig<
-        TBaseData,
-        TTypeData,
-        TCustomTypeConfigOptions
-      >[],
+    getAllTypeConfigs: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+      filters: ResourceTypeConfigFilters,
+    ) =>
+      getAllResourceTypeConfigs<TBaseData, TTypeData, TCustomTypeConfigOptions>(
+        typeConfigsStore,
+        filters,
+      ),
     filter: filterTypedResourceDocuments,
     hooks: {
       useDocument: <TTypeData extends TRDTypeData<TBaseData> = {}>(
