@@ -1,3 +1,11 @@
+export interface ConfigsStoreOptions {
+  /**
+   * The field used to identify the configuration
+   * objects.
+   */
+  idField: string;
+}
+
 export interface ConfigStore<TConfig> {
   /**
    * Retrieves a config by ID. The config 'ID' field is determined

@@ -28,9 +28,9 @@ import { addParentsToResourceDocument } from '../addParentsToResourceDocument';
 import { removeParentsFromResourceDocument } from '../removeParentsFromResourceDocument';
 
 /**
- * Creates a new resource type, returning its API.
+ * Creates a new resource, returning its API.
  *
- * @param config The resource configuration.
+ * @param config - The resource configuration.
  * @returns A resource API.
  */
 export function createResource<

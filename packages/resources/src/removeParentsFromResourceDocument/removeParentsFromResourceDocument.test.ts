@@ -67,7 +67,10 @@ describe('removeParentsFromResourceDocument', () => {
     setup();
 
     // Register the 'tests' resource
-    ResourceApisStore.register(createResource(config, store));
+    ResourceApisStore.register({
+      ...createResource(config, store),
+      extension: core.extensionId,
+    });
 
     // Load the test documents into the store
     store.load([document, parent1, parent2]);

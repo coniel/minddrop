@@ -1,8 +1,8 @@
 import { createConfigsStore } from '../createConfigsStore';
-import { ResourceApi } from '../types';
+import { RegisteredResourceApi, RegisteredTypedResourceApi } from '../types';
 
-export const ResourceApisStore = createConfigsStore<ResourceApi<any, any, any>>(
-  {
-    idField: 'resource',
-  },
-);
+export const ResourceApisStore = createConfigsStore<
+  RegisteredResourceApi | RegisteredTypedResourceApi
+>({
+  idField: 'resource',
+});

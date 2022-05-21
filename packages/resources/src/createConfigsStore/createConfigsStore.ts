@@ -1,5 +1,5 @@
 import createStore from 'zustand';
-import { ConfigStore } from '../types';
+import { ConfigStore, ConfigsStoreOptions } from '../types';
 
 interface Store<TConfig> {
   /**
@@ -29,12 +29,15 @@ interface Store<TConfig> {
 
 /**
  * Creates a store for storing configuration objects.
+ *
+ * @params options - The store options.
+ * @returns A configs store.
  */
-export function createConfigsStore<TConfig>({
-  idField,
-}: {
-  idField: keyof TConfig;
-}): ConfigStore<TConfig> {
+export function createConfigsStore<TConfig>(
+  options: ConfigsStoreOptions,
+): ConfigStore<TConfig> {
+  const { idField } = options;
+
   const useConfigStore = createStore<Store<TConfig>>((set) => ({
     configs: [],
 

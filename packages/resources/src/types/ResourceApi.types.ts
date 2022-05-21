@@ -15,9 +15,9 @@ import { ResourceDocumentFilters } from './ResourceDocumentFilters.types';
  * @param TUpdateData The data that can be supplied to the `update` method when updating a resource document. Should be a subset of `TData`.
  */
 export interface ResourceApi<
-  TData extends RDData,
-  TCreateData extends Partial<Record<keyof TData, any>> & RDData,
-  TUpdateData extends Partial<Record<keyof TData, any>> & RDData,
+  TData extends RDData = {},
+  TCreateData extends Partial<Record<keyof TData, any>> & RDData = {},
+  TUpdateData extends Partial<Record<keyof TData, any>> & RDData = {},
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**
@@ -305,4 +305,11 @@ export interface ResourceStoreApi<TResourceDocument> {
    * **Intended for use in tests only.**
    */
   clear(): void;
+}
+
+export interface RegisteredResourceApi extends ResourceApi {
+  /**
+   * The ID of the extension which registered the resource.
+   */
+  extension: string;
 }

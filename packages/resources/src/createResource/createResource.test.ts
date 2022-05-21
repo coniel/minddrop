@@ -50,24 +50,27 @@ const dataSchema: RDDataSchema<Data> = {
 
 const onClear = jest.fn();
 
-const ResourceApi = createResource<Data, CreateData, UpdateData>({
-  resource: 'tests:test',
-  dataSchema,
-  defaultData: {
-    foo: 'foo',
-    bar: 'bar',
-    baz: 'baz',
-    qux: 'qux',
-  },
-  onClear,
-  onCreate: (core, document) => ({
-    ...document,
-    baz: 'onCreate baz',
-    qux: 'onCreate qux',
+const ResourceApi = {
+  ...createResource<Data, CreateData, UpdateData>({
+    resource: 'tests:test',
+    dataSchema,
+    defaultData: {
+      foo: 'foo',
+      bar: 'bar',
+      baz: 'baz',
+      qux: 'qux',
+    },
+    onClear,
+    onCreate: (core, document) => ({
+      ...document,
+      baz: 'onCreate baz',
+      qux: 'onCreate qux',
+    }),
+    onUpdate: (core, update) => ({ ...update.changes, bar: 'onUpdate bar' }),
+    onGet: (document) => ({ ...document, qux: 'onGet qux' }),
   }),
-  onUpdate: (core, update) => ({ ...update.changes, bar: 'onUpdate bar' }),
-  onGet: (document) => ({ ...document, qux: 'onGet qux' }),
-});
+  extension: core.extensionId,
+};
 
 describe('resource API', () => {
   let existingDoc1: ResourceDocument<Data>;

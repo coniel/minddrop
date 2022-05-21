@@ -5,6 +5,7 @@ export * from './ResourceDocument.types';
 export * from './ResourceDocumentFilters.types';
 export * from './ResourceReference.types';
 export * from './ResourceStore.types';
+export * from './ResourcesApi.types';
 export * from './ResourceValidation.types';
 export * from './ResourceTypeConfig.types';
 export * from './ResourceTypeConfigFilters.types';

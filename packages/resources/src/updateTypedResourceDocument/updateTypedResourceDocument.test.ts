@@ -334,8 +334,14 @@ describe('updateTypedResourceDocument', () => {
     // Create and register the test resources
     const parentStore =
       createResourceStore<TypedResourceDocument<ParentData>>();
-    const parentResource = createTypedResource(parentConfig, parentStore);
-    const childResource = createResource(childConfig);
+    const parentResource = {
+      ...createTypedResource(parentConfig, parentStore),
+      extension: core.extensionId,
+    };
+    const childResource = {
+      ...createResource(childConfig),
+      extension: core.extensionId,
+    };
     ResourceApisStore.register([parentResource, childResource]);
 
     // Register the 'test-type' parent resource type

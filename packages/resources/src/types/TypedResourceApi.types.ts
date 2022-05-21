@@ -23,9 +23,9 @@ import { ResourceTypeConfigFilters } from './ResourceTypeConfigFilters.types';
  * @param TUpdateData The data that can be supplied to the `update` method when updating a resource document. Should be a subset of `TBaseData`.
  */
 export interface TypedResourceApi<
-  TBaseData extends TRDBaseData,
-  TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
-  TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData,
+  TBaseData extends TRDBaseData = {},
+  TCreateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData = {},
+  TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData = {},
   TCustomTypeConfigOptions = {},
 > extends Omit<
     ResourceApi<TBaseData, TCreateData, TUpdateData>,
@@ -329,4 +329,11 @@ export interface TypedResourceApi<
       filters?: TypedResourceDocumentFilters,
     ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
   };
+}
+
+export interface RegisteredTypedResourceApi extends TypedResourceApi {
+  /**
+   * The ID of the extension which registered the resource.
+   */
+  extension: string;
 }

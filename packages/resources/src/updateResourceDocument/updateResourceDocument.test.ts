@@ -167,8 +167,14 @@ describe('updateResourceDocument', () => {
 
     // Create and register the test resources
     const parentStore = createResourceStore<ResourceDocument<ParentData>>();
-    const parentResource = createResource(parentConfig, parentStore);
-    const childResource = createResource(childConfig);
+    const parentResource = {
+      ...createResource(parentConfig, parentStore),
+      extension: core.extensionId,
+    };
+    const childResource = {
+      ...createResource(childConfig),
+      extension: core.extensionId,
+    };
     ResourceApisStore.register([parentResource, childResource]);
 
     // Generate test documents

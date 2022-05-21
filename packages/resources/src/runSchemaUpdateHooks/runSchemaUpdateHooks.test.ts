@@ -27,17 +27,23 @@ const schema: RDDataSchema<ParentData> = {
   },
 };
 
-const parentResource = createResource<ParentData, {}, {}>({
-  resource: 'tests:parent',
-  dataSchema: schema,
-});
+const parentResource = {
+  ...createResource<ParentData, {}, {}>({
+    resource: 'tests:parent',
+    dataSchema: schema,
+  }),
+  extension: core.extensionId,
+};
 
-const childResource = createResource<ChildData, {}, {}>({
-  resource: 'tests:child',
-  dataSchema: {
-    foo: { type: 'string' },
-  },
-});
+const childResource = {
+  ...createResource<ChildData, {}, {}>({
+    resource: 'tests:child',
+    dataSchema: {
+      foo: { type: 'string' },
+    },
+  }),
+  extension: core.extensionId,
+};
 
 // Create a resource reference for the parent document
 const parentRef: ResourceReference = {

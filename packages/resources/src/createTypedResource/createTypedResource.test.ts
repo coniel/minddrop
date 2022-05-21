@@ -70,14 +70,17 @@ const typeConfig: ResourceTypeConfig<BaseData, TypeData> = {
   },
 };
 
-const Api = createTypedResource<BaseData, BaseCreateData, BaseUpdateData>({
-  resource: 'tests:test',
-  dataSchema: baseDataSchema,
-  defaultData: {
-    baseFoo: 'foo',
-    baseBar: 'bar',
-  },
-});
+const Api = {
+  ...createTypedResource<BaseData, BaseCreateData, BaseUpdateData>({
+    resource: 'tests:test',
+    dataSchema: baseDataSchema,
+    defaultData: {
+      baseFoo: 'foo',
+      baseBar: 'bar',
+    },
+  }),
+  extension: core.extensionId,
+};
 
 describe('createTypedResource', () => {
   beforeEach(setup);

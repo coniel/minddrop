@@ -23,7 +23,7 @@ const config: ResourceConfig<{ foo: string }> = {
   },
 };
 
-const ResourceApi = createResource(config);
+const ResourceApi = { ...createResource(config), extension: core.extensionId };
 
 describe('validateResourceReference', () => {
   let document: ResourceDocument<{}>;
