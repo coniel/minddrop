@@ -1,50 +1,27 @@
-import { act } from '@minddrop/test-utils';
-import { Tags, Tag } from '@minddrop/tags';
 import { removeTagsFromDrop } from './removeTagsFromDrop';
-import { Drop } from '../types';
-import { createDrop } from '../createDrop';
 import { addTagsToDrop } from '../addTagsToDrop';
-import { cleanup, core, setup } from '../test-utils';
+import { cleanup, core, setup, drop1 } from '../test-utils';
+import { TAGS_TEST_DATA } from '@minddrop/tags';
+import { DropsResource } from '../DropsResource';
+
+const { tag1, tag2 } = TAGS_TEST_DATA;
 
 describe('removeTagsFromDrop', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('removes tags from the drop', async () => {
-    let drop: Drop;
-    let tag1: Tag;
-    let tag2: Tag;
+  it('removes tags from the drop', () => {
+    // Add tags to a drop
+    addTagsToDrop(core, drop1.id, [tag1.id, tag2.id]);
 
-    await act(async () => {
-      tag1 = await Tags.create(core, { label: 'Tag' });
-      tag2 = await Tags.create(core, { label: 'Tag' });
-      drop = createDrop(core, { type: 'text' });
-      drop = addTagsToDrop(core, drop.id, [tag1.id, tag2.id]);
-      drop = removeTagsFromDrop(core, drop.id, [tag1.id]);
-    });
+    // Remove one of the tags from the drop
+    removeTagsFromDrop(core, drop1.id, [tag1.id]);
 
-    expect(drop.tags).toBeDefined();
-    expect(drop.tags.length).toBe(1);
-    expect(drop.tags[0]).toBe(tag2.id);
-  });
+    // Get the updated drop
+    const drop = DropsResource.get(drop1.id);
 
-  it("dispatches a 'drops:remove-tags' event", (done) => {
-    let drop: Drop;
-    let tag: Tag;
-
-    function callback(payload) {
-      expect(payload.data).toEqual({ drop, tags: { [tag.id]: tag } });
-      done();
-    }
-
-    core.addEventListener('drops:remove-tags', callback);
-
-    act(() => {
-      tag = Tags.create(core, { label: 'Tag' });
-      drop = createDrop(core, { type: 'text', tags: [tag.id] });
-      drop = addTagsToDrop(core, drop.id, [tag.id]);
-      drop = removeTagsFromDrop(core, drop.id, [tag.id]);
-    });
+    // Drop should no longer contain the removed tag ID
+    expect(drop.tags).toEqual([tag2.id]);
   });
 });

@@ -1,29 +1,16 @@
 import { Core } from '@minddrop/core';
-import { Drop } from '../types';
+import { Resources } from '@minddrop/resources';
+import { DropsResource } from '../DropsResource';
 
 export function onRun(core: Core) {
-  // Register the drops:drop resource
-  core.registerResource<Drop>({
-    type: 'drops:drop',
-    createEvent: 'drops:create',
-    updateEvent: 'drops:update',
-    deleteEvent: 'drops:delete-permanently',
-    onLoad: (drops) => useDropsStore.getState().loadDrops(drops),
-    onChange: (drop, deleted) => {
-      const store = useDropsStore.getState();
-      if (deleted) {
-        store.removeDrop(drop.id);
-      } else {
-        store.setDrop(drop);
-      }
-    },
-  });
+  // Register the drops resource
+  Resources.register(core, DropsResource);
 }
 
 export function onDisable(core: Core) {
-  // Clear the store
-  useDropsStore.getState().clearDrops();
-  useDropsStore.getState().clearRegistered();
+  // Unregister the drops resource
+  Resources.unregister(core, DropsResource);
+
   // Remove event listeners
   core.removeAllEventListeners();
 }

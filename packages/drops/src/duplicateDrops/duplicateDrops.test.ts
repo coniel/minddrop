@@ -2,60 +2,65 @@ import {
   setup,
   cleanup,
   core,
-  textDrop1,
-  textDrop2,
-  imageDrop1,
-  TextDrop,
+  drop1,
+  drop2,
+  dropConfig,
+  TextDropData,
 } from '../test-utils';
-import { getDrop } from '../getDrop';
 import { duplicateDrops } from './duplicateDrops';
-import { Files } from '@minddrop/files';
+import { doesNotContain } from '@minddrop/utils';
+import { DropsResource } from '../DropsResource';
 
 describe('duplicateDrops', () => {
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
   it('creates new drops', () => {
-    const drops = duplicateDrops<TextDrop>(core, [textDrop1.id, textDrop2.id]);
-    const drop1Id = Object.values(drops).find(
-      (drop) => drop.text === textDrop1.text,
-    ).id;
-    const drop2Id = Object.values(drops).find(
-      (drop) => drop.text === textDrop2.text,
-    ).id;
+    // The IDs of the original drops
+    const originalDropIds = [drop1.id, drop2.id];
 
-    const drop1 = getDrop(drop1Id);
-    const drop2 = getDrop(drop2Id);
+    // Duplicate a couple of drops
+    const drops = duplicateDrops(core, originalDropIds);
 
-    expect(drop1).toBeDefined();
-    expect(drop2).toBeDefined();
+    // Get the duplcaited drop IDs
+    const duplicateDropIds = Object.keys(drops);
+
+    // Duplicated drops should have new IDs
+    expect(doesNotContain(originalDropIds, duplicateDropIds));
+
+    // Duplciated drops should exist in the store
+    expect(DropsResource.get(duplicateDropIds[0])).toEqual(
+      drops[duplicateDropIds[0]],
+    );
   });
 
   it('adds the `duplicatedFrom` property', () => {
-    const drops = duplicateDrops<TextDrop>(core, [textDrop1.id, textDrop2.id]);
-    const drop1Id = Object.values(drops).find(
-      (drop) => drop.text === textDrop1.text,
-    ).id;
-    const drop2Id = Object.values(drops).find(
-      (drop) => drop.text === textDrop2.text,
-    ).id;
+    // Duplicate a drop
+    const drops = duplicateDrops(core, [drop1.id]);
 
-    const drop1 = getDrop(drop1Id);
-    const drop2 = getDrop(drop2Id);
-
-    expect(drop1.duplicatedFrom).toBe(textDrop1.id);
-    expect(drop2.duplicatedFrom).toBe(textDrop2.id);
+    // Duplcicated drop should have the original drop ID as its
+    // 'duplicatedFrom' value.
+    expect(Object.values(drops)[0].duplicatedFrom).toBe(drop1.id);
   });
 
-  it('adds new drops as attachment to file references', () => {
-    const drops = duplicateDrops<TextDrop>(core, [imageDrop1.id]);
-    const [newDrop] = Object.values(drops);
+  it('merges in the type config `duplicateData` data', () => {
+    // Register a drop type with a `duplicateData` callback
+    DropsResource.register(core, {
+      ...dropConfig,
+      type: 'with-duplicate-data',
+      duplicateData: () => ({ text: 'Duplicated text' }),
+    });
 
-    const fileRef = Files.get(imageDrop1.files[0]);
+    // Create a drop of the type registered above
+    const drop = DropsResource.create(core, 'with-duplicate-data', {
+      text: 'Original text',
+    });
 
-    expect(fileRef.attachedTo.includes(newDrop.id));
+    // Duplicate the drop creatd above
+    const duplicates = duplicateDrops<TextDropData>(core, [drop.id]);
+
+    // Duplicate drop should contain the `duplciateData` data
+    expect(Object.values(duplicates)[0].text).toBe('Duplicated text');
   });
 });

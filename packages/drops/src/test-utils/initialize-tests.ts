@@ -1,48 +1,45 @@
 import { initializeCore } from '@minddrop/core';
 import { act } from '@minddrop/test-utils';
-import { Files, FILES_TEST_DATA } from '@minddrop/files';
-import { Tags, TAGS_TEXT_DATA } from '@minddrop/tags';
-import { registerDropType } from '../registerDropType';
-import { useDropsStore } from '../useDropsStore';
-import { loadDrops } from '../loadDrops';
-import { DropConfig } from '../types';
-import { dropFiles, drops, dropTypeConfigs } from './drops.data';
+import { Tags, TagsResource, TAGS_TEST_DATA } from '@minddrop/tags';
+import { drops, dropTypeConfigs } from './drops.data';
+import { DropsResource } from '../DropsResource';
+import { Resources } from '@minddrop/resources';
 
-const { fileReferences } = FILES_TEST_DATA;
-const { tags } = TAGS_TEXT_DATA;
+const { tags } = TAGS_TEST_DATA;
 
 export const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 export function setup() {
   act(() => {
+    // Register the 'tags:tag' resource
+    Resources.register(core, TagsResource);
+
+    // Register 'drops:drop' resource
+    Resources.register(core, DropsResource);
+
     // Register all test drop configs
     dropTypeConfigs.forEach((config) => {
-      registerDropType(core, config as DropConfig);
+      DropsResource.register(core, config);
     });
 
-    // Load the test drops
-    loadDrops(core, drops);
-
-    // Load the test files
-    Files.load(core, fileReferences);
-    // Load the test files attached to drops
-    Files.load(core, dropFiles);
     // Load test tags
-    Tags.load(core, tags);
+    Tags.store.load(core, tags);
+
+    // Load the test drops
+    DropsResource.store.load(core, drops);
   });
 }
 
 export function cleanup() {
   act(() => {
     // Clear registered drop types
-    useDropsStore.getState().clearRegistered();
+    DropsResource.typeConfigsStore.clear();
 
     // Clear drops
-    useDropsStore.getState().clearDrops();
-    // Clear files
-    Files.clear(core);
+    DropsResource.store.clear();
+
     // Clear tags
-    Tags.clear(core);
+    Tags.store.clear();
 
     // Remove all of the extension's event listeners
     core.removeAllEventListeners();

@@ -1,4 +1,4 @@
-export interface DropConfigFilters {
+export interface DropTypeConfigFilters {
   /**
    * Filter by extension ID, including only drop configs
    * which were added by the given extensions.

@@ -1,20 +1,20 @@
 import { Core, DataInsert } from '@minddrop/core';
-import { createDrop } from '../createDrop';
-import { Drop, DropConfig, DropMap } from '../types';
+import { RegisteredDropTypeConfig, DropMap, Drop } from '../types';
+import { DropsResource } from '../DropsResource';
 
-async function createFromFiles(
+function createFromFiles(
   core: Core,
-  config: DropConfig,
+  config: RegisteredDropTypeConfig,
   files: File[],
-): Promise<Drop> {
-  const dropData = await config.create(core, {
+): Drop {
+  const dropData = config.initializeData({
     action: 'insert',
     types: ['files'],
     data: {},
     files,
   });
 
-  return createDrop(core, dropData);
+  return DropsResource.create(core, config.type, dropData);
 }
 
 /**
@@ -27,56 +27,60 @@ async function createFromFiles(
  * @param data The data from which to create the drops.
  * @param configs The drop configs from which to create the drops.
  */
-export async function createFromDataInsert(
+export function createFromDataInsert(
   core: Core,
   dataInsert: DataInsert,
-  configs: DropConfig<any>[],
-): Promise<DropMap> {
+  configs: RegisteredDropTypeConfig[],
+): DropMap {
   const drops: DropMap = {};
-
-  // Get drop configs which support the data
-  // insert's data types
-  const dataTypes = Object.keys(dataInsert.data);
+  // Get the drop configs which support the data insert's
+  // data types and have an `initializeData` callback.
   const matchedDataConfigs = configs.filter(
     (config) =>
       config.dataTypes &&
-      config.dataTypes.filter((type) => dataTypes.includes(type)).length,
+      config.initializeData &&
+      config.dataTypes.filter((type) => dataInsert.types.includes(type)).length,
   );
 
   // If there are matching drop configs, use the
   // first match to create the drop.
   if (matchedDataConfigs.length) {
-    const dropData = await matchedDataConfigs[0].create(core, dataInsert);
-    const drop = createDrop(core, dropData);
+    const dropData = matchedDataConfigs[0].initializeData(dataInsert);
+    const drop = DropsResource.create(
+      core,
+      matchedDataConfigs[0].type,
+      dropData,
+    );
 
     drops[drop.id] = drop;
   }
 
   if (dataInsert.files && dataInsert.files.length) {
-    const fileDropPromises: Promise<Drop>[] = [];
-    const fileTypes = dataInsert.files.reduce((types, file) => {
-      if (!types.includes(file.type)) {
-        return [...types, file.type];
+    // Group the files by type
+    const filesByType = dataInsert.files.reduce((filesByType, file) => {
+      if (filesByType[file.type]) {
+        return {
+          ...filesByType,
+          [file.type]: [...filesByType[file.type], file],
+        };
       }
 
-      return types;
-    }, [] as string[]);
+      return {
+        ...filesByType,
+        [file.type]: [file],
+      };
+    }, {} as Record<string, File[]>);
 
-    // Group files by type
-    const filesByType = fileTypes.reduce(
-      (files, type) => ({
-        ...files,
-        [type]: dataInsert.files.filter((file) => file.type === type),
-      }),
-      {} as Record<string, File[]>,
-    );
-
-    // Group files by supported drop config
+    // Create drops from the files using the first type config
+    // with support for the file types.
     configs.forEach((config) => {
-      if (config.fileTypes) {
+      if (config.fileTypes && config.initializeData) {
+        // Get the supported files for this config
         const supportedFiles = config.fileTypes.reduce((files, fileType) => {
           if (filesByType[fileType]) {
             const newFiles = [...files, ...filesByType[fileType]];
+
+            // Remove the used files
             delete filesByType[fileType];
 
             return newFiles;
@@ -86,19 +90,22 @@ export async function createFromDataInsert(
         }, [] as File[]);
 
         if (config.multiFile) {
-          fileDropPromises.push(createFromFiles(core, config, supportedFiles));
+          // If the drop type supports multiple files at once,
+          // create a single drop from all the supported files.
+          const drop = createFromFiles(core, config, supportedFiles);
+
+          // Add the drop to the drops map
+          drops[drop.id] = drop;
         } else {
+          // Create a drop for each supported file
           supportedFiles.forEach((file) => {
-            fileDropPromises.push(createFromFiles(core, config, [file]));
+            const drop = createFromFiles(core, config, [file]);
+
+            // Add the drop to the drops map
+            drops[drop.id] = drop;
           });
         }
       }
-    });
-
-    const fileDrops = await Promise.all(fileDropPromises);
-
-    fileDrops.forEach((drop) => {
-      drops[drop.id] = drop;
     });
   }
 

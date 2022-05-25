@@ -1,35 +1,29 @@
 import { Core } from '@minddrop/core';
-import { Tags } from '@minddrop/tags';
-import { FieldValue } from '@minddrop/utils';
-import { Drop } from '../types';
-import { updateDrop } from '../updateDrop';
+import { FieldValue, FieldValueArrayUnion } from '@minddrop/utils';
+import { DropTypeData, Drop } from '../types';
+import { DropsResource } from '../DropsResource';
 
 /**
- * Adds tags to a drop and dispatches a `drops:add-tags` event.
- *
- * - Throws a `DropNotFoundError` if the drop does not exist.
- * - Throws a `TagNotFoundError` if any of the tags do not exist.
+ * Adds tags to a drop.
  *
  * @param core A MindDrop core instance.
  * @param dropId The ID of the drop to which to add the tags.
  * @param tagIds The IDs of the tags to add to the drop.
  * @returns The updated drop.
  */
-export function addTagsToDrop<TDrop extends Drop = Drop>(
+export function addTagsToDrop<TTypeData extends DropTypeData = {}>(
   core: Core,
   dropId: string,
   tagIds: string[],
-): TDrop {
-  // Check that tags exist
-  const tags = Tags.get(tagIds);
-
+): Drop<TTypeData> {
   // Update the drop, adding the tag IDs
-  const drop = updateDrop<TDrop>(core, dropId, {
-    tags: FieldValue.arrayUnion(tagIds),
-  });
-
-  // Dispatch a 'drops:add-tags' event
-  core.dispatch('drops:add-tags', { drop, tags });
+  const drop = DropsResource.update<{ tags: FieldValueArrayUnion }, TTypeData>(
+    core,
+    dropId,
+    {
+      tags: FieldValue.arrayUnion(tagIds),
+    },
+  );
 
   // Return the updated drop
   return drop;

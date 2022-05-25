@@ -1,31 +1,40 @@
 import { Core } from '@minddrop/core';
-import { createDrop } from '../createDrop';
-import { getDrops } from '../getDrops';
+import { DropsResource } from '../DropsResource';
 import { Drop, DropMap } from '../types';
 
 /**
- * Duplicates the given drops by creating new drops
+ * Duplicates the specified drops by creating new drops
  * with the same data.
  *
- * @param core A MindDrop core instance.
- * @param dropIds The IDs of the drops to duplicate.
+ * @param core - A MindDrop core instance.
+ * @param dropIds - The IDs of the drops to duplicate.
  * @returns The new drops.
  */
-export function duplicateDrops<TDrop extends Drop = Drop>(
+export function duplicateDrops<TTypeData>(
   core: Core,
   dropIds: string[],
-): DropMap<TDrop> {
+): DropMap<Drop<TTypeData>> {
   // Get the drops
-  const drops = getDrops(dropIds);
+  const drops = DropsResource.get(dropIds);
 
   // Create new drops
   const newDrops = Object.values(drops).map((drop) => {
+    // Get the drop type config
+    const config = DropsResource.getTypeConfig(drop.type);
+
     // Copy drop data
-    const data = { ...drop, duplicatedFrom: drop.id };
-    // Remove ID
+    let data = { ...drop, duplicatedFrom: drop.id };
+
+    if (config.duplicateData) {
+      // Merge in the type config's `duplicateData` data
+      data = { ...data, ...config.duplicateData(drop) };
+    }
+
+    // Remove the original drop ID
     delete data.id;
+
     // Create the new drop
-    return createDrop(core, data);
+    return DropsResource.create(core, drop.type, data);
   });
 
   // Return drop map
