@@ -1,11 +1,7 @@
 import { ContentColor } from '@minddrop/core';
+import { ResourceDocument } from '@minddrop/resources';
 
-export interface Tag {
-  /**
-   * Universally unique ID.
-   */
-  id: string;
-
+export interface TagData {
   /**
    * The tag label text.
    */
@@ -53,4 +49,6 @@ export interface TagChanges {
   color?: ContentColor;
 }
 
-export type TagMap = Record<string, Tag>;
+export type Tag = ResourceDocument<TagData>;
+
+export type TagMap = Record<string, ResourceDocument<TagData>>;
