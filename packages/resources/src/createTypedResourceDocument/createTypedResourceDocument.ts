@@ -39,7 +39,7 @@ export function createTypedResourceDocument<
   type: string,
   data?: TBaseCreateData & TTypeCreateData,
 ): TypedResourceDocument<TBaseData, TTypeData> {
-  let document: TypedResourceDocument<TBaseData, TTypeData>;
+  let document: TypedResourceDocument<TBaseData, TTypeData | {}>;
 
   // Get the type's config object
   const typeConfig =
@@ -60,15 +60,21 @@ export function createTypedResourceDocument<
   } as unknown as TBaseData;
 
   // Generate a base document using the complete data
-  let baseDocument = generateResourceDocument<
+  document = generateResourceDocument<
     TBaseData,
     TypedResourceDocument<TBaseData>
   >(config.resource, completeData);
 
   if (config.onCreate) {
     // Call the resource config's `onCreate` callback if defined
-    baseDocument = config.onCreate(core, baseDocument);
+    document = config.onCreate(core, document);
   }
+
+  // Add the type to create the typed document
+  let typedDocument = {
+    ...document,
+    type,
+  } as TypedResourceDocument<TBaseData, TTypeData>;
 
   if (typeConfig.defaultData) {
     // Get the type's default data for fields which were not
@@ -81,18 +87,16 @@ export function createTypedResourceDocument<
       {},
     );
 
-    // Merge the type's default data into the document and add the
-    // type to create the typed document.
-    document = {
-      ...baseDocument,
+    // Merge the type's default data into the document
+    typedDocument = {
+      ...typedDocument,
       ...typeDefaultData,
-      type,
     } as TypedResourceDocument<TBaseData, TTypeData>;
   }
 
   if (typeConfig.onCreate) {
     // Call the type config's `onCreate` callback if defined
-    document = typeConfig.onCreate(core, document);
+    typedDocument = typeConfig.onCreate(core, typedDocument);
   }
 
   // Validate the document
@@ -100,22 +104,22 @@ export function createTypedResourceDocument<
     config.resource,
     config.dataSchema,
     typeConfig.dataSchema,
-    document,
+    typedDocument,
   );
 
   // Add the document to the store
-  store.set(document);
+  store.set(typedDocument);
 
   // Run schema create hooks
   runSchemaCreateHooks(
     core,
     { ...config.dataSchema, ...typeConfig.dataSchema },
-    document,
+    typedDocument,
   );
 
   // Dispatch a `[resource]:create` event
-  core.dispatch(`${config.resource}:create`, document);
+  core.dispatch(`${config.resource}:create`, typedDocument);
 
   // Return the new document
-  return document;
+  return typedDocument;
 }

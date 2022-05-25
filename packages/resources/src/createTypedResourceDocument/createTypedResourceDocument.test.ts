@@ -31,6 +31,7 @@ interface BaseData {
 interface BaseCreateData {
   resourceFoo: string;
   resourceBar?: string;
+  resourceBaz?: string;
 }
 
 interface TypeData {
@@ -42,6 +43,7 @@ interface TypeData {
 interface TypeCreateData {
   typeFoo: string;
   typeBar?: string;
+  typeBaz?: string;
 }
 
 type TestDocument = TypedResourceDocument<BaseData, TypeData>;
@@ -156,6 +158,41 @@ describe('createTypedResourceDocument', () => {
 
     // Document should have the specified type
     expect(document.type).toBe('test-type');
+  });
+
+  it('works without any default data', () => {
+    // Create and register a resource type without default data
+    const typeConfig2 = {
+      type: 'without-default-data',
+      dataSchema: typeDataSchema,
+    };
+    typeConfigsStore.register(typeConfig2);
+
+    // Create a typed resource config without default data
+    const config2 = { ...config };
+    delete config2.defaultData;
+
+    // Create a resource document using a config containg an `onCreate`
+    // callback. Should merge the returned data into the document.
+    const document = createTypedResourceDocument(
+      core,
+      store,
+      typeConfigsStore,
+      config2,
+      typeConfig2.type,
+      {
+        resourceFoo: 'foo',
+        resourceBar: 'bar',
+        resourceBaz: 'baz',
+        typeFoo: 'foo',
+        typeBar: 'bar',
+        typeBaz: 'baz',
+      },
+    );
+
+    // Document should contain the data added by `onCreate`
+    expect(document.resourceFoo).toBe('foo');
+    expect(document.typeFoo).toBe('foo');
   });
 
   it('merges the base resource `defaultData` into the generated document', () => {
