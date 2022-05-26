@@ -1,5 +1,4 @@
 import { Drops } from '@minddrop/drops';
-import { getTopic } from '../getTopic';
 import {
   setup,
   cleanup,
@@ -11,6 +10,7 @@ import {
 import { registerTopicView } from '../registerTopicView';
 import { archiveDropsInTopic } from './archiveDropsInTopic';
 import { createTopicViewInstance } from '../createTopicViewInstance';
+import { TopicsResource } from '../TopicsResource';
 
 describe('archiveDropsInTopic', () => {
   beforeEach(setup);
@@ -24,7 +24,7 @@ describe('archiveDropsInTopic', () => {
     archiveDropsInTopic(core, tSixDrops.id, dropIds);
 
     // Get updated topic
-    const topic = getTopic(tSixDrops.id);
+    const topic = TopicsResource.get(tSixDrops.id);
     // Should add drop IDs to 'archviedDrops'
     expect(topic.archivedDrops.includes(dropIds[0])).toBeTruthy();
     expect(topic.archivedDrops.includes(dropIds[1])).toBeTruthy();
@@ -40,15 +40,15 @@ describe('archiveDropsInTopic', () => {
     const result = archiveDropsInTopic(core, tSixDrops.id, dropIds);
 
     // Should return updated topic
-    expect(result).toEqual(getTopic(tSixDrops.id));
+    expect(result).toEqual(TopicsResource.get(tSixDrops.id));
   });
 
-  it('dispatches a `topics:archive-drops` event', (done) => {
+  it('dispatches a `topics:topic:archive-drops` event', (done) => {
     const dropIds = tSixDrops.drops.slice(0, 2);
 
-    core.addEventListener('topics:archive-drops', (payload) => {
+    core.addEventListener('topics:topic:archive-drops', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tSixDrops.id);
+      const topic = TopicsResource.get(tSixDrops.id);
       // Get the archived drops
       const drops = Drops.get(dropIds);
 

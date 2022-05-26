@@ -1,77 +1,41 @@
-import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
-import {
-  Tags,
-  onRun as onRunTags,
-  onDisable as onDisableTags,
-  Tag,
-  TagNotFoundError,
-} from '@minddrop/tags';
-import { onRun, onDisable } from '../topics-extension';
+import { TAGS_TEST_DATA } from '@minddrop/tags';
+import { setup, cleanup, core, tSailing } from '../test-utils';
 import { addTagsToTopic } from './addTagsToTopic';
-import { Topic } from '../types';
-import { createTopic } from '../createTopic';
+import { TopicsResource } from '../TopicsResource';
+import { mapById } from '@minddrop/utils';
 
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-
-// Run tags extension
-onRunTags(core);
-// Run topics extension
-onRun(core);
+const { tag1 } = TAGS_TEST_DATA;
 
 describe('addTagsToTopic', () => {
-  afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    act(() => {
-      onDisableTags(core);
-      onDisable(core);
-      onRunTags(core);
-      onRun(core);
-    });
-  });
+  beforeEach(setup);
+
+  afterEach(cleanup);
 
   it('adds tags to the topic', async () => {
-    let topic: Topic;
-    let tag: Tag;
+    // Add a tag to a topic
+    addTagsToTopic(core, tSailing.id, [tag1.id]);
 
-    await act(async () => {
-      tag = await Tags.create(core, { label: 'Tag' });
-      topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tag.id]);
-    });
+    // Get the updated topic
+    const topic = TopicsResource.get(tSailing.id);
 
-    expect(topic.tags).toBeDefined();
-    expect(topic.tags.length).toBe(1);
-    expect(topic.tags[0]).toBe(tag.id);
+    // Topic should contain the tag ID
+    expect(topic.tags.includes(tag1.id)).toBeTruthy();
   });
 
-  it('throws if tag does not exist', async () => {
-    let topic: Topic;
+  it('dispatches a `topics:topic:add-tags` event', (done) => {
+    // Listen to 'topics:topic:add-tags' events
+    core.addEventListener('topics:topic:add-tags', (payload) => {
+      // Get the updated topic
+      const topic = TopicsResource.get(tSailing.id);
 
-    await act(async () => {
-      topic = createTopic(core);
-    });
-    expect(() =>
-      addTagsToTopic(core, topic.id, ['missing-tag-id']),
-    ).toThrowError(TagNotFoundError);
-  });
-
-  it("dispatches a 'topics:add-tags' event", (done) => {
-    let topic: Topic;
-    let tag: Tag;
-
-    function callback(payload) {
+      // Payload data should contain the topic
       expect(payload.data.topic).toEqual(topic);
-      expect(payload.data.tags).toEqual({ [tag.id]: tag });
+      // Payload data should contained the added tags
+      expect(payload.data.tags).toEqual(mapById([tag1]));
       done();
-    }
-
-    core.addEventListener('topics:add-tags', callback);
-
-    act(() => {
-      tag = Tags.create(core, { label: 'Tag' });
-      topic = createTopic(core);
-      topic = addTagsToTopic(core, topic.id, [tag.id]);
     });
+
+    // Add a tag to a topic
+    addTagsToTopic(core, tSailing.id, [tag1.id]);
   });
 });

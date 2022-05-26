@@ -4,7 +4,7 @@ import { FieldValue } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { getTopicView } from '../getTopicView';
 import { Topic, TopicViewInstance } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
  * Archives the specified drops in a topic and dispatches
@@ -25,7 +25,7 @@ export function archiveDropsInTopic(
   const drops = Drops.get(dropIds);
 
   // Update the topic
-  const topic = updateTopic(core, topicId, {
+  const topic = TopicsResource.update(core, topicId, {
     // Remove drop IDs from 'drops'
     drops: FieldValue.arrayRemove(dropIds),
     // Add drop IDs to 'archivedDrops'

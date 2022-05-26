@@ -1,4 +1,6 @@
-import { Drops, DropNotFoundError, DROPS_TEST_DATA } from '@minddrop/drops';
+import { contains } from '@minddrop/utils';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { ResourceDocumentNotFoundError } from '@minddrop/resources';
 import { createTopicViewInstance } from '../createTopicViewInstance';
 import {
   cleanup,
@@ -9,12 +11,11 @@ import {
   tNoDrops,
   tSixDrops,
 } from '../test-utils';
-import { getTopic } from '../getTopic';
 import { addDropsToTopic } from './addDropsToTopic';
 import { registerTopicView } from '../registerTopicView';
-import { contains } from '@minddrop/utils';
+import { TopicsResource } from '../TopicsResource';
 
-const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
+const { drop1, dropConfig } = DROPS_TEST_DATA;
 
 describe('addDropsToTopic', () => {
   beforeEach(setup);
@@ -23,21 +24,21 @@ describe('addDropsToTopic', () => {
 
   it('adds drops to the topic', () => {
     // Add drop to the topic
-    addDropsToTopic(core, tNoDrops.id, [textDrop1.id]);
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
 
     // Get the updated topic
-    const topic = getTopic(tNoDrops.id);
+    const topic = TopicsResource.get(tNoDrops.id);
 
     // Topic's drops should contain drop ID
-    expect(topic.drops.includes(textDrop1.id)).toBeTruthy();
+    expect(topic.drops.includes(drop1.id)).toBeTruthy();
   });
 
   it("adds topic to the drop's parents", () => {
     // Add the drop to the topic
-    addDropsToTopic(core, tNoDrops.id, [textDrop1.id]);
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
 
     // Get the updated drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
 
     // Should have added topic ID to drop's parents
     expect(
@@ -48,7 +49,7 @@ describe('addDropsToTopic', () => {
   it('throws if drop does not exist', async () => {
     expect(() =>
       addDropsToTopic(core, tNoDrops.id, ['missing-drop-id']),
-    ).toThrowError(DropNotFoundError);
+    ).toThrowError(ResourceDocumentNotFoundError);
   });
 
   it("calls topic view's onAddDrops for each view instance", () => {
@@ -72,10 +73,10 @@ describe('addDropsToTopic', () => {
     };
 
     // Add drop to the topic
-    addDropsToTopic(core, tNoDrops.id, [textDrop1.id], metadata);
+    addDropsToTopic(core, tNoDrops.id, [drop1.id], metadata);
 
     // Get updated drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
 
     // Should be called on the view instance with appropriate data and metadata
     expect(viewConfig.onAddDrops).toHaveBeenCalledWith(
@@ -87,34 +88,32 @@ describe('addDropsToTopic', () => {
   });
 
   it("dispatches a 'topics:add-drops' event", (done) => {
-    function callback(payload) {
+    // Listen to 'topics:topic:add-drops' event
+    core.addEventListener('topics:topic:add-drops', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tNoDrops.id);
+      const topic = TopicsResource.get(tNoDrops.id);
       // Get the updated drop
-      const drop = Drops.get(textDrop1.id);
+      const drop = Drops.get(drop1.id);
 
       // Payload data should contain updated topic
       expect(payload.data.topic).toEqual(topic);
       // Payload data should contain updated drop
       expect(payload.data.drops).toEqual({ [drop.id]: drop });
       done();
-    }
-
-    // Listen to 'topics:add-drops' event
-    core.addEventListener('topics:add-drops', callback);
+    });
 
     // Add drop to the topic
-    addDropsToTopic(core, tNoDrops.id, [textDrop1.id]);
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
   });
 
   it('does not add drops already in the topic', () => {
     // Create a new drop to add
-    const newDrop = Drops.create(core, { type: textDropConfig.type });
+    const newDrop = Drops.create(core, dropConfig.type);
     // Add new and existing drop (already in topic) to the topic
-    addDropsToTopic(core, tSixDrops.id, [textDrop1.id, newDrop.id]);
+    addDropsToTopic(core, tSixDrops.id, [drop1.id, newDrop.id]);
 
     // Get the updated topic
-    const topic = getTopic(tSixDrops.id);
+    const topic = TopicsResource.get(tSixDrops.id);
 
     // Shoould have addded only 1 drop
     expect(topic.drops.length).toBe(7);
@@ -124,7 +123,7 @@ describe('addDropsToTopic', () => {
     jest.spyOn(core, 'dispatch');
 
     // Add drop which is already in the topic
-    addDropsToTopic(core, tSixDrops.id, [textDrop1.id]);
+    addDropsToTopic(core, tSixDrops.id, [drop1.id]);
 
     // Should not end up dispatching anything
     expect(core.dispatch).not.toHaveBeenCalled();

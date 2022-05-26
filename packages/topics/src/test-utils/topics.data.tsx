@@ -3,8 +3,7 @@ import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TopicView, TopicViewConfig, TopicViewInstance } from '../types';
 import { generateTopic } from '../generateTopic';
 
-const { htmlDrop1, textDrop1, textDrop2, textDrop3, textDrop4, imageDrop1 } =
-  DROPS_TEST_DATA;
+const { drop1, drop2, drop3, drop4, drop5, drop6 } = DROPS_TEST_DATA;
 
 export interface TopicColumnsViewData {
   columns: Record<number, string[]>;
@@ -158,9 +157,9 @@ export const tSailingView: TopicColumnsView = {
   view: 'minddrop/topic-view-columns',
   topic: 't-sailing',
   columns: {
-    0: [textDrop1.id, textDrop2.id],
-    1: [textDrop3.id],
-    2: [htmlDrop1.id],
+    0: [drop1.id, drop2.id],
+    1: [drop3.id],
+    2: [drop5.id],
     3: [],
   },
 };
@@ -172,9 +171,9 @@ export const tSailingView2: TopicColumnsView = {
   view: 'minddrop/topic-view-columns',
   topic: 't-sailing',
   columns: {
-    0: [textDrop1.id, textDrop2.id],
-    1: [textDrop3.id],
-    2: [htmlDrop1.id],
+    0: [drop1.id, drop2.id],
+    1: [drop3.id],
+    2: [drop5.id],
     3: [],
   },
 };
@@ -214,8 +213,8 @@ export const tTwoDropsView: TopicColumnsView = {
   view: 'minddrop/topic-view-columns',
   topic: 't-two-drops',
   columns: {
-    0: [textDrop1.id],
-    1: [textDrop2.id],
+    0: [drop1.id],
+    1: [drop2.id],
     2: [],
     3: [],
   },
@@ -228,10 +227,10 @@ export const tSixDropsView: TopicColumnsView = {
   view: 'minddrop/topic-view-columns',
   topic: 't-six-drops',
   columns: {
-    0: [textDrop1.id, textDrop2.id],
-    1: [textDrop3.id],
-    2: [textDrop4.id, htmlDrop1.id],
-    3: [imageDrop1.id],
+    0: [drop1.id, drop2.id],
+    1: [drop3.id],
+    2: [drop4.id, drop5.id],
+    3: [drop6.id],
   },
 };
 
@@ -252,21 +251,21 @@ export const tEmptyView: TopicColumnsView = {
 export const tCoastalNavigation = generateTopic({
   id: 't-coastal-navigation',
   title: 'Coastal navigation',
-  parents: [{ type: 'topic', id: 't-navigation' }],
+  parents: [{ resource: 'topics:topic', id: 't-navigation' }],
   views: [tCoastalNavigationView.id, tCoastalNavigationView2.id],
 });
 
 export const tOffshoreNavigation = generateTopic({
   id: 't-offshore-navigation',
   title: 'Offshore navigation',
-  parents: [{ type: 'topic', id: 't-navigation' }],
+  parents: [{ resource: 'topics:topic', id: 't-navigation' }],
   views: [tOffshoreNavigationView.id],
 });
 
 export const tNavigation = generateTopic({
   id: 't-navigation',
   title: 'Navigation',
-  parents: [{ type: 'topic', id: 't-sailing' }],
+  parents: [{ resource: 'topics:topic', id: 't-sailing' }],
   subtopics: [tCoastalNavigation.id, tOffshoreNavigation.id],
   views: [tNavigationView.id],
 });
@@ -274,14 +273,14 @@ export const tNavigation = generateTopic({
 export const tBoats = generateTopic({
   id: 't-boats',
   title: 'Boats',
-  parents: [{ type: 'topic', id: 't-sailing' }],
+  parents: [{ resource: 'topics:topic', id: 't-sailing' }],
   views: [tBoatsView.id],
 });
 
 export const tAnchoring = generateTopic({
   id: 't-anchoring',
   title: 'Anchoring',
-  parents: [{ type: 'topic', id: 't-sailing' }],
+  parents: [{ resource: 'topics:topic', id: 't-sailing' }],
   views: [tAnchoringView.id],
 });
 
@@ -290,7 +289,7 @@ export const tSailing = generateTopic({
   title: 'Sailing',
   subtopics: [tNavigation.id, tBoats.id, tAnchoring.id],
   views: [tSailingView.id, tSailingView2.id],
-  drops: [textDrop1.id, textDrop2.id, textDrop3.id, htmlDrop1.id],
+  drops: [drop1.id, drop2.id, drop3.id, drop5.id],
 });
 
 export const tUntitled = generateTopic({
@@ -313,7 +312,7 @@ export const tTwoDrops = generateTopic({
   updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
   views: [tTwoDropsView.id],
-  drops: [textDrop1.id, textDrop2.id],
+  drops: [drop1.id, drop2.id],
 });
 
 export const tSixDrops = generateTopic({
@@ -322,14 +321,7 @@ export const tSixDrops = generateTopic({
   updatedAt: new Date('01/01/2000'),
   title: 'Sailing',
   views: [tSixDropsView.id],
-  drops: [
-    textDrop1.id,
-    textDrop2.id,
-    textDrop3.id,
-    textDrop4.id,
-    htmlDrop1.id,
-    imageDrop1.id,
-  ],
+  drops: [drop1.id, drop2.id, drop3.id, drop4.id, drop5.id, drop6.id],
 });
 
 export const tEmpty = generateTopic({

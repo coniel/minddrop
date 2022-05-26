@@ -1,31 +1,18 @@
 import { Core } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
+import { Resources } from '@minddrop/resources';
+import { TopicsResource } from '../TopicsResource';
 import { removeDropsFromTopic } from '../removeDropsFromTopic';
-import { Topic } from '../types';
 import { useTopicsStore } from '../useTopicsStore';
 
 export function onRun(core: Core) {
-  // Register the topics:topic resource
-  core.registerResource<Topic>({
-    type: 'topics:topic',
-    createEvent: 'topics:create',
-    updateEvent: 'topics:update',
-    deleteEvent: 'topics:delete-permanently',
-    onLoad: (topics) => useTopicsStore.getState().loadTopics(topics),
-    onChange: (topic, deleted) => {
-      const store = useTopicsStore.getState();
-      if (deleted) {
-        store.removeTopic(topic.id);
-      } else {
-        store.setTopic(topic);
-      }
-    },
-  });
+  // Register the 'topics:topic' resource
+  Resources.register(core, TopicsResource);
 
   // Listen for drop deletions and remove deleted drops from topics
-  Drops.addEventListener(core, 'drops:delete', ({ data }) => {
+  Drops.addEventListener(core, 'drops:drop:delete', ({ data }) => {
     data.parents
-      .filter((parent) => parent.type === 'topic')
+      .filter((parent) => parent.resource === 'topics:topic')
       .forEach(({ id }) => {
         removeDropsFromTopic(core, id, [data.id]);
       });

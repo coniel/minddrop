@@ -2,10 +2,9 @@ import { Core } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
-import { getTopic } from '../getTopic';
 import { getTopicView } from '../getTopicView';
 import { Topic, TopicViewInstance } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 export interface AddDropMetadata {
   /**
@@ -16,24 +15,20 @@ export interface AddDropMetadata {
 }
 
 /**
- * Adds drops to a topic and dispatches a `topics:add-drops` event
- * and a `topics:update` event. Does not add drops which are already
- * in the topic.
+ * Adds drops to a topic and dispatches a `topics:topics:add-drops` event.
+ * Does not add drops which are already in the topic.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic to which to add the drops.
- * @param dropIds The IDs of the drops to add to the topic.
- * @param metadata Optional metadata added by the view instance which invoked the function.
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic to which to add the drops.
+ * @param dropIds - The IDs of the drops to add to the topic.
+ * @param metadata - Optional metadata added by the view instance which invoked the function.
  * @returns The updated topic.
  */
-export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
-  core: Core,
-  topicId: string,
-  dropIds: string[],
-  metadata?: M,
-): Topic {
+export function addDropsToTopic<
+  TMetadata extends AddDropMetadata = AddDropMetadata,
+>(core: Core, topicId: string, dropIds: string[], metadata?: TMetadata): Topic {
   // Get the topic
-  let topic = getTopic(topicId);
+  let topic = TopicsResource.get(topicId);
 
   // Filter out drops already in topic to avoid duplicates
   const newDropIds = dropIds.filter((dropId) => !topic.drops.includes(dropId));
@@ -47,14 +42,14 @@ export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
   const drops = Drops.get(newDropIds);
 
   // Update the topic
-  topic = updateTopic(core, topicId, {
+  topic = TopicsResource.update(core, topicId, {
     drops: FieldValue.arrayUnion(newDropIds),
   });
 
   // Adds the topic as a parent to the drops
   Object.keys(drops).forEach((dropId) => {
     const drop = Drops.addParents(core, dropId, [
-      { type: 'topic', id: topicId },
+      { resource: 'topics:topic', id: topicId },
     ]);
     // Update the drop in the DropMap
     drops[drop.id] = drop;
@@ -77,8 +72,8 @@ export function addDropsToTopic<M extends AddDropMetadata = AddDropMetadata>(
     }
   });
 
-  // Dispatch 'topics:add-drops' event
-  core.dispatch('topics:add-drops', {
+  // Dispatch 'topics:topics:add-drops' event
+  core.dispatch('topics:topics:add-drops', {
     topic,
     drops,
   });

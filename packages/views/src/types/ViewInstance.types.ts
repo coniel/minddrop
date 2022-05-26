@@ -1,38 +1,30 @@
-export interface ViewInstance {
-  /**
-   * The ID of the view instance.
-   */
-  id: string;
+import { TRDTypeData, TypedResourceDocument } from '@minddrop/resources';
 
+export interface BaseViewInstanceData {
   /**
    * The ID of the registered view rendered by this view instance.
    */
   view: string;
-
-  /**
-   * Timestamp at which the view instance was created.
-   */
-  createdAt: Date;
-
-  /**
-   * Timestamp at which the view instance was last updated.
-   */
-  updatedAt: Date;
 }
 
-export interface CreateViewInstanceData {
+export interface BaseCreateViewInstanceData {
   /**
    * The ID of the view rendered by the view instance.
    */
   view: string;
 }
 
-export interface UpdateViewInstanceData {
+export interface BaseUpdateViewInstanceData {
   /**
    * The ID of the view rendered by the view instance.
    */
   view?: string;
 }
+
+export type ViewInstanceTypeData = TRDTypeData<BaseViewInstanceData>;
+
+export type ViewInstance<TTypeData extends ViewInstanceTypeData = {}> =
+  TypedResourceDocument<BaseViewInstanceData, TTypeData>;
 
 export interface ViewInstanceChanges {
   updatedAt: Date;

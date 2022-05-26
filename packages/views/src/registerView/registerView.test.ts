@@ -14,19 +14,22 @@ describe('registerView', () => {
   afterEach(cleanup);
 
   it('adds the view to the store', () => {
+    // Register a view
     registerView(core, unregisteredViewConfig);
 
+    // View should be registered
     expect(getView(unregisteredViewConfig.id)).toEqual(unregisteredView);
   });
 
-  it("dispatches a 'views:register' event", (done) => {
-    const callback = (payload) => {
+  it("dispatches a 'views:view:register' event", (done) => {
+    // Listen to 'views:view:register' events
+    core.addEventListener('views:view:register', (payload) => {
+      // Payload data should be the registered view
       expect(payload.data).toEqual(unregisteredView);
       done();
-    };
+    });
 
-    core.addEventListener('views:register', callback);
-
+    // Register a view
     registerView(core, unregisteredViewConfig);
   });
 });
