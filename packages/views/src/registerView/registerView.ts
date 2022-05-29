@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { ViewConfig } from '../types';
-import { useViewsStore } from '../useViewsStore';
+import { ViewConfigsStore } from '../ViewConfigsStore';
+import { ViewInstancesResource } from '../ViewInstancesResource';
 
 /**
  * Registers a new view and dispatches a `views:view:register`
@@ -13,8 +14,14 @@ export function registerView(core: Core, config: ViewConfig): void {
   // Add extension ID to config
   const view = { ...config, extension: core.extensionId };
 
-  // Add view to store
-  useViewsStore.getState().setView(view);
+  // Register the the view with the ViewConfigsStore
+  ViewConfigsStore.register(view);
+
+  if (config.type === 'instance') {
+    // Register the view instance type, replacing the
+    // generic 'instance' type with the view ID.
+    ViewInstancesResource.register(core, { ...config, type: config.id });
+  }
 
   // Dispatch 'views:view:register' event
   core.dispatch('views:view:register', view);

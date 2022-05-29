@@ -1,35 +1,59 @@
-import { getView } from '../getView';
-import {
-  cleanup,
-  core,
-  setup,
-  unregisteredView,
-  unregisteredViewConfig,
-} from '../test-utils';
+import { core, staticViewConfig, instanceViewConfig } from '../test-utils';
+import { ViewConfigsStore } from '../ViewConfigsStore';
+import { ViewInstancesResource } from '../ViewInstancesResource';
 import { registerView } from './registerView';
 
 describe('registerView', () => {
-  beforeEach(setup);
+  afterEach(() => {
+    // Clear registered view configs
+    ViewConfigsStore.clear();
 
-  afterEach(cleanup);
+    // Clear registered view instance types
+    ViewInstancesResource.typeConfigsStore.clear();
+  });
 
-  it('adds the view to the store', () => {
-    // Register a view
-    registerView(core, unregisteredViewConfig);
+  describe('static view', () => {
+    it('registers the view config in the ViewConfigsStore', () => {
+      // Register a static view
+      registerView(core, staticViewConfig);
 
-    // View should be registered
-    expect(getView(unregisteredViewConfig.id)).toEqual(unregisteredView);
+      // View config should be registered
+      expect(ViewConfigsStore.get(staticViewConfig.id)).toBeDefined();
+    });
+  });
+
+  describe('instance view', () => {
+    it('registers the view config in the ViewConfigsStore', () => {
+      // Register a static view
+      registerView(core, instanceViewConfig);
+
+      // View config should be registered
+      expect(ViewConfigsStore.get(instanceViewConfig.id)).toBeDefined();
+    });
+
+    it('registers the view instance type in the ViewInstancesResource', () => {
+      // Register a static view
+      registerView(core, instanceViewConfig);
+
+      // View intance type should be registered
+      expect(
+        ViewInstancesResource.typeConfigsStore.get(instanceViewConfig.id),
+      ).toBeDefined();
+    });
   });
 
   it("dispatches a 'views:view:register' event", (done) => {
     // Listen to 'views:view:register' events
     core.addEventListener('views:view:register', (payload) => {
       // Payload data should be the registered view
-      expect(payload.data).toEqual(unregisteredView);
+      expect(payload.data).toEqual({
+        ...staticViewConfig,
+        extension: core.extensionId,
+      });
       done();
     });
 
     // Register a view
-    registerView(core, unregisteredViewConfig);
+    registerView(core, staticViewConfig);
   });
 });

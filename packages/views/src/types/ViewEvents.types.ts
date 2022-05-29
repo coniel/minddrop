@@ -1,19 +1,23 @@
 import { EventListenerCallback } from '@minddrop/core';
-import { View } from './View.types';
+import { RegisteredViewConfig } from './ViewConfig.types';
 import { ViewInstance, ViewInstanceChanges } from './ViewInstance.types';
 
-export type RegisterViewEvent = 'views:register';
-export type UnregisterViewEvent = 'views:unregister';
-export type CreateViewInstanceEvent = 'views:create-instance';
-export type UpdateViewInstanceEvent = 'views:update-instance';
-export type DeleteViewInstanceEvent = 'views:delete-instance';
-export type LoadViewInstancesEvent = 'views:load-instances';
-export type ClearViewsEvent = 'views:clear';
+export type RegisterViewEvent = 'views:view:register';
+export type UnregisterViewEvent = 'views:view:unregister';
+export type CreateViewInstanceEvent = 'views:view-instance:create';
+export type UpdateViewInstanceEvent = 'views:view-instance:update';
+export type DeleteViewInstanceEvent = 'views:view-instance:delete';
+export type RestoreViewInstanceEvent = 'views:view-instance:restore';
+export type PermanentlyDeleteViewInstanceEvent =
+  'views:view-instance:delete-permanently';
+export type LoadViewInstancesEvent = 'views:view-instance:load';
 
-export type RegisterViewEventData = View;
-export type UnregisterViewEventData = View;
+export type RegisterViewEventData = RegisteredViewConfig;
+export type UnregisterViewEventData = RegisteredViewConfig;
 export type CreateViewInstanceEventData = ViewInstance;
 export type DeleteViewInstanceEventData = ViewInstance;
+export type RestoreViewInstanceEventData = ViewInstance;
+export type PermanentlyDeleteViewInstanceEventData = ViewInstance;
 export type LoadViewInstancesEventData = ViewInstance[];
 
 export interface UpdateViewInstanceEventData {
@@ -42,8 +46,15 @@ export type DeleteViewInstanceEventCallback = EventListenerCallback<
   DeleteViewInstanceEvent,
   DeleteViewInstanceEventData
 >;
+export type RestoreViewInstanceEventCallback = EventListenerCallback<
+  RestoreViewInstanceEvent,
+  RestoreViewInstanceEventData
+>;
+export type PermanentlyDeleteViewInstanceEventCallback = EventListenerCallback<
+  PermanentlyDeleteViewInstanceEvent,
+  PermanentlyDeleteViewInstanceEventData
+>;
 export type LoadViewInstancesEventCallback = EventListenerCallback<
   LoadViewInstancesEvent,
   LoadViewInstancesEventData
 >;
-export type ClearViewsEventCallback = EventListenerCallback<ClearViewsEvent>;

@@ -1,52 +1,37 @@
+import { Resources } from '@minddrop/resources';
 import React from 'react';
-import { ViewInstance, View, ViewConfig } from '../types';
+import { ViewInstance, StaticViewConfig, InstanceViewConfig } from '../types';
 
-export const staticViewConfig: ViewConfig = {
+export interface InstanceViewData {
+  foo?: string;
+}
+
+export const staticViewConfig: StaticViewConfig = {
   id: 'static-view',
   type: 'static',
   component: () => <div />,
 };
 
-export const instanceViewConfig: ViewConfig = {
+export const instanceViewConfig: InstanceViewConfig<InstanceViewData> = {
   id: 'instance-view',
   type: 'instance',
+  dataSchema: { foo: { type: 'string' } },
   component: () => <div />,
 };
 
-export const unregisteredViewConfig: ViewConfig = {
-  id: 'unregistered-view',
-  type: 'instance',
-  component: () => <div />,
-};
+export const viewInstance1: ViewInstance = Resources.generateDocument(
+  'views:view-instance',
+  {
+    type: 'instance-view',
+  },
+);
 
-export const staticView: View = {
-  extension: 'views',
-  ...staticViewConfig,
-};
-
-export const instanceView: View = {
-  extension: 'views',
-  ...instanceViewConfig,
-};
-
-export const unregisteredView: View = {
-  extension: 'views',
-  ...unregisteredViewConfig,
-};
-
-export const viewInstance1: ViewInstance = {
-  id: 'view-instance-1',
-  view: 'instance-view',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-export const viewInstance2: ViewInstance = {
-  id: 'view-instance-2',
-  view: 'instance-view',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+export const viewInstance2: ViewInstance = Resources.generateDocument(
+  'views:view-instance',
+  {
+    type: 'instance-view',
+  },
+);
 
 export const viewConfigs = [staticViewConfig, instanceViewConfig];
 

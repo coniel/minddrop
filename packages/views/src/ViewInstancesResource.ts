@@ -2,14 +2,15 @@ import { Resources, RDDataSchema } from '@minddrop/resources';
 import { BaseViewInstanceData } from './types';
 
 const dataSchema: RDDataSchema<BaseViewInstanceData> = {
-  view: {
+  extension: {
     type: 'string',
     required: true,
     allowEmpty: false,
   },
 };
 
-export const ViewInstancesResource = Resources.createTyped({
-  resource: 'views:view',
-  dataSchema,
-});
+export const ViewInstancesResource =
+  Resources.createTyped<BaseViewInstanceData>({
+    resource: 'views:view-instance',
+    dataSchema,
+  });

@@ -1,7 +1,6 @@
 export * from './types';
-export * from './useViewInstance';
-export * from './useViewInstances';
 export * from './views-extension';
 export * from './Views';
+export * from './ViewInstancesResource';
 export * from './errors';
-export * from './test-utils/export';
+export * as VIEWS_TEST_DATA from './test-utils/views.data';

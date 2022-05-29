@@ -1,38 +1,74 @@
 import { unregisterView } from './unregisterView';
 import {
-  cleanup,
   core,
-  setup,
-  staticView,
-  unregisteredView,
+  cleanup,
+  staticViewConfig,
+  instanceViewConfig,
 } from '../test-utils';
-import { getView } from '../getView';
+import { registerView } from '../registerView';
 import { ViewNotRegisteredError } from '../errors';
+import { ViewConfigsStore } from '../ViewConfigsStore';
+import { ViewInstancesResource } from '../ViewInstancesResource';
 
 describe('unregisterView', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    // Register a static view
+    registerView(core, staticViewConfig);
+    // Register an instance view
+    registerView(core, instanceViewConfig);
+  });
 
   afterEach(cleanup);
 
-  it('removes the view from the store', () => {
-    unregisterView(core, staticView.id);
+  describe('static view', () => {
+    it('unregisters the view from the ViewConfigsStore', () => {
+      // Unregister a static view
+      unregisterView(core, staticViewConfig.id);
 
-    expect(() => getView(staticView.id)).toThrowError(ViewNotRegisteredError);
+      // View config should no longer be in the ViewConfigsStore
+      expect(ViewConfigsStore.get(staticViewConfig.id)).toBeUndefined();
+    });
   });
 
-  it('dipatches a `views:unregister` event', (done) => {
-    const callback = (payload) => {
-      expect(payload.data).toEqual(staticView);
+  describe('instance view', () => {
+    it('unregisters the view from the ViewConfigsStore', () => {
+      // Unregister an instance view
+      unregisterView(core, instanceViewConfig.id);
+
+      // View config should no longer be in the ViewConfigsStore
+      expect(ViewConfigsStore.get(instanceViewConfig.id)).toBeUndefined();
+    });
+
+    it('unregisters the view from the ViewInstancesResource', () => {
+      // Unregister an instance view
+      unregisterView(core, instanceViewConfig.id);
+
+      // View config should no longer be in the ViewInstancesResource
+      expect(
+        ViewInstancesResource.typeConfigsStore.get(instanceViewConfig.id),
+      ).toBeUndefined();
+    });
+  });
+
+  it('dipatches a `views:view:unregister` event', (done) => {
+    // Listen to 'view:view:unregister' events
+    core.addEventListener('views:view:unregister', (payload) => {
+      // Payload data should be the unregistered view
+      expect(payload.data).toEqual({
+        ...staticViewConfig,
+        extension: core.extensionId,
+      });
       done();
-    };
+    });
 
-    core.addEventListener('views:unregister', callback);
-
-    unregisterView(core, staticView.id);
+    // Unregister a static view
+    unregisterView(core, staticViewConfig.id);
   });
 
   it('throws a ViewNotRegisteredError if the view is not registered', () => {
-    expect(() => unregisterView(core, unregisteredView.id)).toThrowError(
+    // Attempt to unregister a view which is not registered.
+    // Should throw a `ViewNotRegisteredError`.
+    expect(() => unregisterView(core, 'not-registered')).toThrowError(
       ViewNotRegisteredError,
     );
   });
