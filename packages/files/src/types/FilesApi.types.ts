@@ -1,263 +1,200 @@
 import { Core } from '@minddrop/core';
+import { ResourceApi, ResourceReference } from '@minddrop/resources';
 import { FileReference, FileReferenceMap } from './FileReference.types';
 import {
+  DeleteFileEvent,
+  DeleteFileEventCallback,
+  SaveFileEvent,
+  SaveFileEventCallback,
   CreateFileReferenceEvent,
   CreateFileReferenceEventCallback,
   DeleteFileReferenceEvent,
   DeleteFileReferenceEventCallback,
-  ClearFileReferencesEvent,
-  ClearFileReferencesEventCallback,
   LoadFileReferencesEvent,
   LoadFileReferencesEventCallback,
-  RemoveAttachmentsEventCallback,
-  RemoveAttachmentsEvent,
-  ReplaceAttachmentsEvent,
-  ReplaceAttachmentsEventCallback,
-} from './FileEvents.types';
-import {
-  AddAttachmentsEvent,
-  AddAttachmentsEventCallback,
   UpdateFileReferenceEvent,
   UpdateFileReferenceEventCallback,
-} from '.';
+} from './FileEvents.types';
 
 export interface FilesApi {
   /**
-   * Retrieves one or more file references by ID.
+   * Returns a file reference by ID.
    *
-   * If provided a single file ID string, returns the its file reference.
+   * @param id - The ID of the file reference to retrieve.
+   * @returns The requested file reference.
    *
-   * If provided an array of file IDs, returns a `{ [id]: FileReference }` map of the corresponding files.
-   *
-   * @param ids An array of file IDs to retrieve.
-   * @returns The requested file reference(s).
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the file reference does not exist.
    */
-  get(fileId: string): FileReference | null;
+  get(fileId: string): FileReference;
+
+  /**
+   * Returns a `{ [id]: FileReference }` map of file
+   * references by ID.
+   *
+   * @param ids - The IDs of the file references to retrieve.
+   * @returns The requested file references as a `{ [id]: FileReference }` map.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if any of the file references do not exist.
+   */
   get(fileIds: string[]): FileReferenceMap;
 
   /**
-   * Retrieves all file references from the file references store as a `{ [id]: FileReference }` map.
+   * Retrieves all file references from the file references
+   * as a `{ [id]: FileReference }` map.
    *
    * @returns A `{ [id]: FileReference }` map.
    */
   getAll(): FileReferenceMap;
 
   /**
-   * Creates a new file reference and dispatches a `files:create` event.
-   * Returns a promise which resolves to the newly created file reference.
+   * Saves a file and creates a new file reference.
+   * Dispatches a `files:file:save` event.
    *
-   * @param core A MindDrop core instance.
-   * @param file A file object.
-   * @param attachedTo The IDs of the resources to which this file is attached.
-   * @returns A promise which resolves to the newly created file reference.
+   * Returns a new file reference.
+   *
+   * @param core - A MindDrop core instance.
+   * @param file - A file object.
+   * @returns A file reference.
    */
-  create(core: Core, file: File, attachedTo?: string[]): Promise<FileReference>;
+  save(core: Core, file: File): FileReference;
 
   /**
-   * Permanently deletes a file and removes its file reference from the store.
-   * Alos dispatches a `files:delete` event.
+   * Adds parent resource references to a file reference.
    *
-   * @param core A MindDrop core instance.
-   * @param fileId The ID of the file to delete.
-   * @retuns The reference of the deleted file.
-   */
-  delete(core: Core, id: string): FileReference;
-
-  /**
-   * Adds resource IDs to a file reference's `attachedTo` value and
-   * dispatches a `files:add-attachments` event as well as a
-   * `files:update-file-reference` event.
-   * Returns the updated file reference.
-   *
-   * @param core A MindDrop core instance.
-   * @param fileId The ID of the file to which to add the attachments.
-   * @param resourceIds The IDs of the resources attached to the file.
+   * @param core - A MindDrop core instance.
+   * @param fileReferenceId - The ID of the file reference.
+   * @param parentReferences - The resource references of the parent documents to add.
    * @returns The updated file reference.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the file reference does not exist.
+   *
+   * @throws ResourceValidationError
+   * Thrown if one of the parent references is invalid or a
+   * parent document does not exist.
    */
-  addAttachments(
+  addParents(
     core: Core,
-    fileId: string,
-    resourceIds: string[],
+    fileReferenceId: string,
+    parentReferences: ResourceReference[],
   ): FileReference;
 
   /**
-   * Removes resource IDs from a file reference's `attachedTo` value.
+   * Removes parent resource references from a resource document.
    *
-   * If the file reference's `attachedTo` value becomes empty, the
-   * files is deleted.
+   * File references with no remaining parents are automatically
+   * deleted.
    *
-   * Dispatches a `files:replace-attachments` event as well as
-   * a `files:update-file-reference` event unless the file was
-   * deleted, in which case a `files:delete` event is dispatched.
-   *
-   * Returns the updated file reference.
-   *
-   * @param core A MindDrop core instance.
-   * @param fileId The ID of the file from which to remove the attachments.
-   * @param resourceIds The IDs of the resources to remove from the attachedTo value.
+   * @param core - A MindDrop core instance.
+   * @param fileReferenceId - The ID of the file reference.
+   * @param parentReferences - The resource references of the parent documents to remove.
    * @returns The updated file reference.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the file reference does not exist.
    */
-  removeAttachments(
+  removeParents(
     core: Core,
     fileId: string,
-    resourceIds: string[],
+    parentReferences: ResourceReference[],
   ): FileReference;
 
-  /**
-   * Replaces the resource IDs (removing the current ones and
-   * adding the given ones) in file reference's `attachedTo` value.
-   *
-   * If `resourceIds` is an empty array, the file will be deleted.
-   *
-   * Dispatches a `files:replace-attachments` event as well as
-   * a `files:update-file-reference` event unless the file was
-   * deleted, in which case a `files:delete` event is dispatched.
-   *
-   * Returns the updated file reference.
-   *
-   * @param core A MindDrop core instance.
-   * @param fileId The ID of the file for which to replace the attachments.
-   * @param resourceIds The IDs of the resources to which the file was attached.
-   * @returns The updated file reference.
+  /*
+   * The file references resource store.
    */
-  replaceAttachments(
-    core: Core,
-    fileId: string,
-    resourceIds: string[],
-  ): FileReference;
-
-  /**
-   * Loads file references into the store and dispatches a `files:load` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param files The file references to load.
-   */
-  load(core: Core, files: FileReference[]): void;
-
-  /**
-   * Clears file references from the store and dispatches a `files:clear` event.
-   *
-   * @param core A MindDrop core instance.
-   */
-  clear(core: Core): void;
+  store: ResourceApi['store'];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
 
-  // Add 'files:create' event listener
+  // Add 'files:file:save' event listener
+  addEventListener(
+    core: Core,
+    type: SaveFileEvent,
+    callback: SaveFileEventCallback,
+  ): void;
+
+  // Add 'files:file:delete' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteFileEvent,
+    callback: DeleteFileEventCallback,
+  ): void;
+
+  // Add 'files:file-reference:create' event listener
   addEventListener(
     core: Core,
     type: CreateFileReferenceEvent,
     callback: CreateFileReferenceEventCallback,
   ): void;
 
-  // Add 'files:update-file-reference' event listener
+  // Add 'files:file-reference:update' event listener
   addEventListener(
     core: Core,
     type: UpdateFileReferenceEvent,
     callback: UpdateFileReferenceEventCallback,
   ): void;
 
-  // Add 'files:delete' event listener
+  // Add 'files:file-reference:delete' event listener
   addEventListener(
     core: Core,
     type: DeleteFileReferenceEvent,
     callback: DeleteFileReferenceEventCallback,
   ): void;
 
-  // Add 'files:add-attachments' event listener
-  addEventListener(
-    core: Core,
-    type: AddAttachmentsEvent,
-    callback: AddAttachmentsEventCallback,
-  ): void;
-
-  // Add 'files:remove-attachments' event listener
-  addEventListener(
-    core: Core,
-    type: RemoveAttachmentsEvent,
-    callback: RemoveAttachmentsEventCallback,
-  ): void;
-
-  // Add 'files:replace-attachments' event listener
-  addEventListener(
-    core: Core,
-    type: ReplaceAttachmentsEvent,
-    callback: ReplaceAttachmentsEventCallback,
-  ): void;
-
-  // Add 'files:load' event listener
+  // Add 'files:file-reference:load' event listener
   addEventListener(
     core: Core,
     type: LoadFileReferencesEvent,
     callback: LoadFileReferencesEventCallback,
-  ): void;
-
-  // Add 'files:clear' event listener
-  addEventListener(
-    core: Core,
-    type: ClearFileReferencesEvent,
-    callback: ClearFileReferencesEventCallback,
   ): void;
 
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
 
-  // Add 'files:create' event listener
+  // Remove 'files:file:save' event listener
+  removeEventListener(
+    core: Core,
+    type: SaveFileEvent,
+    callback: SaveFileEventCallback,
+  ): void;
+
+  // Remove 'files:file:delete' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteFileEvent,
+    callback: DeleteFileEventCallback,
+  ): void;
+
+  // Remove 'files:file-reference:create' event listener
   removeEventListener(
     core: Core,
     type: CreateFileReferenceEvent,
     callback: CreateFileReferenceEventCallback,
   ): void;
 
-  // Remove 'files:update-file-reference' event listener
+  // Remove 'files:file-reference:update' event listener
   removeEventListener(
     core: Core,
     type: UpdateFileReferenceEvent,
     callback: UpdateFileReferenceEventCallback,
   ): void;
 
-  // Remove 'files:delete' event listener
+  // Remove 'files:file-reference:delete' event listener
   removeEventListener(
     core: Core,
     type: DeleteFileReferenceEvent,
     callback: DeleteFileReferenceEventCallback,
   ): void;
 
-  // Remove 'files:add-attachments' event listener
-  removeEventListener(
-    core: Core,
-    type: AddAttachmentsEvent,
-    callback: AddAttachmentsEventCallback,
-  ): void;
-
-  // Remove 'files:remove-attachments' event listener
-  removeEventListener(
-    core: Core,
-    type: RemoveAttachmentsEvent,
-    callback: RemoveAttachmentsEventCallback,
-  ): void;
-
-  // Remove 'files:replace-attachments' event listener
-  removeEventListener(
-    core: Core,
-    type: ReplaceAttachmentsEvent,
-    callback: ReplaceAttachmentsEventCallback,
-  ): void;
-
-  // Add 'files:load' event listener
+  // Remove 'files:file-reference:load' event listener
   removeEventListener(
     core: Core,
     type: LoadFileReferencesEvent,
     callback: LoadFileReferencesEventCallback,
-  ): void;
-
-  // Add 'files:clear' event listener
-  removeEventListener(
-    core: Core,
-    type: ClearFileReferencesEvent,
-    callback: ClearFileReferencesEventCallback,
   ): void;
 }

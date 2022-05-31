@@ -121,7 +121,7 @@ export interface ResourceApi<
   ): TResourceDocument;
 
   /**
-   * Removes parent resource references to a resource document.
+   * Removes parent resource references from a resource document.
    *
    * @param core - A MindDrop core instance.
    * @param documentId - The ID of the document.

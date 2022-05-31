@@ -1,24 +1,14 @@
 import { FilesApi } from './types';
-import { get } from './get';
-import { getAllFileReferences } from './getAllFileReferences';
-import { createFile } from './createFile';
-import { deleteFile } from './deleteFile';
-import { addAttachments } from './addAttachments';
-import { removeAttachments } from './removeAttachments';
-import { replaceAttachments } from './replaceAttachments';
-import { loadFileReferences } from './loadFileReferences';
-import { clearFileReferences } from './clearFileReferences';
+import { saveFile } from './saveFile';
+import { FileReferencesResource } from './FileReferencesResource';
 
 export const Files: FilesApi = {
-  get,
-  getAll: getAllFileReferences,
-  create: createFile,
-  delete: deleteFile,
-  addAttachments,
-  removeAttachments,
-  replaceAttachments,
-  load: loadFileReferences,
-  clear: clearFileReferences,
+  save: saveFile,
+  get: FileReferencesResource.get,
+  getAll: FileReferencesResource.getAll,
+  addParents: FileReferencesResource.addParents,
+  removeParents: FileReferencesResource.removeParents,
+  store: FileReferencesResource.store,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>

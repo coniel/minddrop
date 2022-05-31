@@ -4,8 +4,8 @@ import { Files } from '@minddrop/files';
 const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
 
 export function initializeFileStorage() {
-  Files.addEventListener(core, 'files:create', (payload) => {
-    const { file, reference } = payload.data;
-    window.files.create(file, reference.id);
+  Files.addEventListener(core, 'files:file:save', (payload) => {
+    const { file, fileReference } = payload.data;
+    window.files.create(file, fileReference.id);
   });
 }
