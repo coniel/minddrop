@@ -1,7 +1,14 @@
 import { Drops } from '@minddrop/drops';
 import { archiveDropsInTopic } from '../archiveDropsInTopic';
-import { getTopic } from '../getTopic';
-import { setup, cleanup, core, tSixDrops } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  core,
+  tSixDrops,
+  topicViewColumnsConfig,
+} from '../test-utils';
+import { TopicsResource } from '../TopicsResource';
+import { registerTopicView } from '../registerTopicView';
 import { unarchiveDropsInTopic } from './unarchiveDropsInTopic';
 
 const dropIds = tSixDrops.drops.slice(0, 2);
@@ -9,6 +16,9 @@ const dropIds = tSixDrops.drops.slice(0, 2);
 describe('unarchiveDropsInTopic', () => {
   beforeEach(() => {
     setup();
+
+    // Register a test topic view
+    registerTopicView(core, topicViewColumnsConfig);
 
     // Archive the test drops
     archiveDropsInTopic(core, tSixDrops.id, dropIds);
@@ -21,7 +31,7 @@ describe('unarchiveDropsInTopic', () => {
     unarchiveDropsInTopic(core, tSixDrops.id, dropIds);
 
     // Get updated topic
-    const topic = getTopic(tSixDrops.id);
+    const topic = TopicsResource.get(tSixDrops.id);
     // Should add drop IDs to 'drops'
     expect(topic.drops.includes(dropIds[0])).toBeTruthy();
     expect(topic.drops.includes(dropIds[1])).toBeTruthy();
@@ -35,13 +45,14 @@ describe('unarchiveDropsInTopic', () => {
     const result = unarchiveDropsInTopic(core, tSixDrops.id, dropIds);
 
     // Should return updated topic
-    expect(result).toEqual(getTopic(tSixDrops.id));
+    expect(result).toEqual(TopicsResource.get(tSixDrops.id));
   });
 
-  it('dispatches a `topics:unarchive-drops` event', (done) => {
-    core.addEventListener('topics:unarchive-drops', (payload) => {
+  it('dispatches a `topics:topic:unarchive-drops` event', (done) => {
+    // Listen to 'topics:topic:unarchive-drops' events
+    core.addEventListener('topics:topic:unarchive-drops', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tSixDrops.id);
+      const topic = TopicsResource.get(tSixDrops.id);
       // Get the unarchived drops
       const drops = Drops.get(dropIds);
 

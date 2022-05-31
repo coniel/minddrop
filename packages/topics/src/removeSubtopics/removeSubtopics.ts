@@ -1,18 +1,21 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { getTopics } from '../getTopics';
-import { removeParentsFromTopic } from '../removeParentsFromTopic';
 import { Topic } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Removes subtopics from a parent topic and
- * dispatches a `topics:remove-subtopics` event.
+ * Removes subtopics from a parent topic.
+ * Dispatches a `topics:topic:remove-subtopics` event.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic from which to remove the subtopics.
- * @param subtopicIds The IDs of the subtopics to remove from the topic.
+ * Returns the updated topic.
+ *
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic from which to remove the subtopics.
+ * @param subtopicIds - The IDs of the subtopics to remove from the topic.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
  */
 export function removeSubtopics(
   core: Core,
@@ -20,26 +23,26 @@ export function removeSubtopics(
   subtopicIds: string[],
 ): Topic {
   // Get the subtopics
-  const subtopics = getTopics(subtopicIds);
+  const subtopics = TopicsResource.get(subtopicIds);
 
   // Update the topic in the store
-  const updated = updateTopic(core, topicId, {
+  const updated = TopicsResource.update(core, topicId, {
     subtopics: FieldValue.arrayRemove(subtopicIds),
   });
 
   // Remove the topic as a parent on the subtopics
   subtopicIds.forEach((subtopicId) => {
     // Remove the topic as a parent
-    const subtopic = removeParentsFromTopic(core, subtopicId, [
-      { type: 'topic', id: topicId },
+    const subtopic = TopicsResource.removeParents(core, subtopicId, [
+      { resource: 'topic', id: topicId },
     ]);
 
     // Update the subtopic in the subtopics map
     subtopics[subtopicId] = subtopic;
   });
 
-  // Dispatch 'topics:remove-subtopics'
-  core.dispatch('topics:remove-subtopics', {
+  // Dispatch 'topics:topic:remove-subtopics'
+  core.dispatch('topics:topic:remove-subtopics', {
     topic: updated,
     subtopics,
   });

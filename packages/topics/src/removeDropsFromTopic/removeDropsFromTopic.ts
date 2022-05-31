@@ -1,61 +1,52 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
 import { Drops } from '@minddrop/drops';
-import { Topic, TopicViewInstance } from '../types';
-import { updateTopic } from '../updateTopic';
-import { Views } from '@minddrop/views';
-import { getTopicView } from '../getTopicView';
+import { ViewInstances } from '@minddrop/views';
+import { Topic, TopicViewInstanceData } from '../types';
+import { getTopicViewConfig } from '../getTopicViewConfig';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Removes drops from a topic and dispatches a `topics:remove-drops` event
- * and a `topics:update` event.
+ * Removes drops from a topic.
+ * Dispatches a `topics:topic:remove-drops` event.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic from which to remove the drops.
- * @param dropIds The IDs of the drops to remove.
+ * Returns the updated topic.
+ *
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic from which to remove the drops.
+ * @param dropIds - The IDs of the drops to remove.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
  */
 export function removeDropsFromTopic(
   core: Core,
   topicId: string,
   dropIds: string[],
 ): Topic {
-  // Get the drops
-  const drops = Drops.get(dropIds);
-
   // Update the topic
-  const topic = updateTopic(core, topicId, {
+  const topic = TopicsResource.update(core, topicId, {
     drops: FieldValue.arrayRemove(dropIds),
   });
 
-  // Remove topic as parent from drops
-  Object.values(drops).forEach((drop) => {
-    // Don't remove topic as parent from deleted drops so that they
-    // can be restored to the topic.
-    if (!drop.deleted) {
-      // Remove the parent
-      const updatedDrop = Drops.removeParents(core, drop.id, [
-        { type: 'topic', id: topicId },
-      ]);
-      // Update drop in DropMap
-      drops[drop.id] = updatedDrop;
-    }
-  });
+  // Get the updated drops
+  const drops = Drops.get(dropIds);
 
   // Get the topic's view instances
-  const viewInstances = Views.getInstances<TopicViewInstance>(topic.views);
+  const viewInstances = ViewInstances.get<TopicViewInstanceData>(topic.views);
 
   // Call onRemoveDrops on each of the topic's view instances
   Object.values(viewInstances).forEach((viewInstance) => {
-    const view = getTopicView(viewInstance.view);
+    const view = getTopicViewConfig(viewInstance.type);
 
     if (view.onRemoveDrops) {
       view.onRemoveDrops(core, viewInstance, drops);
     }
   });
 
-  // Dispatch 'topics:remove-drops' event
-  core.dispatch('topics:remove-drops', { topic, drops });
+  // Dispatch 'topics:topic:remove-drops' event
+  core.dispatch('topics:topic:remove-drops', { topic, drops });
 
   return topic;
 }

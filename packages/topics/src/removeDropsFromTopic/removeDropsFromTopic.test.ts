@@ -1,3 +1,4 @@
+import { doesNotContain } from '@minddrop/utils';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { removeDropsFromTopic } from './removeDropsFromTopic';
 import {
@@ -5,39 +6,45 @@ import {
   core,
   setup,
   topicViewColumnsConfig,
-  topicViewWithoutCallbacks,
+  topicViewWithoutCallbacksConfig,
   tSixDrops,
 } from '../test-utils';
 import { registerTopicView } from '../registerTopicView';
 import { createTopicViewInstance } from '../createTopicViewInstance';
-import { getTopic } from '../getTopic';
 import { addDropsToTopic } from '../addDropsToTopic';
-import { contains, doesNotContain } from '@minddrop/utils';
+import { TopicsResource } from '../TopicsResource';
+import { ViewInstances } from '@minddrop/views';
 
-const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
+const { drop1, dropConfig } = DROPS_TEST_DATA;
 
 describe('removeDropsFromTopic', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Register test topic views
+    registerTopicView(core, topicViewColumnsConfig);
+    registerTopicView(core, topicViewWithoutCallbacksConfig);
+  });
 
   afterEach(cleanup);
 
   it('removes drops from the topic', () => {
     // Remove drop from topic
-    removeDropsFromTopic(core, tSixDrops.id, [textDrop1.id]);
+    removeDropsFromTopic(core, tSixDrops.id, [drop1.id]);
 
     // Get the updated topic
-    const topic = getTopic(tSixDrops.id);
+    const topic = TopicsResource.get(tSixDrops.id);
 
     // Should have removed drop ID from topic's drops
-    expect(topic.drops.includes(textDrop1.id)).toBeFalsy();
+    expect(topic.drops.includes(drop1.id)).toBeFalsy();
   });
 
   it('returns the updated topic', () => {
     // Remove drop from topic
-    const result = removeDropsFromTopic(core, tSixDrops.id, [textDrop1.id]);
+    const result = removeDropsFromTopic(core, tSixDrops.id, [drop1.id]);
 
     // Get the updated topic
-    const topic = getTopic(tSixDrops.id);
+    const topic = TopicsResource.get(tSixDrops.id);
 
     // Returned topic should match updated topic
     expect(result).toEqual(topic);
@@ -45,7 +52,7 @@ describe('removeDropsFromTopic', () => {
 
   it('removes the topic as a parent of the drops', () => {
     // Create a new drop
-    let drop = Drops.create(core, { type: textDropConfig.type });
+    let drop = Drops.create(core, dropConfig.type);
 
     // Add new drop to topic
     addDropsToTopic(core, tSixDrops.id, [drop.id]);
@@ -58,29 +65,7 @@ describe('removeDropsFromTopic', () => {
 
     // Drop should no longer have topic as a parent
     expect(
-      doesNotContain(drop.parents, [{ type: 'topic', id: tSixDrops.id }]),
-    ).toBeTruthy();
-  });
-
-  it('does not remove the topic as a parent if the drop is deleted', () => {
-    // Create a new drop
-    let drop = Drops.create(core, { type: textDropConfig.type });
-
-    // Add new drop to topic
-    addDropsToTopic(core, tSixDrops.id, [drop.id]);
-
-    // Delete the drop
-    Drops.delete(core, drop.id);
-
-    // Remove drop from topic
-    removeDropsFromTopic(core, tSixDrops.id, [drop.id]);
-
-    // Get updated drop
-    drop = Drops.get(drop.id);
-
-    // Drop should still have topic as a parent
-    expect(
-      contains(drop.parents, [{ type: 'topic', id: tSixDrops.id }]),
+      doesNotContain(drop.parents, [{ resource: 'topic', id: tSixDrops.id }]),
     ).toBeTruthy();
   });
 
@@ -94,15 +79,21 @@ describe('removeDropsFromTopic', () => {
     registerTopicView(core, viewConfig);
 
     // Create an instance of the test topic view
-    const instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
+    let instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
     // Create an instance of a topic view with no onRemoveDrops callback
-    createTopicViewInstance(core, tSixDrops.id, topicViewWithoutCallbacks.id);
+    createTopicViewInstance(
+      core,
+      tSixDrops.id,
+      topicViewWithoutCallbacksConfig.id,
+    );
 
     // Remove drop from topic
-    removeDropsFromTopic(core, tSixDrops.id, [textDrop1.id]);
+    removeDropsFromTopic(core, tSixDrops.id, [drop1.id]);
 
+    // Get the updated view instance
+    instance = ViewInstances.get(instance.id);
     // Get the updated drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
 
     // Should call the test topic view's onRemoveDrops callback with appropriate data
     expect(viewConfig.onRemoveDrops).toHaveBeenCalledWith(core, instance, {
@@ -110,13 +101,13 @@ describe('removeDropsFromTopic', () => {
     });
   });
 
-  it("dispatches a 'topics:remove-drops' event", (done) => {
-    // Listen to 'topics:remove-drops' event
-    core.addEventListener('topics:remove-drops', (payload) => {
+  it("dispatches a 'topics:topic:remove-drops' event", (done) => {
+    // Listen to 'topics:topic:remove-drops' event
+    core.addEventListener('topics:topic:remove-drops', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tSixDrops.id);
+      const topic = TopicsResource.get(tSixDrops.id);
       // Get the updated drop
-      const drop = Drops.get(textDrop1.id);
+      const drop = Drops.get(drop1.id);
 
       // Payload data should include updated topic
       expect(payload.data.topic).toEqual(topic);
@@ -126,6 +117,6 @@ describe('removeDropsFromTopic', () => {
     });
 
     // Remove drop from topic
-    removeDropsFromTopic(core, tSixDrops.id, [textDrop1.id]);
+    removeDropsFromTopic(core, tSixDrops.id, [drop1.id]);
   });
 });

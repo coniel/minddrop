@@ -1,37 +1,43 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { getTopics } from '../getTopics';
 import { Topic } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Archives the specified subtopics in a topic and dispatches
- * a `topics:archive-subtopics` event.
+ * Archives the specified subtopics in a topic.
+ * Dispatches a `topics:topic:archive-subtopics` event.
+ *
  * Returns the updated topic.
  *
- * @param core A MindSubtopic core instance.
- * @param topicId The ID of the topic on which to archive the subtopics.
- * @param subtopicIds The IDs of the subtopics to archive.
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic on which to archive the subtopics.
+ * @param subtopicIds - The IDs of the subtopics to archive.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the subtopics do not exist.
  */
 export function archiveSubtopics(
   core: Core,
   topicId: string,
   subtopicIds: string[],
 ): Topic {
-  // Get the subtopics
-  const subtopics = getTopics(subtopicIds);
-
   // Update the topic
-  const topic = updateTopic(core, topicId, {
+  const topic = TopicsResource.update(core, topicId, {
     // Remove subtopic IDs from 'subtopics'
     subtopics: FieldValue.arrayRemove(subtopicIds),
     // Add subtopic IDs to 'archivedSubtopics'
     archivedSubtopics: FieldValue.arrayUnion(subtopicIds),
   });
 
-  // Dispatch 'topics:archive-subtopics' event
-  core.dispatch('topics:archive-subtopics', { topic, subtopics });
+  // Get the updated subtopics
+  const subtopics = TopicsResource.get(subtopicIds);
+
+  // Dispatch 'topics:topic:archive-subtopics' event
+  core.dispatch('topics:topic:archive-subtopics', { topic, subtopics });
 
   // Return the updated topic
   return topic;

@@ -1,26 +1,13 @@
+import { mapById } from '@minddrop/utils';
 import { TopicsApi } from './types';
-import { get } from './get';
-import { getAllTopics } from './getAllTopics';
-import { getTopicParents } from './getTopicParents';
-import { getDropParentTopics } from './getDropParentTopics';
-import { filterTopics } from './filterTopics';
-import { createTopic } from './createTopic';
-import { updateTopic } from './updateTopic';
 import { addSubtopics } from './addSubtopics';
 import { removeSubtopics } from './removeSubtopics';
 import { addDropsToTopic } from './addDropsToTopic';
 import { removeDropsFromTopic } from './removeDropsFromTopic';
 import { addTagsToTopic } from './addTagsToTopic';
 import { removeTagsFromTopic } from './removeTagsFromTopic';
-import { deleteTopic } from './deleteTopic';
-import { restoreTopic } from './restoreTopic';
-import { deleteTopicPermanently } from './deleteTopicPermanently';
-import { loadTopics } from './loadTopics';
-import { clearTopics } from './clearTopics';
 import { registerTopicView } from './registerTopicView';
 import { unregisterTopicView } from './unregisterTopicView';
-import { getTopicView } from './getTopicView';
-import { getTopicViews } from './getTopicViews';
 import { createTopicViewInstance } from './createTopicViewInstance';
 import { deleteTopicViewInstance } from './deleteTopicViewInstance';
 import { moveDropsToTopic } from './moveDropsToTopic';
@@ -28,18 +15,22 @@ import { archiveDropsInTopic } from './archiveDropsInTopic';
 import { unarchiveDropsInTopic } from './unarchiveDropsInTopic';
 import { archiveSubtopics } from './archiveSubtopics';
 import { unarchiveSubtopics } from './unarchiveSubtopics';
-import { addParentsToTopic } from './addParentsToTopic';
-import { removeParentsFromTopic } from './removeParentsFromTopic';
 import { moveSubtopics } from './moveSubtopics';
+import { TopicsResource } from './TopicsResource';
+import { TopicViewConfigsStore } from './TopicViewConfigsStore';
+import { getTopicViewConfig } from './getTopicViewConfig';
 
 export const Topics: TopicsApi = {
-  get,
-  getAll: getAllTopics,
-  getParents: getTopicParents,
-  getDropParentTopics,
-  filter: filterTopics,
-  create: createTopic,
-  update: updateTopic,
+  get: TopicsResource.get,
+  getAll: TopicsResource.getAll,
+  filter: TopicsResource.filter,
+  create: TopicsResource.create,
+  update: TopicsResource.update,
+  delete: TopicsResource.delete,
+  restore: TopicsResource.restore,
+  deletePermanently: TopicsResource.deletePermanently,
+  addParents: TopicsResource.addParents,
+  removeParents: TopicsResource.removeParents,
   addSubtopics,
   removeSubtopics,
   moveSubtopics,
@@ -50,21 +41,15 @@ export const Topics: TopicsApi = {
   moveDrops: moveDropsToTopic,
   archiveDrops: archiveDropsInTopic,
   unarchiveDrops: unarchiveDropsInTopic,
-  addParents: addParentsToTopic,
-  removeParents: removeParentsFromTopic,
   addTags: addTagsToTopic,
   removeTags: removeTagsFromTopic,
-  delete: deleteTopic,
-  restore: restoreTopic,
-  deletePermanently: deleteTopicPermanently,
-  getView: getTopicView,
-  getViews: getTopicViews,
+  getViewConfig: getTopicViewConfig,
+  getAllViewConfigs: () => mapById(TopicViewConfigsStore.getAll()),
   registerView: registerTopicView,
   unregisterView: unregisterTopicView,
   createViewInstance: createTopicViewInstance,
   deleteViewInstance: deleteTopicViewInstance,
-  load: loadTopics,
-  clear: clearTopics,
+  store: TopicsResource.store,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>

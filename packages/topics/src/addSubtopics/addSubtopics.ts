@@ -7,10 +7,18 @@ import { TopicsResource } from '../TopicsResource';
  * Adds subtopics into a parent topic.
  * Dispatches an `topics:topic:add-subtopics` event
  *
+ * Returns the updated topic.
+ *
  * @param core - A MindDrop core instance.
  * @param topicId - The ID of the topic to which to add the subtopics.
  * @param subtopicIds - The IDs of the subtopics to add to the topic.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the subtopics do not exist.
  */
 export function addSubtopics(
   core: Core,
@@ -25,24 +33,13 @@ export function addSubtopics(
     (id) => !topic.subtopics.includes(id),
   );
 
-  // Get the subtopics
-  const subtopics = TopicsResource.get(newSubtopicIds);
-
   // Update the topic
   const updated = TopicsResource.update(core, topicId, {
     subtopics: FieldValue.arrayUnion(newSubtopicIds),
   });
 
-  // Add the topic as a parent on the subtopics
-  newSubtopicIds.forEach((subtopicId) => {
-    // Add the topic as a parent
-    const subtopic = TopicsResource.addParents(core, subtopicId, [
-      { resource: 'topics:topic', id: topicId },
-    ]);
-
-    // Update the subtopic in the subtopic map
-    subtopics[subtopicId] = subtopic;
-  });
+  // Get the updated subtopics
+  const subtopics = TopicsResource.get(newSubtopicIds);
 
   // Dispatch 'topics:topic:add-subtopics' event
   core.dispatch('topics:topic:add-subtopics', {

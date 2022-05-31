@@ -1,24 +1,18 @@
-import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from './topics-extension';
-import { Topics } from '../Topics';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { setup, cleanup, core } from '../test-utils';
+import { Topics } from '../Topics';
 import { addDropsToTopic } from '../addDropsToTopic';
 import { TopicsResource } from '../TopicsResource';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
+import { onDisable, onRun } from './topics-extension';
 
 const { dropConfig } = DROPS_TEST_DATA;
 
 describe('topics extension', () => {
-  describe('onRun', () => {
-    afterEach(() => {
-      act(() => {
-        core.dispatch('topics:clear');
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    });
+  beforeEach(setup);
 
+  afterEach(cleanup);
+
+  describe('onRun', () => {
     it('removes deleted drops from parent topics', (done) => {
       onRun(core);
 
@@ -33,7 +27,7 @@ describe('topics extension', () => {
       addDropsToTopic(core, topic.id, [drop.id]);
 
       // Listen for remove-drops event
-      Topics.addEventListener(core, 'topics:remove-drops', ({ data }) => {
+      Topics.addEventListener(core, 'topics:topic:remove-drops', ({ data }) => {
         if (data.topic.id === topic.id && data.drops[drop.id]) {
           done();
         }
@@ -45,21 +39,18 @@ describe('topics extension', () => {
   });
 
   describe('onDisable', () => {
-    afterEach(() => {
-      act(() => {
-        core.dispatch('topics:clear');
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    });
-
     it('removes event listeners', () => {
+      // Run the extension
       onRun(core);
-      Topics.addEventListener(core, 'topics:create', jest.fn());
 
-      act(() => {
-        onDisable(core);
-        expect(core.hasEventListeners()).toBe(false);
-      });
+      // Add an event listener
+      Topics.addEventListener(core, 'topics:topic:create', jest.fn());
+
+      // Disable the extension
+      onDisable(core);
+
+      // Should have cleared the event listener
+      expect(core.hasEventListeners()).toBe(false);
     });
   });
 });

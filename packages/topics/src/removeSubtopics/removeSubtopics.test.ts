@@ -7,9 +7,8 @@ import {
   tBoats,
   tSailing,
 } from '../test-utils';
-import { getTopic } from '../getTopic';
 import { doesNotContain } from '@minddrop/utils';
-import { getTopics } from '../getTopics';
+import { TopicsResource } from '../TopicsResource';
 
 describe('removeSubtopics', () => {
   beforeEach(setup);
@@ -21,7 +20,7 @@ describe('removeSubtopics', () => {
     removeSubtopics(core, tSailing.id, [tAnchoring.id, tBoats.id]);
 
     // Get the updated topic
-    const topic = getTopic(tSailing.id);
+    const topic = TopicsResource.get(tSailing.id);
 
     // Topic should no longer contain removed subtopics
     expect(
@@ -34,7 +33,7 @@ describe('removeSubtopics', () => {
     const result = removeSubtopics(core, tSailing.id, [tAnchoring.id]);
 
     // Get the updated topic
-    const topic = getTopic(tSailing.id);
+    const topic = TopicsResource.get(tSailing.id);
 
     // Returned value should match updated topic
     expect(result).toEqual(topic);
@@ -45,21 +44,23 @@ describe('removeSubtopics', () => {
     removeSubtopics(core, tSailing.id, [tAnchoring.id]);
 
     // Get the updated subtopic
-    const subtopic = getTopic(tAnchoring.id);
+    const subtopic = TopicsResource.get(tAnchoring.id);
 
     // Subtopic should no longer have topic as a parent
     expect(
-      doesNotContain(subtopic.parents, [{ type: 'topic', id: tSailing.id }]),
+      doesNotContain(subtopic.parents, [
+        { resource: 'topics:topic', id: tSailing.id },
+      ]),
     ).toBeTruthy();
   });
 
-  it("dispatches a 'topics:remove-subtopics' event", (done) => {
-    // Listen to 'topics:remove-subtopics' event
-    core.addEventListener('topics:remove-subtopics', (payload) => {
+  it("dispatches a 'topics:topic:remove-subtopics' event", (done) => {
+    // Listen to 'topics:topic:remove-subtopics' event
+    core.addEventListener('topics:topic:remove-subtopics', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tSailing.id);
+      const topic = TopicsResource.get(tSailing.id);
       // Get the updated subtopics
-      const subtopics = getTopics([tAnchoring.id, tBoats.id]);
+      const subtopics = TopicsResource.get([tAnchoring.id, tBoats.id]);
 
       // Payload data should contain updated topic
       expect(payload.data.topic).toEqual(topic);

@@ -1,10 +1,11 @@
 import { Core } from '@minddrop/core';
+import { ResourceReference, ResourceApi } from '@minddrop/resources';
+import { ViewInstanceTypeData } from '@minddrop/views';
 import { TopicFilters } from './TopicFilters.types';
 import {
   CreateTopicData,
   Topic,
   TopicMap,
-  TopicParentReference,
   UpdateTopicData,
 } from './Topic.types';
 import {
@@ -32,8 +33,6 @@ import {
   RemoveTagsEventCallback,
   RestoreTopicEventCallback,
   UpdateTopicEventCallback,
-  ClearTopicsEvent,
-  ClearTopicsEventCallback,
   PermanentlyDeleteTopicEventCallback,
   PermanentlyDeleteTopicEvent,
   RegisterViewEvent,
@@ -57,8 +56,7 @@ import {
   MoveDropsEvent,
   MoveDropsEventCallback,
 } from './TopicEvents.types';
-import { TopicViewConfig } from './TopicViewConfig.types';
-import { AddDropsMetadata, TopicView, TopicViewMap } from './TopicView.types';
+import { AddDropsMetadata, TopicViewConfig } from './TopicViewConfig.types';
 import { TopicViewInstance } from './TopicViewInstance.types';
 import { AddDropMetadata } from '../addDropsToTopic';
 
@@ -86,16 +84,6 @@ export interface TopicsApi {
    * @returns A `{ [id]: Topic }` map.
    */
   getAll(filters?: TopicFilters): TopicMap;
-
-  /**
-   * Returns an `{ [id]: Topic }` map of a given drop's parent topics. The results
-   * can be filtered using TopicFilters.
-   *
-   * @param dropId The ID of the drop for which to retrieve the parent topics.
-   * @param filters Filters to filter the parent topics by.
-   * @returns A `{ [id]: Topic }` map of the drop's parent topics.
-   */
-  getDropParentTopics(dropId: string): TopicMap;
 
   /**
    * Filters topics by active and deleted state.
@@ -304,7 +292,7 @@ export interface TopicsApi {
   addParents(
     core: Core,
     topicId: string,
-    parentReferences: TopicParentReference[],
+    parentReferences: ResourceReference[],
   ): Topic;
 
   /**
@@ -318,18 +306,8 @@ export interface TopicsApi {
   removeParents(
     core: Core,
     topicId: string,
-    parentReferences: TopicParentReference[],
+    parentReferences: ResourceReference[],
   ): Topic;
-
-  /**
-   * Returns an `{ [id]: Topic }` map of a given topic's parents. The results
-   * can be filtered using TopicFilters.
-   *
-   * @param topicId The ID of the topic for which to retrieve the parents.
-   * @param filters Filters to filter the parents by.
-   * @returns A `{ [id]: Topic }` map of the topic's parents.
-   */
-  getParents(topicId: string, filters?: TopicFilters): TopicMap;
 
   /**
    * Adds tags to a topic and dispatches a `topics:add-tags` event
@@ -354,16 +332,16 @@ export interface TopicsApi {
   removeTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
   /**
-   * Returns a TopicView by ID.
+   * Returns a topic view's config by ID.
    *
-   * @param viewId The ID of the topic view to retrieve.
+   * @param viewId - The ID of the topic view config to retrieve.
    */
-  getView(viewId: string): TopicView;
+  getViewConfig(viewId: string): TopicViewConfig;
 
   /**
-   * Returns a `{ [id]: TopicView }` map of all registered topic views.
+   * Returns a `{ [id]: TopicViewConfig }` map of all registered topic views.
    */
-  getViews(): TopicViewMap;
+  getAllViewConfigs(): Record<string, TopicViewConfig>;
 
   /**
    * Registers a topic view and dispatches a `topics:register-view` event.
@@ -394,11 +372,11 @@ export interface TopicsApi {
    * @param topicId The ID of the topic to which to add the view.
    * @param topicViewId The ID of the topic view for which to create an instance.
    */
-  createViewInstance<I extends TopicViewInstance = TopicViewInstance>(
+  createViewInstance<TTypeData extends ViewInstanceTypeData = {}>(
     core: Core,
     topicId: string,
     topicViewId: string,
-  ): I;
+  ): TopicViewInstance<TTypeData>;
 
   /**
    * Deletes a topic view instance and removes it from the topic.
@@ -411,19 +389,9 @@ export interface TopicsApi {
   deleteViewInstance(core: Core, viewInstanceId: string): TopicViewInstance;
 
   /**
-   * Loads topics into the store and dispatches a `topics:load` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topics The topics to load.
+   * The topics resource store.
    */
-  load(core: Core, topics: Topic[]): void;
-
-  /**
-   * Clears topics from the store and dispatches a `topics:clear` event.
-   *
-   * @param core A MindDrop core instance.
-   */
-  clear(core: Core);
+  store: ResourceApi['store'];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -590,13 +558,6 @@ export interface TopicsApi {
     callback: LoadTopicsEventCallback,
   ): void;
 
-  // Add 'topics:load' event listener
-  addEventListener(
-    core: Core,
-    type: ClearTopicsEvent,
-    callback: ClearTopicsEventCallback,
-  ): void;
-
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
@@ -655,7 +616,7 @@ export interface TopicsApi {
     core: Core,
     type: MoveSubtopicsEvent,
     callback: MoveSubtopicsEventCallback,
-  );
+  ): void;
 
   // Remove 'topics:add-drops' event listener
   removeEventListener(
@@ -697,14 +658,14 @@ export interface TopicsApi {
     core: Core,
     type: AddParentsEvent,
     callback: AddParentsEventCallback,
-  );
+  ): void;
 
   // Remove topics:remove-parents event listener
   removeEventListener(
     core: Core,
     type: RemoveParentsEvent,
     callback: RemoveParentsEventCallback,
-  );
+  ): void;
 
   // Remove 'topics:add-tags' event listener
   removeEventListener(

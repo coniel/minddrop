@@ -33,13 +33,13 @@ const dataSchema: RDDataSchema<TopicData> = {
   },
   views: {
     type: 'resource-ids',
-    resource: 'views:view',
+    resource: 'views:view-instance',
     required: true,
     addAsParent: true,
   },
   tags: {
     type: 'resource-ids',
-    resource: 'tags:tags',
+    resource: 'tags:tag',
     required: true,
   },
 };
@@ -51,4 +51,13 @@ export const TopicsResource = Resources.create<
 >({
   resource: 'topics:topic',
   dataSchema,
+  defaultData: {
+    title: '',
+    subtopics: [],
+    archivedSubtopics: [],
+    drops: [],
+    archivedDrops: [],
+    views: [],
+    tags: [],
+  },
 });

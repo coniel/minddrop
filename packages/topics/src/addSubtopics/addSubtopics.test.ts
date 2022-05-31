@@ -48,7 +48,9 @@ describe('addSubtopics', () => {
 
     // Should have topic as a parent
     expect(
-      contains(subtopic.parents, [{ type: 'topic', id: tNoDrops.id }]),
+      contains(subtopic.parents, [
+        { resource: 'topics:topic', id: tNoDrops.id },
+      ]),
     ).toBeTruthy();
   });
 

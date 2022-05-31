@@ -8,10 +8,18 @@ import { TopicsResource } from '../TopicsResource';
  * Adds tags to a topic.
  * Dispatches a `topics:topic:add-tags` event.
  *
+ * Returns the updated topic.
+ *
  * @param core - A MindDrop core instance.
  * @param topicId - The ID of the topic to which to add the tags.
  * @param tagIds - The IDs of the tags to add to the topic.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the tags do not exist.
  */
 export function addTagsToTopic(
   core: Core,

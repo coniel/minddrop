@@ -1,49 +1,58 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
-import { getTopic } from '../getTopic';
-import { getTopicView } from '../getTopicView';
-import { TopicViewInstance, CreateTopicViewInstanceData } from '../types';
-import { updateTopic } from '../updateTopic';
+import { ViewInstanceTypeData, ViewInstances } from '@minddrop/views';
+import { TopicViewInstance, TopicViewInstanceData } from '../types';
+import { TopicsResource } from '../TopicsResource';
+import { getTopicViewConfig } from '../getTopicViewConfig';
 
 /**
- * Creates a new instance of a TopicView and adds it to the topic.
- * The topic view must first be registered using `Topics.registerView`
- * or else a TopicViewNotRegisteredError will be thrown.
+ * Creates a new instance of a topic view and adds it to the topic.
+ * The topic view must first be registered using `Topics.registerView`.
  *
- * Returns the new view instance and dispatches a
- * `topics:create-view-instance` event.
+ * Dispatches a `topics:view:create-instance` event.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic to which to add the view.
- * @param topicViewId The ID of the topic view for which to create an instance.
+ * Returns the new topic view instance.
+ *
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic to which to add the view.
+ * @param topicViewId - The ID of the topic view for which to create an instance.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if the view instance data is invalid.
  */
 export function createTopicViewInstance<
-  I extends TopicViewInstance = TopicViewInstance,
->(core: Core, topicId: string, topicViewId: string): I {
+  TData extends ViewInstanceTypeData = {},
+>(core: Core, topicId: string, topicViewId: string): TopicViewInstance<TData> {
   // Get the topic
-  const topic = getTopic(topicId);
+  const topic = TopicsResource.get(topicId);
   // Get the topic view
-  const topicView = getTopicView(topicViewId);
-
-  // Call topic view's onCreate
-  let data = {};
-  if (topicView.onCreate) {
-    data = topicView.onCreate(core, topic);
-  }
+  const topicView = getTopicViewConfig(topicViewId);
+  // Initialize the view instance's custom data
+  const data = topicView.initializeData
+    ? topicView.initializeData(core, topic)
+    : {};
 
   // Create a new view instance
-  const instance = Views.createInstance<CreateTopicViewInstanceData, I>(core, {
-    ...data,
-    topic: topicId,
-    view: topicView.id,
-  });
+  const instance = ViewInstances.create<{}, TopicViewInstanceData<TData>>(
+    core,
+    topicView.id,
+    {
+      ...data,
+      topic: topicId,
+      extension: core.extensionId,
+    },
+  );
 
   // Add the new view instance to the topic
-  updateTopic(core, topicId, { views: FieldValue.arrayUnion(instance.id) });
+  TopicsResource.update(core, topicId, {
+    views: FieldValue.arrayUnion(instance.id),
+  });
 
-  // Dispatch 'topics:create-view-instance'
-  core.dispatch('topics:create-view-instance', instance);
+  // Dispatch 'topics:view:create-instance'
+  core.dispatch('topics:view:create-instance', instance);
 
   return instance;
 }

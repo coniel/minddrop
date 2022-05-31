@@ -1,48 +1,43 @@
 import { DropMap } from '@minddrop/drops';
 import { TagMap } from '@minddrop/tags';
+import { ResourceReference } from '@minddrop/resources';
 import { DataInsert, EventListenerCallback } from '@minddrop/core';
-import {
-  Topic,
-  TopicChanges,
-  TopicMap,
-  TopicParentReference,
-} from './Topic.types';
-import { TopicView } from './TopicView.types';
+import { Topic, TopicChanges, TopicMap } from './Topic.types';
+import { TopicViewConfig } from './TopicViewConfig.types';
 import { TopicViewInstance } from './TopicViewInstance.types';
 
-export type CreateTopicEvent = 'topics:create';
-export type UpdateTopicEvent = 'topics:update';
-export type AddSubtopicsEvent = 'topics:add-subtopics';
-export type ArchiveSubtopicsEvent = 'topics:archive-subtopics';
-export type UnarchiveSubtopicsEvent = 'topics:unarchive-subtopics';
-export type RemoveSubtopicsEvent = 'topics:remove-subtopics';
-export type MoveSubtopicsEvent = 'topics:move-subtopics';
-export type AddDropsEvent = 'topics:add-drops';
-export type ArchiveDropsEvent = 'topics:archive-drops';
-export type UnarchiveDropsEvent = 'topics:unarchive-drops';
-export type RemoveDropsEvent = 'topics:remove-drops';
-export type MoveDropsEvent = 'topics:move-drops';
-export type AddParentsEvent = 'topics:add-parents';
-export type RemoveParentsEvent = 'topics:remove-parents';
-export type AddTagsEvent = 'topics:add-tags';
-export type RemoveTagsEvent = 'topics:remove-tags';
-export type DeleteTopicEvent = 'topics:delete';
-export type RestoreTopicEvent = 'topics:restore';
-export type PermanentlyDeleteTopicEvent = 'topics:delete-permanently';
-export type RegisterViewEvent = 'topics:register-view';
-export type UnregisterViewEvent = 'topics:unregsiter-view';
-export type CreateViewInstanceEvent = 'topics:create-view-instance';
-export type DeleteViewInstanceEvent = 'topics:delete-view-instance';
-export type LoadTopicsEvent = 'topics:load';
-export type ClearTopicsEvent = 'topics:clear';
-export type InsertDataEvent = 'topics:insert-data';
+export type CreateTopicEvent = 'topics:topic:create';
+export type UpdateTopicEvent = 'topics:topic:update';
+export type AddSubtopicsEvent = 'topics:topic:add-subtopics';
+export type ArchiveSubtopicsEvent = 'topics:topic:archive-subtopics';
+export type UnarchiveSubtopicsEvent = 'topics:topic:unarchive-subtopics';
+export type RemoveSubtopicsEvent = 'topics:topic:remove-subtopics';
+export type MoveSubtopicsEvent = 'topics:topic:move-subtopics';
+export type AddDropsEvent = 'topics:topic:add-drops';
+export type ArchiveDropsEvent = 'topics:topic:archive-drops';
+export type UnarchiveDropsEvent = 'topics:topic:unarchive-drops';
+export type RemoveDropsEvent = 'topics:topic:remove-drops';
+export type MoveDropsEvent = 'topics:topic:move-drops';
+export type AddParentsEvent = 'topics:topic:add-parents';
+export type RemoveParentsEvent = 'topics:topic:remove-parents';
+export type AddTagsEvent = 'topics:topic:add-tags';
+export type RemoveTagsEvent = 'topics:topic:remove-tags';
+export type DeleteTopicEvent = 'topics:topic:delete';
+export type RestoreTopicEvent = 'topics:topic:restore';
+export type PermanentlyDeleteTopicEvent = 'topics:topic:delete-permanently';
+export type RegisterViewEvent = 'topics:view:register';
+export type UnregisterViewEvent = 'topics:view:unregsiter';
+export type CreateViewInstanceEvent = 'topics:view:create-instance';
+export type DeleteViewInstanceEvent = 'topics:view:delete-instance';
+export type LoadTopicsEvent = 'topics:topic:load';
+export type InsertDataEvent = 'topics:topic:insert-data';
 
 export type CreateTopicEventData = Topic;
 export type DeleteTopicEventData = Topic;
 export type RestoreTopicEventData = Topic;
 export type PermanentlyDeleteTopicEventData = Topic;
-export type RegisterViewEventData = TopicView;
-export type UnregisterViewEventData = TopicView;
+export type RegisterViewEventData = TopicViewConfig;
+export type UnregisterViewEventData = TopicViewConfig;
 export type CreateViewInstanceData = TopicViewInstance;
 export type DeleteViewInstanceData = TopicViewInstance;
 export type LoadTopicsEventData = Topic[];
@@ -203,7 +198,7 @@ export interface AddParentsEventData {
   /**
    * The references of the parents added to the topic.
    */
-  parents: TopicParentReference[];
+  parents: ResourceReference[];
 }
 
 export interface RemoveParentsEventData {
@@ -215,7 +210,7 @@ export interface RemoveParentsEventData {
   /**
    * The references of the parents which were removed from the topic.
    */
-  parents: TopicParentReference[];
+  parents: ResourceReference[];
 }
 
 export interface AddTagsEventData {
@@ -346,4 +341,3 @@ export type LoadTopicsEventCallback = EventListenerCallback<
   LoadTopicsEvent,
   LoadTopicsEventData
 >;
-export type ClearTopicsEventCallback = EventListenerCallback<ClearTopicsEvent>;

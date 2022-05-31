@@ -8,10 +8,16 @@ import { Drops } from '@minddrop/drops';
  * Moves drops from one topic to another by removing them
  * from the source topic and adding them to the target topic.
  *
- * @param core A MindDrop core instance.
- * @param fromTopicId The ID of the topic from which to move the drops.
- * @param toTopicId The ID of the topic to which to move the drops.
- * @param dropIds The IDs of the drops to move.
+ * @param core - A MindDrop core instance.
+ * @param fromTopicId - The ID of the topic from which to move the drops.
+ * @param toTopicId - The ID of the topic to which to move the drops.
+ * @param dropIds - The IDs of the drops to move.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the drops do not exist.
  */
 export function moveDropsToTopic(
   core: Core,
@@ -29,6 +35,6 @@ export function moveDropsToTopic(
   // Get the updated drops
   const drops = Drops.get(dropIds);
 
-  // Dispatch a `topics:move-drops` event
-  core.dispatch('topics:move-drops', { fromTopic, toTopic, drops });
+  // Dispatch a `topics:topic:move-drops` event
+  core.dispatch('topics:topic:move-drops', { fromTopic, toTopic, drops });
 }

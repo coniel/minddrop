@@ -1,6 +1,4 @@
 import { contains, doesNotContain } from '@minddrop/utils';
-import { getTopic } from '../getTopic';
-import { getTopics } from '../getTopics';
 import {
   setup,
   cleanup,
@@ -11,6 +9,7 @@ import {
   tUntitled,
 } from '../test-utils';
 import { moveSubtopics } from './moveSubtopics';
+import { TopicsResource } from '../TopicsResource';
 
 describe('moveSubtopics', () => {
   beforeEach(setup);
@@ -25,7 +24,7 @@ describe('moveSubtopics', () => {
     ]);
 
     // Get the updated parent topic
-    const parent = getTopic(tSailing.id);
+    const parent = TopicsResource.get(tSailing.id);
 
     // Should no longer contain the subtopics
     expect(
@@ -41,7 +40,7 @@ describe('moveSubtopics', () => {
     ]);
 
     // Get the updated new parent topic
-    const parent = getTopic(tUntitled.id);
+    const parent = TopicsResource.get(tUntitled.id);
 
     // Should contain the subtopics
     expect(
@@ -49,15 +48,15 @@ describe('moveSubtopics', () => {
     ).toBeTruthy();
   });
 
-  it('dispatches a `topics:move-subtopics` event', (done) => {
-    // Listen to 'topics:move-subtopics' event
-    core.addEventListener('topics:move-subtopics', (payload) => {
+  it('dispatches a `topics:topic:move-subtopics` event', (done) => {
+    // Listen to 'topics:topic:move-subtopics' event
+    core.addEventListener('topics:topic:move-subtopics', (payload) => {
       // Get the updated original parent topic
-      const fromTopic = getTopic(tSailing.id);
+      const fromTopic = TopicsResource.get(tSailing.id);
       // Get the updated new parent topic
-      const toTopic = getTopic(tUntitled.id);
+      const toTopic = TopicsResource.get(tUntitled.id);
       // Get the updated subtopics
-      const subtopics = getTopics([tAnchoring.id, tNavigation.id]);
+      const subtopics = TopicsResource.get([tAnchoring.id, tNavigation.id]);
 
       // Payload data should contain updated original parent as 'fromTopic'
       expect(payload.data.fromTopic).toEqual(fromTopic);

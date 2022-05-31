@@ -1,15 +1,16 @@
 import { contains } from '@minddrop/utils';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
-import { ResourceDocumentNotFoundError } from '@minddrop/resources';
+import { ViewInstances } from '@minddrop/views';
+import { ResourceValidationError } from '@minddrop/resources';
 import { createTopicViewInstance } from '../createTopicViewInstance';
 import {
   cleanup,
   core,
-  setup,
   topicViewColumnsConfig,
-  topicViewWithoutCallbacks,
+  topicViewWithoutCallbacksConfig,
   tNoDrops,
   tSixDrops,
+  setup,
 } from '../test-utils';
 import { addDropsToTopic } from './addDropsToTopic';
 import { registerTopicView } from '../registerTopicView';
@@ -18,7 +19,13 @@ import { TopicsResource } from '../TopicsResource';
 const { drop1, dropConfig } = DROPS_TEST_DATA;
 
 describe('addDropsToTopic', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    // Register test topic view
+    registerTopicView(core, topicViewColumnsConfig);
+    registerTopicView(core, topicViewWithoutCallbacksConfig);
+
+    setup();
+  });
 
   afterEach(cleanup);
 
@@ -33,7 +40,7 @@ describe('addDropsToTopic', () => {
     expect(topic.drops.includes(drop1.id)).toBeTruthy();
   });
 
-  it("adds topic to the drop's parents", () => {
+  it('adds the topic as a parent on the drops', () => {
     // Add the drop to the topic
     addDropsToTopic(core, tNoDrops.id, [drop1.id]);
 
@@ -42,14 +49,14 @@ describe('addDropsToTopic', () => {
 
     // Should have added topic ID to drop's parents
     expect(
-      contains(drop.parents, [{ type: 'topic', id: tNoDrops.id }]),
+      contains(drop.parents, [{ resource: 'topics:topic', id: tNoDrops.id }]),
     ).toBeTruthy();
   });
 
   it('throws if drop does not exist', async () => {
     expect(() =>
       addDropsToTopic(core, tNoDrops.id, ['missing-drop-id']),
-    ).toThrowError(ResourceDocumentNotFoundError);
+    ).toThrowError(ResourceValidationError);
   });
 
   it("calls topic view's onAddDrops for each view instance", () => {
@@ -62,9 +69,13 @@ describe('addDropsToTopic', () => {
     registerTopicView(core, viewConfig);
 
     // Create an instance of the test topic view
-    const instance = createTopicViewInstance(core, tNoDrops.id, viewConfig.id);
+    let instance = createTopicViewInstance(core, tNoDrops.id, viewConfig.id);
     // Create an instance of a topic view with no onAddDrops callback
-    createTopicViewInstance(core, tNoDrops.id, topicViewWithoutCallbacks.id);
+    createTopicViewInstance(
+      core,
+      tNoDrops.id,
+      topicViewWithoutCallbacksConfig.id,
+    );
 
     // Add metadata to the call
     const metadata = {
@@ -75,6 +86,8 @@ describe('addDropsToTopic', () => {
     // Add drop to the topic
     addDropsToTopic(core, tNoDrops.id, [drop1.id], metadata);
 
+    // Get the updated view instance
+    instance = ViewInstances.get(instance.id);
     // Get updated drop
     const drop = Drops.get(drop1.id);
 
@@ -87,7 +100,7 @@ describe('addDropsToTopic', () => {
     );
   });
 
-  it("dispatches a 'topics:add-drops' event", (done) => {
+  it("dispatches a 'topics:topic:add-drops' event", (done) => {
     // Listen to 'topics:topic:add-drops' event
     core.addEventListener('topics:topic:add-drops', (payload) => {
       // Get the updated topic

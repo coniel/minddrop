@@ -1,6 +1,5 @@
-import { getTopic } from '../getTopic';
-import { getTopics } from '../getTopics';
 import { setup, cleanup, core, tSailing } from '../test-utils';
+import { TopicsResource } from '../TopicsResource';
 import { archiveSubtopics } from './archiveSubtopics';
 
 describe('archiveSubtopics', () => {
@@ -15,7 +14,7 @@ describe('archiveSubtopics', () => {
     archiveSubtopics(core, tSailing.id, subtopicIds);
 
     // Get updated topic
-    const topic = getTopic(tSailing.id);
+    const topic = TopicsResource.get(tSailing.id);
     // Should add subtopic IDs to 'archviedSubtopics'
     expect(topic.archivedSubtopics.includes(subtopicIds[0])).toBeTruthy();
     expect(topic.archivedSubtopics.includes(subtopicIds[1])).toBeTruthy();
@@ -31,17 +30,17 @@ describe('archiveSubtopics', () => {
     const result = archiveSubtopics(core, tSailing.id, subtopicIds);
 
     // Should return updated topic
-    expect(result).toEqual(getTopic(tSailing.id));
+    expect(result).toEqual(TopicsResource.get(tSailing.id));
   });
 
-  it('dispatches a `topics:archive-subtopics` event', (done) => {
+  it('dispatches a `topics:topic:archive-subtopics` event', (done) => {
     const subtopicIds = tSailing.subtopics.slice(0, 2);
 
-    core.addEventListener('topics:archive-subtopics', (payload) => {
+    core.addEventListener('topics:topic:archive-subtopics', (payload) => {
       // Get the updated topic
-      const topic = getTopic(tSailing.id);
+      const topic = TopicsResource.get(tSailing.id);
       // Get the archived subtopics
-      const subtopics = getTopics(subtopicIds);
+      const subtopics = TopicsResource.get(subtopicIds);
 
       // Payload should contain topic and subtopics
       expect(payload.data.topic).toEqual(topic);

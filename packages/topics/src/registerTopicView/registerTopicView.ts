@@ -1,32 +1,52 @@
 import { Core } from '@minddrop/core';
 import { Views } from '@minddrop/views';
-import { TopicView, TopicViewConfig } from '../types';
-import { useTopicsStore } from '../useTopicsStore';
+import { RDDataSchema } from '@minddrop/resources';
+import { TopicViewConfigsStore } from '../TopicViewConfigsStore';
+import { TopicViewConfig, BaseTopicViewInstanceData } from '../types';
+
+export const baseTopicViewInstanceDataSchema: RDDataSchema<BaseTopicViewInstanceData> =
+  {
+    topic: {
+      type: 'resource-id',
+      resource: 'topics:topic',
+      required: true,
+    },
+  };
 
 /**
- * Registers a topic view and dispatches a `topics:register-view` event.
+ * Registers a topic view.
+ * Dispatches a `topics:view:register` event.
  *
- * @param core A MindDrop core instance.
- * @param config The config of the topic view to register.
+ * @param core - A MindDrop core instance.
+ * @param config - The config of the topic view to register.
  */
 export function registerTopicView(core: Core, config: TopicViewConfig): void {
+  // Create the config's data schema by merging the
+  // view config's data schema with the base topic
+  // view data schema.
+  const dataSchema = {
+    ...config.dataSchema,
+    ...baseTopicViewInstanceDataSchema,
+  };
+
   // Register the view
   Views.register(core, {
     type: 'instance',
-    id: config.id,
-    component: config.component,
+    ...config,
+    dataSchema,
   });
 
-  // Add extension ID to config to create topic view
-  const topicView: TopicView = {
+  // Get the registered config
+  const registeredConfig = Views.get(config.id);
+
+  // Register the view config in the TopicViewConfigsStore
+  TopicViewConfigsStore.register({
     ...config,
+    dataSchema,
     type: 'instance',
     extension: core.extensionId,
-  };
+  });
 
-  // Registers the topic view
-  useTopicsStore.getState().setView(topicView);
-
-  // Dispatches a 'topics:register-view' event
-  core.dispatch('topics:register-view', topicView);
+  // Dispatches a 'topics:view:register' event
+  core.dispatch('topics:view:register', registeredConfig);
 }

@@ -1,17 +1,23 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { getTopics } from '../getTopics';
 import { Topic } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Unarchives the specified subtopics in a topic and dispatches
- * a `topics:unarchive-subtopics` event.
+ * Unarchives the specified subtopics in a topic.
+ * Dispatches a `topics:unarchive-subtopics` event.
+ *
  * Returns the updated topic.
  *
  * @param core A MindSubtopic core instance.
  * @param topicId The ID of the topic on which to unarchive the subtopics.
  * @param subtopicIds The IDs of the subtopics to unarchive.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the subtopics do not exist.
  * @returns The updated topic.
  */
 export function unarchiveSubtopics(
@@ -19,19 +25,19 @@ export function unarchiveSubtopics(
   topicId: string,
   subtopicIds: string[],
 ): Topic {
-  // Get the subtopics
-  const subtopics = getTopics(subtopicIds);
-
   // Update the topic
-  const topic = updateTopic(core, topicId, {
+  const topic = TopicsResource.update(core, topicId, {
     // Remove subtopic IDs from 'unarchivedSubtopics'
     archivedSubtopics: FieldValue.arrayRemove(subtopicIds),
     // Add subtopic IDs to 'subtopics'
     subtopics: FieldValue.arrayUnion(subtopicIds),
   });
 
-  // Dispatch 'topics:unarchive-subtopics' event
-  core.dispatch('topics:unarchive-subtopics', { topic, subtopics });
+  // Get the updated subtopics
+  const subtopics = TopicsResource.get(subtopicIds);
+
+  // Dispatch 'topics:topic:unarchive-subtopics' event
+  core.dispatch('topics:topic:unarchive-subtopics', { topic, subtopics });
 
   // Return the updated topic
   return topic;

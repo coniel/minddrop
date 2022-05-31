@@ -5,15 +5,22 @@ import {
   core,
   tSixDrops,
   topicViewColumnsConfig,
-  topicViewWithoutCallbacks,
+  topicViewWithoutCallbacksConfig,
 } from '../test-utils';
 import { registerTopicView } from '../registerTopicView';
 import { archiveDropsInTopic } from './archiveDropsInTopic';
 import { createTopicViewInstance } from '../createTopicViewInstance';
 import { TopicsResource } from '../TopicsResource';
+import { ViewInstances } from '@minddrop/views';
 
 describe('archiveDropsInTopic', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Register test topic view
+    registerTopicView(core, topicViewColumnsConfig);
+    registerTopicView(core, topicViewWithoutCallbacksConfig);
+  });
 
   afterEach(cleanup);
 
@@ -75,16 +82,22 @@ describe('archiveDropsInTopic', () => {
     // Archive 2 first drops in topic
     const dropIds = tSixDrops.drops.slice(0, 2);
 
-    // Get the drops
-    const drops = Drops.get(dropIds);
-
     // Create an instance of test topic view
-    const instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
+    let instance = createTopicViewInstance(core, tSixDrops.id, viewConfig.id);
     // Create an instance of a topic view with no onRemoveDrops callback
-    createTopicViewInstance(core, tSixDrops.id, topicViewWithoutCallbacks.id);
+    createTopicViewInstance(
+      core,
+      tSixDrops.id,
+      topicViewWithoutCallbacksConfig.id,
+    );
 
     // Archive the drops
     archiveDropsInTopic(core, tSixDrops.id, dropIds);
+
+    // Get the updated view instance
+    instance = ViewInstances.get(instance.id);
+    // Get the updated drops
+    const drops = Drops.get(dropIds);
 
     // Should call onRemoveDrops on the view instance
     expect(viewConfig.onRemoveDrops).toHaveBeenCalledWith(

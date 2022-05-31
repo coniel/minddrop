@@ -3,7 +3,7 @@ import { Drops } from '@minddrop/drops';
 import { Resources } from '@minddrop/resources';
 import { TopicsResource } from '../TopicsResource';
 import { removeDropsFromTopic } from '../removeDropsFromTopic';
-import { useTopicsStore } from '../useTopicsStore';
+import { TopicViewConfigsStore } from '../TopicViewConfigsStore';
 
 export function onRun(core: Core) {
   // Register the 'topics:topic' resource
@@ -20,8 +20,10 @@ export function onRun(core: Core) {
 }
 
 export function onDisable(core: Core) {
-  // Clear the store
-  useTopicsStore.getState().clear();
-  // Remove event listeners
+  // Clear the topics store
+  TopicsResource.store.clear();
+  // Clear topic view
+  TopicViewConfigsStore.clear();
+  // Remove all event listeners
   core.removeAllEventListeners();
 }

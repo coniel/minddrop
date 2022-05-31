@@ -1,10 +1,23 @@
 import { Drops } from '@minddrop/drops';
-import { getTopic } from '../getTopic';
-import { setup, cleanup, core, tTwoDrops, tEmpty } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  core,
+  tTwoDrops,
+  tEmpty,
+  topicViewColumnsConfig,
+} from '../test-utils';
 import { moveDropsToTopic } from './moveDropsToTopic';
+import { TopicsResource } from '../TopicsResource';
+import { registerTopicView } from '../registerTopicView';
 
 describe('moveDropsToTopic', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Register test topic view
+    registerTopicView(core, topicViewColumnsConfig);
+  });
 
   afterEach(cleanup);
 
@@ -13,7 +26,7 @@ describe('moveDropsToTopic', () => {
     moveDropsToTopic(core, tTwoDrops.id, tEmpty.id, tTwoDrops.drops);
 
     // Get the updated target parent topic
-    const topic = getTopic(tEmpty.id);
+    const topic = TopicsResource.get(tEmpty.id);
 
     // Should contain the subtopics
     expect(topic.drops).toEqual(tTwoDrops.drops);
@@ -24,19 +37,19 @@ describe('moveDropsToTopic', () => {
     moveDropsToTopic(core, tTwoDrops.id, tEmpty.id, tTwoDrops.drops);
 
     // Get the updated source parent topic
-    const topic = getTopic(tTwoDrops.id);
+    const topic = TopicsResource.get(tTwoDrops.id);
 
     // Shold no longer contain the subtopics
     expect(topic.drops.length).toBe(0);
   });
 
-  it('dispatches a `topics:move-drops` event', (done) => {
-    // Listen to 'topics:move-drops' events
-    core.addEventListener('topics:move-drops', (payload) => {
+  it('dispatches a `topics:topic:move-drops` event', (done) => {
+    // Listen to 'topics:topic:move-drops' events
+    core.addEventListener('topics:topic:move-drops', (payload) => {
       // Get the updated source topic
-      const fromTopic = getTopic(tTwoDrops.id);
+      const fromTopic = TopicsResource.get(tTwoDrops.id);
       // Get the updated target parent topic
-      const toTopic = getTopic(tEmpty.id);
+      const toTopic = TopicsResource.get(tEmpty.id);
       // Get the updated drops
       const drops = Drops.get(tTwoDrops.drops);
 

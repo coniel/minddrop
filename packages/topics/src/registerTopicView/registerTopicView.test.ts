@@ -1,33 +1,46 @@
 import { registerTopicView } from './registerTopicView';
-import { cleanup, core, setup, unregisteredTopicView } from '../test-utils';
-import { getTopicView } from '../getTopicView';
+import { cleanup, core, unregisteredTopicViewConfig } from '../test-utils';
 import { Views } from '@minddrop/views';
+import { TopicViewConfigsStore } from '../TopicViewConfigsStore';
 
 describe('registerView', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    // Clear registered views
+    TopicViewConfigsStore.clear();
+  });
 
   afterEach(cleanup);
 
   it('registers the view', () => {
-    registerTopicView(core, unregisteredTopicView);
+    // Register a topic view
+    registerTopicView(core, unregisteredTopicViewConfig);
 
-    expect(Views.get(unregisteredTopicView.id)).toBeDefined();
+    // View should be registered
+    expect(Views.get(unregisteredTopicViewConfig.id)).toBeDefined();
   });
 
   it('registers the topic view', () => {
-    registerTopicView(core, unregisteredTopicView);
+    // Register a topic view
+    registerTopicView(core, unregisteredTopicViewConfig);
 
-    expect(getTopicView(unregisteredTopicView.id)).toEqual(
-      unregisteredTopicView,
-    );
+    // Topic view should be registered
+    expect(
+      TopicViewConfigsStore.get(unregisteredTopicViewConfig.id),
+    ).toBeDefined();
   });
 
-  it('dispatches a `topics:register-view` event', (done) => {
-    core.addEventListener('topics:register-view', (payload) => {
-      expect(payload.data).toEqual(unregisteredTopicView);
+  it('dispatches a `topics:view:register` event', (done) => {
+    // Listen to 'topics:view:register' events
+    core.addEventListener('topics:view:register', (payload) => {
+      // Get the registered config
+      const config = Views.get(unregisteredTopicViewConfig.id);
+
+      // Payload data should be the registered view config
+      expect(payload.data).toEqual(config);
       done();
     });
 
-    registerTopicView(core, unregisteredTopicView);
+    // Register a topic view
+    registerTopicView(core, unregisteredTopicViewConfig);
   });
 });
