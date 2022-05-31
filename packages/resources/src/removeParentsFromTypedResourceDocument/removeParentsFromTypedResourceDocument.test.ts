@@ -8,7 +8,7 @@ import {
   TRDTypeDataSchema,
   TypedResourceConfig,
   ResourceTypeConfig,
-  ConfigStore,
+  ConfigsStore,
   ResourceReference,
 } from '../types';
 import { ResourceApisStore } from '../ResourceApisStore';
@@ -92,7 +92,7 @@ const parent2Ref: ResourceReference = { resource: 'tests', id: parent2.id };
 const removeParentsFromTypedResourceDocument = (
   core: Core,
   store: ResourceStore<TypedResourceDocument<BaseData>>,
-  typeConfigsStore: ConfigStore<ResourceTypeConfig<BaseData, TypeData>>,
+  typeConfigsStore: ConfigsStore<ResourceTypeConfig<BaseData, TypeData>>,
   config: TypedResourceConfig<BaseData>,
   documentId: string,
   parentReferences: ResourceReference[],

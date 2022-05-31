@@ -1,4 +1,4 @@
-import { ConfigStore } from '../types';
+import { ConfigsStore } from '../types';
 import { createConfigsStore } from './createConfigsStore';
 
 const config1 = {
@@ -9,7 +9,7 @@ const config2 = {
 };
 
 describe('configsStore', () => {
-  let Store: ConfigStore<{ type: string }>;
+  let Store: ConfigsStore<{ type: string }>;
 
   beforeEach(() => {
     Store = createConfigsStore({ idField: 'type' });

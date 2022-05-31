@@ -9,7 +9,7 @@ import {
 import { TypedResourceApi } from './TypedResourceApi.types';
 import { TypedResourceConfig } from './TypedResourceConfig.types';
 import { ResourceStore } from './ResourceStore.types';
-import { ConfigStore, ConfigsStoreOptions } from './ConfigsStore.types';
+import { ConfigsStore, ConfigsStoreOptions } from './ConfigsStore.types';
 
 export interface ResourcesApi {
   /**
@@ -29,7 +29,7 @@ export interface ResourcesApi {
    */
   createConfigsStore<TConfig>(
     options: ConfigsStoreOptions,
-  ): ConfigStore<TConfig>;
+  ): ConfigsStore<TConfig>;
 
   /**
    * Creates a new resource, returning its API.

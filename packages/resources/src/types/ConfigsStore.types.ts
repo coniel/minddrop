@@ -6,7 +6,7 @@ export interface ConfigsStoreOptions {
   idField: string;
 }
 
-export interface ConfigStore<TConfig> {
+export interface ConfigsStore<TConfig> {
   /**
    * Retrieves a config by ID. The config 'ID' field is determined
    * by the `idField` option provided when the store was created.

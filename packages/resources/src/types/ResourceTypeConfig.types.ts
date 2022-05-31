@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { ConfigStore } from './ConfigsStore.types';
+import { ConfigsStore } from './ConfigsStore.types';
 import { TRDTypeDataSchema } from './ResourceValidation.types';
 import {
   TRDBaseData,
@@ -105,6 +105,6 @@ export type ResourceTypeConfigsStore<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
   TCustomOptions = {},
-> = ConfigStore<
+> = ConfigsStore<
   RegisteredResourceTypeConfig<TBaseData, TTypeData, TCustomOptions>
 >;

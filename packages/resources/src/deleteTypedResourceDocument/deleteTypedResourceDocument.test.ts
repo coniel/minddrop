@@ -10,7 +10,7 @@ import {
   TRDBaseDataSchema,
   TRDTypeDataSchema,
   ResourceTypeConfig,
-  ConfigStore,
+  ConfigsStore,
 } from '../types';
 import { deleteTypedResourceDocument as rawDeleteTypedResourceDocument } from './deleteTypedResourceDocument';
 
@@ -67,7 +67,7 @@ const document = generateResourceDocument<
 const deleteTypedResourceDocument = (
   core: Core,
   store: ResourceStore<TypedResourceDocument<BaseData>>,
-  typeConfigsStore: ConfigStore<ResourceTypeConfig<BaseData, TypeData>>,
+  typeConfigsStore: ConfigsStore<ResourceTypeConfig<BaseData, TypeData>>,
   config: TypedResourceConfig<BaseData>,
   documentId: string,
 ) =>

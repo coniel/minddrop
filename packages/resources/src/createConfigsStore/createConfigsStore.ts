@@ -1,5 +1,5 @@
 import createStore from 'zustand';
-import { ConfigStore, ConfigsStoreOptions } from '../types';
+import { ConfigsStore, ConfigsStoreOptions } from '../types';
 
 interface Store<TConfig> {
   /**
@@ -35,10 +35,10 @@ interface Store<TConfig> {
  */
 export function createConfigsStore<TConfig>(
   options: ConfigsStoreOptions,
-): ConfigStore<TConfig> {
+): ConfigsStore<TConfig> {
   const { idField } = options;
 
-  const useConfigStore = createStore<Store<TConfig>>((set) => ({
+  const useConfigsStore = createStore<Store<TConfig>>((set) => ({
     configs: [],
 
     addConfig: (config) =>
@@ -62,7 +62,7 @@ export function createConfigsStore<TConfig>(
   function get(id: string): TConfig;
   function get(ids: string[]): TConfig[];
   function get(id: string | string[]): TConfig | TConfig[] {
-    const { configs } = useConfigStore.getState();
+    const { configs } = useConfigsStore.getState();
     if (Array.isArray(id)) {
       return configs.filter((config) =>
         id.includes(config[idField] as unknown as string),
@@ -79,10 +79,10 @@ export function createConfigsStore<TConfig>(
   function register(config: TConfig | TConfig[]): void {
     if (Array.isArray(config)) {
       config.forEach((c) => {
-        useConfigStore.getState().addConfig(c);
+        useConfigsStore.getState().addConfig(c);
       });
     } else {
-      useConfigStore.getState().addConfig(config);
+      useConfigsStore.getState().addConfig(config);
     }
   }
 
@@ -91,29 +91,29 @@ export function createConfigsStore<TConfig>(
   function unregister(config: TConfig | TConfig[]): void {
     if (Array.isArray(config)) {
       config.forEach((c) => {
-        useConfigStore.getState().removeConfig(c);
+        useConfigsStore.getState().removeConfig(c);
       });
     } else {
-      useConfigStore.getState().removeConfig(config);
+      useConfigsStore.getState().removeConfig(config);
     }
   }
 
   return {
     get,
     getAll: <T extends TConfig = TConfig>() =>
-      useConfigStore.getState().configs as T[],
+      useConfigsStore.getState().configs as T[],
     register,
     unregister,
-    clear: () => useConfigStore.getState().clearConfigs(),
-    useConfig: (id) => useConfigStore(({ configs }) => configs[id] || null),
+    clear: () => useConfigsStore.getState().clearConfigs(),
+    useConfig: (id) => useConfigsStore(({ configs }) => configs[id] || null),
     useConfigs: <T extends TConfig = TConfig>(ids: string[]) =>
-      useConfigStore(
+      useConfigsStore(
         ({ configs }) =>
           configs.filter((config) =>
             ids.includes(config[idField] as unknown as string),
           ) as T[],
       ),
     useAllConfigs: <T extends TConfig = TConfig>() =>
-      useConfigStore(({ configs }) => configs) as T[],
+      useConfigsStore(({ configs }) => configs) as T[],
   };
 }

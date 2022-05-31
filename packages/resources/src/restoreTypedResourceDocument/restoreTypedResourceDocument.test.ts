@@ -11,7 +11,7 @@ import {
   TRDBaseDataSchema,
   TRDTypeDataSchema,
   ResourceTypeConfig,
-  ConfigStore,
+  ConfigsStore,
 } from '../types';
 import { restoreTypedResourceDocument as rawRestoreTypedResourceDocument } from './restoreTypedResourceDocument';
 
@@ -68,7 +68,7 @@ const document = generateResourceDocument<
 const restoreTypedResourceDocument = (
   core: Core,
   store: ResourceStore<TypedResourceDocument<BaseData>>,
-  typeConfigsStore: ConfigStore<ResourceTypeConfig<BaseData, TypeData>>,
+  typeConfigsStore: ConfigsStore<ResourceTypeConfig<BaseData, TypeData>>,
   config: TypedResourceConfig<BaseData>,
   documentId: string,
 ) =>

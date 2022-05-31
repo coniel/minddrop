@@ -12,7 +12,7 @@ import {
   TypedResourceDocument,
   ResourceTypeConfig,
   ResourceStore,
-  ConfigStore,
+  ConfigsStore,
   TypedResourceConfig,
   ResourceConfig,
 } from '../types';
@@ -121,7 +121,7 @@ const document = generateResourceDocument<
 const updateTypedResourceDocument = (
   core: Core,
   store: ResourceStore<TypedResourceDocument<BaseData>>,
-  typeConfigsStore: ConfigStore<ResourceTypeConfig<BaseData, TypeData>>,
+  typeConfigsStore: ConfigsStore<ResourceTypeConfig<BaseData, TypeData>>,
   config: TypedResourceConfig<BaseData>,
   documentId: string,
   data: Partial<BaseData & TypeData>,
