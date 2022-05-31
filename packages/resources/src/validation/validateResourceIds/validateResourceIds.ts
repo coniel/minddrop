@@ -48,6 +48,7 @@ export function validateResourceIds(
   validateValue<ArrayValidator>(
     {
       type: 'array',
+      allowEmpty: true,
       itemValidatorFn: (item) =>
         // Ensure that each array item is a valid resource ID
         validateResourceId(
