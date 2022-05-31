@@ -13,6 +13,7 @@ describe('getExtension', () => {
   afterEach(cleanup);
 
   it('returns the extension', () => {
+    // Get an extension
     const extension = getExtension(topicExtensionConfig.id);
 
     // Should have ID

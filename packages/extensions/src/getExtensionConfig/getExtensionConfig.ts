@@ -1,17 +1,19 @@
 import { ExtensionNotRegisteredError } from '../errors';
 import { ExtensionConfig } from '../types';
-import { useExtensionsStore } from '../useExtensionsStore';
+import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
 
 /**
  * Returns the extension config for a given extension.
- * Throws a `ExtensionNotRegisteredError` if the extension
- * is not registered.
  *
- * @param extensionId The ID of the extension.
+ * @param extensionId - The ID of the extension.
+ * @returns The requested extension's config.
+ *
+ * @throws ExtensionNotRegisteredError
+ * Thrown if the extension is not registered.
  */
 export function getExtensionConfig(extensionId: string): ExtensionConfig {
-  // Get the extension config from the store
-  const config = useExtensionsStore.getState().extensionConfigs[extensionId];
+  // Get the extension config from the configs store
+  const config = ExtensionConfigsStore.get(extensionId);
 
   if (!config) {
     // Throw an error if the extension config does not exist

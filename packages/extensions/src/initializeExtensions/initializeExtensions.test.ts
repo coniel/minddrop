@@ -1,4 +1,4 @@
-import { getRegisteredExtensions } from '../getRegisteredExtensions';
+import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
 import {
   cleanup,
   core,
@@ -23,7 +23,7 @@ describe('initializeExtensions', () => {
     ]);
 
     // Should register 3 extensions
-    expect(getRegisteredExtensions().length).toBe(3);
+    expect(ExtensionConfigsStore.getAll().length).toBe(3);
   });
 
   it('runs enabled extensions', () => {

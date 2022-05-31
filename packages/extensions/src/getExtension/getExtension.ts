@@ -1,19 +1,25 @@
 import { Extension } from '../types';
 import { getExtensionConfig } from '../getExtensionConfig';
-import { getExtensionDocument } from '../getExtensionDocument';
+import { ExtensionsResource } from '../ExtensionsResource';
 
 /**
- * Returns an extension by ID. Throws an ExtensionNotRegisteredError
+ * Returns an extension by ID. Throws a `ExtensionNotRegisteredError`
  * if the extension is not registered.
  *
- * @param extensionId The ID of the extension to retrieve.
+ * @param extensionId - The ID of the extension to retrieve.
+ * @returns The requested extension.
+ *
+ * @throws ExtensionNotRegisteredError
+ * Thrown if the extension is not registered.
  */
 export function getExtension(extensionId: string): Extension {
   // Get the extension config
   const config = getExtensionConfig(extensionId);
 
   // Get the extension document
-  const document = getExtensionDocument(extensionId);
+  const document = Object.values(ExtensionsResource.getAll()).find(
+    (doc) => doc.extension === extensionId,
+  );
 
   return {
     ...document,

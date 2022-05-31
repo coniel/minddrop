@@ -1,5 +1,6 @@
-import { getRegisteredExtensions } from '../getRegisteredExtensions';
 import { Extension } from '../types';
+import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
+import { getExtension } from '../getExtension';
 
 /**
  * Returns an array of all enabled extensions.
@@ -7,7 +8,9 @@ import { Extension } from '../types';
  * @returns An array containing all enabled extensions.
  */
 export function getEnabledExtensions(): Extension[] {
-  const extensions = getRegisteredExtensions();
+  const configs = ExtensionConfigsStore.getAll();
 
-  return extensions.filter((extension) => extension.enabled);
+  return configs
+    .map((config) => getExtension(config.id))
+    .filter((extension) => extension.enabled);
 }

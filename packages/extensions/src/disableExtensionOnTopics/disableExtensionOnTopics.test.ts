@@ -49,9 +49,9 @@ describe('disableExtensionOnTopics', () => {
     );
   });
 
-  it('dispatches a `extensions:diable-topics` event', (done) => {
-    // Listen to 'extensions:disable-topics' events
-    core.addEventListener('extensions:disable-topics', (payload) => {
+  it('dispatches a `extensions:extension:diable-topics` event', (done) => {
+    // Listen to 'extensions:extension:disable-topics' events
+    core.addEventListener('extensions:extension:disable-topics', (payload) => {
       // Get the extension
       const extension = getExtension(topicExtensionConfig.id);
 

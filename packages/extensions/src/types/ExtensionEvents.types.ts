@@ -6,19 +6,21 @@ import {
   UpdateExtensionDocumentData,
 } from './ExtensionDocument.types';
 
-export type RegisterExtensionEvent = 'extensions:register';
-export type UnregisterExtensionEvent = 'extensions:unregister';
-export type EnableExtensionOnTopicsEvent = 'extensions:enable-topics';
-export type DisableExtensionOnTopicsEvent = 'extensions:disable-topics';
-export type ClearExtensionsEvent = 'extensions:clear';
-export type CreateExtensionDocumentEvent = 'extensions:create-document';
-export type UpdateExtensionDocumentEvent = 'extensions:update-document';
-export type DeleteExtensionDocumentEvent = 'extensions:delete-document';
+export type RegisterExtensionEvent = 'extensions:extension:register';
+export type UnregisterExtensionEvent = 'extensions:extension:unregister';
+export type EnableExtensionOnTopicsEvent = 'extensions:extension:enable-topics';
+export type DisableExtensionOnTopicsEvent =
+  'extensions:extension:disable-topics';
+export type CreateExtensionDocumentEvent = 'extensions:document:create';
+export type UpdateExtensionDocumentEvent = 'extensions:document:update';
+export type DeleteExtensionDocumentEvent = 'extensions:document:delete';
+export type LoadExtensionDocumentsEvent = 'extensions:document:load';
 
 export type RegisterExtensionEventData = Extension;
 export type UnregisterExtensionEventData = Extension;
 export type CreateExtensionDocumentEventData = ExtensionDocument;
 export type DeleteExtensionDocumentEventData = ExtensionDocument;
+export type LoadExtensionDocumentsEventData = ExtensionDocument;
 
 export interface EnableExtensionOnTopicsEventData {
   /**
@@ -77,8 +79,10 @@ export type DisableExtensionOnTopicsEventCallback = EventListenerCallback<
   DisableExtensionOnTopicsEvent,
   DisableExtensionOnTopicsEventData
 >;
-export type ClearExtensionsEventCallback =
-  EventListenerCallback<ClearExtensionsEvent>;
+export type LoadExtensionDocumentsEventCallback = EventListenerCallback<
+  LoadExtensionDocumentsEvent,
+  LoadExtensionDocumentsEventData
+>;
 export type CreateExtensionDocumentEventCallback = EventListenerCallback<
   CreateExtensionDocumentEvent,
   CreateExtensionDocumentEventData

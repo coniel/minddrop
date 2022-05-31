@@ -1,7 +1,6 @@
 import { Core } from '@minddrop/core';
+import { ResourceApi, ConfigsStore } from '@minddrop/resources';
 import {
-  ClearExtensionsEvent,
-  ClearExtensionsEventCallback,
   CreateExtensionDocumentEvent,
   CreateExtensionDocumentEventCallback,
   DeleteExtensionDocumentEvent,
@@ -22,10 +21,14 @@ import { ExtensionConfig } from './ExtensionConfig.types';
 
 export interface ExtensionsApi {
   /**
-   * Returns an extension by ID. Throws an ExtensionNotRegisteredError
+   * Returns an extension by ID. Throws a `ExtensionNotRegisteredError`
    * if the extension is not registered.
    *
-   * @param extensionId The ID of the extension to retrieve.
+   * @param extensionId - The ID of the extension to retrieve.
+   * @returns The requested extension.
+   *
+   * @throws ExtensionNotRegisteredError
+   * Thrown if the extension is not registered.
    */
   get(extensionId: string): Extension;
 
@@ -45,52 +48,54 @@ export interface ExtensionsApi {
   getEnabled(): Extension[];
 
   /**
-   * Registers a new extension and dispatches a `extensions:register`
-   * event. If the extension was not previously registered, creates
-   * an associated ExtensionDocument for it.
+   * Registers a new extension.
+   * Dispatches a `extensions:extension:register` event.
+   *
+   * If the extension was not previously registered, creates
+   * an associated extension document for it.
    *
    * Returns the registered extension.
    *
-   * @param core A MindDrop core instance.
-   * @param extensionConfig The config of extension to register.
+   * @param core - A MindDrop core instance.
+   * @param extensionConfig - The config of the extension to register.
    * @returns The registered extension.
    */
   register(core: Core, extensionConfig: ExtensionConfig): Extension;
 
   /**
-   * Removes an extension from the extensions store and
-   * dispatches a `extensions:unregister` event.
+   * Unregisters an extension.
+   * Dispatches a `extensions:extension:unregister` event.
    *
-   * @param core A MindDrop core instance.
-   * @param extensionId The ID of the extension to unregister.
+   * @param core - A MindDrop core instance.
+   * @param extensionId - The ID of the extension to unregister.
    */
   unregister(core: Core, extensionId: string): void;
 
   /**
    * Returns the IDs of extensions enabled for a given topic.
    *
-   * @param topicId The ID of the topic for which to retrieve the extensions.
+   * @param topicId - The ID of the topic for which to retrieve the extensions.
    * @returns The IDs of the extensions.
    */
   getTopicExtensions(topicId: string): string[];
 
   /**
-   * Enables an extension on topics and dispatches a
-   * `extensions:enable-topics` event.
+   * Enables an extension on topics.
+   * Dispatches a `extensions:extension:enable-topics` event.
    *
-   * @param core A MindDrop core instance.
-   * @param extensionId The ID of the extension to enable.
-   * @param topicsIds The IDs of the topics for which to enable the extension.
+   * @param core - A MindDrop core instance.
+   * @param extensionId - The ID of the extension to enable.
+   * @param topicsIds - The IDs of the topics for which to enable the extension.
    */
   enableOnTopics(core: Core, extensionId: string, topicsIds: string[]): void;
 
   /**
-   * Disables an extension on topics and dispatches a
-   * `extensions:disable-topics` event.
+   * Disables an extension on topics.
+   * Dispatches a `extensions:extension:disable-topics` event.
    *
-   * @param core A MindDrop core instance.
-   * @param extensionId The ID of the extension to disable.
-   * @param topicIds The ID of the topics for which to disable the extension.
+   * @param core - A MindDrop core instance.
+   * @param extensionId - The ID of the extension to disable.
+   * @param topicIds - The ID of the topics for which to disable the extension.
    */
   disableOnTopics(core: Core, extensionId: string, topicIds: string[]): void;
 
@@ -98,17 +103,14 @@ export interface ExtensionsApi {
    * Initializes the given extensions and runs
    * the enabled ones.
    *
-   * @param core A MindDrop core instance.
-   * @param extensionConfigs The extension configs to initialize.
+   * @param core - A MindDrop core instance.
+   * @param extensionConfigs - The extension configs to initialize.
    */
   initialize(core: Core, extensionConfigs: ExtensionConfig[]): void;
 
-  /**
-   * Clears the extensions store.
-   *
-   * @param core A MindDrop core extension.
-   */
-  clear(core: Core): void;
+  store: ResourceApi['store'];
+
+  configsStore: ConfigsStore<ExtensionConfig>;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -121,32 +123,25 @@ export interface ExtensionsApi {
     callback: RegisterExtensionEventCallback,
   ): void;
 
-  // Add 'extensions:unregister' event listener
+  // Add 'extensions:extension:unregister' event listener
   addEventListener(
     core: Core,
     type: UnregisterExtensionEvent,
     callback: UnregisterExtensionEventCallback,
   ): void;
 
-  // Add 'extensions:enable-topics' event listener
+  // Add 'extensions:extension:enable-topics' event listener
   addEventListener(
     core: Core,
     type: EnableExtensionOnTopicsEvent,
     callback: EnableExtensionOnTopicsEventCallback,
   ): void;
 
-  // Add 'extensions:disable-topics' event listener
+  // Add 'extensions:extension:disable-topics' event listener
   addEventListener(
     core: Core,
     type: DisableExtensionOnTopicsEvent,
     callback: DisableExtensionOnTopicsEventCallback,
-  ): void;
-
-  // Add 'extensions:clear' event listener
-  addEventListener(
-    core: Core,
-    type: ClearExtensionsEvent,
-    callback: ClearExtensionsEventCallback,
   ): void;
 
   // Add 'extensions:create-document' event listener
@@ -156,7 +151,7 @@ export interface ExtensionsApi {
     callback: CreateExtensionDocumentEventCallback,
   ): void;
 
-  // Add 'extensions:update-document' event listener
+  // Add 'extensions:extension:update-document' event listener
   addEventListener(
     core: Core,
     type: UpdateExtensionDocumentEvent,
@@ -181,49 +176,42 @@ export interface ExtensionsApi {
     callback: RegisterExtensionEventCallback,
   ): void;
 
-  // Remove 'extensions:unregister' event listener
+  // Remove 'extensions:extension:unregister' event listener
   removeEventListener(
     core: Core,
     type: UnregisterExtensionEvent,
     callback: UnregisterExtensionEventCallback,
   ): void;
 
-  // Remove 'extensions:enable-topics' event listener
+  // Remove 'extensions:extension:enable-topics' event listener
   removeEventListener(
     core: Core,
     type: EnableExtensionOnTopicsEvent,
     callback: EnableExtensionOnTopicsEventCallback,
   ): void;
 
-  // Remove 'extensions:disable-topics' event listener
+  // Remove 'extensions:extension:disable-topics' event listener
   removeEventListener(
     core: Core,
     type: DisableExtensionOnTopicsEvent,
     callback: DisableExtensionOnTopicsEventCallback,
   ): void;
 
-  // Remove 'extensions:clear' event listener
-  removeEventListener(
-    core: Core,
-    type: ClearExtensionsEvent,
-    callback: ClearExtensionsEventCallback,
-  ): void;
-
-  // Remove 'extensions:create-document' event listener
+  // Remove 'extensions:document:create' event listener
   removeEventListener(
     core: Core,
     type: CreateExtensionDocumentEvent,
     callback: CreateExtensionDocumentEventCallback,
   ): void;
 
-  // Remove 'extensions:update-document' event listener
+  // Remove 'extensions:document:update' event listener
   removeEventListener(
     core: Core,
     type: UpdateExtensionDocumentEvent,
     callback: UpdateExtensionDocumentEventCallback,
   ): void;
 
-  // Remove 'extensions:delete-document' event listener
+  // Remove 'extensions:document:delete' event listener
   removeEventListener(
     core: Core,
     type: DeleteExtensionDocumentEvent,

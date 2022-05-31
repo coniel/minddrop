@@ -1,6 +1,6 @@
 import { getExtension } from '../getExtension';
 import { Extension } from '../types';
-import { useExtensionsStore } from '../useExtensionsStore';
+import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
 
 /**
  * Returns an array of all registered extensions,
@@ -9,7 +9,7 @@ import { useExtensionsStore } from '../useExtensionsStore';
  * @returns An array containing all registered extensions.
  */
 export function getRegisteredExtensions(): Extension[] {
-  const { extensionConfigs } = useExtensionsStore.getState();
+  const configs = ExtensionConfigsStore.getAll();
 
-  return Object.keys(extensionConfigs).map((id) => getExtension(id));
+  return configs.map((config) => getExtension(config.id));
 }

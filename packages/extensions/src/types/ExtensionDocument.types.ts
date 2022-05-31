@@ -1,11 +1,7 @@
 import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
+import { ResourceDocument } from '@minddrop/resources';
 
-export interface ExtensionDocument {
-  /**
-   * The document ID.
-   */
-  id: string;
-
+export interface ExtensionDocumentData {
   /**
    * The ID of the extension.
    */
@@ -22,7 +18,16 @@ export interface ExtensionDocument {
   topics: string[];
 }
 
+export interface CreateExtensionDocumentData {
+  /**
+   * The ID of the extension.
+   */
+  extension: string;
+}
+
 export interface UpdateExtensionDocumentData {
   enabled?: boolean;
   topics?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
 }
+
+export type ExtensionDocument = ResourceDocument<ExtensionDocumentData>;

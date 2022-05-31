@@ -1,6 +1,6 @@
-import { Extension, ExtensionConfig, ExtensionDocument } from '../types';
+import { Resources } from '@minddrop/resources';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import { generateExtensionDocument } from '../generateExtensionDocument';
+import { Extension, ExtensionConfig, ExtensionDocument } from '../types';
 
 const { tSailing, tAnchoring, tBoats } = TOPICS_TEST_DATA;
 
@@ -33,10 +33,12 @@ export const topicExtensionConfig: ExtensionConfig = {
 };
 
 // Extension document
-export const topicExtensionDocument: ExtensionDocument = {
-  ...generateExtensionDocument(topicExtensionConfig.id),
-  topics: [tSailing.id, tAnchoring.id, tBoats.id],
-};
+export const topicExtensionDocument: ExtensionDocument =
+  Resources.generateDocument('extensions:document', {
+    extension: topicExtensionConfig.id,
+    topics: [tSailing.id, tAnchoring.id, tBoats.id],
+    enabled: true,
+  });
 
 // Registered extension
 export const topicExtension: Extension = {
@@ -61,7 +63,11 @@ export const appExtensionConfig: ExtensionConfig = {
 
 // Extension document
 export const appExtensionDocument: ExtensionDocument =
-  generateExtensionDocument(appExtensionConfig.id);
+  Resources.generateDocument('extensions:document', {
+    extension: appExtensionConfig.id,
+    topics: [],
+    enabled: true,
+  });
 
 // Registered extension
 export const appExtension: Extension = {
@@ -85,10 +91,12 @@ export const multiScopeExtensionConfig: ExtensionConfig = {
 };
 
 // Extension document
-export const multiScopeExtensionDocument: ExtensionDocument = {
-  ...generateExtensionDocument(multiScopeExtensionConfig.id),
-  topics: [tSailing.id],
-};
+export const multiScopeExtensionDocument: ExtensionDocument =
+  Resources.generateDocument('extensions:document', {
+    extension: multiScopeExtensionConfig.id,
+    topics: [tSailing.id],
+    enabled: true,
+  });
 
 // Registered extension
 export const multiScopeExtension: Extension = {
@@ -113,10 +121,12 @@ export const topicNoCallbacksExtensionConfig: ExtensionConfig = {
 };
 
 // Extension document
-export const topicNoCallbacksExtensionDocument: ExtensionDocument = {
-  ...generateExtensionDocument(topicNoCallbacksExtensionConfig.id),
-  topics: [tSailing.id],
-};
+export const topicNoCallbacksExtensionDocument: ExtensionDocument =
+  Resources.generateDocument('extensions:document', {
+    extension: topicNoCallbacksExtensionConfig.id,
+    topics: [tSailing.id],
+    enabled: true,
+  });
 
 // Registered extension
 export const topicNoCallbacksExtension: Extension = {
@@ -142,11 +152,12 @@ export const disabledTopicExtensionConfig: ExtensionConfig = {
 };
 
 // Extension document
-export const disaledTopicExtensionDocument: ExtensionDocument = {
-  ...generateExtensionDocument(disabledTopicExtensionConfig.id),
-  enabled: false,
-  topics: [tSailing.id, tAnchoring.id, tBoats.id],
-};
+export const disaledTopicExtensionDocument: ExtensionDocument =
+  Resources.generateDocument('extensions:document', {
+    extension: disabledTopicExtensionConfig.id,
+    enabled: false,
+    topics: [tSailing.id, tAnchoring.id, tBoats.id],
+  });
 
 // Registered extension
 export const disabledTopicExtension: Extension = {
@@ -161,21 +172,25 @@ export const extensionConfigs = [
   appExtensionConfig,
   topicNoCallbacksExtensionConfig,
   disabledTopicExtensionConfig,
+  multiScopeExtensionConfig,
 ];
 export const extensions = [
   topicExtension,
   topicNoCallbacksExtension,
   appExtension,
   disabledTopicExtension,
+  multiScopeExtension,
 ];
 export const extensionDocuments = [
   topicExtensionDocument,
   appExtensionDocument,
   topicNoCallbacksExtensionDocument,
   disaledTopicExtensionDocument,
+  multiScopeExtensionDocument,
 ];
 export const enabledExtensions = [
   topicExtension,
   topicNoCallbacksExtension,
   appExtension,
+  multiScopeExtension,
 ];

@@ -55,9 +55,9 @@ describe('enableExtensionsOnTopics', () => {
     });
   });
 
-  it('dispatches a `extensions:enable-topics` event', (done) => {
-    // Listen to 'extensions:enable-topics' events
-    core.addEventListener('extensions:enable-topics', (payload) => {
+  it('dispatches a `extensions:extension:enable-topics` event', (done) => {
+    // Listen to 'extensions:extension:enable-topics' events
+    core.addEventListener('extensions:extension:enable-topics', (payload) => {
       // Get the extension
       const extension = getExtension(topicExtensionConfig.id);
 

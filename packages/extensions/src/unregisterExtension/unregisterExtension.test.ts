@@ -1,8 +1,8 @@
 import { ExtensionNotRegisteredError } from '../errors';
 import { getExtension } from '../getExtension';
 import { setup, cleanup, topicExtensionConfig, core } from '../test-utils';
-import { useExtensionsStore } from '../useExtensionsStore';
 import { unregisterExtension } from './unregisterExtension';
+import { ExtensionsResource } from '../ExtensionsResource';
 
 describe('unregisterExtension', () => {
   beforeEach(setup);
@@ -25,16 +25,16 @@ describe('unregisterExtension', () => {
 
     // Store should no longer contain the extension document
     expect(
-      useExtensionsStore.getState().extensionDocuments[topicExtensionConfig.id],
+      ExtensionsResource.store.get(topicExtensionConfig.id),
     ).not.toBeDefined();
   });
 
-  it('dispatches a `extensions:unregister` event', (done) => {
+  it('dispatches a `extensions:extension:unregister` event', (done) => {
     // Get the extension
     const extension = getExtension(topicExtensionConfig.id);
 
-    // Listen to 'extensions:unregister' events
-    core.addEventListener('extensions:unregister', (payload) => {
+    // Listen to 'extensions:extension:unregister' events
+    core.addEventListener('extensions:extension:unregister', (payload) => {
       // Payload should be the unregistered extension
       expect(payload.data).toEqual(extension);
       done();

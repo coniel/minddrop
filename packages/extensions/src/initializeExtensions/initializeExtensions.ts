@@ -7,8 +7,8 @@ import { ExtensionConfig } from '../types';
  * Initializes the given extensions and runs
  * the enabled ones.
  *
- * @param core A MindDrop core instance.
- * @param extensionConfigs The extension configs to initialize.
+ * @param core - A MindDrop core instance.
+ * @param extensionConfigs - The extension configs to initialize.
  */
 export function initializeExtensions(
   core: Core,

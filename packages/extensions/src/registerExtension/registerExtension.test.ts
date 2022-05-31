@@ -1,15 +1,13 @@
-import { generateExtensionDocument } from '../generateExtensionDocument';
 import { getExtension } from '../getExtension';
 import { getExtensionConfig } from '../getExtensionConfig';
-import { getExtensionDocument } from '../getExtensionDocument';
 import {
   setup,
   cleanup,
   core,
   unregisteredExtensionConfig,
 } from '../test-utils';
-import { useExtensionsStore } from '../useExtensionsStore';
 import { registerExtension } from './registerExtension';
+import { ExtensionsResource } from '../ExtensionsResource';
 
 const extensionConfig = unregisteredExtensionConfig;
 const extensionId = unregisteredExtensionConfig.id;
@@ -34,22 +32,27 @@ describe('registerExtension', () => {
     // Register the extension
     registerExtension(core, extensionConfig);
 
+    // Get the extension
+    const extension = getExtension(extensionConfig.id);
+
     // Should have created an extension document
-    expect(getExtensionDocument(extensionId)).not.toBeNull();
+    expect(ExtensionsResource.get(extension.document)).not.toBeNull();
   });
 
   it('uses the existing extension document if there is one', () => {
     // Generate an extension document for the extension
-    const document = generateExtensionDocument(extensionId);
-
-    // Add the extension document to the store
-    useExtensionsStore.getState().setExtensionDocument(document);
+    const document = ExtensionsResource.create(core, {
+      extension: extensionId,
+    });
 
     // Register the extension
     registerExtension(core, extensionConfig);
 
+    // Get the extension
+    const extension = getExtension(extensionConfig.id);
+
     // Should not have replaced the existing extension document
-    expect(getExtensionDocument(extensionId).id).toBe(document.id);
+    expect(extension.document).toBe(document.id);
   });
 
   it('returns the registered extension', () => {
@@ -63,9 +66,9 @@ describe('registerExtension', () => {
     expect(result).toEqual(extension);
   });
 
-  it('dispatches a `extensions:register` event', (done) => {
-    // Listen to 'extensions:register' events
-    core.addEventListener('extensions:register', (payload) => {
+  it('dispatches a `extensions:extension:register` event', (done) => {
+    // Listen to 'extensions:extension:register' events
+    core.addEventListener('extensions:extension:register', (payload) => {
       // Get the registered extension
       const extension = getExtension(extensionId);
 
