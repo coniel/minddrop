@@ -240,7 +240,7 @@ describe('validateSchema', () => {
         validateSchema(
           {
             type: 'schema',
-            allowedTypes: ['string', 'custom'],
+            allowedTypes: ['string', 'object', 'custom'],
             validatorOptionsSchemas: {
               custom: {
                 booleanOption: { type: 'boolean' },
@@ -250,6 +250,10 @@ describe('validateSchema', () => {
           {
             foo: { type: 'string', required: true, allowEmpty: true },
             bar: { type: 'custom', forbidenWith: ['foo'], booleanOption: true },
+            baz: {
+              type: 'object',
+              schema: { foo: { type: 'string' } },
+            },
           },
         ),
       ).not.toThrowError();

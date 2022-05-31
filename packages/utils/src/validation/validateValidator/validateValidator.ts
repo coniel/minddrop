@@ -1,6 +1,27 @@
 import { InvalidValidatorError } from '../../errors';
 import { Validator, ValidatorValidator, Schema } from '../../types';
 import { validateObject } from '../validateObject';
+import {
+  ObjectValidatorOptionsSchema,
+  ArrayValidatorOptionsSchema,
+  EnumValidatorOptionSchema,
+  RecordValidatorOptionsSchema,
+  NumberValidatorOptionsSchema,
+  SchemaValidatorOptionsSchema,
+  SetValidatorOptionsSchema,
+  StringValidatorOptionsSchema,
+} from '../validator-options-schemas';
+
+const coreValidatorOptionsSchemas = {
+  string: StringValidatorOptionsSchema,
+  array: ArrayValidatorOptionsSchema,
+  object: ObjectValidatorOptionsSchema,
+  record: RecordValidatorOptionsSchema,
+  set: SetValidatorOptionsSchema,
+  enum: EnumValidatorOptionSchema,
+  number: NumberValidatorOptionsSchema,
+  schema: SchemaValidatorOptionsSchema,
+};
 
 /**
  * Validates a valditor object.
@@ -37,7 +58,9 @@ export function validateValidator(
       ? true
       : validator.allowMultiType;
   // The option schemas
-  const optionsSchemas = validator.optionsSchemas || {};
+  const optionsSchemas = validator.optionsSchemas
+    ? { ...coreValidatorOptionsSchemas, ...validator.optionsSchemas }
+    : coreValidatorOptionsSchemas;
   // The allowed validator types. Unrestricted if empty.
   const allowedTypes = validator.allowedTypes || [];
   // Whether the valdiator is a multi-type validator

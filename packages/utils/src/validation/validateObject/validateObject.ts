@@ -8,17 +8,8 @@ import {
   FieldValidator,
   ObjectValidator,
   ValidatorFunction,
-  ValidatorOptionsSchema,
 } from '../../types';
-import { validateValidator } from '../validateValidator';
 import { validateValue } from '../validateValue';
-
-export const ObjectValidatorOptionsSchema: ValidatorOptionsSchema<ObjectValidator> =
-  {
-    schema: {
-      type: 'string',
-    },
-  };
 
 /**
  * Validates an object.
@@ -38,7 +29,11 @@ export function validateObject<
   const { schema } = validator;
 
   // Ensure that the validator is valid
-  validateValidator({ type: 'validator', allowedTypes: ['object'] }, validator);
+  if (!validator || typeof validator !== 'object') {
+    throw new InvalidValidatorError('validator must be an oject');
+  } else if (validator.type !== 'object') {
+    throw new InvalidValidatorError('validator must be an object validator');
+  }
 
   // Ensure that the value is a non-null object
   if (typeof value !== 'object' || value === null) {

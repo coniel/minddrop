@@ -5,7 +5,6 @@ import {
   ValidatorOptionsSchema,
   ValidatorValidator,
 } from '../../types';
-import { RecordValidatorOptionsSchema } from '../validateRecord';
 import { validateValidator } from './validateValidator';
 
 interface StringValidator extends BaseValidator<string> {
@@ -134,9 +133,6 @@ describe('validateValidator', () => {
           {
             ...validator,
             allowedTypes: ['record'],
-            optionsSchemas: {
-              record: RecordValidatorOptionsSchema,
-            },
           },
           { type: 'record', values: { type: 'schema' } },
         ),

@@ -4,43 +4,20 @@ import {
   CoreFieldValidator,
   FieldValidator,
   SchemaValidator,
-  ValidatorOptionsSchema,
 } from '../../types';
 import { contains } from '../../contains';
 import { getMissingItems } from '../../getMissingItems';
-import { NumberValidatorOptionsSchema } from '../validateNumber';
-import { ArrayValidatorOptionsSchema } from '../validateArray';
-import { EnumValidatorOptionSchema } from '../validateEnum';
-import { ObjectValidatorOptionsSchema } from '../validateObject';
-import { RecordValidatorOptionsSchema } from '../validateRecord';
-import { SetValidatorOptionsSchema } from '../validateSet';
-import { StringValidatorOptionsSchema } from '../validateString';
+import {
+  ObjectValidatorOptionsSchema,
+  ArrayValidatorOptionsSchema,
+  NumberValidatorOptionsSchema,
+  EnumValidatorOptionSchema,
+  RecordValidatorOptionsSchema,
+  SchemaValidatorOptionsSchema,
+  SetValidatorOptionsSchema,
+  StringValidatorOptionsSchema,
+} from '../validator-options-schemas';
 import { validateValidator } from '../validateValidator';
-
-export const SchemaValidatorOptionsSchema: ValidatorOptionsSchema<SchemaValidator> =
-  {
-    allowedTypes: {
-      type: 'array',
-      required: false,
-      items: {
-        type: 'string',
-      },
-    },
-    validatorOptionsSchemas: {
-      type: 'record',
-      required: false,
-      values: {
-        type: 'schema',
-      },
-    },
-    customFieldOptions: {
-      type: 'record',
-      required: false,
-      values: {
-        type: 'validator',
-      },
-    },
-  };
 
 export const FieldValidatorOptionsSchema: Schema = {
   required: {

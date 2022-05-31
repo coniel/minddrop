@@ -5,21 +5,10 @@ import {
   RecordValidator,
   Validator,
   ValidatorFunction,
-  ValidatorOptionsSchema,
 } from '../../types';
 import { validateValidator } from '../validateValidator';
 import { validateValue } from '../validateValue';
-
-export const RecordValidatorOptionsSchema: ValidatorOptionsSchema<RecordValidator> =
-  {
-    values: {
-      type: 'validator',
-      required: true,
-    },
-    allowEmpty: {
-      type: 'boolean',
-    },
-  };
+import { RecordValidatorOptionsSchema } from '../validator-options-schemas';
 
 /**
  *

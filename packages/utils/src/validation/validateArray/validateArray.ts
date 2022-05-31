@@ -4,25 +4,10 @@ import {
   CoreValidator,
   Validator,
   ValidatorFunction,
-  ValidatorOptionsSchema,
 } from '../../types';
 import { validateValidator } from '../validateValidator';
 import { validateValue } from '../validateValue';
-
-export const ArrayValidatorOptionsSchema: ValidatorOptionsSchema<ArrayValidator> =
-  {
-    items: {
-      type: 'validator',
-      requiredWithout: ['itemValidatorFn'],
-    },
-    itemValidatorFn: {
-      type: 'function',
-    },
-    allowEmpty: {
-      type: 'boolean',
-      required: false,
-    },
-  };
+import { ArrayValidatorOptionsSchema } from '../validator-options-schemas';
 
 /**
  * Validates a array.

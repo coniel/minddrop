@@ -1,13 +1,7 @@
 import { ValidationError } from '../../errors';
-import { StringValidator, ValidatorOptionsSchema } from '../../types';
+import { StringValidator } from '../../types';
 import { validateValidator } from '../validateValidator';
-
-export const StringValidatorOptionsSchema: ValidatorOptionsSchema<StringValidator> =
-  {
-    allowEmpty: {
-      type: 'boolean',
-    },
-  };
+import { StringValidatorOptionsSchema } from '../validator-options-schemas';
 
 /**
  * Validates a string.

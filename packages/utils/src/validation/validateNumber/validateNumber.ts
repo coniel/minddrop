@@ -1,16 +1,7 @@
 import { InvalidValidatorError, ValidationError } from '../../errors';
-import { NumberValidator, ValidatorOptionsSchema } from '../../types';
+import { NumberValidator } from '../../types';
 import { validateValidator } from '../validateValidator';
-
-export const NumberValidatorOptionsSchema: ValidatorOptionsSchema<NumberValidator> =
-  {
-    min: {
-      type: 'number',
-    },
-    max: {
-      type: 'number',
-    },
-  };
+import { NumberValidatorOptionsSchema } from '../validator-options-schemas';
 
 /**
  * Validates a number.

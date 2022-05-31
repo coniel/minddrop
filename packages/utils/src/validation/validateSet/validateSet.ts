@@ -1,26 +1,8 @@
 import { ValidationError } from '../../errors';
-import { SetValue, SetValidator, ValidatorOptionsSchema } from '../../types';
+import { SetValue, SetValidator } from '../../types';
 import { validateArray } from '../validateArray';
 import { validateValidator } from '../validateValidator';
-
-export const SetValidatorOptionsSchema: ValidatorOptionsSchema<SetValidator> = {
-  options: {
-    type: 'array',
-    required: true,
-    allowEmpty: false,
-    items: {
-      type: [
-        { type: 'string' },
-        { type: 'number' },
-        { type: 'boolean' },
-        { type: 'null' },
-      ],
-    },
-  },
-  allowEmpty: {
-    type: 'boolean',
-  },
-};
+import { SetValidatorOptionsSchema } from '../validator-options-schemas';
 
 /**
  * Validates a set.

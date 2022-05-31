@@ -1,23 +1,7 @@
 import { InvalidValidatorError, ValidationError } from '../../errors';
-import { EnumValidator, EnumValue, ValidatorOptionsSchema } from '../../types';
+import { EnumValidator, EnumValue } from '../../types';
 import { validateValidator } from '../validateValidator';
-
-export const EnumValidatorOptionSchema: ValidatorOptionsSchema<EnumValidator> =
-  {
-    options: {
-      type: 'array',
-      allowEmpty: false,
-      required: true,
-      items: {
-        type: [
-          { type: 'string' },
-          { type: 'number' },
-          { type: 'boolean' },
-          { type: 'null' },
-        ],
-      },
-    },
-  };
+import { EnumValidatorOptionSchema } from '../validator-options-schemas';
 
 /**
  * Validates an enum.
