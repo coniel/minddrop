@@ -1,10 +1,6 @@
 import { BaseEditor } from 'slate';
 import { ReactEditor } from 'slate-react';
-import {
-  RichTextNode,
-  RichTextElement,
-  RICH_TEXT_TEST_DATA,
-} from '@minddrop/rich-text';
+import { RTNode, RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { cleanup, createTestEditor, setup } from '../../test-utils';
 import { getElementAbove } from './getElementAbove';
 import { Transforms } from 'slate';
@@ -14,8 +10,8 @@ const { paragraphElement1, inlineEquationElement1 } = RICH_TEXT_TEST_DATA;
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor;
-    Element: RichTextElement;
-    Text: RichTextNode;
+    Element: RTElement;
+    Text: RTNode;
   }
 }
 

@@ -2,7 +2,7 @@ import { useDebounce } from 'use-debounce';
 import { Core, useCore } from '@minddrop/core';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
 import { useEffect } from 'react';
-import { RichTextDocuments, RichTextElements } from '@minddrop/rich-text';
+import { RTDocuments, RTElements } from '@minddrop/rich-text';
 import { generateId } from '@minddrop/utils';
 
 /**
@@ -66,19 +66,19 @@ export function useDebouncedUpdates(
 
     // Create the new elements in the order they were inserted
     creationOrder.forEach((id) => {
-      RichTextElements.create(core, createdElements[id]);
+      RTElements.create(core, createdElements[id]);
       changeRevision = true;
     });
 
     // Update the modified elements
     Object.keys(updatedElements).forEach((id) => {
-      RichTextElements.update(core, id, updatedElements[id]);
+      RTElements.update(core, id, updatedElements[id]);
       changeRevision = true;
     });
 
     // Delete removed elements
     deletedElements.forEach((id) => {
-      RichTextElements.delete(core, id);
+      RTElements.delete(core, id);
       changeRevision = true;
     });
 
@@ -89,12 +89,7 @@ export function useDebouncedUpdates(
       const revision = createDocumentRevision(sessionId);
 
       // Set the children and new revision
-      RichTextDocuments.setChildren(
-        core,
-        documentId,
-        documentChildren,
-        revision,
-      );
+      RTDocuments.setChildren(core, documentId, documentChildren, revision);
 
       // Prevent the revision from being chnaged below
       changeRevision = false;
@@ -107,7 +102,7 @@ export function useDebouncedUpdates(
       const revision = createDocumentRevision(sessionId);
 
       // Update the document revision
-      RichTextDocuments.setRevision(core, documentId, revision);
+      RTDocuments.setRevision(core, documentId, revision);
     }
   }, [debouncedSessionRevision, sessionId]);
 }

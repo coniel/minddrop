@@ -1,7 +1,4 @@
-import {
-  RICH_TEXT_TEST_DATA,
-  UpdateRichTextElementData,
-} from '@minddrop/rich-text';
+import { RICH_TEXT_TEST_DATA, UpdateRTElementData } from '@minddrop/rich-text';
 import {
   EditorSession,
   useRichTextEditorStore,
@@ -183,7 +180,7 @@ describe('useRichTextEditorStore', () => {
 
   describe('addUpdatedElement', () => {
     // The update data
-    const data: UpdateRichTextElementData = {
+    const data: UpdateRTElementData = {
       children: [{ text: 'Hello world' }],
     };
 
@@ -211,7 +208,7 @@ describe('useRichTextEditorStore', () => {
 
   describe('removeUpdatedElement', () => {
     // The update data
-    const data: UpdateRichTextElementData = {
+    const data: UpdateRTElementData = {
       children: [{ text: 'Hello world' }],
     };
 

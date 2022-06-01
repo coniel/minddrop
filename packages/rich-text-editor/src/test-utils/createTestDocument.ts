@@ -1,9 +1,9 @@
 import { initializeCore } from '@minddrop/core';
 import {
-  RichTextBlockElement,
-  RichTextDocuments,
-  RichTextElementConfig,
-  RichTextElements,
+  RTBlockElement,
+  RTDocuments,
+  RTElementConfig,
+  RTElements,
 } from '@minddrop/rich-text';
 
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
@@ -22,20 +22,20 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
  * @returns A rich text document.
  */
 export function createTestDocument(
-  configs: RichTextElementConfig[],
-  elements: RichTextBlockElement[],
+  configs: RTElementConfig[],
+  elements: RTBlockElement[],
   children?: string[],
 ) {
   // Register the configs
   configs.forEach((config) => {
-    RichTextElements.register(core, config);
+    RTElements.register(core, config);
   });
 
   // Load the test elements
-  RichTextElements.load(core, elements);
+  RTElements.load(core, elements);
 
   // Create a test document
-  const document = RichTextDocuments.create(core, {
+  const document = RTDocuments.create(core, {
     children: children || elements.map((element) => element.id),
   });
 

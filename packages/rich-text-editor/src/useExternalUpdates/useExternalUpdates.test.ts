@@ -1,6 +1,6 @@
 import {
-  RichTextDocuments,
-  RichTextElements,
+  RTDocuments,
+  RTElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { act, renderHook } from '@minddrop/test-utils';
@@ -34,7 +34,7 @@ describe('useExternalUpdates', () => {
 
     act(() => {
       // Modify the value of the document as well a its revision
-      RichTextDocuments.setChildren(
+      RTDocuments.setChildren(
         core,
         richTextDocument1.id,
         [paragraphElement2.id],
@@ -43,7 +43,7 @@ describe('useExternalUpdates', () => {
     });
 
     // Get the inserted udpated version of the inserted element
-    const element = RichTextElements.get(paragraphElement2.id);
+    const element = RTElements.get(paragraphElement2.id);
 
     // Editor children should be reset to the updated value
     expect(editor.children).toEqual([element]);
@@ -69,7 +69,7 @@ describe('useExternalUpdates', () => {
     act(() => {
       // Modify the value of the document as well a its revision,
       // using the revision ID from above.
-      RichTextDocuments.setChildren(
+      RTDocuments.setChildren(
         core,
         richTextDocument1.id,
         [paragraphElement2.id],
@@ -92,7 +92,7 @@ describe('useExternalUpdates', () => {
 
     act(() => {
       // Modify the value of the document as well a its revision
-      RichTextDocuments.setChildren(
+      RTDocuments.setChildren(
         core,
         richTextDocument1.id,
         [paragraphElement2.id],

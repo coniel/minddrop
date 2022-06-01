@@ -1,14 +1,8 @@
 import { DataInsert } from '@minddrop/core';
-import { registerRichTextElementType } from '../registerRichTextElementType';
+import { ResourceTypeNotRegisteredError } from '@minddrop/resources';
+import { RTElementsResource } from '../RTElementsResource';
 import { setup, cleanup, core, paragraphElementConfig } from '../test-utils';
-import {
-  RichTextBlockElement,
-  RichTextBlockElementConfig,
-  RichTextFragment,
-  RichTextInlineElement,
-  RichTextInlineElementConfig,
-} from '../types';
-import { RichTextElementTypeNotRegisteredError } from '../errors';
+import { RTBlockElementConfig, RTInlineElementConfig } from '../types';
 import { initializeRichTextElementData } from './initializeRichTextElementData';
 
 const dataInsert: DataInsert = {
@@ -19,16 +13,13 @@ const dataInsert: DataInsert = {
 
 interface ElementData {
   customProperty: string;
-  children?: RichTextFragment;
 }
 
 // A test block level element config
-const blockConfig: RichTextBlockElementConfig<
-  RichTextBlockElement,
-  ElementData
-> = {
+const blockConfig: RTBlockElementConfig<ElementData> = {
   type: 'block-element',
   level: 'block',
+  // @ts-ignore
   component: paragraphElementConfig.component,
   initializeData: (dataInsert) => ({
     customProperty: 'foo',
@@ -39,22 +30,28 @@ const blockConfig: RichTextBlockElementConfig<
 };
 
 // A test inline level element config
-const inlineConfig: RichTextInlineElementConfig<
-  RichTextInlineElement,
-  ElementData
-> = {
+const inlineConfig: RTInlineElementConfig<ElementData> = {
   type: 'inline-element',
   level: 'inline',
+  // @ts-ignore
   component: paragraphElementConfig.component,
   initializeData: (fragment) => ({
     customProperty: 'foo',
-    children: fragment || [{ text: 'Hello world' }],
+    children: fragment
+      ? fragment.map((part) => {
+          if ('type' in part) {
+            return part.id;
+          }
+
+          return part;
+        })
+      : [{ text: 'Hello world' }],
   }),
 };
 
 // A test block level element config which does not
 // have a `initializeData` method.
-const noCreateBlockConfig: RichTextBlockElementConfig = {
+const noCreateBlockConfig: RTBlockElementConfig = {
   type: 'no-create-block-element',
   level: 'block',
   component: paragraphElementConfig.component,
@@ -62,7 +59,7 @@ const noCreateBlockConfig: RichTextBlockElementConfig = {
 
 // A test inline level element config which does not
 // have a `initializeData` method.
-const noCreateInlineConfig: RichTextInlineElementConfig = {
+const noCreateInlineConfig: RTInlineElementConfig = {
   type: 'no-create-inline-element',
   level: 'inline',
   component: paragraphElementConfig.component,
@@ -73,13 +70,13 @@ describe('initializeRichTextElementData', () => {
     setup();
 
     // Register the test block level element config
-    registerRichTextElementType(core, blockConfig);
+    RTElementsResource.register(core, blockConfig);
     // Register the test inline level element config
-    registerRichTextElementType(core, inlineConfig);
+    RTElementsResource.register(core, inlineConfig);
     // Register the test no-create block level element config
-    registerRichTextElementType(core, noCreateBlockConfig);
+    RTElementsResource.register(core, noCreateBlockConfig);
     // Register the test no-create inline level element config
-    registerRichTextElementType(core, noCreateInlineConfig);
+    RTElementsResource.register(core, noCreateInlineConfig);
   });
 
   afterEach(cleanup);
@@ -88,7 +85,7 @@ describe('initializeRichTextElementData', () => {
     // Attempt to create an element of an unregistered type.
     // Should throw a `RichTextElementTypeNotRegisteredError`.
     expect(() => initializeRichTextElementData('not-registered')).toThrowError(
-      RichTextElementTypeNotRegisteredError,
+      ResourceTypeNotRegisteredError,
     );
   });
 

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useRichTextElementConfigs } from '@minddrop/rich-text';
+import { useRTElementConfigs } from '@minddrop/rich-text';
 import { Editable, Slate } from 'slate-react';
 import { useEditorSession } from '../useEditorSession';
 import { useEditorInitialValue } from '../useEditorInitialValue';
@@ -26,7 +26,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const initialValue = useEditorInitialValue(documentId);
   // Get the configuration objects of all registered rich
   // text element types.
-  const configs = useRichTextElementConfigs();
+  const configs = useRTElementConfigs();
   // Update the document and its elements as it is edited
   useDebouncedUpdates(documentId, sessionId);
   // Reset the editor content when changed externaly

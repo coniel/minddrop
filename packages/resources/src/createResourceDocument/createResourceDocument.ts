@@ -41,7 +41,7 @@ export function createResourceDocument<
 
   if (config.onCreate) {
     // Call `onCreate` callback if defined
-    document = config.onCreate<TResourceDocument>(core, document);
+    document = config.onCreate(core, document);
   }
 
   // Validate the document

@@ -1,12 +1,12 @@
 import { RenderElementProps } from 'slate-react';
 
-export type RichTextElementAttributes = RenderElementProps['attributes'] & {
+export type RTElementAttributes = RenderElementProps['attributes'] & {
   /**
    * The element ID.
    */
   id: string;
 };
 
-export interface RichTextElementProps extends RenderElementProps {
-  attributes: RichTextElementAttributes;
+export interface RTElementProps extends RenderElementProps {
+  attributes: RTElementAttributes;
 }

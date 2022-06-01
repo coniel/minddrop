@@ -1,6 +1,6 @@
 import {
-  RichTextBlockElement,
-  RichTextInlineElement,
+  RTBlockElement,
+  RTInlineElement,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor } from '../test-utils';
@@ -14,7 +14,7 @@ import { withRichTextEditorStore } from './withRichTextEditorStore';
 const { paragraphElement1, paragraphElement2, linkElement1 } =
   RICH_TEXT_TEST_DATA;
 
-interface LinkElement extends RichTextInlineElement {
+interface LinkElement extends RTInlineElement {
   url: string;
 }
 
@@ -23,7 +23,7 @@ function getEditorSessionValue(key: keyof EditorSession) {
   return useRichTextEditorStore.getState().sessions['session-id'][key];
 }
 
-const createEditor = (content: RichTextBlockElement[]) => {
+const createEditor = (content: RTBlockElement[]) => {
   // Create an editor session
   useRichTextEditorStore.getState().addSession('session-id');
 

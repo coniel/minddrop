@@ -1,6 +1,6 @@
 import {
-  RichTextElement,
-  RichTextElements,
+  RTElement,
+  RTElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { Editor, Node } from 'slate';
@@ -38,7 +38,7 @@ describe('withBlockReset', () => {
     editor.insertBreak();
 
     // Get the element
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Element should have been converted into the default type
     expect(element.type).toBe(defaultType);
@@ -71,9 +71,9 @@ describe('withBlockReset', () => {
     editor.insertBreak();
 
     // Get the heading element
-    const heading = Node.get(editor, [0]) as RichTextElement;
+    const heading = Node.get(editor, [0]) as RTElement;
     // Get the link element
-    const link = Node.get(editor, [0, 1]) as RichTextElement;
+    const link = Node.get(editor, [0, 1]) as RTElement;
 
     // Heading element should remain a heading
     expect(heading.type).toBe(headingElement1.type);
@@ -99,7 +99,7 @@ describe('withBlockReset', () => {
     editor.deleteBackward('character');
 
     // Get the element
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Element should have been converted into the default type
     expect(element.type).toBe(defaultType);
@@ -125,12 +125,12 @@ describe('withBlockReset', () => {
     editor.deleteBackward('character');
 
     // Get the element
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Element should remain a heading
     expect(element.type).toBe(headingElement1.type);
     // Last character should have been deleted
-    expect(RichTextElements.toPlainText([element])).toBe('Hello worl');
+    expect(RTElements.toPlainText([element])).toBe('Hello worl');
   });
 
   it('does not reset inline elements when deleting backwards', () => {
@@ -156,9 +156,9 @@ describe('withBlockReset', () => {
     editor.deleteBackward('character');
 
     // Get the heading element
-    const heading = Node.get(editor, [0]) as RichTextElement;
+    const heading = Node.get(editor, [0]) as RTElement;
     // Get the link element
-    const link = Node.get(editor, [0, 1]) as RichTextElement;
+    const link = Node.get(editor, [0, 1]) as RTElement;
 
     // Heading element should remain a heading
     expect(heading.type).toBe(headingElement1.type);

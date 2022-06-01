@@ -1,42 +1,45 @@
-import { act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { Files, FILES_TEST_DATA } from '@minddrop/files';
-import { registerRichTextElementType } from '../registerRichTextElementType';
-import { useRichTextStore } from '../useRichTextStore';
+import { Resources } from '@minddrop/resources';
+import { RTDocumentsResource } from '../RTDocumentsResource';
+import { RTElementsResource } from '../RTElementsResource';
 import {
   richTextDocuments,
   richTextElementConfigs,
   richTextElements,
 } from './rich-text.data';
 
-const { fileReferences } = FILES_TEST_DATA;
-
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export function setup() {
-  act(() => {
-    // Register test rich text element types
-    richTextElementConfigs.forEach((config) => {
-      registerRichTextElementType(core, config);
-    });
+  // Register the rich text elements resource
+  Resources.register(core, RTElementsResource);
+  // Register the rich text documents resource
+  Resources.register(core, RTDocumentsResource);
 
-    // Load file references
-    Files.load(core, fileReferences);
+  // Register test rich text element types
+  richTextElementConfigs.forEach((config) =>
+    RTElementsResource.register(core, config),
+  );
 
-    // Load rich text elements into the store
-    useRichTextStore.getState().loadElements(richTextElements);
+  // Load test rich text documents
+  RTDocumentsResource.store.load(core, richTextDocuments);
 
-    // Load rich text documents into the store
-    useRichTextStore.getState().loadDocuments(richTextDocuments);
-  });
+  // Load test rich text elements
+  RTElementsResource.store.load(core, richTextElements);
 }
 
 export function cleanup() {
-  act(() => {
-    // Clear the rich text store
-    useRichTextStore.getState().clear();
+  // Unegister the rich text elements resource
+  Resources.unregister(core, RTElementsResource);
+  // Unegister the rich text documents resource
+  Resources.unregister(core, RTDocumentsResource);
 
-    // Remove event listeners
-    core.removeAllEventListeners();
-  });
+  // Clear the registered rich text element configs
+  RTElementsResource.typeConfigsStore.clear();
+
+  // Clear the rich text documents store
+  RTDocumentsResource.store.clear();
+
+  // Clear the rich text elements store
+  RTElementsResource.store.clear();
 }

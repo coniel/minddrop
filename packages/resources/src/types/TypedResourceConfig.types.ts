@@ -21,7 +21,7 @@ export interface TypedResourceConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: TRDBaseDataSchema<TBaseData>;
+  dataSchema?: TRDBaseDataSchema<TBaseData>;
 
   /**
    * The default data used when creating a new document.
@@ -45,10 +45,7 @@ export interface TypedResourceConfig<
    * @param document The new document.
    * @returns The new document, with modifications.
    */
-  onCreate?<T extends TResourceDocument = TResourceDocument>(
-    core: Core,
-    document: T,
-  ): T;
+  onCreate?(core: Core, document: TResourceDocument): TResourceDocument;
 
   /**
    * Callback fired when a resource is updated.

@@ -1,7 +1,7 @@
 import {
-  RichTextElement,
-  RichTextElementMap,
-  UpdateRichTextElementData,
+  RTElement,
+  RTElementMap,
+  UpdateRTElementData,
 } from '@minddrop/rich-text';
 import { generateId } from '@minddrop/utils';
 import createStore, { SetState } from 'zustand';
@@ -21,10 +21,10 @@ export interface EditorSession {
   documentRevisions: string[];
 
   /**
-   * An `{ [id]: RichTextElement }` map of created rich
+   * An `{ [id]: RTElement }` map of created rich
    * text elements.
    */
-  createdElements: RichTextElementMap;
+  createdElements: RTElementMap;
 
   /**
    * The IDs of created elements in the order in which
@@ -33,10 +33,10 @@ export interface EditorSession {
   creationOrder: string[];
 
   /**
-   * An `{ [id]: UpdateRichTextElementData }` map of updates
+   * An `{ [id]: UpdateRTElementData }` map of updates
    * to rich text elements.
    */
-  updatedElements: Record<string, UpdateRichTextElementData>;
+  updatedElements: Record<string, UpdateRTElementData>;
 
   /**
    * An array of deleted rich text element IDs.
@@ -97,7 +97,7 @@ export interface RichTextEditorStore {
    * @param sessionId The editor session ID.
    * @param element The created element.
    */
-  addCreatedElement(sessionId: string, element: RichTextElement): void;
+  addCreatedElement(sessionId: string, element: RTElement): void;
 
   /**
    * Removes a created element from the editor session.
@@ -117,7 +117,7 @@ export interface RichTextEditorStore {
   addUpdatedElement(
     sessionId: string,
     id: string,
-    data: UpdateRichTextElementData,
+    data: UpdateRTElementData,
   ): void;
 
   /**

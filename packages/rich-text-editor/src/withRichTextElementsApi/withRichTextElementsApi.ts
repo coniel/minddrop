@@ -1,14 +1,11 @@
-import {
-  RichTextElement,
-  UpdateRichTextElementData,
-} from '@minddrop/rich-text';
+import { RTElement, UpdateRTElementData } from '@minddrop/rich-text';
 import { Node, Path, Text } from 'slate';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
 
-export interface RichTextElementsApi {
-  createElement(element: RichTextElement): void;
-  updateElement(elementId: string, changes: UpdateRichTextElementData): void;
+export interface RTElementsApi {
+  createElement(element: RTElement): void;
+  updateElement(elementId: string, changes: UpdateRTElementData): void;
   deleteElement(elementId: string): void;
   setDocumentChildren(children: string[]): void;
 }
@@ -22,10 +19,7 @@ export interface RichTextElementsApi {
  * @param api The API used to modify the elements and document.
  * @returns The editor instance with the plugin behaviour.
  */
-export function withRichTextElementsApi(
-  editor: Editor,
-  api: RichTextElementsApi,
-): Editor {
+export function withRTElementsApi(editor: Editor, api: RTElementsApi): Editor {
   const { apply } = editor;
 
   // eslint-disable-next-line no-param-reassign
@@ -61,12 +55,12 @@ export function withRichTextElementsApi(
       }
 
       // Create the element.
-      api.createElement(operation.node as RichTextElement);
+      api.createElement(operation.node as RTElement);
 
       // If the element was inserted at the root level, update the document children
       if (!parent) {
         api.setDocumentChildren(
-          editor.children.map((child) => (child as RichTextElement).id),
+          editor.children.map((child) => (child as RTElement).id),
         );
       }
 
@@ -91,12 +85,12 @@ export function withRichTextElementsApi(
       }
 
       // The affected node is an element
-      const element = node as RichTextElement;
+      const element = node as RTElement;
 
       // Update the element, setting its updated properties
       api.updateElement(
         element.id,
-        operation.newProperties as UpdateRichTextElementData,
+        operation.newProperties as UpdateRTElementData,
       );
 
       return;
@@ -111,7 +105,7 @@ export function withRichTextElementsApi(
       // If the node is a text node, update the parent element's children
       if (Text.isText(operation.node)) {
         // Parent is an element
-        const element = parent as RichTextElement;
+        const element = parent as RTElement;
         // Update the parent element's children
         api.updateElement(element.id, { children: element.children });
 
@@ -119,7 +113,7 @@ export function withRichTextElementsApi(
       }
 
       // Node is an element
-      const element = operation.node as RichTextElement;
+      const element = operation.node as RTElement;
 
       // Delete the element
       api.deleteElement(element.id);
@@ -127,7 +121,7 @@ export function withRichTextElementsApi(
       // If the element was at the root level, update the document children
       if (operation.path.length === 1) {
         api.setDocumentChildren(
-          editor.children.map((child) => (child as RichTextElement).id),
+          editor.children.map((child) => (child as RTElement).id),
         );
       }
 
@@ -149,7 +143,7 @@ export function withRichTextElementsApi(
       }
 
       // The split node is an element
-      const splitElement = splitNode as RichTextElement;
+      const splitElement = splitNode as RTElement;
 
       // Update the element which aws split
       api.updateElement(splitElement.id, { children: splitElement.children });
@@ -158,7 +152,7 @@ export function withRichTextElementsApi(
       const newElement = Node.get(
         editor,
         Path.next(operation.path),
-      ) as RichTextElement;
+      ) as RTElement;
 
       // Create the new element
       api.createElement(newElement);
@@ -167,7 +161,7 @@ export function withRichTextElementsApi(
       // the document children.
       if (operation.path.length === 1) {
         api.setDocumentChildren(
-          editor.children.map((child) => (child as RichTextElement).id),
+          editor.children.map((child) => (child as RTElement).id),
         );
       }
 
@@ -197,7 +191,7 @@ export function withRichTextElementsApi(
       }
 
       // Merged-into node is an element
-      const mergedIntoElement = mergedIntoNode as RichTextElement;
+      const mergedIntoElement = mergedIntoNode as RTElement;
 
       // Update the element's children
       api.updateElement(mergedIntoElement.id, {
@@ -205,7 +199,7 @@ export function withRichTextElementsApi(
       });
 
       // The merged node is an element
-      const mergedElement = operation.properties as RichTextElement;
+      const mergedElement = operation.properties as RTElement;
 
       // Delete the merged element
       api.deleteElement(mergedElement.id);
@@ -214,7 +208,7 @@ export function withRichTextElementsApi(
       // the document children.
       if (operation.path.length === 1) {
         api.setDocumentChildren(
-          editor.children.map((child) => (child as RichTextElement).id),
+          editor.children.map((child) => (child as RTElement).id),
         );
       }
 

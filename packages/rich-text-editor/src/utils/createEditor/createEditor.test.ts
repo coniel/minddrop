@@ -1,6 +1,6 @@
 import { Node } from 'slate';
 import { ParentReferences } from '@minddrop/core';
-import { RichTextElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { cleanup, setup } from '../../test-utils';
 import { Transforms } from '../../Transforms';
 import { createEditor } from './createEditor';
@@ -17,11 +17,11 @@ describe('createEditor', () => {
     // Create an editor
     const editor = createEditor('document-id');
 
-    // Check if an RichTextInlineElement is an inline element.
+    // Check if an RTInlineElement is an inline element.
     // Should return true.
     expect(editor.isInline(inlineEquationElement1)).toBeTruthy();
 
-    // Check if an RichTextBlockElement is an inline element.
+    // Check if an RTBlockElement is an inline element.
     // Should return false.
     expect(editor.isInline(blockEquationElement1)).toBeFalsy();
   });
@@ -48,7 +48,7 @@ describe('createEditor', () => {
     });
 
     // Get the inserted element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // The element should have an ID
     expect(element.id).toBeDefined();
@@ -66,7 +66,7 @@ describe('createEditor', () => {
     });
 
     // Get the inserted element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // The element should have the document as a parent
     expect(

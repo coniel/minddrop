@@ -1,36 +1,33 @@
 import {
-  RichTextBlockElement,
-  RichTextNode,
+  RTBlockElement,
+  RTNode,
   RICH_TEXT_TEST_DATA,
-  UpdateRichTextBlockElementData,
+  UpdateRTBlockElementData,
 } from '@minddrop/rich-text';
 import { cleanup, createTestEditor, setup } from '../test-utils';
 import { Transforms } from '../Transforms';
-import {
-  RichTextElementsApi,
-  withRichTextElementsApi,
-} from './withRichTextElementsApi';
+import { RTElementsApi, withRTElementsApi } from './withRTElementsApi';
 
 const { paragraphElement1, paragraphElement2, blockEquationElement1 } =
   RICH_TEXT_TEST_DATA;
 
-const emptyParagraph: RichTextBlockElement = {
+const emptyParagraph: RTBlockElement = {
   ...paragraphElement1,
   children: [{ text: '' }],
 };
 
-const api: RichTextElementsApi = {
+const api: RTElementsApi = {
   createElement: jest.fn(),
   updateElement: jest.fn(),
   deleteElement: jest.fn(),
   setDocumentChildren: jest.fn(),
 };
 
-interface BlockEquationElement extends RichTextBlockElement {
+interface BlockEquationElement extends RTBlockElement {
   expression: string;
 }
 
-describe('withRichTextElements', () => {
+describe('withRTElements', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
@@ -41,10 +38,10 @@ describe('withRichTextElements', () => {
 
       // Create an editor with the plugin applied,
       // containg an empty paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([emptyParagraph]),
-        { ...api, updateElement },
-      );
+      const editor = withRTElementsApi(createTestEditor([emptyParagraph]), {
+        ...api,
+        updateElement,
+      });
 
       // Add some text to the start of the paragraph
       Transforms.insertText(editor, 'added text', {
@@ -56,8 +53,7 @@ describe('withRichTextElements', () => {
       // Should call update with the element's ID
       expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
       // Should call update with the updated children
-      const data = updateElement.mock
-        .calls[0][1] as UpdateRichTextBlockElementData;
+      const data = updateElement.mock.calls[0][1] as UpdateRTBlockElementData;
       expect(data.children).toEqual([{ text: 'added text' }]);
     });
 
@@ -66,10 +62,10 @@ describe('withRichTextElements', () => {
 
       // Create an editor with the plugin applied,
       // containg a paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([paragraphElement1]),
-        { ...api, updateElement },
-      );
+      const editor = withRTElementsApi(createTestEditor([paragraphElement1]), {
+        ...api,
+        updateElement,
+      });
 
       // Remove the text from the paragraph
       Transforms.delete(editor, {
@@ -80,8 +76,7 @@ describe('withRichTextElements', () => {
       // Should call `updateElement` with the element's ID
       expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
       // Should call update with the updated children
-      const data = updateElement.mock
-        .calls[0][1] as UpdateRichTextBlockElementData;
+      const data = updateElement.mock.calls[0][1] as UpdateRTBlockElementData;
       expect(data.children).toEqual([{ text: '' }]);
     });
   });
@@ -93,10 +88,10 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg an empty paragraph element.
-        const editor = withRichTextElementsApi(
-          createTestEditor([emptyParagraph]),
-          { ...api, updateElement },
-        );
+        const editor = withRTElementsApi(createTestEditor([emptyParagraph]), {
+          ...api,
+          updateElement,
+        });
 
         // Insert a text node into the paragraph
         Transforms.insertNodes(
@@ -110,8 +105,7 @@ describe('withRichTextElements', () => {
         // Should call `updateElement` with the element's ID
         expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
         // Should call `updateElement` with the updated children
-        const data = updateElement.mock
-          .calls[0][1] as UpdateRichTextBlockElementData;
+        const data = updateElement.mock.calls[0][1] as UpdateRTBlockElementData;
         expect(data.children).toEqual([{ text: '' }, { text: 'added text' }]);
       });
     });
@@ -122,7 +116,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg a paragraph element.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1]),
           { ...api, createElement },
         );
@@ -131,7 +125,7 @@ describe('withRichTextElements', () => {
         Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
 
         // Should call `createElement` with the new element
-        const element = createElement.mock.calls[0][0] as RichTextBlockElement;
+        const element = createElement.mock.calls[0][0] as RTBlockElement;
         expect(element.id).toEqual(paragraphElement2.id);
       });
 
@@ -141,7 +135,7 @@ describe('withRichTextElements', () => {
 
           // Create an editor with the plugin applied,
           // containg a paragraph element.
-          const editor = withRichTextElementsApi(
+          const editor = withRTElementsApi(
             createTestEditor([paragraphElement1]),
             { ...api, setDocumentChildren },
           );
@@ -166,7 +160,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg a paragraph element.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1]),
           { ...api, updateElement },
         );
@@ -183,11 +177,10 @@ describe('withRichTextElements', () => {
         // Should call `updateElement` with the element's ID
         expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
         // Should call update with the updated children
-        const data = updateElement.mock
-          .calls[0][1] as UpdateRichTextBlockElementData;
+        const data = updateElement.mock.calls[0][1] as UpdateRTBlockElementData;
         expect(data.children).toEqual([
           {
-            text: (paragraphElement1.children[0] as RichTextNode).text,
+            text: (paragraphElement1.children[0] as RTNode).text,
             bold: true,
           },
         ]);
@@ -200,7 +193,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg a block equation element
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([blockEquationElement1]),
           { ...api, updateElement },
         );
@@ -227,7 +220,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied, containing
         // a paragraph element with two text nodes.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([
             {
               ...paragraphElement1,
@@ -255,7 +248,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied, containing
         // two paragraph elements.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1, paragraphElement2]),
           { ...api, deleteElement },
         );
@@ -274,7 +267,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1, paragraphElement2]),
           { ...api, setDocumentChildren },
         );
@@ -296,7 +289,7 @@ describe('withRichTextElements', () => {
 
       // Create an editor with the plugin applied,
       // containg a paragraph element.
-      const editor = withRichTextElementsApi(
+      const editor = withRTElementsApi(
         createTestEditor([
           { ...paragraphElement1, children: [{ text: 'onetwo' }] },
         ]),
@@ -324,7 +317,7 @@ describe('withRichTextElements', () => {
 
       // Create an editor with the plugin applied,
       // containg a paragraph element.
-      const editor = withRichTextElementsApi(
+      const editor = withRTElementsApi(
         createTestEditor([
           { ...paragraphElement1, children: [{ text: 'onetwo' }] },
         ]),
@@ -340,7 +333,7 @@ describe('withRichTextElements', () => {
       });
 
       // Should call `createElement` with a new element
-      const element = createElement.mock.calls[0][0] as RichTextBlockElement;
+      const element = createElement.mock.calls[0][0] as RTBlockElement;
       // New element should have a new ID
       expect(element.id).not.toBe(paragraphElement1.id);
       // New element should contain the second half of the split children
@@ -353,7 +346,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg a paragraph element.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([
             { ...paragraphElement1, children: [{ text: 'onetwo' }] },
           ]),
@@ -381,7 +374,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1, paragraphElement2]),
           { ...api, updateElement },
         );
@@ -409,7 +402,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([paragraphElement1, paragraphElement2]),
           { ...api, deleteElement },
         );
@@ -429,7 +422,7 @@ describe('withRichTextElements', () => {
 
           // Create an editor with the plugin applied,
           // containg a paragraph element.
-          const editor = withRichTextElementsApi(
+          const editor = withRTElementsApi(
             createTestEditor([paragraphElement1, paragraphElement2]),
             { ...api, setDocumentChildren },
           );
@@ -453,7 +446,7 @@ describe('withRichTextElements', () => {
 
         // Create an editor with the plugin applied,
         // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
+        const editor = withRTElementsApi(
           createTestEditor([
             { ...paragraphElement1, children: [{ text: 'one' }] },
             { ...paragraphElement2, children: [{ text: 'two' }] },

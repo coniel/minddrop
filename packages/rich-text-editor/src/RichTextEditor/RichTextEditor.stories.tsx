@@ -1,17 +1,17 @@
 import React from 'react';
 import { RichTextEditor } from './RichTextEditor';
-import { RichTextElements, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RTElements, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { initializeCore } from '@minddrop/core';
-import { registerDefaultRichTextElementTypes } from '../utils';
+import { registerDefaultRTElementTypes } from '../utils';
 
 const { richTextDocument1 } = RICH_TEXT_TEST_DATA;
 
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
-RichTextElements.clearRegistered();
+RTElements.clearRegistered();
 
 // Register the default element types
-registerDefaultRichTextElementTypes(core);
+registerDefaultRTElementTypes(core);
 
 export default {
   title: 'editor/Editor',

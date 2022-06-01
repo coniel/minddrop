@@ -1,6 +1,6 @@
 import { Node } from 'slate';
 import { ParentReferences } from '@minddrop/core';
-import { RichTextElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
 import { withParentReferences } from './withParentReferences';
@@ -37,7 +37,7 @@ describe('withParentReferences', () => {
 
     // Get the inserted element, it has index 1 because a text
     // node will be inserted before it during normalization.
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The inserted element should have the document parent reference
     expect(arrayContainsObject(element.parents, parentReference)).toBeTruthy();
@@ -67,7 +67,7 @@ describe('withParentReferences', () => {
 
     // Get the inserted element, it has index 1 because a text
     // node will be inserted before it during normalization.
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The inserted element should only contain a signel reference
     // to the document.
@@ -95,7 +95,7 @@ describe('withParentReferences', () => {
 
     // Get the inserted element, it has index 1 because a text
     // node will be inserted before it during normalization.
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The inserted element should have the parent reference
     expect(arrayContainsObject(element.parents, parentReference)).toBeTruthy();
@@ -124,7 +124,7 @@ describe('withParentReferences', () => {
 
     // Get the inserted element, it has index 1 because a text
     // node will be inserted before it during normalization.
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The inserted element should contain only a single refernece to
     // the parent element.
@@ -165,9 +165,9 @@ describe('withParentReferences', () => {
     });
 
     // Get the new paragraph element
-    const paragraph = Node.get(editor, [1]) as RichTextElement;
+    const paragraph = Node.get(editor, [1]) as RTElement;
     // Get the link element from the new paragraph
-    const element = Node.get(editor, [1, 1]) as RichTextElement;
+    const element = Node.get(editor, [1, 1]) as RTElement;
 
     // The old parent reference
     const oldParentRef = ParentReferences.generate(
@@ -218,7 +218,7 @@ describe('withParentReferences', () => {
     });
 
     // Get the link element
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The old parent reference
     const oldParentRef = ParentReferences.generate(

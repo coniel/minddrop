@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { RichTextDocument, RichTextDocuments } from '@minddrop/rich-text';
+import { RTDocument, RTDocuments } from '@minddrop/rich-text';
 import { generateId } from '@minddrop/utils';
 import { useMemo } from 'react';
 import { Editor } from '../types';
@@ -24,7 +24,7 @@ export function useEditorSession(documentId: string): [Editor, string] {
     // Generate a session ID
     const id = generateId();
     // Get the rich text document
-    const document = RichTextDocuments.get(documentId) as RichTextDocument;
+    const document = RTDocuments.get(documentId) as RTDocument;
 
     // Create the session in the rich text editor store with the
     // current document revision.

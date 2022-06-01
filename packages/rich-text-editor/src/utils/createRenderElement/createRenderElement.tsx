@@ -1,7 +1,4 @@
-import {
-  RichTextElementConfig,
-  RichTextElementProps,
-} from '@minddrop/rich-text';
+import { RTElementConfig, RTElementProps } from '@minddrop/rich-text';
 import React from 'react';
 
 /**
@@ -15,9 +12,9 @@ import React from 'react';
  * @returns A renderElement function.
  */
 export function createRenderElement(
-  configs: RichTextElementConfig[],
-): (props: RichTextElementProps) => React.ReactElement {
-  return (props: RichTextElementProps) => {
+  configs: RTElementConfig[],
+): (props: RTElementProps) => React.ReactElement {
+  return (props: RTElementProps) => {
     // Get the config for the element type
     const config = configs.find(({ type }) => type === props.element.type);
 

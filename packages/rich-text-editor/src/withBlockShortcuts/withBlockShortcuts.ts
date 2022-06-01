@@ -1,9 +1,9 @@
 import { Editor as SlateEditor, Path, Range, Text } from 'slate';
 import {
-  RichTextBlockElement,
-  RichTextBlockElementConfig,
-  RichTextElementConfig,
-  RichTextElements,
+  RTBlockElement,
+  RTBlockElementConfig,
+  RTElementConfig,
+  RTElements,
 } from '@minddrop/rich-text';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
@@ -19,36 +19,34 @@ import { Transforms } from '../Transforms';
  */
 export function withBlockShortcuts(
   editor: Editor,
-  configs: RichTextElementConfig[],
+  configs: RTElementConfig[],
 ): Editor {
   const { apply } = editor;
 
   // Get the configs of block level elements
   const blockConfigs = configs.filter(
     (config) => config.level === 'block',
-  ) as RichTextBlockElementConfig[];
+  ) as RTBlockElementConfig[];
 
   // Create a `{ [shortcutString]: convertFn }` map of
   // shortcuts and their action.
-  const shortcuts: Record<
-    string,
-    (element: RichTextBlockElement) => RichTextBlockElement
-  > = blockConfigs.reduce((map, config) => {
-    if (!config.shortcuts) {
-      // If the config has no shortcuts, there is nothing to add
-      return map;
-    }
-    //
+  const shortcuts: Record<string, (element: RTBlockElement) => RTBlockElement> =
+    blockConfigs.reduce((map, config) => {
+      if (!config.shortcuts) {
+        // If the config has no shortcuts, there is nothing to add
+        return map;
+      }
+      //
 
-    return config.shortcuts.reduce(
-      (nextMap, shortcut) => ({
-        // Shortcut converts the element into the config's element type
-        [shortcut]: (element) => RichTextElements.convert(element, config.type),
-        ...nextMap,
-      }),
-      map,
-    );
-  }, {});
+      return config.shortcuts.reduce(
+        (nextMap, shortcut) => ({
+          // Shortcut converts the element into the config's element type
+          [shortcut]: (element) => RTElements.convert(element, config.type),
+          ...nextMap,
+        }),
+        map,
+      );
+    }, {});
 
   // eslint-disable-next-line no-param-reassign
   editor.apply = (operation) => {
@@ -63,7 +61,7 @@ export function withBlockShortcuts(
       const element = getElementAbove(editor, { at: operation.path });
 
       // Get the element's config
-      const config = RichTextElements.getConfig(element[0].type);
+      const config = RTElements.getConfig(element[0].type);
 
       if (config.level !== 'block') {
         // If the element is not a block level element, stop here

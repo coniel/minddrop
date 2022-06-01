@@ -1,8 +1,8 @@
 import React from 'react';
-import { RichTextElementProps } from '../types';
+import { RTElementProps } from '../types';
 import './HeadingOneElementComponent.css';
 
-export const HeadingOneElementComponent: React.FC<RichTextElementProps> = ({
+export const HeadingOneElementComponent: React.FC<RTElementProps> = ({
   children,
   attributes,
 }) => (

@@ -1,4 +1,4 @@
-import { RichTextElement } from '@minddrop/rich-text';
+import { RTElement } from '@minddrop/rich-text';
 import { Editor, Element, NodeEntry, Range, Path, Point } from 'slate';
 
 interface Options {
@@ -18,7 +18,7 @@ interface Options {
 export const getElementAbove = (
   editor: Editor,
   options: Options = {},
-): NodeEntry<RichTextElement> | null =>
+): NodeEntry<RTElement> | null =>
   Editor.above(editor, {
     match: (n) => Element.isElement(n),
     ...options,

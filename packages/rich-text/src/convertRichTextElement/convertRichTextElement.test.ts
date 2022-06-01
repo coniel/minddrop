@@ -7,8 +7,8 @@ import {
   paragraphElement1,
   unregisteredElement,
   blockEquationElement1,
-  TestBlockEquationElement,
-  TestToDoElement,
+  TestBlockEquationElementData,
+  TestToDoElementData,
 } from '../test-utils';
 import { toPlainText } from '../toPlainText';
 import { convertRichTextElement } from './convertRichTextElement';
@@ -22,13 +22,13 @@ describe('convertRichTextElement', () => {
 
   it('throws if the element type is not registered', () => {
     // Attempt to convert an element of an unregistered type,
-    // should throw a `RichTextElementNotRegisteredError`.
+    // should throw a `RTElementNotRegisteredError`.
     expect(() => convertRichTextElement(unregisteredElement, 'paragraph'));
   });
 
   it('throws if the convert to element type is not registered', () => {
     // Attempt to convert an element into an unregistered type,
-    // should throw a `RichTextElementNotRegisteredError`.
+    // should throw a `RTElementNotRegisteredError`.
     expect(() => convertRichTextElement(paragraphElement1, 'unregistered'));
   });
 
@@ -36,6 +36,7 @@ describe('convertRichTextElement', () => {
     // Attempt to convert an inline level element, should
     // throw a `InvalidParameterError`.
     expect(() =>
+      // @ts-ignore
       convertRichTextElement(linkElement1, 'paragraph'),
     ).toThrowError(InvalidParameterError);
   });
@@ -50,10 +51,7 @@ describe('convertRichTextElement', () => {
 
   it('sets the new type on the element', () => {
     // Convert a 'paragraph' element into an 'block-equation' element
-    const element = convertRichTextElement<TestBlockEquationElement>(
-      paragraph,
-      'block-equation',
-    );
+    const element = convertRichTextElement(paragraph, 'block-equation');
 
     // Element should have the new type
     expect(element.type).toBe('block-equation');
@@ -61,7 +59,7 @@ describe('convertRichTextElement', () => {
 
   it("removes the original element's custom data", () => {
     // Convert from 'block-equation' element containing a `expression` field
-    const element = convertRichTextElement<TestBlockEquationElement>(
+    const element = convertRichTextElement<TestBlockEquationElementData>(
       blockEquationElement1,
       'paragraph',
     );
@@ -77,7 +75,6 @@ describe('convertRichTextElement', () => {
       {
         ...paragraph,
         nestedElements: ['element-id'],
-        files: ['file-id'],
         deleted: true,
         deletedAt: new Date('01/01/2000'),
       },
@@ -90,8 +87,6 @@ describe('convertRichTextElement', () => {
     expect(element.parents).toEqual(paragraph.parents);
     // Should preserve the `nestedElements` field
     expect(element.nestedElements).toEqual(['element-id']);
-    // Should preserve the `files` field
-    expect(element.files).toEqual(['file-id']);
     // Should preserve the `deleted` field
     expect(element.deleted).toBe(true);
     // Should preserve the `deletedAt` field
@@ -117,7 +112,10 @@ describe('convertRichTextElement', () => {
   it("adds the new element type's initial data", () => {
     // Convert a 'to-do' element which initializes a `done` property
     // in its `initializeData` property.
-    const element = convertRichTextElement<TestToDoElement>(paragraph, 'to-do');
+    const element = convertRichTextElement<TestToDoElementData>(
+      paragraph,
+      'to-do',
+    );
 
     // Should have a `done` property
     expect(element.done).toBeDefined();
@@ -126,7 +124,7 @@ describe('convertRichTextElement', () => {
   it("adds the element new element type's conversion data", () => {
     // Convert to a 'block-equation' element which initializes an
     // `expression` property in its `convertData` method.
-    const element = convertRichTextElement<TestBlockEquationElement>(
+    const element = convertRichTextElement<TestBlockEquationElementData>(
       paragraph,
       'block-equation',
     );
@@ -138,7 +136,7 @@ describe('convertRichTextElement', () => {
 
   it('removes `children` when converting to a void element type', () => {
     // Convert to a void 'block-equation' element type
-    const element = convertRichTextElement<TestBlockEquationElement>(
+    const element = convertRichTextElement<TestBlockEquationElementData>(
       paragraph,
       'block-equation',
     );
@@ -150,7 +148,7 @@ describe('convertRichTextElement', () => {
   it('adds `children` when converting from void to non-void types', () => {
     // Convert from a void 'block-equation' element type to a non-void
     // paragraph element type.
-    const element = convertRichTextElement<TestBlockEquationElement>(
+    const element = convertRichTextElement<TestBlockEquationElementData>(
       blockEquationElement1,
       'paragraph',
     );

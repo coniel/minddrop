@@ -1,8 +1,8 @@
-import { RichTextElementConfig } from './RichTextElementConfig.types';
+import { RTElementConfig } from './RTElementConfig.types';
 
 export interface RichTextEditorPluginConfig {
   /**
    * The elements added by the plugin.
    */
-  elements?: RichTextElementConfig[];
+  elements?: RTElementConfig[];
 }

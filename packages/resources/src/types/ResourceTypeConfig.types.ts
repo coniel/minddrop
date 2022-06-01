@@ -24,7 +24,7 @@ export type ResourceTypeConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: TRDTypeDataSchema<TBaseData, TTypeData>;
+  dataSchema?: TRDTypeDataSchema<TBaseData, TTypeData>;
 
   /**
    * The default data used when creating a new document.

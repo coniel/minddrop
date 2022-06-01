@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  RichTextBlockElementConfig,
-  RichTextBlockElementProps,
+  RTBlockElementConfig,
+  RTBlockElementProps,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { createRenderElement } from './createRenderElement';
@@ -10,17 +10,17 @@ import { render } from '@minddrop/test-utils';
 const { headingElementConfig, paragraphElementConfig, paragraphElement1 } =
   RICH_TEXT_TEST_DATA;
 
-const headingConfig: RichTextBlockElementConfig = {
+const headingConfig: RTBlockElementConfig = {
   ...headingElementConfig,
   component: () => <div>heading</div>,
 };
 
-const paragraphConfig: RichTextBlockElementConfig = {
+const paragraphConfig: RTBlockElementConfig = {
   ...paragraphElementConfig,
   component: () => <div>paragraph</div>,
 };
 
-const attributes: RichTextBlockElementProps['attributes'] = {
+const attributes: RTBlockElementProps['attributes'] = {
   id: paragraphElement1.id,
   'data-slate-node': 'element',
   ref: null,

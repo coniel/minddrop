@@ -1,1 +1,1 @@
-export * from './registerDefaultRichTextElementTypes';
+export * from './registerDefaultRTElementTypes';

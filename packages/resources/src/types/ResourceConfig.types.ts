@@ -17,7 +17,7 @@ export interface ResourceConfig<
    * The schema used to validate the resource
    * document data.
    */
-  dataSchema: RDDataSchema<TData>;
+  dataSchema?: RDDataSchema<TData>;
 
   /**
    * The default data used when creating a new document.
@@ -41,10 +41,7 @@ export interface ResourceConfig<
    * @param document The new document.
    * @returns The new document, with modifications.
    */
-  onCreate?<T extends TResourceDocument = TResourceDocument>(
-    core: Core,
-    document: T,
-  ): T;
+  onCreate?(core: Core, document: TResourceDocument): TResourceDocument;
 
   /**
    * Callback fired when a resource is updated.

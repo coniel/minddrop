@@ -1,6 +1,6 @@
-import { RichTextElementProps } from './RichTextElementProps.types';
+import { RTElementProps } from './RTElementProps.types';
 
-export interface RichTextElementConfig {
+export interface RTElementConfig {
   /**
    * The element type identifier, e.g. 'paragraph'.
    */
@@ -9,7 +9,7 @@ export interface RichTextElementConfig {
   /**
    * The component used to render the element.
    */
-  component: React.ElementType<RichTextElementProps>;
+  component: React.ElementType<RTElementProps>;
 
   /**
    * In a not "void" element, Slate handles the rendering of

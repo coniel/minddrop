@@ -1,4 +1,4 @@
-import { RichTextElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { Transforms } from 'slate';
 import { createEditor } from 'slate';
 import { withElementIds } from './withElementIds';
@@ -17,7 +17,7 @@ describe('withElementIds', () => {
     ]);
 
     // Element should be given an ID
-    expect((editor.children[0] as RichTextElement).id).toBeDefined();
+    expect((editor.children[0] as RTElement).id).toBeDefined();
   });
 
   it("does not overwrite an element's existing ID", () => {
@@ -28,9 +28,7 @@ describe('withElementIds', () => {
     Transforms.insertNodes(editor, [paragraphElement1]);
 
     // Element should maintain its original ID
-    expect((editor.children[0] as RichTextElement).id).toBe(
-      paragraphElement1.id,
-    );
+    expect((editor.children[0] as RTElement).id).toBe(paragraphElement1.id);
   });
 
   it('adds an id to new elements create from a split', () => {
@@ -49,7 +47,7 @@ describe('withElementIds', () => {
     // Split the element
     Transforms.splitNodes(editor, { at: { path: [0, 0], offset: 5 } });
 
-    const elements = editor.children as RichTextElement[];
+    const elements = editor.children as RTElement[];
 
     // New element should have an ID
     expect(elements[1].id).toBeDefined();

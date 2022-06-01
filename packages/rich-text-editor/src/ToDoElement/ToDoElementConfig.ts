@@ -1,7 +1,7 @@
-import { RichTextBlockElementConfig } from '@minddrop/rich-text';
+import { RTBlockElementConfig } from '@minddrop/rich-text';
 import { ToDoElementComponent } from './ToDoElementComponent';
 
-export const ToDoElementConfig: RichTextBlockElementConfig = {
+export const ToDoElementConfig: RTBlockElementConfig = {
   type: 'to-do',
   level: 'block',
   component: ToDoElementComponent,

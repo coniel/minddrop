@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { RichTextElements } from '@minddrop/rich-text';
+import { RTElements } from '@minddrop/rich-text';
 import { Editor as SlateEditor } from 'slate';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
@@ -31,10 +31,10 @@ export function withBlockReset(
       // Is not of the default type
       element[0].type !== defaultType &&
       // Does not contain text
-      RichTextElements.toPlainText([element[0]]) === ''
+      RTElements.toPlainText([element[0]]) === ''
     ) {
       // Convert the element to the default type
-      const converted = RichTextElements.convert(element[0], defaultType);
+      const converted = RTElements.convert(element[0], defaultType);
       // Set the converted element data
       Transforms.setNodes(editor, converted);
     } else {
@@ -54,7 +54,7 @@ export function withBlockReset(
       SlateEditor.isStart(editor, editor.selection.focus, editor.selection)
     ) {
       // Convert the element to the default type
-      const converted = RichTextElements.convert(element[0], defaultType);
+      const converted = RTElements.convert(element[0], defaultType);
       // Set the converted element data
       Transforms.setNodes(editor, converted);
     } else {

@@ -1,9 +1,5 @@
-import {
-  CreateRichTextBlockElementData,
-  RichTextBlockElement,
-} from './RichTextBlockElement.types';
-import { CreateRichTextInlineElementData } from './RichTextInlineElement.types';
-import { RichTextFragment } from './RichTextFragment.types';
+import { RTBlockElement, BaseCreateRTElementData } from './RTElement.types';
+import { RTFragment } from './RTFragment.types';
 
 /**
  * Function called to deserialize an HTML element.
@@ -16,28 +12,18 @@ import { RichTextFragment } from './RichTextFragment.types';
  */
 export type HtmlDeserializer<
   THtmlElement extends HTMLElement = HTMLElement,
-  TData extends
-    | CreateRichTextInlineElementData
-    | CreateRichTextBlockElementData = {
-    type: string;
-    parents: [];
-  },
+  TData extends BaseCreateRTElementData = {},
 > = (
   element: THtmlElement,
   parent: HTMLElement | null,
-  children: RichTextFragment | RichTextBlockElement[] | null,
+  children: RTFragment | RTBlockElement[] | null,
 ) => TData | TData[] | null;
 
 /**
  * A [node name]: HtmlDeserializer map.
  */
 export interface HtmlDeserializerMap<
-  TData extends
-    | CreateRichTextInlineElementData
-    | CreateRichTextBlockElementData = {
-    type: string;
-    parents: [];
-  },
+  TData extends BaseCreateRTElementData = {},
 > {
   A: HtmlDeserializer<HTMLAnchorElement, TData>;
   DIV: HtmlDeserializer<HTMLDivElement, TData>;

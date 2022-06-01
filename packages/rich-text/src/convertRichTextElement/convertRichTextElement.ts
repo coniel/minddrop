@@ -1,15 +1,14 @@
 import { InvalidParameterError } from '@minddrop/utils';
-import { getRichTextElementConfig } from '../getRichTextElementConfig';
 import { initializeRichTextElementData } from '../initializeRichTextElementData';
+import { RTElementsResource } from '../RTElementsResource';
 import { toPlainText } from '../toPlainText';
-import { RichTextBlockElement } from '../types';
+import { RTBlockElement, RTElement, RTElementTypeData } from '../types';
 
-const preservedFields: (keyof RichTextBlockElement)[] = [
+const preservedFields: (keyof RTBlockElement)[] = [
   'id',
   'parents',
   'children',
   'nestedElements',
-  'files',
   'deleted',
   'deletedAt',
 ];
@@ -17,24 +16,27 @@ const preservedFields: (keyof RichTextBlockElement)[] = [
 /**
  * Converts a rich text block element from one type to another.
  *
- * - Throws a `RichTextElementTypeNotRegistered` if the current
- *   or new element type is not registered
- * - Throws a `InvalidParameterError` if the either the element
- *   or the new element type are not 'block' level elements.
- * - Throws a `RichTextElementValidationError` if the updated
- *   element is invalid.
- *
- * @param element The element to convert.
- * @param type The element type to convert to.
+ * @param element - The element to convert.
+ * @param type - The element type to convert to.
  * @returns The converted element.
+ *
+ * @throws ResourceTypeNotRegistered
+ * Thrown if the current or new element type is not registered
+ *
+ * @throws InvalidParameterError
+ * Thrown if the either the element or the new element type are
+ * not 'block' level elements.
+ *
+ * @throws ResourceValidationError
+ * Thrown if the resulting rich text element is invalid.
  */
 export function convertRichTextElement<
-  TElement extends RichTextBlockElement = RichTextBlockElement,
->(element: RichTextBlockElement, type: string): TElement {
+  TTypeData extends RTElementTypeData = {},
+>(element: RTBlockElement, type: string): RTElement<TTypeData> {
   // Get the current element type config
-  const currentConfig = getRichTextElementConfig(element.type);
+  const currentConfig = RTElementsResource.getTypeConfig(element.type);
   // Get the new element type config
-  const config = getRichTextElementConfig(type);
+  const config = RTElementsResource.getTypeConfig(type);
 
   if (currentConfig.level !== 'block') {
     // Throw a `InvalidParameterError` if the current element
@@ -53,9 +55,9 @@ export function convertRichTextElement<
   }
 
   // Clone the element, preserving only default field types
-  let converted: Partial<RichTextBlockElement> = Object.keys(element).reduce(
+  let converted: Partial<RTBlockElement> = Object.keys(element).reduce(
     (fields, key) =>
-      preservedFields.includes(key as keyof RichTextBlockElement)
+      preservedFields.includes(key as keyof RTBlockElement)
         ? { ...fields, [key]: element[key] }
         : fields,
     {},
@@ -83,5 +85,5 @@ export function convertRichTextElement<
     converted.children = [{ text: toPlainText(element) }];
   }
 
-  return converted as TElement;
+  return converted as RTElement<TTypeData>;
 }

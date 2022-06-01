@@ -1,8 +1,8 @@
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
 import {
-  RichTextDocuments,
-  RichTextElements,
+  RTDocuments,
+  RTElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
@@ -19,27 +19,27 @@ export function setup() {
   act(() => {
     // Register element types
     richTextElementConfigs.forEach((config) => {
-      RichTextElements.register(core, config);
+      RTElements.register(core, config);
     });
 
     // Load rich text elements
-    RichTextElements.load(core, richTextElements);
+    RTElements.load(core, richTextElements);
 
     // Load rich text documents
-    RichTextDocuments.load(core, richTextDocuments);
+    RTDocuments.load(core, richTextDocuments);
   });
 }
 
 export function cleanup() {
   act(() => {
     // Clear registered rich text element types
-    RichTextElements.clearRegistered();
+    RTElements.clearRegistered();
 
     // Clear rich text elements
-    RichTextElements.clearElements();
+    RTElements.clearElements();
 
     // Clear rich text documents
-    RichTextDocuments.clear();
+    RTDocuments.clear();
 
     // Clear all mock functions
     jest.clearAllMocks();

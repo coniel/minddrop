@@ -1,5 +1,5 @@
 import { ParentReferences } from '@minddrop/core';
-import { RichTextElement } from '@minddrop/rich-text';
+import { RTElement } from '@minddrop/rich-text';
 import { Text, Node, Path } from 'slate';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
@@ -37,11 +37,11 @@ export function withParentReferences(
       // Get the parent element if there is one
       const parent =
         operation.path.length > 1
-          ? (Node.get(editor, Path.parent(operation.path)) as RichTextElement)
+          ? (Node.get(editor, Path.parent(operation.path)) as RTElement)
           : null;
 
       // The node is a rich text element
-      let element = operation.node as RichTextElement;
+      let element = operation.node as RTElement;
 
       // Check if the document is already present as a parent on the element
       const hasDocumentAsParent = ParentReferences.getIds(
@@ -102,11 +102,11 @@ export function withParentReferences(
       }
 
       // Get the element which was split
-      const splitElement = Node.get(editor, operation.path) as RichTextElement;
+      const splitElement = Node.get(editor, operation.path) as RTElement;
       // The path of the element created as a result of the split
       const newElementPath = Path.next(operation.path);
       // Get the new element
-      const element = Node.get(editor, newElementPath) as RichTextElement;
+      const element = Node.get(editor, newElementPath) as RTElement;
 
       // Update the element's child elements, removing the old
       // parent reference and adding a reference to the new one.
@@ -154,8 +154,8 @@ export function withParentReferences(
       }
 
       // Affected nodes are a elements
-      const deletedElement = mergeNode as RichTextElement;
-      const element = mergedIntoNode as RichTextElement;
+      const deletedElement = mergeNode as RTElement;
+      const element = mergedIntoNode as RTElement;
 
       // Update the element's child elements, removing the old
       // parent reference and adding a reference to the new one.

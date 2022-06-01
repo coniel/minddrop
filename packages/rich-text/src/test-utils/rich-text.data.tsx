@@ -1,11 +1,11 @@
 import React from 'react';
+import { Resources } from '@minddrop/resources';
 import { generateId } from '@minddrop/utils';
-import { generateRichTextDocument } from '../generateRichTextDocument';
 import {
-  RichTextBlockElement,
-  RichTextBlockElementConfig,
-  RichTextInlineElement,
-  RichTextInlineElementConfig,
+  RTBlockElement,
+  RTBlockElementConfig,
+  RTInlineElement,
+  RTInlineElementConfig,
 } from '../types';
 import { toPlainText } from '../toPlainText';
 
@@ -20,7 +20,7 @@ const richTextDoc4Id = generateId();
 /* ******************************* */
 
 // Heading element
-export const headingElementConfig: RichTextBlockElementConfig = {
+export const headingElementConfig: RTBlockElementConfig = {
   type: 'heading-1',
   level: 'block',
   component: ({ children, attributes }) => (
@@ -29,7 +29,7 @@ export const headingElementConfig: RichTextBlockElementConfig = {
 };
 
 // Paragraph element
-export const paragraphElementConfig: RichTextBlockElementConfig = {
+export const paragraphElementConfig: RTBlockElementConfig = {
   type: 'paragraph',
   level: 'block',
   initializeData: (dataInsert) => ({
@@ -45,10 +45,7 @@ export interface TestToDoElementData {
   done: boolean;
 }
 
-export type TestToDoElement = RichTextBlockElement<'to-do'> &
-  TestToDoElementData;
-
-export const toDoElementConfig: RichTextBlockElementConfig<TestToDoElement> = {
+export const toDoElementConfig: RTBlockElementConfig<TestToDoElementData> = {
   type: 'to-do',
   level: 'block',
   initializeData: () => ({ done: false }),
@@ -61,26 +58,22 @@ export const toDoElementConfig: RichTextBlockElementConfig<TestToDoElement> = {
 export interface TestBlockEquationElementData {
   expression: string;
 }
-export type TestBlockEquationElement = RichTextBlockElement<'block-equation'> &
-  TestBlockEquationElementData;
 
-export const blockEquationElementConfig: RichTextBlockElementConfig<
-  TestBlockEquationElement,
-  TestBlockEquationElementData
-> = {
-  type: 'block-equation',
-  level: 'block',
-  void: true,
-  toPlainText: (element) => element.expression,
-  initializeData: () => ({ expression: '' }),
-  convertData: (element) => ({ expression: toPlainText(element) }),
-  component: ({ attributes, children, element }) => (
-    <div {...attributes}>
-      {element}
-      {children}
-    </div>
-  ),
-};
+export const blockEquationElementConfig: RTBlockElementConfig<TestBlockEquationElementData> =
+  {
+    type: 'block-equation',
+    level: 'block',
+    void: true,
+    toPlainText: (element) => element.expression,
+    initializeData: () => ({ expression: '' }),
+    convertData: (element) => ({ expression: toPlainText(element) }),
+    component: ({ attributes, children, element }) => (
+      <div {...attributes}>
+        {element}
+        {children}
+      </div>
+    ),
+  };
 
 /* ******************************** */
 /* Rich text inline element configs */
@@ -90,13 +83,7 @@ export interface TestLinkElementData {
   url: string;
 }
 
-export type TestLinkElement = RichTextInlineElement<'link'> &
-  TestLinkElementData;
-
-export const linkElementConfig: RichTextInlineElementConfig<
-  TestLinkElement,
-  TestLinkElementData
-> = {
+export const linkElementConfig: RTInlineElementConfig<TestLinkElementData> = {
   level: 'inline',
   type: 'link',
   initializeData: () => ({ url: '' }),
@@ -111,25 +98,20 @@ export interface TestInlineEquationElementData {
   expression: string;
 }
 
-export type TestInlineEquationElement =
-  RichTextInlineElement<'inline-equation'> & TestInlineEquationElementData;
-
-export const inlineEquationElementConfig: RichTextInlineElementConfig<
-  TestInlineEquationElement,
-  TestBlockEquationElementData
-> = {
-  level: 'inline',
-  type: 'inline-equation',
-  void: true,
-  initializeData: () => ({ expression: '' }),
-  toPlainText: (element) => element.expression,
-  component: ({ attributes, children, element }) => (
-    <span {...attributes}>
-      {element.expression}
-      {children}
-    </span>
-  ),
-};
+export const inlineEquationElementConfig: RTInlineElementConfig<TestBlockEquationElementData> =
+  {
+    level: 'inline',
+    type: 'inline-equation',
+    void: true,
+    initializeData: () => ({ expression: '' }),
+    toPlainText: (element) => element.expression,
+    component: ({ attributes, children, element }) => (
+      <span {...attributes}>
+        {element.expression}
+        {children}
+      </span>
+    ),
+  };
 
 /* ************************ */
 /* Rich text block elements */
@@ -140,29 +122,34 @@ export const headingElement1PlainText = 'Position and its derivatives';
 export const headingElement2PlainText = 'Classical mechanics';
 export const headingElement3PlainText = 'Law of inertia';
 export const headingElement4PlainText = 'Acceleration';
-export const headingElement1: RichTextBlockElement = {
-  id: generateId(),
-  type: 'heading-1',
-  parents: [{ type: 'rich-text-document', id: richTextDoc1Id }],
-  children: [{ text: headingElement1PlainText }],
+export const headingElement1: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'heading-1',
+    children: [{ text: headingElement1PlainText }],
+  }),
+  id: 'heading-elem-1',
+  parents: [{ resource: 'rich-text:document', id: richTextDoc1Id }],
 };
-export const headingElement2: RichTextBlockElement = {
-  id: generateId(),
-  type: 'heading-1',
-  parents: [{ type: 'rich-text-document', id: richTextDoc2Id }],
-  children: [{ text: headingElement2PlainText }],
+export const headingElement2: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'heading-1',
+    children: [{ text: headingElement2PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc2Id }],
 };
-export const headingElement3: RichTextBlockElement = {
-  id: generateId(),
-  type: 'heading-1',
-  parents: [{ type: 'rich-text-document', id: richTextDoc3Id }],
-  children: [{ text: headingElement3PlainText }],
+export const headingElement3: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'heading-1',
+    children: [{ text: headingElement3PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc3Id }],
 };
-export const headingElement4: RichTextBlockElement = {
-  id: generateId(),
-  type: 'heading-1',
-  parents: [{ type: 'rich-text-document', id: richTextDoc4Id }],
-  children: [{ text: headingElement4PlainText }],
+export const headingElement4: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'heading-1',
+    children: [{ text: headingElement4PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc4Id }],
 };
 
 // Paragraphs
@@ -175,82 +162,73 @@ export const paragraphElement3PlainText =
 export const paragraphElement4PlainText =
   'The acceleration, or rate of change of velocity, is the derivative of the velocity with respect to time.';
 export const blockEquationElement1PlainText = 'e=mc^2';
-export const paragraphElement1: RichTextBlockElement = {
-  id: generateId(),
-  type: 'paragraph',
-  parents: [{ type: 'rich-text-document', id: richTextDoc1Id }],
-  children: [{ text: paragraphElement1PlainText }],
+export const paragraphElement1: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'paragraph',
+    children: [{ text: paragraphElement1PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc1Id }],
 };
-export const paragraphElement2: RichTextBlockElement = {
-  id: generateId(),
-  type: 'paragraph',
-  parents: [{ type: 'rich-text-document', id: richTextDoc2Id }],
-  children: [
-    {
-      text: paragraphElement2PlainText,
-    },
-  ],
+export const paragraphElement2: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'paragraph',
+    children: [{ text: paragraphElement2PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc2Id }],
 };
-export const paragraphElement3: RichTextBlockElement = {
-  id: generateId(),
-  type: 'paragraph',
-  parents: [{ type: 'rich-text-document', id: richTextDoc3Id }],
-  children: [
-    {
-      text: paragraphElement3PlainText,
-    },
-  ],
+export const paragraphElement3: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'paragraph',
+    children: [{ text: paragraphElement3PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc3Id }],
 };
-export const paragraphElement4: RichTextBlockElement = {
-  id: generateId(),
-  type: 'paragraph',
-  parents: [{ type: 'rich-text-document', id: richTextDoc4Id }],
-  children: [
-    {
-      text: paragraphElement4PlainText,
-    },
-  ],
+export const paragraphElement4: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'paragraph',
+    children: [{ text: paragraphElement4PlainText }],
+  }),
+  parents: [{ resource: 'rich-text:document', id: richTextDoc4Id }],
 };
-export const emptyParagraphElement: RichTextBlockElement = {
-  id: generateId(),
-  type: 'paragraph',
-  parents: [],
-  children: [{ text: '' }],
+export const emptyParagraphElement: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  }),
 };
 
 // Block equations
-export const blockEquationElement1: TestBlockEquationElement = {
-  id: generateId(),
-  type: 'block-equation',
-  parents: [],
-  expression: blockEquationElement1PlainText,
+export const blockEquationElement1: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'block-equation',
+    expression: blockEquationElement1PlainText,
+  }),
 };
 
 // To-dos
-
-export const toDoElementCompleted1: TestToDoElement = {
-  id: generateId(),
-  type: 'to-do',
-  parents: [],
-  done: true,
-  children: [{ text: '' }],
+export const toDoElementCompleted1: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'to-do',
+    done: true,
+    children: [{ text: '' }],
+  }),
 };
 
-export const toDoElementIncomplete1: TestToDoElement = {
-  id: generateId(),
-  type: 'to-do',
-  parents: [],
-  done: true,
-  children: [{ text: '' }],
+export const toDoElementIncomplete1: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'to-do',
+    done: true,
+    children: [{ text: '' }],
+  }),
 };
 
 // Unregistered element type
 
-export const unregisteredElement: RichTextBlockElement = {
-  id: generateId(),
-  type: 'no-registered',
-  parents: [],
-  children: [{ text: '' }],
+export const unregisteredElement: RTBlockElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'no-registered',
+    children: [{ text: '' }],
+  }),
 };
 
 /* ************************* */
@@ -258,19 +236,19 @@ export const unregisteredElement: RichTextBlockElement = {
 /* ************************* */
 
 export const linkElement1PlainText = 'MindDrop website';
-export const linkElement1: TestLinkElement = {
-  type: 'link',
-  id: generateId(),
-  url: 'https://minddrop.app',
-  parents: [],
-  children: [{ text: linkElement1PlainText }],
+export const linkElement1: RTInlineElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'link',
+    url: 'https://minddrop.app',
+    children: [{ text: linkElement1PlainText }],
+  }),
 };
 export const inlineEquationElement1PlainText = 'e=mc^2';
-export const inlineEquationElement1: TestInlineEquationElement = {
-  type: 'inline-equation',
-  id: generateId(),
-  expression: inlineEquationElement1PlainText,
-  parents: [],
+export const inlineEquationElement1: RTInlineElement = {
+  ...Resources.generateDocument('rich-text:element', {
+    type: 'inline-equation',
+    expression: inlineEquationElement1PlainText,
+  }),
 };
 
 /* ******************* */
@@ -282,25 +260,25 @@ export const richTextDocument2PlainText = `${headingElement2PlainText}\n\n${para
 export const richTextDocument3PlainText = `${headingElement3PlainText}\n\n${paragraphElement3PlainText}`;
 export const richTextDocument4PlainText = `${headingElement4PlainText}\n\n${paragraphElement4PlainText}`;
 export const richTextDocument1 = {
-  ...generateRichTextDocument({
+  ...Resources.generateDocument('rich-text:document', {
     children: [headingElement1.id, paragraphElement1.id],
   }),
   id: richTextDoc1Id,
 };
 export const richTextDocument2 = {
-  ...generateRichTextDocument({
+  ...Resources.generateDocument('rich-text:document', {
     children: [headingElement2.id, paragraphElement2.id],
   }),
   id: richTextDoc2Id,
 };
 export const richTextDocument3 = {
-  ...generateRichTextDocument({
+  ...Resources.generateDocument('rich-text:document', {
     children: [headingElement3.id, paragraphElement3.id],
   }),
   id: richTextDoc3Id,
 };
 export const richTextDocument4 = {
-  ...generateRichTextDocument({
+  ...Resources.generateDocument('rich-text:document', {
     children: [headingElement4.id, paragraphElement4.id],
   }),
   id: richTextDoc4Id,

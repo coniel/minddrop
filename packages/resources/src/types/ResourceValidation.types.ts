@@ -1,5 +1,6 @@
 import { ContentColor } from '@minddrop/core';
 import {
+  BaseValidator,
   BaseFieldValidator,
   StringValidator,
   NumberValidator,
@@ -13,6 +14,7 @@ import {
   ObjectValidator,
   MultiTypeValidator,
 } from '@minddrop/utils';
+import { ResourceReference } from './ResourceReference.types';
 import { ResourceDocument, RDData } from './ResourceDocument.types';
 import {
   TypedResourceDocument,
@@ -20,7 +22,8 @@ import {
   TRDTypeData,
 } from './TypedResourceDocument.types';
 
-export interface ResourceIdValidator {
+export interface ResourceIdValidator
+  extends BaseValidator<'resource-id', string> {
   /**
    * The field value type.
    */
@@ -39,7 +42,8 @@ export interface ResourceIdValidator {
   addAsParent?: boolean;
 }
 
-export interface ResourceIdsValidator {
+export interface ResourceIdsValidator
+  extends BaseValidator<'resource-ids', string[]> {
   /**
    * The field value type.
    */
@@ -58,14 +62,16 @@ export interface ResourceIdsValidator {
   addAsParent?: boolean;
 }
 
-export interface ResourceReferenceValidator {
+export interface ResourceReferenceValidator
+  extends BaseValidator<'resource-reference', ResourceReference> {
   /**
    * The field value type.
    */
   type: 'resource-reference';
 }
 
-export interface ResourceReferencesValidator {
+export interface ResourceReferencesValidator
+  extends BaseValidator<'resource-references', ResourceReference[]> {
   /**
    * The field value type.
    */
@@ -78,7 +84,8 @@ export interface ResourceReferencesValidator {
   allowEmpty?: boolean;
 }
 
-export interface ContentColorValidator {
+export interface ContentColorValidator
+  extends BaseValidator<'content-color', ContentColor> {
   /**
    * The field value type.
    */
@@ -108,8 +115,8 @@ export type ResourceFieldValidator = (
   | EnumValidator
   | SetValidator
   | RecordValidator
-  | ArrayValidator
-  | ObjectValidator
+  | ArrayValidator<ResourceFieldValidator>
+  | ObjectValidator<ResourceFieldValidator>
   | MultiTypeValidator<ResourceFieldValidator>
   // Resource validator types
   | ResourceIdValidator

@@ -13,7 +13,7 @@ import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
 import { DBApi, initializeResourceConfigs } from '@minddrop/pouchdb';
 import { PersistentStore } from '@minddrop/persistent-store';
-import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
+import { registerDefaultRTElementTypes } from '@minddrop/rich-text-editor';
 import { Topics } from '@minddrop/topics';
 import { Views } from '@minddrop/views';
 import { HomeView } from '../HomeView';
@@ -54,7 +54,7 @@ export async function initializeApp(
   await initializeResourceConfigs(core, database);
 
   // Register default rich text element types
-  registerDefaultRichTextElementTypes(core);
+  registerDefaultRTElementTypes(core);
 
   // Initialize non-core extensions
   Extensions.initialize(core, extensions);

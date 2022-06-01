@@ -33,11 +33,13 @@ export function registerResourceType<
     TCustomTypeConfigOptions
   >,
 ): void {
-  // Ensure that the data schema is valid
-  validateTypedResourceDataSchema(
-    resourceConfig.resource,
-    typeConfig.dataSchema,
-  );
+  if (typeConfig.dataSchema) {
+    // Ensure that the data schema is valid
+    validateTypedResourceDataSchema(
+      resourceConfig.resource,
+      typeConfig.dataSchema,
+    );
+  }
 
   // Add the extension ID to the config
   const registeredTypeConfig = { ...typeConfig, extension: core.extensionId };

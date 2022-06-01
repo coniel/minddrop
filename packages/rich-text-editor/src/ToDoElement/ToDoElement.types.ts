@@ -1,9 +1,6 @@
-import {
-  RichTextBlockElement,
-  RichTextBlockElementProps,
-} from '@minddrop/rich-text';
+import { RTBlockElement, RTBlockElementProps } from '@minddrop/rich-text';
 
-export interface ToDoElement extends RichTextBlockElement {
+export interface ToDoElement extends RTBlockElement {
   /**
    * The element type, always 'to-do'.
    */
@@ -15,4 +12,4 @@ export interface ToDoElement extends RichTextBlockElement {
   done: boolean;
 }
 
-export type ToDoElementProps = RichTextBlockElementProps<ToDoElement>;
+export type ToDoElementProps = RTBlockElementProps<ToDoElement>;

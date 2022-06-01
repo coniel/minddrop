@@ -1,7 +1,7 @@
-import { RichTextBlockElementConfig } from '@minddrop/rich-text';
+import { RTBlockElementConfig } from '@minddrop/rich-text';
 import { ParagraphElementComponent } from './ParagraphElementComponent';
 
-export const ParagraphElementConfig: RichTextBlockElementConfig = {
+export const ParagraphElementConfig: RTBlockElementConfig = {
   type: 'paragraph',
   level: 'block',
   component: ParagraphElementComponent,

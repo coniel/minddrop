@@ -1,8 +1,8 @@
 import React from 'react';
-import { RichTextElementProps } from '../types';
+import { RTElementProps } from '../types';
 import './ParagraphElementComponent.css';
 
-export const ParagraphElementComponent: React.FC<RichTextElementProps> = ({
+export const ParagraphElementComponent: React.FC<RTElementProps> = ({
   children,
   attributes,
 }) => (

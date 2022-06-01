@@ -1,8 +1,8 @@
 import {
-  RichTextBlockElementConfig,
-  RichTextElement,
-  RichTextElements,
-  RichTextInlineElementConfig,
+  RTBlockElementConfig,
+  RTElement,
+  RTElements,
+  RTInlineElementConfig,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { Node, Editor } from 'slate';
@@ -18,7 +18,7 @@ const {
   linkElementConfig,
 } = RICH_TEXT_TEST_DATA;
 
-const headingConfig: RichTextBlockElementConfig = {
+const headingConfig: RTBlockElementConfig = {
   ...headingElementConfig,
   shortcuts: ['# '],
 };
@@ -26,7 +26,7 @@ const headingConfig: RichTextBlockElementConfig = {
 const linkConfig = {
   ...linkElementConfig,
   shortcuts: ['[['],
-} as RichTextInlineElementConfig;
+} as RTInlineElementConfig;
 
 describe('withBlockShortcuts', () => {
   beforeEach(setup);
@@ -45,7 +45,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // The paragraph element should be converted into a heading element
     expect(element.type).toBe(headingConfig.type);
@@ -62,7 +62,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // The element paragraph should be converted into a heading element
     expect(element.type).toBe(headingConfig.type);
@@ -80,10 +80,10 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Should remove the '# ' shortcut from the text
-    expect(RichTextElements.toPlainText([element])).toBe('');
+    expect(RTElements.toPlainText([element])).toBe('');
   });
 
   it('only runs the shortcut if typed at the start of the block', () => {
@@ -103,7 +103,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 2] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Element type should have remained 'paragraph'
     expect(element.type).toBe(emptyParagraphElement.type);
@@ -130,7 +130,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, 'world');
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // Element type should have remained 'paragraph'
     expect(element.type).toBe(emptyParagraphElement.type);
@@ -153,7 +153,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 1, 0] });
 
     // Get the link element from the document
-    const element = Node.get(editor, [0, 1]) as RichTextElement;
+    const element = Node.get(editor, [0, 1]) as RTElement;
 
     // Element type should have remained 'link'
     expect(element.type).toBe(linkElement1.type);
@@ -171,11 +171,11 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '[[', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as RichTextElement;
+    const element = Node.get(editor, [0]) as RTElement;
 
     // The element should have remained a paragraph element
     expect(element.type).toBe(paragraphElement1.type);
     // The shortcut text should not have been removed
-    expect(RichTextElements.toPlainText([element])).toBe('[[');
+    expect(RTElements.toPlainText([element])).toBe('[[');
   });
 });

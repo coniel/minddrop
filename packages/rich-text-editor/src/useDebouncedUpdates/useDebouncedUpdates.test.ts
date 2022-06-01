@@ -1,8 +1,8 @@
 import { act, renderHook } from '@minddrop/test-utils';
 import {
-  RichTextBlockElement,
-  RichTextDocuments,
-  RichTextElements,
+  RTBlockElement,
+  RTDocuments,
+  RTElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor, core } from '../test-utils';
@@ -25,11 +25,11 @@ const {
 const sessionId = 'session-id';
 
 const createEditor = (
-  content: RichTextBlockElement[],
+  content: RTBlockElement[],
   documentId?: string,
 ): [Editor, string] => {
   // Create a new rich text document
-  const document = RichTextDocuments.create(core, {
+  const document = RTDocuments.create(core, {
     children: content.map((element) => element.id),
   });
 
@@ -86,9 +86,9 @@ describe('withDebouncedUpdates', () => {
   });
 
   it('creates elements in sequence', () => {
-    // Spy on the RichTextElements.create method to determine
+    // Spy on the RTElements.create method to determine
     // the order in which the inserted elements will be created.
-    jest.spyOn(RichTextElements, 'create');
+    jest.spyOn(RTElements, 'create');
 
     // Create an editor containing a paragraph element
     const [editor, documentId] = createEditor([paragraphElement1]);
@@ -113,14 +113,14 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Should have created 3 elements
-    expect(RichTextElements.create).toHaveBeenCalledTimes(3);
+    expect(RTElements.create).toHaveBeenCalledTimes(3);
     // Should create the elements in the order in which they were inserted
     // @ts-ignore
-    expect(RichTextElements.create.mock.calls[0][1]).toEqual(paragraph2);
+    expect(RTElements.create.mock.calls[0][1]).toEqual(paragraph2);
     // @ts-ignore
-    expect(RichTextElements.create.mock.calls[1][1]).toEqual(paragraph3);
+    expect(RTElements.create.mock.calls[1][1]).toEqual(paragraph3);
     // @ts-ignore
-    expect(RichTextElements.create.mock.calls[2][1]).toEqual(paragraph4);
+    expect(RTElements.create.mock.calls[2][1]).toEqual(paragraph4);
   });
 
   it('updates elements', () => {
@@ -143,7 +143,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated element
-    const element = RichTextElements.get(paragraphElement1.id);
+    const element = RTElements.get(paragraphElement1.id);
 
     // Element should contain the updated text
     expect(element.children).toEqual([{ text: 'Hello world' }]);
@@ -170,7 +170,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the deleted element
-    const element = RichTextElements.get(paragraphElement2.id);
+    const element = RTElements.get(paragraphElement2.id);
 
     // Element should be deleted
     expect(element.deleted).toBe(true);
@@ -194,7 +194,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RichTextDocuments.get(documentId);
+    const document = RTDocuments.get(documentId);
 
     // Document children should be updated
     expect(document.children).toEqual([
@@ -204,8 +204,8 @@ describe('withDebouncedUpdates', () => {
   });
 
   it('does not set document children if empty', () => {
-    // Spy on RichTextDocuments.setChildren to check if it was called
-    jest.spyOn(RichTextDocuments, 'setChildren');
+    // Spy on RTDocuments.setChildren to check if it was called
+    jest.spyOn(RTDocuments, 'setChildren');
 
     // Create an editor containing an empty paragraph element
     const [editor, documentId] = createEditor([
@@ -227,7 +227,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Should not set document children
-    expect(RichTextDocuments.setChildren).not.toHaveBeenCalled();
+    expect(RTDocuments.setChildren).not.toHaveBeenCalled();
   });
 
   it('changes the document revision if a non root level element was created', () => {
@@ -248,7 +248,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RichTextDocuments.get(richTextDocument1.id);
+    const document = RTDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
@@ -282,7 +282,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RichTextDocuments.get(richTextDocument1.id);
+    const document = RTDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
@@ -311,16 +311,16 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RichTextDocuments.get(richTextDocument1.id);
+    const document = RTDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
   });
 
   it('uses the `setChildren` method to change the document revision if children have changed', () => {
-    // Spy on the `RichTextDocuments.setRevision` method to make sure
+    // Spy on the `RTDocuments.setRevision` method to make sure
     // that it is used to set the new revision.
-    jest.spyOn(RichTextDocuments, 'setRevision');
+    jest.spyOn(RTDocuments, 'setRevision');
 
     // Create an editor containing a paragraph element
     const [editor] = createEditor([paragraphElement1], richTextDocument1.id);
@@ -339,7 +339,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RichTextDocuments.get(richTextDocument1.id);
+    const document = RTDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
@@ -347,7 +347,7 @@ describe('withDebouncedUpdates', () => {
     expect(
       useRichTextEditorStore.getState().sessions[sessionId].documentRevisions,
     ).toContain(document.revision);
-    // Should not call `RichTextDocuments.setRevision`
-    expect(RichTextDocuments.setRevision).not.toHaveBeenCalled();
+    // Should not call `RTDocuments.setRevision`
+    expect(RTDocuments.setRevision).not.toHaveBeenCalled();
   });
 });

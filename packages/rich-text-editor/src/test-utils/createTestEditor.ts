@@ -1,4 +1,4 @@
-import { RichTextBlockElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RTBlockElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { Transforms } from '../Transforms';
 import { addChildrenToVoidElements, createEditor } from '../utils';
 
@@ -12,7 +12,7 @@ const { richTextDocument1 } = RICH_TEXT_TEST_DATA;
  * @returns A new editor.
  */
 export function createTestEditor(
-  content: RichTextBlockElement[] = [],
+  content: RTBlockElement[] = [],
   documentId = richTextDocument1.id,
 ) {
   // Create an editor

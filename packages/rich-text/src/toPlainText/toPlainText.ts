@@ -1,18 +1,16 @@
 import { Node, Element } from 'slate';
-import { getRichTextElementConfig } from '../getRichTextElementConfig';
-import { RichTextElement } from '../types';
+import { RTElementsResource } from '../RTElementsResource';
+import { RTElement } from '../types';
 
 /**
  * Converts rich text elements to a plain text string.
  * Void elements are converted using their `toPlainText`method.
  * If they do not have such a method, they are omited.
  *
- * @param element The rich text element(s) to convert to plain text.
+ * @param element - The rich text element(s) to convert to plain text.
  * @returns The plain text.
  */
-export function toPlainText(
-  element: RichTextElement | RichTextElement[],
-): string {
+export function toPlainText(element: RTElement | RTElement[]): string {
   // Wrap a single element into an array
   const elements = Array.isArray(element) ? element : [element];
 
@@ -24,7 +22,7 @@ export function toPlainText(
       }
 
       // Get the element's configuration object
-      const config = getRichTextElementConfig(element.type);
+      const config = RTElementsResource.getTypeConfig(element.type);
 
       if (config.toPlainText) {
         // If the element has a 'toPlainText' method, use it

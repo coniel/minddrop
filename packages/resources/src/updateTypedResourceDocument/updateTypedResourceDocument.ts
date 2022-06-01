@@ -98,7 +98,7 @@ export function updateTypedResourceDocument<
     | RDDeleteUpdateData
     | RDRestoreUpdateData = {};
   Object.keys(data).forEach((key) => {
-    if (typeConfig.dataSchema[key]) {
+    if (typeConfig.dataSchema && typeConfig.dataSchema[key]) {
       typeData[key] = data[key];
     } else {
       baseData[key] = data[key];

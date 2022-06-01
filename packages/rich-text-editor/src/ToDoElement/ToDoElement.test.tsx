@@ -4,7 +4,7 @@ import { ToDoElement } from './ToDoElement.types';
 import { createTestDocument } from '../test-utils';
 import { RichTextEditor } from '../RichTextEditor';
 import { ToDoElementConfig } from './ToDoElementConfig';
-import { RichTextElements } from '@minddrop/rich-text';
+import { RTElements } from '@minddrop/rich-text';
 
 const toDoElement: ToDoElement = {
   id: 'to-do-element-id',
@@ -43,7 +43,7 @@ describe('ToDoElementComponent', () => {
     });
 
     // Get the updated to-do element
-    let element = RichTextElements.get<ToDoElement>(toDoElement.id);
+    let element = RTElements.get<ToDoElement>(toDoElement.id);
 
     // Should have `done` set to `true`
     expect(element.done).toBe(true);
@@ -59,7 +59,7 @@ describe('ToDoElementComponent', () => {
     });
 
     // Get the updated to-do element
-    element = RichTextElements.get<ToDoElement>(toDoElement.id);
+    element = RTElements.get<ToDoElement>(toDoElement.id);
 
     // Should have `done` set to `false`
     expect(element.done).toBe(false);
