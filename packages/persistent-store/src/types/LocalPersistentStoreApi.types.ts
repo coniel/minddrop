@@ -1,9 +1,9 @@
-import { Core } from 'packages/core/dist';
+import { Core } from '@minddrop/core';
 import { TRDTypeData, TypedResourceApi } from '@minddrop/resources';
 import {
   BaseLocalPersistentStoreData,
   LocalPersistentStoreDataSchema,
-} from './LocalPersistentStore';
+} from './LocalPersistentStore.types';
 
 export interface LocalPersistentStoreApi {
   /**

@@ -1,9 +1,9 @@
-import { Core } from 'packages/core/dist';
+import { Core } from '@minddrop/core';
 import { TRDTypeData, TypedResourceApi } from '@minddrop/resources';
 import {
   BaseGlobalPersistentStoreData,
   GlobalPersistentStoreDataSchema,
-} from './GlobalPersistentStore';
+} from './GlobalPersistentStore.types';
 
 export interface GlobalPersistentStoreApi {
   /**
