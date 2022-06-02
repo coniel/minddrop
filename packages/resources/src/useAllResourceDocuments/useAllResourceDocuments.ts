@@ -21,7 +21,7 @@ export function useAllResourceDocuments<
   filters?: ResourceDocumentFilters,
 ): ResourceDocumentMap<TDocument> {
   // Get all resource documents
-  let { documents } = store.useStore.getState();
+  let { documents } = store.useStore();
 
   if (filters) {
     // Filter the documents if filters were provided

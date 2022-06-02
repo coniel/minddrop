@@ -26,7 +26,7 @@ export function useTypedResourceDocuments<
   filters?: TypedResourceDocumentFilters,
 ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>> {
   // Get all documents from the store
-  const { documents } = store.useStore.getState();
+  const { documents } = store.useStore();
 
   // Get the requested documents
   let requested = documentIds.reduce(

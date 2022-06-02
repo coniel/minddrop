@@ -1,4 +1,4 @@
-import { renderHook } from '@minddrop/test-utils';
+import { renderHook, act } from '@minddrop/test-utils';
 import { mapById } from '@minddrop/utils';
 import { setup, cleanup, core } from '../test-utils';
 import { ResourceTypeNotRegisteredError } from '../errors';
@@ -83,12 +83,18 @@ const Api = {
 };
 
 describe('createTypedResource', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    act(() => {
+      setup();
+    });
+  });
 
   afterEach(() => {
-    cleanup();
-    Api.store.clear();
-    Api.typeConfigsStore.clear();
+    act(() => {
+      cleanup();
+      Api.store.clear();
+      Api.typeConfigsStore.clear();
+    });
   });
 
   describe('register', () => {

@@ -21,7 +21,7 @@ export function useTypedResourceDocument<
   documentId: string,
 ): TypedResourceDocument<TBaseData, TTypeData> | null {
   // Get the document from the store
-  const document = store.useStore.getState().documents[
+  const document = store.useStore().documents[
     documentId
   ] as TypedResourceDocument<TBaseData, TTypeData>;
 

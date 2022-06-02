@@ -1,4 +1,4 @@
-import { renderHook } from '@minddrop/test-utils';
+import { renderHook, act } from '@minddrop/test-utils';
 import { mapById } from '@minddrop/utils';
 import { createResourceStore } from '../createResourceStore';
 import {
@@ -77,16 +77,20 @@ describe('resource API', () => {
   let existingDoc2: ResourceDocument<Data>;
 
   afterEach(() => {
-    ResourceApi.store.clear();
-    cleanup();
+    act(() => {
+      ResourceApi.store.clear();
+      cleanup();
+    });
   });
 
   beforeEach(() => {
-    // Register the test resource type
-    ResourceApisStore.register(ResourceApi);
-    // Create a couple of test documents
-    existingDoc1 = ResourceApi.create(core, {});
-    existingDoc2 = ResourceApi.create(core, {});
+    act(() => {
+      // Register the test resource type
+      ResourceApisStore.register(ResourceApi);
+      // Create a couple of test documents
+      existingDoc1 = ResourceApi.create(core, {});
+      existingDoc2 = ResourceApi.create(core, {});
+    });
   });
 
   it('validates the data schema', () => {
@@ -527,10 +531,16 @@ describe('resource API', () => {
         };
 
         beforeEach(() => {
-          // Clear the store
-          ResourceApi.store.clear();
-          // Load test documents
-          ResourceApi.store.load(core, [document1, document2, deletedDocument]);
+          act(() => {
+            // Clear the store
+            ResourceApi.store.clear();
+            // Load test documents
+            ResourceApi.store.load(core, [
+              document1,
+              document2,
+              deletedDocument,
+            ]);
+          });
         });
 
         describe('useDocument', () => {

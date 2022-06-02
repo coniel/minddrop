@@ -23,7 +23,7 @@ export function useResourceDocuments<
   filters?: ResourceDocumentFilters,
 ): ResourceDocumentMap<TDocument> {
   // Get all documents from the store
-  const { documents } = store.useStore.getState();
+  const { documents } = store.useStore();
 
   // Get the requested documents
   let requested = documentIds.reduce(
