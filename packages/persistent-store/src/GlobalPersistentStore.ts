@@ -35,7 +35,7 @@ export const GlobalPersistentStore: GlobalPersistentStoreApi = {
  * Thrown if the extension has not initialized the
  * persistent store.
  */
-export const useLocalPersistentStoreValue = <TValue = unknown>(
+export const useGlobalPersistentStoreValue = <TValue = unknown>(
   core: Core,
   key: string,
   defaultValue: TValue,
