@@ -1,5 +1,9 @@
 import React from 'react';
-import { TRDDataSchema, Resources } from '@minddrop/resources';
+import {
+  TRDDataSchema,
+  Resources,
+  ResourceFieldValidator,
+} from '@minddrop/resources';
 import { ArrayValidator } from '@minddrop/utils';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TopicViewConfig, TopicViewInstance, Topic } from '../types';
@@ -12,7 +16,7 @@ export interface TopicColumnsViewData {
 
 export type TopicColumnsView = TopicViewInstance & TopicColumnsViewData;
 
-const columnValidator: ArrayValidator = {
+const columnValidator: ArrayValidator<ResourceFieldValidator> = {
   type: 'array',
   allowEmpty: true,
   items: {
