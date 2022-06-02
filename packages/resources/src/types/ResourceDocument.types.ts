@@ -44,7 +44,7 @@ export interface RDRootData {
   /**
    * References to the document's parent documents.
    */
-  parents?: ResourceReference[];
+  parents: ResourceReference[];
 
   /**
    * When `true`, the document is deleted.

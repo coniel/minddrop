@@ -19,6 +19,7 @@ export function generateResourceDocument<
     revision: generateId(),
     createdAt: new Date(),
     updatedAt: new Date(),
+    parents: [],
     ...data,
   };
 

@@ -88,6 +88,7 @@ export const tCoastalNavigationView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-coastal-navigation',
   columns: {
@@ -105,6 +106,7 @@ export const tCoastalNavigationView2: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-coastal-navigation',
   columns: {
@@ -122,6 +124,7 @@ export const tOffshoreNavigationView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-offshore-navigation',
   columns: {
@@ -139,6 +142,7 @@ export const tNavigationView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-navigation',
   columns: {
@@ -156,6 +160,7 @@ export const tBoatsView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-boats',
   columns: {
@@ -173,6 +178,7 @@ export const tAnchoringView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-anchoring',
   columns: {
@@ -190,6 +196,7 @@ export const tSailingView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-sailing',
   columns: {
@@ -207,6 +214,7 @@ export const tSailingView2: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-sailing',
   columns: {
@@ -224,6 +232,7 @@ export const tUntitledView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-untitled',
   columns: {
@@ -241,6 +250,7 @@ export const tNoDropsView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-no-drops',
   columns: {
@@ -258,6 +268,7 @@ export const tTwoDropsView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-two-drops',
   columns: {
@@ -275,6 +286,7 @@ export const tSixDropsView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-six-drops',
   columns: {
@@ -292,6 +304,7 @@ export const tEmptyView: TopicColumnsView = {
   revision: 'rev-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  parents: [],
   type: 'minddrop:topic-view:columns',
   topic: 't-empty',
   columns: {
@@ -319,6 +332,7 @@ export const tCoastalNavigation: Topic = {
     views: [tCoastalNavigationView.id, tCoastalNavigationView2.id],
   }),
   parents: [{ resource: 'topics:topic', id: 't-navigation' }],
+  id: 't-coastal-navigation',
 };
 
 export const tOffshoreNavigation: Topic = {
@@ -328,6 +342,7 @@ export const tOffshoreNavigation: Topic = {
     views: [tOffshoreNavigationView.id],
   }),
   parents: [{ resource: 'topics:topic', id: 't-navigation' }],
+  id: 't-offshore-navigation',
 };
 
 export const tNavigation: Topic = {
@@ -348,6 +363,7 @@ export const tBoats: Topic = {
     views: [tBoatsView.id],
   }),
   parents: [{ resource: 'topics:topic', id: 't-sailing' }],
+  id: 't-boats',
 };
 
 export const tAnchoring: Topic = {
@@ -357,6 +373,7 @@ export const tAnchoring: Topic = {
     views: [tAnchoringView.id],
   }),
   parents: [{ resource: 'topics:topic', id: 't-sailing' }],
+  id: 't-anchoring',
 };
 
 export const tSailing: Topic = {
@@ -376,6 +393,7 @@ export const tUntitled: Topic = {
     title: '',
     views: [tUntitledView.id],
   }),
+  id: 't-untitled',
 };
 
 export const tNoDrops: Topic = {
@@ -384,6 +402,7 @@ export const tNoDrops: Topic = {
     title: 'No drops',
     views: [tNoDropsView.id],
   }),
+  id: 't-no-drops',
 };
 
 export const tTwoDrops: Topic = {
@@ -393,6 +412,7 @@ export const tTwoDrops: Topic = {
     views: [tTwoDropsView.id],
     drops: [drop1.id, drop2.id],
   }),
+  id: 't-two-drops',
 };
 
 export const tSixDrops: Topic = {
@@ -402,6 +422,7 @@ export const tSixDrops: Topic = {
     views: [tSixDropsView.id],
     drops: [drop1.id, drop2.id, drop3.id, drop4.id, drop5.id, drop6.id],
   }),
+  id: 't-six-drops',
 };
 
 export const tEmpty: Topic = {
@@ -409,6 +430,7 @@ export const tEmpty: Topic = {
     ...defaultData,
     views: [tEmptyView.id],
   }),
+  id: 't-empty',
 };
 
 export const rootTopicIds = [tSailing.id, tUntitled.id];
