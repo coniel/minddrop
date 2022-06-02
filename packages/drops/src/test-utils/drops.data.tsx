@@ -17,6 +17,7 @@ export const dropConfig: TextDropConfig = {
   dataSchema: { text: { type: 'string' } },
   component: ({ text }) => <div>{text}</div>,
   defaultData: { text: 'Hello world' },
+  initializeData: () => ({ text: 'Hello world' }),
 };
 
 export const registeredTextDropConfig: RegisteredDropTypeConfig = {
