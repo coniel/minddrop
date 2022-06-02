@@ -1,4 +1,4 @@
-import { ViewInstancesApi } from './types';
+import { ViewInstancesApi, ViewInstanceTypeData } from './types';
 import { ViewInstancesResource } from './ViewInstancesResource';
 
 export const ViewInstances: ViewInstancesApi = {
@@ -15,3 +15,13 @@ export const ViewInstances: ViewInstancesApi = {
   removeEventListener: (core, event, callback) =>
     core.removeEventListener(event, callback),
 };
+
+/**
+ * Returns a view instance by ID.
+ *
+ * @param viewInstanceId - The ID of the view instance.
+ * @returns A view instance or `null` if it does not exist.
+ */
+export const useViewInstance = <TData extends ViewInstanceTypeData = {}>(
+  viewInstanceId: string,
+) => ViewInstancesResource.hooks.useDocument<TData>(viewInstanceId);
