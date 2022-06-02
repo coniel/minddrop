@@ -59,7 +59,7 @@ describe('<TopicNavItem />', () => {
     });
 
     const { view, instance } = App.getCurrentView();
-    expect(view.id).toBe('minddrop/topic-view-columns');
+    expect(view.id).toBe('minddrop:topic-view:columns');
     expect(instance.id).toBe(tCoastalNavigationView.id);
   });
 
@@ -97,7 +97,7 @@ describe('<TopicNavItem />', () => {
     const { view, instance } = App.getCurrentView();
     const subtopicId = Topics.get(tCoastalNavigation.id).subtopics.slice(-1)[0];
     const subtopic = Topics.get(subtopicId);
-    expect(view.id).toBe('minddrop/topic-view-columns');
+    expect(view.id).toBe('minddrop:topic-view:columns');
     expect(instance.id).toBe(subtopic.views[0]);
   });
 
