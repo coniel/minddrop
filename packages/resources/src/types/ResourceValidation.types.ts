@@ -114,7 +114,7 @@ export type ResourceFieldValidator = (
   | NullValidator
   | EnumValidator
   | SetValidator
-  | RecordValidator
+  | RecordValidator<ResourceFieldValidator>
   | ArrayValidator<ResourceFieldValidator>
   | ObjectValidator<ResourceFieldValidator>
   | MultiTypeValidator<ResourceFieldValidator>

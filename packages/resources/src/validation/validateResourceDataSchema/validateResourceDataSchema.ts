@@ -32,6 +32,7 @@ const allowedDataTypes = [
   'resource-ids',
   'resource-reference',
   'resource-references',
+  'null',
 ];
 
 /**
