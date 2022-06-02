@@ -3,7 +3,7 @@ import { Topics } from '@minddrop/topics';
 import { Extension } from './topic-view-columns-extension';
 
 const core = initializeCore({
-  appId: 'app-id',
+  appId: 'app',
   extensionId: 'minddrop/topic-view-columns',
 });
 

@@ -15,7 +15,7 @@ import {
 
 const { topics } = TOPICS_TEST_DATA;
 
-export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
+export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 export function setup() {
   // Run the topics extension

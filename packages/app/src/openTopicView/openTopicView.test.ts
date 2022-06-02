@@ -15,7 +15,7 @@ const {
   tCoastalNavigationView2,
 } = TOPICS_TEST_DATA;
 
-const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
+const core = initializeCore({ appId: 'app', extensionId: 'app' });
 const trail = [tSailing.id, tNavigation.id, tCoastalNavigation.id];
 
 describe('openTopicView', () => {

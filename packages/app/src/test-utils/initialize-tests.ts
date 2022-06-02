@@ -34,9 +34,9 @@ const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
 export const globalPersistentStore = { rootTopics: rootTopicIds };
 export const localPersistentStore = { sidebarWidth: 302, expandedTopics: [] };
 
-export const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
+export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 export const viewsCore = initializeCore({
-  appId: 'app-id',
+  appId: 'app',
   extensionId: 'views',
 });
 

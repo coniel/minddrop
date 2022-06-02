@@ -5,7 +5,7 @@ import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 
 const { drop1, dropConfig } = DROPS_TEST_DATA;
 
-const core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
+const core = initializeCore({ appId: 'app', extensionId: 'drops' });
 
 describe('renderDrop', () => {
   beforeAll(() => {

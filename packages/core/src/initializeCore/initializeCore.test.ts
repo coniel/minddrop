@@ -1,7 +1,7 @@
 import { initializeCore } from './initializeCore';
 
-const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
-const core2 = initializeCore({ appId: 'app-id', extensionId: 'topics' });
+const core = initializeCore({ appId: 'app', extensionId: 'app' });
+const core2 = initializeCore({ appId: 'app', extensionId: 'topics' });
 
 describe('initializeCore', () => {
   afterEach(() => {

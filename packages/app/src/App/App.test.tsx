@@ -153,7 +153,7 @@ describe('App', () => {
 
   it('removes all UI extensions added by the extension from a specified location', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
+    const core2 = initializeCore({ appId: 'app', extensionId: 'extension' });
 
     act(() => {
       App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
@@ -168,7 +168,7 @@ describe('App', () => {
 
   it('removes all UI extensions added by the extension', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
-    const core2 = initializeCore({ appId: 'app-id', extensionId: 'extension' });
+    const core2 = initializeCore({ appId: 'app', extensionId: 'extension' });
 
     act(() => {
       App.addUiExtension(core, 'Sidebar:BottomToolbar:Item', config);
