@@ -55,3 +55,23 @@ export const Topics: TopicsApi = {
   removeEventListener: (core, event, callback) =>
     core.removeEventListener(event, callback),
 };
+
+/**
+ * Returns a topic by ID, or `null` if it
+ * does not exist.
+ *
+ * @param topicId - The ID of the topic to retrieve.
+ * @returns A topic or `null`.
+ */
+export const useTopic = (topicId: string) =>
+  TopicsResource.hooks.useDocument(topicId);
+
+/**
+ * Returns a `{ [id]: Topic }` map of topics by ID,
+ * omitting any topics which do not exist.
+ *
+ * @param topicIds - The IDs of the topics to retrieve.
+ * @returns A `{ [id]: Topic }` map of the requested topics.
+ */
+export const useTopics = (topicIds: string[]) =>
+  TopicsResource.hooks.useDocuments(topicIds);
