@@ -1,4 +1,10 @@
-import { useViewInstance, View, ViewInstance, Views } from '@minddrop/views';
+import {
+  useViewInstance,
+  ViewConfig,
+  ViewInstance,
+  Views,
+  ViewInstanceTypeData,
+} from '@minddrop/views';
 import createStore from 'zustand';
 import { AppStore } from '../types';
 
@@ -116,13 +122,13 @@ export const useAppStore = createStore<AppStore>((set) => ({
  *
  * @returns The current view.
  */
-export const useCurrentView = <I extends ViewInstance = ViewInstance>(): {
-  view: View;
-  instance: I | null;
+export const useCurrentView = <TData extends ViewInstanceTypeData = {}>(): {
+  view: ViewConfig;
+  instance: ViewInstance<TData> | null;
 } => {
   const { view: viewId, viewInstance: viewInstanceId } = useAppStore();
 
-  const viewInstance = useViewInstance<I>(viewInstanceId || '');
+  const viewInstance = useViewInstance<TData>(viewInstanceId || '');
 
   return {
     view: Views.get(viewId),

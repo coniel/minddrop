@@ -1,5 +1,5 @@
 import { initializeCore } from '@minddrop/core';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { LocalPersistentStore } from '@minddrop/persistent-store';
 import { act } from '@minddrop/test-utils';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { App } from '../App';
@@ -7,7 +7,7 @@ import { cleanup, setup } from '../test-utils';
 import { openTopicView } from './openTopicView';
 
 const {
-  topicViewColumns,
+  topicViewColumnsConfig,
   tCoastalNavigation,
   tNavigation,
   tSailing,
@@ -31,7 +31,7 @@ describe('openTopicView', () => {
     const currentView = App.getCurrentView();
 
     // tCoastalNavigation has tCoastalNavigationView as its first view
-    expect(currentView.view.id).toEqual(topicViewColumns.id);
+    expect(currentView.view.id).toEqual(topicViewColumnsConfig.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView);
   });
 
@@ -43,7 +43,7 @@ describe('openTopicView', () => {
 
     const currentView = App.getCurrentView();
 
-    expect(currentView.view.id).toEqual(topicViewColumns.id);
+    expect(currentView.view.id).toEqual(topicViewColumnsConfig.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView2);
   });
 
@@ -54,7 +54,7 @@ describe('openTopicView', () => {
 
     const currentView = App.getCurrentView();
 
-    expect(currentView.view.id).toEqual(topicViewColumns.id);
+    expect(currentView.view.id).toEqual(topicViewColumnsConfig.id);
     expect(currentView.instance).toEqual(tCoastalNavigationView2);
   });
 
@@ -64,9 +64,7 @@ describe('openTopicView', () => {
     });
 
     expect(
-      PersistentStore.getLocalValue(core, 'topicViews', {})[
-        tCoastalNavigation.id
-      ],
+      LocalPersistentStore.get(core, 'topicViews', {})[tCoastalNavigation.id],
     ).toBe(tCoastalNavigationView2.id);
   });
 
@@ -75,8 +73,6 @@ describe('openTopicView', () => {
       openTopicView(core, trail);
     });
 
-    expect(PersistentStore.getLocalValue(core, 'topicTrail', [])).toEqual(
-      trail,
-    );
+    expect(LocalPersistentStore.get(core, 'topicTrail', [])).toEqual(trail);
   });
 });

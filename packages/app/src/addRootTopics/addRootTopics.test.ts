@@ -1,9 +1,5 @@
-import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import {
-  PersistentStore,
-  useGlobalPersistentStoreValue,
-} from '@minddrop/persistent-store';
+import { GlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { addRootTopics } from './addRootTopics';
 import { useAppStore } from '../useAppStore';
@@ -17,71 +13,48 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
 describe('addRootTopics', () => {
   beforeEach(() => {
     setup();
-    act(() => {
-      PersistentStore.setGlobalValue(core, 'rootTopics', [tSailing.id]);
-    });
+
+    // Set a test root topic
+    GlobalPersistentStore.set(core, 'rootTopics', [tSailing.id]);
   });
 
-  afterEach(() => {
-    cleanup();
-    act(() => {
-      PersistentStore.clearGlobalCache();
-    });
-  });
+  afterEach(cleanup);
 
   it('adds topic IDs to the app store', () => {
-    const { result } = renderHook(() => useAppStore());
+    // Add a couple of root topics
+    addRootTopics(core, [tAnchoring.id, tNavigation.id]);
 
-    act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
-    });
-
+    // Root topics should be in the app store
     expect(
-      contains(result.current.rootTopics, [tAnchoring.id, tNavigation.id]),
+      contains(useAppStore.getState().rootTopics, [
+        tAnchoring.id,
+        tNavigation.id,
+      ]),
     ).toBeTruthy();
   });
 
   it('adds topic IDs to the persistent store', () => {
-    const { result } = renderHook(() =>
-      useGlobalPersistentStoreValue(core, 'rootTopics'),
-    );
+    // Add a couple of root topics
+    addRootTopics(core, [tAnchoring.id, tNavigation.id]);
 
-    act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
-    });
-
-    expect(result.current).toEqual([
+    // Root topics should be in the persistent store
+    expect(GlobalPersistentStore.get(core, 'rootTopics')).toEqual([
       tSailing.id,
       tAnchoring.id,
       tNavigation.id,
     ]);
   });
 
-  it('adds app as parent to the topic', () => {
-    // Add root topic
-    addRootTopics(core, [tAnchoring.id]);
-
-    // Get the updated topic
-    const topic = Topics.get(tAnchoring.id);
-
-    // Should have app as parent
-    expect(contains(topic.parents, [{ type: 'app', id: 'root' }])).toBeTruthy();
-  });
-
-  it("dispatches a 'app:add-root-topics' event", (done) => {
-    function callback(payload) {
+  it("dispatches a 'app:root-topics:add' event", (done) => {
+    core.addEventListener('app:root-topics:add', (payload) => {
       // Get updated topic
       const topics = Topics.get([tAnchoring.id, tNavigation.id]);
 
       // Payload data should be updated topics
       expect(payload.data).toEqual(topics);
       done();
-    }
-
-    core.addEventListener('app:add-root-topics', callback);
-
-    act(() => {
-      addRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
+
+    addRootTopics(core, [tAnchoring.id, tNavigation.id]);
   });
 });

@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { GlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics } from '@minddrop/topics';
 import { FieldValue } from '@minddrop/utils';
 import { useAppStore } from '../useAppStore';
@@ -16,20 +16,15 @@ export function removeRootTopics(core: Core, topicIds: string[]): void {
   useAppStore.getState().removeRootTopics(topicIds);
 
   // Remove topic IDs to global persistent store
-  PersistentStore.setGlobalValue(
+  GlobalPersistentStore.set(
     core,
     'rootTopics',
     FieldValue.arrayRemove(topicIds),
   );
 
-  // Remove app as parent on topics
-  topicIds.forEach((topicId) => {
-    Topics.removeParents(core, topicId, [{ type: 'app', id: 'root' }]);
-  });
-
   // Get the updated topics
   const topics = Topics.get(topicIds);
 
-  // Dispatch app:remove-root-topics event
-  core.dispatch('app:remove-root-topics', topics);
+  // Dispatch app:root-topics:remove event
+  core.dispatch('app:root-topics:remove', topics);
 }

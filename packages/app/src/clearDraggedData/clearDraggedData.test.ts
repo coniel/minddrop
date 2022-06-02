@@ -20,8 +20,8 @@ describe('clearDraggedData', () => {
     });
   });
 
-  it('dispatches a `app:drag-end`', (done) => {
-    core.addEventListener('app:drag-end', () => {
+  it('dispatches a `app:drag:end`', (done) => {
+    core.addEventListener('app:drag:end', () => {
       done();
     });
 

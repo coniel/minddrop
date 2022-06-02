@@ -5,7 +5,7 @@ import { selectDrops } from '../selectDrops';
 import { setup, cleanup, core } from '../test-utils';
 import { useSelectedDrops } from './useSelectedDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('useSelectedDrops', () => {
   beforeEach(setup);
@@ -16,10 +16,10 @@ describe('useSelectedDrops', () => {
     const { result } = renderHook(() => useSelectedDrops());
 
     act(() => {
-      selectDrops(core, [textDrop1.id, textDrop2.id]);
+      selectDrops(core, [drop1.id, drop2.id]);
     });
 
-    expect(result.current).toEqual(mapById([textDrop1, textDrop2]));
+    expect(result.current).toEqual(mapById([drop1, drop2]));
   });
 
   it('returns {} if no drops are selected', () => {

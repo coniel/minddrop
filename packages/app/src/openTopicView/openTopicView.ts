@@ -1,5 +1,5 @@
 import { Core, initializeCore } from '@minddrop/core';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { LocalPersistentStore } from '@minddrop/persistent-store';
 import { Topics } from '@minddrop/topics';
 import { FieldValue } from '@minddrop/utils';
 import { App } from '../App';
@@ -28,7 +28,7 @@ export function openTopicView(
   // The topic's default view instance
   const defaultView = topic.views[0];
   // The previously opened view for this topic
-  const previousView = PersistentStore.getLocalValue(appCore, 'topicViews', {})[
+  const previousView = LocalPersistentStore.get(appCore, 'topicViews', {})[
     topicId
   ];
 
@@ -42,7 +42,7 @@ export function openTopicView(
 
   // Save the view instance as the topic's last opened
   // view instance in the local persistent store.
-  PersistentStore.setLocalValue(
+  LocalPersistentStore.set(
     appCore,
     'topicViews',
     FieldValue.objectUnion({
@@ -51,5 +51,5 @@ export function openTopicView(
   );
 
   // Save the trail in the local persistent store
-  PersistentStore.setLocalValue(appCore, 'topicTrail', trail);
+  LocalPersistentStore.set(appCore, 'topicTrail', trail);
 }

@@ -1,5 +1,6 @@
 import { ComponentType } from 'react';
 import { Core, DataInsert } from '@minddrop/core';
+import { ResourceReference } from '@minddrop/resources';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
 import { SlotProps } from '../Slot';
@@ -12,15 +13,8 @@ import {
   RemoveRootTopicsEventCallback,
   UnarchiveRootTopicsEvent,
   UnarchiveRootTopicsEventCallback,
-  MoveSubtopicsToRootEvent,
-  MoveSubtopicsToRootEventData,
   MoveRootTopicsEvent,
   MoveRootTopicsEventCallback,
-} from './AppEvents.types';
-import { View, ViewInstance } from '@minddrop/views';
-import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
-import { Drop, DropMap, DropParentReference } from '@minddrop/drops';
-import {
   ArchiveRootTopicsEvent,
   ArchiveRootTopicsEventCallback,
   ClearSelectedDropsEvent,
@@ -29,7 +23,14 @@ import {
   SelectDropsEventCallback,
   UnselectDropsEvent,
   UnselectDropsEventCallback,
-} from '.';
+} from './AppEvents.types';
+import {
+  ViewConfig,
+  ViewInstance,
+  ViewInstanceTypeData,
+} from '@minddrop/views';
+import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
+import { Drop, DropMap } from '@minddrop/drops';
 
 export interface AppApi {
   /**
@@ -60,9 +61,9 @@ export interface AppApi {
    *
    * @returns The currently open view and view instance.
    */
-  getCurrentView<I extends ViewInstance = ViewInstance>(): {
-    view: View;
-    instance: I | null;
+  getCurrentView<TData extends ViewInstanceTypeData = {}>(): {
+    view: ViewConfig;
+    instance: ViewInstance<TData> | null;
   };
 
   /**
@@ -134,7 +135,7 @@ export interface AppApi {
     topicId: string,
     data: DataInsert,
     metadata?: M,
-  ): Promise<boolean>;
+  ): boolean;
 
   /**
    * Returns root topics in the order they appear in
@@ -266,7 +267,7 @@ export interface AppApi {
    * @param parent The `DropParentReference` of the parent inside which the drop is being rendered.
    * @returns The rendered drop element.
    */
-  renderDrop(drop: Drop, parent?: DropParentReference): React.ReactElement;
+  renderDrop(drop: Drop, parent?: ResourceReference): React.ReactElement;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -277,70 +278,63 @@ export interface AppApi {
     core: Core,
     event: OpenViewEvent,
     callback: OpenViewEventCallback,
-  );
+  ): void;
 
   // Add 'app:add-root-topics' event listener
   addEventListener(
     core: Core,
     event: AddRootTopicsEvent,
     callback: AddRootTopicsEventCallback,
-  );
+  ): void;
 
   // Add 'app:remove-root-topics' event listener
   addEventListener(
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
-  );
-
-  // Add 'app:move-subtopics-root' event listener
-  addEventListener(
-    core: Core,
-    event: MoveSubtopicsToRootEvent,
-    callback: MoveSubtopicsToRootEventData,
-  );
+  ): void;
 
   // Add 'app:move-root-topics' event listener
   addEventListener(
     core: Core,
     event: MoveRootTopicsEvent,
     callback: MoveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Add 'app:unarchive-root-topics' event listener
   addEventListener(
     core: Core,
     event: UnarchiveRootTopicsEvent,
     callback: UnarchiveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Add 'app:archive-root-topics' event listener
   addEventListener(
     core: Core,
     event: ArchiveRootTopicsEvent,
     callback: ArchiveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Add 'app:select-drops' event listener
   addEventListener(
     core: Core,
     event: SelectDropsEvent,
     callback: SelectDropsEventCallback,
-  );
+  ): void;
 
   // Add 'app:unselect-drops' event listener
   addEventListener(
     core: Core,
     event: UnselectDropsEvent,
     callback: UnselectDropsEventCallback,
-  );
+  ): void;
 
   // Add 'app:clear-selected-drops' event listener
   addEventListener(
     core: Core,
     event: ClearSelectedDropsEvent,
     callback: ClearSelectedDropsEventCallback,
-  );
+  ): void;
 
   /* ************************************* */
   /* *** removeEventListener overloads *** */
@@ -358,61 +352,54 @@ export interface AppApi {
     core: Core,
     event: AddRootTopicsEvent,
     callback: AddRootTopicsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:remove-root-topics' event listener
   removeEventListener(
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
-  );
-
-  // Remove 'app:move-subtopics-root' event listener
-  removeEventListener(
-    core: Core,
-    event: MoveSubtopicsToRootEvent,
-    callback: MoveSubtopicsToRootEventData,
-  );
+  ): void;
 
   // Remove 'app:move-root-topics' event listener
   removeEventListener(
     core: Core,
     event: MoveRootTopicsEvent,
     callback: MoveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:archive-root-topics' event listener
   removeEventListener(
     core: Core,
     event: ArchiveRootTopicsEvent,
     callback: ArchiveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:unarchive-root-topics' event listener
   removeEventListener(
     core: Core,
     event: UnarchiveRootTopicsEvent,
     callback: UnarchiveRootTopicsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:select-drops' event listener
   removeEventListener(
     core: Core,
     event: SelectDropsEvent,
     callback: SelectDropsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:unselect-drops' event listener
   removeEventListener(
     core: Core,
     event: UnselectDropsEvent,
     callback: UnselectDropsEventCallback,
-  );
+  ): void;
 
   // Remove 'app:clear-selected-drops' event listener
   removeEventListener(
     core: Core,
     event: ClearSelectedDropsEvent,
     callback: ClearSelectedDropsEventCallback,
-  );
+  ): void;
 }

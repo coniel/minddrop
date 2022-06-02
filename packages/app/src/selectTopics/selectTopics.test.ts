@@ -20,8 +20,8 @@ describe('selectTopics', () => {
     ]);
   });
 
-  it('dispatches a `app:select-topics` event', (done) => {
-    core.addEventListener('app:select-topics', (payload) => {
+  it('dispatches a `app:selection:select-topics` event', (done) => {
+    core.addEventListener('app:selection:select-topics', (payload) => {
       expect(payload.data).toEqual(mapById([tSailing, tAnchoring]));
       done();
     });

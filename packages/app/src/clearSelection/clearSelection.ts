@@ -4,7 +4,7 @@ import { clearSelectedTopics } from '../clearSelectedTopics';
 
 /**
  * Clears the current selection of topics and drops
- * and dispatches a 'app:clear-selection' event.
+ * and dispatches a 'app:selection:clear' event.
  *
  * @param core A MindDrop core instance.
  */
@@ -14,6 +14,6 @@ export function clearSelection(core: Core): void {
   // Clear selected topics
   clearSelectedTopics(core);
 
-  // Dispatch 'app:clear-selection' event
-  core.dispatch('app:clear-selection');
+  // Dispatch 'app:selection:clear' event
+  core.dispatch('app:selection:clear');
 }

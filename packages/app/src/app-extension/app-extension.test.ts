@@ -1,26 +1,64 @@
-import { PersistentStore } from '@minddrop/persistent-store';
-import { onDisable, onRun } from './app-extension';
+import {
+  GlobalPersistentStore,
+  LocalPersistentStore,
+} from '@minddrop/persistent-store';
+import {
+  VIEWS_TEST_DATA,
+  Views,
+  ViewInstances,
+  ViewConfig,
+} from '@minddrop/views';
+import { TOPICS_TEST_DATA, Topics } from '@minddrop/topics';
+import * as ViewsExtension from '@minddrop/views';
+import * as TopicsExtension from '@minddrop/topics';
+import {
+  onDisable,
+  onRun,
+  localPersistentDataSchema,
+  globalPersistentDataSchema,
+} from './app-extension';
 import { App } from '../App';
 import { act, renderHook } from '@minddrop/test-utils';
 import { useAppStore } from '../useAppStore';
-import { cleanup, setup, core } from '../test-utils';
-import { VIEWS_TEST_DATA } from '@minddrop/views';
-import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { core } from '../test-utils';
 
-const { rootTopicIds } = TOPICS_TEST_DATA;
-const { viewInstance1, instanceView, viewInstance2, staticView } =
+const { rootTopicIds, topics } = TOPICS_TEST_DATA;
+const { viewInstance1, instanceViewConfig, viewInstance2, staticViewConfig } =
   VIEWS_TEST_DATA;
 
+export const homeViewConfig: ViewConfig = {
+  id: 'app:home',
+  type: 'static',
+  component: jest.fn(),
+};
+
 describe('app-extension', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    ViewsExtension.onRun(core);
+    TopicsExtension.onRun(core);
+
+    Views.register(core, instanceViewConfig);
+    Views.register(core, staticViewConfig);
+    Views.register(core, homeViewConfig);
+    ViewInstances.store.load(core, [viewInstance1, viewInstance2]);
+    Topics.store.load(core, topics);
+  });
 
   afterEach(() => {
-    cleanup();
-    PersistentStore.clearLocalCache();
+    GlobalPersistentStore.store.clear();
+    GlobalPersistentStore.typeConfigsStore.clear();
+    LocalPersistentStore.store.clear();
+    LocalPersistentStore.typeConfigsStore.clear();
   });
 
   describe('onRun', () => {
+    afterEach(() => onDisable(core));
+
     it('loads the root topics from the global persistent store', () => {
+      GlobalPersistentStore.initialize(core, globalPersistentDataSchema, {
+        rootTopics: rootTopicIds,
+        archivedRootTopics: [],
+      });
       useAppStore.getState().clear();
 
       onRun(core);
@@ -31,32 +69,59 @@ describe('app-extension', () => {
     });
 
     it('loads current view from the local persistent store', () => {
-      PersistentStore.setLocalValue(core, 'view', staticView.id);
-      PersistentStore.setLocalValue(core, 'viewInstance', null);
+      // Initialize the persistent stores
+      LocalPersistentStore.initialize(core, localPersistentDataSchema, {
+        view: 'app:home',
+        viewInstance: null,
+        topicViews: {},
+        topicTrail: [],
+        expandedTopics: [],
+        sidebarWidth: 300,
+      });
+      LocalPersistentStore.set(core, 'view', staticViewConfig.id);
+      LocalPersistentStore.set(core, 'viewInstance', null);
 
       onRun(core);
 
       expect(App.getCurrentView()).toEqual({
-        view: staticView,
+        view: Views.get(staticViewConfig.id),
         instance: null,
       });
     });
 
     it('loads current view instance ID from the local persistent store', () => {
-      PersistentStore.setLocalValue(core, 'view', viewInstance1.view);
-      PersistentStore.setLocalValue(core, 'viewInstance', viewInstance1.id);
+      // Initialize the persistent stores
+      LocalPersistentStore.initialize(core, localPersistentDataSchema, {
+        view: 'app:home',
+        viewInstance: null,
+        topicViews: {},
+        topicTrail: [],
+        expandedTopics: [],
+        sidebarWidth: 300,
+      });
+      LocalPersistentStore.set(core, 'view', viewInstance1.type);
+      LocalPersistentStore.set(core, 'viewInstance', viewInstance1.id);
 
       onRun(core);
 
       expect(App.getCurrentView()).toEqual({
-        view: instanceView,
+        view: Views.get(instanceViewConfig.id),
         instance: viewInstance1,
       });
     });
 
     it('updates the current view in the local persistent on change', (done) => {
-      PersistentStore.setLocalValue(core, 'view', viewInstance1.view);
-      PersistentStore.setLocalValue(core, 'viewInstance', viewInstance1.id);
+      // Initialize the persistent stores
+      LocalPersistentStore.initialize(core, localPersistentDataSchema, {
+        view: 'app:home',
+        viewInstance: null,
+        topicViews: {},
+        topicTrail: [],
+        expandedTopics: [],
+        sidebarWidth: 300,
+      });
+      LocalPersistentStore.set(core, 'view', viewInstance1.type);
+      LocalPersistentStore.set(core, 'viewInstance', viewInstance1.id);
 
       onRun(core);
 
@@ -64,11 +129,11 @@ describe('app-extension', () => {
         App.openViewInstance(core, viewInstance2.id);
       });
 
-      core.addEventListener('persistent-store:update-local', () => {
-        expect(PersistentStore.getLocalValue(core, 'view')).toEqual(
-          viewInstance2.view,
+      core.addEventListener('persistent-stores:local:update', () => {
+        expect(LocalPersistentStore.get(core, 'view')).toEqual(
+          viewInstance2.type,
         );
-        expect(PersistentStore.getLocalValue(core, 'viewInstance')).toEqual(
+        expect(LocalPersistentStore.get(core, 'viewInstance')).toEqual(
           viewInstance2.id,
         );
         done();
@@ -99,7 +164,7 @@ describe('app-extension', () => {
       onRun(core);
 
       act(() => {
-        App.addEventListener(core, 'app:open-view', jest.fn());
+        App.addEventListener(core, 'app:view:open', jest.fn());
 
         onDisable(core);
       });

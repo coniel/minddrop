@@ -1,15 +1,33 @@
 import { act, MockDate } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import { ViewConfig, Views, VIEWS_TEST_DATA } from '@minddrop/views';
+import {
+  ViewConfig,
+  ViewInstances,
+  Views,
+  VIEWS_TEST_DATA,
+} from '@minddrop/views';
+import {
+  LocalPersistentStore,
+  GlobalPersistentStore,
+} from '@minddrop/persistent-store';
 import { Extensions, EXTENSIONS_TEST_DATA } from '@minddrop/extensions';
+import * as ExtensionsExtension from '@minddrop/extensions';
+import * as ViewsExtension from '@minddrop/views';
+import * as DropsExtension from '@minddrop/drops';
+import * as TopicsExtension from '@minddrop/topics';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { useAppStore } from '../useAppStore';
-import { PersistentStore } from '@minddrop/persistent-store';
-import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { onRun } from '../app-extension';
 
 const { extensions } = EXTENSIONS_TEST_DATA;
-const { rootTopicIds, topicViewConfigs, topicViewInstances, topics } =
-  TOPICS_TEST_DATA;
+const {
+  rootTopicIds,
+  topicViewConfigs,
+  topicViewInstances,
+  topics,
+  topicViewColumnsConfig,
+} = TOPICS_TEST_DATA;
 const { viewInstances, viewConfigs } = VIEWS_TEST_DATA;
 const { dropTypeConfigs, drops } = DROPS_TEST_DATA;
 
@@ -30,16 +48,26 @@ export const homeViewConfig: ViewConfig = {
 
 export function setup() {
   act(() => {
-    PersistentStore.setGlobalStore(core, globalPersistentStore);
-    PersistentStore.setLocalStore(core, localPersistentStore);
+    [...viewConfigs, homeViewConfig].forEach((view) =>
+      Views.register(core, view),
+    );
+
+    ExtensionsExtension.onRun(core);
+    DropsExtension.onRun(core);
+    ViewsExtension.onRun(core);
+    TopicsExtension.onRun(core);
+
+    Topics.registerView(core, topicViewColumnsConfig);
+
+    onRun(core);
 
     // Register drop types
-    dropTypeConfigs.forEach((config) => Drops.register<Drop>(core, config));
+    dropTypeConfigs.forEach((config) => Drops.register(core, config));
     // Load drops
-    Drops.load(core, drops);
+    Drops.store.load(core, drops);
 
     // Load topics
-    Topics.load(core, topics);
+    Topics.store.load(core, topics);
 
     // Set root topics
     useAppStore.getState().addRootTopics(rootTopicIds);
@@ -56,24 +84,32 @@ export function setup() {
       ),
     );
 
-    [...viewConfigs, homeViewConfig].forEach((view) =>
-      Views.register(viewsCore, view),
-    );
-    Views.loadInstances(viewsCore, [...viewInstances, ...topicViewInstances]);
+    ViewInstances.store.load(viewsCore, [
+      ...viewInstances,
+      ...topicViewInstances,
+    ]);
     topicViewConfigs.forEach((view) => Topics.registerView(core, view));
+
+    GlobalPersistentStore.set(core, 'rootTopics', rootTopicIds);
+    LocalPersistentStore.set(core, 'sidebarWidth', 302);
+    LocalPersistentStore.set(core, 'expandedTopics', []);
   });
 }
 
 export function cleanup() {
   act(() => {
-    PersistentStore.clearGlobalCache();
-    PersistentStore.clearLocalCache();
+    LocalPersistentStore.store.clear();
+    LocalPersistentStore.typeConfigsStore.clear();
+    GlobalPersistentStore.store.clear();
+    GlobalPersistentStore.typeConfigsStore.clear();
 
     Views.clear(core);
+    Topics.store.clear();
+    Drops.store.clear();
+    Drops.typeConfigsStore.clear();
+    ViewInstances.store.clear();
     core.removeAllEventListeners();
     useAppStore.getState().clear();
-    PersistentStore.clearLocalCache();
-    Topics.clear(core);
   });
 }
 

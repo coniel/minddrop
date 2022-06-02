@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { GlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics } from '@minddrop/topics';
 import { FieldValue } from '@minddrop/utils';
 import { useAppStore } from '../useAppStore';
@@ -22,14 +22,14 @@ export function archiveRootTopics(core: Core, topicIds: string[]): void {
   useAppStore.getState().removeRootTopics(topicIds);
 
   // Add the archived topic IDs to global persistent store's archivedRootTopics
-  PersistentStore.setGlobalValue(
+  GlobalPersistentStore.set(
     core,
     'archivedRootTopics',
     FieldValue.arrayUnion(topicIds),
   );
 
   // Remove the archived topic IDs from global persistent store's rootTopics
-  PersistentStore.setGlobalValue(
+  GlobalPersistentStore.set(
     core,
     'rootTopics',
     FieldValue.arrayRemove(topicIds),

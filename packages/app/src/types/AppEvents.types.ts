@@ -1,17 +1,16 @@
 import { EventListenerCallback } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
 import { Topic, TopicMap } from '@minddrop/topics';
-import { View, ViewInstance } from '@minddrop/views';
+import { ViewConfig, ViewInstance } from '@minddrop/views';
 
-export type OpenViewEvent = 'app:open-view';
-export type AddRootTopicsEvent = 'app:add-root-topics';
-export type RemoveRootTopicsEvent = 'app:remove-root-topics';
-export type MoveSubtopicsToRootEvent = 'app:move-subtopics-root';
-export type MoveRootTopicsEvent = 'app:move-root-topics';
-export type ArchiveRootTopicsEvent = 'app:archive-root-topics';
-export type UnarchiveRootTopicsEvent = 'app:unarchive-root-topics';
-export type SelectDropsEvent = 'app:select-drops';
-export type UnselectDropsEvent = 'app:unselect-drops';
+export type OpenViewEvent = 'app:view:open';
+export type AddRootTopicsEvent = 'app:root-topics:add';
+export type RemoveRootTopicsEvent = 'app:root-topics:remove';
+export type MoveRootTopicsEvent = 'app:root-topics:move';
+export type ArchiveRootTopicsEvent = 'app:root-topics:archive';
+export type UnarchiveRootTopicsEvent = 'app:root-topics:unarchive';
+export type SelectDropsEvent = 'app:selection:select-drops';
+export type UnselectDropsEvent = 'app:selection:unselect-drops';
 export type ClearSelectedDropsEvent = 'app:clear-selected-drops';
 
 export type AddRootTopicsEventData = TopicMap;
@@ -22,7 +21,7 @@ export type SelectDropsEventData = DropMap;
 export type UnselectDropsEventData = DropMap;
 
 export interface OpenViewEventData {
-  view: View;
+  view: ViewConfig;
   instance: ViewInstance | null;
 }
 
@@ -60,10 +59,6 @@ export type AddRootTopicsEventCallback = EventListenerCallback<
 >;
 export type RemoveRootTopicsEventCallback = EventListenerCallback<
   RemoveRootTopicsEvent,
-  RemoveRootTopicsEventData
->;
-export type MoveSubtopicsToRootEventCallback = EventListenerCallback<
-  MoveSubtopicsToRootEvent,
   RemoveRootTopicsEventData
 >;
 export type MoveRootTopicsEventCallback = EventListenerCallback<

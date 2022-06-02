@@ -7,7 +7,7 @@ import { selectTopics } from '../selectTopics';
 import { setup, cleanup, core } from '../test-utils';
 import { clearSelection } from './clearSelection';
 
-const { textDrop1 } = DROPS_TEST_DATA;
+const { drop1 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
 
 describe('clearSelection', () => {
@@ -16,7 +16,7 @@ describe('clearSelection', () => {
   afterEach(cleanup);
 
   it('clears selected drops and topics', () => {
-    selectDrops(core, [textDrop1.id]);
+    selectDrops(core, [drop1.id]);
     selectTopics(core, [tSailing.id]);
 
     clearSelection(core);
@@ -25,8 +25,8 @@ describe('clearSelection', () => {
     expect(getSelectedTopics()).toEqual({});
   });
 
-  it('dispatches a `app:clear-selection` event', (done) => {
-    core.addEventListener('app:clear-selection', () => {
+  it('dispatches a `app:selection:clear` event', (done) => {
+    core.addEventListener('app:selection:clear', () => {
       done();
     });
 

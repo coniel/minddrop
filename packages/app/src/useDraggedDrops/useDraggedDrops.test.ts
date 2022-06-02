@@ -5,7 +5,7 @@ import { setDraggedDrops } from '../setDraggedDrops';
 import { setup, cleanup, core } from '../test-utils';
 import { useDraggedDrops } from './useDraggedDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('useDraggedDrops', () => {
   beforeEach(setup);
@@ -16,10 +16,10 @@ describe('useDraggedDrops', () => {
     const { result } = renderHook(() => useDraggedDrops());
 
     act(() => {
-      setDraggedDrops(core, [textDrop1.id, textDrop2.id]);
+      setDraggedDrops(core, [drop1.id, drop2.id]);
     });
 
-    expect(result.current).toEqual(mapById([textDrop1, textDrop2]));
+    expect(result.current).toEqual(mapById([drop1, drop2]));
   });
 
   it('returns `{}` if no drops are currently being dragged', () => {

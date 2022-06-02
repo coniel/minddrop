@@ -2,7 +2,7 @@ import React from 'react';
 import { renderHook, act } from '@minddrop/test-utils';
 import {
   ViewNotRegisteredError,
-  ViewInstanceNotFoundError,
+  Views,
   VIEWS_TEST_DATA,
 } from '@minddrop/views';
 import { App } from './App';
@@ -10,9 +10,9 @@ import { useAppStore, useUiExtensions } from '../useAppStore';
 import { IconButtonConfig } from '../types';
 import { core, cleanup, setup } from '../test-utils';
 import { initializeCore } from '@minddrop/core';
+import { ResourceDocumentNotFoundError } from '@minddrop/resources';
 
-const { viewInstance1, staticView, unregisteredView, instanceView } =
-  VIEWS_TEST_DATA;
+const { viewInstance1, staticViewConfig, instanceViewConfig } = VIEWS_TEST_DATA;
 
 const config: IconButtonConfig = {
   type: 'icon-button',
@@ -33,28 +33,26 @@ describe('App', () => {
       const { result } = renderHook(() => useAppStore((state) => state));
 
       act(() => {
-        App.openView(core, staticView.id);
+        App.openView(core, staticViewConfig.id);
       });
 
-      expect(result.current.view).toBe(staticView.id);
+      expect(result.current.view).toBe(staticViewConfig.id);
     });
 
-    it("dispatches a 'app:open-view' event", (done) => {
-      function callback(payload) {
-        expect(payload.data.view).toEqual(staticView);
+    it("dispatches a 'app:view:open' event", (done) => {
+      core.addEventListener('app:view:open', (payload) => {
+        expect(payload.data.view).toEqual(Views.get(staticViewConfig.id));
         expect(payload.data.instance).toBeNull();
         done();
-      }
-
-      core.addEventListener('app:open-view', callback);
+      });
 
       act(() => {
-        App.openView(core, staticView.id);
+        App.openView(core, staticViewConfig.id);
       });
     });
 
     it('throws a ViewNotRegisteredError if the view is not registered', () => {
-      expect(() => App.openView(core, unregisteredView.id)).toThrowError(
+      expect(() => App.openView(core, 'unregistered')).toThrowError(
         ViewNotRegisteredError,
       );
     });
@@ -68,7 +66,7 @@ describe('App', () => {
         App.openViewInstance(core, viewInstance1.id);
       });
 
-      expect(result.current.view).toEqual(viewInstance1.view);
+      expect(result.current.view).toEqual(viewInstance1.type);
     });
 
     it('sets the current view instance in the store', () => {
@@ -81,14 +79,12 @@ describe('App', () => {
       expect(result.current.viewInstance).toEqual(viewInstance1.id);
     });
 
-    it("dispatches a 'app:open-view' event", (done) => {
-      function callback(payload) {
-        expect(payload.data.view).toEqual(instanceView);
+    it("dispatches a 'app:view:open' event", (done) => {
+      core.addEventListener('app:view:open', (payload) => {
+        expect(payload.data.view).toEqual(Views.get(instanceViewConfig.id));
         expect(payload.data.instance).toEqual(viewInstance1);
         done();
-      }
-
-      core.addEventListener('app:open-view', callback);
+      });
 
       act(() => {
         App.openViewInstance(core, viewInstance1.id);
@@ -96,9 +92,9 @@ describe('App', () => {
     });
 
     it('throws a ViewInstanceNotFoundError if the view instance does not exist', () => {
-      expect(() =>
-        App.openViewInstance(core, unregisteredView.id),
-      ).toThrowError(ViewInstanceNotFoundError);
+      expect(() => App.openViewInstance(core, 'unregistered')).toThrowError(
+        ResourceDocumentNotFoundError,
+      );
     });
   });
 
@@ -108,8 +104,10 @@ describe('App', () => {
         App.openViewInstance(core, viewInstance1.id);
       });
 
+      const registeredViewConfig = Views.get(instanceViewConfig.id);
+
       expect(App.getCurrentView()).toEqual({
-        view: instanceView,
+        view: registeredViewConfig,
         instance: viewInstance1,
       });
     });

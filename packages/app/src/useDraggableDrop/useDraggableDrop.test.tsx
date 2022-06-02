@@ -8,7 +8,7 @@ import { createDataInsertFromDataTransfer, mapById } from '@minddrop/utils';
 import { selectDrops } from '../selectDrops';
 import { setDraggedDrops } from '../setDraggedDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 const dragStartEvent = {
   dataTransfer: {
@@ -17,7 +17,7 @@ const dragStartEvent = {
 };
 
 const Drop = () => {
-  const { onDragStart } = useDraggableDrop(textDrop1.id);
+  const { onDragStart } = useDraggableDrop(drop1.id);
 
   return <div onDragStart={onDragStart} data-testid="drop" />;
 };
@@ -29,16 +29,16 @@ describe('useDropDragging', () => {
 
   describe('isBeingDragged', () => {
     it('is `false` when drop is not being dragged', () => {
-      const { result } = renderHook(() => useDraggableDrop(textDrop1.id));
+      const { result } = renderHook(() => useDraggableDrop(drop1.id));
 
       expect(result.current.isBeingDragged).toBe(false);
     });
 
     it('is `true` when drop is being dragged', () => {
-      const { result } = renderHook(() => useDraggableDrop(textDrop1.id));
+      const { result } = renderHook(() => useDraggableDrop(drop1.id));
 
       act(() => {
-        setDraggedDrops(core, [textDrop1.id]);
+        setDraggedDrops(core, [drop1.id]);
       });
 
       expect(result.current.isBeingDragged).toBe(true);
@@ -51,7 +51,7 @@ describe('useDropDragging', () => {
 
       act(() => {
         // Select another drop
-        selectDrops(core, [textDrop2.id]);
+        selectDrops(core, [drop2.id]);
       });
 
       act(() => {
@@ -59,7 +59,7 @@ describe('useDropDragging', () => {
       });
 
       // Other drop should no longer be selected
-      expect(getSelectedDrops()).toEqual(mapById([textDrop1]));
+      expect(getSelectedDrops()).toEqual(mapById([drop1]));
     });
 
     it('sets action and selected drops in data transfer', () => {
@@ -80,11 +80,11 @@ describe('useDropDragging', () => {
 
       act(() => {
         // Select the drops
-        selectDrops(core, [textDrop2.id, textDrop1.id]);
+        selectDrops(core, [drop2.id, drop1.id]);
       });
 
       act(() => {
-        // Drag textDrop1
+        // Drag drop1
         fireEvent.dragStart(getByTestId('drop'), event);
       });
 
@@ -95,8 +95,8 @@ describe('useDropDragging', () => {
       // Should set action
       expect(dataInsert.action).toEqual('sort');
       // Should set drops
-      expect(dataInsert.drops.includes(textDrop1.id)).toBeTruthy();
-      expect(dataInsert.drops.includes(textDrop2.id)).toBeTruthy();
+      expect(dataInsert.drops.includes(drop1.id)).toBeTruthy();
+      expect(dataInsert.drops.includes(drop2.id)).toBeTruthy();
     });
   });
 });

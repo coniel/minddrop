@@ -3,22 +3,23 @@ import { renderDrop } from './renderDrop';
 import { render } from '@minddrop/test-utils';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 
-const { textDrop1, textDropConfig } = DROPS_TEST_DATA;
+const { drop1, dropConfig } = DROPS_TEST_DATA;
 
 const core = initializeCore({ appId: 'app-id', extensionId: 'drops' });
 
 describe('renderDrop', () => {
   beforeAll(() => {
-    Drops.register(core, textDropConfig);
+    Drops.register(core, dropConfig);
   });
 
   afterAll(() => {
-    Drops.clearDrops(core);
+    Drops.store.clear();
+    Drops.typeConfigsStore.clear();
   });
 
   it('renders the drop', () => {
-    const { getByText } = render(renderDrop(textDrop1));
+    const { getByText } = render(renderDrop(drop1));
 
-    getByText(textDrop1.text);
+    getByText(drop1.text);
   });
 });

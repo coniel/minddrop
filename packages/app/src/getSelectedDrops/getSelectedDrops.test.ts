@@ -4,7 +4,7 @@ import { selectDrops } from '../selectDrops';
 import { setup, cleanup, core } from '../test-utils';
 import { getSelectedDrops } from './getSelectedDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('getSelectedDrops', () => {
   beforeEach(setup);
@@ -12,8 +12,8 @@ describe('getSelectedDrops', () => {
   afterEach(cleanup);
 
   it('returns the currently selected drops', () => {
-    selectDrops(core, [textDrop1.id, textDrop2.id]);
+    selectDrops(core, [drop1.id, drop2.id]);
 
-    expect(getSelectedDrops()).toEqual(mapById([textDrop1, textDrop2]));
+    expect(getSelectedDrops()).toEqual(mapById([drop1, drop2]));
   });
 });

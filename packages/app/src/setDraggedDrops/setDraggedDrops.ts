@@ -4,7 +4,7 @@ import { useAppStore } from '../useAppStore';
 
 /**
  * Sets dropps as currently being dragged and dispatches a
- * `app:drag-drops` event.
+ * `app:drag:drag-drops` event.
  *
  * @param core A MindDrop core instance.
  * @param dropIds The IDs of the drops being dragged.
@@ -16,6 +16,6 @@ export function setDraggedDrops(core: Core, dropIds: string[]): void {
   // Get the dragged drops
   const drops = Drops.get(dropIds);
 
-  // Dispatch 'app:drag-drops' event
-  core.dispatch('app:drag-drops', drops);
+  // Dispatch 'app:drag:drag-drops' event
+  core.dispatch('app:drag:drag-drops', drops);
 }

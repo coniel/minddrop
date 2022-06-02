@@ -18,10 +18,10 @@ describe('clearSelectedTopics', () => {
     expect(useAppStore.getState().selectedTopics).toEqual([]);
   });
 
-  it('dispatches a `app:clear-selected-topics` event', (done) => {
+  it('dispatches a `app:selected-topics:clear` event', (done) => {
     selectTopics(core, [tSailing.id, tAnchoring.id]);
 
-    core.addEventListener('app:clear-selected-topics', () => {
+    core.addEventListener('app:selected-topics:clear', () => {
       done();
     });
 

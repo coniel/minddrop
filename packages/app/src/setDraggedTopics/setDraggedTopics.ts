@@ -4,7 +4,7 @@ import { useAppStore } from '../useAppStore';
 
 /**
  * Sets topics as currently being dragged and dispatches a
- * `app:drag-topics` event.
+ * `app:drag:drag-topics` event.
  *
  * @param core A MindTopic core instance.
  * @param topicIds The IDs of the topics being dragged.
@@ -16,6 +16,6 @@ export function setDraggedTopics(core: Core, topicIds: string[]): void {
   // Get the dragged topics
   const topics = Topics.get(topicIds);
 
-  // Dispatch 'app:drag-topics' event
-  core.dispatch('app:drag-topics', topics);
+  // Dispatch 'app:drag:drag-topics' event
+  core.dispatch('app:drag:drag-topics', topics);
 }

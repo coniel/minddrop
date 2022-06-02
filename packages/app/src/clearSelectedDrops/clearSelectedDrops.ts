@@ -3,7 +3,7 @@ import { useAppStore } from '../useAppStore';
 
 /**
  * Clears the selected drops list and dispatches a
- * `app:clear-selected-drops` event.
+ * `app:selected-drops:clear` event.
  *
  * @param core A MindDrop core instance.
  */
@@ -11,6 +11,6 @@ export function clearSelectedDrops(core: Core): void {
   // Clear selected drops from the store
   useAppStore.getState().clearSelectedDrops();
 
-  // Dispatch 'app:clear-selected-drops' event
-  core.dispatch('app:clear-selected-drops');
+  // Dispatch 'app:selected-drops:clear' event
+  core.dispatch('app:selected-drops:clear');
 }

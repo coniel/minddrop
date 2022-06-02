@@ -1,5 +1,5 @@
 import { AppApi, UiExtensionConfig } from '../types';
-import { Views } from '@minddrop/views';
+import { Views, ViewInstances } from '@minddrop/views';
 import { Slot } from '../Slot';
 import { addRootTopics } from '../addRootTopics';
 import { useAppStore } from '../useAppStore';
@@ -43,17 +43,17 @@ export const App: AppApi = {
 
     useAppStore.getState().setView(viewId);
 
-    core.dispatch('app:open-view', { view, instance: null });
+    core.dispatch('app:view:open', { view, instance: null });
   },
 
   openViewInstance: (core, viewInstanceId) => {
-    const instance = Views.getInstance(viewInstanceId);
-    const view = Views.get(instance.view);
+    const instance = ViewInstances.get(viewInstanceId);
+    const view = Views.get(instance.type);
 
     useAppStore.getState().setView(view.id);
     useAppStore.getState().setViewInstance(instance.id);
 
-    core.dispatch('app:open-view', { view, instance });
+    core.dispatch('app:view:open', { view, instance });
   },
 
   getCurrentView: () => {
@@ -63,7 +63,7 @@ export const App: AppApi = {
     if (instanceId) {
       return {
         view,
-        instance: Views.getInstance(instanceId),
+        instance: ViewInstances.get(instanceId),
       };
     }
 

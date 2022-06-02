@@ -1,5 +1,6 @@
 import React from 'react';
-import { Drops, Drop, DropParentReference } from '@minddrop/drops';
+import { Drops, Drop } from '@minddrop/drops';
+import { ResourceReference } from '@minddrop/resources';
 
 /**
  * Renders a drop using the appropriate component.
@@ -10,10 +11,10 @@ import { Drops, Drop, DropParentReference } from '@minddrop/drops';
  */
 export function renderDrop(
   drop: Drop,
-  parent?: DropParentReference,
+  parent?: ResourceReference,
 ): React.ReactElement {
-  const dropConfig = Drops.getConfig(drop.type);
+  const dropConfig = Drops.getTypeConfig(drop.type);
   const Component = dropConfig.component;
 
-  return <Component key={drop.id} parent={parent} {...drop} />;
+  return <Component key={drop.id} currentParent={parent} {...drop} />;
 }

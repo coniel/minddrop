@@ -4,7 +4,7 @@ import { useAppStore } from '../useAppStore';
 
 /**
  * Removes topics from the selected topics list and
- * dispatches a `app:unselect-topics` event.
+ * dispatches a `app:selection:unselect-topics` event.
  *
  * @param core A MindTopic core instance.
  * @param topicIds The IDs of the topics to unselect.
@@ -16,6 +16,6 @@ export function unselectTopics(core: Core, topicIds: string[]): void {
   // Remove IDs from the store's selected topics
   useAppStore.getState().removeSelectedTopics(topicIds);
 
-  // Dispatch 'app:unselect-topics' event
-  core.dispatch('app:unselect-topics', topics);
+  // Dispatch 'app:selection:unselect-topics' event
+  core.dispatch('app:selection:unselect-topics', topics);
 }

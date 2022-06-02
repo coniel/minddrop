@@ -19,8 +19,8 @@ describe('setDraggedTopics', () => {
     );
   });
 
-  it('dispatches a `app:drag-topics` event', (done) => {
-    core.addEventListener('app:drag-topics', (payload) => {
+  it('dispatches a `app:drag:drag-topics` event', (done) => {
+    core.addEventListener('app:drag:drag-topics', (payload) => {
       expect(payload.data).toEqual(
         mapById([tCoastalNavigation, tOffshoreNavigation]),
       );

@@ -7,7 +7,7 @@ import { unselectTopics } from './unselectTopics';
 
 const { tSailing, tAnchoring, tBoats } = TOPICS_TEST_DATA;
 
-describe('selectTopics', () => {
+describe('unselectTopics', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
@@ -19,10 +19,10 @@ describe('selectTopics', () => {
     expect(useAppStore.getState().selectedTopics).toEqual([tBoats.id]);
   });
 
-  it('dispatches a `app:unselect-topics` event', (done) => {
+  it('dispatches a `app:selection:unselect-topics` event', (done) => {
     selectTopics(core, [tSailing.id, tAnchoring.id, tBoats.id]);
 
-    core.addEventListener('app:unselect-topics', (payload) => {
+    core.addEventListener('app:selection:unselect-topics', (payload) => {
       expect(payload.data).toEqual(mapById([tSailing, tAnchoring]));
       done();
     });

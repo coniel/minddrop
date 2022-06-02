@@ -5,7 +5,7 @@ import { removeRootTopics } from '../removeRootTopics';
 /**
  * Removes topics from the root level and adds them as
  * subtopics into a specified topic.
- * Dispatches a `app:move-root-topics` event.
+ * Dispatches a `app:root-topics:move` event.
  *
  * @param core A MindDrop core instance.
  * @param toTopicId The ID of the topic into which to move the topics.
@@ -25,6 +25,6 @@ export function moveRootTopicsToParentTopic(
   // Get the updated topics
   const topics = Topics.get(topicIds);
 
-  // Dispatch a `app:move-root-topics` event
-  core.dispatch('app:move-root-topics', { toTopic, topics });
+  // Dispatch a `app:root-topics:move` event
+  core.dispatch('app:root-topics:move', { toTopic, topics });
 }

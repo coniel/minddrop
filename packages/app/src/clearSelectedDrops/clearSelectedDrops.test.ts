@@ -4,7 +4,7 @@ import { setup, cleanup, core } from '../test-utils';
 import { useAppStore } from '../useAppStore';
 import { clearSelectedDrops } from './clearSelectedDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('clearSelectedDrops', () => {
   beforeEach(setup);
@@ -12,16 +12,16 @@ describe('clearSelectedDrops', () => {
   afterEach(cleanup);
 
   it('clears selected drops', () => {
-    selectDrops(core, [textDrop1.id, textDrop2.id]);
+    selectDrops(core, [drop1.id, drop2.id]);
     clearSelectedDrops(core);
 
     expect(useAppStore.getState().selectedDrops).toEqual([]);
   });
 
-  it('dispatches a `app:clear-selected-drops` event', (done) => {
-    selectDrops(core, [textDrop1.id, textDrop2.id]);
+  it('dispatches a `app:selected-drops:clear` event', (done) => {
+    selectDrops(core, [drop1.id, drop2.id]);
 
-    core.addEventListener('app:clear-selected-drops', () => {
+    core.addEventListener('app:selected-drops:clear', () => {
       done();
     });
 

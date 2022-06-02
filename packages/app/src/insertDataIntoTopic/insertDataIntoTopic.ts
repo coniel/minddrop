@@ -22,14 +22,9 @@ import { AddDropsMetadata, Topics } from '@minddrop/topics';
  * @param topicId The topic into which the data is being inserted.
  * @param metadata Optional metadata added by the view instance which invoked the function.
  */
-export async function insertDataIntoTopic<
+export function insertDataIntoTopic<
   M extends AddDropsMetadata = AddDropsMetadata,
->(
-  core: Core,
-  topicId: string,
-  data: DataInsert,
-  metadata?: M,
-): Promise<boolean> {
+>(core: Core, topicId: string, data: DataInsert, metadata?: M): boolean {
   const { action, source } = data;
 
   // Raw data was inserted
@@ -38,12 +33,12 @@ export async function insertDataIntoTopic<
     const topicExtensions = Extensions.getTopicExtensions(topicId);
 
     // Get the drop type configs added by the topic's extensions
-    const dropConfigs = Drops.getRegisteredDropTypes({
-      extension: topicExtensions,
-    });
+    const dropConfigs = Drops.getAllTypeConfigs().filter((config) =>
+      topicExtensions.includes(config.extension),
+    );
 
     // Create drops using the topic's enabled drop types
-    const drops = await Drops.createFromDataInsert(core, data, dropConfigs);
+    const drops = Drops.createFromDataInsert(core, data, dropConfigs);
 
     // Add drops to the topic
     Topics.addDrops(core, topicId, Object.keys(drops), metadata);

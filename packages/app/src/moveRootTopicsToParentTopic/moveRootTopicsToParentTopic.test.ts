@@ -44,14 +44,14 @@ describe('moveRootTopicsToParentTopic', () => {
     expect(contains(parent.subtopics, [topic1.id, topic2.id])).toBeTruthy();
   });
 
-  it('dispatches a `app:move-root-topics` event', (done) => {
+  it('dispatches a `app:root-topics:move` event', (done) => {
     // Create a couple of root level topics
     const topic1 = Topics.create(core);
     const topic2 = Topics.create(core);
     addRootTopics(core, [topic1.id, topic2.id]);
 
-    // Listen to 'app:move-root-topics' events
-    core.addEventListener('app:move-root-topics', (payload) => {
+    // Listen to 'app:root-topics:move' events
+    core.addEventListener('app:root-topics:move', (payload) => {
       // Get the updated parent topic
       const parent = Topics.get(tSailing.id);
       // Get the updated moved topics

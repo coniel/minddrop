@@ -1,9 +1,5 @@
-import { renderHook, act } from '@minddrop/test-utils';
 import { initializeCore } from '@minddrop/core';
-import {
-  PersistentStore,
-  useGlobalPersistentStoreValue,
-} from '@minddrop/persistent-store';
+import { GlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { removeRootTopics } from './removeRootTopics';
 import { useAppStore } from '../useAppStore';
@@ -18,27 +14,16 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
 describe('removeRootTopics', () => {
   beforeEach(() => {
     setup();
-    act(() => {
-      addRootTopics(core, [tSailing.id, tAnchoring.id, tNavigation.id]);
-    });
+    addRootTopics(core, [tSailing.id, tAnchoring.id, tNavigation.id]);
   });
 
-  afterEach(() => {
-    cleanup();
-    act(() => {
-      PersistentStore.clearGlobalCache();
-    });
-  });
+  afterEach(cleanup);
 
   it('removes topic IDs from the app store', () => {
-    const { result } = renderHook(() => useAppStore());
-
-    act(() => {
-      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
-    });
+    removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
 
     expect(
-      doesNotContain(result.current.rootTopics, [
+      doesNotContain(useAppStore.getState().rootTopics, [
         tAnchoring.id,
         tNavigation.id,
       ]),
@@ -46,34 +31,18 @@ describe('removeRootTopics', () => {
   });
 
   it('removes topic IDs from the persistent store', () => {
-    const { result } = renderHook(() =>
-      useGlobalPersistentStoreValue(core, 'rootTopics'),
-    );
-
-    act(() => {
-      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
-    });
+    removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
 
     expect(
-      doesNotContain(result.current, [tAnchoring.id, tNavigation.id]),
+      doesNotContain(GlobalPersistentStore.get(core, 'rootTopics'), [
+        tAnchoring.id,
+        tNavigation.id,
+      ]),
     ).toBeTruthy();
   });
 
-  it('removes app as a parent on the topics', () => {
-    // Remove a root topic
-    removeRootTopics(core, [tAnchoring.id]);
-
-    // Get the updated root topic
-    const topic = Topics.get(tAnchoring.id);
-
-    // Should no longer have app as a parent
-    expect(
-      doesNotContain(topic.parents, [{ type: 'app', id: 'root' }]),
-    ).toBeTruthy();
-  });
-
-  it("dispatches a 'app:remove-root-topics' event", (done) => {
-    function callback(payload) {
+  it("dispatches a 'app:root-topics:remove' event", (done) => {
+    core.addEventListener('app:root-topics:remove', (payload) => {
       // Get updated topic
       const topics = Topics.get([tAnchoring.id, tNavigation.id]);
 
@@ -81,12 +50,8 @@ describe('removeRootTopics', () => {
       expect(payload.data).toEqual(topics);
 
       done();
-    }
-
-    core.addEventListener('app:remove-root-topics', callback);
-
-    act(() => {
-      removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
     });
+
+    removeRootTopics(core, [tAnchoring.id, tNavigation.id]);
   });
 });

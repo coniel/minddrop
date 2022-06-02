@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { PersistentStore } from '@minddrop/persistent-store';
+import { GlobalPersistentStore } from '@minddrop/persistent-store';
 import { Topics } from '@minddrop/topics';
 import { FieldValue } from '@minddrop/utils';
 import { useAppStore } from '../useAppStore';
@@ -16,20 +16,15 @@ export function addRootTopics(core: Core, topicIds: string[]): void {
   useAppStore.getState().addRootTopics(topicIds);
 
   // Add topic IDs to global persistent store
-  PersistentStore.setGlobalValue(
+  GlobalPersistentStore.set(
     core,
     'rootTopics',
     FieldValue.arrayUnion(topicIds),
   );
 
-  // Add app as parent on topics
-  topicIds.forEach((topicId) => {
-    Topics.addParents(core, topicId, [{ type: 'app', id: 'root' }]);
-  });
-
   // Get the updated topics
   const topics = Topics.get(topicIds);
 
-  // Dispatch app:add-root-topics event
-  core.dispatch('app:add-root-topics', topics);
+  // Dispatch 'app:root-topics:add' event
+  core.dispatch('app:root-topics:add', topics);
 }

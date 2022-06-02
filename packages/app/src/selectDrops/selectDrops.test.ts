@@ -4,7 +4,7 @@ import { setup, cleanup, core } from '../test-utils';
 import { useAppStore } from '../useAppStore';
 import { selectDrops } from './selectDrops';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('selectDrops', () => {
   beforeEach(setup);
@@ -12,20 +12,17 @@ describe('selectDrops', () => {
   afterEach(cleanup);
 
   it('adds selected drops to the store', () => {
-    selectDrops(core, [textDrop1.id, textDrop2.id]);
+    selectDrops(core, [drop1.id, drop2.id]);
 
-    expect(useAppStore.getState().selectedDrops).toEqual([
-      textDrop1.id,
-      textDrop2.id,
-    ]);
+    expect(useAppStore.getState().selectedDrops).toEqual([drop1.id, drop2.id]);
   });
 
-  it('dispatches a `app:select-drops` event', (done) => {
-    core.addEventListener('app:select-drops', (payload) => {
-      expect(payload.data).toEqual(mapById([textDrop1, textDrop2]));
+  it('dispatches a `app:selection:select-drops` event', (done) => {
+    core.addEventListener('app:selection:select-drops', (payload) => {
+      expect(payload.data).toEqual(mapById([drop1, drop2]));
       done();
     });
 
-    selectDrops(core, [textDrop1.id, textDrop2.id]);
+    selectDrops(core, [drop1.id, drop2.id]);
   });
 });
