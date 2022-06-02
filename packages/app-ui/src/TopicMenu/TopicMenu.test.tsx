@@ -1,6 +1,5 @@
-/* eslint-disable class-methods-use-this */
 import React from 'react';
-import { render, act, fireEvent, MockDate } from '@minddrop/test-utils';
+import { render, act, fireEvent } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
 import { setup, cleanup, core } from '../test-utils';
 import { DropdownMenuContent, DropdownMenu } from '@minddrop/ui';
@@ -13,14 +12,6 @@ const { trail, tCoastalNavigation, tNavigation, tSailing, tUntitled } =
 const topicId = trail.slice(-1)[0];
 
 describe('TopicMenu', () => {
-  beforeAll(() => {
-    MockDate.set('01/01/2020');
-  });
-
-  afterAll(() => {
-    MockDate.reset();
-  });
-
   beforeEach(setup);
 
   afterEach(cleanup);
@@ -54,7 +45,7 @@ describe('TopicMenu', () => {
     const { getByItemLabel } = init({ onAddSubtopic });
 
     // Listen to 'topics:add-subtopics' events
-    Topics.addEventListener(core, 'topics:add-subtopics', ({ data }) => {
+    Topics.addEventListener(core, 'topics:topic:add-subtopics', ({ data }) => {
       if (data.topic.id === topicId) {
         // Should call onAddSubtopic callback with the added subtopic
         expect(onAddSubtopic).toHaveBeenCalledWith(

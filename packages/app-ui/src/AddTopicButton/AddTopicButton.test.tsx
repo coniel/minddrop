@@ -1,19 +1,25 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from '@minddrop/test-utils';
+import { TopicViewInstanceData, Topics } from '@minddrop/topics';
 import { AddTopicButton } from './AddTopicButton';
 import { setup, cleanup, core } from '../test-utils';
-import { TopicViewInstance } from '@minddrop/topics';
 import { App } from '@minddrop/app';
 
 describe('<AddTopicButton />', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    act(() => {
+      setup();
+    });
+  });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+  });
 
   it('creates a topic', (done) => {
     render(<AddTopicButton />);
 
-    core.addEventListener('topics:create', () => {
+    Topics.addEventListener(core, 'topics:topic:create', () => {
       done();
     });
 
@@ -25,7 +31,7 @@ describe('<AddTopicButton />', () => {
   it('adds the topic to the root level', (done) => {
     render(<AddTopicButton />);
 
-    core.addEventListener('topics:create', (payload) => {
+    Topics.addEventListener(core, 'topics:topic:create', (payload) => {
       // Get root topics
       const rootTopics = App.getRootTopics();
 
@@ -44,8 +50,8 @@ describe('<AddTopicButton />', () => {
   it('opens the topic', (done) => {
     render(<AddTopicButton />);
 
-    core.addEventListener('topics:create', (payload) => {
-      expect(App.getCurrentView<TopicViewInstance>().instance.topic).toBe(
+    Topics.addEventListener(core, 'topics:topic:create', (payload) => {
+      expect(App.getCurrentView<TopicViewInstanceData>().instance.topic).toBe(
         payload.data.id,
       );
       done();

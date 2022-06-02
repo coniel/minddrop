@@ -5,14 +5,14 @@ import {
   fireEvent,
   act,
 } from '@minddrop/test-utils';
-import { cleanup, core, setup } from '../test-utils';
-import { DropContextMenu } from './DropContextMenu';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { App } from '@minddrop/app';
 import { mapById } from '@minddrop/utils';
+import { cleanup, core, setup } from '../test-utils';
+import { DropContextMenu } from './DropContextMenu';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
 
 describe('<DropContextMenu />', () => {
@@ -27,7 +27,7 @@ describe('<DropContextMenu />', () => {
 
   const init = () => {
     const utils = render(
-      <DropContextMenu dropId={textDrop1.id} topicId={tSailing.id}>
+      <DropContextMenu dropId={drop1.id} topicId={tSailing.id}>
         <div>trigger</div>
       </DropContextMenu>,
     );
@@ -39,7 +39,7 @@ describe('<DropContextMenu />', () => {
 
     act(() => {
       // Select other drop
-      App.selectDrops(core, [textDrop2.id]);
+      App.selectDrops(core, [drop2.id]);
     });
 
     act(() => {
@@ -48,6 +48,6 @@ describe('<DropContextMenu />', () => {
     });
 
     // Should have target drop as only selected drop
-    expect(App.getSelectedDrops()).toEqual(mapById([textDrop1]));
+    expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
   });
 });

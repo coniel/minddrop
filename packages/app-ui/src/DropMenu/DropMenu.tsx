@@ -171,7 +171,7 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     const topicsDropsMap = Object.values(selectedDrops).reduce((map, drop) => {
       const updatedMap = { ...map };
       drop.parents
-        .filter((parent) => parent.type === 'topic')
+        .filter((parent) => parent.resource === 'topics:topic')
         .forEach((parent) => {
           if (map[parent.id]) {
             updatedMap[parent.id].push(drop.id);
@@ -288,7 +288,10 @@ export const DropMenu: React.FC<DropMenuProps> = ({
 
   // If the drop has multiple parent topics, add a secondary
   // action to archive/delete the drop in all parent topics.
-  if (drop.parents.filter((parent) => parent.type === 'topic').length > 1) {
+  if (
+    drop.parents.filter((parent) => parent.resource === 'topics:topic').length >
+    1
+  ) {
     // Archive item modifications
     archiveItem.secondaryLabel = i18n.t('archiveEverywhere');
     archiveItem.secondaryOnSelect = handleArchiveEverywhere;

@@ -11,7 +11,7 @@ import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { i18n } from '@minddrop/i18n';
 
-const { textDrop1 } = DROPS_TEST_DATA;
+const { drop1 } = DROPS_TEST_DATA;
 const { tSixDrops } = TOPICS_TEST_DATA;
 
 describe('<DropActions />', () => {
@@ -25,7 +25,7 @@ describe('<DropActions />', () => {
   const init = (props?: Partial<DropActionsProps>) => {
     const utils = render(
       <div className="drop" data-testid="drop">
-        <DropActions dropId={textDrop1.id} {...props} />
+        <DropActions dropId={drop1.id} {...props} />
       </div>,
     );
 
@@ -49,7 +49,7 @@ describe('<DropActions />', () => {
     it('renders the drop options menu', () => {
       // Render with topic as parent
       const { getByLabelText } = init({
-        parent: { type: 'topic', id: tSixDrops.id },
+        currentParent: { resource: 'topics:topic', id: tSixDrops.id },
       });
 
       // Should render drop options menu
@@ -61,7 +61,7 @@ describe('<DropActions />', () => {
       // Render with children and a topic as parent
       const { getByText } = init({
         children: <span>CHILD</span>,
-        parent: { type: 'topic', id: tSixDrops.id },
+        currentParent: { resource: 'topics:topic', id: tSixDrops.id },
       });
 
       // Should render children
@@ -78,7 +78,7 @@ describe('<DropActions />', () => {
 
     it('stays visible when opening the drop options menu', () => {
       const { getByTestId, getByLabelText } = init({
-        parent: { type: 'topic', id: tSixDrops.id },
+        currentParent: { resource: 'topics:topic', id: tSixDrops.id },
       });
 
       act(() => {

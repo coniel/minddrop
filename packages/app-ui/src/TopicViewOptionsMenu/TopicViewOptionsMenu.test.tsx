@@ -10,12 +10,9 @@ import { cleanup, core, setup } from '../test-utils';
 import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import {
-  CreateTopicEvent,
-  CreateTopicEventData,
-  DeleteTopicEvent,
-  DeleteTopicEventData,
+  Topics,
   TOPICS_TEST_DATA,
-  TopicViewInstance,
+  TopicViewInstanceData,
 } from '@minddrop/topics';
 
 const { tNavigation, tSailing, tUntitled } = TOPICS_TEST_DATA;
@@ -38,15 +35,12 @@ describe('<TopicViewOptionsMenu />', () => {
     const { getByText } = init();
     const label = i18n.t('addSubtopic');
 
-    core.addEventListener<CreateTopicEvent, CreateTopicEventData>(
-      'topics:create',
-      (payload) => {
-        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
-          payload.data.id,
-        );
-        done();
-      },
-    );
+    Topics.addEventListener(core, 'topics:topic:create', (payload) => {
+      expect(
+        App.getCurrentView<TopicViewInstanceData>().instance.topic,
+      ).toEqual(payload.data.id);
+      done();
+    });
 
     act(() => {
       fireEvent.click(getByText(label));
@@ -57,15 +51,12 @@ describe('<TopicViewOptionsMenu />', () => {
     const { getByText } = init();
     const label = i18n.t('delete');
 
-    core.addEventListener<DeleteTopicEvent, DeleteTopicEventData>(
-      'topics:delete',
-      () => {
-        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
-          tSailing.id,
-        );
-        done();
-      },
-    );
+    Topics.addEventListener(core, 'topics:topic:delete', () => {
+      expect(
+        App.getCurrentView<TopicViewInstanceData>().instance.topic,
+      ).toEqual(tSailing.id);
+      done();
+    });
 
     act(() => {
       fireEvent.click(getByText(label));
@@ -76,15 +67,12 @@ describe('<TopicViewOptionsMenu />', () => {
     const { getByText } = init([tUntitled.id]);
     const label = i18n.t('delete');
 
-    core.addEventListener<DeleteTopicEvent, DeleteTopicEventData>(
-      'topics:delete',
-      () => {
-        expect(App.getCurrentView<TopicViewInstance>().instance.topic).toEqual(
-          tSailing.id,
-        ); // tSailing is the first root topic
-        done();
-      },
-    );
+    Topics.addEventListener(core, 'topics:topic:delete', () => {
+      expect(
+        App.getCurrentView<TopicViewInstanceData>().instance.topic,
+      ).toEqual(tSailing.id); // tSailing is the first root topic
+      done();
+    });
 
     act(() => {
       fireEvent.click(getByText(label));

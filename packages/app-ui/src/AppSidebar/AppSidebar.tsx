@@ -2,7 +2,7 @@ import React, { FC, useCallback } from 'react';
 import { Sidebar, NavGroup, Toolbar } from '@minddrop/ui';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  PersistentStore,
+  LocalPersistentStore,
   useLocalPersistentStoreValue,
 } from '@minddrop/persistent-store';
 import { useAppCore, useRootTopics } from '@minddrop/app';
@@ -13,12 +13,11 @@ import './AppSidebar.css';
 export const AppSidebar: FC = () => {
   const { t } = useTranslation();
   const core = useAppCore();
-  const width = useLocalPersistentStoreValue(core, 'sidebarWidth');
+  const width = useLocalPersistentStoreValue(core, 'sidebarWidth', 300);
   const topics = useRootTopics();
 
   const handleResize = useCallback(
-    (value: number) =>
-      PersistentStore.setLocalValue(core, 'sidebarWidth', value),
+    (value: number) => LocalPersistentStore.set(core, 'sidebarWidth', value),
     [core],
   );
 

@@ -13,7 +13,7 @@ import { i18n } from '@minddrop/i18n';
 import { App } from '@minddrop/app';
 import { mapById } from '@minddrop/utils';
 
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
 
 describe('<DropDropdownMenu />', () => {
@@ -26,11 +26,7 @@ describe('<DropDropdownMenu />', () => {
 
   const init = (props: Partial<DropDropdownMenuProps> = {}) => {
     const utils = render(
-      <DropDropdownMenu
-        dropId={textDrop1.id}
-        topicId={tSailing.id}
-        {...props}
-      />,
+      <DropDropdownMenu dropId={drop1.id} topicId={tSailing.id} {...props} />,
     );
 
     const getTriggerButton = () => {
@@ -46,7 +42,7 @@ describe('<DropDropdownMenu />', () => {
 
     act(() => {
       // Select other drop
-      App.selectDrops(core, [textDrop2.id]);
+      App.selectDrops(core, [drop2.id]);
     });
 
     act(() => {
@@ -55,7 +51,7 @@ describe('<DropDropdownMenu />', () => {
     });
 
     // Should have target drop as only selected drop
-    expect(App.getSelectedDrops()).toEqual(mapById([textDrop1]));
+    expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
   });
 
   it('calls onOpenChange', () => {

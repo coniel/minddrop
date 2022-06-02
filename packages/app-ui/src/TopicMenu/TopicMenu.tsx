@@ -110,7 +110,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
   const rootTopicIds = App.getRootTopics().map((topic) => topic.id);
   // The topic's parent topics
   const parentTopics = topic.parents.filter(
-    (parent) => parent.type === 'topic',
+    (parent) => parent.resource === 'topics:topic',
   );
   // Does the topic appear at the root level
   const isRootTopic = rootTopicIds.includes(topic.id);

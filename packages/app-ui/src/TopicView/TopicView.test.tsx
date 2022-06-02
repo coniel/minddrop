@@ -17,7 +17,7 @@ import {
 } from '@minddrop/utils';
 
 const { tSixDropsView, tSixDrops } = TOPICS_TEST_DATA;
-const { textDrop1, textDrop2 } = DROPS_TEST_DATA;
+const { drop1, drop2 } = DROPS_TEST_DATA;
 
 describe('<TopicView />', () => {
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -59,7 +59,7 @@ describe('<TopicView />', () => {
     });
 
     // Get the drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
     // Should unselect drops
@@ -71,7 +71,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -80,7 +80,7 @@ describe('<TopicView />', () => {
     });
 
     // Get the drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
     // Should unselect drops
@@ -92,7 +92,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -103,10 +103,10 @@ describe('<TopicView />', () => {
     // Get the updated topic
     const topic = Topics.get(tSixDropsView.topic);
     // Get the drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
 
     // Drop should be archived in the topic
-    expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
+    expect(topic.archivedDrops.includes(drop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
     // Should unselect drops
@@ -118,7 +118,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -129,10 +129,10 @@ describe('<TopicView />', () => {
     // Get the updated topic
     const topic = Topics.get(tSixDropsView.topic);
     // Get the drop
-    const drop = Drops.get(textDrop1.id);
+    const drop = Drops.get(drop1.id);
 
     // Drop should be archived in the topic
-    expect(topic.archivedDrops.includes(textDrop1.id)).toBe(true);
+    expect(topic.archivedDrops.includes(drop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
     // Should unselect drops
@@ -159,7 +159,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -174,7 +174,7 @@ describe('<TopicView />', () => {
     // Should set action
     expect(dataInsert.action).toEqual('copy');
     // Should set drops
-    expect(dataInsert.drops).toEqual([textDrop1.id]);
+    expect(dataInsert.drops).toEqual([drop1.id]);
   });
 
   it('adds selected drops and action to clipboardData and removes drops from topic on cut', () => {
@@ -195,7 +195,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -210,10 +210,10 @@ describe('<TopicView />', () => {
     // Should set action
     expect(dataInsert.action).toEqual('cut');
     // Should set drops
-    expect(dataInsert.drops).toEqual([textDrop1.id]);
+    expect(dataInsert.drops).toEqual([drop1.id]);
     // Should remove drops from topic
     const topic = Topics.get(tSixDropsView.topic);
-    expect(topic.drops.includes(textDrop1.id)).toBe(false);
+    expect(topic.drops.includes(drop1.id)).toBe(false);
   });
 
   it('inserts data on paste', () => {
@@ -245,7 +245,7 @@ describe('<TopicView />', () => {
       // Add the new drop to the clipboard event data
       setDataTransferData(event as unknown as ClipboardEvent, {
         action: 'copy',
-        drops: [textDrop1.id],
+        drops: [drop1.id],
       });
       // Fire a paste event using the clipboard event
       fireEvent.paste(document, event);
@@ -256,7 +256,7 @@ describe('<TopicView />', () => {
     // @ts-ignore
     const params = App.insertDataIntoTopic.mock.calls[0];
     expect(params[1]).toBe(tSixDropsView.topic);
-    expect(params[2].drops).toEqual([textDrop1.id]);
+    expect(params[2].drops).toEqual([drop1.id]);
   });
 
   it('ignores data pasted into INPUT and SPAN', () => {
@@ -288,7 +288,7 @@ describe('<TopicView />', () => {
       // Add the new drop to the clipboard event data
       setDataTransferData(event as unknown as ClipboardEvent, {
         action: 'copy',
-        drops: [textDrop1.id],
+        drops: [drop1.id],
       });
       // Fire a paste event into INPUT using the clipboard event
       fireEvent.paste(document, event);
@@ -306,7 +306,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [textDrop1.id]);
+      App.selectDrops(core, [drop1.id]);
     });
 
     act(() => {
@@ -317,7 +317,7 @@ describe('<TopicView />', () => {
     act(() => {
       // Select another drop
       App.clearSelectedDrops(core);
-      App.selectDrops(core, [textDrop2.id]);
+      App.selectDrops(core, [drop2.id]);
     });
 
     act(() => {
@@ -329,13 +329,13 @@ describe('<TopicView />', () => {
     const topic = Topics.get(tSixDropsView.topic);
     expect(topic.drops.length).toEqual(8);
     // Should have duplicated the first drop
-    const dropId = topic.drops[6];
-    const drop = Drops.get(dropId);
-    expect(drop.duplicatedFrom).toBe(textDrop1.id);
+    const duplicate1Id = topic.drops[6];
+    const duplicate1 = Drops.get(duplicate1Id);
+    expect(duplicate1.duplicatedFrom).toBe(drop1.id);
     // Should have duplicated the first drop
-    const dropId2 = topic.drops[7];
-    const drop2 = Drops.get(dropId2);
-    expect(drop2.duplicatedFrom).toBe(textDrop2.id);
+    const duplicate2Id = topic.drops[7];
+    const duplicate2 = Drops.get(duplicate2Id);
+    expect(duplicate2.duplicatedFrom).toBe(drop2.id);
   });
 
   it('selects all drops on metaKey+A/a keypress', () => {

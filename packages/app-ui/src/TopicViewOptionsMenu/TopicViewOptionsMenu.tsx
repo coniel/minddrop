@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Topic } from '@minddrop/topics';
 import { App, useAppCore } from '@minddrop/app';
 import {

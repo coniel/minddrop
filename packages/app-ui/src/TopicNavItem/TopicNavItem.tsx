@@ -9,10 +9,10 @@ import {
   PopoverAnchor,
 } from '@minddrop/ui';
 import { App } from '@minddrop/app';
-import { Topic, useTopic, TopicViewInstance } from '@minddrop/topics';
+import { Topic, useTopic, TopicViewInstanceData } from '@minddrop/topics';
 import { useAppCore, useCurrentView } from '@minddrop/app';
 import {
-  PersistentStore,
+  LocalPersistentStore,
   useLocalPersistentStoreValue,
 } from '@minddrop/persistent-store';
 import { FieldValue } from '@minddrop/utils';
@@ -32,7 +32,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   // The topic ID is the last ID in the trail
   const topicId = useMemo(() => trail.slice(-1)[0], trail);
   const topic = useTopic(topicId);
-  const { instance } = useCurrentView<TopicViewInstance>();
+  const { instance } = useCurrentView<TopicViewInstanceData>();
   const expandedTopics = useLocalPersistentStoreValue<string[]>(
     core,
     'expandedTopics',
@@ -49,7 +49,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
 
   const handleExpandedChange = useCallback(
     (expanded) => {
-      PersistentStore.setLocalValue(
+      LocalPersistentStore.set(
         core,
         'expandedTopics',
         expanded

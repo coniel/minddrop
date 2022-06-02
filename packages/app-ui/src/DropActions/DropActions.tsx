@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
+import { ResourceReference } from '@minddrop/resources';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './DropActions.css';
-import { DropParentReference } from '@minddrop/drops';
 import { Toolbar } from '@minddrop/ui';
 import { DropDropdownMenu } from '../DropDropdownMenu';
 
@@ -15,7 +15,7 @@ export interface DropActionsProps extends React.HTMLAttributes<HTMLDivElement> {
    * The reference to the parent inside which the
    * drop is rendered.
    */
-  parent?: DropParentReference;
+  currentParent?: ResourceReference;
 
   /**
    * Additional actions. Should be IconButtons.
@@ -25,7 +25,7 @@ export interface DropActionsProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const DropActions: FC<DropActionsProps> = ({
   dropId,
-  parent,
+  currentParent,
   children,
   className,
   ...other
@@ -38,12 +38,12 @@ export const DropActions: FC<DropActionsProps> = ({
       className={mapPropsToClasses({ className, visible }, 'drop-actions')}
       {...other}
     >
-      {parent && parent.type === 'topic' && (
+      {currentParent && currentParent.resource === 'topics:topic' && (
         <Toolbar>
           {children}
           <DropDropdownMenu
             dropId={dropId}
-            topicId={parent.id}
+            topicId={currentParent.id}
             onOpenChange={setVisible}
           />
         </Toolbar>
