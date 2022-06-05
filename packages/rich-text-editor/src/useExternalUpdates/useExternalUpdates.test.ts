@@ -1,8 +1,5 @@
-import {
-  RTDocuments,
-  RTElements,
-  RICH_TEXT_TEST_DATA,
-} from '@minddrop/rich-text';
+import { ResourceReferences } from '@minddrop/resources';
+import { RichTextDocuments, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { act, renderHook } from '@minddrop/test-utils';
 import { generateId } from '@minddrop/utils';
 import { setup, cleanup, core } from '../test-utils';
@@ -34,19 +31,24 @@ describe('useExternalUpdates', () => {
 
     act(() => {
       // Modify the value of the document as well a its revision
-      RTDocuments.setChildren(
-        core,
-        richTextDocument1.id,
-        [paragraphElement2.id],
-        generateId(),
-      );
+      RichTextDocuments.update(core, richTextDocument1.id, {
+        children: [paragraphElement2.id],
+      });
     });
 
-    // Get the inserted udpated version of the inserted element
-    const element = RTElements.get(paragraphElement2.id);
-
     // Editor children should be reset to the updated value
-    expect(editor.children).toEqual([element]);
+    expect(editor.children).toEqual([
+      {
+        ...paragraphElement2,
+        parents: [
+          ...paragraphElement2.parents,
+          ResourceReferences.generate(
+            'rich-text:document',
+            richTextDocument1.id,
+          ),
+        ],
+      },
+    ]);
   });
 
   it('does not reset if the value has changed within the editor', () => {
@@ -69,12 +71,10 @@ describe('useExternalUpdates', () => {
     act(() => {
       // Modify the value of the document as well a its revision,
       // using the revision ID from above.
-      RTDocuments.setChildren(
-        core,
-        richTextDocument1.id,
-        [paragraphElement2.id],
+      RichTextDocuments.update(core, richTextDocument1.id, {
+        children: [paragraphElement2.id],
         revision,
-      );
+      });
     });
 
     // Editor children should not be reset (initial value was empty)
@@ -91,13 +91,10 @@ describe('useExternalUpdates', () => {
     );
 
     act(() => {
-      // Modify the value of the document as well a its revision
-      RTDocuments.setChildren(
-        core,
-        richTextDocument1.id,
-        [paragraphElement2.id],
-        generateId(),
-      );
+      // Modify the value of the document
+      RichTextDocuments.update(core, richTextDocument1.id, {
+        children: [paragraphElement2.id],
+      });
     });
 
     // Get the editor session data

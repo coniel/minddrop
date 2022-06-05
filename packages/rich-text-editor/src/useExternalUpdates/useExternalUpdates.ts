@@ -1,6 +1,5 @@
-import { RTElements, useRTDocument } from '@minddrop/rich-text';
-import { useEffect, useRef } from 'react';
-import { Descendant } from 'slate';
+import { RichTextElements, useRichTextDocument } from '@minddrop/rich-text';
+import { useEffect } from 'react';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
@@ -20,7 +19,7 @@ export function useExternalUpdates(
   sessionId: string,
 ): void {
   // Watch the document for changes
-  const document = useRTDocument(documentId);
+  const document = useRichTextDocument(documentId);
 
   useEffect(() => {
     // Get the session's document revisions
@@ -32,7 +31,7 @@ export function useExternalUpdates(
     // value has been changed externally.
     if (!documentRevisions.includes(document.revision)) {
       // Get the rich text elements making up the document's children
-      const elements = RTElements.get(document.children);
+      const elements = RichTextElements.get(document.children);
 
       // Create the editor value by aranging the rich text elements
       // in the order they are listed in the document's children.

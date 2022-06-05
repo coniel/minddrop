@@ -1,5 +1,5 @@
 import { Node } from 'slate';
-import { ParentReferences } from '@minddrop/core';
+import { ResourceReferences } from '@minddrop/resources';
 import { RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
@@ -30,8 +30,8 @@ describe('withParentReferences', () => {
     Transforms.insertNodes(editor, linkElement1, { at: [0, 0] });
 
     // The document reference
-    const parentReference = ParentReferences.generate(
-      'rich-text-document',
+    const parentReference = ResourceReferences.generate(
+      'rich-text:document',
       richTextDocument1.id,
     );
 
@@ -59,7 +59,10 @@ describe('withParentReferences', () => {
         ...linkElement1,
 
         parents: [
-          ParentReferences.generate('rich-text-document', richTextDocument1.id),
+          ResourceReferences.generate(
+            'rich-text:document',
+            richTextDocument1.id,
+          ),
         ],
       },
       { at: [0, 0] },
@@ -72,7 +75,7 @@ describe('withParentReferences', () => {
     // The inserted element should only contain a signel reference
     // to the document.
     expect(
-      ParentReferences.get('rich-text-document', element.parents).length,
+      ResourceReferences.get('rich-text:document', element.parents).length,
     ).toBe(1);
   });
 
@@ -88,8 +91,8 @@ describe('withParentReferences', () => {
     Transforms.insertNodes(editor, linkElement1, { at: [0, 0] });
 
     // The parent element's reference
-    const parentReference = ParentReferences.generate(
-      'rich-text-element',
+    const parentReference = ResourceReferences.generate(
+      'rich-text:element',
       paragraphElement1.id,
     );
 
@@ -116,7 +119,10 @@ describe('withParentReferences', () => {
       {
         ...linkElement1,
         parents: [
-          ParentReferences.generate('rich-text-element', paragraphElement1.id),
+          ResourceReferences.generate(
+            'rich-text:element',
+            paragraphElement1.id,
+          ),
         ],
       },
       { at: [0, 0] },
@@ -129,7 +135,7 @@ describe('withParentReferences', () => {
     // The inserted element should contain only a single refernece to
     // the parent element.
     expect(
-      ParentReferences.getIds('rich-text-element', element.parents).length,
+      ResourceReferences.getIds('rich-text:element', element.parents).length,
     ).toBe(1);
   });
 
@@ -145,8 +151,8 @@ describe('withParentReferences', () => {
             {
               ...linkElement1,
               parents: [
-                ParentReferences.generate(
-                  'rich-text-element',
+                ResourceReferences.generate(
+                  'rich-text:element',
                   paragraphElement1.id,
                 ),
               ],
@@ -170,13 +176,13 @@ describe('withParentReferences', () => {
     const element = Node.get(editor, [1, 1]) as RTElement;
 
     // The old parent reference
-    const oldParentRef = ParentReferences.generate(
-      'rich-text-element',
+    const oldParentRef = ResourceReferences.generate(
+      'rich-text:element',
       paragraphElement1.id,
     );
     // The new parent reference
-    const newParentRef = ParentReferences.generate(
-      'rich-text-element',
+    const newParentRef = ResourceReferences.generate(
+      'rich-text:element',
       paragraph.id,
     );
 
@@ -199,8 +205,8 @@ describe('withParentReferences', () => {
             {
               ...linkElement1,
               parents: [
-                ParentReferences.generate(
-                  'rich-text-element',
+                ResourceReferences.generate(
+                  'rich-text:element',
                   paragraphElement2.id,
                 ),
               ],
@@ -221,13 +227,13 @@ describe('withParentReferences', () => {
     const element = Node.get(editor, [0, 1]) as RTElement;
 
     // The old parent reference
-    const oldParentRef = ParentReferences.generate(
-      'rich-text-element',
+    const oldParentRef = ResourceReferences.generate(
+      'rich-text:element',
       paragraphElement2.id,
     );
     // The new parent reference
-    const newParentRef = ParentReferences.generate(
-      'rich-text-element',
+    const newParentRef = ResourceReferences.generate(
+      'rich-text:element',
       paragraphElement1.id,
     );
 

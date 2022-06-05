@@ -1,7 +1,7 @@
 import {
   RTBlockElementConfig,
   RTElement,
-  RTElements,
+  RichTextElements,
   RTInlineElementConfig,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
@@ -83,7 +83,7 @@ describe('withBlockShortcuts', () => {
     const element = Node.get(editor, [0]) as RTElement;
 
     // Should remove the '# ' shortcut from the text
-    expect(RTElements.toPlainText([element])).toBe('');
+    expect(RichTextElements.toPlainText([element])).toBe('');
   });
 
   it('only runs the shortcut if typed at the start of the block', () => {
@@ -176,6 +176,6 @@ describe('withBlockShortcuts', () => {
     // The element should have remained a paragraph element
     expect(element.type).toBe(paragraphElement1.type);
     // The shortcut text should not have been removed
-    expect(RTElements.toPlainText([element])).toBe('[[');
+    expect(RichTextElements.toPlainText([element])).toBe('[[');
   });
 });

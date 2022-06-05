@@ -1,22 +1,40 @@
 import React from 'react';
 import { act, fireEvent, render } from '@minddrop/test-utils';
-import { ToDoElement } from './ToDoElement.types';
-import { createTestDocument } from '../test-utils';
+import { ToDoElementData } from './ToDoElement.types';
+import { cleanup, core, createTestDocument, setup } from '../test-utils';
 import { RichTextEditor } from '../RichTextEditor';
 import { ToDoElementConfig } from './ToDoElementConfig';
-import { RTElements } from '@minddrop/rich-text';
+import {
+  RichTextElements,
+  RICH_TEXT_TEST_DATA,
+  RTBlockElementDocument,
+  RTDocument,
+} from '@minddrop/rich-text';
+import { Resources } from '@minddrop/resources';
 
-const toDoElement: ToDoElement = {
-  id: 'to-do-element-id',
-  type: 'to-do',
-  done: false,
-  parents: [],
-  children: [{ text: 'children' }],
-};
+const { toDoElementConfig } = RICH_TEXT_TEST_DATA;
 
-const document = createTestDocument([ToDoElementConfig], [toDoElement]);
+const toDoElement: RTBlockElementDocument<ToDoElementData> =
+  Resources.generateDocument('rich-text:element', {
+    type: 'to-do',
+    done: false,
+    children: [{ text: 'children' }],
+  });
 
 describe('ToDoElementComponent', () => {
+  let document: RTDocument;
+
+  beforeAll(() => {
+    setup();
+
+    // Unregister the test data 'to-do' element type
+    RichTextElements.unregister(core, toDoElementConfig);
+
+    document = createTestDocument([ToDoElementConfig], [toDoElement]);
+  });
+
+  afterAll(cleanup);
+
   it('renders it children', () => {
     // Render an editor containing a 'to-do' element
     const { getByText } = render(<RichTextEditor documentId={document.id} />);
@@ -43,7 +61,7 @@ describe('ToDoElementComponent', () => {
     });
 
     // Get the updated to-do element
-    let element = RTElements.get<ToDoElement>(toDoElement.id);
+    let element = RichTextElements.get<ToDoElementData>(toDoElement.id);
 
     // Should have `done` set to `true`
     expect(element.done).toBe(true);
@@ -59,7 +77,7 @@ describe('ToDoElementComponent', () => {
     });
 
     // Get the updated to-do element
-    element = RTElements.get<ToDoElement>(toDoElement.id);
+    element = RichTextElements.get<ToDoElementData>(toDoElement.id);
 
     // Should have `done` set to `false`
     expect(element.done).toBe(false);

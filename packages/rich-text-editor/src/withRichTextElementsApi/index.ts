@@ -1,1 +1,1 @@
-export * from './withRTElementsApi';
+export * from './withRichTextElementsApi';

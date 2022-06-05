@@ -1,8 +1,8 @@
 import { useDebounce } from 'use-debounce';
-import { Core, useCore } from '@minddrop/core';
+import { useCore } from '@minddrop/core';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
 import { useEffect } from 'react';
-import { RTDocuments, RTElements } from '@minddrop/rich-text';
+import { RichTextDocuments, RichTextElements } from '@minddrop/rich-text';
 import { generateId } from '@minddrop/utils';
 
 /**
@@ -66,19 +66,23 @@ export function useDebouncedUpdates(
 
     // Create the new elements in the order they were inserted
     creationOrder.forEach((id) => {
-      RTElements.create(core, createdElements[id]);
+      RichTextElements.create(
+        core,
+        createdElements[id].type,
+        createdElements[id],
+      );
       changeRevision = true;
     });
 
     // Update the modified elements
     Object.keys(updatedElements).forEach((id) => {
-      RTElements.update(core, id, updatedElements[id]);
+      RichTextElements.update(core, id, updatedElements[id]);
       changeRevision = true;
     });
 
     // Delete removed elements
     deletedElements.forEach((id) => {
-      RTElements.delete(core, id);
+      RichTextElements.delete(core, id);
       changeRevision = true;
     });
 
@@ -89,7 +93,10 @@ export function useDebouncedUpdates(
       const revision = createDocumentRevision(sessionId);
 
       // Set the children and new revision
-      RTDocuments.setChildren(core, documentId, documentChildren, revision);
+      RichTextDocuments.update(core, documentId, {
+        children: documentChildren,
+        revision,
+      });
 
       // Prevent the revision from being chnaged below
       changeRevision = false;
@@ -102,7 +109,7 @@ export function useDebouncedUpdates(
       const revision = createDocumentRevision(sessionId);
 
       // Update the document revision
-      RTDocuments.setRevision(core, documentId, revision);
+      RichTextDocuments.update(core, documentId, { revision });
     }
   }, [debouncedSessionRevision, sessionId]);
 }

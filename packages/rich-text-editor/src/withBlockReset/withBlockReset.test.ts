@@ -1,6 +1,6 @@
 import {
   RTElement,
-  RTElements,
+  RichTextElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { Editor, Node } from 'slate';
@@ -130,7 +130,7 @@ describe('withBlockReset', () => {
     // Element should remain a heading
     expect(element.type).toBe(headingElement1.type);
     // Last character should have been deleted
-    expect(RTElements.toPlainText([element])).toBe('Hello worl');
+    expect(RichTextElements.toPlainText([element])).toBe('Hello worl');
   });
 
   it('does not reset inline elements when deleting backwards', () => {

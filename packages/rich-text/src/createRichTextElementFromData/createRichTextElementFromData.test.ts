@@ -34,15 +34,7 @@ const inlineConfig: RTInlineElementConfig<ElementData> = {
   dataSchema: { foo: { type: 'string' } },
   component: paragraphElementConfig.component,
   initializeData: (fragment) => ({
-    children: fragment
-      ? fragment.map((part) => {
-          if ('type' in part) {
-            return part.id;
-          }
-
-          return part;
-        })
-      : [{ text: 'Hello world' }],
+    children: fragment || [{ text: 'Hello world' }],
   }),
 };
 

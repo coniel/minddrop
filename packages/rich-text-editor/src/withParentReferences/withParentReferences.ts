@@ -1,4 +1,4 @@
-import { ParentReferences } from '@minddrop/core';
+import { ResourceReferences } from '@minddrop/resources';
 import { RTElement } from '@minddrop/rich-text';
 import { Text, Node, Path } from 'slate';
 import { Transforms } from '../Transforms';
@@ -44,8 +44,8 @@ export function withParentReferences(
       let element = operation.node as RTElement;
 
       // Check if the document is already present as a parent on the element
-      const hasDocumentAsParent = ParentReferences.getIds(
-        'rich-text-document',
+      const hasDocumentAsParent = ResourceReferences.getIds(
+        'rich-text:document',
         element.parents,
       ).includes(documentId);
 
@@ -55,7 +55,7 @@ export function withParentReferences(
           ...element,
           parents: [
             ...element.parents,
-            ParentReferences.generate('rich-text-document', documentId),
+            ResourceReferences.generate('rich-text:document', documentId),
           ],
         };
       }
@@ -63,8 +63,8 @@ export function withParentReferences(
       if (parent) {
         // Check if the parent element is already present as a parent
         // on the element.
-        const hasParentReference = ParentReferences.getIds(
-          'rich-text-element',
+        const hasParentReference = ResourceReferences.getIds(
+          'rich-text:element',
           element.parents,
         ).includes(parent.id);
 
@@ -75,7 +75,7 @@ export function withParentReferences(
             ...element,
             parents: [
               ...element.parents,
-              ParentReferences.generate('rich-text-element', parent.id),
+              ResourceReferences.generate('rich-text:element', parent.id),
             ],
           };
         }
@@ -120,11 +120,11 @@ export function withParentReferences(
                   // Filter out previous parent element from existing parents
                   ...element.parents.filter(
                     (parent) =>
-                      parent.type === 'rich-text-element' &&
+                      parent.resource === 'rich-text:element' &&
                       parent.id === splitElement.id,
                   ),
                   // Add a reference to the new parent element
-                  ParentReferences.generate('rich-text-element', element.id),
+                  ResourceReferences.generate('rich-text:element', element.id),
                 ],
               },
               { at: [...newElementPath, index] },
@@ -169,11 +169,11 @@ export function withParentReferences(
                   // Filter out previous parent element from existing parents
                   ...element.parents.filter(
                     (parent) =>
-                      parent.type === 'rich-text-element' &&
+                      parent.resource === 'rich-text:element' &&
                       parent.id === deletedElement.id,
                   ),
                   // Add a reference to the new parent element
-                  ParentReferences.generate('rich-text-element', element.id),
+                  ResourceReferences.generate('rich-text:element', element.id),
                 ],
               },
               { at: [...Path.previous(operation.path), index] },

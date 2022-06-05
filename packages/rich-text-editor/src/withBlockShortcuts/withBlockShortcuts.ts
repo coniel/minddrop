@@ -3,7 +3,7 @@ import {
   RTBlockElement,
   RTBlockElementConfig,
   RTElementConfig,
-  RTElements,
+  RichTextElements,
 } from '@minddrop/rich-text';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
@@ -41,7 +41,8 @@ export function withBlockShortcuts(
       return config.shortcuts.reduce(
         (nextMap, shortcut) => ({
           // Shortcut converts the element into the config's element type
-          [shortcut]: (element) => RTElements.convert(element, config.type),
+          [shortcut]: (element) =>
+            RichTextElements.convert(element, config.type),
           ...nextMap,
         }),
         map,
@@ -61,7 +62,7 @@ export function withBlockShortcuts(
       const element = getElementAbove(editor, { at: operation.path });
 
       // Get the element's config
-      const config = RTElements.getConfig(element[0].type);
+      const config = RichTextElements.getTypeConfig(element[0].type);
 
       if (config.level !== 'block') {
         // If the element is not a block level element, stop here
@@ -104,7 +105,7 @@ export function withBlockShortcuts(
           Transforms.delete(editor);
 
           // Run the conversion function to get the conversion data
-          const data = shortcuts[match](element[0]);
+          const data = shortcuts[match](element[0] as RTBlockElement);
 
           // Apply the conversion data to the element to convert it
           Transforms.setNodes(editor, data, {

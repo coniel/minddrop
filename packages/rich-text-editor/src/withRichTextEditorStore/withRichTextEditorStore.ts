@@ -1,5 +1,5 @@
 import { Editor } from '../types';
-import { withRTElementsApi } from '../withRTElementsApi';
+import { withRichTextElementsApi } from '../withRichTextElementsApi';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
 
 // Static store methods
@@ -96,5 +96,5 @@ export function withRichTextEditorStore(
 ): Editor {
   // Add the rich text elements API plugin to the
   // editor with the configured API.
-  return withRTElementsApi(editor, createApi(sessionId));
+  return withRichTextElementsApi(editor, createApi(sessionId));
 }

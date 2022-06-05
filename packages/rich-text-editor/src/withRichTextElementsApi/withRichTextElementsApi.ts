@@ -19,7 +19,10 @@ export interface RTElementsApi {
  * @param api The API used to modify the elements and document.
  * @returns The editor instance with the plugin behaviour.
  */
-export function withRTElementsApi(editor: Editor, api: RTElementsApi): Editor {
+export function withRichTextElementsApi(
+  editor: Editor,
+  api: RTElementsApi,
+): Editor {
   const { apply } = editor;
 
   // eslint-disable-next-line no-param-reassign

@@ -1,4 +1,8 @@
-import { RTDocument, RTDocuments, RTElements } from '@minddrop/rich-text';
+import {
+  RTDocument,
+  RichTextDocuments,
+  RichTextElements,
+} from '@minddrop/rich-text';
 import { useMemo } from 'react';
 import { Descendant } from 'slate';
 
@@ -12,13 +16,13 @@ import { Descendant } from 'slate';
 export function useEditorInitialValue(documentId: string): Descendant[] {
   // Get the rich text document being edited
   const document = useMemo(
-    () => RTDocuments.get(documentId),
+    () => RichTextDocuments.get(documentId),
     [documentId],
   ) as RTDocument;
 
   // Get the document's root level rich text child elements
   const rootElements = useMemo(
-    () => RTElements.get(document.children),
+    () => RichTextElements.get(document.children),
     [documentId],
   );
 

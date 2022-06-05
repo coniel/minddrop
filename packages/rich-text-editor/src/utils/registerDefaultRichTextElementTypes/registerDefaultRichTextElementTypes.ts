@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { RTElements } from '@minddrop/rich-text';
+import { RichTextElements } from '@minddrop/rich-text';
 import { HeadingOneElementConfig } from '../../HeadingOneElement';
 import { ParagraphElementConfig } from '../../ParagraphElement';
 import { ToDoElementConfig } from '../../ToDoElement';
@@ -13,8 +13,8 @@ const configs = [
 /**
  * Registers all default rich text element types.
  */
-export function registerDefaultRTElementTypes(core: Core): void {
+export function registerDefaultRichTextElementTypes(core: Core): void {
   configs.forEach((config) => {
-    RTElements.register(core, config);
+    RichTextElements.register(core, config);
   });
 }

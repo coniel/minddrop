@@ -1,8 +1,8 @@
 import { act, renderHook } from '@minddrop/test-utils';
 import {
   RTBlockElement,
-  RTDocuments,
-  RTElements,
+  RichTextDocuments,
+  RichTextElements,
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { setup, cleanup, createTestEditor, core } from '../test-utils';
@@ -29,7 +29,7 @@ const createEditor = (
   documentId?: string,
 ): [Editor, string] => {
   // Create a new rich text document
-  const document = RTDocuments.create(core, {
+  const document = RichTextDocuments.create(core, {
     children: content.map((element) => element.id),
   });
 
@@ -47,9 +47,7 @@ const createEditor = (
 describe('withDebouncedUpdates', () => {
   jest.useFakeTimers();
 
-  beforeEach(() => {
-    setup();
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
@@ -86,9 +84,9 @@ describe('withDebouncedUpdates', () => {
   });
 
   it('creates elements in sequence', () => {
-    // Spy on the RTElements.create method to determine
+    // Spy on the RichTextElements.create method to determine
     // the order in which the inserted elements will be created.
-    jest.spyOn(RTElements, 'create');
+    jest.spyOn(RichTextElements, 'create');
 
     // Create an editor containing a paragraph element
     const [editor, documentId] = createEditor([paragraphElement1]);
@@ -113,14 +111,14 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Should have created 3 elements
-    expect(RTElements.create).toHaveBeenCalledTimes(3);
+    expect(RichTextElements.create).toHaveBeenCalledTimes(3);
     // Should create the elements in the order in which they were inserted
     // @ts-ignore
-    expect(RTElements.create.mock.calls[0][1]).toEqual(paragraph2);
+    expect(RichTextElements.create.mock.calls[0][2]).toEqual(paragraph2);
     // @ts-ignore
-    expect(RTElements.create.mock.calls[1][1]).toEqual(paragraph3);
+    expect(RichTextElements.create.mock.calls[1][2]).toEqual(paragraph3);
     // @ts-ignore
-    expect(RTElements.create.mock.calls[2][1]).toEqual(paragraph4);
+    expect(RichTextElements.create.mock.calls[2][2]).toEqual(paragraph4);
   });
 
   it('updates elements', () => {
@@ -143,7 +141,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated element
-    const element = RTElements.get(paragraphElement1.id);
+    const element = RichTextElements.get(paragraphElement1.id);
 
     // Element should contain the updated text
     expect(element.children).toEqual([{ text: 'Hello world' }]);
@@ -170,7 +168,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the deleted element
-    const element = RTElements.get(paragraphElement2.id);
+    const element = RichTextElements.get(paragraphElement2.id);
 
     // Element should be deleted
     expect(element.deleted).toBe(true);
@@ -194,7 +192,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RTDocuments.get(documentId);
+    const document = RichTextDocuments.get(documentId);
 
     // Document children should be updated
     expect(document.children).toEqual([
@@ -204,13 +202,13 @@ describe('withDebouncedUpdates', () => {
   });
 
   it('does not set document children if empty', () => {
-    // Spy on RTDocuments.setChildren to check if it was called
-    jest.spyOn(RTDocuments, 'setChildren');
-
     // Create an editor containing an empty paragraph element
     const [editor, documentId] = createEditor([
       { ...paragraphElement1, children: [{ text: '' }] },
     ]);
+
+    // Get the document
+    const document = RichTextDocuments.get(documentId);
 
     // Render the hook to simulate it being used in the editor component
     renderHook(() => useDebouncedUpdates(documentId, sessionId));
@@ -226,8 +224,13 @@ describe('withDebouncedUpdates', () => {
       jest.runAllTimers();
     });
 
-    // Should not set document children
-    expect(RTDocuments.setChildren).not.toHaveBeenCalled();
+    // Get the updated document
+    const updatedDocument = RichTextDocuments.get(documentId);
+
+    // Document children should remain unchanged
+    expect(updatedDocument.children).toEqual([paragraphElement1.id]);
+    // Revision should be changed
+    expect(updatedDocument.revision).not.toEqual(document.revision);
   });
 
   it('changes the document revision if a non root level element was created', () => {
@@ -248,7 +251,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RTDocuments.get(richTextDocument1.id);
+    const document = RichTextDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
@@ -282,7 +285,7 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RTDocuments.get(richTextDocument1.id);
+    const document = RichTextDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
@@ -311,43 +314,9 @@ describe('withDebouncedUpdates', () => {
     });
 
     // Get the updated document
-    const document = RTDocuments.get(richTextDocument1.id);
+    const document = RichTextDocuments.get(richTextDocument1.id);
 
     // Document revision should be different
     expect(document.revision).not.toBe(richTextDocument1.revision);
-  });
-
-  it('uses the `setChildren` method to change the document revision if children have changed', () => {
-    // Spy on the `RTDocuments.setRevision` method to make sure
-    // that it is used to set the new revision.
-    jest.spyOn(RTDocuments, 'setRevision');
-
-    // Create an editor containing a paragraph element
-    const [editor] = createEditor([paragraphElement1], richTextDocument1.id);
-
-    // Render the hook to simulate it being used in the editor component
-    renderHook(() => useDebouncedUpdates(richTextDocument1.id, sessionId));
-
-    act(() => {
-      // Insert a second paragraph element
-      Transforms.insertNodes(editor, paragraphElement2, { at: [1] });
-    });
-
-    act(() => {
-      // Run timers to call the debounced update function
-      jest.runAllTimers();
-    });
-
-    // Get the updated document
-    const document = RTDocuments.get(richTextDocument1.id);
-
-    // Document revision should be different
-    expect(document.revision).not.toBe(richTextDocument1.revision);
-    // New document revision should be in the session's `documentRevisions`
-    expect(
-      useRichTextEditorStore.getState().sessions[sessionId].documentRevisions,
-    ).toContain(document.revision);
-    // Should not call `RTDocuments.setRevision`
-    expect(RTDocuments.setRevision).not.toHaveBeenCalled();
   });
 });

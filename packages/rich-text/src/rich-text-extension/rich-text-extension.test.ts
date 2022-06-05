@@ -3,9 +3,9 @@ import {
   setup,
   cleanup,
   core,
-  headingElement1,
   paragraphElementConfig,
   richTextDocument1,
+  headingElement1Document,
 } from '../test-utils';
 import { RichTextDocuments } from '../RichTextDocuments';
 import { RichTextElements } from '../RichTextElements';
@@ -68,7 +68,7 @@ describe('rich text extension', () => {
 
     it('clears the rich text elements store', () => {
       // Load a rich text element into the store
-      RichTextElements.store.load(core, [headingElement1]);
+      RichTextElements.store.load(core, [headingElement1Document]);
 
       // Disable the exension
       onDisable(core);

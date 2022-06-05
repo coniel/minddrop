@@ -1,5 +1,4 @@
 import { Node } from 'slate';
-import { ParentReferences } from '@minddrop/core';
 import { RTElement, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { cleanup, setup } from '../../test-utils';
 import { Transforms } from '../../Transforms';
@@ -70,7 +69,9 @@ describe('createEditor', () => {
 
     // The element should have the document as a parent
     expect(
-      ParentReferences.contains('rich-text-document', element.parents),
+      element.parents.find(
+        (parent) => parent.resource === 'rich-text:document',
+      ),
     ).toBeTruthy();
   });
 });

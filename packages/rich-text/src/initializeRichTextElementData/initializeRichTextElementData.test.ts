@@ -37,15 +37,7 @@ const inlineConfig: RTInlineElementConfig<ElementData> = {
   component: paragraphElementConfig.component,
   initializeData: (fragment) => ({
     customProperty: 'foo',
-    children: fragment
-      ? fragment.map((part) => {
-          if ('type' in part) {
-            return part.id;
-          }
-
-          return part;
-        })
-      : [{ text: 'Hello world' }],
+    children: fragment || [{ text: 'Hello world' }],
   }),
 };
 

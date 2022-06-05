@@ -1,4 +1,4 @@
-import { RTElements } from '@minddrop/rich-text';
+import { RichTextElements } from '@minddrop/rich-text';
 import { createEditor as createSlateEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
@@ -24,7 +24,7 @@ export function createEditor(documentId: string): Editor {
   // Checks if an element is an inline level element
   editor.isInline = (element) => {
     // Get the element's configuration object
-    const config = RTElements.getConfig(element.type);
+    const config = RichTextElements.getTypeConfig(element.type);
 
     // Return `true` if the element is configured an inline level
     return config.level === 'inline';
@@ -33,7 +33,7 @@ export function createEditor(documentId: string): Editor {
   // Checks if an element is a void
   editor.isVoid = (element) => {
     // Get the element's configuration object
-    const config = RTElements.getConfig(element.type);
+    const config = RichTextElements.getTypeConfig(element.type);
 
     // Return `true` if the element is configured as void
     return config.void === true;
