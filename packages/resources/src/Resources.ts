@@ -7,6 +7,8 @@ import { ResourceApisStore } from './ResourceApisStore';
 import { ResourcesApi } from './types';
 import { unregisterResource } from './unregisterResource';
 import { generateResourceDocument } from './generateResourceDocument';
+import { registerResourceStorageAdapter } from './registerResourceStorageAdapter';
+import { unregisterResourceStorageAdapter } from './unregisterResourceStorageAdapter';
 
 export const Resources: ResourcesApi = {
   createResourceStore,
@@ -19,4 +21,10 @@ export const Resources: ResourcesApi = {
   get: ResourceApisStore.get,
   getAll: ResourceApisStore.getAll,
   clear: ResourceApisStore.clear,
+  registerStorageAdapter: registerResourceStorageAdapter,
+  unregisterStorageAdapter: unregisterResourceStorageAdapter,
+  addEventListener: (core, event, callback) =>
+    core.addEventListener(event, callback),
+  removeEventListener: (core, event, callback) =>
+    core.removeEventListener(event, callback),
 };

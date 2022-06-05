@@ -10,6 +10,17 @@ import { TypedResourceApi } from './TypedResourceApi.types';
 import { TypedResourceConfig } from './TypedResourceConfig.types';
 import { ResourceStore } from './ResourceStore.types';
 import { ConfigsStore, ConfigsStoreOptions } from './ConfigsStore.types';
+import { ResourceStorageAdapterConfig } from './ResourceStorageAdapterConfig.types';
+import {
+  RegisterResourceEvent,
+  RegisterResourceEventCallback,
+  RegisterResourceStorageAdapterEvent,
+  RegisterResourceStorageAdapterEventCallback,
+  UnregisterResourceEvent,
+  UnregisterResourceEventCallback,
+  UnregisterResourceStorageAdapterEvent,
+  UnregisterResourceStorageAdapterEventCallback,
+} from './ResourceEvents.types';
 
 export interface ResourcesApi {
   /**
@@ -143,4 +154,96 @@ export interface ResourcesApi {
    * **Intended for use in tests only.**
    */
   clear(): void;
+
+  /**
+   * Registers a new resource storage adapter.
+   *
+   * Dispatches a 'resources:storage-adapter:register'
+   * event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param config - The sotrage adapter config to register.
+   */
+  registerStorageAdapter(
+    core: Core,
+    config: ResourceStorageAdapterConfig,
+  ): void;
+
+  /**
+   * Unregisters a resource storage adapter.
+   *
+   * Dispatches a 'resources:storage-adapter:unregister'
+   * event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param config - The storage adapter config to unregister.
+   */
+  unregisterStorageAdapter(
+    core: Core,
+    config: ResourceStorageAdapterConfig,
+  ): void;
+
+  /* ********************************** */
+  /* *** addEventListener overloads *** */
+  /* ********************************** */
+
+  // Add 'resources:resource:register' event listener
+  addEventListener(
+    core: Core,
+    type: RegisterResourceEvent,
+    callback: RegisterResourceEventCallback,
+  ): void;
+
+  // Add 'resources:resource:unregister' event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterResourceEvent,
+    callback: UnregisterResourceEventCallback,
+  ): void;
+
+  // Add 'resources:storage-adapter:register' event listener
+  addEventListener(
+    core: Core,
+    type: RegisterResourceStorageAdapterEvent,
+    callback: RegisterResourceStorageAdapterEventCallback,
+  ): void;
+
+  // Add 'resources:storage-adapter:unregister' event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterResourceStorageAdapterEvent,
+    callback: UnregisterResourceStorageAdapterEventCallback,
+  ): void;
+
+  /* ************************************* */
+  /* *** removeEventListener overloads *** */
+  /* ************************************* */
+
+  // Remove 'resources:resource:register' event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterResourceEvent,
+    callback: RegisterResourceEventCallback,
+  ): void;
+
+  // Remove 'resources:resource:unregister' event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterResourceEvent,
+    callback: UnregisterResourceEventCallback,
+  ): void;
+
+  // Remove 'resources:storage-adapter:register' event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterResourceStorageAdapterEvent,
+    callback: RegisterResourceStorageAdapterEventCallback,
+  ): void;
+
+  // Remove 'resources:storage-adapter:unregister' event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterResourceStorageAdapterEvent,
+    callback: UnregisterResourceStorageAdapterEventCallback,
+  ): void;
 }
