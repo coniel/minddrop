@@ -3,6 +3,8 @@ export * from './RTBlockElementConfig.types';
 export * from './RTDocument.types';
 export * from './RTDocumentsApi.types';
 export * from './RTElement.types';
+export * from './RTElementConfig.types';
+export * from './RTElementDocument.types';
 export * from './RTElementFilters.types';
 export * from './RTElementProps.types';
 export * from './RTElementsApi.types';

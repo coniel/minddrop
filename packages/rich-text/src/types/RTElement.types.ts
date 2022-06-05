@@ -5,7 +5,6 @@ import {
   FieldValueArrayRemove,
 } from '@minddrop/utils';
 import { TRDTypeData, TypedResourceDocument } from '@minddrop/resources';
-import { RTNode } from '.';
 
 export interface BaseRTElementData {
   /**
@@ -14,11 +13,10 @@ export interface BaseRTElementData {
   level: 'inline' | 'block';
 
   /**
-   * An array of rich text nodes and the IDs of inline rich
-   * text elements which make up the element's rich text
-   * content.
+   * A rich text fragment consisting of rich text nodes and
+   * inline rich text elements.
    */
-  children?: (RTNode | string)[];
+  children?: RTFragment;
 
   /**
    * The IDs of nested block level `RTElements`. Only present
@@ -100,6 +98,10 @@ export type RTBlockElement<
 > = Omit<RTElement<TTypeData>, 'level'> & {
   level: 'block';
 };
+
+export type UpdateRTElementData<
+  TTypeUpdateData extends TRDTypeData<BaseRTElementData> = {},
+> = BaseUpdateRTElementData & TTypeUpdateData;
 
 /**
  * A { [id]: RTElement } map of rich text elements.

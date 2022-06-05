@@ -16,3 +16,28 @@ export const RichTextElements: RTElementsApi = {
   removeEventListener: (core, type, callback) =>
     core.removeEventListener(type, callback),
 };
+
+/**
+ * Returns a rich text element by ID.
+ *
+ * @param elementId - The ID of the rich text element to retrieve.
+ * @returns A rich text element or `null` if it does not exist.
+ */
+export const useRichTextElement = (elementId: string) =>
+  RTElementsResource.hooks.useDocument(elementId);
+
+/**
+ * Returns rich text elements by ID.
+ *
+ * @param elementIds - The IDs of the rich text elements to retrieve.
+ * @returns A `{ [id]: RTElement }` map of rich text elements.
+ */
+export const useRichTextElements = (elementIds: string[]) =>
+  RTElementsResource.hooks.useDocuments(elementIds);
+
+/**
+ * Returns all registered rich text element type
+ * config objects.
+ */
+export const useRichTextElementTypeConfigs =
+  RTElementsResource.hooks.useAllTypeConfigs;

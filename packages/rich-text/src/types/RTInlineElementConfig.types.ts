@@ -6,13 +6,13 @@ import { HtmlDeserializerMap } from './HtmlDeserializer.types';
 import { RTFragment } from './RTFragment.types';
 import { RTInlineElementProps } from './RTElementProps.types';
 import {
-  RTElement,
-  BaseRTElementData,
-  RTElementTypeData,
-} from './RTElement.types';
+  RTElementDocumentTypeData,
+  BaseRTElementDocumentData,
+} from './RTElementDocument.types';
+import { RTElement, BaseRTElementData } from './RTElement.types';
 
 interface RTInlineElementConfigOptions<
-  TTypeData extends RTElementTypeData = {},
+  TTypeData extends RTElementDocumentTypeData = {},
 > {
   /**
    * The level at which the element is rendered, always 'inline'.
@@ -96,17 +96,18 @@ interface RTInlineElementConfigOptions<
   htmlDeserializers?: HtmlDeserializerMap;
 }
 
-export type RTInlineElementConfig<TTypeData extends RTElementTypeData = {}> =
-  ResourceTypeConfig<
-    BaseRTElementData,
-    TTypeData,
-    RTInlineElementConfigOptions<TTypeData>
-  >;
+export type RTInlineElementConfig<
+  TTypeData extends RTElementDocumentTypeData = {},
+> = ResourceTypeConfig<
+  BaseRTElementDocumentData,
+  TTypeData,
+  RTInlineElementConfigOptions<TTypeData>
+>;
 
 export type RegisteredRTInlineElementConfig<
-  TTypeData extends RTElementTypeData = {},
+  TTypeData extends RTElementDocumentTypeData = {},
 > = RegisteredResourceTypeConfig<
-  BaseRTElementData,
+  BaseRTElementDocumentData,
   TTypeData,
   RTInlineElementConfigOptions<TTypeData>
 >;

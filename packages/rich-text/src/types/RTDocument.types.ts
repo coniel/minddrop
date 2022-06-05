@@ -33,6 +33,12 @@ export type UpdateRTDocumentData = {
    * of the document.
    */
   children?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
+
+  /**
+   * The document revision ID. If omitted, a new revision ID
+   * is automatically genereated.
+   */
+  revision?: string;
 };
 
 export type RTDocumentChanges = RDChanges<{

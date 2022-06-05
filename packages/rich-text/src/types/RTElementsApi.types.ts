@@ -3,13 +3,16 @@ import { TypedResourceApi } from '@minddrop/resources';
 import { RTBlockElementConfig } from './RTBlockElementConfig.types';
 import {
   RTBlockElement,
-  BaseCreateRTElementData,
   RTElement,
   RTElementMap,
-  BaseUpdateRTElementData,
-  BaseRTElementData,
   RTElementTypeData,
 } from './RTElement.types';
+import {
+  BaseCreateRTElementDocumentData,
+  BaseUpdateRTElementDocumentData,
+  BaseRTElementDocumentData,
+  RTElementDocumentTypeData,
+} from './RTElementDocument.types';
 import { RTElementFilters } from './RTElementFilters.types';
 import {
   CreateRTElementEvent,
@@ -33,11 +36,14 @@ import { RTFragment } from './RTFragment.types';
 import { RTInlineElementConfig } from './RTInlineElementConfig.types';
 
 export interface RTElementsApi
-  extends TypedResourceApi<
-    BaseRTElementData,
-    BaseCreateRTElementData,
-    BaseUpdateRTElementData,
-    RTBlockElementConfig | RTInlineElementConfig
+  extends Omit<
+    TypedResourceApi<
+      BaseRTElementDocumentData,
+      BaseCreateRTElementDocumentData,
+      BaseUpdateRTElementDocumentData,
+      RTBlockElementConfig | RTInlineElementConfig
+    >,
+    'create' | 'update' | 'get'
   > {
   /**
    * Registers a new rich text element type.
@@ -46,7 +52,7 @@ export interface RTElementsApi
    * @param core A - MindDrop core instance.
    * @param config - The configuration of the rich text element type to register.
    */
-  register<TTypeData extends RTElementTypeData = {}>(
+  register<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     config: RTBlockElementConfig<TTypeData> | RTInlineElementConfig<TTypeData>,
   ): void;
@@ -61,7 +67,7 @@ export interface RTElementsApi
    * @throws ResourceTypeNotRegisteredError
    * Thrown if the resource type is not registered.
    */
-  unregister<TTypeData extends RTElementTypeData = {}>(
+  unregister<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     config: RTBlockElementConfig<TTypeData> | RTInlineElementConfig<TTypeData>,
   ): void;
@@ -97,7 +103,9 @@ export interface RTElementsApi
   /**
    * Returns all rich text elements as a `{ [id]: RichTextElement }` map.
    */
-  getAll<TTypeData extends RTElementTypeData = {}>(): RTElementMap<TTypeData>;
+  getAll<
+    TTypeData extends RTElementDocumentTypeData = {},
+  >(): RTElementMap<TTypeData>;
 
   /**
    * Filters rich text elements according to the provided filters.
@@ -109,7 +117,7 @@ export interface RTElementsApi
    * @throws ResourceTypeNotRegisteredError
    * Thrown if any of the element types are not registered.
    */
-  filter<TTypeData extends RTElementTypeData = {}>(
+  filter<TTypeData extends RTElementDocumentTypeData = {}>(
     elements: RTElementMap<TTypeData>,
     filters: RTElementFilters,
   ): RTElementMap<TTypeData>;
@@ -131,7 +139,10 @@ export interface RTElementsApi
    * @throws ResourceValidationError
    * Thrown if the data is invalid.
    */
-  create<TTypeCreateData = {}, TTypeData extends RTElementTypeData = {}>(
+  create<
+    TTypeCreateData = {},
+    TTypeData extends RTElementDocumentTypeData = {},
+  >(
     core: Core,
     type: string,
     data: TTypeCreateData,
@@ -159,7 +170,7 @@ export interface RTElementsApi
    * @throws ResourceValidationError
    * Thrown if the data is invalid.
    */
-  createFromData<TTypeData extends RTElementTypeData = {}>(
+  createFromData<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     type: string,
     data: DataInsert | RTFragment,
@@ -185,7 +196,10 @@ export interface RTElementsApi
    * @throws ResourceValidationError
    * Thrown if the data is invalid.
    */
-  update<TTypeUpdateData = {}, TTypeData extends RTElementTypeData = {}>(
+  update<
+    TTypeUpdateData = {},
+    TTypeData extends RTElementDocumentTypeData = {},
+  >(
     core: Core,
     elementId: string,
     data: TTypeUpdateData,
@@ -204,7 +218,7 @@ export interface RTElementsApi
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  restore<TTypeData extends RTElementTypeData = {}>(
+  restore<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     elementId: string,
   ): RTElement<TTypeData>;
@@ -225,7 +239,7 @@ export interface RTElementsApi
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  delete<TTypeData extends RTElementTypeData = {}>(
+  delete<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     elementId: string,
   ): RTElement<TTypeData>;
@@ -245,7 +259,7 @@ export interface RTElementsApi
    * @throws ResourceDocumentNotFoundError
    * Thrown if the resource document does not exist.
    */
-  deletePermanently<TTypeData extends RTElementTypeData = {}>(
+  deletePermanently<TTypeData extends RTElementDocumentTypeData = {}>(
     core: Core,
     elementId: string,
   ): RTElement<TTypeData>;
@@ -276,7 +290,7 @@ export interface RTElementsApi
    * @throws ResourceTypeNotRegisteredError
    * Thrown if the rich text element type is not registered.
    */
-  initializeData<TData extends RTElementTypeData>(
+  initializeData<TData extends RTElementDocumentTypeData>(
     type: string,
     data?: DataInsert | RTFragment,
   ): Partial<RTElement<TData>>;
@@ -298,7 +312,7 @@ export interface RTElementsApi
    * @throws ResourceValidationError
    * Thrown if the resulting rich text element is invalid.
    */
-  convert<TTypeData extends RTElementTypeData = {}>(
+  convert<TTypeData extends RTElementDocumentTypeData = {}>(
     element: RTBlockElement,
     type: string,
   ): RTElement<TTypeData>;

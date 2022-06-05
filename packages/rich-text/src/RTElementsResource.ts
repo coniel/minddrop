@@ -5,12 +5,15 @@ import {
 } from '@minddrop/resources';
 import { Schema } from '@minddrop/utils';
 import {
-  BaseRTElementData,
-  BaseCreateRTElementData,
-  BaseUpdateRTElementData,
+  BaseRTElementDocumentData,
+  BaseCreateRTElementDocumentData,
+  BaseUpdateRTElementDocumentData,
   RTInlineElementConfig,
   RTBlockElementConfig,
+  RTElementDocument,
   RTElement,
+  RTInlineElement,
+  RTNode,
 } from './types';
 
 const richTextNodeDataSchema: Schema<ResourceFieldValidator> = {
@@ -49,7 +52,33 @@ const richTextNodeDataSchema: Schema<ResourceFieldValidator> = {
   },
 };
 
-const dataSchema: RDDataSchema<BaseRTElementData> = {
+function serializeChildren(
+  children?: RTElement['children'] | RTElementDocument['children'],
+): RTElementDocument['children'] {
+  if (!children) {
+    return [{ text: '' }];
+  }
+
+  return children.map((child: RTInlineElement | RTNode | string) => {
+    if (typeof child === 'string') {
+      // Child is a inline element ID,
+      // return it as is.
+      return child;
+    }
+
+    if ('type' in child) {
+      // Child is an inline rich text
+      // element, return its ID.
+      return child.id;
+    }
+
+    // Child is a rich text node,
+    // return it as is.
+    return child;
+  });
+}
+
+const dataSchema: RDDataSchema<BaseRTElementDocumentData> = {
   level: {
     type: 'enum',
     options: ['inline', 'block'],
@@ -77,9 +106,9 @@ const dataSchema: RDDataSchema<BaseRTElementData> = {
 };
 
 export const RTElementsResource = Resources.createTyped<
-  BaseRTElementData,
-  BaseCreateRTElementData,
-  BaseUpdateRTElementData,
+  BaseRTElementDocumentData,
+  BaseCreateRTElementDocumentData,
+  BaseUpdateRTElementDocumentData,
   RTInlineElementConfig | RTBlockElementConfig
 >({
   resource: 'rich-text:element',
@@ -87,12 +116,33 @@ export const RTElementsResource = Resources.createTyped<
   onCreate: (core, data) => {
     const config = RTElementsResource.getTypeConfig(data.type);
 
-    const document: RTElement = { ...data, level: config.level };
+    const document: RTElementDocument = { ...data, level: config.level };
 
-    if (!config.void && !document.children) {
-      return { ...document, children: [{ text: '' }] };
+    if (!config.void) {
+      return { ...document, children: serializeChildren(document.children) };
     }
 
     return document;
   },
+  onUpdate: (core, update) => {
+    if (
+      'children' in update.changes &&
+      Array.isArray(update.changes.children)
+    ) {
+      return {
+        ...update.changes,
+        children: serializeChildren(update.changes.children),
+      };
+    }
+
+    return update.changes;
+  },
+  // onGet: (document) => ({
+  //   ...document,
+  //   children: document.children
+  //     ? document.children.map((node) =>
+  //         typeof node === 'string' ? RTElementsResource.get(node) : node,
+  //       )
+  //     : undefined,
+  // }),
 });

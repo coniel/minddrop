@@ -4,17 +4,20 @@ import {
 } from '@minddrop/resources';
 import { DataInsert } from '@minddrop/core';
 import { Editor } from 'slate';
-import { RTBlockElement } from './RTElement.types';
+import {
+  RTBlockElement,
+  RTElement,
+  BaseRTElementData,
+} from './RTElement.types';
 import { RTBlockElementProps } from './RTElementProps.types';
 import { HtmlDeserializerMap } from './HtmlDeserializer.types';
 import {
-  RTElement,
-  BaseRTElementData,
-  RTElementTypeData,
-} from './RTElement.types';
+  RTElementDocumentTypeData,
+  BaseRTElementDocumentData,
+} from './RTElementDocument.types';
 
 interface RTBlockElementConfigOptions<
-  TTypeData extends RTElementTypeData = {},
+  TTypeData extends RTElementDocumentTypeData = {},
 > {
   /**
    * The level at which the element is rendered, always 'block'.
@@ -173,17 +176,18 @@ interface RTBlockElementConfigOptions<
   htmlDeserializers?: HtmlDeserializerMap;
 }
 
-export type RTBlockElementConfig<TTypeData extends RTElementTypeData = {}> =
-  ResourceTypeConfig<
-    BaseRTElementData,
-    TTypeData,
-    RTBlockElementConfigOptions<TTypeData>
-  >;
+export type RTBlockElementConfig<
+  TTypeData extends RTElementDocumentTypeData = {},
+> = ResourceTypeConfig<
+  BaseRTElementDocumentData,
+  TTypeData,
+  RTBlockElementConfigOptions<TTypeData>
+>;
 
 export type RegisteredRTBlockElementConfig<
-  TTypeData extends RTElementTypeData = {},
+  TTypeData extends RTElementDocumentTypeData = {},
 > = RegisteredResourceTypeConfig<
-  BaseRTElementData,
+  BaseRTElementDocumentData,
   TTypeData,
   RTBlockElementConfigOptions<TTypeData>
 >;
