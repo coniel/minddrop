@@ -8,7 +8,7 @@ import {
 } from './ResourceDocument.types';
 
 export interface ResourceConfig<
-  TData extends RDData,
+  TData extends RDData = {},
   TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**

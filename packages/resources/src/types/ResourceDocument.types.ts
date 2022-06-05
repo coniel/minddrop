@@ -152,8 +152,8 @@ export type RDChanges<TData extends RDData> = RDRootChanges &
  * Describes the changes made to an updated resource document.
  */
 export interface RDUpdate<
-  TData extends RDData,
-  TResourceDocument extends ResourceDocument<TData>,
+  TData extends RDData = {},
+  TResourceDocument extends ResourceDocument<TData> = ResourceDocument<TData>,
 > {
   /**
    * The resource document before it was changed.
