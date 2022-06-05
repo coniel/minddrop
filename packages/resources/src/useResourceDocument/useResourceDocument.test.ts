@@ -1,18 +1,12 @@
 import { renderHook } from '@minddrop/test-utils';
 import { createResourceStore } from '../createResourceStore';
-import { ResourceDocument } from '../types';
+import { generateResourceDocument } from '../generateResourceDocument';
 import { useResourceDocument } from './useResourceDocument';
 
 const store = createResourceStore();
 
 // Create a test document
-const document: ResourceDocument = {
-  resource: 'tests',
-  id: 'document-id',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const document = generateResourceDocument('tests:test', {});
 
 // Add the document to the store
 store.set(document);

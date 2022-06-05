@@ -1,28 +1,15 @@
 import { renderHook } from '@minddrop/test-utils';
+import { mapById } from '@minddrop/utils';
 import { TypedResourceDocument } from '../types';
 import { createResourceStore } from '../createResourceStore';
 import { useTypedResourceDocuments } from './useTypedResourceDocuments';
-import { mapById } from '@minddrop/utils';
+import { generateResourceDocument } from '../generateResourceDocument';
 
 const store = createResourceStore<TypedResourceDocument>();
 
 // Create a couple of test documents
-const document1: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-1',
-  revision: 'rev-1',
-  type: 'type-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-const document2: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-2',
-  revision: 'rev-1',
-  type: 'type-2',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const document1 = generateResourceDocument('tests:test', { type: 'type-1' });
+const document2 = generateResourceDocument('tests:test', { type: 'type-2' });
 
 // Load the documents into the store
 store.load([document1, document2]);

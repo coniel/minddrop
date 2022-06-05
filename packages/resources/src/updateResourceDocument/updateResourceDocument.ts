@@ -29,8 +29,8 @@ export function createChanges<TData>(
   data: RDUpdateData<TData>,
 ): RDChanges<TData> {
   return {
-    ...data,
     revision: generateId(),
+    ...data,
     updatedAt: new Date(),
   };
 }
@@ -48,7 +48,7 @@ export function validateExternalUpdateData<TData>(data: TData) {
   // Ensure that the update data does not contain properties which
   // can only be updated by the internal API.
   const internalFields = Object.keys(data).filter((key) =>
-    ['revision', 'updatedAt', 'deleted', 'deletedAt', 'parents'].includes(key),
+    ['updatedAt', 'deleted', 'deletedAt', 'parents'].includes(key),
   );
 
   if (internalFields.length) {

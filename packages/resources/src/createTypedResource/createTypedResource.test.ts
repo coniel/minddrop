@@ -330,6 +330,7 @@ describe('createTypedResource', () => {
       id: 'doc-1',
       revision: 'rev-1',
       type: 'type-1',
+      parents: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       baseFoo: 'foo',

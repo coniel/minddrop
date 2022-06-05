@@ -53,7 +53,7 @@ const updateResourceDocument = (
   store: ResourceStore<ResourceDocument<Data>>,
   config: ResourceConfig<Data>,
   documentId: string,
-  data: Partial<Data>,
+  data: Partial<Data & { revision?: string }>,
 ) =>
   rawUpdateResourceDocument<Data, ResourceDocument<Data>>(
     core,
@@ -81,6 +81,16 @@ describe('updateResourceDocument', () => {
     ).toThrowError(ResourceDocumentNotFoundError);
   });
 
+  it('updates the document', () => {
+    // Update a document
+    updateResourceDocument(core, store, config, document.id, {
+      foo: 'updated foo',
+    });
+
+    // Document should be updated in the store
+    expect(store.get(document.id).foo).toBe('updated foo');
+  });
+
   it('returns the updated document', () => {
     // Update a document
     const updated = updateResourceDocument(core, store, config, document.id, {
@@ -89,6 +99,17 @@ describe('updateResourceDocument', () => {
 
     // Should return the updated document
     expect(updated.foo).toBe('updated foo');
+  });
+
+  it('uses the provided revision ID', () => {
+    // Update a document, providing a custom revision ID
+    const updated = updateResourceDocument(core, store, config, document.id, {
+      foo: 'updated foo',
+      revision: 'new-rev',
+    });
+
+    // Should use the provided revision ID
+    expect(updated.revision).toBe('new-rev');
   });
 
   it("calls the config's `onUpdate` callback", () => {
@@ -232,18 +253,6 @@ describe('updateResourceDocument', () => {
   });
 
   describe('internal updates', () => {
-    it('throws if `revision` is updated without `isInternalUpdate`', () => {
-      // Attempt to update a document's `revision` field without the
-      // `isInternalUpdate` flag being set. Should throw a
-      // `ResourceValidationError`.
-      expect(() =>
-        updateResourceDocument(core, store, config, document.id, {
-          // @ts-ignore
-          revision: 'new-rev',
-        }),
-      ).toThrowError(ResourceValidationError);
-    });
-
     it('throws if `updatedAt` is updated without `isInternalUpdate`', () => {
       // Attempt to update a document's `updatedAt` field without the
       // `isInternalUpdate` flag being set. Should throw a

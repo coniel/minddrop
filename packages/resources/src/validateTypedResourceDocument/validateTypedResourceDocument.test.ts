@@ -1,5 +1,6 @@
 import { ResourceValidationError } from '../errors';
 import { RDDataSchema, TypedResourceDocument } from '../types';
+import { generateResourceDocument } from '../generateResourceDocument';
 import { validateTypedResourceDocument } from './validateTypedResourceDocument';
 
 interface BaseData {
@@ -24,16 +25,12 @@ const typeSchema: RDDataSchema<TypeData> = {
   },
 };
 
-const document: TypedResourceDocument<BaseData, TypeData> = {
-  baseField: 'foo',
-  typeField: 'foo',
-  resource: 'tests',
-  type: 'test-type',
-  id: 'document-id',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const document: TypedResourceDocument<BaseData, TypeData> =
+  generateResourceDocument('tests:test', {
+    baseField: 'foo',
+    typeField: 'foo',
+    type: 'test-type',
+  });
 
 describe('validateTypedResourceDocument', () => {
   describe('`type` field', () => {

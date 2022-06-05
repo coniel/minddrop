@@ -138,7 +138,7 @@ describe('runSchemaCreateHooks', () => {
       const child = childResource.get(childDocument4.id);
 
       // Child document should not have a parent reference
-      expect(child.parents).not.toBeDefined();
+      expect(child.parents).toEqual([]);
     });
   });
 
@@ -162,7 +162,7 @@ describe('runSchemaCreateHooks', () => {
       const child = childResource.get(childDocument4.id);
 
       // Child document should not have a parent reference
-      expect(child.parents).not.toBeDefined();
+      expect(child.parents).toEqual([]);
     });
   });
 });

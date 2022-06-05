@@ -4,6 +4,7 @@ import {
   TRDBaseData,
   TypedResourceDocument,
   TRDUpdate,
+  TRDUpdateData,
 } from './TypedResourceDocument.types';
 
 export interface TypedResourceConfig<
@@ -57,7 +58,7 @@ export interface TypedResourceConfig<
    *
    * @param update The resource update.
    */
-  onUpdate?(core: Core, update: TRDUpdate<TBaseData>): Partial<TBaseData>;
+  onUpdate?(core: Core, update: TRDUpdate<TBaseData>): TRDUpdateData<TBaseData>;
 
   /**
    * Callback fired when a document is retrieved from the store.

@@ -211,6 +211,34 @@ export function createTypedResource<
       useAllDocuments: <TTypeData extends TRDTypeData<TBaseData> = {}>(
         filters: TypedResourceDocumentFilters,
       ) => useAllTypedResourceDocuments<TBaseData, TTypeData>(store, filters),
+      useTypeConfig: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+        type: string,
+      ) =>
+        typeConfigsStore.useConfig<
+          RegisteredResourceTypeConfig<
+            TBaseData,
+            TTypeData,
+            TCustomTypeConfigOptions
+          >
+        >(type),
+      useTypeConfigs: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+        types: string[],
+      ) =>
+        typeConfigsStore.useConfigs<
+          RegisteredResourceTypeConfig<
+            TBaseData,
+            TTypeData,
+            TCustomTypeConfigOptions
+          >
+        >(types),
+      useAllTypeConfigs: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
+        typeConfigsStore.useAllConfigs<
+          RegisteredResourceTypeConfig<
+            TBaseData,
+            TTypeData,
+            TCustomTypeConfigOptions
+          >
+        >(),
     },
     typeConfigsStore,
   };

@@ -1,21 +1,12 @@
 import { mapById } from '@minddrop/utils';
 import { ResourceDocument, ResourceDocumentMap } from '../types';
+import { generateResourceDocument } from '../generateResourceDocument';
 import { filterResourceDocuments } from './filterResourceDocuments';
 
-const activeDocument: ResourceDocument = {
-  resource: 'tests',
-  id: 'doc-1',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const activeDocument = generateResourceDocument('tests:test', {});
 
 const deletedDocument: ResourceDocument = {
-  resource: 'tests',
-  id: 'doc-2',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  ...generateResourceDocument('tests:test', {}),
   deleted: true,
   deletedAt: new Date(),
 };

@@ -2,6 +2,7 @@ import { renderHook } from '@minddrop/test-utils';
 import { createResourceStore } from '../createResourceStore';
 import { TypedResourceDocument } from '../types';
 import { useTypedResourceDocument } from './useTypedResourceDocument';
+import { generateResourceDocument } from '../generateResourceDocument';
 
 interface BaseData {
   foo: string;
@@ -14,16 +15,12 @@ interface TypeData {
 const store = createResourceStore<TypedResourceDocument<BaseData, TypeData>>();
 
 // Create a test document
-const document: TypedResourceDocument<BaseData, TypeData> = {
-  resource: 'tests',
-  id: 'document-id',
-  revision: 'rev-1',
-  type: 'type-1',
-  foo: 'foo',
-  bar: 'bar',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const document: TypedResourceDocument<BaseData, TypeData> =
+  generateResourceDocument('tests:test', {
+    type: 'type-1',
+    foo: 'foo',
+    bar: 'bar',
+  });
 
 // Add the document to the store
 store.set(document);

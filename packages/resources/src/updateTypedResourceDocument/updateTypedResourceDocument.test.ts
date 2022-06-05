@@ -412,25 +412,6 @@ describe('updateTypedResourceDocument', () => {
   });
 
   describe('internal updates', () => {
-    it('throws if `revision` is updated without `isInternalUpdate`', () => {
-      // Attempt to update a document's `revision` field without the
-      // `isInternalUpdate` flag being set. Should throw a
-      // `ResourceValidationError`.
-      expect(() =>
-        updateTypedResourceDocument(
-          core,
-          store,
-          typeConfigsStore,
-          config,
-          document.id,
-          {
-            // @ts-ignore
-            revision: 'new-rev',
-          },
-        ),
-      ).toThrowError(ResourceValidationError);
-    });
-
     it('throws if `updatedAt` is updated without `isInternalUpdate`', () => {
       // Attempt to update a document's `updatedAt` field without the
       // `isInternalUpdate` flag being set. Should throw a

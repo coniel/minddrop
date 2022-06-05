@@ -1,6 +1,11 @@
 import { RDDataSchema } from './ResourceValidation.types';
 import { Core } from '@minddrop/core';
-import { ResourceDocument, RDData, RDUpdate } from './ResourceDocument.types';
+import {
+  ResourceDocument,
+  RDData,
+  RDUpdate,
+  RDUpdateData,
+} from './ResourceDocument.types';
 
 export interface ResourceConfig<
   TData extends RDData,
@@ -56,7 +61,7 @@ export interface ResourceConfig<
   onUpdate?(
     core: Core,
     update: RDUpdate<TData, TResourceDocument>,
-  ): Partial<TData>;
+  ): RDUpdateData<TData>;
 
   /**
    * Callback fired when a document is retrieved from the store.

@@ -1,33 +1,18 @@
 import { renderHook } from '@minddrop/test-utils';
+import { mapById } from '@minddrop/utils';
 import { ResourceDocument } from '../types';
 import { createResourceStore } from '../createResourceStore';
 import { useResourceDocuments } from './useResourceDocuments';
-import { mapById } from '@minddrop/utils';
+import { generateResourceDocument } from '../generateResourceDocument';
 
 const store = createResourceStore();
 
 // Create a couple of test documents
-const document1: ResourceDocument = {
-  resource: 'tests',
-  id: 'doc-1',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-const document2: ResourceDocument = {
-  resource: 'tests',
-  id: 'doc-2',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const document1 = generateResourceDocument('tests:test', {});
+const document2 = generateResourceDocument('tests:test', {});
 // Create a test deleted document
 const deletedDocument: ResourceDocument = {
-  resource: 'tests',
-  id: 'doc-3',
-  revision: 'rev-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  ...generateResourceDocument('tests:test', {}),
   deleted: true,
   deletedAt: new Date(),
 };

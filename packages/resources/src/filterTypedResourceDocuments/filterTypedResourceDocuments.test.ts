@@ -1,41 +1,31 @@
 import { mapById } from '@minddrop/utils';
 import { TypedResourceDocument, TypedResourceDocumentMap } from '../types';
+import { generateResourceDocument } from '../generateResourceDocument';
 import { filterTypedResourceDocuments } from './filterTypedResourceDocuments';
 
-const type1Document: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-1',
-  revision: 'rev-1',
-  type: 'type-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const type1Document: TypedResourceDocument = generateResourceDocument(
+  'tests:test',
+  {
+    type: 'type-1',
+  },
+);
 
-const type2Document: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-2',
-  revision: 'rev-1',
-  type: 'type-2',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const type2Document: TypedResourceDocument = generateResourceDocument(
+  'tests:test',
+  {
+    type: 'type-2',
+  },
+);
 
-const activeDocument: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-3',
-  revision: 'rev-1',
-  type: 'type-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+const activeDocument: TypedResourceDocument = generateResourceDocument(
+  'tests:test',
+  {
+    type: 'type-1',
+  },
+);
 
 const deletedDocument: TypedResourceDocument = {
-  resource: 'tests',
-  id: 'doc-4',
-  revision: 'rev-1',
-  type: 'type-1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  ...generateResourceDocument('tests:test', {}),
   deleted: true,
   deletedAt: new Date(),
 };

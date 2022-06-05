@@ -328,6 +328,35 @@ export interface TypedResourceApi<
     useAllDocuments<TTypeData extends TRDTypeData<TBaseData> = {}>(
       filters?: TypedResourceDocumentFilters,
     ): TypedResourceDocumentMap<TypedResourceDocument<TBaseData, TTypeData>>;
+
+    /**
+     * Returns a resource type configuration by type.
+     *
+     * @param type - The resource type for which to retrieve the configuration.
+     * @returns The resource type config object or `null` if it does not exist.
+     */
+    useTypeConfig<TTypeData extends TRDTypeData<TBaseData> = {}>(
+      type: string,
+    ): ResourceTypeConfig<TBaseData, TTypeData, TCustomTypeConfigOptions>;
+
+    /**
+     * Returns resource type configurations by type.
+     *
+     * @param types - The resource types for which to retrieve the configurations.
+     * @returns An array of resource type config objects.
+     */
+    useTypeConfigs<TTypeData extends TRDTypeData<TBaseData> = {}>(
+      types: string[],
+    ): ResourceTypeConfig<TBaseData, TTypeData, TCustomTypeConfigOptions>[];
+
+    /**
+     * Returns all registered resource type configurations.
+     *
+     * @returns An array of resource type config objects.
+     */
+    useAllTypeConfigs<
+      TTypeData extends TRDTypeData<TBaseData> = {},
+    >(): ResourceTypeConfig<TBaseData, TTypeData, TCustomTypeConfigOptions>[];
   };
 }
 

@@ -59,7 +59,9 @@ export interface RDRootData {
 }
 
 export type RDData = Object &
-  Partial<Record<keyof ResourceDocument<{}>, never>>;
+  Partial<Record<keyof Omit<ResourceDocument<{}>, 'revision'>, never>> & {
+    revision?: string;
+  };
 
 /**
  * A resource document consists of the base resource document
@@ -133,7 +135,7 @@ export interface RDParentsUpdateData {
  * restore update data.
  */
 export type RDUpdateData<TData extends RDData> =
-  | Partial<TData>
+  | Partial<TData & { revision?: string }>
   | RDDeleteUpdateData
   | RDRestoreUpdateData
   | RDParentsUpdateData;
