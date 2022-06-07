@@ -118,7 +118,7 @@ export interface DropTypeConfigOptions<TData extends DropTypeData = {}> {
    * @param data - A data insert object.
    * @returns The drop's custom data.
    */
-  initializeData?(data?: DataInsert): TData;
+  initializeData?(core: Core, data?: DataInsert): TData;
 
   /**
    * Called when a drop of this type is duplicated. Should return an object
@@ -127,7 +127,7 @@ export interface DropTypeConfigOptions<TData extends DropTypeData = {}> {
    * Omit if the data can be duplicated directly without any needing to be
    * modified.
    */
-  duplicateData?(drop: Drop<TData>): TData;
+  duplicateData?(core: Core, drop: Drop<TData>): TData;
 
   /**
    * Called when an existing drop of a different type is converted into
@@ -141,7 +141,7 @@ export interface DropTypeConfigOptions<TData extends DropTypeData = {}> {
    * @param drop - The drop being converted.
    * @returns The new drop type's custom data.
    */
-  convertData?(drop: Drop): TData;
+  convertData?(core: Core, drop: Drop): TData;
 
   /**
    * Callback fired when a drop of this type is created. Called before

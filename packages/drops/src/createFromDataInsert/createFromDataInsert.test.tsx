@@ -39,7 +39,7 @@ const textDropConfig: DropTypeConfig<{ text: string }> = {
   multiFile: true,
   dataTypes: ['text/plain', 'text/html'],
   fileTypes: ['text/plain', 'text/html'],
-  initializeData: ({ data }) => ({
+  initializeData: (core, { data }) => ({
     text: data['text/plain'] || data['text/html'],
   }),
 };
@@ -51,7 +51,7 @@ const imageDropConfig: DropTypeConfig<{ file: string }> = {
   type: 'image',
   fileTypes: ['image/jpeg', 'image/png'],
   dataSchema: { file: { type: 'string' } },
-  initializeData: ({ files }) => ({ file: files[0].name }),
+  initializeData: (core, { files }) => ({ file: files[0].name }),
 };
 
 const htmlDropConfig: DropTypeConfig<{ html: string }> = {
@@ -61,7 +61,7 @@ const htmlDropConfig: DropTypeConfig<{ html: string }> = {
   dataTypes: ['text/html'],
   type: 'html',
   dataSchema: { html: { type: 'string' } },
-  initializeData: ({ data }) => ({
+  initializeData: (core, { data }) => ({
     html: data['text/html'],
   }),
 };

@@ -7,7 +7,7 @@ function createFromFiles(
   config: RegisteredDropTypeConfig,
   files: File[],
 ): Drop {
-  const dropData = config.initializeData({
+  const dropData = config.initializeData(core, {
     action: 'insert',
     types: ['files'],
     data: {},
@@ -45,7 +45,7 @@ export function createFromDataInsert(
   // If there are matching drop configs, use the
   // first match to create the drop.
   if (matchedDataConfigs.length) {
-    const dropData = matchedDataConfigs[0].initializeData(dataInsert);
+    const dropData = matchedDataConfigs[0].initializeData(core, dataInsert);
     const drop = DropsResource.create(
       core,
       matchedDataConfigs[0].type,

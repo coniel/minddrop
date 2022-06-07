@@ -27,7 +27,7 @@ export function duplicateDrops<TTypeData>(
 
     if (config.duplicateData) {
       // Merge in the type config's `duplicateData` data
-      data = { ...data, ...config.duplicateData(drop) };
+      data = { ...data, ...config.duplicateData(core, drop) };
     }
 
     // Remove the original drop ID
