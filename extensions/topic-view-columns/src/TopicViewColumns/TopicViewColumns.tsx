@@ -125,7 +125,6 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     setDragOver(null);
     App.clearSelectedDrops(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
-    console.log(dataInsert);
 
     if (dataInsert.action === 'sort') {
       const instance =
