@@ -4,7 +4,7 @@ import * as TopicsExtension from '@minddrop/topics';
 import * as DropsExtension from '@minddrop/drops';
 import * as ViewExtension from '@minddrop/views';
 import * as AppExtension from '@minddrop/app';
-import * as PersistentStoreExtension from '@minddrop/persistent-store';
+import * as RichTextExtension from '@minddrop/rich-text';
 import ExtensionTextDrop from '@minddrop/text-drop';
 import ExtensionTopicViewColumns, {
   TOPIC_VIEW_COLUMNS_TEST_DATA,
@@ -12,8 +12,16 @@ import ExtensionTopicViewColumns, {
 import { TOPICS_TEST_DATA, Topics } from '@minddrop/topics';
 import { DROPS_TEST_DATA, Drops } from '@minddrop/drops';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
-import { ViewConfig, Views, VIEWS_TEST_DATA } from '@minddrop/views';
-import { PersistentStore } from '@minddrop/persistent-store';
+import {
+  ViewConfig,
+  Views,
+  ViewInstances,
+  VIEWS_TEST_DATA,
+} from '@minddrop/views';
+import {
+  GlobalPersistentStore,
+  LocalPersistentStore,
+} from '@minddrop/persistent-store';
 import {
   RichTextDocuments,
   RichTextElements,
@@ -29,13 +37,6 @@ const { richTextElements, richTextDocuments, richTextDocument1 } =
 const topicIds = topics.map((topic) => topic.id);
 
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
-const globalPersistentStore = { rootTopics: rootTopicIds };
-const localPersistentStore = {
-  sidebarWidth: 302,
-  expandedTopics: [],
-  view: TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.view,
-  viewInstance: TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.id,
-};
 
 const homeViewConfig: ViewConfig = {
   id: 'app:home',
@@ -46,31 +47,28 @@ const homeViewConfig: ViewConfig = {
 Views.register(core, homeViewConfig);
 
 VIEWS_TEST_DATA.viewConfigs.forEach((config) => Views.register(core, config));
-Views.loadInstances(core, VIEWS_TEST_DATA.viewInstances);
+ViewInstances.store.load(core, VIEWS_TEST_DATA.viewInstances);
 
-PersistentStoreExtension.onRun(core);
 DropsExtension.onRun(core);
 ViewExtension.onRun(core);
 TopicsExtension.onRun(core);
+RichTextExtension.onRun(core);
 
-PersistentStore.setGlobalStore(core, globalPersistentStore);
-PersistentStore.setLocalStore(core, localPersistentStore);
-
-Drops.load(
+Drops.store.load(
   core,
   DROPS_TEST_DATA.drops.map((drop) => ({
     ...drop,
     richTextDocument: richTextDocument1.id,
     parents: [
       {
-        type: 'topic',
+        resource: 'topics:topic',
         id: TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.topic,
       },
     ],
   })),
 );
-Topics.load(core, TOPICS_TEST_DATA.topics);
-Views.loadInstances(core, [
+Topics.store.load(core, TOPICS_TEST_DATA.topics);
+ViewInstances.store.load(core, [
   TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance,
 ]);
 
@@ -91,9 +89,22 @@ Views.loadInstances(core, [
 registerDefaultRichTextElementTypes(core);
 
 // Load rich text elements
-RichTextElements.load(core, richTextElements);
+RichTextElements.store.load(core, richTextElements);
 
 // Load rich text documents
-RichTextDocuments.load(core, richTextDocuments);
+RichTextDocuments.store.load(core, richTextDocuments);
 
 AppExtension.onRun(core);
+GlobalPersistentStore.set(core, 'rootTopics', rootTopicIds);
+LocalPersistentStore.set(core, 'sidebarWidth', 300);
+LocalPersistentStore.set(core, 'expandedTopics', []);
+LocalPersistentStore.set(
+  core,
+  'view',
+  TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.type,
+);
+LocalPersistentStore.set(
+  core,
+  'viewInstance',
+  TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.id,
+);

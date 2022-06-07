@@ -1,8 +1,9 @@
 import {
   DBResourceDocument,
-  initializePouchDB,
+  initializePouchdb,
   ResourceDB,
 } from '@minddrop/pouchdb';
+import TextDropExtension from '@minddrop/text-drop';
 import React from 'react';
 import { MindDrop } from './MindDrop';
 
@@ -27,14 +28,15 @@ const dbApi: ResourceDB = {
   get: async (id: string) => database[id],
 };
 
-const api = initializePouchDB(dbApi);
+const api = initializePouchdb(dbApi);
 
+console.log(TextDropExtension);
 export const App: React.FC = () => {
   return (
     <div
       style={{ height: '100%', width: '100%', marginTop: -16, marginLeft: -16 }}
     >
-      <MindDrop appId="app" extensions={[]} dbApi={api} />
+      <MindDrop appId="app" extensions={[TextDropExtension]} dbApi={api} />
     </div>
   );
 };
