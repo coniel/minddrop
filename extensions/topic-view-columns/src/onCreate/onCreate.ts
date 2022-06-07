@@ -1,7 +1,8 @@
 import { Core } from '@minddrop/core';
 import { Topic } from '@minddrop/topics';
 import { generateId } from '@minddrop/utils';
-import { ColumnItem, Columns, TopicViewColumnsData } from '../types';
+import { ResourceReference } from '@minddrop/resources';
+import { Columns, TopicViewColumnsData } from '../types';
 
 /**
  * The view's onCreate callback.
@@ -14,9 +15,9 @@ export function onCreate(core: Core, topic: Topic): TopicViewColumnsData {
   const columns: Columns = [];
 
   for (let i = 3; i > 0; i--) {
-    const items: ColumnItem[] = topic.drops
+    const items: ResourceReference[] = topic.drops
       .splice(0, Math.ceil(topic.drops.length / i))
-      .map((dropId) => ({ type: 'drop', id: dropId }));
+      .map((dropId) => ({ resource: 'drops:drop', id: dropId }));
 
     columns.push({ id: generateId(), items });
   }

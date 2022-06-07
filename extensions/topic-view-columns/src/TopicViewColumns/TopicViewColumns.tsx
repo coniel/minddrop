@@ -2,27 +2,31 @@
 import React, { FC, useCallback, useState } from 'react';
 import './TopicViewColumns.css';
 import { App } from '@minddrop/app';
-import { useTopic } from '@minddrop/topics';
+import { useTopic, TopicViewInstanceData } from '@minddrop/topics';
 import { useDrops } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
   mapPropsToClasses,
 } from '@minddrop/utils';
 import { TopicView } from '@minddrop/app-ui';
-import { InstanceViewProps, useViewInstance, Views } from '@minddrop/views';
+import {
+  InstanceViewProps,
+  useViewInstance,
+  ViewInstances,
+} from '@minddrop/views';
 import { useCore } from '@minddrop/core';
 import {
   ColumnsAddDropsMetadata,
   CreateColumnMetadata,
-  TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
+  TopicViewColumnsData,
 } from '../types';
 import { moveColumnItems } from '../moveColumnItems';
 import { moveItemsToNewColumn } from '../moveItemsToNewColumn';
 
 export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   const { columns, topic: topicId } =
-    useViewInstance<TopicViewColumnsInstance>(instanceId);
+    useViewInstance<TopicViewInstanceData<TopicViewColumnsData>>(instanceId);
   const core = useCore('@minddrop/topic-view-columns');
   const topic = useTopic(topicId);
   const drops = useDrops(topic.drops);
@@ -81,7 +85,10 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
       if (!dataInsert.drops) {
         return;
       }
-      const instance = Views.getInstance<TopicViewColumnsInstance>(instanceId);
+      const instance =
+        ViewInstances.get<TopicViewInstanceData<TopicViewColumnsData>>(
+          instanceId,
+        );
 
       // Move the dropped items into a new column
       const updatedColumns = moveItemsToNewColumn(
@@ -90,7 +97,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
         column,
       );
 
-      Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
+      ViewInstances.update<UpdateTopicViewColumnsInstanceData>(
         core,
         instanceId,
         {
@@ -118,17 +125,24 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     setDragOver(null);
     App.clearSelectedDrops(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
+    console.log(dataInsert);
 
     if (dataInsert.action === 'sort') {
-      const instance = Views.getInstance<TopicViewColumnsInstance>(instanceId);
+      const instance =
+        ViewInstances.get<TopicViewInstanceData<TopicViewColumnsData>>(
+          instanceId,
+        );
 
-      Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
+      ViewInstances.update<UpdateTopicViewColumnsInstanceData>(
         core,
         instanceId,
         {
           columns: moveColumnItems(
             instance.columns,
-            dataInsert.drops.map((dropId) => ({ type: 'drop', id: dropId })),
+            dataInsert.drops.map((dropId) => ({
+              resource: 'drops:drop',
+              id: dropId,
+            })),
             column,
             index,
           ),
@@ -200,7 +214,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                       <div className="indicator" />
                     </div>
                     {App.renderDrop(drops[item.id], {
-                      type: 'topic',
+                      resource: 'topics:topic',
                       id: topicId,
                     })}
                   </div>

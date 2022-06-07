@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
-import { Views } from '@minddrop/views';
+import { ViewInstances } from '@minddrop/views';
 import {
   TopicViewColumnsInstance,
   UpdateTopicViewColumnsInstanceData,
@@ -30,7 +30,7 @@ export function onRemoveDrops(
   columns = removeEmptiedColumns(viewInstance.columns, columns);
 
   // Update the view instance
-  Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
+  ViewInstances.update<UpdateTopicViewColumnsInstanceData>(
     core,
     viewInstance.id,
     {

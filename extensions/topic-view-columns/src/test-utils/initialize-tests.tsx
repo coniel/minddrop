@@ -1,20 +1,25 @@
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Topic, Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
-import { Drop, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { initializeCore } from '@minddrop/core';
-import { Views } from '@minddrop/views';
+import { ViewInstances, ViewConfig, Views } from '@minddrop/views';
 import {
   ExtensionConfig,
   Extensions,
   EXTENSIONS_TEST_DATA,
 } from '@minddrop/extensions';
+import * as AppExtension from '@minddrop/app';
+import * as DropsExtension from '@minddrop/drops';
+import * as TopicsExtension from '@minddrop/topics';
+import * as ViewsExtension from '@minddrop/views';
+import * as ExtensionsExtension from '@minddrop/extensions';
 import { Extension } from '../topic-view-columns-extension';
 import { topicViewColumnsConfig } from '../config';
 import { topicViewColumnsInstance } from './topic-view-columns.data';
 
 const { topicExtension } = EXTENSIONS_TEST_DATA;
 const { tSixDrops, topicViewInstances } = TOPICS_TEST_DATA;
-const { dropTypeConfigs, textDropConfig, drops } = DROPS_TEST_DATA;
+const { dropTypeConfigs, dropConfig, drops } = DROPS_TEST_DATA;
 
 export const topicWithView: Topic = {
   ...tSixDrops,
@@ -23,12 +28,6 @@ export const topicWithView: Topic = {
 
 // Initialize core instances
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
-const extensionCore = initializeCore({
-  appId: 'app',
-  extensionId: topicExtension.id,
-});
-const topicsCore = initializeCore({ appId: 'app', extensionId: 'topics' });
-const viewsCore = initializeCore({ appId: 'app', extensionId: 'views' });
 
 const textDropExtension: ExtensionConfig = {
   id: 'text-drop',
@@ -36,17 +35,29 @@ const textDropExtension: ExtensionConfig = {
   description: 'Adds a text drop type',
   scopes: ['topic'],
   onRun: (core) => {
-    Drops.register(core, { ...textDropConfig, type: 'test-text-drop' });
+    Drops.register(core, { ...dropConfig, type: 'test-text-drop' });
   },
+};
+
+export const homeViewConfig: ViewConfig = {
+  id: 'app:home',
+  type: 'static',
+  component: jest.fn(),
 };
 
 export function setup() {
   act(() => {
+    Views.register(core, homeViewConfig);
+    // Run core extensions
+    ExtensionsExtension.onRun(core);
+    AppExtension.onRun(core);
+    ViewsExtension.onRun(core);
+    DropsExtension.onRun(core);
+    TopicsExtension.onRun(core);
+
     // Register drop types using the extensionCore so that
     // they are tied to the extension
-    dropTypeConfigs.forEach((config) =>
-      Drops.register<Drop>(extensionCore, config),
-    );
+    dropTypeConfigs.forEach((config) => Drops.register(core, config));
 
     // Register extensions
     Extensions.register(core, topicExtension);
@@ -56,10 +67,10 @@ export function setup() {
     textDropExtension.onRun({ ...core, extensionId: textDropExtension.id });
 
     // Load test drops into drops store
-    Drops.load(core, drops);
+    Drops.store.load(core, drops);
 
     // Load test topics into topics store
-    Topics.load(topicsCore, [topicWithView]);
+    Topics.store.load(core, [topicWithView]);
 
     // Register test views
     [topicViewColumnsConfig].forEach((config) =>
@@ -67,7 +78,7 @@ export function setup() {
     );
 
     // Load test view instances into the view store
-    Views.loadInstances(viewsCore, [
+    ViewInstances.store.load(core, [
       ...topicViewInstances.filter(
         (instance) => instance.id !== topicViewColumnsInstance.id,
       ),
@@ -88,17 +99,10 @@ export function cleanup() {
     // React testing library cleanup
     cleanupRender();
 
-    // Clear drops store
-    Drops.clearDrops(core);
-    Drops.clearRegisteredDropTypes(core);
-
-    // Clear topics store
-    Topics.clear(core);
-
-    // Clear views store
-    Views.clear(core);
-
-    // Clear extensions
-    Extensions.clear(core);
+    AppExtension.onDisable(core);
+    DropsExtension.onDisable(core);
+    TopicsExtension.onDisable(core);
+    ViewsExtension.onDisable(core);
+    ExtensionsExtension.onDisable(core);
   });
 }

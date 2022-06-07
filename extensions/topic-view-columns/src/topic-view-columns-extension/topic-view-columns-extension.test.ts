@@ -8,11 +8,11 @@ const core = initializeCore({
 });
 
 describe('topic view columns extension', () => {
-  it('registers the minddrop/topic-view-columns view', () => {
+  it('registers the `minddrop:topic-view:column` view', () => {
     // Run the extension
     Extension.onRun(core);
 
     // View should be registered
-    expect(Topics.getView('minddrop/topic-view-columns')).toBeDefined();
+    expect(Topics.getViewConfig('minddrop:topic-view:columns')).toBeDefined();
   });
 });

@@ -1,28 +1,22 @@
 import { DropMap, Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { ResourceReference, ResourceReferences } from '@minddrop/resources';
 import { mapById } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
-import {
-  setup,
-  cleanup,
-  core,
-  topicViewColumnsInstance,
-  colItemTextDrop2,
-  colItemTextDrop3,
-} from '../test-utils';
+import { ViewInstances } from '@minddrop/views';
+import { setup, cleanup, core, topicViewColumnsInstance } from '../test-utils';
 import {
   ColumnsAddDropsMetadata,
   CreateColumnMetadata,
   InsertIntoColumnMetadata,
-  TopicViewColumnsInstance,
+  TopicViewColumnsData,
 } from '../types';
 import { onAddDrops } from './onAddDrops';
 
-const { textDrop4, imageDrop1, htmlDrop1 } = DROPS_TEST_DATA;
+const { drop2, drop3, drop4, drop5, drop6 } = DROPS_TEST_DATA;
 const instanceId = topicViewColumnsInstance.id;
-const addedItems = [
-  { type: 'drop', id: textDrop4.id },
-  { type: 'drop', id: imageDrop1.id },
-  { type: 'drop', id: htmlDrop1.id },
+const addedItems: ResourceReference[] = [
+  { resource: 'drops:drop', id: drop4.id },
+  { resource: 'drops:drop', id: drop5.id },
+  { resource: 'drops:drop', id: drop6.id },
 ];
 
 const insertIntoColumnMetadata = (
@@ -48,19 +42,18 @@ const call = (metadata?: ColumnsAddDropsMetadata) =>
   onAddDrops(
     core,
     topicViewColumnsInstance,
-    mapById([textDrop4, imageDrop1, htmlDrop1]) as DropMap,
+    mapById([drop4, drop5, drop6]) as DropMap,
     metadata,
   );
 
-const getInstance = () =>
-  Views.getInstance<TopicViewColumnsInstance>(instanceId);
+const getInstance = () => ViewInstances.get<TopicViewColumnsData>(instanceId);
 
 describe('onAddDrops', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it.only('places duplciated drops below their originals', () => {
+  it('places duplciated drops below their originals', () => {
     // Duplicate drops in column 1
     const dropIds = topicViewColumnsInstance.columns[1].items.map(
       (item) => item.id,
@@ -91,10 +84,10 @@ describe('onAddDrops', () => {
     );
     // Duplicate drops should be placed directly below their original
     expect(instance.columns[1].items).toEqual([
-      { id: dropId0, type: 'drop' },
-      { id: duplicateDrop0.id, type: 'drop' },
-      { id: dropId1, type: 'drop' },
-      { id: duplicateDrop1.id, type: 'drop' },
+      { id: dropId0, resource: 'drops:drop' },
+      { id: duplicateDrop0.id, resource: 'drops:drop' },
+      { id: dropId1, resource: 'drops:drop' },
+      { id: duplicateDrop1.id, resource: 'drops:drop' },
     ]);
   });
 
@@ -127,11 +120,11 @@ describe('onAddDrops', () => {
 
     const instance = getInstance();
 
-    // Original column 1 contains [colItemTextDrop2, colItemTextDrop3]
+    // Original column 1 contains drop2 and drop3
     expect(instance.columns[1].items).toEqual([
-      colItemTextDrop2,
+      ResourceReferences.generate('drops:drop', drop2.id),
       ...addedItems,
-      colItemTextDrop3,
+      ResourceReferences.generate('drops:drop', drop3.id),
     ]);
   });
 

@@ -1,5 +1,6 @@
+import { ResourceReference } from '@minddrop/resources';
 import { removeEmptiedColumns } from '../removeEmptiedColumns';
-import { ColumnItem, Columns } from '../types';
+import { Columns } from '../types';
 
 /**
  * Moves items within and between columns to a new column
@@ -12,7 +13,7 @@ import { ColumnItem, Columns } from '../types';
  */
 export function moveColumnItems(
   columns: Columns,
-  items: ColumnItem[],
+  items: ResourceReference[],
   toColumn: number,
   toIndex: number,
 ): Columns {

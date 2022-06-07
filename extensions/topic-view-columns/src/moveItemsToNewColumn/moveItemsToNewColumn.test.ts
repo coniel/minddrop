@@ -6,25 +6,25 @@ const columns: Columns = [
   {
     id: 'column-0',
     items: [
-      { id: 'drop-1', type: 'drop' },
-      { id: 'drop-2', type: 'drop' },
-      { id: 'drop-3', type: 'drop' },
+      { id: 'drop-1', resource: 'drops:drop' },
+      { id: 'drop-2', resource: 'drops:drop' },
+      { id: 'drop-3', resource: 'drops:drop' },
     ],
   },
   {
     id: 'column-1',
     items: [
-      { id: 'drop-4', type: 'drop' },
-      { id: 'drop-5', type: 'drop' },
-      { id: 'drop-6', type: 'drop' },
+      { id: 'drop-4', resource: 'drops:drop' },
+      { id: 'drop-5', resource: 'drops:drop' },
+      { id: 'drop-6', resource: 'drops:drop' },
     ],
   },
   {
     id: 'column-2',
     items: [
-      { id: 'drop-7', type: 'drop' },
-      { id: 'drop-8', type: 'drop' },
-      { id: 'drop-9', type: 'drop' },
+      { id: 'drop-7', resource: 'drops:drop' },
+      { id: 'drop-8', resource: 'drops:drop' },
+      { id: 'drop-9', resource: 'drops:drop' },
     ],
   },
 ];
@@ -45,15 +45,15 @@ describe('moveItemsToNewColumn', () => {
     expect(result.length).toBe(columns.length + 1);
     // Removes items from original columns
     expect(result[0].items).toEqual([
-      { id: 'drop-2', type: 'drop' },
-      { id: 'drop-3', type: 'drop' },
+      { id: 'drop-2', resource: 'drops:drop' },
+      { id: 'drop-3', resource: 'drops:drop' },
     ]);
-    expect(result[3].items).toEqual([{ id: 'drop-8', type: 'drop' }]);
+    expect(result[3].items).toEqual([{ id: 'drop-8', resource: 'drops:drop' }]);
     // Adds items to new column
     expect(result[1].items).toEqual([
-      { id: 'drop-1', type: 'drop' },
-      { id: 'drop-7', type: 'drop' },
-      { id: 'drop-9', type: 'drop' },
+      { id: 'drop-1', resource: 'drops:drop' },
+      { id: 'drop-7', resource: 'drops:drop' },
+      { id: 'drop-9', resource: 'drops:drop' },
     ]);
   });
 
@@ -68,14 +68,14 @@ describe('moveItemsToNewColumn', () => {
     expect(result.length).toBe(columns.length);
     // Should have moved items to last column
     expect(result[1].items).toEqual([
-      { id: 'drop-7', type: 'drop' },
-      { id: 'drop-8', type: 'drop' },
-      { id: 'drop-9', type: 'drop' },
+      { id: 'drop-7', resource: 'drops:drop' },
+      { id: 'drop-8', resource: 'drops:drop' },
+      { id: 'drop-9', resource: 'drops:drop' },
     ]);
     expect(result[2].items).toEqual([
-      { id: 'drop-4', type: 'drop' },
-      { id: 'drop-5', type: 'drop' },
-      { id: 'drop-6', type: 'drop' },
+      { id: 'drop-4', resource: 'drops:drop' },
+      { id: 'drop-5', resource: 'drops:drop' },
+      { id: 'drop-6', resource: 'drops:drop' },
     ]);
   });
 });

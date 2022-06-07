@@ -1,27 +1,31 @@
-import { TopicViewColumnsInstance } from '../types';
+import { ResourceReferences, Resources } from '@minddrop/resources';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
+import { TopicViewColumnsInstance } from '../types';
 
 const { tSixDrops } = TOPICS_TEST_DATA;
-const { textDrop1, textDrop2, textDrop3, textDrop4, htmlDrop1, imageDrop1 } =
-  DROPS_TEST_DATA;
+const { drop1, drop2, drop3, drop4 } = DROPS_TEST_DATA;
 
-export const colItemTextDrop1 = { type: 'drop', id: textDrop1.id };
-export const colItemTextDrop2 = { type: 'drop', id: textDrop2.id };
-export const colItemTextDrop3 = { type: 'drop', id: textDrop3.id };
-export const colItemTextDrop4 = { type: 'drop', id: textDrop4.id };
-export const colItemHtmlDrop1 = { type: 'drop', id: htmlDrop1.id };
-export const colItemImageDrop1 = { type: 'drop', id: imageDrop1.id };
-
-export const topicViewColumnsInstance: TopicViewColumnsInstance = {
-  id: 'columns-view-instance',
-  view: 'minddrop/topic-view-columns',
-  topic: tSixDrops.id,
-  createdAt: new Date('01/01/2000'),
-  updatedAt: new Date('01/01/2000'),
-  columns: [
-    { id: 'column-0', items: [colItemTextDrop1] },
-    { id: 'column-1', items: [colItemTextDrop2, colItemTextDrop3] },
-    { id: 'column-2', items: [colItemTextDrop4] },
-  ],
-};
+export const topicViewColumnsInstance: TopicViewColumnsInstance =
+  Resources.generateDocument('views:view-instance', {
+    extension: 'minddrop:topic-view:columns',
+    type: 'minddrop:topic-view:columns',
+    topic: tSixDrops.id,
+    columns: [
+      {
+        id: 'column-0',
+        items: [ResourceReferences.generate('drops:drop', drop1.id)],
+      },
+      {
+        id: 'column-1',
+        items: [
+          ResourceReferences.generate('drops:drop', drop2.id),
+          ResourceReferences.generate('drops:drop', drop3.id),
+        ],
+      },
+      {
+        id: 'column-2',
+        items: [ResourceReferences.generate('drops:drop', drop4.id)],
+      },
+    ],
+  });

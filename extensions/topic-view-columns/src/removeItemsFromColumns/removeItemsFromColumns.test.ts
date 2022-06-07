@@ -6,25 +6,25 @@ const columns: Columns = [
   {
     id: 'column-0',
     items: [
-      { id: 'drop-1', type: 'drop' },
-      { id: 'drop-2', type: 'drop' },
-      { id: 'drop-3', type: 'drop' },
+      { id: 'drop-1', resource: 'drops:drop' },
+      { id: 'drop-2', resource: 'drops:drop' },
+      { id: 'drop-3', resource: 'drops:drop' },
     ],
   },
   {
     id: 'column-1',
     items: [
-      { id: 'drop-4', type: 'drop' },
-      { id: 'drop-5', type: 'drop' },
-      { id: 'drop-6', type: 'drop' },
+      { id: 'drop-4', resource: 'drops:drop' },
+      { id: 'drop-5', resource: 'drops:drop' },
+      { id: 'drop-6', resource: 'drops:drop' },
     ],
   },
   {
     id: 'column-2',
     items: [
-      { id: 'drop-7', type: 'drop' },
-      { id: 'drop-8', type: 'drop' },
-      { id: 'drop-9', type: 'drop' },
+      { id: 'drop-7', resource: 'drops:drop' },
+      { id: 'drop-8', resource: 'drops:drop' },
+      { id: 'drop-9', resource: 'drops:drop' },
     ],
   },
 ];
@@ -41,17 +41,17 @@ describe('removeItemsFromColumns', () => {
       {
         id: 'column-0',
         items: [
-          { id: 'drop-1', type: 'drop' },
-          { id: 'drop-3', type: 'drop' },
+          { id: 'drop-1', resource: 'drops:drop' },
+          { id: 'drop-3', resource: 'drops:drop' },
         ],
       },
       { id: 'column-1', items: [] },
       {
         id: 'column-2',
         items: [
-          { id: 'drop-7', type: 'drop' },
-          { id: 'drop-8', type: 'drop' },
-          { id: 'drop-9', type: 'drop' },
+          { id: 'drop-7', resource: 'drops:drop' },
+          { id: 'drop-8', resource: 'drops:drop' },
+          { id: 'drop-9', resource: 'drops:drop' },
         ],
       },
     ]);

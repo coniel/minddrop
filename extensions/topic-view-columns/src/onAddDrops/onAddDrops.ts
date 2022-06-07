@@ -1,10 +1,10 @@
 import { Core } from '@minddrop/core';
 import { DropMap } from '@minddrop/drops';
 import { generateId } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
+import { ViewInstances } from '@minddrop/views';
+import { ResourceReference } from '@minddrop/resources';
 import { distributeItemsBetweenColumns } from '../distributeItemsBetweenColumns';
 import {
-  ColumnItem,
   Columns,
   ColumnsAddDropsMetadata,
   TopicViewColumnsInstance,
@@ -29,8 +29,8 @@ export function onAddDrops(
 ): void {
   // Ignore metadata if not present or if it was set by another view instance.
   const ignoreMetadata = !metadata || metadata.viewInstance !== viewInstance.id;
-  const items: ColumnItem[] = Object.keys(drops).map((dropId) => ({
-    type: 'drop',
+  const items: ResourceReference[] = Object.keys(drops).map((dropId) => ({
+    resource: 'drops:drop',
     id: dropId,
   }));
 
@@ -65,7 +65,11 @@ export function onAddDrops(
 
           // If it has an added duplicate drop, insert it directly below
           if (duplicate) {
-            return [...columnItems, item, { id: duplicate.id, type: 'drop' }];
+            return [
+              ...columnItems,
+              item,
+              { id: duplicate.id, resource: 'drops:drop' },
+            ];
           }
 
           // If there is not duplicate drop, do nothing
@@ -90,7 +94,7 @@ export function onAddDrops(
   }
 
   // Update the instance
-  Views.updateInstance<UpdateTopicViewColumnsInstanceData>(
+  ViewInstances.update<UpdateTopicViewColumnsInstanceData>(
     core,
     viewInstance.id,
     {

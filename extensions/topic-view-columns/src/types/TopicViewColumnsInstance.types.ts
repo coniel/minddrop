@@ -1,18 +1,6 @@
+import { ResourceReference } from '@minddrop/resources';
 import { AddDropsMetadata, TopicViewInstance } from '@minddrop/topics';
 import { FieldValue } from '@minddrop/utils';
-import { UpdateViewInstanceData } from '@minddrop/views';
-
-export interface ColumnItem {
-  /**
-   * The type of item, e.g. 'drop'.
-   */
-  type: string;
-
-  /**
-   * The item's ID.
-   */
-  id: string;
-}
 
 export interface Column {
   /**
@@ -23,7 +11,7 @@ export interface Column {
   /**
    * The column's contents.
    */
-  items: ColumnItem[];
+  items: ResourceReference[];
 }
 
 export type Columns = Column[];
@@ -35,12 +23,9 @@ export interface TopicViewColumnsData {
   columns: Columns;
 }
 
-export interface TopicViewColumnsInstance
-  extends TopicViewInstance,
-    TopicViewColumnsData {}
+export type TopicViewColumnsInstance = TopicViewInstance<TopicViewColumnsData>;
 
-export interface UpdateTopicViewColumnsInstanceData
-  extends UpdateViewInstanceData {
+export interface UpdateTopicViewColumnsInstanceData {
   columns: FieldValue | TopicViewColumnsInstance['columns'];
 }
 

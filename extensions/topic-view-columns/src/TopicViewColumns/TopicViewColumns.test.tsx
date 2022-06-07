@@ -1,16 +1,18 @@
 import React from 'react';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { Topics, TopicViewInstanceData } from '@minddrop/topics';
+import { ViewInstances } from '@minddrop/views';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { cleanup, core, setup, topicViewColumnsInstance } from '../test-utils';
 import { TopicViewColumns } from './TopicViewColumns';
-import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
-import { Topics } from '@minddrop/topics';
-import { Views } from '@minddrop/views';
-import { TopicViewColumnsInstance } from '../types';
+import { TopicViewColumnsData } from '../types';
 
-const { textDrop1 } = DROPS_TEST_DATA;
+const { drop1 } = DROPS_TEST_DATA;
 
 const getViewInstance = () =>
-  Views.getInstance<TopicViewColumnsInstance>(topicViewColumnsInstance.id);
+  ViewInstances.get<TopicViewInstanceData<TopicViewColumnsData>>(
+    topicViewColumnsInstance.id,
+  );
 
 describe('<TopicViewColumns />', () => {
   beforeEach(setup);
@@ -28,13 +30,13 @@ describe('<TopicViewColumns />', () => {
   it('renders drops', () => {
     const { getByText } = init();
 
-    getByText(textDrop1.text);
+    getByText(drop1.text);
   });
 
   it('inserts drop at end of column when data is dropped there', (done) => {
     const { getByTestId } = init();
 
-    Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
+    Drops.addEventListener(core, 'drops:drop:create', ({ data: drop }) => {
       // Get the updated view instance
       const viewInstance = getViewInstance();
       // Get the updated topic
@@ -62,7 +64,7 @@ describe('<TopicViewColumns />', () => {
   it('inserts drops at a specified index when data is dropped on a spacer', (done) => {
     const { getByTestId } = init();
 
-    Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
+    Drops.addEventListener(core, 'drops:drop:create', ({ data: drop }) => {
       // Get updated view instance
       const viewInstance = getViewInstance();
       // Get updated topics
@@ -125,7 +127,7 @@ describe('<TopicViewColumns />', () => {
     it('inserts drops into a new column at the specified index', (done) => {
       const { getByTestId } = init();
 
-      Drops.addEventListener(core, 'drops:create', ({ data: drop }) => {
+      Drops.addEventListener(core, 'drops:drop:create', ({ data: drop }) => {
         // Get the updated view instance
         const viewInstance = getViewInstance();
         // Get the updated topic
@@ -175,9 +177,9 @@ describe('<TopicViewColumns />', () => {
         });
       });
 
-      const viewInstance = Views.getInstance<TopicViewColumnsInstance>(
-        topicViewColumnsInstance.id,
-      );
+      const viewInstance = ViewInstances.get<
+        TopicViewInstanceData<TopicViewColumnsData>
+      >(topicViewColumnsInstance.id);
 
       expect(viewInstance.columns[0].items[0].id).toBe(movedDropId);
     });

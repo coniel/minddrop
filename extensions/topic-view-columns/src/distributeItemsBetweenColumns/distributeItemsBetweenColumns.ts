@@ -1,4 +1,5 @@
-import { ColumnItem, Columns, TopicViewColumnsData } from '../types';
+import { ResourceReference } from '@minddrop/resources';
+import { Columns, TopicViewColumnsData } from '../types';
 
 /**
  * Distributes drops evenly into columns by adding
@@ -10,7 +11,7 @@ import { ColumnItem, Columns, TopicViewColumnsData } from '../types';
  */
 export function distributeItemsBetweenColumns(
   initialColumns: TopicViewColumnsData['columns'],
-  items: ColumnItem[],
+  items: ResourceReference[],
 ): TopicViewColumnsData['columns'] {
   // Clone the initial columns array to remove nested references
   const clonedInitialColumns: Columns = JSON.parse(

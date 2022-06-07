@@ -3,7 +3,7 @@ import { Topics } from '@minddrop/topics';
 import { topicViewColumnsConfig } from '../config';
 
 export const Extension: ExtensionConfig = {
-  id: 'minddrop/topic-view-columns',
+  id: 'minddrop:topic-view:columns',
   name: 'Columns Topic View',
   description: 'A column based layout.',
   scopes: ['topic'],

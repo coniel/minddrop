@@ -1,23 +1,18 @@
-import {
-  setup,
-  cleanup,
-  colItemTextDrop1,
-  colItemTextDrop2,
-  colItemTextDrop3,
-  colItemTextDrop4,
-  colItemHtmlDrop1,
-  colItemImageDrop1,
-} from '../test-utils';
+import { DROPS_TEST_DATA } from '@minddrop/drops';
+import { ResourceReferences } from '@minddrop/resources';
+import { setup, cleanup } from '../test-utils';
 import { Columns } from '../types';
 import { distributeItemsBetweenColumns } from './distributeItemsBetweenColumns';
 
+const { drop1, drop2, drop3, drop4, drop5, drop6 } = DROPS_TEST_DATA;
+
 const items = [
-  colItemTextDrop1,
-  colItemTextDrop2,
-  colItemTextDrop3,
-  colItemTextDrop4,
-  colItemHtmlDrop1,
-  colItemImageDrop1,
+  ResourceReferences.generate('drops:drop', drop1.id),
+  ResourceReferences.generate('drops:drop', drop2.id),
+  ResourceReferences.generate('drops:drop', drop3.id),
+  ResourceReferences.generate('drops:drop', drop4.id),
+  ResourceReferences.generate('drops:drop', drop5.id),
+  ResourceReferences.generate('drops:drop', drop6.id),
 ];
 
 describe('distributeDropsBetweenColumns', () => {
@@ -44,13 +39,13 @@ describe('distributeDropsBetweenColumns', () => {
   it('fills out columns evenly from the left', () => {
     const columns: Columns = [
       { id: 'column-0', items: [] },
-      { id: 'column-1', items: [{ type: 'drop', id: 'first-drop' }] },
+      { id: 'column-1', items: [{ resource: 'drops:drop', id: 'first-drop' }] },
       {
         id: 'column-2',
         items: [
-          { type: 'drop', id: 'second-drop' },
-          { type: 'drop', id: 'third-drop' },
-          { type: 'drop', id: 'fourth-drop' },
+          { resource: 'drops:drop', id: 'second-drop' },
+          { resource: 'drops:drop', id: 'third-drop' },
+          { resource: 'drops:drop', id: 'fourth-drop' },
         ],
       },
       { id: 'columns-3', items: [] },
