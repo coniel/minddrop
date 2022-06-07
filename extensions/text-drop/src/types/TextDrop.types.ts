@@ -1,11 +1,13 @@
 import { Drop } from '@minddrop/drops';
 
-export interface TextDrop extends Drop {
+export interface TextDropData {
   /**
    * The ID of the drop's rich text document.
    */
   richTextDocument: string;
 }
+
+export type TextDrop = Drop<TextDropData>;
 
 export interface CreateTextDropData {
   /**

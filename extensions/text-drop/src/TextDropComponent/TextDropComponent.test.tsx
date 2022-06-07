@@ -1,6 +1,8 @@
 import React from 'react';
+import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { cleanup, render } from '@minddrop/test-utils';
-import { Drops, generateDrop } from '@minddrop/drops';
+import { Resources } from '@minddrop/resources';
+import { Drops } from '@minddrop/drops';
 import { TextDropComponent } from './TextDropComponent';
 import { core, setup } from '../test-utils';
 import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
@@ -8,7 +10,7 @@ import { CreateTextDropData } from '../types';
 
 const { richTextDocument1, headingElement1PlainText } = RICH_TEXT_TEST_DATA;
 
-const drop = generateDrop<CreateTextDropData>({
+const drop = Resources.generateDocument<CreateTextDropData>('drops:drop', {
   type: 'text',
   richTextDocument: richTextDocument1.id,
 });
@@ -16,12 +18,17 @@ const drop = generateDrop<CreateTextDropData>({
 describe('<TextDrop />', () => {
   beforeEach(() => {
     setup();
-    Drops.load(core, [drop]);
+
+    // Load a test drop
+    Drops.store.load(core, [drop]);
   });
 
   afterEach(() => {
     cleanup();
-    Drops.clearDrops(core);
+    cleanupRender();
+
+    // Clear the drops store
+    Drops.store.clear();
   });
 
   const init = () => {

@@ -1,11 +1,11 @@
 import { DataInsert } from '@minddrop/core';
 import {
-  RichTextDocument,
+  RTDocument,
   RichTextDocuments,
   RichTextElements,
 } from '@minddrop/rich-text';
 import { cleanup, core, setup } from '../test-utils';
-import { createTextDrop } from './createTextDrop';
+import { initializeTextDropData } from './initializeTextDropData';
 
 const textData: DataInsert = {
   action: 'insert',
@@ -17,19 +17,19 @@ const textData: DataInsert = {
   files: [],
 };
 
-describe('createTextDrop', () => {
+describe('initializeTextDropData', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   describe('without data insert', () => {
     it('returns a drop containing an empty heading and paragraph', () => {
-      const data = createTextDrop(core);
+      const data = initializeTextDropData(core);
 
       // Get the drop document
       const document = RichTextDocuments.get(
         data.richTextDocument,
-      ) as RichTextDocument;
+      ) as RTDocument;
 
       // Get the document's child elements
       const elements = RichTextElements.get(document.children);
@@ -45,12 +45,12 @@ describe('createTextDrop', () => {
 
   describe('with plain text data insert', () => {
     it('returns a drop containing a paragraph with the plain text', () => {
-      const data = createTextDrop(core, textData);
+      const data = initializeTextDropData(core, textData);
 
       // Get the drop document
       const document = RichTextDocuments.get(
         data.richTextDocument,
-      ) as RichTextDocument;
+      ) as RTDocument;
 
       // Get the document's child elements
       const elements = RichTextElements.get(document.children);

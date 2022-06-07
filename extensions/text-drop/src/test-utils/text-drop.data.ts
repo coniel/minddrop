@@ -1,5 +1,5 @@
-import { generateDrop } from '@minddrop/drops';
 import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { Resources } from '@minddrop/resources';
 import { TextDrop } from '../types';
 
 const {
@@ -9,22 +9,22 @@ const {
   richTextDocument4,
 } = RICH_TEXT_TEST_DATA;
 
-export const textDrop1: TextDrop = generateDrop({
+export const textDrop1: TextDrop = Resources.generateDocument('drops:drop', {
   type: 'text',
   richTextDocument: richTextDocument1.id,
 });
 
-export const textDrop2: TextDrop = generateDrop({
+export const textDrop2: TextDrop = Resources.generateDocument('drops:drop', {
   type: 'text',
   richTextDocument: richTextDocument2.id,
 });
 
-export const textDrop3: TextDrop = generateDrop({
+export const textDrop3: TextDrop = Resources.generateDocument('drops:drop', {
   type: 'text',
   richTextDocument: richTextDocument3.id,
 });
 
-export const textDrop4: TextDrop = generateDrop({
+export const textDrop4: TextDrop = Resources.generateDocument('drops:drop', {
   type: 'text',
   richTextDocument: richTextDocument4.id,
 });

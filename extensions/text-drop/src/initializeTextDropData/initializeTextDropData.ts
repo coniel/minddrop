@@ -9,7 +9,7 @@ import { CreateTextDropData } from '../types';
  * @param dataInsert Inserted data.
  * @returns The data to create a text drop.
  */
-export function createTextDrop(
+export function initializeTextDropData(
   core: Core,
   dataInsert?: DataInsert,
 ): CreateTextDropData {
@@ -19,13 +19,19 @@ export function createTextDrop(
   if (dataInsert && dataInsert.types.includes('text/plain')) {
     // Set the inserted plain text as the content
     children.push(
-      RichTextElements.createOfType(core, 'paragraph', dataInsert).id,
+      RichTextElements.createFromData(core, 'paragraph', dataInsert).id,
     );
   } else {
     // Create empty 'heading-1' and 'paragraph' elements as
     // the drop's content.
-    children.push(RichTextElements.createOfType(core, 'heading-1').id);
-    children.push(RichTextElements.createOfType(core, 'paragraph').id);
+    children.push(
+      RichTextElements.create(core, 'heading-1', { children: [{ text: '' }] })
+        .id,
+    );
+    children.push(
+      RichTextElements.create(core, 'paragraph', { children: [{ text: '' }] })
+        .id,
+    );
   }
 
   // Create the drop's rich text document

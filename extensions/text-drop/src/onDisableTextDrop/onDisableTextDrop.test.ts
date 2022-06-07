@@ -1,6 +1,7 @@
 import { Drops } from '@minddrop/drops';
 import { onRunTextDrop } from '../onRunTextDrop';
 import { core } from '../test-utils';
+import { TextDropConfig } from '../TextDropConfig';
 import { onDisableTextDrop } from './onDisableTextDrop';
 
 describe('onDisableTextDrop', () => {
@@ -12,7 +13,7 @@ describe('onDisableTextDrop', () => {
     // Disable the extension
     onDisableTextDrop(core);
 
-    // Should no longer have any registered drop types
-    expect(Drops.getRegisteredDropTypes().length).toBe(0);
+    // 'text' drop type should no longer be registered
+    expect(Drops.typeConfigsStore.get(TextDropConfig.type)).toBeUndefined();
   });
 });

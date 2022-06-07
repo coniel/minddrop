@@ -15,7 +15,7 @@ export const TextDropComponent: FC<TextDropComponentProps> = ({
   richTextDocument,
   id,
   color,
-  parent,
+  currentParent,
 }) => {
   // Drag and drop handling
   const { onDragStart } = useDraggableDrop(id);
@@ -34,7 +34,7 @@ export const TextDropComponent: FC<TextDropComponentProps> = ({
         className="drag-handle"
         onClick={() => (!isSelected ? select() : undefined)}
       />
-      <DropActions dropId={id} parent={parent} />
+      <DropActions dropId={id} currentParent={currentParent} />
     </Drop>
   );
 };
