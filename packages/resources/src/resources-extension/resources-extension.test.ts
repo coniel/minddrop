@@ -9,7 +9,7 @@ import { ResourceStorageAdaptersStore } from '../ResourceStorageAdaptersStore';
 import { ResourceApisStore } from '../ResourceApisStore';
 import { Resources } from '../Resources';
 
-const resource1 = createResource<{ foo: string }, {}, {}>({
+const resource1 = createResource<{ foo?: string }, {}, {}>({
   resource: 'tests:resource-1',
   dataSchema: {
     foo: {
@@ -18,7 +18,7 @@ const resource1 = createResource<{ foo: string }, {}, {}>({
     },
   },
 });
-const resource2 = createResource<{ foo: string }, {}, {}>({
+const resource2 = createResource<{ foo?: string }, {}, {}>({
   resource: 'tests:resource-2',
   dataSchema: {
     foo: {
@@ -27,7 +27,7 @@ const resource2 = createResource<{ foo: string }, {}, {}>({
     },
   },
 });
-const resource3 = createResource<{ foo: string }, {}, {}>({
+const resource3 = createResource<{ foo?: string }, {}, {}>({
   resource: 'tests:resource-2',
   dataSchema: {
     foo: {
@@ -37,9 +37,12 @@ const resource3 = createResource<{ foo: string }, {}, {}>({
   },
 });
 
-const document1 = generateResourceDocument('tests:resource-1', {});
-const document2 = generateResourceDocument('tests:resource-2', {});
-const document3 = generateResourceDocument('tests:resource-1', {});
+// resource1 documents
+const res1doc1 = generateResourceDocument('tests:resource-1', {});
+const res1doc2 = generateResourceDocument('tests:resource-1', {});
+const res1doc3 = generateResourceDocument('tests:resource-1', {});
+// resource2 documents
+const res2doc1 = generateResourceDocument('tests:resource-2', {});
 
 const storageAdapterConfig1: ResourceStorageAdapterConfig = {
   id: 'adapter-1',
@@ -49,7 +52,7 @@ const storageAdapterConfig1: ResourceStorageAdapterConfig = {
   delete: jest.fn(),
   getAll: () =>
     new Promise((resolve) => {
-      resolve([document1, document2]);
+      resolve([res1doc1, res1doc2, res2doc1]);
     }),
 };
 const storageAdapterConfig2: ResourceStorageAdapterConfig = {
@@ -57,7 +60,7 @@ const storageAdapterConfig2: ResourceStorageAdapterConfig = {
   create: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-  getAll: () => [document3],
+  getAll: () => [res1doc2],
 };
 
 describe('resources-extension', () => {
@@ -73,17 +76,44 @@ describe('resources-extension', () => {
   });
 
   describe('onRun', () => {
-    it('initializes storage adapters', async () => {
-      // Register a couple of storage adapters, with storage
-      // adapter 2 having no initialization callback.
-      registerResourceStorageAdapter(core, storageAdapterConfig1);
-      registerResourceStorageAdapter(core, storageAdapterConfig2);
+    it('initializes storage adapters with the sync API', async () => {
+      // Register a resource
+      registerResource(core, resource1);
+      // Load a couple of documents to the resource store
+      resource1.store.load(core, [res1doc1, res1doc2]);
+      // Register a storage adapter which calls sync API methods
+      registerResourceStorageAdapter(core, {
+        ...storageAdapterConfig1,
+        // Load nothing to prevent modifications made
+        // in `initialize` from being overwritten.
+        getAll: () => [],
+        initialize: (syncApi) => {
+          // Set a new document
+          syncApi.set(res1doc3);
+          // Set an existing document with modifications
+          syncApi.set({ ...res1doc1, revision: 'new-revision' });
+          // Remove a document
+          syncApi.remove(res1doc2);
+        },
+      });
 
       // Run the extension
       await onRun(core);
 
-      // Should initialize the adapters with a `initialize` callback
-      expect(storageAdapterConfig1.initialize).toHaveBeenCalledWith(core);
+      // Should have added document 'res1doc3' to the store
+      expect(resource1.store.get(res1doc3.id)).toEqual(res1doc3);
+      // Should have set document 'res1doc1' modifications in the store
+      expect(resource1.store.get(res1doc1.id).revision).toBe('new-revision');
+      // Should have removed document 'res1doc2' from the store
+      expect(resource1.store.get(res1doc2.id)).not.toBeDefined();
+    });
+
+    it('works with storage adapters which have no `initialize` callback', async () => {
+      // Register a storage adapter which has no `initialize` callback
+      registerResourceStorageAdapter(core, storageAdapterConfig2);
+
+      // Run the extension, should not throw
+      await onRun(core);
     });
 
     it('loads documents into the appropriate store', async () => {
@@ -96,12 +126,12 @@ describe('resources-extension', () => {
       // Run the extension
       await onRun(core);
 
-      // Should load document1 into resource1
-      expect(resource1.store.get(document1.id)).toBeDefined();
-      expect(resource2.store.get(document1.id)).toBeUndefined();
-      // Should load document2 into resource2
-      expect(resource2.store.get(document2.id)).toBeDefined();
-      expect(resource1.store.get(document2.id)).toBeUndefined();
+      // Should load res1doc1 into resource1
+      expect(resource1.store.get(res1doc1.id)).toBeDefined();
+      expect(resource2.store.get(res1doc1.id)).toBeUndefined();
+      // Should load res2doc1 into resource2
+      expect(resource2.store.get(res2doc1.id)).toBeDefined();
+      expect(resource1.store.get(res2doc1.id)).toBeUndefined();
     });
 
     it('loads documents from the last registered storage adapter', async () => {
@@ -140,7 +170,7 @@ describe('resources-extension', () => {
       core.addEventListener('tests:resource-1:load', (payload) => {
         // Payload should be 'tests:resource-1' documents loaded
         // by storage adapter 1.
-        expect(payload.data).toEqual([document1]);
+        expect(payload.data).toEqual([res1doc1, res1doc2]);
         done();
       });
 

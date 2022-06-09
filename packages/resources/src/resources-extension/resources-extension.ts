@@ -1,7 +1,7 @@
 import { Core } from '@minddrop/core';
 import { ResourceStorageAdaptersStore } from '../ResourceStorageAdaptersStore';
 import { ResourceApisStore } from '../ResourceApisStore';
-import { Resources } from '..';
+import { Resources } from '../Resources';
 
 /**
  * Runs the resources extension.
@@ -17,7 +17,31 @@ export async function onRun(core: Core): Promise<void> {
     storageAdapters
       // Ignore adapters without a `initialize` callback
       .filter((adapter) => adapter.initialize)
-      .map((adapter) => adapter.initialize(core)),
+      .map((adapter) =>
+        adapter.initialize({
+          set: (document) => {
+            // Get the document resource API
+            const resource = Resources.get(document.resource);
+
+            if (resource.store.get(document.id)) {
+              // If the document is present in the store,
+              // set the modified version.
+              resource.store.set(core, document);
+            } else {
+              // If the document is not present in the
+              // store, add it in.
+              resource.store.add(core, document);
+            }
+          },
+          remove: (document) => {
+            // Get the document resource API
+            const resource = Resources.get(document.resource);
+
+            // Remove the document from the store
+            resource.store.remove(core, document.id);
+          },
+        }),
+      ),
   );
 
   // Get all documents from the last registered storage adapter

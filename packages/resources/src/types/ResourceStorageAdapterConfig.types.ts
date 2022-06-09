@@ -1,5 +1,22 @@
-import { Core } from '@minddrop/core';
 import { ResourceDocument, RDUpdate } from './ResourceDocument.types';
+
+export interface ResourceStorageAdapterSyncApi {
+  /**
+   * Callback to be fired when a resource document
+   * is added or updated.
+   *
+   * @param document - The document to set.
+   */
+  set: (document: ResourceDocument) => void;
+
+  /**
+   * Callback to be fired when a resource document
+   * is removed.
+   *
+   * @param document - The document to remove.
+   */
+  remove: (document: ResourceDocument) => void;
+}
 
 export interface ResourceStorageAdapterConfig {
   /**
@@ -11,9 +28,9 @@ export interface ResourceStorageAdapterConfig {
    * Called on app startup to initialize the
    * storage adapter.
    *
-   * @param core - A MindDrop core instance.
+   * @param syncApi - The API used to sync resource document changes.
    */
-  initialize?(core: Core): void | Promise<void>;
+  initialize?(syncApi: ResourceStorageAdapterSyncApi): void | Promise<void>;
 
   /**
    * Called to retrieve all docuemnts from storage.
