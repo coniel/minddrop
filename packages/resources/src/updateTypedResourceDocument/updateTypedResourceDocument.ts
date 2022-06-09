@@ -12,6 +12,7 @@ import {
   TypedResourceConfig,
   TRDUpdate,
 } from '../types';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import {
   createChanges,
   validateExternalUpdateData,
@@ -160,8 +161,22 @@ export function updateTypedResourceDocument<
     document,
   );
 
-  // Set the updated document in the store
+  // Set the updated document in the resource store
   store.set(update.after);
+
+  // Create an update object combining the base changes
+  // and type changes.
+  const combinedUpdate = {
+    before: document,
+    after: update.after,
+    changes: {
+      ...baseUpdate.changes,
+      ...update.changes,
+    },
+  };
+
+  // Add the document update to the document changes store
+  ResourceDocumentChangesStore.addUpdated(documentId, combinedUpdate);
 
   // Run schema update hooks
   runSchemaUpdateHooks(
@@ -172,14 +187,7 @@ export function updateTypedResourceDocument<
   );
 
   // Dispatch a `[resource]:update` event
-  core.dispatch(`${config.resource}:update`, {
-    before: document,
-    after: update.after,
-    changes: {
-      ...baseUpdate.changes,
-      ...update.changes,
-    },
-  });
+  core.dispatch(`${config.resource}:update`, combinedUpdate);
 
   // Return the updated document
   return update.after;

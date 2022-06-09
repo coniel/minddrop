@@ -4,7 +4,6 @@ import {
   ResourceValidationError,
   ResourceTypeNotRegisteredError,
 } from '../errors';
-import { createResourceStore } from '../createResourceStore';
 import {
   ResourceTypeConfigsStore,
   TypedResourceDocument,
@@ -15,11 +14,13 @@ import {
   TypedResourceConfig,
   ResourceConfig,
 } from '../types';
+import { createResourceStore } from '../createResourceStore';
 import { createConfigsStore } from '../createConfigsStore';
 import { createTypedResource } from '../createTypedResource';
 import { createResource } from '../createResource';
 import { generateResourceDocument } from '../generateResourceDocument';
 import { ResourceApisStore } from '../ResourceApisStore';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import { createTypedResourceDocument as rawCreateTypedResourceDocument } from './createTypedResourceDocument';
 
 interface BaseData {
@@ -383,7 +384,7 @@ describe('createTypedResourceDocument', () => {
     ).toThrowError(ResourceValidationError);
   });
 
-  it('adds the document to the store', () => {
+  it('adds the document to the resource store', () => {
     // Create a new document
     const document = createTypedResourceDocument(
       core,
@@ -399,6 +400,25 @@ describe('createTypedResourceDocument', () => {
 
     // Document should be in the store
     expect(store.get(document.id)).toEqual(document);
+  });
+
+  it('adds the document to the document changes store', () => {
+    // Create a new document
+    const document = createTypedResourceDocument(
+      core,
+      store,
+      typeConfigsStore,
+      config,
+      'test-type',
+      {
+        resourceFoo: 'foo',
+        typeFoo: 'foo',
+      },
+    );
+
+    // Document should be in the document changes
+    // store's `created` map.
+    expect(ResourceDocumentChangesStore.created[document.id]).toEqual(document);
   });
 
   it('runs schema create hooks', () => {

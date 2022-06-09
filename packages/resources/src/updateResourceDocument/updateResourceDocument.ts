@@ -4,6 +4,7 @@ import {
   ResourceDocumentNotFoundError,
   ResourceValidationError,
 } from '../errors';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import { runSchemaUpdateHooks } from '../runSchemaUpdateHooks';
 import {
   RDDeleteUpdateData,
@@ -142,8 +143,11 @@ export function updateResourceDocument<
     update.before,
   );
 
-  // Set the updated document in the store
+  // Set the updated document in the resource store
   store.set(update.after);
+
+  // Add the document update to the document changes store
+  ResourceDocumentChangesStore.addUpdated(documentId, update);
 
   // Run schema update hooks
   runSchemaUpdateHooks(core, config.dataSchema, update.before, update.after);

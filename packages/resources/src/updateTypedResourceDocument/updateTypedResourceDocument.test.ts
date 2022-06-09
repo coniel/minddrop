@@ -19,6 +19,7 @@ import {
 import { createTypedResource } from '../createTypedResource';
 import { createResource } from '../createResource';
 import { ResourceApisStore } from '../ResourceApisStore';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import { createConfigsStore } from '../createConfigsStore';
 import { updateTypedResourceDocument as rawUpdateResourceDocument } from './updateTypedResourceDocument';
 
@@ -303,6 +304,34 @@ describe('updateTypedResourceDocument', () => {
     // Store document should be updated
     expect(updated.baseFoo).toBe('updated foo');
     expect(updated.typeFoo).toBe('updated foo');
+  });
+
+  it('adds the document to the document changes store', () => {
+    // Update a dcoument
+    const updated = updateTypedResourceDocument(
+      core,
+      store,
+      typeConfigsStore,
+      config,
+      document.id,
+      {
+        baseFoo: 'updated foo',
+        typeFoo: 'updated foo',
+      },
+    );
+
+    // Document update should be in the document changes
+    // store's `updated` map.
+    expect(ResourceDocumentChangesStore.updated[document.id]).toEqual({
+      before: document,
+      after: updated,
+      changes: {
+        baseFoo: 'updated foo',
+        typeFoo: 'updated foo',
+        updatedAt: updated.updatedAt,
+        revision: updated.revision,
+      },
+    });
   });
 
   it('runs schema update hooks', () => {

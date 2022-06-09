@@ -7,6 +7,7 @@ import { ResourceConfig, ResourceDocument, ResourceStore } from '../types';
 import { createResource } from '../createResource';
 import { ResourceApisStore } from '../ResourceApisStore';
 import { permanentlyDeleteResourceDocument as rawPermanentlyDeleteResourceDocument } from './permanentlyDeleteResourceDocument';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 
 // Test resource config
 const config: ResourceConfig<{}> = {
@@ -38,12 +39,21 @@ describe('permanentlyDeleteResourceDocument', () => {
 
   afterEach(cleanup);
 
-  it('removes the document from the store', () => {
+  it('removes the document from the resource store', () => {
     // Permanently delete a document
     permanentlyDeleteResourceDocument(core, store, config, document.id);
 
     // Document should no longer be in the store
     expect(store.get(document.id)).toBeUndefined();
+  });
+
+  it('adds the document to the document changes store', () => {
+    // Permanently delete a document
+    permanentlyDeleteResourceDocument(core, store, config, document.id);
+
+    // Document should be in the document changes
+    // store's `deleted` list.
+    expect(ResourceDocumentChangesStore.deleted).toContain(document);
   });
 
   it('throws if the document does not exist', () => {

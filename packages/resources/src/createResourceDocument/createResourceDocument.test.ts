@@ -1,8 +1,4 @@
 import { Core } from '@minddrop/core';
-import { createResourceStore } from '../createResourceStore';
-import { createResource } from '../createResource';
-import { ResourceValidationError } from '../errors';
-import { setup, cleanup, core } from '../test-utils';
 import {
   ResourceConfig,
   RDDataSchema,
@@ -10,9 +6,14 @@ import {
   ResourceStore,
   RDData,
 } from '../types';
+import { createResourceStore } from '../createResourceStore';
+import { createResource } from '../createResource';
+import { ResourceValidationError } from '../errors';
+import { setup, cleanup, core } from '../test-utils';
 import { generateResourceDocument } from '../generateResourceDocument';
-import { createResourceDocument as rawCreateResourceDocument } from './createResourceDocument';
 import { ResourceApisStore } from '../ResourceApisStore';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
+import { createResourceDocument as rawCreateResourceDocument } from './createResourceDocument';
 
 interface Data {
   foo: string;
@@ -122,7 +123,7 @@ describe('createResourceDocument', () => {
     ).toThrowError(ResourceValidationError);
   });
 
-  it('adds the document to the store', () => {
+  it('adds the document to the resource store', () => {
     // Create a new document
     const document = createResourceDocument(core, store, baseConfig, {
       foo: 'foo',
@@ -130,6 +131,17 @@ describe('createResourceDocument', () => {
 
     // Document should be in the store
     expect(store.get(document.id)).toEqual(document);
+  });
+
+  it('adds the document to the document changes store', () => {
+    // Create a new document
+    const document = createResourceDocument(core, store, baseConfig, {
+      foo: 'foo',
+    });
+
+    // Document should be in the document changes
+    // store's `created` map.
+    expect(ResourceDocumentChangesStore.created[document.id]).toEqual(document);
   });
 
   it('runs schema create hooks', () => {

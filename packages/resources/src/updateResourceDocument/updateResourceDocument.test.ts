@@ -14,6 +14,7 @@ import {
 } from '../types';
 import { createResource } from '../createResource';
 import { ResourceApisStore } from '../ResourceApisStore';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import { updateResourceDocument as rawUpdateResourceDocument } from './updateResourceDocument';
 
 // Test resource data
@@ -146,7 +147,7 @@ describe('updateResourceDocument', () => {
     ).toThrowError(ResourceValidationError);
   });
 
-  it('sets the updated document in the store', () => {
+  it('sets the updated document in the resource store', () => {
     // Update a dcoument
     updateResourceDocument(core, store, config, document.id, {
       foo: 'updated foo',
@@ -157,6 +158,25 @@ describe('updateResourceDocument', () => {
 
     // Store document should be updated
     expect(updated.foo).toBe('updated foo');
+  });
+
+  it('adds the document to the document changes store', () => {
+    // Update a dcoument
+    const updated = updateResourceDocument(core, store, config, document.id, {
+      foo: 'updated foo',
+    });
+
+    // Document update should be in the document changes
+    // store's `updated` map.
+    expect(ResourceDocumentChangesStore.updated[document.id]).toEqual({
+      before: document,
+      after: updated,
+      changes: {
+        foo: 'updated foo',
+        updatedAt: updated.updatedAt,
+        revision: updated.revision,
+      },
+    });
   });
 
   it('runs schema update hooks', () => {

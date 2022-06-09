@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { ResourceDocumentNotFoundError } from '../errors';
+import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import { runSchemaDeleteHooks } from '../runSchemaDeleteHooks';
 import {
   ResourceConfig,
@@ -35,8 +36,12 @@ export function permanentlyDeleteResourceDocument<
     throw new ResourceDocumentNotFoundError(config.resource, documentId);
   }
 
-  // Remove the document from the store
+  // Remove the document from the resource store
   store.remove(documentId);
+
+  // Add the document to the changes store as a
+  // deleted document.
+  ResourceDocumentChangesStore.addDeleted(document);
 
   // Run schema delete hooks
   runSchemaDeleteHooks(core, config.dataSchema, document);
