@@ -9,6 +9,7 @@ const dataSchema: RDDataSchema<RTDocumentData> = {
   children: {
     type: 'resource-ids',
     resource: 'rich-text:element',
+    addAsParent: true,
     required: true,
   },
 };
