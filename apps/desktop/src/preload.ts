@@ -1,3 +1,4 @@
+import { deserializeResourceDocument } from '@minddrop/pouchdb';
 import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 import { ipcRenderer, contextBridge } from 'electron';
 
@@ -7,13 +8,13 @@ const pouchdbStorageAdapter: ResourceStorageAdapterConfig = {
     // Listen to 'db:set' events
     ipcRenderer.on('db:set', (event, data) => {
       // Set the added/updated document
-      return syncApi.set(JSON.parse(data));
+      return syncApi.set(deserializeResourceDocument(JSON.parse(data)));
     });
 
     // Listen to 'db:remove' events
     ipcRenderer.on('db:remove', (event, data) => {
       // Remove the deleted document
-      syncApi.remove(JSON.parse(data));
+      syncApi.remove(deserializeResourceDocument(JSON.parse(data)));
     });
   },
   getAll: () =>
