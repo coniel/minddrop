@@ -67,7 +67,7 @@ export function createTypedResourceDocument<
 
   if (config.onCreate) {
     // Call the resource config's `onCreate` callback if defined
-    document = config.onCreate(core, document);
+    document = config.onCreate(core, { ...document, type });
   }
 
   // Add the type to create the typed document
