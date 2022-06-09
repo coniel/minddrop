@@ -9,6 +9,11 @@ import {
 import { LocalStoreResource } from '../LocalStoreResource';
 import { GlobalStoreResource } from '../GlobalStoreResource';
 
+export const core = initializeCore({
+  appId: 'app',
+  extensionId: 'persistent-store',
+});
+
 export interface StoreData {
   foo: string;
   bar?: number;
