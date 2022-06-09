@@ -7,7 +7,13 @@ import './App.css';
 initializeFileStorage();
 
 const App: React.FC = () => {
-  return <MindDrop appId="app" dbApi={window.db} extensions={[]} />;
+  return (
+    <MindDrop
+      appId="app"
+      resourceStorageAdapter={window.resourceStorageAdapter}
+      extensions={[]}
+    />
+  );
 };
 
 function render() {

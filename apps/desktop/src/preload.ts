@@ -1,26 +1,46 @@
+import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 import { ipcRenderer, contextBridge } from 'electron';
 
-contextBridge.exposeInMainWorld('db', {
-  getAllDocs: () =>
+const pouchdbStorageAdapter: ResourceStorageAdapterConfig = {
+  id: 'minddrop:pouchdb',
+  initialize: (syncApi) => {
+    // Listen to 'db:set' events
+    ipcRenderer.on('db:set', (event, data) => {
+      // Set the added/updated document
+      return syncApi.set(JSON.parse(data));
+    });
+
+    // Listen to 'db:remove' events
+    ipcRenderer.on('db:remove', (event, data) => {
+      // Remove the deleted document
+      syncApi.remove(JSON.parse(data));
+    });
+  },
+  getAll: () =>
     new Promise((resolve) => {
+      // Listen for the 'db:all-docs' response
       ipcRenderer.once('db:all-docs', (event, data) => {
         resolve(data);
       });
-      ipcRenderer.send('db:getAllDocs');
+
+      // Send a 'db:getAll' request
+      ipcRenderer.send('db:getAll');
     }),
-
-  add: async (type, data) => {
-    ipcRenderer.send('db:add', { type, data });
+  create: async (document) => {
+    ipcRenderer.send('db:create', document);
   },
-
-  update: async (id, data) => {
-    ipcRenderer.send('db:update', { id, data });
+  update: async (id, update) => {
+    ipcRenderer.send('db:update', update.after);
   },
-
-  delete: async (id) => {
-    ipcRenderer.send('db:delete', id);
+  delete: async (document) => {
+    ipcRenderer.send('db:delete', document.id);
   },
-});
+};
+
+contextBridge.exposeInMainWorld(
+  'resourceStorageAdapter',
+  pouchdbStorageAdapter,
+);
 
 contextBridge.exposeInMainWorld('files', {
   getAttachmentsPath: () => ipcRenderer.sendSync('files:getAttachmentsPath'),

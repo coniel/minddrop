@@ -97,6 +97,7 @@
     "@minddrop/files": "0.1.0",
     "@minddrop/pouchdb": "0.1.0",
     "@minddrop/minddrop": "^0.0.1",
+    "@minddrop/resources": "^0.1.0",
     "pouchdb": "^7.2.2",
     "electron-squirrel-startup": "^1.0.0",
     "react": "17.0.2",

@@ -12,9 +12,11 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let mainWindow: BrowserWindow;
+
 const createWindow = (): void => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     height: 800,
     width: 1200,
     titleBarStyle: 'hiddenInset',
@@ -52,5 +54,5 @@ app.on('activate', () => {
   }
 });
 
-initializeDatabase();
+initializeDatabase(mainWindow);
 initializeFileStorage();

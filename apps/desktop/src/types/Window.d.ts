@@ -1,8 +1,8 @@
-import { DBApi } from '@minddrop/pouchdb';
+import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 
 export declare global {
   interface Window {
-    db: DBApi;
+    resourceStorageAdapter: ResourceStorageAdapterConfig;
 
     files: {
       getAttachmentsPath(): string;
