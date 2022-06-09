@@ -3,6 +3,7 @@ export * from './ResourceApi.types';
 export * from './ResourceConfig.types';
 export * from './ResourceDeserializers.types';
 export * from './ResourceDocument.types';
+export * from './ResourceDocumentChangesStore.types';
 export * from './ResourceDocumentFilters.types';
 export * from './ResourceEvents.types';
 export * from './ResourceReference.types';

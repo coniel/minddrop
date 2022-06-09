@@ -145,7 +145,7 @@ export type RDUpdateData<TData extends RDData> =
  * base document changes (which are set for every update), and
  * the custom data changes or delete/restore data changes.
  */
-export type RDChanges<TData extends RDData> = RDRootChanges &
+export type RDChanges<TData extends RDData = {}> = RDRootChanges &
   RDUpdateData<TData>;
 
 /**
