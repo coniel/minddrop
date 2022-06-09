@@ -1,5 +1,5 @@
+import { ResourceStorageAdapterConfig, Resources } from '@minddrop/resources';
 import * as ExtensionsExtension from '@minddrop/extensions';
-import * as PersistentStoreExtension from '@minddrop/persistent-store';
 import * as ViewsExtension from '@minddrop/views';
 import * as FilesExtension from '@minddrop/files';
 import * as TagsExtension from '@minddrop/tags';
@@ -11,9 +11,7 @@ import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
-import { DBApi, initializeResourceConfigs } from '@minddrop/pouchdb';
-import { PersistentStore } from '@minddrop/persistent-store';
-import { registerDefaultRTElementTypes } from '@minddrop/rich-text-editor';
+import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 import { Topics } from '@minddrop/topics';
 import { Views } from '@minddrop/views';
 import { HomeView } from '../HomeView';
@@ -34,15 +32,17 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
  * all non-core extensions on newly created topics.
  */
 export async function initializeApp(
-  database: DBApi,
+  resourceStorageAdapter: ResourceStorageAdapterConfig,
   installedExtensions: ExtensionConfig[],
 ) {
   // Combine default and installed extensions
   const extensions = [...defaultExtensions, ...installedExtensions];
 
+  // Register the default resource storage adapter
+  Resources.registerStorageAdapter(core, resourceStorageAdapter);
+
   // Run core extensions
   ExtensionsExtension.onRun(core);
-  PersistentStoreExtension.onRun(core);
   ViewsExtension.onRun(core);
   FilesExtension.onRun(core);
   TagsExtension.onRun(core);
@@ -50,23 +50,17 @@ export async function initializeApp(
   DropsExtension.onRun(core);
   TopicsExtension.onRun(core);
 
-  // Inistialize registered resource connectors
-  await initializeResourceConfigs(core, database);
-
   // Register default rich text element types
-  registerDefaultRTElementTypes(core);
+  registerDefaultRichTextElementTypes(core);
 
   // Initialize non-core extensions
   Extensions.initialize(core, extensions);
-
-  // Initialize persistent stores
-  PersistentStore.initialize(core);
 
   // Run the app extensions
   AppExtension.onRun(core);
 
   // Enable all non-core extensions on a topic when it is created
-  Topics.addEventListener(core, 'topics:create', ({ data }) => {
+  Topics.addEventListener(core, 'topics:topic:create', ({ data }) => {
     extensions.forEach((extension) => {
       Extensions.enableOnTopics(core, extension.id, [data.id]);
     });

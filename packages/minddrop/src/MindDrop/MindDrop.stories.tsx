@@ -1,10 +1,9 @@
-import {
-  DBResourceDocument,
-  initializePouchdb,
-  ResourceDB,
-} from '@minddrop/pouchdb';
-import TextDropExtension from '@minddrop/text-drop';
 import React from 'react';
+import TextDropExtension from '@minddrop/text-drop';
+import {
+  ResourceDocument,
+  ResourceStorageAdapterConfig,
+} from '@minddrop/resources';
 import { MindDrop } from './MindDrop';
 
 export default {
@@ -12,31 +11,32 @@ export default {
   component: MindDrop,
 };
 
-const database: Record<string, DBResourceDocument> = {};
+const database: Record<string, ResourceDocument> = {};
 
-const dbApi: ResourceDB = {
-  // @ts-ignore
-  allDocs: async () => ({
-    rows: Object.values(database).map((doc) => ({ doc })),
-  }),
-  // @ts-ignore
-  put: async (doc: DBResourceDocument) => {
-    // eslint-disable-next-line no-underscore-dangle
-    database[doc._id] = doc;
+const storageAdapter: ResourceStorageAdapterConfig = {
+  id: 'test',
+  getAll: async () => Object.values(database),
+  create: async (doc) => {
+    database[doc.id] = doc;
   },
-  // @ts-ignore
-  get: async (id: string) => database[id],
+  update: async (id, update) => {
+    database[id] = update.after;
+  },
+  delete: async (doc) => {
+    delete database[doc.id];
+  },
 };
 
-const api = initializePouchdb(dbApi);
-
-console.log(TextDropExtension);
 export const App: React.FC = () => {
   return (
     <div
       style={{ height: '100%', width: '100%', marginTop: -16, marginLeft: -16 }}
     >
-      <MindDrop appId="app" extensions={[TextDropExtension]} dbApi={api} />
+      <MindDrop
+        appId="app"
+        extensions={[TextDropExtension]}
+        resourceStorageAdapter={storageAdapter}
+      />
     </div>
   );
 };

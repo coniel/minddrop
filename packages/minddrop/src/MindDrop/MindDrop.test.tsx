@@ -1,32 +1,30 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { App } from '@minddrop/app';
-import { act, render, waitFor } from '@minddrop/test-utils';
 import {
-  DBResourceDocument,
-  initializePouchDB,
-  ResourceDB,
-} from '@minddrop/pouchdb';
-import { Views } from '@minddrop/views';
+  ResourceDocument,
+  ResourceStorageAdapterConfig,
+} from '@minddrop/resources';
+import { act, render, waitFor } from '@minddrop/test-utils';
+import { ViewInstances, Views } from '@minddrop/views';
 import { cleanup, core, setup } from '../test-utils';
 import { MindDrop } from './MindDrop';
 
-let database: Record<string, DBResourceDocument> = {};
+let database: Record<string, ResourceDocument> = {};
 
-const dbApi: ResourceDB = {
-  // @ts-ignore
-  allDocs: async () => ({
-    rows: Object.values(database).map((doc) => ({ doc })),
-  }),
-  // @ts-ignore
-  put: async (doc: DBResourceDocument) => {
-    database[doc._id] = doc;
+const storageAdapter: ResourceStorageAdapterConfig = {
+  id: 'test',
+  getAll: async () => Object.values(database),
+  create: async (doc) => {
+    database[doc.id] = doc;
   },
-  // @ts-ignore
-  get: async (id: string) => database[id],
+  update: async (id, update) => {
+    database[id] = update.after;
+  },
+  delete: async (doc) => {
+    delete database[doc.id];
+  },
 };
-
-const api = initializePouchDB(dbApi);
 
 describe('MindDrop', () => {
   beforeEach(setup);
@@ -39,7 +37,13 @@ describe('MindDrop', () => {
   });
 
   function init() {
-    return render(<MindDrop appId="app" dbApi={api} extensions={[]} />);
+    return render(
+      <MindDrop
+        appId="app"
+        resourceStorageAdapter={storageAdapter}
+        extensions={[]}
+      />,
+    );
   }
 
   describe('view', () => {
@@ -77,7 +81,7 @@ describe('MindDrop', () => {
       });
 
       // Create an instance of the test view
-      const viewInstance = Views.createInstance(core, { view: 'test' });
+      const viewInstance = ViewInstances.create(core, 'test', {});
 
       const { getByText, getByTestId } = init();
 

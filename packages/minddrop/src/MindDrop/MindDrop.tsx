@@ -4,11 +4,11 @@ import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { useCurrentView } from '@minddrop/app';
-import { DBApi } from '@minddrop/pouchdb';
 import { ExtensionConfig } from '@minddrop/extensions';
 import { initializeApp, registerViews } from '../initializeApp';
 import '@minddrop/theme';
 import './MindDrop.css';
+import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 
 export interface MindDropProps {
   /**
@@ -17,9 +17,9 @@ export interface MindDropProps {
   appId: string;
 
   /**
-   * The database API.
+   * The default resource storage adapter config.
    */
-  dbApi: DBApi;
+  resourceStorageAdapter: ResourceStorageAdapterConfig;
 
   /**
    * The extension configs of installed extensions.
@@ -35,7 +35,7 @@ registerViews();
 
 export const MindDrop: React.FC<MindDropProps> = ({
   appId,
-  dbApi,
+  resourceStorageAdapter,
   extensions,
 }) => {
   const { view, instance } = useCurrentView();
@@ -43,7 +43,7 @@ export const MindDrop: React.FC<MindDropProps> = ({
 
   useEffect(() => {
     async function initialize() {
-      await initializeApp(dbApi, extensions);
+      await initializeApp(resourceStorageAdapter, extensions);
       setInitialized(true);
     }
 
