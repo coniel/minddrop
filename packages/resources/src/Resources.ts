@@ -9,6 +9,7 @@ import { unregisterResource } from './unregisterResource';
 import { generateResourceDocument } from './generateResourceDocument';
 import { registerResourceStorageAdapter } from './registerResourceStorageAdapter';
 import { unregisterResourceStorageAdapter } from './unregisterResourceStorageAdapter';
+import { deserializeResourceDocument } from './deserializeResourceDocument';
 
 export const Resources: ResourcesApi = {
   createResourceStore,
@@ -23,6 +24,7 @@ export const Resources: ResourcesApi = {
   clear: ResourceApisStore.clear,
   registerStorageAdapter: registerResourceStorageAdapter,
   unregisterStorageAdapter: unregisterResourceStorageAdapter,
+  deserializeDocument: deserializeResourceDocument,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>

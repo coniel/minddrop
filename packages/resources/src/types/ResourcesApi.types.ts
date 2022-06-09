@@ -21,6 +21,7 @@ import {
   UnregisterResourceStorageAdapterEvent,
   UnregisterResourceStorageAdapterEventCallback,
 } from './ResourceEvents.types';
+import { ResourceDeserializers } from './ResourceDeserializers.types';
 
 export interface ResourcesApi {
   /**
@@ -182,6 +183,16 @@ export interface ResourcesApi {
     core: Core,
     config: ResourceStorageAdapterConfig,
   ): void;
+
+  deserializeDocument<
+    TData extends RDData = {},
+    TRawDocument extends
+      | ResourceDocument
+      | TypedResourceDocument = ResourceDocument,
+  >(
+    document: TRawDocument,
+    deserializers: ResourceDeserializers,
+  ): ResourceDocument<TData>;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
