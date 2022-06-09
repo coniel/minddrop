@@ -1,10 +1,11 @@
 import { Core } from '@minddrop/core';
-import { ResourceReference } from '.';
+import { ResourceReference } from './ResourceReference.types';
 import {
   ResourceDocument,
   ResourceDocumentMap,
   RDData,
 } from './ResourceDocument.types';
+import { RDDataSchema } from './ResourceValidation.types';
 import { ResourceDocumentFilters } from './ResourceDocumentFilters.types';
 
 /**
@@ -24,6 +25,11 @@ export interface ResourceApi<
    * The resource identifier.
    */
   resource: string;
+
+  /**
+   * The resource's data schema.
+   */
+  dataSchema: RDDataSchema<TData>;
 
   /**
    * Creates a new resource document and dispatches a `[resource]:create`

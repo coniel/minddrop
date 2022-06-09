@@ -63,6 +63,7 @@ export function createResource<
   // Return the resource API
   return {
     resource: config.resource,
+    dataSchema: config.dataSchema,
     get,
     getAll: () => getAllResourceDocuments(store, config),
     create: (core, data) => createResourceDocument(core, store, config, data),
