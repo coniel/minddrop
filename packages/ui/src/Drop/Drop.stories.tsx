@@ -122,3 +122,118 @@ export const Default: React.FC = () => (
     </Drop>
   </div>
 );
+
+export const Selected: React.FC = () => (
+  <div style={{ display: 'flex', columnGap: 32, rowGap: 32, flexWrap: 'wrap' }}>
+    <Drop className="drop-selected" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="blue" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="cyan" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="red" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="pink" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="purple" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="green" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="yellow" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="orange" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="brown" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+    <Drop className="drop-selected" color="gray" style={{ width: 240 }}>
+      <DropTitle>Reference frames</DropTitle>
+      <DropNote>
+        Reference frames play a crucial role in relativity theory. The term
+        reference frame as used here is an observational perspective in space
+        that is not undergoing any change in motion (acceleration), from which a
+        position can be measured along 3 spatial axes (so, at rest or constant
+        velocity).
+      </DropNote>
+    </Drop>
+  </div>
+);

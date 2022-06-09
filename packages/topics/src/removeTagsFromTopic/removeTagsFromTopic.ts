@@ -2,28 +2,37 @@ import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
 import { Tags } from '@minddrop/tags';
 import { Topic } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Removes tags from a topic and dispatches a `topics:remove-tags` event
- * and a `topics:update` event.
+ * Removes tags from a topic.
+ * Dispatches a `topics:topic:remove-tags` event.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic from which to remove the tags.
- * @param tagIds The IDs of the tags to remove.
+ * Returns the updated topic.
+ *
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic from which to remove the tags.
+ * @param tagIds - The IDs of the tags to remove.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
  */
 export function removeTagsFromTopic(
   core: Core,
   topicId: string,
   tagIds: string[],
 ): Topic {
+  // Get the tags
   const tags = Tags.get(tagIds);
-  const topic = updateTopic(core, topicId, {
+
+  // Update the topic, removing the specified tags
+  const topic = TopicsResource.update(core, topicId, {
     tags: FieldValue.arrayRemove(tagIds),
   });
 
-  core.dispatch('topics:remove-tags', { topic, tags });
+  // Dispatch a 'topics:topic:remove-tags' event
+  core.dispatch('topics:topic:remove-tags', { topic, tags });
 
   return topic;
 }

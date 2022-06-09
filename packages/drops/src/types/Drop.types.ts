@@ -1,46 +1,21 @@
 import { ContentColor } from '@minddrop/core';
 import {
+  FieldValueArrayFilter,
   FieldValueArrayRemove,
   FieldValueArrayUnion,
   FieldValueDelete,
 } from '@minddrop/utils';
+import {
+  TRDTypeData,
+  TypedResourceDocument,
+  TRDUpdate,
+} from '@minddrop/resources';
 
-export interface Drop {
-  /**
-   * A universally unique ID.
-   */
-  id: string;
-
-  /**
-   * The drop type. Determines which component will be used to render it.
-   */
-  type: string;
-
-  /**
-   * Timestamp at which the drop was created.
-   */
-  createdAt: Date;
-
-  /**
-   * Timestamp at which the drop was last updated. Equal to the `createdAt`
-   * value if the drop has not been updated.
-   */
-  updatedAt: Date;
-
+export interface DropBaseData {
   /**
    * The IDs of the tags applied to the drop.
    */
   tags?: string[];
-
-  /**
-   * The drop's markdown text content.
-   */
-  markdown?: string;
-
-  /**
-   * IDs of the drop's files. All files attached to the drop must be listed here.
-   */
-  files?: string[];
 
   /**
    * The drop's highlight color.
@@ -48,61 +23,43 @@ export interface Drop {
   color?: ContentColor;
 
   /**
-   * `true` if the drop is archived.
+   * The ID of the original drop from which this drop was created if
+   * it is a duplicate drop. Only set if the drop was created through
+   * duplication.
    */
-  archived?: boolean;
-
-  /**
-   * Timestamp at which the drop was archived.
-   * Only set if `archived` is `true`.
-   */
-  archivedAt?: Date;
-
-  /**
-   * `true` if the drop is  in the trash.
-   */
-  deleted?: boolean;
-
-  /**
-   * Timestamp at which the drop was deleted.
-   * Only set if `deleted` is `true`.
-   */
-  deletedAt?: Date;
+  duplicatedFrom?: string;
 }
 
-export interface GenerateDropData extends Partial<Drop> {
-  type: string;
-}
+export type DropTypeData = TRDTypeData<DropBaseData>;
 
-export interface CreateDropData {
-  type: string;
-  markdown?: string;
+export type Drop<TDropTypeData extends DropTypeData = {}> =
+  TypedResourceDocument<DropBaseData, TDropTypeData>;
+
+export type BaseGenerateDropData = Partial<Drop>;
+
+export interface BaseCreateDropData {
   color?: ContentColor;
-  files?: string[];
   tags?: string[];
 }
 
-export interface UpdateDropData {
-  type?: string;
-  markdown?: string | FieldValueDelete;
+export interface BaseUpdateDropData {
   color?: ContentColor | FieldValueDelete;
+  tags?:
+    | string[]
+    | FieldValueArrayUnion
+    | FieldValueArrayRemove
+    | FieldValueArrayFilter;
 }
 
 export interface DropChanges {
   updatedAt: Date;
-  type?: string;
-  markdown?: string | FieldValueDelete;
   tags?: string[] | FieldValueArrayUnion | FieldValueArrayRemove;
-  files?:
-    | string[]
-    | FieldValueDelete
-    | FieldValueArrayUnion
-    | FieldValueArrayRemove;
   color?: ContentColor | FieldValueDelete;
-  archived?: true | FieldValueDelete;
-  archivedAt?: Date | FieldValueDelete;
   deleted?: true | FieldValueDelete;
   deletedAt?: Date | FieldValueDelete;
+  parents?: FieldValueArrayUnion | FieldValueArrayFilter;
 }
 
-export type DropMap = Record<string, Drop>;
+export type DropUpdate<TTypeData = {}> = TRDUpdate<DropBaseData, TTypeData>;
+
+export type DropMap<T extends Drop = Drop> = Record<string, T>;

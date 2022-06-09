@@ -1,4 +1,5 @@
-export type ContentColor =
+type AllContentColors =
+  | 'default'
   | 'blue'
   | 'cyan'
   | 'red'
@@ -9,3 +10,8 @@ export type ContentColor =
   | 'yellow'
   | 'brown'
   | 'gray';
+
+export type ContentColor<TColor = AllContentColors> = Extract<
+  AllContentColors,
+  TColor
+>;

@@ -4,6 +4,8 @@
   "private": true,
   "workspaces": {
     "packages": [
+      "apps/*",
+      "extensions/*",
       "packages/*"
     ],
     "nohoist": [

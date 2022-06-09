@@ -1,0 +1,44 @@
+---
+metaTitle: ExtensionDocument Interface
+metaDescription: A document used to store and sync an extension's state and configuration.
+---
+
+# ExtensionDocument
+
+<Description>
+  A document used to store and sync an extension's state and
+  configuration.
+</Description>
+
+An extension's state, such as which topics it is enabled in, is stored in the database as an `ExtensionDocument`. Extension documents are synced across a user's app instances in order to ensure that each instance uses the same extensions with the same configuration.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'id',
+      type: 'string',
+      required: true,
+      description: 'The document ID.',
+    },
+    {
+      name: 'extension',
+      type: 'string',
+      required: true,
+      description: 'The ID of the extension.',
+    },
+    {
+      name: 'enabled',
+      type: 'boolean',
+      required: true,
+      description:
+        'Indicates whether the extension is enabled or not.',
+    },
+    {
+      name: 'topics',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics for which this extension is enabled.',
+    },
+  ]}
+/>

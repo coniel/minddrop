@@ -1,14 +1,8 @@
 export interface TopicFilters {
   /**
-   * Include active topics (topics which are not archived,
-   * deleted, nor hidden).
+   * Include active topics (topics which are not deleted).
    */
   active?: boolean;
-
-  /**
-   * Include archived topics.
-   */
-  archived?: boolean;
 
   /**
    * Include deleted topics.

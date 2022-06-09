@@ -1,0 +1,25 @@
+.to-do-element {
+  display: flex;
+}
+
+.to-do-element .rich-text-content {
+  padding-left: 6px;
+  font-size: var(--fsContentRegular);
+  line-height: var(--lhContentRegular);
+  font-weight: var(--fwRegular);
+}
+
+.to-do-element .icon {
+  cursor: pointer;
+  vertical-align: middle;
+  outline: none;
+}
+
+.to-do-element.done .rich-text-content {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.to-do-element.done .icon {
+  fill: var(--primary10);
+}

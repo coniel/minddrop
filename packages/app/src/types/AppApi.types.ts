@@ -1,24 +1,70 @@
 import { ComponentType } from 'react';
-import { Core } from '@minddrop/core';
+import { Core, DataInsert } from '@minddrop/core';
+import { ResourceReference } from '@minddrop/resources';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
-import { View } from './View.types';
-import { OpenViewEvent, OpenViewEventCallback } from './AppEvents.types';
+import { SlotProps } from '../Slot';
+import {
+  OpenViewEvent,
+  OpenViewEventCallback,
+  AddRootTopicsEvent,
+  AddRootTopicsEventCallback,
+  RemoveRootTopicsEvent,
+  RemoveRootTopicsEventCallback,
+  UnarchiveRootTopicsEvent,
+  UnarchiveRootTopicsEventCallback,
+  MoveRootTopicsEvent,
+  MoveRootTopicsEventCallback,
+  ArchiveRootTopicsEvent,
+  ArchiveRootTopicsEventCallback,
+  ClearSelectedDropsEvent,
+  ClearSelectedDropsEventCallback,
+  SelectDropsEvent,
+  SelectDropsEventCallback,
+  UnselectDropsEvent,
+  UnselectDropsEventCallback,
+} from './AppEvents.types';
+import {
+  ViewConfig,
+  ViewInstance,
+  ViewInstanceTypeData,
+} from '@minddrop/views';
+import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
+import { Drop, DropMap } from '@minddrop/drops';
 
 export interface AppApi {
   /**
    * A component which will render UI extensions
    * for a given location.
    */
-  Slot: ComponentType<{ location: UiLocation }>;
+  Slot: ComponentType<SlotProps>;
 
   /**
-   * Opens a view in the app.
+   * Opens a static view in the app and dispatches an `app:open-view` event.
    *
    * @param core A MindDrop core instance.
-   * @param view The view to open.
+   * @param viewId The ID of the static view to open.
    */
-  openView(core: Core, view: View): void;
+  openView(core: Core, viewId: string): void;
+
+  /**
+   * Opens a view instance in the app and dispatches an `app:open-view` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewId The ID of the view instance document to open.
+   */
+  openViewInstance(core: Core, viewInstanceId: string): void;
+
+  /**
+   * Returns a `{ view: View, instance: ViewInstance | null }` map of the currently
+   * open view and view instance (`null` if no view instance is open).
+   *
+   * @returns The currently open view and view instance.
+   */
+  getCurrentView<TData extends ViewInstanceTypeData = {}>(): {
+    view: ViewConfig;
+    instance: ViewInstance<TData> | null;
+  };
 
   /**
    * Adds a new UI extension for a speficied location.
@@ -54,6 +100,175 @@ export interface AppApi {
    */
   removeAllUiExtensions(core: Core, location?: UiLocation): void;
 
+  /**
+   * Creates a new topic along with a default view for it.
+   * Dispatches a `topics:create` event and `views:create`
+   * event. Returns the new topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param data The default topic property values.
+   * @returns The new topic.
+   */
+  createTopic(core: Core, data?: CreateTopicData): Topic;
+
+  /**
+   * Handles data inserts into a topic depending on the insert's `action` parameter:
+   * - `insert`: creates drops from the raw data and adds them to the topic
+   * - `copy`: data insert's drops are duplicated and duplicates added to the topic
+   * - `cut`: data insert's drops are added to the topic (removal from source is
+   *    handled at the time of the cut)
+   * - `move`: data insert's drops are added to the topic and removed from the
+   *    source topic
+   * - `add`: data insert's drops are added to the topic
+   *
+   * Any other action is ignored.
+   *
+   * Returns a boolean indicating whether or not the data insert was handled
+   * (`false` if action is not one of the ones listed above).
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The topic into which the data is being inserted.
+   * @param metadata Optional metadata added by the view instance which invoked the function.
+   */
+  insertDataIntoTopic<M extends AddDropsMetadata = AddDropsMetadata>(
+    core: Core,
+    topicId: string,
+    data: DataInsert,
+    metadata?: M,
+  ): boolean;
+
+  /**
+   * Returns root topics in the order they appear in
+   * the sidebar.
+   *
+   * @returns Root topics as an ordered array.
+   */
+  getRootTopics(): Topic[];
+
+  /**
+   * Adds topics to the root level and dispaches an
+   * `app:add-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to add to the root level.
+   */
+  addRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Removes topics from the root level and dispaches an
+   * `app:remove-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to remove from the root level.
+   */
+  removeRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Removes subtopics from a parent topic and adds them to the
+   * root level. Dispatches a `app:move-subtopics-root` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param parentTopicId The ID of the parent topic containg the subtopics.
+   * @param subtopicIds The IDs of the subtopics to move to the root level.
+   */
+  moveSubtopicsToRoot(
+    core: Core,
+    parentTopicId: string,
+    subtopicIds: string[],
+  ): void;
+
+  /**
+   * Removes topics from the root level and adds them as
+   * subtopics into a specified topic.
+   * Dispatches a `app:move-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param toTopicId The ID of the topic into which to move the topics.
+   * @param topicIds The IDs of the root level topics to move.
+   */
+  moveRootTopicsToParentTopic(
+    core: Core,
+    toTopicId: string,
+    topicIds: string[],
+  ): void;
+
+  /**
+   * Returns archived root topics in the order in which
+   * they appear in the app sidebar.
+   *
+   * @returns Archived root topics.
+   */
+  getArchivedRootTopics(): Topic[];
+
+  /**
+   * Archives root level topics and dispatches an
+   * `app:archive-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the root level topics to archive.
+   */
+  archiveRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Unarchives root level topics and dispatches an
+   * `app:remove-root-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to remove from the root level.
+   */
+  unarchiveRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Opens a topic's view.
+   *
+   * @param core A MindDrop core instance.
+   * @param trail The IDs of the topics leading up to and including the topic to open.
+   * @param viewInstanceId The ID of the topic view instance to open.
+   */
+  openTopicView(core: Core, trail: string[], viewInstanceId?: string): void;
+
+  /**
+   * Adds drops to the selected drops list and
+   * dispatches a `app:selected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropIds The IDs of the drops to select.
+   */
+  selectDrops(core: Core, dropIds: string[]): void;
+
+  /**
+   * Removes drops from the selected drops list and
+   * dispatches a `app:unselected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param dropIds The IDs of the drops to unselect.
+   */
+  unselectDrops(core: Core, dropIds: string[]): void;
+
+  /**
+   * Returns the currently selected drops.
+   *
+   * @returns A DropMap of selected drops.
+   */
+  getSelectedDrops(): DropMap;
+
+  /**
+   * Clears the selected drops from the store and
+   * dispatches a `app:clear-selected-drops` event.
+   *
+   * @param core A MindDrop core instance.
+   */
+  clearSelectedDrops(core: Core): void;
+
+  /**
+   * Renders a drop using the appropriate component.
+   *
+   * @param drop The drop to render.
+   * @param parent The `DropParentReference` of the parent inside which the drop is being rendered.
+   * @returns The rendered drop element.
+   */
+  renderDrop(drop: Drop, parent?: ResourceReference): React.ReactElement;
+
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
@@ -63,7 +278,63 @@ export interface AppApi {
     core: Core,
     event: OpenViewEvent,
     callback: OpenViewEventCallback,
-  );
+  ): void;
+
+  // Add 'app:add-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: AddRootTopicsEvent,
+    callback: AddRootTopicsEventCallback,
+  ): void;
+
+  // Add 'app:remove-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: RemoveRootTopicsEvent,
+    callback: RemoveRootTopicsEventCallback,
+  ): void;
+
+  // Add 'app:move-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: MoveRootTopicsEvent,
+    callback: MoveRootTopicsEventCallback,
+  ): void;
+
+  // Add 'app:unarchive-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: UnarchiveRootTopicsEvent,
+    callback: UnarchiveRootTopicsEventCallback,
+  ): void;
+
+  // Add 'app:archive-root-topics' event listener
+  addEventListener(
+    core: Core,
+    event: ArchiveRootTopicsEvent,
+    callback: ArchiveRootTopicsEventCallback,
+  ): void;
+
+  // Add 'app:select-drops' event listener
+  addEventListener(
+    core: Core,
+    event: SelectDropsEvent,
+    callback: SelectDropsEventCallback,
+  ): void;
+
+  // Add 'app:unselect-drops' event listener
+  addEventListener(
+    core: Core,
+    event: UnselectDropsEvent,
+    callback: UnselectDropsEventCallback,
+  ): void;
+
+  // Add 'app:clear-selected-drops' event listener
+  addEventListener(
+    core: Core,
+    event: ClearSelectedDropsEvent,
+    callback: ClearSelectedDropsEventCallback,
+  ): void;
 
   /* ************************************* */
   /* *** removeEventListener overloads *** */
@@ -74,5 +345,61 @@ export interface AppApi {
     core: Core,
     type: OpenViewEvent,
     callback: OpenViewEventCallback,
+  ): void;
+
+  // Remove 'app:add-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: AddRootTopicsEvent,
+    callback: AddRootTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:remove-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: RemoveRootTopicsEvent,
+    callback: RemoveRootTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:move-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: MoveRootTopicsEvent,
+    callback: MoveRootTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:archive-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: ArchiveRootTopicsEvent,
+    callback: ArchiveRootTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:unarchive-root-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: UnarchiveRootTopicsEvent,
+    callback: UnarchiveRootTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:select-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: SelectDropsEvent,
+    callback: SelectDropsEventCallback,
+  ): void;
+
+  // Remove 'app:unselect-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: UnselectDropsEvent,
+    callback: UnselectDropsEventCallback,
+  ): void;
+
+  // Remove 'app:clear-selected-drops' event listener
+  removeEventListener(
+    core: Core,
+    event: ClearSelectedDropsEvent,
+    callback: ClearSelectedDropsEventCallback,
   ): void;
 }

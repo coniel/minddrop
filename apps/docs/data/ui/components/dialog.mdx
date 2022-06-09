@@ -1,0 +1,241 @@
+---
+metaTitle: Dialog
+metaDescription: A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
+name: dialog
+---
+
+# Dialog
+
+<Description>
+  A window overlaid on either the primary window or another dialog
+  window, rendering the content underneath inert.
+</Description>
+
+<HeroContainer>
+  <DialogDemo />
+</HeroContainer>
+
+```jsx hero template=DialogDemo
+
+```
+
+<Highlights
+  features={[
+    'Supports modal and non-modal modes.',
+    'Focus is automatically trapped when modal.',
+    'Can be controlled or uncontrolled.',
+    <span>
+      anages screen reader announcements with <Code>DialogTitle</Code>{' '}
+      and <Code>DialogDescription</Code> components.
+    </span>,
+    'Esc closes the component automatically.',
+  ]}
+/>
+
+## Usage
+
+Import the components from the `@minddrop/ui` package.
+
+```jsx
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  Button,
+} from '@minddrop/ui';
+
+export default () => {
+  return (
+    <Dialog>
+      <DrialogTrigger>
+        <Button>Edit profile</Button>
+        <DialogContent>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're
+            done.
+          </DialogDescription>
+          ...
+        </DialogContent>
+      </DrialogTrigger>
+    </Dialog>
+  );
+};
+```
+
+## API Reference
+
+### Dialog
+
+Contains all the parts of a dialog.
+
+<PropsTable
+  data={[
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      description: (
+        <span>
+          The open state of the dialog when it is initially rendered.
+          Use when you do not need to control its open state.
+        </span>
+      ),
+    },
+    {
+      name: 'open',
+      type: 'boolean',
+      description: (
+        <span>
+          The controlled open state of the dialog. Must be used in
+          conjunction with <Code>onOpenChange</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the open state of the dialog
+          changes.
+        </span>
+      ),
+    },
+    {
+      name: 'modal',
+      required: false,
+      type: 'boolean',
+      default: 'true',
+      description: (
+        <span>
+          The modality of the dialog. When set to <Code>true</Code>,
+          interaction with outside elements will be disabled and only
+          dialog content will be visible to screen readers.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### DrialogTrigger
+
+A wrapper component to be placed around the button which triggers the dialog.
+
+### Content
+
+Contains content to be rendered in the open dialog.
+
+<PropsTable
+  data={[
+    {
+      name: 'onOpenAutoFocus',
+      type: '(event: Event) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when focus moves into the component
+          after opening. It can be prevented by calling{' '}
+          <Code>event.preventDefault</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onCloseAutoFocus',
+      type: '(event: Event) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when focus moves to the trigger after
+          closing. It can be prevented by calling{' '}
+          <Code>event.preventDefault</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onEscapeKeyDown',
+      type: '(event: KeyboardEvent) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when the escape key is down. It can be
+          prevented by calling <Code>event.preventDefault</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onPointerDownOutside',
+      type: '(event: PointerDownOutsideEvent) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when a pointer event occurs outside the
+          bounds of the component. It can be prevented by calling{' '}
+          <Code>event.preventDefault</Code>.
+        </span>
+      ),
+    },
+    {
+      name: 'onInteractOutside',
+      type: '(event: React.FocusEvent | MouseEvent | TouchEvent) => void',
+      typeSimple: 'function',
+      description: (
+        <span>
+          Event handler called when an interaction (pointer or focus
+          event) happens outside the bounds of the component. It can
+          be prevented by calling <Code>event.preventDefault</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### Close
+
+A wrapper component to be placed around a button which closes the dialog.
+
+### Title
+
+An accessible name to be announced when the dialog is opened. Alternatively, you can provide `aria-label` or `aria-labelledby` to `DialogContent` and exclude this component.
+
+### Description
+
+An accessible description to be announced when the dialog is opened. Alternatively, you can provide `aria-describedby` to `DialogContent` and exclude this component.
+
+## Accessibility
+
+Adheres to the [Dialog WAI-ARIA design pattern](https://www.w3.org/TR/wai-aria-practices-1.2/#dialog_modal).
+
+### Keyboard Interactions
+
+<KeyboardTable
+  data={[
+    {
+      keys: ['Space'],
+      description: 'Opens/closes the dialog.',
+    },
+    {
+      keys: ['Enter'],
+      description: 'Opens/closes the dialog.',
+    },
+    {
+      keys: ['Tab'],
+      description: 'Moves focus to the next focusable element.',
+    },
+    {
+      keys: ['Shift + Tab'],
+      description: 'Moves focus to the previous focusable element.',
+    },
+    {
+      keys: ['Esc'],
+      description: (
+        <span>
+          Closes the dialog and moves focus to{' '}
+          <Code>DialogTrigger</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>

@@ -1,17 +1,11 @@
-import { GroupedResources, ResourceDocument } from './DBResource.types';
+import { ResourceDocument, RDData } from '@minddrop/resources';
 
 export interface DBApi {
-  getAllDocs(): Promise<GroupedResources>;
+  getAll(): Promise<ResourceDocument[]>;
 
-  add<T extends ResourceDocument>(type: string, document: T): void;
+  add<TData extends RDData = {}>(document: ResourceDocument<TData>): void;
 
-  update<T extends ResourceDocument>(id: string, changes: Partial<T>): void;
+  update<TData extends RDData = {}>(document: ResourceDocument<TData>): void;
 
   delete(id: string): void;
 }
-
-export type ResourceChangeHandler = (
-  resourceType: string,
-  document: ResourceDocument,
-  deleted: boolean,
-) => void;

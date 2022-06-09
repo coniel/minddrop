@@ -15,7 +15,11 @@ export function mergeRegularValues<O extends object, C extends object>(
   Object.keys(changes).forEach((key) => {
     const value = changes[key];
 
-    if (typeof value !== 'object' || !(value as FieldValue).isFieldValue) {
+    if (
+      value === null ||
+      typeof value !== 'object' ||
+      !(value as FieldValue).isFieldValue
+    ) {
       merged[key] = value;
     }
   });

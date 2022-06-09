@@ -1,22 +1,23 @@
 /* eslint-disable no-underscore-dangle */
-import { ResourceDocument } from '../types';
+import { Resources } from '@minddrop/resources';
 import { serializeResouceDocument } from './serializeResouceDocument';
 
-const doc: ResourceDocument = {
-  id: 'doc-id',
-};
+const document = Resources.generateDocument('items:item', {});
 
 describe('serializeResouceDocument', () => {
   it('adds PouchDB fields and resourceType', () => {
-    const result = serializeResouceDocument(doc, 'items:item');
+    // Serialize a document
+    const result = serializeResouceDocument(document);
 
-    expect(result._id).toBe('doc-id');
-    expect(result.resourceType).toBe('items:item');
+    // Should add the document ID as the '_id' property
+    expect(result._id).toBe(document.id);
   });
 
   it('removes the id field', () => {
-    const result = serializeResouceDocument(doc, 'items:item');
+    // Serialize a document
+    const result = serializeResouceDocument(document);
 
+    // Should remove the ID field
     // @ts-ignore
     expect(result.id).not.toBeDefined();
   });

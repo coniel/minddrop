@@ -3,11 +3,12 @@ import { mergeRegularValues } from './mergeRegularValues';
 
 describe('mergeRegularValues', () => {
   it('merges in non FieldValue values', () => {
-    const object = { field: 'value' };
-    const changes = { field: 'new value' };
+    const object = { field: 'value', nullField: 'foo' };
+    const changes = { field: 'new value', nullField: null };
     const result = mergeRegularValues(object, changes);
 
     expect(result.field).toBe('new value');
+    expect(result.nullField).toBeNull();
   });
 
   it('does not merge FieldValue values', () => {

@@ -1,36 +1,53 @@
-import { Core } from '@minddrop/core';
-import { CreateDropData, Drop, DropMap, UpdateDropData } from './Drop.types';
+import { Core, DataInsert } from '@minddrop/core';
 import {
+  TypedResourceApi,
+  TypedResourceDocumentFilters,
+} from '@minddrop/resources';
+import {
+  BaseCreateDropData,
+  Drop,
+  DropMap,
+  DropTypeData,
+  BaseUpdateDropData,
+  DropBaseData,
+} from './Drop.types';
+import {
+  DropTypeConfig,
+  RegisteredDropTypeConfig,
+  DropTypeConfigOptions,
+} from './DropTypeConfig.types';
+import {
+  AddDropEvent,
+  AddDropEventCallback,
   CreateDropEvent,
-  UpdateDropEvent,
-  ArchiveDropEvent,
-  DeleteDropEvent,
-  RestoreDropEvent,
   CreateDropEventCallback,
-  AddTagsEvent,
-  AddTagsEventCallback,
-  RemoveTagsEvent,
-  RemoveTagsEventCallback,
-  ArchiveDropEventCallback,
-  ClearDropsEvent,
-  ClearDropsEventCallback,
+  DeleteDropEvent,
   DeleteDropEventCallback,
   LoadDropsEvent,
   LoadDropsEventCallback,
-  RestoreDropEventCallback,
-  UpdateDropEventCallback,
   PermanentlyDeleteDropEvent,
   PermanentlyDeleteDropEventCallback,
-  AddFilesEvent,
-  AddFilesEventCallback,
-  RemoveFilesEvent,
-  RemoveFilesEventCallback,
-  ReplaceFilesEvent,
-  ReplaceFilesEventCallback,
+  RegisterDropTypeEvent,
+  RegisterDropTypeEventCallback,
+  RemoveDropEvent,
+  RemoveDropEventCallback,
+  RestoreDropEvent,
+  RestoreDropEventCallback,
+  SetDropEventCallback,
+  SetDropEventData,
+  UnregisterDropTypeEvent,
+  UnregisterDropTypeEventCallback,
+  UpdateDropEvent,
+  UpdateDropEventCallback,
 } from './DropEvents.types';
-import { DropFilters } from './DropFilters.types';
 
-export interface DropsApi {
+export interface DropsApi
+  extends TypedResourceApi<
+    DropBaseData,
+    BaseCreateDropData,
+    BaseUpdateDropData,
+    DropTypeConfigOptions
+  > {
   /**
    * Retrieves one or more drops by ID.
    *
@@ -39,94 +56,161 @@ export interface DropsApi {
    * If provided an array of IDs, returns a `{ [id]: Drop }` map of the corresponding drops.
    * Drops can be filtered by passing in DropFilters. Filtering is not supported when getting a single drop.
    *
-   * @param ids An array of drop IDs to retrieve.
-   * @param filters Filters to filter to the drops by, only supported when getting multiple drops.
+   * @param ids - An array of drop IDs to retrieve.
+   * @param filters - Filters to filter to the drops by, only supported when getting multiple drops.
    * @returns The requested drop(s).
    */
-  get(dropId: string): Drop | null;
-  get(dropIds: string[], filters?: DropFilters): DropMap;
+  get<TDropData extends DropTypeData = {}>(dropId: string): Drop<TDropData>;
+  get<TDropData extends DropTypeData = {}>(
+    dropIds: string[],
+    filters?: TypedResourceDocumentFilters,
+  ): DropMap<Drop<TDropData>>;
 
   /**
    * Retrieves all drops from the drops store as a `{ [id]: Drop }` map.
    * Drops can be filtered by passing in DropFilters.
    *
-   * @param filters Filters to filter to the drops by.
+   * @param filters - Filters to filter to the drops by.
    * @returns A `{ [id]: Drop }` map.
    */
-  getAll(filters?: DropFilters): DropMap;
+  getAll<TDropData extends DropTypeData = {}>(
+    filters?: TypedResourceDocumentFilters,
+  ): DropMap<Drop<TDropData>>;
 
   /**
-   * Filters drops by type, active, archived, and deleted states.
-   * If no filters are set, returns active drops.
-   * If either archived or deleted filters are `true`, active
-   * drops are not included unless specifically set to `true`.
+   * Returns the `DropTypeConfig` for a given drop type.
    *
-   * @param drops The drops to filter.
+   * @param type - The drop type for which to retrieve the config.
+   */
+  getTypeConfig<TDropData extends DropTypeData = {}>(
+    type: string,
+  ): RegisteredDropTypeConfig<TDropData>;
+
+  /**
+   * Returns all registered `DropTypeConfig`s.
+   *
+   * @returns An array of drop type configs.
+   */
+  getAllTypeConfigs<
+    TDropData extends DropTypeData = {},
+  >(): RegisteredDropTypeConfig<TDropData>[];
+
+  /**
+   * Filters drops by type, active, and deleted states.
+   * If no filters are set, returns active drops.
+   * If deleted filters is `true`, active drops are not
+   * included unless specifically set to `true`.
+   *
+   * @param drops - The drops to filter.
    * @param filters The filters by which to filter the drops.
    * @returns The filtered drops.
    */
-  filter(drops: DropMap, filters: DropFilters): DropMap;
+  filter<TTypeData extends DropTypeData = {}>(
+    drops: DropMap,
+    filters: TypedResourceDocumentFilters,
+  ): DropMap<Drop<TTypeData>>;
 
   /**
-   * Retrieves a drop's parent drops, returning an array of drops.
-   * By default, only active drops are returned.
+   * Registers a new drop type and dispatches a `drops:drop:register`
+   * event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param config - The configartion of the drop type to register.
    */
-  // dropParents(dropId: string): Drop[];
+  register(core: Core, config: DropTypeConfig): void;
 
   /**
-   * Creates a new drop and dispatches a `drops:create` event.
-   * Returns the new drop.
+   * Unregisters a drop type and dispatches a `drops:drop:unregister` event.
    *
-   * If the drop is created with attached files, the file references
-   * of the attached files will be automatically updated, adding the
-   * drop as a attached resource.
+   * @param core - A MindDrop core instance.
+   * @param type - The type of drop to unregister.
+   */
+  unregister(core: Core, config: DropTypeConfig): void;
+
+  /**
+   * Creates a new drop and dispatches a `drops:drop:create` event.
    *
-   * @param core A MindDrop core instance.
-   * @param data The default drop property values.
+   * @param core - A MindDrop core instance.
+   * @param type - The type of drop to create.
+   * @param data - The default drop property values.
    * @returns The newly created drop.
    */
-  create(core: Core, data?: CreateDropData): Drop;
+  create<TTypeCreateData = {}, TTypeData extends DropTypeData = {}>(
+    core: Core,
+    type: string,
+    data?: BaseCreateDropData & TTypeCreateData,
+  ): Drop<TTypeData>;
 
   /**
-   * Updates a drop and dispatches a `drops:update` event.
-   * Returns the updated drop.
+   * Creates drops of the appropriate type given a `DataInsert` object
+   * and an array of `DropTypeConfig` objects. Returns a promise resolving
+   * to a `{ [id]: Drop }` map of the created drops. Dispatches a
+   * `drops:create` event for each created drop.
    *
-   * @param core A MindDrop core instance.
-   * @param id The ID of the drop to update.
-   * @param data The changes to apply to the drop.
+   * @param core - A MindDrop core instance.
+   * @param data - The data from which to create the drops.
+   * @param configs - The drop configs from which to create the drops.
+   */
+  createFromDataInsert(
+    core: Core,
+    dataInsert: DataInsert,
+    configs: DropTypeConfig[],
+  ): DropMap;
+
+  /**
+   * Duplicates the given drops by creating new drops
+   * with the same data.
+   *
+   * @param core - A MindDrop core instance.
+   * @param dropIds - The IDs of the drops to duplicate.
+   * @returns The new drops.
+   */
+  duplicate<TTypeData extends DropTypeData>(
+    core: Core,
+    dropIds: string[],
+  ): DropMap<Drop<TTypeData>>;
+
+  /**
+   * Updates a drop and dispatches a `drops:drop:update` event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param id - The ID of the drop to update.
+   * @param data - The changes to apply to the drop.
    * @returns The updated drop.
    */
-  update(core: Core, id: string, data: UpdateDropData): Drop;
+  update<TTypeUpdateData = {}, TTypeData extends DropTypeData = {}>(
+    core: Core,
+    id: string,
+    data: BaseUpdateDropData & TTypeUpdateData,
+  ): Drop<TTypeData>;
 
   /**
-   * Archives a drop and dispatches a `drops:archive`
-   * event and a `drops:update` event.
+   * Soft deletes a drop and dispatches a `drops:drop:delete` event.
    *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop to archive.
-   * @returns The archived drop.
-   */
-  archive(core: Core, dropId: string): Drop;
-
-  /**
-   * Deletes a drop and dispatches a `drops:delete`
-   * event and a `drops:update` event.
+   * Soft deleted drops can be restored using the `restore`
+   * method.
    *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop to delete.
+   * @param core - A MindDrop core instance.
+   * @param dropId - The ID of the drop to delete.
    * @returns The deleted drop.
    */
-  delete(core: Core, dropId: string): Drop;
+  delete<TDropData extends DropTypeData = {}>(
+    core: Core,
+    dropId: string,
+  ): Drop<TDropData>;
 
   /**
-   * Restores an archived or deleted drop and dispatches
-   * a `drops:restore` event and a `drops:update` event.
+   * Restores a deleted drop and dispatches a
+   * `drops:restore` event and a `drops:update` event.
    *
    * @param core A MindDrop core instance.
    * @param dropId The ID of the drop to restore.
    * @returns The restored drop.
    */
-  restore(core: Core, dropId: string): Drop;
+  restore<TDropData extends DropTypeData = {}>(
+    core: Core,
+    dropId: string,
+  ): Drop<TDropData>;
 
   /**
    * Permanently deletes a drop and dispatches a
@@ -136,280 +220,170 @@ export interface DropsApi {
    * @param dropId The ID of the drop to delete permanently.
    * @returns The deleted drop.
    */
-  deletePermanently(core: Core, dropId: string): Drop;
-
-  /**
-   * Adds tags to a drop and dispatches a `drops:add-tags` event
-   * and a `drops:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop to which to add the tags.
-   * @param tagIds The IDs of the tags to add to the drop.
-   * @returns The updated drop.
-   */
-  addTags(core: Core, dropId: string, tagIds: string[]): Drop;
-
-  /**
-   * Removes tags from a drop and dispatches a `drops:remove-tags` event
-   * and a `drops:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop from which to remove the tags.
-   * @param tagIds The IDs of the tags to remove.
-   * @returns The updated drop.
-   */
-  removeTags(core: Core, dropId: string, tagIds: string[]): Drop;
-
-  /**
-   * Adds files to a drop and dispatches a `drops:add-files` event
-   * and a `drops:update` event.
-   *
-   * The file references of the attached files will be automatically
-   * updated to include the drop ID in their `attachedTo` value.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop to which to add the files.
-   * @param fileIds The IDs of the files to add to the drop.
-   * @returns The updated drop.
-   */
-  addFiles(core: Core, dropId: string, fileIds: string[]): Drop;
-
-  /**
-   * Removes files from a drop and dispatches a `drops:add-files` event
-   * and a `drops:update` event.
-   *
-   * The file references of the removed files will be automatically updated
-   * to remove the drop ID from their `attachedTo` value, and deleted if the
-   * drop was their only attachment.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop from which to remove the files.
-   * @param fileIds The IDs of the files to remove.
-   * @returns The updated drop.
-   */
-  removeFiles(core: Core, dropId: string, fileIds: string[]): Drop;
-
-  /**
-   * Replaces a drop's files, removing the current ones and
-   * adding the new ones. Dispatches a `drops:replace-files` event
-   * and a `drops:update` event.
-   *
-   * The file references of the added files will be automatically
-   * updated to include the drop ID in their `attachedTo` value.
-   *
-   * The file references of the removed files will be automatically
-   * updated to remove the drop ID from their `attachedTo` value, and
-   * deleted if the drop was their only attachment.
-   *
-   * @param core A MindDrop core instance.
-   * @param dropId The ID of the drop in which to replace the files.
-   * @param fileIds The IDs of the files to add to the drop.
-   * @returns The updated drop.
-   */
-  replaceFiles(core: Core, dropId: string, fileIds: string[]): Drop;
-
-  /**
-   * Loads drops into the store and dispatches a `drops:load` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param drops The drops to load.
-   */
-  load(core: Core, drops: Drop[]): void;
-
-  /**
-   * Clears drops from the store and dispatches a `drops:clear` event.
-   *
-   * @param core A MindDrop core instance.
-   */
-  clear(core: Core): void;
+  deletePermanently<TDropData extends DropTypeData = {}>(
+    core: Core,
+    dropId: string,
+  ): Drop<TDropData>;
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
   /* ********************************** */
 
-  // Add drops:create event listener
+  // Add 'drops:drop:register' event listener
+  addEventListener(
+    core: Core,
+    type: RegisterDropTypeEvent,
+    callback: RegisterDropTypeEventCallback,
+  ): void;
+
+  // Add 'drops:drop:unregister' event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterDropTypeEvent,
+    callback: UnregisterDropTypeEventCallback,
+  ): void;
+
+  // Add 'drops:drop:create' event listener
   addEventListener(
     core: Core,
     type: CreateDropEvent,
     callback: CreateDropEventCallback,
   ): void;
 
-  // Add drops:update event listener
+  // Add 'drops:drop:update' event listener
   addEventListener(
     core: Core,
     type: UpdateDropEvent,
     callback: UpdateDropEventCallback,
   ): void;
 
-  // Add drops:archive event listener
-  addEventListener(
-    core: Core,
-    type: ArchiveDropEvent,
-    callback: ArchiveDropEventCallback,
-  ): void;
-
-  // Add drops:delete event listener
+  // Add 'drops:drop:delete' event listener
   addEventListener(
     core: Core,
     type: DeleteDropEvent,
     callback: DeleteDropEventCallback,
   ): void;
 
-  // Add drops:restore event listener
+  // Add 'drops:drop:restore' event listener
   addEventListener(
     core: Core,
     type: RestoreDropEvent,
     callback: RestoreDropEventCallback,
   ): void;
 
-  // Add drops:deletepermanently event listener
+  // Add 'drops:drop:delete-permanently' event listener
   addEventListener(
     core: Core,
     type: PermanentlyDeleteDropEvent,
     callback: PermanentlyDeleteDropEventCallback,
   ): void;
 
-  // Add drops:add-tags event listener
-  addEventListener(
-    core: Core,
-    type: AddTagsEvent,
-    callback: AddTagsEventCallback,
-  );
-
-  // Add drops:remove-tags event listener
-  addEventListener(
-    core: Core,
-    type: RemoveTagsEvent,
-    callback: RemoveTagsEventCallback,
-  );
-
-  // Add drops:add-files event listener
-  addEventListener(
-    core: Core,
-    type: AddFilesEvent,
-    callback: AddFilesEventCallback,
-  );
-
-  // Add drops:remove-files event listener
-  addEventListener(
-    core: Core,
-    type: RemoveFilesEvent,
-    callback: RemoveFilesEventCallback,
-  );
-
-  // Add drops:replace-files event listener
-  addEventListener(
-    core: Core,
-    type: ReplaceFilesEvent,
-    callback: ReplaceFilesEventCallback,
-  );
-
-  // Add drops:load event listener
+  // Add 'drops:drop:load' event listener
   addEventListener(
     core: Core,
     type: LoadDropsEvent,
     callback: LoadDropsEventCallback,
-  );
+  ): void;
 
-  // Add drops:clear event listener
+  // Add 'drops:drop:add' event listener
   addEventListener(
     core: Core,
-    type: ClearDropsEvent,
-    callback: ClearDropsEventCallback,
-  );
+    type: AddDropEvent,
+    callback: AddDropEventCallback,
+  ): void;
+
+  // Add 'drops:drop:set' event listener
+  addEventListener(
+    core: Core,
+    type: SetDropEventData,
+    callback: SetDropEventCallback,
+  ): void;
+
+  // Add 'drops:drop:remove' event listener
+  addEventListener(
+    core: Core,
+    type: RemoveDropEvent,
+    callback: RemoveDropEventCallback,
+  ): void;
 
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
 
-  // Remove drops:create event listener
+  // Remove 'drops:drop:register' event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterDropTypeEvent,
+    callback: RegisterDropTypeEventCallback,
+  ): void;
+
+  // Remove 'drops:drop:unregister' event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterDropTypeEvent,
+    callback: UnregisterDropTypeEventCallback,
+  ): void;
+
+  // Remove 'drops:drop:create' event listener
   removeEventListener(
     core: Core,
     type: CreateDropEvent,
     callback: CreateDropEventCallback,
   ): void;
 
-  // Remove drops:update event listener
+  // Remove 'drops:drop:update' event listener
   removeEventListener(
     core: Core,
     type: UpdateDropEvent,
     callback: UpdateDropEventCallback,
   ): void;
 
-  // Remove drops:archive event listener
-  removeEventListener(
-    core: Core,
-    type: ArchiveDropEvent,
-    callback: ArchiveDropEventCallback,
-  ): void;
-
-  // Remove drops:delete event listener
+  // Remove 'drops:drop:delete' event listener
   removeEventListener(
     core: Core,
     type: DeleteDropEvent,
     callback: DeleteDropEventCallback,
   ): void;
 
-  // Remove drops:restore event listener
+  // Remove 'drops:drop:restore' event listener
   removeEventListener(
     core: Core,
     type: RestoreDropEvent,
     callback: RestoreDropEventCallback,
   ): void;
 
-  // Remove drops:delete-permanently event listener
+  // Remove 'drops:drop:delete-permanently' event listener
   removeEventListener(
     core: Core,
     type: PermanentlyDeleteDropEvent,
     callback: PermanentlyDeleteDropEventCallback,
   ): void;
 
-  // Remove drops:add-tags event listener
-  removeEventListener(
-    core: Core,
-    type: AddTagsEvent,
-    callback: AddTagsEventCallback,
-  );
-
-  // Remove drops:remove-tags event listener
-  removeEventListener(
-    core: Core,
-    type: RemoveTagsEvent,
-    callback: RemoveTagsEventCallback,
-  );
-
-  // Remove drops:add-files event listener
-  removeEventListener(
-    core: Core,
-    type: AddFilesEvent,
-    callback: AddFilesEventCallback,
-  );
-
-  // Remove drops:remove-files event listener
-  removeEventListener(
-    core: Core,
-    type: RemoveFilesEvent,
-    callback: RemoveFilesEventCallback,
-  );
-
-  // Remove drops:replace-files event listener
-  removeEventListener(
-    core: Core,
-    type: ReplaceFilesEvent,
-    callback: ReplaceFilesEventCallback,
-  );
-
-  // Remove drops:load event listener
+  // Remove 'drops:drop:load' event listener
   removeEventListener(
     core: Core,
     type: LoadDropsEvent,
     callback: LoadDropsEventCallback,
-  );
+  ): void;
 
-  // Remove drops:clear event listener
+  // Remove 'drops:drop:add' event listener
   removeEventListener(
     core: Core,
-    type: ClearDropsEvent,
-    callback: ClearDropsEventCallback,
-  );
+    type: AddDropEvent,
+    callback: AddDropEventCallback,
+  ): void;
+
+  // Remove 'drops:drop:set' event listener
+  removeEventListener(
+    core: Core,
+    type: SetDropEventData,
+    callback: SetDropEventCallback,
+  ): void;
+
+  // Remove 'drops:drop:remove' event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveDropEvent,
+    callback: RemoveDropEventCallback,
+  ): void;
 }

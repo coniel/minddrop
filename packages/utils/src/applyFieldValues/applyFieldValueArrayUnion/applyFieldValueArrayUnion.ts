@@ -18,6 +18,7 @@ export function applyFieldValueArrayUnion<O extends object, C extends object>(
     const value = changes[key] as FieldValueArrayUnion;
 
     if (
+      value !== null &&
       typeof value === 'object' &&
       value.isFieldValue &&
       value.type === 'array-union'

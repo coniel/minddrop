@@ -1,22 +1,37 @@
+import { TagsResource } from './TagsResource';
 import { TagsApi } from './types';
-import { get } from './get';
-import { getAllTags } from './getAllTags';
-import { createTag } from './createTag';
-import { updateTag } from './updateTag';
-import { deleteTag } from './deleteTag';
-import { loadTags } from './loadTags';
-import { clearTags } from './clearTags';
+
+const { hooks, ...api } = TagsResource;
 
 export const Tags: TagsApi = {
-  get,
-  getAll: getAllTags,
-  create: createTag,
-  update: updateTag,
-  delete: deleteTag,
-  load: loadTags,
-  clear: clearTags,
+  ...api,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>
     core.removeEventListener(event, callback),
 };
+
+/*
+ * Returns a tag by ID or `null` if it does not exist.
+ *
+ * @param documentId - The ID of the tag to retrieve.
+ * @returns The requested tag or `null`.
+ */
+export const useTag = hooks.useDocument;
+
+/**
+ * Returns a `{ [id]: Tag }` map of tags by ID.
+ *
+ * @param documentIds - The IDs of the tags to retrieve.
+ * @param filters - Optional filters by which to filter the returned tag docuemnts.
+ * @returns A `{ [id]: Tag }` map of the requested tags.
+ */
+export const useTags = hooks.useDocuments;
+
+/**
+ * Returns a `{ [id]: Tag }` map of all tags.
+ *
+ * @param filters - Optional filters by which to filter the returned tag docuemnts.
+ * @returns A `{ [id]: Tag }` map of all tags.
+ */
+export const useAllTags = hooks.useAllDocuments;

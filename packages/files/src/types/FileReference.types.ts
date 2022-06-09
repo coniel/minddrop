@@ -1,4 +1,5 @@
 import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
+import { ResourceDocument } from '@minddrop/resources';
 
 export interface ImageDimensions {
   /**
@@ -17,12 +18,7 @@ export interface ImageDimensions {
   aspectRatio: number;
 }
 
-export interface FileReference {
-  /**
-   * A universally unique ID.
-   */
-  id: string;
-
+export interface FileReferenceData {
   /**
    * The file media type.
    */
@@ -39,11 +35,6 @@ export interface FileReference {
   size: number;
 
   /**
-   * IDs of resources to which the file is attached.
-   */
-  attachedTo: string[];
-
-  /**
    * URL to the file if it is located remotely.
    */
   url?: string;
@@ -53,6 +44,8 @@ export interface FileReference {
    */
   dimensions?: ImageDimensions;
 }
+
+export type FileReference = ResourceDocument<FileReferenceData>;
 
 export interface ImageFileReference extends FileReference {
   /**

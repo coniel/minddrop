@@ -1,99 +1,84 @@
-import { renderHook, act, textFile } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from './files-extension';
-import { generateFileReference } from '../generateFileReference';
-import { useAllFileReferences } from '../useAllFileReferences';
+import { imageFile, textFile } from '@minddrop/test-utils';
+import { Resources } from '@minddrop/resources';
+import { cleanup, core } from '../test-utils';
 import { Files } from '../Files';
-
-let core = initializeCore({ appId: 'app-id', extensionId: 'files' });
+import { onRun, onDisable } from './files-extension';
+import { saveFile } from '../saveFile';
 
 describe('files extension', () => {
+  afterEach(cleanup);
+
   describe('onRun', () => {
-    afterEach(() => {
-      act(() => {
-        Files.clear(core);
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'files' });
+    it('registers the `files:file-reference` resource', () => {
+      // Run the extension
+      onRun(core);
+
+      // Get the registered 'files:file-reference' resource config
+      const resource = Resources.get('files:file-reference');
+
+      // 'files:file-reference' resource should be registered
+      expect(resource).toBeDefined();
     });
 
-    describe('filleReferences resource registration', () => {
-      it('loads filleReferences', async () => {
-        const { result } = renderHook(() => useAllFileReferences());
-        const filleReference = await generateFileReference(textFile);
+    it('adds dimensions to image file references', (done) => {
+      // Run the extension
+      onRun(core);
 
-        onRun(core);
-
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onLoad([filleReference]);
-        });
-
-        expect(result.current[filleReference.id]).toBeDefined();
+      // Listen to 'files:file-references:update' events
+      Files.addEventListener(core, 'files:file-reference:update', (payload) => {
+        expect(payload.data.after.dimensions).toBeDefined();
+        done();
       });
 
-      it('handles added/updated filleReferences', async () => {
-        const { result } = renderHook(() => useAllFileReferences());
-        const filleReference = await generateFileReference(textFile);
+      // Save an image file
+      saveFile(core, imageFile);
+    });
 
-        onRun(core);
+    it('deletes files when the last parent is removed', () => {
+      // Run the extension
+      onRun(core);
 
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onChange(filleReference, false);
-        });
+      // Save a couple of files
+      const fileRef1 = Files.save(core, textFile);
+      const fileRef2 = Files.save(core, imageFile);
 
-        expect(result.current[filleReference.id]).toBeDefined();
-      });
+      // Add the first file as a parent on the second
+      Files.addParents(core, fileRef2.id, [
+        { resource: 'files:file-reference', id: fileRef1.id },
+      ]);
 
-      it('handles deleted filleReferences', async () => {
-        const { result } = renderHook(() => useAllFileReferences());
-        const filleReference = await generateFileReference(textFile);
+      // Listen to 'files:file-reference:update' events
+      Files.addEventListener(
+        core,
+        'files:file-reference:delete',
+        ({ data }) => {
+          // Should delete the file reference from which the
+          // parents were removed.
+          expect(data.id).toEqual(fileRef2.id);
+          expect(data.deleted).toBe(true);
+        },
+      );
 
-        onRun(core);
-
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onLoad([filleReference]);
-          connector.onChange(filleReference, true);
-        });
-
-        expect(result.current[filleReference.id]).not.toBeDefined();
-      });
+      // Remove the parent added above
+      Files.removeParents(core, fileRef2.id, [
+        { resource: 'files:file-reference', id: fileRef1.id },
+      ]);
     });
   });
 
   describe('onDisable', () => {
-    afterEach(() => {
-      act(() => {
-        Files.clear(core);
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'files' });
-    });
-
-    it('clears the store', async () => {
-      const { result } = renderHook(() => useAllFileReferences());
-      const file1 = await generateFileReference(textFile);
-      const file2 = await generateFileReference(textFile);
-
-      onRun(core);
-
-      act(() => {
-        Files.load(core, [file1, file2]);
-        onDisable(core);
-      });
-
-      expect(result.current[file1.id]).not.toBeDefined();
-      expect(result.current[file2.id]).not.toBeDefined();
-    });
-
     it('removes event listeners', () => {
+      // Run the extension
       onRun(core);
-      Files.addEventListener(core, 'files:create', jest.fn());
 
-      act(() => {
-        onDisable(core);
-        expect(core.hasEventListeners()).toBe(false);
-      });
+      // Add an event listener
+      Files.addEventListener(core, 'files:file-reference:create', jest.fn());
+
+      // Disable the extension
+      onDisable(core);
+
+      // Should have cleared the event listener
+      expect(core.hasEventListeners()).toBe(false);
     });
   });
 });

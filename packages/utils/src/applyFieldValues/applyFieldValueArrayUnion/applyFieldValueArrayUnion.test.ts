@@ -3,11 +3,12 @@ import { applyFieldValueArrayUnion } from './applyFieldValueArrayUnion';
 
 describe('applyFieldValueArrayUnion', () => {
   it('merges values into array', () => {
-    const object = { field: [0, 1, 2] };
-    const changes = { field: FieldValue.arrayUnion([3, 4]) };
+    const object = { field: [0, 1, 2], nullField: null };
+    const changes = { field: FieldValue.arrayUnion([3, 4]), nullField: null };
     const result = applyFieldValueArrayUnion(object, changes);
 
     expect(result.field).toEqual([0, 1, 2, 3, 4]);
+    expect(result.nullField).toBeNull();
   });
 
   it('supports single values', () => {

@@ -1,5 +1,4 @@
 import { EventListenerCallback } from './EventListener.types';
-import { ResourceConnector } from './ResourceConnector.types';
 
 export interface Core {
   /**
@@ -89,36 +88,4 @@ export interface Core {
    * @param data The data associated with the event.
    */
   dispatch(type: string, data?: any): void;
-
-  /**
-   * Registers a new resource type. Fires a
-   * `core:register-resource` event.
-   *
-   * @param connector The connector of the resource to register.
-   */
-  registerResource<R>(connector: ResourceConnector<R>): void;
-
-  /**
-   * Unregisters a resource type. All resources of the specified
-   * type will be permanently deleted. Fires a
-   * `core:unregister-resource` event.
-   *
-   * @param resourceType The type of resource to unregister.
-   */
-  unregisterResource(resourceType: string): void;
-
-  /**
-   * Checks whether a specified resource is registrerd.
-   *
-   * @param type The resource type.
-   * @returns `true` if the resource is registered, otherwise `false`.
-   */
-  isResourceRegistered(type: string): boolean;
-
-  /**
-   * Fetches all resource connectors.
-   *
-   * @returns All resource connectors.
-   */
-  getResourceConnectors(): ResourceConnector[];
 }

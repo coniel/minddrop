@@ -1,78 +1,144 @@
-import { act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
+import { contains } from '@minddrop/utils';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { ViewInstances } from '@minddrop/views';
+import { ResourceValidationError } from '@minddrop/resources';
+import { createTopicViewInstance } from '../createTopicViewInstance';
 import {
-  Drops,
-  onRun as onRunDrops,
-  onDisable as onDisableDrops,
-  Drop,
-  DropNotFoundError,
-} from '@minddrop/drops';
-import { onRun, onDisable } from '../topics-extension';
+  cleanup,
+  core,
+  topicViewColumnsConfig,
+  topicViewWithoutCallbacksConfig,
+  tNoDrops,
+  tSixDrops,
+  setup,
+} from '../test-utils';
 import { addDropsToTopic } from './addDropsToTopic';
-import { Topic } from '../types';
-import { createTopic } from '../createTopic';
+import { registerTopicView } from '../registerTopicView';
+import { TopicsResource } from '../TopicsResource';
 
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-
-// Run drops extension
-onRunDrops(core);
-// Run topics extension
-onRun(core);
+const { drop1, dropConfig } = DROPS_TEST_DATA;
 
 describe('addDropsToTopic', () => {
-  afterEach(() => {
-    core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    act(() => {
-      onDisableDrops(core);
-      onDisable(core);
-      onRunDrops(core);
-      onRun(core);
-    });
+  beforeEach(() => {
+    // Register test topic view
+    registerTopicView(core, topicViewColumnsConfig);
+    registerTopicView(core, topicViewWithoutCallbacksConfig);
+
+    setup();
   });
 
-  it('adds drops to the topic', async () => {
-    let topic: Topic;
-    let drop: Drop;
+  afterEach(cleanup);
 
-    await act(async () => {
-      drop = await Drops.create(core, { type: 'text' });
-      topic = createTopic(core);
-      topic = addDropsToTopic(core, topic.id, [drop.id]);
-    });
+  it('adds drops to the topic', () => {
+    // Add drop to the topic
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
 
-    expect(topic.drops).toBeDefined();
-    expect(topic.drops.length).toBe(1);
-    expect(topic.drops[0]).toBe(drop.id);
+    // Get the updated topic
+    const topic = TopicsResource.get(tNoDrops.id);
+
+    // Topic's drops should contain drop ID
+    expect(topic.drops.includes(drop1.id)).toBeTruthy();
   });
 
-  it('throws if drop attachement does not exist', async () => {
-    let topic: Topic;
+  it('adds the topic as a parent on the drops', () => {
+    // Add the drop to the topic
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
 
-    await act(async () => {
-      topic = createTopic(core);
-    });
+    // Get the updated drop
+    const drop = Drops.get(drop1.id);
 
+    // Should have added topic ID to drop's parents
+    expect(
+      contains(drop.parents, [{ resource: 'topics:topic', id: tNoDrops.id }]),
+    ).toBeTruthy();
+  });
+
+  it('throws if drop does not exist', async () => {
     expect(() =>
-      addDropsToTopic(core, topic.id, ['missing-drop-id']),
-    ).toThrowError(DropNotFoundError);
+      addDropsToTopic(core, tNoDrops.id, ['missing-drop-id']),
+    ).toThrowError(ResourceValidationError);
   });
 
-  it("dispatches a 'topics:add-drops' event", (done) => {
-    let topic: Topic;
-    let drop: Drop;
+  it("calls topic view's onAddDrops for each view instance", () => {
+    // Register test topic view config
+    const viewConfig = {
+      ...topicViewColumnsConfig,
+      id: 'on-create-view-test',
+      onAddDrops: jest.fn(),
+    };
+    registerTopicView(core, viewConfig);
 
-    function callback(payload) {
+    // Create an instance of the test topic view
+    let instance = createTopicViewInstance(core, tNoDrops.id, viewConfig.id);
+    // Create an instance of a topic view with no onAddDrops callback
+    createTopicViewInstance(
+      core,
+      tNoDrops.id,
+      topicViewWithoutCallbacksConfig.id,
+    );
+
+    // Add metadata to the call
+    const metadata = {
+      viewInstance: instance.id,
+      column: 2,
+    };
+
+    // Add drop to the topic
+    addDropsToTopic(core, tNoDrops.id, [drop1.id], metadata);
+
+    // Get the updated view instance
+    instance = ViewInstances.get(instance.id);
+    // Get updated drop
+    const drop = Drops.get(drop1.id);
+
+    // Should be called on the view instance with appropriate data and metadata
+    expect(viewConfig.onAddDrops).toHaveBeenCalledWith(
+      core,
+      instance,
+      { [drop.id]: drop },
+      metadata,
+    );
+  });
+
+  it("dispatches a 'topics:topic:add-drops' event", (done) => {
+    // Listen to 'topics:topic:add-drops' event
+    core.addEventListener('topics:topic:add-drops', (payload) => {
+      // Get the updated topic
+      const topic = TopicsResource.get(tNoDrops.id);
+      // Get the updated drop
+      const drop = Drops.get(drop1.id);
+
+      // Payload data should contain updated topic
       expect(payload.data.topic).toEqual(topic);
+      // Payload data should contain updated drop
       expect(payload.data.drops).toEqual({ [drop.id]: drop });
       done();
-    }
-
-    core.addEventListener('topics:add-drops', callback);
-
-    act(() => {
-      drop = Drops.create(core, { type: 'text' });
-      topic = createTopic(core);
-      topic = addDropsToTopic(core, topic.id, [drop.id]);
     });
+
+    // Add drop to the topic
+    addDropsToTopic(core, tNoDrops.id, [drop1.id]);
+  });
+
+  it('does not add drops already in the topic', () => {
+    // Create a new drop to add
+    const newDrop = Drops.create(core, dropConfig.type);
+    // Add new and existing drop (already in topic) to the topic
+    addDropsToTopic(core, tSixDrops.id, [drop1.id, newDrop.id]);
+
+    // Get the updated topic
+    const topic = TopicsResource.get(tSixDrops.id);
+
+    // Shoould have addded only 1 drop
+    expect(topic.drops.length).toBe(7);
+  });
+
+  it('does nothing if there are no drops to add', () => {
+    jest.spyOn(core, 'dispatch');
+
+    // Add drop which is already in the topic
+    addDropsToTopic(core, tSixDrops.id, [drop1.id]);
+
+    // Should not end up dispatching anything
+    expect(core.dispatch).not.toHaveBeenCalled();
   });
 });

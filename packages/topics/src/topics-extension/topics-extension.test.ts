@@ -1,99 +1,56 @@
-import { renderHook, act } from '@minddrop/test-utils';
-import { initializeCore } from '@minddrop/core';
-import { onDisable, onRun } from './topics-extension';
-import { generateTopic } from '../generateTopic';
-import { useAllTopics } from '../useAllTopics';
+import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
+import { setup, cleanup, core } from '../test-utils';
 import { Topics } from '../Topics';
+import { addDropsToTopic } from '../addDropsToTopic';
+import { TopicsResource } from '../TopicsResource';
+import { onDisable, onRun } from './topics-extension';
 
-let core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
+const { dropConfig } = DROPS_TEST_DATA;
 
 describe('topics extension', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
   describe('onRun', () => {
-    afterEach(() => {
-      act(() => {
-        core.dispatch('topics:clear');
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    });
+    it('removes deleted drops from parent topics', (done) => {
+      onRun(core);
 
-    describe('topics resource registration', () => {
-      it('loads topics', () => {
-        const { result } = renderHook(() => useAllTopics());
-        const topic = generateTopic();
+      // Create a topic
+      const topic = TopicsResource.create(core, { title: 'My topic' });
 
-        onRun(core);
+      // Create a drop
+      Drops.register(core, dropConfig);
+      const drop = Drops.create(core, dropConfig.type);
 
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onLoad([topic]);
-        });
+      // Add the drop to the topic
+      addDropsToTopic(core, topic.id, [drop.id]);
 
-        expect(result.current[topic.id]).toBeDefined();
+      // Listen for remove-drops event
+      Topics.addEventListener(core, 'topics:topic:remove-drops', ({ data }) => {
+        if (data.topic.id === topic.id && data.drops[drop.id]) {
+          done();
+        }
       });
 
-      it('handles added/updated topics', () => {
-        const { result } = renderHook(() => useAllTopics());
-        const topic = generateTopic();
-
-        onRun(core);
-
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onChange(topic, false);
-        });
-
-        expect(result.current[topic.id]).toBeDefined();
-      });
-
-      it('handles deleted topics', () => {
-        const { result } = renderHook(() => useAllTopics());
-        const topic = generateTopic();
-
-        onRun(core);
-
-        act(() => {
-          const [connector] = core.getResourceConnectors();
-          connector.onLoad([topic]);
-          connector.onChange(topic, true);
-        });
-
-        expect(result.current[topic.id]).not.toBeDefined();
-      });
+      // Delete the drop
+      Drops.delete(core, drop.id);
     });
   });
 
   describe('onDisable', () => {
-    afterEach(() => {
-      act(() => {
-        core.dispatch('topics:clear');
-      });
-      core = initializeCore({ appId: 'app-id', extensionId: 'topics' });
-    });
-
-    it('clears the store', () => {
-      const { result } = renderHook(() => useAllTopics());
-      const topic1 = generateTopic();
-      const topic2 = generateTopic();
-
-      onRun(core);
-
-      act(() => {
-        core.dispatch('topics:load', [topic1, topic2]);
-        onDisable(core);
-      });
-
-      expect(result.current[topic1.id]).not.toBeDefined();
-      expect(result.current[topic2.id]).not.toBeDefined();
-    });
-
     it('removes event listeners', () => {
+      // Run the extension
       onRun(core);
-      Topics.addEventListener(core, 'topics:create', jest.fn());
 
-      act(() => {
-        onDisable(core);
-        expect(core.hasEventListeners()).toBe(false);
-      });
+      // Add an event listener
+      Topics.addEventListener(core, 'topics:topic:create', jest.fn());
+
+      // Disable the extension
+      onDisable(core);
+
+      // Should have cleared the event listener
+      expect(core.hasEventListeners()).toBe(false);
     });
   });
 });

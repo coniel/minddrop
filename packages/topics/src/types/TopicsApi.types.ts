@@ -1,4 +1,6 @@
-import { Core, DataInsert } from '@minddrop/core';
+import { Core } from '@minddrop/core';
+import { ResourceReference, ResourceApi } from '@minddrop/resources';
+import { ViewInstanceTypeData } from '@minddrop/views';
 import { TopicFilters } from './TopicFilters.types';
 import {
   CreateTopicData,
@@ -9,8 +11,6 @@ import {
 import {
   CreateTopicEvent,
   UpdateTopicEvent,
-  ArchiveTopicEvent,
-  UnarchiveTopicEvent,
   DeleteTopicEvent,
   RestoreTopicEvent,
   AddSubtopicsEvent,
@@ -24,7 +24,6 @@ import {
   AddDropsEventCallback,
   AddSubtopicsEventCallback,
   AddTagsEventCallback,
-  ArchiveTopicEventCallback,
   CreateTopicEventCallback,
   DeleteTopicEventCallback,
   InsertDataEventCallback,
@@ -33,13 +32,33 @@ import {
   RemoveSubtopicsEventCallback,
   RemoveTagsEventCallback,
   RestoreTopicEventCallback,
-  UnarchiveTopicEventCallback,
   UpdateTopicEventCallback,
-  ClearTopicsEvent,
-  ClearTopicsEventCallback,
   PermanentlyDeleteTopicEventCallback,
   PermanentlyDeleteTopicEvent,
+  RegisterViewEvent,
+  RegisterViewEventCallback,
+  UnregisterViewEvent,
+  UnregisterViewEventCallback,
+  CreateViewInstanceEvent,
+  CreateViewInstanceEventCallback,
+  DeleteViewInstanceEventCallback,
+  DeleteViewInstanceEvent,
+  ArchiveDropsEvent,
+  ArchiveDropsEventCallback,
+  UnarchiveDropsEvent,
+  UnarchiveDropsEventCallback,
+  AddParentsEvent,
+  AddParentsEventCallback,
+  RemoveParentsEvent,
+  RemoveParentsEventCallback,
+  MoveSubtopicsEvent,
+  MoveSubtopicsEventCallback,
+  MoveDropsEvent,
+  MoveDropsEventCallback,
 } from './TopicEvents.types';
+import { AddDropsMetadata, TopicViewConfig } from './TopicViewConfig.types';
+import { TopicViewInstance } from './TopicViewInstance.types';
+import { AddDropMetadata } from '../addDropsToTopic';
 
 export interface TopicsApi {
   /**
@@ -67,30 +86,10 @@ export interface TopicsApi {
   getAll(filters?: TopicFilters): TopicMap;
 
   /**
-   * Returns an `{ [id]: Topic }` map of a given topic's parents. The results
-   * can be filtered using TopicFilters.
-   *
-   * @param topicId The ID of the topic for which to retrieve the parents.
-   * @param filters Filters to filter the parents by.
-   * @returns A `{ [id]: Topic }` map of the topic's parents.
-   */
-  parents(topicId: string, filters?: TopicFilters): TopicMap;
-
-  /**
-   * Returns an `{ [id]: Topic }` map of a given drop's parent topics. The results
-   * can be filtered using TopicFilters.
-   *
-   * @param dropId The ID of the drop for which to retrieve the parent topics.
-   * @param filters Filters to filter the parent topics by.
-   * @returns A `{ [id]: Topic }` map of the drop's parent topics.
-   */
-  dropParents(dropId: string): TopicMap;
-
-  /**
-   * Filters topics by active, archived, and deleted state.
+   * Filters topics by active and deleted state.
    * If no filters are set, returns active topics.
-   * If either archived or deleted filters are `true`, active
-   * topics are not included unless specifically set to `true`.
+   * If deleted filters is `true`, active topics are
+   * not included unless specifically set to `true`.
    *
    * @param topics The topics to filter.
    * @param filters The filters by which to filter the topics.
@@ -120,16 +119,6 @@ export interface TopicsApi {
   update(core: Core, id: string, data: UpdateTopicData): Topic;
 
   /**
-   * Archives a topic and dispatches a `topics:archive`
-   * event and an `topics:update` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to archive.
-   * @returns The archived topic.
-   */
-  archive(core: Core, topicId: string): Topic;
-
-  /**
    * Deletes a topic and dispatches a `topics:delete`
    * event and an `topics:update` event.
    *
@@ -140,8 +129,8 @@ export interface TopicsApi {
   delete(core: Core, topicId: string): Topic;
 
   /**
-   * Restores an archived or deleted topic and dispatches
-   * a `topics:restore` event and an `topics:update` event.
+   * Restores a deleted topic and dispatches a
+   * `topics:restore` event and an `topics:update` event.
    *
    * @param core A MindDrop core instance.
    * @param topicId The ID of the topic to restore.
@@ -184,15 +173,78 @@ export interface TopicsApi {
   removeSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
 
   /**
+   * Moves subtopics from one topic to another and dispaches
+   * a `topics:move-subtopics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param fromTopicId The ID of the topic from which to move the subtopics.
+   * @param toTopicId The ID of the topic into which to move the subtopics.
+   * @param subtopicIds The IDs of the subtopics to remove.
+   */
+  moveSubtopics(
+    core: Core,
+    fromTopicId: string,
+    toTopicId: string,
+    subtopicIds: string[],
+  ): void;
+
+  /**
+   * Archives the specified subtopics in a topic and dispatches
+   * a `topics:archive-subtopics` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindSubtopic core instance.
+   * @param topicId The ID of the topic on which to archive the subtopics.
+   * @param subtopicIds The IDs of the subtopics to archive.
+   * @returns The updated topic.
+   */
+  archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+
+  /**
+   * Unarchives the specified subtopics in a topic and dispatches
+   * a `topics:unarchive-subtopics` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindSubtopic core instance.
+   * @param topicId The ID of the topic on which to unarchive the subtopics.
+   * @param subtopicIds The IDs of the subtopics to unarchive.
+   * @returns The updated topic.
+   */
+  unarchiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+
+  /**
    * Adds drops to a topic and dispatches a `topics:add-drops` event
    * and a `topics:update` event.
    *
    * @param core A MindDrop core instance.
    * @param topicId The ID of the topic to which to add the drops.
    * @param dropIds The IDs of the drops to add to the topic.
+   * @param metadata Optional metadata added by the view instance which invoked the function.
    * @returns The updated topic.
    */
-  addDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+  addDrops<M extends AddDropMetadata = AddDropMetadata>(
+    core: Core,
+    topicId: string,
+    dropIds: string[],
+    metadata?: M,
+  ): Topic;
+
+  /**
+   * Moves drops from one topic to another by removing them
+   * from the source topic and adding them to the target topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param fromTopicId The ID of the topic from which to move the drops.
+   * @param toTopicId The ID of the topic to which to move the drops.
+   * @param dropIds The IDs of the drops to move.
+   */
+  moveDrops(
+    core: Core,
+    fromTopicId: string,
+    toTopicId: string,
+    dropIds: string[],
+    metadata?: AddDropsMetadata,
+  ): void;
 
   /**
    * Removes drops from a topic and dispatches a `topics:remove-drops` event
@@ -204,6 +256,58 @@ export interface TopicsApi {
    * @returns The updated topic.
    */
   removeDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
+   * Archives the specified drops in a topic and dispatches
+   * a `topics:archive-drops` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic on which to archive the drops.
+   * @param dropIds The IDs of the drops to archive.
+   * @returns The updated topic.
+   */
+  archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
+   * Unarchives the specified drops in a topic and dispatches
+   * a `topics:unarchive-drops` event.
+   * Returns the updated topic.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic on which to unarchive the drops.
+   * @param dropIds The IDs of the drops to unarchive.
+   * @returns The updated topic.
+   */
+  unarchiveDrops(core: Core, topicId: string, dropIds: string[]): Topic;
+
+  /**
+   * Adds parent references to a topic and dispatches a
+   * `topics:add-parents` event.
+   *
+   * @param core A MindTopic core instance.
+   * @param topicId The ID of the topic to which to add the parents.
+   * @param parentReferences The parent references to add.
+   */
+  addParents(
+    core: Core,
+    topicId: string,
+    parentReferences: ResourceReference[],
+  ): Topic;
+
+  /**
+   * Removes parent references from a topic and dispatches a
+   * `topics:remove-parents` event.
+   *
+   * @param core A MindTopic core instance.
+   * @param topicId The ID of the topic from which to remove the parents.
+   * @param parentReferences The parent references to remove.
+   */
+  removeParents(
+    core: Core,
+    topicId: string,
+    parentReferences: ResourceReference[],
+  ): Topic;
 
   /**
    * Adds tags to a topic and dispatches a `topics:add-tags` event
@@ -228,27 +332,66 @@ export interface TopicsApi {
   removeTags(core: Core, topicId: string, tagIds: string[]): Topic;
 
   /**
-   * Dispatches a `topics:insert-data` event for a given topic.
+   * Returns a topic view's config by ID.
    *
-   * @param core A MindDrop core instance.
-   * @param topicId The topic into which the data is being inserted.
+   * @param viewId - The ID of the topic view config to retrieve.
    */
-  insertData(core: Core, topicId: string, data: DataInsert): void;
+  getViewConfig(viewId: string): TopicViewConfig;
 
   /**
-   * Loads topics into the store and dispatches a `topics:load` event.
-   *
-   * @param core A MindDrop core instance.
-   * @param topics The topics to load.
+   * Returns a `{ [id]: TopicViewConfig }` map of all registered topic views.
    */
-  load(core: Core, topics: Topic[]): void;
+  getAllViewConfigs(): Record<string, TopicViewConfig>;
 
   /**
-   * Clears topics from the store and dispatches a `topics:clear` event.
+   * Registers a topic view and dispatches a `topics:register-view` event.
    *
    * @param core A MindDrop core instance.
+   * @param config The config of the topic view to register.
    */
-  clear(core: Core);
+  registerView(core: Core, config: TopicViewConfig): void;
+
+  /**
+   * Unregisters a topic view and dispatches a
+   * `topics:unregister-view` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewId The ID of the view to unregister.
+   */
+  unregisterView(core: Core, viewId: string): void;
+
+  /**
+   * Creates a new instance of a TopicView and adds it to the topic.
+   * The topic view must first be registered using `Topics.registerView`
+   * or else a TopicViewNotRegisteredError will be thrown.
+   *
+   * Returns the new view instance and dispatches a
+   * `topics:create-view-instance` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to which to add the view.
+   * @param topicViewId The ID of the topic view for which to create an instance.
+   */
+  createViewInstance<TTypeData extends ViewInstanceTypeData = {}>(
+    core: Core,
+    topicId: string,
+    topicViewId: string,
+  ): TopicViewInstance<TTypeData>;
+
+  /**
+   * Deletes a topic view instance and removes it from the topic.
+   * Returns the deleted view instance and dispatches a
+   * `topics:delete-view-instance` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param viewInstanceId The ID of the topic view instance to delete.
+   */
+  deleteViewInstance(core: Core, viewInstanceId: string): TopicViewInstance;
+
+  /**
+   * The topics resource store.
+   */
+  store: ResourceApi['store'];
 
   /* ********************************** */
   /* *** addEventListener overloads *** */
@@ -266,20 +409,6 @@ export interface TopicsApi {
     core: Core,
     type: UpdateTopicEvent,
     callback: UpdateTopicEventCallback,
-  ): void;
-
-  // Add 'topics:archive' event listener
-  addEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Add 'topics:unarchive' event listener
-  addEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
   ): void;
 
   // Add 'topics:delete' event listener
@@ -317,11 +446,32 @@ export interface TopicsApi {
     callback: RemoveSubtopicsEventCallback,
   ): void;
 
+  // Add 'topics:move-topics' event listener
+  addEventListener(
+    core: Core,
+    type: MoveSubtopicsEvent,
+    callback: MoveSubtopicsEventCallback,
+  );
+
   // Add 'topics:add-drops' event listener
   addEventListener(
     core: Core,
     type: AddDropsEvent,
     callback: AddDropsEventCallback,
+  ): void;
+
+  // Add 'topics:archive-drops' event listener
+  addEventListener(
+    core: Core,
+    type: ArchiveDropsEvent,
+    callback: ArchiveDropsEventCallback,
+  ): void;
+
+  // Add 'topics:unarchive-drops' event listener
+  addEventListener(
+    core: Core,
+    type: UnarchiveDropsEvent,
+    callback: UnarchiveDropsEventCallback,
   ): void;
 
   // Add 'topics:remove-drops' event listener
@@ -330,6 +480,27 @@ export interface TopicsApi {
     type: RemoveDropsEvent,
     callback: RemoveDropsEventCallback,
   ): void;
+
+  // Add 'topics:move-drops' event listener
+  addEventListener(
+    core: Core,
+    type: MoveDropsEvent,
+    callback: MoveDropsEventCallback,
+  ): void;
+
+  // Add topics:add-parents event listener
+  addEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  );
+
+  // Add topics:remove-parents event listener
+  addEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
+  );
 
   // Add 'topics:add-tags' event listener
   addEventListener(
@@ -345,6 +516,34 @@ export interface TopicsApi {
     callback: RemoveTagsEventCallback,
   ): void;
 
+  // Add 'topics:register-view' event listener
+  addEventListener(
+    core: Core,
+    type: RegisterViewEvent,
+    callback: RegisterViewEventCallback,
+  ): void;
+
+  // Add 'topics:unregister-view' event listener
+  addEventListener(
+    core: Core,
+    type: UnregisterViewEvent,
+    callback: UnregisterViewEventCallback,
+  ): void;
+
+  // Add 'topics:create-view-instance' event listener
+  addEventListener(
+    core: Core,
+    type: CreateViewInstanceEvent,
+    callback: CreateViewInstanceEventCallback,
+  ): void;
+
+  // Add 'topics:delete-view-instance' event listener
+  addEventListener(
+    core: Core,
+    type: DeleteViewInstanceEvent,
+    callback: DeleteViewInstanceEventCallback,
+  ): void;
+
   // Add 'topics:insert-data' event listener
   addEventListener(
     core: Core,
@@ -357,13 +556,6 @@ export interface TopicsApi {
     core: Core,
     type: LoadTopicsEvent,
     callback: LoadTopicsEventCallback,
-  ): void;
-
-  // Add 'topics:load' event listener
-  addEventListener(
-    core: Core,
-    type: ClearTopicsEvent,
-    callback: ClearTopicsEventCallback,
   ): void;
 
   /* ************************************* */
@@ -382,20 +574,6 @@ export interface TopicsApi {
     core: Core,
     type: UpdateTopicEvent,
     callback: UpdateTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:archive' event listener
-  removeEventListener(
-    core: Core,
-    type: ArchiveTopicEvent,
-    callback: ArchiveTopicEventCallback,
-  ): void;
-
-  // Remove 'topics:unarchive' event listener
-  removeEventListener(
-    core: Core,
-    type: UnarchiveTopicEvent,
-    callback: UnarchiveTopicEventCallback,
   ): void;
 
   // Remove 'topics:delete' event listener
@@ -433,6 +611,13 @@ export interface TopicsApi {
     callback: RemoveSubtopicsEventCallback,
   ): void;
 
+  // Remove 'topics:move-topics' event listener
+  removeEventListener(
+    core: Core,
+    type: MoveSubtopicsEvent,
+    callback: MoveSubtopicsEventCallback,
+  ): void;
+
   // Remove 'topics:add-drops' event listener
   removeEventListener(
     core: Core,
@@ -440,11 +625,46 @@ export interface TopicsApi {
     callback: AddDropsEventCallback,
   ): void;
 
+  // Remove 'topics:archive-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: ArchiveDropsEvent,
+    callback: ArchiveDropsEventCallback,
+  ): void;
+
+  // Remove 'topics:unarchive-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: UnarchiveDropsEvent,
+    callback: UnarchiveDropsEventCallback,
+  ): void;
+
   // Remove 'topics:remove-drops' event listener
   removeEventListener(
     core: Core,
     type: RemoveDropsEvent,
     callback: RemoveDropsEventCallback,
+  ): void;
+
+  // Remove 'topics:move-drops' event listener
+  removeEventListener(
+    core: Core,
+    type: MoveDropsEvent,
+    callback: MoveDropsEventCallback,
+  ): void;
+
+  // Remove topics:add-parents event listener
+  removeEventListener(
+    core: Core,
+    type: AddParentsEvent,
+    callback: AddParentsEventCallback,
+  ): void;
+
+  // Remove topics:remove-parents event listener
+  removeEventListener(
+    core: Core,
+    type: RemoveParentsEvent,
+    callback: RemoveParentsEventCallback,
   ): void;
 
   // Remove 'topics:add-tags' event listener
@@ -459,6 +679,34 @@ export interface TopicsApi {
     core: Core,
     type: RemoveTagsEvent,
     callback: RemoveTagsEventCallback,
+  ): void;
+
+  // Remove 'topics:register-view' event listener
+  removeEventListener(
+    core: Core,
+    type: RegisterViewEvent,
+    callback: RegisterViewEventCallback,
+  ): void;
+
+  // Remove 'topics:unregister-view' event listener
+  removeEventListener(
+    core: Core,
+    type: UnregisterViewEvent,
+    callback: UnregisterViewEventCallback,
+  ): void;
+
+  // Remove 'topics:create-view-instance' event listener
+  removeEventListener(
+    core: Core,
+    type: CreateViewInstanceEvent,
+    callback: CreateViewInstanceEventCallback,
+  ): void;
+
+  // Remove 'topics:delete-view-instance' event listener
+  removeEventListener(
+    core: Core,
+    type: DeleteViewInstanceEvent,
+    callback: DeleteViewInstanceEventCallback,
   ): void;
 
   // Remove 'topics:load' event listener

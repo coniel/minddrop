@@ -1,0 +1,12 @@
+.minddrop {
+  height: 100%;
+  display: flex;
+}
+
+.minddrop .app-content {
+  flex: 1;
+}
+
+/* .minddrop .sidebar {
+  height: 100%;
+} */

@@ -2,30 +2,40 @@ import { Core } from '@minddrop/core';
 import { Tags } from '@minddrop/tags';
 import { FieldValue } from '@minddrop/utils';
 import { Topic } from '../types';
-import { updateTopic } from '../updateTopic';
+import { TopicsResource } from '../TopicsResource';
 
 /**
- * Adds tags to a topic and dispatches a `topics:add-tags` event
- * and a `topics:update` event.
+ * Adds tags to a topic.
+ * Dispatches a `topics:topic:add-tags` event.
  *
- * @param core A MindDrop core instance.
- * @param topicId The ID of the topic to which to add the tags.
- * @param tagIds The IDs of the tags to add to the topic.
+ * Returns the updated topic.
+ *
+ * @param core - A MindDrop core instance.
+ * @param topicId - The ID of the topic to which to add the tags.
+ * @param tagIds - The IDs of the tags to add to the topic.
  * @returns The updated topic.
+ *
+ * @throws ResourceDocumentNotFoundError
+ * Thrown if the topic does not exist.
+ *
+ * @throws ResourceValidationError
+ * Thrown if any of the tags do not exist.
  */
 export function addTagsToTopic(
   core: Core,
   topicId: string,
   tagIds: string[],
 ): Topic {
-  // Check that tags exist
+  // Get the tags
   const tags = Tags.get(tagIds);
 
-  const topic = updateTopic(core, topicId, {
+  // Add the tag IDs to the topic
+  const topic = TopicsResource.update(core, topicId, {
     tags: FieldValue.arrayUnion(tagIds),
   });
 
-  core.dispatch('topics:add-tags', {
+  // Dispatch a 'topics:topic:add-tags' event
+  core.dispatch('topics:topic:add-tags', {
     topic,
     tags,
   });

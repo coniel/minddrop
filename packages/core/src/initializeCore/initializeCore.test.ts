@@ -1,8 +1,7 @@
-import { ResourceConnector } from '../types';
 import { initializeCore } from './initializeCore';
 
-const core = initializeCore({ appId: 'app-id', extensionId: 'app' });
-const core2 = initializeCore({ appId: 'app-id', extensionId: 'topics' });
+const core = initializeCore({ appId: 'app', extensionId: 'app' });
+const core2 = initializeCore({ appId: 'app', extensionId: 'topics' });
 
 describe('initializeCore', () => {
   afterEach(() => {
@@ -150,50 +149,5 @@ describe('initializeCore', () => {
 
     core.dispatch('test');
     core.dispatch('test-2');
-  });
-
-  it('adds and removes resource connectors', () => {
-    const connector: ResourceConnector = {
-      type: 'test',
-    };
-
-    core.registerResource(connector);
-
-    expect(core.getResourceConnectors().length).toBe(1);
-
-    core.unregisterResource('test');
-
-    expect(core.getResourceConnectors().length).toBe(0);
-  });
-
-  it("dispatches a 'core:register-resource' event", (done) => {
-    const connector: ResourceConnector = {
-      type: 'test',
-    };
-
-    function callback(payload) {
-      expect(payload.data).toBe(connector);
-      done();
-    }
-
-    core.addEventListener('core:register-resource', callback);
-
-    core.registerResource(connector);
-  });
-
-  it("dispatches a 'core:unregister-resource' event", (done) => {
-    const connector: ResourceConnector = {
-      type: 'test',
-    };
-
-    function callback(payload) {
-      expect(payload.data).toEqual(connector);
-      done();
-    }
-
-    core.addEventListener('core:unregister-resource', callback);
-
-    core.registerResource(connector);
-    core.unregisterResource(connector.type);
   });
 });

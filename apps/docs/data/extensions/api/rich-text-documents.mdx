@@ -1,0 +1,619 @@
+---
+metaTitle: RichTextDocuments API Reference
+metaDescription: An interface for retrieving and managing rich text documents.
+---
+
+# RichTextDocuments
+
+<Description>
+  An interface for retrieving and managing rich text documents.
+</Description>
+
+## Hooks
+
+Hooks provide access to rich text documents and related data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useRichTextDocument
+
+Returns a rich text document by ID or `null` if it does not exist.
+
+```ts
+useRichTextDocument(documentId: string): RichTextDocument | null;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text document to retrieve.',
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves rich text documents by ID. If provided a single ID string, returns the matching rich text document. If provided an array of IDs, returns a `{ [id]: RichTextDocument }` map of the corresponding rich text documents.
+
+- Throws a `RichTextDocumentNotFoundError` if a document does not exist.
+
+```ts
+// Get a single rich text document
+RichTextDocuments.get(documentId: string): RichTextDocument
+
+// Get multiple rich text documents
+RichTextDocuments.get(documentId: string[]): RichTextDocumentMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'documentId',
+      type: 'string | string[]',
+      required: true,
+      description:
+        'The ID(s) of the rich text document(s) to retrieve.',
+    },
+  ]}
+/>
+
+### getAll
+
+Retrieves all rich text documents as a `{ [id]: RichTextDocument }` map.
+
+```ts
+RichTextDocuments.getAll(): RichTextDocumentMap
+```
+
+### create
+
+Creates a new rich text document and dispaches a `rich-text-documents:create` event. Returns the new rich text document.
+
+Adds the document as a parent on all rich text block elements listen in `children`.
+
+- Throws a `RichTextElementNotFoundError` if any of the rich text elements listed in `children` do not exist.
+- Throws a `RichTextElementTypeNotRegistered` if any of the rich text elements listed in `children` are of an unregistered type.
+- Throws a `RichTextDocumentValidationError` if any of the elements listen in `children` are not block level elements.
+
+```ts
+RichTextDocuments.create(core: Core, data?: CreateRichTextDocumentData): RichTextDocument;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateRichTextDocumentData',
+      description:
+        'The rich text document data. See the table below for details.',
+    },
+  ]}
+/>
+
+#### CreateRichTextDocumentData
+
+Data used to create a rich text document.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'children',
+      type: 'string[]',
+      description:
+        'The IDs of the rich text block elements making up the root level content of the document (nested elements should not be listed here).',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      description:
+        'An UUID used to distinguish between different revisions of a rich text document. If not set, a new one will be automatically generated.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a rich text document and dispaches a `rich-text-documents:delete` event. Returns the deleted document.
+
+Deleted rich text documents can be restored using the `RichTextDocuments.restore` method.
+
+- Throws a `RichTextDocumentNotFoundError` if the document does not exist.
+
+```ts
+RichTextDocuments.delete(core: Core, documentId: string): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text document to delete.',
+    },
+  ]}
+/>
+
+### restore
+
+Restores a deleted rich text document and dispatches a `rich-text-documents:restore` event. Returns the restored document.
+
+- Throws a `RichTextDocumentNotFoundError` if the document does not exist.
+
+```ts
+RichTextDocuments.restore(core: Core, documentId: string): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the rich text document to restore.',
+    },
+  ]}
+/>
+
+### deletePermanently
+
+Permanently deletes a rich text document and dispatches a `rich-text-documents:delete-permanently` event. Returns the deleted document.
+
+Permanently deleted rich text documents cannot be restored.
+
+- Throws a `RichTextDocumentNotFoundError` if the document does not exist.
+
+```ts
+RichTextDocuments.deletePermanently(core: Core, documentId: string): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document to delete permanently.',
+    },
+  ]}
+/>
+
+### setChildren
+
+Sets the child elements of a rich text document and dispatches a `rich-text-documents:set-children` event. Returns the updated document.
+
+Adds the document as a parent on any added child elements and removes the document as a parent from any removed child elements. Optionally, a new revision ID can be passed to update the document's revision.
+
+- Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
+- Throws a `RichTextElementNotFoundError` if any of the rich text block elements do not exist.
+- Throws a `RichTextDocumentValidationError` if any of the added elements are not block level elements.
+
+```ts
+RichTextDocuments.setChildren(
+  core: Core,
+  documentId: string,
+  children: string[],
+  revision?: string
+): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document for which to set the children.',
+    },
+    {
+      name: 'children',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the rich text block elements which make up the root level elements of the document.',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      description: 'The document revision ID.',
+    },
+  ]}
+/>
+
+### setRevision
+
+Sets a new reivsion on the document and dispaches a `rich-text-documents:update` event. Returns the updated document.
+
+- Throws a `RichTextDocumentNotFoundError` if the rich text document does not exist.
+
+```ts
+RichTextDocuments.setRevision(
+  core: Core,
+  documentId: string,
+  revision: string
+): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document for which to set the revision.',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      required: true,
+      description: 'The document revision ID.',
+    },
+  ]}
+/>
+
+### addParents
+
+Adds parent references to a rich text document and dispatches a `rich-text-documents:add-parents` event. Returns the updated rich text document.
+
+- Throws a `RichTextDocumentNotFoundError` if the document does not exist.
+- Throws a `ParentReferenceValidationError` if any of the parent references are invalid.
+
+```ts
+RichTextDocuments.addParents(
+  core: Core,
+  documentId: string,
+  parentReferences: ParentReference[],
+): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document to which to add parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'ParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to add to the rich text document. See
+          the{' '}
+          <a href="/docs/extensions/types/parent-reference">
+            ParentReference
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeParents
+
+Remove parents references from a rich text document and dispaches a `rich-text-documents:remove-parents` event. Returns the updated rich text document.
+
+- Throws a `RichTextDocumentNotFoundError` if the document does not exist.
+
+```ts
+RichTextDocuments.removeParents(
+  core: Core,
+  documentId: string,
+  parentReferences: ParentReference[],
+): RichTextDocument
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documentId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the rich text document from which to remove parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'ParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to remove from the rich text document.
+          See the{' '}
+          <a href="/docs/extensions/types/parent-reference">
+            ParentReference
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### toPlainText
+
+Converts a rich text document to a plain text string. Void elements are converted using their `toPlainText` method. If they do not have such a method, they are omited.
+
+- Throws a `RichTextElementNotFoundError` if any of the document's rich text elements do no exist.
+
+```ts
+toPlainText(document: RichTextDocument): string
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'document',
+      type: 'RichTextDocument',
+      required: true,
+      description:
+        'The rich text document to convert into plain text.',
+    },
+  ]}
+/>
+
+### load
+
+Loads rich text documents into the store and dispatches a `rich-text-documents:load` event.
+
+```ts
+RichTextDocuments.load(core: Core, documents: RichTextDocument[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'documents',
+      type: 'RichTextDocument',
+      required: true,
+      description: 'The rich text documents to load.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears all rich text documents from the store. This method is **only intended for use in tests**, do not use within your extension code.
+
+```ts
+RichTextDocuments.clear(): void
+```
+
+## RichTextDocument events
+
+See below the table for more details on the data passed by rich text document related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'rich-text-documents:create',
+      data: 'RichTextDocument',
+      description: 'Dispatched when a rich text document is created.',
+    },
+    {
+      name: 'rich-text-documents:update',
+      data: 'UpdateRichTextDocumentEventData',
+      description: 'Dispatched when a rich text document is updated.',
+    },
+    {
+      name: 'rich-text-documents:delete',
+      data: 'RichTextDocument',
+      description: 'Dispatched when a rich text document is deleted.',
+    },
+    {
+      name: 'rich-text-documents:restore',
+      data: 'RichTextDocument',
+      description:
+        'Dispatched when a deleted rich text document is restored.',
+    },
+    {
+      name: 'rich-text-documents:delete-permanently',
+      data: 'RichTextDocument',
+      description:
+        'Dispatched when a rich text document is permanently deleted.',
+    },
+    {
+      name: 'rich-text-documents:set-children',
+      data: 'SetRichTextDocumentChildrenEventData',
+      description:
+        "Dispatched when a rich text document's children are set.",
+    },
+    {
+      name: 'rich-text-documents:add-parents',
+      data: 'AddParentsToRichTextDocumentEventData',
+      description:
+        'Dispatched when parents are added to a rich text document.',
+    },
+    {
+      name: 'rich-text-documents:remove-parents',
+      data: 'RemoveParentsFromRichTextDocumentEventData',
+      description:
+        'Dispatched when parents are removed from a rich text document.',
+    },
+    {
+      name: 'rich-text-documents:load',
+      data: 'RichTextDocument[]',
+      description:
+        'Dispatched when rich text documents are loaded into the store.',
+    },
+  ]}
+/>
+
+### RichTextDocument event data types
+
+RichTextDocument events are dispatched with one of the following types of data.
+
+#### RichTextDocument
+
+See the [RichTextDocument](/docs/extensions/types/rich-text-document) interface page.
+
+#### ParentReference
+
+See the [ParentReference](/docs/extensions/types/parent-reference) interface page.
+
+#### UpdateRichTextDocumentEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'RichTextDocument',
+      required: true,
+      description: 'The rich text document before it was updated.',
+    },
+    {
+      name: 'after',
+      type: 'RichTextDocument',
+      required: true,
+      description: 'The updated rich text document.',
+    },
+    {
+      name: 'changes',
+      type: 'RichTextDocumentChanges',
+      required: true,
+      description:
+        'The changes applied to the rich text document. See below for details.',
+    },
+  ]}
+/>
+
+`RichTextDocumentChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description:
+        'Timestamp at which the rich text document was updated.',
+    },
+    {
+      name: 'revision',
+      type: 'string',
+      required: true,
+      description:
+        'An UUID used to distinguish between different revisions of a rich text document.',
+    },
+    {
+      name: 'children',
+      type: 'string[] | ArrayUnion | ArrayRemove',
+      description: (
+        <span>
+          The IDs of the <Code>RichTextBlockElement</Code>s which make
+          up the root level content of the document.
+        </span>
+      ),
+    },
+    {
+      name: 'deleted',
+      type: 'true',
+      description: (
+        <span>
+          If <Code>true</Code>, the rich text document is deleted. Not
+          present if the rich text document is not deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date',
+      description: (
+        <span>
+          Timestamp at which the rich text document was deleted. Only
+          set if
+          <Code>deleted</Code> is <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### SetRichTextDocumentChildrenEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'document',
+      type: 'RichTextDocument',
+      required: true,
+      description:
+        'The rich text document in which the elements were set.',
+    },
+    {
+      name: 'removedElements',
+      type: 'RichTextBlockElementMap',
+      required: true,
+      description:
+        'The rich text block elements which were removed from the document.',
+    },
+    {
+      name: 'addedElements',
+      type: 'RichTextBlockElementMap',
+      required: true,
+      description:
+        'The rich text block elements which were added to the document.',
+    },
+  ]}
+/>
+
+#### AddParentsToRichTextDocumentEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'document',
+      type: 'RichTextDocument',
+      required: true,
+      description:
+        'The rich text document to which the parents were added.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were added to the rich text document.',
+    },
+  ]}
+/>
+
+#### RemoveParentsFromRichTextDocumentEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'document',
+      type: 'RichTextDocument',
+      required: true,
+      description:
+        'The rich text document from which the parents were removed.',
+    },
+    {
+      name: 'parents',
+      type: 'ParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were removed from the rich text document.',
+    },
+  ]}
+/>

@@ -1,0 +1,1588 @@
+---
+metaTitle: Topic API Interface
+metaDescription: An interface for retrieving and managing topics.
+---
+
+# Topics
+
+<Description>
+  An interface for retrieving and managing topics.
+</Description>
+
+## Hooks
+
+Hooks provide access to topics and related data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useTopic
+
+Returns a topic by ID or `null` if no topic was found.
+
+```ts
+useTopic(topicId: string): Topic | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to retrieve.',
+    },
+  ]}
+/>
+
+### useTopics
+
+Returns a `TopicMap` of topics matching the provided IDs. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+useTopics(topicIds: string[], filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      description: 'The IDs of the topics to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### useAllTopics
+
+Returns a `TopicMap` map of all topics. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+useAllTopics(filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### useTopicParents
+
+Returns an `{ [id]: Topic }` map of a given topic's parents. The results can be filtered by passing in `TopicFilters``.
+
+```ts
+useTopicParents(topicId: string, filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the parents.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Static methods
+
+### get
+
+Retrieves topics by ID. If provided a single ID string, returns the topic. If provided an array of IDs, returns a `TopicMap` of the corresponding topics. Returned topics can be filtered by passing in `TopicFilters`. Filtering is not supported when getting a single topic.
+
+Throws a `TopicNotFoundError` if one or more of the requested topics does not exist.
+
+```ts
+Topics.get(topicId: string | string[], filters?: TopicFilters): Topic | TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string | string[]',
+      required: true,
+      description: 'The ID(s) of the topic(s) to retrieve.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### getAll
+
+Retrieves all topics, returning a `TopicMap`. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+Topics.getAll(filters?: TopicFilters): Topic | TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### getDropParentTopics
+
+Retrieves a drop's parent topics returned as a `TopicMap`. Returned topics can be filtered by passing in `TopicFilters`.
+
+```ts
+Topics.getDropParentTopics(topicId: string, filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the drop for which to retrieve the parent topics.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+
+]}
+/>
+
+### filter
+
+Filters topics according to provided filters.
+
+```ts
+Topics.filter(topics: TopicMap, filters: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topics',
+      type: 'TopicMap',
+      description: 'The topics to filter.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Filtering options. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### create
+
+Creates a new topic and dispatches a `topics:create` event. Returns the new topic.
+
+```ts
+Topics.create(core: Core, data?: CreateTopicData): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTopicData',
+      description:
+        'The default topic property values. See below for details.',
+    },
+  ]}
+/>
+
+#### `CreateTopicData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'title',
+      type: 'string',
+      description: 'The topic title.',
+    },
+    {
+      name: 'hidden',
+      type: 'true',
+      description:
+        'If set, the topic will be created as a hidden topic.',
+    },
+  ]}
+/>
+
+### update
+
+Updates a topic and dispatches a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.update(core: Core, topicId: string, data: UpdateTopicData): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to update.',
+    },
+    {
+      name: 'data',
+      type: 'UpdateTopicData',
+      required: true,
+      description:
+        'The changes to apply to the topic. See below for details.',
+    },
+  ]}
+/>
+
+#### `UpdateTopicData`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'title',
+      type: 'string',
+      description: 'The topic title.',
+    },
+  ]}
+/>
+
+### delete
+
+Deletes a topic and dispatches a `topics:delete` event and a `topics:update` event. Returns the deleted topic.
+
+Deleted topics are not removed from the store but instead marked as deleted using `deleted: true` and `deletedAt: Date` properties. Deleted topics can be restored using the `Topics.restore` method. To permanently delete a topic and remove it from the store, use `Topics.deletePermanently`.
+
+```ts
+Topics.delete(core: Core, topicId: string): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to delete.',
+    },
+  ]}
+/>
+
+### restore
+
+Restores a deleted topic and dispatches a `topics:restore` event and a `topics:update` event. Returns the restored topic.
+
+```ts
+Topics.restore(core: Core, topicId: string): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to restore.',
+    },
+  ]}
+/>
+
+### deletePermanently
+
+Permanently deletes a topic and all of its view instances and dispatches a `topics:delete-permanently` event. The topic is also removed as a parent from its drops and subtopics. Returns the deleted topic.
+
+Permanently deleted topics cannot be restored.
+
+```ts
+Topics.deletePermanently(core: Core, topicId: string): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to delete.',
+    },
+  ]}
+/>
+
+### addSubtopics
+
+Adds subtopics into a parent topic. Dispatches an `topics:add-subtopics` event, as well as `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.addSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable core data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic into which to add the subtopic.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics.',
+    },
+
+]} />
+
+### removeSubtopics
+
+Removes subtopics from a topic. Dispatches a `topics:remove-subtopics` event as well as `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable core data={[
+    {
+      name: 'parentId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic from which to remove the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to remove.',
+    },
+
+]} />
+
+### moveSubtopics
+
+Moves subtopics from one topic to another and dispaches a `topics:move-subtopics` event.
+
+```ts
+Topics.moveSubtopics(core: Core, fromTopicId: string, toTopicId: string, subtopicIds: string[]): void
+```
+
+<ArgsTable core data={[
+    {
+      name: 'fromTopicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic from which to remove the subtopics.',
+    },
+    {
+      name: 'toTopicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the parent topic into which to add the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to move.',
+    },
+
+]} />
+
+### archiveSubtopics
+
+Archives subtopics in a topic and dispatches a `topics:archive-subtopics` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to archive the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to archive.',
+    },
+  ]}
+/>
+
+### unarchiveSubtopics
+
+Unarchives subtopics in a topic and dispatches a `topics:unarchive-subtopics` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to unarchive the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the subtopics to unarchive.',
+    },
+  ]}
+/>
+
+### addDrops
+
+Adds drops to a topic, dispaches an `topics:add-drops` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.addDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the drop.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to add.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the event added by the topic view
+          instance that triggered the event. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### moveDrops
+
+Moves drops from one topic to another by removing them from the source topic and adding them to the destination topic. Dispatches a `topics:move-drops` event.
+
+```ts
+Topics.moveDrops(core: Core, fromTopicId: string, toTopicId: string, dropIds: string[], metadata: AddDropsMetadata): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'fromTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the source topic from which to move the drops.',
+    },
+    {
+      name: 'toTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the target topic into which to move the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to move.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the event added by the topic view
+          instance that triggered the move. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### archiveDrops
+
+Archives drops in a topic and dispatches a `topics:archive-drops` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to archive the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to archive.',
+    },
+  ]}
+/>
+
+### unarchiveDrops
+
+Unarchives drops in a topic and dispatches a `topics:unarchive-drops` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.archiveDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic in which to unarchive the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to unarchive.',
+    },
+  ]}
+/>
+
+### removeDrops
+
+Removes drops from a topic and dispatches a `topics:remove-drops` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.removeDrops(core: Core, topicId: string, dropIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the drops.',
+    },
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to remove.',
+    },
+  ]}
+/>
+
+### addParents
+
+Adds parent references to a topic and dispatches a `topics:add-parents` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.addParents(core: Core, topicId: string, parentReferences: TopicParentReference[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'TopicParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to add to the topic. See the{' '}
+          <a href="/docs/extensions/types/topic#topicparentreference">
+            <Code>TopicParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeParents
+
+Remove parent references from a topic and dispatches a `topics:remove-parents` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.removeParents(core: Core, topicId: string, parentReferences: TopicParentReference[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the parents.',
+    },
+    {
+      name: 'parentReferences',
+      type: 'TopicParentReference[]',
+      required: true,
+      description: (
+        <span>
+          The parent references to remove from the topic. See the{' '}
+          <a href="/docs/extensions/types/topic#topicparentreference">
+            <Code>TopicParentReference</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### getParents
+
+Returns an `{ [id]: Topic }` map of a given topic's parents. The results can be filtered by passing in `TopicFilters``.
+
+```ts
+Topics.getParents(topicId: string, filters?: TopicFilters): TopicMap
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the parents.',
+    },
+    {
+      name: 'filters',
+      type: 'TopicFilters',
+      description: (
+        <span>
+          Allows filtering of returned topics. See the{' '}
+          <a href="#topicfilters">TopicFilters</a> section for more
+          details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### addTags
+
+Adds tags to a topic, dispaches an `topics:add-tags` event and a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.addTags(core: Core, topicId: string, tagIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic to which to add the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add.',
+    },
+  ]}
+/>
+
+### removeTags
+
+Removes tags from a topic and dispatches a `topics:remove-tags` event as well as a `topics:update` event. Returns the updated topic.
+
+```ts
+Topics.removesTags(core: Core, topicId: string, tagIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic from which to remove the tags.',
+    },
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to remove.',
+    },
+  ]}
+/>
+
+### registerView
+
+Registers a `TopicView` and dispaches a `topics:register-view` event. Registering a topic view allows the user to create instances of the view within topics. This method registers the view with the `Views` API (using `Views.register`) internally, so you do not need to do so yourself.
+
+```ts
+Topics.registerView(core: Core, view: TopicViewConfig): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'view',
+      type: 'TopicViewConfig',
+      required: true,
+      description: (
+        <span>
+          The view to register. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config">
+            <Code>TopicViewConfig</Code>
+          </a>{' '}
+          interface for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### unregisterView
+
+Unregisters a `TopicView` and dispaches a `topics:unregister-view` event. This method unregisters the view with the `Views` API (using `Views.unregister`) internally, so you do not need to do so yourself.
+
+```ts
+Topics.unregisterView(core: Core, viewId: string): void;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view to unregister.',
+    },
+  ]}
+/>
+
+### getView
+
+Returns a `TopicView` by ID. Throws a `TopicViewNotRegisteredError` if the topic view is not registered.
+
+```ts
+Topics.getView(topicViewId: string): TopicView
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic view to retrieve.',
+    },
+  ]}
+/>
+
+### getViews
+
+Returns a `{ [id]: TopicView }` map of all registered topic views.
+
+```ts
+Topics.getView(): TopicViewMap
+```
+
+### createViewInstance
+
+Creates a new instance of a `TopicView` and adds it to the topic. The topic view must first be registered using `Topics.registerView` or else a `TopicViewNotRegisteredError` will be thrown. Returns the new view instance and dispatches a `topics:create-view-instance` event.
+
+```ts
+Topics.createViewInstance(core: Core, topicId: string, topicViewId: string): ViewInstance;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic into which to add the view.',
+    },
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic view for which to create a new instance.',
+    },
+  ]}
+/>
+
+### deleteViewInstance
+
+Deletes a topic view instance and removes it from the topic. Returns the deleted view instance and dispatches a `topics:delete-view-instance` event.
+
+```ts
+Topics.deleteViewInstance(core: Core, topicViewId: string): ViewInstance
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicViewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic view to delete.',
+    },
+  ]}
+/>
+
+### load
+
+Loads topics into the store and dispatches a `topics:load` event.
+
+```ts
+Topics.load(core: Core, topics: Topic[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topics',
+      type: 'Topic[]',
+      required: true,
+      description: 'The topics to load into the store.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears the topics store and dispatches a `topics:clear` event.
+
+```ts
+Topics.clear(core: Core): void
+```
+
+<ArgsTable core />
+
+### addEventListener
+
+Adds topic specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Topics.addEventListener(core: Core, event: TopicEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TopicEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the topic events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the topic events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes topic specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Topics.removeEventListener(core: Core, event: TopicEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'TopicEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Topic events
+
+Topic events are prefixed with the namespace `topics`.
+
+See below the table for more details on the data passed by topic related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'topics:create',
+      data: 'Topic',
+      description: 'Dispatched when a topic is created.',
+    },
+    {
+      name: 'topics:update',
+      data: 'UpdateTopicEventData',
+      description: 'Dispatched when a topic is updated.',
+    },
+    {
+      name: 'topics:delete',
+      data: 'Topic',
+      description: 'Dispatched when a topic is deleted.',
+    },
+    {
+      name: 'topics:restore',
+      data: 'Topic',
+      description:
+        'Dispatched when a archived/deleted topic is restored.',
+    },
+    {
+      name: 'topics:delete-permanently',
+      data: 'Topic',
+      description: 'Dispatched when a topic is permanently deleted.',
+    },
+    {
+      name: 'topics:add-subtopics',
+      data: 'AddSubtopicsEventData',
+      description: 'Dispatched when subtopics are added to a topic.',
+    },
+    {
+      name: 'topics:remove-subtopics',
+      data: 'RemoveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are removed from a topic.',
+    },
+    {
+      name: 'topics:move-subtopics',
+      data: 'MoveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are moved from one topic to another.',
+    },
+    {
+      name: 'topics:archive-subtopics',
+      data: 'ArchiveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are archived inside a topic.',
+    },
+    {
+      name: 'topics:unarchive-subtopics',
+      data: 'UnarchiveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are unarchived inside a topic.',
+    },
+    {
+      name: 'topics:add-drops',
+      data: 'AddDropsEventData',
+      description: 'Dispatched when drops are added to a topic.',
+    },
+    {
+      name: 'topics:remove-drops',
+      data: 'RemoveDropsEventData',
+      description: 'Dispatched when drops are removed from a topic.',
+    },
+    {
+      name: 'topics:move-drops',
+      data: 'MoveDropsEventData',
+      description:
+        'Dispatched when drops are moved from one topic to another.',
+    },
+    {
+      name: 'topics:archive-drops',
+      data: 'ArchiveDropsEventData',
+      description:
+        'Dispatched when drops inside a topic are archived.',
+    },
+    {
+      name: 'topics:unarchive-drops',
+      data: 'UnarchiveDropsEventData',
+      description:
+        'Dispatched when drops inside a topic are unarchived.',
+    },
+    {
+      name: 'topics:add-parents',
+      data: 'AddParentsEventData',
+      description: 'Dispatched when parents are added to a topic.',
+    },
+    {
+      name: 'topics:remove-parents',
+      data: 'RemoveParentsEventData',
+      description:
+        'Dispatched when parents are removed from a topic.',
+    },
+    {
+      name: 'topics:add-tags',
+      data: 'AddTagsEventData',
+      description: 'Dispatched when tags are added to a topic.',
+    },
+    {
+      name: 'topics:remove-tags',
+      data: 'RemoveTagsEventData',
+      description: 'Dispatched when tags are removed from a topic.',
+    },
+    {
+      name: 'topics:register-view',
+      data: 'TopicView',
+      description: 'Dispatched when a topic view is registered.',
+    },
+    {
+      name: 'topics:unregister-view',
+      data: 'TopicView',
+      description: 'Dispatched when a topic view is unregistered.',
+    },
+    {
+      name: 'topics:create-view-intance',
+      data: 'TopicViewInstance',
+      description:
+        'Dispatched when a new topic view instance is created.',
+    },
+    {
+      name: 'topics:delete-view-intance',
+      data: 'TopicViewInstance',
+      description:
+        'Dispatched when a topic view instance is deleted.',
+    },
+    {
+      name: 'topics:load',
+      data: 'Topic[]',
+      description:
+        'Dispatched when topics are loaded into the store.',
+    },
+    {
+      name: 'topics:clear',
+      description: 'Dispatched when the topics store is cleared.',
+    },
+  ]}
+/>
+
+### Topic event data types
+
+Topic events are dispatched with one of the following types of data.
+
+#### Topic
+
+See the [Topic](/docs/extensions/types/topic) interface page.
+
+#### UpdateTopicEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'before',
+      type: 'Topic',
+      required: true,
+      description: 'Topic data before it was changed.',
+    },
+    {
+      name: 'after',
+      type: 'Topic',
+      required: true,
+      description: 'Updated topic data.',
+    },
+    {
+      name: 'changes',
+      type: 'TopicChanges',
+      required: true,
+      description:
+        'The changes made to the topic. See below for details.',
+    },
+  ]}
+/>
+
+`TopicChanges`
+
+<InterfaceTable
+  data={[
+    {
+      name: 'updatedAt',
+      type: 'Date',
+      required: true,
+      description: 'The timestamp at which the topic was updated.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      description: 'The topic title.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[] | ArrayUnion | ArrayFilter',
+      description: "The references of the topic's parents.",
+    },
+    {
+      name: 'subtopics',
+      type: 'string[]',
+      description: 'The IDs of the topics inside the topic.',
+    },
+    {
+      name: 'drops',
+      type: 'string[]',
+      description: 'The IDs of the drops inside the topic.',
+    },
+    {
+      name: 'tags',
+      type: 'string[]',
+      description: 'IDs of the tags belonging to the topic.',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean | Delete',
+      description: (
+        <span>
+          If <Code>true</Code> the topic is deleted.
+        </span>
+      ),
+    },
+    {
+      name: 'deletedAt',
+      type: 'Date | Delete',
+      description: 'Timestamp at which the topic was deleted.',
+    },
+    {
+      name: 'hidden',
+      type: 'true | Delete',
+      description: (
+        <span>
+          If <Code>true</Code>, the topic is hidden.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### AddSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the subtopics were added.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The subtopics added to the topic.',
+    },
+  ]}
+/>
+
+#### RemoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were removed.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The subtopics which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### MoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were removed.',
+    },
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the subtopics were added.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The subtopics which were moved.',
+    },
+  ]}
+/>
+
+#### ArchiveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description:
+        'The topic inside which the subtopics were archived.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The archived subtopics.',
+    },
+  ]}
+/>
+
+#### UnarchiveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description:
+        'The topic inside which the subtopics were unarchived.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The unarchived subtopics.',
+    },
+  ]}
+/>
+
+#### AddDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the drops were added.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were added to the topic.',
+    },
+  ]}
+/>
+
+#### ArchiveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic in which the drops were archived.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were archived.',
+    },
+  ]}
+/>
+
+#### UnarchiveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic in which the drops were unarchived.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were unarchived.',
+    },
+  ]}
+/>
+
+#### RemoveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the drops were removed.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### MoveDropsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the drops were removed.',
+    },
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the drops were added.',
+    },
+    {
+      name: 'drops',
+      type: 'DropMap',
+      required: true,
+      description: 'The drops which were moved.',
+    },
+  ]}
+/>
+
+#### AddParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the parents were added.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were added to the topic.',
+    },
+  ]}
+/>
+
+#### RemoveParentsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the parents were removed.',
+    },
+    {
+      name: 'parents',
+      type: 'TopicParentReference[]',
+      required: true,
+      description:
+        'The references of the parents which were removed from the topic.',
+    },
+  ]}
+/>
+
+#### AddTagsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic to which the tags were added.',
+    },
+    {
+      name: 'tags',
+      type: 'TagMap',
+      required: true,
+      description: 'The tags which were added to the topic.',
+    },
+  ]}
+/>
+
+#### RemoveTagsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'topic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the tags were removed.',
+    },
+    {
+      name: 'tags',
+      type: 'TagMap',
+      required: true,
+      description: 'The tags which were removed from the topic.',
+    },
+  ]}
+/>
+
+## TopicFilters
+
+Topics can be filtered using one or more of the options below.
+
+By default, deleted topics are filtered out. If `deleted` is set to `true`, active topics will be filtered out by default unless `active` is also set to `true`.
+
+A topic is considered active if it is not deleted.
+
+<PropsTable
+  data={[
+    {
+      name: 'active',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Include active topics (topics which are neither archived nor deleted).',
+    },
+    {
+      name: 'deleted',
+      type: 'boolean',
+      default: 'false',
+      description: 'Include deleted topics.',
+    },
+  ]}
+/>

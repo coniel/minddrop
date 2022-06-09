@@ -1,40 +1,35 @@
-import { DropsApi } from './types';
-import { get } from './get';
-import { getAllDrops } from './getAllDrops';
-import { filterDrops } from './filterDrops';
-import { createDrop } from './createDrop';
-import { updateDrop } from './updateDrop';
-import { archiveDrop } from './archiveDrop';
-import { deleteDrop } from './deleteDrop';
-import { restoreDrop } from './restoreDrop';
-import { deleteDropPermanently } from './deleteDropPermanently';
-import { addTagsToDrop } from './addTagsToDrop';
-import { removeTagsFromDrop } from './removeTagsFromDrop';
-import { addFilesToDrop } from './addFilesToDrop';
-import { removeFilesFromDrop } from './removeFilesFromDrop';
-import { replaceDropFiles } from './replaceDropFiles';
-import { loadDrops } from './loadDrops';
-import { clearDrops } from './clearDrops';
+import { DropsApi, DropTypeData } from './types';
+import { createFromDataInsert } from './createFromDataInsert';
+import { duplicateDrops } from './duplicateDrops';
+import { DropsResource } from './DropsResource';
 
 export const Drops: DropsApi = {
-  get,
-  getAll: getAllDrops,
-  filter: filterDrops,
-  create: createDrop,
-  update: updateDrop,
-  archive: archiveDrop,
-  delete: deleteDrop,
-  restore: restoreDrop,
-  addTags: addTagsToDrop,
-  removeTags: removeTagsFromDrop,
-  addFiles: addFilesToDrop,
-  removeFiles: removeFilesFromDrop,
-  replaceFiles: replaceDropFiles,
-  deletePermanently: deleteDropPermanently,
-  load: loadDrops,
-  clear: clearDrops,
+  ...DropsResource,
+  createFromDataInsert,
+  duplicate: duplicateDrops,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>
     core.removeEventListener(event, callback),
 };
+
+/**
+ * Returns a drop by ID or `null` if the
+ * drop does not exist.
+ *
+ * @param dropId - The ID of the drop to retrieve.
+ * @returns A drop or `null` if it does not exist.
+ */
+export const useDrop = <TTypeData extends DropTypeData = {}>(dropId: string) =>
+  DropsResource.hooks.useDocument<TTypeData>(dropId);
+
+/**
+ * Returns a `{ [id]: Drop }` drops by ID,
+ * omitting any drops that do not exist.
+ *
+ * @param dropIds - The IDs of the drops to retrieve.
+ * @returns A `{ [id]: Drop }` maps of the requested drops.
+ */
+export const useDrops = <TTypeData extends DropTypeData = {}>(
+  dropIds: string[],
+) => DropsResource.hooks.useDocuments<TTypeData>(dropIds);

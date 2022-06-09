@@ -8,6 +8,8 @@ import { ContextMenuTriggerItem } from '../ContextMenuTriggerItem';
 import { ContextMenuLabel } from '../ContextMenuLabel';
 import { ContextMenuSeparator } from '../ContextMenuSeparator';
 import { ContextMenu } from '../ContextMenu';
+import { ContextMenuTopicSelectionItem } from '../ContextMenuTopicSelectionItem';
+import { ContextMenuColorSelectionItem } from '../ContextMenuColorSelectionItem';
 
 export interface ContextMenuContentProps
   extends ContextMenuPrimitives.ContextMenuContentProps {
@@ -33,6 +35,8 @@ export const ContextMenuContent: FC<ContextMenuContentProps> = ({
           Separator: ContextMenuSeparator,
           Menu: ContextMenu,
           MenuContent: ContextMenuContent,
+          TopicSelectionItem: ContextMenuTopicSelectionItem,
+          ColorSelectionItem: ContextMenuColorSelectionItem,
         },
         content,
       ),

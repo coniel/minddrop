@@ -1,108 +1,111 @@
-import { initializeCore } from '@minddrop/core';
-import { renderHook, act } from '@minddrop/test-utils';
-import { onRun } from './persistent-store-extension';
-import { PersistentStoreDocument } from '../types';
-import { usePersistentStore } from '../usePersistentStore';
+import { onDisable, onRun } from './persistent-store-extension';
+import { setup, cleanup, core } from '../test-utils';
+import { LocalStoreResource } from '../LocalStoreResource';
+import { GlobalStoreResource } from '../GlobalStoreResource';
+import { RDDataSchema, Resources } from '@minddrop/resources';
+import { LocalPersistentStore } from '../LocalPersistentStore';
+import { GlobalPersistentStore } from '../GlobalPersistentStore';
 
-const core = initializeCore({
-  appId: 'app',
-  extensionId: 'persistent-store',
-});
+const schema: RDDataSchema<{ foo: string }> = {
+  foo: { type: 'string' },
+};
 
-describe('persistent-store-extension', () => {
+describe('rich text extension', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
   describe('onRun', () => {
-    afterEach(() => {
-      core.unregisterResource('persistent-store:stores');
-      act(() => {
-        usePersistentStore.getState().clearScope('global');
-        usePersistentStore.getState().clearScope('local');
-      });
+    it('registers the `persistent-stores:local` resource', () => {
+      // Run the extension
+      onRun(core);
+
+      // Should register the 'persistent-store:local' resource
+      expect(Resources.get(LocalStoreResource.resource)).toBeDefined();
     });
 
-    describe('global store resource', () => {
-      it('loads data into the global store', () => {
-        const { result } = renderHook(() => usePersistentStore().global);
-        const data = { app: { topics: ['topic-id'] } };
-        const doc: PersistentStoreDocument = {
-          id: 'global-id',
-          data,
-        };
+    it('registers the `persistent-stores:global` resource', () => {
+      // Run the extension
+      onRun(core);
 
-        onRun(core);
+      // Should register the 'persistent-store:global' resource
+      expect(Resources.get(GlobalStoreResource.resource)).toBeDefined();
+    });
+  });
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:global-stores');
-          connector.onLoad([doc]);
-        });
+  describe('onDisable', () => {
+    beforeEach(() => onRun(core));
 
-        expect(result.current).toEqual(data);
-      });
+    it('unregisters the `persistent-store:local` resource', () => {
+      // Disable the extension
+      onDisable(core);
 
-      it('works with no docs', () => {
-        const { result } = renderHook(() => usePersistentStore().global);
-
-        onRun(core);
-
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:global-stores');
-          connector.onLoad([]);
-        });
-
-        expect(result.current).toEqual({});
-      });
+      // Should unregister the 'persistent-store:local' resource
+      expect(Resources.get('persistent-store:local')).toBeUndefined();
     });
 
-    describe('local store resource', () => {
-      it('loads data into the local store', () => {
-        const { result } = renderHook(() => usePersistentStore().local);
-        const data = { app: { sidebarWidth: 300 } };
-        const doc1: PersistentStoreDocument = {
-          id: 'other-app-id',
-          data: {},
-        };
-        const doc2: PersistentStoreDocument = {
-          id: core.appId,
-          data,
-        };
+    it('unregisters the `persistent-store:global` resource', () => {
+      // Disable the extension
+      onDisable(core);
 
-        onRun(core);
+      // Should unregister the 'persistent-store:global' resource
+      expect(Resources.get('persistent-store:global')).toBeUndefined();
+    });
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:local-stores');
-          connector.onLoad([doc1, doc2]);
-        });
+    it('clears registered local persistent stores', () => {
+      // Initialize a local persistent store
+      LocalPersistentStore.initialize(core, schema, {});
 
-        expect(result.current).toEqual(data);
-      });
+      // Disable the exension
+      onDisable(core);
 
-      it('works with no store docs', () => {
-        const { result } = renderHook(() => usePersistentStore().local);
+      // Store type config should be cleared
+      expect(
+        LocalStoreResource.typeConfigsStore.get(core.extensionId),
+      ).toBeUndefined();
+    });
 
-        onRun(core);
+    it('clears the local persistent store documents', () => {
+      // Initialize a local persistent store
+      LocalPersistentStore.initialize(core, schema, {});
 
-        act(() => {
-          // Get the registered connector and run its onLoad method,
-          // simulating an onLoad event from the srorage-adapter.
-          const connector = core
-            .getResourceConnectors()
-            .find((c) => c.type === 'persistent-store:local-stores');
-          connector.onLoad([]);
-        });
+      // Disable the exension
+      onDisable(core);
 
-        expect(result.current).toEqual({});
-      });
+      // Local store documents should be cleared
+      expect(LocalStoreResource.getAll()).toEqual({});
+    });
+
+    it('clears registered global persistent stores', () => {
+      // Initialize a global persistent store
+      GlobalPersistentStore.initialize(core, schema, {});
+
+      // Disable the exension
+      onDisable(core);
+
+      // Store type config should be cleared
+      expect(
+        GlobalPersistentStore.typeConfigsStore.get(core.extensionId),
+      ).toBeUndefined();
+    });
+
+    it('clears the global persistent store documents', () => {
+      // Initialize a global persistent store
+      GlobalPersistentStore.initialize(core, schema, {});
+
+      // Disable the exension
+      onDisable(core);
+
+      // Global store documents should be cleared
+      expect(GlobalStoreResource.getAll()).toEqual({});
+    });
+
+    it('removes all event listeners', () => {
+      // Disable the extension
+      onDisable(core);
+
+      // There should no longer be any rich text related event listeners
+      expect(core.hasEventListeners()).toBeFalsy();
     });
   });
 });

@@ -1,0 +1,13 @@
+.topic-view .top-toolbar {
+  padding: 8px;
+}
+
+.topic-view .header {
+  display: flex;
+  padding: 36px 36px 0 36px;
+  align-items: center;
+}
+
+.topic-view .header .topic-title {
+  flex: 1;
+}

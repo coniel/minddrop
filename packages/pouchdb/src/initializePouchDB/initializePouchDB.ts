@@ -3,23 +3,39 @@ import { getAllDocs } from '../getAllDocs';
 import { ResourceDB } from '../types';
 import { DBApi } from '../types';
 
-export function initializePouchDB(db: ResourceDB): DBApi {
+/**
+ * Returns a simplified API for managing documents
+ * in a given PouchDB database.
+ *
+ * @param db - The PouchDB database instance.
+ * @returns Simplified database API.
+ */
+export function initializePouchdb(db: ResourceDB): DBApi {
   return {
-    getAllDocs: () => getAllDocs(db),
-    add: (type, doc) => {
-      db.put(serializeResouceDocument(doc, type));
+    getAll: () => getAllDocs(db),
+    add: (document) => {
+      // Add the new document to the database
+      db.put(serializeResouceDocument(document));
     },
-    update: async (id, changes) => {
-      const item = await db.get(id);
-      await db.put({
-        ...item,
-        ...changes,
-      });
+    update: async (document) => {
+      // Get the document from the database
+      const dbDocument = await db.get(document.id);
+
+      // Update the document in the database
+      await db.put(
+        serializeResouceDocument({
+          ...dbDocument,
+          ...document,
+        }),
+      );
     },
     delete: async (id) => {
-      const item = await db.get(id);
+      // Get the document from the database
+      const dbDocument = await db.get(id);
+
+      // Delete the document in the database
       await db.put({
-        ...item,
+        ...dbDocument,
         _deleted: true,
       });
     },

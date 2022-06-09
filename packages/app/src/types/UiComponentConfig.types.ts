@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconName } from '@minddrop/icons';
-import { View } from './View.types';
+import { ViewConfig } from '@minddrop/views';
 
 export type UiComponentConfigType =
   | 'primary-nav-item'
@@ -28,7 +28,7 @@ export interface BaseNavItemConfig extends BaseUiComponentConfig {
   /**
    * The view opened by the item.
    */
-  view: View;
+  view: ViewConfig;
 }
 
 export interface PrimaryNavItemConfig extends BaseNavItemConfig {

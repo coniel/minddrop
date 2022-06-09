@@ -1,0 +1,65 @@
+.topic-view-columns {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+  padding: 0 8px;
+}
+
+.topic-view-columns .column {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+}
+
+.topic-view-columns .column-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.topic-view-columns .column-end {
+  flex: 1;
+  padding-top: 28px;
+}
+
+.topic-view-columns .bottom-drop-zone {
+  border-radius: var(--radiusLg);
+  height: 140px;
+  pointer-events: none;
+}
+
+.topic-view-columns .bottom-drop-zone.active {
+  background-color: var(--bgNeutral);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.topic-view-columns .spacer-drop-zone {
+  height: 2px;
+  padding: 13px 0;
+}
+
+.topic-view-columns .indicator {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.topic-view-columns .spacer-drop-zone.active .indicator {
+  height: 2px;
+  background-color: var(--primary10);
+  pointer-events: none;
+}
+
+.topic-view-columns .vertical-drop-zone {
+  padding: 28px 13px;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.topic-view-columns .vertical-drop-zone .indicator {
+  width: 2px;
+  pointer-events: none;
+}
+
+.topic-view-columns .vertical-drop-zone.active .indicator {
+  background-color: var(--primary10);
+}

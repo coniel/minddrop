@@ -1,0 +1,410 @@
+---
+metaTitle: Extensions API Interface
+metaDescription: An interface for managing MindDrop's extensions.
+---
+
+# Extensions
+
+<Description>
+  An interface for managing MindDrop's extensions.
+</Description>
+
+### getExtension
+
+Returns a registered extension by ID. Throws an `ExtensionNotRegisteredError` if the extension is not registered.
+
+```ts
+Extensions.get(extensionId: string): Extension
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'extensionId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the extension to retrieve.',
+    },
+  ]}
+/>
+
+### getRegistered
+
+Returns an array of all registered extensions, including disabled ones.
+
+```ts
+Extensions.getRegistered(): Extension[]
+```
+
+### getEnabled
+
+Returns an array of all enabled extensions.
+
+```ts
+Extensions.getEnabled(): Extension[]
+```
+
+### getTopicExtensions
+
+Returns the IDs of enabled extensions enabled for a given topic.
+
+```ts
+Extensions.getTopicExtensions(topicId: string): Extension[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the extensions.',
+    },
+  ]}
+/>
+
+### register
+
+Registers a new extension and dispatches a `extensions:register` event.
+
+```ts
+Extensions.register(core: Core, extension: ExtensionConfig): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extension',
+      type: 'ExtensionConfig',
+      required: true,
+      description: 'The config object of the extension to register.',
+    },
+  ]}
+/>
+
+### unregister
+
+Removes an extension from the extensions store and dispatches a `extensions:unregister` event.
+
+```ts
+Extensions.unregister(core: Core, extensionId: string): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extensionId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the extension to unregister.',
+    },
+  ]}
+/>
+
+### enableOnTopics
+
+Enables an extension on topics and dispatches a `extensions:enable-topics` event.
+
+```ts
+Extensions.enableOnTopics(core: Core, extensionId: string, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extensionId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the extension to enable on the topics.',
+    },
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics for which to enable the extension.',
+    },
+  ]}
+/>
+
+### disableOnTopics
+
+Disables an extension on topics and dispatches a `extensions:disable-topics` event.
+
+```ts
+Extensions.disableOnTopics(core: Core, extensionId: string, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extensionId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the extension to disable on the topics.',
+    },
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics for which to disable the extension.',
+    },
+  ]}
+/>
+
+### initialize
+
+Initializes extensions for a given application instance.
+
+```ts
+Extensions.initialize(core: Core, extensionConfigs: extensionConfig[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'extensionConfigs',
+      type: 'ExtensionConfig[]',
+      required: true,
+      description:
+        'The configuration objects for the extensions to initialize.',
+    },
+  ]}
+/>
+
+### clear
+
+Clears the extensons store and dispatches a `extensions:clear` event.
+
+```ts
+Extensions.clear(core: Core): void
+```
+
+<ArgsTable core />
+
+### addEventListener
+
+Adds extension specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Extensions.addEventListener(core: Core, event: ExtensionEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'ExtensionEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the extension events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the extension events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes extension specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Extensions.removeEventListener(core: Core, event: ExtensionEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'ExtensionEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Extension events
+
+Extension events are prefixed with the namespace `extensions`.
+
+See below the table for more details on the data passed by extension related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'extensions:register',
+      data: 'Extension',
+      description: 'Dispatched when an extension is registered.',
+    },
+    {
+      name: 'extensions:unregister',
+      data: 'Extension',
+      description: 'Dispatched when an extension is unregistered.',
+    },
+    {
+      name: 'extensions:enable-topics',
+      data: 'EnableExtensionOnTopicsEventData',
+      description:
+        'Dispatched when an extension is enabled for given topics.',
+    },
+    {
+      name: 'extensions:disable-topics',
+      data: 'DisableExtensionOnTopicsEventData',
+      description:
+        'Dispatched when an extension is disabled for given topics.',
+    },
+    {
+      name: 'extensions:clear',
+      description: 'Dispatched when the extensions store is cleared.',
+    },
+    {
+      name: 'extensions:create-document',
+      data: 'ExtensionDocument',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          created.
+        </span>
+      ),
+    },
+    {
+      name: 'extensions:update-document',
+      data: 'UpdateExtensionDocumentEventData',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          updated.
+        </span>
+      ),
+    },
+    {
+      name: 'extensions:create-document',
+      data: 'ExtensionDocument',
+      description: (
+        <span>
+          Dispatched when an <Code>ExtensionDocument</Code> is
+          deleted.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### Extension event data types
+
+Extension events are dispatched with one of the following types of data.
+
+#### Extension
+
+See the [Extension](/docs/extensions/types/extension) interface page.
+
+#### ExtensionDocument
+
+See the [ExtensionDocument](/docs/extensions/types/extension-document) interface page.
+
+### EnableExtensionOnTopicsEventData
+
+<ArgsTable
+  data={[
+    {
+      name: 'extension',
+      type: 'Extension',
+      required: true,
+      description: 'The extension which was enabled.',
+    },
+    {
+      name: 'topics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The topics in which the extension was enabled.',
+    },
+  ]}
+/>
+
+### DisableExtensionOnTopicsEventData
+
+<ArgsTable
+  data={[
+    {
+      name: 'extension',
+      type: 'Extension',
+      required: true,
+      description: 'The extension which was disabled.',
+    },
+    {
+      name: 'topics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The topics in which the extension was disabled.',
+    },
+  ]}
+/>
+
+### UpdateExtensionDocumentEventData
+
+<ArgsTable
+  data={[
+    {
+      name: 'before',
+      type: 'ExtensionDocument',
+      required: true,
+      description: 'The extension document before it was updated.',
+    },
+    {
+      name: 'after',
+      type: 'ExtensionDocument',
+      required: true,
+      description: 'The extension document after it was updated.',
+    },
+    {
+      name: 'changes',
+      type: 'ExtensionDocumentChanges',
+      required: true,
+      description:
+        'The changes made to the extension document. See below for details.',
+    },
+  ]}
+/>
+
+`ExtensionDocumentChanges`
+
+<ArgsTable
+  data={[
+    {
+      name: 'enabled',
+      type: 'boolean',
+      required: true,
+      description:
+        'Indicates whether the extension is enabled or not.',
+    },
+    {
+      name: 'topics',
+      type: 'string[] | ArrayUnion | ArrayRemove',
+      required: true,
+      description:
+        'The IDs of the topics for which this extension is enabled.',
+    },
+  ]}
+/>

@@ -1,0 +1,337 @@
+---
+metaTitle: RichTextInlineElementConfig Interface
+metaDescription: Configuration for registering inline rich text element types.
+---
+
+# RichTextInlineElementConfig
+
+<Description>
+  Configuration for registering inline rich text element types.
+</Description>
+
+In rich text documents, inline elements such as links, equations, etc. are defined using `RichTextInlineElement` objects. Before such elements can be created, the element type needs to be registered using the `RichTextElements.register` method.
+
+Inline level elements are rendered inline with text, as part of another (block or inline) element's children. An inline element can only be siblings with `RichTextNode`s and other `RichTextInlineElement`s.
+
+## RichTextInlineElementConfig
+
+The configuration object for registering new inline level element types. See below the table for additional details.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'level',
+      type: "'inline'",
+      required: true,
+      description:
+        "The level at which the element is rendered, always 'inline'.",
+    },
+    {
+      name: 'type',
+      type: 'string',
+      required: true,
+      description: "The element type, such as 'equation'.",
+    },
+    {
+      name: 'component',
+      type: 'React.ComponentType',
+      required: true,
+      description: 'The component used to render the element.',
+    },
+    {
+      name: 'initializeData',
+      type: 'function',
+      description:
+        'Called when creating a new element of this type. Should return the initial state of any custom data used in the element. Omit if the element does not use custom data.',
+    },
+    {
+      name: 'toPlainText',
+      type: 'function',
+      description:
+        "Function which returns a plain text version of the element's content.",
+    },
+    {
+      name: 'void',
+      type: 'boolean',
+      default: 'false',
+      description:
+        'Determines whether the element is editable within the editor text flow.',
+    },
+    {
+      name: 'shortcuts',
+      type: '(string | ComboShortcut)[]',
+      description:
+        'Strings, which when typed trigger the insertion of this element.',
+    },
+    {
+      name: 'hotkey',
+      type: 'string[]',
+      description:
+        'A list of keys which, when pressed in unison, insert an element of this type.',
+    },
+    {
+      name: 'htmlDeserializers',
+      type: 'HtmlDeserializerMap',
+      description:
+        'Deserializer functions used to deserialize pasted HTML into this type of element.',
+    },
+  ]}
+/>
+
+### component
+
+Inline rich text element components are just simple React components. However, there are two required props which need to be applied correctly in order for the element to function:
+
+- `attributes`: contains HTML attributes used internally by the editor, must be spread onto the root HTML element.
+- `children`: renders the `RichTextFragment` containing the text content. Must be rendered within the component, **even if the component does not have children**.
+
+Below is an example of a non-void (in which text can be edited) link element. It will render a link for which the text can be edited.
+
+```tsx
+interface LinkElementProps extends RichTextInlineElementProps {
+  /**
+   * The link URL.
+   */
+  url: string;
+}
+
+const LinkElement: React.FC<LinkElementProps> = ({
+  attributes,
+  children,
+  element,
+}) => (
+  <a href={element.url} {...attributes}>
+    {children}
+  </a>
+);
+```
+
+Below is an example of a void (in which there is no text to edit) equation element in which the actual equation rendering is carried out by another component. Note that `children` needs to be rendered despite the quation itself not being editable within the editor flow (it will render an empty span element required for editor functionality).
+
+```tsx
+interface EquationElementProps extends RichTextInlineElementProps {
+  /**
+   * The image src.
+   */
+  src: string;
+}
+
+const EquationElement: React.FC<EquationElementProps> = ({
+  attributes,
+  children,
+  element,
+}) => (
+  <span {...attributes}>
+    <Equation expression={element.expression} />
+    {children}
+  </span>
+);
+```
+
+#### RichTextInlineElementProps
+
+The props passed to inline element components.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'attributes',
+      type: 'Record<string, string>',
+      required: true,
+      description:
+        'HTML attributes required for the editor to function. Should be spread onto the root HTML element of the component.',
+    },
+    {
+      name: 'children',
+      type: 'React Children',
+      required: true,
+      description:
+        'Renders the editable rich text content. Must be rendered even if the element is void and does not support rich text content (it will render an empty span element required for editor functionality).',
+    },
+    {
+      name: 'element',
+      type: 'RichTextElement',
+      required: true,
+      description: 'The rich text element being rendered.',
+    },
+  ]}
+/>
+
+### initializeData
+
+Called when creating a new element of this type. Should return an object containing the initial state of the custom data used in the element. Omit if the element does not use custom data.
+
+```ts
+initializeData<TData extends {}>(fragment?: RichTextFragment): TData
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'fragment',
+      type: 'RichTextFragment',
+      description: 'The text fragment selected in the editor.',
+    },
+  ]}
+/>
+
+If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). The fragment will automatically be set as the element's `children` field unless the element is void.
+
+#### Example
+
+For an 'equation' element which stores the equation expression under a field called `expression`, the `initializeData` method should return an object initializing the property:
+
+```ts
+initializeData: (fragment) => ({
+  expression: fragment ? RichTextElements.toPlainText(fragment) : '',
+});
+```
+
+In this example, if a fragment is present, `expression` is initialized with the fragment's plain text value (and an empty string otherwise).
+
+### toPlainText
+
+A function which returns a plain text version of the element's content. Only needed for void elements which use text based data (e.g. a 'equation' element in which the equation expression is edited in a popup field).
+
+Providing a `toPlainText` method is strongly recommended for void elements which contain any text based data. The method has several uses:
+
+- **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
+- **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data.
+- **Unregister**: When an inline rich text element type is unregistered (e.g. because the extension was uninstalled), the elements of that type are converted into `RichTextNode`s with the plain text set as their text value.
+
+```ts
+toPlainText(element: RichTextInlineElement): string
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'element',
+      type: 'RichTextInlineElement',
+      required: true,
+      description: 'The element to convert to plain text.',
+    },
+  ]}
+/>
+
+### void
+
+Void elements are elements which do not involve text (e.g. an image element), or elements in wich the text is not edited as part of the editor text flow (e.g. an equation element in which the equation expression is edited in a popup field).
+
+Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
+
+### shortcuts
+
+Markdown style shorcuts which trigger the creation of an element of this type.
+
+Inline element shortcuts can be one of two types:
+
+- A simple string, which triggers the shortcut as soon as it is typed.
+- A `{ start: string; end: string; }` combo, which is triggered when the `end` string is typed some time after the `start` string (e.g. \*\*bold text\*\* where both `start` and `end` are set to `'**'`).
+
+When triggered, it calls the `initializeData` method and inserts the new element. In the case of a start-end combo shortcut, the nodes between the two shortcut strings will be set as the `initializeData` method's `fragment` parameter.
+
+The shortcut text is automatically removed when the shortcut is triggered.
+
+#### ComboShortcut
+
+An object defining a start-end combo shortcut.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'start',
+      type: 'string',
+      required: true,
+      description: 'The first segment of the shortcut string.',
+    },
+    {
+      name: 'end',
+      type: 'string',
+      required: true,
+      description:
+        'The second segment of the shortcut string, triggers the shortcut when typed.',
+    },
+  ]}
+/>
+
+### hotkey
+
+A list of keys, which when pressed together, insert an element of this type by calling the `initializeData` method. If text is selected in the editor when the hotkey is triggered, the selected nodes will be passed as the `fragment` parameter.
+
+Modifier keys:
+
+- Use `'Ctrl'` for the Control key (maps to Command key on Mac)
+- Use `'Alt'` from the Alt key (maps to the Option key on Mac).
+- Use `'Shift'`for the Shift key.
+
+For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`). These are case insensitive.
+
+For instance, the hotkey `['Ctrl', 'Shift', '1']` would trigger when the `Control` + `Shift` + `1` (`Command` + `Shift` + `1` on Mac) keys are pressed in unison.
+
+### htmlDeserializers
+
+HTML deserializers are called when HTML data is inserted into the editor, usually as a result of text being copy pasted into the editor from a web page. They should return an object (or array of objects) containing the element `type` as well as any data used by the element, or `null` if an element should not be created.
+
+HTML deserializers are configured using a `{ [node name]: HtmlDeserializer }` map, where `[node name]` corresponds to an HTML element node name (in all caps), such a SPAN, A, IMG, etc. Use an asterisk (\*) as the node name in order to match against all HTML element types. If multiple registered rich text element types configure a deserializer for the same HTML element, the deserializers will be run one after the other (in the order they were registered) until a non `null` value is returned. HTML deserializers bubble up, meaning that the most deeply nested elements are deserialized first, followed by their parent element.
+
+The example below demonstrates an HTML deserializer which turns anchor elements (`<a href="...">`) into a 'link' element. Note that for non-void elements, `children` will be automatically added to the resulting element.
+
+```ts
+deserializers = {
+  A: (element) => {
+    if (element.href) {
+      // Only create a 'link' element if the achor has an href value
+      return { type: 'link', url: element.href };
+    }
+
+    // Don't create a 'link' element
+    return null;
+  },
+};
+```
+
+#### HtmlDeserializer
+
+Callback used to deserialize an HTML element.
+
+```ts
+deserializeHtmlElement(
+  element: HTMLElement,
+  parent: HTMLElement | null,
+  children: RichTextFragment | RichTextBlockElement[] | null,
+): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'element',
+      type: 'HTMLElement',
+      required: true,
+      description: <span>The HTML element to deserialize.</span>,
+    },
+    {
+      name: 'parent',
+      type: 'HTMLElement | null',
+      required: true,
+      description: (
+        <span>
+          The element's parent element, or <Code>null</Code> if it has
+          no parent.
+        </span>
+      ),
+    },
+    {
+      name: 'children',
+      type: 'RichTextFragment | RichTextBlockElement[] | null',
+      required: true,
+      description: (
+        <span>
+          The element's deserialized child elements or{' '}
+          <Code>null</Code> if the element has no children.
+        </span>
+      ),
+    },
+  ]}
+/>

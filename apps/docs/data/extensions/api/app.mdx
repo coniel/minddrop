@@ -1,0 +1,1094 @@
+---
+metaTitle: App API Reference
+metaDescription: An interface for interacting with the MindDrop application.
+---
+
+# App
+
+<Description>
+  An interface for interacting with the MindDrop application.
+</Description>
+
+## Topics
+
+Hooks and methods for retrieving and managing topics.
+
+### useRootTopics
+
+Returns root topics as an array ordered according their order of appearance in the app sidebar.
+
+```ts
+useRootTopics(): Topic[]
+```
+
+### useArchivedRootTopics
+
+Returns archived root topics as an array ordered according their order of appearance in the app sidebar.
+
+```ts
+useArchivedRootTopics(): Topic[]
+```
+
+### useSelectedTopics
+
+Returns a `{ [id]: Topic }` map of the currently selected topics.
+
+```ts
+useSelectedTopics(): TopicMap
+```
+
+### useDraggedTopics
+
+Returns a `{ [id]: Topic }` map of the topics currently being dragged.
+
+```ts
+useDraggedTopics(): TopicMap
+```
+
+### useSelectableTopic
+
+Returns utilities for handling topic selection.
+
+```ts
+useTopicSelection(topicId: string): TopicSelection
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic.',
+    },
+  ]}
+/>
+
+#### TopicSelection
+
+<InterfaceTable
+  data={[
+    {
+      name: 'isSelected',
+      type: 'boolean',
+      description:
+        'A boolean representing whether or not the topic is currently selected.',
+    },
+    {
+      name: 'select',
+      type: 'function',
+      description: 'Selects the topic when called.',
+    },
+    {
+      name: 'unselect',
+      type: 'function',
+      description: 'Unselects the topic when called.',
+    },
+    {
+      name: 'onClick',
+      type: 'function',
+      description: (
+        <span>
+          Callback to be applied to the topic's container as its{' '}
+          <Code>onClick</Code> prop. Handles clicking and Shift
+          clicking behaviour on the topic.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### useDraggableTopic
+
+Provides utilities for handling topic dragging behaviour.
+
+```ts
+useTopicDragging(topicId: string): TopicDragging
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic.',
+    },
+  ]}
+/>
+
+#### TopicDragging
+
+<InterfaceTable
+  data={[
+    {
+      name: 'isBeingDragged',
+      type: 'boolean',
+      description:
+        'Indicates whether or not the topic is currently being dragged.',
+    },
+    {
+      name: 'onDragStart',
+      type: 'function',
+      description: (
+        <span>
+          Callback to be applied to the topic's container as its{' '}
+          <Code>onDragStart</Code> prop. Handles the topic dragging
+          behaviour.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### createTopic
+
+Creates a new topic along with a default view for it. Returns the new topic.
+
+```ts
+App.createTopic(core: Core, data?: CreateTopicData): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'data',
+      type: 'CreateTopicData',
+      description: (
+        <span>
+          The default topic property values. See the{' '}
+          <a href="/docs/extensions/api/topics#create">
+            Topics interface page
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### addRootTopics
+
+Adds topics to the root level and dispaches an `app:add-root-topics` event.
+
+```ts
+App.addRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics to add to the root level.',
+    },
+  ]}
+/>
+
+### removeRootTopics
+
+Removes topics from the root level and dispaches an `app:remove-root-topics` event.
+
+```ts
+App.removeRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics to remove from the root level.',
+    },
+  ]}
+/>
+
+### moveSubtopicsToRoot
+
+Removes subtopics from a parent topic and adds them to the root level. Dispatches an `app:move-subtopics-root` event.
+
+```ts
+App.moveSubtopicsToRoot(core: Core, parentTopicId: string, subtopicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'parentTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the parent topic from which to move the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the subtopics to move to the root level.',
+    },
+  ]}
+/>
+
+### moveRootTopicsToParentTopic
+
+Removes topics from the root level and adds them as subtopics to a specified topic. Dispatches a `app:move-root-topics` event.
+
+```ts
+App.moveRootTopicsToParentTopic(core: Core, parentTopicId: string, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'parentTopicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the parent topic into which to move the topics.',
+    },
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the topics to move to from root level.',
+    },
+  ]}
+/>
+
+### archiveRootTopics
+
+Archives root level topics and dispaches an `app:archive-root-topics` event.
+
+```ts
+App.archiveRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the root level topics to archive.',
+    },
+  ]}
+/>
+
+### unarchiveRootTopics
+
+Unarchives root level topics and dispaches an `app:unarchive-root-topics` event.
+
+```ts
+App.unarchiveRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the root level topics to unarchive.',
+    },
+  ]}
+/>
+
+### getRootTopics
+
+Returns root topics as an array ordered according their order of appearance in the app sidebar.
+
+```ts
+App.getRootTopics(): Topic[]
+```
+
+### getArchivedRootTopics
+
+Returns archived root topics as an array ordered according their order of appearance in the app sidebar.
+
+```ts
+App.getArchivedRootTopics(): Topic[]
+```
+
+### insertDataIntoTopic
+
+Handles data inserts into a topic depending on the insert's `action` parameter:
+
+- `insert`: creates drops from the raw data and adds them to the topic
+- `copy`: data insert's drops are duplicated and duplicates added to the topic
+- `cut`: data insert's drops are added to the topic (removal from source is handled at the time of the cut)
+- `move`: data insert's drops are added to the topic and removed from the source topic
+- `add`: data insert's drops are added to the topic
+
+Any other action is ignored. Returns a boolean indicating whether or not the data insert was handled (`false` if action is not one of the ones listed above).
+
+```ts
+App.insertDataIntoTopic(core: Core, topicId: string, data: DataInsert, metada: AddDropsMetadata): Promise<boolean>
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic into which to insert the data.',
+    },
+    {
+      name: 'data',
+      type: 'DataInsert',
+      required: true,
+      description: 'The data insert.',
+    },
+    {
+      name: 'metadata',
+      type: 'AddDropsMetadata',
+      description: (
+        <span>
+          Optional metadata about the data insert added by the topic
+          view instance that triggered the event. See the{' '}
+          <a href="/docs/extensions/types/topic-view-config#onadddrops">
+            <Code>TopicView</Code> interface
+          </a>{' '}
+          for details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### selectTopics
+
+Adds topics to the selected topics list and dispatches a `app:select-topics` event.
+
+```ts
+App.selectTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics to select.',
+    },
+  ]}
+/>
+
+### unselectTopics
+
+Removes topics from the selected topics list and dispatches a `app:unselect-topics` event.
+
+```ts
+App.unselectTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics to unselect.',
+    },
+  ]}
+/>
+
+### clearSelectedTopics
+
+Clears the selected topics list and dispatches a `app:clear-selected-topics` event.
+
+```ts
+App.clearSelectedTopics(core: Core): void
+```
+
+<ArgsTable core />
+
+### getSelectedTopics
+
+Returns a `{ [id]: Topic }` map of the currently selected topics.
+
+```ts
+App.getSelectedTopics(): TopicMap
+```
+
+### setDraggedTopics
+
+Sets topics as currently being dragged and dispatches a `app:drag-topics` event.
+
+```ts
+App.setDraggedTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the topics being dragged.',
+    },
+  ]}
+/>
+
+### getDraggedTopics
+
+Returns a `{ [id]: Topic }` map of the topics currently being dragged.
+
+```ts
+App.getDraggedTopics(): TopicMap
+```
+
+## Drops
+
+### useSelectedDrops
+
+Returns a `{ [id]: Drop }` map of the currently selected drops.
+
+```ts
+useSelectedDrops(): DropMap
+```
+
+### useDraggedDrops
+
+Returns a `{ [id]: Drop }` map of the drops currently being dragged.
+
+```ts
+useDraggedDrops(): DropMap
+```
+
+### useSelectableDrop
+
+Returns utilities for handling drop selection.
+
+```ts
+useDropSelection(dropId: string): DropSelection
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop.',
+    },
+  ]}
+/>
+
+#### DropSelection
+
+<InterfaceTable
+  data={[
+    {
+      name: 'isSelected',
+      type: 'boolean',
+      description:
+        'A boolean representing whether or not the drop is currently selected.',
+    },
+    {
+      name: 'select',
+      type: 'function',
+      description: 'Selects the drop when called.',
+    },
+    {
+      name: 'selectAsOnly',
+      type: 'function',
+      description:
+        'Clears drops selection and selects the drop as the only selected drop when called.',
+    },
+    {
+      name: 'unselect',
+      type: 'function',
+      description: 'Unselects the drop when called.',
+    },
+    {
+      name: 'onClick',
+      type: 'function',
+      description: (
+        <span>
+          Callback to be applied to the drop's container as its{' '}
+          <Code>onClick</Code> prop. Handles clicking and Shift
+          clicking behaviour on the drop.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### useDraggableDrop
+
+Provides utilities for handling drop dragging behaviour.
+
+```ts
+useDropDragging(dropId: string): DropDragging
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop.',
+    },
+  ]}
+/>
+
+#### DropDragging
+
+<InterfaceTable
+  data={[
+    {
+      name: 'isBeingDragged',
+      type: 'boolean',
+      description:
+        'Indicates whether or not the drop is currently being dragged.',
+    },
+    {
+      name: 'onDragStart',
+      type: 'function',
+      description: (
+        <span>
+          Callback to be applied to the drop's container as its{' '}
+          <Code>onDragStart</Code> prop. Handles the drop dragging
+          behaviour.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### selectDrops
+
+Adds drops to the selected drops list and dispatches a `app:select-drops` event.
+
+```ts
+App.selectDrops(core: Core, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to select.',
+    },
+  ]}
+/>
+
+### unselectDrops
+
+Removes drops from the selected drops list and dispatches a `app:unselect-drops` event.
+
+```ts
+App.unselectDrops(core: Core, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops to unselect.',
+    },
+  ]}
+/>
+
+### clearSelectedDrops
+
+Clears the selected drops list and dispatches a `app:clear-selected-drops` event.
+
+```ts
+App.clearSelectedDrops(core: Core): void
+```
+
+<ArgsTable core />
+
+### getSelectedDrops
+
+Returns a `{ [id]: Drop }` map of the currently selected drops.
+
+```ts
+App.getSelectedDrops(): DropMap
+```
+
+### setDraggedDrops
+
+Sets drops as currently being dragged and dispatches a `app:drag-drops` event.
+
+```ts
+App.setDraggedDrops(core: Core, dropIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'dropIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the drops being dragged.',
+    },
+  ]}
+/>
+
+### getDraggedDrops
+
+Returns a `{ [id]: Drop }` map of the drops currently being dragged.
+
+```ts
+App.getDraggedDrops(): DropMap
+```
+
+### renderDrop
+
+Renders a drop using the appropriate component.
+
+```ts
+Drops.render(drop: Drop, parent?: DropParentReference): ReactElement;
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'drop',
+      type: 'Drop',
+      required: true,
+      description: 'The drop to render.',
+    },
+    {
+      name: 'parent',
+      type: 'DropParentReference',
+      required: true,
+      description: (
+        <span>
+          The reference of the parent inside which the drop is being
+          rendered. See the{' '}
+          <a href="/docs/extensions/types/drop#dropparentreference">
+            Drop interface
+          </a>
+          docs for more details.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+## Tags
+
+### addGlobalTags
+
+Adds global tags and dispaches an `app:add-global-tags` event.
+
+```ts
+App.addGlobalTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description: 'The IDs of the tags to add to the root level.',
+    },
+  ]}
+/>
+
+### removeGlobalTags
+
+Removes global tags and dispaches an `app:remove-global-tags` event.
+
+```ts
+App.removeGlobalTags(core: Core, tagIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'tagIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the tags to remove from the global level.',
+    },
+  ]}
+/>
+
+## Views
+
+### useCurrentView
+
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
+
+```ts
+useCurrentView(): { view: View, instance: ViewInstance | null }
+```
+
+### getCurrentView
+
+Returns an object containing the currently open view and view instance (set to `null` if no view instance is open).
+
+```ts
+App.getCurrentView(): { view: View, instance: ViewInstance | null }
+```
+
+### openView
+
+Opens a view in the app and dispatches a `app:open-view` event. If opening a view instance, use `App.openViewInstance` instead.
+
+```ts
+App.openView(core: Core, view: viewId): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view to open.',
+    },
+  ]}
+/>
+
+### openViewInstance
+
+Opens a view instance in the app and dispatches a `app:open-view` event. If opening a static view, use `App.openView` instead.
+
+```ts
+App.openViewInstance(core: Core, view: viewInstanceId): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'viewInstanceId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the view instance to open.',
+    },
+  ]}
+/>
+
+## UI extensions
+
+### addUiExtension
+
+Adds a UI extension at a given location.
+
+```ts
+App.addUiExtension(location: UiLocation, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation',
+      required: true,
+      description: (
+        <span>
+          The location at which to extend the UI. See the{' '}
+          <a href="">UiLocation</a> page for available locations.
+          Extensions can also provide their own UI extension locations
+          using the <a href="">Slot</a> component.
+        </span>
+      ),
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: (
+        <span>
+          The UI element to render. Either a{' '}
+          <a href="/docs/extensions/types/ui-component-config">
+            UiComponentConfig
+          </a>{' '}
+          object or a React element.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### removeUiExtension
+
+Removes a UI extension from a given location. The location and element must be the same as the ones used when adding the extension.
+
+```ts
+App.removeUiExtension(location: UiLocation, element: UiComponentConfig | ReactElement): void
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'location',
+      type: 'UiLocation',
+      required: true,
+      description:
+        'The location from which to remove the UI extension.',
+    },
+    {
+      name: 'element',
+      type: 'UiComponentConfig | ReactElement',
+      required: true,
+      description: 'The UI element to remove.',
+    },
+  ]}
+/>
+
+### removeAllUiExtensions
+
+Removes all UI extensions added by the extension. Optionally, a location can be specified to remove UI extensions only from the specified location.
+
+```ts
+App.removeAllUiExtensions(core: Core, location?: UiLocation): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'location',
+      type: 'string',
+      description:
+        'The location from which to remove all UI extensions. If ommited, UI extensions will be removed from all locations.',
+    },
+  ]}
+/>
+
+## Misc
+
+### clearSelection
+
+Clears the current selection of topics and drops and dispatches a 'app:clear-selection' event.
+
+```ts
+App.clearSelection(core: Core): void
+```
+
+<ArgsTable core />
+
+## Event listeners
+
+### addEventListener
+
+Adds app specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+App.addEventListener(core: Core, event: AppEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'AppEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the app events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the app events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes app specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+App.removeEventListener(core: Core, event: AppEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'AppEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## App events
+
+App events are prefixed with the namespace `app`.
+
+See below the table for more details on the data passed by app related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'app:open-view',
+      data: 'AppView',
+      description: 'Dispatched when a view is opened.',
+    },
+    {
+      name: 'app:add-root-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are added to the root level.',
+    },
+    {
+      name: 'app:remove-root-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when topics are removed from the root level.',
+    },
+    {
+      name: 'app:move-subtopics-root',
+      data: 'MoveSubtopicsEventData',
+      description:
+        'Dispatched when subtopics are moved to the root level.',
+    },
+    {
+      name: 'app:move-root-topics',
+      data: 'MoveRootTopicsEventData',
+      description:
+        'Dispatched when root level topics are moved into a parent topic.',
+    },
+    {
+      name: 'app:archive-root-topics',
+      data: 'TopicMap',
+      description: 'Dispatched when root level topics are archived.',
+    },
+    {
+      name: 'app:unarchive-root-topics',
+      data: 'TopicMap',
+      description:
+        'Dispatched when root level topics are unarchived.',
+    },
+    {
+      name: 'app:add-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are added.',
+    },
+    {
+      name: 'app:remove-tags',
+      data: 'TagMap',
+      description: 'Dispatched when global tags are removed.',
+    },
+    {
+      name: 'app:select-drops',
+      data: 'DropMap',
+      description: 'Dispatched when drops are selected.',
+    },
+    {
+      name: 'app:unselect-drops',
+      data: 'DropMap',
+      description: 'Dispatched when drops are unselected.',
+    },
+    {
+      name: 'app:clear-selected-drops',
+      description: 'Dispatched when the drops selection is cleared.',
+    },
+  ]}
+/>
+
+### App event data types
+
+#### AppView
+
+<InterfaceTable
+  data={[
+    {
+      name: 'view',
+      type: 'View',
+      required: true,
+      description: 'The view object.',
+    },
+    {
+      name: 'instance',
+      type: 'ViewInstance | null',
+      required: true,
+      description: (
+        <span>
+          The view instance object or <Code>null</Code> if no view
+          instance is included.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### MoveSubtopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'fromTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic from which the subtopics were moved.',
+    },
+    {
+      name: 'subtopics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The moved subtopics.',
+    },
+  ]}
+/>
+
+### MoveRootTopicsEventData
+
+<InterfaceTable
+  data={[
+    {
+      name: 'toTopic',
+      type: 'Topic',
+      required: true,
+      description: 'The topic into which the topics were moved.',
+    },
+    {
+      name: 'topics',
+      type: 'TopicMap',
+      required: true,
+      description: 'The moved topics.',
+    },
+  ]}
+/>
