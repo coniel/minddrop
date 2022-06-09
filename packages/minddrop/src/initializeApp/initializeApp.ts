@@ -7,6 +7,8 @@ import * as DropsExtension from '@minddrop/drops';
 import * as TopicsExtension from '@minddrop/topics';
 import * as AppExtension from '@minddrop/app';
 import * as RichTextExtension from '@minddrop/rich-text';
+import * as ResourcesExtension from '@minddrop/resources';
+import * as PersistentStoreExtension from '@minddrop/persistent-store';
 import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
@@ -49,6 +51,9 @@ export async function initializeApp(
   RichTextExtension.onRun(core);
   DropsExtension.onRun(core);
   TopicsExtension.onRun(core);
+  PersistentStoreExtension.onRun(core);
+
+  await ResourcesExtension.onRun(core);
 
   // Register default rich text element types
   registerDefaultRichTextElementTypes(core);
