@@ -39,7 +39,7 @@ interface RTBlockElementConfigOptions<
    *
    * @param data A data insert object.
    */
-  initializeData?(data?: DataInsert): TTypeData | Partial<BaseRTElementData>;
+  initializeData?(data?: DataInsert): TTypeData & Partial<BaseRTElementData>;
 
   /**
    * Called when an existing rich text element of a different type is converted
