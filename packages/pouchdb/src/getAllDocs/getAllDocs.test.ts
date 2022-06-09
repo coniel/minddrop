@@ -1,39 +1,38 @@
 import PouchDB from 'pouchdb';
-import { deserializeResourceDocument } from '../deserializeResourceDocument';
-import { DBResourceDocument } from '../types';
+import { Resources } from '@minddrop/resources';
+import { serializeResouceDocument } from '../serializeResouceDocument';
+import { DBResourceDocument, ResourceDB } from '../types';
 import { getAllDocs } from './getAllDocs';
 
-const item1 = {
-  _id: 'item-1',
-  resourceType: 'items:item',
-  markdown: 'Hello',
-};
-const item2 = {
-  _id: 'item-2',
-  resourceType: 'items:item',
-  markdown: 'World',
-};
-const item3 = {
-  _id: 'item-3',
-  resourceType: 'foos:foo',
-};
-const deserializedItem1 = deserializeResourceDocument(item1);
-const deserializedItem2 = deserializeResourceDocument(item2);
-const deserializedItem3 = deserializeResourceDocument(item3);
+const document1 = Resources.generateDocument('tests:test', {});
+const document2 = Resources.generateDocument('tests:test', {});
 
 describe('getAllDocs', () => {
-  it('retuns all resource docs grouped by resource type', async () => {
-    const db = new PouchDB<DBResourceDocument>('getAllDocs');
-    await Promise.all([db.put(item1), db.put(item2), db.put(item3)]);
+  let db: ResourceDB;
 
-    const result = await getAllDocs(db);
+  beforeEach(() => {
+    // Create a PouchDB instance
+    db = new PouchDB<DBResourceDocument>(`getAllDocs-${new Date().getTime()}`);
+  });
 
-    expect(result['items:item']).toEqual([
-      deserializedItem1,
-      deserializedItem2,
+  afterEach(async () => {
+    // Destroy the PouchDB instance
+    await db.destroy();
+  });
+
+  it('retuns all resource docs in deserialized form', async () => {
+    // Load test documents into the database
+    await Promise.all([
+      db.put(serializeResouceDocument(document1)),
+      db.put(serializeResouceDocument(document2)),
     ]);
-    expect(result['foos:foo']).toEqual([deserializedItem3]);
 
-    db.destroy();
+    // Get all documts
+    const documents = await getAllDocs(db);
+
+    // Should return an array containing all documents
+    // in deserialized form.
+    expect(documents.length).toBe(2);
+    expect(documents.find((doc) => doc.id === document1.id)).toEqual(document1);
   });
 });

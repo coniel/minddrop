@@ -1,102 +1,98 @@
 /* eslint-disable no-underscore-dangle */
+import { Resources } from '@minddrop/resources';
 import PouchDB from 'pouchdb';
+import { deserializeResourceDocument } from '../deserializeResourceDocument';
 import { serializeResouceDocument } from '../serializeResouceDocument';
-import { ResourceDB, ResourceDocument } from '../types';
-import { initializePouchDB } from './initializePouchDB';
+import { ResourceDB } from '../types';
+import { initializePouchdb } from './initializePouchdb';
 
-interface ItemResource extends ResourceDocument {
-  markdown: string;
+interface Data {
+  foo: string;
 }
 
-const item1 = {
-  _id: 'item-1',
-  resourceType: 'items:item',
-  markdown: 'Hello',
-};
-const item2 = {
-  _id: 'item-2',
-  resourceType: 'items:item',
-  markdown: 'World',
-};
-const item3 = {
-  _id: 'item-3',
-  resourceType: 'foos:foo',
-};
-const newItem = {
-  id: 'item-4',
-  markdown: 'New',
-};
+const document1 = Resources.generateDocument<Data>('tests:test', {
+  foo: 'document-1',
+});
+const document2 = Resources.generateDocument<Data>('tests:test', {
+  foo: 'document-2',
+});
 
-describe('initiaizePouchDB', () => {
+describe('initiaizePouchdb', () => {
   let db: ResourceDB;
-  const onChange = jest.fn();
 
   beforeEach(async () => {
-    db = new PouchDB('initiaizePouchDB');
-    await Promise.all([db.put(item1), db.put(item2), db.put(item3)]);
+    // Create a PouchDB instance
+    db = new PouchDB('initiaizePouchdb');
+
+    // Load a test document into the database
+    await db.put(serializeResouceDocument(document1));
   });
 
   afterEach(async () => {
+    // Destroy the PouchDB instance
     await db.destroy();
-    onChange.mockClear();
+
+    // Clear all mock
+    jest.clearAllMocks();
   });
 
-  it('adds new resources to the database', async () => {
-    const pouch = initializePouchDB(db);
+  it('adds new documents to the database', async () => {
+    // Initialize a database API instance
+    const api = initializePouchdb(db);
 
-    await pouch.add('items:item', newItem);
+    // Add the document to the database
+    api.add(document2);
 
-    const item = await db.get(newItem.id);
+    // Get the document from the database
+    const dbDocument = await db.get(document2.id);
 
-    expect(item).toBeDefined();
-    expect(item).toEqual(
-      expect.objectContaining(serializeResouceDocument(newItem, 'items:item')),
+    // Should have inserted the document
+    expect(deserializeResourceDocument(dbDocument)).toEqual(
+      expect.objectContaining(document2),
     );
+    // Database document should be serialized
+    expect(dbDocument._id).toBe(document2.id);
+    expect(dbDocument.id).not.toBeDefined();
   });
 
-  it('updates resources in the database', (done) => {
-    const pouch = initializePouchDB(db);
+  it('updates documents in the database', (done) => {
+    // Initialize a database API instance
+    const api = initializePouchdb(db);
 
-    pouch.update<ItemResource>(item1._id, { markdown: 'Updated' });
+    // Update a document in the database
+    api.update<Data>({ ...document1, foo: 'updated' });
 
     setTimeout(async () => {
-      const item = await db.get<ItemResource>(item1._id);
+      // Get the document from the database
+      const dbDocument = await db.get<Data>(document1.id);
 
-      expect(item.markdown).toBe('Updated');
+      // Database document should be updated
+      expect(deserializeResourceDocument(dbDocument)).toEqual(
+        expect.objectContaining({ ...document1, foo: 'updated' }),
+      );
+      // Database document should be serialized
+      expect(dbDocument._id).toBe(document1.id);
+      expect(dbDocument.id).not.toBeDefined();
       done();
     }, 200);
   });
 
-  it('deletes resources in the database', (done) => {
-    const pouch = initializePouchDB(db);
+  it('deletes documents in the database', (done) => {
+    // Initialize a database API instance
+    const api = initializePouchdb(db);
 
-    pouch.delete(item1._id);
+    // Delete a document from the database
+    api.delete(document1.id);
 
     setTimeout(async () => {
       try {
-        await db.get(item1._id);
+        // Atempt to get the deleted document
+        await db.get(document1.id);
       } catch (err) {
+        // Should throw an error
         expect(err.message).toBe('missing');
         done();
       }
-    }, 200);
-  });
-
-  it('executes actions sequentially to prevent conflicts', (done) => {
-    const pouch = initializePouchDB(db);
-
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 1' });
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 2' });
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 3' });
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 4' });
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 5' });
-    pouch.update<ItemResource>(item1._id, { markdown: 'Update 6' });
-
-    setTimeout(async () => {
-      const item = await db.get<ItemResource>(item1._id);
-
-      expect(item.markdown).toBe('Update 6');
-      done();
     }, 200);
   });
 });

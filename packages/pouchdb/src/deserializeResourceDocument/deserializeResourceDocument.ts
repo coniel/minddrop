@@ -1,22 +1,37 @@
 /* eslint-disable no-underscore-dangle */
-import { ResourceDocument, DBResourceDocument } from '../types';
+import {
+  ResourceDocument,
+  RDData,
+  Resources,
+  ResourceDeserializers,
+} from '@minddrop/resources';
+import { DBResourceDocument } from '../types';
+
+const deserializers: ResourceDeserializers<{ date: string }> = {
+  /**
+   * Dates are stored as date string in PouchDB.
+   */
+  date: (value) => new Date(value),
+};
 
 /**
  * Deserializes a PouchDB resource document into its
  * original form.
  *
- * @param resource The document to deserialize.
+ * @param document - The document to deserialize.
  * @returns Deserialized document.
  */
-export function deserializeResourceDocument(
-  doc: DBResourceDocument,
-): ResourceDocument {
-  const cleaned = { ...doc, id: doc._id };
+export function deserializeResourceDocument<TData extends RDData = {}>(
+  document: DBResourceDocument,
+): ResourceDocument<TData> {
+  const cleaned = { ...document, id: document._id };
 
   delete cleaned._id;
   delete cleaned._rev;
   delete cleaned._deleted;
-  delete cleaned.resourceType;
 
-  return cleaned;
+  return Resources.deserializeDocument(
+    cleaned,
+    deserializers,
+  ) as unknown as ResourceDocument<TData>;
 }

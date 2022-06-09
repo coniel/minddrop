@@ -1,14 +1,11 @@
 import type PouchDB from 'pouchdb';
+import { ResourceDocument } from '@minddrop/resources';
 
-export interface DBResourceDocument {
+export interface DBResourceDocument extends ResourceDocument {
   _id: string;
   _rev?: string;
   _deleted?: boolean;
-  resourceType: string;
-}
-
-export interface ResourceDocument {
-  id: string;
+  resource: string;
 }
 
 export type ResourceDB = PouchDB.Database<DBResourceDocument>;
