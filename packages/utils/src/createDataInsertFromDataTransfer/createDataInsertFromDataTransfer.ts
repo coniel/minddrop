@@ -1,3 +1,4 @@
+import isUrl from 'is-url';
 import { DataInsert } from '@minddrop/core';
 
 /**
@@ -50,6 +51,15 @@ export function createDataInsertFromDataTransfer(
   if (dataTransfer.types.includes('minddrop/topics')) {
     dataInsert.topics = JSON.parse(dataTransfer.getData('minddrop/topics'));
     delete data['minddrop/topics'];
+  }
+
+  // Add 'text/url' data if 'text/plain' is a URL
+  if (
+    dataTransfer.types.includes('text/plain') &&
+    isUrl(dataTransfer.getData('text/plain'))
+  ) {
+    dataInsert.types.push('text/url');
+    dataInsert.data['text/url'] = dataTransfer.getData('text/plain');
   }
 
   // Add remaining data as raw data

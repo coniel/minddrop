@@ -146,4 +146,23 @@ describe('createDataInsertFromDataTransfer', () => {
       topics: ['topic-1-id', 'topic-2-id'],
     });
   });
+
+  it('adds `text/url` data if the plain text is a URL', () => {
+    const dataTransfer = createDataTransfer({
+      data: {
+        'text/plain': 'https://ibguides.com',
+      },
+    });
+
+    const result = createDataInsertFromDataTransfer(dataTransfer);
+
+    expect(result).toEqual({
+      action: 'insert',
+      types: ['text/url', 'text/plain'],
+      data: {
+        'text/plain': 'https://ibguides.com',
+        'text/url': 'https://ibguides.com',
+      },
+    });
+  });
 });
