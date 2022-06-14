@@ -1,4 +1,6 @@
 import { ResourceStorageAdapterConfig, Resources } from '@minddrop/resources';
+import { BackendUtilsApi, registerBackendUtilsAdapter } from '@minddrop/utils';
+import { FileStorageApi, Files } from '@minddrop/files';
 import * as ExtensionsExtension from '@minddrop/extensions';
 import * as ViewsExtension from '@minddrop/views';
 import * as FilesExtension from '@minddrop/files';
@@ -33,25 +35,38 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
  * Adds a event listener for topic creations which enables
  * all non-core extensions on newly created topics.
  */
-export async function initializeApp(
-  resourceStorageAdapter: ResourceStorageAdapterConfig,
-  installedExtensions: ExtensionConfig[],
-) {
+export async function initializeApp({
+  resourceStorageAdapter,
+  fileStorageAdapter,
+  backendUtilsAdapter,
+  installedExtensions,
+}: {
+  resourceStorageAdapter: ResourceStorageAdapterConfig;
+  fileStorageAdapter: FileStorageApi;
+  backendUtilsAdapter: BackendUtilsApi;
+  installedExtensions: ExtensionConfig[];
+}) {
   // Combine default and installed extensions
   const extensions = [...defaultExtensions, ...installedExtensions];
 
   // Register the default resource storage adapter
   Resources.registerStorageAdapter(core, resourceStorageAdapter);
 
+  // Register the default file storage adapter
+  Files.registerStorageAdapter(fileStorageAdapter);
+
+  // Register the backend utils storae adapter
+  registerBackendUtilsAdapter(backendUtilsAdapter);
+
   // Run core extensions
   ExtensionsExtension.onRun(core);
+  PersistentStoreExtension.onRun(core);
   ViewsExtension.onRun(core);
   FilesExtension.onRun(core);
   TagsExtension.onRun(core);
   RichTextExtension.onRun(core);
   DropsExtension.onRun(core);
   TopicsExtension.onRun(core);
-  PersistentStoreExtension.onRun(core);
 
   await ResourcesExtension.onRun(core);
 
