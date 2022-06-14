@@ -21949,6 +21949,18 @@ tinycolor2@^1.4.2:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
 
+tldts-core@^5.7.81:
+  version "5.7.81"
+  resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-5.7.81.tgz#1beae3fdd959ca9f32a2eb5ac07c4a65a561e65e"
+  integrity sha512-9i+XjmFvl/eSubippvvxEqIGexT6ALqb7fO3EPQ6yNOMaoRdaDgrMqBCIXSqVY/SckpFm54fksaLVQE6KtlAGA==
+
+tldts@^5.7.81:
+  version "5.7.81"
+  resolved "https://registry.yarnpkg.com/tldts/-/tldts-5.7.81.tgz#a43aff0de062df106dbc9e3a5b18660b3e497044"
+  integrity sha512-ulFEOSC+mHmkYwWMeX/ys+n7GFxROldJJVrSxSPASuyigTFvAQAGs1eVy82NFxazoEsCfvuCQrSOzdXLKfvR+A==
+  dependencies:
+    tldts-core "^5.7.81"
+
 tmp-promise@^1.0.5:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/tmp-promise/-/tmp-promise-1.1.0.tgz#bb924d239029157b9bc1d506a6aa341f8b13e64c"

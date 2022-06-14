@@ -18,3 +18,4 @@ export * from './removeObjectsFromArray';
 export * from './validation';
 export * from './getMissingItems';
 export * from './backend-utils';
+export * from './isDomainMatch';
