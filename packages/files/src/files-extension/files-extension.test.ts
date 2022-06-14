@@ -1,11 +1,23 @@
-import { imageFile, textFile } from '@minddrop/test-utils';
+import { textFile } from '@minddrop/test-utils';
 import { Resources } from '@minddrop/resources';
-import { cleanup, core } from '../test-utils';
+import { cleanup, core, fileStorageAdapter } from '../test-utils';
 import { Files } from '../Files';
+import { createFileReference } from '../createFileReference';
 import { onRun, onDisable } from './files-extension';
-import { saveFile } from '../saveFile';
+import {
+  registerFileStorageAdapter,
+  unregisterFileStorageAdapter,
+} from '../file-storage';
 
 describe('files extension', () => {
+  beforeAll(() => {
+    registerFileStorageAdapter(fileStorageAdapter);
+  });
+
+  afterAll(() => {
+    unregisterFileStorageAdapter();
+  });
+
   afterEach(cleanup);
 
   describe('onRun', () => {
@@ -20,27 +32,13 @@ describe('files extension', () => {
       expect(resource).toBeDefined();
     });
 
-    it('adds dimensions to image file references', (done) => {
+    it('deletes files when the last parent is removed', async () => {
       // Run the extension
       onRun(core);
 
-      // Listen to 'files:file-references:update' events
-      Files.addEventListener(core, 'files:file-reference:update', (payload) => {
-        expect(payload.data.after.dimensions).toBeDefined();
-        done();
-      });
-
-      // Save an image file
-      saveFile(core, imageFile);
-    });
-
-    it('deletes files when the last parent is removed', () => {
-      // Run the extension
-      onRun(core);
-
-      // Save a couple of files
-      const fileRef1 = Files.save(core, textFile);
-      const fileRef2 = Files.save(core, imageFile);
+      // Create a couple of file references
+      const fileRef1 = await createFileReference(core, textFile);
+      const fileRef2 = await createFileReference(core, textFile);
 
       // Add the first file as a parent on the second
       Files.addParents(core, fileRef2.id, [

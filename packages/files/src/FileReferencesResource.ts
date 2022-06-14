@@ -1,5 +1,9 @@
 import { Resources, RDDataSchema } from '@minddrop/resources';
-import { FileReferenceData } from './types';
+import {
+  FileReferenceData,
+  CreateFileReferenceData,
+  UpdateFileReferenceData,
+} from './types';
 
 const dataSchema: RDDataSchema<FileReferenceData> = {
   name: {
@@ -17,7 +21,7 @@ const dataSchema: RDDataSchema<FileReferenceData> = {
     required: true,
     allowEmpty: false,
   },
-  url: {
+  remoteUrl: {
     type: 'string',
     required: false,
     allowEmpty: false,
@@ -44,7 +48,11 @@ const dataSchema: RDDataSchema<FileReferenceData> = {
   },
 };
 
-export const FileReferencesResource = Resources.create({
+export const FileReferencesResource = Resources.create<
+  FileReferenceData,
+  CreateFileReferenceData,
+  UpdateFileReferenceData
+>({
   resource: 'files:file-reference',
   dataSchema,
 });

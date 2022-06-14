@@ -15,6 +15,7 @@ import {
   UpdateFileReferenceEvent,
   UpdateFileReferenceEventCallback,
 } from './FileEvents.types';
+import { FileStorageApi } from './FileStorageApi.types';
 
 export interface FilesApi {
   /**
@@ -49,6 +50,31 @@ export interface FilesApi {
   getAll(): FileReferenceMap;
 
   /**
+   * Returns the URL (possibly a data URL) for the given file.
+   *
+   * @param fileId - The file ID.
+   * @returns The URL or null if the file is not in storage.
+   */
+  getUrl(fileId: string): string | null;
+
+  /**
+   * **Only intended for use in file storage adapters.**
+   *
+   * Creates a new file reference for a given.
+   * Dispatches a `files:file-reference:create` event.
+   *
+   * Returns the new file reference.
+   *
+   * @param core - A MindDrop core instance.
+   * @param file - The file from which to create the reference.
+   * @returns A file reference.
+   *
+   * @throws InvalidParameterError
+   * Thrown if the file is not a valid file.
+   */
+  createReference(core: Core, file: File): Promise<FileReference>;
+
+  /**
    * Saves a file and creates a new file reference.
    * Dispatches a `files:file:save` event.
    *
@@ -57,8 +83,29 @@ export interface FilesApi {
    * @param core - A MindDrop core instance.
    * @param file - A file object.
    * @returns A file reference.
+   *
+   * @throws SaveFileError
+   * Thrown if an error occured while saving the file.
    */
-  save(core: Core, file: File): FileReference;
+  save(core: Core, file: File): Promise<FileReference>;
+
+  /**
+   * Downloads and saves a file and creates a new file
+   * reference. Dispatches a `files:file:save` event.
+   *
+   * Returns a new file reference.
+   *
+   * @param core - A MindDrop core instance.
+   * @param url - The URL of the file to download.
+   * @returns A file reference.
+   *
+   * @throws DownloadFileError
+   * Thrown if an error occured while downloading the file.
+   *
+   * @throws SaveFileError
+   * Thrown if an error occured while saving the file.
+   */
+  download(core: Core, url: string): Promise<FileReference>;
 
   /**
    * Adds parent resource references to a file reference.
@@ -100,6 +147,20 @@ export interface FilesApi {
     fileId: string,
     parentReferences: ResourceReference[],
   ): FileReference;
+
+  /**
+   * Registers a file storage adapter.
+   *
+   * @param adapter - A file storage adapter.
+   */
+  registerStorageAdapter(adapter: FileStorageApi): void;
+
+  /**
+   * **Intended for use in tests only.**
+   *
+   * Unregisters the registered file storage adapter.
+   */
+  unregisterStorageAdapter(): void;
 
   /*
    * The file references resource store.

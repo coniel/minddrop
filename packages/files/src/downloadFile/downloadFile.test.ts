@@ -1,13 +1,12 @@
-import { textFile } from '@minddrop/test-utils';
 import { core, fileStorageAdapter, textFileRef1 } from '../test-utils';
 import {
   registerFileStorageAdapter,
   unregisterFileStorageAdapter,
 } from '../file-storage';
 import { FileReferencesResource } from '../FileReferencesResource';
-import { saveFile } from './saveFile';
+import { downloadFile } from './downloadFile';
 
-describe('saveFile', () => {
+describe('downloadFile', () => {
   beforeEach(() => {
     // Register a test file storage adapter
     registerFileStorageAdapter(fileStorageAdapter);
@@ -23,22 +22,22 @@ describe('saveFile', () => {
   });
 
   it('returns the file reference', async () => {
-    // Save a file
-    const fileReference = await saveFile(core, textFile);
+    // Download a file
+    const fileReference = await downloadFile(core, 'file-url');
 
     // Should return the file reference
     expect(fileReference).toEqual(textFileRef1);
   });
 
-  it('saves the file using the file storage adapter', async () => {
-    jest.spyOn(fileStorageAdapter, 'save');
+  it('downloads the file using the file storage adapter', async () => {
+    jest.spyOn(fileStorageAdapter, 'download');
 
-    // Save a file
-    await saveFile(core, textFile);
+    // Download a file
+    await downloadFile(core, 'file-url');
 
-    // Should save the file using the file storage adapter's
-    // 'save' method.
-    expect(fileStorageAdapter.save).toHaveBeenCalledWith(core, textFile);
+    // Should download the file using the file storage adapter's
+    // 'download' method.
+    expect(fileStorageAdapter.download).toHaveBeenCalledWith(core, 'file-url');
   });
 
   it('dispatches a `files:file:save` event', (done) => {
@@ -49,7 +48,7 @@ describe('saveFile', () => {
       done();
     });
 
-    // Save a file
-    saveFile(core, textFile);
+    // Download a file
+    downloadFile(core, 'file-url');
   });
 });
