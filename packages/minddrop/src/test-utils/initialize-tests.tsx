@@ -37,6 +37,7 @@ export const resourceStorageAdapter: ResourceStorageAdapterConfig = {
 export const fileStorageAdapter: FileStorageApi = {
   getUrl: jest.fn(),
   save: jest.fn(),
+  download: jest.fn(),
 };
 
 export const backendUtilsAdapter: BackendUtilsApi = {
