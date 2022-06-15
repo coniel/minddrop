@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow } from 'electron';
+import { app, protocol, shell, BrowserWindow } from 'electron';
 import path from 'path';
 import { initializeDatabase, initializeFileStorage } from './main-init';
 
@@ -25,6 +25,12 @@ const createWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
+  });
+
+  // Open all URLs in an external browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
   });
 
   // Initialize the persistent storage adapter
