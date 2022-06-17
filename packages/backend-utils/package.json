@@ -26,6 +26,9 @@
   "dependencies": {
     "@minddrop/files": "^0.1.1",
     "@minddrop/utils": "^0.4.0",
-    "metadata-scraper": "^0.2.55"
+    "@devmehq/open-graph-extractor": "^1.0.4",
+    "axios": "^0.27.2",
+    "metascraper": "^5.29.8",
+    "tldts": "^5.7.81"
   }
 }
