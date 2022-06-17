@@ -13,6 +13,7 @@ import * as ResourcesExtension from '@minddrop/resources';
 import * as PersistentStoreExtension from '@minddrop/persistent-store';
 import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
+import BookmarkDropExtension from '@minddrop/bookmark-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
@@ -21,7 +22,11 @@ import { Views } from '@minddrop/views';
 import { HomeView } from '../HomeView';
 
 // Default extensions
-const defaultExtensions = [TopicViewColumnsExtension, TextDropExtension];
+const defaultExtensions = [
+  TopicViewColumnsExtension,
+  TextDropExtension,
+  BookmarkDropExtension,
+];
 
 // Create the 'app' MindDrop core instance
 const core = initializeCore({ appId: 'app', extensionId: 'app' });
