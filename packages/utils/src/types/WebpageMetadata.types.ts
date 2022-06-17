@@ -1,5 +1,16 @@
 export interface WebpageMetadata {
   /**
+   * The website domain.
+   */
+  domain: string;
+
+  /**
+   * The webpage title or domain if a title
+   * is not present.
+   */
+  title: string;
+
+  /**
    * The resource type.
    */
   type?: string;
@@ -13,11 +24,6 @@ export interface WebpageMetadata {
    * The webpage's preview/thumbnail image.
    */
   image?: string;
-
-  /**
-   * The webpage title, if it has one.
-   */
-  title?: string;
 
   /**
    * The webpage meta description.
