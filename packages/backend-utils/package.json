@@ -18,6 +18,7 @@
     "@jest/types": "^27.2.5",
     "@types/node": "^16.11.6",
     "jest": "^27.3.1",
+    "nock": "^13.2.7",
     "rimraf": "~3.0.2",
     "ts-jest": "^27.0.7",
     "ts-node": "^10.4.0",
@@ -28,6 +29,7 @@
     "@minddrop/utils": "^0.4.0",
     "@devmehq/open-graph-extractor": "^1.0.4",
     "axios": "^0.27.2",
+    "is-url": "^1.2.4",
     "metascraper": "^5.29.8",
     "tldts": "^5.7.81"
   }
