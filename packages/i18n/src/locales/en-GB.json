@@ -8,6 +8,7 @@
   "addSubtopic": "Add subtopic",
   "edit": "Edit",
   "delete": "Delete",
+  "save": "Save",
   "deleteEverywhere": "Delete everywhere",
   "archiveEverywhere": "Archive everywhere",
   "remove": "Remove",
@@ -49,5 +50,8 @@
   "colorOrange": "Orange",
   "colorYellow": "Yellow",
   "colorBrown": "Brown",
-  "colorGray": "Gray"
+  "colorGray": "Gray",
+
+  "bookmarkPlaceholder": "Add a web bookmark",
+  "bookmarkLink": "Bookmark link"
 }
