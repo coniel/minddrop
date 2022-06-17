@@ -1,13 +1,11 @@
 import { ResourceStorageAdapterConfig } from '@minddrop/resources';
+import { BackendUtilsApi } from '@minddrop/utils';
+import { DesktopFileStorageAdapter } from './DesktopFileStorageAdapter.types';
 
 export declare global {
   interface Window {
-    resourceStorageAdapter: ResourceStorageAdapterConfig;
-
-    files: {
-      getAttachmentsPath(): string;
-      create(file: File, id: string): void;
-      get(id: string): Promise<string>;
-    };
+    ResourceStorageAdapter: ResourceStorageAdapterConfig;
+    FileStorageAdapter: DesktopFileStorageAdapter;
+    BackendUtilsAdapter: BackendUtilsApi;
   }
 }

@@ -4,13 +4,13 @@ import { MindDrop } from '@minddrop/minddrop';
 import { initializeFileStorage } from './renderer-init';
 import './App.css';
 
-initializeFileStorage();
-
 const App: React.FC = () => {
   return (
     <MindDrop
       appId="app"
-      resourceStorageAdapter={window.resourceStorageAdapter}
+      resourceStorageAdapter={window.ResourceStorageAdapter}
+      fileStorageAdapter={initializeFileStorage()}
+      backendUtilsAdapter={window.BackendUtilsAdapter}
       extensions={[]}
     />
   );
