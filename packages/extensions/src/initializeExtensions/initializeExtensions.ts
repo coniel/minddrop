@@ -17,20 +17,20 @@ export function initializeExtensions(
   extensionConfigs.forEach((config) => {
     // Register the extensions
     registerExtension(core, config);
+  });
 
-    // Get enabled extensions
-    const enabledExtensions = getEnabledExtensions();
+  // Get enabled extensions
+  const enabledExtensions = getEnabledExtensions();
 
-    // Run the enabled extensions
-    enabledExtensions.forEach((extension) => {
-      // Create a core instance for the extension
-      const extensionCore = initializeCore({
-        appId: core.appId,
-        extensionId: extension.id,
-      });
-
-      // Run the extension using its core instance
-      extension.onRun(extensionCore);
+  // Run the enabled extensions
+  enabledExtensions.forEach((extension) => {
+    // Create a core instance for the extension
+    const extensionCore = initializeCore({
+      appId: core.appId,
+      extensionId: extension.id,
     });
+
+    // Run the extension using its core instance
+    extension.onRun(extensionCore);
   });
 }

@@ -29,6 +29,7 @@ export interface DataInsert {
    * Common types include:
    * - 'text/plain' if plain text was inserted.
    * - 'text/html' if HTML text was inserted.
+   * - 'text/url' if a URL was inserted.
    */
   types: string[];
 

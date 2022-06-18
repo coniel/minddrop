@@ -17,6 +17,7 @@
   "devDependencies": {
     "@jest/types": "^27.2.5",
     "@types/node": "^16.11.6",
+    "@types/is-url": "^1.2.30",
     "jest": "^27.3.1",
     "mockdate": "^3.0.5",
     "rimraf": "~3.0.2",
@@ -26,6 +27,8 @@
   },
   "dependencies": {
     "@minddrop/core": "^0.3.1",
+    "is-url": "^1.2.4",
+    "tldts": "^5.7.81",
     "uuid": "^8.3.2"
   },
   "peerDependencies": {

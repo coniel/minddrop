@@ -43,6 +43,7 @@
         [
           "@electron-forge/plugin-webpack",
           {
+            "devContentSecurityPolicy": "img-src media-file://* data:;",
             "mainConfig": "./webpack.main.config.js",
             "port": 3001,
             "renderer": {
@@ -53,7 +54,7 @@
                   "js": "./src/renderer.ts",
                   "name": "main_window",
                   "preload": {
-                    "js": "./src/preload.ts"
+                    "js": "./src/preload"
                   }
                 }
               ]
@@ -92,17 +93,20 @@
     "webpack": "^5.64.1"
   },
   "dependencies": {
+    "@minddrop/backend-utils": "^0.1.0",
     "@minddrop/core": "^0.2.0",
     "@minddrop/extensions": "^0.1.0",
     "@minddrop/files": "0.1.0",
     "@minddrop/pouchdb": "0.1.0",
     "@minddrop/minddrop": "^0.0.1",
     "@minddrop/resources": "^0.1.0",
+    "@minddrop/utils": "^0.4.0",
     "pouchdb": "^7.2.2",
     "electron-squirrel-startup": "^1.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "remove": "^0.1.5",
+    "metadata-scraper": "^0.2.55",
     "webpack": "^5.64.1"
   }
 }

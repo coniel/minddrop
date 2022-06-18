@@ -1,11 +1,30 @@
-import { initializeCore } from '@minddrop/core';
-import { Files } from '@minddrop/files';
+import { Files, FileStorageApi } from '@minddrop/files';
 
-const core = initializeCore({ appId: 'app', extensionId: 'app' });
+export function initializeFileStorage(): FileStorageApi {
+  const api = window.FileStorageAdapter;
 
-export function initializeFileStorage() {
-  Files.addEventListener(core, 'files:file:save', (payload) => {
-    const { file, fileReference } = payload.data;
-    window.files.create(file, fileReference.id);
-  });
+  return {
+    getUrl: api.getUrl,
+    save: async (core, file) => {
+      // Create a file reference
+      const fileReference = await Files.createReference(core, file);
+
+      // Save the file to the attachments directory
+      await api.save(file, fileReference);
+
+      return fileReference;
+    },
+    download: async (core, url) => {
+      // Download the file
+      const file = await api.download(url);
+
+      // Create a file reference
+      const fileReference = await Files.createReference(core, file);
+
+      // Save the downloaded file to the attachments directory
+      await api.save(file, fileReference);
+
+      return fileReference;
+    },
+  };
 }

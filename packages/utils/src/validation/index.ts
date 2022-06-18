@@ -8,3 +8,4 @@ export * from './validateSet';
 export * from './validateString';
 export * from './validateValidator';
 export * from './validateValue';
+export * from './validateParamter';

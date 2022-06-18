@@ -1,6 +1,23 @@
 import { FieldValueArrayRemove, FieldValueArrayUnion } from '@minddrop/utils';
 import { ResourceDocument } from '@minddrop/resources';
 
+export interface FileMetadata {
+  /**
+   * The file media type.
+   */
+  type: string;
+
+  /**
+   * The file name.
+   */
+  name: string;
+
+  /**
+   * The file size in bytes.
+   */
+  size: number;
+}
+
 export interface ImageDimensions {
   /**
    * The image width.
@@ -18,26 +35,35 @@ export interface ImageDimensions {
   aspectRatio: number;
 }
 
-export interface FileReferenceData {
-  /**
-   * The file media type.
-   */
-  type: string;
-
-  /**
-   * The file name.
-   */
-  name: string;
-
-  /**
-   * The file size in bytes.
-   */
-  size: number;
-
+export interface FileReferenceData extends FileMetadata {
   /**
    * URL to the file if it is located remotely.
    */
-  url?: string;
+  remoteUrl?: string;
+
+  /**
+   * Dimensions and aspect ratio of the image. Only set if the file is an image.
+   */
+  dimensions?: ImageDimensions;
+}
+
+export interface CreateFileReferenceData extends FileMetadata {
+  /**
+   * URL to the file if it is located remotely.
+   */
+  remoteUrl?: string;
+
+  /**
+   * Dimensions and aspect ratio of the image. Only set if the file is an image.
+   */
+  dimensions?: ImageDimensions;
+}
+
+export interface UpdateFileReferenceData {
+  /**
+   * URL to the file if it is located remotely.
+   */
+  removeUrl?: string;
 
   /**
    * Dimensions and aspect ratio of the image. Only set if the file is an image.

@@ -13,4 +13,8 @@ export const ViewInstancesResource =
   Resources.createTyped<BaseViewInstanceData>({
     resource: 'views:view-instance',
     dataSchema,
+    onCreate: (core, document) => ({
+      ...document,
+      extension: core.extensionId,
+    }),
   });

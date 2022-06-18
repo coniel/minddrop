@@ -3,6 +3,7 @@ export * from './Archive';
 export * from './ArrowBack';
 export * from './ArrowForward';
 export * from './ArrowUpRight';
+export * from './Bookmark';
 export * from './ColorPalette';
 export * from './Duplicate';
 export * from './Edit';

@@ -2,8 +2,8 @@ import { deserializeResourceDocument } from '@minddrop/pouchdb';
 import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 import { ipcRenderer, contextBridge } from 'electron';
 
-const pouchdbStorageAdapter: ResourceStorageAdapterConfig = {
-  id: 'minddrop:pouchdb',
+const ResourceStorageAdapter: ResourceStorageAdapterConfig = {
+  id: 'minddrop:resource-storage-adapter:pouchdb',
   initialize: (syncApi) => {
     // Listen to 'db:set' events
     ipcRenderer.on('db:set', (event, data) => {
@@ -38,33 +38,8 @@ const pouchdbStorageAdapter: ResourceStorageAdapterConfig = {
   },
 };
 
+// Expose the adapter in the renderer
 contextBridge.exposeInMainWorld(
-  'resourceStorageAdapter',
-  pouchdbStorageAdapter,
+  'ResourceStorageAdapter',
+  ResourceStorageAdapter,
 );
-
-contextBridge.exposeInMainWorld('files', {
-  getAttachmentsPath: () => ipcRenderer.sendSync('files:getAttachmentsPath'),
-
-  get: (id) =>
-    new Promise((resolve) => {
-      const callback = (event, data) => {
-        if (data.id === id) {
-          resolve(data);
-          ipcRenderer.removeListener('files:got', callback);
-        }
-      };
-
-      ipcRenderer.on('files:got', callback);
-
-      ipcRenderer.send('files:get', id);
-    }),
-
-  create: (file, id) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      ipcRenderer.send('files:create', { base64: reader.result, id });
-    };
-  },
-});

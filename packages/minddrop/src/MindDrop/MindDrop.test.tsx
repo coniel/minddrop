@@ -1,46 +1,34 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import { App } from '@minddrop/app';
-import {
-  ResourceDocument,
-  ResourceStorageAdapterConfig,
-} from '@minddrop/resources';
 import { act, render, waitFor } from '@minddrop/test-utils';
 import { ViewInstances, Views } from '@minddrop/views';
-import { cleanup, core, setup } from '../test-utils';
+import {
+  cleanup,
+  core,
+  setup,
+  resourceStorageAdapter,
+  fileStorageAdapter,
+  backendUtilsAdapter,
+} from '../test-utils';
 import { MindDrop } from './MindDrop';
 
-let database: Record<string, ResourceDocument> = {};
-
-const storageAdapter: ResourceStorageAdapterConfig = {
-  id: 'test',
-  getAll: async () => Object.values(database),
-  create: async (doc) => {
-    database[doc.id] = doc;
-  },
-  update: async (id, update) => {
-    database[id] = update.after;
-  },
-  delete: async (doc) => {
-    delete database[doc.id];
-  },
-};
-
 describe('MindDrop', () => {
-  beforeEach(setup);
+  beforeAll(async () => {});
 
-  afterEach(() => {
-    cleanup();
-
-    // Clear the database
-    database = {};
+  beforeEach(async () => {
+    await setup();
   });
+
+  afterEach(cleanup);
 
   function init() {
     return render(
       <MindDrop
         appId="app"
-        resourceStorageAdapter={storageAdapter}
+        resourceStorageAdapter={resourceStorageAdapter}
+        fileStorageAdapter={fileStorageAdapter}
+        backendUtilsAdapter={backendUtilsAdapter}
         extensions={[]}
       />,
     );
@@ -48,17 +36,18 @@ describe('MindDrop', () => {
 
   describe('view', () => {
     it('renders the current static view', async () => {
-      // Register a test view
-      Views.register(core, {
-        id: 'test',
-        type: 'static',
-        component: () => <div>Test view</div>,
-      });
       const { getByText, getByTestId } = init();
 
       // Wait for app to be initialized
       await waitFor(() => {
         expect(getByTestId('home-view')).toBeInTheDocument();
+      });
+
+      // Register a test view
+      Views.register(core, {
+        id: 'test',
+        type: 'static',
+        component: () => <div>Test view</div>,
       });
 
       act(() => {
@@ -73,6 +62,13 @@ describe('MindDrop', () => {
     });
 
     it('renders the current instance view', async () => {
+      const { getByText, getByTestId } = init();
+
+      // Wait for app to be initialized
+      await waitFor(() => {
+        expect(getByTestId('home-view')).toBeInTheDocument();
+      });
+
       // Register a test view
       Views.register(core, {
         id: 'test',
@@ -82,13 +78,6 @@ describe('MindDrop', () => {
 
       // Create an instance of the test view
       const viewInstance = ViewInstances.create(core, 'test', {});
-
-      const { getByText, getByTestId } = init();
-
-      // Wait for app to be initialized
-      await waitFor(() => {
-        expect(getByTestId('home-view')).toBeInTheDocument();
-      });
 
       act(() => {
         // Set the view to a topic view

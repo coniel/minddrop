@@ -1,42 +1,55 @@
-import { initializeCore } from '@minddrop/core';
 import { textFile } from '@minddrop/test-utils';
+import { core, fileStorageAdapter, textFileRef1 } from '../test-utils';
+import {
+  registerFileStorageAdapter,
+  unregisterFileStorageAdapter,
+} from '../file-storage';
 import { FileReferencesResource } from '../FileReferencesResource';
-import { FileReference } from '../types';
 import { saveFile } from './saveFile';
 
-const core = initializeCore({ appId: 'app', extensionId: 'files' });
+describe('saveFile', () => {
+  beforeEach(() => {
+    // Register a test file storage adapter
+    registerFileStorageAdapter(fileStorageAdapter);
+  });
 
-describe('createFile', () => {
   afterEach(() => {
     // Clear the file resources store
     FileReferencesResource.store.clear();
+    // Unregister the test file storage adapter
+    unregisterFileStorageAdapter();
+    // Clear all mocks
+    jest.clearAllMocks();
   });
 
-  it('creates a file reference', () => {
+  it('returns the file reference', async () => {
     // Save a file
-    const fileReference = saveFile(core, textFile);
+    const fileReference = await saveFile(core, textFile);
 
-    // File reference should be in the store
-    expect(FileReferencesResource.get(fileReference.id)).toEqual(fileReference);
-    // File reference should contain the file data
-    expect(fileReference.name).toEqual(textFile.name);
-    expect(fileReference.type).toEqual(textFile.type);
-    expect(fileReference.size).toEqual(textFile.size);
+    // Should return the file reference
+    expect(fileReference).toEqual(textFileRef1);
+  });
+
+  it('saves the file using the file storage adapter', async () => {
+    jest.spyOn(fileStorageAdapter, 'save');
+
+    // Save a file
+    await saveFile(core, textFile);
+
+    // Should save the file using the file storage adapter's
+    // 'save' method.
+    expect(fileStorageAdapter.save).toHaveBeenCalledWith(core, textFile);
   });
 
   it('dispatches a `files:file:save` event', (done) => {
-    let fileReference: FileReference;
-
     // Listen to 'files:file:save' events
     core.addEventListener('files:file:save', (payload) => {
-      // Payload data should contain the file
-      expect(payload.data.file).toEqual(textFile);
-      // Payload data should contain the file reference
-      expect(payload.data.fileReference).toEqual(fileReference);
+      // Payload data should be the file reference
+      expect(payload.data).toEqual(textFileRef1);
       done();
     });
 
     // Save a file
-    fileReference = saveFile(core, textFile);
+    saveFile(core, textFile);
   });
 });

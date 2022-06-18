@@ -30,6 +30,16 @@ const multiTextFilesData: DataInsert = {
   files: [textFile, textFile],
 };
 
+const urlData: DataInsert = {
+  action: 'insert',
+  types: ['text/plain', 'text/url'],
+  data: {
+    'text/plain': 'https://minddrop.app',
+    'text/url': 'https://minddrop.app',
+  },
+  files: [],
+};
+
 const textDropConfig: DropTypeConfig<{ text: string }> = {
   name: 'Text',
   description: 'A text drop',
@@ -71,7 +81,11 @@ const bookmarkDropConfig: DropTypeConfig<{ url: string }> = {
   description: 'A bookmark drop',
   component: () => <div />,
   type: 'bookmark',
+  domains: ['*'],
   dataSchema: { url: { type: 'string' } },
+  initializeData: (core, { data }) => ({
+    url: data['text/url'],
+  }),
 };
 
 const withoutInitializeDataDropConfig: DropTypeConfig<{ text: string }> = {
@@ -165,5 +179,26 @@ describe('createFromDataInsert', () => {
     expect(drop.type).toBe('text');
     // Should save the drop
     expect(DropsResource.get(drop.id)).toEqual(drop);
+  });
+
+  describe('url data insert', () => {
+    it('creates a URL drop from a config with a matching domain matcher', () => {
+      // Create drops from a text data insert
+      const drops = createFromDataInsert(
+        core,
+        urlData,
+        DropsResource.getAllTypeConfigs(),
+      );
+
+      // Should only create a single drop
+      expect(Object.keys(drops).length).toBe(1);
+
+      const [drop] = Object.values(drops);
+
+      // Should create a 'bookmark' drop
+      expect(drop.type).toBe('bookmark');
+      // Should save the drop
+      expect(DropsResource.get(drop.id)).toEqual(drop);
+    });
   });
 });

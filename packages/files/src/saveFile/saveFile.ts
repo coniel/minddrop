@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { FileReference } from '../types';
-import { FileReferencesResource } from '../FileReferencesResource';
+import { saveFileToStorage } from '../file-storage';
 
 /**
  * Saves a file and creates a new file reference.
@@ -12,16 +12,12 @@ import { FileReferencesResource } from '../FileReferencesResource';
  * @param file - A file object.
  * @returns A file reference.
  */
-export function saveFile(core: Core, file: File): FileReference {
-  // Create a file reference
-  const fileReference = FileReferencesResource.create(core, {
-    name: file.name,
-    size: file.size,
-    type: file.type,
-  });
+export async function saveFile(core: Core, file: File): Promise<FileReference> {
+  // Save the file to the persistent file storage
+  const fileReference = await saveFileToStorage(core, file);
 
   // Dispatch a 'files:file:save' event
-  core.dispatch('files:file:save', { file, fileReference });
+  core.dispatch('files:file:save', fileReference);
 
   return fileReference;
 }
