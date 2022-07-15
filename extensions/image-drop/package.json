@@ -1,0 +1,48 @@
+{
+  "name": "@minddrop/image-drop",
+  "version": "0.1.0",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./dist",
+    "compile": "rollup --config",
+    "prepublishOnly": "yarn run build",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@jest/types": "^27.2.5",
+    "@minddrop/test-utils": "^0.3.1",
+    "@minddrop/topics": "^0.1.1",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/node": "^16.11.6",
+    "jest": "^27.3.1",
+    "rimraf": "~3.0.2",
+    "rollup": "^2.59.0",
+    "rollup-plugin-css-only": "^3.1.0",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
+    "typescript": "~4.4.4"
+  },
+  "dependencies": {
+    "@minddrop/app": "^0.1.1",
+    "@minddrop/app-ui": "^0.1.0",
+    "@minddrop/core": "^0.3.1",
+    "@minddrop/drops": "^0.1.1",
+    "@minddrop/files": "^0.1.1",
+    "@minddrop/i18n": "^0.2.1",
+    "@minddrop/resources": "^0.1.0",
+    "@minddrop/extensions": "^0.1.0",
+    "@minddrop/ui": "^0.2.2",
+    "@minddrop/utils": "^0.4.0",
+    "ahooks": "^3.5.2"
+  },
+  "peerDependencies": {
+    "react": "17.0.2",
+    "@types/react-dom": "^17.0.10"
+  }
+}
