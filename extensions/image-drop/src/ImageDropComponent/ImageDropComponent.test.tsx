@@ -3,6 +3,7 @@ import {
   cleanup as cleanupRender,
   render,
   act,
+  fireEvent,
   imageFile,
 } from '@minddrop/test-utils';
 import { DataInsert } from '@minddrop/core';
@@ -129,6 +130,38 @@ describe('<ImageDrop />', () => {
         expect(Files.save).not.toHaveBeenCalled();
       });
     });
+
+    describe('file input', () => {
+      it('saves the file', async () => {
+        jest.spyOn(Files, 'save');
+
+        await act(async () => {
+          // Render a drop with a file
+          const { getByTestId, getByRole } = render(
+            <ImageDropComponent {...withFile} />,
+          );
+
+          // Simulate a file selection
+          fireEvent.change(getByTestId('file-input'), {
+            target: { files: [imageFile] },
+          });
+
+          // Wait for a second to allow rerender
+          await new Promise((resolve) => {
+            setTimeout(resolve, 1000);
+          });
+
+          // Should save the file
+          expect(Files.save).toHaveBeenCalledWith(expect.anything(), imageFile);
+          // Should set the file data URL as the image URL
+          expect(
+            getByRole('img')
+              .getAttribute('src')
+              .startsWith('data:image/jpeg;base64'),
+          ).toBeTruthy();
+        });
+      });
+    });
   });
 
   describe('without file', () => {
@@ -151,6 +184,41 @@ describe('<ImageDrop />', () => {
         // Should render placeholder text
         getByText(placeholder);
       });
+
+      describe('file input', () => {
+        it('saves the file', async () => {
+          jest.spyOn(Files, 'save');
+
+          await act(async () => {
+            // Render a drop with a file
+            const { getByTestId, getByRole } = render(
+              <ImageDropComponent {...withoutFile} />,
+            );
+
+            // Simulate a file selection
+            fireEvent.change(getByTestId('file-input'), {
+              target: { files: [imageFile] },
+            });
+
+            // Wait for a second to allow rerender
+            await new Promise((resolve) => {
+              setTimeout(resolve, 1000);
+            });
+
+            // Should save the file
+            expect(Files.save).toHaveBeenCalledWith(
+              expect.anything(),
+              imageFile,
+            );
+            // Should set the file data URL as the image URL
+            expect(
+              getByRole('img')
+                .getAttribute('src')
+                .startsWith('data:image/jpeg;base64'),
+            ).toBeTruthy();
+          });
+        });
+      });
     });
 
     describe('with data insert', () => {
@@ -170,7 +238,7 @@ describe('<ImageDrop />', () => {
           // Should render the image
           const image = await findByRole('img');
 
-          // Should render the image using base64
+          // Should render the image using the data URL
           expect(
             image.getAttribute('src').startsWith('data:image/jpeg;base64'),
           ).toBeTruthy();
@@ -246,6 +314,49 @@ describe('<ImageDrop />', () => {
 
           // Should not render the placeholder
           expect(queryByText(placeholder)).toBeNull();
+        });
+      });
+
+      describe('file input', () => {
+        it('saves the file', async () => {
+          jest.spyOn(Files, 'save');
+
+          // Create a drop from an image data insert.
+          // The data insert will be available to the drop
+          // component via the drop data inserts store.
+          const drops = Drops.createFromDataInsert(core, imageDataInsert, [
+            ImageDropConfig,
+          ]);
+          const drop = Object.values(drops)[0];
+
+          await act(async () => {
+            // Render a drop with a file
+            const { getByTestId, getByRole } = render(
+              <ImageDropComponent {...drop} />,
+            );
+
+            // Simulate a file selection
+            fireEvent.change(getByTestId('file-input'), {
+              target: { files: [imageFile] },
+            });
+
+            // Wait for a second to allow rerender
+            await new Promise((resolve) => {
+              setTimeout(resolve, 1000);
+            });
+
+            // Should save the file
+            expect(Files.save).toHaveBeenCalledWith(
+              expect.anything(),
+              imageFile,
+            );
+            // Should set the file data URL as the image URL
+            expect(
+              getByRole('img')
+                .getAttribute('src')
+                .startsWith('data:image/jpeg;base64'),
+            ).toBeTruthy();
+          });
         });
       });
     });

@@ -77,6 +77,28 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
     [setImageUrl],
   );
 
+  // Fired when the file input value changes.
+  // Saves the file and set the file's data URL
+  // as the image URL.
+  const handleFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      // Get the file
+      const image = event.target.files[0];
+
+      if (image) {
+        // Mark the file as unsaved
+        saved.current = false;
+
+        // Set the file base64 data URL as the image URL
+        setDataUrl(image);
+
+        // Save the file and add it to the drop
+        saveImage(image);
+      }
+    },
+    [saveImage, setDataUrl],
+  );
+
   // Saves the data insert's file if the drop was
   // created from a data insert.
   useEffect(() => {
@@ -106,26 +128,6 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
       fileInput.current.click();
     }
   }, [fileInput]);
-
-  // Fired when the file input value changes
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      // Get the file
-      const image = event.target.files[0];
-
-      if (image) {
-        // Mark the file as unsaved
-        saved.current = false;
-
-        // Set the file base64 data URL as the image URL
-        setDataUrl(image);
-
-        // Save the file and add it to the drop
-        saveImage(image);
-      }
-    },
-    [saveImage, setDataUrl],
-  );
 
   return (
     <Drop
@@ -160,6 +162,7 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
           accept="image/*"
           onChange={handleFileChange}
           className="image-drop-hidden-file-input"
+          data-testid="file-input"
         />,
         document.body,
       )}
