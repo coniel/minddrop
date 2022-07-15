@@ -51,7 +51,7 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
   // Drag and drop handling
   const { onDragStart } = useDraggableDrop(id);
   // Selection handling
-  const { selectedClass, select, isSelected } = useSelectableDrop(id);
+  const { selectedClass, onClick, isSelected } = useSelectableDrop(id);
 
   useEffect(() => {
     // If the drop has a URL but no preview,
@@ -150,10 +150,7 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
           href={url}
         />
       )}
-      <div
-        className="drag-handle"
-        onClick={() => (!isSelected ? select() : undefined)}
-      />
+      <div className="drag-handle" onClick={onClick} />
       <DropActions dropId={id} currentParent={currentParent} />
     </Drop>
   );

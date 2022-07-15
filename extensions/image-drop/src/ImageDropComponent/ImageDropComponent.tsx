@@ -32,7 +32,7 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
   // Drag and drop handling
   const { onDragStart } = useDraggableDrop(id);
   // Selection handling
-  const { selectedClass, select, isSelected } = useSelectableDrop(id);
+  const { selectedClass, onClick, isSelected } = useSelectableDrop(id);
   // The image src value
   const [imageUrl, setImageUrl] = useSafeState(file ? Files.getUrl(file) : '');
 
@@ -139,7 +139,15 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
         'image-drop',
       )}
     >
-      {imageUrl && <img className="image" alt="" src={imageUrl} />}
+      {imageUrl && (
+        <img
+          className="image"
+          alt=""
+          src={imageUrl}
+          role="button"
+          onClick={onClick}
+        />
+      )}
       {!imageUrl && !dataInsert && (
         <div
           role="button"
@@ -150,10 +158,7 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
           <span>{t('imagePlaceholder')}</span>
         </div>
       )}
-      <div
-        className="drag-handle"
-        onClick={() => (!isSelected ? select() : undefined)}
-      />
+      <div className="drag-handle" onClick={onClick} />
       <DropActions dropId={id} currentParent={currentParent} />
       {createPortal(
         <input
