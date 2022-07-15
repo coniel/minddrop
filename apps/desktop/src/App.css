@@ -158,6 +158,7 @@ img {
 
 .app-drag-handle {
   -webkit-app-region: drag;
+  pointer-events: none;
   height: 34px;
   width: 100%;
 }

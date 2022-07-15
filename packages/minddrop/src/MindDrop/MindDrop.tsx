@@ -81,6 +81,7 @@ export const MindDrop: React.FC<MindDropProps> = ({
         <div className="minddrop">
           <AppSidebar />
           <div className="app-content">
+            <div className="app-drag-handle" />
             {view && <View instanceId={instance ? instance.id : undefined} />}
           </div>
         </div>

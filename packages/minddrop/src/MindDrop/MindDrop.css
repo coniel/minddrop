@@ -5,6 +5,14 @@
 
 .minddrop .app-content {
   flex: 1;
+  position: relative;
+}
+
+.minddrop .app-content .app-drag-handle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 
 /* .minddrop .sidebar {
