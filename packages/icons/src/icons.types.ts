@@ -15,6 +15,7 @@ export type IconName =
   | 'expand'
   | 'expand-horizontal'
   | 'extension'
+  | 'image'
   | 'inside'
   | 'link'
   | 'more-vertical'
