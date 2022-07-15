@@ -4,6 +4,7 @@ import { imageFile, textFile } from '@minddrop/test-utils';
 import { DropsResource } from '../DropsResource';
 import { cleanup, setup, core } from '../test-utils';
 import { DropTypeConfig } from '../types';
+import { getDropDataInsert } from '../drop-data-inserts-store';
 import { createFromDataInsert } from './createFromDataInsert';
 
 const textData: DataInsert = {
@@ -133,57 +134,114 @@ describe('createFromDataInsert', () => {
       // Should save the drop
       expect(DropsResource.get(drop.id)).toEqual(drop);
     });
-  });
 
-  describe('file data insert', () => {
-    it('creates one drop per file using the first tyoe config to match the file type', () => {
+    it('adds the data insert to the drop data inserts store', () => {
+      // Create drops from a URL data insert
       const drops = createFromDataInsert(
         core,
-        filesData,
+        textData,
         DropsResource.getAllTypeConfigs(),
       );
 
-      // Should create two drops
-      expect(Object.keys(drops).length).toBe(2);
+      // Get the drop ID
+      const dropId = Object.keys(drops)[0];
 
-      // Should create an 'image' drop
-      expect(
-        Object.values(drops).find((drop) => drop.type === 'image'),
-      ).toBeDefined();
-      // Should create a 'text' drop
-      expect(
-        Object.values(drops).find((drop) => drop.type === 'text'),
-      ).toBeDefined();
-
-      // Should save the drops
-      expect(DropsResource.get(Object.keys(drops))).toEqual(drops);
+      // Data insert should be in the store
+      expect(getDropDataInsert(dropId)).toEqual(textData);
     });
   });
 
-  it('creates a single drop from multiple files if drop type supports multiFile', () => {
-    // Create drops from a data insert containing multiple
-    // text files.
-    const drops = createFromDataInsert(
-      core,
-      multiTextFilesData,
-      DropsResource.getAllTypeConfigs(),
-    );
+  describe('file data insert', () => {
+    describe('single file drop', () => {
+      it('creates one drop per file using the first type config to match the file type', () => {
+        const drops = createFromDataInsert(
+          core,
+          filesData,
+          DropsResource.getAllTypeConfigs(),
+        );
 
-    // Should create a single drop (text drop type supports
-    // multiple files).
-    expect(Object.keys(drops).length).toBe(1);
+        // Should create two drops
+        expect(Object.keys(drops).length).toBe(2);
 
-    const [drop] = Object.values(drops);
+        // Should create an 'image' drop
+        expect(
+          Object.values(drops).find((drop) => drop.type === 'image'),
+        ).toBeDefined();
+        // Should create a 'text' drop
+        expect(
+          Object.values(drops).find((drop) => drop.type === 'text'),
+        ).toBeDefined();
 
-    // Should create a 'text' drop
-    expect(drop.type).toBe('text');
-    // Should save the drop
-    expect(DropsResource.get(drop.id)).toEqual(drop);
+        // Should save the drops
+        expect(DropsResource.get(Object.keys(drops))).toEqual(drops);
+      });
+
+      it('adds the data inserts to the drop data inserts store', () => {
+        // Create drops from a data insert
+        const drops = createFromDataInsert(
+          core,
+          filesData,
+          DropsResource.getAllTypeConfigs(),
+        );
+
+        // Get the drop IDs
+        const dropIds = Object.keys(drops);
+
+        // Should have a data insert for each drop containg a single file
+        dropIds.forEach((dropId) => {
+          // Get the data insert for the drop
+          const dataInsert = getDropDataInsert(dropId);
+
+          // The data insert should exist
+          expect(dataInsert).toBeDefined();
+          // The data insert should contain a single file
+          expect(dataInsert.files.length).toBe(1);
+        });
+      });
+    });
+
+    describe('multi-file drop', () => {
+      it('creates a single drop from multiple files if drop type supports multiFile', () => {
+        // Create drops from a data insert containing multiple
+        // text files.
+        const drops = createFromDataInsert(
+          core,
+          multiTextFilesData,
+          DropsResource.getAllTypeConfigs(),
+        );
+
+        // Should create a single drop (text drop type supports
+        // multiple files).
+        expect(Object.keys(drops).length).toBe(1);
+
+        const [drop] = Object.values(drops);
+
+        // Should create a 'text' drop
+        expect(drop.type).toBe('text');
+        // Should save the drop
+        expect(DropsResource.get(drop.id)).toEqual(drop);
+      });
+
+      it('adds the data insert to the drop data inserts store', () => {
+        // Create drops from a data insert
+        const drops = createFromDataInsert(
+          core,
+          multiTextFilesData,
+          DropsResource.getAllTypeConfigs(),
+        );
+
+        // Get the drop ID
+        const dropId = Object.keys(drops)[0];
+
+        // Data insert should be in the store
+        expect(getDropDataInsert(dropId)).toEqual(multiTextFilesData);
+      });
+    });
   });
 
   describe('url data insert', () => {
     it('creates a URL drop from a config with a matching domain matcher', () => {
-      // Create drops from a text data insert
+      // Create drops from a URL data insert
       const drops = createFromDataInsert(
         core,
         urlData,
@@ -199,6 +257,21 @@ describe('createFromDataInsert', () => {
       expect(drop.type).toBe('bookmark');
       // Should save the drop
       expect(DropsResource.get(drop.id)).toEqual(drop);
+    });
+
+    it('adds the data insert to the drop data inserts store', () => {
+      // Create drops from a URL data insert
+      const drops = createFromDataInsert(
+        core,
+        urlData,
+        DropsResource.getAllTypeConfigs(),
+      );
+
+      // Get the drop ID
+      const dropId = Object.keys(drops)[0];
+
+      // Data insert should be in the store
+      expect(getDropDataInsert(dropId)).toEqual(urlData);
     });
   });
 });

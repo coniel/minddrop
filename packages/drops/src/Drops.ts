@@ -2,11 +2,13 @@ import { DropsApi, DropTypeData } from './types';
 import { createFromDataInsert } from './createFromDataInsert';
 import { duplicateDrops } from './duplicateDrops';
 import { DropsResource } from './DropsResource';
+import { getDropDataInsert } from './drop-data-inserts-store';
 
 export const Drops: DropsApi = {
   ...DropsResource,
   createFromDataInsert,
   duplicate: duplicateDrops,
+  getDataInsert: getDropDataInsert,
   addEventListener: (core, event, callback) =>
     core.addEventListener(event, callback),
   removeEventListener: (core, event, callback) =>

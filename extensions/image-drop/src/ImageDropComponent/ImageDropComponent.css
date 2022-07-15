@@ -1,0 +1,47 @@
+.image-drop {
+  padding: 0;
+  border-color: transparent;
+}
+
+.image-drop .drag-handle {
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  cursor: move;
+}
+
+.image-drop.placeholder {
+  border: none;
+  background-color: var(--bgNeutral);
+}
+
+.image-drop .placeholder-content {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 12px;
+  color: var(--textNeutralLight);
+  font-size: var(--fsLarge);
+  cursor: pointer;
+}
+
+.image-drop .placeholder-content .icon {
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+}
+
+.image-drop-hidden-file-input {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  left: -1000px;
+  top: -1000px;
+}
+
+.image-drop .image {
+  width: 100%;
+  border-radius: var(--radiusLg);
+}

@@ -53,5 +53,7 @@
   "colorGray": "Gray",
 
   "bookmarkPlaceholder": "Add a web bookmark",
-  "bookmarkLink": "Bookmark link"
+  "bookmarkLink": "Bookmark link",
+
+  "imagePlaceholder": "Add an image"
 }
