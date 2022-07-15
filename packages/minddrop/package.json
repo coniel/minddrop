@@ -45,6 +45,7 @@
     "@minddrop/theme": "^0.4.0",
     "@minddrop/text-drop": "^0.1.0",
     "@minddrop/bookmark-drop": "^0.1.0",
+    "@minddrop/image-drop": "^0.1.0",
     "@minddrop/topics": "^0.1.1",
     "@minddrop/topic-view-columns": "^0.1.0",
     "@minddrop/utils": "^0.4.0",

@@ -14,6 +14,7 @@ import * as PersistentStoreExtension from '@minddrop/persistent-store';
 import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import BookmarkDropExtension from '@minddrop/bookmark-drop';
+import ImageDropExtension from '@minddrop/image-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
@@ -26,6 +27,7 @@ const defaultExtensions = [
   TopicViewColumnsExtension,
   TextDropExtension,
   BookmarkDropExtension,
+  ImageDropExtension,
 ];
 
 // Create the 'app' MindDrop core instance
