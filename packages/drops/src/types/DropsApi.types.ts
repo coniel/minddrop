@@ -96,6 +96,16 @@ export interface DropsApi
   >(): RegisteredDropTypeConfig<TDropData>[];
 
   /**
+   * Returns the `DataInsert` from which a drop was created,
+   * or `null` if the drop was not created from a data insert
+   * or the data insert is no longer in memory.
+   *
+   * @param dropId - The ID of the drop from which to retrieve the data insert.
+   * @returns A data insert object or null.
+   */
+  getDataInsert(dropId: string): DataInsert | null;
+
+  /**
    * Filters drops by type, active, and deleted states.
    * If no filters are set, returns active drops.
    * If deleted filters is `true`, active drops are not

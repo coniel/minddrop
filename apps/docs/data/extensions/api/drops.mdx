@@ -62,6 +62,27 @@ useDrops(dropIds: string[], filters?: DropFilters): Record<string, Drop>
   ]}
 />
 
+### useDataInsert
+
+Returns the `DataInsert` from which a drop was created, or `null` if the drop was not created from a data insert or the data insert is no longer in memory.
+
+This hook is mainly intended to provide access the to the files from which a drop was created within the drop component, immediately after its creation.
+
+```ts
+useDataInsert(dropId: string): DataInsert | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop for which to retrieve the data insert.',
+    },
+  ]}
+/>
+
 ## Static methods
 
 ### get
@@ -133,6 +154,27 @@ Drops.getConfig(type: string): DropConfig
       type: 'string',
       required: true,
       description: 'The drop type for which to retrieve the config.',
+    },
+  ]}
+/>
+
+### getDataInsert
+
+Returns the `DataInsert` from which a drop was created, or `null` if the drop was not created from a data insert or the data insert is no longer in memory.
+
+This method is mainly intended to provide access the to files from which a drop was created within the drop component, immediately after its creation.
+
+```ts
+Drops.getDataInsert(dropId: string): DataInsert | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'dropId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the drop for which to retrieve the data insert.',
     },
   ]}
 />

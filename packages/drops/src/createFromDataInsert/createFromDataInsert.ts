@@ -2,20 +2,32 @@ import { Core, DataInsert } from '@minddrop/core';
 import { isDomainMatch } from '@minddrop/utils';
 import { RegisteredDropTypeConfig, DropMap, Drop } from '../types';
 import { DropsResource } from '../DropsResource';
+import { addDropDataInsert } from '../drop-data-inserts-store';
 
 function createFromFiles(
   core: Core,
   config: RegisteredDropTypeConfig,
   files: File[],
 ): Drop {
-  const dropData = config.initializeData(core, {
+  // Create a custom data insert for the drop,
+  // containing the drop's files.
+  const dropDataInsert: DataInsert = {
     action: 'insert',
     types: ['files'],
     data: {},
     files,
-  });
+  };
 
-  return DropsResource.create(core, config.type, dropData);
+  // Initialize the drop data using the drop's data insert
+  const dropData = config.initializeData(core, dropDataInsert);
+
+  // Create a drop using the initialized data
+  const drop = DropsResource.create(core, config.type, dropData);
+
+  // Add the data insert to the drop data inserts store
+  addDropDataInsert(drop.id, dropDataInsert);
+
+  return drop;
 }
 
 /**
@@ -108,6 +120,9 @@ export function createFromDataInsert(
       const dropData = matchedConfigs[0].initializeData(core, dataInsert);
       const drop = DropsResource.create(core, matchedConfigs[0].type, dropData);
 
+      // Add the data insert to the drops data inserts store
+      addDropDataInsert(drop.id, dataInsert);
+
       drops[drop.id] = drop;
     }
   }
@@ -135,6 +150,9 @@ export function createFromDataInsert(
       matchedDataConfigs[0].type,
       dropData,
     );
+
+    // Add the data insert to the drops data inserts store
+    addDropDataInsert(drop.id, dataInsert);
 
     drops[drop.id] = drop;
   }
