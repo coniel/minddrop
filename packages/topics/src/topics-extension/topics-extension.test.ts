@@ -4,6 +4,7 @@ import { Topics } from '../Topics';
 import { addDropsToTopic } from '../addDropsToTopic';
 import { TopicsResource } from '../TopicsResource';
 import { onDisable, onRun } from './topics-extension';
+import { addSubtopics } from '../addSubtopics';
 
 const { dropConfig } = DROPS_TEST_DATA;
 
@@ -35,6 +36,33 @@ describe('topics extension', () => {
 
       // Delete the drop
       Drops.delete(core, drop.id);
+    });
+
+    it('removes deleted subtopics from parent topics', (done) => {
+      onRun(core);
+
+      // Create a topic
+      const topic = TopicsResource.create(core, { title: 'My topic' });
+
+      // Create a subtopic
+      const subtopic = TopicsResource.create(core, { title: 'My subtopic' });
+
+      // Add the subtopic to the topic
+      addSubtopics(core, topic.id, [subtopic.id]);
+
+      // Listen for remove-drops event
+      Topics.addEventListener(
+        core,
+        'topics:topic:remove-subtopics',
+        ({ data }) => {
+          if (data.topic.id === topic.id && data.subtopics[subtopic.id]) {
+            done();
+          }
+        },
+      );
+
+      // Delete the subtopic
+      Topics.delete(core, subtopic.id);
     });
   });
 
