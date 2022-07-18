@@ -5,11 +5,12 @@ import {
   LocalPersistentStoreDataSchema,
   GlobalPersistentStoreDataSchema,
 } from '@minddrop/persistent-store';
+import { Topics } from '@minddrop/topics';
 import { useAppStore } from '../useAppStore';
 import { App } from '../App';
 import { OpenViewEvent, OpenViewEventData } from '../types';
 
-interface LocalPersistentData {
+export interface LocalPersistentData {
   view: string;
   viewInstance: string | null;
   topicViews: Record<string, string>;
@@ -18,7 +19,7 @@ interface LocalPersistentData {
   sidebarWidth: number;
 }
 
-interface GlobalPersistentData {
+export interface GlobalPersistentData {
   rootTopics: string[];
   archivedRootTopics: string[];
 }
@@ -119,6 +120,17 @@ export function onRun(core: Core) {
       );
     },
   );
+
+  Topics.addEventListener(core, 'topics:topic:delete', ({ data }) => {
+    // Get root topics
+    const rootTopics = App.getRootTopics();
+
+    // If the topic is a root topic, remove it from
+    // root topics.
+    if (rootTopics.find(({ id }) => data.id === id)) {
+      App.removeRootTopics(core, [data.id]);
+    }
+  });
 }
 
 export function onDisable(core: Core) {

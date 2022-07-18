@@ -1,4 +1,4 @@
-import { Topic, Topics } from '@minddrop/topics';
+import { Topic, useTopics } from '@minddrop/topics';
 import { useAppStore } from '../useAppStore';
 
 /**
@@ -12,7 +12,7 @@ export function useRootTopics(): Topic[] {
   const { rootTopics } = useAppStore();
 
   // Get the topics
-  const topics = Topics.get(rootTopics);
+  const topics = useTopics(rootTopics);
 
   // Return the topics as an array ordered according to
   // the root topics.
