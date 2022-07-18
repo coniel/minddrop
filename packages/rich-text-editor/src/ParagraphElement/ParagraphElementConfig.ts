@@ -6,7 +6,14 @@ export const ParagraphElementConfig: RTBlockElementConfig = {
   level: 'block',
   dataTypes: ['text/plain'],
   component: ParagraphElementComponent,
-  initializeData: ({ data }) => ({
-    children: [{ text: data['text/plain'] ? data['text/plain'].trim() : '' }],
+  initializeData: (dataInsert) => ({
+    children: [
+      {
+        text:
+          dataInsert && dataInsert.types.includes('text/plain')
+            ? dataInsert.data['text/plain'].trim()
+            : '',
+      },
+    ],
   }),
 };
