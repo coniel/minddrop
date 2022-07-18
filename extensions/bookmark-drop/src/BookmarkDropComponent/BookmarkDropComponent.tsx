@@ -52,6 +52,7 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
   const { onDragStart } = useDraggableDrop(id);
   // Selection handling
   const { selectedClass, onClick, isSelected } = useSelectableDrop(id);
+  const domain = url ? new URL(url).hostname : '';
 
   useEffect(() => {
     // If the drop has a URL but no preview,
@@ -110,7 +111,7 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
                 )}
               </>
             )}
-            <div className="url">{url}</div>
+            <div className="url">{domain}</div>
           </div>
         )}
         {!url && (
