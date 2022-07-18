@@ -29,3 +29,24 @@ export const topicViewColumnsInstance: TopicViewColumnsInstance =
       },
     ],
   });
+
+export const emptyTopicViewColumnsInstance: TopicViewColumnsInstance =
+  Resources.generateDocument('views:view-instance', {
+    extension: 'minddrop:topic-view:columns',
+    type: 'minddrop:topic-view:columns',
+    topic: tSixDrops.id,
+    columns: [
+      {
+        id: 'column-0',
+        items: [],
+      },
+      {
+        id: 'column-1',
+        items: [],
+      },
+      {
+        id: 'column-2',
+        items: [],
+      },
+    ],
+  });

@@ -3,7 +3,14 @@ import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { Topics, TopicViewInstanceData } from '@minddrop/topics';
 import { ViewInstances } from '@minddrop/views';
 import { act, fireEvent, render } from '@minddrop/test-utils';
-import { cleanup, core, setup, topicViewColumnsInstance } from '../test-utils';
+import { i18n } from '@minddrop/i18n';
+import {
+  cleanup,
+  core,
+  setup,
+  topicViewColumnsInstance,
+  emptyTopicViewColumnsInstance,
+} from '../test-utils';
 import { TopicViewColumns } from './TopicViewColumns';
 import { TopicViewColumnsData } from '../types';
 
@@ -19,10 +26,8 @@ describe('<TopicViewColumns />', () => {
 
   afterEach(cleanup);
 
-  const init = () => {
-    const utils = render(
-      <TopicViewColumns instanceId={topicViewColumnsInstance.id} />,
-    );
+  const init = (instanceId = topicViewColumnsInstance.id) => {
+    const utils = render(<TopicViewColumns instanceId={instanceId} />);
 
     return utils;
   };
@@ -182,6 +187,51 @@ describe('<TopicViewColumns />', () => {
       >(topicViewColumnsInstance.id);
 
       expect(viewInstance.columns[0].items[0].id).toBe(movedDropId);
+    });
+  });
+
+  describe('delete button', () => {
+    it('is rendered in empty columns', () => {
+      const { getAllByText } = init(emptyTopicViewColumnsInstance.id);
+
+      // Get the delete button label text
+      const label = i18n.t('deleteColumn');
+
+      // Should render 3 delete column buttons
+      expect(getAllByText(label).length).toBe(3);
+    });
+
+    it('is not rendered in columns containing content', () => {
+      const { queryByText } = init();
+
+      // Get the delete button label text
+      const label = i18n.t('deleteColumn');
+
+      // Should not contain any delete column buttons
+      expect(queryByText(label)).toBeNull();
+    });
+
+    it('deletes the column', () => {
+      const { getAllByText } = init(emptyTopicViewColumnsInstance.id);
+
+      // Get the delete button label text
+      const label = i18n.t('deleteColumn');
+
+      act(() => {
+        // Click the first column's delete button
+        fireEvent.click(getAllByText(label)[0]);
+      });
+
+      // Get the updated view instance
+      const viewInstance = ViewInstances.get<TopicViewColumnsData>(
+        emptyTopicViewColumnsInstance.id,
+      );
+
+      // Should delete the first column
+      expect(viewInstance.columns.length).toBe(2);
+      expect(
+        viewInstance.columns.find((column) => column.id === 'column-0'),
+      ).toBeUndefined();
     });
   });
 });

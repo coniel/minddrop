@@ -33,6 +33,7 @@
     "@minddrop/app-ui": "^0.1.0",
     "@minddrop/core": "^0.3.1",
     "@minddrop/drops": "^0.1.1",
+    "@minddrop/i18n": "^0.2.1",
     "@minddrop/resources": "^0.1.0",
     "@minddrop/topics": "^0.1.1",
     "@minddrop/ui": "^0.2.2",

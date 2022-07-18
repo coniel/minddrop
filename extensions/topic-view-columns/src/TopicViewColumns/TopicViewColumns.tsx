@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FC, useCallback, useState } from 'react';
-import './TopicViewColumns.css';
+import { FieldValue } from '@minddrop/utils';
 import { App } from '@minddrop/app';
 import { useTopic, TopicViewInstanceData } from '@minddrop/topics';
 import { useDrops } from '@minddrop/drops';
@@ -14,6 +14,7 @@ import {
   useViewInstance,
   ViewInstances,
 } from '@minddrop/views';
+import { Button } from '@minddrop/ui';
 import { useCore } from '@minddrop/core';
 import {
   ColumnsAddDropsMetadata,
@@ -23,6 +24,7 @@ import {
 } from '../types';
 import { moveColumnItems } from '../moveColumnItems';
 import { moveItemsToNewColumn } from '../moveItemsToNewColumn';
+import './TopicViewColumns.css';
 
 export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   const { columns, topic: topicId } =
@@ -159,6 +161,20 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     }
   };
 
+  const handleDeleteColumn = useCallback(
+    (columnId: string) => {
+      // Update the view instance, removing the column
+      ViewInstances.update<UpdateTopicViewColumnsInstanceData>(
+        core,
+        instanceId,
+        {
+          columns: FieldValue.arrayFilter((column) => column.id !== columnId),
+        },
+      );
+    },
+    [core, instanceId],
+  );
+
   return (
     <TopicView topicId={topicId}>
       <div className="topic-view-columns">
@@ -240,7 +256,16 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                       { active: dragOver === `${columnIndex}:undefined` },
                       'bottom-drop-zone',
                     )}
-                  />
+                  >
+                    {!column.items.length && (
+                      <Button
+                        variant="neutral"
+                        label="deleteColumn"
+                        className="delete-button"
+                        onClick={() => handleDeleteColumn(column.id)}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

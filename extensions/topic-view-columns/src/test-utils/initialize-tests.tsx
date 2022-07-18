@@ -15,7 +15,10 @@ import * as ViewsExtension from '@minddrop/views';
 import * as ExtensionsExtension from '@minddrop/extensions';
 import { Extension } from '../topic-view-columns-extension';
 import { topicViewColumnsConfig } from '../config';
-import { topicViewColumnsInstance } from './topic-view-columns.data';
+import {
+  topicViewColumnsInstance,
+  emptyTopicViewColumnsInstance,
+} from './topic-view-columns.data';
 
 const { topicExtension } = EXTENSIONS_TEST_DATA;
 const { tSixDrops, topicViewInstances } = TOPICS_TEST_DATA;
@@ -83,6 +86,7 @@ export function setup() {
         (instance) => instance.id !== topicViewColumnsInstance.id,
       ),
       topicViewColumnsInstance,
+      emptyTopicViewColumnsInstance,
     ]);
 
     // Enable extensions on the topic

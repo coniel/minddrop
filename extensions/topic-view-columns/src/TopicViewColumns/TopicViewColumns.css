@@ -30,7 +30,20 @@
 .topic-view-columns .bottom-drop-zone {
   border-radius: var(--radiusLg);
   height: 140px;
-  pointer-events: none;
+  text-align: center;
+}
+
+.topic-view-columns .column .delete-button {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.topic-view-columns .column:hover .delete-button {
+  opacity: 0.7;
+}
+
+.topic-view-columns .delete-button:hover {
+  opacity: 1;
 }
 
 .topic-view-columns .bottom-drop-zone.active {
