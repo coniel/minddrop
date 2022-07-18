@@ -109,21 +109,4 @@ describe('moveColumnItems', () => {
       },
     ]);
   });
-
-  it('removes excess empty columns', () => {
-    const excessColumns: Columns = [
-      { id: 'column-0', items: [drop1Reference] },
-      { id: 'column-1', items: [drop2Reference] },
-      { id: 'column-2', items: [drop3Reference] },
-      { id: 'column-3', items: [drop4Reference] },
-    ];
-
-    const result = moveColumnItems(excessColumns, [drop1Reference], 1, 1);
-
-    expect(result).toEqual([
-      { id: 'column-1', items: [drop2Reference, drop1Reference] },
-      { id: 'column-2', items: [drop3Reference] },
-      { id: 'column-3', items: [drop4Reference] },
-    ]);
-  });
 });

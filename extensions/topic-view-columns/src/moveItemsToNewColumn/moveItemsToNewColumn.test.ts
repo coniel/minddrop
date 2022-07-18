@@ -56,26 +56,4 @@ describe('moveItemsToNewColumn', () => {
       { id: 'drop-9', resource: 'drops:drop' },
     ]);
   });
-
-  it('removes excess emptied columns', () => {
-    const result = moveItemsToNewColumn(
-      columns,
-      ['drop-4', 'drop-5', 'drop-6'],
-      3,
-    );
-
-    // Should have same amount of columns as before (1 added, 1 removed)
-    expect(result.length).toBe(columns.length);
-    // Should have moved items to last column
-    expect(result[1].items).toEqual([
-      { id: 'drop-7', resource: 'drops:drop' },
-      { id: 'drop-8', resource: 'drops:drop' },
-      { id: 'drop-9', resource: 'drops:drop' },
-    ]);
-    expect(result[2].items).toEqual([
-      { id: 'drop-4', resource: 'drops:drop' },
-      { id: 'drop-5', resource: 'drops:drop' },
-      { id: 'drop-6', resource: 'drops:drop' },
-    ]);
-  });
 });

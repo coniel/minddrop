@@ -1,5 +1,4 @@
 import { generateId } from '@minddrop/utils';
-import { removeEmptiedColumns } from '../removeEmptiedColumns';
 import { removeItemsFromColumns } from '../removeItemsFromColumns';
 import { Columns } from '../types';
 
@@ -23,16 +22,13 @@ export function moveItemsToNewColumn(
     .filter((item) => itemIds.includes(item.id));
 
   // Remove moved items from existing columns
-  let updatedColumns = removeItemsFromColumns(columns, itemIds);
+  const updatedColumns = removeItemsFromColumns(columns, itemIds);
 
   // Insert moved intems as new column
   updatedColumns.splice(newColumnIndex, 0, {
     id: generateId(),
     items: movedItems,
   });
-
-  // Remove emptied columns
-  updatedColumns = removeEmptiedColumns(columns, updatedColumns);
 
   return updatedColumns;
 }
