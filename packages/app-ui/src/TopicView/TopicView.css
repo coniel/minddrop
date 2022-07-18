@@ -1,5 +1,15 @@
+.topic-view {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .topic-view .top-toolbar {
   padding: 8px;
+}
+
+.main {
+  overflow-y: scroll;
 }
 
 .topic-view .header {
