@@ -23,3 +23,47 @@
 .to-do-element.done .icon {
   fill: var(--primary10);
 }
+
+.color-blue .to-do-element.done .icon {
+  fill: var(--blue10);
+}
+
+.color-cyan .to-do-element.done .icon {
+  fill: var(--cyan10);
+}
+
+.color-red .to-do-element.done .icon {
+  fill: var(--red10);
+}
+
+.color-red .to-do-element.done .icon {
+  fill: var(--red10);
+}
+
+.color-pink .to-do-element.done .icon {
+  fill: var(--pink10);
+}
+
+.color-purple .to-do-element.done .icon {
+  fill: var(--purple10);
+}
+
+.color-green .to-do-element.done .icon {
+  fill: var(--green10);
+}
+
+.color-orange .to-do-element.done .icon {
+  fill: var(--orange10);
+}
+
+.color-yellow .to-do-element.done .icon {
+  fill: var(--yellow10);
+}
+
+.color-brown .to-do-element.done .icon {
+  fill: var(--brown10);
+}
+
+.color-gray .to-do-element.done .icon {
+  fill: var(--gray10);
+}
