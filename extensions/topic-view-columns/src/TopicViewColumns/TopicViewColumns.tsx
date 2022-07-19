@@ -247,7 +247,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                   onDragOver={(event) => handleDragEnter(event, columnIndex)}
                   onDragLeave={(event) => handleDragLeave(event)}
                   onDrop={(event) =>
-                    handleDrop(event, columnIndex, columns.length)
+                    handleDrop(event, columnIndex, column.items.length)
                   }
                   onClick={clearSelectedDrops}
                 >
