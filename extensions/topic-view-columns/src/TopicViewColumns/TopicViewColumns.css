@@ -1,11 +1,13 @@
 .topic-view-columns {
   display: flex;
   height: 100%;
+  width: 100%;
 }
 
 .topic-view-columns .columns {
   display: grid;
   height: 100%;
+  width: 100%;
   padding: 0 8px;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
