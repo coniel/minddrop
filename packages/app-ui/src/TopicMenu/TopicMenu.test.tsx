@@ -40,24 +40,39 @@ describe('TopicMenu', () => {
     return { ...utils, queryByItemLabel, getByItemLabel };
   }
 
-  it('allows creating subtopics', (done) => {
-    const onAddSubtopic = jest.fn();
-    const { getByItemLabel } = init({ onAddSubtopic });
+  describe('Add subtopic', () => {
+    it('adds a subtopic', (done) => {
+      const onAddSubtopic = jest.fn();
+      // Render with a `onAddSubtopic` callback
+      const { getByItemLabel } = init({ onAddSubtopic });
 
-    // Listen to 'topics:add-subtopics' events
-    Topics.addEventListener(core, 'topics:topic:add-subtopics', ({ data }) => {
-      if (data.topic.id === topicId) {
-        // Should call onAddSubtopic callback with the added subtopic
-        expect(onAddSubtopic).toHaveBeenCalledWith(
-          Object.values(data.subtopics)[0],
-        );
-        done();
-      }
+      // Listen to 'topics:add-subtopics' events
+      Topics.addEventListener(
+        core,
+        'topics:topic:add-subtopics',
+        ({ data }) => {
+          if (data.topic.id === topicId) {
+            // Should call onAddSubtopic callback with the added subtopic
+            expect(onAddSubtopic).toHaveBeenCalledWith(
+              Object.values(data.subtopics)[0],
+            );
+            done();
+          }
+        },
+      );
+
+      // Click the 'Add subtopic' item
+      act(() => {
+        fireEvent.click(getByItemLabel('addSubtopic'));
+      });
     });
 
-    // Click the 'Add subtopic' item
-    act(() => {
-      fireEvent.click(getByItemLabel('Add subtopic'));
+    it('is not rendered if `onAddSubtopic` callback is not provided', () => {
+      // Render without an `onAddSubtopic` callback
+      const { queryByItemLabel } = init();
+
+      // Should not render 'Add subtopic' menu item
+      expect(queryByItemLabel('addSubtopic')).toBeNull();
     });
   });
 
@@ -649,7 +664,7 @@ describe('TopicMenu', () => {
     it('calls onRename when clicked', () => {
       const onRename = jest.fn();
 
-      // Render with onRename callback
+      // Render with an `onRename` callback
       const { getByItemLabel } = init({ onRename });
 
       act(() => {
@@ -661,7 +676,8 @@ describe('TopicMenu', () => {
       expect(onRename).toHaveBeenCalled();
     });
 
-    it('is not rendered if callback is not passed in', () => {
+    it('is not rendered if `onRename` callback is not provided', () => {
+      // Render without a `onRename` callback
       const { queryByItemLabel } = init();
 
       // Should not contain 'Rename' item

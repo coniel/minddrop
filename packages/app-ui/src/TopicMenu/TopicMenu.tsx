@@ -129,20 +129,20 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       // Call the onAddSubtopic callback
       onAddSubtopic(subtopic);
     }
-  }, [topic.id, onAddSubtopic]);
+  }, [topic.id, onAddSubtopic, core]);
 
   const handleAddTo = useCallback(
     (event: Event, selectedTopicId: string) => {
       // Add topic as sutopic in selectd topic
       Topics.addSubtopics(core, selectedTopicId, [topic.id]);
     },
-    [topic.id],
+    [topic.id, core],
   );
 
   const handleAddToRoot = useCallback(() => {
     // Add topic to the root level
     App.addRootTopics(core, [topic.id]);
-  }, [topic.id]);
+  }, [topic.id, core]);
 
   const handleMoveTo = useCallback(
     (event: Event, selectedTopicId: string) => {
@@ -157,7 +157,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
         Topics.moveSubtopics(core, parentId, selectedTopicId, [topic.id]);
       }
     },
-    [trail, topic.id],
+    [trail, topic.id, core, isRootTopic],
   );
 
   const handleMoveToRoot = useCallback(() => {
@@ -166,7 +166,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
 
     // Move the topic to the root level
     App.moveSubtopicsToRoot(core, parentId, [topic.id]);
-  }, [trail, topic.id]);
+  }, [trail, topic.id, core]);
 
   const handleArchive = useCallback(() => {
     if (trail.length === 1) {
@@ -182,7 +182,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       // Call the onArchiveCallback
       onArchive();
     }
-  }, [trail, onArchive]);
+  }, [trail, onArchive, core]);
 
   const handleArchiveEverywhere = useCallback(() => {
     if (isRootTopic) {
@@ -199,7 +199,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       // Call the onArchiveCallback
       onArchive();
     }
-  }, [parentTopics, isRootTopic, topic.id, onArchive]);
+  }, [parentTopics, isRootTopic, topic.id, onArchive, core]);
 
   const handleRemove = useCallback(() => {
     if (trail.length === 1) {
@@ -214,7 +214,7 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
     if (onDelete) {
       onDelete();
     }
-  }, [trail, onDelete]);
+  }, [trail, onDelete, core]);
 
   const handleDelete = useCallback(() => {
     // Delete the topic
@@ -224,17 +224,19 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
       // Call the onDelete callback
       onDelete();
     }
-  }, [topic.id, onDelete]);
+  }, [topic.id, onDelete, core]);
 
-  let items: MenuContents = [
+  let items: MenuContents = [];
+
+  if (onAddSubtopic) {
     // Add subtopic
-    {
+    items.push({
       type: 'menu-item',
       label: i18n.t('addSubtopic'),
       onSelect: handleAddSubtopic,
       icon: 'add',
-    },
-  ];
+    });
+  }
 
   if (onRename) {
     // Add 'Rename' item if there an onRename callback was provided
@@ -357,5 +359,5 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
     items,
   );
 
-  return <>{content}</>;
+  return <>{content.map((item) => item)}</>;
 };
