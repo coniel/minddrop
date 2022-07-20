@@ -46,12 +46,18 @@ const homeView: ViewConfig = {
   id: 'app:home',
 };
 
+const trashView: ViewConfig = {
+  ...staticViewConfig,
+  id: 'app:trash',
+};
+
 export const core = initializeCore({ appId: 'app', extensionId: 'app' });
 
 initializeI18n();
 
 export function setup() {
   Views.register(core, homeView);
+  Views.register(core, trashView);
   viewConfigs.forEach((view) => Views.register(core, view));
   dropTypeConfigs.forEach((config) => Drops.register(core, config));
   ViewInstances.store.load(core, [...viewInstances, ...topicViewInstances]);

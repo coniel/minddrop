@@ -12,3 +12,4 @@ export * from './DropDropdownMenu';
 export * from './DropActions';
 export * from './DropTrashActions';
 export * from './TopicSelectionMenu';
+export * from './TrashView';
