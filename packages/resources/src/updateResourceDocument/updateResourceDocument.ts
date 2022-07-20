@@ -67,12 +67,12 @@ export function validateExternalUpdateData<TData>(data: TData) {
  * Updates a resource document and dispatches a
  * `[resource]:update` event.
  *
- * @param core A MindDrop core instance.
- * @param store The resource store.
- * @param config The resource config.
- * @param documentId The ID of the document to update.
- * @param data The update data.
- * @param isInternalUpdate Whether the function is being called internally within the API.
+ * @param core - A MindDrop core instance.
+ * @param store - The resource store.
+ * @param config - The resource config.
+ * @param documentId - The ID of the document to update.
+ * @param data - The update data.
+ * @param isInternalUpdate - Whether the function is being called internally within the API.
  */
 export function updateResourceDocument<
   TData extends RDData,
@@ -94,6 +94,8 @@ export function updateResourceDocument<
   config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
   data: Partial<TData>,
+  isInternalUpdate?: boolean,
+  skipSchemaHooks?: boolean,
 ): TResourceDocument;
 export function updateResourceDocument<
   TData extends RDData,
@@ -104,7 +106,8 @@ export function updateResourceDocument<
   config: ResourceConfig<TData, TResourceDocument>,
   documentId: string,
   data: RDUpdateData<TData>,
-  isInternalUpdate?: true,
+  isInternalUpdate?: boolean,
+  skipSchemaHooks?: boolean,
 ): TResourceDocument {
   // Get the document from the store
   const document = store.get(documentId);
@@ -149,8 +152,10 @@ export function updateResourceDocument<
   // Add the document update to the document changes store
   ResourceDocumentChangesStore.addUpdated(documentId, update);
 
-  // Run schema update hooks
-  runSchemaUpdateHooks(core, config.dataSchema, update.before, update.after);
+  if (!skipSchemaHooks) {
+    // Run schema update hooks
+    runSchemaUpdateHooks(core, config.dataSchema, update.before, update.after);
+  }
 
   // Dispatch a `[resource]:update` event
   core.dispatch(`${config.resource}:update`, update);
