@@ -9,7 +9,8 @@ import {
 import { generateResourceDocument } from '../generateResourceDocument';
 import { ResourceApisStore } from '../ResourceApisStore';
 import { cleanup, core } from '../test-utils';
-import { ResourceApi, RDDataSchema, ResourceDocument } from '../types';
+import { RDDataSchema, ResourceDocument } from '../types';
+import { registerResource } from '../registerResource';
 import { createResource } from './createResource';
 
 interface Data {
@@ -17,6 +18,7 @@ interface Data {
   bar: string;
   baz: string;
   qux: string;
+  children?: string[];
 }
 
 interface CreateData {
@@ -46,6 +48,10 @@ const dataSchema: RDDataSchema<Data> = {
     type: 'string',
     static: true,
   },
+  children: {
+    type: 'resource-ids',
+    resource: 'tests:child',
+  },
 };
 
 const onClear = jest.fn();
@@ -72,6 +78,11 @@ const ResourceApi = {
   extension: core.extensionId,
 };
 
+const ChildResourceApi = createResource({
+  resource: 'tests:child',
+  dataSchema: { foo: { type: 'string', required: false } },
+});
+
 describe('resource API', () => {
   let existingDoc1: ResourceDocument<Data>;
   let existingDoc2: ResourceDocument<Data>;
@@ -85,8 +96,9 @@ describe('resource API', () => {
 
   beforeEach(() => {
     act(() => {
-      // Register the test resource type
+      // Register the test resources
       ResourceApisStore.register(ResourceApi);
+      registerResource(core, ChildResourceApi);
       // Create a couple of test documents
       existingDoc1 = ResourceApi.create(core, {});
       existingDoc2 = ResourceApi.create(core, {});
@@ -387,6 +399,32 @@ describe('resource API', () => {
 
       // Document should not contain the parent
       expect(document.parents).toEqual([]);
+    });
+  });
+
+  describe('normalize', () => {
+    it('normalizes the document', () => {
+      // Generate a document containing a child which
+      // does not exist.
+      const document = generateResourceDocument<Data>('tests:test', {
+        foo: 'foo',
+        bar: 'bar',
+        baz: 'baz',
+        qux: 'qux',
+        children: ['missing'],
+      });
+
+      // Load the document into the store
+      ResourceApi.store.load(core, [document]);
+
+      // Normalize the document
+      ResourceApi.normalize(core, document.id);
+
+      // Get the updatd document
+      const updated = ResourceApi.get(document.id);
+
+      // Document should be normalized
+      expect(updated.children).toEqual([]);
     });
   });
 

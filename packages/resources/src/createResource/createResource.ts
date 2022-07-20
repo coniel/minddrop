@@ -26,6 +26,7 @@ import { useResourceDocuments } from '../useResourceDocuments';
 import { useAllResourceDocuments } from '../useAllResourceDocuments';
 import { addParentsToResourceDocument } from '../addParentsToResourceDocument';
 import { removeParentsFromResourceDocument } from '../removeParentsFromResourceDocument';
+import { normalizeResourceDocument } from '../normalizeResourceDocument';
 
 /**
  * Creates a new resource, returning its API.
@@ -91,6 +92,8 @@ export function createResource<
         documentId,
         parentreferences,
       ),
+    normalize: (core, documentId) =>
+      normalizeResourceDocument(core, store, config, documentId),
     filter: filterResourceDocuments,
     hooks: {
       useDocument: (documentId) => useResourceDocument(store, documentId),
