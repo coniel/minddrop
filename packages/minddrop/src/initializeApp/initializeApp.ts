@@ -92,6 +92,11 @@ export async function initializeApp({
       Extensions.enableOnTopics(core, extension.id, [data.id]);
     });
   });
+
+  // Normalize all topics
+  Object.keys(Topics.getAll()).forEach((topicId) =>
+    Topics.normalize(core, topicId),
+  );
 }
 
 export function registerViews() {
