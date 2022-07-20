@@ -42,6 +42,7 @@ export const App: AppApi = {
     const view = Views.get(viewId);
 
     useAppStore.getState().setView(viewId);
+    useAppStore.getState().setViewInstance(null);
 
     core.dispatch('app:view:open', { view, instance: null });
   },

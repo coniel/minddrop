@@ -39,6 +39,16 @@ describe('App', () => {
       expect(result.current.view).toBe(staticViewConfig.id);
     });
 
+    it('clears the current view instance ID in the store', () => {
+      const { result } = renderHook(() => useAppStore((state) => state));
+
+      act(() => {
+        App.openView(core, staticViewConfig.id);
+      });
+
+      expect(result.current.viewInstance).toBeNull();
+    });
+
     it("dispatches a 'app:view:open' event", (done) => {
       core.addEventListener('app:view:open', (payload) => {
         expect(payload.data.view).toEqual(Views.get(staticViewConfig.id));
