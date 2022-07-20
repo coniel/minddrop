@@ -29,6 +29,7 @@ export const Topics: TopicsApi = {
   delete: TopicsResource.delete,
   restore: TopicsResource.restore,
   deletePermanently: TopicsResource.deletePermanently,
+  normalize: TopicsResource.normalize,
   addParents: TopicsResource.addParents,
   removeParents: TopicsResource.removeParents,
   addSubtopics,

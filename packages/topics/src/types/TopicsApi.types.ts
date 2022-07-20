@@ -149,6 +149,15 @@ export interface TopicsApi {
   deletePermanently(core: Core, topicId: string): Topic;
 
   /**
+   * Normalizes a topic, removing any references to documents
+   * (such as drops) which do not exist.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicId The ID of the topic to normalize.
+   */
+  normalize(core: Core, topicId: string): void;
+
+  /**
    * Adds subtopics into a parent topic.
    * Dispatches an `topics:add-subtopics` event, as well
    * as a `topics:update` event.
