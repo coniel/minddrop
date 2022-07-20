@@ -10,6 +10,7 @@
 
 .main {
   overflow-y: scroll;
+  height: 100%;
 }
 
 .topic-view .header {
@@ -20,4 +21,8 @@
 
 .topic-view .header .topic-title {
   flex: 1;
+}
+
+.topic-view .content {
+  min-height: 100%;
 }
