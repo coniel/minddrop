@@ -29,7 +29,7 @@ import {
 } from '@minddrop/rich-text';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 
-const { rootTopicIds, topics } = TOPICS_TEST_DATA;
+const { rootTopicIds, topics, topicViewInstances } = TOPICS_TEST_DATA;
 
 const { richTextElements, richTextDocuments, richTextDocument1 } =
   RICH_TEXT_TEST_DATA;
@@ -47,7 +47,10 @@ const homeViewConfig: ViewConfig = {
 Views.register(core, homeViewConfig);
 
 VIEWS_TEST_DATA.viewConfigs.forEach((config) => Views.register(core, config));
-ViewInstances.store.load(core, VIEWS_TEST_DATA.viewInstances);
+ViewInstances.store.load(core, [
+  ...VIEWS_TEST_DATA.viewInstances,
+  ...topicViewInstances,
+]);
 
 DropsExtension.onRun(core);
 ViewExtension.onRun(core);
@@ -56,16 +59,22 @@ RichTextExtension.onRun(core);
 
 Drops.store.load(
   core,
-  DROPS_TEST_DATA.drops.map((drop) => ({
-    ...drop,
-    richTextDocument: richTextDocument1.id,
-    parents: [
-      {
-        resource: 'topics:topic',
-        id: TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.topic,
-      },
-    ],
-  })),
+  DROPS_TEST_DATA.drops.map((drop) => {
+    // Remove default text data
+    const dropWithoutText = { ...drop };
+    delete dropWithoutText.text;
+
+    return {
+      ...dropWithoutText,
+      richTextDocument: richTextDocument1.id,
+      parents: [
+        {
+          resource: 'topics:topic',
+          id: TOPIC_VIEW_COLUMNS_TEST_DATA.topicViewColumnsInstance.topic,
+        },
+      ],
+    };
+  }),
 );
 Topics.store.load(core, TOPICS_TEST_DATA.topics);
 ViewInstances.store.load(core, [
