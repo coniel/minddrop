@@ -30,7 +30,7 @@ export interface TopicNavItemProps
 export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   const core = useAppCore();
   // The topic ID is the last ID in the trail
-  const topicId = useMemo(() => trail.slice(-1)[0], trail);
+  const topicId = useMemo(() => trail.slice(-1)[0], [trail]);
   const topic = useTopic(topicId);
   const { instance } = useCurrentView<TopicViewInstanceData>();
   const expandedTopics = useLocalPersistentStoreValue<string[]>(
@@ -57,7 +57,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
           : FieldValue.arrayRemove(topicId),
       );
     },
-    [topicId],
+    [topicId, core],
   );
 
   function openTopicView(topicTrail: string[]) {
