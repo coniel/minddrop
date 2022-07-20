@@ -139,13 +139,10 @@ export const TopicMenu: React.FC<TopicMenuProps> = ({
     [topic.id],
   );
 
-  const handleAddToRoot = useCallback(
-    (event: Event) => {
-      // Add topic to the root level
-      App.addRootTopics(core, [topic.id]);
-    },
-    [topic.id],
-  );
+  const handleAddToRoot = useCallback(() => {
+    // Add topic to the root level
+    App.addRootTopics(core, [topic.id]);
+  }, [topic.id]);
 
   const handleMoveTo = useCallback(
     (event: Event, selectedTopicId: string) => {
