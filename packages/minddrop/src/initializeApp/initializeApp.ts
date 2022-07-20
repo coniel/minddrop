@@ -18,6 +18,7 @@ import ImageDropExtension from '@minddrop/image-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore } from '@minddrop/core';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
+import { TrashView } from '@minddrop/app-ui';
 import { Topics } from '@minddrop/topics';
 import { Views } from '@minddrop/views';
 import { HomeView } from '../HomeView';
@@ -105,5 +106,12 @@ export function registerViews() {
     id: 'app:home',
     type: 'static',
     component: HomeView,
+  });
+
+  // Register the 'app:trash' view
+  Views.register(core, {
+    id: 'app:trash',
+    type: 'static',
+    component: TrashView,
   });
 }
