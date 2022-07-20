@@ -27,4 +27,5 @@ export type IconName =
   | 'toggle-empty'
   | 'toggle-filled'
   | 'trash'
-  | 'turn-into';
+  | 'turn-into'
+  | 'undo';
