@@ -28,8 +28,11 @@ export const DropContextMenu: FC<DropContextMenuProps> = ({
 
   return (
     <ContextMenu
-      onOpenChange={() => {
-        if (!isSelected) {
+      onOpenChange={(open) => {
+        if (!isSelected && open) {
+          // If the drop is not selected, and the menu
+          // is being opened, select the drop as the
+          // only selected drop.
           selectAsOnly();
         }
       }}

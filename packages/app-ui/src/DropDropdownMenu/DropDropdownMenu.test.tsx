@@ -26,7 +26,10 @@ describe('<DropDropdownMenu />', () => {
 
   const init = (props: Partial<DropDropdownMenuProps> = {}) => {
     const utils = render(
-      <DropDropdownMenu dropId={drop1.id} topicId={tSailing.id} {...props} />,
+      <div>
+        <DropDropdownMenu dropId={drop1.id} topicId={tSailing.id} {...props} />
+        <button type="button">close</button>
+      </div>,
     );
 
     const getTriggerButton = () => {
@@ -52,6 +55,32 @@ describe('<DropDropdownMenu />', () => {
 
     // Should have target drop as only selected drop
     expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
+  });
+
+  it('does not set the drop as selectedDrops when menu closes', () => {
+    const { getTriggerButton } = init();
+
+    act(() => {
+      // Open the menu
+      fireEvent.click(getTriggerButton());
+    });
+
+    act(() => {
+      // Clear selected drops
+      App.clearSelectedDrops(core);
+    });
+
+    act(() => {
+      // Close the menu
+      fireEvent.keyDown(getTriggerButton(), {
+        key: 'Escape',
+        code: 'Escape',
+        charCode: 27,
+      });
+    });
+
+    // Drop should not be selected
+    expect(App.getSelectedDrops()).toEqual({});
   });
 
   it('calls onOpenChange', () => {

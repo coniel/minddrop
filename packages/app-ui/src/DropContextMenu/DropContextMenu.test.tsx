@@ -50,4 +50,30 @@ describe('<DropContextMenu />', () => {
     // Should have target drop as only selected drop
     expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
   });
+
+  it('does not set the drop as selectedDrops when menu closes', () => {
+    const { getByText } = init();
+
+    act(() => {
+      // Right click the menu trigger button
+      fireEvent.contextMenu(getByText('trigger'));
+    });
+
+    act(() => {
+      // Clear selected drops
+      App.clearSelectedDrops(core);
+    });
+
+    act(() => {
+      // Close the menu
+      fireEvent.keyDown(getByText('trigger'), {
+        key: 'Escape',
+        code: 'Escape',
+        charCode: 27,
+      });
+    });
+
+    // Drop should not be selected
+    expect(App.getSelectedDrops()).toEqual({});
+  });
 });

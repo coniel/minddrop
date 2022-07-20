@@ -37,11 +37,15 @@ export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
   return (
     <DropdownMenu
       onOpenChange={(open) => {
-        if (!isSelected) {
+        if (!isSelected && open) {
+          // If the drop is not selected, and the menu
+          // is being opened, select the drop as the
+          // only selected drop.
           selectAsOnly();
         }
 
         if (onOpenChange) {
+          // Call the onOpenChange callback if provided
           onOpenChange(open);
         }
       }}
