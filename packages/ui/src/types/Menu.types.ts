@@ -45,6 +45,12 @@ export interface MenuTopicSelectionItemConfig {
   type: 'menu-topic-selection-item';
 
   /**
+   * The topic ID which can be used as the menu element's
+   * key prop.
+   */
+  id: string;
+
+  /**
    * The menu item label, typically the topic's title.
    */
   label: string;

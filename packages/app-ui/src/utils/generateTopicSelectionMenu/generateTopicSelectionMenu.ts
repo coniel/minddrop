@@ -9,6 +9,7 @@ function createTree(
   const topic = Topics.get(topicId);
   return {
     type: 'menu-topic-selection-item',
+    id: topicId,
     onSelect: (event) => onSelect(event, topic.id),
     label: topic.title,
     subtopics: topic.subtopics
