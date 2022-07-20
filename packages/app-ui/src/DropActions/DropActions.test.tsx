@@ -69,6 +69,21 @@ describe('<DropActions />', () => {
     });
   });
 
+  describe('with trash view as parent', () => {
+    it('renders the trash view actions', () => {
+      // Render with trash view as parent
+      const { getByLabelText } = init({
+        currentParent: { resource: 'view', id: 'app:trash' },
+      });
+
+      // Get a trash action button label
+      const deletePermanently = i18n.t('deletePermanently');
+
+      // Should render the trash actions
+      getByLabelText(deletePermanently);
+    });
+  });
+
   describe('visibility', () => {
     it('is invisible by default', () => {
       const { getByTestId } = init();
@@ -84,6 +99,20 @@ describe('<DropActions />', () => {
       act(() => {
         // Click the drop options menu
         const dropOptionsLabel = i18n.t('dropOptions');
+        fireEvent.click(getByLabelText(dropOptionsLabel));
+      });
+
+      expect(getByTestId('drop-actions')).toHaveClass('visible');
+    });
+
+    it('stays visible when opening the drop restore menu', () => {
+      const { getByTestId, getByLabelText } = init({
+        currentParent: { resource: 'view', id: 'app:trash' },
+      });
+
+      act(() => {
+        // Click the drop restore button
+        const dropOptionsLabel = i18n.t('restore');
         fireEvent.click(getByLabelText(dropOptionsLabel));
       });
 

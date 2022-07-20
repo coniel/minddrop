@@ -1,9 +1,10 @@
 import React, { FC, useState } from 'react';
 import { ResourceReference } from '@minddrop/resources';
 import { mapPropsToClasses } from '@minddrop/utils';
-import './DropActions.css';
 import { Toolbar } from '@minddrop/ui';
 import { DropDropdownMenu } from '../DropDropdownMenu';
+import { DropTrashActions } from '../DropTrashActions';
+import './DropActions.css';
 
 export interface DropActionsProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -48,6 +49,11 @@ export const DropActions: FC<DropActionsProps> = ({
           />
         </Toolbar>
       )}
+      {currentParent &&
+        currentParent.resource === 'app:view' &&
+        currentParent.id === 'app:trash' && (
+          <DropTrashActions dropId={dropId} onDropdownOpenChange={setVisible} />
+        )}
     </div>
   );
 };
