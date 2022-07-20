@@ -10,6 +10,8 @@ import { AppSidebar } from './AppSidebar';
 import { core, setup, cleanup } from '../test-utils';
 import { LocalPersistentStore } from '@minddrop/persistent-store';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
+import { i18n } from '@minddrop/i18n';
+import { App } from '@minddrop/app';
 
 const { tSailing } = TOPICS_TEST_DATA;
 
@@ -57,5 +59,42 @@ describe('<AppSidebar />', () => {
     render(<AppSidebar />);
 
     screen.getByText(tSailing.title);
+  });
+
+  describe('Trash menu item', () => {
+    it('opens the trash view', () => {
+      // Render the sidebar
+      const { getByText } = render(<AppSidebar />);
+
+      // Get the 'Trash' menu item label
+      const label = i18n.t('trash');
+
+      act(() => {
+        // Click the 'Trash' menu item
+        fireEvent.click(getByText(label));
+      });
+
+      // Should open the 'app:trash' view
+      expect(App.getCurrentView().view.id).toEqual('app:trash');
+    });
+
+    it('is active when the view is `app:trash`', () => {
+      // Render the sidebar
+      const { getByText, getByRole } = render(<AppSidebar />);
+
+      // Get the 'Trash' menu item label
+      const label = i18n.t('trash');
+
+      act(() => {
+        // Click the 'Trash' menu item
+        fireEvent.click(getByText(label));
+      });
+
+      // 'Trash' menu item should be active
+      expect(getByRole('button', { name: label })).toHaveAttribute(
+        'aria-current',
+        'location',
+      );
+    });
   });
 });
