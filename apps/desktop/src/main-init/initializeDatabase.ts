@@ -1,11 +1,7 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
 import PouchDB from 'pouchdb';
 import { ResourceDocument } from '@minddrop/resources';
-import {
-  DBResourceDocument,
-  initializePouchdb,
-  deserializeResourceDocument,
-} from '@minddrop/pouchdb';
+import { DBResourceDocument, initializePouchdb } from '@minddrop/pouchdb';
 
 export function initializeDatabase(window: BrowserWindow) {
   const appDataDirectory = app.getPath('userData');
@@ -48,15 +44,12 @@ export function initializeDatabase(window: BrowserWindow) {
   }).on('change', (change) => {
     const { doc } = change;
 
-    // Deserialize the database document
-    const document = deserializeResourceDocument(doc);
-
     if (change.deleted) {
       // Remove the deleted document
-      return window.webContents.send('db:remove', JSON.stringify(document));
+      return window.webContents.send('db:remove', JSON.stringify(doc));
     }
 
     // Set the added/updated document
-    return window.webContents.send('db:set', JSON.stringify(document));
+    return window.webContents.send('db:set', JSON.stringify(doc));
   });
 }
