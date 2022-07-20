@@ -24,7 +24,7 @@ export function initializePouchdb(db: ResourceDB): DBApi {
       // Update the document in the database
       await db.put(
         serializeResouceDocument({
-          ...dbDocument,
+          _rev: dbDocument._rev,
           ...document,
         }),
       );
