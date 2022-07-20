@@ -1,6 +1,10 @@
 import React from 'react';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
-import { Topics, TopicViewInstanceData } from '@minddrop/topics';
+import {
+  Topics,
+  TopicViewInstanceData,
+  TOPICS_TEST_DATA,
+} from '@minddrop/topics';
 import { ViewInstances } from '@minddrop/views';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
@@ -15,6 +19,7 @@ import { TopicViewColumns } from './TopicViewColumns';
 import { TopicViewColumnsData } from '../types';
 
 const { drop1 } = DROPS_TEST_DATA;
+const { tSailing } = TOPICS_TEST_DATA;
 
 const getViewInstance = () =>
   ViewInstances.get<TopicViewInstanceData<TopicViewColumnsData>>(
@@ -31,6 +36,16 @@ describe('<TopicViewColumns />', () => {
 
     return utils;
   };
+
+  it('renders subtopics', () => {
+    // Add a subtopic to the topic
+    Topics.addSubtopics(core, topicViewColumnsInstance.topic, [tSailing.id]);
+
+    const { getByText } = init();
+
+    // Should render the subtopic
+    getByText(tSailing.title);
+  });
 
   it('renders drops', () => {
     const { getByText } = init();

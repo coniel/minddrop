@@ -21,7 +21,7 @@ import {
 } from './topic-view-columns.data';
 
 const { topicExtension } = EXTENSIONS_TEST_DATA;
-const { tSixDrops, topicViewInstances } = TOPICS_TEST_DATA;
+const { tSixDrops, topicViewInstances, topics } = TOPICS_TEST_DATA;
 const { dropTypeConfigs, dropConfig, drops } = DROPS_TEST_DATA;
 
 export const topicWithView: Topic = {
@@ -73,7 +73,7 @@ export function setup() {
     Drops.store.load(core, drops);
 
     // Load test topics into topics store
-    Topics.store.load(core, [topicWithView]);
+    Topics.store.load(core, [...topics, topicWithView]);
 
     // Register test views
     [topicViewColumnsConfig].forEach((config) =>

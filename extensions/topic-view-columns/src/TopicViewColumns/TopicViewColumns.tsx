@@ -1,14 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FC, useCallback, useState } from 'react';
 import { FieldValue } from '@minddrop/utils';
-import { App } from '@minddrop/app';
+import { App, useTopicTrail } from '@minddrop/app';
 import { useTopic, TopicViewInstanceData } from '@minddrop/topics';
 import { useDrops } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
   mapPropsToClasses,
 } from '@minddrop/utils';
-import { TopicView } from '@minddrop/app-ui';
+import { TopicView, TopicDrop } from '@minddrop/app-ui';
 import {
   InstanceViewProps,
   useViewInstance,
@@ -33,6 +33,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   const topic = useTopic(topicId);
   const drops = useDrops(topic.drops);
   const [dragOver, setDragOver] = useState<string | null>(null);
+  const trail = useTopicTrail();
 
   const clearSelectedDrops = useCallback(
     () => App.clearSelectedDrops(core),
@@ -178,114 +179,126 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   return (
     <TopicView topicId={topicId}>
       <div className="topic-view-columns">
-        <div className="columns">
-          {columns.map((column, columnIndex) => (
-            <div key={columnIndex} className="column">
-              <div
-                data-testid={`vertical-drop-zone-${columnIndex}`}
-                className={mapPropsToClasses(
-                  { active: dragOver === `vertical-drop-zone-${columnIndex}` },
-                  'vertical-drop-zone',
-                )}
-                onClick={clearSelectedDrops}
-                onDragEnter={(event) =>
-                  handleDragEnterVerticalZone(
-                    event,
-                    `vertical-drop-zone-${columnIndex}`,
-                  )
-                }
-                onDragLeave={(event) => handleDragLeave(event)}
-                onDragOver={(event) =>
-                  handleDragEnterVerticalZone(
-                    event,
-                    `vertical-drop-zone-${columnIndex}`,
-                  )
-                }
-                onDrop={(event) => handleDropVerticalZone(event, columnIndex)}
-              >
-                <div className="indicator" />
-              </div>
-              <div className="column-content">
-                {column.items.map((item, dropIndex) =>
-                  drops[item.id] ? (
-                    <div key={`spacer-${item.id}`}>
-                      <div
-                        data-testid={`spacer-${columnIndex}:${dropIndex}`}
-                        className={mapPropsToClasses(
-                          {
-                            active: dragOver === `${columnIndex}:${dropIndex}`,
-                          },
-                          'spacer-drop-zone',
-                        )}
-                        onDragEnter={(event) =>
-                          handleDragEnter(event, columnIndex, dropIndex)
-                        }
-                        onDragOver={(event) =>
-                          handleDragEnter(event, columnIndex, dropIndex)
-                        }
-                        onDragLeave={(event) => handleDragLeave(event)}
-                        onDrop={(event) =>
-                          handleDrop(event, columnIndex, dropIndex)
-                        }
-                        onClick={clearSelectedDrops}
-                      >
-                        <div className="indicator" />
-                      </div>
-                      {App.renderDrop(drops[item.id], {
-                        resource: 'topics:topic',
-                        id: topicId,
-                      })}
-                    </div>
-                  ) : (
-                    ''
-                  ),
-                )}
+        {topic.subtopics.length > 0 && (
+          <div className="topics">
+            {topic.subtopics.map((topicId) => (
+              <TopicDrop trail={[...trail, topicId]} />
+            ))}
+          </div>
+        )}
+        <div className="columns-container">
+          <div className="columns">
+            {columns.map((column, columnIndex) => (
+              <div key={columnIndex} className="column">
                 <div
-                  className="column-end"
-                  data-testid={`column-end-${columnIndex}`}
-                  onDragEnter={(event) => handleDragEnter(event, columnIndex)}
-                  onDragOver={(event) => handleDragEnter(event, columnIndex)}
-                  onDragLeave={(event) => handleDragLeave(event)}
-                  onDrop={(event) =>
-                    handleDrop(event, columnIndex, column.items.length)
-                  }
+                  data-testid={`vertical-drop-zone-${columnIndex}`}
+                  className={mapPropsToClasses(
+                    {
+                      active: dragOver === `vertical-drop-zone-${columnIndex}`,
+                    },
+                    'vertical-drop-zone',
+                  )}
                   onClick={clearSelectedDrops}
+                  onDragEnter={(event) =>
+                    handleDragEnterVerticalZone(
+                      event,
+                      `vertical-drop-zone-${columnIndex}`,
+                    )
+                  }
+                  onDragLeave={(event) => handleDragLeave(event)}
+                  onDragOver={(event) =>
+                    handleDragEnterVerticalZone(
+                      event,
+                      `vertical-drop-zone-${columnIndex}`,
+                    )
+                  }
+                  onDrop={(event) => handleDropVerticalZone(event, columnIndex)}
                 >
+                  <div className="indicator" />
+                </div>
+                <div className="column-content">
+                  {column.items.map((item, dropIndex) =>
+                    drops[item.id] ? (
+                      <div key={`spacer-${item.id}`}>
+                        <div
+                          data-testid={`spacer-${columnIndex}:${dropIndex}`}
+                          className={mapPropsToClasses(
+                            {
+                              active:
+                                dragOver === `${columnIndex}:${dropIndex}`,
+                            },
+                            'spacer-drop-zone',
+                          )}
+                          onDragEnter={(event) =>
+                            handleDragEnter(event, columnIndex, dropIndex)
+                          }
+                          onDragOver={(event) =>
+                            handleDragEnter(event, columnIndex, dropIndex)
+                          }
+                          onDragLeave={(event) => handleDragLeave(event)}
+                          onDrop={(event) =>
+                            handleDrop(event, columnIndex, dropIndex)
+                          }
+                          onClick={clearSelectedDrops}
+                        >
+                          <div className="indicator" />
+                        </div>
+                        {App.renderDrop(drops[item.id], {
+                          resource: 'topics:topic',
+                          id: topicId,
+                        })}
+                      </div>
+                    ) : (
+                      ''
+                    ),
+                  )}
                   <div
-                    className={mapPropsToClasses(
-                      { active: dragOver === `${columnIndex}:undefined` },
-                      'bottom-drop-zone',
-                    )}
+                    className="column-end"
+                    data-testid={`column-end-${columnIndex}`}
+                    onDragEnter={(event) => handleDragEnter(event, columnIndex)}
+                    onDragOver={(event) => handleDragEnter(event, columnIndex)}
+                    onDragLeave={(event) => handleDragLeave(event)}
+                    onDrop={(event) =>
+                      handleDrop(event, columnIndex, column.items.length)
+                    }
+                    onClick={clearSelectedDrops}
                   >
-                    {!column.items.length && (
-                      <Button
-                        variant="neutral"
-                        label="deleteColumn"
-                        className="delete-button"
-                        onClick={() => handleDeleteColumn(column.id)}
-                      />
-                    )}
+                    <div
+                      className={mapPropsToClasses(
+                        { active: dragOver === `${columnIndex}:undefined` },
+                        'bottom-drop-zone',
+                      )}
+                    >
+                      {!column.items.length && (
+                        <Button
+                          variant="neutral"
+                          label="deleteColumn"
+                          className="delete-button"
+                          onClick={() => handleDeleteColumn(column.id)}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <div
-          data-testid="vertical-drop-zone-view-end"
-          onClick={clearSelectedDrops}
-          className={mapPropsToClasses(
-            { active: dragOver === 'vertical-drop-zone-view-end' },
-            'vertical-drop-zone',
-          )}
-          onDragEnter={(event) =>
-            handleDragEnterVerticalZone(event, 'vertical-drop-zone-view-end')
-          }
-          onDragLeave={(event) => handleDragLeave(event)}
-          onDragOver={(event) => handleDragOver(event)}
-          onDrop={(event) => handleDropVerticalZone(event, columns.length)}
-        >
-          <div className="indicator" />
+            ))}
+          </div>
+          <div
+            data-testid="vertical-drop-zone-view-end"
+            onClick={clearSelectedDrops}
+            className={mapPropsToClasses(
+              { active: dragOver === 'vertical-drop-zone-view-end' },
+              'vertical-drop-zone',
+            )}
+            onDragEnter={(event) =>
+              handleDragEnterVerticalZone(event, 'vertical-drop-zone-view-end')
+            }
+            onDragLeave={(event) => handleDragLeave(event)}
+            onDragOver={(event) => handleDragOver(event)}
+            onDrop={(event) => handleDropVerticalZone(event, columns.length)}
+          >
+            <div className="indicator" />
+          </div>
         </div>
       </div>
     </TopicView>
