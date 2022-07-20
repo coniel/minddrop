@@ -144,6 +144,16 @@ export interface ResourceApi<
   ): TResourceDocument;
 
   /**
+   * Ensures that a document's referenced resource IDs
+   * point to existing documentsm removing any invalid
+   * references.
+   *
+   * @param core - A MindDrop core instance.
+   * @param documentId - The ID of the document to normalize.
+   */
+  normalize(core: Core, documentId: string): void;
+
+  /**
    * Retrieves one or more resource documents by ID.
    *
    * If provided a single ID, returns the requested document.
