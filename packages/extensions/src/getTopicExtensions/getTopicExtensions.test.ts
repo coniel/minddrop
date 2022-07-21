@@ -1,10 +1,5 @@
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import {
-  setup,
-  cleanup,
-  topicExtension,
-  disabledTopicExtension,
-} from '../test-utils';
+import { setup, cleanup, tSailingExtensions } from '../test-utils';
 import { getTopicExtensions } from './getTopicExtensions';
 
 const { tSailing } = TOPICS_TEST_DATA;
@@ -15,15 +10,8 @@ describe('getTopicExtensions', () => {
   afterEach(cleanup);
 
   it('returns the enabled extensions for a topic', () => {
-    const result = getTopicExtensions(tSailing.id);
+    const topicExtensions = getTopicExtensions(tSailing.id);
 
-    expect(
-      result.find((extensionId) => extensionId === topicExtension.id),
-    ).toBeDefined();
-
-    // Should not include disabled extensions
-    expect(
-      result.find((extensionId) => extensionId === disabledTopicExtension.id),
-    ).not.toBeDefined();
+    expect(topicExtensions).toEqual(tSailingExtensions);
   });
 });
