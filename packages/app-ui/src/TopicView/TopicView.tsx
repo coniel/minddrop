@@ -1,17 +1,24 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { Topics, useTopic } from '@minddrop/topics';
-import { IconButton, Toolbar } from '@minddrop/ui';
+import {
+  IconButton,
+  Toolbar,
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from '@minddrop/ui';
 import { App, useAppCore } from '@minddrop/app';
-import { TopicTitle } from '../TopicTitle';
+import { useTranslation } from '@minddrop/i18n';
 import { useLocalPersistentStoreValue } from '@minddrop/persistent-store';
-import { TopicBreadcrumbs } from '../TopicBreadcrumbs';
-import './TopicView.css';
-import { TopicViewOptionsMenu } from '../TopicViewOptionsMenu';
 import { Drops } from '@minddrop/drops';
 import {
   createDataInsertFromDataTransfer,
   setDataTransferData,
 } from '@minddrop/utils';
+import { TopicTitle } from '../TopicTitle';
+import { TopicBreadcrumbs } from '../TopicBreadcrumbs';
+import { TopicViewOptionsMenu } from '../TopicViewOptionsMenu';
+import { AddDropMenu } from '../AddDropMenu';
+import './TopicView.css';
 
 export interface TopicViewProps {
   /**
@@ -21,6 +28,7 @@ export interface TopicViewProps {
 }
 
 export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
+  const { t } = useTranslation();
   const titleInput = useRef<HTMLInputElement | null>(null);
   const core = useAppCore();
   const topic = useTopic(topicId);
@@ -137,7 +145,12 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
         <div className="header">
           <TopicTitle ref={titleInput} topic={topic} />
           <Toolbar className="actions">
-            <IconButton icon="add" label="Add content" />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <IconButton icon="add" label={t('addDrop')} />
+              </DropdownMenuTrigger>
+              <AddDropMenu menuType="dropdown" topicId={topicId} />
+            </DropdownMenu>
             <TopicViewOptionsMenu trail={trail} />
           </Toolbar>
         </div>

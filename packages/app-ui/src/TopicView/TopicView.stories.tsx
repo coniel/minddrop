@@ -12,7 +12,7 @@ export default {
 export const Default: React.FC = () => {
   return (
     <div style={{ margin: -16 }}>
-      <TopicView topic={tSailing.id} />
+      <TopicView topicId={tSailing.id} />
     </div>
   );
 };
