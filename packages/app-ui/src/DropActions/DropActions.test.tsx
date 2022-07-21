@@ -73,7 +73,7 @@ describe('<DropActions />', () => {
     it('renders the trash view actions', () => {
       // Render with trash view as parent
       const { getByLabelText } = init({
-        currentParent: { resource: 'view', id: 'app:trash' },
+        currentParent: { resource: 'app:view', id: 'app:trash' },
       });
 
       // Get a trash action button label
@@ -107,7 +107,7 @@ describe('<DropActions />', () => {
 
     it('stays visible when opening the drop restore menu', () => {
       const { getByTestId, getByLabelText } = init({
-        currentParent: { resource: 'view', id: 'app:trash' },
+        currentParent: { resource: 'app:view', id: 'app:trash' },
       });
 
       act(() => {
