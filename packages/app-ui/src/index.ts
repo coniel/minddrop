@@ -14,3 +14,4 @@ export * from './DropTrashActions';
 export * from './TopicSelectionMenu';
 export * from './TrashView';
 export * from './TopicDrop';
+export * from './AddDropMenu';
