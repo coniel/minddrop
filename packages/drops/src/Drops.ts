@@ -4,9 +4,11 @@ import { createFromDataInsert } from './createFromDataInsert';
 import { duplicateDrops } from './duplicateDrops';
 import { DropsResource } from './DropsResource';
 import { getDropDataInsert } from './drop-data-inserts-store';
+import { createDrop } from './createDrop';
 
 export const Drops: DropsApi = {
   ...DropsResource,
+  create: createDrop,
   createFromDataInsert,
   duplicate: duplicateDrops,
   getDataInsert: getDropDataInsert,

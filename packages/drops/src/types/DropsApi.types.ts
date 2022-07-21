@@ -144,6 +144,12 @@ export interface DropsApi
    * @param type - The type of drop to create.
    * @param data - The default drop property values.
    * @returns The newly created drop.
+   *
+   * @throws ResourceTypeNotRegisteredError
+   * Thrown if the drop type is not registered.
+   *
+   * @throws ResourceValidationError
+   * Thrown if the drop data is invalid.
    */
   create<TTypeCreateData = {}, TTypeData extends DropTypeData = {}>(
     core: Core,

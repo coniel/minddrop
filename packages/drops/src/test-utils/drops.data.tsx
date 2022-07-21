@@ -16,7 +16,6 @@ export const dropConfig: TextDropConfig = {
   fileTypes: ['text/plain'],
   dataSchema: { text: { type: 'string' } },
   component: ({ text }) => <div>{text}</div>,
-  defaultData: { text: 'Hello world' },
   initializeData: () => ({ text: 'Hello world' }),
 };
 
