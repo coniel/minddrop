@@ -22,8 +22,9 @@ export function getExtension(extensionId: string): Extension {
   );
 
   return {
-    ...document,
     ...config,
+    enabled: document.enabled,
+    topics: document.topics,
     document: document.id,
   };
 }
