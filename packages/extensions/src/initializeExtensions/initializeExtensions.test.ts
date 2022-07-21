@@ -1,16 +1,23 @@
 import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
+import { ExtensionsResource } from '../ExtensionsResource';
 import {
   cleanup,
   core,
   topicExtensionConfig,
   appExtensionConfig,
   disabledTopicExtension,
+  extensionDocuments,
 } from '../test-utils';
 import { initializeExtensions } from './initializeExtensions';
 
 describe('initializeExtensions', () => {
   // Start with a cleared state
   beforeAll(cleanup);
+
+  beforeEach(() => {
+    // Load extension documents
+    ExtensionsResource.store.load(core, extensionDocuments);
+  });
 
   afterEach(cleanup);
 
