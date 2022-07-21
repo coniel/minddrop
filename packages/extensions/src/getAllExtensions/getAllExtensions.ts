@@ -8,7 +8,7 @@ import { ExtensionConfigsStore } from '../ExtensionConfigsStore';
  *
  * @returns An array containing all registered extensions.
  */
-export function getRegisteredExtensions(): Extension[] {
+export function getAllExtensions(): Extension[] {
   const configs = ExtensionConfigsStore.getAll();
 
   return configs.map((config) => getExtension(config.id));

@@ -4,7 +4,7 @@ import { ExtensionConfigsStore } from './ExtensionConfigsStore';
 import { ExtensionsResource } from './ExtensionsResource';
 import { getEnabledExtensions } from './getEnabledExtensions';
 import { getExtension } from './getExtension';
-import { getRegisteredExtensions } from './getRegisteredExtensions';
+import { getAllExtensions } from './getAllExtensions';
 import { getTopicExtensions } from './getTopicExtensions';
 import { initializeExtensions } from './initializeExtensions';
 import { registerExtension } from './registerExtension';
@@ -13,7 +13,7 @@ import { unregisterExtension } from './unregisterExtension';
 
 export const Extensions: ExtensionsApi = {
   get: getExtension,
-  getRegistered: getRegisteredExtensions,
+  getAll: getAllExtensions,
   getEnabled: getEnabledExtensions,
   register: registerExtension,
   unregister: unregisterExtension,

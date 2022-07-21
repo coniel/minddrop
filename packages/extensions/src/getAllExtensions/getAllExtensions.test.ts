@@ -1,5 +1,5 @@
 import { setup, cleanup, extensions } from '../test-utils';
-import { getRegisteredExtensions } from './getRegisteredExtensions';
+import { getAllExtensions } from './getAllExtensions';
 
 describe('getEnabledExtensions', () => {
   beforeEach(setup);
@@ -8,7 +8,7 @@ describe('getEnabledExtensions', () => {
 
   it('returns all registered extensions', () => {
     // Get registered extensions
-    const registered = getRegisteredExtensions();
+    const registered = getAllExtensions();
 
     // Should contain all registered extensions
     expect(registered.length).toEqual(extensions.length);

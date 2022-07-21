@@ -38,7 +38,7 @@ export interface ExtensionsApi {
    *
    * @returns An array containing all registered extensions.
    */
-  getRegistered(): Extension[];
+  getAll(): Extension[];
 
   /**
    * Returns an array of all enabled extensions.
@@ -72,12 +72,12 @@ export interface ExtensionsApi {
   unregister(core: Core, extensionId: string): void;
 
   /**
-   * Returns the IDs of extensions enabled for a given topic.
+   * Returns the extensions enabled for a given topic.
    *
    * @param topicId - The ID of the topic for which to retrieve the extensions.
-   * @returns The IDs of the extensions.
+   * @returns An array of extensions.
    */
-  getTopicExtensions(topicId: string): string[];
+  getTopicExtensions(topicId: string): Extension[];
 
   /**
    * Enables an extension on topics.
