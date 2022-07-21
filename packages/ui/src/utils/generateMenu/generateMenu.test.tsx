@@ -74,10 +74,12 @@ const separator: MenuSeparatorConfig = {
 const topicSelectionItem: MenuTopicSelectionItemConfig = {
   type: 'menu-topic-selection-item',
   label: 'topic',
+  id: 'topic-id',
   subtopics: [
     {
       type: 'menu-topic-selection-item',
       label: 'subtopic',
+      id: 'subtopic-id',
       subtopics: [],
       onSelect: jest.fn(),
     },
