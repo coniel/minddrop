@@ -46,12 +46,13 @@ export const backendUtilsAdapter: BackendUtilsApi = {
 
 export async function setup() {
   // Register default views
-  registerViews();
+  registerViews(core);
 
   // Load test topics
   TopicsResource.store.load(core, topics);
 
   await initializeApp({
+    appId: core.appId,
     resourceStorageAdapter,
     fileStorageAdapter,
     backendUtilsAdapter,

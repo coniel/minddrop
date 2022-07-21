@@ -16,7 +16,7 @@ import TextDropExtension from '@minddrop/text-drop';
 import BookmarkDropExtension from '@minddrop/bookmark-drop';
 import ImageDropExtension from '@minddrop/image-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
-import { initializeCore } from '@minddrop/core';
+import { initializeCore, Core } from '@minddrop/core';
 import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
 import { TrashView } from '@minddrop/app-ui';
 import { Topics } from '@minddrop/topics';
@@ -31,9 +31,6 @@ const defaultExtensions = [
   ImageDropExtension,
 ];
 
-// Create the 'app' MindDrop core instance
-const core = initializeCore({ appId: 'app', extensionId: 'app' });
-
 /**
  * Initializes the app by running all core extensions,
  * initializing all non-core extensions, initializing
@@ -44,16 +41,20 @@ const core = initializeCore({ appId: 'app', extensionId: 'app' });
  * all non-core extensions on newly created topics.
  */
 export async function initializeApp({
+  appId,
   resourceStorageAdapter,
   fileStorageAdapter,
   backendUtilsAdapter,
   installedExtensions,
 }: {
+  appId: string;
   resourceStorageAdapter: ResourceStorageAdapterConfig;
   fileStorageAdapter: FileStorageApi;
   backendUtilsAdapter: BackendUtilsApi;
   installedExtensions: ExtensionConfig[];
 }) {
+  // Create the 'app' MindDrop core instance
+  const core = initializeCore({ appId, extensionId: 'app' });
   // Combine default and installed extensions
   const extensions = [...defaultExtensions, ...installedExtensions];
 
@@ -100,7 +101,7 @@ export async function initializeApp({
   );
 }
 
-export function registerViews() {
+export function registerViews(core: Core) {
   // Register the 'app:home' view
   Views.register(core, {
     id: 'app:home',

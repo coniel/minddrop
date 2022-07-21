@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AppSidebar } from '@minddrop/app-ui';
 import { IconsProvider } from '@minddrop/icons';
-import { CoreProvider } from '@minddrop/core';
+import { CoreProvider, initializeCore } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { useCurrentView } from '@minddrop/app';
 import { FileStorageApi } from '@minddrop/files';
@@ -43,7 +43,7 @@ export interface MindDropProps {
 initializeI18n();
 
 // Register the default views
-registerViews();
+registerViews(initializeCore({ appId: 'app', extensionId: 'app' }));
 
 export const MindDrop: React.FC<MindDropProps> = ({
   appId,
@@ -58,6 +58,7 @@ export const MindDrop: React.FC<MindDropProps> = ({
   useEffect(() => {
     async function initialize() {
       await initializeApp({
+        appId,
         resourceStorageAdapter,
         fileStorageAdapter,
         backendUtilsAdapter,
