@@ -1,7 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
-import { Extensions } from '@minddrop/extensions';
 import { AddDropsMetadata, Topics } from '@minddrop/topics';
+import { getTopicDropConfigs } from '../getTopicDropConfigs';
 
 /**
  * Handles data inserts into a topic depending on the insert's `action` parameter:
@@ -29,13 +29,8 @@ export function insertDataIntoTopic<
 
   // Raw data was inserted
   if (action === 'insert') {
-    // Get the topic's extensions
-    const topicExtensions = Extensions.getTopicExtensions(topicId);
-
     // Get the drop type configs added by the topic's extensions
-    const dropConfigs = Drops.getAllTypeConfigs().filter((config) =>
-      topicExtensions.includes(config.extension),
-    );
+    const dropConfigs = getTopicDropConfigs(topicId);
 
     // Create drops using the topic's enabled drop types
     const drops = Drops.createFromDataInsert(core, data, dropConfigs);

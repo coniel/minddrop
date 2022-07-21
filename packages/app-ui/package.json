@@ -31,6 +31,7 @@
     "@minddrop/app": "^0.1.1",
     "@minddrop/core": "^0.3.1",
     "@minddrop/drops": "^0.1.1",
+    "@minddrop/extensions": "^0.1.0",
     "@minddrop/files": "^0.1.1",
     "@minddrop/i18n": "^0.2.1",
     "@minddrop/icons": "^0.3.1",

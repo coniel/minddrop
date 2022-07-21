@@ -16,6 +16,7 @@ import { archiveRootTopics } from '../archiveRootTopics';
 import { unarchiveRootTopics } from '../unarchiveRootTopics';
 import { getArchivedRootTopics } from '../getArchivedRootTopics';
 import { moveSubtopicsToRoot } from '../moveSubtopicsToRoot';
+import { getTopicDropConfigs } from '../getTopicDropConfigs';
 import { moveRootTopicsToParentTopic } from '../moveRootTopicsToParentTopic';
 import { renderDrop } from '../renderDrop';
 
@@ -28,6 +29,7 @@ export const App: AppApi = {
   archiveRootTopics,
   unarchiveRootTopics,
   getArchivedRootTopics,
+  getTopicDropConfigs,
   openTopicView,
   createTopic,
   insertDataIntoTopic,

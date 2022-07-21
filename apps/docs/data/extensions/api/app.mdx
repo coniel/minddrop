@@ -141,6 +141,25 @@ useTopicDragging(topicId: string): TopicDragging
   ]}
 />
 
+### useTopicDropConfigs
+
+Returns the drop configs for the drop types enabled on the given topic.
+
+```ts
+useTopicDropConfigs(topicId: string): DropConfig[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic.',
+    },
+  ]}
+/>
+
 ### createTopic
 
 Creates a new topic along with a default view for it. Returns the new topic.
@@ -455,6 +474,25 @@ Returns a `{ [id]: Topic }` map of the topics currently being dragged.
 ```ts
 App.getDraggedTopics(): TopicMap
 ```
+
+### getTopicDropConfigs
+
+Returns the drop configs for the drop types enabled on the given topic.
+
+```ts
+App.getTopicDropConfigs(topicId: string): DropConfig[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description: 'The ID of the topic.',
+    },
+  ]}
+/>
 
 ## Drops
 

@@ -1,6 +1,13 @@
 import { ComponentType } from 'react';
 import { Core, DataInsert } from '@minddrop/core';
 import { ResourceReference } from '@minddrop/resources';
+import {
+  ViewConfig,
+  ViewInstance,
+  ViewInstanceTypeData,
+} from '@minddrop/views';
+import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
+import { Drop, DropMap, DropTypeConfig } from '@minddrop/drops';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
 import { SlotProps } from '../Slot';
@@ -24,13 +31,6 @@ import {
   UnselectDropsEvent,
   UnselectDropsEventCallback,
 } from './AppEvents.types';
-import {
-  ViewConfig,
-  ViewInstance,
-  ViewInstanceTypeData,
-} from '@minddrop/views';
-import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
-import { Drop, DropMap } from '@minddrop/drops';
 
 export interface AppApi {
   /**
@@ -217,6 +217,15 @@ export interface AppApi {
    * @param topicIds The IDs of the topics to remove from the root level.
    */
   unarchiveRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Returns the drop configs for the drop types enabled
+   * on the given topic.
+   *
+   * @param topicId - The ID of the topic for which to retrieve the drop configs.
+   * @returns An array of drop confiogs.
+   */
+  getTopicDropConfigs(topicId: string): DropTypeConfig[];
 
   /**
    * Opens a topic's view.

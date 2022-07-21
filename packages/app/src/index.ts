@@ -17,3 +17,4 @@ export * from './useSelectedTopics';
 export * from './useRootTopics';
 export * from './useArchivedRootTopics';
 export * from './useTopicTrail';
+export * from './useTopicDropConfigs';
