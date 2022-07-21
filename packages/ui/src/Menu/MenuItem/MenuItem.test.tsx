@@ -17,6 +17,12 @@ describe('<MenuItem />', () => {
     expect(screen.getByRole('menuitem')).toHaveTextContent('Copy');
   });
 
+  it('renders the description', () => {
+    render(<MenuItem label="Text" description="A text drop" />);
+
+    expect(screen.getByRole('menuitem')).toHaveTextContent('A text drop');
+  });
+
   it('renders icon', () => {
     render(<MenuItem label="Copy" icon="duplicate" />);
 

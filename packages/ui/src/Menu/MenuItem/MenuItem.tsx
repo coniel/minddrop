@@ -13,6 +13,11 @@ export interface MenuItemProps {
   label: React.ReactNode;
 
   /**
+   * The item description.
+   */
+  description?: React.ReactNode;
+
+  /**
    * Icon for the item.
    */
   icon?: IconProp;
@@ -46,6 +51,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       disabled,
       hasSubmenu,
       label,
+      description,
       icon,
       keyboardShortcut,
       ...other
@@ -62,25 +68,28 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
         )}
         {...other}
       >
-        <IconRenderer icon={icon} />
-        <Text size="regular" className="label">
-          {label}
-        </Text>
-        {keyboardShortcut && (
-          <KeyboardShortcut
-            color="light"
-            size="tiny"
-            weight="medium"
-            keys={keyboardShortcut}
-          />
-        )}
-        {hasSubmenu && (
-          <Icon
-            name="submenu-indicator"
-            className="submenu-indicator"
-            data-testid="submenu-indicator"
-          />
-        )}
+        <div className="label-container">
+          <IconRenderer icon={icon} />
+          <Text size="regular" className="label">
+            {label}
+          </Text>
+          {keyboardShortcut && (
+            <KeyboardShortcut
+              color="light"
+              size="tiny"
+              weight="medium"
+              keys={keyboardShortcut}
+            />
+          )}
+          {hasSubmenu && (
+            <Icon
+              name="submenu-indicator"
+              className="submenu-indicator"
+              data-testid="submenu-indicator"
+            />
+          )}
+        </div>
+        {description && <div className="description">{description}</div>}
       </div>
     );
   },

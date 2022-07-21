@@ -1,11 +1,15 @@
 .menu-item {
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+
+.menu-item .label-container {
   display: flex;
   align-items: center;
   width: 100%;
   color: var(--textPrimary);
   padding: 5px 14px;
-  cursor: pointer;
-  outline: none;
 }
 
 .menu-item:focus {
@@ -16,7 +20,7 @@
   background-color: var(--bgNeutralActive);
 }
 
-.menu-item.has-submenu {
+.menu-item.has-submenu .label-container {
   padding-right: 0;
 }
 
@@ -51,4 +55,10 @@
   width: 18px;
   margin-inline-end: 8px;
   fill: var(--textNeutralLight);
+}
+
+.menu-item .description {
+  color: var(--textNeutralLight);
+  font-size: var(--fsSmall);
+  padding: 0px 14px 8px 14px;
 }

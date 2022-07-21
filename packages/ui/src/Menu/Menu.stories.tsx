@@ -55,3 +55,16 @@ export const ColorSelection: React.FC = () => (
     </Menu>
   </div>
 );
+
+export const WithDescriptions: React.FC = () => (
+  <div style={{ maxWidth: 240 }}>
+    <Menu>
+      <MenuItem label="Text" description="A rich text drop" />
+      <MenuItem
+        label="Bookmark"
+        description="Save a link as a visual bookmark"
+      />
+      <MenuItem label="Image" description="A simple image drop" />
+    </Menu>
+  </div>
+);
