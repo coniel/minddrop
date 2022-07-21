@@ -7,5 +7,6 @@ export declare global {
     ResourceStorageAdapter: ResourceStorageAdapterConfig;
     FileStorageAdapter: DesktopFileStorageAdapter;
     BackendUtilsAdapter: BackendUtilsApi;
+    getStoreValue(key: string): Promise<string>;
   }
 }
