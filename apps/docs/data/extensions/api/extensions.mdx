@@ -9,6 +9,48 @@ metaDescription: An interface for managing MindDrop's extensions.
   An interface for managing MindDrop's extensions.
 </Description>
 
+## Hooks
+
+Hooks provide access to drops and related data from inside React components. Unlike data accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useAllExtensions
+
+Returns an array of all registered extensions, including disabled ones.
+
+```ts
+useAllExtensions(): Extension[]
+```
+
+### useEnabledExtensions
+
+Returns an array of all enabled extensions.
+
+```ts
+useEnabledExtensions(): Extension[]
+```
+
+### useTopicExtensions
+
+Returns the extensions enabled for a given topic.
+
+```ts
+useTopicExtensions(topicId: string): Extension[]
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The ID of the topic for which to retrieve the extensions.',
+    },
+  ]}
+/>
+
+## Static methods
+
 ### getExtension
 
 Returns a registered extension by ID. Throws an `ExtensionNotRegisteredError` if the extension is not registered.

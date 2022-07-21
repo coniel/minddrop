@@ -194,3 +194,9 @@ export const enabledExtensions = [
   appExtension,
   multiScopeExtension,
 ];
+
+export const tSailingExtensions = [
+  topicExtension,
+  topicNoCallbacksExtension,
+  multiScopeExtension,
+];

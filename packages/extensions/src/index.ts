@@ -4,4 +4,7 @@ export * from './Extensions';
 export * from './extensions-extension';
 export * from './ExtensionsResource';
 export * from './ExtensionConfigsStore';
+export * from './useAllExtensions';
+export * from './useEnabledExtensions';
+export * from './useTopicExtensions';
 export * as EXTENSIONS_TEST_DATA from './test-utils/extensions.data';
