@@ -7,7 +7,7 @@ const packages = contents.filter((file) =>
   fs.statSync(path.resolve(packagesPath, file)).isDirectory(),
 );
 const choices = packages.filter(
-  (package) => !['app-desktop', 'docs', 'storybook', 'theme'].includes(package),
+  (package) => !['app-desktop', 'docs', 'storybook'].includes(package),
 );
 
 module.exports = [

@@ -5,7 +5,7 @@ import React from 'react';
 import { <%= name %> } from './<%= name %>';
 
 export default {
-  title: 'app/<%= name %>',
+  title: 'app-ui/<%= name %>',
   component: <%= name %>,
 };
 
