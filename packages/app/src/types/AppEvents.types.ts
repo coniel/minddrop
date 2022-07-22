@@ -3,28 +3,31 @@ import { DropMap } from '@minddrop/drops';
 import { Topic, TopicMap } from '@minddrop/topics';
 import { ViewConfig, ViewInstance } from '@minddrop/views';
 
+// View events
 export type OpenViewEvent = 'app:view:open';
+// Root topic events
 export type AddRootTopicsEvent = 'app:root-topics:add';
 export type RemoveRootTopicsEvent = 'app:root-topics:remove';
 export type MoveRootTopicsEvent = 'app:root-topics:move';
 export type ArchiveRootTopicsEvent = 'app:root-topics:archive';
 export type UnarchiveRootTopicsEvent = 'app:root-topics:unarchive';
+// Selection events
 export type SelectDropsEvent = 'app:selection:select-drops';
 export type UnselectDropsEvent = 'app:selection:unselect-drops';
-export type ClearSelectedDropsEvent = 'app:clear-selected-drops';
+export type SelectTopicsEvent = 'app:selection:select-topics';
+export type UnselectTopicsEvent = 'app:selection:unselect-topics';
+export type ClearSelectionEvent = 'app:selection:clear';
 
-export type AddRootTopicsEventData = TopicMap;
-export type RemoveRootTopicsEventData = TopicMap;
-export type ArchiveRootTopicsEventData = TopicMap;
-export type UnarchiveRootTopicsEventData = TopicMap;
-export type SelectDropsEventData = DropMap;
-export type UnselectDropsEventData = DropMap;
-
+// View event data
 export interface OpenViewEventData {
   view: ViewConfig;
   instance: ViewInstance | null;
 }
-
+// Root topic event data
+export type AddRootTopicsEventData = TopicMap;
+export type RemoveRootTopicsEventData = TopicMap;
+export type ArchiveRootTopicsEventData = TopicMap;
+export type UnarchiveRootTopicsEventData = TopicMap;
 export interface MoveSubtopicsToRootEventData {
   /**
    * The topic from which the subtopics were moved.
@@ -36,7 +39,6 @@ export interface MoveSubtopicsToRootEventData {
    */
   subtopics: TopicMap;
 }
-
 export interface MoveRootTopicsEventData {
   /**
    * The topic into which the topics were moved.
@@ -48,11 +50,18 @@ export interface MoveRootTopicsEventData {
    */
   topics: TopicMap;
 }
+// Selection event data
+export type SelectDropsEventData = DropMap;
+export type UnselectDropsEventData = DropMap;
+export type SelectTopicsEventData = TopicMap;
+export type UnselectTopicsEventData = TopicMap;
 
+// View event callbacks
 export type OpenViewEventCallback = EventListenerCallback<
   OpenViewEvent,
   OpenViewEventData
 >;
+// Root topic event callbacks
 export type AddRootTopicsEventCallback = EventListenerCallback<
   AddRootTopicsEvent,
   AddRootTopicsEventData
@@ -73,6 +82,7 @@ export type UnarchiveRootTopicsEventCallback = EventListenerCallback<
   UnarchiveRootTopicsEvent,
   UnarchiveRootTopicsEventData
 >;
+// Selection event callbacks
 export type SelectDropsEventCallback = EventListenerCallback<
   SelectDropsEvent,
   SelectDropsEventData
@@ -81,5 +91,13 @@ export type UnselectDropsEventCallback = EventListenerCallback<
   UnselectDropsEvent,
   UnselectDropsEventData
 >;
-export type ClearSelectedDropsEventCallback =
-  EventListenerCallback<ClearSelectedDropsEvent>;
+export type SelectTopicsEventCallback = EventListenerCallback<
+  SelectTopicsEvent,
+  SelectTopicsEventData
+>;
+export type UnselectTopicsEventCallback = EventListenerCallback<
+  UnselectTopicsEvent,
+  UnselectTopicsEventData
+>;
+export type ClearSelectionEventCallback =
+  EventListenerCallback<ClearSelectionEvent>;

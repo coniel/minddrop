@@ -60,8 +60,8 @@ describe('<DropContextMenu />', () => {
     });
 
     act(() => {
-      // Clear selected drops
-      App.clearSelectedDrops(core);
+      // Clear selection
+      App.clearSelection(core);
     });
 
     act(() => {

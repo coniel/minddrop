@@ -35,10 +35,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   const [dragOver, setDragOver] = useState<string | null>(null);
   const trail = useTopicTrail();
 
-  const clearSelectedDrops = useCallback(
-    () => App.clearSelectedDrops(core),
-    [core],
-  );
+  const clearSelection = useCallback(() => App.clearSelection(core), [core]);
 
   const handleDragEnter = (
     event: React.DragEvent<HTMLDivElement>,
@@ -81,7 +78,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     event.preventDefault();
     event.stopPropagation();
     setDragOver(null);
-    App.clearSelectedDrops(core);
+    App.clearSelection(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
 
     if (dataInsert.action === 'sort') {
@@ -126,7 +123,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     event.preventDefault();
     event.stopPropagation();
     setDragOver(null);
-    App.clearSelectedDrops(core);
+    App.clearSelection(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
 
     if (dataInsert.action === 'sort') {
@@ -198,7 +195,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                     },
                     'vertical-drop-zone',
                   )}
-                  onClick={clearSelectedDrops}
+                  onClick={clearSelection}
                   onDragEnter={(event) =>
                     handleDragEnterVerticalZone(
                       event,
@@ -239,7 +236,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                           onDrop={(event) =>
                             handleDrop(event, columnIndex, dropIndex)
                           }
-                          onClick={clearSelectedDrops}
+                          onClick={clearSelection}
                         >
                           <div className="indicator" />
                         </div>
@@ -261,7 +258,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
                     onDrop={(event) =>
                       handleDrop(event, columnIndex, column.items.length)
                     }
-                    onClick={clearSelectedDrops}
+                    onClick={clearSelection}
                   >
                     <div
                       className={mapPropsToClasses(
@@ -285,7 +282,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
           </div>
           <div
             data-testid="vertical-drop-zone-view-end"
-            onClick={clearSelectedDrops}
+            onClick={clearSelection}
             className={mapPropsToClasses(
               { active: dragOver === 'vertical-drop-zone-view-end' },
               'vertical-drop-zone',

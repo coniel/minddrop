@@ -6,7 +6,12 @@ import {
   ViewInstance,
   ViewInstanceTypeData,
 } from '@minddrop/views';
-import { AddDropsMetadata, CreateTopicData, Topic } from '@minddrop/topics';
+import {
+  AddDropsMetadata,
+  CreateTopicData,
+  Topic,
+  TopicMap,
+} from '@minddrop/topics';
 import { Drop, DropMap, DropTypeConfig } from '@minddrop/drops';
 import { UiComponentConfig } from './UiComponentConfig.types';
 import { UiLocation } from './UiLocation';
@@ -24,12 +29,16 @@ import {
   MoveRootTopicsEventCallback,
   ArchiveRootTopicsEvent,
   ArchiveRootTopicsEventCallback,
-  ClearSelectedDropsEvent,
-  ClearSelectedDropsEventCallback,
+  ClearSelectionEvent,
+  ClearSelectionEventCallback,
   SelectDropsEvent,
   SelectDropsEventCallback,
   UnselectDropsEvent,
   UnselectDropsEventCallback,
+  SelectTopicsEvent,
+  SelectTopicsEventCallback,
+  UnselectTopicsEvent,
+  UnselectTopicsEventCallback,
 } from './AppEvents.types';
 
 export interface AppApi {
@@ -262,12 +271,37 @@ export interface AppApi {
   getSelectedDrops(): DropMap;
 
   /**
-   * Clears the selected drops from the store and
-   * dispatches a `app:clear-selected-drops` event.
+   * Adds topics to the selected topics list and
+   * dispatches a `app:selection:select-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicsIds The IDs of the topics to select.
+   */
+  selectTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Removes topics from the selected topics list and
+   * dispatches a `app:selection:unselect-topics` event.
+   *
+   * @param core A MindDrop core instance.
+   * @param topicIds The IDs of the topics to unselect.
+   */
+  unselectTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Returns the currently selected topics.
+   *
+   * @returns A TopicMap of selected topics.
+   */
+  getSelectedTopics(): TopicMap;
+
+  /**
+   * Clears the selected drops and topics and
+   * dispatches a `app:selection:clear` event.
    *
    * @param core A MindDrop core instance.
    */
-  clearSelectedDrops(core: Core): void;
+  clearSelection(core: Core): void;
 
   /**
    * Renders a drop using the appropriate component.
@@ -282,133 +316,161 @@ export interface AppApi {
   /* *** addEventListener overloads *** */
   /* ********************************** */
 
-  // Add 'app:open-view' event listener
+  // Add 'app:view:open' event listener
   addEventListener(
     core: Core,
     event: OpenViewEvent,
     callback: OpenViewEventCallback,
   ): void;
 
-  // Add 'app:add-root-topics' event listener
+  // Add 'app:root-topics:add' event listener
   addEventListener(
     core: Core,
     event: AddRootTopicsEvent,
     callback: AddRootTopicsEventCallback,
   ): void;
 
-  // Add 'app:remove-root-topics' event listener
+  // Add 'app:root-topics:remove' event listener
   addEventListener(
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
   ): void;
 
-  // Add 'app:move-root-topics' event listener
+  // Add 'app:root-topics:move' event listener
   addEventListener(
     core: Core,
     event: MoveRootTopicsEvent,
     callback: MoveRootTopicsEventCallback,
   ): void;
 
-  // Add 'app:unarchive-root-topics' event listener
+  // Add 'app:root-topics:unarchive' event listener
   addEventListener(
     core: Core,
     event: UnarchiveRootTopicsEvent,
     callback: UnarchiveRootTopicsEventCallback,
   ): void;
 
-  // Add 'app:archive-root-topics' event listener
+  // Add 'app:root-topics:archive' event listener
   addEventListener(
     core: Core,
     event: ArchiveRootTopicsEvent,
     callback: ArchiveRootTopicsEventCallback,
   ): void;
 
-  // Add 'app:select-drops' event listener
+  // Add 'app:selection:select-drops' event listener
   addEventListener(
     core: Core,
     event: SelectDropsEvent,
     callback: SelectDropsEventCallback,
   ): void;
 
-  // Add 'app:unselect-drops' event listener
+  // Add 'app:selection:unselect-drops' event listener
   addEventListener(
     core: Core,
     event: UnselectDropsEvent,
     callback: UnselectDropsEventCallback,
   ): void;
 
-  // Add 'app:clear-selected-drops' event listener
+  // Add 'app:selection:select-topics' event listener
   addEventListener(
     core: Core,
-    event: ClearSelectedDropsEvent,
-    callback: ClearSelectedDropsEventCallback,
+    event: SelectTopicsEvent,
+    callback: SelectTopicsEventCallback,
+  ): void;
+
+  // Add 'app:selection:unselect-topics' event listener
+  addEventListener(
+    core: Core,
+    event: UnselectTopicsEvent,
+    callback: UnselectTopicsEventCallback,
+  ): void;
+
+  // Add 'app:selection:clear' event listener
+  addEventListener(
+    core: Core,
+    event: ClearSelectionEvent,
+    callback: ClearSelectionEventCallback,
   ): void;
 
   /* ************************************* */
   /* *** removeEventListener overloads *** */
   /* ************************************* */
 
-  // Remove 'app:open-view' event listener
+  // Remove 'app:view:open' event listener
   removeEventListener(
     core: Core,
     type: OpenViewEvent,
     callback: OpenViewEventCallback,
   ): void;
 
-  // Remove 'app:add-root-topics' event listener
+  // Remove 'app:root-topics:add' event listener
   removeEventListener(
     core: Core,
     event: AddRootTopicsEvent,
     callback: AddRootTopicsEventCallback,
   ): void;
 
-  // Remove 'app:remove-root-topics' event listener
+  // Remove 'app:root-topics:remove' event listener
   removeEventListener(
     core: Core,
     event: RemoveRootTopicsEvent,
     callback: RemoveRootTopicsEventCallback,
   ): void;
 
-  // Remove 'app:move-root-topics' event listener
+  // Remove 'app:root-topics:move' event listener
   removeEventListener(
     core: Core,
     event: MoveRootTopicsEvent,
     callback: MoveRootTopicsEventCallback,
   ): void;
 
-  // Remove 'app:archive-root-topics' event listener
+  // Remove 'app:root-topics:archive' event listener
   removeEventListener(
     core: Core,
     event: ArchiveRootTopicsEvent,
     callback: ArchiveRootTopicsEventCallback,
   ): void;
 
-  // Remove 'app:unarchive-root-topics' event listener
+  // Remove 'app:root-topics:unarchive' event listener
   removeEventListener(
     core: Core,
     event: UnarchiveRootTopicsEvent,
     callback: UnarchiveRootTopicsEventCallback,
   ): void;
 
-  // Remove 'app:select-drops' event listener
+  // Remove 'app:selection:select-drops' event listener
   removeEventListener(
     core: Core,
     event: SelectDropsEvent,
     callback: SelectDropsEventCallback,
   ): void;
 
-  // Remove 'app:unselect-drops' event listener
+  // Remove 'app:selection:unselect-drops' event listener
   removeEventListener(
     core: Core,
     event: UnselectDropsEvent,
     callback: UnselectDropsEventCallback,
   ): void;
 
-  // Remove 'app:clear-selected-drops' event listener
+  // Remove 'app:selection:select-topics' event listener
   removeEventListener(
     core: Core,
-    event: ClearSelectedDropsEvent,
-    callback: ClearSelectedDropsEventCallback,
+    event: SelectTopicsEvent,
+    callback: SelectTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:selection:unselect-topics' event listener
+  removeEventListener(
+    core: Core,
+    event: UnselectTopicsEvent,
+    callback: UnselectTopicsEventCallback,
+  ): void;
+
+  // Remove 'app:selection:clear' event listener
+  removeEventListener(
+    core: Core,
+    event: ClearSelectionEvent,
+    callback: ClearSelectionEventCallback,
   ): void;
 }

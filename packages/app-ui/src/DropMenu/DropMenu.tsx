@@ -99,17 +99,20 @@ export const DropMenu: React.FC<DropMenuProps> = ({
   const rootTopicIds = App.getRootTopics().map((topic) => topic.id);
   let items: MenuContents = [];
 
-  const handleSelectColor = useCallback((color: ContentColor | 'default') => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+  const handleSelectColor = useCallback(
+    (color: ContentColor | 'default') => {
+      // Get selected drops
+      const selectedDrops = App.getSelectedDrops();
 
-    // Update color on selected drops
-    Object.keys(selectedDrops).forEach((id) => {
-      Drops.update(core, id, {
-        color: color === 'default' ? FieldValue.delete() : color,
+      // Update color on selected drops
+      Object.keys(selectedDrops).forEach((id) => {
+        Drops.update(core, id, {
+          color: color === 'default' ? FieldValue.delete() : color,
+        });
       });
-    });
-  }, []);
+    },
+    [core],
+  );
 
   const handleSelectMoveToTopic = useCallback(
     (event: Event, selectedTopicId: string) => {
@@ -125,7 +128,7 @@ export const DropMenu: React.FC<DropMenuProps> = ({
       );
 
       // Unselect the drops
-      App.clearSelectedDrops(core);
+      App.clearSelection(core);
     },
     [core, topicId],
   );
@@ -150,7 +153,7 @@ export const DropMenu: React.FC<DropMenuProps> = ({
 
     // Add duplicated drops to topic
     Topics.addDrops(core, topicId, Object.keys(duplicates));
-  }, [topicId]);
+  }, [core, topicId]);
 
   const handleArchive = useCallback(() => {
     // Get selected drops
@@ -160,8 +163,8 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     Topics.archiveDrops(core, topicId, Object.keys(selectedDrops));
 
     // Unselect the drops
-    App.clearSelectedDrops(core);
-  }, [topicId]);
+    App.clearSelection(core);
+  }, [core, topicId]);
 
   const handleArchiveEverywhere = useCallback(() => {
     // Get selected drops
@@ -189,8 +192,8 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     });
 
     // Unselect the drops
-    App.clearSelectedDrops(core);
-  }, [topicId]);
+    App.clearSelection(core);
+  }, [core]);
 
   const handleDelete = useCallback(() => {
     // Get selected drops
@@ -202,8 +205,8 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     });
 
     // Unselect the drops
-    App.clearSelectedDrops(core);
-  }, [topicId]);
+    App.clearSelection(core);
+  }, [core]);
 
   const handleRemoveFromTopic = useCallback(() => {
     // Get selected drops
@@ -213,8 +216,8 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     Topics.removeDrops(core, topicId, Object.keys(selectedDrops));
 
     // Unselect the drops
-    App.clearSelectedDrops(core);
-  }, [topicId]);
+    App.clearSelection(core);
+  }, [core, topicId]);
 
   if (onSelectEdit) {
     items.push({
@@ -324,5 +327,5 @@ export const DropMenu: React.FC<DropMenuProps> = ({
     items,
   );
 
-  return <>{content}</>;
+  return <>{content.map((item) => item)}</>;
 };

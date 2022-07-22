@@ -11,7 +11,7 @@ import {
 } from '@minddrop/ui';
 import { Drops } from '@minddrop/drops';
 import { Topics } from '@minddrop/topics';
-import { useAppCore, useSelectableDrop, App } from '@minddrop/app';
+import { useAppCore, App } from '@minddrop/app';
 import { TopicSelectionMenu } from '../TopicSelectionMenu';
 
 export interface DropTrashActionsProps
@@ -41,7 +41,7 @@ export const DropTrashActions: FC<DropTrashActionsProps> = ({
     if (!App.getSelectedDrops()[dropId]) {
       // If the drop is not selected, exclusively select
       // it in order to only delete this drop.
-      App.clearSelectedDrops(core);
+      App.clearSelection(core);
       App.selectDrops(core, [dropId]);
     }
 
@@ -53,8 +53,8 @@ export const DropTrashActions: FC<DropTrashActionsProps> = ({
       Drops.deletePermanently(core, drop.id);
     });
 
-    // Clear selected drops
-    App.clearSelectedDrops(core);
+    // Clear selection
+    App.clearSelection(core);
   }, [core, dropId]);
 
   const handleRestore = useCallback(
@@ -62,7 +62,7 @@ export const DropTrashActions: FC<DropTrashActionsProps> = ({
       if (!App.getSelectedDrops()[dropId]) {
         // If the drop is not selected, exclusively select
         // it in order to only delete this drop.
-        App.clearSelectedDrops(core);
+        App.clearSelection(core);
         App.selectDrops(core, [dropId]);
       }
 
@@ -77,8 +77,8 @@ export const DropTrashActions: FC<DropTrashActionsProps> = ({
       // Add the drop to the selected topic
       Topics.addDrops(core, topicId, selectedDrops);
 
-      // Clear selected drops
-      App.clearSelectedDrops(core);
+      // Clear selection
+      App.clearSelection(core);
     },
     [core, dropId],
   );

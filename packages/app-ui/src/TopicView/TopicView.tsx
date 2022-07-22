@@ -50,8 +50,8 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
           });
         }
 
-        // Unselect drops
-        App.clearSelectedDrops(core);
+        // Clear selection
+        App.clearSelection(core);
       } else if (['D', 'd'].includes(event.key) && event.metaKey) {
         event.preventDefault();
 

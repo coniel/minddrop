@@ -188,7 +188,7 @@ describe('app-extension', () => {
       );
     });
 
-    it('clears selected drops when the view changes', async () => {
+    it('clears selection when the view changes', async () => {
       // Run the extension
       onRun(core);
 

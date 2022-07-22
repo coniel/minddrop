@@ -63,7 +63,7 @@ describe('useSelectableTopic', () => {
       shiftKey: true,
     } as unknown as React.MouseEvent;
 
-    it('clears selected topics and selects the topic', () => {
+    it('clears selection and selects the topic', () => {
       const { result } = renderHook(() => useSelectableTopic(tSailing.id));
 
       act(() => {

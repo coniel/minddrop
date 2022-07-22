@@ -3,7 +3,7 @@ import { useAppCore } from '../utils';
 import { selectDrops } from '../selectDrops';
 import { useSelectedDrops } from '../useSelectedDrops';
 import { unselectDrops } from '../unselectDrops';
-import { clearSelectedDrops } from '../clearSelectedDrops';
+import { clearSelection } from '../clearSelection';
 
 export interface DropSelection {
   /**
@@ -56,10 +56,10 @@ export function useSelectableDrop(dropId: string): DropSelection {
     // which clears drop selection.
     event.stopPropagation();
 
-    // If not a shift click, unselect all drops and
-    // select this one.
+    // If not a shift click, clear selection and
+    // select this drop.
     if (!event.shiftKey) {
-      clearSelectedDrops(core);
+      clearSelection(core);
       selectDrops(core, [dropId]);
     } else if (!isSelected) {
       // Shift clicked drop which is not selcted,
@@ -76,8 +76,8 @@ export function useSelectableDrop(dropId: string): DropSelection {
     isSelected,
     select: () => selectDrops(core, [dropId]),
     selectAsOnly: () => {
-      // Unselect other drops
-      clearSelectedDrops(core);
+      // Clear selection
+      clearSelection(core);
       // Select this drop
       selectDrops(core, [dropId]);
     },

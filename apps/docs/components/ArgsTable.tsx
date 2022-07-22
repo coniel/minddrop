@@ -13,7 +13,7 @@ const coreDef: InterfaceDef = {
   name: 'core',
   type: 'Core',
   required: true,
-  description: 'The MindDrop core instance.',
+  description: 'A MindDrop core instance.',
 };
 
 export function ArgsTable({

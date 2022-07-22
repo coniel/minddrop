@@ -9,8 +9,8 @@ export const TrashView: FC = () => {
   const drops = useAllDrops({ deleted: true });
 
   const clearSelectedDrops = useCallback(
-    // Clear selected drops
-    () => App.clearSelectedDrops(core),
+    // Clear selection
+    () => App.clearSelection(core),
     [core],
   );
 

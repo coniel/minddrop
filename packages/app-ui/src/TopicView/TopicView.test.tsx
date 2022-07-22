@@ -316,7 +316,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select another drop
-      App.clearSelectedDrops(core);
+      App.clearSelection(core);
       App.selectDrops(core, [drop2.id]);
     });
 
@@ -354,7 +354,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Clear selected drops
-      App.clearSelectedDrops(core);
+      App.clearSelection(core);
     });
 
     act(() => {

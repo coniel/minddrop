@@ -3,7 +3,7 @@ import { useAppCore } from '../utils';
 import { selectTopics } from '../selectTopics';
 import { useSelectedTopics } from '../useSelectedTopics';
 import { unselectTopics } from '../unselectTopics';
-import { clearSelectedTopics } from '../clearSelectedTopics';
+import { clearSelection } from '../clearSelection';
 
 export interface TopicSelection {
   /**
@@ -45,10 +45,10 @@ export function useSelectableTopic(topicId: string): TopicSelection {
     // which clears topic selection.
     event.stopPropagation();
 
-    // If not a shift click, unselect all topics and
-    // select this one.
+    // If not a shift click, clear selection and
+    // select this topic.
     if (!event.shiftKey) {
-      clearSelectedTopics(core);
+      clearSelection(core);
       selectTopics(core, [topicId]);
     } else if (!isSelected) {
       // Shift clicked topic which is not selcted,

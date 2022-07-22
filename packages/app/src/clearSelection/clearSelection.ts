@@ -1,6 +1,5 @@
 import { Core } from '@minddrop/core';
-import { clearSelectedDrops } from '../clearSelectedDrops';
-import { clearSelectedTopics } from '../clearSelectedTopics';
+import { useAppStore } from '../useAppStore';
 
 /**
  * Clears the current selection of topics and drops
@@ -10,9 +9,9 @@ import { clearSelectedTopics } from '../clearSelectedTopics';
  */
 export function clearSelection(core: Core): void {
   // Clear selected drops
-  clearSelectedDrops(core);
+  useAppStore.getState().clearSelectedDrops();
   // Clear selected topics
-  clearSelectedTopics(core);
+  useAppStore.getState().clearSelectedTopics();
 
   // Dispatch 'app:selection:clear' event
   core.dispatch('app:selection:clear');

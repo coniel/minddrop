@@ -67,7 +67,7 @@ describe('<DropDropdownMenu />', () => {
 
     act(() => {
       // Clear selected drops
-      App.clearSelectedDrops(core);
+      App.clearSelection(core);
     });
 
     act(() => {

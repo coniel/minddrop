@@ -3,7 +3,7 @@ import { setDataTransferData } from '@minddrop/utils';
 import { getSelectedDrops } from '../getSelectedDrops';
 import { useSelectableDrop } from '../useSelectableDrop';
 import { useAppStore } from '../useAppStore';
-import { clearSelectedDrops } from '../clearSelectedDrops';
+import { clearSelection } from '../clearSelection';
 import { useAppCore } from '../utils';
 
 export interface DropDragging {
@@ -32,7 +32,7 @@ export function useDraggableDrop(dropId: string): DropDragging {
     onDragStart: (event) => {
       // Select the drop
       if (!isSelected) {
-        clearSelectedDrops(core);
+        clearSelection(core);
         select();
       }
 

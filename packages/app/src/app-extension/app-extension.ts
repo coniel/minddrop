@@ -121,8 +121,8 @@ export function onRun(core: Core) {
         instance ? instance.id : null,
       );
 
-      // Clear selected drops
-      App.clearSelectedDrops(core);
+      // Clear selection
+      App.clearSelection(core);
     },
   );
 

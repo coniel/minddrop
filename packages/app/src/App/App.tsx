@@ -7,9 +7,12 @@ import { openTopicView } from '../openTopicView';
 import { createTopic } from '../createTopic';
 import { insertDataIntoTopic } from '../insertDataIntoTopic';
 import { selectDrops } from '../selectDrops';
+import { selectTopics } from '../selectTopics';
 import { getSelectedDrops } from '../getSelectedDrops';
-import { clearSelectedDrops } from '../clearSelectedDrops';
+import { getSelectedTopics } from '../getSelectedTopics';
+import { clearSelection } from '../clearSelection';
 import { unselectDrops } from '../unselectDrops';
+import { unselectTopics } from '../unselectTopics';
 import { getRootTopics } from '../getRootTopics';
 import { removeRootTopics } from '../removeRootTopics';
 import { archiveRootTopics } from '../archiveRootTopics';
@@ -35,8 +38,11 @@ export const App: AppApi = {
   insertDataIntoTopic,
   selectDrops,
   unselectDrops,
-  clearSelectedDrops,
+  selectTopics,
+  unselectTopics,
+  clearSelection,
   getSelectedDrops,
+  getSelectedTopics,
   renderDrop,
   Slot,
 
