@@ -2,6 +2,8 @@ export * from './DropdownMenu';
 export * from './DropdownMenuContent';
 export * from './DropdownMenuItem';
 export * from './DropdownMenuLabel';
+export * from './DropdownMenuRadioGroup';
+export * from './DropdownMenuRadioItem';
 export * from './DropdownMenuSeparator';
 export * from './DropdownMenuTopicSelectionItem';
 export * from './DropdownMenuColorSelectionItem';

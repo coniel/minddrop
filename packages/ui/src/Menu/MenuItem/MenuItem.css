@@ -24,6 +24,10 @@
   padding-right: 0;
 }
 
+.menu-item[data-state='checked'] .label-container {
+  padding-right: 14px;
+}
+
 /* Label */
 
 .menu-item .label {
@@ -35,16 +39,12 @@
 
 /* Icon */
 
-.menu-item .icon {
+.menu-item .item-icon {
   display: inline-block;
-  height: 17px;
-  margin-inline-end: 8px;
-}
-
-.menu-item .icon {
   fill: var(--textNeutral);
   width: 17px;
   height: 17px;
+  margin-inline-end: 8px;
 }
 
 /* Submenu indicator */
@@ -56,6 +56,17 @@
   margin-inline-end: 8px;
   fill: var(--textNeutralLight);
 }
+
+/* Item indicator */
+
+.menu-item .item-indicator {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  fill: var(--textNeutralLight);
+}
+
+/* Description */
 
 .menu-item .description {
   color: var(--textNeutralLight);

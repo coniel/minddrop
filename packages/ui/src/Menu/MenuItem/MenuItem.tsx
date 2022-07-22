@@ -33,6 +33,12 @@ export interface MenuItemProps {
   keyboardShortcut?: string[];
 
   /**
+   * Renders at the end of the item. Used to indicate when a menu
+   * item is checked.
+   */
+  itemIndicator?: React.ReactNode;
+
+  /**
    * When `true`, prevents the user from interacting with the item.
    */
   disabled?: boolean;
@@ -53,6 +59,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       label,
       description,
       icon,
+      itemIndicator,
       keyboardShortcut,
       ...other
     },
@@ -69,7 +76,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
         {...other}
       >
         <div className="label-container">
-          <IconRenderer icon={icon} />
+          <IconRenderer className="item-icon" icon={icon} />
           <Text size="regular" className="label">
             {label}
           </Text>
@@ -88,6 +95,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
               data-testid="submenu-indicator"
             />
           )}
+          {itemIndicator}
         </div>
         {description && <div className="description">{description}</div>}
       </div>

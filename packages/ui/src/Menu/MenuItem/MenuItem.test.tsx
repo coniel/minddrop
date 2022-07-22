@@ -42,6 +42,12 @@ describe('<MenuItem />', () => {
     expect(screen.getByRole('menuitem')).toHaveClass('has-submenu');
   });
 
+  it('renders selected indicator', () => {
+    render(<MenuItem itemIndicator="INDICATOR" label="Copy" />);
+
+    screen.getByText('INDICATOR');
+  });
+
   it('renders the keyboard shortcut', () => {
     render(<MenuItem label="Copy" keyboardShortcut={['A', 'B']} />);
 

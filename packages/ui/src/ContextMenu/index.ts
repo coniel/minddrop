@@ -2,6 +2,8 @@ export * from './ContextMenu';
 export * from './ContextMenuContent';
 export * from './ContextMenuItem';
 export * from './ContextMenuLabel';
+export * from './ContextMenuRadioGroup';
+export * from './ContextMenuRadioItem';
 export * from './ContextMenuSeparator';
 export * from './ContextMenuTopicSelectionItem';
 export * from './ContextMenuColorSelectionItem';

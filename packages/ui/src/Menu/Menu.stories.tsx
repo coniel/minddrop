@@ -1,5 +1,6 @@
 import React from 'react';
 import { ContentColors } from '../constants';
+import { Icon } from '../Icon';
 import { ColorSelectionMenuItem } from './ColorSelectionMenuItem';
 import { Menu } from './Menu';
 import { MenuItem } from './MenuItem';
@@ -65,6 +66,21 @@ export const WithDescriptions: React.FC = () => (
         description="Save a link as a visual bookmark"
       />
       <MenuItem label="Image" description="A simple image drop" />
+    </Menu>
+  </div>
+);
+
+export const Radio: React.FC = () => (
+  <div style={{ maxWidth: 240 }}>
+    <Menu>
+      <MenuLabel>Appearance</MenuLabel>
+      <MenuItem label="Use system setting" />
+      <MenuItem
+        data-state="checked"
+        label="Light"
+        itemIndicator={<Icon name="checkmark" />}
+      />
+      <MenuItem label="Dark" />
     </Menu>
   </div>
 );

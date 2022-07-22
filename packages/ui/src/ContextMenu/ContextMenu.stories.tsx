@@ -1,8 +1,11 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useState } from 'react';
 import { ContextMenu } from './ContextMenu';
 import { ContextMenuContent } from './ContextMenuContent';
 import { ContextMenuTrigger } from './ContextMenuTrigger';
+import { ContextMenuRadioItem } from './ContextMenuRadioItem';
+import { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
+import { IconButton } from '../IconButton';
 import { ContentColors } from '../constants';
 
 export default {
@@ -98,16 +101,19 @@ export const Default: React.FC = () => (
           submenuContentClass: 'topic-selection-submenu',
           submenu: [
             {
+              id: 'sailing',
               type: 'menu-topic-selection-item',
               label: 'Sailing',
               onSelect: () => console.log("Move to 'Sailing'"),
               subtopics: [
                 {
+                  id: 'navigation',
                   type: 'menu-topic-selection-item',
                   label: 'Navigation',
                   onSelect: () => console.log("Move to 'Navigation'"),
                   subtopics: [
                     {
+                      id: 'coastal-navigation',
                       type: 'menu-topic-selection-item',
                       label: 'Coastal navigation',
                       onSelect: () =>
@@ -115,6 +121,7 @@ export const Default: React.FC = () => (
                       subtopics: [],
                     },
                     {
+                      id: 'offshore-navigation',
                       type: 'menu-topic-selection-item',
                       label: 'Offshore navigation',
                       onSelect: () =>
@@ -124,12 +131,14 @@ export const Default: React.FC = () => (
                   ],
                 },
                 {
+                  id: 'anchoring',
                   type: 'menu-topic-selection-item',
                   label: 'Anchoring',
                   onSelect: () => console.log("Move to 'Anchoring'"),
                   subtopics: [],
                 },
                 {
+                  id: 'sailboats',
                   type: 'menu-topic-selection-item',
                   label: 'Sailboats',
                   onSelect: () => console.log("Move to 'Sailboats'"),
@@ -138,24 +147,28 @@ export const Default: React.FC = () => (
               ],
             },
             {
+              id: 'home',
               type: 'menu-topic-selection-item',
               label: 'Home',
               onSelect: () => console.log("Move to 'Home'"),
               subtopics: [],
             },
             {
+              id: 'tea',
               type: 'menu-topic-selection-item',
               label: 'Tea',
               onSelect: () => console.log("Move to 'Tea'"),
               subtopics: [],
             },
             {
+              id: 'work',
               type: 'menu-topic-selection-item',
               label: 'Work',
               onSelect: () => console.log("Move to 'work'"),
               subtopics: [],
             },
             {
+              id: 'japanese',
               type: 'menu-topic-selection-item',
               label: 'Japanese',
               onSelect: () => console.log("Move to 'Japanese'"),
@@ -171,67 +184,77 @@ export const Default: React.FC = () => (
           submenuContentClass: 'topic-selection-submenu',
           submenu: [
             {
+              id: 'sailing',
               type: 'menu-topic-selection-item',
               label: 'Sailing',
-              onSelect: () => console.log("Move to 'Sailing'"),
+              onSelect: () => console.log("Add to 'Sailing'"),
               subtopics: [
                 {
+                  id: 'navigation',
                   type: 'menu-topic-selection-item',
                   label: 'Navigation',
-                  onSelect: () => console.log("Move to 'Navigation'"),
+                  onSelect: () => console.log("Add to 'Navigation'"),
                   subtopics: [
                     {
+                      id: 'coastal-navigation',
                       type: 'menu-topic-selection-item',
                       label: 'Coastal navigation',
                       onSelect: () =>
-                        console.log("Move to 'Coastal navigation'"),
+                        console.log("Add to 'Coastal navigation'"),
                       subtopics: [],
                     },
                     {
+                      id: 'offshore-navigation',
                       type: 'menu-topic-selection-item',
                       label: 'Offshore navigation',
                       onSelect: () =>
-                        console.log("Move to 'Offshore navigation'"),
+                        console.log("Add to 'Offshore navigation'"),
                       subtopics: [],
                     },
                   ],
                 },
                 {
+                  id: 'anchoring',
                   type: 'menu-topic-selection-item',
                   label: 'Anchoring',
-                  onSelect: () => console.log("Move to 'Anchoring'"),
+                  onSelect: () => console.log("Add to 'Anchoring'"),
                   subtopics: [],
                 },
                 {
+                  id: 'sailboats',
                   type: 'menu-topic-selection-item',
                   label: 'Sailboats',
-                  onSelect: () => console.log("Move to 'Sailboats'"),
+                  onSelect: () => console.log("Add to 'Sailboats'"),
                   subtopics: [],
                 },
               ],
             },
             {
+              id: 'home',
               type: 'menu-topic-selection-item',
               label: 'Home',
-              onSelect: () => console.log("Move to 'Home'"),
+              onSelect: () => console.log("Add to 'Home'"),
               subtopics: [],
             },
             {
+              id: 'tea',
               type: 'menu-topic-selection-item',
               label: 'Tea',
-              onSelect: () => console.log("Move to 'Tea'"),
+              onSelect: () => console.log("Add to 'Tea'"),
               subtopics: [],
             },
             {
+              id: 'work',
               type: 'menu-topic-selection-item',
               label: 'Work',
-              onSelect: () => console.log("Move to 'work'"),
+              onSelect: () => console.log("Add to 'work'"),
               subtopics: [],
             },
             {
+              id: 'japanese',
               type: 'menu-topic-selection-item',
               label: 'Japanese',
-              onSelect: () => console.log("Move to 'Japanese'"),
+              onSelect: () => console.log("Add to 'Japanese'"),
               subtopics: [],
             },
           ],
@@ -275,3 +298,33 @@ export const Default: React.FC = () => (
     />
   </ContextMenu>
 );
+
+export const RadioMenu: React.FC = () => {
+  const [value, setValue] = useState('light');
+
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger>
+        <div
+          style={{
+            border: '2px dashed gray',
+            borderRadius: 4,
+            userSelect: 'none',
+            padding: '45px 0',
+            width: 300,
+            textAlign: 'center',
+          }}
+        >
+          Right click here.
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent style={{ width: 240 }}>
+        <ContextMenuRadioGroup value={value} onValueChange={setValue}>
+          <ContextMenuRadioItem label="Use system setting" value="system" />
+          <ContextMenuRadioItem label="Light" value="light" />
+          <ContextMenuRadioItem label="Dark" value="dark" />
+        </ContextMenuRadioGroup>
+      </ContextMenuContent>
+    </ContextMenu>
+  );
+};
