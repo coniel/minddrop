@@ -11,6 +11,7 @@ import * as AppExtension from '@minddrop/app';
 import * as RichTextExtension from '@minddrop/rich-text';
 import * as ResourcesExtension from '@minddrop/resources';
 import * as PersistentStoreExtension from '@minddrop/persistent-store';
+import * as ThemeExtension from '@minddrop/theme';
 import TopicViewColumnsExtension from '@minddrop/topic-view-columns';
 import TextDropExtension from '@minddrop/text-drop';
 import BookmarkDropExtension from '@minddrop/bookmark-drop';
@@ -87,6 +88,7 @@ export async function initializeApp({
 
   // Run the app extensions
   AppExtension.onRun(core);
+  ThemeExtension.onRun({ ...core, extensionId: 'minddrop:theme' });
 
   // Enable all non-core extensions on a topic when it is created
   Topics.addEventListener(core, 'topics:topic:create', ({ data }) => {
