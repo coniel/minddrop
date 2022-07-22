@@ -28,7 +28,7 @@ import { core } from '../test-utils';
 import {} from '.';
 
 const { rootTopicIds, topics, topicViewInstances } = TOPICS_TEST_DATA;
-const { drops } = DROPS_TEST_DATA;
+const { drops, drop1 } = DROPS_TEST_DATA;
 const {
   instanceViewConfig,
   staticViewConfig,
@@ -159,7 +159,7 @@ describe('app-extension', () => {
       Topics.delete(core, deletedTopicId);
     });
 
-    it('updates the current view in the local persistent on change', (done) => {
+    it('updates the current view in the local persistent on change', async () => {
       // Set the current view in the local persistent to
       // a view instance.
       LocalPersistentStore.set(core, 'view', viewInstance1.type);
@@ -173,18 +173,42 @@ describe('app-extension', () => {
         App.openViewInstance(core, viewInstance2.id);
       });
 
-      // Listen to local persistent store update events
-      core.addEventListener('persistent-stores:local:update', () => {
-        // Should set the view to the openened view
-        expect(LocalPersistentStore.get(core, 'view')).toEqual(
-          viewInstance2.type,
-        );
-        // Should set the view instance ID to the openened view instance ID
-        expect(LocalPersistentStore.get(core, 'viewInstance')).toEqual(
-          viewInstance2.id,
-        );
-        done();
+      // Wait for hooks to run
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
       });
+
+      // Should set the view to the openened view
+      expect(LocalPersistentStore.get(core, 'view')).toEqual(
+        viewInstance2.type,
+      );
+      // Should set the view instance ID to the openened view instance ID
+      expect(LocalPersistentStore.get(core, 'viewInstance')).toEqual(
+        viewInstance2.id,
+      );
+    });
+
+    it('clears selected drops when the view changes', async () => {
+      // Run the extension
+      onRun(core);
+
+      act(() => {
+        // Select a drop
+        App.selectDrops(core, [drop1.id]);
+      });
+
+      act(() => {
+        // Open a view
+        App.openViewInstance(core, viewInstance2.id);
+      });
+
+      // Wait for hooks to run
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+
+      // Drop should no longer be selected
+      expect(App.getSelectedDrops()).toEqual({});
     });
   });
 

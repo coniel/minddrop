@@ -112,12 +112,17 @@ export function onRun(core: Core) {
     'app:view:open',
     (payload) => {
       const { view, instance } = payload.data;
+
+      // Save view and view instance to local persistent store
       LocalPersistentStore.set(core, 'view', view.id);
       LocalPersistentStore.set(
         core,
         'viewInstance',
         instance ? instance.id : null,
       );
+
+      // Clear selected drops
+      App.clearSelectedDrops(core);
     },
   );
 
