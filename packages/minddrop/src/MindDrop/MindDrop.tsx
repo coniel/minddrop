@@ -84,7 +84,7 @@ export const MindDrop: React.FC<MindDropProps> = ({
   }, [themeAppearance]);
 
   if (!initialized) {
-    return <div>Loading</div>;
+    return <div className="loading-view">Loading...</div>;
   }
 
   const View = view.component;
