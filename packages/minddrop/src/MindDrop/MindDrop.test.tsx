@@ -12,6 +12,7 @@ import {
   backendUtilsAdapter,
 } from '../test-utils';
 import { MindDrop } from './MindDrop';
+import { Theme } from '@minddrop/theme';
 
 describe('MindDrop', () => {
   beforeAll(async () => {});
@@ -34,7 +35,7 @@ describe('MindDrop', () => {
     );
   }
 
-  describe('view', () => {
+  describe('MindDrop', () => {
     it('renders the current static view', async () => {
       const { getByText, getByTestId } = init();
 
@@ -88,6 +89,30 @@ describe('MindDrop', () => {
       await waitFor(() => {
         expect(getByText(viewInstance.id)).toBeInTheDocument();
       });
+    });
+
+    it('sets the body class based on the theme appearance', () => {
+      init();
+
+      // Set theme appearance to 'light'
+      act(() => {
+        Theme.setAppearance(core, 'light');
+      });
+
+      // body should have 'light-theme' class
+      expect(document.getElementsByTagName('body').item(0)).toHaveClass(
+        'light-theme',
+      );
+
+      // Set theme appearance to 'dark'
+      act(() => {
+        Theme.setAppearance(core, 'dark');
+      });
+
+      // body should have 'dark-theme' class
+      expect(document.getElementsByTagName('body').item(0)).toHaveClass(
+        'dark-theme',
+      );
     });
   });
 });

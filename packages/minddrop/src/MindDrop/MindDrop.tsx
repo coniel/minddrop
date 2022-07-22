@@ -7,10 +7,10 @@ import { useCurrentView } from '@minddrop/app';
 import { FileStorageApi } from '@minddrop/files';
 import { ExtensionConfig } from '@minddrop/extensions';
 import { initializeApp, registerViews } from '../initializeApp';
-import '@minddrop/theme';
-import './MindDrop.css';
+import { useThemeAppearance } from '@minddrop/theme';
 import { ResourceStorageAdapterConfig } from '@minddrop/resources';
 import { BackendUtilsApi } from '@minddrop/utils';
+import './MindDrop.css';
 
 export interface MindDropProps {
   /**
@@ -54,6 +54,7 @@ export const MindDrop: React.FC<MindDropProps> = ({
 }) => {
   const { view, instance } = useCurrentView();
   const [initialized, setInitialized] = useState(false);
+  const themeAppearance = useThemeAppearance();
 
   useEffect(() => {
     async function initialize() {
@@ -69,6 +70,18 @@ export const MindDrop: React.FC<MindDropProps> = ({
 
     initialize();
   }, []);
+
+  useEffect(() => {
+    // Toggle the theme appearance class on <body>
+    // whenever the theme appearance value is changes.
+    if (themeAppearance === 'dark') {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    }
+  }, [themeAppearance]);
 
   if (!initialized) {
     return <div>Loading</div>;

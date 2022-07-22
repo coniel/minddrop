@@ -22,6 +22,15 @@ class ResizeObserver {
 window.DOMRect = { fromRect: () => ({}) };
 // @ts-ignore
 window.ResizeObserver = ResizeObserver;
+// Needed for theme
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation(() => ({
+    matches: true,
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+  })),
+});
 
 initializeI18n();
 
