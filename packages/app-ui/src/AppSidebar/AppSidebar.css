@@ -3,7 +3,6 @@
   flex-direction: column;
   row-gap: 36px;
   flex-shrink: 0;
-  overflow-y: scroll;
 }
 
 .app-sidebar .flex {
@@ -19,4 +18,8 @@
 
 .app-sidebar .bottom-toolbar .icon {
   fill: var(--textNeutralLight);
+}
+
+.theme-appearance-setting-menu {
+  width: 200px;
 }

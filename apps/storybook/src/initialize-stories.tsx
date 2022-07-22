@@ -5,6 +5,7 @@ import * as DropsExtension from '@minddrop/drops';
 import * as ViewExtension from '@minddrop/views';
 import * as AppExtension from '@minddrop/app';
 import * as RichTextExtension from '@minddrop/rich-text';
+import * as ThemeExtension from '@minddrop/theme';
 import ExtensionTextDrop from '@minddrop/text-drop';
 import ExtensionTopicViewColumns, {
   TOPIC_VIEW_COLUMNS_TEST_DATA,
@@ -56,6 +57,7 @@ DropsExtension.onRun(core);
 ViewExtension.onRun(core);
 TopicsExtension.onRun(core);
 RichTextExtension.onRun(core);
+ThemeExtension.onRun({ ...core, extensionId: 'minddrop:theme' });
 
 Drops.store.load(
   core,

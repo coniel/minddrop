@@ -62,5 +62,10 @@
   "bookmarkPlaceholder": "Add a web bookmark",
   "bookmarkLink": "Bookmark link",
 
-  "imagePlaceholder": "Add an image"
+  "imagePlaceholder": "Add an image",
+
+  "themeAppearance": "Appearance",
+  "themeAppearanceSystem": "Use system setting",
+  "themeAppearanceLight": "Light",
+  "themeAppearanceDark": "Dark"
 }

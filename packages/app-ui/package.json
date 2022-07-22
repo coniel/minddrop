@@ -39,6 +39,7 @@
     "@minddrop/resources": "^0.1.0",
     "@minddrop/tags": "^0.1.1",
     "@minddrop/topics": "^0.1.1",
+    "@minddrop/theme": "^0.4.0",
     "@minddrop/ui": "^0.2.2",
     "@minddrop/utils": "^0.4.0",
     "@minddrop/views": "^0.1.0",
