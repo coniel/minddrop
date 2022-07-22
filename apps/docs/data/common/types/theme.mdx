@@ -1,0 +1,26 @@
+---
+metaTitle: Theme Interface
+metaDescription: Types relating to MindDrop's theming.
+---
+
+# Theme
+
+<Description>
+  Types relating to MindDrop's theming. 
+</Description>
+
+### ThemeAppearance
+
+The current appearance of the theme. Either `light` or `dark`.
+
+```ts
+type ThemeAppearance = 'light' | 'dark';
+```
+
+### ThemeAppearanceSetting
+
+The setting used to decide which apperance to apply to the theme. When set to `system`, the appearance will be resolved based on the OS's appearance setting.
+
+```ts
+type ThemeAppearanceSetting = 'light' | 'dark' | 'system';
+```

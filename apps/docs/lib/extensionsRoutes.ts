@@ -85,6 +85,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/tags',
       },
       {
+        title: 'Theme',
+        slug: 'docs/extensions/api/theme',
+      },
+      {
         title: 'Topics',
         slug: 'docs/extensions/api/topics',
       },
@@ -184,6 +188,10 @@ export const extensionsRoutes = [
       {
         title: 'Tag',
         slug: 'docs/extensions/types/tag',
+      },
+      {
+        title: 'Theme',
+        slug: 'docs/extensions/types/theme',
       },
       {
         title: 'Topic',

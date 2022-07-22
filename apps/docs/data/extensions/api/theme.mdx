@@ -1,0 +1,174 @@
+---
+metaTitle: Theme API Interface
+metaDescription: An interface for managing MindDrop's theme.
+---
+
+# Theme
+
+<Description>
+ An interface for managing MindDrop's theme. 
+</Description>
+
+## Hooks
+
+Hooks provide access to themes from inside React components. Unlike resources accessed using static methods, hooks will cause the component to rerender when the data changes.
+
+### useAppearance
+
+Returns the theme's current appearance.
+
+```ts
+useAppearance(): ThemeAppearance
+```
+
+### useAppearanceSetting
+
+Returns the theme's current appearance setting.
+
+```ts
+useAppearance(): ThemeAppearanceSetting
+```
+
+## Static methods
+
+### getAppearance
+
+Returns the theme's current appearance.
+
+```ts
+Theme.getAppearance(): ThemeAppearance
+```
+
+### setAppearance
+
+Sets the theme's current appearance. Dispatches a `theme:appearance:set-value` event.
+
+```ts
+Theme.setAppearance(core: Core, value: ThemeAppearance): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'value',
+      type: 'ThemeAppearance',
+      required: true,
+      description: "The theme's current appearance.",
+    },
+  ]}
+/>
+
+### getAppearanceSetting
+
+Returns the theme's appearance setting.
+
+```ts
+Theme.getAppearanceSetting(): ThemeAppearanceSetting
+```
+
+### setAppearanceSetting
+
+Sets the theme's appearance setting. Dispatches a `theme:appearance:set-setting` event.
+
+```ts
+Theme.setAppearanceSetting(core: Core, value: ThemeAppearanceSetting): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'value',
+      type: 'ThemeAppearanceSetting',
+      required: true,
+      description: "The theme's appearance setting.",
+    },
+  ]}
+/>
+
+### addEventListener
+
+Adds theme specific event listeners. Equivalent to calling `addEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Theme.addEventListener(core: Core, event: ThemeEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'ThemeEvent',
+      required: true,
+      description:
+        'The event type to listen for. See the theme events section below for available events.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description:
+        'The callback fired when the event occurs. See the theme events section below for the data passed to the callback.',
+    },
+  ]}
+/>
+
+### removeEventListener
+
+Removes theme specific event listeners. Equivalent to calling `removeEventListener` directly on `core`, but provides more advanced type definitions.
+
+```ts
+Themes.removeEventListener(core: Core, event: ThemeEvent, callback: EventListenerCallback): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'event',
+      type: 'ThemeEvent',
+      required: true,
+      description:
+        'The event type for which to remove the event listener.',
+    },
+    {
+      name: 'callback',
+      type: 'EventListenerCallback',
+      required: true,
+      description: 'The callback of the event listener to remove.',
+    },
+  ]}
+/>
+
+## Theme events
+
+See below the table for more details on the data passed by theme related events.
+
+<EventsTable
+  data={[
+    {
+      name: 'theme:appearance:set-value',
+      data: 'ThemeAppearance',
+      description: 'Dispatched when the theme appearance is changed.',
+    },
+    {
+      name: 'theme:appearance:set-setting',
+      data: 'ThemeAppearanceSetting',
+      description: 'Dispatched when the theme appearance setting is changed.',
+    },
+  ]}
+/>
+
+### Theme event data types
+
+Theme events are dispatched with one of the following types of data.
+
+#### ThemeAppearance
+
+The current theme appearance. See the [Theme](/docs/extensions/types/theme) interface page for more details.
+
+#### ThemeAppearanceSetting
+
+The theme appearance setting. See the [Theme](/docs/extensions/types/theme) interface page for more details.
