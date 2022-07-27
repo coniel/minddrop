@@ -1,14 +1,10 @@
-export interface DataInsertSource {
-  /**
-   * The type of the source, e.g. 'topic'.
-   */
-  type: string;
-
-  /**
-   * The ID of the source, e.g. a topic ID.
-   */
-  id: string;
-}
+export type DataInsertAction =
+  | 'insert'
+  | 'copy'
+  | 'cut'
+  | 'move'
+  | 'add'
+  | 'sort';
 
 export interface DataInsert {
   /**
@@ -20,7 +16,7 @@ export interface DataInsert {
    * - `add`: internal data (such as drops) dragged and dropped from a different view with intent to add
    * - `sort`: internal data (such as drops) dragged and dropped within the same view
    */
-  action: 'insert' | 'copy' | 'cut' | 'move' | 'add' | 'sort';
+  action: DataInsertAction;
 
   /**
    * The types of text based data which were inserted.
@@ -30,6 +26,8 @@ export interface DataInsert {
    * - 'text/plain' if plain text was inserted.
    * - 'text/html' if HTML text was inserted.
    * - 'text/url' if a URL was inserted.
+   * - 'minddrop-selection/[resource]' if selection items were inserted,
+   *   where `[resource]` is the resource type.
    */
   types: string[];
 
@@ -39,23 +37,7 @@ export interface DataInsert {
   data: Record<string, string>;
 
   /**
-   * The IDs of the inserted drops. Only set if drops were inserted.
-   */
-  drops?: string[];
-
-  /**
-   * The IDs of the inserted topics. Only set if topics were inserted.
-   */
-  topics?: string[];
-
-  /**
    * The inserted files. Only set if files were inserted.
    */
   files?: File[];
-
-  /**
-   * The source from which the data originates, if the data is being inserted
-   * from within MindDrop.
-   */
-  source?: DataInsertSource;
 }

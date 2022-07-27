@@ -35,23 +35,23 @@ export function createDataInsertFromDataTransfer(
     delete data['minddrop/action'];
   }
 
-  // Add the MindDrop source if present
-  if (dataTransfer.types.includes('minddrop/source')) {
-    dataInsert.source = JSON.parse(dataTransfer.getData('minddrop/source'));
-    delete data['minddrop/source'];
-  }
-
-  // Add the MindDrop drops if present
-  if (dataTransfer.types.includes('minddrop/drops')) {
-    dataInsert.drops = JSON.parse(dataTransfer.getData('minddrop/drops'));
-    delete data['minddrop/drops'];
-  }
-
-  // Add the MindDrop topics if present
-  if (dataTransfer.types.includes('minddrop/topics')) {
-    dataInsert.topics = JSON.parse(dataTransfer.getData('minddrop/topics'));
-    delete data['minddrop/topics'];
-  }
+  // // Add the MindDrop source if present
+  // if (dataTransfer.types.includes('minddrop/source')) {
+  //   dataInsert.source = JSON.parse(dataTransfer.getData('minddrop/source'));
+  //   delete data['minddrop/source'];
+  // }
+  //
+  // // Add the MindDrop drops if present
+  // if (dataTransfer.types.includes('minddrop/drops')) {
+  //   dataInsert.drops = JSON.parse(dataTransfer.getData('minddrop/drops'));
+  //   delete data['minddrop/drops'];
+  // }
+  //
+  // // Add the MindDrop topics if present
+  // if (dataTransfer.types.includes('minddrop/topics')) {
+  //   dataInsert.topics = JSON.parse(dataTransfer.getData('minddrop/topics'));
+  //   delete data['minddrop/topics'];
+  // }
 
   // Add 'text/url' data if 'text/plain' is a URL
   if (
