@@ -81,6 +81,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/rich-text-elements',
       },
       {
+        title: 'Selection',
+        slug: 'docs/extensions/api/selection',
+      },
+      {
         title: 'Tags',
         slug: 'docs/extensions/api/tags',
       },
@@ -180,6 +184,10 @@ export const extensionsRoutes = [
       {
         title: 'RichTextInlineElementConfig',
         slug: 'docs/extensions/types/rich-text-inline-element-config',
+      },
+      {
+        title: 'Selection',
+        slug: 'docs/extensions/types/selection',
       },
       {
         title: 'Slot',
