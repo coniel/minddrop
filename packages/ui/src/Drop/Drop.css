@@ -73,6 +73,6 @@
   border-color: var(--gray7);
 }
 
-.drop.drop-selected {
+.drop.selected {
   outline: 2px solid var(--blue7);
 }

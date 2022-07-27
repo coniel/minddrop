@@ -125,7 +125,7 @@ export const Default: React.FC = () => (
 
 export const Selected: React.FC = () => (
   <div style={{ display: 'flex', columnGap: 32, rowGap: 32, flexWrap: 'wrap' }}>
-    <Drop className="drop-selected" style={{ width: 240 }}>
+    <Drop selected style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -135,7 +135,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="blue" style={{ width: 240 }}>
+    <Drop selected color="blue" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -145,7 +145,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="cyan" style={{ width: 240 }}>
+    <Drop selected color="cyan" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -155,7 +155,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="red" style={{ width: 240 }}>
+    <Drop selected color="red" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -165,7 +165,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="pink" style={{ width: 240 }}>
+    <Drop selected color="pink" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -175,7 +175,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="purple" style={{ width: 240 }}>
+    <Drop selected color="purple" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -185,7 +185,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="green" style={{ width: 240 }}>
+    <Drop selected color="green" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -195,7 +195,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="yellow" style={{ width: 240 }}>
+    <Drop selected color="yellow" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -205,7 +205,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="orange" style={{ width: 240 }}>
+    <Drop selected color="orange" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -215,7 +215,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="brown" style={{ width: 240 }}>
+    <Drop selected color="brown" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term
@@ -225,7 +225,7 @@ export const Selected: React.FC = () => (
         velocity).
       </DropNote>
     </Drop>
-    <Drop className="drop-selected" color="gray" style={{ width: 240 }}>
+    <Drop selected color="gray" style={{ width: 240 }}>
       <DropTitle>Reference frames</DropTitle>
       <DropNote>
         Reference frames play a crucial role in relativity theory. The term

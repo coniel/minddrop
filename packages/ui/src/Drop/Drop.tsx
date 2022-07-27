@@ -13,16 +13,25 @@ export interface DropProps extends React.HTMLAttributes<HTMLDivElement> {
    * The color of the drop.
    */
   color?: ContentColor;
+
+  /**
+   * The selected state of the drop.
+   */
+  selected?: boolean;
 }
 
 export const Drop: FC<DropProps> = ({
   children,
   className,
   color,
+  selected,
   ...other
 }) => {
   return (
-    <div className={mapPropsToClasses({ className, color }, 'drop')} {...other}>
+    <div
+      className={mapPropsToClasses({ className, color, selected }, 'drop')}
+      {...other}
+    >
       {children}
     </div>
   );
