@@ -1,6 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { useAllDrops } from '@minddrop/drops';
 import { useAppCore, App } from '@minddrop/app';
+import { Selection } from '@minddrop/selection';
 import './TrashView.css';
 
 export const TrashView: FC = () => {
@@ -10,7 +11,7 @@ export const TrashView: FC = () => {
 
   const clearSelectedDrops = useCallback(
     // Clear selection
-    () => App.clearSelection(core),
+    () => Selection.clear(core),
     [core],
   );
 

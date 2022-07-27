@@ -3,7 +3,11 @@ import { createPortal } from 'react-dom';
 import { useSafeState } from 'ahooks';
 import { useCore } from '@minddrop/core';
 import { Drop, Icon } from '@minddrop/ui';
-import { useDraggableDrop, useSelectableDrop } from '@minddrop/app';
+import {
+  SelectionItem,
+  useDraggable,
+  useSelectable,
+} from '@minddrop/selection';
 import { DropActions } from '@minddrop/app-ui';
 import { Files } from '@minddrop/files';
 import { DropComponentProps, Drops, useDataInsert } from '@minddrop/drops';
@@ -19,7 +23,9 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
   id,
   color,
   currentParent,
+  resource,
 }) => {
+  const selectionItem: SelectionItem = { id, resource, parent: currentParent };
   const core = useCore('minddrop:drop:image');
   const { t } = useTranslation();
   // Tracks whether the image file has been saved
@@ -30,9 +36,9 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
   // The file input use to set/change the image
   const fileInput = useRef<HTMLInputElement | null>(null);
   // Drag and drop handling
-  const { onDragStart } = useDraggableDrop(id);
+  const { onDragStart } = useDraggable(selectionItem);
   // Selection handling
-  const { selectedClass, onClick, isSelected } = useSelectableDrop(id);
+  const { onClick, selected } = useSelectable(selectionItem);
   // The image src value
   const [imageUrl, setImageUrl] = useSafeState(file ? Files.getUrl(file) : '');
 
@@ -133,11 +139,9 @@ export const ImageDropComponent: FC<ImageDropComponentProps> = ({
     <Drop
       draggable
       color={color}
+      selected={selected}
       onDragStart={onDragStart}
-      className={mapPropsToClasses(
-        { [selectedClass]: isSelected, placeholder: !file },
-        'image-drop',
-      )}
+      className={mapPropsToClasses({ placeholder: !file }, 'image-drop')}
     >
       {imageUrl && (
         <img

@@ -6,9 +6,9 @@ import {
   cleanup as cleanupRender,
 } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { App } from '@minddrop/app';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
+import { Selection } from '@minddrop/selection';
 import { DropTrashActions } from './DropTrashActions';
 import { setup, cleanup, core } from '../test-utils';
 
@@ -29,6 +29,8 @@ describe('DropTrashActions', () => {
   afterEach(() => {
     cleanup();
     cleanupRender();
+    // Clear the selection
+    Selection.clear(core);
   });
 
   describe('delete permanently', () => {
@@ -37,7 +39,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select a couple of drops
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Get the delete permanently button label text
@@ -58,7 +60,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select drop2
-        App.selectDrops(core, [drop2.id]);
+        Selection.select(core, [Selection.item(drop2)]);
       });
 
       // Get the delete permanently button label text
@@ -80,7 +82,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select a couple of drops
-        App.selectDrops(core, [drop2.id]);
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Get the delete permanently button label text
@@ -92,7 +94,7 @@ describe('DropTrashActions', () => {
       });
 
       // Should clear selected drops
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 
@@ -104,7 +106,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select a couple of drops
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Get the restore button label text
@@ -139,7 +141,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select drop2
-        App.selectDrops(core, [drop2.id]);
+        Selection.select(core, [Selection.item(drop2)]);
       });
 
       // Get the restore button label text
@@ -168,7 +170,7 @@ describe('DropTrashActions', () => {
 
       act(() => {
         // Select a couple of drops
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Get the restore button label text
@@ -185,7 +187,7 @@ describe('DropTrashActions', () => {
       });
 
       // Should clear selected drops
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
 
     it('calls `onDropdownOpenChange` when opened/closed', () => {

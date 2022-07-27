@@ -10,10 +10,8 @@ import { App, useAppCore } from '@minddrop/app';
 import { useTranslation } from '@minddrop/i18n';
 import { useLocalPersistentStoreValue } from '@minddrop/persistent-store';
 import { Drops } from '@minddrop/drops';
-import {
-  createDataInsertFromDataTransfer,
-  setDataTransferData,
-} from '@minddrop/utils';
+import { Selection } from '@minddrop/selection';
+import { createDataInsertFromDataTransfer } from '@minddrop/utils';
 import { TopicTitle } from '../TopicTitle';
 import { TopicBreadcrumbs } from '../TopicBreadcrumbs';
 import { TopicViewOptionsMenu } from '../TopicViewOptionsMenu';
@@ -37,26 +35,26 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
   useEffect(() => {
     const keydownCallback = (event: KeyboardEvent) => {
       // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
+      const selectedDrops = Selection.get('drops:drop').map((item) => item.id);
 
       if (event.key === 'Delete' || event.key === 'Backspace') {
         if (event.shiftKey) {
           // Archive selected drops is Shift key was pressed
-          Topics.archiveDrops(core, topicId, Object.keys(selectedDrops));
+          Topics.archiveDrops(core, topicId, selectedDrops);
         } else {
           // Delete selected drops
-          Object.keys(selectedDrops).forEach((dropId) => {
+          selectedDrops.forEach((dropId) => {
             Drops.delete(core, dropId);
           });
         }
 
         // Clear selection
-        App.clearSelection(core);
+        Selection.clear(core);
       } else if (['D', 'd'].includes(event.key) && event.metaKey) {
         event.preventDefault();
 
         // Duplicate the drops
-        const drops = Drops.duplicate(core, Object.keys(selectedDrops));
+        const drops = Drops.duplicate(core, selectedDrops);
 
         // Add duplicate drops to the topic
         Topics.addDrops(core, topicId, Object.keys(drops));
@@ -64,48 +62,33 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
         event.preventDefault();
 
         // Select all of the topic's drops
-        App.selectDrops(core, topic.drops);
+        Selection.select(
+          core,
+          Topics.get(topicId).drops.map((dropId) => ({
+            id: dropId,
+            resource: 'drops:drop',
+            parent: { id: topicId, resource: 'topics:topic' },
+          })),
+        );
       }
     };
 
-    const copyCallback = (event: ClipboardEvent) => {
-      // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
-
-      if (Object.keys(selectedDrops).length) {
-        // Clear default clipboard data
-        event.clipboardData.clearData();
-
-        // Set custom data
-        setDataTransferData(event, {
-          drops: selectedDrops,
-          action: 'copy',
-        });
-
-        // Needed when setting custom data
-        event.preventDefault();
-      }
-    };
+    const copyCallback = (event: ClipboardEvent) => Selection.copy(core, event);
 
     const cutCallback = (event: ClipboardEvent) => {
+      // Cut the selection
+      Selection.cut(core, event);
+
       // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
+      const selectedDrops = Selection.get('drops:drop');
 
-      if (Object.keys(selectedDrops).length) {
-        // Clear default clipboard data
-        event.clipboardData.clearData();
-
-        // Set custom data
-        setDataTransferData(event, {
-          drops: selectedDrops,
-          action: 'cut',
-        });
-
-        // Needed when setting custom data
-        event.preventDefault();
-
+      if (selectedDrops.length) {
         // Remove selected drops from the topic
-        Topics.removeDrops(core, topicId, Object.keys(selectedDrops));
+        Topics.removeDrops(
+          core,
+          topicId,
+          selectedDrops.map((item) => item.id),
+        );
       }
     };
 

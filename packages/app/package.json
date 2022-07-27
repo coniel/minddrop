@@ -32,6 +32,7 @@
     "@minddrop/icons": "^0.3.1",
     "@minddrop/persistent-store": "^0.1.0",
     "@minddrop/resources": "^0.1.0",
+    "@minddrop/selection": "^0.1.0",
     "@minddrop/tags": "^0.1.1",
     "@minddrop/topics": "^0.1.1",
     "@minddrop/ui": "^0.2.2",

@@ -1,5 +1,4 @@
 import { EventListenerCallback } from '@minddrop/core';
-import { DropMap } from '@minddrop/drops';
 import { Topic, TopicMap } from '@minddrop/topics';
 import { ViewConfig, ViewInstance } from '@minddrop/views';
 
@@ -11,12 +10,6 @@ export type RemoveRootTopicsEvent = 'app:root-topics:remove';
 export type MoveRootTopicsEvent = 'app:root-topics:move';
 export type ArchiveRootTopicsEvent = 'app:root-topics:archive';
 export type UnarchiveRootTopicsEvent = 'app:root-topics:unarchive';
-// Selection events
-export type SelectDropsEvent = 'app:selection:select-drops';
-export type UnselectDropsEvent = 'app:selection:unselect-drops';
-export type SelectTopicsEvent = 'app:selection:select-topics';
-export type UnselectTopicsEvent = 'app:selection:unselect-topics';
-export type ClearSelectionEvent = 'app:selection:clear';
 
 // View event data
 export interface OpenViewEventData {
@@ -50,11 +43,6 @@ export interface MoveRootTopicsEventData {
    */
   topics: TopicMap;
 }
-// Selection event data
-export type SelectDropsEventData = DropMap;
-export type UnselectDropsEventData = DropMap;
-export type SelectTopicsEventData = TopicMap;
-export type UnselectTopicsEventData = TopicMap;
 
 // View event callbacks
 export type OpenViewEventCallback = EventListenerCallback<
@@ -82,22 +70,3 @@ export type UnarchiveRootTopicsEventCallback = EventListenerCallback<
   UnarchiveRootTopicsEvent,
   UnarchiveRootTopicsEventData
 >;
-// Selection event callbacks
-export type SelectDropsEventCallback = EventListenerCallback<
-  SelectDropsEvent,
-  SelectDropsEventData
->;
-export type UnselectDropsEventCallback = EventListenerCallback<
-  UnselectDropsEvent,
-  UnselectDropsEventData
->;
-export type SelectTopicsEventCallback = EventListenerCallback<
-  SelectTopicsEvent,
-  SelectTopicsEventData
->;
-export type UnselectTopicsEventCallback = EventListenerCallback<
-  UnselectTopicsEvent,
-  UnselectTopicsEventData
->;
-export type ClearSelectionEventCallback =
-  EventListenerCallback<ClearSelectionEvent>;

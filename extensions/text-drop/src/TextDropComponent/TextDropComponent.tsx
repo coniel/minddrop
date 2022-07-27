@@ -1,6 +1,10 @@
 import React, { FC } from 'react';
 import { Drop } from '@minddrop/ui';
-import { useDraggableDrop, useSelectableDrop } from '@minddrop/app';
+import {
+  SelectionItem,
+  useDraggable,
+  useSelectable,
+} from '@minddrop/selection';
 import { DropActions } from '@minddrop/app-ui';
 import { RichTextEditor } from '@minddrop/rich-text-editor';
 import { DropComponentProps } from '@minddrop/drops';
@@ -16,18 +20,21 @@ export const TextDropComponent: FC<TextDropComponentProps> = ({
   id,
   color,
   currentParent,
+  resource,
 }) => {
+  const selectionItem: SelectionItem = { id, resource, parent: currentParent };
   // Drag and drop handling
-  const { onDragStart } = useDraggableDrop(id);
+  const { onDragStart } = useDraggable(selectionItem);
   // Selection handling
-  const { selectedClass, onClick } = useSelectableDrop(id);
+  const { selected, onClick } = useSelectable(selectionItem);
 
   return (
     <Drop
       draggable
       color={color}
+      selected={selected}
       onDragStart={onDragStart}
-      className={`text-drop ${selectedClass}`}
+      className="text-drop"
     >
       <RichTextEditor documentId={richTextDocument} />
       <div className="drag-handle" onClick={onClick} />

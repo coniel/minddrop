@@ -85,12 +85,12 @@ describe('<BookmarkDrop />', () => {
       getByText(withPreview.description);
     });
 
-    it('renders the URL', () => {
+    it('renders the domain', () => {
       // Render a drop with preview data
       const { getByText } = render(<BookmarkDropComponent {...withPreview} />);
 
-      // Should render the URL
-      getByText(withPreview.url);
+      // Should render the domain
+      getByText('minddrop.app');
     });
 
     it('renders the image', () => {

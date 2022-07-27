@@ -7,10 +7,9 @@ import {
 } from '@minddrop/test-utils';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
-import { App } from '@minddrop/app';
-import { mapById } from '@minddrop/utils';
 import { cleanup, core, setup } from '../test-utils';
 import { DropContextMenu } from './DropContextMenu';
+import { Selection } from '@minddrop/selection';
 
 const { drop1, drop2 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
@@ -39,7 +38,7 @@ describe('<DropContextMenu />', () => {
 
     act(() => {
       // Select other drop
-      App.selectDrops(core, [drop2.id]);
+      Selection.select(core, [Selection.item(drop2)]);
     });
 
     act(() => {
@@ -48,7 +47,7 @@ describe('<DropContextMenu />', () => {
     });
 
     // Should have target drop as only selected drop
-    expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
+    expect(Selection.getIds()).toEqual([drop1.id]);
   });
 
   it('does not set the drop as selectedDrops when menu closes', () => {
@@ -61,7 +60,7 @@ describe('<DropContextMenu />', () => {
 
     act(() => {
       // Clear selection
-      App.clearSelection(core);
+      Selection.clear(core);
     });
 
     act(() => {
@@ -74,6 +73,6 @@ describe('<DropContextMenu />', () => {
     });
 
     // Drop should not be selected
-    expect(App.getSelectedDrops()).toEqual({});
+    expect(Selection.get()).toEqual([]);
   });
 });

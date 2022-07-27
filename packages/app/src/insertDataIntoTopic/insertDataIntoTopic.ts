@@ -1,6 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { Drops } from '@minddrop/drops';
 import { AddDropsMetadata, Topics } from '@minddrop/topics';
+import { Selection } from '@minddrop/selection';
 import { getTopicDropConfigs } from '../getTopicDropConfigs';
 
 /**
@@ -25,7 +26,9 @@ import { getTopicDropConfigs } from '../getTopicDropConfigs';
 export function insertDataIntoTopic<
   M extends AddDropsMetadata = AddDropsMetadata,
 >(core: Core, topicId: string, data: DataInsert, metadata?: M): boolean {
-  const { action, source } = data;
+  const { action } = data;
+  const dropItems = Selection.getFromDataInsert(data, 'drops:drop');
+  const dropIds = dropItems.map((item) => item.id);
 
   // Raw data was inserted
   if (action === 'insert') {
@@ -42,13 +45,13 @@ export function insertDataIntoTopic<
   }
 
   // If the data contains no drops, don't do anything
-  if (!data.drops || data.drops.length === 0) {
+  if (dropItems.length === 0) {
     return false;
   }
 
   if (action === 'copy') {
     // Duplicate the drops
-    const drops = Drops.duplicate(core, data.drops);
+    const drops = Drops.duplicate(core, dropIds);
 
     // Add the duplicate drops to the topic
     Topics.addDrops(core, topicId, Object.keys(drops), metadata);
@@ -58,7 +61,7 @@ export function insertDataIntoTopic<
 
   if (action === 'add') {
     // Adds drops to the topic
-    Topics.addDrops(core, topicId, data.drops, metadata);
+    Topics.addDrops(core, topicId, dropIds, metadata);
 
     return true;
   }
@@ -67,11 +70,9 @@ export function insertDataIntoTopic<
     // Get the topic
     const topic = Topics.get(topicId);
     // Get drops already in the topic
-    const duplicateDropIds = data.drops.filter((id) =>
-      topic.drops.includes(id),
-    );
+    const duplicateDropIds = dropIds.filter((id) => topic.drops.includes(id));
     // Get the drops not in the topic
-    let addDropIds = data.drops.filter((id) => !topic.drops.includes(id));
+    let addDropIds = dropIds.filter((id) => !topic.drops.includes(id));
 
     if (duplicateDropIds.length) {
       // Duplicate the drops already in the topic
@@ -86,10 +87,10 @@ export function insertDataIntoTopic<
     return true;
   }
 
-  if (action === 'move' && source && source.type === 'topic') {
-    // Move the drops to the topic
-    Topics.moveDrops(core, source.id, topicId, data.drops, metadata);
-  }
+  // if (action === 'move' && source && source.type === 'topic') {
+  //   // Move the drops to the topic
+  //   Topics.moveDrops(core, source.id, topicId, data.drops, metadata);
+  // }
 
   return false;
 }

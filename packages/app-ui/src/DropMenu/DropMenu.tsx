@@ -26,6 +26,7 @@ import {
 } from '@minddrop/ui';
 import { App, useAppCore } from '@minddrop/app';
 import { Topics } from '@minddrop/topics';
+import { Selection } from '@minddrop/selection';
 import { Drops } from '@minddrop/drops';
 import { FieldValue } from '@minddrop/utils';
 import { generateTopicSelectionMenu } from '../utils';
@@ -101,11 +102,11 @@ export const DropMenu: React.FC<DropMenuProps> = ({
 
   const handleSelectColor = useCallback(
     (color: ContentColor | 'default') => {
-      // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
+      // Get selected drop IDs
+      const selectedDrops = Selection.getIds('drops:drop');
 
       // Update color on selected drops
-      Object.keys(selectedDrops).forEach((id) => {
+      selectedDrops.forEach((id) => {
         Drops.update(core, id, {
           color: color === 'default' ? FieldValue.delete() : color,
         });
@@ -116,62 +117,58 @@ export const DropMenu: React.FC<DropMenuProps> = ({
 
   const handleSelectMoveToTopic = useCallback(
     (event: Event, selectedTopicId: string) => {
-      // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
+      // Get selected drop IDs
+      const selectedDrops = Selection.getIds('drops:drop');
 
       // Move selected drops to the selected topic
-      Topics.moveDrops(
-        core,
-        topicId,
-        selectedTopicId,
-        Object.keys(selectedDrops),
-      );
+      Topics.moveDrops(core, topicId, selectedTopicId, selectedDrops);
 
-      // Unselect the drops
-      App.clearSelection(core);
+      // Clear the selection
+      Selection.clear(core);
     },
     [core, topicId],
   );
 
   const handleSelectAddToTopic = useCallback(
     (event: Event, selectedTopicId: string) => {
-      // Get selected drops
-      const selectedDrops = App.getSelectedDrops();
+      // Get selected drop IDs
+      const selectedDrops = Selection.getIds('drops:drop');
 
       // Add selected drops to the selected topic
-      Topics.addDrops(core, selectedTopicId, Object.keys(selectedDrops));
+      Topics.addDrops(core, selectedTopicId, selectedDrops);
     },
     [core],
   );
 
   const handleDuplicate = useCallback(() => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+    // Get selected drop IDs
+    const selectedDrops = Selection.getIds('drops:drop');
 
     // Duplicate selected drops
-    const duplicates = Drops.duplicate(core, Object.keys(selectedDrops));
+    const duplicates = Drops.duplicate(core, selectedDrops);
 
     // Add duplicated drops to topic
     Topics.addDrops(core, topicId, Object.keys(duplicates));
   }, [core, topicId]);
 
   const handleArchive = useCallback(() => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+    // Get selected drop IDs
+    const selectedDrops = Selection.getIds('drops:drop');
 
     // Archive selected drops
-    Topics.archiveDrops(core, topicId, Object.keys(selectedDrops));
+    Topics.archiveDrops(core, topicId, selectedDrops);
 
-    // Unselect the drops
-    App.clearSelection(core);
+    // Clear the selection
+    Selection.clear(core);
   }, [core, topicId]);
 
   const handleArchiveEverywhere = useCallback(() => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+    // Get selected drop IDs
+    const dropIds = Selection.getIds('drops:drop');
+    const drops = Drops.get(dropIds);
 
     // Generate a map of affected topics and their affected drops
-    const topicsDropsMap = Object.values(selectedDrops).reduce((map, drop) => {
+    const topicsDropsMap = Object.values(drops).reduce((map, drop) => {
       const updatedMap = { ...map };
       drop.parents
         .filter((parent) => parent.resource === 'topics:topic')
@@ -191,32 +188,32 @@ export const DropMenu: React.FC<DropMenuProps> = ({
       Topics.archiveDrops(core, tId, topicsDropsMap[tId]);
     });
 
-    // Unselect the drops
-    App.clearSelection(core);
+    // Clear the selection
+    Selection.clear(core);
   }, [core]);
 
   const handleDelete = useCallback(() => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+    // Get selected drop IDs
+    const selectedDrops = Selection.getIds('drops:drop');
 
     // Delete selected drops
-    Object.keys(selectedDrops).forEach((id) => {
+    selectedDrops.forEach((id) => {
       Drops.delete(core, id);
     });
 
-    // Unselect the drops
-    App.clearSelection(core);
+    // Clear the selection
+    Selection.clear(core);
   }, [core]);
 
   const handleRemoveFromTopic = useCallback(() => {
-    // Get selected drops
-    const selectedDrops = App.getSelectedDrops();
+    // Get selected drop IDs
+    const selectedDrops = Selection.getIds('drops:drop');
 
     // Remove the selected drop from the topic
-    Topics.removeDrops(core, topicId, Object.keys(selectedDrops));
+    Topics.removeDrops(core, topicId, selectedDrops);
 
-    // Unselect the drops
-    App.clearSelection(core);
+    // Clear the selection
+    Selection.clear(core);
   }, [core, topicId]);
 
   if (onSelectEdit) {

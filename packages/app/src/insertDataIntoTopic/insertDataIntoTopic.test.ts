@@ -1,6 +1,7 @@
 import { DataInsert, initializeCore } from '@minddrop/core';
 import { Drops, DROPS_TEST_DATA } from '@minddrop/drops';
 import { Extensions, EXTENSIONS_TEST_DATA } from '@minddrop/extensions';
+import { Selection } from '@minddrop/selection';
 import { imageFile, textFile } from '@minddrop/test-utils';
 import {
   AddDropsMetadata,
@@ -29,14 +30,14 @@ const sourceTopic: Topic = {
 };
 
 const copyDropsDataInsert: DataInsert = {
-  types: [],
-  data: {},
-  source: {
-    type: 'topic',
-    id: sourceTopic.id,
+  types: ['minddrop-selection/drops:drop'],
+  data: {
+    'minddrop-selection/drops:drop': JSON.stringify([
+      Selection.item(drop1),
+      Selection.item(drop2),
+    ]),
   },
   action: 'copy',
-  drops: [drop1.id, drop2.id],
 };
 
 const cutDropsDataInsert: DataInsert = {
@@ -153,13 +154,7 @@ describe('insertDataIntoTopic', () => {
       insertDataIntoTopic(
         core,
         tEmpty.id,
-        { ...copyDropsDataInsert, drops: [] },
-        metadata,
-      );
-      insertDataIntoTopic(
-        core,
-        tEmpty.id,
-        { ...copyDropsDataInsert, drops: undefined },
+        { ...copyDropsDataInsert, data: {}, types: [] },
         metadata,
       );
 
@@ -196,7 +191,7 @@ describe('insertDataIntoTopic', () => {
       expect(Topics.addDrops).toHaveBeenCalledWith(
         core,
         tEmpty.id,
-        cutDropsDataInsert.drops,
+        [drop1.id, drop2.id],
         metadata,
       );
     });
@@ -207,13 +202,7 @@ describe('insertDataIntoTopic', () => {
       insertDataIntoTopic(
         core,
         tEmpty.id,
-        { ...cutDropsDataInsert, drops: [] },
-        metadata,
-      );
-      insertDataIntoTopic(
-        core,
-        tEmpty.id,
-        { ...cutDropsDataInsert, drops: undefined },
+        { ...cutDropsDataInsert, data: {}, types: [] },
         metadata,
       );
 
@@ -232,7 +221,7 @@ describe('insertDataIntoTopic', () => {
         core,
         sourceTopic.id,
         tEmpty.id,
-        moveDropsDataInsert.drops,
+        [drop1.id, drop2.id],
         metadata,
       );
     });
@@ -250,18 +239,7 @@ describe('insertDataIntoTopic', () => {
       const handledNoSource = insertDataIntoTopic(
         core,
         tEmpty.id,
-        { ...moveDropsDataInsert, source: undefined },
-        metadata,
-      );
-
-      // Source not a topic, should not remove drops
-      const handledNotTopic = insertDataIntoTopic(
-        core,
-        tEmpty.id,
-        {
-          ...moveDropsDataInsert,
-          source: { type: 'something-else', id: sourceTopic.id },
-        },
+        moveDropsDataInsert,
         metadata,
       );
 
@@ -269,7 +247,6 @@ describe('insertDataIntoTopic', () => {
 
       expect(topic.drops.length).toBe(2);
       expect(handledNoSource).toBe(false);
-      expect(handledNotTopic).toBe(false);
     });
   });
 
@@ -279,13 +256,7 @@ describe('insertDataIntoTopic', () => {
     insertDataIntoTopic(
       core,
       tEmpty.id,
-      { ...moveDropsDataInsert, drops: [] },
-      metadata,
-    );
-    insertDataIntoTopic(
-      core,
-      tEmpty.id,
-      { ...moveDropsDataInsert, drops: undefined },
+      { ...moveDropsDataInsert, data: {}, types: [] },
       metadata,
     );
 
@@ -302,7 +273,7 @@ describe('insertDataIntoTopic', () => {
       expect(Topics.addDrops).toHaveBeenCalledWith(
         core,
         tEmpty.id,
-        addDropsDataInsert.drops,
+        [drop1.id, drop2.id],
         metadata,
       );
     });
@@ -313,13 +284,7 @@ describe('insertDataIntoTopic', () => {
       insertDataIntoTopic(
         core,
         tEmpty.id,
-        { ...addDropsDataInsert, drops: [] },
-        metadata,
-      );
-      insertDataIntoTopic(
-        core,
-        tEmpty.id,
-        { ...addDropsDataInsert, drops: undefined },
+        { ...addDropsDataInsert, data: {}, types: [] },
         metadata,
       );
 

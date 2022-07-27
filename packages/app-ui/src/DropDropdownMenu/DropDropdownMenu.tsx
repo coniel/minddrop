@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
   IconButton,
 } from '@minddrop/ui';
-import { useSelectableDrop } from '@minddrop/app';
+import { useSelectable } from '@minddrop/selection';
 import { i18n } from '@minddrop/i18n';
 
 export interface DropDropdownMenuProps extends Omit<DropMenuProps, 'menuType'> {
@@ -32,16 +32,19 @@ export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
   onOpenChange,
   ...other
 }) => {
-  const { isSelected, selectAsOnly } = useSelectableDrop(dropId);
+  const { selected, select } = useSelectable({
+    resource: 'drops:drop',
+    id: dropId,
+  });
 
   return (
     <DropdownMenu
       onOpenChange={(open) => {
-        if (!isSelected && open) {
+        if (!selected && open) {
           // If the drop is not selected, and the menu
           // is being opened, select the drop as the
           // only selected drop.
-          selectAsOnly();
+          select();
         }
 
         if (onOpenChange) {

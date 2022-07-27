@@ -1,17 +1,5 @@
 import { UiExtension } from './UiExtension.types';
 
-export interface DraggedData {
-  /**
-   * The IDs of drops currently being dragged.
-   */
-  drops: string[];
-
-  /**
-   * The IDs of topics currently being dragged.
-   */
-  topics: string[];
-}
-
 export interface AppStore {
   /**
    * The IDs of the root level topics.
@@ -38,23 +26,6 @@ export interface AppStore {
    * The UI extensions added by extensions.
    */
   uiExtensions: UiExtension[];
-
-  /**
-   * An array of drop IDs containing the currently
-   * selected drops in the app UI.
-   */
-  selectedDrops: string[];
-
-  /**
-   * An array of drop IDs containing the currently
-   * selected topics in the app UI.
-   */
-  selectedTopics: string[];
-
-  /**
-   * Data which is currently being dragged.
-   */
-  draggedData: DraggedData;
 
   /**
    * Adds topics to the root topics list.
@@ -123,61 +94,6 @@ export interface AppStore {
    * @param location The location from which to remove the UI extensions.
    */
   removeAllUiExtensions(source: string, location?: string): void;
-
-  /**
-   * Adds drops to the selected drops.
-   *
-   * @param drops The IDs of the drops to add.
-   */
-  addSelectedDrops(dropIds: string[]): void;
-
-  /**
-   * Removes drops from the selected drops.
-   *
-   * @param dropIds The IDs of the drops to remove.
-   */
-  removeSelectedDrops(dropIds: string[]): void;
-
-  /**
-   * Clears the selected drops.
-   */
-  clearSelectedDrops(): void;
-
-  /**
-   * Adds topics to the selected topics.
-   *
-   * @param topics The IDs of the topics to add.
-   */
-  addSelectedTopics(topicIds: string[]): void;
-
-  /**
-   * Removes topics from the selected topics.
-   *
-   * @param topicIds The IDs of the topics to remove.
-   */
-  removeSelectedTopics(topicIds: string[]): void;
-
-  /**
-   * Clears the selected topics.
-   */
-  clearSelectedTopics(): void;
-
-  /**
-   * Clears both selected drops and selected topics.
-   */
-  clearSelection(): void;
-
-  /**
-   * Sets dragged data.
-   *
-   * @param data The dragged data.
-   */
-  setDraggedData(data: Partial<DraggedData>): void;
-
-  /**
-   * Clears the dragged data.
-   */
-  clearDraggedData(): void;
 
   /**
    * Clears the store state.

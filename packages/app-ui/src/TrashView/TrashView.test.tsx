@@ -6,9 +6,9 @@ import {
   cleanup as cleanupRender,
 } from '@minddrop/test-utils';
 import { DROPS_TEST_DATA, Drops } from '@minddrop/drops';
+import { Selection } from '@minddrop/selection';
 import { setup, cleanup, core } from '../test-utils';
 import { TrashView } from './TrashView';
-import { App } from '@minddrop/app';
 
 const { drop1, drop2, drop3 } = DROPS_TEST_DATA;
 
@@ -40,7 +40,7 @@ describe('TrashView', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -49,6 +49,6 @@ describe('TrashView', () => {
     });
 
     // Drop should no longer be selected
-    expect(App.getSelectedDrops()).toEqual({});
+    expect(Selection.get()).toEqual([]);
   });
 });

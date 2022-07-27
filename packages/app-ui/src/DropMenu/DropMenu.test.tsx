@@ -4,8 +4,8 @@ import { i18n } from '@minddrop/i18n';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
 import { DropdownMenu, DropdownMenuContent } from '@minddrop/ui';
-import { App } from '@minddrop/app';
 import { contains } from '@minddrop/utils';
+import { Selection } from '@minddrop/selection';
 import { cleanup, core, setup } from '../test-utils';
 import { DropMenu, DropMenuProps } from './DropMenu';
 
@@ -68,9 +68,9 @@ describe('<DropMenu />', () => {
     it('changes the color on selected drops', () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Mouse over 'Color' item
@@ -94,9 +94,9 @@ describe('<DropMenu />', () => {
     it('removes the color on selected drops when `Default` is selected', () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Mouse over 'Color' item
@@ -122,9 +122,9 @@ describe('<DropMenu />', () => {
     it('adds selected drops to the selected topic', () => {
       const { getByItemLabel, getByText } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click 'Add to' item
@@ -149,9 +149,9 @@ describe('<DropMenu />', () => {
     it('moves selected drops to the selected topic', () => {
       const { getByItemLabel, getByText } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click 'Move to' item
@@ -176,7 +176,7 @@ describe('<DropMenu />', () => {
       expect(originalTopic.drops.includes(drop1.id)).toBe(false);
       expect(originalTopic.drops.includes(drop2.id)).toBe(false);
       // Drops should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 
@@ -184,9 +184,9 @@ describe('<DropMenu />', () => {
     it('duplicates the selected drops within the topic', () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click 'Duplicate' item
@@ -211,9 +211,9 @@ describe('<DropMenu />', () => {
     it('archives the selected drops in the topic', () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click 'Archive' item
@@ -226,7 +226,7 @@ describe('<DropMenu />', () => {
       // Both drops should be archived
       expect(contains(topic.archivedDrops, [drop1.id, drop2.id])).toBeTruthy();
       // Drops should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 
@@ -234,9 +234,9 @@ describe('<DropMenu />', () => {
     it("uses 'Archive' if the drop only has a single parent", () => {
       const { getByItemLabel } = init();
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click on the 'Archive' item
@@ -250,7 +250,7 @@ describe('<DropMenu />', () => {
       expect(topic.archivedDrops.includes(drop1.id)).toBe(true);
       expect(topic.archivedDrops.includes(drop2.id)).toBe(true);
       // Drops should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
 
     it("uses 'Archive' by default if drop has multiple parents", () => {
@@ -268,9 +268,9 @@ describe('<DropMenu />', () => {
       // Should not render 'Archive everywhere' item
       expect(queryByItemLabel('archiveEverywhere')).toBeNull();
 
-      // Select a the drop
       act(() => {
-        App.selectDrops(core, [drop1.id]);
+        // Select the drop
+        Selection.select(core, [Selection.item(drop1)]);
       });
 
       // Click on the 'Archive' item
@@ -284,7 +284,7 @@ describe('<DropMenu />', () => {
       // Drop should be archived
       expect(topic.archivedDrops.includes(drop1.id)).toBeTruthy();
       // Drop should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
 
     it("uses 'Archive everywhere' if drop has multiple parents and Shift key it pressed", () => {
@@ -306,9 +306,9 @@ describe('<DropMenu />', () => {
       // Should not render 'Archive' item
       expect(queryByItemLabel('archive')).toBeNull();
 
-      // Select a the drop
       act(() => {
-        App.selectDrops(core, [drop1.id]);
+        // Select the drop
+        Selection.select(core, [Selection.item(drop1)]);
       });
 
       // Click on the 'Archive everywhere' item
@@ -323,7 +323,7 @@ describe('<DropMenu />', () => {
       expect(topic1.archivedDrops.includes(drop1.id)).toBeTruthy();
       expect(topic2.archivedDrops.includes(drop1.id)).toBeTruthy();
       // Drop should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 
@@ -331,9 +331,9 @@ describe('<DropMenu />', () => {
     it("uses 'Delete' if the drop only has a single parent", () => {
       const { getByItemLabel } = init({ onSelectEdit: () => null });
 
-      // Select both drops
       act(() => {
-        App.selectDrops(core, [drop1.id, drop2.id]);
+        // Select both drops
+        Selection.select(core, [Selection.item(drop1), Selection.item(drop2)]);
       });
 
       // Click on the 'Delete' item
@@ -348,7 +348,7 @@ describe('<DropMenu />', () => {
       expect(deleted1.deleted).toBe(true);
       expect(deleted2.deleted).toBe(true);
       // Drops should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
 
     it("uses 'Delete' by default if drop has multiple parents", () => {
@@ -366,9 +366,9 @@ describe('<DropMenu />', () => {
       // Should not render 'Delete everywhere' item
       expect(queryByItemLabel('deleteEverywhere')).toBeNull();
 
-      // Select a the drop
       act(() => {
-        App.selectDrops(core, [drop1.id]);
+        // Select the drop
+        Selection.select(core, [Selection.item(drop1)]);
       });
 
       // Click on the 'Delete' item
@@ -386,7 +386,7 @@ describe('<DropMenu />', () => {
       // Drop should not be deleted
       expect(drop.deleted).toBeFalsy();
       // Drop should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
 
     it("uses 'Delete everywhere' if drop has multiple parents and Shift key it pressed", () => {
@@ -408,9 +408,9 @@ describe('<DropMenu />', () => {
       // Should not render 'Delete' item
       expect(queryByItemLabel('delete')).toBeNull();
 
-      // Select a the drop
       act(() => {
-        App.selectDrops(core, [drop1.id]);
+        // Select the drop
+        Selection.select(core, [Selection.item(drop1)]);
       });
 
       // Click on the 'Delete everywhere' item
@@ -423,7 +423,7 @@ describe('<DropMenu />', () => {
       // Drop should be deleted
       expect(drop.deleted).toBeTruthy();
       // Drop should be unselected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 });

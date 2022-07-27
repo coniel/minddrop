@@ -5,13 +5,12 @@ import {
   act,
   cleanup as cleanupRender,
 } from '@minddrop/test-utils';
-import { cleanup, core, setup } from '../test-utils';
-import { DropDropdownMenu, DropDropdownMenuProps } from './DropDropdownMenu';
 import { DROPS_TEST_DATA } from '@minddrop/drops';
 import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { i18n } from '@minddrop/i18n';
-import { App } from '@minddrop/app';
-import { mapById } from '@minddrop/utils';
+import { Selection } from '@minddrop/selection';
+import { cleanup, core, setup } from '../test-utils';
+import { DropDropdownMenu, DropDropdownMenuProps } from './DropDropdownMenu';
 
 const { drop1, drop2 } = DROPS_TEST_DATA;
 const { tSailing } = TOPICS_TEST_DATA;
@@ -45,7 +44,7 @@ describe('<DropDropdownMenu />', () => {
 
     act(() => {
       // Select other drop
-      App.selectDrops(core, [drop2.id]);
+      Selection.select(core, [Selection.item(drop2)]);
     });
 
     act(() => {
@@ -54,7 +53,7 @@ describe('<DropDropdownMenu />', () => {
     });
 
     // Should have target drop as only selected drop
-    expect(App.getSelectedDrops()).toEqual(mapById([drop1]));
+    expect(Selection.getIds()).toEqual([drop1.id]);
   });
 
   it('does not set the drop as selectedDrops when menu closes', () => {
@@ -67,7 +66,7 @@ describe('<DropDropdownMenu />', () => {
 
     act(() => {
       // Clear selected drops
-      App.clearSelection(core);
+      Selection.clear(core);
     });
 
     act(() => {
@@ -80,7 +79,7 @@ describe('<DropDropdownMenu />', () => {
     });
 
     // Drop should not be selected
-    expect(App.getSelectedDrops()).toEqual({});
+    expect(Selection.get()).toEqual([]);
   });
 
   it('calls onOpenChange', () => {

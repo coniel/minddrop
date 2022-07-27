@@ -8,6 +8,7 @@ import {
 import { ViewInstances } from '@minddrop/views';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
+import { Selection } from '@minddrop/selection';
 import {
   cleanup,
   core,
@@ -118,13 +119,15 @@ describe('<TopicViewColumns />', () => {
       // Insert to column 0, index 0
       fireEvent.drop(getByTestId('spacer-0:0'), {
         dataTransfer: {
-          types: ['minddrop/action', 'minddrop/drops'],
+          types: ['minddrop/action', 'minddrop-selection/drops:drop'],
           getData: (key) => {
             switch (key) {
               case 'minddrop/action':
                 return 'sort';
-              case 'minddrop/drops':
-                return `["${movedDropId}"]`;
+              case 'minddrop-selection/drops:drop':
+                return JSON.stringify([
+                  { resource: 'drops:drop', id: movedDropId },
+                ]);
               default:
                 return undefined;
             }
@@ -182,13 +185,15 @@ describe('<TopicViewColumns />', () => {
         // Insert from col 2:0 to new col 0
         fireEvent.drop(getByTestId('vertical-drop-zone-0'), {
           dataTransfer: {
-            types: ['minddrop/action', 'minddrop/drops'],
+            types: ['minddrop/action', 'minddrop-selection/drops:drop'],
             getData: (key) => {
               switch (key) {
                 case 'minddrop/action':
                   return 'sort';
-                case 'minddrop/drops':
-                  return `["${movedDropId}"]`;
+                case 'minddrop-selection/drops:drop':
+                  return JSON.stringify([
+                    { resource: 'drops:drop', id: movedDropId },
+                  ]);
                 default:
                   return undefined;
               }

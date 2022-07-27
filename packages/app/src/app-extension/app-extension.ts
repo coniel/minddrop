@@ -6,6 +6,7 @@ import {
   GlobalPersistentStoreDataSchema,
 } from '@minddrop/persistent-store';
 import { Topics } from '@minddrop/topics';
+import { Selection } from '@minddrop/selection';
 import { useAppStore } from '../useAppStore';
 import { App } from '../App';
 import { OpenViewEvent, OpenViewEventData } from '../types';
@@ -122,7 +123,7 @@ export function onRun(core: Core) {
       );
 
       // Clear selection
-      App.clearSelection(core);
+      Selection.clear(core);
     },
   );
 

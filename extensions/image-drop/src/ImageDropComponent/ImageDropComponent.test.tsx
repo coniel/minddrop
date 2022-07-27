@@ -57,7 +57,7 @@ describe('<ImageDrop />', () => {
       const { getByRole } = render(<ImageDropComponent {...withFile} />);
 
       // Should render the image (which has an empty alt value)
-      expect(getByRole('img').getAttribute('src')).toBe('image-url');
+      expect(getByRole('button').getAttribute('src')).toBe('image-url');
     });
 
     it('does not render the placeholder', () => {
@@ -93,7 +93,7 @@ describe('<ImageDrop />', () => {
           const { findByRole } = render(<ImageDropComponent {...drop} />);
 
           // Should render the image
-          const image = await findByRole('img');
+          const image = await findByRole('button');
 
           // Should render the image using the file's URL
           // rather than the data insert file's base64 data.
@@ -155,7 +155,7 @@ describe('<ImageDrop />', () => {
           expect(Files.save).toHaveBeenCalledWith(expect.anything(), imageFile);
           // Should set the file data URL as the image URL
           expect(
-            getByRole('img')
+            getByRole('button')
               .getAttribute('src')
               .startsWith('data:image/jpeg;base64'),
           ).toBeTruthy();
@@ -212,7 +212,7 @@ describe('<ImageDrop />', () => {
             );
             // Should set the file data URL as the image URL
             expect(
-              getByRole('img')
+              getByRole('button')
                 .getAttribute('src')
                 .startsWith('data:image/jpeg;base64'),
             ).toBeTruthy();
@@ -236,7 +236,7 @@ describe('<ImageDrop />', () => {
           const { findByRole } = render(<ImageDropComponent {...drop} />);
 
           // Should render the image
-          const image = await findByRole('img');
+          const image = await findByRole('button');
 
           // Should render the image using the data URL
           expect(
@@ -352,7 +352,7 @@ describe('<ImageDrop />', () => {
             );
             // Should set the file data URL as the image URL
             expect(
-              getByRole('img')
+              getByRole('button')
                 .getAttribute('src')
                 .startsWith('data:image/jpeg;base64'),
             ).toBeTruthy();

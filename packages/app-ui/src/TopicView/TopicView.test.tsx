@@ -5,6 +5,7 @@ import {
   act,
   fireEvent,
 } from '@minddrop/test-utils';
+import { Selection } from '@minddrop/selection';
 import { setup as setupApp, cleanup, core } from '../test-utils';
 import { TopicView } from './TopicView';
 import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
@@ -19,6 +20,13 @@ import {
 const { tSixDropsView, tSixDrops } = TOPICS_TEST_DATA;
 const { drop1, drop2 } = DROPS_TEST_DATA;
 
+const clipboardEvent = {
+  clipboardData: {
+    clearData: jest.fn(),
+    setData: jest.fn(),
+  },
+};
+
 describe('<TopicView />', () => {
   beforeEach(() => {
     setupApp();
@@ -27,6 +35,7 @@ describe('<TopicView />', () => {
   afterEach(() => {
     cleanupRender();
     cleanup();
+    jest.clearAllMocks();
   });
 
   const setup = () => {
@@ -50,7 +59,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -62,8 +71,8 @@ describe('<TopicView />', () => {
     const drop = Drops.get(drop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
-    // Should unselect drops
-    expect(App.getSelectedDrops()).toEqual({});
+    // Should clear selection
+    expect(Selection.get()).toEqual([]);
   });
 
   it('deletes selected drops on Backspace keydown', () => {
@@ -71,7 +80,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -83,8 +92,8 @@ describe('<TopicView />', () => {
     const drop = Drops.get(drop1.id);
     // Should be deleted
     expect(drop.deleted).toBe(true);
-    // Should unselect drops
-    expect(App.getSelectedDrops()).toEqual({});
+    // Should clear selection
+    expect(Selection.get()).toEqual([]);
   });
 
   it('archives selected drops on Shift+Delete keydown', () => {
@@ -92,7 +101,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -109,8 +118,8 @@ describe('<TopicView />', () => {
     expect(topic.archivedDrops.includes(drop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
-    // Should unselect drops
-    expect(App.getSelectedDrops()).toEqual({});
+    // Should clear selection
+    expect(Selection.get()).toEqual([]);
   });
 
   it('archives selected drops on Shift+Backspace keydown', () => {
@@ -118,7 +127,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -135,85 +144,67 @@ describe('<TopicView />', () => {
     expect(topic.archivedDrops.includes(drop1.id)).toBe(true);
     // Drop should not be deleted
     expect(drop.deleted).toBeFalsy();
-    // Should unselect drops
-    expect(App.getSelectedDrops()).toEqual({});
+    // Should clear selection
+    expect(Selection.get()).toEqual([]);
   });
 
-  it('adds selected drops and action to clipboardData on copy', () => {
-    setup();
+  describe('on copy', () => {
+    it('sets selection data to clipboard', () => {
+      jest.spyOn(Selection, 'copy');
+      setup();
 
-    const clipboardData = {
-      types: [],
-      data: {},
-      getData: (key) => clipboardData.data[key],
-    };
-    const event = {
-      clipboardData: {
-        clearData: jest.fn(),
-        setData: (key, value) => {
-          clipboardData.data[key] = value;
-          clipboardData.types.push(key);
-        },
-      },
-    };
+      act(() => {
+        // Select a drop
+        Selection.select(core, [Selection.item(drop1)]);
+      });
 
-    act(() => {
-      // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      act(() => {
+        // Fire copy event
+        fireEvent.copy(document, clipboardEvent);
+      });
+
+      // Should initialize selection copy
+      expect(Selection.copy).toHaveBeenCalled();
     });
-
-    act(() => {
-      // Fire copy event
-      fireEvent.copy(document, event);
-    });
-
-    const dataInsert = createDataInsertFromDataTransfer(
-      clipboardData as unknown as DataTransfer,
-    );
-
-    // Should set action
-    expect(dataInsert.action).toEqual('copy');
-    // Should set drops
-    expect(dataInsert.drops).toEqual([drop1.id]);
   });
 
-  it('adds selected drops and action to clipboardData and removes drops from topic on cut', () => {
-    setup();
+  describe('on cut', () => {
+    it('sets selection data to clipboard on cut', () => {
+      jest.spyOn(Selection, 'cut');
 
-    const event = {
-      clipboardData: {
-        types: [],
-        data: {},
-        getData: (key) => event.clipboardData.data[key],
-        clearData: jest.fn(),
-        setData: (key, value) => {
-          event.clipboardData.data[key] = value;
-          event.clipboardData.types.push(key);
-        },
-      },
-    };
+      setup();
 
-    act(() => {
-      // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      act(() => {
+        // Select a drop
+        Selection.select(core, [Selection.item(drop1)]);
+      });
+
+      act(() => {
+        // Fire cut event
+        fireEvent.cut(document, clipboardEvent);
+      });
+
+      // Should initialize selection cut
+      expect(Selection.cut).toHaveBeenCalled();
     });
 
-    act(() => {
-      // Fire cut event
-      fireEvent.cut(document, event);
+    it('removes drops from the topic', () => {
+      setup();
+
+      act(() => {
+        // Select a drop
+        Selection.select(core, [Selection.item(drop1)]);
+      });
+
+      act(() => {
+        // Fire cut event
+        fireEvent.cut(document, clipboardEvent);
+      });
+
+      // Should remove drops from topic
+      const topic = Topics.get(tSixDropsView.topic);
+      expect(topic.drops.includes(drop1.id)).toBe(false);
     });
-
-    const dataInsert = createDataInsertFromDataTransfer(
-      event.clipboardData as unknown as DataTransfer,
-    );
-
-    // Should set action
-    expect(dataInsert.action).toEqual('cut');
-    // Should set drops
-    expect(dataInsert.drops).toEqual([drop1.id]);
-    // Should remove drops from topic
-    const topic = Topics.get(tSixDropsView.topic);
-    expect(topic.drops.includes(drop1.id)).toBe(false);
   });
 
   it('inserts data on paste', () => {
@@ -229,6 +220,7 @@ describe('<TopicView />', () => {
       target: {
         tagName: 'BODY',
       },
+      preventDefault: jest.fn(),
       clipboardData: {
         types: [],
         data: {},
@@ -242,21 +234,31 @@ describe('<TopicView />', () => {
     };
 
     act(() => {
-      // Add the new drop to the clipboard event data
-      setDataTransferData(event as unknown as ClipboardEvent, {
-        action: 'copy',
-        drops: [drop1.id],
-      });
+      // Select a drop
+      Selection.select(core, [Selection.item(drop1)]);
+    });
+
+    act(() => {
+      // Copy the selection
+      Selection.copy(core, event as unknown as ClipboardEvent);
+    });
+
+    act(() => {
       // Fire a paste event using the clipboard event
       fireEvent.paste(document, event);
     });
 
+    // Create data insert
+    const dataInsert = createDataInsertFromDataTransfer(
+      event.clipboardData as unknown as DataTransfer,
+    );
+
     // Should insert data into topic
-    expect(App.insertDataIntoTopic).toHaveBeenCalled();
-    // @ts-ignore
-    const params = App.insertDataIntoTopic.mock.calls[0];
-    expect(params[1]).toBe(tSixDropsView.topic);
-    expect(params[2].drops).toEqual([drop1.id]);
+    expect(App.insertDataIntoTopic).toHaveBeenCalledWith(
+      expect.anything(),
+      tSixDropsView.topic,
+      dataInsert,
+    );
   });
 
   it('ignores data pasted into INPUT and SPAN', () => {
@@ -306,7 +308,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select a drop
-      App.selectDrops(core, [drop1.id]);
+      Selection.select(core, [Selection.item(drop1)]);
     });
 
     act(() => {
@@ -316,8 +318,7 @@ describe('<TopicView />', () => {
 
     act(() => {
       // Select another drop
-      App.clearSelection(core);
-      App.selectDrops(core, [drop2.id]);
+      Selection.select(core, [Selection.item(drop2)]);
     });
 
     act(() => {
@@ -347,14 +348,14 @@ describe('<TopicView />', () => {
     });
 
     // Get selected drop IDs
-    let selected = Object.keys(App.getSelectedDrops());
+    let selected = Selection.get('drops:drop').map((item) => item.id);
 
     // All of the topic's drops should be selected
     expect(isEqual(tSixDrops.drops, selected)).toBeTruthy();
 
     act(() => {
       // Clear selected drops
-      App.clearSelection(core);
+      Selection.clear(core);
     });
 
     act(() => {
@@ -363,7 +364,7 @@ describe('<TopicView />', () => {
     });
 
     // Get selected drop IDs
-    selected = Object.keys(App.getSelectedDrops());
+    selected = Selection.get('drops:drop').map((item) => item.id);
 
     // All of the topic's drops should be selected
     expect(isEqual(tSixDrops.drops, selected)).toBeTruthy();

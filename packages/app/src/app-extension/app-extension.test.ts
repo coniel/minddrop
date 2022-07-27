@@ -9,6 +9,7 @@ import {
   ViewInstances,
   ViewConfig,
 } from '@minddrop/views';
+import { Selection } from '@minddrop/selection';
 import { TOPICS_TEST_DATA, Topics } from '@minddrop/topics';
 import { DROPS_TEST_DATA, Drops } from '@minddrop/drops';
 import * as ViewsExtension from '@minddrop/views';
@@ -194,7 +195,7 @@ describe('app-extension', () => {
 
       act(() => {
         // Select a drop
-        App.selectDrops(core, [drop1.id]);
+        Selection.select(core, [Selection.item(drop1)]);
       });
 
       act(() => {
@@ -208,7 +209,7 @@ describe('app-extension', () => {
       });
 
       // Drop should no longer be selected
-      expect(App.getSelectedDrops()).toEqual({});
+      expect(Selection.get()).toEqual([]);
     });
   });
 

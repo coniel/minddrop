@@ -2,6 +2,7 @@
 import React, { FC, useCallback, useState } from 'react';
 import { FieldValue } from '@minddrop/utils';
 import { App, useTopicTrail } from '@minddrop/app';
+import { Selection } from '@minddrop/selection';
 import { useTopic, TopicViewInstanceData } from '@minddrop/topics';
 import { useDrops } from '@minddrop/drops';
 import {
@@ -35,7 +36,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   const [dragOver, setDragOver] = useState<string | null>(null);
   const trail = useTopicTrail();
 
-  const clearSelection = useCallback(() => App.clearSelection(core), [core]);
+  const clearSelection = useCallback(() => Selection.clear(core), [core]);
 
   const handleDragEnter = (
     event: React.DragEvent<HTMLDivElement>,
@@ -78,11 +79,14 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     event.preventDefault();
     event.stopPropagation();
     setDragOver(null);
-    App.clearSelection(core);
+    Selection.clear(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
+    const dropIds = Selection.getFromDataInsert(dataInsert, 'drops:drop').map(
+      (item) => item.id,
+    );
 
     if (dataInsert.action === 'sort') {
-      if (!dataInsert.drops) {
+      if (!dropIds.length) {
         return;
       }
       const instance =
@@ -93,7 +97,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
       // Move the dropped items into a new column
       const updatedColumns = moveItemsToNewColumn(
         instance.columns,
-        dataInsert.drops,
+        dropIds,
         column,
       );
 
@@ -123,8 +127,11 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
     event.preventDefault();
     event.stopPropagation();
     setDragOver(null);
-    App.clearSelection(core);
+    Selection.clear(core);
     const dataInsert = createDataInsertFromDataTransfer(event.dataTransfer);
+    const dropIds = Selection.getFromDataInsert(dataInsert, 'drops:drop').map(
+      (item) => item.id,
+    );
 
     if (dataInsert.action === 'sort') {
       const instance =
@@ -138,7 +145,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
         {
           columns: moveColumnItems(
             instance.columns,
-            dataInsert.drops.map((dropId) => ({
+            dropIds.map((dropId) => ({
               resource: 'drops:drop',
               id: dropId,
             })),

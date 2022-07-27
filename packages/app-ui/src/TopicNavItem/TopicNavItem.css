@@ -1,0 +1,21 @@
+.topic-nav-item-container {
+  position: relative;
+}
+
+.topic-nav-item-container .top-drop-target {
+  position: absolute;
+  display: none;
+  top: -3px;
+  right: 0;
+  left: 0;
+  height: 6px;
+  border-radius: 2px;
+}
+
+.topic-nav-item-container .top-drop-target.displayed {
+  display: block;
+}
+
+.topic-nav-item-container .top-drop-target.over {
+  background-color: var(--primary11);
+}

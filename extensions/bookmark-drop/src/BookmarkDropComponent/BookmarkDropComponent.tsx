@@ -9,7 +9,11 @@ import {
   InvisibleTextField,
   Button,
 } from '@minddrop/ui';
-import { useDraggableDrop, useSelectableDrop } from '@minddrop/app';
+import {
+  useSelectable,
+  useDraggable,
+  SelectionItem,
+} from '@minddrop/selection';
 import { DropActions } from '@minddrop/app-ui';
 import { Files } from '@minddrop/files';
 import { DropComponentProps, Drops } from '@minddrop/drops';
@@ -33,6 +37,7 @@ interface UrlForm extends HTMLFormElement {
 }
 
 export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
+  resource,
   url,
   hasPreview,
   title,
@@ -42,6 +47,7 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
   color,
   currentParent,
 }) => {
+  const selectionItem: SelectionItem = { id, resource, parent: currentParent };
   const core = useCore(Extension.id);
   const { t } = useTranslation();
   // State of the bookmark preview
@@ -49,9 +55,9 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
     'missing' | 'present' | 'fetching'
   >(hasPreview ? 'present' : 'missing');
   // Drag and drop handling
-  const { onDragStart } = useDraggableDrop(id);
+  const { onDragStart, onDragEnd } = useDraggable(selectionItem);
   // Selection handling
-  const { selectedClass, onClick, isSelected } = useSelectableDrop(id);
+  const { onClick, selected } = useSelectable(selectionItem);
   const domain = url ? new URL(url).hostname : '';
 
   useEffect(() => {
@@ -88,11 +94,10 @@ export const BookmarkDropComponent: FC<BookmarkDropComponentProps> = ({
     <Drop
       draggable
       color={color}
+      selected={selected}
       onDragStart={onDragStart}
-      className={mapPropsToClasses(
-        { [selectedClass]: isSelected, placeholder: !url },
-        'bookmark-drop',
-      )}
+      onDragEnd={onDragEnd}
+      className={mapPropsToClasses({ placeholder: !url }, 'bookmark-drop')}
     >
       <div className="content">
         {hasPreview && image && (
