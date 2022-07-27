@@ -33,7 +33,7 @@ useSelection(resourceType?: string | string[]): SelectionItem[]
 
 ### useSelectionContains
 
-Returns a boolean indicating whether the selection contains resources of the given type(s).
+Returns a boolean indicating whether the current selection contains resources of the given type(s).
 
 ```ts
 useSelectionContains(resourceType?: string | string[], exclusive?: boolean): boolean
@@ -62,11 +62,32 @@ useSelectionContains(resourceType?: string | string[], exclusive?: boolean): boo
 
 ### useIsDragging
 
-Returns a boolean indicating whether a drag action is in progress.
+Returns a boolean indicating whether a drag action is in progress. Optionally, one or more resource types can be passed in to check if the items being dragged are of the given type(s).
 
 ```ts
-useIsDragging(): boolean
+useIsDragging(resourceType?: string | string[], exclusive?: boolean): boolean
 ```
+
+<ArgsTable
+  data={[
+    {
+      name: 'resourceType',
+      type: 'string | string[]',
+      required: true,
+      description: 'The resource type(s) of the selection items to check for.',
+    },
+    {
+      name: 'exclusive',
+      type: 'boolean',
+      description: (
+        <span>
+          When <Code>true</Code>, the hook will only return <Code>true</Code> if the
+          selection contains nothing but items of the given type(s).
+        </span>
+      ),
+    },
+  ]}
+/>
 
 ### useSelectable
 
@@ -267,6 +288,53 @@ Selection.isSelected(item: SelectionItem): boolean
     },
   ]}
 />
+
+### contains
+
+Returns a boolean indicating whether or not an array of selection items contains items of the given resoure type(s).
+
+```ts
+Selection.contains(
+  selectionItems: SelectionItem[],
+  resource: string | string[],
+  exclusive?: boolean
+): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'selectionItems',
+      type: 'SelectionItem[]',
+      required: true,
+      description: 'The array of selection items in which to check.',
+    },
+    {
+      name: 'resourceType',
+      type: 'string | string[]',
+      required: true,
+      description: 'The resource type(s) of the selection items to check for.',
+    },
+    {
+      name: 'exclusive',
+      type: 'boolean',
+      description: (
+        <span>
+          When <Code>true</Code>, the method will only return <Code>true</Code> if the
+          selection contains nothing but items of the given type(s).
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### isEmpty
+
+Returns a boolean indicating whether or not the current selection is empty.
+
+```ts
+Selection.isEmpty(): boolean
+```
 
 ### filter
 

@@ -47,6 +47,28 @@ export interface SelectionApi {
   isSelected(item: SelectionItem): boolean;
 
   /**
+   * Returns a boolean indicating whether the given selection items
+   * contain resources of the given type(s).
+   *
+   * @param selectionItems - The array of selection items in which to check.
+   * @param resourceType - The resource type(s) of the selection items to check for.
+   * @param exclusive - When `true`, the hook will only return true if the selection contains nothing but items of the given type(s).
+   * @reutrns A boolean indicating whether resources of the given type are selected.
+   */
+  contains(
+    selectionItems: SelectionItem[],
+    resourceType: string | string[],
+    exclusive?: boolean,
+  ): boolean;
+
+  /**
+   * Returns a boolean indicating whether or not the selection is empty.
+   *
+   * @returns A boolean indicating whether the selection is empty.
+   */
+  isEmpty(): boolean;
+
+  /**
    * Filters the given selection items by one or more
    * resource types.
    *

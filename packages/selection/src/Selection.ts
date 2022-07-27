@@ -3,6 +3,8 @@ import { getSelection } from './getSelection';
 import { getSelectionIds } from './getSelectionIds';
 import { getFromDataInsert } from './getFromDataInsert';
 import { isSelected } from './isSelected';
+import { selectionContains } from './selectionContains';
+import { selectionIsEmpty } from './selectionIsEmpty';
 import { filterSelectionItems } from './filterSelectionItems';
 import { item } from './item';
 import { addToSelection } from './addToSelection';
@@ -19,6 +21,8 @@ export const Selection: SelectionApi = {
   getIds: getSelectionIds,
   getFromDataInsert,
   isSelected,
+  contains: selectionContains,
+  isEmpty: selectionIsEmpty,
   filter: filterSelectionItems,
   item,
   add: addToSelection,
