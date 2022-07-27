@@ -34,7 +34,7 @@ export function removeSubtopics(
   subtopicIds.forEach((subtopicId) => {
     // Remove the topic as a parent
     const subtopic = TopicsResource.removeParents(core, subtopicId, [
-      { resource: 'topic', id: topicId },
+      { resource: 'topics:topic', id: topicId },
     ]);
 
     // Update the subtopic in the subtopics map
