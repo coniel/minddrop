@@ -14,11 +14,10 @@ import './TopicNavItem.css';
 export interface TopicNavItemProps
   extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * `TopicNavItem`s for the topic's subtopics.
+   * Children rendered inside a collapsible container.
+   * Typically the topic's subtopic nav items.
    */
-  children?:
-    | React.ReactElement<TopicNavItemProps>
-    | React.ReactElement<TopicNavItemProps>[];
+  children?: React.ReactNode;
 
   /**
    * The topic name.
@@ -161,27 +160,7 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
             </div>
           </Tooltip>
           <CollapsibleContent asChild>
-            <div className="children">
-              {childCount > 0 ? (
-                React.Children.map(children, (child) =>
-                  React.cloneElement(
-                    child as React.ReactElement<TopicNavItemProps>,
-                    {
-                      level: level + 1,
-                    },
-                  ),
-                )
-              ) : (
-                <Text
-                  as="div"
-                  color="light"
-                  className="helper-text"
-                  style={{ paddingLeft: level * 16 }}
-                >
-                  {t('noSubtopics')}
-                </Text>
-              )}
-            </div>
+            <div className="children">{children}</div>
           </CollapsibleContent>
         </div>
       </Collapsible>
