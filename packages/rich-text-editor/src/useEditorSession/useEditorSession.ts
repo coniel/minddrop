@@ -34,7 +34,7 @@ export function useEditorSession(documentId: string): [Editor, string] {
   // Create the editor instance
   const editor = useMemo(
     () => withRichTextEditorStore(createEditor(documentId), sessionId),
-    [documentId],
+    [documentId, sessionId],
   );
 
   return [editor, sessionId];
