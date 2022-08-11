@@ -35,6 +35,9 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
 
   const onDragStart = useCallback(
     (event: DragEvent | React.DragEvent) => {
+      // Prevent parent from becoming the dragged element
+      event.stopPropagation();
+
       if (!isSelected(selectionItem)) {
         if (event.shiftKey) {
           // If the Shift key is pressed, add the item to the
