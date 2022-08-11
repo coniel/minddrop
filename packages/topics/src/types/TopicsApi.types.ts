@@ -53,6 +53,8 @@ import {
   RemoveParentsEventCallback,
   MoveSubtopicsEvent,
   MoveSubtopicsEventCallback,
+  SortSubtopicsEvent,
+  SortSubtopicsEventCallback,
   MoveDropsEvent,
   MoveDropsEventCallback,
 } from './TopicEvents.types';
@@ -96,6 +98,21 @@ export interface TopicsApi {
    * @returns The filtered topics.
    */
   filter(topics: TopicMap, filters: TopicFilters): TopicMap;
+
+  /**
+   * Checks whether a topic is a descendant of other topics.
+   * A descendant topic can be nested multiple layers deeep
+   * inside a parent topic.
+   *
+   * @param descendantTopicId - The ID of the topic which may be a descendant.
+   * @param parentTopicIds - The IDs of the topics which may be a parent.
+   * @returns A boolean indicating whether the topic is a descendant.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the topic or any of the potential parent
+   * topics do not exist.
+   */
+  isDescendant(descendantTopicId: string, parentTopicIds: string[]): boolean;
 
   /**
    * Creates a new topic and dispatches a `topics:create` event.
@@ -159,15 +176,28 @@ export interface TopicsApi {
 
   /**
    * Adds subtopics into a parent topic.
-   * Dispatches an `topics:add-subtopics` event, as well
-   * as a `topics:update` event.
+   * Dispatches an `topics:topic:add-subtopics` event
    *
-   * @param core A MindDrop core instance.
-   * @param topicId The ID of the topic to which to add the subtopics.
-   * @param subtopicIds The IDs of the subtopics to add to the topic.
+   * Returns the updated topic.
+   *
+   * @param core - A MindDrop core instance.
+   * @param topicId - The ID of the topic to which to add the subtopics.
+   * @param subtopicIds - The IDs of the subtopics to add to the topic.
+   * @param position - The index at which to add the subtopics.
    * @returns The updated topic.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the topic does not exist.
+   *
+   * @throws ResourceValidationError
+   * Thrown if any of the subtopics do not exist.
    */
-  addSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
+  addSubtopics(
+    core: Core,
+    topicId: string,
+    subtopicIds: string[],
+    position?: number,
+  ): Topic;
 
   /**
    * Removes subtopics from a parent topic.
@@ -182,20 +212,45 @@ export interface TopicsApi {
   removeSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
 
   /**
-   * Moves subtopics from one topic to another and dispaches
-   * a `topics:move-subtopics` event.
+   * Moves subtopics from one topic to another.
+   * Dispatches a `topics:topic:move-subtopics` event.
    *
-   * @param core A MindDrop core instance.
-   * @param fromTopicId The ID of the topic from which to move the subtopics.
-   * @param toTopicId The ID of the topic into which to move the subtopics.
-   * @param subtopicIds The IDs of the subtopics to remove.
+   * @param core - A MindDrop core instance.
+   * @param fromTopicId - The ID of the topic from which to move the subtopics.
+   * @param toTopicId - The ID of the topic into which to move the subtopics.
+   * @param subtopicIds - The IDs of the subtopics to remove.
+   * @param position - The index at which to add the subtopics.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the topic does not exist.
+   *
+   * @throws ResourceValidationError
+   * Thrown if any of the subtopics do not exist.
    */
   moveSubtopics(
     core: Core,
     fromTopicId: string,
     toTopicId: string,
     subtopicIds: string[],
+    position?: number,
   ): void;
+
+  /**
+   * Sets a new sort order for a topic's subtopics.
+   * The provided subtopic IDs must contain the same
+   * IDs as the current value, only in a different order.
+   * Dispatches a `topics:topic:sort-subtopics` event.
+   * Retruns the updated topic.
+   *
+   * @param core - A MindDrop core instance.
+   * @param topicId - The ID of the topic in which to sort the subtopics.
+   * @param subtopicIds - The IDs of the subtopics in their new sort order.
+   *
+   * @throws InvalidParameterError
+   * Thrown if the given subtopic IDs differ from the
+   * current subtopic IDs in anything but order.
+   */
+  sortSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic;
 
   /**
    * Archives the specified subtopics in a topic and dispatches
@@ -460,7 +515,14 @@ export interface TopicsApi {
     core: Core,
     type: MoveSubtopicsEvent,
     callback: MoveSubtopicsEventCallback,
-  );
+  ): void;
+
+  // Add 'topics:topic:sort-subtopics' event listener
+  addEventListener(
+    core: Core,
+    type: SortSubtopicsEvent,
+    callback: SortSubtopicsEventCallback,
+  ): void;
 
   // Add 'topics:add-drops' event listener
   addEventListener(
@@ -502,14 +564,14 @@ export interface TopicsApi {
     core: Core,
     type: AddParentsEvent,
     callback: AddParentsEventCallback,
-  );
+  ): void;
 
   // Add topics:remove-parents event listener
   addEventListener(
     core: Core,
     type: RemoveParentsEvent,
     callback: RemoveParentsEventCallback,
-  );
+  ): void;
 
   // Add 'topics:add-tags' event listener
   addEventListener(
@@ -625,6 +687,13 @@ export interface TopicsApi {
     core: Core,
     type: MoveSubtopicsEvent,
     callback: MoveSubtopicsEventCallback,
+  ): void;
+
+  // Remove 'topics:topic:sort-subtopics' event listener
+  removeEventListener(
+    core: Core,
+    type: SortSubtopicsEvent,
+    callback: SortSubtopicsEventCallback,
   ): void;
 
   // Remove 'topics:add-drops' event listener

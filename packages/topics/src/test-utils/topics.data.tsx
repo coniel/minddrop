@@ -433,7 +433,12 @@ export const tEmpty: Topic = {
   id: 't-empty',
 };
 
-export const rootTopicIds = [tSailing.id, tUntitled.id];
+export const rootTopicIds = [
+  tSailing.id,
+  tUntitled.id,
+  tTwoDrops.id,
+  tSixDrops.id,
+];
 
 export const topics = [
   tCoastalNavigation,

@@ -1,5 +1,4 @@
 import { Core } from '@minddrop/core';
-import { FieldValue } from '@minddrop/utils';
 import { Topic } from '../types';
 import { TopicsResource } from '../TopicsResource';
 
@@ -12,6 +11,7 @@ import { TopicsResource } from '../TopicsResource';
  * @param core - A MindDrop core instance.
  * @param topicId - The ID of the topic to which to add the subtopics.
  * @param subtopicIds - The IDs of the subtopics to add to the topic.
+ * @param position - The index at which to add the subtopics.
  * @returns The updated topic.
  *
  * @throws ResourceDocumentNotFoundError
@@ -24,6 +24,7 @@ export function addSubtopics(
   core: Core,
   topicId: string,
   subtopicIds: string[],
+  position?: number,
 ): Topic {
   // Get the topic
   const topic = TopicsResource.get(topicId);
@@ -33,12 +34,20 @@ export function addSubtopics(
     (id) => !topic.subtopics.includes(id),
   );
 
+  // Add the new subtopics to the specified positon
+  const sorted = [...topic.subtopics];
+  sorted.splice(
+    typeof position === 'number' ? position : topic.subtopics.length,
+    0,
+    ...newSubtopicIds,
+  );
+
   // Update the topic
   const updated = TopicsResource.update(core, topicId, {
-    subtopics: FieldValue.arrayUnion(newSubtopicIds),
+    subtopics: sorted,
   });
 
-  // Get the updated subtopics
+  // Get the new subtopics
   const subtopics = TopicsResource.get(newSubtopicIds);
 
   // Dispatch 'topics:topic:add-subtopics' event

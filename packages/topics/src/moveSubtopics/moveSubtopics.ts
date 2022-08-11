@@ -11,6 +11,7 @@ import { TopicsResource } from '../TopicsResource';
  * @param fromTopicId - The ID of the topic from which to move the subtopics.
  * @param toTopicId - The ID of the topic into which to move the subtopics.
  * @param subtopicIds - The IDs of the subtopics to remove.
+ * @param position - The index at which to add the subtopics.
  *
  * @throws ResourceDocumentNotFoundError
  * Thrown if the topic does not exist.
@@ -23,11 +24,12 @@ export function moveSubtopics(
   fromTopicId: string,
   toTopicId: string,
   subtopicIds: string[],
+  position?: number,
 ): void {
   // Remove subtopics from parent topic
   const fromTopic = removeSubtopics(core, fromTopicId, subtopicIds);
   // Adds subtopics to new parent topic
-  const toTopic = addSubtopics(core, toTopicId, subtopicIds);
+  const toTopic = addSubtopics(core, toTopicId, subtopicIds, position);
 
   // Get updated subtopics
   const subtopics = TopicsResource.get(subtopicIds);

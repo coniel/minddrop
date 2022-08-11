@@ -5,6 +5,7 @@ import {
   core,
   setup,
   tNoDrops,
+  tSailing,
   tSixDrops,
   tTwoDrops,
 } from '../test-utils';
@@ -17,15 +18,32 @@ describe('addSubtopics', () => {
 
   it('adds subtopics to the topic', () => {
     // Add the subtopics
-    addSubtopics(core, tNoDrops.id, [tTwoDrops.id, tSixDrops.id]);
+    addSubtopics(core, tSailing.id, [tTwoDrops.id, tSixDrops.id]);
 
     // Get the updated topic
-    const topic = TopicsResource.get(tNoDrops.id);
+    const topic = TopicsResource.get(tSailing.id);
 
     // Should have added subtopics
-    expect(
-      contains(topic.subtopics, [tTwoDrops.id, tSixDrops.id]),
-    ).toBeTruthy();
+    expect(topic.subtopics).toEqual([
+      ...tSailing.subtopics,
+      tTwoDrops.id,
+      tSixDrops.id,
+    ]);
+  });
+
+  it('adds subtopics to the specified index', () => {
+    // Add the subtopics to the top of the subtopics list
+    addSubtopics(core, tSailing.id, [tTwoDrops.id, tSixDrops.id], 0);
+
+    // Get the updated topic
+    const topic = TopicsResource.get(tSailing.id);
+
+    // Subtopics should be at the top of the list
+    expect(topic.subtopics).toEqual([
+      tTwoDrops.id,
+      tSixDrops.id,
+      ...tSailing.subtopics,
+    ]);
   });
 
   it('returns the updated topic', () => {

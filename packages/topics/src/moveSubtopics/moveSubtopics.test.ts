@@ -7,6 +7,8 @@ import {
   tAnchoring,
   tNavigation,
   tUntitled,
+  tCoastalNavigation,
+  tOffshoreNavigation,
 } from '../test-utils';
 import { moveSubtopics } from './moveSubtopics';
 import { TopicsResource } from '../TopicsResource';
@@ -46,6 +48,29 @@ describe('moveSubtopics', () => {
     expect(
       contains(parent.subtopics, [tAnchoring.id, tNavigation.id]),
     ).toBeTruthy();
+  });
+
+  it('adds the subtopics to the specified location', () => {
+    // Move the subtopics to the top of the target topic's
+    // subtopics list.
+    moveSubtopics(
+      core,
+      tNavigation.id,
+      tSailing.id,
+      [tCoastalNavigation.id, tOffshoreNavigation.id],
+      0,
+    );
+
+    // Get the updated new parent topic
+    const parent = TopicsResource.get(tSailing.id);
+
+    // Should add the subtopics to the topic of the
+    // subtopics list.
+    expect(parent.subtopics).toEqual([
+      tCoastalNavigation.id,
+      tOffshoreNavigation.id,
+      ...tSailing.subtopics,
+    ]);
   });
 
   it('dispatches a `topics:topic:move-subtopics` event', (done) => {

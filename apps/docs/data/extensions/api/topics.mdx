@@ -235,6 +235,31 @@ Topics.filter(topics: TopicMap, filters: TopicFilters): TopicMap
   ]}
 />
 
+### isDescendant
+
+Checks whether a topic is a descendant of other topics. A descendant topic can be nested multiple levels deep inside the parent topic.
+
+```ts
+Topics.isDescendant(descendantTopicId: string, parentTopicIds: string[]): boolean
+```
+
+<ArgsTable
+  data={[
+    {
+        name: 'descendantTopicId',
+        type: 'string',
+        required: true,
+        description: 'The ID of the topic which may be a descendant.'
+    },
+    {
+        name: 'parentTopicIds',
+        type: 'string',
+        required: true,
+        description: 'The IDs of the topics which may be a parent.'
+    },
+  ]}
+/>
+
 ### create
 
 Creates a new topic and dispatches a `topics:create` event. Returns the new topic.
@@ -378,10 +403,15 @@ Topics.deletePermanently(core: Core, topicId: string): Topic
 
 ### addSubtopics
 
-Adds subtopics into a parent topic. Dispatches an `topics:add-subtopics` event, as well as `topics:update` event. Returns the updated topic.
+Adds subtopics into a parent topic. Dispatches an `topics:topic:add-subtopics` event, as well as `topics:topic:update` event. Returns the updated topic.
 
 ```ts
-Topics.addSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+Topics.addSubtopics(
+  core: Core,
+  topicId: string,
+  subtopicIds: string[],
+  position?: number,
+): Topic
 ```
 
 <ArgsTable core data={[
@@ -396,6 +426,11 @@ Topics.addSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
       type: 'string[]',
       required: true,
       description: 'The IDs of the subtopics.',
+    },
+    {
+      name: 'position',
+      type: 'number',
+      description: 'The index at which to add the subtopics.',
     },
 
 ]} />
@@ -426,10 +461,16 @@ Topics.removeSubtopics(core: Core, parentId: string, subtopicIds: string[]): Top
 
 ### moveSubtopics
 
-Moves subtopics from one topic to another and dispaches a `topics:move-subtopics` event.
+Moves subtopics from one topic to another and dispaches a `topics:topic:move-subtopics` event.
 
 ```ts
-Topics.moveSubtopics(core: Core, fromTopicId: string, toTopicId: string, subtopicIds: string[]): void
+Topics.moveSubtopics(
+  core: Core,
+  fromTopicId: string,
+  toTopicId: string,
+  subtopicIds: string[],
+  position?: number
+): void
 ```
 
 <ArgsTable core data={[
@@ -451,8 +492,43 @@ Topics.moveSubtopics(core: Core, fromTopicId: string, toTopicId: string, subtopi
       required: true,
       description: 'The IDs of the subtopics to move.',
     },
+    {
+      name: 'position',
+      type: 'number',
+      description: 'The index at which to add the moved subtopics.',
+    },
 
 ]} />
+
+### sortSubtopics
+
+Sets a new sort order for a topic's subtopics. The provided subtopic IDs must contain the same IDs as the current value, only in a different order. Dispatches a `topics:topic:sort-subtopics` event. Returns the updated topic.
+
+- Throws a `InvalidParameterError` if the given subtopic IDs differ from the current subtopic IDs in anything but order.
+
+```ts
+Topics.sortSubtopics(core: Core, topicId: string, subtopicIds: string[]): Topic
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicId',
+      type: 'string',
+      required: true,
+      description:
+        'The IDs of the topic in which to sort the subtopics.',
+    },
+    {
+      name: 'subtopicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the subtopics in their new sort order.',
+    },
+  ]}
+/>
 
 ### archiveSubtopics
 

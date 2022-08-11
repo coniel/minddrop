@@ -13,6 +13,7 @@ export type ArchiveSubtopicsEvent = 'topics:topic:archive-subtopics';
 export type UnarchiveSubtopicsEvent = 'topics:topic:unarchive-subtopics';
 export type RemoveSubtopicsEvent = 'topics:topic:remove-subtopics';
 export type MoveSubtopicsEvent = 'topics:topic:move-subtopics';
+export type SortSubtopicsEvent = 'topics:topic:sort-subtopics';
 export type AddDropsEvent = 'topics:topic:add-drops';
 export type ArchiveDropsEvent = 'topics:topic:archive-drops';
 export type UnarchiveDropsEvent = 'topics:topic:unarchive-drops';
@@ -36,6 +37,7 @@ export type CreateTopicEventData = Topic;
 export type DeleteTopicEventData = Topic;
 export type RestoreTopicEventData = Topic;
 export type PermanentlyDeleteTopicEventData = Topic;
+export type SortSubtopicsEventData = Topic;
 export type RegisterViewEventData = TopicViewConfig;
 export type UnregisterViewEventData = TopicViewConfig;
 export type CreateViewInstanceData = TopicViewInstance;
@@ -268,6 +270,10 @@ export type RemoveSubtopicsEventCallback = EventListenerCallback<
 export type MoveSubtopicsEventCallback = EventListenerCallback<
   MoveSubtopicsEvent,
   MoveSubtopicsEventData
+>;
+export type SortSubtopicsEventCallback = EventListenerCallback<
+  SortSubtopicsEvent,
+  SortSubtopicsEventData
 >;
 export type AddDropsEventCallback = EventListenerCallback<
   AddDropsEvent,

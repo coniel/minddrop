@@ -16,9 +16,11 @@ import { unarchiveDropsInTopic } from './unarchiveDropsInTopic';
 import { archiveSubtopics } from './archiveSubtopics';
 import { unarchiveSubtopics } from './unarchiveSubtopics';
 import { moveSubtopics } from './moveSubtopics';
+import { sortSubtopics } from './sortSubtopics';
 import { TopicsResource } from './TopicsResource';
 import { TopicViewConfigsStore } from './TopicViewConfigsStore';
 import { getTopicViewConfig } from './getTopicViewConfig';
+import { isDescendant } from './isDescendant';
 
 export const Topics: TopicsApi = {
   get: TopicsResource.get,
@@ -32,9 +34,11 @@ export const Topics: TopicsApi = {
   normalize: TopicsResource.normalize,
   addParents: TopicsResource.addParents,
   removeParents: TopicsResource.removeParents,
+  isDescendant,
   addSubtopics,
   removeSubtopics,
   moveSubtopics,
+  sortSubtopics,
   archiveSubtopics,
   unarchiveSubtopics,
   addDrops: addDropsToTopic,
