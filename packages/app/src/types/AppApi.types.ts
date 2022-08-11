@@ -141,12 +141,13 @@ export interface AppApi {
 
   /**
    * Adds topics to the root level and dispaches an
-   * `app:add-root-topics` event.
+   * `app:root-topics:add` event.
    *
-   * @param core A MindDrop core instance.
-   * @param topicIds The IDs of the topics to add to the root level.
+   * @param core - A MindDrop core instance.
+   * @param topicIds - The IDs of the topics to add to the root level.
+   * @param position - The position (index) at which to add the topics.
    */
-  addRootTopics(core: Core, topicIds: string[]): void;
+  addRootTopics(core: Core, topicIds: string[], position?: number): void;
 
   /**
    * Removes topics from the root level and dispaches an
@@ -156,6 +157,21 @@ export interface AppApi {
    * @param topicIds The IDs of the topics to remove from the root level.
    */
   removeRootTopics(core: Core, topicIds: string[]): void;
+
+  /**
+   * Sets a new sort order for root topics.
+   * The provided root topic IDs must contain the same
+   * IDs as the current value, only in a different order.
+   * Dispatches a `app:root-topics:sort` event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param topicIds - The IDs of the root topics in their new sort order.
+   *
+   * @throws InvalidParameterError
+   * Thrown if the given topic IDs differ from the
+   * current root topic IDs in anything but order.
+   */
+  sortRootTopics(core: Core, topicIds: string[]): void;
 
   /**
    * Removes subtopics from a parent topic and adds them to the
@@ -174,16 +190,18 @@ export interface AppApi {
   /**
    * Removes topics from the root level and adds them as
    * subtopics into a specified topic.
-   * Dispatches a `app:move-root-topics` event.
+   * Dispatches a `app:root-topics:move` event.
    *
-   * @param core A MindDrop core instance.
-   * @param toTopicId The ID of the topic into which to move the topics.
-   * @param topicIds The IDs of the root level topics to move.
+   * @param core - A MindDrop core instance.
+   * @param toTopicId - The ID of the topic into which to move the topics.
+   * @param topicIds - The IDs of the root level topics to move.
+   * @param position - The index at which to add the subtopics.
    */
   moveRootTopicsToParentTopic(
     core: Core,
     toTopicId: string,
     topicIds: string[],
+    position?: number,
   ): void;
 
   /**

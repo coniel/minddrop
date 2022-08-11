@@ -8,6 +8,7 @@ import { createTopic } from '../createTopic';
 import { insertDataIntoTopic } from '../insertDataIntoTopic';
 import { getRootTopics } from '../getRootTopics';
 import { removeRootTopics } from '../removeRootTopics';
+import { sortRootTopics } from '../sortRootTopics';
 import { archiveRootTopics } from '../archiveRootTopics';
 import { unarchiveRootTopics } from '../unarchiveRootTopics';
 import { getArchivedRootTopics } from '../getArchivedRootTopics';
@@ -19,6 +20,7 @@ import { renderDrop } from '../renderDrop';
 export const App: AppApi = {
   addRootTopics,
   removeRootTopics,
+  sortRootTopics,
   moveSubtopicsToRoot,
   moveRootTopicsToParentTopic,
   getRootTopics,

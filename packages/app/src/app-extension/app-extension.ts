@@ -127,6 +127,13 @@ export function onRun(core: Core) {
     },
   );
 
+  // Listen to root topic sort events
+  core.addEventListener('app:root-topics:sort', (payload) => {
+    // Set the new root topic sort order in the global
+    // persistent store.
+    GlobalPersistentStore.set(core, 'rootTopics', payload.data);
+  });
+
   Topics.addEventListener(core, 'topics:topic:delete', ({ data }) => {
     // Get root topics
     const rootTopics = App.getRootTopics();

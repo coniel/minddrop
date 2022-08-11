@@ -42,6 +42,13 @@ export interface AppStore {
   removeRootTopics(topicIds: string[]): void;
 
   /**
+   * Sets the root topics list.
+   *
+   * @param topicIds The IDs of the topics to set.
+   */
+  setRootTopics(topicIds: string[]): void;
+
+  /**
    * Adds topics to the archived topics list.
    *
    * @param topicIds The IDs of the archived topics to add.

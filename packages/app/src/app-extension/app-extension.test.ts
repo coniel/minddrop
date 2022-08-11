@@ -24,9 +24,9 @@ import {
   GlobalPersistentData,
 } from './app-extension';
 import { App } from '../App';
+import { sortRootTopics } from '../sortRootTopics';
 import { useAppStore } from '../useAppStore';
 import { core } from '../test-utils';
-import {} from '.';
 
 const { rootTopicIds, topics, topicViewInstances } = TOPICS_TEST_DATA;
 const { drops, drop1 } = DROPS_TEST_DATA;
@@ -210,6 +210,27 @@ describe('app-extension', () => {
 
       // Drop should no longer be selected
       expect(Selection.get()).toEqual([]);
+    });
+
+    it('updates the root topic sort order in the global persistent store on change', async () => {
+      // The new root topic order. Move the first
+      // topic to the end.
+      const newOrder = [...rootTopicIds.slice(1), rootTopicIds[0]];
+
+      // Run the extension
+      onRun(core);
+
+      // Sort the root topics
+      sortRootTopics(core, newOrder);
+
+      // Wait for hooks to run
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+
+      // Root topics order should be updated in
+      // the global persistent store.
+      expect(GlobalPersistentStore.get(core, 'rootTopics')).toEqual(newOrder);
     });
   });
 

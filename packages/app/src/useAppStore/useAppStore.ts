@@ -28,6 +28,8 @@ export const useAppStore = createStore<AppStore>((set) => ({
       ),
     })),
 
+  setRootTopics: (topicIds) => set(() => ({ rootTopics: topicIds })),
+
   addArchivedRootTopics: (topicIds) =>
     set((state) => ({
       archivedRootTopics: [...state.archivedRootTopics, ...topicIds],

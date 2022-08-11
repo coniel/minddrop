@@ -58,6 +58,17 @@ describe('useAppStore', () => {
     expect(result.current.rootTopics).toEqual(['topic-3']);
   });
 
+  it('sets root topics', () => {
+    const { result } = renderHook(() => useAppStore((state) => state));
+
+    act(() => {
+      result.current.addRootTopics(['topic-1', 'topic-2', 'topic-3']);
+      result.current.setRootTopics(['topic-3', 'topic-4']);
+    });
+
+    expect(result.current.rootTopics).toEqual(['topic-3', 'topic-4']);
+  });
+
   it('adds archived root topics', () => {
     const { result } = renderHook(() => useAppStore((state) => state));
 

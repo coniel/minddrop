@@ -80,7 +80,7 @@ App.createTopic(core: Core, data?: CreateTopicData): Topic
 Adds topics to the root level and dispaches an `app:root-topics:add` event.
 
 ```ts
-App.addRootTopics(core: Core, topicIds: string[]): void
+App.addRootTopics(core: Core, topicIds: string[], position?: number): void
 ```
 
 <ArgsTable
@@ -91,6 +91,11 @@ App.addRootTopics(core: Core, topicIds: string[]): void
       type: 'string[]',
       required: true,
       description: 'The IDs of the topics to add to the root level.',
+    },
+    {
+      name: 'position',
+      type: 'number',
+      description: 'The index at which to add the new root topics.',
     },
   ]}
 />
@@ -112,6 +117,29 @@ App.removeRootTopics(core: Core, topicIds: string[]): void
       required: true,
       description:
         'The IDs of the topics to remove from the root level.',
+    },
+  ]}
+/>
+
+### sortRootTopics
+
+Sets a new sort order for root topics. The provided root topic IDs must contain the same IDs as the current value, only in a different order. Dispatches a `app:root-topics:sort` event.
+
+- Throws a `InvalidParameterError` if the given topic IDs differ from the current root topic IDs in anything but order.
+
+```ts
+App.sortRootTopics(core: Core, topicIds: string[]): void
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'topicIds',
+      type: 'string[]',
+      required: true,
+      description:
+        'The IDs of the root topics in their new sort order.',
     },
   ]}
 />
@@ -149,7 +177,12 @@ App.moveSubtopicsToRoot(core: Core, parentTopicId: string, subtopicIds: string[]
 Removes topics from the root level and adds them as subtopics to a specified topic. Dispatches a `app:root-topics:move` event.
 
 ```ts
-App.moveRootTopicsToParentTopic(core: Core, parentTopicId: string, topicIds: string[]): void
+App.moveRootTopicsToParentTopic(
+  core: Core,
+  parentTopicId: string,
+  topicIds: string[],
+  position?: number,
+): void
 ```
 
 <ArgsTable
@@ -168,6 +201,12 @@ App.moveRootTopicsToParentTopic(core: Core, parentTopicId: string, topicIds: str
       required: true,
       description:
         'The IDs of the topics to move to from root level.',
+    },
+    {
+      name: 'position',
+      type: 'number',
+      description:
+        'The index at which to add the topics into the subtopics list.',
     },
   ]}
 />

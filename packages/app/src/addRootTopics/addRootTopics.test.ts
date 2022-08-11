@@ -1,6 +1,6 @@
 import { initializeCore } from '@minddrop/core';
 import { GlobalPersistentStore } from '@minddrop/persistent-store';
-import { Topics, TOPICS_TEST_DATA } from '@minddrop/topics';
+import { TOPICS_TEST_DATA } from '@minddrop/topics';
 import { addRootTopics } from './addRootTopics';
 import { useAppStore } from '../useAppStore';
 import { cleanup, setup } from '../test-utils';
@@ -14,8 +14,8 @@ describe('addRootTopics', () => {
   beforeEach(() => {
     setup();
 
-    // Set a test root topic
-    GlobalPersistentStore.set(core, 'rootTopics', [tSailing.id]);
+    // Set a single root topic
+    useAppStore.getState().setRootTopics([tSailing.id]);
   });
 
   afterEach(cleanup);
@@ -33,25 +33,36 @@ describe('addRootTopics', () => {
     ).toBeTruthy();
   });
 
-  it('adds topic IDs to the persistent store', () => {
-    // Add a couple of root topics
-    addRootTopics(core, [tAnchoring.id, tNavigation.id]);
+  it('adds topic IDs at the specified index', () => {
+    // Add a couple of root topics to the top
+    // of the root topics list.
+    addRootTopics(core, [tAnchoring.id, tNavigation.id], 0);
 
-    // Root topics should be in the persistent store
+    // Root topics should be added at the specified index
     expect(GlobalPersistentStore.get(core, 'rootTopics')).toEqual([
-      tSailing.id,
       tAnchoring.id,
       tNavigation.id,
+      tSailing.id,
+    ]);
+  });
+
+  it('does not add topics already at the root level', () => {
+    // Add a couple of root topics to the top
+    // of the root topics list, including one
+    // that is already present there.
+    addRootTopics(core, [tAnchoring.id, tSailing.id], 0);
+
+    // Root topics should be added at the specified index
+    expect(GlobalPersistentStore.get(core, 'rootTopics')).toEqual([
+      tAnchoring.id,
+      tSailing.id,
     ]);
   });
 
   it("dispatches a 'app:root-topics:add' event", (done) => {
     core.addEventListener('app:root-topics:add', (payload) => {
-      // Get updated topic
-      const topics = Topics.get([tAnchoring.id, tNavigation.id]);
-
-      // Payload data should be updated topics
-      expect(payload.data).toEqual(topics);
+      // Payload data should the added topic IDs
+      expect(payload.data).toEqual([tAnchoring.id, tNavigation.id]);
       done();
     });
 
