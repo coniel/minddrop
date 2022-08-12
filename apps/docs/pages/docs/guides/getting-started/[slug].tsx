@@ -60,12 +60,12 @@ export default function OverviewDoc({ frontmatter, code }: Doc) {
 }
 
 export async function getStaticPaths() {
-  const frontmatters = getAllFrontmatter('api/getting-started');
+  const frontmatters = getAllFrontmatter('guides/getting-started');
 
   return {
     paths: frontmatters.map((frontmatter) => ({
       params: {
-        slug: frontmatter.slug.replace('api/getting-started/', ''),
+        slug: frontmatter.slug.replace('guides/getting-started/', ''),
       },
     })),
     fallback: false,
@@ -74,7 +74,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const { frontmatter, code } = await getMdxBySlug(
-    'api/getting-started/',
+    'guides/getting-started/',
     context.params.slug,
   );
   return { props: { frontmatter, code } };

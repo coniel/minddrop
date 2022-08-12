@@ -49,9 +49,7 @@ export default function Home() {
             >
               <Card as="a" variant="ghost">
                 <Box css={{ p: '$4' }}>
-                  <Heading css={{ fontWeight: 500, mb: '$2' }}>
-                    Extensions
-                  </Heading>
+                  <Heading css={{ fontWeight: 500, mb: '$2' }}>API</Heading>
                   <Text variant="gray" css={{ lineHeight: '23px' }}>
                     Easily extend MindDrop&apos;s core features with our
                     powerful extensions API.
@@ -62,7 +60,7 @@ export default function Home() {
             <NextLink href="/docs/themes/getting-started/setup" passHref>
               <Card as="a" variant="ghost">
                 <Box css={{ p: '$4' }}>
-                  <Heading css={{ fontWeight: 500, mb: '$2' }}>Themes</Heading>
+                  <Heading css={{ fontWeight: 500, mb: '$2' }}>Theming</Heading>
                   <Text variant="gray" css={{ lineHeight: '23px' }}>
                     Customize MindDrop&apos;s appearance with CSS based themes
                     and custom icon sets.
@@ -73,12 +71,13 @@ export default function Home() {
             <Card
               as="a"
               variant="ghost"
-              href="/docs/api/getting-started/introduction"
+              href="/docs/guides/getting-started/introduction"
             >
               <Box css={{ p: '$4' }}>
-                <Heading css={{ fontWeight: 500, mb: '$2' }}>API</Heading>
+                <Heading css={{ fontWeight: 500, mb: '$2' }}>Guides</Heading>
                 <Text variant="gray" css={{ lineHeight: '23px' }}>
-                  Browse the API docs.
+                  Step by step guides for contributing to and extending
+                  MindDrop.
                 </Text>
               </Box>
             </Card>

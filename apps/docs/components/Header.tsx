@@ -132,10 +132,10 @@ export const Header = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={() =>
-                    router.push('/docs/api/getting-started/introduction')
+                    router.push('/docs/guides/getting-started/introduction')
                   }
                 >
-                  API
+                  Guides
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={() => router.push('/docs/ui/overview/introduction')}
@@ -144,12 +144,12 @@ export const Header = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Separator orientation="vertical" />
-            <NextLink href="/blog" passHref>
-              <Link variant="subtle" css={{ fontSize: '$3' }}>
-                Blog
-              </Link>
-            </NextLink>
+            {/* <Separator orientation="vertical" /> */}
+            {/* <NextLink href="/blog" passHref> */}
+            {/*   <Link variant="subtle" css={{ fontSize: '$3' }}> */}
+            {/*     Blog */}
+            {/*   </Link> */}
+            {/* </NextLink> */}
             <Separator orientation="vertical" />
             <NextLink href="https://github.com/coniel/minddrop" passHref>
               <Link variant="subtle" css={{ fontSize: '$3' }}>

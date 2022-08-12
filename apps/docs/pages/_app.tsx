@@ -74,10 +74,10 @@ function App({ Component, pageProps }: AppProps) {
 
   const isComponentsDocs = router.pathname.includes('/docs/ui');
   const isExtensionsDocs = router.pathname.includes('/docs/extensions');
-  const isApiDocs = router.pathname.includes('/docs/api');
+  const isGuidesDocs = router.pathname.includes('/docs/guides');
   const isThemesDocs = router.pathname.includes('/docs/themes');
   const IsNotADocPage =
-    !isComponentsDocs && !isApiDocs && !isThemesDocs && !isExtensionsDocs;
+    !isComponentsDocs && !isGuidesDocs && !isThemesDocs && !isExtensionsDocs;
 
   return (
     <DesignSystemProvider>
@@ -116,7 +116,7 @@ function App({ Component, pageProps }: AppProps) {
                 <Component {...pageProps} />
               </UiPage>
             )}
-            {isApiDocs && (
+            {isGuidesDocs && (
               <ApiPage>
                 <Component {...pageProps} />
               </ApiPage>
@@ -129,7 +129,7 @@ function App({ Component, pageProps }: AppProps) {
             {!isExtensionsDocs &&
               !isComponentsDocs &&
               !isThemesDocs &&
-              !isApiDocs && <Component {...pageProps} />}
+              !isGuidesDocs && <Component {...pageProps} />}
           </Box>
           {IsNotADocPage && <Footer />}
         </ThemeProvider>
