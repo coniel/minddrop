@@ -19,7 +19,7 @@
     "clean": "lerna run clean",
     "build:packages": "lerna run build --no-private",
     "build:docs": "yarn workspace @minddrop/docs build",
-    "build:website": "yarn workspace @minddrop/utils build && yarn workspace @minddrop/i18n build && yarn workspace @minddrop/icons build &&   yarn workspace @minddrop/theme build && yarn workspace @minddrop/ui build && yarn workspace @minddrop/website build",
+    "build:website": "yarn workspace @minddrop/website build",
     "pub": "lerna publish --no-private",
     "test": "lerna run test -- --passWithNoTests",
     "test:watch": "lerna run test --parallel -- --passWithNoTests --watch",
