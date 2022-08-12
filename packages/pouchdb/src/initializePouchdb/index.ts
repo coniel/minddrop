@@ -1,1 +1,1 @@
-export * from './initializePouchDB';
+export * from './initializePouchdb';
