@@ -12,10 +12,10 @@ import {
 } from '@modulz/design-system';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { ScrollArea } from './ScrollArea';
-import { allApiRoutes, apiRoutes, RouteProps } from '@lib/apiRoutes';
+import { allGuidesRoutes, guidesRoutes, RouteProps } from '@lib/guidesRoutes';
 import { NavHeading, NavItem } from './DocNav';
 
-export function ApiPage({ children }: { children: React.ReactNode }) {
+export function GuidesPage({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -38,11 +38,11 @@ export function ApiPage({ children }: { children: React.ReactNode }) {
   }
   editUrl = editUrl.replace('/docs', '');
 
-  const currentPageIndex = allApiRoutes.findIndex(
+  const currentPageIndex = allGuidesRoutes.findIndex(
     (page) => page.slug === currentPageSlug,
   );
-  const previous = allApiRoutes[currentPageIndex - 1];
-  const next = allApiRoutes[currentPageIndex + 1];
+  const previous = allGuidesRoutes[currentPageIndex - 1];
+  const next = allGuidesRoutes[currentPageIndex + 1];
 
   React.useEffect(() => {
     const handleRouteChange = () => setIsOpen(false);
@@ -112,7 +112,7 @@ export function ApiPage({ children }: { children: React.ReactNode }) {
               '@bp2': { display: 'block', mt: '$4' },
             }}
           >
-            {apiRoutes.map((section: RouteProps) => (
+            {guidesRoutes.map((section: RouteProps) => (
               <Box key={section.label} css={{ mb: '$4' }}>
                 <NavHeading>{section.label}</NavHeading>
                 {section.pages.map((page) => {

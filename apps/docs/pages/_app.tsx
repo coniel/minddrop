@@ -13,7 +13,7 @@ import { Footer } from '@components/Footer';
 import { ExtensionsPage } from '@components/ExtensionsPage';
 import { UiPage } from '@components/UiPage';
 import { ThemesPage } from '@components/ThemesPage';
-import { ApiPage } from '@components/ApiPage';
+import { GuidesPage } from '@components/GuidesPage';
 import { IconsProvider } from '@minddrop/icons';
 import '@minddrop/theme/dist/styles.css';
 import '@minddrop/ui/dist/styles.css';
@@ -117,9 +117,9 @@ function App({ Component, pageProps }: AppProps) {
               </UiPage>
             )}
             {isGuidesDocs && (
-              <ApiPage>
+              <GuidesPage>
                 <Component {...pageProps} />
-              </ApiPage>
+              </GuidesPage>
             )}
             {isThemesDocs && (
               <ThemesPage>

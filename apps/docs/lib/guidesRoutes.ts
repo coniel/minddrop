@@ -1,10 +1,10 @@
-export const apiRoutes = [
+export const guidesRoutes = [
   {
     label: 'Getting Started',
     pages: [
       {
         title: 'Introduction',
-        slug: 'docs/api/getting-started/introduction',
+        slug: 'docs/guides/getting-started/introduction',
       },
     ],
   },
@@ -22,6 +22,6 @@ export type RouteProps = {
   pages: PageProps[];
 };
 
-export const allApiRoutes = apiRoutes.reduce((acc, curr: RouteProps) => {
+export const allGuidesRoutes = guidesRoutes.reduce((acc, curr: RouteProps) => {
   return [...acc, ...curr.pages.filter((p) => p.draft !== true)];
 }, []);

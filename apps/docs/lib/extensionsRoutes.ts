@@ -155,7 +155,7 @@ export const extensionsRoutes = [
       },
       {
         title: 'RichTextNode',
-        slug: '/docs/extensions/types/rich-text-node',
+        slug: 'docs/extensions/types/rich-text-node',
       },
       {
         title: 'RichTextElement',
