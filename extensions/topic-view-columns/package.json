@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@jest/types": "^27.2.5",
-    "@minddrop/extensions": "0.1.0",
-    "@minddrop/test-utils": "^0.3.1",
+    "@minddrop/extensions": "^0.1.0",
+    "@minddrop/test-utils": "^0.4.0",
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/node": "^16.11.6",
     "jest": "^27.3.1",
@@ -29,16 +29,16 @@
     "typescript": "~4.4.4"
   },
   "dependencies": {
-    "@minddrop/app": "^0.1.1",
+    "@minddrop/app": "^0.2.0",
     "@minddrop/app-ui": "^0.1.0",
-    "@minddrop/core": "^0.3.1",
-    "@minddrop/drops": "^0.1.1",
-    "@minddrop/i18n": "^0.2.1",
+    "@minddrop/core": "^0.4.0",
+    "@minddrop/drops": "^0.2.0",
+    "@minddrop/i18n": "^0.3.0",
     "@minddrop/resources": "^0.1.0",
     "@minddrop/selection": "^0.1.0",
-    "@minddrop/topics": "^0.1.1",
-    "@minddrop/ui": "^0.2.2",
-    "@minddrop/utils": "^0.4.0",
+    "@minddrop/topics": "^0.2.0",
+    "@minddrop/ui": "^0.3.0",
+    "@minddrop/utils": "^0.5.0",
     "@minddrop/views": "^0.1.0"
   },
   "peerDependencies": {
