@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 export interface ImageSvgProps {
@@ -21,13 +21,12 @@ export const ImageSvg: React.FC<ImageSvgProps> = ({
   srcDark,
   ...props
 }) => {
+  const [src, setSrc] = useState(srcLight);
   const { resolvedTheme } = useTheme();
 
-  return (
-    <img
-      alt=""
-      {...props}
-      src={resolvedTheme === 'light' ? srcLight : srcDark}
-    />
-  );
+  useEffect(() => {
+    setSrc(resolvedTheme === 'dark' ? srcDark : srcLight);
+  }, [resolvedTheme, srcLight, srcDark]);
+
+  return <img alt="" {...props} src={src} />;
 };

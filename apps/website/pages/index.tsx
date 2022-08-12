@@ -1,35 +1,9 @@
 import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { Toolbar, Button, Separator } from '@minddrop/ui';
+import { Toolbar, Button } from '@minddrop/ui';
 import { Image, ImageSvg, ThemeToggle, EmailForm } from '../components';
 import styles from '../styles/Home.module.css';
-
-function className(classes: string[]): string {
-  let value = '';
-
-  classes.forEach((name) => {
-    value = `${value} ${styles[name]}`;
-  });
-
-  return value;
-}
-
-const Checkmark: React.FC = () => (
-  <ImageSvg
-    srcLight="/checkmark-light.svg"
-    srcDark="/checkmark-dark.svg"
-    className={styles.pricingCardFeatureIcon}
-  />
-);
-
-const Heart: React.FC = () => (
-  <ImageSvg
-    srcLight="/heart-light.svg"
-    srcDark="/heart-dark.svg"
-    className={styles.pricingCardFeatureIcon}
-  />
-);
 
 const Home: NextPage = () => {
   return (
@@ -54,17 +28,17 @@ const Home: NextPage = () => {
           <Toolbar>
             <Button
               variant="text"
-              href="#pricing"
-              className={styles.hiddenMobile}
-            >
-              Pricing
-            </Button>
-            <Button
-              variant="text"
               href="https://docs.minddrop.app"
               className={styles.hiddenMobile}
             >
               Docs
+            </Button>
+            <Button
+              variant="text"
+              href="https://github.com/coniel/minddrop"
+              className={styles.hiddenMobile}
+            >
+              Github
             </Button>
             <span />
             <ThemeToggle />
@@ -79,9 +53,8 @@ const Home: NextPage = () => {
             workspace.
           </h3>
           <p className={styles.subtext}>
-            MindDrop is{' '}
-            <a href="https://github.com/coniel/minddrop">open source</a> and
-            free for unlimited offline use.
+            MindDrop is free and{' '}
+            <a href="https://github.com/coniel/minddrop">open source</a>.
           </p>
           <EmailForm />
         </div>
@@ -274,119 +247,25 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.section}>
-          <h3 id="pricing" className={styles.sectionTitle}>
-            Simple pricing
-          </h3>
-          <div className={styles.pricingCards}>
-            <div className={styles.pricingCard}>
-              <h4 className={styles.pricingCardTitle}>Use</h4>
-              <div className={styles.pricingCardPrice}>
-                <span className={styles.pricingCardPriceNumber}>$0</span>
-                <span className={styles.pricingCardPricePeriod}>/ month</span>
-              </div>
-              <ul className={styles.pricingCardFeatureList}>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Offline local storage
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Unlimited content
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  No account or sign up required
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Access to extensions
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Community support
-                </li>
-              </ul>
-              <div className={styles.pricingCardComingSoon}>coming soon</div>
-              {/* <Button fullWidth variant="primary">
-                Notify me
-              </Button> */}
-            </div>
-
-            <div className={styles.pricingCard}>
-              <h4 className={styles.pricingCardTitle}>Sync</h4>
-              <div className={styles.pricingCardPrice}>
-                <span className={styles.pricingCardPriceNumber}>$5</span>
-                <span className={styles.pricingCardPricePeriod}>/ month</span>
-              </div>
-              <ul className={styles.pricingCardFeatureList}>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Sync accross devices
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  End-to-end encryption
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Cloud data backup (10GB)
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Email support
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Heart />
-                  Support the developer
-                </li>
-              </ul>
-              <div className={styles.pricingCardComingSoon}>coming soon</div>
-              {/* <Button fullWidth variant="primary">
-                Notify me
-              </Button> */}
-            </div>
-
-            <div className={styles.pricingCard}>
-              <h4 className={styles.pricingCardTitle}>Publish</h4>
-              <div className={styles.pricingCardPrice}>
-                <span className={styles.pricingCardPriceNumber}>$9</span>
-                <span className={styles.pricingCardPricePeriod}>/ month</span>
-              </div>
-              <ul className={styles.pricingCardFeatureList}>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Publish topics as a website web
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  No technical knowledge required
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Selectively publish topics
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Checkmark />
-                  Email support
-                </li>
-                <li className={styles.pricingCardFeature}>
-                  <Heart />
-                  Support the developer
-                </li>
-              </ul>
-              <div className={styles.pricingCardComingSoon}>coming soon</div>
-              {/* <Button fullWidth variant="primary">
-                Notify me
-              </Button> */}
-            </div>
-          </div>
-
-          <p className={styles.pricingText}>
-            MindDrop Sync and Publish are add-on services. The MindDrop app does
-            not require them nor an account to work.
+          <h3 className={styles.sectionTitle}>Made to be extended.</h3>
+          <p className={styles.sectionSubtitle}>
+            MindDrop was built from the ground up to be highly extensible with a
+            simple yet powerful{' '}
+            <a href="https://docs.minddrop.app">extensions API</a>.
           </p>
+          <div className={styles.extensionImage}>
+            <Image
+              srcLight="/extension-light.png"
+              srcDark="/extension-dark.png"
+              width={1654}
+              height={1160}
+            />
+          </div>
         </div>
-        <EmailForm />
+
+        <div className={styles.section}>
+          <EmailForm />
+        </div>
       </main>
       {/* 
       <footer className={styles.footer}>
