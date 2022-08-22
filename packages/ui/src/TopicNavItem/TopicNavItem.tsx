@@ -3,7 +3,6 @@ import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
 import { Text } from '../Text';
-import { Tooltip } from '../Tooltip';
 import {
   Collapsible,
   CollapsibleTrigger,
@@ -97,68 +96,57 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
           className={mapPropsToClasses({ className }, 'topic-nav-item')}
           {...other}
         >
-          <Tooltip
-            side="right"
-            sideOffset={6}
-            title={title}
-            delayDuration={800}
-            description={t('subtopicCount_interval', {
-              postProcess: 'interval',
-              count: childCount,
-            })}
-          >
-            <div className={mapPropsToClasses({ active }, 'item')}>
-              {level > 0 && (
-                <div
-                  role="button"
-                  aria-hidden="true"
-                  className="spacer-button"
-                  tabIndex={-1}
-                  onClick={onClick}
-                  style={{ paddingLeft: level * 16, height: 24 }}
-                />
-              )}
-              <CollapsibleTrigger>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  className="toggle-button"
-                  aria-label={t('expandSubtopics')}
-                >
-                  {childCount ? (
-                    <Icon
-                      name="toggle-filled"
-                      color="light"
-                      className="toggle-icon has-subtopics"
-                    />
-                  ) : (
-                    <Icon
-                      name="toggle-empty"
-                      color="light"
-                      className="toggle-icon no-subtopics"
-                    />
-                  )}
-                </div>
-              </CollapsibleTrigger>
+          <div className={mapPropsToClasses({ active }, 'item')}>
+            {level > 0 && (
+              <div
+                role="button"
+                aria-hidden="true"
+                className="spacer-button"
+                tabIndex={-1}
+                onClick={onClick}
+                style={{ paddingLeft: level * 16, height: 24 }}
+              />
+            )}
+            <CollapsibleTrigger>
               <div
                 role="button"
                 tabIndex={0}
-                className="label-button"
-                onClick={onClick}
-                aria-current={active ? 'true' : 'false'}
+                className="toggle-button"
+                aria-label={t('expandSubtopics')}
               >
-                <Text
-                  as="div"
-                  color="light"
-                  weight="medium"
-                  className="label"
-                  size="regular"
-                >
-                  {title}
-                </Text>
+                {childCount ? (
+                  <Icon
+                    name="toggle-filled"
+                    color="light"
+                    className="toggle-icon has-subtopics"
+                  />
+                ) : (
+                  <Icon
+                    name="toggle-empty"
+                    color="light"
+                    className="toggle-icon no-subtopics"
+                  />
+                )}
               </div>
+            </CollapsibleTrigger>
+            <div
+              role="button"
+              tabIndex={0}
+              className="label-button"
+              onClick={onClick}
+              aria-current={active ? 'true' : 'false'}
+            >
+              <Text
+                as="div"
+                color="light"
+                weight="medium"
+                className="label"
+                size="regular"
+              >
+                {title}
+              </Text>
             </div>
-          </Tooltip>
+          </div>
           <CollapsibleContent asChild>
             <div className="children">{children}</div>
           </CollapsibleContent>
