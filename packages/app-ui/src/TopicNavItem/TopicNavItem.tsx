@@ -46,11 +46,7 @@ export interface TopicNavItemProps
   trail: string[];
 }
 
-export const TopicNavItem: FC<TopicNavItemProps> = ({
-  trail,
-  level = 0,
-  ...other
-}) => {
+export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
   const core = useAppCore();
   const { t } = useTranslation();
   // The topic ID is the last ID in the trail
@@ -355,6 +351,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
                   <TopicNavItem
                     key={subtopicId}
                     trail={[...trail, subtopicId]}
+                    level={trail.length}
                   />
                 ))}
                 {topic.subtopics.length === 0 && (
@@ -362,7 +359,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({
                     as="div"
                     color="light"
                     className="helper-text"
-                    style={{ paddingLeft: level * 16 }}
+                    style={{ paddingLeft: trail.length * 16 }}
                   >
                     {t('noSubtopics')}
                   </Text>
