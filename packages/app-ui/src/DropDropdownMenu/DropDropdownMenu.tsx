@@ -56,7 +56,7 @@ export const DropDropdownMenu: FC<DropDropdownMenuProps> = ({
       <DropdownMenuTrigger asChild>
         <IconButton icon="more-vertical" label={i18n.t('dropOptions')} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="drop-menu-content">
+      <DropdownMenuContent className="drop-menu-content" align="end">
         <DropMenu menuType="dropdown" dropId={dropId} {...other} />
       </DropdownMenuContent>
     </DropdownMenu>
