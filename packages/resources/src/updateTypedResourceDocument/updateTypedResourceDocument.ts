@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { createUpdate } from '@minddrop/utils';
+import { createUpdate, InvalidParameterError } from '@minddrop/utils';
 import {
   RDDeleteUpdateData,
   ResourceStore,
@@ -85,6 +85,14 @@ export function updateTypedResourceDocument<
 ): TypedResourceDocument<TBaseData, TTypeData> {
   // Get the document from the store
   const document = getResourceDocument(store, config, documentId, true);
+
+  // Throw an error if the `type` property is being changed.
+  if ('type' in data) {
+    throw new InvalidParameterError(
+      'cannot update document type. Use the `convert` method to change the document type.',
+    );
+  }
+
   // Get the type config
   const typeConfig = getTypedResourceTypeConfig(
     config.resource,
@@ -100,8 +108,12 @@ export function updateTypedResourceDocument<
     | RDRestoreUpdateData = {};
   Object.keys(data).forEach((key) => {
     if (typeConfig.dataSchema && typeConfig.dataSchema[key]) {
+      // If the key appears in the type's data schema, it is
+      // type specific data.
       typeData[key] = data[key];
     } else {
+      // If the key does not appear in the type's data schema,
+      // it is base data.
       baseData[key] = data[key];
     }
   });

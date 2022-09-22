@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { InvalidParameterError } from '@minddrop/utils';
 import { createResourceStore } from '../createResourceStore';
 import {
   ResourceDocumentNotFoundError,
@@ -43,6 +44,7 @@ interface BaseUpdateData {
 interface TypeUpdateData {
   typeFoo?: string;
   typeBar?: string;
+  type?: string;
 }
 
 type TestDocument = TypedResourceDocument<BaseData, TypeData>;
@@ -125,7 +127,7 @@ const updateTypedResourceDocument = (
   typeConfigsStore: ConfigsStore<ResourceTypeConfig<BaseData, TypeData>>,
   config: TypedResourceConfig<BaseData>,
   documentId: string,
-  data: Partial<BaseData & TypeData>,
+  data: Partial<BaseData & TypeData & { type?: string }>,
 ) =>
   rawUpdateResourceDocument<BaseData, TypeData, BaseUpdateData, TypeUpdateData>(
     core,
@@ -513,6 +515,23 @@ describe('updateTypedResourceDocument', () => {
 
       // Document should be updated
       expect(updated.deleted).toBe(true);
+    });
+  });
+
+  describe('type change', () => {
+    it('throws if the type has changed', () => {
+      // Update a document, changing it from one type to another.
+      // Should throw a `InvalidParameterError`.
+      expect(() =>
+        updateTypedResourceDocument(
+          core,
+          store,
+          typeConfigsStore,
+          config,
+          document.id,
+          { type: 'new-type' },
+        ),
+      ).toThrowError(InvalidParameterError);
     });
   });
 });
