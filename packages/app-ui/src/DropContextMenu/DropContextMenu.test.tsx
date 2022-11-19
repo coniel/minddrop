@@ -30,6 +30,7 @@ describe('<DropContextMenu />', () => {
         <div>trigger</div>
       </DropContextMenu>,
     );
+
     return utils;
   };
 

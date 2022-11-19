@@ -19,6 +19,7 @@ export function InterfaceTable({
   'aria-labelledby'?: string;
 }) {
   const hasAriaLabel = !!(ariaLabel || ariaLabelledBy);
+
   return (
     <RegionTable
       css={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}

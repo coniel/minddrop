@@ -168,9 +168,9 @@ export type TRDSchema<
 export type TRDBaseDataSchema<TBaseData extends TRDBaseData> = Record<
   keyof TBaseData,
   ResourceFieldValidator
-> &
-  Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;
-
+> & {
+  [K in keyof TypedResourceDocument<{}, {}>]?: never;
+};
 /**
  * The schema for the type specific custom data
  * of typed resource documents.
@@ -178,8 +178,9 @@ export type TRDBaseDataSchema<TBaseData extends TRDBaseData> = Record<
 export type TRDTypeDataSchema<
   TBaseData extends TRDBaseData,
   TTypeData extends TRDTypeData<TBaseData>,
-> = Record<keyof TTypeData, ResourceFieldValidator> &
-  Partial<Record<keyof TypedResourceDocument<TBaseData, {}>, never>>;
+> = Record<keyof TTypeData, ResourceFieldValidator> & {
+  [K in keyof TypedResourceDocument<TBaseData, {}>]?: never;
+};
 
 /**
  * The combined base and type scpecific custom
@@ -189,5 +190,6 @@ export type TRDDataSchema<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
 > = TRDBaseDataSchema<TBaseData> &
-  TRDTypeDataSchema<TBaseData, TTypeData> &
-  Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;
+  TRDTypeDataSchema<TBaseData, TTypeData> & {
+    [K in keyof TypedResourceDocument<{}, {}>]?: never;
+  };

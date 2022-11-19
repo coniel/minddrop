@@ -27,12 +27,10 @@ export const PopoverContent: FC<PopoverContentProps> = ({
   className,
   asChild,
   ...other
-}) => {
-  return (
-    <PopoverPrimitive.Content asChild {...other}>
-      <div className={mapPropsToClasses({ className }, 'popover')}>
-        {children}
-      </div>
-    </PopoverPrimitive.Content>
-  );
-};
+}) => (
+  <PopoverPrimitive.Content asChild {...other}>
+    <div className={mapPropsToClasses({ className }, 'popover')}>
+      {children}
+    </div>
+  </PopoverPrimitive.Content>
+);

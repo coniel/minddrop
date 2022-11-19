@@ -8,12 +8,13 @@ type IconSet = Record<
   React.ElementType<React.HTMLAttributes<SVGElement>>
 >;
 
-const defaultIconSet = Object.keys(Icons).reduce((iconSet, key) => {
-  return {
+const defaultIconSet = Object.keys(Icons).reduce(
+  (iconSet, key) => ({
     ...iconSet,
     [toKebabCase(key)]: Icons[key],
-  };
-}, {}) as IconSet;
+  }),
+  {},
+) as IconSet;
 
 export interface IconsProviderProps {
   icons?: Partial<IconSet>;
@@ -24,11 +25,7 @@ const [hook, Provider, Consumer] = createContext<IconSet>();
 export const IconsProvider: React.FC<IconsProviderProps> = ({
   children,
   icons,
-}) => {
-  return (
-    <Provider value={{ ...defaultIconSet, ...icons }}>{children}</Provider>
-  );
-};
+}) => <Provider value={{ ...defaultIconSet, ...icons }}>{children}</Provider>;
 
 export const useIcons = hook;
 export const IconsConsumer = Consumer;

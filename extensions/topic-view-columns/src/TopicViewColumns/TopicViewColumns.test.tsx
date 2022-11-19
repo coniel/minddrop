@@ -8,7 +8,6 @@ import {
 import { ViewInstances } from '@minddrop/views';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { Selection } from '@minddrop/selection';
 import {
   cleanup,
   core,

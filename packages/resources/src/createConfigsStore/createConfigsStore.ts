@@ -63,6 +63,7 @@ export function createConfigsStore<TConfig>(
   function get(ids: string[]): TConfig[];
   function get(id: string | string[]): TConfig | TConfig[] {
     const { configs } = useConfigsStore.getState();
+
     if (Array.isArray(id)) {
       return configs.filter((config) =>
         id.includes(config[idField] as unknown as string),

@@ -50,6 +50,7 @@ export const components = {
     // https://github.com/wooorm/xdm/issues/47
     const childText =
       typeof children === 'string' ? children : children.props.children;
+
     return (
       <DS.Paragraph size="2" {...props} as="p" css={{ mt: '$2', mb: '$7' }}>
         {childText}
@@ -105,6 +106,7 @@ export const components = {
         />
       );
     }
+
     return (
       <NextLink href={href} passHref>
         <DS.Link {...props} variant="blue" />
@@ -157,7 +159,7 @@ export const components = {
       {...props}
     />
   ),
-  pre: ({ children }) => <>{children}</>,
+  pre: ({ children }) => children,
   code: ({
     className,
     hero,
@@ -168,6 +170,7 @@ export const components = {
     ...props
   }) => {
     const isInlineCode = !className;
+
     return isInlineCode ? (
       <DS.Code {...props} css={{ whiteSpace: 'break-spaces' }} />
     ) : (
@@ -307,6 +310,7 @@ export const FrontmatterContext = React.createContext<Frontmatter>({} as any);
 // https://github.com/hashicorp/next-mdx-remote#using-providers
 export function MDXProvider(props) {
   const { frontmatter, children } = props;
+
   return (
     <FrontmatterContext.Provider value={frontmatter}>
       {children}

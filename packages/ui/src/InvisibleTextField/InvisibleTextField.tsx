@@ -34,17 +34,15 @@ export interface InvisibleTextFieldProps
 export const InvisibleTextField = React.forwardRef<
   HTMLInputElement,
   InvisibleTextFieldProps
->(({ children, className, label, size, color, weight, ...other }, ref) => {
-  return (
-    <input
-      ref={ref}
-      type="text"
-      aria-label={label}
-      className={mapPropsToClasses(
-        { className, size, color, weight },
-        'invisible-text-field',
-      )}
-      {...other}
-    />
-  );
-});
+>(({ children, className, label, size, color, weight, ...other }, ref) => (
+  <input
+    ref={ref}
+    type="text"
+    aria-label={label}
+    className={mapPropsToClasses(
+      { className, size, color, weight },
+      'invisible-text-field',
+    )}
+    {...other}
+  />
+));

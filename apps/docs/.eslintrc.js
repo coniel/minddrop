@@ -1,10 +1,5 @@
 module.exports = {
-  extends: [
-    '@nighttrax/eslint-config-tsx',
-    'plugin:prettier/recommended',
-    'plugin:@next/next/recommended',
-  ],
-  plugins: ['prettier'],
+  extends: ['@nighttrax/eslint-config-tsx', 'plugin:@next/next/recommended'],
   rules: {
     'prettier/prettier': 'error',
     'react/jsx-props-no-spreading': 'off',

@@ -11,11 +11,15 @@ export default () => {
   };
 
   function visitor(node) {
-    if (!node.meta) return;
+    if (!node.meta) {
+      return;
+    }
 
     const [, templateName] = node.meta && node.meta.split('template=');
 
-    if (!templateName) return;
+    if (!templateName) {
+      return;
+    }
 
     const templatePath = path.join(
       `${ROOT_PATH}/${HERO_PATH}/${templateName}.jsx`,

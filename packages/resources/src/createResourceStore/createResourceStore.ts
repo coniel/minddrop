@@ -90,6 +90,7 @@ export function createResourceStore<
   function get(documentIds: string[]): Record<string, TDocument>;
   function get(documentId: string | string[]) {
     const { documents } = useResourceStore.getState();
+
     if (Array.isArray(documentId)) {
       return documentId.reduce(
         (map, id) => ({ ...map, [id]: documents[id] }),

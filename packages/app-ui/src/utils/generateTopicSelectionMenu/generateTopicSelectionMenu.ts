@@ -7,6 +7,7 @@ function createTree(
   excludeTopicIds: string[] = [],
 ): MenuTopicSelectionItemConfig {
   const topic = Topics.get(topicId);
+
   return {
     type: 'menu-topic-selection-item',
     id: topicId,

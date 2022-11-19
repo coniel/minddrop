@@ -41,28 +41,20 @@ export const SecondaryNavItem: FC<SecondaryNavItemProps> = ({
   onClick,
   onKeyDown,
   ...other
-}) => {
-  return (
-    <li
-      role="button"
-      tabIndex={0}
-      aria-current={active ? 'location' : undefined}
-      className={mapPropsToClasses({ className, active }, 'secondary-nav-item')}
-      onClick={onClick}
-      onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
-      {...other}
-    >
-      <IconRenderer icon={icon} />
-      <Text
-        as="div"
-        color="light"
-        weight="medium"
-        size="small"
-        className="label"
-      >
-        {label}
-      </Text>
-      {children}
-    </li>
-  );
-};
+}) => (
+  <li
+    role="button"
+    tabIndex={0}
+    aria-current={active ? 'location' : undefined}
+    className={mapPropsToClasses({ className, active }, 'secondary-nav-item')}
+    onClick={onClick}
+    onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
+    {...other}
+  >
+    <IconRenderer icon={icon} />
+    <Text as="div" color="light" weight="medium" size="small" className="label">
+      {label}
+    </Text>
+    {children}
+  </li>
+);

@@ -41,28 +41,20 @@ export const PrimaryNavItem: FC<PrimaryNavItemProps> = ({
   onClick,
   onKeyDown,
   ...other
-}) => {
-  return (
-    <li
-      role="button"
-      tabIndex={0}
-      aria-current={active ? 'location' : undefined}
-      className={mapPropsToClasses({ className, active }, 'primary-nav-item')}
-      onClick={onClick}
-      onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
-      {...other}
-    >
-      <IconRenderer icon={icon} />
-      <Text
-        as="div"
-        color="light"
-        weight="medium"
-        size="large"
-        className="label"
-      >
-        {label}
-      </Text>
-      {children}
-    </li>
-  );
-};
+}) => (
+  <li
+    role="button"
+    tabIndex={0}
+    aria-current={active ? 'location' : undefined}
+    className={mapPropsToClasses({ className, active }, 'primary-nav-item')}
+    onClick={onClick}
+    onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
+    {...other}
+  >
+    <IconRenderer icon={icon} />
+    <Text as="div" color="light" weight="medium" size="large" className="label">
+      {label}
+    </Text>
+    {children}
+  </li>
+);

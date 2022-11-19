@@ -140,6 +140,7 @@ describe('initializeCore', () => {
 
     function callback() {
       calls += 1;
+
       if (calls === 2) {
         done();
       }

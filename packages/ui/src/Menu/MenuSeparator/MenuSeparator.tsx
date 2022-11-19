@@ -7,15 +7,13 @@ export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
 export const MenuSeparator = React.forwardRef<
   HTMLDivElement,
   MenuSeparatorProps
->(({ children, className, ...other }, ref) => {
-  return (
-    <div ref={ref}>
-      <Separator
-        className={mapPropsToClasses({ className }, 'menu-label')}
-        orientation="horizontal"
-        margin="small"
-        {...other}
-      />
-    </div>
-  );
-});
+>(({ children, className, ...other }, ref) => (
+  <div ref={ref}>
+    <Separator
+      className={mapPropsToClasses({ className }, 'menu-label')}
+      orientation="horizontal"
+      margin="small"
+      {...other}
+    />
+  </div>
+));

@@ -12,10 +12,8 @@ export const DropdownMenuTriggerItem: FC<DropdownMenuTriggerItemProps> = ({
   icon,
   disabled,
   ...other
-}) => {
-  return (
-    <DropdownMenuPrimitives.TriggerItem asChild disabled={disabled} {...other}>
-      <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
-    </DropdownMenuPrimitives.TriggerItem>
-  );
-};
+}) => (
+  <DropdownMenuPrimitives.TriggerItem asChild disabled={disabled} {...other}>
+    <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
+  </DropdownMenuPrimitives.TriggerItem>
+);

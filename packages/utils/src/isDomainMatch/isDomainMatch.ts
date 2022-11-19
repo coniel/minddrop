@@ -48,9 +48,11 @@ export function isDomainMatch(
     // If the matcher is a wildcard, it always is a match
     if (matcher === '*') {
       matched = true;
+
       // Break the loop
       return false;
     }
+
     // If a match has already been found
     if (typeof matcher === 'string') {
       // Whether the matcher has a wildcard subdomain

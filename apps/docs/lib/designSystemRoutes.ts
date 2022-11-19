@@ -22,6 +22,7 @@ export const designSystemRoutes = [
   },
 ];
 
-export const allDesignSystemRoutes = designSystemRoutes.reduce((acc, curr) => {
-  return [...acc, ...curr.pages.filter((p) => p.draft !== true)];
-}, []);
+export const allDesignSystemRoutes = designSystemRoutes.reduce(
+  (acc, curr) => [...acc, ...curr.pages.filter((p) => p.draft !== true)],
+  [],
+);

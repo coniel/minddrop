@@ -59,49 +59,47 @@ export const Tooltip: FC<TooltipProps> = ({
   description,
   keyboardShortcut,
   ...other
-}) => {
-  return (
-    <TooltipPrimitive.Provider
-      delayDuration={delayDuration}
-      skipDelayDuration={skipDelayDuration}
+}) => (
+  <TooltipPrimitive.Provider
+    delayDuration={delayDuration}
+    skipDelayDuration={skipDelayDuration}
+  >
+    <TooltipPrimitive.Root
+      defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={onOpenChange}
     >
-      <TooltipPrimitive.Root
-        defaultOpen={defaultOpen}
-        open={open}
-        onOpenChange={onOpenChange}
+      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Content
+        className="tooltip"
+        side="bottom"
+        align="center"
+        sideOffset={5}
+        {...other}
       >
-        <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-        <TooltipPrimitive.Content
-          className="tooltip"
-          side="bottom"
-          align="center"
-          sideOffset={5}
-          {...other}
-        >
-          <Text as="div" color="contrast" size="small" weight="medium">
-            {title}
+        <Text as="div" color="contrast" size="small" weight="medium">
+          {title}
+        </Text>
+        {description && (
+          <Text
+            as="div"
+            size="small"
+            color="contrast-light"
+            className="description"
+          >
+            {description}
           </Text>
-          {description && (
-            <Text
-              as="div"
-              size="small"
-              color="contrast-light"
-              className="description"
-            >
-              {description}
-            </Text>
-          )}
-          {keyboardShortcut && (
-            <KeyboardShortcut
-              as="div"
-              size="small"
-              color="contrast-light"
-              weight="medium"
-              keys={keyboardShortcut}
-            />
-          )}
-        </TooltipPrimitive.Content>
-      </TooltipPrimitive.Root>
-    </TooltipPrimitive.Provider>
-  );
-};
+        )}
+        {keyboardShortcut && (
+          <KeyboardShortcut
+            as="div"
+            size="small"
+            color="contrast-light"
+            weight="medium"
+            keys={keyboardShortcut}
+          />
+        )}
+      </TooltipPrimitive.Content>
+    </TooltipPrimitive.Root>
+  </TooltipPrimitive.Provider>
+);

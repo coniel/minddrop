@@ -13,10 +13,8 @@ export const DropTitle: FC<DropTitleProps> = ({
   children,
   className,
   ...other
-}) => {
-  return (
-    <div className={mapPropsToClasses({ className }, 'drop-title')} {...other}>
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div className={mapPropsToClasses({ className }, 'drop-title')} {...other}>
+    {children}
+  </div>
+);

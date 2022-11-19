@@ -33,6 +33,7 @@ describe('<DropDropdownMenu />', () => {
 
     const getTriggerButton = () => {
       const label = i18n.t('dropOptions');
+
       return utils.getByLabelText(label);
     };
 

@@ -26,13 +26,11 @@ export const Drop: FC<DropProps> = ({
   color,
   selected,
   ...other
-}) => {
-  return (
-    <div
-      className={mapPropsToClasses({ className, color, selected }, 'drop')}
-      {...other}
-    >
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div
+    className={mapPropsToClasses({ className, color, selected }, 'drop')}
+    {...other}
+  >
+    {children}
+  </div>
+);

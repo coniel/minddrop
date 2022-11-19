@@ -15,11 +15,9 @@ export const Separator: FC<SeparatorProps> = ({
   className,
   margin,
   ...other
-}) => {
-  return (
-    <SeparatorPrimitive.Root
-      className={mapPropsToClasses({ className, margin }, 'separator')}
-      {...other}
-    />
-  );
-};
+}) => (
+  <SeparatorPrimitive.Root
+    className={mapPropsToClasses({ className, margin }, 'separator')}
+    {...other}
+  />
+);

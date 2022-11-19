@@ -121,6 +121,7 @@ export function ExtensionsPage({ children }: { children: React.ReactNode }) {
                 {section.pages.map((page) => {
                   const isDraft = page.draft;
                   const isDeprecated = page.deprecated;
+
                   return (
                     <NavItem
                       key={page.slug}

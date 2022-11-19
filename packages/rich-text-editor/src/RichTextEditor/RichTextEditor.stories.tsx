@@ -18,23 +18,19 @@ export default {
   component: RichTextEditor,
 };
 
-export const Default: React.FC = () => {
-  return (
-    <div>
+export const Default: React.FC = () => (
+  <div>
+    <RichTextEditor documentId={richTextDocument1.id} />
+  </div>
+);
+
+export const MultipleEditorsSameDocument: React.FC = () => (
+  <div style={{ display: 'flex' }}>
+    <div style={{ flex: 1 }}>
       <RichTextEditor documentId={richTextDocument1.id} />
     </div>
-  );
-};
-
-export const MultipleEditorsSameDocument: React.FC = () => {
-  return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
-        <RichTextEditor documentId={richTextDocument1.id} />
-      </div>
-      <div style={{ flex: 1 }}>
-        <RichTextEditor documentId={richTextDocument1.id} />
-      </div>
+    <div style={{ flex: 1 }}>
+      <RichTextEditor documentId={richTextDocument1.id} />
     </div>
-  );
-};
+  </div>
+);

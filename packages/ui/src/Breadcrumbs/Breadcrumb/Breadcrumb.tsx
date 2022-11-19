@@ -26,17 +26,15 @@ export const Breadcrumb: FC<BreadcrumbProps> = ({
   onClick,
   onKeyDown,
   ...other
-}) => {
-  return (
-    <li
-      role="button"
-      tabIndex={0}
-      className={mapPropsToClasses({ className }, 'breadcrumb')}
-      onClick={onClick}
-      onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
-      {...other}
-    >
-      <Text color="light">{label}</Text>
-    </li>
-  );
-};
+}) => (
+  <li
+    role="button"
+    tabIndex={0}
+    className={mapPropsToClasses({ className }, 'breadcrumb')}
+    onClick={onClick}
+    onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
+    {...other}
+  >
+    <Text color="light">{label}</Text>
+  </li>
+);

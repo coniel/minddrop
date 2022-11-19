@@ -123,5 +123,6 @@ export default function BlogPage({ posts }: { posts: Frontmatter[] }) {
 
 export async function getStaticProps() {
   const posts = getAllFrontmatter('blog');
+
   return { props: { posts } };
 }

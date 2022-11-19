@@ -89,6 +89,7 @@ function generateStoreDocuments(scope: string) {
     return documents.map((document) => {
       const applessDocument = { ...document };
       delete applessDocument.app;
+
       return applessDocument;
     });
   }

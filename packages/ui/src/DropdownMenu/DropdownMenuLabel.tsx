@@ -8,10 +8,8 @@ export type DropdownMenuLabelProps =
 export const DropdownMenuLabel: FC<DropdownMenuLabelProps> = ({
   children,
   ...other
-}) => {
-  return (
-    <DropdownMenuPrimitives.Label asChild {...other}>
-      <MenuLabel>{children}</MenuLabel>
-    </DropdownMenuPrimitives.Label>
-  );
-};
+}) => (
+  <DropdownMenuPrimitives.Label asChild {...other}>
+    <MenuLabel>{children}</MenuLabel>
+  </DropdownMenuPrimitives.Label>
+);

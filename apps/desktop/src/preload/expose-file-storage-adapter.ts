@@ -23,6 +23,7 @@ const base64ToFile = async (base64: string, name: string, type: string) => {
   const url = `data:${type};base64,${base64}`;
   const res = await fetch(url);
   const buf = await res.arrayBuffer();
+
   return new File([buf], name, { type });
 };
 

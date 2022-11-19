@@ -15,8 +15,9 @@ export function removeObjectsFromArray<TObject extends Object = Object>(
 ): TObject[] {
   // For each object, check if an equivalent object is in
   // the list of objects to remove.
-  return objects.filter((object) => {
-    // If there is an equivalent object, filter out this object
-    return !arrayContainsObject(objectsToRemove, object);
-  });
+  return objects.filter(
+    (object) =>
+      // If there is an equivalent object, filter out this object
+      !arrayContainsObject(objectsToRemove, object),
+  );
 }

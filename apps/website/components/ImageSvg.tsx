@@ -28,5 +28,6 @@ export const ImageSvg: React.FC<ImageSvgProps> = ({
     setSrc(resolvedTheme === 'dark' ? srcDark : srcLight);
   }, [resolvedTheme, srcLight, srcDark]);
 
+  // eslint-disable-next-line @next/next/no-img-element
   return <img alt="" {...props} src={src} />;
 };

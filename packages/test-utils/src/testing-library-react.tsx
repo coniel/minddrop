@@ -34,13 +34,11 @@ Object.defineProperty(window, 'matchMedia', {
 
 initializeI18n();
 
-const WithProviders: FC = ({ children }) => {
-  return (
-    <IconsProvider>
-      <CoreProvider appId="app">{children}</CoreProvider>
-    </IconsProvider>
-  );
-};
+const WithProviders: FC = ({ children }) => (
+  <IconsProvider>
+    <CoreProvider appId="app">{children}</CoreProvider>
+  </IconsProvider>
+);
 
 const customRender = (
   ui: ReactElement,

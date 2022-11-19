@@ -23,6 +23,7 @@ export function useClipboard(text: string, timeout = 1500) {
 
       return () => clearTimeout(id);
     }
+
     return () => null;
   }, [timeout, hasCopied]);
 

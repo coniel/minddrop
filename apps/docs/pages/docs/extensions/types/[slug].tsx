@@ -77,5 +77,6 @@ export async function getStaticProps(context) {
     'common/types/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

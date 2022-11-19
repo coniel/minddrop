@@ -6,10 +6,10 @@ const ResourceStorageAdapter: ResourceStorageAdapterConfig = {
   id: 'minddrop:resource-storage-adapter:pouchdb',
   initialize: (syncApi) => {
     // Listen to 'db:set' events
-    ipcRenderer.on('db:set', (event, data) => {
+    ipcRenderer.on('db:set', (event, data) =>
       // Set the added/updated document
-      return syncApi.set(deserializeResourceDocument(JSON.parse(data)));
-    });
+      syncApi.set(deserializeResourceDocument(JSON.parse(data))),
+    );
 
     // Listen to 'db:remove' events
     ipcRenderer.on('db:remove', (event, data) => {

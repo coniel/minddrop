@@ -84,6 +84,10 @@ export type RouteProps = {
   pages: PageProps[];
 };
 
-export const allUiRoutes = uiRoutes.reduce((acc, curr: RouteProps) => {
-  return [...acc, ...curr.pages.filter((p) => p.draft !== true)];
-}, []);
+export const allUiRoutes = uiRoutes.reduce(
+  (acc, curr: RouteProps) => [
+    ...acc,
+    ...curr.pages.filter((p) => p.draft !== true),
+  ],
+  [],
+);

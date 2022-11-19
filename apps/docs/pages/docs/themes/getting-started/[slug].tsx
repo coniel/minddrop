@@ -89,5 +89,6 @@ export async function getStaticProps(context) {
     'themes/getting-started/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

@@ -10,9 +10,7 @@ export function initializeStore() {
     store.set('appId', uuid());
   }
 
-  ipcMain.handle('store:value:get', (event, key: string) => {
-    return store.get(key);
-  });
+  ipcMain.handle('store:value:get', (event, key: string) => store.get(key));
 
   return store;
 }

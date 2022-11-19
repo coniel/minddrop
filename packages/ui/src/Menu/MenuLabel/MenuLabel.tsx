@@ -11,20 +11,18 @@ export interface MenuLabelProps extends TextProps {
 }
 
 export const MenuLabel = React.forwardRef<HTMLDivElement, MenuLabelProps>(
-  ({ children, className, ...other }, ref) => {
-    return (
-      <div ref={ref}>
-        <Text
-          as="div"
-          color="light"
-          weight="semibold"
-          size="tiny"
-          className={mapPropsToClasses({ className }, 'menu-label')}
-          {...other}
-        >
-          {children}
-        </Text>
-      </div>
-    );
-  },
+  ({ children, className, ...other }, ref) => (
+    <div ref={ref}>
+      <Text
+        as="div"
+        color="light"
+        weight="semibold"
+        size="tiny"
+        className={mapPropsToClasses({ className }, 'menu-label')}
+        {...other}
+      >
+        {children}
+      </Text>
+    </div>
+  ),
 );

@@ -16,6 +16,6 @@ const core = initializeCore({
 
 ViewInstances.store.load(core, [topicViewColumnsInstance]);
 
-export const Default: React.FC = () => {
-  return <TopicViewColumns instanceId={topicViewColumnsInstance.id} />;
-};
+export const Default: React.FC = () => (
+  <TopicViewColumns instanceId={topicViewColumnsInstance.id} />
+);

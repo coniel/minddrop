@@ -31,17 +31,15 @@ export const Toolbar: FC<ToolbarProps> = ({
   className,
   direction,
   ...other
-}) => {
-  return (
-    <RadixToolbar.Root
-      className={mapPropsToClasses({ className }, 'toolbar')}
-      dir={direction}
-      {...other}
-    >
-      {children}
-    </RadixToolbar.Root>
-  );
-};
+}) => (
+  <RadixToolbar.Root
+    className={mapPropsToClasses({ className }, 'toolbar')}
+    dir={direction}
+    {...other}
+  >
+    {children}
+  </RadixToolbar.Root>
+);
 
 export const ToolbarIconButton: FC<IconButtonProps> = ({
   children,

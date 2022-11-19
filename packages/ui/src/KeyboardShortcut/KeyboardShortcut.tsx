@@ -33,13 +33,11 @@ export const KeyboardShortcut: FC<KeyboardShortcutProps> = ({
   className,
   keys,
   ...other
-}) => {
-  return (
-    <Text
-      className={mapPropsToClasses({ className }, 'keyboard-shortcut')}
-      {...other}
-    >
-      {printKeyboardShortcut(keys)}
-    </Text>
-  );
-};
+}) => (
+  <Text
+    className={mapPropsToClasses({ className }, 'keyboard-shortcut')}
+    {...other}
+  >
+    {printKeyboardShortcut(keys)}
+  </Text>
+);

@@ -7,10 +7,8 @@ export type ContextMenuLabelProps = ContextMenuPrimitives.ContextMenuLabelProps;
 export const ContextMenuLabel: FC<ContextMenuLabelProps> = ({
   children,
   ...other
-}) => {
-  return (
-    <ContextMenuPrimitives.Label asChild {...other}>
-      <MenuLabel>{children}</MenuLabel>
-    </ContextMenuPrimitives.Label>
-  );
-};
+}) => (
+  <ContextMenuPrimitives.Label asChild {...other}>
+    <MenuLabel>{children}</MenuLabel>
+  </ContextMenuPrimitives.Label>
+);

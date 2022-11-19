@@ -18,13 +18,13 @@ to: packages/<%= name %>/package.json
     "test": "jest"
   },
   "devDependencies": {
-    "@jest/types": "^27.2.5",
+    "@jest/types": "^29.3.1",
     "@types/node": "^16.11.6",
-    "jest": "^27.3.1",
+    "jest": "^29.3.1",
     "rimraf": "~3.0.2",
-    "ts-jest": "^27.0.7",
-    "ts-node": "^10.4.0",
-    "typescript": "~4.4.4"
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "~4.9.3"
   },
   "dependencies": {}
 }

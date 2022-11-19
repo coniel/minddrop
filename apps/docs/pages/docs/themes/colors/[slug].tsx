@@ -109,5 +109,6 @@ export async function getStaticProps(context) {
     'themes/colors/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

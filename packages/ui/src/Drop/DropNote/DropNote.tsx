@@ -13,10 +13,8 @@ export const DropNote: FC<DropNoteProps> = ({
   children,
   className,
   ...other
-}) => {
-  return (
-    <div className={mapPropsToClasses({ className }, 'drop-note')} {...other}>
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div className={mapPropsToClasses({ className }, 'drop-note')} {...other}>
+    {children}
+  </div>
+);

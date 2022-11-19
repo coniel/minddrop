@@ -16,6 +16,7 @@ export function resetNodes(
   } = {},
 ): void {
   const children = [...editor.children];
+
   for (let i = 0; i < children.length; i++) {
     const node = children[i];
     editor.apply({ type: 'remove_node', path: [0], node });
@@ -23,6 +24,7 @@ export function resetNodes(
 
   if (options.nodes) {
     const nodes = Node.isNode(options.nodes) ? [options.nodes] : options.nodes;
+
     for (let i = 0; i < nodes.length; i++) {
       editor.apply({ type: 'insert_node', path: [i], node: nodes[i] });
     }

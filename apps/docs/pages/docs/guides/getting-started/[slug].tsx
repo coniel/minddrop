@@ -77,5 +77,6 @@ export async function getStaticProps(context) {
     'guides/getting-started/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

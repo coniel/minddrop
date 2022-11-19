@@ -45,6 +45,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+
     if (dragOver !== `${column}:${index}`) {
       setDragOver(`${column}:${index}`);
     }
@@ -56,6 +57,7 @@ export const TopicViewColumns: FC<InstanceViewProps> = ({ instanceId }) => {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+
     if (dragOver !== location) {
       setDragOver(location);
     }

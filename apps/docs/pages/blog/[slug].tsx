@@ -101,5 +101,6 @@ export async function getStaticProps(context) {
     'blog/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

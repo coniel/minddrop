@@ -20,10 +20,8 @@ export const Tag: FC<TagProps> = ({
   className,
   color = 'blue',
   ...other
-}) => {
-  return (
-    <span className={mapPropsToClasses({ className, color }, 'tag')} {...other}>
-      {label}
-    </span>
-  );
-};
+}) => (
+  <span className={mapPropsToClasses({ className, color }, 'tag')} {...other}>
+    {label}
+  </span>
+);

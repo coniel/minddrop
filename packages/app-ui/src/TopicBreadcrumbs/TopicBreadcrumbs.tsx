@@ -9,16 +9,14 @@ export interface TopicBreadcrumbsProps {
   trail: string[];
 }
 
-export const TopicBreadcrumbs: FC<TopicBreadcrumbsProps> = ({ trail }) => {
-  return (
-    <Breadcrumbs>
-      {trail.map((id, index) => (
-        <TopicBreadcrumb
-          trail={trail.slice(0, index + 1)}
-          key={id}
-          onClick={index === trail.length - 1 ? 'open-rename' : 'open-view'}
-        />
-      ))}
-    </Breadcrumbs>
-  );
-};
+export const TopicBreadcrumbs: FC<TopicBreadcrumbsProps> = ({ trail }) => (
+  <Breadcrumbs>
+    {trail.map((id, index) => (
+      <TopicBreadcrumb
+        trail={trail.slice(0, index + 1)}
+        key={id}
+        onClick={index === trail.length - 1 ? 'open-rename' : 'open-view'}
+      />
+    ))}
+  </Breadcrumbs>
+);

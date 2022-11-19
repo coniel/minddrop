@@ -12,7 +12,9 @@ import remarkHeroTemplate from '@lib/remark-hero-template';
 import type { Frontmatter } from 'types/frontmatter';
 
 const ROOT_PATH = process.cwd();
+
 export const DATA_PATH = path.join(ROOT_PATH, 'data');
+
 if (process.platform === 'win32') {
   process.env.ESBUILD_BINARY_PATH = path.join(
     process.cwd(),

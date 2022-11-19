@@ -106,6 +106,7 @@ export const InteractiveMenuItem: FC<InteractiveMenuItemProps> = ({
         setShiftKeyDown(true);
       }
     };
+
     const onKeyUp = (event: KeyboardEvent) => {
       if (event.key === 'Shift') {
         setShiftKeyDown(false);

@@ -10,7 +10,8 @@ export type ContextMenuTopicSelectionItemProps = Omit<
   'MenuItemComponent'
 >;
 
-export const ContextMenuTopicSelectionItem: React.FC<ContextMenuTopicSelectionItemProps> =
-  (props) => (
-    <TopicSelectionMenuItem {...props} MenuItemComponent={ContextMenuItem} />
-  );
+export const ContextMenuTopicSelectionItem: React.FC<
+  ContextMenuTopicSelectionItemProps
+> = (props) => (
+  <TopicSelectionMenuItem {...props} MenuItemComponent={ContextMenuItem} />
+);

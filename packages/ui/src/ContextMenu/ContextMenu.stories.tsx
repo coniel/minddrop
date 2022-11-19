@@ -5,7 +5,6 @@ import { ContextMenuContent } from './ContextMenuContent';
 import { ContextMenuTrigger } from './ContextMenuTrigger';
 import { ContextMenuRadioItem } from './ContextMenuRadioItem';
 import { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
-import { IconButton } from '../IconButton';
 import { ContentColors } from '../constants';
 
 export default {

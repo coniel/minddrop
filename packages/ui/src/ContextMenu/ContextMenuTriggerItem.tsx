@@ -12,10 +12,8 @@ export const ContextMenuTriggerItem: FC<ContextMenuTriggerItemProps> = ({
   icon,
   disabled,
   ...other
-}) => {
-  return (
-    <ContextMenuPrimitives.TriggerItem asChild disabled={disabled} {...other}>
-      <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
-    </ContextMenuPrimitives.TriggerItem>
-  );
-};
+}) => (
+  <ContextMenuPrimitives.TriggerItem asChild disabled={disabled} {...other}>
+    <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
+  </ContextMenuPrimitives.TriggerItem>
+);

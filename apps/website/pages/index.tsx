@@ -47,7 +47,7 @@ const Home: NextPage = () => {
       </div>
       <main className={styles.main}>
         <div className={styles.heading}>
-          <h2 className={styles.title}>Your mind's visual workspace.</h2>
+          <h2 className={styles.title}>Your mind&apos;s visual workspace.</h2>
           <h3 className={styles.subtitle}>
             Organize your projects, studies, research, and ideas into a visual
             workspace.

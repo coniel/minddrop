@@ -32,6 +32,7 @@ export function LocationsTable({
   'aria-labelledby'?: string;
 }) {
   const hasAriaLabel = !!(ariaLabel || ariaLabelledBy);
+
   return (
     <RegionTable
       css={{

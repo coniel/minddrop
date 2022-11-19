@@ -47,11 +47,9 @@ export const topicViewColumnsConfig: TopicViewConfig = {
   dataSchema: columnsViewDataSchema,
   name: 'Columns',
   description: 'Organise drops into a column based layout.',
-  initializeData: () => {
-    return {
-      columns: { 0: [], 1: [], 2: [], 3: [] },
-    };
-  },
+  initializeData: () => ({
+    columns: { 0: [], 1: [], 2: [], 3: [] },
+  }),
   onDelete: () => null,
   onAddDrops: () => null,
   onRemoveDrops: () => null,
@@ -71,11 +69,9 @@ export const unregisteredTopicViewConfig: TopicViewConfig = {
   component: () => <div />,
   name: 'Unregistered',
   description: 'This view is not registered.',
-  initializeData: () => {
-    return {
-      columns: { 0: [], 1: [], 2: [], 3: [] },
-    };
-  },
+  initializeData: () => ({
+    columns: { 0: [], 1: [], 2: [], 3: [] },
+  }),
   onDelete: () => null,
   onAddDrops: () => null,
   onRemoveDrops: () => null,

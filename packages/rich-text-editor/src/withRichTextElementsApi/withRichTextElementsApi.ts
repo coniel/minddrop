@@ -54,6 +54,7 @@ export function withRichTextElementsApi(
       if (Text.isText(operation.node)) {
         // Update the parent element
         api.updateElement(parent[0].id, { children: parent[0].children });
+
         return;
       }
 

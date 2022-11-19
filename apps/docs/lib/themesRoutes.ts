@@ -27,6 +27,7 @@ export const themesRoutes = [
   },
 ];
 
-export const allthemesRoutes = themesRoutes.reduce((acc, curr) => {
-  return [...acc, ...curr.pages.filter((p) => p.draft !== true)];
-}, []);
+export const allthemesRoutes = themesRoutes.reduce(
+  (acc, curr) => [...acc, ...curr.pages.filter((p) => p.draft !== true)],
+  [],
+);

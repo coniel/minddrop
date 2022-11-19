@@ -219,6 +219,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
       sorted.splice(sorted.indexOf(topicId), 0, ...draggedTopicIds);
       // Save the sorted root topics
       App.sortRootTopics(core, sorted);
+
       // Stop here
       return;
     }
@@ -264,6 +265,7 @@ export const TopicNavItem: FC<TopicNavItemProps> = ({ trail, ...other }) => {
       sorted.splice(sorted.indexOf(topicId), 0, ...draggedTopicIds);
       // Save the sorted subtopics
       Topics.sortSubtopics(core, parentId, sorted);
+
       // Stop here
       return;
     }

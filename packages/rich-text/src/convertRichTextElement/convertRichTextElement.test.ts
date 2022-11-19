@@ -1,3 +1,4 @@
+import { ResourceTypeNotRegisteredError } from '@minddrop/resources';
 import { doesNotContain, InvalidParameterError } from '@minddrop/utils';
 import {
   setup,
@@ -22,14 +23,18 @@ describe('convertRichTextElement', () => {
 
   it('throws if the element type is not registered', () => {
     // Attempt to convert an element of an unregistered type,
-    // should throw a `RTElementNotRegisteredError`.
-    expect(() => convertRichTextElement(unregisteredElement, 'paragraph'));
+    // should throw a `ResourceTypeNotRegisteredError`.
+    expect(() =>
+      convertRichTextElement(unregisteredElement, 'paragraph'),
+    ).toThrowError(ResourceTypeNotRegisteredError);
   });
 
   it('throws if the convert to element type is not registered', () => {
     // Attempt to convert an element into an unregistered type,
-    // should throw a `RTElementNotRegisteredError`.
-    expect(() => convertRichTextElement(paragraphElement1, 'unregistered'));
+    // should throw a `ResourceTypeNotRegisteredError`.
+    expect(() =>
+      convertRichTextElement(paragraphElement1, 'unregistered'),
+    ).toThrowError(ResourceTypeNotRegisteredError);
   });
 
   it('throws if the element is not a block level element', () => {

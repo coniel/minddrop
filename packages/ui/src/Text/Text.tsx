@@ -41,6 +41,7 @@ export const Text: FC<TextProps> = ({
   ...other
 }) => {
   const Component = as || 'span';
+
   return (
     <Component
       className={mapPropsToClasses({ className, color, size, weight }, 'text')}

@@ -67,6 +67,7 @@ export function validateValue<TValidator extends Validator = CoreValidator>(
   // type is a matching custom type, run the custom validator function.
   if (customValidatorFns && customValidatorFns[type]) {
     customValidatorFns[type](primitiveValidator, value, customValidatorFns);
+
     return;
   }
 

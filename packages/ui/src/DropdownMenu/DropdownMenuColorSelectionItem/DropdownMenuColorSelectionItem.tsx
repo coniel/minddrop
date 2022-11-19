@@ -12,11 +12,10 @@ export interface DropdownMenuColorSelectionItemProps
   disabled?: InteractiveMenuItemProps['disabled'];
 }
 
-export const DropdownMenuColorSelectionItem: FC<DropdownMenuColorSelectionItemProps> =
-  ({ disabled, color, ...other }) => {
-    return (
-      <DropdownMenuPrimitives.Item asChild disabled={disabled} {...other}>
-        <ColorSelectionMenuItem disabled={disabled} color={color} />
-      </DropdownMenuPrimitives.Item>
-    );
-  };
+export const DropdownMenuColorSelectionItem: FC<
+  DropdownMenuColorSelectionItemProps
+> = ({ disabled, color, ...other }) => (
+  <DropdownMenuPrimitives.Item asChild disabled={disabled} {...other}>
+    <ColorSelectionMenuItem disabled={disabled} color={color} />
+  </DropdownMenuPrimitives.Item>
+);

@@ -64,41 +64,39 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       ...other
     },
     ref,
-  ) => {
-    return (
-      <div
-        ref={ref}
-        role="menuitem"
-        className={mapPropsToClasses(
-          { className, disabled, hasSubmenu },
-          'menu-item',
+  ) => (
+    <div
+      ref={ref}
+      role="menuitem"
+      className={mapPropsToClasses(
+        { className, disabled, hasSubmenu },
+        'menu-item',
+      )}
+      {...other}
+    >
+      <div className="label-container">
+        <IconRenderer className="item-icon" icon={icon} />
+        <Text size="regular" className="label">
+          {label}
+        </Text>
+        {keyboardShortcut && (
+          <KeyboardShortcut
+            color="light"
+            size="tiny"
+            weight="medium"
+            keys={keyboardShortcut}
+          />
         )}
-        {...other}
-      >
-        <div className="label-container">
-          <IconRenderer className="item-icon" icon={icon} />
-          <Text size="regular" className="label">
-            {label}
-          </Text>
-          {keyboardShortcut && (
-            <KeyboardShortcut
-              color="light"
-              size="tiny"
-              weight="medium"
-              keys={keyboardShortcut}
-            />
-          )}
-          {hasSubmenu && (
-            <Icon
-              name="submenu-indicator"
-              className="submenu-indicator"
-              data-testid="submenu-indicator"
-            />
-          )}
-          {itemIndicator}
-        </div>
-        {description && <div className="description">{description}</div>}
+        {hasSubmenu && (
+          <Icon
+            name="submenu-indicator"
+            className="submenu-indicator"
+            data-testid="submenu-indicator"
+          />
+        )}
+        {itemIndicator}
       </div>
-    );
-  },
+      {description && <div className="description">{description}</div>}
+    </div>
+  ),
 );

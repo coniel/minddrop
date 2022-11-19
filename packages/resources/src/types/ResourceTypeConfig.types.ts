@@ -45,6 +45,7 @@ export type ResourceTypeConfig<
    *
    * Must return the new document of this resource type.
    *
+   * @param core - A MindDrop core instance.
    * @param document - The new document.
    * @returns The new document, with modifications.
    */
@@ -54,18 +55,40 @@ export type ResourceTypeConfig<
   ): TypedResourceDocument<TBaseData, TTypeData>;
 
   /**
-   * Callback fired when a resource document of ths type is
+   * Callback fired when a resource document of this type is
    * updated. Called before the document changes are set to
    * the store and database. Allows for performing modifications
    * and validation on the document before it is updated.
    *
-   * Must return the updated document.
-   *
+   * @param core - A MindDrop core instance.
    * @param update - The resource update.
+   * @returns The updated document data.
    */
   onUpdate?(
     core: Core,
     update: TRDUpdate<TBaseData, TTypeData>,
+  ): Partial<TBaseData & TTypeData>;
+
+  /**
+   * Callback fired when a resource document of another type is
+   * converted to this type. Allows for preserving and modifying
+   * data when converting from a known type.
+   *
+   * Should return conversion specific data to be set on the
+   * document, or an empty object if no data was converted.
+   *
+   * When a typed document is converted, the document's current
+   * type scpecific data is removed and replaced by the new
+   * type's `defaultData`, `onCreate` data, and `onConvert`
+   * data, merged in that order.
+   *
+   * @param core - A MindDrop core instance.
+   * @param document - The resource document being converted.
+   * @returns The new document type data.
+   */
+  onConvert?(
+    core: Core,
+    document: TypedResourceDocument<TBaseData, TTypeData>,
   ): Partial<TBaseData & TTypeData>;
 
   /**

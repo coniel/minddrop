@@ -17,6 +17,7 @@ export function KeyboardTable({
   'aria-labelledby'?: string;
 }) {
   const hasAriaLabel = !!(ariaLabel || ariaLabelledBy);
+
   return (
     <RegionTable
       css={{

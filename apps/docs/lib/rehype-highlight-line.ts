@@ -28,16 +28,22 @@ const lineNumberify = function lineNumberify(
       const node = originalNode as
         | RefractorElementWithLineNumber
         | TextWithLineNumber;
+
       if (node.type === 'text') {
         if (node.value.indexOf('\n') === -1) {
           node.lineNumber = lineNumber;
           result.nodes.push(node);
+
           return result;
         }
 
         const lines = node.value.split('\n');
+
         for (let i = 0; i < lines.length; i++) {
-          if (i !== 0) ++lineNumber;
+          if (i !== 0) {
+            ++lineNumber;
+          }
+
           if (i !== lines.length - 1 || lines[i].length !== 0) {
             result.nodes.push({
               type: 'text',
@@ -48,6 +54,7 @@ const lineNumberify = function lineNumberify(
         }
 
         result.lineNumber = lineNumber;
+
         return result;
       }
 
@@ -57,10 +64,12 @@ const lineNumberify = function lineNumberify(
         node.children = processed.nodes;
         result.lineNumber = processed.lineNumber;
         result.nodes.push(node);
+
         return result;
       }
 
       result.nodes.push(node);
+
       return result;
     },
     { nodes: [], lineNumber } as Numberified,
@@ -80,6 +89,7 @@ const wrapLines = function wrapLines(
   const wrapped = allLines.reduce((nodes, marker) => {
     const line = marker;
     const children = [];
+
     for (; i < ast.length; i++) {
       if (ast[i].lineNumber < line) {
         nodes.push(ast[i]);

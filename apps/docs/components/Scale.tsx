@@ -22,6 +22,7 @@ const scaleToHSLObject = (name: string, scale: Scale) => {
   const values = Object.entries(scale)
     .map(([key, val]) => `  ${key}: '${val}',`)
     .join('\n');
+
   return `const ${name} = {\n${values}\n}`;
 };
 
@@ -40,6 +41,7 @@ const scaleToHexObject = (name: string, scale: Scale) => {
       }',`;
     })
     .join('\n');
+
   return `const ${name} = {\n${values}\n}`;
 };
 
@@ -47,20 +49,19 @@ const scaleToCSS = (name, scale: Scale) => {
   const values = Object.entries(scale)
     .map(([key, val]) => `  --${key}: ${val};`)
     .join('\n');
+
   return `.${name} {\n${values}\n}`;
 };
 
-const scaleToSASS = (scale: Scale) => {
-  return Object.entries(scale)
+const scaleToSASS = (scale: Scale) =>
+  Object.entries(scale)
     .map(([key, val]) => `$${key}: ${val};`)
     .join('\n');
-};
 
-const scaleToLESS = (scale: Scale) => {
-  return Object.entries(scale)
+const scaleToLESS = (scale: Scale) =>
+  Object.entries(scale)
     .map(([key, val]) => `@${key}: ${val};`)
     .join('\n');
-};
 
 const backgroundColor = (
   isDarkAlpha: boolean,
@@ -80,6 +81,7 @@ const scaleToSvg = (
   valueHeight: number = 35,
 ) => {
   const values = Object.values(scale);
+
   return `<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${
     values.length * valueWidth
   } ${valueHeight}">${values
@@ -88,6 +90,7 @@ const scaleToSvg = (
       const hex = tinycolor(value).toHexString();
       // tinycolor doesn't know to parse alpha from the newer hsl syntax, so we extract it ourselves
       const alpha = value.match(/\/\s*((\d|\.)+)/)?.[1] ?? '1';
+
       return `<rect x="${x}" width="${valueWidth}" height="${valueHeight}" fill="${hex}" fill-opacity="${alpha}" />`;
     })
     .join('')}</svg>`;
@@ -99,30 +102,29 @@ const colorKeys = Object.keys(Object.values(Colors)[0]);
 const getBgColorForDarkCell = (name) => {
   const baseScale = name.replace('DarkA', 'Dark');
   const scale = Colors[baseScale];
+
   return Object.values(scale)[0];
 };
 
-export const ColorScaleGroup = ({ children }: { children: any }) => {
-  return (
-    <>
-      <Flex css={{ width: '100%' }}>
-        <Box css={{ height: '$5', width: 105 }} />
-        {colorKeys.map((key, i) => (
-          <Box key={key} css={{ flex: 1 }}>
-            <Text
-              variant="gray"
-              css={{ bc: 'transparent', fontSize: '$2', ta: 'center' }}
-            >
-              {i + 1}
-            </Text>
-          </Box>
-        ))}
-        <Box />
-      </Flex>
-      {children}
-    </>
-  );
-};
+export const ColorScaleGroup = ({ children }: { children: any }) => (
+  <>
+    <Flex css={{ width: '100%' }}>
+      <Box css={{ height: '$5', width: 105 }} />
+      {colorKeys.map((key, i) => (
+        <Box key={key} css={{ flex: 1 }}>
+          <Text
+            variant="gray"
+            css={{ bc: 'transparent', fontSize: '$2', ta: 'center' }}
+          >
+            {i + 1}
+          </Text>
+        </Box>
+      ))}
+      <Box />
+    </Flex>
+    {children}
+  </>
+);
 
 export const ColorScale = ({
   label,
@@ -153,36 +155,34 @@ export const ColorScale = ({
             {label}
           </Code>
         </Flex>
-        {Object.values(scale).map((value, i) => {
-          return (
-            <Box
-              // eslint-disable-next-line react/no-array-index-key
-              key={i}
-              css={{
-                height: '$6',
-                flex: 1,
-                bc: backgroundColor(isAlpha, name, isDarkAlpha),
+        {Object.values(scale).map((value, i) => (
+          <Box
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            css={{
+              height: '$6',
+              flex: 1,
+              bc: backgroundColor(isAlpha, name, isDarkAlpha),
 
-                // Show transparency grid for whiteA and blackA
-                ...((isWhiteA || isBlackA) && {
-                  backgroundColor: 'transparent',
-                  backgroundSize: '12px 12px',
-                  backgroundPosition: '0px 0px, 6px 0px, 6px -6px, 0px 6px',
-                  backgroundImage: `
+              // Show transparency grid for whiteA and blackA
+              ...((isWhiteA || isBlackA) && {
+                backgroundColor: 'transparent',
+                backgroundSize: '12px 12px',
+                backgroundPosition: '0px 0px, 6px 0px, 6px -6px, 0px 6px',
+                backgroundImage: `
                       linear-gradient(45deg, $gray6 25%, transparent 25%),
                       linear-gradient(135deg, $gray6 25%, transparent 25%),
                       linear-gradient(45deg, transparent 75%, $gray6 75%),
                       linear-gradient(135deg, transparent 75%, $gray6 75%)`,
-                }),
-              }}
-            >
-              <Box
-                key={value}
-                css={{ height: '100%', width: '100%', bc: value }}
-              />
-            </Box>
-          );
-        })}
+              }),
+            }}
+          >
+            <Box
+              key={value}
+              css={{ height: '100%', width: '100%', bc: value }}
+            />
+          </Box>
+        ))}
       </Flex>
       {(isHovered || dropdownMenuIsOpen) && (
         <Flex

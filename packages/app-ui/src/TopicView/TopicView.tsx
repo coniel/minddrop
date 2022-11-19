@@ -94,6 +94,7 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
 
     const pasteCallback = (event: ClipboardEvent) => {
       const target = event.target as HTMLElement;
+
       // Ignore paste event on inputs and spans (spans used as inputs in rich text editor)
       if (target.tagName === 'INPUT' || target.tagName === 'SPAN') {
         return;

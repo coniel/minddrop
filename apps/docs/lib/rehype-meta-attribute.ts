@@ -15,6 +15,7 @@ export default () => {
     if (node.tagName === 'code' && node.data && node.data.meta) {
       re.lastIndex = 0; // Reset regex.
       match = re.exec(node.data.meta);
+
       while (match) {
         // eslint-disable-next-line no-param-reassign
         node.properties[match[1]] = match[2] || match[3] || match[4] || '';

@@ -60,6 +60,7 @@ const createWindow = (): void => {
   // Open all URLs in an external browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
+
     return { action: 'deny' };
   });
 

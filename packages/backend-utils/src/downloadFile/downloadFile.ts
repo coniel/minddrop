@@ -101,6 +101,7 @@ export async function downloadFile(
               response.statusMessage ||
                 `server responsed with ${response.statusCode}`,
             );
+
             // Stop here
             return;
           }

@@ -8,10 +8,8 @@ export type ContextMenuSeparatorProps =
 export const ContextMenuSeparator: FC<ContextMenuSeparatorProps> = ({
   children,
   ...other
-}) => {
-  return (
-    <ContextMenuPrimitives.Separator asChild {...other}>
-      <MenuSeparator />
-    </ContextMenuPrimitives.Separator>
-  );
-};
+}) => (
+  <ContextMenuPrimitives.Separator asChild {...other}>
+    <MenuSeparator />
+  </ContextMenuPrimitives.Separator>
+);

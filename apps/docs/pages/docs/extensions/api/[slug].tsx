@@ -77,5 +77,6 @@ export async function getStaticProps(context) {
     'extensions/api/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

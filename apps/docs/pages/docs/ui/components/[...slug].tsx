@@ -77,5 +77,6 @@ export async function getStaticProps(context) {
     'ui/components/',
     context.params.slug.join('/'),
   );
+
   return { props: { frontmatter, code } };
 }

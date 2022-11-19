@@ -9,10 +9,8 @@ export default {
   component: TopicView,
 };
 
-export const Default: React.FC = () => {
-  return (
-    <div style={{ margin: -16 }}>
-      <TopicView topicId={tSailing.id} />
-    </div>
-  );
-};
+export const Default: React.FC = () => (
+  <div style={{ margin: -16 }}>
+    <TopicView topicId={tSailing.id} />
+  </div>
+);

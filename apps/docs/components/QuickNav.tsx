@@ -42,9 +42,7 @@ export function QuickNav() {
   }, []);
 
   // Function to determine the Heading Level based on `nodeName` (H2, H3, etc)
-  const getLevel = (nodeName) => {
-    return Number(nodeName.replace('H', ''));
-  };
+  const getLevel = (nodeName) => Number(nodeName.replace('H', ''));
 
   return (
     <ScrollArea>
@@ -71,15 +69,13 @@ export function QuickNav() {
             </Box>
           )}
 
-          {headings.map(({ id, nodeName, innerText }) => {
-            return (
-              <Box as="li" key={id} data-level={getLevel(nodeName)}>
-                <QuickNavLink variant="subtle" href={`#${id}`}>
-                  <QuickNavText size="2">{innerText}</QuickNavText>
-                </QuickNavLink>
-              </Box>
-            );
-          })}
+          {headings.map(({ id, nodeName, innerText }) => (
+            <Box as="li" key={id} data-level={getLevel(nodeName)}>
+              <QuickNavLink variant="subtle" href={`#${id}`}>
+                <QuickNavText size="2">{innerText}</QuickNavText>
+              </QuickNavLink>
+            </Box>
+          ))}
         </QuickNavUl>
       </Box>
     </ScrollArea>

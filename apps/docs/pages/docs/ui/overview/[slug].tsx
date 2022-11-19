@@ -75,5 +75,6 @@ export async function getStaticProps(context) {
     'ui/overview/',
     context.params.slug,
   );
+
   return { props: { frontmatter, code } };
 }

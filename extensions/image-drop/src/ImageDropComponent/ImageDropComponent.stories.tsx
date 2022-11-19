@@ -54,20 +54,18 @@ Drops.store.load(core, [dropWithFile, dropWithoutFile]);
 // Register a mock file storage adapter
 Files.registerStorageAdapter({
   getUrl: () => 'https://placekitten.com/1200/1200',
-  save: async () => {
-    return FileReferencesResource.create(core, {
+  save: async () =>
+    FileReferencesResource.create(core, {
       type: 'image/png',
       name: 'image.png',
       size: 200,
-    });
-  },
-  download: async () => {
-    return FileReferencesResource.create(core, {
+    }),
+  download: async () =>
+    FileReferencesResource.create(core, {
       type: 'image/png',
       name: 'image.png',
       size: 200,
-    });
-  },
+    }),
 });
 
 export const WithFile: React.FC = () => {

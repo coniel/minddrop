@@ -12,11 +12,10 @@ export interface ContextMenuColorSelectionItemProps
   disabled?: InteractiveMenuItemProps['disabled'];
 }
 
-export const ContextMenuColorSelectionItem: FC<ContextMenuColorSelectionItemProps> =
-  ({ disabled, color, ...other }) => {
-    return (
-      <ContextMenuPrimitives.Item asChild disabled={disabled} {...other}>
-        <ColorSelectionMenuItem disabled={disabled} color={color} />
-      </ContextMenuPrimitives.Item>
-    );
-  };
+export const ContextMenuColorSelectionItem: FC<
+  ContextMenuColorSelectionItemProps
+> = ({ disabled, color, ...other }) => (
+  <ContextMenuPrimitives.Item asChild disabled={disabled} {...other}>
+    <ColorSelectionMenuItem disabled={disabled} color={color} />
+  </ContextMenuPrimitives.Item>
+);

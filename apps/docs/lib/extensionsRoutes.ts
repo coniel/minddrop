@@ -254,8 +254,9 @@ export type RouteProps = {
 };
 
 export const allExtensionsRoutes = extensionsRoutes.reduce(
-  (acc, curr: RouteProps) => {
-    return [...acc, ...curr.pages.filter((p) => p.draft !== true)];
-  },
+  (acc, curr: RouteProps) => [
+    ...acc,
+    ...curr.pages.filter((p) => p.draft !== true),
+  ],
   [],
 );

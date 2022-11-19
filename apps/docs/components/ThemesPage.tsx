@@ -108,6 +108,7 @@ export function ThemesPage({ children }: { children: React.ReactNode }) {
                 <NavHeading>{section.label}</NavHeading>
                 {section.pages.map((page) => {
                   const isDraft = page.draft;
+
                   return (
                     <NavItem
                       key={page.slug}

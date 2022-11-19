@@ -10,7 +10,8 @@ export type DropdownMenuTopicSelectionItemProps = Omit<
   'MenuItemComponent'
 >;
 
-export const DropdownMenuTopicSelectionItem: React.FC<DropdownMenuTopicSelectionItemProps> =
-  (props) => (
-    <TopicSelectionMenuItem {...props} MenuItemComponent={DropdownMenuItem} />
-  );
+export const DropdownMenuTopicSelectionItem: React.FC<
+  DropdownMenuTopicSelectionItemProps
+> = (props) => (
+  <TopicSelectionMenuItem {...props} MenuItemComponent={DropdownMenuItem} />
+);

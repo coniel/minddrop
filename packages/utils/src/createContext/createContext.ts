@@ -9,9 +9,14 @@ export function createContext<ContextType>(): [
 
   function useContext(): ContextType {
     const c = React.useContext(context);
-    if (!c) throw new Error('useCtx must be inside a Provider with a value');
+
+    if (!c) {
+      throw new Error('useCtx must be inside a Provider with a value');
+    }
+
     return c;
   }
+
   return [
     useContext,
     context.Provider,

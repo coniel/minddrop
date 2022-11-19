@@ -70,20 +70,18 @@ Drops.store.load(core, [dropWithPreview, dropWithoutPreview, dropWithoutUrl]);
 Files.registerStorageAdapter({
   getUrl: () =>
     'https://ichef.bbci.co.uk/news/976/cpsprodpb/DE1C/production/_125406865_gettyimages-963041196-1.jpg',
-  save: async () => {
-    return FileReferencesResource.create(core, {
+  save: async () =>
+    FileReferencesResource.create(core, {
       type: 'image/png',
       name: 'image.png',
       size: 200,
-    });
-  },
-  download: async () => {
-    return FileReferencesResource.create(core, {
+    }),
+  download: async () =>
+    FileReferencesResource.create(core, {
       type: 'image/png',
       name: 'image.png',
       size: 200,
-    });
-  },
+    }),
 });
 
 // Register a mock backend utils adapter
