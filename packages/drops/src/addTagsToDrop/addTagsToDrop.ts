@@ -1,5 +1,5 @@
 import { Core } from '@minddrop/core';
-import { FieldValue, FieldValueArrayUnion } from '@minddrop/utils';
+import { FieldValue } from '@minddrop/utils';
 import { DropTypeData, Drop } from '../types';
 import { DropsResource } from '../DropsResource';
 
@@ -17,13 +17,9 @@ export function addTagsToDrop<TTypeData extends DropTypeData = {}>(
   tagIds: string[],
 ): Drop<TTypeData> {
   // Update the drop, adding the tag IDs
-  const drop = DropsResource.update<{ tags: FieldValueArrayUnion }, TTypeData>(
-    core,
-    dropId,
-    {
-      tags: FieldValue.arrayUnion(tagIds),
-    },
-  );
+  const drop = DropsResource.update<{}, TTypeData>(core, dropId, {
+    tags: FieldValue.arrayUnion(tagIds),
+  });
 
   // Return the updated drop
   return drop;

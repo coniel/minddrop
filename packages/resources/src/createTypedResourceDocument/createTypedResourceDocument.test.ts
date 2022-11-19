@@ -422,6 +422,13 @@ describe('createTypedResourceDocument', () => {
   });
 
   it('runs schema create hooks', () => {
+    interface ParentBaseData {
+      childId: string;
+    }
+    interface ParentTypeData {
+      foo: string;
+    }
+
     // The config of the parent document (document being created)
     const parentConfig: TypedResourceConfig<{ childId: string }> = {
       resource: 'parent',
@@ -447,9 +454,12 @@ describe('createTypedResourceDocument', () => {
 
     // Create and register the test resources
     const parentStore =
-      createResourceStore<TypedResourceDocument<{ childId: string }>>();
+      createResourceStore<TypedResourceDocument<ParentBaseData>>();
     const parentResource = {
-      ...createTypedResource(parentConfig, parentStore),
+      ...createTypedResource<ParentBaseData, ParentBaseData, ParentBaseData>(
+        parentConfig,
+        parentStore,
+      ),
       extension: core.extensionId,
     };
     const childResource = {
@@ -470,8 +480,8 @@ describe('createTypedResourceDocument', () => {
     // Create a 'parent' document that references the child document
     // created above.
     const parentDocument = rawCreateTypedResourceDocument<
-      { childId: string },
-      { foo: 'string' },
+      ParentBaseData,
+      ParentTypeData,
       {},
       {}
     >(core, parentStore, typeConfigsStore, parentConfig, 'test-type', {

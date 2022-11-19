@@ -9,6 +9,7 @@ import {
   ResourceTypeConfigsStore,
   TypedResourceDocument,
   RegisteredResourceTypeConfig,
+  TRDTypeData,
 } from '../types';
 import { validateTypedResourceDocument } from '../validateTypedResourceDocument';
 
@@ -29,12 +30,12 @@ import { validateTypedResourceDocument } from '../validateTypedResourceDocument'
  */
 export function createTypedResourceDocument<
   TBaseData,
-  TTypeData,
+  TTypeData extends TRDTypeData<TBaseData>,
   TBaseCreateData,
   TTypeCreateData,
 >(
   core: Core,
-  store: ResourceStore<TypedResourceDocument<TBaseData>>,
+  store: ResourceStore<TypedResourceDocument<TBaseData, TTypeData>>,
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   type: string,
@@ -75,7 +76,7 @@ export function createTypedResourceDocument<
   let typedDocument = {
     ...document,
     type,
-  } as TypedResourceDocument<TBaseData, TTypeData>;
+  } as unknown as TypedResourceDocument<TBaseData, TTypeData>;
 
   if (typeConfig.defaultData) {
     // Get the type's default data for fields which were not
@@ -92,7 +93,7 @@ export function createTypedResourceDocument<
     typedDocument = {
       ...typedDocument,
       ...typeDefaultData,
-    } as TypedResourceDocument<TBaseData, TTypeData>;
+    } as unknown as TypedResourceDocument<TBaseData, TTypeData>;
   }
 
   if (typeConfig.onCreate) {

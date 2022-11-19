@@ -56,8 +56,8 @@ export function updateTypedResourceDocument<
 export function updateTypedResourceDocument<
   TBaseData extends TRDBaseData,
   TTypeData extends TRDTypeData<TBaseData>,
-  TBaseUpdateData extends Partial<TBaseData>,
-  TTypeUpdateData extends Partial<TTypeData>,
+  TBaseUpdateData,
+  TTypeUpdateData,
 >(
   core: Core,
   store: ResourceStore<TypedResourceDocument<TBaseData>>,

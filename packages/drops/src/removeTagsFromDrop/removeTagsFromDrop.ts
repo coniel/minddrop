@@ -1,6 +1,6 @@
 import { Core } from '@minddrop/core';
 import { FieldValue } from '@minddrop/utils';
-import { Drop } from '../types';
+import { Drop, DropTypeData } from '../types';
 import { DropsResource } from '../DropsResource';
 
 /**
@@ -11,13 +11,13 @@ import { DropsResource } from '../DropsResource';
  * @param tagIds - The IDs of the tags to remove.
  * @returns The updated drop.
  */
-export function removeTagsFromDrop(
+export function removeTagsFromDrop<TTypeData extends DropTypeData = {}>(
   core: Core,
   dropId: string,
   tagIds: string[],
-): Drop {
+): Drop<TTypeData> {
   // Remove the specified tags from the drop.
-  const drop = DropsResource.update(core, dropId, {
+  const drop = DropsResource.update<{}, TTypeData>(core, dropId, {
     tags: FieldValue.arrayRemove(tagIds),
   });
 

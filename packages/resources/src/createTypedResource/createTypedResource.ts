@@ -71,7 +71,7 @@ export function createTypedResource<
   return {
     ...Api,
     create: <
-      TTypeCreateData = {},
+      TTypeCreateData extends Partial<TRDTypeData<TBaseData>> = {},
       TTypeData extends TRDTypeData<TBaseData> = {},
     >(
       core: Core,
@@ -85,17 +85,17 @@ export function createTypedResource<
         TTypeCreateData
       >(core, store, typeConfigsStore, config, type, data),
     update: <
-      TTypeUpdateData = {},
+      TTypeUpdateData extends Partial<TRDTypeData<TBaseData>> = {},
       TTypeData extends TRDTypeData<TBaseData> = {},
     >(
       core: Core,
       documentId: string,
-      data: TBaseData & TTypeUpdateData,
+      data: TUpdateData & TTypeUpdateData,
     ) =>
       updateTypedResourceDocument<
         TBaseData,
         TTypeData,
-        TBaseData,
+        Partial<TBaseData>,
         TTypeUpdateData
       >(core, store, typeConfigsStore, config, documentId, data),
     delete: <TTypeData extends TRDTypeData<TBaseData> = {}>(

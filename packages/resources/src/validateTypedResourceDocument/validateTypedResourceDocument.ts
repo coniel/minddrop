@@ -3,6 +3,7 @@ import {
   TRDTypeDataSchema,
   TypedResourceDocument,
   TRDDataSchema,
+  TRDTypeData,
 } from '../types';
 import { validateResourceDocument } from '../validation';
 
@@ -21,7 +22,10 @@ import { validateResourceDocument } from '../validation';
  * @throws InvalidSchemaError
  * Thrown if the resource data schema is invalid.
  */
-export function validateTypedResourceDocument<TBaseData, TTypeData>(
+export function validateTypedResourceDocument<
+  TBaseData,
+  TTypeData extends TRDTypeData<TBaseData>,
+>(
   resource: string,
   baseDataSchema: TRDBaseDataSchema<TBaseData>,
   typeDataSchema: TRDTypeDataSchema<TBaseData, TTypeData>,
