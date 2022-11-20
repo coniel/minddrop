@@ -194,10 +194,7 @@ export interface DropsApi
    * @param data - The changes to apply to the drop.
    * @returns The updated drop.
    */
-  update<
-    TTypeUpdateData extends Partial<DropTypeData> = {},
-    TTypeData extends DropTypeData = {},
-  >(
+  update<TTypeUpdateData = {}, TTypeData extends DropTypeData = {}>(
     core: Core,
     id: string,
     data: BaseUpdateDropData & TTypeUpdateData,

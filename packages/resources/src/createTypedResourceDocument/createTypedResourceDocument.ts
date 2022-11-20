@@ -35,7 +35,7 @@ export function createTypedResourceDocument<
   TTypeCreateData,
 >(
   core: Core,
-  store: ResourceStore<TypedResourceDocument<TBaseData, TTypeData>>,
+  store: ResourceStore<TypedResourceDocument<TBaseData>>,
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   type: string,
