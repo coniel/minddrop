@@ -35,7 +35,9 @@ export function useExternalUpdates(
 
       // Create the editor value by aranging the rich text elements
       // in the order they are listed in the document's children.
-      const value = document.children.map((childId) => elements[childId]);
+      const value = document.children.map((childId) =>
+        RichTextElements.generateChildrenTree(elements[childId]),
+      );
 
       // Reset the editor content to the new value
       Transforms.resetNodes(editor, { nodes: value });
