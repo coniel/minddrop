@@ -1,17 +1,13 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { TypedResourceApi } from '@minddrop/resources';
 import { RTBlockElementConfig } from './RTBlockElementConfig.types';
-import {
-  RTBlockElement,
-  RTElement,
-  RTElementMap,
-  RTElementTypeData,
-} from './RTElement.types';
+import { RTBlockElement, RTElement, RTElementMap } from './RTElement.types';
 import {
   BaseCreateRTElementDocumentData,
   BaseUpdateRTElementDocumentData,
   BaseRTElementDocumentData,
   RTElementDocumentTypeData,
+  RTElementDocument,
 } from './RTElementDocument.types';
 import { RTElementFilters } from './RTElementFilters.types';
 import {
@@ -43,7 +39,7 @@ export interface RTElementsApi
       BaseUpdateRTElementDocumentData,
       RTBlockElementConfig | RTInlineElementConfig
     >,
-    'create' | 'update' | 'get'
+    'create' | 'update'
   > {
   /**
    * Registers a new rich text element type.
@@ -73,34 +69,6 @@ export interface RTElementsApi
   ): void;
 
   /**
-   * Retrieves a rich text element by ID.
-   *
-   * @param elementId - The ID of the element to retrieve.
-   * @returns The requested rich text element.
-   *
-   * @throws ResourceDocumentNotFoundError
-   * Thrown if the rich text element does not exist.
-   */
-  get<TTypeData extends RTElementTypeData = {}>(
-    elementId: string,
-  ): RTElement<TTypeData>;
-
-  /**
-   * Retrieves rich text elements by ID.
-   *
-   * Returns a `{ [id]: RTElement }` map of the corresponding rich text elements.
-   *
-   * @param elementIds - The IDs of the elements to retrieve.
-   * @returns A `{ [id]: RichTextElement }` map of the requested rich text elements.
-   *
-   * @throws ResourceDocumentNotFoundError
-   * Thrown if any of the rich text elements do not exist.
-   */
-  get<TTypeData extends RTElementTypeData = {}>(
-    elementIds: string[],
-  ): RTElement<TTypeData>;
-
-  /**
    * Returns all rich text elements as a `{ [id]: RichTextElement }` map.
    */
   getAll<
@@ -121,6 +89,8 @@ export interface RTElementsApi
     elements: RTElementMap<TTypeData>,
     filters: RTElementFilters,
   ): RTElementMap<TTypeData>;
+
+  generateChildrenTree(document: RTElementDocument): RTElement;
 
   /**
    * Creates a new rich text element of the specified type.

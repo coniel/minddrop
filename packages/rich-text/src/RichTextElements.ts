@@ -1,4 +1,5 @@
 import { RTElementsApi } from './types';
+import { generateChildrenTree } from './generateChildrenTree';
 import { toPlainText } from './toPlainText';
 import { RTElementsResource } from './RTElementsResource';
 import { createRichTextElementFromData } from './createRichTextElementFromData/createRichTextElementFromData';
@@ -7,6 +8,7 @@ import { initializeRichTextElementData } from './initializeRichTextElementData';
 
 export const RichTextElements: RTElementsApi = {
   ...RTElementsResource,
+  generateChildrenTree,
   toPlainText,
   convert: convertRichTextElement,
   createFromData: createRichTextElementFromData,

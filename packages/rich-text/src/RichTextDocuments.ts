@@ -1,3 +1,4 @@
+import { generateChildrenTree } from './generateChildrenTree';
 import { RichTextElements } from './RichTextElements';
 import { RTDocumentsResource } from './RTDocumentsResource';
 import { toPlainText } from './toPlainText';
@@ -15,8 +16,13 @@ export const RichTextDocuments: RTDocumentsApi = {
       (childId) => children[childId],
     );
 
+    // Get the child elements tree for each child
+    const withChildenTree = orderedChildren.map((child) =>
+      generateChildrenTree(child),
+    );
+
     // Return the children as plain text
-    return toPlainText(orderedChildren);
+    return toPlainText(withChildenTree);
   },
   addEventListener: (core, type, callback) =>
     core.addEventListener(type, callback),

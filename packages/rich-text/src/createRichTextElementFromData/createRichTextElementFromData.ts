@@ -36,14 +36,13 @@ export function createRichTextElementFromData<
   const elementData = initializeRichTextElementData<TTypeData>(type, data);
 
   // Create the element
-  const element = RTElementsResource.create<Partial<TTypeData>, TTypeData>(
-    core,
+  const element = RTElementsResource.create<
+    Partial<RTElement<TTypeData>>,
+    TTypeData
+  >(core, type, {
+    ...elementData,
     type,
-    {
-      ...elementData,
-      type,
-    },
-  );
+  });
 
   // Return the new element
   return element;
