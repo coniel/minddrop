@@ -118,11 +118,6 @@ export interface TypedResourceApi<
    * event. The document is validated before being updated. Returns
    * the updated document.
    *
-   * - Throws a `ResourceDocumentNotFoundError` if the document does
-   *   not exist.
-   * - Throws a `ResourceDocumentValidationError` if the resulting
-   *   document is invalid.
-   *
    * @param core A MindDrop core instance.
    * @param documentId The ID of the document to update.
    * @param data The data required to create a document.
@@ -196,6 +191,31 @@ export interface TypedResourceApi<
   deletePermanently<TTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
     documentId: string,
+  ): TypedResourceDocument<TBaseData, TTypeData>;
+
+  /**
+   * Converts a typed resource document from one type to another
+   * and dispatches a `[resource]:udapte` event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param documentId - The ID of the document to convert.
+   * @param newType - The type to which to convert the document.
+   * @returns The converted document.
+   *
+   * @throws ResourceDocumentNotFoundError
+   * Thrown if the resource document does not exist.
+   *
+   * @throws ResourceTypeNotRegisteredError
+   * Thrown if either the original resource type or the new
+   * resource type are not registered.
+   *
+   * @throws ResourceDocumentValidationError
+   * Thrown if the resulting document is invalid.
+   */
+  convert<TTypeData extends TRDTypeData<TBaseData> = {}>(
+    core: Core,
+    documentId: string,
+    newType: string,
   ): TypedResourceDocument<TBaseData, TTypeData>;
 
   /**

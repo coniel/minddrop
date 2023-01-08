@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { addParentsToTypedResourceDocument } from '../addParentsToTypedResourceDocument';
+import { convertTypedResourceDocument } from '../convertTypedResourceDocument';
 import { createConfigsStore } from '../createConfigsStore';
 import { createResource } from '../createResource';
 import { createResourceStore } from '../createResourceStore';
@@ -137,6 +138,19 @@ export function createTypedResource<
         TBaseData,
         TTypeData
       >,
+    convert: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+      core: Core,
+      documentId: string,
+      newType: string,
+    ) =>
+      convertTypedResourceDocument<TBaseData, TTypeData>(
+        core,
+        store,
+        typeConfigsStore,
+        config,
+        documentId,
+        newType,
+      ),
     addParents: <TTypeData extends TRDTypeData<TBaseData> = {}>(
       core: Core,
       documentId: string,
