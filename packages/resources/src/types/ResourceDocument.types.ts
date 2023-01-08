@@ -67,7 +67,8 @@ export type RDData = Object &
  * A resource document consists of the base resource document
  * data, and custom data.
  */
-export type ResourceDocument<TData extends RDData = {}> = RDRootData & TData;
+export type ResourceDocument<TData extends RDData = {}> = RDRootData &
+  Omit<TData, keyof RDRootData>;
 
 /**
  * When updating a resource document, the following properties

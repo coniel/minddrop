@@ -86,9 +86,9 @@ export type ResourceTypeConfig<
    * @param document - The resource document being converted.
    * @returns The new document type data.
    */
-  onConvert?(
+  onConvert?<TFromTypeData extends TRDTypeData<TBaseData> = {}>(
     core: Core,
-    document: TypedResourceDocument<TBaseData, TTypeData>,
+    document: TypedResourceDocument<TBaseData, TFromTypeData>,
   ): Partial<TBaseData & TTypeData>;
 
   /**

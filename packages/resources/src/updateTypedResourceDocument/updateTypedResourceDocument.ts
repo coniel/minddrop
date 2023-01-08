@@ -11,6 +11,8 @@ import {
   TypedResourceDocument,
   TypedResourceConfig,
   TRDUpdate,
+  TypedResourceDocumentData,
+  ResourceConfig,
 } from '../types';
 import { ResourceDocumentChangesStore } from '../ResourceDocumentChangesStore';
 import {
@@ -73,7 +75,7 @@ export function updateTypedResourceDocument<
   TTypeUpdateData extends Partial<TTypeData>,
 >(
   core: Core,
-  store: ResourceStore<TypedResourceDocument<TBaseData, TTypeData>>,
+  store: ResourceStore<TypedResourceDocument<TBaseData>>,
   typeConfigsStore: ResourceTypeConfigsStore<TBaseData, TTypeData>,
   config: TypedResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
   documentId: string,
@@ -84,7 +86,18 @@ export function updateTypedResourceDocument<
   isInternalUpdate?: true,
 ): TypedResourceDocument<TBaseData, TTypeData> {
   // Get the document from the store
-  const document = getResourceDocument(store, config, documentId, true);
+  const document = getResourceDocument<
+    TypedResourceDocumentData<TBaseData>,
+    TypedResourceDocument<TBaseData>
+  >(
+    store,
+    config as ResourceConfig<
+      TypedResourceDocumentData<TBaseData>,
+      TypedResourceDocument<TBaseData>
+    >,
+    documentId,
+    true,
+  );
 
   // Throw an error if the `type` property is being changed.
   if ('type' in data) {

@@ -10,6 +10,7 @@ import {
   TypedResourceDocumentMap,
   TRDBaseData,
   TRDTypeData,
+  TypedResourceDocumentData,
 } from './TypedResourceDocument.types';
 import { TypedResourceDocumentFilters } from './ResourceDocumentFilters.types';
 import { ResourceReference } from './ResourceReference.types';
@@ -28,7 +29,7 @@ export interface TypedResourceApi<
   TUpdateData extends Partial<Record<keyof TBaseData, any>> & TRDBaseData = {},
   TCustomTypeConfigOptions = {},
 > extends Omit<
-    ResourceApi<TBaseData, TCreateData, TUpdateData>,
+    ResourceApi<TypedResourceDocumentData<TBaseData>, TCreateData, TUpdateData>,
     'create' | 'filter' | 'hooks'
   > {
   /**

@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { ResourceStorageAdaptersStore } from '../ResourceStorageAdaptersStore';
 import { ResourceApisStore } from '../ResourceApisStore';
 import { Resources } from '../Resources';
+import { ResourceApi } from '../types';
 
 /**
  * Runs the resources extension.
@@ -21,7 +22,7 @@ export async function onRun(core: Core): Promise<void> {
         adapter.initialize({
           set: (document) => {
             // Get the document resource API
-            const resource = Resources.get(document.resource);
+            const resource = Resources.get(document.resource) as ResourceApi;
 
             if (resource.store.get(document.id)) {
               // If the document is present in the store,

@@ -7,6 +7,7 @@ import { createTypedResourceDocument } from '../createTypedResourceDocument';
 import { deleteTypedResourceDocument } from '../deleteTypedResourceDocument';
 import { filterTypedResourceDocuments } from '../filterTypedResourceDocuments';
 import { getAllResourceTypeConfigs } from '../getAllResourceTypeConfigs';
+import { getResourceDocument } from '../getResourceDocument';
 import { getTypedResourceTypeConfig } from '../getTypedResourceTypeConfig';
 import { registerResourceType } from '../registerResourceType';
 import { removeParentsFromTypedResourceDocument } from '../removeParentsFromTypedResourceDocument';
@@ -24,6 +25,7 @@ import {
   ResourceReference,
   ResourceStore,
   ResourceTypeConfigFilters,
+  TypedResourceDocumentData,
 } from '../types';
 import { unregisterResourceType } from '../unregisterResourceType';
 import { updateTypedResourceDocument } from '../updateTypedResourceDocument';
@@ -56,8 +58,15 @@ export function createTypedResource<
     customStore || createResourceStore<TypedResourceDocument<TBaseData>>();
 
   // Create a resource
-  const Api = createResource<TBaseData, TCreateData, TUpdateData>(
-    config as ResourceConfig<TBaseData, TypedResourceDocument<TBaseData>>,
+  const Api = createResource<
+    TypedResourceDocumentData<TBaseData>,
+    TCreateData,
+    TUpdateData
+  >(
+    config as ResourceConfig<
+      TypedResourceDocumentData<TBaseData>,
+      TypedResourceDocument<TBaseData>
+    >,
     store,
   );
 
@@ -153,6 +162,20 @@ export function createTypedResource<
         config,
         documentId,
         parentReferences,
+      ),
+    get: <TTypeData extends TRDTypeData<TBaseData> = {}>(
+      documentId: string | string[],
+    ) =>
+      getResourceDocument<
+        TypedResourceDocumentData<TBaseData, TTypeData>,
+        TypedResourceDocument<TBaseData, TTypeData>
+      >(
+        store as ResourceStore<TypedResourceDocument<TBaseData, TTypeData>>,
+        config as unknown as ResourceConfig<
+          TypedResourceDocumentData<TBaseData, TTypeData>,
+          TypedResourceDocument<TBaseData, TTypeData>
+        >,
+        documentId as string,
       ),
     getAll: <TTypeData extends TRDTypeData<TBaseData> = {}>() =>
       Api.getAll() as Record<

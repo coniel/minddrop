@@ -25,19 +25,33 @@ export interface TRDRootData {
  * The custom data for the base resource document
  * which is shared by all types.
  */
-export type TRDBaseData = Object &
-  Partial<Record<keyof TypedResourceDocument<{}, {}>, never>>;
+export type TRDBaseData = Object & {
+  [K in keyof ResourceDocument<TRDRootData>]?: never;
+};
 
 /**
  * The type specific custom resource document data.
  */
-export type TRDTypeData<TBaseData> = Object &
-  Partial<Record<keyof (TypedResourceDocument<{}, {}> & TBaseData), never>>;
+export type TRDTypeData<TBaseData> = Object & {
+  [K in keyof ResourceDocument<TRDRootData & TBaseData>]?: never;
+};
 
 export type TypedResourceDocument<
   TBaseData extends TRDBaseData = {},
   TTypeData extends TRDTypeData<TBaseData> = {},
-> = ResourceDocument<TRDRootData & TBaseData & TTypeData>;
+> = ResourceDocument &
+  TRDRootData &
+  Omit<TBaseData & TTypeData, keyof ResourceDocument<TRDRootData>>;
+
+export type TypedResourceDocumentData<
+  TBaseData extends TRDBaseData = {},
+  TTypeData extends TRDTypeData<TBaseData> = {},
+> = Omit<TypedResourceDocument<TBaseData, TTypeData>, keyof ResourceDocument>;
+
+export type ToData<TData extends TRDBaseData | TRDTypeData<{}>> = Omit<
+  TData,
+  keyof ResourceDocument & TRDRootData
+>;
 
 /**
  * When updating a resource document, the update data can consist
