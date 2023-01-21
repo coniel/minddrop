@@ -6,7 +6,7 @@ import {
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { Node, Editor } from 'slate';
-import { setup, cleanup, createTestEditor } from '../test-utils';
+import { setup, cleanup, core, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
 import { withBlockShortcuts } from './withBlockShortcuts';
 
@@ -37,6 +37,7 @@ describe('withBlockShortcuts', () => {
     // Create an editor instance configured with the plugin using the heading
     // element configuration containing an empty paragraph element.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([emptyParagraphElement]),
       [headingConfig],
     );
@@ -54,9 +55,11 @@ describe('withBlockShortcuts', () => {
   it('works with elements which contain text', () => {
     // Create an editor instance configured with the plugin using the heading
     // element configuration containing a paragraph element.
-    const editor = withBlockShortcuts(createTestEditor([paragraphElement1]), [
-      headingConfig,
-    ]);
+    const editor = withBlockShortcuts(
+      core,
+      createTestEditor([paragraphElement1]),
+      [headingConfig],
+    );
 
     // Insert the heading shortcut text at the beggining of the paragraph element
     Transforms.insertText(editor, '# ', { at: [0, 0] });
@@ -72,6 +75,7 @@ describe('withBlockShortcuts', () => {
     // Create an editor instance configured with the plugin using the heading
     // element configuration containing an empty paragraph element.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([emptyParagraphElement]),
       [headingConfig],
     );
@@ -90,6 +94,7 @@ describe('withBlockShortcuts', () => {
     // Create an editor instance configured with the plugin using the heading element
     // configuration containing a paragraph element with a link element inside it.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([
         {
           ...emptyParagraphElement,
@@ -114,6 +119,7 @@ describe('withBlockShortcuts', () => {
     // configuration containingn a paragraph element which has the shortcut string at
     // the start of the paragraph text.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([
         // Paragraph text starts with the shortcut string
         { ...paragraphElement1, children: [{ text: '# Hello ' }] },
@@ -140,6 +146,7 @@ describe('withBlockShortcuts', () => {
     // Create an editor instance configured with the plugin using the heading element
     // configuration containing a paragraph element with a link element inside it.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([
         {
           ...emptyParagraphElement,
@@ -163,6 +170,7 @@ describe('withBlockShortcuts', () => {
     // Create an editor instance configured with the plugin using the link
     // (inline) element configuration containing an empty paragraph element.
     const editor = withBlockShortcuts(
+      core,
       createTestEditor([emptyParagraphElement]),
       [linkConfig],
     );

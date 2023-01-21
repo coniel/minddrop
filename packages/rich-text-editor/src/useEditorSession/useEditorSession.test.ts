@@ -1,4 +1,4 @@
-import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import { RichTextElements, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { renderHook } from '@minddrop/test-utils';
 import { setup, cleanup } from '../test-utils';
 import { Transforms } from '../Transforms';
@@ -27,22 +27,19 @@ describe('useEditorSession', () => {
     ).toContain(richTextDocument1.revision);
   });
 
-  it('configures the `withRichTextEditorStore` plugin', () => {
+  it('configures the `withRichTextElementsApi` plugin', () => {
+    const newElement = { ...paragraphElement1, id: 'new-element' };
+
     // Run the hook
     const { result } = renderHook(() => useEditorSession(richTextDocument1.id));
 
     // Get the editor and session ID
-    const [editor, sessionId] = result.current;
+    const [editor] = result.current;
 
     // Insert an element into the document
-    Transforms.insertNodes(editor, paragraphElement1, { at: [0] });
+    Transforms.insertNodes(editor, newElement, { at: [0] });
 
-    // Rich text editor store session should contain
-    // the created element.
-    expect(
-      useRichTextEditorStore.getState().sessions[sessionId].createdElements[
-        paragraphElement1.id
-      ],
-    ).toBeDefined();
+    // Should create the element
+    expect(RichTextElements.get(newElement.id)).toBeDefined();
   });
 });

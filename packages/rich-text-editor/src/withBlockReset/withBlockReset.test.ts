@@ -4,7 +4,7 @@ import {
   RICH_TEXT_TEST_DATA,
 } from '@minddrop/rich-text';
 import { Editor, Node } from 'slate';
-import { setup, cleanup, createTestEditor } from '../test-utils';
+import { setup, cleanup, core, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
 import { withBlockReset } from './withBlockReset';
 
@@ -24,6 +24,7 @@ describe('withBlockReset', () => {
     // Create an editor with the plugin applied containing an empty
     // heading element.
     const editor = withBlockReset(
+      core,
       createTestEditor([emptyHeading]),
       defaultType,
     );
@@ -48,6 +49,7 @@ describe('withBlockReset', () => {
     // Create an editor with the plugin applied containing a
     // heading element with an empty link
     const editor = withBlockReset(
+      core,
       createTestEditor([
         {
           ...headingElement1,
@@ -85,6 +87,7 @@ describe('withBlockReset', () => {
     // Create an editor with the plugin applied containing a
     // heading element.
     const editor = withBlockReset(
+      core,
       createTestEditor([headingElement1]),
       defaultType,
     );
@@ -109,6 +112,7 @@ describe('withBlockReset', () => {
     // Create an editor with the plugin applied containing a
     // heading element.
     const editor = withBlockReset(
+      core,
       createTestEditor([
         { ...headingElement1, children: [{ text: 'Hello world' }] },
       ]),
@@ -137,6 +141,7 @@ describe('withBlockReset', () => {
     // Create an editor with the plugin applied containing a
     // heading element with a link
     const editor = withBlockReset(
+      core,
       createTestEditor([
         {
           ...headingElement1,

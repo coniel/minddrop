@@ -35,6 +35,9 @@ export function setup() {
 }
 
 export function cleanup() {
+  // React testing library cleanup
+  cleanupRender();
+
   act(() => {
     // Disable the rich text extension
     RichTextExtension.onDisable(core);
@@ -45,7 +48,4 @@ export function cleanup() {
     // Clear the rich text editor store
     useRichTextEditorStore.getState().clear();
   });
-
-  // React testing library cleanup
-  cleanupRender();
 }

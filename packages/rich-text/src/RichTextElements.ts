@@ -3,14 +3,12 @@ import { generateChildrenTree } from './generateChildrenTree';
 import { toPlainText } from './toPlainText';
 import { RTElementsResource } from './RTElementsResource';
 import { createRichTextElementFromData } from './createRichTextElementFromData/createRichTextElementFromData';
-import { convertRichTextElement } from './convertRichTextElement';
 import { initializeRichTextElementData } from './initializeRichTextElementData';
 
 export const RichTextElements: RTElementsApi = {
   ...RTElementsResource,
   generateChildrenTree,
   toPlainText,
-  convert: convertRichTextElement,
   createFromData: createRichTextElementFromData,
   initializeData: initializeRichTextElementData,
   addEventListener: (core, type, callback) =>
@@ -29,7 +27,7 @@ export const useRichTextElement = (elementId: string) =>
   RTElementsResource.hooks.useDocument(elementId);
 
 /**
- * Returns rich text elements by ID.
+ * Returns rich text elements by IDi
  *
  * @param elementIds - The IDs of the rich text elements to retrieve.
  * @returns A `{ [id]: RTElement }` map of rich text elements.

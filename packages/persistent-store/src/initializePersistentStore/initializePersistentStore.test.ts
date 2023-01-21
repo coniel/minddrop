@@ -52,6 +52,8 @@ describe('initializePersistentStore', () => {
 
       // Document should exist
       expect(document).not.toBeNull();
+      // Document should contain extension ID
+      expect(document.extension).toBe(coreA1.extensionId);
       // Document should contain default data
       expect(document.foo).toBe(storeDefaultData.foo);
       expect(document.bar).toBe(storeDefaultData.bar);
@@ -92,6 +94,10 @@ describe('initializePersistentStore', () => {
 
       // Document should exist
       expect(a1Document).not.toBeNull();
+      // Document should contain app ID
+      expect(a1Document.app).toBe(coreA1.appId);
+      // Document should contain extension ID
+      expect(a1Document.extension).toBe(coreA1.extensionId);
       // Document should contain default data
       expect(a1Document.foo).toBe(storeDefaultData.foo);
       expect(a1Document.bar).toBe(storeDefaultData.bar);

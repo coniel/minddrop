@@ -1,4 +1,8 @@
-import { RichTextElements, useRichTextDocument } from '@minddrop/rich-text';
+import {
+  RichTextElements,
+  RTElement,
+  useRichTextDocument,
+} from '@minddrop/rich-text';
 import { useEffect } from 'react';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
@@ -10,14 +14,12 @@ import { useRichTextEditorStore } from '../useRichTextEditorStore';
  * originate from the current editor session.
  *
  * @param editor The editor instance.
- * @param documentId The ID of the document being edited.
  * @param sessionId The editor session ID.
  */
-export function useExternalUpdates(
-  editor: Editor,
-  documentId: string,
-  sessionId: string,
-): void {
+export function useExternalUpdates(editor: Editor, sessionId: string): void {
+  // Get the document ID from the session
+  const { documentId } = useRichTextEditorStore.getState().sessions[sessionId];
+
   // Watch the document for changes
   const document = useRichTextDocument(documentId);
 
@@ -35,18 +37,20 @@ export function useExternalUpdates(
 
       // Create the editor value by aranging the rich text elements
       // in the order they are listed in the document's children.
-      const value = document.children.map((childId) =>
-        RichTextElements.generateChildrenTree(elements[childId]),
-      );
+      const value = document.children.map(
+        (childId) => elements[childId],
+        /* RichTextElements.generateChildrenTree(elements[childId]), */
+      ) as RTElement[];
+
+      // Pause updates for this session to prevent the editor content
+      // reset from triggering it's own updates.
+      useRichTextEditorStore.getState().pauseUpdates(sessionId);
 
       // Reset the editor content to the new value
       Transforms.resetNodes(editor, { nodes: value });
 
-      // Reseting nodes removes the current nodes and inserts the updated ones,
-      // this causes the changes to be added to the editor session in the rich
-      // text editor store. Reset the editor session to clear the changes as
-      // they aren't actually changes.
-      useRichTextEditorStore.getState().resetSessionChanges(sessionId);
+      // Resume updates for this session
+      useRichTextEditorStore.getState().resumeUpdates(sessionId);
     }
   }, [document.revision, sessionId]);
 }

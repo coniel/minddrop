@@ -1,485 +1,463 @@
 import {
   RTBlockElement,
-  RTNode,
   RICH_TEXT_TEST_DATA,
-  UpdateRTElementData,
+  RichTextElements,
+  RichTextDocuments,
 } from '@minddrop/rich-text';
-import { cleanup, createTestEditor, setup } from '../test-utils';
+import { setup, cleanup, core, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
-import {
-  RTElementsApi,
-  withRichTextElementsApi,
-} from './withRichTextElementsApi';
+import { useRichTextEditorStore } from '../useRichTextEditorStore';
+import { withRichTextElementsApi } from './withRichTextElementsApi';
 
-const { paragraphElement1, paragraphElement2, blockEquationElement1 } =
-  RICH_TEXT_TEST_DATA;
+const {
+  richTextDocument1,
+  paragraphElement1,
+  paragraphElement2,
+  linkElement1,
+  headingElementConfig,
+} = RICH_TEXT_TEST_DATA;
 
-const emptyParagraph: RTBlockElement = {
-  ...paragraphElement1,
-  children: [{ text: '' }],
+const SESSION_ID = 'session-id';
+
+const createEditor = (content: RTBlockElement[]) => {
+  // Create an editor session
+  useRichTextEditorStore
+    .getState()
+    .addSession(SESSION_ID, richTextDocument1.id, richTextDocument1.revision);
+
+  // Create an editor with the plugin applied, using the
+  // session created above.
+  return withRichTextElementsApi(core, createTestEditor(content), SESSION_ID);
 };
 
-const api: RTElementsApi = {
-  createElement: jest.fn(),
-  updateElement: jest.fn(),
-  deleteElement: jest.fn(),
-  setDocumentChildren: jest.fn(),
-};
+// Pause updates on the editor session
+const pauseUpdates = () =>
+  useRichTextEditorStore.getState().pauseUpdates(SESSION_ID);
 
-interface BlockEquationElement extends RTBlockElement {
-  expression: string;
-}
-
-describe('withRTElements', () => {
+describe('withRichTextElementsApi', () => {
   beforeEach(setup);
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
 
-  describe('edit text', () => {
-    it('updates the parent element children when text is inserted', () => {
-      const updateElement = jest.fn();
+    // Resume updates on the editor session
+    useRichTextEditorStore.getState().resumeUpdates(SESSION_ID);
+  });
 
-      // Create an editor with the plugin applied,
-      // containg an empty paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([emptyParagraph]),
-        {
-          ...api,
-          updateElement,
-        },
-      );
+  describe('create element', () => {
+    describe('root level element', () => {
+      it('creates the element', () => {
+        // The element to be inserted
+        const newElement = { ...paragraphElement1, id: 'new-element' };
+
+        // Create an editor with the plugin applied, containg a paragraph element
+        const editor = createEditor([paragraphElement1]);
+
+        // Insert a new element
+        Transforms.insertNodes(editor, [newElement], { at: [1] });
+
+        // The inserted element should be created as a RichTextElement
+        expect(RichTextElements.get(newElement.id)).toBeDefined();
+      });
+
+      it('restores the element if it was deleted', () => {
+        jest.spyOn(RichTextElements, 'create');
+
+        // Create an editor with the plugin applied, containg two paragraph elements
+        const editor = createEditor([paragraphElement1]);
+
+        // Delete the test element to be created
+        RichTextElements.delete(core, paragraphElement2.id);
+
+        // Insert the deleted element into the document
+        Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
+
+        // The inserted element should be restored
+        expect(
+          RichTextElements.get(paragraphElement2.id).deleted,
+        ).toBeUndefined();
+
+        // Should not create the element again
+        expect(RichTextElements.create).not.toHaveBeenCalled();
+      });
+
+      it('udpates `children` on the rich text document', () => {
+        // Create an editor with the plugin applied, containg a paragraph element.
+        const editor = createEditor([paragraphElement1]);
+
+        // Insert a new element
+        Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
+
+        // Should update rich text document's `children` to include the
+        // new element.
+        expect(RichTextDocuments.get(richTextDocument1.id).children).toEqual([
+          paragraphElement1.id,
+          paragraphElement2.id,
+        ]);
+      });
+
+      it('updates the document revision', () => {
+        // Get the current document revision
+        const oldRevision = richTextDocument1.revision;
+
+        // Create an editor with the plugin applied, containg a paragraph element
+        const editor = createEditor([paragraphElement1]);
+
+        // Insert a new element
+        Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
+
+        // Get the editor session
+        const session = useRichTextEditorStore.getState().sessions[SESSION_ID];
+
+        // Get the updated document
+        const document = RichTextDocuments.get(richTextDocument1.id);
+
+        // Document should have a new revision ID
+        expect(document.revision).not.toEqual(oldRevision);
+
+        // New revision should be added to editor session
+        expect(session.documentRevisions).toEqual([
+          oldRevision,
+          document.revision,
+        ]);
+      });
+
+      describe('with paused updates', () => {
+        it('does nothing', () => {
+          // The element to be inserted
+          const newElement = { ...paragraphElement1, id: 'new-element' };
+
+          // Create an editor with the plugin applied, containg a paragraph element
+          const editor = createEditor([paragraphElement1]);
+
+          // Pause updates on the editor session
+          pauseUpdates();
+
+          // Insert a new element
+          Transforms.insertNodes(editor, [newElement], { at: [1] });
+
+          // The inserted element should not be created as a RichTextElement
+          expect(RichTextElements.store.get(newElement.id)).toBeUndefined();
+          // The document's children shot not be updated
+          expect(RichTextDocuments.get(richTextDocument1.id).children).toEqual(
+            richTextDocument1.children,
+          );
+        });
+      });
+    });
+
+    describe('nested element', () => {
+      it('creates the element', () => {
+        // New link element to be inserted
+        const newLinkElement = { ...linkElement1, id: 'new-link-element' };
+
+        // Create an editor with the plugin applied, containg a paragraph element
+        const editor = createEditor([paragraphElement1]);
+
+        // Insert a new element
+        Transforms.insertNodes(editor, [newLinkElement], { at: [0, 1] });
+
+        // The inserted element should be created as a RichTextElement
+        expect(RichTextElements.get(newLinkElement.id)).toBeDefined();
+      });
+
+      it('restores the element if it was deleted', () => {
+        jest.spyOn(RichTextElements, 'create');
+
+        // Create an editor with the plugin applied, containg two paragraph elements
+        const editor = createEditor([paragraphElement1]);
+
+        // Delete the test element to be created
+        RichTextElements.delete(core, linkElement1.id);
+
+        // Insert the deleted element into paragraph 1
+        Transforms.insertNodes(editor, [linkElement1], { at: [0, 1] });
+
+        // The inserted element should be restored
+        expect(RichTextElements.get(linkElement1.id).deleted).toBeUndefined();
+
+        // Should not create the element again
+        expect(RichTextElements.create).not.toHaveBeenCalled();
+      });
+
+      it('updates the document revision', () => {
+        // Get the current document revision
+        const oldRevision = richTextDocument1.revision;
+
+        // Create an editor with the plugin applied, containg a paragraph element
+        const editor = createEditor([paragraphElement1]);
+
+        // Insert a new element
+        Transforms.insertNodes(editor, [linkElement1], { at: [0, 1] });
+
+        // Get the editor session
+        const session = useRichTextEditorStore.getState().sessions[SESSION_ID];
+
+        // Get the updated document
+        const document = RichTextDocuments.get(richTextDocument1.id);
+
+        // Document should have a new revision ID
+        expect(document.revision).not.toEqual(oldRevision);
+
+        // New revision should be added to editor session
+        expect(session.documentRevisions).toEqual([
+          oldRevision,
+          document.revision,
+        ]);
+      });
+
+      describe('with paused updates', () => {
+        it('does nothing', () => {
+          // New link element to be inserted
+          const newLinkElement = { ...linkElement1, id: 'new-link-element' };
+
+          // Create an editor with the plugin applied, containg a paragraph element
+          const editor = createEditor([paragraphElement1]);
+
+          // Pause updates on the editor session
+          pauseUpdates();
+
+          // Insert a new element
+          Transforms.insertNodes(editor, [newLinkElement], { at: [0, 1] });
+
+          // The inserted element should not be created as a RichTextElement
+          expect(RichTextElements.store.get(newLinkElement.id)).toBeUndefined();
+        });
+      });
+    });
+  });
+
+  describe('update element', () => {
+    describe('with paused updates', () => {
+      it('does nothing', () => {
+        // Create an editor with the plugin applied, containg a paragraph element
+        const editor = createEditor([paragraphElement1]);
+
+        // Pause updates on the editor session
+        pauseUpdates();
+
+        // Add some text to the start of the paragraph
+        Transforms.insertText(editor, 'added text', {
+          at: { path: [0, 0], offset: 0 },
+        });
+
+        // The element should not be updated in the RichTextElements store
+        expect(RichTextElements.get(paragraphElement1.id)).toEqual(
+          paragraphElement1,
+        );
+      });
+    });
+
+    it('updates the element', () => {
+      // Create an editor with the plugin applied, containg an empty paragraph element
+      const editor = createEditor([
+        { ...paragraphElement1, children: [{ text: '' }] },
+      ]);
 
       // Add some text to the start of the paragraph
       Transforms.insertText(editor, 'added text', {
         at: { path: [0, 0], offset: 0 },
       });
 
-      // Should call the supplied API's update function
-      expect(updateElement).toHaveBeenCalled();
-      // Should call update with the element's ID
-      expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-      // Should call update with the updated children
-      const data = updateElement.mock.calls[0][1] as UpdateRTElementData;
-      expect(data.children).toEqual([{ text: 'added text' }]);
+      // The element should be updated in the RichTextElements store
+      expect(RichTextElements.get(paragraphElement1.id)).toEqual(
+        expect.objectContaining({
+          children: [{ text: 'added text' }],
+        }),
+      );
     });
 
-    it('updates the parent element children when text is removed', () => {
-      const updateElement = jest.fn();
+    it('ignores updates which include the `type` field', () => {
+      // Create an editor with the plugin applied, containg a paragraph element
+      const editor = createEditor([paragraphElement1]);
 
-      // Create an editor with the plugin applied,
-      // containg a paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([paragraphElement1]),
+      // Change the element type
+      Transforms.setNodes(
+        editor,
+        { type: headingElementConfig.type },
         {
-          ...api,
-          updateElement,
+          at: { path: [0, 0], offset: 0 },
         },
       );
 
-      // Remove the text from the paragraph
-      Transforms.delete(editor, {
-        unit: 'line',
+      // The element should no have been updated
+      expect(RichTextElements.get(paragraphElement1.id).type).toBe(
+        paragraphElement1.type,
+      );
+    });
+
+    it('updates the document revision', () => {
+      // Get the current document revision
+      const oldRevision = richTextDocument1.revision;
+
+      // Create an editor with the plugin applied, containg an empty paragraph element
+      const editor = createEditor([
+        { ...paragraphElement1, children: [{ text: '' }] },
+      ]);
+
+      // Add some text to the start of the paragraph
+      Transforms.insertText(editor, 'added text', {
         at: { path: [0, 0], offset: 0 },
       });
 
-      // Should call `updateElement` with the element's ID
-      expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-      // Should call update with the updated children
-      const data = updateElement.mock.calls[0][1] as UpdateRTElementData;
-      expect(data.children).toEqual([{ text: '' }]);
+      // Get the editor session
+      const session = useRichTextEditorStore.getState().sessions[SESSION_ID];
+
+      // Get the updated document
+      const document = RichTextDocuments.get(richTextDocument1.id);
+
+      // Document should have a new revision ID
+      expect(document.revision).not.toEqual(oldRevision);
+
+      // New revision should be added to editor session
+      expect(session.documentRevisions).toEqual([
+        oldRevision,
+        document.revision,
+      ]);
     });
   });
 
-  describe('insert node', () => {
-    describe('text node', () => {
-      it('updates the parent element children', () => {
-        const updateElement = jest.fn();
+  describe('delete element', () => {
+    describe('root level element', () => {
+      it('deletes the element', () => {
+        // Create an editor with the plugin applied, containg two paragraph elements
+        const editor = createEditor([paragraphElement1, paragraphElement2]);
 
-        // Create an editor with the plugin applied,
-        // containg an empty paragraph element.
-        const editor = withRichTextElementsApi(
-          createTestEditor([emptyParagraph]),
-          {
-            ...api,
-            updateElement,
-          },
-        );
+        // Delete the second paragraph element
+        Transforms.removeNodes(editor, { at: [1] });
 
-        // Insert a text node into the paragraph
-        Transforms.insertNodes(
-          editor,
-          { text: 'added text' },
-          {
-            at: { path: [0, 0], offset: 0 },
-          },
-        );
-
-        // Should call `updateElement` with the element's ID
-        expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-        // Should call `updateElement` with the updated children
-        const data = updateElement.mock.calls[0][1] as UpdateRTElementData;
-        expect(data.children).toEqual([{ text: '' }, { text: 'added text' }]);
-      });
-    });
-
-    describe('element node', () => {
-      it('creates an element', () => {
-        const createElement = jest.fn();
-
-        // Create an editor with the plugin applied,
-        // containg a paragraph element.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1]),
-          { ...api, createElement },
-        );
-
-        // Insert a new element
-        Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
-
-        // Should call `createElement` with the new element
-        const element = createElement.mock.calls[0][0] as RTBlockElement;
-        expect(element.id).toEqual(paragraphElement2.id);
+        // Element should be deleted in the RichTextElements store
+        expect(RichTextElements.get(paragraphElement2.id).deleted).toBe(true);
       });
 
-      describe('block element', () => {
-        it('adds root level elements to the document children', () => {
-          const setDocumentChildren = jest.fn();
+      it('updates the document revision', () => {
+        // Get the current document revision
+        const oldRevision = richTextDocument1.revision;
 
-          // Create an editor with the plugin applied,
-          // containg a paragraph element.
-          const editor = withRichTextElementsApi(
-            createTestEditor([paragraphElement1]),
-            { ...api, setDocumentChildren },
-          );
+        // Create an editor with the plugin applied, containg two paragraph elements
+        const editor = createEditor([paragraphElement1, paragraphElement2]);
 
-          // Insert a new root level element
-          Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
+        // Delete the second paragraph element
+        Transforms.removeNodes(editor, { at: [1] });
 
-          // Should call `setDocumentChildren` with the updated children
-          expect(setDocumentChildren.mock.calls[0][0]).toEqual([
-            paragraphElement1.id,
-            paragraphElement2.id,
-          ]);
-        });
-      });
-    });
-  });
+        // Get the editor session
+        const session = useRichTextEditorStore.getState().sessions[SESSION_ID];
 
-  describe('set node', () => {
-    describe('text node', () => {
-      it('updates the parent element children', () => {
-        const updateElement = jest.fn();
+        // Get the updated document
+        const document = RichTextDocuments.get(richTextDocument1.id);
 
-        // Create an editor with the plugin applied,
-        // containg a paragraph element.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1]),
-          { ...api, updateElement },
-        );
+        // Document should have a new revision ID
+        expect(document.revision).not.toEqual(oldRevision);
 
-        // Apply the 'bold' mark to the text
-        Transforms.setNodes(
-          editor,
-          { bold: true },
-          {
-            at: [0, 0],
-          },
-        );
-
-        // Should call `updateElement` with the element's ID
-        expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-        // Should call update with the updated children
-        const data = updateElement.mock.calls[0][1] as UpdateRTElementData;
-        expect(data.children).toEqual([
-          {
-            text: (paragraphElement1.children[0] as RTNode).text,
-            bold: true,
-          },
+        // New revision should be added to editor session
+        expect(session.documentRevisions).toEqual([
+          oldRevision,
+          document.revision,
         ]);
       });
-    });
 
-    describe('element node', () => {
-      it('updates the element properties', () => {
-        const updateElement = jest.fn();
+      it('udpates `children` on the rich text document', () => {
+        // Create an editor with the plugin applied, containg two paragraph elements
+        const editor = createEditor([paragraphElement1, paragraphElement2]);
 
-        // Create an editor with the plugin applied,
-        // containg a block equation element
-        const editor = withRichTextElementsApi(
-          createTestEditor([blockEquationElement1]),
-          { ...api, updateElement },
-        );
-
-        // Update the equation's expression
-        Transforms.setNodes<BlockEquationElement>(
-          editor,
-          { expression: 'F=ma' },
-          { at: [0] },
-        );
-
-        // Should call `updateElement` with the element's ID
-        expect(updateElement.mock.calls[0][0]).toBe(blockEquationElement1.id);
-        // Should call update with the updated children
-        expect(updateElement.mock.calls[0][1]).toEqual({ expression: 'F=ma' });
-      });
-    });
-  });
-
-  describe('remove node', () => {
-    describe('text node', () => {
-      it('updates the parent element children', () => {
-        const updateElement = jest.fn();
-
-        // Create an editor with the plugin applied, containing
-        // a paragraph element with two text nodes.
-        const editor = withRichTextElementsApi(
-          createTestEditor([
-            {
-              ...paragraphElement1,
-              children: [{ text: 'node 1' }, { text: 'node 2', bold: true }],
-            },
-          ]),
-          { ...api, updateElement },
-        );
-
-        // Remove the second text node
-        Transforms.removeNodes(editor, { at: [0, 1] });
-
-        // Should call `updateElement` with the element ID
-        expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-        // Should call `updateElement` with the updated children
-        expect(updateElement.mock.calls[0][1]).toEqual({
-          children: [{ text: 'node 1' }],
-        });
-      });
-    });
-
-    describe('element node', () => {
-      it('deletes the element', () => {
-        const deleteElement = jest.fn();
-
-        // Create an editor with the plugin applied, containing
-        // two paragraph elements.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1, paragraphElement2]),
-          { ...api, deleteElement },
-        );
-
-        // Remove the second paragraph
+        // Delete the second paragraph element
         Transforms.removeNodes(editor, { at: [1] });
 
-        // Should call `deleteElement` with the element ID
-        expect(deleteElement.mock.calls[0][0]).toBe(paragraphElement2.id);
-      });
-    });
-
-    describe('block element', () => {
-      it('remove root level element from the document children', () => {
-        const setDocumentChildren = jest.fn();
-
-        // Create an editor with the plugin applied,
-        // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1, paragraphElement2]),
-          { ...api, setDocumentChildren },
-        );
-
-        // Remove the second paragraph
-        Transforms.removeNodes(editor, { at: [1] });
-
-        // Should call `setDocumentChildren` with the updated children
-        expect(setDocumentChildren.mock.calls[0][0]).toEqual([
+        // Should update rich text document's `children` to include the
+        // new element.
+        expect(RichTextDocuments.get(richTextDocument1.id).children).toEqual([
           paragraphElement1.id,
         ]);
       });
-    });
-  });
 
-  describe('split node', () => {
-    it('updates the split element children', () => {
-      const updateElement = jest.fn();
+      describe('with updates paused', () => {
+        it('does nothing', () => {
+          // Create an editor with the plugin applied, containg two paragraph elements
+          const editor = createEditor([paragraphElement1, paragraphElement2]);
 
-      // Create an editor with the plugin applied,
-      // containg a paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([
-          { ...paragraphElement1, children: [{ text: 'onetwo' }] },
-        ]),
-        { ...api, updateElement },
-      );
+          // Pause updates on the editor session
+          pauseUpdates();
 
-      // Split the paragraph element between one/two
-      Transforms.splitNodes(editor, {
-        at: {
-          anchor: { path: [0, 0], offset: 3 },
-          focus: { path: [0, 0], offset: 3 },
-        },
-      });
+          // Delete the second paragraph element
+          Transforms.removeNodes(editor, { at: [1] });
 
-      // Should call `updateElement` with the element ID
-      expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-      // Should call `updateElement` with the updated children
-      expect(updateElement.mock.calls[0][1]).toEqual({
-        children: [{ text: 'one' }],
+          // Element should not be deleted in the RichTextElements store
+          expect(
+            RichTextElements.get(paragraphElement2.id).deleted,
+          ).toBeUndefined();
+        });
       });
     });
 
-    it('creates an element from the second half of the split', () => {
-      const createElement = jest.fn();
-
-      // Create an editor with the plugin applied,
-      // containg a paragraph element.
-      const editor = withRichTextElementsApi(
-        createTestEditor([
-          { ...paragraphElement1, children: [{ text: 'onetwo' }] },
-        ]),
-        { ...api, createElement },
-      );
-
-      // Split the paragraph element between one/two
-      Transforms.splitNodes(editor, {
-        at: {
-          anchor: { path: [0, 0], offset: 3 },
-          focus: { path: [0, 0], offset: 3 },
-        },
-      });
-
-      // Should call `createElement` with a new element
-      const element = createElement.mock.calls[0][0] as RTBlockElement;
-      // New element should have a new ID
-      expect(element.id).not.toBe(paragraphElement1.id);
-      // New element should contain the second half of the split children
-      expect(element.children).toEqual([{ text: 'two' }]);
-    });
-
-    describe('block element', () => {
-      it('adds root level elements to the document children', () => {
-        const setDocumentChildren = jest.fn();
-
-        // Create an editor with the plugin applied,
-        // containg a paragraph element.
-        const editor = withRichTextElementsApi(
-          createTestEditor([
-            { ...paragraphElement1, children: [{ text: 'onetwo' }] },
-          ]),
-          { ...api, setDocumentChildren },
-        );
-
-        // Split the paragraph element between one/two
-        Transforms.splitNodes(editor, {
-          at: {
-            anchor: { path: [0, 0], offset: 3 },
-            focus: { path: [0, 0], offset: 3 },
+    describe('nested element', () => {
+      it('deletes the element', () => {
+        // Create an editor with the plugin applied, containg a paragraph element
+        // with a link element as a child.
+        const editor = createEditor([
+          {
+            ...paragraphElement1,
+            children: [{ text: '' }, linkElement1, { text: '' }],
           },
-        });
+        ]);
 
-        // Should call `setDocumentChildren` with the added child ID
-        expect(setDocumentChildren.mock.calls[0][0].length).toBe(2);
-      });
-    });
-  });
+        // Delete the link element
+        Transforms.removeNodes(editor, { at: [0, 1] });
 
-  describe('merge node', () => {
-    describe('element node', () => {
-      it('updates the element into which the other was merged', () => {
-        const updateElement = jest.fn();
-
-        // Create an editor with the plugin applied,
-        // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1, paragraphElement2]),
-          { ...api, updateElement },
-        );
-
-        // Merge the second paragraph element into the first one
-        Transforms.mergeNodes(editor, {
-          at: [1],
-        });
-
-        // Should call `updateElement` with the first element's ID
-        expect(updateElement.mock.calls[0][0]).toBe(paragraphElement1.id);
-        // Should call `updateElement` with the merged children
-        expect(updateElement.mock.calls[0][1]).toEqual({
-          children: [
-            // The text nodes are seperate as they are merged
-            // in a second merge operation.
-            ...paragraphElement1.children,
-            ...paragraphElement2.children,
-          ],
-        });
+        // Element should be deleted in the RichTextElements store
+        expect(RichTextElements.get(linkElement1.id).deleted).toBe(true);
       });
 
-      it('deletes the merged element', () => {
-        const deleteElement = jest.fn();
+      it('updates the document revision', () => {
+        // Get the current document revision
+        const oldRevision = richTextDocument1.revision;
 
-        // Create an editor with the plugin applied,
-        // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
-          createTestEditor([paragraphElement1, paragraphElement2]),
-          { ...api, deleteElement },
-        );
+        // Create an editor with the plugin applied, containg a paragraph element
+        // with a link element as a child.
+        const editor = createEditor([
+          {
+            ...paragraphElement1,
+            children: [{ text: '' }, linkElement1, { text: '' }],
+          },
+        ]);
 
-        // Merge the second paragraph element into the first one
-        Transforms.mergeNodes(editor, {
-          at: [1],
-        });
+        // Delete the link element
+        Transforms.removeNodes(editor, { at: [0, 1] });
 
-        // Should call `deleteElement` with the second element's ID
-        expect(deleteElement.mock.calls[0][0]).toBe(paragraphElement2.id);
+        // Get the editor session
+        const session = useRichTextEditorStore.getState().sessions[SESSION_ID];
+
+        // Get the updated document
+        const document = RichTextDocuments.get(richTextDocument1.id);
+
+        // Document should have a new revision ID
+        expect(document.revision).not.toEqual(oldRevision);
+
+        // New revision should be added to editor session
+        expect(session.documentRevisions).toEqual([
+          oldRevision,
+          document.revision,
+        ]);
       });
 
-      describe('block element', () => {
-        it('removes root level elements from the document children', () => {
-          const setDocumentChildren = jest.fn();
-
-          // Create an editor with the plugin applied,
-          // containg a paragraph element.
-          const editor = withRichTextElementsApi(
-            createTestEditor([paragraphElement1, paragraphElement2]),
-            { ...api, setDocumentChildren },
-          );
-
-          // Merge the second paragraph into the first one
-          Transforms.mergeNodes(editor, {
-            at: [1],
-          });
-
-          // Should call `setDocumentChildren` with only the first element ID
-          expect(setDocumentChildren.mock.calls[0][0]).toEqual([
-            paragraphElement1.id,
+      describe('with updates paused', () => {
+        it('does nothing', () => {
+          // Create an editor with the plugin applied, containg a paragraph element
+          // with a link element as a child.
+          const editor = createEditor([
+            {
+              ...paragraphElement1,
+              children: [{ text: '' }, linkElement1, { text: '' }],
+            },
           ]);
-        });
-      });
-    });
 
-    describe('text node', () => {
-      it('updates the parent element children', () => {
-        const updateElement = jest.fn();
+          // Pause updates on the editor session
+          pauseUpdates();
 
-        // Create an editor with the plugin applied,
-        // containg two paragraph elements.
-        const editor = withRichTextElementsApi(
-          createTestEditor([
-            { ...paragraphElement1, children: [{ text: 'one' }] },
-            { ...paragraphElement2, children: [{ text: 'two' }] },
-          ]),
-          { ...api, updateElement },
-        );
+          // Delete the link element
+          Transforms.removeNodes(editor, { at: [0, 1] });
 
-        // Merge the second paragraph element into the first one.
-        // This will cause the text nodes to be merged.
-        Transforms.mergeNodes(editor, {
-          at: [1],
-        });
-
-        // The call to `updateElement` involving the merging of the
-        // text nodes is the second call, as the paragraph elements
-        // are merged first.
-        // Should call `updateElement` with the first element's ID
-        expect(updateElement.mock.calls[1][0]).toBe(paragraphElement1.id);
-        // Should call `updateElement` with the merged children
-        expect(updateElement.mock.calls[1][1]).toEqual({
-          children: [{ text: 'onetwo' }],
+          // Element should not be deleted in the RichTextElements store
+          expect(RichTextElements.get(linkElement1.id).deleted).toBeUndefined();
         });
       });
     });

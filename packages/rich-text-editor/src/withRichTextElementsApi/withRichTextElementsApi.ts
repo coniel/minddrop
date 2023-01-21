@@ -1,233 +1,132 @@
-import { RTElement, UpdateRTElementData } from '@minddrop/rich-text';
-import { Node, Path, Text } from 'slate';
+import { Core } from '@minddrop/core';
+import { generateId } from '@minddrop/utils';
 import { Editor } from '../types';
-import { getElementAbove } from '../utils';
-
-export interface RTElementsApi {
-  createElement(element: RTElement): void;
-  updateElement(elementId: string, changes: UpdateRTElementData): void;
-  deleteElement(elementId: string): void;
-  setDocumentChildren(children: string[]): void;
-}
+import { withOperations } from '../withOperations';
+import { useRichTextEditorStore } from '../useRichTextEditorStore';
+import {
+  RichTextDocuments,
+  RichTextElements,
+  RTElement,
+  UpdateRTElementData,
+} from '@minddrop/rich-text';
 
 /**
- * Creates, updates, and deletes rich text elements via the supplied
- * API as the document is modified. Updates the document's children
- * when root level elements are added, removed, or moved.
+ * Generates a new document revision ID and adds it to the
+ * editor session's `documentRevisions`.
+ *
+ * @param sessionId - The editor session ID.
+ */
+function updateDocumentRevision(
+  core: Core,
+  sessionId: string,
+  skipUpdate?: boolean,
+) {
+  // Get the editor session
+  const session = useRichTextEditorStore.getState().sessions[sessionId];
+  // Generate a new revision ID
+  const revision = generateId();
+
+  // Add the revision to the session's document revisions
+  useRichTextEditorStore.getState().addDocumentRevision(sessionId, revision);
+
+  if (!skipUpdate) {
+    // Update the document
+    RichTextDocuments.update(core, session.documentId, { revision });
+  }
+
+  return revision;
+}
+
+function updatesPaused(sessionId: string) {
+  // Get the `pauseUpdates` state from the editor session
+  const { pauseUpdates } =
+    useRichTextEditorStore.getState().sessions[sessionId];
+
+  return pauseUpdates;
+}
+
+const createApi = (core: Core, sessionId: string) => ({
+  setDocumentChildren: (children: string[]) => {
+    if (updatesPaused(sessionId)) {
+      // If updates are paused for the editor session,
+      // do nothing.
+      return;
+    }
+
+    // Get the editor session
+    const session = useRichTextEditorStore.getState().sessions[sessionId];
+
+    // Create a new document revision without updating
+    // the document.
+    const revision = updateDocumentRevision(core, sessionId, true);
+
+    // Update the document's children and revision
+    RichTextDocuments.update(core, session.documentId, { children, revision });
+  },
+  createElement: (element: RTElement) => {
+    if (updatesPaused(sessionId)) {
+      // If updates are paused for the editor session,
+      // do nothing.
+      return;
+    }
+
+    // Check if the element exists in the RichTextElements store
+    const existingElement = RichTextElements.store.get(element.id);
+
+    if (existingElement && existingElement.deleted) {
+      // If the element exists and is deleted, restore it
+      RichTextElements.restore(core, element.id);
+    } else {
+      // Create the element
+      RichTextElements.create(core, element.type, element);
+    }
+  },
+  updateElement: (id: string, data: UpdateRTElementData) => {
+    if (updatesPaused(sessionId)) {
+      // If updates are paused for the editor session,
+      // do nothing.
+      return;
+    }
+
+    if ('type' in data) {
+      // Ignore updates invloving the `type` field as the
+      // update is handled as part of the element conversion.
+      return;
+    }
+
+    // Update the element
+    RichTextElements.update(core, id, data);
+
+    // Update the document revision
+    updateDocumentRevision(core, sessionId);
+  },
+  deleteElement: (id: string) => {
+    if (updatesPaused(sessionId)) {
+      // If updates are paused for the editor session,
+      // do nothing.
+      return;
+    }
+
+    // Delete the element
+    RichTextElements.delete(core, id);
+  },
+});
+
+/**
+ * Synchronizes rich text element create, update, and delete,
+ * events, as well as document children changes with the rich
+ * text editor store.
  *
  * @param editor An editor instance.
- * @param api The API used to modify the elements and document.
+ * @param sessionId The ID of the rich text editor session.
  * @returns The editor instance with the plugin behaviour.
  */
 export function withRichTextElementsApi(
+  core: Core,
   editor: Editor,
-  api: RTElementsApi,
+  sessionId: string,
 ): Editor {
-  const { apply } = editor;
-
-  // eslint-disable-next-line no-param-reassign
-  editor.apply = (operation) => {
-    // Text was inserted or removed
-    if (operation.type === 'insert_text' || operation.type === 'remove_text') {
-      // Apply the operation to actually update the text
-      // in the element.
-      apply(operation);
-
-      // Get the affected element entry
-      const element = getElementAbove(editor, { at: operation.path });
-
-      // Update the element's children
-      api.updateElement(element[0].id, { children: element[0].children });
-
-      return;
-    }
-
-    // A node was inserted
-    if (operation.type === 'insert_node') {
-      // Apply the operation to actually insert the node
-      apply(operation);
-
-      // Get the node's parent element
-      const parent = getElementAbove(editor, { at: operation.path });
-
-      // If the inserted node is a text node, update the parent element
-      if (Text.isText(operation.node)) {
-        // Update the parent element
-        api.updateElement(parent[0].id, { children: parent[0].children });
-
-        return;
-      }
-
-      // Create the element.
-      api.createElement(operation.node as RTElement);
-
-      // If the element was inserted at the root level, update the document children
-      if (!parent) {
-        api.setDocumentChildren(
-          editor.children.map((child) => (child as RTElement).id),
-        );
-      }
-
-      return;
-    }
-
-    // Data was set on an existing node
-    if (operation.type === 'set_node') {
-      // Apply the operation to actually set the node data
-      apply(operation);
-
-      // Get the affected node
-      const node = Node.get(editor, operation.path);
-      // Get the parent element entry
-      const parent = getElementAbove(editor, { at: operation.path });
-
-      if (Text.isText(node)) {
-        // If the node is a text node, update the parent element's children
-        api.updateElement(parent[0].id, { children: parent[0].children });
-
-        return;
-      }
-
-      // The affected node is an element
-      const element = node as RTElement;
-
-      // Update the element, setting its updated properties
-      api.updateElement(
-        element.id,
-        operation.newProperties as UpdateRTElementData,
-      );
-
-      return;
-    }
-
-    // A node was removed
-    if (operation.type === 'remove_node') {
-      apply(operation);
-
-      const parent = Node.get(editor, Path.parent(operation.path));
-
-      // If the node is a text node, update the parent element's children
-      if (Text.isText(operation.node)) {
-        // Parent is an element
-        const element = parent as RTElement;
-        // Update the parent element's children
-        api.updateElement(element.id, { children: element.children });
-
-        return;
-      }
-
-      // Node is an element
-      const element = operation.node as RTElement;
-
-      // Delete the element
-      api.deleteElement(element.id);
-
-      // If the element was at the root level, update the document children
-      if (operation.path.length === 1) {
-        api.setDocumentChildren(
-          editor.children.map((child) => (child as RTElement).id),
-        );
-      }
-
-      return;
-    }
-
-    // A node was split into two nodes
-    if (operation.type === 'split_node') {
-      // Apply the operation, so that the node is actually split
-      apply(operation);
-
-      // Get the node which was split
-      const splitNode = Node.get(editor, operation.path);
-
-      if (Text.isText(splitNode)) {
-        // Ignore split text nodes, their parent is updated by
-        // the element split operation following this one.
-        return;
-      }
-
-      // The split node is an element
-      const splitElement = splitNode as RTElement;
-
-      // Update the element which aws split
-      api.updateElement(splitElement.id, { children: splitElement.children });
-
-      // Get the element created as a result of the split
-      const newElement = Node.get(
-        editor,
-        Path.next(operation.path),
-      ) as RTElement;
-
-      // Create the new element
-      api.createElement(newElement);
-
-      // If the new element is a root level element, update
-      // the document children.
-      if (operation.path.length === 1) {
-        api.setDocumentChildren(
-          editor.children.map((child) => (child as RTElement).id),
-        );
-      }
-
-      return;
-    }
-
-    // A node was merged into the node above it
-    if (operation.type === 'merge_node') {
-      // Apply the operation to actaully merge the nodes
-      apply(operation);
-
-      // Get the merged-into node
-      const mergedIntoNode = Node.get(editor, Path.previous(operation.path));
-
-      // If the merged-into node is a text node, update
-      // the parent element's children.
-      if (Text.isText(mergedIntoNode)) {
-        // Get the parent element entry
-        const parent = getElementAbove(editor, {
-          at: Path.previous(operation.path),
-        });
-
-        // Update the parent element's children
-        api.updateElement(parent[0].id, { children: parent[0].children });
-
-        return;
-      }
-
-      // Merged-into node is an element
-      const mergedIntoElement = mergedIntoNode as RTElement;
-
-      // Update the element's children
-      api.updateElement(mergedIntoElement.id, {
-        children: mergedIntoElement.children,
-      });
-
-      // The merged node is an element
-      const mergedElement = operation.properties as RTElement;
-
-      // Delete the merged element
-      api.deleteElement(mergedElement.id);
-
-      // If the merged element is a root level element, update
-      // the document children.
-      if (operation.path.length === 1) {
-        api.setDocumentChildren(
-          editor.children.map((child) => (child as RTElement).id),
-        );
-      }
-
-      return;
-    }
-
-    // operation.type === 'move_node'
-    // Update the old parent, removing the element.
-    // Update its new parent, adding the element.
-    // If the element was moved within the document root
-    // level, update the document.
-
-    // Call the default apply method
-    apply(operation);
-  };
-
-  return editor;
+  // Add the rich text elements API plugin to the
+  // editor with the configured API.
+  return withOperations(editor, createApi(core, sessionId));
 }

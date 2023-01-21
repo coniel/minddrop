@@ -1,7 +1,7 @@
 import { Core, DataInsert } from '@minddrop/core';
 import { TypedResourceApi } from '@minddrop/resources';
 import { RTBlockElementConfig } from './RTBlockElementConfig.types';
-import { RTBlockElement, RTElement, RTElementMap } from './RTElement.types';
+import { RTElement, RTElementMap } from './RTElement.types';
 import {
   BaseCreateRTElementDocumentData,
   BaseUpdateRTElementDocumentData,
@@ -147,7 +147,7 @@ export interface RTElementsApi
   ): RTElement<TTypeData>;
 
   /**
-   * Updates a rich text element. Dispatches a `rich-text:elemet:update`
+   * Updates a rich text element. Dispatches a `rich-text:element:update`
    * event.
    *
    * Returns the updated element.
@@ -264,28 +264,6 @@ export interface RTElementsApi
     type: string,
     data?: DataInsert | RTFragment,
   ): Partial<RTElement<TData>>;
-
-  /**
-   * Converts a rich text block element from one type to another.
-   *
-   * @param element - The element to convert.
-   * @param type - The element type to convert to.
-   * @returns The converted element.
-   *
-   * @throws ResourceTypeNotRegistered
-   * Thrown if the current or new element type is not registered
-   *
-   * @throws InvalidParameterError
-   * Thrown if the either the element or the new element type are
-   * not 'block' level elements.
-   *
-   * @throws ResourceValidationError
-   * Thrown if the resulting rich text element is invalid.
-   */
-  convert<TTypeData extends RTElementDocumentTypeData = {}>(
-    element: RTBlockElement,
-    type: string,
-  ): RTElement<TTypeData>;
 
   /* ************************** */
   /* addEventListener overloads */

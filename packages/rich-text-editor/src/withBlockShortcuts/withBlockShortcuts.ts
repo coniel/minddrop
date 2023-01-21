@@ -8,6 +8,7 @@ import {
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
 import { Transforms } from '../Transforms';
+import { Core } from '@minddrop/core';
 
 /**
  * Adds support for block element shortcuts, enabling
@@ -18,6 +19,7 @@ import { Transforms } from '../Transforms';
  * @returns The editor instance with the plugin behaviour.
  */
 export function withBlockShortcuts(
+  core: Core,
   editor: Editor,
   configs: RTElementConfig[],
 ): Editor {
@@ -42,7 +44,7 @@ export function withBlockShortcuts(
         (nextMap, shortcut) => ({
           // Shortcut converts the element into the config's element type
           [shortcut]: (element) =>
-            RichTextElements.convert(element, config.type),
+            RichTextElements.convert(core, element.id, config.type),
           ...nextMap,
         }),
         map,

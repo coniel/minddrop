@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+import { Core } from '@minddrop/core';
 import { RichTextElements, RTBlockElement } from '@minddrop/rich-text';
 import { Editor as SlateEditor } from 'slate';
 import { Transforms } from '../Transforms';
@@ -15,6 +16,7 @@ import { getElementAbove } from '../utils';
  * @returns The editor instance with the plugin behaviour applied.
  */
 export function withBlockReset(
+  core: Core,
   editor: Editor,
   defaultType: string = 'paragraph',
 ): Editor {
@@ -35,11 +37,19 @@ export function withBlockReset(
     ) {
       // Convert the element to the default type
       const converted = RichTextElements.convert(
-        element[0] as RTBlockElement,
+        core,
+        element[0].id,
         defaultType,
       );
+
+      // Unset the current element data other than type and ID
+      Transforms.unsetNodes(
+        editor,
+        Object.keys(element[0]).filter((key) => key !== 'id' && key !== 'type'),
+      );
+
       // Set the converted element data
-      Transforms.setNodes(editor, converted);
+      Transforms.setNodes(editor, converted as RTBlockElement);
     } else {
       // Insert a break as normal
       insertBreak();
@@ -58,11 +68,19 @@ export function withBlockReset(
     ) {
       // Convert the element to the default type
       const converted = RichTextElements.convert(
-        element[0] as RTBlockElement,
+        core,
+        element[0].id,
         defaultType,
       );
+
+      // Unset the current element data other than type and ID
+      Transforms.unsetNodes(
+        editor,
+        Object.keys(element[0]).filter((key) => key !== 'id' && key !== 'type'),
+      );
+
       // Set the converted element data
-      Transforms.setNodes(editor, converted);
+      Transforms.setNodes(editor, converted as RTBlockElement);
     } else {
       deleteBackward(unit);
     }

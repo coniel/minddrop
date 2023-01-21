@@ -1,5 +1,8 @@
-import { ResourceReferences } from '@minddrop/resources';
-import { RichTextDocuments, RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
+import {
+  RichTextDocuments,
+  RichTextElements,
+  RICH_TEXT_TEST_DATA,
+} from '@minddrop/rich-text';
 import { act, renderHook } from '@minddrop/test-utils';
 import { generateId } from '@minddrop/utils';
 import { setup, cleanup, core } from '../test-utils';
@@ -20,35 +23,69 @@ describe('useExternalUpdates', () => {
 
   afterEach(cleanup);
 
-  it('resets the editor value if it has changed externally', () => {
-    // Create an editor session
-    const [editor, sessionId] = createEditorSession();
+  describe('external update', () => {
+    it('resets the editor value', () => {
+      // Create an editor session
+      const [editor, sessionId] = createEditorSession();
 
-    // Run the hook for the editor session
-    renderHook(() =>
-      useExternalUpdates(editor, richTextDocument1.id, sessionId),
-    );
+      // Run the hook for the editor session
+      renderHook(() => useExternalUpdates(editor, sessionId));
 
-    act(() => {
-      // Modify the value of the document as well a its revision
-      RichTextDocuments.update(core, richTextDocument1.id, {
-        children: [paragraphElement2.id],
+      act(() => {
+        // Modify the value of the document as well a its revision
+        RichTextDocuments.update(core, richTextDocument1.id, {
+          children: [paragraphElement2.id],
+        });
       });
+
+      // Get the updated paragraph inserted element
+      const insertedParagraph = RichTextElements.get(paragraphElement2.id);
+
+      // Editor children should be reset to the updated value
+      expect(editor.children).toEqual([insertedParagraph]);
     });
 
-    // Editor children should be reset to the updated value
-    expect(editor.children).toEqual([
-      {
-        ...paragraphElement2,
-        parents: [
-          ...paragraphElement2.parents,
-          ResourceReferences.generate(
-            'rich-text:document',
-            richTextDocument1.id,
-          ),
-        ],
-      },
-    ]);
+    it('does not trigger updates', () => {
+      // Create an editor session
+      const [editor, sessionId] = createEditorSession();
+
+      // Run the hook for the editor session
+      renderHook(() => useExternalUpdates(editor, sessionId));
+
+      act(() => {
+        // Modify the value of the document as well a its revision
+        RichTextDocuments.update(core, richTextDocument1.id, {
+          children: [paragraphElement2.id],
+          revision: 'original-revision',
+        });
+      });
+
+      // Get the updated document
+      const document = RichTextDocuments.get(richTextDocument1.id);
+
+      // Document should still have the revision set above
+      expect(document.revision).toEqual('original-revision');
+    });
+
+    it('resumes editor session updates', () => {
+      // Create an editor session
+      const [editor, sessionId] = createEditorSession();
+
+      // Run the hook for the editor session
+      renderHook(() => useExternalUpdates(editor, sessionId));
+
+      act(() => {
+        // Modify the value of the document as well a its revision
+        RichTextDocuments.update(core, richTextDocument1.id, {
+          children: [paragraphElement2.id],
+        });
+      });
+
+      // Editor session updates should not be paused
+      expect(
+        useRichTextEditorStore.getState().sessions[sessionId].pauseUpdates,
+      ).toBeFalsy();
+    });
   });
 
   it('does not reset if the value has changed within the editor', () => {
@@ -56,9 +93,7 @@ describe('useExternalUpdates', () => {
     const [editor, sessionId] = createEditorSession();
 
     // Run the hook for the editor session
-    renderHook(() =>
-      useExternalUpdates(editor, richTextDocument1.id, sessionId),
-    );
+    renderHook(() => useExternalUpdates(editor, sessionId));
 
     // Create a revision ID
     const revision = generateId();
@@ -79,32 +114,5 @@ describe('useExternalUpdates', () => {
 
     // Editor children should not be reset (initial value was empty)
     expect(editor.children).toEqual([]);
-  });
-
-  it('resets the session changes', () => {
-    // Create an editor session
-    const [editor, sessionId] = createEditorSession();
-
-    // Run the hook for the editor session
-    renderHook(() =>
-      useExternalUpdates(editor, richTextDocument1.id, sessionId),
-    );
-
-    act(() => {
-      // Modify the value of the document
-      RichTextDocuments.update(core, richTextDocument1.id, {
-        children: [paragraphElement2.id],
-      });
-    });
-
-    // Get the editor session data
-    const session = useRichTextEditorStore.getState().sessions[sessionId];
-
-    // Session should not contain any changes
-    expect(session.createdElements).toEqual({});
-    expect(session.creationOrder).toEqual([]);
-    expect(session.updatedElements).toEqual({});
-    expect(session.deletedElements).toEqual([]);
-    expect(session.documentChildren).toEqual([]);
   });
 });

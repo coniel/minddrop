@@ -13,7 +13,7 @@ const App: React.FC = () => {
     }
 
     getAppId();
-  });
+  }, []);
 
   if (!appId) {
     return <div className="loading-view">Loading...</div>;

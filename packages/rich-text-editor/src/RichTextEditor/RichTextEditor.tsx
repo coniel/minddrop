@@ -4,11 +4,11 @@ import { Editable, Slate } from 'slate-react';
 import { useEditorSession } from '../useEditorSession';
 import { useEditorInitialValue } from '../useEditorInitialValue';
 import { createRenderElement } from '../utils';
-import { useDebouncedUpdates } from '../useDebouncedUpdates';
 import { useExternalUpdates } from '../useExternalUpdates';
-import './RichTextEditor.css';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withBlockReset } from '../withBlockReset';
+import { useCore } from '@minddrop/core';
+import './RichTextEditor.css';
 
 export interface RichTextEditorProps {
   /**
@@ -20,6 +20,7 @@ export interface RichTextEditorProps {
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   documentId,
 }) => {
+  const core = useCore('rich-text-editor');
   // Create a session based editor instance
   const [editor, sessionId] = useEditorSession(documentId);
   // Create the editor's initial value
@@ -27,10 +28,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // Get the configuration objects of all registered rich
   // text element types.
   const configs = useRichTextElementTypeConfigs();
-  // Update the document and its elements as it is edited
-  useDebouncedUpdates(documentId, sessionId);
   // Reset the editor content when changed externaly
-  useExternalUpdates(editor, documentId, sessionId);
+  useExternalUpdates(editor, sessionId);
   // Create a renderElement function using the registered
   // element type configuration objects.
   const renderElement = useMemo(
@@ -39,7 +38,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   );
   // Add plugins to editor
   const editorWithPlugins = useMemo(
-    () => withBlockReset(withBlockShortcuts(editor, configs)),
+    () => withBlockReset(core, withBlockShortcuts(core, editor, configs)),
     [editor, configs.length],
   );
 
