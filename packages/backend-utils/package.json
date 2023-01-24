@@ -1,6 +1,6 @@
 {
   "name": "@minddrop/backend-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@devmehq/open-graph-extractor": "^1.0.4",
-    "@minddrop/files": "^0.2.0",
-    "@minddrop/utils": "^0.5.0",
+    "@minddrop/files": "^0.2.1",
+    "@minddrop/utils": "^0.5.1",
     "axios": "^0.27.2",
     "is-url": "^1.2.4",
     "metascraper": "^5.29.8",

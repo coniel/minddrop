@@ -1,6 +1,6 @@
 {
   "name": "@minddrop/pouchdb",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -26,8 +26,8 @@
     "wait": "^0.4.2"
   },
   "dependencies": {
-    "@minddrop/core": "^0.4.0",
-    "@minddrop/resources": "^0.1.0",
+    "@minddrop/core": "^0.4.1",
+    "@minddrop/resources": "^0.2.0",
     "pouchdb": "^7.2.2"
   }
 }
