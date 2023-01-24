@@ -1,10 +1,11 @@
 import React from 'react';
+import { ReactEditor, useSlate } from 'slate-react';
+import { mapPropsToClasses } from '@minddrop/utils';
 import { Icon } from '@minddrop/ui';
+import { Transforms } from '../Transforms';
+import { ElementPlaceholderText } from '../ElementPlaceholderText';
 import { ToDoElement, ToDoElementProps } from './ToDoElement.types';
 import './ToDoElementComponent.css';
-import { ReactEditor, useSlate } from 'slate-react';
-import { Transforms } from '../Transforms';
-import { mapPropsToClasses } from '@minddrop/utils';
 
 export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
   children,
@@ -43,7 +44,10 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
           }
         />
       </div>
-      <div className="rich-text-content">{children}</div>
+      <div className="rich-text-content">
+        <ElementPlaceholderText element={element} text="To-do" />
+        {children}
+      </div>
     </div>
   );
 };
