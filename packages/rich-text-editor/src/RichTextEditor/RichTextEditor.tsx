@@ -15,10 +15,22 @@ export interface RichTextEditorProps {
    * The ID of the rich text document to edit.
    */
   documentId: string;
+
+  /**
+   * Callback fired when the editor is focused.
+   */
+  onFocus: React.FocusEventHandler<HTMLDivElement>;
+
+  /**
+   * Callback fired when the editor is blured.
+   */
+  onBlur: React.FocusEventHandler<HTMLDivElement>;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   documentId,
+  onFocus,
+  onBlur,
 }) => {
   const core = useCore('rich-text-editor');
   // Create a session based editor instance
@@ -46,7 +58,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     // The editor does nothing `onChange` because updates are handled
     // by the `useEditorSession` hook.
     <Slate editor={editorWithPlugins} value={initialValue}>
-      <Editable className="editor" renderElement={renderElement} />
+      <Editable
+        className="editor"
+        renderElement={renderElement}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
     </Slate>
   );
 };
