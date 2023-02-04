@@ -75,7 +75,7 @@ export interface TopicsApi {
    * @param filters Filters to filter to the topics by, only supported when getting multiple topics.
    * @returns The requested topic(s).
    */
-  get(topicId: string): Topic | null;
+  get(topicId: string): Topic;
   get(topicIds: string[], filters?: TopicFilters): TopicMap;
 
   /**
