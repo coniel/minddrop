@@ -26,7 +26,7 @@ export const TextDropComponent: FC<TextDropComponentProps> = ({
   // Drag and drop handling
   const { onDragStart } = useDraggable(selectionItem);
   // Selection handling
-  const { selected, onClick } = useSelectable(selectionItem);
+  const { selected, onClick, clearSelection } = useSelectable(selectionItem);
   const [draggable, setDraggable] = useState(true);
 
   return (
@@ -41,6 +41,7 @@ export const TextDropComponent: FC<TextDropComponentProps> = ({
         documentId={richTextDocument}
         onFocus={() => {
           setDraggable(false);
+          clearSelection();
         }}
         onBlur={() => {
           setDraggable(true);
