@@ -7,6 +7,7 @@ import { select } from '../select';
 import { isSelected } from '../isSelected';
 import { removeFromSelection } from '../removeFromSelection';
 import { addToSelection } from '../addToSelection';
+import { clearSelection } from '../clearSelection';
 
 export interface SelectionUtils {
   /**
@@ -37,6 +38,11 @@ export interface SelectionUtils {
    * current selection.
    */
   select(): void;
+
+  /**
+   * Clears the current selection.
+   */
+  clearSelection(): void;
 }
 
 /**
@@ -85,11 +91,14 @@ export function useSelectable(item: SelectionItem): SelectionUtils {
 
   const selectItem = useCallback(() => select(core, [item]), [core, item]);
 
+  const clear = useCallback(() => clearSelection(core), [core]);
+
   return {
     selected: containsSelectionItem(selection, item),
     onClick,
     addToSelection: addItemToSelection,
     removeFromSelection: removeItemFromSelection,
     select: selectItem,
+    clearSelection: clear,
   };
 }

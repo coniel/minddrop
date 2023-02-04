@@ -147,7 +147,7 @@ describe('useSelectable', () => {
     });
   });
 
-  describe('remove from selection', () => {
+  describe('removeFromSelection', () => {
     it('removes the item from the selection', () => {
       // Add an initial selection containing the item
       // as well as a second one.
@@ -206,6 +206,25 @@ describe('useSelectable', () => {
       expect(useSelectionStore.getState().selectedItems).toEqual([
         selectedDrop1,
       ]);
+    });
+  });
+
+  describe('clearSelection', () => {
+    it('clears the selection', () => {
+      // Add selected items
+      useSelectionStore
+        .getState()
+        .addSelectedItems([selectedDrop1, selectedDrop2]);
+
+      const { result } = init();
+
+      act(() => {
+        // Clear selection
+        result.current.clearSelection();
+      });
+
+      // Selection should be cleared
+      expect(useSelectionStore.getState().selectedItems).toEqual([]);
     });
   });
 });
