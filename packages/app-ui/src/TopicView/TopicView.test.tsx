@@ -25,6 +25,9 @@ const clipboardEvent = {
     clearData: jest.fn(),
     setData: jest.fn(),
   },
+  target: {
+    tagName: 'BODY',
+  },
 };
 
 describe('<TopicView />', () => {
@@ -163,8 +166,40 @@ describe('<TopicView />', () => {
         fireEvent.copy(document, clipboardEvent);
       });
 
-      // Should initialize selection copy
+      // Should copy selection
       expect(Selection.copy).toHaveBeenCalled();
+    });
+
+    it('ignores events with INPUT as target', () => {
+      jest.spyOn(Selection, 'copy');
+      setup();
+
+      act(() => {
+        // Fire copy event with an INPUT at its target
+        fireEvent.copy(document, {
+          ...clipboardEvent,
+          target: { tagName: 'INPUT' },
+        });
+      });
+
+      // Should not copy selection
+      expect(Selection.copy).not.toHaveBeenCalled();
+    });
+
+    it('ignores events with SPAN as target', () => {
+      jest.spyOn(Selection, 'copy');
+      setup();
+
+      act(() => {
+        // Fire copy event with an SPAN at its target
+        fireEvent.copy(document, {
+          ...clipboardEvent,
+          target: { tagName: 'SPAN' },
+        });
+      });
+
+      // Should not copy selection
+      expect(Selection.copy).not.toHaveBeenCalled();
     });
   });
 
@@ -184,7 +219,7 @@ describe('<TopicView />', () => {
         fireEvent.cut(document, clipboardEvent);
       });
 
-      // Should initialize selection cut
+      // Should cut selection
       expect(Selection.cut).toHaveBeenCalled();
     });
 
@@ -205,6 +240,38 @@ describe('<TopicView />', () => {
       const topic = Topics.get(tSixDropsView.topic);
       expect(topic.drops.includes(drop1.id)).toBe(false);
     });
+
+    it('ignores events with INPUT as target', () => {
+      jest.spyOn(Selection, 'cut');
+      setup();
+
+      act(() => {
+        // Fire cut event with an INPUT at its target
+        fireEvent.cut(document, {
+          ...clipboardEvent,
+          target: { tagName: 'INPUT' },
+        });
+      });
+
+      // Should not cut selection
+      expect(Selection.cut).not.toHaveBeenCalled();
+    });
+
+    it('ignores events with SPAN as target', () => {
+      jest.spyOn(Selection, 'cut');
+      setup();
+
+      act(() => {
+        // Fire cut event with an SPAN at its target
+        fireEvent.cut(document, {
+          ...clipboardEvent,
+          target: { tagName: 'SPAN' },
+        });
+      });
+
+      // Should not cut selection
+      expect(Selection.cut).not.toHaveBeenCalled();
+    });
   });
 
   it('inserts data on paste', () => {
@@ -212,9 +279,9 @@ describe('<TopicView />', () => {
     setup();
 
     const clipboardData = {
-      types: [],
+      types: [] as string[],
       data: {},
-      getData: (key) => clipboardData.data[key],
+      getData: (key: string) => clipboardData.data[key],
     };
     const event = {
       target: {
@@ -222,11 +289,11 @@ describe('<TopicView />', () => {
       },
       preventDefault: jest.fn(),
       clipboardData: {
-        types: [],
+        types: [] as string[],
         data: {},
-        getData: (key) => event.clipboardData.data[key],
+        getData: (key: string) => event.clipboardData.data[key],
         clearData: jest.fn(),
-        setData: (key, value) => {
+        setData: (key: string, value: string) => {
           event.clipboardData.data[key] = value;
           event.clipboardData.types.push(key);
         },
@@ -268,18 +335,18 @@ describe('<TopicView />', () => {
     const clipboardData = {
       types: [],
       data: {},
-      getData: (key) => clipboardData.data[key],
+      getData: (key: string) => clipboardData.data[key],
     };
     const event = {
       target: {
         tagName: 'INPUT',
       },
       clipboardData: {
-        types: [],
+        types: [] as string[],
         data: {},
-        getData: (key) => event.clipboardData.data[key],
+        getData: (key: string) => event.clipboardData.data[key],
         clearData: jest.fn(),
-        setData: (key, value) => {
+        setData: (key: string, value: string) => {
           event.clipboardData.data[key] = value;
           event.clipboardData.types.push(key);
         },

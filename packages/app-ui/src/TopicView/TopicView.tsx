@@ -25,6 +25,16 @@ export interface TopicViewProps {
   topicId: string;
 }
 
+/**
+ * Returns `true` if the target of a clipboard event is an
+ * input or rich text editor node.
+ */
+function isTextFieldEvent(event: ClipboardEvent) {
+  const target = event.target as HTMLElement;
+
+  return target.tagName === 'INPUT' || target.tagName === 'SPAN';
+}
+
 export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
   const { t } = useTranslation();
   const titleInput = useRef<HTMLInputElement | null>(null);
@@ -73,9 +83,21 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
       }
     };
 
-    const copyCallback = (event: ClipboardEvent) => Selection.copy(core, event);
+    const copyCallback = (event: ClipboardEvent) => {
+      // Ignore copy events eminating from a text field
+      if (isTextFieldEvent(event)) {
+        return;
+      }
+
+      Selection.copy(core, event);
+    };
 
     const cutCallback = (event: ClipboardEvent) => {
+      // Ignore cut events eminating from a text field
+      if (isTextFieldEvent(event)) {
+        return;
+      }
+
       // Cut the selection
       Selection.cut(core, event);
 
@@ -93,10 +115,8 @@ export const TopicView: FC<TopicViewProps> = ({ topicId, children }) => {
     };
 
     const pasteCallback = (event: ClipboardEvent) => {
-      const target = event.target as HTMLElement;
-
-      // Ignore paste event on inputs and spans (spans used as inputs in rich text editor)
-      if (target.tagName === 'INPUT' || target.tagName === 'SPAN') {
+      // Ignore paste events eminating from a text field
+      if (isTextFieldEvent(event)) {
         return;
       }
 
