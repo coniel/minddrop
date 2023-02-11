@@ -5,9 +5,6 @@ import { useEditorSession } from '../useEditorSession';
 import { useEditorInitialValue } from '../useEditorInitialValue';
 import { createRenderElement } from '../utils';
 import { useExternalUpdates } from '../useExternalUpdates';
-import { withBlockShortcuts } from '../withBlockShortcuts';
-import { withBlockReset } from '../withBlockReset';
-import { useCore } from '@minddrop/core';
 import './RichTextEditor.css';
 
 export interface RichTextEditorProps {
@@ -19,12 +16,12 @@ export interface RichTextEditorProps {
   /**
    * Callback fired when the editor is focused.
    */
-  onFocus: React.FocusEventHandler<HTMLDivElement>;
+  onFocus?: React.FocusEventHandler<HTMLDivElement>;
 
   /**
    * Callback fired when the editor is blured.
    */
-  onBlur: React.FocusEventHandler<HTMLDivElement>;
+  onBlur?: React.FocusEventHandler<HTMLDivElement>;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -32,7 +29,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onFocus,
   onBlur,
 }) => {
-  const core = useCore('rich-text-editor');
   // Create a session based editor instance
   const [editor, sessionId] = useEditorSession(documentId);
   // Create the editor's initial value
@@ -48,16 +44,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     () => createRenderElement(configs),
     [configs.length],
   );
-  // Add plugins to editor
-  const editorWithPlugins = useMemo(
-    () => withBlockReset(core, withBlockShortcuts(core, editor, configs)),
-    [editor, configs.length],
-  );
 
   return (
     // The editor does nothing `onChange` because updates are handled
     // by the `useEditorSession` hook.
-    <Slate editor={editorWithPlugins} value={initialValue}>
+    <Slate editor={editor} value={initialValue}>
       <Editable
         className="editor"
         renderElement={renderElement}

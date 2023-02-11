@@ -63,25 +63,35 @@ const createApi = (core: Core, sessionId: string) => ({
     // Update the document's children and revision
     RichTextDocuments.update(core, session.documentId, { children, revision });
   },
-  createElement: (element: RTElement) => {
+  createElement: (data: RTElement): RTElement => {
     if (updatesPaused(sessionId)) {
       // If updates are paused for the editor session,
-      // do nothing.
-      return;
+      // return the element as is without creating it.
+      return data;
     }
 
-    // Check if the element exists in the RichTextElements store
-    const existingElement = RichTextElements.store.get(element.id);
+    const element = { ...data };
 
-    if (existingElement && existingElement.deleted) {
-      // If the element exists and is deleted, restore it
-      RichTextElements.restore(core, element.id);
-    } else {
-      // Create the element
-      RichTextElements.create(core, element.type, element);
-    }
+    // Delete base data so that it is regenerated when creating
+    // the element below. Prevents copy-pasted elements from
+    // being duplicated.
+    delete element.id;
+    delete element.createdAt;
+    delete element.updatedAt;
+    delete element.revision;
+    delete element.parents;
+    delete element.deleted;
+    delete element.deletedAt;
+
+    // Create the element
+    return RichTextElements.create(core, element.type, element);
   },
-  updateElement: (id: string, data: UpdateRTElementData) => {
+  updateElement: (
+    id: string,
+    data: UpdateRTElementData & { parents: RTElement['parents'] },
+  ) => {
+    const updateData = { ...data } as UpdateRTElementData;
+
     if (updatesPaused(sessionId)) {
       // If updates are paused for the editor session,
       // do nothing.
@@ -94,8 +104,39 @@ const createApi = (core: Core, sessionId: string) => ({
       return;
     }
 
+    if ('parents' in data) {
+      // Remove parents from the upate data as it cannot
+      // directly be updated.
+      delete (updateData as RTElement).parents;
+
+      // Get the element in its current form
+      const element = RichTextElements.get(id);
+
+      // Get a list of parents to remove
+      const parentsToRemove = element.parents.filter(
+        (reference) =>
+          !data.parents.find(
+            ({ resource, id }) =>
+              reference.resource === resource && reference.id === id,
+          ),
+      );
+
+      // Get a list of parents to add
+      const parentsToAdd = data.parents.filter(
+        (reference) =>
+          !element.parents.find(
+            ({ resource, id }) =>
+              reference.resource === resource && reference.id === id,
+          ),
+      );
+
+      // Update the parents
+      RichTextElements.removeParents(core, id, parentsToRemove);
+      RichTextElements.addParents(core, id, parentsToAdd);
+    }
+
     // Update the element
-    RichTextElements.update(core, id, data);
+    RichTextElements.update(core, id, updateData);
 
     // Update the document revision
     updateDocumentRevision(core, sessionId);

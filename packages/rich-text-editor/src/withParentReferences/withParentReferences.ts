@@ -1,5 +1,9 @@
 import { ResourceReferences } from '@minddrop/resources';
-import { RTElement } from '@minddrop/rich-text';
+import {
+  RichTextDocuments,
+  RichTextElements,
+  RTElement,
+} from '@minddrop/rich-text';
 import { Text, Node, Path } from 'slate';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
@@ -26,11 +30,11 @@ export function withParentReferences(
   editor.apply = (operation) => {
     // A node was inserted
     if (operation.type === 'insert_node') {
+      apply(operation);
+
       if (Text.isText(operation.node)) {
         // If the inserted node is a text node,
-        // simply apply the operation
-        apply(operation);
-
+        // stop here.
         return;
       }
 
@@ -40,49 +44,51 @@ export function withParentReferences(
           ? (Node.get(editor, Path.parent(operation.path)) as RTElement)
           : null;
 
-      // The node is a rich text element
-      let element = operation.node as RTElement;
+      // The element's parents
+      let parents = [...(operation.node as RTElement).parents];
 
       // Check if the document is already present as a parent on the element
       const hasDocumentAsParent = ResourceReferences.getIds(
-        'rich-text:document',
-        element.parents,
+        RichTextDocuments.resource,
+        parents,
       ).includes(documentId);
 
       if (!hasDocumentAsParent) {
         // Add the document as a parent on the element if not already present
-        element = {
-          ...element,
-          parents: [
-            ...element.parents,
-            ResourceReferences.generate('rich-text:document', documentId),
-          ],
-        };
+        parents = [
+          ...parents,
+          ResourceReferences.generate(RichTextDocuments.resource, documentId),
+        ];
       }
 
       if (parent) {
         // Check if the parent element is already present as a parent
         // on the element.
         const hasParentReference = ResourceReferences.getIds(
-          'rich-text:element',
-          element.parents,
+          RichTextElements.resource,
+          parents,
         ).includes(parent.id);
 
         if (!hasParentReference) {
           // If there is a parent element, add a reference to it in the
           // element if not already present.
-          element = {
-            ...element,
-            parents: [
-              ...element.parents,
-              ResourceReferences.generate('rich-text:element', parent.id),
-            ],
-          };
+          parents = [
+            ...parents,
+            ResourceReferences.generate(RichTextElements.resource, parent.id),
+          ];
         }
       }
 
-      // Apply the operation to actually insert the element node
-      apply({ ...operation, node: element });
+      if (parents.length) {
+        // Add the new parents if there are any to add
+        Transforms.setNodes(
+          editor,
+          {
+            parents,
+          },
+          { at: operation.path },
+        );
+      }
 
       return;
     }
@@ -108,6 +114,29 @@ export function withParentReferences(
       // Get the new element
       const element = Node.get(editor, newElementPath) as RTElement;
 
+      // Check if the document is already present as a parent on the element
+      const hasDocumentAsParent = ResourceReferences.getIds(
+        RichTextDocuments.resource,
+        element.parents,
+      ).includes(documentId);
+
+      if (!hasDocumentAsParent) {
+        // Add the document as a parent on the element if not already present
+        Transforms.setNodes(
+          editor,
+          {
+            parents: [
+              ...element.parents,
+              ResourceReferences.generate(
+                RichTextDocuments.resource,
+                documentId,
+              ),
+            ],
+          },
+          { at: newElementPath },
+        );
+      }
+
       // Update the element's child elements, removing the old
       // parent reference and adding a reference to the new one.
       if (element.children) {
@@ -120,11 +149,14 @@ export function withParentReferences(
                   // Filter out previous parent element from existing parents
                   ...element.parents.filter(
                     (parent) =>
-                      parent.resource === 'rich-text:element' &&
+                      parent.resource === RichTextElements.resource &&
                       parent.id === splitElement.id,
                   ),
                   // Add a reference to the new parent element
-                  ResourceReferences.generate('rich-text:element', element.id),
+                  ResourceReferences.generate(
+                    RichTextElements.resource,
+                    element.id,
+                  ),
                 ],
               },
               { at: [...newElementPath, index] },
@@ -169,11 +201,14 @@ export function withParentReferences(
                   // Filter out previous parent element from existing parents
                   ...element.parents.filter(
                     (parent) =>
-                      parent.resource === 'rich-text:element' &&
+                      parent.resource === RichTextElements.resource &&
                       parent.id === deletedElement.id,
                   ),
                   // Add a reference to the new parent element
-                  ResourceReferences.generate('rich-text:element', element.id),
+                  ResourceReferences.generate(
+                    RichTextElements.resource,
+                    element.id,
+                  ),
                 ],
               },
               { at: [...Path.previous(operation.path), index] },

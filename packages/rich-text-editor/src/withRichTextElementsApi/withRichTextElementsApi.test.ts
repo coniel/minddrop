@@ -1,9 +1,12 @@
+import { ResourceReferences } from '@minddrop/resources';
 import {
   RTBlockElement,
   RICH_TEXT_TEST_DATA,
   RichTextElements,
   RichTextDocuments,
+  RTElement,
 } from '@minddrop/rich-text';
+import { Node } from 'slate';
 import { setup, cleanup, core, createTestEditor } from '../test-utils';
 import { Transforms } from '../Transforms';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
@@ -11,6 +14,7 @@ import { withRichTextElementsApi } from './withRichTextElementsApi';
 
 const {
   richTextDocument1,
+  richTextDocument2,
   paragraphElement1,
   paragraphElement2,
   linkElement1,
@@ -18,6 +22,19 @@ const {
 } = RICH_TEXT_TEST_DATA;
 
 const SESSION_ID = 'session-id';
+
+const richTextDocument1Reference = ResourceReferences.generate(
+  RichTextDocuments.resource,
+  richTextDocument1.id,
+);
+const richTextDocument2Reference = ResourceReferences.generate(
+  RichTextDocuments.resource,
+  richTextDocument2.id,
+);
+const paragraphElement1Reference = ResourceReferences.generate(
+  RichTextElements.resource,
+  paragraphElement1.id,
+);
 
 const createEditor = (content: RTBlockElement[]) => {
   // Create an editor session
@@ -46,39 +63,36 @@ describe('withRichTextElementsApi', () => {
 
   describe('create element', () => {
     describe('root level element', () => {
-      it('creates the element', () => {
-        // The element to be inserted
-        const newElement = { ...paragraphElement1, id: 'new-element' };
-
+      it('creates a element with new base data', () => {
         // Create an editor with the plugin applied, containg a paragraph element
         const editor = createEditor([paragraphElement1]);
 
         // Insert a new element
-        Transforms.insertNodes(editor, [newElement], { at: [1] });
+        Transforms.insertNodes(
+          editor,
+          [{ ...paragraphElement2, deleted: true, deletedAt: new Date() }],
+          { at: [1] },
+        );
+
+        // Get the inserted element
+        const newElement = RichTextElements.get(
+          (editor.children[1] as RTElement).id,
+        );
 
         // The inserted element should be created as a RichTextElement
-        expect(RichTextElements.get(newElement.id)).toBeDefined();
-      });
-
-      it('restores the element if it was deleted', () => {
-        jest.spyOn(RichTextElements, 'create');
-
-        // Create an editor with the plugin applied, containg two paragraph elements
-        const editor = createEditor([paragraphElement1]);
-
-        // Delete the test element to be created
-        RichTextElements.delete(core, paragraphElement2.id);
-
-        // Insert the deleted element into the document
-        Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
-
-        // The inserted element should be restored
-        expect(
-          RichTextElements.get(paragraphElement2.id).deleted,
-        ).toBeUndefined();
-
-        // Should not create the element again
-        expect(RichTextElements.create).not.toHaveBeenCalled();
+        expect(newElement).toBeDefined();
+        // It regenrates the base data
+        expect(newElement.id).not.toBe(paragraphElement2.id);
+        expect(newElement.revision).not.toBe(paragraphElement2.revision);
+        expect(newElement.createdAt).not.toBe(paragraphElement2.createdAt);
+        expect(newElement.updatedAt).not.toBe(paragraphElement2.updatedAt);
+        expect(newElement.parents.length).toBe(1);
+        expect(newElement.parents[0].id).not.toBe(
+          paragraphElement2.parents[0].id,
+        );
+        // It removes deleted state
+        expect(newElement.deleted).toBeUndefined();
+        expect(newElement.deletedAt).toBeUndefined();
       });
 
       it('udpates `children` on the rich text document', () => {
@@ -88,11 +102,14 @@ describe('withRichTextElementsApi', () => {
         // Insert a new element
         Transforms.insertNodes(editor, [paragraphElement2], { at: [1] });
 
+        // Get the inserted element from the editor
+        const newElement = editor.children[1] as RTElement;
+
         // Should update rich text document's `children` to include the
         // new element.
         expect(RichTextDocuments.get(richTextDocument1.id).children).toEqual([
           paragraphElement1.id,
-          paragraphElement2.id,
+          newElement.id,
         ]);
       });
 
@@ -123,9 +140,13 @@ describe('withRichTextElementsApi', () => {
       });
 
       describe('with paused updates', () => {
-        it('does nothing', () => {
+        it('returns the element without creating it', () => {
           // The element to be inserted
-          const newElement = { ...paragraphElement1, id: 'new-element' };
+          const newElement = {
+            ...paragraphElement1,
+            id: 'new-element',
+            parents: [richTextDocument1Reference],
+          };
 
           // Create an editor with the plugin applied, containg a paragraph element
           const editor = createEditor([paragraphElement1]);
@@ -138,46 +159,29 @@ describe('withRichTextElementsApi', () => {
 
           // The inserted element should not be created as a RichTextElement
           expect(RichTextElements.store.get(newElement.id)).toBeUndefined();
-          // The document's children shot not be updated
+          // The document's children should not be updated
           expect(RichTextDocuments.get(richTextDocument1.id).children).toEqual(
             richTextDocument1.children,
           );
+          // The element should be inserted into the editor
+          expect(editor.children[1]).toEqual(newElement);
         });
       });
     });
 
     describe('nested element', () => {
       it('creates the element', () => {
-        // New link element to be inserted
-        const newLinkElement = { ...linkElement1, id: 'new-link-element' };
-
         // Create an editor with the plugin applied, containg a paragraph element
         const editor = createEditor([paragraphElement1]);
 
         // Insert a new element
-        Transforms.insertNodes(editor, [newLinkElement], { at: [0, 1] });
-
-        // The inserted element should be created as a RichTextElement
-        expect(RichTextElements.get(newLinkElement.id)).toBeDefined();
-      });
-
-      it('restores the element if it was deleted', () => {
-        jest.spyOn(RichTextElements, 'create');
-
-        // Create an editor with the plugin applied, containg two paragraph elements
-        const editor = createEditor([paragraphElement1]);
-
-        // Delete the test element to be created
-        RichTextElements.delete(core, linkElement1.id);
-
-        // Insert the deleted element into paragraph 1
         Transforms.insertNodes(editor, [linkElement1], { at: [0, 1] });
 
-        // The inserted element should be restored
-        expect(RichTextElements.get(linkElement1.id).deleted).toBeUndefined();
+        // Get the element from the edior
+        const newElement = Node.get(editor, [0, 1]) as RTElement;
 
-        // Should not create the element again
-        expect(RichTextElements.create).not.toHaveBeenCalled();
+        // The inserted element should be created as a RichTextElement
+        expect(RichTextElements.get(newElement.id)).toBeDefined();
       });
 
       it('updates the document revision', () => {
@@ -207,9 +211,13 @@ describe('withRichTextElementsApi', () => {
       });
 
       describe('with paused updates', () => {
-        it('does nothing', () => {
+        it('returns the element without creating it', () => {
           // New link element to be inserted
-          const newLinkElement = { ...linkElement1, id: 'new-link-element' };
+          const newLinkElement = {
+            ...linkElement1,
+            id: 'new-link-element',
+            parents: [richTextDocument1Reference, paragraphElement1Reference],
+          };
 
           // Create an editor with the plugin applied, containg a paragraph element
           const editor = createEditor([paragraphElement1]);
@@ -222,6 +230,8 @@ describe('withRichTextElementsApi', () => {
 
           // The inserted element should not be created as a RichTextElement
           expect(RichTextElements.store.get(newLinkElement.id)).toBeUndefined();
+          // The element should be inserted into the editor
+          expect(Node.get(editor, [0, 1])).toEqual(newLinkElement);
         });
       });
     });
@@ -284,6 +294,28 @@ describe('withRichTextElementsApi', () => {
       expect(RichTextElements.get(paragraphElement1.id).type).toBe(
         paragraphElement1.type,
       );
+    });
+
+    it('updates parents via [add/remove]Parents', () => {
+      // Create an editor with the plugin applied, containg a paragraph element
+      const editor = createEditor([paragraphElement1]);
+
+      // Change the element's parents
+      Transforms.setNodes(
+        editor,
+        {
+          parents: [richTextDocument2Reference],
+        },
+        {
+          at: { path: [0, 0], offset: 0 },
+        },
+      );
+
+      // Get the updated element
+      const element = RichTextElements.get(paragraphElement1.id);
+
+      // Should replace old parent with new one
+      expect(element.parents).toEqual([richTextDocument2Reference]);
     });
 
     it('updates the document revision', () => {

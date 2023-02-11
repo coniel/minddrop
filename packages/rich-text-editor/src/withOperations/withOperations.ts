@@ -4,7 +4,7 @@ import { Editor } from '../types';
 import { getElementAbove } from '../utils';
 
 export interface RTElementsApi {
-  createElement(element: RTElement): void;
+  createElement(element: Partial<RTElement>): RTElement;
   updateElement(elementId: string, changes: UpdateRTElementData): void;
   deleteElement(elementId: string): void;
   setDocumentChildren(children: string[]): void;
@@ -41,14 +41,14 @@ export function withOperations(editor: Editor, api: RTElementsApi): Editor {
 
     // A node was inserted
     if (operation.type === 'insert_node') {
-      // Apply the operation to actually insert the node
-      apply(operation);
-
-      // Get the node's parent element
-      const parent = getElementAbove(editor, { at: operation.path });
-
       // If the inserted node is a text node, update the parent element
       if (Text.isText(operation.node)) {
+        // Apply the operation to actually insert the node
+        apply(operation);
+
+        // Get the node's parent element
+        const parent = getElementAbove(editor, { at: operation.path });
+
         // Update the parent element
         api.updateElement(parent[0].id, { children: parent[0].children });
 
@@ -56,10 +56,13 @@ export function withOperations(editor: Editor, api: RTElementsApi): Editor {
       }
 
       // Create the element.
-      api.createElement(operation.node as RTElement);
+      const element = api.createElement(operation.node as Partial<RTElement>);
+
+      // Apply the operation to actually insert the node
+      apply({ ...operation, node: element });
 
       // If the element was inserted at the root level, update the document children
-      if (!parent) {
+      if (operation.path.length === 1) {
         api.setDocumentChildren(
           editor.children.map((child) => (child as RTElement).id),
         );
@@ -146,17 +149,28 @@ export function withOperations(editor: Editor, api: RTElementsApi): Editor {
       // The split node is an element
       const splitElement = splitNode as RTElement;
 
-      // Update the element which aws split
+      // Update the element which was split
       api.updateElement(splitElement.id, { children: splitElement.children });
 
-      // Get the element created as a result of the split
-      const newElement = Node.get(
-        editor,
-        Path.next(operation.path),
-      ) as RTElement;
+      // The path of the element created as a result of the split
+      const newElementPath = Path.next(operation.path);
 
-      // Create the new element
-      api.createElement(newElement);
+      // Get the element created as a result of the split
+      const newEditorElement = Node.get(editor, newElementPath) as RTElement;
+
+      // Create and clone the new element as a RichTextElement
+      const newElement = { ...api.createElement(newEditorElement) };
+
+      delete newElement.children;
+
+      // Apply the created RichTextElement's data to the new
+      // editor element.
+      apply({
+        type: 'set_node',
+        path: newElementPath,
+        properties: {},
+        newProperties: newElement,
+      });
 
       // If the new element is a root level element, update
       // the document children.

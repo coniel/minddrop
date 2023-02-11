@@ -3,8 +3,6 @@ import { createEditor as createSlateEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../../types';
-import { withElementIds } from '../../withElementIds';
-import { withParentReferences } from '../../withParentReferences';
 
 /**
  * Creates a new editor configured with the React and History
@@ -13,13 +11,9 @@ import { withParentReferences } from '../../withParentReferences';
  * @param documentId The ID of the rich text document being edited.
  * @returns An editor instance.
  */
-export function createEditor(documentId: string): Editor {
-  // Create a Slate editor with the React, history, element ID,
-  // and parent reference plugins.
-  const editor = withParentReferences(
-    withElementIds(withReact(withHistory(createSlateEditor()))),
-    documentId,
-  );
+export function createEditor(): Editor {
+  // Create a Slate editor with the React and history plugins
+  const editor = withReact(withHistory(createSlateEditor()));
 
   // Checks if an element is an inline level element
   editor.isInline = (element) => {
