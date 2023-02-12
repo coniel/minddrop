@@ -85,8 +85,14 @@ interface RTBlockElementConfigOptions<
    * - `break-out` inserts a new element of the default type below (default).
    * - `same-type` inserts a new element of the same type as this one below.
    * - `line-break` inserts a soft line break into the current element.
+   * - `callback` inserts a new element of the same type as this one below and
+   *   calls the provided callback to update its data.
    */
-  returnBehaviour?: 'break-out' | 'line-break' | 'same-type';
+  returnBehaviour?:
+    | 'break-out'
+    | 'line-break'
+    | 'same-type'
+    | ((element: RTBlockElement) => Partial<TTypeData>);
 
   /**
    * The data types from which this kind of element can be created (e.g.
