@@ -1,6 +1,5 @@
 import {
   RTBlockElement,
-  RTNode,
   RICH_TEXT_TEST_DATA,
   UpdateRTElementData,
   RTFragment,
