@@ -16,5 +16,5 @@ export const ToDoElementConfig: RTBlockElementConfig<ToDoElementData> = {
   },
   component: ToDoElementComponent,
   shortcuts: ['[]'],
-  initializeData: () => ({ done: false }),
+  returnBehaviour: () => ({ done: false }),
 };
