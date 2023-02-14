@@ -1,19 +1,19 @@
 ---
-metaTitle: RichTextInlineElementConfig Interface
+metaTitle: RTInlineElementConfig Interface
 metaDescription: Configuration for registering inline rich text element types.
 ---
 
-# RichTextInlineElementConfig
+# RTInlineElementConfig
 
 <Description>
   Configuration for registering inline rich text element types.
 </Description>
 
-In rich text documents, inline elements such as links, equations, etc. are defined using `RichTextInlineElement` objects. Before such elements can be created, the element type needs to be registered using the `RichTextElements.register` method.
+In rich text documents, inline elements such as links, equations, etc. are defined using `RTInlineElement` objects. Before such elements can be created, the element type needs to be registered using the `RTElements.register` method.
 
-Inline level elements are rendered inline with text, as part of another (block or inline) element's children. An inline element can only be siblings with `RichTextNode`s and other `RichTextInlineElement`s.
+Inline level elements are rendered inline with text, as part of another (block or inline) element's children. An inline element can only be siblings with `RTNode`s and other `RTInlineElement`s.
 
-## RichTextInlineElementConfig
+## RTInlineElementConfig
 
 The configuration object for registering new inline level element types. See below the table for additional details.
 
@@ -39,10 +39,10 @@ The configuration object for registering new inline level element types. See bel
       description: 'The component used to render the element.',
     },
     {
-      name: 'initializeData',
+      name: 'initializeDataFromFragment',
       type: 'function',
       description:
-        'Called when creating a new element of this type. Should return the initial state of any custom data used in the element. Omit if the element does not use custom data.',
+        'Called when creating a new element of this type from a rich text fragment. Should return the initial state of any custom data used in the element. Can be omited if the element simply uses the fragment as its children or not at all.',
     },
     {
       name: 'toPlainText',
@@ -59,13 +59,13 @@ The configuration object for registering new inline level element types. See bel
     },
     {
       name: 'shortcuts',
-      type: '(string | ComboShortcut)[]',
+      type: '(string | InlineShortcutWrapTrigger)[]',
       description:
-        'Strings, which when typed trigger the insertion of this element.',
+        'Markdown style shortcuts which trigger the insertion of this element.',
     },
     {
-      name: 'hotkey',
-      type: 'string[]',
+      name: 'hotkeys',
+      type: 'InlineHotkey[]',
       description:
         'A list of keys which, when pressed in unison, insert an element of this type.',
     },
@@ -83,12 +83,12 @@ The configuration object for registering new inline level element types. See bel
 Inline rich text element components are just simple React components. However, there are two required props which need to be applied correctly in order for the element to function:
 
 - `attributes`: contains HTML attributes used internally by the editor, must be spread onto the root HTML element.
-- `children`: renders the `RichTextFragment` containing the text content. Must be rendered within the component, **even if the component does not have children**.
+- `children`: renders the `RTFragment` containing the text content. Must be rendered within the component, **even if the component does not have children**.
 
 Below is an example of a non-void (in which text can be edited) link element. It will render a link for which the text can be edited.
 
 ```tsx
-interface LinkElementProps extends RichTextInlineElementProps {
+interface LinkElementProps extends RTInlineElementProps {
   /**
    * The link URL.
    */
@@ -109,7 +109,7 @@ const LinkElement: React.FC<LinkElementProps> = ({
 Below is an example of a void (in which there is no text to edit) equation element in which the actual equation rendering is carried out by another component. Note that `children` needs to be rendered despite the quation itself not being editable within the editor flow (it will render an empty span element required for editor functionality).
 
 ```tsx
-interface EquationElementProps extends RichTextInlineElementProps {
+interface EquationElementProps extends RTInlineElementProps {
   /**
    * The image src.
    */
@@ -128,7 +128,7 @@ const EquationElement: React.FC<EquationElementProps> = ({
 );
 ```
 
-#### RichTextInlineElementProps
+#### RTInlineElementProps
 
 The props passed to inline element components.
 
@@ -150,7 +150,7 @@ The props passed to inline element components.
     },
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The rich text element being rendered.',
     },
@@ -162,20 +162,20 @@ The props passed to inline element components.
 Called when creating a new element of this type. Should return an object containing the initial state of the custom data used in the element. Omit if the element does not use custom data.
 
 ```ts
-initializeData<TData extends {}>(fragment?: RichTextFragment): TData
+initializeData<TData extends {}>(fragment?: RTFragment): TData
 ```
 
 <ArgsTable
   data={[
     {
       name: 'fragment',
-      type: 'RichTextFragment',
+      type: 'RTFragment',
       description: 'The text fragment selected in the editor.',
     },
   ]}
 />
 
-If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RichTextFragment` (see the [RichTextFragment](rich-text-fragment#selectionfragment) page for details). The fragment will automatically be set as the element's `children` field unless the element is void.
+If there is a selection in the editor when the element is created (e.g. the user selects text and presses the element's creation hotkey), the `fragment` parameter will contain a `RTFragment` (see the [RTFragment](rich-text-fragment#selectionfragment) page for details). The fragment will automatically be set as the element's `children` field unless the element is void.
 
 #### Example
 
@@ -183,7 +183,7 @@ For an 'equation' element which stores the equation expression under a field cal
 
 ```ts
 initializeData: (fragment) => ({
-  expression: fragment ? RichTextElements.toPlainText(fragment) : '',
+  expression: fragment ? RTElements.toPlainText(fragment) : '',
 });
 ```
 
@@ -197,17 +197,17 @@ Providing a `toPlainText` method is strongly recommended for void elements which
 
 - **Search**: MindDrop's search indexing uses the plain text version of rich text documents. Providing a `toPlainText` method makes void elements searchable.
 - **Copy/Paste**: When copying text from the rich text editor, a plain text version of the text is added to the clipboard data.
-- **Unregister**: When an inline rich text element type is unregistered (e.g. because the extension was uninstalled), the elements of that type are converted into `RichTextNode`s with the plain text set as their text value.
+- **Unregister**: When an inline rich text element type is unregistered (e.g. because the extension was uninstalled), the elements of that type are converted into `RTNode`s with the plain text set as their text value.
 
 ```ts
-toPlainText(element: RichTextInlineElement): string
+toPlainText(element: RTInlineElement): string
 ```
 
 <ArgsTable
   data={[
     {
       name: 'element',
-      type: 'RichTextInlineElement',
+      type: 'RTInlineElement',
       required: true,
       description: 'The element to convert to plain text.',
     },
@@ -218,24 +218,20 @@ toPlainText(element: RichTextInlineElement): string
 
 Void elements are elements which do not involve text (e.g. an image element), or elements in wich the text is not edited as part of the editor text flow (e.g. an equation element in which the equation expression is edited in a popup field).
 
-Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
+Non-void elements must have a `children` field set to a [`RTFragment`](/docs/extensions/types/rich-text-fragment).
 
 ### shortcuts
 
-Markdown style shorcuts which trigger the creation of an element of this type.
+Markdown style shorcuts which trigger the insertion of an element of this type.
 
 Inline element shortcuts can be one of two types:
 
 - A simple string, which triggers the shortcut as soon as it is typed.
-- A `{ start: string; end: string; }` combo, which is triggered when the `end` string is typed some time after the `start` string (e.g. \*\*bold text\*\* where both `start` and `end` are set to `'**'`).
-
-When triggered, it calls the `initializeData` method and inserts the new element. In the case of a start-end combo shortcut, the nodes between the two shortcut strings will be set as the `initializeData` method's `fragment` parameter.
+- A `{ start: string; end: string; }` combo, which is triggered when the `end` string is typed some time after the `start` string (e.g. \*\*bold text\*\*).
 
 The shortcut text is automatically removed when the shortcut is triggered.
 
-#### ComboShortcut
-
-An object defining a start-end combo shortcut.
+#### InlineShortcutWrapTrigger
 
 <InterfaceTable
   data={[
@@ -243,21 +239,25 @@ An object defining a start-end combo shortcut.
       name: 'start',
       type: 'string',
       required: true,
-      description: 'The first segment of the shortcut string.',
+      description: 'The shortcut start trigger.',
     },
     {
       name: 'end',
       type: 'string',
       required: true,
-      description:
-        'The second segment of the shortcut string, triggers the shortcut when typed.',
+      description: 'The shortcut end trigger.',
     },
   ]}
 />
 
-### hotkey
+### hotkeys
 
-A list of keys, which when pressed together, insert an element of this type by calling the `initializeData` method. If text is selected in the editor when the hotkey is triggered, the selected nodes will be passed as the `fragment` parameter.
+The hotkeys related to this element. Inline element hotkeys can be used to insert a new element of this type, or modify the data of an existing element of this type if it is currently focused.
+
+Hotkeys are configured using `InlineHotkey` objects with a `keys` property, which is the list of keys which when pressed together trigger the action, and an `action` property. The action property can be one of two types:
+
+- `'insert'`: setting the action to 'insert' will insert a new element of this type. If the hotkey is triggered with a text selection, `initializeDataFromFragment` will be called with the rich text fragment to initialize the new element's data.
+- `InlineHotkeyAction`: setting the action a function will call the function when triggered. It is only triggered if the currently selected/focused element(s) are of this type. The function should return updated custom data for the element type. If multiple elements are selected, the function is called once per element of this type.
 
 Modifier keys:
 
@@ -268,6 +268,59 @@ Modifier keys:
 For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`). These are case insensitive.
 
 For instance, the hotkey `['Ctrl', 'Shift', '1']` would trigger when the `Control` + `Shift` + `1` (`Command` + `Shift` + `1` on Mac) keys are pressed in unison.
+
+#### Example
+
+The following hotkey toggles a focused to-do element's 'done' state using `Ctrl + Enter`.
+
+```ts
+{
+  keys: ['Ctrl', 'Enter'],
+  action: (element) => ({ done: !element.done }),
+}
+```
+
+#### InlineHotkey
+
+<InterfaceTable
+  data={[
+    {
+      name: 'keys',
+      type: 'string[]',
+      required: true,
+      description: 'List of keys used to trigger the action.',
+    },
+    {
+      name: 'action',
+      type: "'insert' | InlineHotkeyAction",
+      description: 'The action triggered by the hotkey.',
+    },
+  ]}
+/>
+
+#### InlineHotkeyAction
+
+Callback fired when an inline hotkey is triggered. Should return the custom type data to set onto the element.
+
+```ts
+<TTypeData extends RTElementTypeData>(
+  core: Core,
+  element: RTInlineElement,
+): TTypeData;
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'element',
+      type: 'RTInlineElement',
+      required: true,
+      description:
+        'The target inline element on which the hotkey was triggered.',
+    },
+  ]}
+/>
 
 ### htmlDeserializers
 
@@ -299,8 +352,8 @@ Callback used to deserialize an HTML element.
 deserializeHtmlElement(
   element: HTMLElement,
   parent: HTMLElement | null,
-  children: RichTextFragment | RichTextBlockElement[] | null,
-): CreateRichTextInlineElementData | CreateRichTextInlineElementData[] | null
+  children: RTFragment | RTBlockElement[] | null,
+): CreateRTInlineElementData | CreateRTInlineElementData[] | null
 ```
 
 <ArgsTable
@@ -324,7 +377,7 @@ deserializeHtmlElement(
     },
     {
       name: 'children',
-      type: 'RichTextFragment | RichTextBlockElement[] | null',
+      type: 'RTFragment | RTBlockElement[] | null',
       required: true,
       description: (
         <span>

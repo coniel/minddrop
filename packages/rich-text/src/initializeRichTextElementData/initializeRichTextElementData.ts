@@ -35,7 +35,7 @@ export function initializeRichTextElementData<TData extends RTElementTypeData>(
 
   if (config.level === 'inline' && Array.isArray(data)) {
     // If the element is an inline level element, and the data
-    // is a RichTextFragment, create the element using the data.
+    // is a RTFragment, create the element using the data.
     return config.initializeData(data) as Partial<RTElement<TData>>;
   }
 

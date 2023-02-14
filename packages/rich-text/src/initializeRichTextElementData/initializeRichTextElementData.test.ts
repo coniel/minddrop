@@ -113,8 +113,8 @@ describe('initializeRichTextElementData', () => {
         expect(data.children).toEqual([{ text: 'Plain text data' }]);
       });
 
-      it('ignores data if it is a RichTextFragment', () => {
-        // Create a 'block-element' with a RichTextFragment as data
+      it('ignores data if it is a RTFragment', () => {
+        // Create a 'block-element' with a RTFragment as data
         const data = initializeRichTextElementData<ElementData>(
           'block-element',
           [{ text: 'Rich text' }],
@@ -159,7 +159,7 @@ describe('initializeRichTextElementData', () => {
 
     describe('with data', () => {
       it('passes the fragment to the `initializeData` method', () => {
-        // Create a 'inline-element' with a RichTextFragment as data
+        // Create a 'inline-element' with a RTFragment as data
         const data = initializeRichTextElementData<ElementData>(
           'inline-element',
           [{ text: 'Fragment text' }],

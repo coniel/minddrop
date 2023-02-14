@@ -1,9 +1,9 @@
 ---
-metaTitle: RichTextElements API Reference
+metaTitle: RTElements API Reference
 metaDescription: An interface for retrieving and managing rich text elements.
 ---
 
-# RichTextElements
+# RTElements
 
 <Description>
   An interface for retrieving and managing rich text elements.
@@ -18,7 +18,7 @@ Hooks provide access to rich text elements and related data from inside React co
 Returns a rich text element by ID or `null` if the element does not exist.
 
 ```ts
-useRichTextElement<T extends RichTextElement>(id: string): T | null;
+useRichTextElement<T extends RTElement>(id: string): T | null;
 ```
 
 <ArgsTable
@@ -34,12 +34,12 @@ useRichTextElement<T extends RichTextElement>(id: string): T | null;
 
 ### useRichTextElements
 
-Returns a `{ [id]: RichTextElement }` map of rich text elements by ID. If a requested element does not exist, it is ommited from the map.
+Returns a `{ [id]: RTElement }` map of rich text elements by ID. If a requested element does not exist, it is ommited from the map.
 
-Optionally, the returned elements can be filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
+Optionally, the returned elements can be filtered by passing in `RTElementFilters`. See the [RTElementFilters](#richtextelementfilters) section for filtering options.
 
 ```ts
-useRichTextElements<T extends RichTextElement>(elementIds: string[], filters?: RichTextElementFilters): RichTextElementMap<T>;
+useRichTextElements<T extends RTElement>(elementIds: string[], filters?: RTElementFilters): RTElementMap<T>;
 ```
 
 <ArgsTable
@@ -52,13 +52,13 @@ useRichTextElements<T extends RichTextElement>(elementIds: string[], filters?: R
     },
     {
       name: 'filters',
-      type: 'RichTextElementFilters',
+      type: 'RTElementFilters',
       description: (
         <p>
           When present, filters the returned elements according to the
           provided filters. See the
           <a href="#richtextelementfilters">
-            RichTextElementFilters
+            RTElementFilters
           </a> section for filtering options.
         </p>
       ),
@@ -70,21 +70,21 @@ useRichTextElements<T extends RichTextElement>(elementIds: string[], filters?: R
 
 ### get
 
-Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RichTextElement }` map of the corresponding rich text elements.
+Retrieves rich text elements by ID. If provided a single ID string, returns the matching rich text element. If provided an array of IDs, returns a `{ [id]: RTElement }` map of the corresponding rich text elements.
 
-Optionally, when getting multiple rich text elements, the returned elements can be filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
+Optionally, when getting multiple rich text elements, the returned elements can be filtered by passing in `RTElementFilters`. See the [RTElementFilters](#richtextelementfilters) section for filtering options.
 
 Throws a `RichTextElementNotFoundError` if a requested element does not exist.
 
 ```ts
 // Get a single element
-RichTextElements.get<T extends RichTextElement>(elementId: string): T
+RichTextElements.get<T extends RTElement>(elementId: string): T
 
 // Get multiple elements
-RichTextElements.get<T extends RichTextElement>(
+RichTextElements.get<T extends RTElement>(
   elementId: string[],
-  filters?: RichTextElementFilters
-): RichTextElementMap<T>
+  filters?: RTElementFilters
+): RTElementMap<T>
 ```
 
 <ArgsTable
@@ -98,14 +98,14 @@ RichTextElements.get<T extends RichTextElement>(
     },
     {
       name: 'filters',
-      type: 'RichTextElementFilters',
+      type: 'RTElementFilters',
       description: (
         <p>
           When present, filters the returned elements according to the
           provided filters. Only supported when getting multiple
           elements. See the
           <a href="#richtextelementfilters">
-            RichTextElementFilters
+            RTElementFilters
           </a> section for filtering options.
         </p>
       ),
@@ -115,25 +115,25 @@ RichTextElements.get<T extends RichTextElement>(
 
 ### getAll
 
-Retrieves all rich text elements as a `{ [id]: RichTextElement }` map.
+Retrieves all rich text elements as a `{ [id]: RTElement }` map.
 
-Optionally, the returned elements can by filtered by passing in `RichTextElementFilters`. See the [RichTextElementFilters](#richtextelementfilters) section for filtering options.
+Optionally, the returned elements can by filtered by passing in `RTElementFilters`. See the [RTElementFilters](#richtextelementfilters) section for filtering options.
 
 ```ts
-RichTextElements.getAll<T extends RichTextElement>(filters?: RichTextElementFilters): RichTextElementMap<T>
+RichTextElements.getAll<T extends RTElement>(filters?: RTElementFilters): RTElementMap<T>
 ```
 
 <ArgsTable
   data={[
     {
       name: 'filters',
-      type: 'RichTextElementFilters',
+      type: 'RTElementFilters',
       description: (
         <p>
           When present, filters the returned elements according to the
           provided filters. See the
           <a href="#richtextelementfilters">
-            RichTextElementFilters
+            RTElementFilters
           </a> section for filtering options.t by which to filter the returned
         </p>
       ),
@@ -148,23 +148,23 @@ Filters rich text elements according to the provided filters.
 The provided elements must be of registered types, or a `RichTextElementTypeNotRegisteredError` will be thrown.
 
 ```ts
-RichTextElements.filter<T extends RichTextElement>(
-  elements: RichTextElementMap<T>,
-  filters: RichTextElementFilters
-): RichTextElementMap<T>
+RichTextElements.filter<T extends RTElement>(
+  element: RTElementMap<T>,
+  filters: RTElementFilters
+): RTElementMap<T>
 ```
 
 <ArgsTable
   data={[
     {
       name: 'elements',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The rich text elements to filter.',
     },
     {
       name: 'filters',
-      type: 'RichTextElementFilters',
+      type: 'RTElementFilters',
       required: true,
       description:
         'Filtering options. See the table below for details.',
@@ -172,7 +172,7 @@ RichTextElements.filter<T extends RichTextElement>(
   ]}
 />
 
-#### RichTextElementFilters
+#### RTElementFilters
 
 Options for filtering rich text elements.
 
@@ -220,7 +220,7 @@ Options for filtering rich text elements.
 
 ### create
 
-Creates a new rich text element and dispaches a `rich-text-elements:create` event. Returns the newly created element.
+Creates a new rich text element and dispaches a `rich-text-element:create` event. Returns the newly created element.
 
 To create an element, the element type must first be registered using the [`RichTextElements.register`](#register) method.
 
@@ -233,8 +233,8 @@ If the element has nested elements (only supported on 'block' level elements), t
 
 ```ts
 RichTextElements.create<
-  TElement extends RichTextElement,
-  TData extends CreateRichTextElementData,
+  TElement extends RTElement,
+  TData extends CreateRTElementData,
 >(core: Core, data: TData): TElement;
 ```
 
@@ -243,7 +243,7 @@ RichTextElements.create<
   data={[
     {
       name: 'data',
-      type: 'CreateRichTextElementData',
+      type: 'CreateRTElementData',
       required: true,
       description:
         'The rich text element data. See below for details.',
@@ -251,7 +251,7 @@ RichTextElements.create<
   ]}
 />
 
-`CreateRichTextElementData`
+`CreateRTElementData`
 
 In addition to the data below, you can include any custom data required by your rich text element.
 
@@ -265,15 +265,15 @@ In addition to the data below, you can include any custom data required by your 
     },
     {
       name: 'children',
-      type: 'RichTextFragment',
+      type: 'RTFragment',
       description: (
         <span>
           The rich text content of the element. See the{' '}
           <a href="/docs/extensions/types/rich-text-fragment">
-            RichTextFragment
+            RTFragment
           </a>{' '}
           page for details. If omitted on non-void elements, an empty{' '}
-          <Code>RichTextNode</Code> will be set as the only child. Not
+          <Code>RTNode</Code> will be set as the only child. Not
           supported on void nodes.
         </span>
       ),
@@ -289,7 +289,7 @@ In addition to the data below, you can include any custom data required by your 
       type: 'string[]',
       description: (
         <span>
-          The IDs of nested <Code>RichTextBlockElement</Code>s. Only
+          The IDs of nested <Code>RTBlockElement</Code>s. Only
           supported for 'block' level elements.
         </span>
       ),
@@ -299,14 +299,14 @@ In addition to the data below, you can include any custom data required by your 
 
 ### createOfType
 
-Creates a new rich text element of the given type. Dispatches a `rich-text-elements:create` event and returns the newly created element.
+Creates a new rich text element of the given type. Dispatches a `rich-text-element:create` event and returns the newly created element.
 
 - Throws a `RichTextElementTypeNotRegisteredError` if the element type is not registered.
 
 ```ts
 RichTextElements.createOfType<
-  TElement extends RichTextElement,
->(core: Core, type: string, data?: DataInsert | RichTextFragment): TElement
+  TElement extends RTElement,
+>(core: Core, type: string, data?: DataInsert | RTFragment): TElement
 ```
 
 <ArgsTable
@@ -320,7 +320,7 @@ RichTextElements.createOfType<
     },
     {
       name: 'data',
-      type: 'DataInsert | RichTextFragment',
+      type: 'DataInsert | RTFragment',
       description: (
         <div>
           <p>The data from which to create the element.</p>
@@ -330,7 +330,7 @@ RichTextElements.createOfType<
           </p>
           <p>
             If creating an 'inline' level element, the data must be a
-            <Code>RichTextFragment</Code>.
+            <Code>RTFragment</Code>.
           </p>
         </div>
       ),
@@ -348,8 +348,8 @@ Updates a rich text element and dispaches a `rich-text-element:update` event. Re
 
 ```ts
 RichTextElements.update<
-  TElement extends RichTextElement,
-  TData extends CreateRichTextElementData,
+  TElement extends RTElement,
+  TData extends CreateRTElementData,
 >(core: Core, elementId: string, data: TData): TElement
 ```
 
@@ -364,7 +364,7 @@ RichTextElements.update<
     },
     {
       name: 'data',
-      type: 'UpdateRichTextElementData',
+      type: 'UpdateRTElementData',
       required: true,
       description:
         'The changes to make to the rich text element. See below for details.',
@@ -372,7 +372,7 @@ RichTextElements.update<
   ]}
 />
 
-`UpdateRichTextElementData`
+`UpdateRTElementData`
 
 In addition to the data below, you can include any custom data required by your rich text element.
 
@@ -380,12 +380,12 @@ In addition to the data below, you can include any custom data required by your 
   data={[
     {
       name: 'children',
-      type: 'RichTextFragment | ArrayUnion | ArrayRemove',
+      type: 'RTFragment | ArrayUnion | ArrayRemove',
       description: (
         <span>
           The rich text content of the element. See the{' '}
           <a href="/docs/extensions/types/rich-text-fragment">
-            RichTextFragment
+            RTFragment
           </a>{' '}
           page for details. Only supported on non-void elements.
         </span>
@@ -420,13 +420,13 @@ RichTextElements.delete<TElement extends Element>(core: Core, elementId: string)
 
 ### restore
 
-Restores a deleted rich text element and dispatches a `rich-text-elements:restore` event. Returns the restored element.
+Restores a deleted rich text element and dispatches a `rich-text-element:restore` event. Returns the restored element.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 
 ```ts
 RichTextElements.restore<
-  TElement extends RichTextElement,
+  TElement extends RTElement,
 >(core: Core, elementId: string): TElement
 ```
 
@@ -444,7 +444,7 @@ RichTextElements.restore<
 
 ### deletePermanently
 
-Permanently deletes a rich text element and dispatches a `rich-text-elements:delete-permanently` event. Returns the deleted element.
+Permanently deletes a rich text element and dispatches a `rich-text-element:delete-permanently` event. Returns the deleted element.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 
@@ -452,7 +452,7 @@ Permanently deleted rich text elements cannot be restored.
 
 ```ts
 RichTextElement.deletePermanently<
-  TElement extends RichTextElement,
+  TElement extends RTElement,
 >(core: Core, elementId: string): TElement
 ```
 
@@ -470,14 +470,14 @@ RichTextElement.deletePermanently<
 
 ### addParents
 
-Adds parent references to a rich text element and dispaches a `rich-text-elements:add-parents` event. Returns the updated rich text element.
+Adds parent references to a rich text element and dispaches a `rich-text-element:add-parents` event. Returns the updated rich text element.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 - Throws a `ParentReferenceValidationError` if any of the parent references are invalid.
 
 ```ts
 RichTextElements.addParents<
-  TElement extends RichTextElement
+  TElement extends RTElement
 >(core: Core, elementId: string, parents: ParentReference[]): TElement
 ```
 
@@ -510,13 +510,13 @@ RichTextElements.addParents<
 
 ### removeParents
 
-Removes parent references from a rich text element and dispaches a `rich-text-elements:remove-parents` event. Returns the updated rich text element.
+Removes parent references from a rich text element and dispaches a `rich-text-element:remove-parents` event. Returns the updated rich text element.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 
 ```ts
 RichTextElements.removeParents<
-  TElement extends RichTextElement
+  TElement extends RTElement
 >(core: Core, elementId: string, parents: ParentReference[]): TElement
 ```
 
@@ -541,7 +541,7 @@ RichTextElements.removeParents<
 
 ### nest
 
-Nests rich text block elements into another rich text block element and dispatches a `rich-text-elements:nest` event. Returns the updated element.
+Nests rich text block elements into another rich text block element and dispatches a `rich-text-element:nest` event. Returns the updated element.
 
 The elements is added as a parent on the nested elements.
 
@@ -551,7 +551,7 @@ The elements is added as a parent on the nested elements.
 
 ```ts
 RichTextElements.nest<
-  TElement extends RichTextBlockElement
+  TElement extends RTBlockElement
 >(core: Core, elementId: string, nestElementIds: string[]): TElement
 ```
 
@@ -576,7 +576,7 @@ RichTextElements.nest<
 
 ### unnest
 
-Unnests rich text block elements from another rich text block element and dispatches a `rich-text-elements:unnest` event. Returns the updated element.
+Unnests rich text block elements from another rich text block element and dispatches a `rich-text-element:unnest` event. Returns the updated element.
 
 The elements is removed as a parent from the nested elements.
 
@@ -584,7 +584,7 @@ The elements is removed as a parent from the nested elements.
 
 ```ts
 RichTextElements.unnest<
-  TElement extends RichTextBlockElement
+  TElement extends RTBlockElement
 >(core: Core, elementId: string, unnestElementIds: string[]): TElement
 ```
 
@@ -609,7 +609,7 @@ RichTextElements.unnest<
 
 ### addFiles
 
-Adds files to a rich text element and dispaches a `rich-text-elements:add-files` event. Returns the updated rich text element.
+Adds files to a rich text element and dispaches a `rich-text-element:add-files` event. Returns the updated rich text element.
 
 - Throws a `RichTextElementNotFoundError` if the element does not exist.
 - Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
@@ -617,7 +617,7 @@ Adds files to a rich text element and dispaches a `rich-text-elements:add-files`
 The element is added as a parent on the file references.
 
 ```ts
-RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): RTElement
 ```
 
 <ArgsTable
@@ -641,7 +641,7 @@ RichTextElements.addFiles(core: Core, elementId: string, fileIds: string[]): Ric
 
 ### removeFiles
 
-Removes files from a rich text element and dispatches a `rich-text-elements:remove-files`. Returns the updated rich text element.
+Removes files from a rich text element and dispatches a `rich-text-element:remove-files`. Returns the updated rich text element.
 
 The element is removed as a parent from the file references.
 
@@ -649,7 +649,7 @@ The element is removed as a parent from the file references.
 - Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
 
 ```ts
-RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): RTElement
 ```
 
 <ArgsTable
@@ -673,7 +673,7 @@ RichTextElements.removeFiles(core: Core, elementId: string, fileIds: string[]): 
 
 ### replaceFiles
 
-Replaces files in a rich text element (removing current files and adding given files) and dispatches a `rich-text-elements:replace-files` event. Returns the updated rich text element.
+Replaces files in a rich text element (removing current files and adding given files) and dispatches a `rich-text-element:replace-files` event. Returns the updated rich text element.
 
 The element will be added as a parent onto the added files, and removed as a parent from the removed files.
 
@@ -681,7 +681,7 @@ The element will be added as a parent onto the added files, and removed as a par
 - Throws a `FileReferenceNotFoundError` if any of the file references do not exist.
 
 ```ts
-RichTextElements.replaceFiles(core: Core, elementId: string, fileIds: string[]): RichTextElement
+RichTextElements.replaceFiles(core: Core, elementId: string, fileIds: string[]): RTElement
 ```
 
 <ArgsTable
@@ -705,10 +705,13 @@ RichTextElements.replaceFiles(core: Core, elementId: string, fileIds: string[]):
 
 ### register
 
-Registers a new rich text element type and dispaches a `rich-text-elements:register` event.
+Registers a new rich text element type and dispaches a `rich-text-element:register` event.
 
 ```ts
-RichTextElements.register(core: Core, config: RichTextElementConfig): void
+RichTextElements.register(
+  core: Core,
+  config: RTBlockElementConfig | RTInlineElementConfig,
+): void
 ```
 
 <ArgsTable
@@ -716,15 +719,17 @@ RichTextElements.register(core: Core, config: RichTextElementConfig): void
   data={[
     {
       name: 'config',
-      type: 'RichTextElementConfig',
+      type: 'RTBlockElementConfig | RTInlineElementConfig',
       required: true,
       description: (
         <span>
-          The config of the rich text element to register. See the{' '}
-          <a href="/docs/extensions/types/rich-text-element-config">
-            RichTextElementConfig interface
-          </a>{' '}
-          for details.
+          The config of the rich text element to register. Either a
+          <a href="/docs/extensions/types/rich-text-block-element-config">
+            block element type config
+          </a> or an 
+          <a href="/docs/extensions/types/rich-text-inline-element-config">
+            inline element type config
+          </a>.
         </span>
       ),
     },
@@ -733,7 +738,7 @@ RichTextElements.register(core: Core, config: RichTextElementConfig): void
 
 ### unregister
 
-Unregisters a rich text element type and dispaches a `rich-text-elements:unregister` event.
+Unregisters a rich text element type and dispaches a `rich-text-element:unregister` event.
 
 ```ts
 RichTextElements.unregister(core: Core, type: string): void
@@ -758,14 +763,14 @@ Converts one or more rich text elements to a plain text string. Void elements ar
 - Throws a `RichTextElementNotFoundError` if any of the elements' nested elements do not exist.
 
 ```ts
-RichTextElements.toPlainText(element: RichTextElement | RichTextElement[]): string
+RichTextElements.toPlainText(element: RTElement | RTElement[]): string
 ```
 
 <ArgsTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement | RichTextElement[]',
+      type: 'RTElement | RTElement[]',
       required: true,
       description:
         'The rich text element(s) to convert into plain text.',
@@ -782,7 +787,7 @@ Returns the initialzed custom data for a new rich text element. The data is init
 ```ts
 RichTextElements.initializeData<TData = {}>(
   type: string,
-  fromData?: DataInsert | RichTextFragment
+  fromData?: DataInsert | RTFragment
 ): TData
 ```
 
@@ -797,7 +802,7 @@ RichTextElements.initializeData<TData = {}>(
     },
     {
       name: 'fromData',
-      type: 'DataInsert | RichTextFragment',
+      type: 'DataInsert | RTFragment',
       description: (
         <div>
           <p>The data from which to initialize the element data.</p>
@@ -807,7 +812,7 @@ RichTextElements.initializeData<TData = {}>(
           </p>
           <p>
             If initializing the data for an 'inline' level element,
-            must be a <Code>RichTextFragment</Code>.
+            must be a <Code>RTFragment</Code>.
           </p>
         </div>
       ),
@@ -824,7 +829,7 @@ The conversion of an element from one type to another follows these steps:
 1. The default data for the new element type is generated using the element's `initializeData` method (if defined).
 2. The conversion data is generated using the new element's `convertData` method (if defined).
 3. The element's custom data fields (if present) are removed.
-4. If converting to a void element type, `children` is removed. Conversly, if converting from a void element type to a non-void element type, `children` (consisting of a `RichTextFragment` containing the original element's plain text value) is added.
+4. If converting to a void element type, `children` is removed. Conversly, if converting from a void element type to a non-void element type, `children` (consisting of a `RTFragment` containing the original element's plain text value) is added.
 5. The default data (generated in step 1) is merged into the element.
 6. The conversion data (generated in step 2) is merged into the element.
 7. The element's `type` is changed to the new type.
@@ -835,15 +840,15 @@ The conversion of an element from one type to another follows these steps:
 
 ```ts
 RichTextElements.convert<
-  TElement extends RichTextBlockElement,
->(element: RichTextBlockElement, type: string): TElement
+  TElement extends RTBlockElement,
+>(element: RTBlockElement, type: string): TElement
 ```
 
 <ArgsTable
   data={[
     {
       name: 'element',
-      type: 'RichTextBlockElement',
+      type: 'RTBlockElement',
       required: true,
       description: 'The rich text block element to convert.',
     },
@@ -859,10 +864,10 @@ RichTextElements.convert<
 
 ### load
 
-Loads rich text elements into the store and dispatches a `rich-text-elements:load` event.
+Loads rich text elements into the store and dispatches a `rich-text-element:load` event.
 
 ```ts
-RichTextElements.load(core: Core, elements: RichTextElement[]): void
+RichTextElements.load(core: Core, element: RTElement[]): void
 ```
 
 <ArgsTable
@@ -870,7 +875,7 @@ RichTextElements.load(core: Core, elements: RichTextElement[]): void
   data={[
     {
       name: 'elements',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The rich text elements to load.',
     },
@@ -893,137 +898,137 @@ Clears all registered rich text element configs from the store. This method is *
 RichTextElements.clearRegistered(): void
 ```
 
-## RichTextElement events
+## RTElement events
 
 See below the table for more details on the data passed by rich text element related events.
 
 <EventsTable
   data={[
     {
-      name: 'rich-text-elements:create',
-      data: 'RichTextElement',
+      name: 'rich-text-element:create',
+      data: 'RTElement',
       description: 'Dispatched when a rich text element is created.',
     },
     {
-      name: 'rich-text-elements:update',
-      data: 'UpdateRichTextElementEventData',
+      name: 'rich-text-element:update',
+      data: 'UpdateRTElementEventData',
       description: 'Dispatched when a rich text element is updated.',
     },
     {
-      name: 'rich-text-elements:delete',
-      data: 'RichTextElement',
+      name: 'rich-text-element:delete',
+      data: 'RTElement',
       description: 'Dispatched when a rich text element is deleted.',
     },
     {
-      name: 'rich-text-elements:restore',
-      data: 'RichTextElement',
+      name: 'rich-text-element:restore',
+      data: 'RTElement',
       description:
         'Dispatched when a deleted rich text element is restored.',
     },
     {
-      name: 'rich-text-elements:delete-permanently',
-      data: 'RichTextElement',
+      name: 'rich-text-element:delete-permanently',
+      data: 'RTElement',
       description:
         'Dispatched when a rich text element is permanently deleted.',
     },
     {
-      name: 'rich-text-elements:add-parents',
-      data: 'AddParentsToRichTextElementEventData',
+      name: 'rich-text-element:add-parents',
+      data: 'AddParentsToRTElementEventData',
       description:
         'Dispatched when parents are added to a rich text element.',
     },
     {
-      name: 'rich-text-elements:remove-parents',
-      data: 'RemoveParentsFromRichTextElementEventData',
+      name: 'rich-text-element:remove-parents',
+      data: 'RemoveParentsFromRTElementEventData',
       description:
         'Dispatched when parents are removed from a rich text element.',
     },
     {
-      name: 'rich-text-elements:nest',
-      data: 'NestRichTextElementEventData',
+      name: 'rich-text-element:nest',
+      data: 'NestRTElementEventData',
       description:
         'Dispatched when rich text elements are nested into another element.',
     },
     {
-      name: 'rich-text-elements:unnest',
-      data: 'UnnestRichTextElementEventData',
+      name: 'rich-text-element:unnest',
+      data: 'UnnestRTElementEventData',
       description:
         'Dispatched when rich text elements are unnested from another element.',
     },
     {
-      name: 'rich-text-elements:add-files',
-      data: 'AddFilesToRichTextElementEventData',
+      name: 'rich-text-element:add-files',
+      data: 'AddFilesToRTElementEventData',
       description:
         'Dispatched when files are added to a rich text element.',
     },
     {
-      name: 'rich-text-elements:remove-files',
-      data: 'RemoveFilesFromRichTextElementEventData',
+      name: 'rich-text-element:remove-files',
+      data: 'RemoveFilesFromRTElementEventData',
       description:
         'Dispatched when files are removed from a rich text element.',
     },
     {
-      name: 'rich-text-elements:replace-files',
-      data: 'ReplaceFilesInRichTextElementEventData',
+      name: 'rich-text-element:replace-files',
+      data: 'ReplaceFilesInRTElementEventData',
       description:
         "Dispatched when a rich text element's files are replaced with new ones.",
     },
     {
-      name: 'rich-text-elements:register',
-      data: 'RichTextElementConfig',
+      name: 'rich-text-element:register',
+      data: 'RTElementConfig',
       description:
         'Dispatched when a new rich text element type is registered.',
     },
     {
-      name: 'rich-text-elements:unregister',
-      data: 'RichTextElementConfig',
+      name: 'rich-text-element:unregister',
+      data: 'RTElementConfig',
       description:
         'Dispatched when a rich text element type is unregistered.',
     },
     {
-      name: 'rich-text-elements:load',
-      data: 'RichTextElement[]',
+      name: 'rich-text-element:load',
+      data: 'RTElement[]',
       description:
         'Dispatched when rich text elements are loaded into the store.',
     },
   ]}
 />
 
-### RichTextElement event data types
+### RTElement event data types
 
-RichTextElement events are dispatched with one of the following types of data.
+RTElement events are dispatched with one of the following types of data.
 
-#### RichTextElement
+#### RTElement
 
-See the [RichTextElement](/docs/extensions/types/rich-text-element) interface page.
+See the [RTElement](/docs/extensions/types/rich-text-element) interface page.
 
-#### RichTextElementConfig
+#### RTElementConfig
 
-See the [RichTextElementConfig](/docs/extensions/types/rich-text-element-config) interface page.
+See the [RTElementConfig](/docs/extensions/types/rich-text-element-config) interface page.
 
 #### ParentReference
 
 See the [ParentReference](/docs/extensions/types/parent-reference) interface page.
 
-#### UpdateRichTextElementEventData
+#### UpdateRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'before',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The rich text element before it was updated.',
     },
     {
       name: 'after',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The updated rich text element.',
     },
     {
       name: 'changes',
-      type: 'RichTextElementChanges',
+      type: 'RTElementChanges',
       required: true,
       description:
         'The changes applied to the rich text element. See below for details.',
@@ -1031,7 +1036,7 @@ See the [ParentReference](/docs/extensions/types/parent-reference) interface pag
   ]}
 />
 
-`RichTextElementChanges`
+`RTElementChanges`
 
 In addition to the data below, the changes data may include custom data according to the rich text element type.
 
@@ -1046,7 +1051,7 @@ In addition to the data below, the changes data may include custom data accordin
     },
     {
       name: 'children',
-      type: 'RichTextFragment | ArrayUnion | ArrayRemove',
+      type: 'RTFragment | ArrayUnion | ArrayRemove',
       description: 'The rich text content of the element.',
     },
     {
@@ -1054,7 +1059,7 @@ In addition to the data below, the changes data may include custom data accordin
       type: 'string[] | ArrayUnion | ArrayRemove | Delete',
       description: (
         <span>
-          The IDs of nested block level <Code>RichTextElement</Code>s.
+          The IDs of nested block level <Code>RTElement</Code>s.
         </span>
       ),
     },
@@ -1088,13 +1093,13 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### AddParentsToRichTextElementEventData
+#### AddParentsToRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description:
         'The rich text element to which the parents were added.',
@@ -1109,13 +1114,13 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### RemoveParentsFromRichTextElementEventData
+#### RemoveParentsFromRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description:
         'The rich text element from which the parents were removed.',
@@ -1130,40 +1135,40 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### NestRichTextElementEventData
+#### NestRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextBlockElement',
+      type: 'RTBlockElement',
       required: true,
       description:
         'The rich text block element into which the elements were nested.',
     },
     {
       name: 'nestedElements',
-      type: 'RichTextBlockElementMap',
+      type: 'RTBlockElementMap',
       required: true,
       description: 'The rich text block elements which were nested.',
     },
   ]}
 />
 
-#### RemoveParentsFromRichTextElementEventData
+#### RemoveParentsFromRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextBlockElement',
+      type: 'RTBlockElement',
       required: true,
       description:
         'The rich text block element from which the elements were unnested.',
     },
     {
       name: 'unnestedElements',
-      type: 'RichTextBlockElementMap',
+      type: 'RTBlockElementMap',
       required: true,
       description:
         'The rich text block elements which were unnested.',
@@ -1171,13 +1176,13 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### AddFilesToRichTextElementEventData
+#### AddFilesToRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description:
         'The rich text element to which the files were added.',
@@ -1192,13 +1197,13 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### RemoveFilesFromRichTextElementEventData
+#### RemoveFilesFromRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description:
         'The rich text element from which the files were removed.',
@@ -1213,13 +1218,13 @@ In addition to the data below, the changes data may include custom data accordin
   ]}
 />
 
-#### ReplaceFilesInRichTextElementEventData
+#### ReplaceFilesInRTElementEventData
 
 <InterfaceTable
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description:
         'The rich text element in which the files were replaced.',

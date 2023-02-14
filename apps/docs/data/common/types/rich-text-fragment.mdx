@@ -1,24 +1,24 @@
 ---
-metaTitle: RichTextFragment
+metaTitle: RTFragment
 metaDescription: The lowest level content of rich text documents.
 ---
 
-# RichTextFragment
+# RTFragment
 
 <Description>
   The lowest level content of rich text documents.
 </Description>
 
-A rich text fragment is simply an array of [`RichTextNode`](rich-text-node) and [`RichTextInlineElement`](rich-text-inline-element) objects.
+A rich text fragment is simply an array of [`RTNode`](rich-text-node) and [`RTInlineElement`](rich-text-inline-element) objects.
 
-A fragment must always contain at least one `RichTextNode`. If the rich text fragment is 'empty' (e.g. a new paragraph element was inserted into the editor but no text has been typed into it yet), the fragment must consist on a single `RichTextNode` with its text set to an empty string:
+A fragment must always contain at least one `RTNode`. If the rich text fragment is 'empty' (e.g. a new paragraph element was inserted into the editor but no text has been typed into it yet), the fragment must consist on a single `RTNode` with its text set to an empty string:
 
 ```ts
 // An empty fragment
 const fragment = [{ text: '' }];
 ```
 
-A fragment's `RichTextInlineElement`s must be surounded by `RichTextNode`s, and must always start and end with a `RichTextNode`. These can be empty nodes if there is no text content between the inline elements:
+A fragment's `RTInlineElement`s must be surounded by `RTNode`s, and must always start and end with a `RTNode`. These can be empty nodes if there is no text content between the inline elements:
 
 The text "[Mass-energy equivalence](https://en.wikipedia.org/wiki/Mass-energy_equivalence) formula: `e=mc^2`" would have a fragment resembling the following:
 
@@ -44,7 +44,7 @@ const fragment = [
 
 Rich text fragments are also used to represent the text selection in the editor.
 
-If the selection covers only part of the text in a `RichTextNode`, the resulting selection fragment will include only the selected text.
+If the selection covers only part of the text in a `RTNode`, the resulting selection fragment will include only the selected text.
 
 For example if a section of the text:
 

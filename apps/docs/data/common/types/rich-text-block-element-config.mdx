@@ -1,17 +1,17 @@
 ---
-metaTitle: RichTextBlockElementConfig Interface
+metaTitle: RTBlockElementConfig Interface
 metaDescription: Configuration for registering block level rich text element types.
 ---
 
-# RichTextBlockElementConfig
+# RTBlockElementConfig
 
 <Description>
   Configuration for registering block level rich text element types.
 </Description>
 
-In rich text documents, elements such as paragraphs, images, links, etc. are created using `RichTextElement` objects. Before such elements can be created, the element type needs to be registered using the `RichTextElements.register` method.
+In rich text documents, elements such as paragraphs, images, links, etc. are created using `RTElement` objects. Before such elements can be created, the element type needs to be registered using the `RTElements.register` method.
 
-## RichTextBlockElementConfig
+## RTBlockElementConfig
 
 The configuration object for block level elements. See below the table for additioal details.
 
@@ -37,10 +37,16 @@ The configuration object for block level elements. See below the table for addit
       description: 'The component used to render the element.',
     },
     {
-      name: 'initializeData',
+      name: 'initializeDataFromFragment',
       type: 'function',
       description:
-        'Called when creating a new element of this type. Should return the initial state of any custom data used in the element. Omit if the element does not use custom data.',
+        'Called when creating a new element of this type from a rich text fragment. Should return the initial state of any custom data used in the element. Can be omitted if the element simply uses the fragment as its children or not at all.',
+    },
+    {
+      name: 'initializeDataFromFile',
+      type: 'function',
+      description:
+        'Called when creating a new element of this type from a file. Should return the initial state of any custom data used in the element. Can be omitted if the element does not support creation from files.',
     },
     {
       name: 'convertData',
@@ -74,10 +80,10 @@ The configuration object for block level elements. See below the table for addit
     },
     {
       name: 'returnBehaviour',
-      type: "'break-out' | 'line-break' | 'same-type'",
+      type: "'break-out' | 'line-break' | 'same-type' | callback",
       default: "'break-out'",
       description:
-        'Determines the bahviour when the Return key is pressed at the end of an element of this type.',
+        'Determines the bahviour when the Return key is pressed with focus within an element of this type. See below for details.',
     },
     {
       name: 'dataTypes',
@@ -106,7 +112,7 @@ The configuration object for block level elements. See below the table for addit
       description: (
         <p>
           When <Code>true</Code>, indicates that this element type
-          supports multiple files at once.
+          supports multiple files at once, in which case <Code>initializeDataFromFile</Code> will be called once with all files instead of once per file.
         </p>
       ),
     },
@@ -127,7 +133,7 @@ The configuration object for block level elements. See below the table for addit
     },
     {
       name: 'hotkeys',
-      type: 'BlockHotkeyConfig[]',
+      type: 'BlockHotkey[]',
       description: 'The hotkeys related to this element.',
     },
     {
@@ -149,7 +155,7 @@ Rich text element components are just simple React components. However, there ar
 Below is an example of a non-void (in which text can be edited) paragraph element. It will render a paragraph inside which the text is editable.
 
 ```tsx
-const ParagraphElement: React.FC<RichTextBlockElementProps> = ({
+const ParagraphElement: React.FC<RTBlockElementProps> = ({
   attributes,
   children,
 }) => <p {...attributes}>{children}</p>;
@@ -158,7 +164,7 @@ const ParagraphElement: React.FC<RichTextBlockElementProps> = ({
 Below is an example of a void (in which there is no text to edit) image element. Note that `children` must be rendered even though the image doesn't actaully have editable children (it renders an empty span element required for editor functionality).
 
 ```tsx
-interface ImageElementProps extends RichTextBlockElementProps {
+interface ImageElementProps extends RTBlockElementProps {
   /**
    * The image src.
    */
@@ -177,7 +183,7 @@ const ImageElement: React.FC<ImageElementProps> = ({
 );
 ```
 
-#### RichTextBlockElementProps
+#### RTBlockElementProps
 
 The props passed to block element components.
 
@@ -199,38 +205,82 @@ The props passed to block element components.
     },
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTElement',
       required: true,
       description: 'The rich text element being rendered.',
     },
   ]}
 />
 
-### initializeData
+### initializeDataFromFragment
 
-Called when creating a new rich text element of this type. Should return an object containing the initial state of the custom data used by the element. Omit if the element does not use any custom data.
+Called when creating a new rich text element of this type from a [rich text fragment](/docs/extensions/types/rich-text-fragment). Should return an object containing the initial state of the custom data used by the element. Can be omitted if the element simply uses the fragment as its children or not at all. 
 
 ```ts
-initializeData<TCustomData extends {}>(data?: DataInsert): TCustomData
+initializeDataFromFragment<
+  TCustomData extends {}
+>(fragment?: RTFragment): TCustomData
 ```
 
 <ArgsTable
+  core
   data={[
     {
-      name: 'data',
-      type: 'DataInsert',
-      description:
-        'A data insert object present if the element is being created as a result of a data insert.',
+      name: 'fragment',
+      type: 'RTFragment',
+      required: true,
+      description: 'A rich text fragment.',
     },
   ]}
 />
 
 #### Example
 
-For a 'to-do' element which has a `done` property, the `initializeData` method should return an object initializing the property:
+Imagine an "equation" element which renders mathematical expression, the `initializeDataFromFragment` method could be used to set the fragment's plain text value as the expression value:
 
 ```ts
-initializeData: () => ({ done: false });
+createFromFragment: (core, fragment) => ({ expression: RTElements.toPlainText(fragment) });
+```
+
+### initializeDataFromFile
+
+Called when creating a new rich text element of this type from one or more files. Should return an object containing the initial state of the custom data used by the element. Omit if the element does not support being created from files.
+
+When creating elements from files, a file reference must be created for each file using `Files.create`.
+
+
+
+```ts
+createFromFile<TCustomData extends {}>(file?: File | File[]): TCustomData
+```
+
+<ArgsTable
+  core
+  data={[
+    {
+      name: 'file',
+      type: 'File | File[]',
+      required: true,
+      description: (
+        <span>The file or files from which to initialize the data. Always a single file if <Code>multiFile</Code> is false. Always an array of files if <Code>multiFile</Code> it true.</span>
+      )
+    },
+  ]}
+/>
+
+#### Example
+
+Imagine a simple "image" element which stores the displayed image's file reference ID using a `file` property.
+
+```ts
+initializeDataFromFile: (core, file) => {
+  // Save the file
+  const fileReference = Files.create(core, file);
+
+  return {
+    file: fileReference.id,
+  }
+}
 ```
 
 ### convertData
@@ -238,14 +288,16 @@ initializeData: () => ({ done: false });
 Called when an existing rich text element of a different type is converted into this type (e.g. converting a 'paragraph' element into an 'equation' element). Omit if the element does not need to perform additional logic during element conversions.
 
 ```ts
-convert<TCustomData extends {}>(element: RichTextBlockElement): TCustomData
+convert<TCustomData extends {}>(element: RTBlockElement): TCustomData
 ```
 
 <ArgsTable
+  core
   data={[
     {
       name: 'element',
-      type: 'RichTextBlockElement',
+      type: 'RTBlockElement',
+      required: true,
       description:
         'The rich text element being converted, always a block level element.',
     },
@@ -254,10 +306,10 @@ convert<TCustomData extends {}>(element: RichTextBlockElement): TCustomData
 
 The conversion of an element from one type to another follows these steps:
 
-1. The default data for the new element type is generated using the element's `initializeData` method (if defined).
+1. The default data for the new element type is generated using the element's `createFromFragment` method (if defined).
 2. The conversion data is generated using the new element's `convertData` method (if defined).
 3. The element's custom data fields (if present) are removed.
-4. If converting to a void element type, `children` is removed. Conversly, if converting from a void element type to a non-void element type, `children` (consisting of a `RichTextFragment` containing the original element's plain text value) is added.
+4. If converting to a void element type, `children` is removed. Conversly, if converting from a void element type to a non-void element type, `children` (consisting of a `RTFragment` containing the original element's plain text value) is added.
 5. The default data (generated in step 1) is merged into the element.
 6. The conversion data (generated in step 2) is merged into the element.
 7. The element's `type` is changed to the new type.
@@ -267,8 +319,8 @@ The conversion of an element from one type to another follows these steps:
 For an 'equation' element which stores the equation expression under a field called `expression`, conversion could be done by setting the converted element's plain text value as the `expression`.
 
 ```ts
-convertData: (element) => ({
-  expression: RichTextElements.toPlainText(element),
+convertData: (core, element) => ({
+  expression: RTElements.toPlainText(element),
 });
 ```
 
@@ -284,14 +336,15 @@ Providing a `toPlainText` method is strongly recommended for void elements which
 - **Conversion**: Some element types use the plain text content to initialize custom data fields during conversion (see [convertData](#convertdata) above).
 
 ```ts
-toPlainText(element: RichTextBlockElement): string
+toPlainText(element: RTBlockElement): string
 ```
 
 <ArgsTable
+  core
   data={[
     {
       name: 'element',
-      type: 'RichTextBlockElement',
+      type: 'RTBlockElement',
       required: true,
       description: 'The element to convert to plain text.',
     },
@@ -302,7 +355,7 @@ toPlainText(element: RichTextBlockElement): string
 
 Void elements are elements which do not involve text (e.g. an 'image' element), or elements in wich the text is not directly a part of the editor (e.g. an 'equation' element in which the equation expression is edited in a popup field).
 
-Non-void elements must have a `children` field set to a [`RichTextFragment`](/docs/extensions/types/rich-text-fragment).
+Non-void elements must have a `children` field set to a [`RTFragment`](/docs/extensions/types/rich-text-fragment).
 
 ### returnBehaviour
 
@@ -311,6 +364,7 @@ What happens when the Return key is pressed at the end of a block element:
 - `'break-out'` inserts a new element of the default type below, this is the default behaviour.
 - `'same-type'` inserts a new element of the same type as this one below.
 - `'line-break'` inserts a soft line break (`\n`) into the current element.
+- `(element: RTBlockElement) => Partial<TypeData>` inserts a new element of the same type as this one below and sets the returned data on the element. Receives the new element as its only parameter.
 
 If the Return key is pressed within the element's text, the element is split in two, creating a second element of the same type below, unless returnBehaviour is set to `'line-break'` in which case a line break is insterted.
 
@@ -318,7 +372,7 @@ If the Return key is pressed within the element's text, the element is split in 
 
 The data types from which this kind of element can be created (e.g. `'text/plain'`). Used to decide which type of element to create when data is inserted into the editor (e.g. from a paste event).
 
-When a data insert contains a matching data type, the `initializeData` method will be called with the inserted data. If there are multiple registered rich text element types that support the same data type, only a single element will be created (the element type that was registered first).
+When a data insert contains a matching data type, the `createFromFragment` method will be called with the inserted data. If there are multiple registered rich text element types that support the same data type, only a single element will be created (the element type that was registered first).
 
 Omit if this element type does not support being created from data.
 
@@ -328,7 +382,7 @@ Note that `'text/html'` data is ommited as creating elements from HTML is handle
 
 The file types from which this kind of element can be created (e.g. `'image/png'`). Used to decide which type of element to create when data containg files is inserted into the editor (e.g. from a paste event).
 
-When a data insert contains a matching file type, the `initializeData` method will be called with the inserted file(s). If there are multiple registered rich text element types that support the same file type, only a single element will be created (the element type that was registered first).
+When a data insert contains a matching file type, the `createFromFragment` method will be called with the inserted file(s). If there are multiple registered rich text element types that support the same file type, only a single element will be created (the element type that was registered first).
 
 Omit if this element type does not support being created from files.
 
@@ -336,9 +390,9 @@ Omit if this element type does not support being created from files.
 
 Determnies the behaviour when creating elements of this type from files.
 
-When `true`, indicates that this element type supports multiple files at once, resulting in the `initializeData` method being called once with all supported files included in the data parameter.
+When `true`, indicates that this element type supports multiple files at once, resulting in the `createFromFragment` method being called once with all supported files included in the data parameter.
 
-When `false`, indicates that this element type only supports a single file per element. In this case, the `initializeData` method will called for each inserted file, with a signle file being included in the data parameter.
+When `false`, indicates that this element type only supports a single file per element. In this case, the `createFromFragment` method will called for each inserted file, with a signle file being included in the data parameter.
 
 ### domains
 
@@ -381,10 +435,12 @@ The shortcut text is automatically removed when the shortcut is triggered.
 
 ### hotkeys
 
-The hotkeys related to this element. Hotkeys are configured using objects with a `keys` property, which is the list of keys which when pressed together trigger the action, and an `action` property. The action property can be one of two types:
+The hotkeys related to this element. Block element hotkeys can be used to convert elements of another type to this type, or modify the data on existing elements of this type if they are currently focused.
+
+Hotkeys are configured using `BlockHotkey` objects with a `keys` property, which is the list of keys which when pressed together trigger the action, and an `action` property. The action property can be one of two types:
 
 - `'convert'`: setting the action to 'convert' will cause the currently selected/focused block(s) to be converted to this type when triggered.
-- `BlockHotkeyCallback`: setting the action a function will call the function when triggered. It is only triggered if the currently selected/focused block(s) are of this type. The function should return the updated element (or the original if no changes were made). If multiple elements are selected, the function is called once per element of this type.
+- `BlockHotkeyAction`: setting the action a function will call the function when triggered. It is only triggered if the currently selected/focused block(s) are of this type. The function should return updated custom data for the element type. If multiple elements are selected, the function is called once per element of this type.
 
 Modifier keys:
 
@@ -396,7 +452,18 @@ For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`). Thes
 
 For instance, the hotkey `['Ctrl', 'Shift', '1']` would trigger when the `Control` + `Shift` + `1` (`Command` + `Shift` + `1` on Mac) keys are pressed in unison.
 
-#### BlockHotkeyConfig
+#### Example
+
+The following hotkey toggles a focused to-do element's 'done' state using `Ctrl + Enter`.
+
+```ts
+{
+  keys: ['Ctrl', 'Enter'],
+  action: (element) => ({ done: !element.done }),
+}
+```
+
+#### BlockHotkey
 
 <InterfaceTable
   data={[
@@ -408,29 +475,32 @@ For instance, the hotkey `['Ctrl', 'Shift', '1']` would trigger when the `Contro
     },
     {
       name: 'action',
-      type: "'convert' | BlockHotkeyCallback",
+      type: "'convert' | BlockHotkeyAction",
       description: 'The action triggered by the hotkey.',
     },
   ]}
 />
 
-#### BlockHotkeyCallback
+#### BlockHotkeyAction
 
-Callback fired when a block hotkey is triggered. Should return the updated element.
+Callback fired when an inline hotkey is triggered. Should return the custom type data to set onto the element.
 
 ```ts
-(core: Core, element: RichTextElement): RichTextBlockElement;
+<TTypeData extends RTElementTypeData>(
+  core: Core,
+  element: RTBlockElement,
+): TTypeData;
 ```
 
 <ArgsTable
-  code
+  core
   data={[
     {
       name: 'element',
-      type: 'RichTextElement',
+      type: 'RTBlockElement',
       required: true,
       description:
-        'The target element on which the hotkey was triggered.',
+        'The target block element on which the hotkey was triggered.',
     },
   ]}
 />
@@ -477,8 +547,8 @@ Callback used to deserialize an HTML element.
 deserializeHtmlElement(
   element: HTMLElement,
   parent: HTMLElement | null,
-  children: RichTextFragment | RichTextBlockElement[] | null,
-): CreateRichTextBlockElementData | CreateRichTextBlockElementData[] | null
+  children: RTFragment | RTBlockElement[] | null,
+): CreateRTBlockElementData | CreateRTBlockElementData[] | null
 ```
 
 <ArgsTable
@@ -502,7 +572,7 @@ deserializeHtmlElement(
     },
     {
       name: 'children',
-      type: 'RichTextFragment | RichTextBlockElement[] | null',
+      type: 'RTFragment | RTBlockElement[] | null',
       required: true,
       description: (
         <span>

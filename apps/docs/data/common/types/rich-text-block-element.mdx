@@ -1,18 +1,18 @@
 ---
-metaTitle: RichTextBlockElement Interface
+metaTitle: RTBlockElement Interface
 metaDescription: An object used to define block level elements in a rich text document.
 ---
 
-# RichTextBlockElement
+# RTBlockElement
 
 <Description>
   An object used to define block level elements in a rich text
   document.
 </Description>
 
-In rich text documents, elements such as paragraphs, list items, images, etc. are created using `RichTextBlockElement` objects.
+In rich text documents, elements such as paragraphs, list items, images, etc. are created using `RTBlockElement` objects.
 
-### RichTextBlockElement
+### RTBlockElement
 
 In addition to the fields below, rich text elements can contain custom fields for any custom data they require.
 
@@ -31,16 +31,16 @@ In addition to the fields below, rich text elements can contain custom fields fo
       description: (
         <p>
           The references of the element's parents. Typically, will
-          contain a reference to a <Code>RichTextDocument</Code> (the
+          contain a reference to a <Code>RTDocument</Code> (the
           rich text document in which the element is found) and a{' '}
-          <Code>RichTextBlockElement</Code> if the element is nested
+          <Code>RTBlockElement</Code> if the element is nested
           inside another rich text element.
         </p>
       ),
     },
     {
       name: 'children',
-      type: 'RichTextFragment',
+      type: 'RTFragment',
       description: 'The rich text content of the element.',
     },
     {
@@ -48,7 +48,7 @@ In addition to the fields below, rich text elements can contain custom fields fo
       type: 'string[]',
       description: (
         <p>
-          The IDs of nested <Code>RichTextBlockElement</Code>s. Only
+          The IDs of nested <Code>RTBlockElement</Code>s. Only
           present on block level elements which support nesting.
         </p>
       ),
@@ -83,7 +83,7 @@ In addition to the fields below, rich text elements can contain custom fields fo
 A 'to-do' element with nested elements.
 
 ```ts
-interface ToDoElement extends RichTextBlockElement {
+interface ToDoElement extends RTBlockElement {
   /**
    * The element type, always 'to-do'.
    */
@@ -117,7 +117,7 @@ const element: ToDoElement = {
 A void 'image' element with an attached file.
 
 ```ts
-interface ImageElement extends RichTextBlockElement {
+interface ImageElement extends RTBlockElement {
   /**
    * The element type, always 'image'.
    */

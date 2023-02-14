@@ -163,7 +163,7 @@ export function withOperations(editor: Editor, api: RTElementsApi): Editor {
 
       delete newElement.children;
 
-      // Apply the created RichTextElement's data to the new
+      // Apply the created RTElement's data to the new
       // editor element.
       apply({
         type: 'set_node',

@@ -81,6 +81,10 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/api/rich-text-elements',
       },
       {
+        title: 'RichTextMarks',
+        slug: 'docs/extensions/api/rich-text-marks',
+      },
+      {
         title: 'Selection',
         slug: 'docs/extensions/api/selection',
       },
@@ -154,36 +158,40 @@ export const extensionsRoutes = [
         slug: 'docs/extensions/types/resource-config',
       },
       {
-        title: 'RichTextNode',
+        title: 'RTNode',
         slug: 'docs/extensions/types/rich-text-node',
       },
       {
-        title: 'RichTextElement',
+        title: 'RTElement',
         slug: 'docs/extensions/types/rich-text-element',
       },
       {
-        title: 'RichTextFragment',
+        title: 'RTFragment',
         slug: 'docs/extensions/types/rich-text-fragment',
       },
       {
-        title: 'RichTextDocument',
+        title: 'RTDocument',
         slug: 'docs/extensions/types/rich-text-document',
       },
       {
-        title: 'RichTextBlockElement',
+        title: 'RTBlockElement',
         slug: 'docs/extensions/types/rich-text-block-element',
       },
       {
-        title: 'RichTextInlineElement',
+        title: 'RTInlineElement',
         slug: 'docs/extensions/types/rich-text-inline-element',
       },
       {
-        title: 'RichTextBlockElementConfig',
+        title: 'RTBlockElementConfig',
         slug: 'docs/extensions/types/rich-text-block-element-config',
       },
       {
-        title: 'RichTextInlineElementConfig',
+        title: 'RTInlineElementConfig',
         slug: 'docs/extensions/types/rich-text-inline-element-config',
+      },
+      {
+        title: 'RTMarkConfig',
+        slug: 'docs/extensions/types/rich-text-mark-config',
       },
       {
         title: 'Selection',

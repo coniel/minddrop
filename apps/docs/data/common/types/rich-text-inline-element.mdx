@@ -1,17 +1,17 @@
 ---
-metaTitle: RichTextElement Interface
+metaTitle: RTElement Interface
 metaDescription: An object used to define inline elements in a rich text document.
 ---
 
-# RichTextInlineElement
+# RTInlineElement
 
 <Description>
   An object used to define inline elements in a rich text document.
 </Description>
 
-In rich text documents, elements such as links, equations, etc. are created using `RichTextInlineElement` objects.
+In rich text documents, elements such as links, equations, etc. are created using `RTInlineElement` objects.
 
-### RichTextInlineElement
+### RTInlineElement
 
 In addition to the fields below, inline rich text elements can contain custom fields for any custom data they require (e.g. a `url` field for a 'link' element).
 
@@ -30,16 +30,16 @@ In addition to the fields below, inline rich text elements can contain custom fi
       description: (
         <p>
           The references of the element's parents. Typically, will
-          contain a reference to a <Code>RichTextBlockElement</Code>{' '}
+          contain a reference to a <Code>RTBlockElement</Code>{' '}
           (the rich text block in which the element is found) and a{' '}
-          <Code>RichTextDocument</Code> (the rich text document in
+          <Code>RTDocument</Code> (the rich text document in
           which the element is found).
         </p>
       ),
     },
     {
       name: 'children',
-      type: 'RichTextFragment',
+      type: 'RTFragment',
       description: 'The rich text content of the element.',
     },
     {
@@ -77,7 +77,7 @@ In addition to the fields below, inline rich text elements can contain custom fi
 A 'link' element.
 
 ```ts
-interface LinkElement extends RichTextInlineElement {
+interface LinkElement extends RTInlineElement {
   /**
    * The element type, always 'link'.
    */
@@ -108,7 +108,7 @@ const element: LinkElement = {
 A void 'equation' element (the expression is edited in a popup field).
 
 ```ts
-interface EquationElement extends RichTextInlineElement {
+interface EquationElement extends RTInlineElement {
   /**
    * The element type, always 'equation'.
    */

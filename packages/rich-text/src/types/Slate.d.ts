@@ -1,9 +1,9 @@
-import { RichTextNode } from './RichTextNode.types';
-import { RichTextElement } from './RichTextBlockElement.types';
+import { RTNode } from './RTNode.types';
+import { RTElement } from './RTElement.types';
 
 declare module 'slate' {
   interface CustomTypes {
-    Element: RichTextElement;
-    Text: RichTextNode;
+    Element: RTElement;
+    Text: RTNode;
   }
 }
