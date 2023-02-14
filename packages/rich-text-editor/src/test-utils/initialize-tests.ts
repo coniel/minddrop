@@ -7,6 +7,13 @@ import {
 } from '@minddrop/rich-text';
 import * as RichTextExtension from '@minddrop/rich-text';
 import { useRichTextEditorStore } from '../useRichTextEditorStore';
+import { RTMarkConfigsStore } from '../RTMarkConfigsStore';
+import {
+  boldMarkConfig,
+  italicMarkConfig,
+  strikethroughMarkConfig,
+  underlineMarkConfig,
+} from './rich-text-editor.data';
 
 const { richTextElementConfigs, richTextElements, richTextDocuments } =
   RICH_TEXT_TEST_DATA;
@@ -25,6 +32,14 @@ export function setup() {
     richTextElementConfigs.forEach((config) => {
       RichTextElements.register(core, config);
     });
+
+    // Register marks
+    RTMarkConfigsStore.register([
+      boldMarkConfig,
+      italicMarkConfig,
+      underlineMarkConfig,
+      strikethroughMarkConfig,
+    ]);
 
     // Load rich text elements
     RichTextElements.store.load(core, richTextElements);
@@ -47,5 +62,8 @@ export function cleanup() {
 
     // Clear the rich text editor store
     useRichTextEditorStore.getState().clear();
+
+    // Clear registered marks
+    RTMarkConfigsStore.clear();
   });
 }

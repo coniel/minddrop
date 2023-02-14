@@ -18,7 +18,10 @@ import BookmarkDropExtension from '@minddrop/bookmark-drop';
 import ImageDropExtension from '@minddrop/image-drop';
 import { ExtensionConfig, Extensions } from '@minddrop/extensions';
 import { initializeCore, Core } from '@minddrop/core';
-import { registerDefaultRichTextElementTypes } from '@minddrop/rich-text-editor';
+import {
+  registerDefaultRichTextElementTypes,
+  registerDefaultRichTextMarks,
+} from '@minddrop/rich-text-editor';
 import { TrashView } from '@minddrop/app-ui';
 import { Topics } from '@minddrop/topics';
 import { Views } from '@minddrop/views';
@@ -80,8 +83,9 @@ export async function initializeApp({
 
   await ResourcesExtension.onRun(core);
 
-  // Register default rich text element types
+  // Register default rich text elements and marks
   registerDefaultRichTextElementTypes(core);
+  registerDefaultRichTextMarks(core);
 
   // Initialize non-core extensions
   Extensions.initialize(core, extensions);

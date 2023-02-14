@@ -63,8 +63,15 @@ interface RTInlineElementConfigOptions<
 
   /**
    * The hotkeys related to this element type.
+   *
+   * - Use `'Ctrl'` for the Control key (maps to Command key on Mac)
+   * - Use `'Alt'` from the Alt key (maps to the Option key on Mac).
+   * - Use `'Shift'`for the Shift key.
+   *
+   * For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`).
+   * These are case insensitive.
    */
-  hotkey?: string[];
+  hotkeys?: string[];
 
   /**
    * Markdown style shorcuts which trigger the creation of an element of

@@ -1,0 +1,246 @@
+---
+metaTitle: RTMarkConfig Interface
+metaDescription: Configuration for registering rich text editor marks.
+---
+
+# RTMarkConfig
+
+<Description>
+  Configuration for registering inline rich text editor marks.
+</Description>
+
+In rich text documents, text nodes are the lowest-level nodes in the tree, containing the text content of the document, along with any formatting.
+
+To implement formatting such as **bold**, text nodes can contain custom properties refered to as 'marks'.
+
+Custom marks can be added to the editor by registering an `RTMarkConfig` using `RTMarks.register`.
+
+## RTMarkConfig
+
+The configuration object for registering new rich text mark.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'key',
+      type: 'string',
+      required: true,
+      description: 'The key of the property added to the text node to enable to mark.',
+    },
+    {
+      name: 'component',
+      type: 'React.ComponentType',
+      required: true,
+      description: 'The component used to render the mark. Wraps the editable span element containing the text.',
+    },
+    {
+      name: 'initializeDataFromFragment',
+      type: 'function',
+      description:
+        'Called when creating a new element of this type from a rich text fragment. Should return the initial state of any custom data used in the element. Can be omited if the element simply uses the fragment as its children or not at all.',
+    },
+    {
+      name: 'shortcuts',
+      type: '(string | InlineShortcutWrapTrigger)[]',
+      description:
+        'Markdown style shortcuts which activate this mark.',
+    },
+    {
+      name: 'hotkeys',
+      type: 'string[]',
+      description:
+        'A list of keys which, when pressed in unison, insert an element of this type.',
+    },
+    {
+      name: 'htmlDeserializers',
+      type: 'HtmlDeserializerMap',
+      description:
+        'Deserializer functions used to deserialize pasted HTML into this type of mark.',
+    },
+  ]}
+/>
+
+### key
+
+Text nodes are marked by adding a `{ [key]: true }` property to the node. The default value is `true`, but string and number values are also supported.
+
+### component
+
+Mark components are just simple React components which wrap the editable span containing the text. The component must render `children`.
+
+#### Example
+
+```tsx
+({ children }) => <strong>{children}</strong>
+```
+
+#### RTMarkProps
+
+The props passed to inline element components.
+
+<InterfaceTable
+  data={[
+    {
+      name: 'children',
+      type: 'React Children',
+      required: true,
+      description:
+        'Renders the editable rich text content. Must be rendered even if the element is void and does not support rich text content (it will render an empty span element required for editor functionality).',
+    },
+    {
+      name: 'leaf',
+      type: 'RTText',
+      required: true,
+      description: 'The rich text node being rendered.',
+    },
+  ]}
+/>
+
+### shortcuts
+
+Markdown style shorcuts which enable this mark.
+
+Mark shortcut triggers can be one of two types:
+
+- A simple string, which toggles the mark on as soon as it is typed.
+- A start-end combo, which applies the mark to the text wrapped between the start and end triggers.
+   
+The shortcut text is automatically removed when the shortcut is triggered.
+
+#### RTMarkShortcut
+
+<InterfaceTable
+  data={[
+    {
+      name: 'trigger',
+      type: 'string | InlineShortcutWrapTrigger',
+      required: true,
+      description: 'The trigger which enables the mark.',
+    },
+    {
+      name: 'value',
+      type: 'boolean | string | number',
+      description: (
+        <span>
+          The value of the mark set onto the text node,
+          defaults to <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+#### InlineShortcutWrapTrigger
+
+<InterfaceTable
+  data={[
+    {
+      name: 'start',
+      type: 'string',
+      required: true,
+      description: 'The shortcut start trigger.',
+    },
+    {
+      name: 'end',
+      type: 'string',
+      required: true,
+      description: 'The shortcut end trigger.',
+    },
+  ]}
+/>
+
+### hotkeys
+
+The hotkeys which toggle this mark.
+
+Modifier keys:
+
+- Use `'Ctrl'` for the Control key (maps to Command key on Mac)
+- Use `'Alt'` from the Alt key (maps to the Option key on Mac).
+- Use `'Shift'`for the Shift key.
+
+For other keys, simply use the character itslef (e.g. `'A'`, `'1'`, `'#'`). These are case insensitive.
+
+#### RTMarkHotkey 
+
+<InterfaceTable
+  data={[
+    {
+      name: 'keys',
+      type: 'string[]',
+      required: true,
+      description: 'List of keys used to trigger the action.',
+    },
+    {
+      name: 'value',
+      type: 'boolean | string | number',
+      description: (
+        <span>
+          The value of the mark set onto the text node,
+          defaults to <Code>true</Code>.
+        </span>
+      ),
+    },
+  ]}
+/>
+
+### htmlDeserializers
+
+HTML deserializers are called when HTML data is inserted into the editor, usually as a result of text being copy pasted into the editor from a web page. They should return the mark's value, such as `true`, or `null` the mark should not be applied.
+
+HTML deserializers are configured using a `{ [node name]: HtmlDeserializer }` map, where `[node name]` corresponds to an HTML element node name (in all caps), such a SPAN, A, IMG, etc. Use an asterisk (\*) as the node name in order to match against all HTML element types. If multiple registered rich text mark/element types configure a deserializer for the same HTML element, the deserializers will be run one after the other (in the order they were registered) until a non `null` value is returned. HTML deserializers bubble up, meaning that the most deeply nested elements are deserialized first, followed by their parent element.
+
+The example below demonstrates an HTML deserializer which turns `<strong>` elements into a 'bold' mark.
+
+```ts
+deserializers = {
+  STRONG: (element) => {
+    return true;
+  },
+};
+```
+
+#### HtmlMarkDeserializer
+
+Callback used to deserialize an HTML mark.
+
+```ts
+deserializeHtmlMark(
+  element: HTMLElement,
+  parent: HTMLElement | null,
+  children: RTFragment | RTBlockElement[] | null,
+): boolean | string | number | null
+```
+
+<ArgsTable
+  data={[
+    {
+      name: 'element',
+      type: 'HTMLElement',
+      required: true,
+      description: <span>The HTML element to deserialize.</span>,
+    },
+    {
+      name: 'parent',
+      type: 'HTMLElement | null',
+      required: true,
+      description: (
+        <span>
+          The element's parent element, or <Code>null</Code> if it has
+          no parent.
+        </span>
+      ),
+    },
+    {
+      name: 'children',
+      type: 'RTFragment | RTBlockElement[] | null',
+      required: true,
+      description: (
+        <span>
+          The element's deserialized child elements or{' '}
+          <Code>null</Code> if the element has no children.
+        </span>
+      ),
+    },
+  ]}
+/>

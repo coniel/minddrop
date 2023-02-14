@@ -6,6 +6,8 @@ import { useEditorInitialValue } from '../useEditorInitialValue';
 import { createRenderElement } from '../utils';
 import { useExternalUpdates } from '../useExternalUpdates';
 import './RichTextEditor.css';
+import { withRichTextMarks } from '../withRichTextMarks';
+import { RTMarkConfigsStore } from '../RTMarkConfigsStore';
 
 export interface RichTextEditorProps {
   /**
@@ -45,13 +47,19 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     [configs.length],
   );
 
+  const [editorWithPlugins, renderLeaf] = useMemo(
+    () => withRichTextMarks(editor, RTMarkConfigsStore.getAll()),
+    [],
+  );
+
   return (
     // The editor does nothing `onChange` because updates are handled
     // by the `useEditorSession` hook.
-    <Slate editor={editor} value={initialValue}>
+    <Slate editor={editorWithPlugins} value={initialValue}>
       <Editable
         className="editor"
         renderElement={renderElement}
+        renderLeaf={renderLeaf}
         onFocus={onFocus}
         onBlur={onBlur}
       />

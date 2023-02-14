@@ -144,6 +144,18 @@ img {
   -webkit-user-drag: none;
 }
 
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+u {
+  text-decoration: underline;
+}
+
 .draggable {
   -webkit-app-region: drag;
 }
