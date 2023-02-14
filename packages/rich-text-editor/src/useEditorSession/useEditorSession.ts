@@ -12,6 +12,7 @@ import { withBlockReset } from '../withBlockReset';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withParentReferences } from '../withParentReferences';
 import { withRichTextElementsApi } from '../withRichTextElementsApi';
+import { withReturnBehaviour } from '../withReturnBehaviour';
 
 /**
  * Returns an editor instance configured with plugins and
@@ -48,15 +49,17 @@ export function useEditorSession(documentId: string): [Editor, string] {
   // Create the editor instance
   const editor = useMemo(
     () =>
-      withBlockReset(
-        core,
-        withBlockShortcuts(
+      withReturnBehaviour(
+        withBlockReset(
           core,
-          withParentReferences(
-            withRichTextElementsApi(core, createEditor(), sessionId),
-            documentId,
+          withBlockShortcuts(
+            core,
+            withParentReferences(
+              withRichTextElementsApi(core, createEditor(), sessionId),
+              documentId,
+            ),
+            configs,
           ),
-          configs,
         ),
       ),
     [documentId, sessionId, configs.length],
