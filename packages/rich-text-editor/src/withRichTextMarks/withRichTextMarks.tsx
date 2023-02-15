@@ -1,5 +1,5 @@
 import React from 'react';
-import { Editor as SlateEditor, Transforms } from 'slate';
+import { Editor as SlateEditor, Range, Transforms } from 'slate';
 import { RenderLeafProps } from 'slate-react';
 import { Editor, RTMarkConfig } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
@@ -49,8 +49,20 @@ export function withRichTextMarks(
         {
           triggers: config.shortcuts,
           action: (editor: Editor) => {
-            SlateEditor.addMark(editor, config.key, true);
-            Transforms.collapse(editor, { edge: 'focus' });
+            // Check if the mark is already applied
+            if (SlateEditor.marks(editor)[config.key]) {
+              // Remove the mark
+              SlateEditor.removeMark(editor, config.key);
+            } else {
+              // Add the mark
+              SlateEditor.addMark(editor, config.key, true);
+            }
+
+            if (!Range.isCollapsed(editor.selection)) {
+              // If a wrapping shortcut was used, collapse
+              // the selection to the trailing edge.
+              Transforms.collapse(editor, { edge: 'focus' });
+            }
           },
         },
       ],
