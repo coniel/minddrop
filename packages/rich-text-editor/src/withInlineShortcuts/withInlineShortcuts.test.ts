@@ -250,7 +250,7 @@ describe('withInlineShortcuts', () => {
       expect(shortcut.action).toHaveBeenCalledWith(editor);
     });
 
-    it('prioritizes longer shortcut triggers', () => {
+    it('supports triggers which are a partial match of other triggers', () => {
       // Create a shortcut which fires upon a piece of text
       // being wrapped by '*' characters.
       const singleShortcut: InlineShortcut = {
@@ -265,17 +265,57 @@ describe('withInlineShortcuts', () => {
       };
 
       // Create an editor with the shortcut applied containing text
-      // prefixed by the start trigger of the long shortcut and
-      // followed by the first half of the end trigger.
+      // prefixed by the start trigger of the short shortcut.
       const editor = createEditor(
         [singleShortcut, doubleShortcut],
-        [{ ...emptyParagraphElement, children: [{ text: '**hello world*' }] }],
+        [{ ...emptyParagraphElement, children: [{ text: '*hello world' }] }],
       );
 
-      // Insert '*' (trigger character of both shortcuts) into
-      // the editor.
+      // Insert '*' (end trigger character)
       editor.insertText('*');
 
+      // Should not fire the double shortcut action
+      expect(doubleShortcut.action).not.toHaveBeenCalled();
+      // Should fire the single shortcut action
+      expect(singleShortcut.action).toHaveBeenCalledWith(editor);
+    });
+
+    it('prioritizes longer shortcut triggers', () => {
+      // Create a shortcut which fires upon a piece of text
+      // being wrapped by '*' characters.
+      const singleShortcut: InlineShortcut = {
+        triggers: [{ start: '*', end: '*' }],
+        action: jest.fn(),
+      };
+      // Create a shortcut which fires upon a piece of text
+      // being wrapped between '*' and '**'.
+      const mixedShortcut: InlineShortcut = {
+        triggers: [{ start: '*', end: '**' }],
+        action: jest.fn(),
+      };
+      // Create a shortcut which fires upon a piece of text
+      // being wrapped by '**' characters.
+      const doubleShortcut: InlineShortcut = {
+        triggers: [{ start: '**', end: '**' }],
+        action: jest.fn(),
+      };
+
+      // Create an editor with the shortcut applied containing text
+      // prefixed by the start trigger of the long shortcut.
+      const editor = createEditor(
+        [singleShortcut, mixedShortcut, doubleShortcut],
+        [{ ...emptyParagraphElement, children: [{ text: '**hello world' }] }],
+      );
+
+      // Insert '*' twice (trigger character of both shortcuts)
+      // into the editor.
+      editor.insertText('*');
+      editor.insertText('*');
+
+      // Should not fire the single shortcut action
+      expect(singleShortcut.action).not.toHaveBeenCalled();
+      // Should not fire the mixed shortcut action
+      expect(mixedShortcut.action).not.toHaveBeenCalled();
       // Should fire the double shortcut action
       expect(doubleShortcut.action).toHaveBeenCalledWith(editor);
     });

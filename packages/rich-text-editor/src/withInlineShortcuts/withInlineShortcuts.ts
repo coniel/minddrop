@@ -47,13 +47,13 @@ export function withInlineShortcuts(
   );
 
   // Create an array of [trigger, action] tuples for every start/end
-  // triggered shortcut, sorted by descending trigger end length.
+  // triggered shortcut, sorted by descending start trigger length.
   const startEndTriggerActions: [
     InlineShortcutWrapTrigger,
     InlineShortcutAction,
   ][] = triggerActions
     .filter(([trigger]) => typeof trigger !== 'string')
-    .sort(([a], [b]) => b.end.length - a.end.length);
+    .sort(([a], [b]) => b.start.length - a.start.length);
 
   // Create an array of [trigger, action] tuples for every string
   // triggered shortcut, sorted by descending trigger length.
@@ -91,123 +91,143 @@ export function withInlineShortcuts(
     let text = SlateEditor.string(editor, range);
     // Add the inserted text to the end of the current text
     text = `${text}${insertedText}`;
+    // The length of the longest matched start trigger
+    let minStartTriggerLength = 1;
 
     startEndTriggerActions.every(([trigger, action]) => {
-      // Check that the end of the text is the end trigger
-      if (text.endsWith(trigger.end)) {
-        // Get the text leading up to but excluding the trigger end
-        const leadText = text.slice(0, -trigger.end.length);
+      // Get the text leading up to but excluding the trigger end
+      const leadText = text.slice(0, -trigger.end.length);
 
-        // Check that the text contains the start trigger at least
-        // one character before the end trigger.
-        if (
-          leadText.includes(trigger.start) &&
-          !leadText.endsWith(trigger.start)
-        ) {
-          matched = true;
-
-          // If the end trigger is multiple characters long,
-          // remove the previously inputed characters.
-          if (trigger.end.length > 1) {
-            // Delete the inputed part of the end trigger
-            Transforms.delete(editor, {
-              at: {
-                anchor: {
-                  path: focus.path,
-                  // +1 because the last character was not inserted
-                  offset: focus.offset - trigger.end.length + 1,
-                },
-                focus,
-              },
-            });
-          }
-
-          // The index of the leaf containing the start trigger
-          let startTriggerLeafIndex: number;
-          // The index of the first leaf wrapped by the triggers.
-          // This can be different to the start trigger leaf if
-          // the start trigger is placed on the trailing edge of
-          // a leaf.
-          let firstAffectedLeafIndex: number;
-          // The offset of the start of the wrapped text
-          let startOffset: number;
-
-          // Loop through all the leaves up to and including
-          // the one into which the text is being inserted.
-          parentBlock[0].children.forEach((child, index) => {
-            if (!Text.isText(child)) {
-              return;
-            }
-
-            // Ignore leaves which are after the end trigger
-            if (index <= focus.path.slice(-1)[0]) {
-              if (child.text.includes(trigger.start)) {
-                // We want the closest match, so overriding an
-                // existing value is fine.
-                startTriggerLeafIndex = index;
-                firstAffectedLeafIndex = index;
-                startOffset = child.text.lastIndexOf(trigger.start);
-
-                // If the mark is at the trailing edge of the node,
-                // the first affected leaf will be the next leaf.
-                if (child.text.endsWith(trigger.end)) {
-                  firstAffectedLeafIndex += 1;
-                  startOffset = 0;
-                }
-              }
-            }
-          });
-
-          // The start trigger's offset within the leaf's text
-          const startTriggerOffset = (
-            parentBlock[0].children[startTriggerLeafIndex] as Text
-          ).text.lastIndexOf(trigger.start);
-          // The path of the leaf containing the start trigger
-          const startTriggerPath = [...parentBlockPath, startTriggerLeafIndex];
-
-          // Delete the start trigger
-          Transforms.delete(editor, {
-            distance: trigger.start.length,
-            unit: 'character',
-            at: {
-              path: startTriggerPath,
-              offset: startTriggerOffset,
-            },
-          });
-
-          // Select the text which was wrapped by the shortcut triggers
-          Transforms.setSelection(editor, {
-            anchor: {
-              path: [...parentBlockPath, firstAffectedLeafIndex],
-              offset: startOffset,
-            },
-            focus:
-              focus.offset === trigger.end.length - 1
-                ? // If the end trigger was at the leading edge of a node,
-                  // set focus to the trailing edge of the previous node.
-                  SlateEditor.end(editor, Path.previous(focus.path))
-                : // Otherwise set the focus to insertion point
-                  {
-                    path: focus.path,
-                    offset:
-                      focus.offset -
-                      trigger.end.length +
-                      1 -
-                      (Path.equals(focus.path, startTriggerPath)
-                        ? trigger.start.length
-                        : 0),
-                  },
-          });
-
-          // Fire the action
-          action(editor);
-
-          // Stop here
-          return false;
-        }
+      // Ensure that the text contains the start trigger at least
+      // one character before the end trigger.
+      if (
+        !leadText.includes(trigger.start) ||
+        leadText.endsWith(trigger.start)
+      ) {
+        // Does not contain (or it ends with) the start trigger
+        // move on to next one.
+        return true;
       }
 
-      return true;
+      // Ensure that the start trigger match is not a partial match
+      // of a previously matched start trigger.
+      if (trigger.start.length < minStartTriggerLength) {
+        // Stop here to prevent a shorter trigger pair (e.g. */*)
+        // from prematurely closing a longer pair that uses the
+        // same characters (e.g. **/**).
+        return true;
+      }
+
+      // Set the new minimum start trigger length
+      minStartTriggerLength = trigger.start.length;
+
+      // Check that the end of the text is the end trigger
+      if (!text.endsWith(trigger.end)) {
+        // Does not end with end trigger, move on to next one
+        return true;
+      }
+
+      // Shortcut has been matched
+      matched = true;
+
+      // If the end trigger is multiple characters long,
+      // remove the previously inputed characters.
+      if (trigger.end.length > 1) {
+        // Delete the inputed part of the end trigger
+        Transforms.delete(editor, {
+          at: {
+            anchor: {
+              path: focus.path,
+              // +1 because the last character was not inserted
+              offset: focus.offset - trigger.end.length + 1,
+            },
+            focus,
+          },
+        });
+      }
+
+      // The index of the leaf containing the start trigger
+      let startTriggerLeafIndex: number;
+      // The index of the first leaf wrapped by the triggers.
+      // This can be different to the start trigger leaf if
+      // the start trigger is placed on the trailing edge of
+      // a leaf.
+      let firstAffectedLeafIndex: number;
+      // The offset of the start of the wrapped text
+      let startOffset: number;
+
+      // Loop through all the leaves up to and including
+      // the one into which the text is being inserted.
+      parentBlock[0].children.forEach((child, index) => {
+        if (!Text.isText(child)) {
+          return;
+        }
+
+        // Ignore leaves which are after the end trigger
+        if (index <= focus.path.slice(-1)[0]) {
+          if (child.text.includes(trigger.start)) {
+            // We want the closest match, so overriding an
+            // existing value is fine.
+            startTriggerLeafIndex = index;
+            firstAffectedLeafIndex = index;
+            startOffset = child.text.lastIndexOf(trigger.start);
+
+            // If the mark is at the trailing edge of the node,
+            // the first affected leaf will be the next leaf.
+            if (child.text.endsWith(trigger.end)) {
+              firstAffectedLeafIndex += 1;
+              startOffset = 0;
+            }
+          }
+        }
+      });
+
+      // The start trigger's offset within the leaf's text
+      const startTriggerOffset = (
+        parentBlock[0].children[startTriggerLeafIndex] as Text
+      ).text.lastIndexOf(trigger.start);
+      // The path of the leaf containing the start trigger
+      const startTriggerPath = [...parentBlockPath, startTriggerLeafIndex];
+
+      // Delete the start trigger
+      Transforms.delete(editor, {
+        distance: trigger.start.length,
+        unit: 'character',
+        at: {
+          path: startTriggerPath,
+          offset: startTriggerOffset,
+        },
+      });
+
+      // Select the text which was wrapped by the shortcut triggers
+      Transforms.setSelection(editor, {
+        anchor: {
+          path: [...parentBlockPath, firstAffectedLeafIndex],
+          offset: startOffset,
+        },
+        focus:
+          focus.offset === trigger.end.length - 1
+            ? // If the end trigger was at the leading edge of a node,
+              // set focus to the trailing edge of the previous node.
+              SlateEditor.end(editor, Path.previous(focus.path))
+            : // Otherwise set the focus to insertion point
+              {
+                path: focus.path,
+                offset:
+                  focus.offset -
+                  trigger.end.length +
+                  1 -
+                  (Path.equals(focus.path, startTriggerPath)
+                    ? trigger.start.length
+                    : 0),
+              },
+      });
+
+      // Fire the action
+      action(editor);
+
+      // Shortcut has been triggered, stop here
+      return false;
     });
 
     if (matched) {
