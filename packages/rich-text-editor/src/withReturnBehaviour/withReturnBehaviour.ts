@@ -19,9 +19,10 @@ export function withReturnBehaviour(editor: Editor): Editor {
 
   // eslint-disable-next-line no-param-reassign
   editor.insertBreak = () => {
-    // Get the element entry in which the break was inserted
+    // Get the block element in which the break was inserted
     const [element] = getElementAbove(editor);
 
+    // Get the element's type config
     const config = RichTextElements.getTypeConfig(
       element.type,
     ) as RTBlockElementConfig;
