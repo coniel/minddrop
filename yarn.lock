@@ -3123,6 +3123,32 @@
     "@minddrop/core" "^0.3.0"
     pouchdb "^7.2.2"
 
+"@minddrop/resources@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/resources/-/resources-0.1.0.tgz#5492123492bb90ccf842cc6631ddf293d9ac1736"
+  integrity sha512-E86DSEzESuo5ueI7nhy2Yc5o6HAI8qJtrYtnFwIM0vVuOe0k1YkSVzsPFrHA3olaXHBiHBJUEDr6nX+s7dM7fg==
+  dependencies:
+    "@minddrop/core" "^0.4.0"
+    "@minddrop/utils" "^0.5.0"
+    zustand "^3.6.5"
+
+"@minddrop/rich-text-editor@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@minddrop/rich-text-editor/-/rich-text-editor-0.1.0.tgz#01ef5ea1d1116270ace6fa59a921d55c50bee90b"
+  integrity sha512-rrMztYYAM2W1nHFHuvTJDyd0s0i4foo9dSqBfaZMM/O/cuMzztSaXbBQ3jn1Gkl1b3r2EFDvmSmoY7TN5sM/+w==
+  dependencies:
+    "@minddrop/core" "^0.4.0"
+    "@minddrop/resources" "^0.1.0"
+    "@minddrop/rich-text" "^0.1.0"
+    "@minddrop/ui" "^0.3.0"
+    "@minddrop/utils" "^0.5.0"
+    slate "^0.76.1"
+    slate-history "^0.66.0"
+    slate-hyperscript "^0.67.0"
+    slate-react "^0.76.1"
+    use-debounce "^7.0.1"
+    zustand "^3.6.5"
+
 "@minddrop/tags@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@minddrop/tags/-/tags-0.1.1.tgz#e2b9853ec453d616ad9904f6444bc63fac85caf5"
@@ -14911,6 +14937,11 @@ is-hexadecimal@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/is-hexadecimal/-/is-hexadecimal-2.0.1.tgz#86b5bf668fca307498d319dfc03289d781a90027"
   integrity sha512-DgZQp241c8oO6cA1SbTEWiXeoxV42vlcJxgH+B3hi1AiqqKruZR3ZGF8In3fj4+/y/7rHvlOZLZtgJ/4ttYGZg==
+
+is-hotkey@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/is-hotkey/-/is-hotkey-0.2.0.tgz#1835a68171a91e5c9460869d96336947c8340cef"
+  integrity sha512-UknnZK4RakDmTgz4PI1wIph5yxSs/mvChWs9ifnlXsKuXgWmOkY/hAE0H/k2MIqH0RlRye0i1oC07MCRSD28Mw==
 
 is-hotkey@^0.1.6:
   version "0.1.8"

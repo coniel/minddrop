@@ -33,6 +33,7 @@
     "@minddrop/rich-text": "^0.1.1",
     "@minddrop/ui": "^0.3.1",
     "@minddrop/utils": "^0.5.1",
+    "is-hotkey": "0.2.0",
     "slate": "^0.76.1",
     "slate-history": "^0.66.0",
     "slate-hyperscript": "^0.67.0",
