@@ -8,6 +8,8 @@ import { useExternalUpdates } from '../useExternalUpdates';
 import './RichTextEditor.css';
 import { withRichTextMarks } from '../withRichTextMarks';
 import { RTMarkConfigsStore } from '../RTMarkConfigsStore';
+import { withMarkHotkeys } from '../withMarkHotkeys';
+import { defaultMarkConfigs } from '../default-mark-configs';
 
 export interface RichTextEditorProps {
   /**
@@ -52,6 +54,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     [],
   );
 
+  const onKeyDown = useMemo(
+    () => withMarkHotkeys(editor, defaultMarkConfigs),
+    [],
+  );
+
   return (
     // The editor does nothing `onChange` because updates are handled
     // by the `useEditorSession` hook.
@@ -60,6 +67,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         className="editor"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
+        onKeyDown={onKeyDown}
         onFocus={onFocus}
         onBlur={onBlur}
       />
