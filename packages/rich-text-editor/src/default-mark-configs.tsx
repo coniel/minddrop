@@ -5,26 +5,26 @@ export const boldMarkConfig: RTMarkConfig = {
   key: 'bold',
   component: ({ children }) => <strong>{children}</strong>,
   shortcuts: [
-    { start: '**', end: '**' },
-    { start: '__', end: '__' },
+    { trigger: { start: '**', end: '**' } },
+    { trigger: { start: '__', end: '__' } },
   ],
-  hotkeys: [{ keys: ['Ctrl', 'B'] }],
+  hotkeys: [{ keys: ['mod', 'B'] }],
 };
 
 export const italicMarkConfig: RTMarkConfig = {
   key: 'italic',
   component: ({ children }) => <em>{children}</em>,
   shortcuts: [
-    { start: '_', end: '_' },
-    { start: '*', end: '*' },
+    { trigger: { start: '_', end: '_' } },
+    { trigger: { start: '*', end: '*' } },
   ],
-  hotkeys: [{ keys: ['Ctrl', 'I'] }],
+  hotkeys: [{ keys: ['mod', 'I'] }],
 };
 
 export const underlineMarkConfig: RTMarkConfig = {
   key: 'underline',
   component: ({ children }) => <u>{children}</u>,
-  hotkeys: [{ keys: ['Ctrl', 'U'] }],
+  hotkeys: [{ keys: ['mod', 'U'] }],
 };
 
 export const strikethroughMarkConfig: RTMarkConfig = {
@@ -32,7 +32,7 @@ export const strikethroughMarkConfig: RTMarkConfig = {
   component: ({ children }) => (
     <span style={{ textDecoration: 'line-through' }}>{children}</span>
   ),
-  shortcuts: [{ start: '~', end: '~' }],
+  shortcuts: [{ trigger: { start: '~', end: '~' } }],
 };
 
 export const defaultMarkConfigs = [

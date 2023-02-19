@@ -63,7 +63,7 @@ export interface RTMarkConfig {
    * Markdown style shorcuts which enable this mark.
    *
    */
-  shortcuts?: (string | InlineShortcutWrapTrigger)[];
+  shortcuts?: RTMarkShortcut[];
 
   /**
    * HTML deserializers are called when HTML text is inserted into the editor.

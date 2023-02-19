@@ -1,8 +1,42 @@
+import { RTElement } from '@minddrop/rich-text';
 import React from 'react';
-import { Editor as SlateEditor, Range, Transforms } from 'slate';
+import { Node, Path, Range, Text, Transforms } from 'slate';
 import { RenderLeafProps } from 'slate-react';
-import { Editor, RTMarkConfig } from '../types';
+import { Editor, InlineShortcut, RTMarkConfig } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
+
+/**
+ * Transforms a mark config's shortcuts into
+ * InlineShortcut objects.
+ *
+ * @param markConfig - The rich text mark config.
+ * @returns An array of InlineSortuct objects.
+ */
+function markConfigToInlineShortcuts(
+  markConfig: RTMarkConfig,
+): InlineShortcut[] {
+  // Loop through the mark config's shortcuts, transforming
+  // each one into an InlineShortcut.
+  return markConfig.shortcuts.reduce(
+    (configShortcutActions, configShortcut) => [
+      ...configShortcutActions,
+      {
+        triggers: [configShortcut.trigger],
+        action: (editor: Editor) => {
+          // Toggle the mark
+          editor.toggleMark(markConfig.key, configShortcut.value);
+
+          if (!Range.isCollapsed(editor.selection)) {
+            // If a wrapping shortcut was used, collapse
+            // the selection to the trailing edge.
+            Transforms.collapse(editor, { edge: 'focus' });
+          }
+        },
+      },
+    ],
+    [],
+  );
+}
 
 /**
  * Creates a `renderLeaf` callback which handles rich text mark related
@@ -17,6 +51,40 @@ export function withRichTextMarks(
   editor: Editor,
   markConfigs: RTMarkConfig[],
 ): [Editor, (props: RenderLeafProps) => JSX.Element] {
+  const { apply } = editor;
+
+  // eslint-disable-next-line no-param-reassign
+  editor.apply = (operation) => {
+    apply(operation);
+
+    if (operation.type === 'split_node') {
+      // Get the node which was split
+      const splitNode = Node.get(editor, operation.path);
+
+      if (Text.isText(splitNode)) {
+        // Ignore split text nodes, their parent is updated by
+        // the element split operation following this one.
+        return;
+      }
+
+      // The path of the element created as a result of the split
+      const newElementPath = Path.next(operation.path);
+
+      // Get the element created as a result of the split
+      const newElement = Node.get(editor, newElementPath) as RTElement;
+
+      if (Node.string(newElement) === '') {
+        Transforms.unsetNodes(
+          editor,
+          Object.keys(Node.get(editor, [...newElementPath, 0])).filter(
+            (key) => key !== 'text',
+          ),
+          { at: [...newElementPath, 0] },
+        );
+      }
+    }
+  };
+
   const renderLeaf = (props: RenderLeafProps) => {
     // Map the mark configs by their key
     const configs: Record<string, RTMarkConfig> = markConfigs.reduce(
@@ -41,33 +109,16 @@ export function withRichTextMarks(
     return <span {...props.attributes}>{children}</span>;
   };
 
-  const shortcutActions = markConfigs
+  // Transform the mark shortcut configs into inline shortcuts
+  const inlineShortcuts = markConfigs
     .filter((config) => !!config.shortcuts)
     .reduce(
-      (value, config) => [
-        ...value,
-        {
-          triggers: config.shortcuts,
-          action: (editor: Editor) => {
-            // Check if the mark is already applied
-            if (SlateEditor.marks(editor)[config.key]) {
-              // Remove the mark
-              SlateEditor.removeMark(editor, config.key);
-            } else {
-              // Add the mark
-              SlateEditor.addMark(editor, config.key, true);
-            }
-
-            if (!Range.isCollapsed(editor.selection)) {
-              // If a wrapping shortcut was used, collapse
-              // the selection to the trailing edge.
-              Transforms.collapse(editor, { edge: 'focus' });
-            }
-          },
-        },
+      (previous, config) => [
+        ...previous,
+        ...markConfigToInlineShortcuts(config),
       ],
       [],
     );
 
-  return [withInlineShortcuts(editor, shortcutActions), renderLeaf];
+  return [withInlineShortcuts(editor, inlineShortcuts), renderLeaf];
 }
