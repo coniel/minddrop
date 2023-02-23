@@ -3,7 +3,7 @@ import { RICH_TEXT_TEST_DATA } from '@minddrop/rich-text';
 import { Transforms } from '../Transforms';
 import { addChildrenToVoidElements, createEditor } from '../utils';
 
-const { paragraphElement1 } = RICH_TEXT_TEST_DATA;
+const { emptyParagraphElement } = RICH_TEXT_TEST_DATA;
 
 /**
  * Creates a new editor with the given content.
@@ -13,7 +13,7 @@ const { paragraphElement1 } = RICH_TEXT_TEST_DATA;
  * @returns A new editor.
  */
 export function createTestEditor(
-  content: RTBlockElement[] = [paragraphElement1],
+  content: RTBlockElement[] = [emptyParagraphElement],
 ) {
   // Create an editor
   const editor = createEditor();
