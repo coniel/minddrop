@@ -12,7 +12,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
-    "test:watch": "turbo run test:watch"
+    "test:watch": "turbo run test:watch",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "eslint": "^8.34.0",
@@ -20,7 +21,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "latest",
     "turbo": "latest",
-    "vitest": "^0.28.5"
+    "vitest": "^0.28.5",
+    "husky": "^8.0.0"
   },
   "engines": {
     "node": ">=14.0.0"

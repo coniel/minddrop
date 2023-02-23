@@ -7,6 +7,7 @@ importers:
       eslint: ^8.34.0
       eslint-config-custom: workspace:*
       eslint-plugin-prettier: ^4.2.1
+      husky: ^8.0.0
       prettier: latest
       turbo: latest
       vitest: ^0.28.5
@@ -14,6 +15,7 @@ importers:
       eslint: 8.34.0
       eslint-config-custom: link:packages/eslint-config-custom
       eslint-plugin-prettier: 4.2.1_yrlhudqyxg2l7qvwle5bdpmrli
+      husky: 8.0.3
       prettier: 2.8.4
       turbo: 1.8.2
       vitest: 0.28.5
@@ -2089,6 +2091,12 @@ packages:
 
   /he/1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
+    hasBin: true
+    dev: true
+
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
