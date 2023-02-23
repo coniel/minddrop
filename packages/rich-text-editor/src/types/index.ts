@@ -4,4 +4,4 @@ export * from './RTEditorPluginConfig.types';
 export * from './RTElementConfig.types';
 export * from './RTElementProps.types';
 export * from './RTMarkConfig.types';
-export * from './RTTriggerCharacterConfig.types';
+export * from './RTInlineMenuConfig.types';
