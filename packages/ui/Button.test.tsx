@@ -1,9 +1,9 @@
-import { it } from "vitest";
-import { render } from "@testing-library/react";
-import { Button } from "./Button";
+import { it } from 'vitest';
+import { render } from '@testing-library/react';
+import { Button } from './Button';
 
-it("renders", () => {
+it('renders', () => {
   const { getByText } = render(<Button />);
 
-  getByText("Boop");
+  getByText('Boop');
 });
