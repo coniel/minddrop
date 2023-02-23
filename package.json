@@ -15,7 +15,9 @@
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
+    "eslint": "^8.34.0",
     "eslint-config-custom": "workspace:*",
+    "eslint-plugin-prettier": "^4.2.1",
     "prettier": "latest",
     "turbo": "latest",
     "vitest": "^0.28.5"
