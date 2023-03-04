@@ -5,7 +5,8 @@
   "types": "./index.tsx",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint *.ts*",
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
     "test": "vitest run --config ./vitest.config.ts",
     "test:watch": "vitest --config ./vitest.config.ts"
   },
