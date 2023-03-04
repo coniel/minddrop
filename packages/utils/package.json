@@ -1,0 +1,27 @@
+{
+  "name": "@minddrop/utils",
+  "version": "0.6.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/is-url": "^1.2.30",
+    "@types/react": "^18.0.28",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "mockdate": "^3.0.5",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "is-url": "^1.2.4",
+    "react": "^18.2.0",
+    "tldts": "^5.7.109"
+  }
+}
