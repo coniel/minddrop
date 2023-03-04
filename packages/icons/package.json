@@ -1,0 +1,21 @@
+{
+  "name": "@minddrop/icons",
+  "version": "0.5.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "react": "^18.2.0",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@minddrop/utils": "workspace:*"
+  }
+}
