@@ -1,5 +1,9 @@
-const toKebabCase =
-  require('@minddrop/utils/dist/toKebabCase/toKebabCase').toKebabCase;
+function toKebabCase(string) {
+  return string.replace(
+    /[A-Z]+(?![a-z])|[A-Z]/g,
+    ($, ofs) => (ofs ? '-' : '') + $.toLowerCase(),
+  );
+}
 
 module.exports = {
   helpers: {
