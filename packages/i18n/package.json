@@ -1,0 +1,25 @@
+{
+  "name": "@minddrop/i18n",
+  "version": "0.4.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.5",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "i18next": "^21.4.2",
+    "i18next-intervalplural-postprocessor": "^3.0.0",
+    "react-i18next": "^11.14.2"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  }
+}
