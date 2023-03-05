@@ -1,0 +1,160 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  color: var(--textNeutral);
+  font-family: var(--defaultFontFamily);
+  border-radius: var(--radiusMd);
+  padding: 5px 16px;
+  transition: var(--transitionShort);
+  transition-property: color, background-color, border-color;
+  cursor: pointer;
+  background-color: var(--bgNeutral);
+  border-width: 1px;
+  border-color: var(--borderNeutral);
+  border-style: solid;
+  font-weight: var(--fwSemibold);
+  font-size: var(--fsRegular);
+}
+
+a.button {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button:hover {
+  background-color: var(--bgNeutralHover);
+  border-color: var(--borderNeutralHover);
+  transition-duration: 0.1s;
+}
+
+.button:active {
+  background-color: var(--bgNeutralActive);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--borderPrimary);
+}
+
+/* Primary */
+
+.button.variant-primary {
+  background-color: var(--bgSolidPrimary);
+  border-color: var(--bgSolidPrimary);
+  color: var(--white);
+}
+
+.button.variant-primary:hover {
+  background-color: var(--bgSolidPrimaryHover);
+  border-color: var(--bgSolidPrimaryHover);
+}
+
+.button.variant-primary:active {
+  background-color: var(--bgSolidPrimaryActive);
+  border-color: var(--bgSolidPrimary);
+}
+
+/* Text */
+
+.button.variant-text {
+  background-color: transparent;
+  border: none;
+  color: var(--textPrimaryLight);
+}
+
+.button.variant-text:hover {
+  background-color: var(--bgNeutralHover);
+  transition-duration: 0.1s;
+}
+
+.button.variant-text:active {
+  background-color: var(--bgNeutralActive);
+}
+
+/* Danger */
+
+.button.variant-danger {
+  background-color: var(--bgNeutral);
+  border-color: var(--borderNeutral);
+  color: var(--textDangerLight);
+}
+
+.button.variant-danger:hover,
+.button.variant-danger:active {
+  color: var(--contrastColor);
+  transition-duration: 0.1s;
+}
+
+.button.variant-danger:hover {
+  background-color: var(--bgSolidDangerHover);
+  border-color: var(--borderDangerHover);
+}
+
+.button.variant-danger:active {
+  background-color: var(--bgSolidDangerActive);
+  border-color: var(--borderDangerHover);
+}
+
+/* Sizes */
+
+.button.size-small {
+  padding: 3px 12px;
+  font-size: var(--fsTiny);
+}
+
+.button.size-large {
+  padding: 10px 24px;
+  font-size: var(--fsLarge);
+}
+
+/* Disabled */
+
+.button:disabled {
+  background-color: var(--bgNeutral);
+  border-color: var(--bgNeutral);
+  color: var(--textNeutralDisabled);
+  pointer-events: none;
+}
+
+.button.variant-text:disabled {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+/* Full width */
+
+.button.full-width {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+}
+
+/* Icons */
+.button .start-icon,
+.button .end-icon {
+  display: inline-block;
+  line-height: 1em;
+  height: 1em;
+}
+
+.button .start-icon {
+  padding-inline-end: 4px;
+  fill: currentColor;
+}
+
+.button .end-icon {
+  padding-inline-start: 4px;
+  fill: currentColor;
+}
+
+.button .start-icon,
+.button .end-icon {
+  height: 1.2em;
+  width: 1.2em;
+}
+
+.button.size-small .start-icon,
+.button.size-small .end-icon {
+  height: 1.4em;
+  width: 1.4em;
+}

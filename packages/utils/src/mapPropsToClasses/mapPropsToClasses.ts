@@ -10,7 +10,7 @@ import { toKebabCase } from '../toKebabCase';
  * camelCase prop names are converted into kebab-case.
  */
 export function mapPropsToClasses(
-  props: Record<string, string | boolean>,
+  props: Record<string, string | boolean | undefined>,
   rootClass: string = '',
 ): string {
   let className = rootClass;

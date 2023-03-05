@@ -1,0 +1,78 @@
+.drop {
+  position: relative;
+  background-color: var(--bgApp);
+  padding: 16px;
+  border-radius: var(--radiusLg);
+  border-width: 1px;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  background-color: var(--bgApp);
+  color: var(--textNeutral);
+  border-color: var(--borderNeutralSubtle);
+}
+
+.drop.color-blue {
+  background-color: var(--blue6);
+  color: var(--blue12);
+  border-color: var(--blue7);
+}
+
+.drop.color-cyan {
+  background-color: var(--cyan6);
+  color: var(--cyan12);
+  border-color: var(--cyan7);
+}
+
+.drop.color-red {
+  background-color: var(--red6);
+  color: var(--red12);
+  border-color: var(--red7);
+}
+
+.drop.color-pink {
+  background-color: var(--pink6);
+  color: var(--pink12);
+  border-color: var(--pink7);
+}
+
+.drop.color-purple {
+  background-color: var(--purple6);
+  color: var(--purple12);
+  border-color: var(--purple7);
+}
+
+.drop.color-green {
+  background-color: var(--green6);
+  color: var(--green12);
+  border-color: var(--green7);
+}
+
+.drop.color-yellow {
+  background-color: var(--yellow6);
+  color: var(--yellow12);
+  border-color: var(--yellow7);
+}
+
+.drop.color-orange {
+  background-color: var(--orange6);
+  color: var(--orange12);
+  border-color: var(--orange7);
+}
+
+.drop.color-brown {
+  background-color: var(--brown6);
+  color: var(--brown12);
+  border-color: var(--brown7);
+}
+
+.drop.color-gray {
+  background-color: var(--gray6);
+  color: var(--gray12);
+  border-color: var(--gray7);
+}
+
+.drop.selected {
+  outline: 2px solid var(--blue7);
+}
