@@ -1,0 +1,17 @@
+.nav-group {
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+}
+
+/* Title */
+.nav-group .title {
+  text-transform: uppercase;
+  font-weight: var(--fwBold);
+  font-size: var(--fsTiny);
+  letter-spacing: 0.03em;
+  color: var(--neutral8);
+  margin-bottom: 6px;
+  margin-left: 6px;
+}

@@ -1,0 +1,12 @@
+.breadcrumbs .list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumbs .crumb-separator {
+  padding: 4px;
+  color: var(--borderNeutral);
+}

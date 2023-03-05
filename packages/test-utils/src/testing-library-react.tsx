@@ -9,12 +9,15 @@ import {
 import { initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
+import userEvent from '@testing-library/user-event';
 import type {} from '@testing-library/dom';
 
 class ResizeObserver {
   observe() {}
 
   unobserve() {}
+
+  disconnect() {}
 }
 
 // Needed for popovers and tooltips
@@ -57,3 +60,4 @@ const customRenderHook = <TProps, TResult>(
 export * from '@testing-library/react';
 export { customRender as render };
 export { customRenderHook as renderHook };
+export { userEvent };

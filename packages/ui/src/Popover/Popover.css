@@ -1,0 +1,9 @@
+.popover {
+  transform-origin: var(--radix-popover-content-transform-origin);
+  border-radius: var(--radiusXs);
+  animation-name: popIn;
+  animation-duration: var(--adPop);
+  animation-timing-function: var(--atfPop);
+  box-shadow: var(--el2ShadowBordered);
+  background-color: var(--el2Background);
+}
