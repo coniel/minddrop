@@ -11,28 +11,35 @@ import { useSelectionStore } from '../useSelectionStore';
 import { useSelection } from './useSelection';
 
 describe('useSelection', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
 
-  afterEach(cleanup);
+    // Add an item to the selection
+    useSelectionStore.getState().addSelectedItems([selectedDrop1]);
+  });
+
+  afterEach(() => {
+    act(() => {
+      cleanup();
+    });
+  });
 
   it('returns the current selection', () => {
-    // Select some items
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectedDrop1, selectedDrop2]);
-
     // Get the current selection
     const { result } = renderHook(() => useSelection());
+
+    act(() => {
+      // Add an item to the selection
+      useSelectionStore.getState().addSelectedItems([selectedDrop2]);
+    });
 
     // Should return the current selection
     expect(result.current).toEqual([selectedDrop1, selectedDrop2]);
   });
 
   it('filters selection by item type', () => {
-    // Select 'drop' and 'topic' items
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectedDrop1, selectedTopic1]);
+    // Add a 'topic' item to the selection
+    useSelectionStore.getState().addSelectedItems([selectedTopic1]);
 
     // Get the current selection, filtering for the
     // 'topic' item type.
