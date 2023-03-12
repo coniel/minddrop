@@ -1,5 +1,5 @@
 import { ConfigsFile, ConfigsFileOptions } from '../../constants';
-import { FS } from '../../FileSystem';
+import { Fs } from '../../FileSystem';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
 
 /**
@@ -22,7 +22,7 @@ export function persistConfigs(): Promise<void> {
   );
 
   // Write to config values to 'configs.json' in app data
-  return FS.writeTextFile(
+  return Fs.writeTextFile(
     ConfigsFile,
     JSON.stringify(configValues),
     ConfigsFileOptions,

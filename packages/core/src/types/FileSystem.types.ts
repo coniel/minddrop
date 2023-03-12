@@ -1,8 +1,8 @@
-export interface FSFileOptions {
+export interface FsFileOptions {
   dir: 'workspace' | 'app-data';
 }
 
-export interface FSDirOptions {
+export interface FsDirOptions {
   dir: 'workspace' | 'app-data';
   recursive: boolean;
 }
@@ -38,7 +38,7 @@ export interface FileSystem {
   copyFile(
     source: string,
     destination: string,
-    options?: FSFileOptions,
+    options?: FsFileOptions,
   ): Promise<void>;
 
   /**
@@ -50,7 +50,7 @@ export interface FileSystem {
    * @param options - File system dir options.
    * @returns A promise indicating the success or failure of the operation.
    */
-  createDir(dir: string, options?: FSDirOptions): Promise<void>;
+  createDir(dir: string, options?: FsDirOptions): Promise<void>;
 
   /**
    * Check if a path exists.
@@ -59,7 +59,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise resolving to a boolean indicating whether or not the path exists.
    */
-  exists(path: string, options?: FSFileOptions): Promise<boolean>;
+  exists(path: string, options?: FsFileOptions): Promise<boolean>;
 
   /**
    * Reads a file as byte array.
@@ -68,7 +68,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise resolving to the file contents.
    */
-  readBinaryFile(path: string, options: FSFileOptions): Promise<Uint8Array>;
+  readBinaryFile(path: string, options: FsFileOptions): Promise<Uint8Array>;
 
   /**
    * List directory files.
@@ -77,7 +77,7 @@ export interface FileSystem {
    * @param options - File system dir options.
    * @returns A promise resolving to an array of FileEntry objects.
    */
-  readDir(path: string, options?: FSDirOptions): Promise<FileEntry[]>;
+  readDir(path: string, options?: FsDirOptions): Promise<FileEntry[]>;
 
   /**
    * Reads a file as an UTF-8 encoded string.
@@ -86,7 +86,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise resolving to the contents of the file.
    */
-  readTextFile(path: string, options: FSFileOptions): Promise<string>;
+  readTextFile(path: string, options: FsFileOptions): Promise<string>;
 
   /**
    * Removes a directory. If the directory is not empty and the recursive option
@@ -96,7 +96,7 @@ export interface FileSystem {
    * @param options - File system dir options.
    * @returns A promise indicating the success or failure of the operation.
    */
-  removeDir(path: string, options?: FSDirOptions): Promise<void>;
+  removeDir(path: string, options?: FsDirOptions): Promise<void>;
 
   /**
    * Removes a file.
@@ -105,7 +105,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise indicating the success or failure of the operation.
    */
-  removeFile(path: string, options: FSFileOptions): Promise<void>;
+  removeFile(path: string, options: FsFileOptions): Promise<void>;
 
   /**
    * Renames a file.
@@ -118,7 +118,7 @@ export interface FileSystem {
   renameFile(
     oldPath: string,
     newPath: string,
-    options?: FSFileOptions,
+    options?: FsFileOptions,
   ): Promise<void>;
 
   /**
@@ -132,7 +132,7 @@ export interface FileSystem {
   writeBinaryFile(
     path: string,
     contents: Iterable<number> | ArrayLike<number> | ArrayBuffer,
-    options: FSFileOptions,
+    options: FsFileOptions,
   ): Promise<void>;
 
   /**
@@ -146,6 +146,6 @@ export interface FileSystem {
   writeTextFile(
     path: string,
     contents: string,
-    options: FSFileOptions,
+    options: FsFileOptions,
   ): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { FS } from '../../FileSystem';
+import { Fs } from '../../FileSystem';
 import { ConfigsFile, ConfigsFileOptions } from '../../constants';
 import { ConfigItem, PersistentConfigsStore } from '../PersistentConfigsStore';
 
@@ -7,7 +7,7 @@ import { ConfigItem, PersistentConfigsStore } from '../PersistentConfigsStore';
  */
 export async function loadConfigs(): Promise<void> {
   // Verify that the configs file exists
-  const exists = await FS.exists(ConfigsFile, ConfigsFileOptions);
+  const exists = await Fs.exists(ConfigsFile, ConfigsFileOptions);
 
   if (!exists) {
     // Stop here if the file does not exist
@@ -16,7 +16,7 @@ export async function loadConfigs(): Promise<void> {
 
   // Get the stringified configs data from the
   // app-data configs.json file.
-  const configsRaw = await FS.readTextFile(ConfigsFile, ConfigsFileOptions);
+  const configsRaw = await Fs.readTextFile(ConfigsFile, ConfigsFileOptions);
 
   try {
     // Parse the configs data
