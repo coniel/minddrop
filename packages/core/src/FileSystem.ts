@@ -2,7 +2,7 @@ import { FileSystem } from './types';
 
 let FsAdapter: FileSystem = {} as FileSystem;
 
-export const FS: FileSystem = {
+export const Fs: FileSystem = {
   copyFile: (...args) => FsAdapter.copyFile(...args),
   createDir: (...args) => FsAdapter.createDir(...args),
   exists: (...args) => FsAdapter.exists(...args),
