@@ -3,11 +3,11 @@ export interface FsFileOptions {
 }
 
 export interface FsDirOptions {
-  dir: 'workspace' | 'app-data';
-  recursive: boolean;
+  dir?: 'workspace' | 'app-data';
+  recursive?: boolean;
 }
 
-interface FileEntry {
+export interface FileEntry {
   /**
    * The file's path.
    */
