@@ -1,0 +1,23 @@
+{
+  "name": "@minddrop/topics",
+  "version": "0.3.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "zustand": "^4.3.3"
+  },
+  "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  }
+}
