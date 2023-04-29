@@ -1,4 +1,5 @@
 import { Core } from '@minddrop/core';
+import { Topic } from './Topic.types';
 
 export interface TopicsApi {
   /**
@@ -10,6 +11,23 @@ export interface TopicsApi {
    * @param path - The path from which to load the topics.
    */
   load(core: Core, path: string): Promise<void>;
+
+  /**
+   * Returns a topic or subtopic by path.
+   *
+   * @param path - The topic/subtopic path.
+   * @returns The requested topic or `null` if it does not exist.
+   */
+  get(path: string): Topic | null;
+
+  /**
+   * Returns topics at the specified paths, omitting any
+   * missing topics.
+   *
+   * @param paths - The topic paths.
+   * @returns The requested topics.
+   */
+  get(paths: string[]): Topic[];
 
   /**
    * Clears all topics from the topics store.
