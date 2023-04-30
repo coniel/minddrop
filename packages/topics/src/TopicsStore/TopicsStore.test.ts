@@ -6,7 +6,7 @@ import {
   Topic_1_2,
   Topic_1_2_1,
   Topic_2,
-  Topic_Untitled_2,
+  Topic_Unnamed_2,
 } from '../test-utils';
 import { TopicsStore } from './TopicsStore';
 
@@ -30,15 +30,15 @@ describe('TopicsStore', () => {
 
     it('maintains existing topics', () => {
       // Load a topic into the store
-      TopicsStore.getState().load({ [Topic_1.filename]: Topic_1 });
+      TopicsStore.getState().load({ [Topic_1.name]: Topic_1 });
 
       // Load another topic into the store
-      TopicsStore.getState().load({ [Topic_2.filename]: Topic_2 });
+      TopicsStore.getState().load({ [Topic_2.name]: Topic_2 });
 
       // Both topics should be in the store
       expect(TopicsStore.getState().topics).toEqual({
-        [Topic_1.filename]: Topic_1,
-        [Topic_2.filename]: Topic_2,
+        [Topic_1.name]: Topic_1,
+        [Topic_2.name]: Topic_2,
       });
     });
   });
@@ -46,29 +46,28 @@ describe('TopicsStore', () => {
   describe('add', () => {
     it('adds a root topic to `topics`', () => {
       // Add a root topic to the store
-      TopicsStore.getState().add([Topic_1.filename], Topic_1);
+      TopicsStore.getState().add([Topic_1.name], Topic_1);
 
       // Topic should be in `topics`
-      expect(TopicsStore.getState().topics[Topic_1.filename]).toEqual(Topic_1);
+      expect(TopicsStore.getState().topics[Topic_1.name]).toEqual(Topic_1);
     });
 
     it('adds a subtopic to its parent topic', () => {
       // Load topic into the store
       loadTopics();
 
-      // Add Topic_Untitled_2 as a subtopic on /Topic_1/Topic_1_1
+      // Add Topic_Unnamed_2 as a subtopic on /Topic_1/Topic_1_1
       TopicsStore.getState().add(
-        [Topic_1.filename, Topic_1_1.filename, Topic_Untitled_2.filename],
-        Topic_Untitled_2,
+        [Topic_1.name, Topic_1_1.name, Topic_Unnamed_2.name],
+        Topic_Unnamed_2,
       );
 
-      // Topic_Untitled_2 should be added to Topic_1_1's subtopics
+      // Topic_Unnamed_2 should be added to Topic_1_1's subtopics
       expect(
-        TopicsStore.getState().topics[Topic_1.filename].subtopics[
-          Topic_1_1.filename
-        ].subtopics,
+        TopicsStore.getState().topics[Topic_1.name].subtopics[Topic_1_1.name]
+          .subtopics,
       ).toMatchObject({
-        [Topic_Untitled_2.filename]: Topic_Untitled_2,
+        [Topic_Unnamed_2.name]: Topic_Unnamed_2,
       });
     });
 
@@ -76,9 +75,9 @@ describe('TopicsStore', () => {
       // Load topic into the store
       loadTopics();
 
-      // Attempts to add Topic_Untitled_2 as a subtopic on an
+      // Attempts to add Topic_Unnamed_2 as a subtopic on an
       // invalid path.
-      TopicsStore.getState().add(['some', 'invalid', 'path'], Topic_Untitled_2);
+      TopicsStore.getState().add(['some', 'invalid', 'path'], Topic_Unnamed_2);
 
       // Topic should remain unchanged
       expect(TopicsStore.getState().topics).toMatchObject(topics);
@@ -88,9 +87,9 @@ describe('TopicsStore', () => {
       // Load topic into the store
       loadTopics();
 
-      // Attempts to add Topic_Untitled_2 as a subtopic on an
+      // Attempts to add Topic_Unnamed_2 as a subtopic on an
       // empty path.
-      TopicsStore.getState().add([], Topic_Untitled_2);
+      TopicsStore.getState().add([], Topic_Unnamed_2);
 
       // Topic should remain unchanged
       expect(TopicsStore.getState().topics).toMatchObject(topics);
@@ -105,25 +104,24 @@ describe('TopicsStore', () => {
 
     it('removes root topics', () => {
       // Remove a root topic
-      TopicsStore.getState().remove([Topic_1.filename]);
+      TopicsStore.getState().remove([Topic_1.name]);
 
       // Topic should no longer be in the store
-      expect(TopicsStore.getState().topics[Topic_1.filename]).toBeUndefined();
+      expect(TopicsStore.getState().topics[Topic_1.name]).toBeUndefined();
     });
 
     it('removes subtopics', () => {
       // Remove the 'Topic 1.2.1' subtopic
       TopicsStore.getState().remove([
-        Topic_1.filename,
-        Topic_1_2.filename,
-        Topic_1_2_1.filename,
+        Topic_1.name,
+        Topic_1_2.name,
+        Topic_1_2_1.name,
       ]);
 
       // Subtopic should no longer be in the store
       expect(
-        TopicsStore.getState().topics[Topic_1.filename].subtopics[
-          Topic_1_2.filename
-        ].subtopics[Topic_1_2_1.filename],
+        TopicsStore.getState().topics[Topic_1.name].subtopics[Topic_1_2.name]
+          .subtopics[Topic_1_2_1.name],
       ).toBeUndefined();
     });
 
@@ -151,34 +149,31 @@ describe('TopicsStore', () => {
     });
 
     it('updates root topics', () => {
-      // Update the title of a root topic
-      TopicsStore.getState().update([Topic_1.filename], { title: 'New title' });
+      // Update the name of a root topic
+      TopicsStore.getState().update([Topic_1.name], { name: 'New name' });
 
       // Should update the topic
-      expect(TopicsStore.getState().topics[Topic_1.filename].title).toBe(
-        'New title',
-      );
+      expect(TopicsStore.getState().topics[Topic_1.name].name).toBe('New name');
     });
 
     it('updates subtopics', () => {
-      // Update the title of the 'Topic 1.2.1' subtopic
+      // Update the name of the 'Topic 1.2.1' subtopic
       TopicsStore.getState().update(
-        [Topic_1.filename, Topic_1_2.filename, Topic_1_2_1.filename],
-        { title: 'New title' },
+        [Topic_1.name, Topic_1_2.name, Topic_1_2_1.name],
+        { name: 'New name' },
       );
 
       // Should update the topic
       expect(
-        TopicsStore.getState().topics[Topic_1.filename].subtopics[
-          Topic_1_2.filename
-        ].subtopics[Topic_1_2_1.filename].title,
-      ).toBe('New title');
+        TopicsStore.getState().topics[Topic_1.name].subtopics[Topic_1_2.name]
+          .subtopics[Topic_1_2_1.name].name,
+      ).toBe('New name');
     });
 
     it('retains current state if path is invalid', () => {
       // Attempts to update an invalid path
       TopicsStore.getState().update(['some', 'invalid', 'path'], {
-        title: 'New title',
+        name: 'New name',
       });
 
       // Topic should remain unchanged
@@ -188,7 +183,7 @@ describe('TopicsStore', () => {
     it('retains current state if path is empty', () => {
       // Attempts to update an empty path
       TopicsStore.getState().update([], {
-        title: 'New title',
+        name: 'New name',
       });
 
       // Topic should remain unchanged

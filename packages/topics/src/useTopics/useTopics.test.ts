@@ -19,7 +19,7 @@ describe('useTopics', () => {
   it('returns root topics', () => {
     // Get a couple of root topics
     const { result } = renderHook(() =>
-      useTopics([Topic_1.filename, Topic_2.filename]),
+      useTopics([Topic_1.name, Topic_2.name]),
     );
 
     // Should return the root topics
@@ -30,8 +30,8 @@ describe('useTopics', () => {
     // Get a couple of nested topics
     const { result } = renderHook(() =>
       useTopics([
-        `${Topic_1.filename}/${Topic_1_2.filename}/${Topic_1_2_1.filename}`,
-        `${Topic_1.filename}/${Topic_1_1.filename}`,
+        `${Topic_1.name}/${Topic_1_2.name}/${Topic_1_2_1.name}`,
+        `${Topic_1.name}/${Topic_1_1.name}`,
       ]),
     );
 
@@ -41,9 +41,7 @@ describe('useTopics', () => {
 
   it('omits topic if a root topic does not exist', () => {
     // Get a couple of root topics, one of which does not exist
-    const { result } = renderHook(() =>
-      useTopics([Topic_1.filename, 'missing']),
-    );
+    const { result } = renderHook(() => useTopics([Topic_1.name, 'missing']));
 
     // Should return only existing topics
     expect(result.current).toEqual([Topic_1]);
@@ -53,8 +51,8 @@ describe('useTopics', () => {
     // Get a couple of nested topics, one of which does not exist
     const { result } = renderHook(() =>
       useTopics([
-        `${Topic_1.filename}/${Topic_1_2.filename}/${Topic_1_2_1.filename}`,
-        `${Topic_1.filename}/foo/${Topic_1_2_1.filename}`,
+        `${Topic_1.name}/${Topic_1_2.name}/${Topic_1_2_1.name}`,
+        `${Topic_1.name}/foo/${Topic_1_2_1.name}`,
       ]),
     );
 

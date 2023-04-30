@@ -1,16 +1,11 @@
 export interface Topic {
   /**
-   * The title.
+   * The topic name, also used as file and directory name.
    */
-  title: string;
+  name: string;
 
   /**
-   * The file or directory name.
-   */
-  filename: string;
-
-  /**
-   * true if the topic is a directory.
+   * `true` if the topic is a directory.
    */
   isDir: boolean;
 

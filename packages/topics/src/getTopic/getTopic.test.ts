@@ -9,7 +9,7 @@ describe('getTopic', () => {
 
   it('returns root topics', () => {
     // Get a root topic
-    const topic = getTopic(Topic_1.filename);
+    const topic = getTopic(Topic_1.name);
 
     // Should return the root topic
     expect(topic).toEqual(Topic_1);
@@ -18,7 +18,7 @@ describe('getTopic', () => {
   it('returns nested topics', () => {
     // Get a nested topic
     const topic = getTopic(
-      `${Topic_1.filename}/${Topic_1_2.filename}/${Topic_1_2_1.filename}`,
+      `${Topic_1.name}/${Topic_1_2.name}/${Topic_1_2_1.name}`,
     );
 
     // Should return the nested topic
@@ -32,8 +32,6 @@ describe('getTopic', () => {
 
   it('returns `null` if a nested topic does not exist', () => {
     // Should return null
-    expect(
-      getTopic(`${Topic_1.filename}/foo/${Topic_1_2_1.filename}`),
-    ).toBeNull();
+    expect(getTopic(`${Topic_1.name}/foo/${Topic_1_2_1.name}`)).toBeNull();
   });
 });

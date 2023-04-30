@@ -23,13 +23,11 @@ export function fileEntriesToTopics(
       // Is not the parent topic's markdown file
       fileEntry.name !== `${parentDir}.md`
     ) {
-      const filename = fileEntry.name as string;
-      const title = filename.slice(0, -3);
+      const name = fileEntry.name.slice(0, -3);
 
       // Add the topic to the tree
-      topics[filename] = {
-        filename,
-        title,
+      topics[name] = {
+        name,
         isDir: false,
         subtopics: {},
       };
@@ -42,8 +40,7 @@ export function fileEntriesToTopics(
     ) {
       // Add the topic to the tree
       topics[fileEntry.name] = {
-        filename: fileEntry.name,
-        title: fileEntry.name,
+        name: fileEntry.name,
         isDir: true,
         // Transform child file entries into subtopics
         subtopics: fileEntriesToTopics(fileEntry.children, fileEntry.name),

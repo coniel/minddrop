@@ -128,8 +128,7 @@ export const TopicsStore = create<TopicStore>()((set) => ({
 
       // If the path leads to a subtopic, update it in place
       const nextTopics = modifySubtopic(state.topics, path, (subtopic) => {
-        subtopic.title = data.title || subtopic.title;
-        subtopic.filename = data.filename || subtopic.filename;
+        subtopic.name = data.name || subtopic.name;
         subtopic.isDir = data.isDir || subtopic.isDir;
       });
 
