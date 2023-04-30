@@ -132,7 +132,7 @@ export interface FileSystem {
   writeBinaryFile(
     path: string,
     contents: Iterable<number> | ArrayLike<number> | ArrayBuffer,
-    options: FsFileOptions,
+    options?: FsFileOptions,
   ): Promise<void>;
 
   /**
@@ -146,6 +146,6 @@ export interface FileSystem {
   writeTextFile(
     path: string,
     contents: string,
-    options: FsFileOptions,
+    options?: FsFileOptions,
   ): Promise<void>;
 }
