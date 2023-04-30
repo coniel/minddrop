@@ -10,7 +10,7 @@ describe('useTopic', () => {
 
   it('returns root topics', () => {
     // Get a root topic
-    const { result } = renderHook(() => useTopic(Topic_1.filename));
+    const { result } = renderHook(() => useTopic(Topic_1.name));
 
     // Should return the root topic
     expect(result.current).toEqual(Topic_1);
@@ -19,9 +19,7 @@ describe('useTopic', () => {
   it('returns nested topics', () => {
     // Get a nested topic
     const { result } = renderHook(() =>
-      useTopic(
-        `${Topic_1.filename}/${Topic_1_2.filename}/${Topic_1_2_1.filename}`,
-      ),
+      useTopic(`${Topic_1.name}/${Topic_1_2.name}/${Topic_1_2_1.name}`),
     );
 
     // Should return the nested topic
@@ -39,7 +37,7 @@ describe('useTopic', () => {
   it('returns `null` if a nested topic does not exist', () => {
     // Get a nested topic which does not exist
     const { result } = renderHook(() =>
-      useTopic(`${Topic_1.filename}/foo/${Topic_1_2_1.filename}`),
+      useTopic(`${Topic_1.name}/foo/${Topic_1_2_1.name}`),
     );
 
     // Should return null

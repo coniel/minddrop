@@ -17,7 +17,7 @@ describe('getTopics', () => {
 
   it('returns root topics', () => {
     // Get a couple of root topics
-    const topic = getTopics([Topic_1.filename, Topic_2.filename]);
+    const topic = getTopics([Topic_1.name, Topic_2.name]);
 
     // Should return the root topics
     expect(topic).toEqual([Topic_1, Topic_2]);
@@ -26,8 +26,8 @@ describe('getTopics', () => {
   it('returns nested topics', () => {
     // Get a couple of nested topics
     const topic = getTopics([
-      `${Topic_1.filename}/${Topic_1_2.filename}/${Topic_1_2_1.filename}`,
-      `${Topic_1.filename}/${Topic_1_1.filename}`,
+      `${Topic_1.name}/${Topic_1_2.name}/${Topic_1_2_1.name}`,
+      `${Topic_1.name}/${Topic_1_1.name}`,
     ]);
 
     // Should return the nested topics
@@ -36,15 +36,15 @@ describe('getTopics', () => {
 
   it('omits topic if a root topic does not exist', () => {
     // Should return only existing topic
-    expect(getTopics([Topic_1.filename, 'foo'])).toEqual([Topic_1]);
+    expect(getTopics([Topic_1.name, 'foo'])).toEqual([Topic_1]);
   });
 
   it('omits topic if a nested topic does not exist', () => {
     // Should return only existing topic
     expect(
       getTopics([
-        `${Topic_1.filename}/${Topic_1_1.filename}`,
-        `${Topic_1.filename}/foo/${Topic_1_2_1.filename}`,
+        `${Topic_1.name}/${Topic_1_1.name}`,
+        `${Topic_1.name}/foo/${Topic_1_2_1.name}`,
       ]),
     ).toEqual([Topic_1_1]);
   });
