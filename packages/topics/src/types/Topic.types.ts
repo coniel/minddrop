@@ -1,8 +1,13 @@
 export interface Topic {
   /**
-   * The topic name, also used as file and directory name.
+   * The topic title, also serves as the filen/directory name.
    */
-  name: string;
+  title: string;
+
+  /**
+   * Absolute path to the topic markdown file.
+   */
+  path: string;
 
   /**
    * `true` if the topic is a directory.
@@ -10,7 +15,7 @@ export interface Topic {
   isDir: boolean;
 
   /**
-   * A `{ [file/dir name]: Topic }` map of the topic's subtopics.
+   * The paths of the topic's subtopics.
    */
-  subtopics: Record<string, Topic>;
+  subtopics: string[];
 }

@@ -2,58 +2,64 @@ import { FileEntry } from '@minddrop/core';
 import { Topic } from '../types';
 
 export const Topic_1_2_1: Topic = {
-  name: 'Topic 1.2.1',
+  title: 'Topic 1.2.1',
   isDir: false,
-  subtopics: {},
+  path: '/Users/foo/Documents/minddrop/Topic 1/Topic 1.2/Topic 1.2.1.md',
+  subtopics: [],
 };
 
 export const Topic_1_1: Topic = {
-  name: 'Topic 1.1',
+  title: 'Topic 1.1',
   isDir: false,
-  subtopics: {},
+  path: '/Users/foo/Documents/minddrop/Topic 1/Topic 1.1.md',
+  subtopics: [],
 };
 
 export const Topic_1_2: Topic = {
-  name: 'Topic 1.2',
+  title: 'Topic 1.2',
   isDir: true,
-  subtopics: {
-    [Topic_1_2_1.name]: Topic_1_2_1,
-  },
+  path: '/Users/foo/Documents/minddrop/Topic 1/Topic 1.2',
+  subtopics: [Topic_1_2_1.path],
 };
 
 export const Topic_1: Topic = {
-  name: 'Topic 1',
+  title: 'Topic 1',
   isDir: true,
-  subtopics: {
-    [Topic_1_1.name]: Topic_1_1,
-    [Topic_1_2.name]: Topic_1_2,
-  },
+  path: '/Users/foo/Documents/minddrop/Topic 1',
+  subtopics: [Topic_1_2.path, Topic_1_1.path],
 };
 
 export const Topic_2: Topic = {
-  name: 'Topic 2',
+  title: 'Topic 2',
   isDir: true,
-  subtopics: {},
+  path: '/Users/foo/Documents/minddrop/Topic 2',
+  subtopics: [],
 };
 
-export const Topic_Unnamed: Topic = {
-  name: 'Unnamed',
+export const Topic_Untitled: Topic = {
+  title: 'Untitled',
   isDir: false,
-  subtopics: {},
+  path: '/Users/foo/Documents/minddrop/Untitled.md',
+  subtopics: [],
 };
 
 // Not included as a root or sub topic in topics
-export const Topic_Unnamed_2: Topic = {
-  name: 'Unnamed 2',
+export const Topic_Untitled_1: Topic = {
+  title: 'Untitled 1',
   isDir: false,
-  subtopics: {},
+  path: '/Users/foo/Documents/minddrop/Untitled 1.md',
+  subtopics: [],
 };
 
-export const topics = {
-  [Topic_1.name]: Topic_1,
-  [Topic_2.name]: Topic_2,
-  [Topic_Unnamed.name]: Topic_Unnamed,
-};
+export const topics = [
+  Topic_1,
+  Topic_1_2,
+  Topic_1_2_1,
+  Topic_1_1,
+  Topic_2,
+  Topic_Untitled,
+  Topic_Untitled_1,
+];
 
 export const topicFiles: FileEntry[] = [
   {
@@ -82,7 +88,7 @@ export const topicFiles: FileEntry[] = [
           },
         ],
         name: 'Topic 1.2',
-        path: '/Users/foo/Documents/minddrop/Topic 1/Topic 1.2.md',
+        path: '/Users/foo/Documents/minddrop/Topic 1/Topic 1.2',
       },
       {
         name: 'Topic 1.1.md',
@@ -90,15 +96,24 @@ export const topicFiles: FileEntry[] = [
       },
     ],
     name: 'Topic 1',
-    path: '/Users/foo/Documents/minddrop/Topic 1.md',
+    path: '/Users/foo/Documents/minddrop/Topic 1',
   },
   {
-    children: [],
+    children: [
+      {
+        name: 'Topic 2.md',
+        path: '/Users/foo/Documents/minddrop/Topic 2.md',
+      },
+    ],
     name: 'Topic 2',
-    path: '/Users/foo/Documents/minddrop/Topic 2.md',
+    path: '/Users/foo/Documents/minddrop/Topic 2',
   },
   {
-    name: 'Unnamed.md',
-    path: '/Users/foo/Documents/minddrop/Unnamed.md',
+    name: 'Untitled.md',
+    path: '/Users/foo/Documents/minddrop/Untitled.md',
+  },
+  {
+    name: 'Untitled 1.md',
+    path: '/Users/foo/Documents/minddrop/Untitled 1.md',
   },
 ];
