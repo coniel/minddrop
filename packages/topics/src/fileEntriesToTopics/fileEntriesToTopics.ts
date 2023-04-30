@@ -1,6 +1,18 @@
 import { FileEntry } from '@minddrop/core';
 import { Topic } from '../types';
 
+function getSubtopicPaths(children: FileEntry[], parentName: string): string[] {
+  return children
+    .filter(
+      (fileEntry) =>
+        // Subtopics are either directories or markdown files
+        (fileEntry.children || fileEntry.path.endsWith('.md')) &&
+        // Don't include parent topic markdown file as child
+        fileEntry.name !== `${parentName}.md`,
+    )
+    .map((fileEntry) => fileEntry.path);
+}
+
 /**
  * Recursively transforms an array of file entries
  * into a topic tree.
@@ -11,8 +23,8 @@ import { Topic } from '../types';
 export function fileEntriesToTopics(
   fileEntries: FileEntry[],
   parentDir?: string,
-): Record<string, Topic> {
-  const topics: Record<string, Topic> = {};
+): Topic[] {
+  let topics: Topic[] = [];
 
   fileEntries.forEach((fileEntry) => {
     if (
@@ -23,14 +35,15 @@ export function fileEntriesToTopics(
       // Is not the parent topic's markdown file
       fileEntry.name !== `${parentDir}.md`
     ) {
-      const name = fileEntry.name.slice(0, -3);
+      const title = fileEntry.name.slice(0, -3);
 
-      // Add the topic to the tree
-      topics[name] = {
-        name,
+      // Add topic to array
+      topics.push({
+        title,
+        path: fileEntry.path,
         isDir: false,
-        subtopics: {},
-      };
+        subtopics: [],
+      });
     }
 
     if (
@@ -38,13 +51,20 @@ export function fileEntriesToTopics(
       fileEntry.children &&
       fileEntry.name
     ) {
-      // Add the topic to the tree
-      topics[fileEntry.name] = {
-        name: fileEntry.name,
+      // Add topic to array
+      topics.push({
+        title: fileEntry.name,
+        path: fileEntry.path,
         isDir: true,
         // Transform child file entries into subtopics
-        subtopics: fileEntriesToTopics(fileEntry.children, fileEntry.name),
-      };
+        subtopics: getSubtopicPaths(fileEntry.children, fileEntry.name),
+      });
+
+      // Recursively add subtopics to array
+      topics = [
+        ...topics,
+        ...fileEntriesToTopics(fileEntry.children, fileEntry.name),
+      ];
     }
   });
 

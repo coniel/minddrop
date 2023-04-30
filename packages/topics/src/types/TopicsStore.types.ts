@@ -4,37 +4,36 @@ export interface TopicStore {
   /**
    * Root level topics.
    */
-  topics: Record<string, Topic>;
+  topics: Topic[];
 
   /*
-   * Load root level topics.
+   * Load topics into the store.
    *
    * @param topics - The topics to load.
    */
-  load(topics: Record<string, Topic>): void;
+  load(topics: Topic[]): void;
 
   /**
-   * Add a topic to the specified path.
+   * Add a topic to the store.
    *
-   * @param path - The path at which to add the topic.
    * @param topic - The topic to add.
    */
-  add(path: string[], topic: Topic): void;
+  add(topic: Topic): void;
 
   /**
-   * Remove a topic from the specified path.
+   * Remove a topic from the store.
    *
-   * @parm path - The path from which to remove the topic.
+   * @parm path - The path of the topic to remove.
    */
-  remove(path: string[]): void;
+  remove(path: string): void;
 
   /**
-   * Update data on the topic at the specified path.
+   * Update data on the topic with the specified path.
    *
    * @parm path - The path of the topic to update.
    * @param data - The updated data applied to the topic.
    */
-  update(path: string[], data: Partial<Topic>): void;
+  update(path: string, data: Partial<Topic>): void;
 
   /**
    * Clear root topics.
