@@ -1,4 +1,5 @@
 import { clearTopics } from './clearTopics';
+import { createTopic } from './createTopic';
 import { getTopic } from './getTopic';
 import { getTopics } from './getTopics';
 import { loadTopics } from './loadTopics';
@@ -20,5 +21,6 @@ function get(path: string | string[]) {
 export const Topics: TopicsApi = {
   load: loadTopics,
   clear: clearTopics,
+  create: createTopic,
   get,
 };
