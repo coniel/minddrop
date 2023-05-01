@@ -13,6 +13,6 @@ describe('clearTopics', () => {
     clearTopics();
 
     // Topics should be cleared
-    expect(TopicsStore.getState().topics).toEqual({});
+    expect(TopicsStore.getState().topics).toEqual([]);
   });
 });

@@ -30,6 +30,17 @@ export interface TopicsApi {
   get(paths: string[]): Topic[];
 
   /**
+   * Creates a topic at the specified path and dispatches a
+   * 'topics:topic:create' event.
+   *
+   * @param core - A MindDrop core instance.
+   * @param path - The path at which to create the topic.
+   * @param asDir - When `true`, the topic will be created as a directory.
+   * @returns The created topic.
+   */
+  create(core: Core, path: string, asDir?: boolean): Promise<Topic>;
+
+  /**
    * Clears all topics from the topics store.
    */
   clear(): void;
