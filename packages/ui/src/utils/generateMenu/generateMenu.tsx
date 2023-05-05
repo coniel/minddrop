@@ -68,7 +68,7 @@ export function generateMenu(
             <SubmenuContent className={submenuContentClass}>
               {React.isValidElement(submenu)
                 ? submenu
-                : generateMenu(components, submenu)}
+                : generateMenu(components, submenu as MenuContents)}
             </SubmenuContent>
           </Submenu>,
         ];
