@@ -10,19 +10,20 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "prepare": "husky install"
   },
   "devDependencies": {
-    "eslint": "^8.34.0",
+    "eslint": "^8.40.0",
     "eslint-config-custom": "workspace:*",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
-    "prettier": "^2.8.4",
-    "turbo": "^1.8.2",
-    "vitest": "^0.28.5"
+    "prettier": "^2.8.8",
+    "turbo": "^1.9.3",
+    "vitest": "^0.31.0"
   },
   "engines": {
     "node": ">=14.0.0"

@@ -10,16 +10,16 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "tsconfig": "workspace:*",
-    "typescript": "^4.5.2",
-    "eslint-config-custom": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
-    "@types/react": "^18.0.15"
+    "@types/react": "^18.2.5",
+    "eslint": "^8.39.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@minddrop/core": "workspace:*",
     "react": "^18.2.0",
-    "zustand": "^4.3.3",
-    "@minddrop/core": "workspace:*"
+    "zustand": "^4.3.8"
   }
 }

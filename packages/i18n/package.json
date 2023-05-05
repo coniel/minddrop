@@ -8,16 +8,16 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/node": "^18.14.5",
-    "eslint": "^7.32.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "i18next": "^21.4.2",
+    "i18next": "^22.4.15",
     "i18next-intervalplural-postprocessor": "^3.0.0",
-    "react-i18next": "^11.14.2"
+    "react-i18next": "^12.2.2"
   },
   "peerDependencies": {
     "react": "^18.2.0"
