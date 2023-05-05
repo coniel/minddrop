@@ -20,6 +20,13 @@ export async function incrementalPath(
     ? `${pathWithoutExtension} ${increment}${extension}`
     : path;
 
+  // Cap increment to 200 to prevent accidental infinite loops
+  if (increment && increment > 200) {
+    throw new Error(
+      `reached maximum file increment of 200: ${incrementedPath}`,
+    );
+  }
+
   const exists = await Fs.exists(incrementedPath);
 
   // If the path exists, recursively increment the suffix

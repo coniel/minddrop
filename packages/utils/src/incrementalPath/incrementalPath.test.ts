@@ -1,6 +1,20 @@
 import { describe, it, expect, vi } from 'vitest';
-import { registerFileSystemAdapter, MockFsAdapter } from '@minddrop/core';
+import { registerFileSystemAdapter, FileSystem } from '@minddrop/core';
 import { incrementalPath } from './incrementalPath';
+
+export const MockFsAdapter: FileSystem = {
+  copyFile: vi.fn(),
+  createDir: vi.fn(),
+  exists: vi.fn(),
+  readBinaryFile: vi.fn(),
+  readDir: vi.fn(),
+  readTextFile: vi.fn(),
+  removeDir: vi.fn(),
+  removeFile: vi.fn(),
+  renameFile: vi.fn(),
+  writeBinaryFile: vi.fn(),
+  writeTextFile: vi.fn(),
+};
 
 describe('incrementalFilename', () => {
   it('returns the path as is if the path does not alredy exist', async () => {
