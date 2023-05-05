@@ -4,18 +4,17 @@
   "main": "src/index",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
-    "typecheck": "tsc --noEmit --jsx react-jsx"
+    "lint": "eslint ./**/*.ts*"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "eslint": "^7.32.0",
+    "@types/react": "^18.2.5",
+    "eslint": "^8.40.0",
     "eslint-config-custom": "workspace:*",
-    "react": "^18.2.0",
     "tsconfig": "workspace:*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "react": "^18.2.0"
   }
 }
