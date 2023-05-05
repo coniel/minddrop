@@ -5,5 +5,4 @@ export * from './errors';
 export * from './initializeCore';
 export * from './PersistentConfigsStore';
 export * from './FileSystem';
-export * from './test-utils/mock-fs-adapter';
 export * from './types';
