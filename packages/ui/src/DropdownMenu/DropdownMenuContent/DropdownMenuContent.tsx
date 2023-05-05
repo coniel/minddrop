@@ -13,7 +13,7 @@ import { DropdownSubmenu } from '../DropdownSubmenu';
 import { DropdownSubmenuContent } from '../DropdownSubmenuContent';
 
 export interface DropdownMenuContentProps
-  extends DropdownMenuPrimitives.DropdownMenuContentProps {
+  extends Omit<DropdownMenuPrimitives.DropdownMenuContentProps, 'content'> {
   /**
    * Used to automatically generate a context menu based on the provided
    * item descriptors.

@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
@@ -13,7 +13,7 @@ import { ContextSubmenuTriggerItem } from '../ContextSubmenuTriggerItem';
 import { ContextSubmenuContent } from '../ContextSubmenuContent';
 
 export interface ContextMenuContentProps
-  extends ContextMenuPrimitives.ContextMenuContentProps {
+  extends Omit<ContextMenuPrimitives.ContextMenuContentProps, 'content'> {
   /**
    * Used to automatically generate a context menu based on the provided
    * item descriptors.
