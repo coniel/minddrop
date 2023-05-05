@@ -1,9 +1,5 @@
-import { act } from '@minddrop/test-utils';
-import {
-  initializeCore,
-  MockFsAdapter,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
+import { act, MockFsAdapter } from '@minddrop/test-utils';
+import { initializeCore, registerFileSystemAdapter } from '@minddrop/core';
 import { ThemeConfig } from '../ThemeConfig';
 
 export const core = initializeCore({
