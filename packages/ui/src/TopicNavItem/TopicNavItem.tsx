@@ -112,7 +112,7 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
                 role="button"
                 tabIndex={0}
                 className="toggle-button"
-                aria-label={t('expandSubtopics')}
+                aria-label={t('expandSubtopics') as string}
               >
                 {childCount ? (
                   <Icon

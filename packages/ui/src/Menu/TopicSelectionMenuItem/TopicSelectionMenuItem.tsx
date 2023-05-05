@@ -138,7 +138,7 @@ export const TopicSelectionMenuItem = React.forwardRef<
               tabIndex={0}
               className="toggle-button"
               data-state={expanded ? 'open' : 'closed'}
-              aria-label={t('expandSubtopics')}
+              aria-label={t('expandSubtopics') as string}
               onClick={handleClickExpand}
             >
               {childCount ? (
