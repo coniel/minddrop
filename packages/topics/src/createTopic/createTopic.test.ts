@@ -1,7 +1,7 @@
+import { MockFsAdapter } from '@minddrop/test-utils';
 import {
   registerFileSystemAdapter,
   InvalidParameterError,
-  MockFsAdapter,
 } from '@minddrop/core';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { setup, cleanup, core } from '../test-utils';
@@ -65,7 +65,7 @@ describe('createTopic', () => {
     // name as the file name and markdown header.
     expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
       `${PATH}/Untitled.md`,
-      '# Untitled\\n\\n',
+      '# Untitled\n\n',
     );
   });
 
@@ -98,7 +98,7 @@ describe('createTopic', () => {
     // Should create the topic file as 'Untitled 1.md'
     expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
       `${PATH}/Untitled 1.md`,
-      '# Untitled 1\\n\\n',
+      '# Untitled 1\n\n',
     );
   });
 
@@ -169,7 +169,7 @@ describe('createTopic', () => {
       // Should create the topic markdown file inside the new directory
       expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
         `${PATH}/Untitled 1/Untitled 1.md`,
-        '# Untitled 1\\n\\n',
+        '# Untitled 1\n\n',
       );
     });
   });

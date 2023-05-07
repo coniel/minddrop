@@ -47,7 +47,7 @@ export async function createTopic(
   }
 
   // Create topic markdown file
-  await Fs.writeTextFile(mdPath, `# ${title}\\n\\n`);
+  await Fs.writeTextFile(mdPath, `# ${title}\n\n`);
 
   const topic: Topic = {
     title,
