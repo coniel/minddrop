@@ -68,7 +68,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise resolving to the file contents.
    */
-  readBinaryFile(path: string, options: FsFileOptions): Promise<Uint8Array>;
+  readBinaryFile(path: string, options?: FsFileOptions): Promise<Uint8Array>;
 
   /**
    * List directory files.
@@ -86,7 +86,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise resolving to the contents of the file.
    */
-  readTextFile(path: string, options: FsFileOptions): Promise<string>;
+  readTextFile(path: string, options?: FsFileOptions): Promise<string>;
 
   /**
    * Removes a directory. If the directory is not empty and the recursive option
@@ -105,7 +105,7 @@ export interface FileSystem {
    * @param options - File system file options.
    * @returns A promise indicating the success or failure of the operation.
    */
-  removeFile(path: string, options: FsFileOptions): Promise<void>;
+  removeFile(path: string, options?: FsFileOptions): Promise<void>;
 
   /**
    * Renames a file.
