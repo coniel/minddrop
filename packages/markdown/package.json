@@ -1,0 +1,23 @@
+{
+  "name": "@minddrop/markdown",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
+    "@types/marked": "^4.3.0",
+    "eslint": "^8.40.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "marked": "^5.0.1"
+  }
+}
