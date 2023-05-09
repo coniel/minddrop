@@ -1,5 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { MockFsAdapter, registerFileSystemAdapter } from '@minddrop/core';
+import { MockFsAdapter } from '@minddrop/test-utils';
+import { registerFileSystemAdapter } from '@minddrop/core';
 import { setup, cleanup, topicFiles, topics } from '../test-utils';
 import { getTopicsFromPath } from './getTopicsFromPath';
 

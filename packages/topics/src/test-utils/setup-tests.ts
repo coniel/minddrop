@@ -12,4 +12,7 @@ export function setup() {
 export function cleanup() {
   // Clear the topics store
   TopicsStore.getState().clear();
+
+  // Remove all event listeners
+  core.removeAllEventListeners();
 }

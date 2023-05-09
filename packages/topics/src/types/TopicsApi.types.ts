@@ -41,6 +41,20 @@ export interface TopicsApi {
   create(core: Core, path: string, asDir?: boolean): Promise<Topic>;
 
   /**
+   * Renames a topic markdown file (as well as directory
+   * if the topic is a directory), and updates the
+   * markdown heading (if present) to match.
+   *
+   * Uses incremental file naming to avoid collisions.
+   *
+   * @param core - A MindDrop core instance.
+   * @param path - The topic path.
+   * @param name - The new topic name/title.
+   * @returns The new topic path.
+   */
+  rename(core: Core, path: string, name: string): Promise<string>;
+
+  /**
    * Clears all topics from the topics store.
    */
   clear(): void;

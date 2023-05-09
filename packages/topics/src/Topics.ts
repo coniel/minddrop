@@ -3,6 +3,7 @@ import { createTopic } from './createTopic';
 import { getTopic } from './getTopic';
 import { getTopics } from './getTopics';
 import { loadTopics } from './loadTopics';
+import { renameTopic } from './renameTopic';
 import { Topic } from './types';
 import { TopicsApi } from './types/TopicsApi.types';
 
@@ -19,8 +20,9 @@ function get(path: string | string[]) {
 }
 
 export const Topics: TopicsApi = {
+  get,
   load: loadTopics,
   clear: clearTopics,
   create: createTopic,
-  get,
+  rename: renameTopic,
 };
