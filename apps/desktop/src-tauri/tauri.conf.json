@@ -16,6 +16,20 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "path": {
+        "all": true
+      },
+      "fs": {
+        "all": true,
+        "scope": [
+          "$DESKTOP",
+          "$DESKTOP/*",
+          "$HOME",
+          "$HOME/**",
+          "$DOCUMENT",
+          "$DOCUMENT/**"
+        ]
       }
     },
     "bundle": {
@@ -33,7 +47,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "MindDrop",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
