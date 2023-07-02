@@ -30,6 +30,9 @@
           "$DOCUMENT",
           "$DOCUMENT/**"
         ]
+      },
+      "window": {
+        "startDragging": true
       }
     },
     "bundle": {
@@ -77,6 +80,8 @@
         "height": 600,
         "resizable": true,
         "title": "MindDrop",
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
         "width": 800
       }
     ]
