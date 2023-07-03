@@ -1,10 +1,18 @@
-import { DesktopApp } from '@minddrop/desktop-app';
-import { fs } from '@tauri-apps/api';
+import { useEffect } from 'react';
+import { fs, path } from '@tauri-apps/api';
+import './App.css';
 import {
   FsFileOptions,
   FsDirOptions,
+  initializeCore,
   registerFileSystemAdapter,
 } from '@minddrop/core';
+import { useThemeAppearance, Theme } from '@minddrop/theme';
+import { Button } from '@minddrop/ui';
+import { Topics } from '@minddrop/topics';
+import { DesktopApp } from '@minddrop/desktop-app';
+
+const core = initializeCore({ extensionId: 'app' });
 
 function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
   const opts: fs.FsOptions = {};
@@ -79,6 +87,37 @@ registerFileSystemAdapter({
 });
 
 function App() {
+  const themeAppearance = useThemeAppearance();
+
+  useEffect(() => {
+    // Toggle the theme appearance class on <body>
+    // whenever the theme appearance value is changes.
+    if (themeAppearance === 'dark') {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+    }
+  }, [themeAppearance]);
+
+  async function greet() {
+    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+    /* setGreetMsg(await invoke('greet', { name })); */
+    const desktop = await path.desktopDir();
+    await Topics.load(core, `${desktop}MindDrop`);
+    performance.mark('start');
+    await Topics.rename(core, `${desktop}MindDrop/Morrowind.md`, 'Stop Skooma');
+    performance.mark('end');
+    console.log(performance.measure('run', 'start', 'end'));
+    /* console.log(getAll()); */
+    /* Theme.setAppearanceSetting( */
+    /*   core, */
+    /*   themeAppearance === 'dark' ? 'light' : 'dark', */
+    /* ); */
+    /* Theme.setAppearance(core, themeAppearance === 'dark' ? 'light' : 'dark'); */
+  }
+
   return <DesktopApp />;
 }
 
