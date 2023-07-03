@@ -1,0 +1,31 @@
+{
+  "name": "@minddrop/desktop-app",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.0.0",
+    "@types/react": "^18.2.5",
+    "eslint": "^8.39.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/theme": "workspace:*",
+    "@minddrop/ui": "workspace:*"
+  }
+}

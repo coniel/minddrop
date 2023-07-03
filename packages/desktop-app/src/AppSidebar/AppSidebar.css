@@ -1,0 +1,25 @@
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  row-gap: 36px;
+  flex-shrink: 0;
+}
+
+.app-sidebar .flex {
+  flex: 1;
+}
+
+.app-sidebar .bottom-toolbar {
+  padding: 10px 16px;
+  column-gap: 16px;
+  row-gap: 16px;
+  flex-wrap: wrap;
+}
+
+.app-sidebar .bottom-toolbar .icon {
+  fill: var(--textNeutralLight);
+}
+
+.theme-appearance-setting-menu {
+  width: 200px;
+}
