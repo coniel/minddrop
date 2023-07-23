@@ -83,7 +83,7 @@ export const Default: React.FC = () => {
         <NavGroup label="Utilities">
           <SecondaryNavItem
             label="Extensions"
-            icon="extension"
+            icon="cube"
             active={active === 'extensions'}
             onClick={() => setActive('extensions')}
           />

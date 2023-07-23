@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-export const Extension: FC<React.HTMLAttributes<SVGElement>> = (props) => (
+export const Cube: FC<React.HTMLAttributes<SVGElement>> = (props) => (
   <svg
     width="24"
     height="24"

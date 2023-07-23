@@ -15,7 +15,7 @@ export type IconName =
   | 'edit'
   | 'expand'
   | 'expand-horizontal'
-  | 'extension'
+  | 'cube'
   | 'folder-add'
   | 'image'
   | 'inside'

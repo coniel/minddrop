@@ -21,7 +21,7 @@ export const Default: React.FC = () => {
     >
       <SecondaryNavItem
         label="Extensions"
-        icon="extension"
+        icon="cube"
         active={active === 'extensions'}
         onClick={() => setActive('extensions')}
       />

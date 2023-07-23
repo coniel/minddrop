@@ -14,7 +14,7 @@ export * from './Duplicate';
 export * from './Edit';
 export * from './Expand';
 export * from './ExpandHorizontal';
-export * from './Extension';
+export * from './Cube';
 export * from './FolderAdd';
 export * from './Image';
 export * from './Inside';
