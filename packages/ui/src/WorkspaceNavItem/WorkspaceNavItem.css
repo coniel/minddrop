@@ -1,0 +1,24 @@
+.workspace-nav-item .nav-item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.workspace-nav-item .nav-item:hover .text,
+.workspace-nav-item.active .nav-item .text {
+  color: var(--textPrimary);
+}
+
+.workspace-nav-item .nav-item:hover .icon,
+.workspace-nav-item.active .nav-item .icon {
+  fill: var(--textPrimary);
+}
+
+.workspace-nav-item .label {
+  margin-left: 6px;
+}
+
+.workspace-nav-item .children {
+  padding: 2px 6px 12px 8px;
+}

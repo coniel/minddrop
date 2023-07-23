@@ -27,3 +27,4 @@ export * from './utils';
 export * from './Dialog';
 export * from './InteractiveMenuItem';
 export * from './TopicDrop';
+export * from './WorkspaceNavItem';
