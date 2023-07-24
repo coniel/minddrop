@@ -49,7 +49,8 @@ export function fileEntriesToTopics(
     if (
       // Is a directory
       fileEntry.children &&
-      fileEntry.name
+      fileEntry.name &&
+      !fileEntry.name.startsWith('.')
     ) {
       // Add topic to array
       topics.push({
