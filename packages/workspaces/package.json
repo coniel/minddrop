@@ -1,0 +1,22 @@
+{
+  "name": "@minddrop/workspaces",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "@minddrop/topics": "workspace:*"
+  },
+  "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.5.2"
+  }
+}
