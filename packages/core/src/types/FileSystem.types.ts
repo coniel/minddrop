@@ -1,9 +1,9 @@
 export interface FsFileOptions {
-  dir: 'workspace' | 'app-data';
+  dir: 'app-data' | 'app-config';
 }
 
 export interface FsDirOptions {
-  dir?: 'workspace' | 'app-data';
+  dir?: 'app-data' | 'app-config';
   recursive?: boolean;
 }
 
