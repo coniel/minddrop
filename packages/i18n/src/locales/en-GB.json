@@ -4,6 +4,7 @@
   "primaryNavigation": "Main",
   "secondaryNavigation": "Tools",
   "topicsNavigation": "Topics",
+  "addWorkspace": "Add a workspace",
   "createTopic": "Add topic",
   "addSubtopic": "Add subtopic",
   "edit": "Edit",
@@ -15,7 +16,7 @@
   "archive": "Archive",
   "rename": "Rename",
   "topicName": "Topic name",
-  "trash": "Trash",
+  "settings": "Settings",
   "addDrop": "Add drop",
 
   "deleteFromTopic": "Delete from this topic",
