@@ -1,7 +1,12 @@
 .sidebar {
   position: relative;
   height: 100%;
-  border-right: 1px solid var(--borderNeutralSubtle);
+  border-right: 1px solid transparent;
+  transition: border-right-color 0.3s ease-in-out;
+}
+
+.sidebar:hover {
+  border-right-color: var(--neutral3);
 }
 
 .sidebar .resize-handle {
