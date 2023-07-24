@@ -72,8 +72,8 @@
   --textPrimaryLight: var(--primary11);
   --textPrimary: var(--primary12);
 
-  --textDangerLight: var(--danger11);
-  --textDanger: var(--danger12);
+  --textDangerLight: var(--danger10);
+  --textDanger: var(--danger11);
 
   /* Radii */
   --radiusXs: 3px; /* popovers, menus */
