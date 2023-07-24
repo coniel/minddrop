@@ -28,8 +28,13 @@
           "$HOME",
           "$HOME/**",
           "$DOCUMENT",
-          "$DOCUMENT/**"
+          "$DOCUMENT/**",
+          "$APPCONFIG",
+          "$APPCONFIG/**"
         ]
+      },
+      "dialog": {
+        "open": true
       },
       "window": {
         "startDragging": true
