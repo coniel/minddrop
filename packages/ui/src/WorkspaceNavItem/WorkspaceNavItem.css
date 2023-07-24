@@ -22,3 +22,11 @@
 .workspace-nav-item .children {
   padding: 2px 6px 12px 8px;
 }
+
+.workspace-nav-item.missing .nav-item .text {
+  color: var(--textDanger);
+}
+
+.workspace-nav-item.missing .nav-item .icon {
+  fill: var(--textDanger);
+}

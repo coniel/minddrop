@@ -27,9 +27,14 @@ export interface WorkspaceNavItemProps
   icon?: React.ReactNode;
 
   /**
-   * If `true`, the nav item will have active styling.
+   * If `true`, the nav item will have 'active' styling.
    */
   active?: boolean;
+
+  /**
+   * If `true`, the nav item will have 'missing' styling.
+   */
+  missing?: boolean;
 
   /**
    * Callback fired when the nav item is clicked.
@@ -68,6 +73,7 @@ export const WorkspaceNavItem = React.forwardRef<
       expanded,
       icon,
       label,
+      missing,
       onExpandedChange,
       ...other
     },
@@ -83,7 +89,7 @@ export const WorkspaceNavItem = React.forwardRef<
         <div
           ref={ref}
           className={mapPropsToClasses(
-            { className, active },
+            { className, active, missing },
             'workspace-nav-item',
           )}
           {...other}
