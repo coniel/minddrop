@@ -13,9 +13,7 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/desktop-app": "workspace:*",
-    "@minddrop/topics": "workspace:*",
     "@minddrop/theme": "workspace:*",
-    "@minddrop/ui": "workspace:*",
     "@tauri-apps/api": "^1.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
