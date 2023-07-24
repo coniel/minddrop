@@ -30,6 +30,15 @@ export interface TopicsApi {
   get(paths: string[]): Topic[];
 
   /**
+   * Returns all topics contained by the specified directory.
+   *
+   * @param paths - The path to the directory containing the topics.
+   * @param recursive - When `true`, traverses subdirectories to get subtopics.
+   * @returns The contained topics.
+   */
+  getFrom(path: string, recursive?: boolean): Promise<Topic[]>;
+
+  /**
    * Creates a topic at the specified path and dispatches a
    * 'topics:topic:create' event.
    *

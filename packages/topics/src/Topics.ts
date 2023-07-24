@@ -2,6 +2,7 @@ import { clearTopics } from './clearTopics';
 import { createTopic } from './createTopic';
 import { getTopic } from './getTopic';
 import { getTopics } from './getTopics';
+import { getTopicsFromPath } from './getTopicsFromPath';
 import { loadTopics } from './loadTopics';
 import { renameTopic } from './renameTopic';
 import { Topic } from './types';
@@ -19,10 +20,15 @@ function get(path: string | string[]) {
   return getTopic(path);
 }
 
+function getFrom(path: string, recursive = false) {
+  return getTopicsFromPath(path, recursive);
+}
+
 export const Topics: TopicsApi = {
   get,
   load: loadTopics,
   clear: clearTopics,
   create: createTopic,
   rename: renameTopic,
+  getFrom,
 };
