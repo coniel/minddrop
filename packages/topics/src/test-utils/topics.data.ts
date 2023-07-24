@@ -69,6 +69,11 @@ export const topicFiles: FileEntry[] = [
     path: `${workspaceRootPath}/.DS_Store`,
   },
   {
+    name: '.hidden-dir',
+    path: `${workspaceRootPath}/.hidden-dir`,
+    children: [],
+  },
+  {
     children: [
       {
         name: 'Topic 1.md',
