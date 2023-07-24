@@ -25,9 +25,6 @@ importers:
       '@minddrop/core': workspace:*
       '@minddrop/desktop-app': workspace:*
       '@minddrop/theme': workspace:*
-      '@minddrop/topics': workspace:*
-      '@minddrop/ui': workspace:*
-      '@minddrop/workspaces': workspace:*
       '@tauri-apps/api': ^1.3.0
       '@tauri-apps/cli': ^1.3.0
       '@types/node': ^20.0.0
@@ -42,9 +39,6 @@ importers:
       '@minddrop/core': link:../../packages/core
       '@minddrop/desktop-app': link:../../packages/desktop-app
       '@minddrop/theme': link:../../packages/theme
-      '@minddrop/topics': link:../../packages/topics
-      '@minddrop/ui': link:../../packages/ui
-      '@minddrop/workspaces': link:../../packages/workspaces
       '@tauri-apps/api': 1.3.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0

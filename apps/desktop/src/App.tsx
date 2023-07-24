@@ -13,8 +13,12 @@ function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
     opts.dir = fs.BaseDirectory.AppData;
   }
 
-  if (options.dir === 'workspace') {
-    opts.dir = fs.BaseDirectory.Desktop;
+  if (options.dir === 'app-config') {
+    opts.dir = fs.BaseDirectory.AppConfig;
+  }
+
+  if ('recursive' in options && typeof options.recursive === 'boolean') {
+    (opts as FsDirOptions).recursive = options.recursive;
   }
 
   return opts;
@@ -42,7 +46,9 @@ registerFileSystemAdapter({
     return fs.readBinaryFile(path, opts);
   },
   readDir: async (path, options) => {
+    console.log(options);
     const opts = options ? convertFsOptions(options) : undefined;
+    console.log(opts);
 
     return fs.readDir(path, opts);
   },
