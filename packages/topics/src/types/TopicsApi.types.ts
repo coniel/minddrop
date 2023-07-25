@@ -39,6 +39,19 @@ export interface TopicsApi {
   getFrom(path: string, recursive?: boolean): Promise<Topic[]>;
 
   /**
+   * Returns the text content of the topic at the given path,
+   * or null if the topic is a directory with no associated text
+   * file.
+   *
+   * @param path - The topic's absolute path.
+   * @reurns The topic file's text content or null if the topic has no file.
+   *
+   * @throws FileNoFoundError
+   * Thrown if the topic file/dir does not exist.
+   */
+  read(path: string): Promise<string | null>;
+
+  /**
    * Creates a topic at the specified path and dispatches a
    * 'topics:topic:create' event.
    *
