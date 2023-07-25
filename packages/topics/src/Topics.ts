@@ -4,6 +4,7 @@ import { getTopic } from './getTopic';
 import { getTopics } from './getTopics';
 import { getTopicsFromPath } from './getTopicsFromPath';
 import { loadTopics } from './loadTopics';
+import { readTopic } from './readTopic';
 import { renameTopic } from './renameTopic';
 import { Topic } from './types';
 import { TopicsApi } from './types/TopicsApi.types';
@@ -31,4 +32,5 @@ export const Topics: TopicsApi = {
   create: createTopic,
   rename: renameTopic,
   getFrom,
+  read: readTopic,
 };
