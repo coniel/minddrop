@@ -3,7 +3,7 @@ import remarkParse from 'remark-parse';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import { RootContent } from 'mdast';
+import { RootContent } from '../types';
 
 /**
  * Parses markdown into markdown abstract syntax tree nodes.
