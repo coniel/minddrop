@@ -1,4 +1,4 @@
-import { RootContent } from 'mdast';
+import { RootContent } from '@minddrop/markdown';
 import { Drop } from './Drop.types';
 
 export interface DropsApi {
