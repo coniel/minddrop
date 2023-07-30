@@ -124,3 +124,21 @@ export const topicFiles: FileEntry[] = [
     path: `${workspaceRootPath}/Untitled 1.md`,
   },
 ];
+
+export const topicMarkdown = `# Topic title
+
+### Drop 1 title
+
+Drop text.
+
+### Drop 2 title
+
+Drop 2 text.
+
+---
+
+![Image description](img.png "Image title")
+
+[Bookmark](https://minddrop.app "Bookmark description")
+
+***`;

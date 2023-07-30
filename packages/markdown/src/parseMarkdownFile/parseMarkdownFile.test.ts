@@ -5,7 +5,8 @@ import {
   registerFileSystemAdapter,
 } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
-import { mdContentTopic, tokenContentTopic } from '../test-utils';
+import { mdContentTopic } from '../test-utils';
+import { parseMarkdown } from '../parseMarkdown/parseMarkdown';
 
 describe('parseMarkdownFile', () => {
   beforeEach(() => {
@@ -25,10 +26,12 @@ describe('parseMarkdownFile', () => {
       readTextFile: vi.fn().mockResolvedValue(mdContentTopic),
     });
 
+    const parsed = parseMarkdown(mdContentTopic);
+
     // Parse a markdown file
     const tokens = await parseMarkdownFile('/foo.md');
 
     // Should return content as tokens
-    expect(JSON.stringify(tokens)).toEqual(JSON.stringify(tokenContentTopic));
+    expect(JSON.stringify(tokens)).toEqual(JSON.stringify(parsed));
   });
 });

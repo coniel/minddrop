@@ -18,7 +18,7 @@ describe('updateMarkdownFileHeading', () => {
         .mockImplementation(
           (path) => new Promise((resolve) => resolve(path === MD_FILE_PATH)),
         ),
-      readTextFile: vi.fn().mockResolvedValue('# Old heading\n\n'),
+      readTextFile: vi.fn().mockResolvedValue('# Old heading\n'),
     });
   });
 
@@ -39,7 +39,7 @@ describe('updateMarkdownFileHeading', () => {
     // Should write the updated markdown to the file
     expect(Fs.writeTextFile).toHaveBeenCalledWith(
       MD_FILE_PATH,
-      '# New heading\n\n',
+      '# New heading\n',
     );
   });
 });

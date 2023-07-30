@@ -1,5 +1,4 @@
-import { RootContent } from 'mdast';
-import { TokenList } from './markdown.types';
+import { RootContent } from './markdown.types';
 
 export interface MarkdownApi {
   /**
@@ -11,12 +10,12 @@ export interface MarkdownApi {
   fromMdast(nodes: RootContent[]): string;
 
   /**
-   * Parses markdown into tokens.
+   * Parses markdown into MD AST nodes.
    *
    * @param markdown - The markdown to parse.
-   * @returns A token list.
+   * @returns MD AST nodes.
    */
-  parse(markdown: string): TokenList;
+  parse(markdown: string): RootContent[];
 
   /**
    * Parses HTML into markdown.
@@ -27,20 +26,12 @@ export interface MarkdownApi {
   fromHtml(html: string): Promise<string>;
 
   /**
-   * Parses a markdown file's content into tokens.
+   * Parses a markdown file's content into MD AST nodes.
    *
    * @param path - The path to the markdown file.
    * @returns A token list.
    */
-  parseFile(path: string): Promise<TokenList>;
-
-  /**
-   * Converts tokens into a markdown document.
-   *
-   * @param tokens - A token list.
-   * @returns Markdown document.
-   */
-  toMarkdown(tokens: TokenList): string;
+  parseFile(path: string): Promise<RootContent[]>;
 
   /**
    * Updates the heading of a markdown document.
@@ -60,11 +51,11 @@ export interface MarkdownApi {
   updateFileHeading(path: string, heading: string): Promise<void>;
 
   /**
-   * Converts tokens into a markdown document and writes
+   * Converts MD AST nodes into a markdown document and writes
    * it to a file.
    *
    * @param path - The markdown file path.
-   * @param tokens - A token list.
+   * @param nodes - The MD AST nodes.
    */
-  writeFile(path: string, tokens: TokenList): Promise<void>;
+  writeFile(path: string, nodes: RootContent[]): Promise<void>;
 }
