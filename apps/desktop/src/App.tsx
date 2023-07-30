@@ -46,9 +46,7 @@ registerFileSystemAdapter({
     return fs.readBinaryFile(path, opts);
   },
   readDir: async (path, options) => {
-    console.log(options);
     const opts = options ? convertFsOptions(options) : undefined;
-    console.log(opts);
 
     return fs.readDir(path, opts);
   },
