@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { RootContent } from 'mdast';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import { RootContent } from '../types';
 import { mdastNodesToMarkdown } from './mdastNodesToMarkdown';
 
 const markdown = `# Title

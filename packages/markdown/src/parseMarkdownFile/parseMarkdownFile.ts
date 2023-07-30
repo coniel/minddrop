@@ -1,6 +1,6 @@
 import { Fs, InvalidParameterError } from '@minddrop/core';
+import { RootContent } from '../types';
 import { parseMarkdown } from '../parseMarkdown';
-import { RootContent } from 'mdast';
 
 /**
  * Parses a markdown file's content into tokens.
