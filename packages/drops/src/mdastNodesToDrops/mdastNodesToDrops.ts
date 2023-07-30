@@ -1,6 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { Markdown } from '@minddrop/markdown';
-import { RootContent } from 'mdast';
+import { Markdown, RootContent } from '@minddrop/markdown';
 import { Drop } from '../types';
 import { getDropType } from '../getDropType';
 

@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
 import { getDropType } from './getDropType';
-import { RootContent } from 'mdast';
+import { Markdown } from '@minddrop/markdown';
 
 const heading1 = '# Heading 1\n';
 
@@ -23,11 +19,7 @@ const link = '[Link description](https://minddrop.app "Link title")\n';
 const table = '| a | b  |  c |  d  |\n| - | :- | -: | :-: |\n';
 
 function markdownToMdast(markdown: string) {
-  return unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkMath)
-    .parse(markdown).children as RootContent[];
+  return Markdown.parse(markdown);
 }
 
 describe('mdastNodesToDrop', () => {
