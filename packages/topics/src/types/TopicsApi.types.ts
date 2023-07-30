@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Topic } from './Topic.types';
+import { TopicContent } from './TopicContent.types';
 
 export interface TopicsApi {
   /**
@@ -50,6 +51,19 @@ export interface TopicsApi {
    * Thrown if the topic file/dir does not exist.
    */
   read(path: string): Promise<string | null>;
+
+  /**
+   * Returns the text content of the topic at the given path,
+   * or null if the topic is a directory with no associated text
+   * file.
+   *
+   * @param path - The topic's absolute path.
+   * @reurns The topic file's text content or null if the topic has no file.
+   *
+   * @throws FileNoFoundError
+   * Thrown if the topic file/dir does not exist.
+   */
+  parse(markdown: string): TopicContent;
 
   /**
    * Creates a topic at the specified path and dispatches a

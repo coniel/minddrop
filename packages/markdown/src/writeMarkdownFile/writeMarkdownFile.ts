@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/core';
-import { TokenList } from '../types';
-import { tokensToMarkdown } from '../tokensToMarkdown';
+import { RootContent } from '../types';
+import { mdastNodesToMarkdown } from '../mdastNodesToMarkdown';
 
 /**
  * Converts tokens into a markdown document and writes
@@ -11,10 +11,10 @@ import { tokensToMarkdown } from '../tokensToMarkdown';
  */
 export async function writeMarkdownFile(
   path: string,
-  tokens: TokenList,
+  nodes: RootContent[],
 ): Promise<void> {
   // Convert tokens to markdown
-  const md = tokensToMarkdown(tokens);
+  const md = mdastNodesToMarkdown(nodes);
 
   // Write markdown to file
   await Fs.writeTextFile(path, md);

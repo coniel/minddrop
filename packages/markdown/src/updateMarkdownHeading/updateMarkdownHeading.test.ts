@@ -7,7 +7,8 @@ const mdOldHeading = `# Untitled
 
 ### Drop 1 header
 
-**Drop 1** text`;
+**Drop 1** text
+`;
 
 const mdNewHeading = `# New heading
 
@@ -15,7 +16,8 @@ const mdNewHeading = `# New heading
 
 ### Drop 1 header
 
-**Drop 1** text`;
+**Drop 1** text
+`;
 
 describe('updateDocumentHeading', () => {
   it('updates the heading', () => {

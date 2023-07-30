@@ -1,5 +1,5 @@
+import { mdastNodesToMarkdown } from '../mdastNodesToMarkdown';
 import { parseMarkdown } from '../parseMarkdown';
-import { tokensToMarkdown } from '../tokensToMarkdown';
 
 /**
  * Updates the heading of a markdown document.
@@ -13,14 +13,15 @@ export function updateMarkdownHeading(
   heading: string,
 ): string {
   // Parse the markdown
-  const tokens = parseMarkdown(markdown);
+  const nodes = parseMarkdown(markdown);
 
-  // If the first token is a level 1 heading
+  // If the first node is a level 1 heading
   // replace its text.
-  if (tokens[0].type === 'heading') {
-    tokens[0].raw = `# ${heading}\n\n`;
+  if (nodes[0].type === 'heading' && nodes[0].depth === 1) {
+    const [newHeading] = parseMarkdown(`# ${heading}\n`);
+    nodes[0] = newHeading;
   }
 
   // Convert tokens back to markdown
-  return tokensToMarkdown(tokens);
+  return mdastNodesToMarkdown(nodes);
 }

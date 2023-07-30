@@ -1,3 +1,5 @@
+import { TopicContent } from './TopicContent.types';
+
 export interface Topic {
   /**
    * The topic title, also serves as the filen/directory name.
@@ -18,4 +20,10 @@ export interface Topic {
    * The paths of the topic's subtopics.
    */
   subtopics: string[];
+
+  /**
+   * The topic's content. Only present on topics opened during
+   * the current session.
+   */
+  content?: TopicContent;
 }
