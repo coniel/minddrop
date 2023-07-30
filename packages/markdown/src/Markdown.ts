@@ -1,3 +1,4 @@
+import { htmlToMarkdown } from './htmlToMarkdown';
 import { parseMarkdown } from './parseMarkdown';
 import { parseMarkdownFile } from './parseMarkdownFile';
 import { tokensToMarkdown } from './tokensToMarkdown';
@@ -8,6 +9,7 @@ import { writeMarkdownFile } from './writeMarkdownFile';
 
 export const Markdown: MarkdownApi = {
   parse: parseMarkdown,
+  fromHtml: htmlToMarkdown,
   toMarkdown: tokensToMarkdown,
   updateHeading: updateMarkdownHeading,
   parseFile: parseMarkdownFile,
