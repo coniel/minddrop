@@ -1,10 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
+import { Markdown } from '@minddrop/markdown';
 import { mdastNodesToDrops } from './mdastNodesToDrops';
-import { RootContent } from 'mdast';
 
 vi.mock('uuid', () => ({
   v4: () => 'some-id',
@@ -35,8 +31,7 @@ function toMarkdownString(parts: string[]): string {
 function markdownToMdast(markdown: string | string[]) {
   let md = Array.isArray(markdown) ? toMarkdownString(markdown) : markdown;
 
-  return unified().use(remarkParse).use(remarkGfm).use(remarkMath).parse(md)
-    .children as RootContent[];
+  return Markdown.parse(md);
 }
 
 describe('mdastNodesToDrop', () => {
