@@ -10,6 +10,14 @@ export interface MarkdownApi {
   parse(markdown: string): TokenList;
 
   /**
+   * Parses HTML into markdown.
+   *
+   * @param html - The HTML to parse.
+   * @returns The parsed markdown.
+   */
+  fromHtml(html: string): Promise<string>;
+
+  /**
    * Parses a markdown file's content into tokens.
    *
    * @param path - The path to the markdown file.
