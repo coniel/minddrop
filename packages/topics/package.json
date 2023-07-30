@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",
+    "@minddrop/drops": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*",
+    "uuid": "^9.0.0",
     "zustand": "^4.3.8"
   },
   "peerDependencies": {

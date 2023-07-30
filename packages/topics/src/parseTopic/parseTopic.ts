@@ -1,28 +1,14 @@
 import { v4 as uuid } from 'uuid';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkFrontmatter from 'remark-frontmatter';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import { toString } from 'mdast-util-to-string';
-import { RootContent } from 'mdast';
+import { Drops } from '@minddrop/drops';
+import { Markdown, RootContent } from '@minddrop/markdown';
 import { TopicColumn, TopicContent } from '../types';
-import { remove } from 'unist-util-remove';
-import { is } from 'unist-util-is';
-import { Drop, Drops } from '@minddrop/drops';
 
 export function parseTopic(markdownContent: string): TopicContent {
   let title = '';
-
-  let tree = unified()
-    .use(remarkParse)
-    .use(remarkFrontmatter)
-    .use(remarkGfm)
-    .use(remarkMath)
-    .parse(markdownContent);
+  let nodes = Markdown.parse(markdownContent);
 
   // Remove front matter from MD content
-  remove(tree, { type: 'yaml' });
+  Markdown.remove(nodes, { type: 'yaml' });
 
   const columnContents: { seperator?: string; content: RootContent[] }[] = [];
   let currentColumn: RootContent[] = [];
@@ -35,11 +21,11 @@ export function parseTopic(markdownContent: string): TopicContent {
     });
   }
 
-  (tree.children as RootContent[]).forEach((node, index) => {
+  nodes.forEach((node, index) => {
     // If the first child is a level 1 heading, use
     // it as the topic title.
-    if (index === 0 && is(node, { type: 'heading', depth: 1 })) {
-      title = toString(node);
+    if (index === 0 && Markdown.is(node, { type: 'heading', depth: 1 })) {
+      title = Markdown.toString(node);
 
       return;
     }

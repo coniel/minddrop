@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { parseTopic } from './parseTopic';
-import { TopicContent } from '../types';
 
 vi.mock('uuid', () => ({
   v4: () => 'some-id',
@@ -22,10 +21,6 @@ const thematicBreak = '---\n';
 
 function toMarkdownString(parts: string[]): string {
   return parts.join('\n');
-}
-
-function getDrop(content: TopicContent, colIndex: number, dropIndex: number) {
-  return content.columns[colIndex].drops[dropIndex];
 }
 
 describe('parseTopic', () => {
