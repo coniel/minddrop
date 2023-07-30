@@ -1,6 +1,15 @@
+import { RootContent } from 'mdast';
 import { TokenList } from './markdown.types';
 
 export interface MarkdownApi {
+  /**
+   * Processes MD AST nodes into markdown.
+   *
+   * @nodes - MD AST nodes
+   * @returns Markdown
+   */
+  fromMdast(nodes: RootContent[]): string;
+
   /**
    * Parses markdown into tokens.
    *
