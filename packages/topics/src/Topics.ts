@@ -9,6 +9,7 @@ import { readTopic } from './readTopic';
 import { renameTopic } from './renameTopic';
 import { Topic } from './types';
 import { TopicsApi } from './types/TopicsApi.types';
+import { updateTopic } from './updateTopic';
 
 // The `get` function which returns one or multiple topics based
 // on whether the `path` argument is a string or an array.
@@ -31,6 +32,7 @@ export const Topics: TopicsApi = {
   load: loadTopics,
   clear: clearTopics,
   create: createTopic,
+  update: updateTopic,
   rename: renameTopic,
   getFrom,
   read: readTopic,

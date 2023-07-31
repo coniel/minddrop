@@ -12,6 +12,7 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/drops": "workspace:*",
+    "@minddrop/events": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "uuid": "^9.0.0",
