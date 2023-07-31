@@ -77,6 +77,19 @@ export interface TopicsApi {
   create(core: Core, path: string, asDir?: boolean): Promise<Topic>;
 
   /**
+   * Updates a topic in the topic's store and dispatches a
+   * 'topics:topic:update' event.
+   *
+   * @param path - The topic path.
+   * @param data - The data to st on the topic.
+   * @returns The updated topic.
+   *
+   * @throws NotFoundError
+   * Thrown if the topic does not exist.
+   */
+  update(path: string, data: Partial<Topic>): Topic;
+
+  /**
    * Renames a topic markdown file (as well as directory
    * if the topic is a directory), and updates the
    * markdown heading (if present) to match.
