@@ -104,6 +104,31 @@ export interface TopicsApi {
   rename(core: Core, path: string, name: string): Promise<string>;
 
   /**
+   * Converts a topic's content into markdown.
+   *
+   * @property content - The topic's content.
+   * @returns The topic content as markdown.
+   */
+  toMarkdown(content: TopicContent): string;
+
+  /**
+   * Writes the provided markdown to a topic's markdown file.
+   *
+   * @param path - The topic path.
+   * @param markdown - The topic markdown.
+   */
+  write(path: string, markdown: string): Promise<void>;
+
+  /**
+   * Returns the path to a topic's markdown file. Does **not**
+   * check for the existence of the file.
+   *
+   * @param path - The topic path.
+   * @returns The path to the topic's markdown file.
+   */
+  getMarkdownFilePath(topicPath: string): string;
+
+  /**
    * Clears all topics from the topics store.
    */
   clear(): void;
