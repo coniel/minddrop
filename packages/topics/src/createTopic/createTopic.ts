@@ -2,6 +2,7 @@ import { Core, Fs, InvalidParameterError } from '@minddrop/core';
 import { incrementalPath } from '@minddrop/utils';
 import { TopicsStore } from '../TopicsStore';
 import { Topic } from '../types';
+import { initializeTopicContent } from '../initializeTopicContent';
 
 /**
  * Creates a topic at the specified path and dispatches a
@@ -46,15 +47,21 @@ export async function createTopic(
     title = mdPath.split('/').slice(-1)[0].slice(0, -3);
   }
 
-  // Create topic markdown file
-  await Fs.writeTextFile(mdPath, `# ${title}\n\n`);
-
   const topic: Topic = {
     title,
     path: mdPath,
     isDir: asDir,
     subtopics: [],
   };
+
+  // Initialize the topic content
+  const content = initializeTopicContent(topic);
+
+  // Add the content to the topic
+  topic.content = content;
+
+  // Create topic markdown file
+  await Fs.writeTextFile(mdPath, content.markdown);
 
   // Add to topics store
   TopicsStore.getState().add(topic);

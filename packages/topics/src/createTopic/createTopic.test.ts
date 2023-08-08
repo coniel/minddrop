@@ -8,12 +8,25 @@ import { setup, cleanup, core } from '../test-utils';
 import { TopicsStore } from '../TopicsStore';
 import { createTopic } from './createTopic';
 
+vi.mock('uuid', () => ({
+  v4: () => 'uuid',
+}));
+
 const PATH = '/foo';
 const TOPIC = {
   title: 'Untitled',
   path: `${PATH}/Untitled.md`,
   isDir: false,
   subtopics: [],
+  content: {
+    title: 'Untitled',
+    markdown: '# Untitled\n\n---\n\n---\n\n',
+    columns: [
+      { id: 'uuid', drops: [] },
+      { id: 'uuid', drops: [] },
+      { id: 'uuid', drops: [] },
+    ],
+  },
 };
 
 describe('createTopic', () => {
@@ -65,7 +78,7 @@ describe('createTopic', () => {
     // name as the file name and markdown header.
     expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
       `${PATH}/Untitled.md`,
-      '# Untitled\n\n',
+      TOPIC.content.markdown,
     );
   });
 
@@ -98,7 +111,7 @@ describe('createTopic', () => {
     // Should create the topic file as 'Untitled 1.md'
     expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
       `${PATH}/Untitled 1.md`,
-      '# Untitled 1\n\n',
+      '# Untitled 1\n\n---\n\n---\n\n',
     );
   });
 
@@ -169,7 +182,7 @@ describe('createTopic', () => {
       // Should create the topic markdown file inside the new directory
       expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
         `${PATH}/Untitled 1/Untitled 1.md`,
-        '# Untitled 1\n\n',
+        '# Untitled 1\n\n---\n\n---\n\n',
       );
     });
   });
