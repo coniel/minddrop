@@ -17,4 +17,12 @@ export interface DropsApi {
    * @returns Drops
    */
   fromMdast(nodes: RootContent[]): Drop[];
+
+  /**
+   * Parses HTML into drops.
+   *
+   * @param html - The HTML to parse.
+   * @returns Drops.
+   */
+  fromHtml(html: string): Drop[];
 }
