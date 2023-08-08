@@ -9,12 +9,12 @@ import remarkStringify from 'remark-stringify';
  * @param html - The HTML to parse.
  * @returns The parsed markdown.
  */
-export async function htmlToMarkdown(html: string): Promise<string> {
-  const file = await unified()
+export function htmlToMarkdown(html: string): string {
+  const file = unified()
     .use(rehypeParse)
     .use(rehypeRemark)
     .use(remarkStringify)
-    .process(html);
+    .processSync(html);
 
   return file.toString();
 }

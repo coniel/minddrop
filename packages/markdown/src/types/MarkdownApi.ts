@@ -24,7 +24,7 @@ export interface MarkdownApi {
    * @param html - The HTML to parse.
    * @returns The parsed markdown.
    */
-  fromHtml(html: string): Promise<string>;
+  fromHtml(html: string): string;
 
   /**
    * Parses a markdown file's content into MD AST nodes.
