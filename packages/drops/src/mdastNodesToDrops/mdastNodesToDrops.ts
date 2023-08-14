@@ -10,13 +10,30 @@ import { getDropType } from '../getDropType';
  * @returns Drops
  */
 export function mdastNodesToDrops(nodes: RootContent[]): Drop[] {
-  const drops: RootContent[][] = [];
+  const drops: Drop[] = [];
   let currentDropChildren: RootContent[] = [];
   let previousLine = 0;
 
+  // Turns `currentDropChildren` into a drop
   function terminateDrop() {
     if (currentDropChildren.length) {
-      drops.push([...currentDropChildren]);
+      const dropType = getDropType(currentDropChildren);
+
+      // If a text drops does not begin with a header,
+      // prepend one to it.
+      if (dropType === 'text' && currentDropChildren[0].type === 'paragraph') {
+        currentDropChildren.unshift(Markdown.parse('### ')[0]);
+      }
+
+      // Create a drop from its contents
+      drops.push({
+        id: uuid(),
+        type: dropType,
+        children: currentDropChildren,
+        markdown: Markdown.fromMdast(currentDropChildren),
+      });
+
+      // Clear current drop children
       currentDropChildren = [];
     }
   }
@@ -93,10 +110,5 @@ export function mdastNodesToDrops(nodes: RootContent[]): Drop[] {
   // Add the final drop contents to the column
   terminateDrop();
 
-  return drops.map((children) => ({
-    id: uuid(),
-    type: getDropType(children),
-    children,
-    markdown: Markdown.fromMdast(children),
-  }));
+  return drops;
 }
