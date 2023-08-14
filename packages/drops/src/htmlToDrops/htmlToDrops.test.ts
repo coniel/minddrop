@@ -18,7 +18,7 @@ describe('htmlToDrops', () => {
     expect(drops.length).toBe(2);
 
     // Drops should be split by H3
-    expect(drops[0].markdown).toBe('Drop 1\n');
+    expect(drops[0].markdown).toBe('###\n\nDrop 1\n');
     expect(drops[1].markdown).toBe('### Drop 2 title\n\nDrop 2\n');
   });
 });

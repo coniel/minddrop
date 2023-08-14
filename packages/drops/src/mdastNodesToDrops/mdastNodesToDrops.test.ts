@@ -42,7 +42,7 @@ describe('mdastNodesToDrop', () => {
   });
 
   it('adds children', () => {
-    const children = markdownToMdast(text);
+    const children = markdownToMdast(image);
     const [drop] = mdastNodesToDrops(children);
 
     expect(drop.children).toEqual(children);
@@ -97,6 +97,15 @@ describe('mdastNodesToDrop', () => {
 
       expect(drops[0].type).toBe('text');
       expect(drops[0].markdown).toBe(toMarkdownString([heading3, text]));
+    });
+  });
+
+  describe('text', () => {
+    it('prepends a heading to text drops which to not begin with one', () => {
+      const [drop] = mdastNodesToDrops(markdownToMdast(text));
+
+      expect(drop.children.length).toBe(2);
+      expect(drop.markdown).toBe(`###\n\n${text}`);
     });
   });
 
