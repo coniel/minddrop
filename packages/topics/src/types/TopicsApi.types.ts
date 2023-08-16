@@ -1,6 +1,7 @@
 import { Core } from '@minddrop/core';
 import { Topic } from './Topic.types';
 import { TopicContent } from './TopicContent.types';
+import { Drop } from '@minddrop/drops';
 
 export interface TopicsApi {
   /**
@@ -127,6 +128,25 @@ export interface TopicsApi {
    * @returns The path to the topic's markdown file.
    */
   getMarkdownFilePath(topicPath: string): string;
+
+  /**
+   * Adds drops to a topic at the specified location, or
+   * at the end of the first column if no location was
+   * provided.
+   *
+   * Dispatches a 'topics:topic:update' event.
+   *
+   * @param path - The topic path.
+   * @param drops - The drops to add.
+   * @param columnIndex - The index of the column to which to add the drops.
+   * @param dropIndex - The index at which to insert the drops within the column.
+   */
+  addDrops(
+    path: string,
+    drops: Drop[],
+    columnIndex?: number,
+    dropIndex?: number,
+  ): Promise<Topic>;
 
   /**
    * Clears all topics from the topics store.
