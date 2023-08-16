@@ -14,8 +14,8 @@ export function initializeTopicContent(topic: Topic): TopicContent {
     markdown: `# ${topic.title}\n\n---\n\n---\n\n`,
     columns: [
       { id: uuid(), drops: [] },
-      { id: uuid(), drops: [] },
-      { id: uuid(), drops: [] },
+      { id: uuid(), seperator: '---', drops: [] },
+      { id: uuid(), seperator: '---', drops: [] },
     ],
   };
 }

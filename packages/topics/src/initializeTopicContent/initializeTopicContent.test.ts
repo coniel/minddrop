@@ -17,8 +17,8 @@ describe('initializeTopicContent', () => {
     // Should generate columns
     expect(content.columns).toEqual([
       { id: 'uuid', drops: [] },
-      { id: 'uuid', drops: [] },
-      { id: 'uuid', drops: [] },
+      { id: 'uuid', seperator: '---', drops: [] },
+      { id: 'uuid', seperator: '---', drops: [] },
     ]);
   });
 });
