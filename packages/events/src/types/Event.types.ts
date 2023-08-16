@@ -7,7 +7,7 @@ export interface Event<TData = any> {
   /**
    * The event data if it contains any.
    */
-  data?: TData;
+  data: TData;
 
   /**
    * Stops the invocation of event listeners after the
