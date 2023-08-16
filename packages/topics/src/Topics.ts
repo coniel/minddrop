@@ -1,3 +1,4 @@
+import { addDropsToTopic } from './addDropsToTopic';
 import { clearTopics } from './clearTopics';
 import { createTopic } from './createTopic';
 import { getTopic } from './getTopic';
@@ -43,4 +44,5 @@ export const Topics: TopicsApi = {
   write: writeTopic,
   toMarkdown: topicContentToMarkdown,
   getMarkdownFilePath: getTopicMarkdownFilePath,
+  addDrops: addDropsToTopic,
 };
