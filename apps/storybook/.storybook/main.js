@@ -1,6 +1,9 @@
 /** @type { import('@storybook/react-vite').StorybookConfig } */
 const config = {
-  stories: ['../../../packages/ui/**/*.stories.@(ts|tsx)'],
+  stories: [
+    '../../../packages/ui/**/*.stories.@(ts|tsx)',
+    '../../../packages/rich-text-editor/**/*.stories.@(ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
