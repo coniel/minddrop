@@ -11,7 +11,6 @@ import { RootContent } from '../types';
  */
 export function mdastNodesToMarkdown(nodes: RootContent[]): string {
   return toMarkdown(
-    // @ts-ignore
     { type: 'root', children: nodes },
     { extensions: [gfmToMarkdown(), mathToMarkdown()], bullet: '-', rule: '-' },
   );
