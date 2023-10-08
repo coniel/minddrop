@@ -75,7 +75,8 @@ export function createItemStore<
     remove: (id) => useItemStore.getState().removeItem(id),
     load: (items) => useItemStore.getState().loadItems(items),
     clear: () => useItemStore.getState().clearItems(),
-    useItem: (id) => useItemStore(({ items }) => ({ ...items[id] } || null)),
+    useItem: (id) =>
+      useItemStore(({ items }) => (items[id] ? { ...items[id] } : null)),
     useItems: (ids) =>
       useItemStore(({ items }) =>
         ids.reduce((map, id) => ({ ...map, [id]: items[id] }), {}),
