@@ -23,8 +23,8 @@ const TOPIC = {
     markdown: '# Untitled\n\n---\n\n---\n\n',
     columns: [
       { id: 'uuid', drops: [] },
-      { id: 'uuid', drops: [] },
-      { id: 'uuid', drops: [] },
+      { id: 'uuid', drops: [], seperator: '---' },
+      { id: 'uuid', drops: [], seperator: '---' },
     ],
   },
 };
