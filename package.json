@@ -17,13 +17,13 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "eslint": "^8.40.0",
+    "eslint": "^8.51.0",
     "eslint-config-custom": "workspace:*",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "prettier": "^2.8.8",
-    "turbo": "^1.9.3",
-    "vitest": "^0.31.0"
+    "turbo": "^1.10.15",
+    "vitest": "^0.31.4"
   },
   "engines": {
     "node": ">=14.0.0"
