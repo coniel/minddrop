@@ -1,0 +1,9 @@
+.heading-2-element {
+  font-size: 26px;
+  font-weight: var(--fwSemibold);
+  padding-top: 16px;
+}
+
+.heading-2-element:first-child {
+  padding-top: 0;
+}
