@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Drop.css';
 import { ContentColor } from '../types';
@@ -20,17 +20,16 @@ export interface DropProps extends React.HTMLAttributes<HTMLDivElement> {
   selected?: boolean;
 }
 
-export const Drop: FC<DropProps> = ({
-  children,
-  className,
-  color,
-  selected,
-  ...other
-}) => (
-  <div
-    className={mapPropsToClasses({ className, color, selected }, 'drop')}
-    {...other}
-  >
-    {children}
-  </div>
+export const Drop = React.forwardRef<HTMLDivElement, DropProps>(
+  ({ children, className, color, selected, ...other }, ref) => (
+    <div
+      className={mapPropsToClasses({ className, color, selected }, 'drop')}
+      ref={ref}
+      {...other}
+    >
+      {children}
+    </div>
+  ),
 );
+
+Drop.displayName = 'Drop';
