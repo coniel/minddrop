@@ -5,8 +5,9 @@ import {
   registerFileSystemAdapter,
 } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
-import { mdContentTopic } from '../test-utils';
 import { parseMarkdown } from '../parseMarkdown/parseMarkdown';
+
+const markdown = '# Title';
 
 describe('parseMarkdownFile', () => {
   beforeEach(() => {
@@ -23,10 +24,10 @@ describe('parseMarkdownFile', () => {
     registerFileSystemAdapter({
       ...MockFsAdapter,
       exists: vi.fn().mockResolvedValue(true),
-      readTextFile: vi.fn().mockResolvedValue(mdContentTopic),
+      readTextFile: vi.fn().mockResolvedValue(markdown),
     });
 
-    const parsed = parseMarkdown(mdContentTopic);
+    const parsed = parseMarkdown(markdown);
 
     // Parse a markdown file
     const tokens = await parseMarkdownFile('/foo.md');
