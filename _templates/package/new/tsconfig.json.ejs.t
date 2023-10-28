@@ -2,7 +2,7 @@
 to: packages/<%= name %>/tsconfig.json
 ---
 {
-  "extends": "tsconfig/base.json",
+  "extends": "tsconfig/<% if(locals.react){ -%>react-library<% } else { -%>base<% } -%>.json",
   "include": ["."],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["node_modules"]
 }

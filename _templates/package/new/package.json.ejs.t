@@ -12,9 +12,9 @@ to: packages/<%= name %>/package.json
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.0.4"
   },
 }
