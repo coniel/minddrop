@@ -26,10 +26,10 @@ export function createPersistentConfig(
 
   return {
     set: (key, value) => setConfigValue(id, key, value),
-    get: (key, defaultValue = undefined) =>
+    get: (key, defaultValue = defaultValues[key]) =>
       getConfigValue(id, key, defaultValue),
     clear: (key) => clearConfigValue(id, key),
-    useValue: (key, defaultValue = undefined) => {
+    useValue: (key, defaultValue = defaultValues[key]) => {
       const value = useConfigValue(id, key, defaultValue);
 
       return value;
