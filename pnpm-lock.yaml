@@ -182,6 +182,9 @@ importers:
       '@minddrop/ui':
         specifier: workspace:*
         version: link:../ui
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -728,6 +731,9 @@ importers:
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/topics':
         specifier: workspace:*
         version: link:../topics
