@@ -1,6 +1,7 @@
 import { Fs } from '@minddrop/core';
 import { Topics } from '@minddrop/topics';
 import { Workspace } from '../types';
+import { workspaceExists } from '../workspaceExists';
 
 /**
  * Creates a workspace object from a directory.
@@ -10,20 +11,15 @@ import { Workspace } from '../types';
  */
 export async function getWorkspaceFromPath(path: string): Promise<Workspace> {
   let topics: string[] = [];
-  const workspaceExists = await Fs.exists(path);
+  const exists = await workspaceExists(path);
 
-  if (workspaceExists) {
-    /* const workspaceContents = await Fs.readDir(path); */
-
-    /* topics = workspaceContents */
-    /*   .filter((entry) => entry.children || entry.path.endsWith('.md')) */
-    /*   .map((entry) => entry.path); */
+  if (exists) {
     topics = (await Topics.getFrom(path)).map((topic) => topic.path);
   }
 
   return {
     path,
-    exists: workspaceExists,
+    exists,
     name: path.split('/').slice(-1)[0],
     topics,
   };

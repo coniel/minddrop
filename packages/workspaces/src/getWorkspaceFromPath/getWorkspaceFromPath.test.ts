@@ -1,7 +1,7 @@
 import { registerFileSystemAdapter } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { setup, cleanup, workspace1, workspace2 } from '../test-utils';
+import { setup, cleanup, workspace1, missingWorkspace } from '../test-utils';
 import { getWorkspaceFromPath } from './getWorkspaceFromPath';
 
 // Pretend workspace contains topics
@@ -24,7 +24,7 @@ describe('getWorkspaceFromPath', () => {
     exists.mockImplementation(
       (path) =>
         new Promise((resolve) => {
-          resolve(path !== workspace2.path);
+          resolve(path !== missingWorkspace.path);
         }),
     );
 
@@ -46,9 +46,9 @@ describe('getWorkspaceFromPath', () => {
 
   it('sets `exists` to false if workspace directory does not exist', async () => {
     // Get a workspace from a non-existent path
-    const workspace = await getWorkspaceFromPath(workspace2.path);
+    const workspace = await getWorkspaceFromPath(missingWorkspace.path);
 
     // Should return workspace with exists = false
-    expect(workspace).toEqual(workspace2);
+    expect(workspace).toEqual(missingWorkspace);
   });
 });

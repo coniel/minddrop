@@ -1,4 +1,5 @@
-import { Core, FileNotFoundError, Fs } from '@minddrop/core';
+import { FileNotFoundError, Fs } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import { getWorkspaceFromPath } from '../getWorkspaceFromPath';
 import { Workspace } from '../types';
 import { WorkspacesStore } from '../WorkspacesStore';
@@ -11,10 +12,7 @@ import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
  * @param path - Absolute path to the workspace directory.
  * @returns The new workspace.
  */
-export async function addWorkspace(
-  core: Core,
-  path: string,
-): Promise<Workspace> {
+export async function addWorkspace(path: string): Promise<Workspace> {
   // Ensure path exists
   const exists = await Fs.exists(path);
 
@@ -32,7 +30,7 @@ export async function addWorkspace(
   writeWorkspacesConfig();
 
   // Dispatch a 'workspaces:workspace:add' event
-  core.dispatch('workspaces:workspace:add', workspace);
+  Events.dispatch('workspaces:workspace:add', workspace);
 
   return workspace;
 }
