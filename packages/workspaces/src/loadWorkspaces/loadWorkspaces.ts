@@ -1,41 +1,24 @@
-import { Core, FileNotFoundError, Fs } from '@minddrop/core';
-import { WorkspacesConfigFile } from '../constants';
+import { Events } from '@minddrop/events';
 import { getWorkspaceFromPath } from '../getWorkspaceFromPath';
-import { Workspace, WorkspacesConfig } from '../types';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
+import { Workspace } from '../types';
 import { WorkspacesStore } from '../WorkspacesStore';
 
 /**
- * Loads workspaces from the workspaces configs file and
- * verifies that each workspace path exists.
+ * Loads the user's workspaces into the workspaces store.
  *
  * Dispatches a 'workspaces:load' event.
  *
- * @param core - A MindDrop core instance.
  * @returns The loaded workspaces.
+ *
+ * @throws {FileNotFoundError} - Workspaces config file not found.
+ * @throws {JsonParseError} - Failed to parse workspaces config file.
  */
-export async function loadWorkspaces(core: Core): Promise<Workspace[]> {
-  let workspacesConfig: WorkspacesConfig;
+export async function loadWorkspaces(): Promise<Workspace[]> {
+  // Get the user's workspaces config
+  const workspacesConfig = await getWorkspacesConfig();
 
-  // Check if workspace configs file exists
-  const exists = await Fs.exists(WorkspacesConfigFile, { dir: 'app-config' });
-
-  if (!exists) {
-    throw new FileNotFoundError(WorkspacesConfigFile);
-  }
-
-  try {
-    // Read workspace paths from configs file
-    const stringConfig = await Fs.readTextFile(WorkspacesConfigFile, {
-      dir: 'app-config',
-    });
-
-    // Parse the config
-    workspacesConfig = JSON.parse(stringConfig);
-  } catch {
-    throw new Error(`Unable to parse ${WorkspacesConfigFile}`);
-  }
-
-  // Create workspace obejcts
+  // Get workspaces listed in the config
   const workspaces: Workspace[] = await Promise.all(
     workspacesConfig.paths.map(getWorkspaceFromPath),
   );
@@ -44,7 +27,7 @@ export async function loadWorkspaces(core: Core): Promise<Workspace[]> {
   WorkspacesStore.getState().load(workspaces);
 
   // Dispatch a 'workspaces:load' event
-  core.dispatch('workspaces:load', workspaces);
+  Events.dispatch('workspaces:load', workspaces);
 
   return workspaces;
 }

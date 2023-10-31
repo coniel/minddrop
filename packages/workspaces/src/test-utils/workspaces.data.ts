@@ -10,11 +10,11 @@ export const workspace1: Workspace = {
   ],
 };
 
-export const workspace2: Workspace = {
+export const missingWorkspace: Workspace = {
   path: 'Users/foo/Documents/Workspace 2',
   exists: false,
   name: 'Workspace 2',
   topics: [],
 };
 
-export const workspaces = [workspace1, workspace2];
+export const workspaces = [workspace1, missingWorkspace];

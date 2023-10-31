@@ -1,5 +1,5 @@
 import { describe, afterEach, it, expect, beforeEach } from 'vitest';
-import { workspace1, workspace2, workspaces } from '../test-utils';
+import { workspace1, missingWorkspace, workspaces } from '../test-utils';
 import { WorkspacesStore } from './WorkspacesStore';
 
 function loadWorkspaces() {
@@ -27,12 +27,12 @@ describe('WorkspacesStore', () => {
       WorkspacesStore.getState().load([workspace1]);
 
       // Add a second workspace to the store
-      WorkspacesStore.getState().add(workspace2);
+      WorkspacesStore.getState().add(missingWorkspace);
 
       // Workspace 2 should be added to the end of workspaces
       expect(WorkspacesStore.getState().workspaces).toEqual([
         workspace1,
-        workspace2,
+        missingWorkspace,
       ]);
     });
 
@@ -41,11 +41,11 @@ describe('WorkspacesStore', () => {
       WorkspacesStore.getState().load([workspace1]);
 
       // Add a second workspace to position 0 in the store
-      WorkspacesStore.getState().add(workspace2, 0);
+      WorkspacesStore.getState().add(missingWorkspace, 0);
 
       // Workspace 2 should be added to the start of workspaces
       expect(WorkspacesStore.getState().workspaces).toEqual([
-        workspace2,
+        missingWorkspace,
         workspace1,
       ]);
     });
