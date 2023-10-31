@@ -20,7 +20,7 @@ import {
 } from '@minddrop/theme';
 import { useTranslation } from '@minddrop/i18n';
 import { useCore } from '@minddrop/core';
-import { AppUiState, useAppUiState } from '../AppUiState';
+import { AppUiState, useSidebarWidth } from '../AppUiState';
 import './AppSidebar.css';
 
 export const AppSidebar: FC = () => {
@@ -28,7 +28,7 @@ export const AppSidebar: FC = () => {
   const themeAppearance = useThemeAppearance();
   const themeAppearanceSetting = useThemeAppearanceSetting();
   const core = useCore('minddrop:app');
-  const initialWidth = useAppUiState('sidebarWidth');
+  const initialWidth = useSidebarWidth();
 
   const handleResize = useCallback(
     (value: number) => AppUiState.set('sidebarWidth', value),
