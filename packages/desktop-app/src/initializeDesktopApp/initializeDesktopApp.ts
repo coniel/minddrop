@@ -1,6 +1,7 @@
 import { initializeCore, loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme } from '@minddrop/theme';
+import { initializeWorkspaces } from './initializeWorkspaces';
 
 /**
  * Initializes the desktop app.
@@ -14,6 +15,9 @@ export async function initializeDesktopApp(): Promise<void> {
 
   // Load persisted config values
   await loadConfigs();
+
+  // Initialize workspaces
+  await initializeWorkspaces();
 
   Theme.addEventListener(core, 'theme:appearance:set-value', ({ data }) => {
     // Toggle the theme appearance class on <body>
