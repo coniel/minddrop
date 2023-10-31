@@ -5,20 +5,20 @@ export interface AppUiState {
    * Current width of the sidebar in pixels.
    */
   sidebarWidth: number;
+
+  /**
+   * The currently open view.
+   */
+  view: string | null;
 }
 
 export const AppUiState = createPersistentConfig('app-ui', {
   sidebarWidth: 300,
+  view: null,
 });
 
-export function useAppUiState<T extends keyof AppUiState>(
-  key: keyof AppUiState,
-): AppUiState[T] {
-  const value = AppUiState.useValue<AppUiState[T]>(key);
+export const useCurrentView = () =>
+  AppUiState.useValue('view') as string | null;
 
-  if (typeof value === 'undefined') {
-    throw new Error(`Missing UI state value ${key}`);
-  }
-
-  return value;
-}
+export const useSidebarWidth = () =>
+  AppUiState.useValue('sidebarWidth') as number;
