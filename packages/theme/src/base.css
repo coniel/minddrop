@@ -21,6 +21,8 @@
   --fsContentTitle: 20px;
 
   --lhContentRegular: 1.5;
+  --lhUiDense: 1.2;
+  --lhUiRegular: 1.4;
 
   /* Backgrounds */
   --bgApp: var(--appBackground);
