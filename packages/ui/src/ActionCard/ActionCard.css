@@ -1,0 +1,39 @@
+.action-card {
+  width: 200px;
+  height: 240px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  align-items: center;
+
+  background-color: var(--bgApp);
+  border-radius: var(--radiusLg);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--borderNeutralSubtle);
+
+  padding: 28px 18px 18px 18px;
+
+  text-align: center;
+  color: var(--textNeutral);
+  line-height: var(--lhDense);
+}
+
+.action-card .icon {
+  color: var(--blue9);
+  width: 36px;
+  height: 36px;
+}
+
+.action-card .action {
+  margin-top: auto;
+}
+
+.action-card .title {
+  line-height: 20px;
+}
+
+.action-card .description {
+  line-height: 1.25;
+}
