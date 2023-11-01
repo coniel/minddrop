@@ -32,7 +32,8 @@ export interface WorkspacesStore {
 export const WorkspacesStore = create<WorkspacesStore>()((set) => ({
   workspaces: [],
 
-  load: (workspaces) => set({ workspaces }),
+  load: (workspaces) =>
+    set((state) => ({ workspaces: [...state.workspaces, ...workspaces] })),
 
   add: (workspace, index) =>
     set((state) => {

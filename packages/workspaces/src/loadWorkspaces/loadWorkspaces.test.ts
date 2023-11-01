@@ -67,6 +67,20 @@ describe('loadWorkspaces', () => {
     ]);
   });
 
+  it('does not load workspaces already present in the store', async () => {
+    // Add a workspace to the store
+    WorkspacesStore.getState().add(workspace1);
+
+    // Load the workspaces
+    await loadWorkspaces();
+
+    // Store should contain the workspaces
+    expect(WorkspacesStore.getState().workspaces).toEqual([
+      workspace1,
+      missingWorkspace,
+    ]);
+  });
+
   it('dispatches a `workspaces:load` event', async () =>
     new Promise<void>((done) => {
       // Listen to 'workspaces:load' events
@@ -79,4 +93,20 @@ describe('loadWorkspaces', () => {
       // Load workspaces
       loadWorkspaces();
     }));
+
+  it('does not dispatch if no new workspaces were loaded', async () => {
+    const dispatch = vi.spyOn(Events, 'dispatch');
+
+    // Load workspaces
+    await loadWorkspaces();
+
+    dispatch.mockClear();
+
+    // Load workspaces again, nothing new will
+    // be loaded.
+    await loadWorkspaces();
+
+    // Should not dispatch
+    expect(dispatch).not.toHaveBeenCalled();
+  });
 });

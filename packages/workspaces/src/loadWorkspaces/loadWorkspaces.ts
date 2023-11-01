@@ -15,19 +15,33 @@ import { WorkspacesStore } from '../WorkspacesStore';
  * @throws {JsonParseError} - Failed to parse workspaces config file.
  */
 export async function loadWorkspaces(): Promise<Workspace[]> {
+  // Get the existing workspaces from the store
+  const existingWorkspaces = WorkspacesStore.getState().workspaces;
+
   // Get the user's workspaces config
   const workspacesConfig = await getWorkspacesConfig();
 
+  // Filter out the existing workspace paths from the
+  // config's workspace paths.
+  const newPaths = workspacesConfig.paths.filter(
+    (path) => !existingWorkspaces.find((workspace) => workspace.path === path),
+  );
+
+  // If there are no new paths, there is nothing to load
+  if (newPaths.length === 0) {
+    return [];
+  }
+
   // Get workspaces listed in the config
-  const workspaces: Workspace[] = await Promise.all(
-    workspacesConfig.paths.map(getWorkspaceFromPath),
+  const newWorkspaces: Workspace[] = await Promise.all(
+    newPaths.map(getWorkspaceFromPath),
   );
 
   // Load workspace paths into store
-  WorkspacesStore.getState().load(workspaces);
+  WorkspacesStore.getState().load(newWorkspaces);
 
   // Dispatch a 'workspaces:load' event
-  Events.dispatch('workspaces:load', workspaces);
+  Events.dispatch('workspaces:load', newWorkspaces);
 
-  return workspaces;
+  return newWorkspaces;
 }

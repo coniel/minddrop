@@ -1,5 +1,6 @@
 export * from './test-utils/workspaces.data';
 export * from './types';
+export * from './constants';
 export * from './Workspaces';
 export * from './useWorkspaces';
 export * from './useWorkspace';
