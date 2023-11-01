@@ -12,12 +12,17 @@ describe('WorkspacesStore', () => {
   });
 
   describe('load', () => {
-    it('loads workspaces into the store', () => {
-      // Load workspaces into the store
-      WorkspacesStore.getState().load(workspaces);
+    it('loads workspaces into the stor, preserving existing ones', () => {
+      // Load a workspace into the store
+      WorkspacesStore.getState().load([workspace1]);
+      // Load a second workspace into the store
+      WorkspacesStore.getState().load([missingWorkspace]);
 
-      // workspaces should be in the store
-      expect(WorkspacesStore.getState().workspaces).toEqual(workspaces);
+      // Both workspaces should be in the store
+      expect(WorkspacesStore.getState().workspaces).toEqual([
+        workspace1,
+        missingWorkspace,
+      ]);
     });
   });
 
