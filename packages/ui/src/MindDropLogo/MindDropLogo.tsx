@@ -1,6 +1,4 @@
 import React, { FC } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
-import './MindDropLogo.css';
 
 export interface MindDropLogoProps extends React.HTMLAttributes<SVGElement> {
   /**
