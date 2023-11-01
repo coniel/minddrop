@@ -17,7 +17,7 @@
 
   text-align: center;
   color: var(--textNeutral);
-  line-height: var(--lhDense);
+  line-height: var(--lhUiDense);
 }
 
 .action-card .icon {
