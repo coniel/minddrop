@@ -13,17 +13,17 @@ export interface ThemeApi {
   /**
    * System theme name.
    */
-  System: string;
+  System: 'system';
 
   /**
    * Light theme name.
    */
-  Light: string;
+  Light: 'light';
 
   /**
    * Dark theme name.
    */
-  Dark: string;
+  Dark: 'dark';
 
   /**
    * Returns the current theme appearance.
