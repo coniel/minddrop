@@ -9,9 +9,9 @@ import {
 } from 'vitest';
 import { Theme } from '../Theme';
 import { setThemeAppearanceSetting } from '../setThemeAppearanceSetting';
-import { setup, cleanup, core } from '../test-utils';
+import { setup, cleanup } from '../test-utils';
 import { ThemeConfig } from '../ThemeConfig';
-import { onRun, onDisable } from './theme-extension';
+import { onRun } from './theme-extension';
 import { ThemeAppearance } from '../types';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
 
@@ -51,16 +51,13 @@ describe('theme extension', () => {
     setup();
     // Run the extension once before all tests in
     // order to initialize the local persistent store.
-    onRun(core);
+    onRun();
   });
 
   beforeEach(setup);
 
   afterEach(() => {
     cleanup();
-
-    // Clear all event listeners
-    core.removeAllEventListeners();
 
     // Reset the local persistent store data to default values
     ThemeConfig.set('appearanceSetting', ThemeSystem);
@@ -76,7 +73,7 @@ describe('theme extension', () => {
       ThemeConfig.set('appearanceSetting', ThemeDark);
 
       // Run the extension
-      onRun(core);
+      onRun();
 
       // Should load the apperance setting from the local
       // persistent store into the theme store.
@@ -91,7 +88,7 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Should set theme appearance to 'dark'
         expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
@@ -104,7 +101,7 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeDark);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Should set theme appearance to 'dark'
         expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
@@ -117,7 +114,7 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Simulate OS appearance change to dark mode
         simulateOsAppearanceChange(ThemeDark);
@@ -130,10 +127,10 @@ describe('theme extension', () => {
     describe('theme appearance setting change', () => {
       it('updates the local persistent store appearanceSetting value', async () => {
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Change the appearance setting value
-        setThemeAppearanceSetting(core, ThemeDark);
+        setThemeAppearanceSetting(ThemeDark);
 
         // Wait for the event to be dispatched
         await new Promise((resolve) => {
@@ -152,10 +149,10 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Set the theme appearance setting to 'system'
-        Theme.setAppearanceSetting(core, ThemeSystem);
+        Theme.setAppearanceSetting(ThemeSystem);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -173,10 +170,10 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Set the theme appearance setting to 'dark'
-        Theme.setAppearanceSetting(core, ThemeDark);
+        Theme.setAppearanceSetting(ThemeDark);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -194,10 +191,10 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Set the theme appearance setting to 'system'
-        Theme.setAppearanceSetting(core, ThemeSystem);
+        Theme.setAppearanceSetting(ThemeSystem);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -218,10 +215,10 @@ describe('theme extension', () => {
         ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
-        onRun(core);
+        onRun();
 
         // Set the theme appearance setting to 'dark'
-        Theme.setAppearanceSetting(core, ThemeDark);
+        Theme.setAppearanceSetting(ThemeDark);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -234,19 +231,6 @@ describe('theme extension', () => {
         // Theme appearance should remain 'dark'
         expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
-    });
-  });
-
-  describe('onDisable', () => {
-    it('removes all theme event listeners', () => {
-      // Add an event listener
-      Theme.addEventListener(core, 'theme:appearance:set-value', vi.fn());
-
-      // Disable the extension
-      onDisable(core);
-
-      // Should clear event listeners
-      expect(core.eventListenerCount()).toBe(0);
     });
   });
 });

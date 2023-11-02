@@ -1,11 +1,8 @@
 import { act, MockFsAdapter } from '@minddrop/test-utils';
-import { initializeCore, registerFileSystemAdapter } from '@minddrop/core';
+import { registerFileSystemAdapter } from '@minddrop/core';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeLight, ThemeSystem } from '../constants';
-
-export const core = initializeCore({
-  extensionId: 'minddrop:theme',
-});
+import { Events } from '@minddrop/events';
 
 export function setup() {
   // Reigster mock file system adapter
@@ -13,6 +10,9 @@ export function setup() {
 }
 
 export function cleanup() {
+  // Clear all event listeners
+  Events._clearAll();
+
   act(() => {
     // Reset the appearance to the default value
     ThemeConfig.set('appearance', ThemeLight);

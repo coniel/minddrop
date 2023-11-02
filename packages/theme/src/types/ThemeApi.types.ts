@@ -1,4 +1,3 @@
-import { Core } from '@minddrop/core';
 import {
   SetThemeAppearanceEvent,
   SetThemeAppearanceEventCallback,
@@ -44,25 +43,23 @@ export interface ThemeApi {
    * Sets the current theme appearance. Dispatches
    * a `theme:appearance:set-value` event.
    *
-   * @param core - A MindDrop core instance.
    * @param appearance - The theme apperance value to set.
    *
    * @throws InvalidParamterError
    * Thrown if the appearance value is invalid.
    */
-  setAppearance(core: Core, appearance: ThemeAppearance): void;
+  setAppearance(appearance: ThemeAppearance): void;
 
   /**
    * Sets the theme appearance setting. Dispatches
    * a `theme:appearance:set-setting` event.
    *
-   * @param core - A MindDrop core instance.
    * @param setting - The theme apperance setting value to set.
    *
    * @throws InvalidParamterError
    * Thrown if the appearance setting value is invalid.
    */
-  setAppearanceSetting(core: Core, setting: ThemeAppearanceSetting): void;
+  setAppearanceSetting(setting: ThemeAppearanceSetting): void;
 
   /* ************************** */
   /* addEventListener overloads */
@@ -70,16 +67,18 @@ export interface ThemeApi {
 
   // Add 'theme:appearance:set-value' event listener
   addEventListener(
-    core: Core,
     type: SetThemeAppearanceEvent,
+    listenerId: string,
     callback: SetThemeAppearanceEventCallback,
+    once?: boolean,
   ): void;
 
   // Add 'theme:appearance:set-setting' event listener
   addEventListener(
-    core: Core,
     type: SetThemeAppearanceSettingEvent,
+    listenerId: string,
     callback: SetThemeAppearanceSettingEventCallback,
+    once?: boolean,
   ): void;
 
   /* ***************************** */
@@ -88,15 +87,15 @@ export interface ThemeApi {
 
   // Remove 'theme:appearance:set-value' event listener
   removeEventListener(
-    core: Core,
     type: SetThemeAppearanceEvent,
+    listenerId: string,
     callback: SetThemeAppearanceEventCallback,
   ): void;
 
   // Remove 'theme:appearance:set-setting' event listener
   removeEventListener(
-    core: Core,
     type: SetThemeAppearanceSettingEvent,
+    listenerId: string,
     callback: SetThemeAppearanceSettingEventCallback,
   ): void;
 }

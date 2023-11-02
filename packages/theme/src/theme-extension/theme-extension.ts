@@ -1,8 +1,7 @@
-import { Core } from '@minddrop/core';
 import { Theme } from '../Theme';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
 
-export function onRun(core: Core) {
+export function onRun() {
   // Media matcher that matches if OS is in dark mode
   const matchMediaDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -13,37 +12,41 @@ export function onRun(core: Core) {
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     // Set the theme appearance to the system value
-    Theme.setAppearance(core, darkMode ? ThemeDark : ThemeLight);
+    Theme.setAppearance(darkMode ? ThemeDark : ThemeLight);
   }
 
   // Listen to `theme:appearance:set-setting` events
-  Theme.addEventListener(core, 'theme:appearance:set-setting', (payload) => {
-    // The event data is the new appearance setting
-    const appearanceSetting = payload.data;
+  Theme.addEventListener(
+    'theme:appearance:set-setting',
+    'theme:appearance:set',
+    (payload) => {
+      // The event data is the new appearance setting
+      const appearanceSetting = payload.data;
 
-    if (appearanceSetting === ThemeSystem) {
-      // If the setting has been set to 'system', set
-      // the current theme appearance to the system value.
-      setThemeAppearanceToSystemValue();
+      if (appearanceSetting === ThemeSystem) {
+        // If the setting has been set to 'system', set
+        // the current theme appearance to the system value.
+        setThemeAppearanceToSystemValue();
 
-      // Listen for changes to the OS dark mode setting
-      // and update the theme appearance when it changes.
-      matchMediaDarkMode.addEventListener(
-        'change',
-        setThemeAppearanceToSystemValue,
-      );
-    } else {
-      // If the setting has been set to a fixed value,
-      // set the value as the current theme appearance.
-      Theme.setAppearance(core, appearanceSetting || ThemeLight);
+        // Listen for changes to the OS dark mode setting
+        // and update the theme appearance when it changes.
+        matchMediaDarkMode.addEventListener(
+          'change',
+          setThemeAppearanceToSystemValue,
+        );
+      } else {
+        // If the setting has been set to a fixed value,
+        // set the value as the current theme appearance.
+        Theme.setAppearance(appearanceSetting || ThemeLight);
 
-      // Remove the OS dark mode change listener
-      matchMediaDarkMode.removeEventListener(
-        'change',
-        setThemeAppearanceToSystemValue,
-      );
-    }
-  });
+        // Remove the OS dark mode change listener
+        matchMediaDarkMode.removeEventListener(
+          'change',
+          setThemeAppearanceToSystemValue,
+        );
+      }
+    },
+  );
 
   // Get the initial theme appearance setting
   const appearanceSetting = Theme.getAppearanceSetting();
@@ -61,11 +64,8 @@ export function onRun(core: Core) {
   } else {
     // If the setting has been set to a fixed value,
     // set the value as the current theme appearance.
-    Theme.setAppearance(core, appearanceSetting);
+    Theme.setAppearance(appearanceSetting);
   }
 }
 
-export function onDisable(core: Core) {
-  // Clear all added event listeners
-  core.removeAllEventListeners();
-}
+export function onDisable() {}
