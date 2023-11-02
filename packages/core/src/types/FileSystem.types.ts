@@ -1,9 +1,15 @@
+export enum BaseDirectory {
+  AppData = 'app-data',
+  AppConfig = 'app-config',
+  Documents = 'documents',
+}
+
 export interface FsFileOptions {
-  dir: 'app-data' | 'app-config';
+  dir?: BaseDirectory;
 }
 
 export interface FsDirOptions {
-  dir?: 'app-data' | 'app-config';
+  dir?: BaseDirectory;
   recursive?: boolean;
 }
 
@@ -27,6 +33,14 @@ export interface FileEntry {
 }
 
 export interface FileSystem {
+  /**
+   * Returns the path of a BaseDirectory.
+   *
+   * @param dir - The directory for which to retrieve the path.
+   * @returns The directory path.
+   */
+  getDirPath(dir: BaseDirectory): Promise<string>;
+
   /**
    * Copies a file to a destination.
    *

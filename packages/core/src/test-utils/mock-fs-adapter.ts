@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { FileSystem } from '../types';
 
 export const MockFsAdapter: FileSystem = {
+  getDirPath: vi.fn(),
   copyFile: vi.fn(),
   createDir: vi.fn(),
   exists: vi.fn(),

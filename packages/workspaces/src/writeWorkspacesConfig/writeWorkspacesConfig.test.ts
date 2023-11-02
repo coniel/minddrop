@@ -1,4 +1,4 @@
-import { registerFileSystemAdapter } from '@minddrop/core';
+import { BaseDirectory, registerFileSystemAdapter } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { WorkspacesConfigFile } from '../constants';
@@ -30,7 +30,7 @@ describe('writeWorkspacesConfig', () => {
     expect(writeTextFile).toHaveBeenCalledWith(
       WorkspacesConfigFile,
       JSON.stringify({ paths: [workspace1.path, missingWorkspace.path] }),
-      { dir: 'app-config' },
+      { dir: BaseDirectory.AppConfig },
     );
   });
 });
