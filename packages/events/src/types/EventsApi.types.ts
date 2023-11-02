@@ -110,4 +110,11 @@ export interface EventsApi {
    * @param data - The data associated with the event.
    */
   dispatch(eventName: string, data?: any): Promise<void>;
+
+  /**
+   * Clears all event listeners.
+   *
+   * **Intended for use in test only!**
+   */
+  _clearAll(): void;
 }
