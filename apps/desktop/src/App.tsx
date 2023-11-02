@@ -1,10 +1,14 @@
-import { DesktopApp } from '@minddrop/desktop-app';
 import { fs } from '@tauri-apps/api';
 import {
   FsFileOptions,
   FsDirOptions,
   registerFileSystemAdapter,
 } from '@minddrop/core';
+import '@minddrop/theme/src/reset.css';
+import '@minddrop/theme/src/light.css';
+import '@minddrop/theme/src/dark.css';
+import '@minddrop/theme/src/base.css';
+import '@minddrop/theme/src/animations.css';
 
 function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
   const opts: fs.FsOptions = {};
@@ -82,8 +86,6 @@ registerFileSystemAdapter({
   },
 });
 
-function App() {
-  return <DesktopApp />;
-}
-
-export default App;
+export const App: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return children;
+};
