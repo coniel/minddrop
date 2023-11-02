@@ -66,6 +66,7 @@
   "imagePlaceholder": "Add an image",
 
   "themeAppearance": "Appearance",
+  "themeAppearanceLabel": "Theme appearance",
   "themeAppearanceSystem": "Use system setting",
   "themeAppearanceLight": "Light",
   "themeAppearanceDark": "Dark"

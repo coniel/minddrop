@@ -6,7 +6,6 @@ import {
   useThemeAppearance,
   useThemeAppearanceSetting,
 } from '@minddrop/theme';
-import { useCore } from '@minddrop/core';
 import {
   IconButton,
   DropdownMenu,
@@ -21,21 +20,19 @@ export const ThemeAppearanceSelect: React.FC = () => {
   const { t } = useTranslation();
   const themeAppearance = useThemeAppearance();
   const themeAppearanceSetting = useThemeAppearanceSetting();
-  const core = useCore('minddrop:app');
 
   const handleChangeThemeAppearanceSetting = useCallback(
-    (setting: string) => {
-      Theme.setAppearanceSetting(core, setting as ThemeAppearanceSetting);
-    },
-    [core],
+    (setting: string) =>
+      Theme.setAppearanceSetting(setting as ThemeAppearanceSetting),
+    [],
   );
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <IconButton
-          label="Theme appearance"
-          icon={themeAppearance === 'dark' ? 'sun' : 'moon'}
+          label={t('themeAppearanceSetting')}
+          icon={themeAppearance === Theme.Dark ? 'sun' : 'moon'}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="theme-appearance-setting-menu">
