@@ -1,3 +1,4 @@
+import { Events } from '@minddrop/events';
 import { ThemeDark, ThemeLight, ThemeSystem } from './constants';
 import { getThemeAppearance } from './getThemeAppearance';
 import { getThemeAppearanceSetting } from './getThemeAppearanceSetting';
@@ -16,8 +17,6 @@ export const Theme: ThemeApi = {
   getAppearanceSetting: getThemeAppearanceSetting,
   setAppearance: setThemeAppearance,
   setAppearanceSetting: setThemeAppearanceSetting,
-  addEventListener: (core, event, callback) =>
-    core.addEventListener<any, any>(event, callback),
-  removeEventListener: (core, event, callback) =>
-    core.addEventListener<any, any>(event, callback),
+  addEventListener: Events.addListener,
+  removeEventListener: Events.removeListener,
 };

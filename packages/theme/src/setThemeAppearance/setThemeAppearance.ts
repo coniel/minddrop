@@ -1,5 +1,5 @@
-import { Core } from '@minddrop/core';
 import { InvalidParameterError } from '@minddrop/utils';
+import { Events } from '@minddrop/events';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeAppearance } from '../types';
 import { ThemeDark, ThemeLight } from '../constants';
@@ -8,16 +8,12 @@ import { ThemeDark, ThemeLight } from '../constants';
  * Sets the current theme appearance. Dispatches
  * a `theme:appearance:set-value` event.
  *
- * @param core - A MindDrop core instance.
  * @param appearance - The theme apperance value to set.
  *
  * @throws InvalidParamterError
  * Thrown if the appearance value is invalid.
  */
-export function setThemeAppearance(
-  core: Core,
-  appearance: ThemeAppearance,
-): void {
+export function setThemeAppearance(appearance: ThemeAppearance): void {
   if (![ThemeLight, ThemeDark].includes(appearance)) {
     // If the appearance value is invalid, throw a
     // `InvalidParameterError`.
@@ -30,5 +26,5 @@ export function setThemeAppearance(
   ThemeConfig.set('appearance', appearance);
 
   // Dispatch a 'theme:appearance:set-value' event
-  core.dispatch('theme:appearance:set-value', appearance);
+  Events.dispatch('theme:appearance:set-value', appearance);
 }

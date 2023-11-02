@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",
+    "@minddrop/events": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "zustand": "^4.3.8"
   },
