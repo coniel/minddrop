@@ -12,6 +12,21 @@ import {
 
 export interface ThemeApi {
   /**
+   * System theme name.
+   */
+  System: string;
+
+  /**
+   * Light theme name.
+   */
+  Light: string;
+
+  /**
+   * Dark theme name.
+   */
+  Dark: string;
+
+  /**
    * Returns the current theme appearance.
    *
    * @returns The current theme appearance.

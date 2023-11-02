@@ -3,6 +3,7 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { setup, cleanup, core } from '../test-utils';
 import { ThemeConfig } from '../ThemeConfig';
 import { setThemeAppearance } from './setThemeAppearance';
+import { ThemeDark } from '../constants';
 
 describe('setThemeAppearance', () => {
   beforeEach(setup);
@@ -20,10 +21,10 @@ describe('setThemeAppearance', () => {
 
   it('sets the theme appearance in the theme store', () => {
     // Set the theme appearance value
-    setThemeAppearance(core, 'dark');
+    setThemeAppearance(core, ThemeDark);
 
     // Should set the value in the theme store
-    expect(ThemeConfig.get('appearance')).toBe('dark');
+    expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
   });
 
   it('dispatches a `theme:appearance:set-value` event', () =>
@@ -31,11 +32,11 @@ describe('setThemeAppearance', () => {
       // Listen to `theme:appearance:set-value` events
       core.addEventListener(`theme:appearance:set-value`, (payload) => {
         // Payload data should be the new appearance value
-        expect(payload.data).toBe('dark');
+        expect(payload.data).toBe(ThemeDark);
         done();
       });
 
       // Set the theme appearance value
-      setThemeAppearance(core, 'dark');
+      setThemeAppearance(core, ThemeDark);
     }));
 });

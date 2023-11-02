@@ -1,5 +1,6 @@
 import { Core } from '@minddrop/core';
 import { Theme } from '../Theme';
+import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
 
 export function onRun(core: Core) {
   // Media matcher that matches if OS is in dark mode
@@ -12,7 +13,7 @@ export function onRun(core: Core) {
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     // Set the theme appearance to the system value
-    Theme.setAppearance(core, darkMode ? 'dark' : 'light');
+    Theme.setAppearance(core, darkMode ? ThemeDark : ThemeLight);
   }
 
   // Listen to `theme:appearance:set-setting` events
@@ -20,7 +21,7 @@ export function onRun(core: Core) {
     // The event data is the new appearance setting
     const appearanceSetting = payload.data;
 
-    if (appearanceSetting === 'system') {
+    if (appearanceSetting === ThemeSystem) {
       // If the setting has been set to 'system', set
       // the current theme appearance to the system value.
       setThemeAppearanceToSystemValue();
@@ -34,7 +35,7 @@ export function onRun(core: Core) {
     } else {
       // If the setting has been set to a fixed value,
       // set the value as the current theme appearance.
-      Theme.setAppearance(core, appearanceSetting || 'light');
+      Theme.setAppearance(core, appearanceSetting || ThemeLight);
 
       // Remove the OS dark mode change listener
       matchMediaDarkMode.removeEventListener(
@@ -47,7 +48,7 @@ export function onRun(core: Core) {
   // Get the initial theme appearance setting
   const appearanceSetting = Theme.getAppearanceSetting();
 
-  if (appearanceSetting === 'system') {
+  if (appearanceSetting === ThemeSystem) {
     // If the theme appearance setting is 'system', set
     // the theme appearance to the system value.
     setThemeAppearanceToSystemValue();
