@@ -52,7 +52,7 @@ export interface ButtonBaseProps {
   /**
    * The variant to use based on the action type.
    */
-  variant?: 'neutral' | 'primary' | 'text' | 'danger';
+  variant?: 'neutral' | 'contained' | 'primary' | 'text' | 'danger';
 }
 
 export interface ButtonProps

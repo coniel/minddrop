@@ -14,6 +14,9 @@ export const VariantsAndSizes: React.FC = () => (
       <Button variant="primary" size="small" style={{ marginLeft: 12 }}>
         Primary
       </Button>
+      <Button variant="contained" size="small" style={{ marginLeft: 12 }}>
+        Contained
+      </Button>
       <Button variant="danger" size="small" style={{ marginLeft: 12 }}>
         Danger
       </Button>
@@ -26,6 +29,9 @@ export const VariantsAndSizes: React.FC = () => (
       <Button>Neutral</Button>
       <Button variant="primary" style={{ marginLeft: 12 }}>
         Primary
+      </Button>
+      <Button variant="contained" style={{ marginLeft: 12 }}>
+        Contained
       </Button>
       <Button variant="danger" style={{ marginLeft: 12 }}>
         Danger
@@ -40,12 +46,18 @@ export const VariantsAndSizes: React.FC = () => (
       <Button variant="primary" size="large" style={{ marginLeft: 12 }}>
         Primary
       </Button>
+      <Button variant="contained" size="large" style={{ marginLeft: 12 }}>
+        Contained
+      </Button>
     </div>
     <div style={{ marginTop: 24 }}>Disabled</div>
     <div style={{ paddingTop: 12 }}>
       <Button disabled>Neutral</Button>
       <Button disabled variant="primary" style={{ marginLeft: 12 }}>
         Primary
+      </Button>
+      <Button disabled variant="contained" style={{ marginLeft: 12 }}>
+        Contained
       </Button>
       <Button disabled variant="danger" style={{ marginLeft: 12 }}>
         Danger
@@ -59,6 +71,9 @@ export const VariantsAndSizes: React.FC = () => (
       <Button fullWidth>Neutral</Button>
       <Button fullWidth variant="primary" style={{ marginTop: 12 }}>
         Primary
+      </Button>
+      <Button fullWidth variant="contained" style={{ marginTop: 12 }}>
+        Contained
       </Button>
       <Button fullWidth variant="danger" style={{ marginTop: 12 }}>
         Danger
