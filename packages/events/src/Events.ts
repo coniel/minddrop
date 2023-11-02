@@ -7,7 +7,7 @@ import { prependEventListener } from './prependEventListener';
 import { removeEventListener } from './removeEventListener';
 import { EventListenerMap, EventsApi } from './types';
 
-const eventListeners: EventListenerMap = {};
+let eventListeners: EventListenerMap = {};
 
 export const Events: EventsApi = {
   addListener: (...args) => addEventListener(eventListeners, ...args),
@@ -18,4 +18,7 @@ export const Events: EventsApi = {
   addListenerAfter: (...args) => addEventListenerAfter(eventListeners, ...args),
   removeListener: (...args) => removeEventListener(eventListeners, ...args),
   hasListener: (...args) => hasEventListener(eventListeners, ...args),
+  _clearAll: () => {
+    eventListeners = {};
+  },
 };
