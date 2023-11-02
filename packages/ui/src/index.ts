@@ -30,3 +30,6 @@ export * from './TopicDrop';
 export * from './WorkspaceNavItem';
 export * from './ActionCard';
 export * from './MindDropLogo';
+export * from './TextInput';
+export * from './FieldLabel';
+export * from './HelperText';
