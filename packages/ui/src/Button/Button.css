@@ -53,11 +53,29 @@ a.button {
   border-color: var(--bgSolidPrimary);
 }
 
+/* Contained */
+
+.button.variant-contained {
+  border: none;
+  padding: 6px 17px;
+  background-color: var(--bgPrimary);
+  color: var(--textPrimaryLight);
+}
+
+.button.variant-contained:hover {
+  background-color: var(--bgPrimaryHover);
+}
+
+.button.variant-contained:active {
+  background-color: var(--bgPrimaryActive);
+}
+
 /* Text */
 
 .button.variant-text {
   background-color: transparent;
   border: none;
+  padding: 6px 17px;
   color: var(--textPrimaryLight);
 }
 
