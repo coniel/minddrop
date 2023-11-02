@@ -2,6 +2,7 @@ import { Core } from '@minddrop/core';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeAppearanceSetting } from '../types';
+import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
 
 /**
  * Sets the theme appearance setting. Dispatches
@@ -17,11 +18,11 @@ export function setThemeAppearanceSetting(
   core: Core,
   setting: ThemeAppearanceSetting,
 ): void {
-  if (!['light', 'dark', 'system'].includes(setting)) {
+  if (![ThemeLight, ThemeDark, ThemeSystem].includes(setting)) {
     // If the setting value is invalid, throw a
     // `InvalidParameterError`.
     throw new InvalidParameterError(
-      `theme appearance setting must be one of 'light', 'dark', or 'system', received: ${setting}`,
+      `theme appearance setting must be one of ${ThemeLight}, ${ThemeDark}, or ${ThemeSystem}, received: ${setting}`,
     );
   }
 

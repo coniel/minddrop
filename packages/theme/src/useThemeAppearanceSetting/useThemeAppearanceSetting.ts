@@ -1,4 +1,5 @@
 import { ThemeConfig } from '../ThemeConfig';
+import { ThemeSystem } from '../constants';
 import { ThemeAppearanceSetting } from '../types';
 
 /**
@@ -7,5 +8,5 @@ import { ThemeAppearanceSetting } from '../types';
  * @returns The theme appearance setting.
  */
 export function useThemeAppearanceSetting(): ThemeAppearanceSetting {
-  return ThemeConfig.useValue('appearanceSetting', 'system');
+  return ThemeConfig.useValue('appearanceSetting', ThemeSystem);
 }

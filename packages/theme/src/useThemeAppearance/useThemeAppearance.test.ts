@@ -3,6 +3,7 @@ import { renderHook, act } from '@minddrop/test-utils';
 import { setup, cleanup } from '../test-utils';
 import { useThemeAppearance } from './useThemeAppearance';
 import { ThemeConfig } from '../ThemeConfig';
+import { ThemeDark } from '../constants';
 
 describe('useAppearance', () => {
   beforeEach(setup);
@@ -15,10 +16,10 @@ describe('useAppearance', () => {
 
     act(() => {
       // Set the current appearance to 'dark'
-      ThemeConfig.set('appearance', 'dark');
+      ThemeConfig.set('appearance', ThemeDark);
     });
 
     // Should return the current appearance
-    expect(result.current).toBe('dark');
+    expect(result.current).toBe(ThemeDark);
   });
 });

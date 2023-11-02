@@ -1,4 +1,5 @@
 import { ThemeConfig } from '../ThemeConfig';
+import { ThemeSystem } from '../constants';
 import { ThemeAppearanceSetting } from '../types';
 
 /**
@@ -9,5 +10,5 @@ import { ThemeAppearanceSetting } from '../types';
 export function getThemeAppearanceSetting(): ThemeAppearanceSetting {
   // Return the appearance setting from the theme config
   // or 'system' if no value is set.
-  return ThemeConfig.get('appearanceSetting', 'system');
+  return ThemeConfig.get('appearanceSetting', ThemeSystem);
 }

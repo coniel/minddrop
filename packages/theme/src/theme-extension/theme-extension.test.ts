@@ -13,15 +13,16 @@ import { setup, cleanup, core } from '../test-utils';
 import { ThemeConfig } from '../ThemeConfig';
 import { onRun, onDisable } from './theme-extension';
 import { ThemeAppearance } from '../types';
+import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
 
 describe('theme extension', () => {
   let matchMediaEventListeners: VoidFunction[] = [];
 
-  function mockMatchMedia(appearance: ThemeAppearance = 'light') {
+  function mockMatchMedia(appearance: ThemeAppearance = ThemeLight) {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockImplementation(() => ({
-        matches: appearance === 'dark',
+        matches: appearance === ThemeDark,
         // Add the callback to the 'matchMediaEventListeners' array
         addEventListener: (event: string, callback: VoidFunction) =>
           matchMediaEventListeners.push(callback),
@@ -62,7 +63,7 @@ describe('theme extension', () => {
     core.removeAllEventListeners();
 
     // Reset the local persistent store data to default values
-    ThemeConfig.set('appearanceSetting', 'system');
+    ThemeConfig.set('appearanceSetting', ThemeSystem);
 
     // Clear mock match media event listeners
     matchMediaEventListeners = [];
@@ -72,57 +73,57 @@ describe('theme extension', () => {
     it('loads the appearance setting value from the local persistent store', () => {
       // Set the initial appearance setting value in the
       // local persistent store.
-      ThemeConfig.set('appearanceSetting', 'dark');
+      ThemeConfig.set('appearanceSetting', ThemeDark);
 
       // Run the extension
       onRun(core);
 
       // Should load the apperance setting from the local
       // persistent store into the theme store.
-      expect(ThemeConfig.get('appearanceSetting')).toBe('dark');
+      expect(ThemeConfig.get('appearanceSetting')).toBe(ThemeDark);
     });
 
     describe('initial theme appearance', () => {
       it('sets the OS value when the setting is `system`', () => {
         // Mock match media to return a match for dark mode
-        mockMatchMedia('dark');
+        mockMatchMedia(ThemeDark);
         // Set the initial appearance setting value to 'system'
-        ThemeConfig.set('appearanceSetting', 'system');
+        ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
         onRun(core);
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
 
       it('sets the setting value when the setting is `light` or `dark`', () => {
         // Mock match media to return a match for light mode
-        mockMatchMedia('light');
+        mockMatchMedia(ThemeLight);
         // Set the initial appearance setting value to 'dark'
-        ThemeConfig.set('appearanceSetting', 'dark');
+        ThemeConfig.set('appearanceSetting', ThemeDark);
 
         // Run the extension
         onRun(core);
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
 
       it('listens for OS dark mode changes when setting is `system`', () => {
         // Mock match media to return a match for light mode
-        mockMatchMedia('light');
+        mockMatchMedia(ThemeLight);
         // Set the initial appearance setting value to 'system'
-        ThemeConfig.set('appearanceSetting', 'system');
+        ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
         onRun(core);
 
         // Simulate OS appearance change to dark mode
-        simulateOsAppearanceChange('dark');
+        simulateOsAppearanceChange(ThemeDark);
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
     });
 
@@ -132,7 +133,7 @@ describe('theme extension', () => {
         onRun(core);
 
         // Change the appearance setting value
-        setThemeAppearanceSetting(core, 'dark');
+        setThemeAppearanceSetting(core, ThemeDark);
 
         // Wait for the event to be dispatched
         await new Promise((resolve) => {
@@ -141,20 +142,20 @@ describe('theme extension', () => {
 
         // Should set the new appearance setting in the local
         // persistent store.
-        expect(ThemeConfig.get('appearanceSetting')).toBe('dark');
+        expect(ThemeConfig.get('appearanceSetting')).toBe(ThemeDark);
       });
 
       it('sets the OS value if the setting is `system`', async () => {
         // Mock match media to return a match for dark mode
-        mockMatchMedia('dark');
+        mockMatchMedia(ThemeDark);
         // Set the initial appearance setting value to 'light'
-        ThemeConfig.set('appearanceSetting', 'light');
+        ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
         onRun(core);
 
         // Set the theme appearance setting to 'system'
-        Theme.setAppearanceSetting(core, 'system');
+        Theme.setAppearanceSetting(core, ThemeSystem);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -162,20 +163,20 @@ describe('theme extension', () => {
         });
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
 
       it('sets the setting value if the setting is `light` or `dark`', async () => {
         // Mock match media to return a match for light mode
-        mockMatchMedia('light');
+        mockMatchMedia(ThemeLight);
         // Set the initial appearance setting value to 'light'
-        ThemeConfig.set('appearanceSetting', 'light');
+        ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
         onRun(core);
 
         // Set the theme appearance setting to 'dark'
-        Theme.setAppearanceSetting(core, 'dark');
+        Theme.setAppearanceSetting(core, ThemeDark);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -183,20 +184,20 @@ describe('theme extension', () => {
         });
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
 
       it('listens for OS dark mode changes if setting is `system`', async () => {
         // Mock match media to return a match for light mode
-        mockMatchMedia('light');
+        mockMatchMedia(ThemeLight);
         // Set the initial appearance setting value to 'light'
-        ThemeConfig.set('appearanceSetting', 'light');
+        ThemeConfig.set('appearanceSetting', ThemeLight);
 
         // Run the extension
         onRun(core);
 
         // Set the theme appearance setting to 'system'
-        Theme.setAppearanceSetting(core, 'system');
+        Theme.setAppearanceSetting(core, ThemeSystem);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -204,23 +205,23 @@ describe('theme extension', () => {
         });
 
         // Simulate OS appearance change to dark mode
-        simulateOsAppearanceChange('dark');
+        simulateOsAppearanceChange(ThemeDark);
 
         // Should set theme appearance to 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
 
       it('removes OS dark mode changes listener if setting is `light` or `dark`', async () => {
         // Mock match media to return a match for dark mode
-        mockMatchMedia('dark');
+        mockMatchMedia(ThemeDark);
         // Set the initial appearance setting value to 'system'
-        ThemeConfig.set('appearanceSetting', 'system');
+        ThemeConfig.set('appearanceSetting', ThemeSystem);
 
         // Run the extension
         onRun(core);
 
         // Set the theme appearance setting to 'dark'
-        Theme.setAppearanceSetting(core, 'dark');
+        Theme.setAppearanceSetting(core, ThemeDark);
 
         // Wait for the event listener to run
         await new Promise((resolve) => {
@@ -228,10 +229,10 @@ describe('theme extension', () => {
         });
 
         // Simulate OS appearance change to light mode
-        simulateOsAppearanceChange('light');
+        simulateOsAppearanceChange(ThemeLight);
 
         // Theme appearance should remain 'dark'
-        expect(ThemeConfig.get('appearance')).toBe('dark');
+        expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
       });
     });
   });
