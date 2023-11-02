@@ -14,8 +14,8 @@ export async function loadConfigs(): Promise<void> {
     return;
   }
 
-  // Get the stringified configs data from the
-  // app-data configs.json file.
+  // Get the stringified configs data from the app-config
+  // configs.json file.
   const configsRaw = await Fs.readTextFile(ConfigsFile, ConfigsFileOptions);
 
   try {

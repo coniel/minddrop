@@ -1,4 +1,6 @@
-import { FsFileOptions } from '../types';
+import { BaseDirectory, FsFileOptions } from '../types';
 
 export const ConfigsFile = 'configs.json';
-export const ConfigsFileOptions: FsFileOptions = { dir: 'app-data' };
+export const ConfigsFileOptions: FsFileOptions = {
+  dir: BaseDirectory.AppConfig,
+};

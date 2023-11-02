@@ -1,4 +1,9 @@
-import { FileNotFoundError, Fs, JsonParseError } from '@minddrop/core';
+import {
+  BaseDirectory,
+  FileNotFoundError,
+  Fs,
+  JsonParseError,
+} from '@minddrop/core';
 import { WorkspacesConfigFile } from '../constants';
 import { hasWorkspacesConfig } from '../hasWorkspacesConfig';
 import { WorkspacesConfig } from '../types';
@@ -23,7 +28,7 @@ export async function getWorkspacesConfig(): Promise<WorkspacesConfig> {
   try {
     // Read workspace paths from configs file
     stringConfig = await Fs.readTextFile(WorkspacesConfigFile, {
-      dir: 'app-config',
+      dir: BaseDirectory.AppConfig,
     });
 
     // Parse and return the config

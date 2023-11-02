@@ -1,8 +1,11 @@
 import { fs } from '@tauri-apps/api';
+import { appConfigDir, appDataDir, documentDir } from '@tauri-apps/api/path';
 import {
   FsFileOptions,
   FsDirOptions,
   registerFileSystemAdapter,
+  BaseDirectory,
+  InvalidParameterError,
 } from '@minddrop/core';
 import '@minddrop/theme/src/reset.css';
 import '@minddrop/theme/src/light.css';
@@ -13,12 +16,16 @@ import '@minddrop/theme/src/animations.css';
 function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
   const opts: fs.FsOptions = {};
 
-  if (options.dir === 'app-data') {
-    opts.dir = fs.BaseDirectory.AppData;
-  }
-
-  if (options.dir === 'app-config') {
-    opts.dir = fs.BaseDirectory.AppConfig;
+  switch (options.dir) {
+    case BaseDirectory.AppData:
+      opts.dir = fs.BaseDirectory.AppData;
+      break;
+    case BaseDirectory.AppConfig:
+      opts.dir = fs.BaseDirectory.AppConfig;
+      break;
+    case BaseDirectory.Documents:
+      opts.dir = fs.BaseDirectory.Document;
+      break;
   }
 
   if ('recursive' in options && typeof options.recursive === 'boolean') {
@@ -28,7 +35,21 @@ function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
   return opts;
 }
 
+function getDirPath(dir: BaseDirectory): Promise<string> {
+  switch (dir) {
+    case BaseDirectory.AppData:
+      return appDataDir();
+    case BaseDirectory.AppConfig:
+      return appConfigDir();
+    case BaseDirectory.Documents:
+      return documentDir();
+    default:
+      throw new InvalidParameterError(`Invalid BaseDirectory value: ${dir}`);
+  }
+}
+
 registerFileSystemAdapter({
+  getDirPath,
   copyFile: async (source, destination, options) => {
     const opts = options ? convertFsOptions(options) : undefined;
 
