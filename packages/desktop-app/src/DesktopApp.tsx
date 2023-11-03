@@ -1,26 +1,31 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
 import { AppSidebar } from './AppSidebar';
 import { initializeDesktopApp } from './initializeDesktopApp';
-import './DesktopApp.css';
 import { useCurrentView } from './AppUiState';
+import { ShowWindowOnRendered } from './utils';
+import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
   const [initializingApp, setInitializingApp] = useState(true);
   const view = useCurrentView();
 
   useEffect(() => {
+    let cleanup = () => {};
+
     const init = async () => {
-      await initializeDesktopApp();
+      cleanup = await initializeDesktopApp();
 
       setInitializingApp(false);
     };
 
     init();
+
+    return cleanup;
   }, []);
 
-  if (initializingApp) {
+  if (initializingApp || view === null) {
     return <div>Loading...</div>;
   }
 
@@ -28,11 +33,17 @@ export const DesktopApp: React.FC = () => {
     <CoreProvider>
       <IconsProvider>
         <div className="app">
-          <AppSidebar />
-          <div className="app-content">
-            <div data-tauri-drag-region className="app-drag-handle" />
-          </div>
+          {view && (
+            <>
+              <AppSidebar />
+              <div className="app-content">
+                <div data-tauri-drag-region className="app-drag-handle" />
+                {view === 'no-valid-workspace' && <h1>No valid workspaces </h1>}
+              </div>
+            </>
+          )}
         </div>
+        <ShowWindowOnRendered />
       </IconsProvider>
     </CoreProvider>
   );

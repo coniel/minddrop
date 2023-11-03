@@ -1,6 +1,8 @@
+import { WebviewWindow, getAll } from '@tauri-apps/api/window';
 import { FileNotFoundError, JsonParseError } from '@minddrop/core';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../../AppUiState';
+import { throttle } from '@minddrop/utils';
 
 /**
  * Initializes workspaces by loading them from the workspaces
@@ -22,15 +24,34 @@ export async function initializeWorkspaces() {
     // 'create-first-workspace' view which will re-initialize
     // the config file.
     if (error instanceof FileNotFoundError || error instanceof JsonParseError) {
-      AppUiState.set('view', 'create-first-workspace');
+      openCreateFirstWorkspaceWindow();
     }
   }
 
   if (Workspaces.getAll().length === 0) {
     // No workspaces, open 'create-first-workspace' view
-    AppUiState.set('view', 'create-first-workspace');
+    openCreateFirstWorkspaceWindow();
   } else if (!Workspaces.hasValidWorkspace()) {
     // No valid workspace, open 'no-valid-workspace' view
     AppUiState.set('view', 'no-valid-workspace');
   }
 }
+
+const openCreateFirstWorkspaceWindow = throttle(() => {
+  AppUiState.set('view', null);
+
+  if (!getAll().find((window) => window.label === 'create-first-workspace')) {
+    new WebviewWindow('create-first-workspace', {
+      url: 'create-first-workspace.html',
+      width: 800,
+      height: 650,
+      center: true,
+      resizable: false,
+      maximizable: false,
+      visible: false,
+      title: 'MindDrop',
+      titleBarStyle: 'overlay',
+      hiddenTitle: true,
+    });
+  }
+}, 100);
