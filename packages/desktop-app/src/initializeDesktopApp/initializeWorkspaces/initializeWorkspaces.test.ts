@@ -30,6 +30,11 @@ vi.mock('@minddrop/workspaces', async () => {
   };
 });
 
+vi.mock('@tauri-apps/api/window', () => ({
+  getAll: () => [],
+  WebviewWindow: vi.fn(),
+}));
+
 registerFileSystemAdapter(MockFsAdapter);
 
 describe('initializeWorkspaces', () => {
@@ -43,7 +48,7 @@ describe('initializeWorkspaces', () => {
     vi.mocked(Workspaces.getAll).mockReturnValue([workspace1]);
   });
 
-  it('sets view to `create-first-workspace` if load throw FileNotFoundError', () => {
+  it('sets view to null if load throw FileNotFoundError', () => {
     // Pretend workspaces config file does not exist
     vi.mocked(Workspaces.load).mockImplementation(() => {
       throw new FileNotFoundError('config');
@@ -53,10 +58,10 @@ describe('initializeWorkspaces', () => {
     initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
-    expect(AppUiState.get('view')).toBe('create-first-workspace');
+    expect(AppUiState.get('view')).toBeNull();
   });
 
-  it('sets view to `create-first-workspace` if load throw JsonParseError', () => {
+  it('sets view to null if load throw JsonParseError', () => {
     // Pretend workspaces config could not be parsed
     vi.mocked(Workspaces.load).mockImplementation(() => {
       throw new JsonParseError('foo');
@@ -66,10 +71,10 @@ describe('initializeWorkspaces', () => {
     initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
-    expect(AppUiState.get('view')).toBe('create-first-workspace');
+    expect(AppUiState.get('view')).toBeNull();
   });
 
-  it('sets view to `create-first-workspace` if config contains no workspaces', () => {
+  it('sets view to null if config contains no workspaces', () => {
     // Pretend workspaces config contains no workspaces
     vi.mocked(Workspaces.getAll).mockReturnValue([]);
 
@@ -77,7 +82,7 @@ describe('initializeWorkspaces', () => {
     initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
-    expect(AppUiState.get('view')).toBe('create-first-workspace');
+    expect(AppUiState.get('view')).toBeNull();
   });
 
   it('sets view to `no-valid-workspace` if config contains no workspaces', () => {
