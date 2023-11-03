@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "MindDrop",
-    "version": "0.0.0"
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -37,7 +37,10 @@
         "open": true
       },
       "window": {
-        "startDragging": true
+        "startDragging": true,
+        "create": true,
+        "close": true,
+        "show": true
       }
     },
     "bundle": {
@@ -83,12 +86,14 @@
       {
         "fileDropEnabled": false,
         "fullscreen": false,
-        "height": 600,
+        "height": 800,
+        "width": 1200,
+        "center": true,
         "resizable": true,
         "title": "MindDrop",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
-        "width": 800
+        "visible": false
       }
     ]
   }
