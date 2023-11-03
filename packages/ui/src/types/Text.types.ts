@@ -3,6 +3,8 @@ export type TextColor =
   | 'regular'
   | 'light'
   | 'white'
+  | 'danger'
+  | 'danger-light'
   | 'contrast'
   | 'contrast-light';
 export type TextWeight =
