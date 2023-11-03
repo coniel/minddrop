@@ -14,6 +14,7 @@ mod window_ext;
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs_watch::init())
         .setup(|app| {
             let win = app.get_window("main").unwrap();
             win.set_transparent_titlebar(true);
@@ -38,3 +39,4 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
+
