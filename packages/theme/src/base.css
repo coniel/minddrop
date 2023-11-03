@@ -64,6 +64,7 @@
 
   /* Text */
   --textNeutralDisabled: var(--neutral9);
+  --textNeutralPlaceholder: var(--neutral9);
   --textNeutralLight: var(--neutral11);
   --textNeutral: var(--neutral12);
 
