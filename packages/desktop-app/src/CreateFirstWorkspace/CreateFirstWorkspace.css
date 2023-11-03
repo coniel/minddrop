@@ -1,0 +1,52 @@
+.create-first-workspace {
+  background-color: var(--neutral1);
+}
+
+.create-first-workspace .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 500px;
+  padding-top: 42px;
+}
+
+.create-first-workspace .app-drag-handle {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 34px;
+  width: 100%;
+}
+
+.create-first-workspace .toolbar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+}
+
+.create-first-workspace .toolbar .icon {
+  fill: var(--textNeutralLight);
+}
+
+.create-first-workspace h1 {
+  text-align: center;
+  margin: 4px 0 12px 0;
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.create-first-workspace .action-cards {
+  display: flex;
+  justify-content: center;
+  column-gap: 30px;
+  margin-top: 52px;
+}
+
+.create-first-workspace .workspace-description {
+  margin-top: 48px;
+  max-width: 380px;
+  text-align: center;
+  line-height: 1.4;
+}

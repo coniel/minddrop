@@ -1,0 +1,23 @@
+.create-workspace-form {
+  width: 380px;
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+}
+
+.create-workspace-form .field {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.create-workspace-form .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.create-workspace-form .location {
+  color: var(--blue11);
+}

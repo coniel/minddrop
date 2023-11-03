@@ -1,6 +1,27 @@
 {
   "test": "Test-en-GB",
-
+  "version": "Version",
+  "open": "Open",
+  "start": "Start",
+  "create": "Create",
+  "browse": "Browse",
+  "back": "Back",
+  "openWorkspace": "Open workspace",
+  "openWorkspaceDescription": "Open an existing folder of Markdown files to use as a workspace.",
+  "quickStart": "Quickstart",
+  "quickStartWorkspaceDescription": "Create a new workspace in your Documents folder.",
+  "createWorkspace": "Create workspace",
+  "createWorkspaceDescription": "Create a custom workspace anywhere on your computer.",
+  "workspaceDefinition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
+  "workspaceName": "Workspace name",
+  "workspaceNameHelperText": "This will be the name of the parent folder which contains the workspace contents.",
+  "workspaceNamePlaceholder": "My Workspace",
+  "workspaceNameMissingError": "Please enter a name for your workspace.",
+  "workspaceLocation": "Location",
+  "workspaceLocationHelperText": "Where would you like to put your new workspace?",
+  "workspaceLocationSelectedHelperText": "Your new workspace will be created in:",
+  "workspaceLocationMissingError": "Please select a location for your workspace.",
+  "workspaceLocationConflictError": "A folder of the same name already exists at that location.",
   "primaryNavigation": "Main",
   "secondaryNavigation": "Tools",
   "topicsNavigation": "Topics",
@@ -18,13 +39,11 @@
   "topicName": "Topic name",
   "settings": "Settings",
   "addDrop": "Add drop",
-
   "deleteFromTopic": "Delete from this topic",
   "archiveInTopic": "Archive in this topic",
   "toDeleteFromAllTopics": "to delete from all topics",
   "toArchiveInAllTopics": "to archive in all topics",
   "shiftClick": "Shift + Click",
-
   "moveTo": "Move to",
   "addTo": "Add to",
   "moveToTopics": "Move to Topics",
@@ -34,7 +53,6 @@
   "color": "Colour",
   "duplicate": "Duplicate",
   "dropOptions": "Drop options",
-
   "noSubtopics": "No subtopics",
   "subtopicCount_one": "{{count}} subtopic",
   "subtopicCount_other": "{{count}} subtopics",
@@ -42,10 +60,8 @@
   "untitled": "Untitled",
   "openTopic": "Open {{topic}}",
   "expandSubtopics": "Expand subtopics",
-
   "restore": "Restore",
   "deletePermanently": "Delete permanently",
-
   "colorDefault": "Default",
   "colorBlue": "Blue",
   "colorCyan": "Cyan",
@@ -57,14 +73,10 @@
   "colorYellow": "Yellow",
   "colorBrown": "Brown",
   "colorGray": "Gray",
-
   "deleteColumn": "Delete column",
-
   "bookmarkPlaceholder": "Add a web bookmark",
   "bookmarkLink": "Bookmark link",
-
   "imagePlaceholder": "Add an image",
-
   "themeAppearance": "Appearance",
   "themeAppearanceLabel": "Theme appearance",
   "themeAppearanceSystem": "Use system setting",
