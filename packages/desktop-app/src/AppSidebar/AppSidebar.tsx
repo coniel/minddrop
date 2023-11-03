@@ -1,45 +1,19 @@
 import { FC, useCallback } from 'react';
-import {
-  Sidebar,
-  NavGroup,
-  Toolbar,
-  SecondaryNavItem,
-  IconButton,
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuLabel,
-} from '@minddrop/ui';
-import {
-  useThemeAppearance,
-  useThemeAppearanceSetting,
-  Theme,
-  ThemeAppearanceSetting,
-} from '@minddrop/theme';
+import { Sidebar, NavGroup, Toolbar, SecondaryNavItem } from '@minddrop/ui';
 import { useTranslation } from '@minddrop/i18n';
-import { useCore } from '@minddrop/core';
 import { AppUiState, useSidebarWidth } from '../AppUiState';
+import { useWorkspaces } from '@minddrop/workspaces';
+import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
 import './AppSidebar.css';
 
 export const AppSidebar: FC = () => {
   const { t } = useTranslation();
-  const themeAppearance = useThemeAppearance();
-  const themeAppearanceSetting = useThemeAppearanceSetting();
-  const core = useCore('minddrop:app');
   const initialWidth = useSidebarWidth();
+  const workspaces = useWorkspaces();
 
   const handleResize = useCallback(
     (value: number) => AppUiState.set('sidebarWidth', value),
     [],
-  );
-
-  const handleChangeThemeAppearanceSetting = useCallback(
-    (setting: string) => {
-      Theme.setAppearanceSetting(core, setting as ThemeAppearanceSetting);
-    },
-    [core],
   );
 
   return (
@@ -49,42 +23,17 @@ export const AppSidebar: FC = () => {
       initialWidth={initialWidth}
       onResized={handleResize}
     >
-      <div className="app-drag-handle" />
+      <div data-tauri-drag-region className="app-drag-handle" />
       <NavGroup label="Main" />
-      <NavGroup title={t('topics') as string}></NavGroup>
+      {workspaces.map((workspace) => (
+        <NavGroup title={workspace.name}></NavGroup>
+      ))}
       <NavGroup label="Secondary">
         <SecondaryNavItem icon="trash" label={t('trash')} />
       </NavGroup>
       <div className="flex" />
       <Toolbar className="bottom-toolbar">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <IconButton
-              label="Theme appearance"
-              icon={themeAppearance === 'dark' ? 'sun' : 'moon'}
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="theme-appearance-setting-menu">
-            <DropdownMenuLabel>{t('themeAppearance')}</DropdownMenuLabel>
-            <DropdownMenuRadioGroup
-              value={themeAppearanceSetting}
-              onValueChange={handleChangeThemeAppearanceSetting}
-            >
-              <DropdownMenuRadioItem
-                value="system"
-                label={t('themeAppearanceSystem')}
-              />
-              <DropdownMenuRadioItem
-                value="light"
-                label={t('themeAppearanceLight')}
-              />
-              <DropdownMenuRadioItem
-                value="dark"
-                label={t('themeAppearanceDark')}
-              />
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ThemeAppearanceSelect />
       </Toolbar>
     </Sidebar>
   );
