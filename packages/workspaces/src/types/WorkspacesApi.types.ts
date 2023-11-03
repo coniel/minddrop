@@ -22,6 +22,28 @@ export interface WorkspacesApi {
   add(path: string): Promise<Workspace>;
 
   /**
+   * Creates a new workspace directory and adds it to the
+   * WorkspaceStore. Dispatches a 'workspaces:workspace:create'
+   * event.
+   *
+   * @param location - The location at which to create the workspace directory (with or without trailing `/`).
+   * @param name - The workspace name.
+   * @returns The new workspace.
+   *
+   * @throws InvalidPathError - location path does not exist.
+   * @throws PathConflictError - workspace path already exists.
+   */
+  create(location: string, name: string): Promise<Workspace>;
+
+  /**
+   * Returns a workspace by path, or null if it does not exist.
+   *
+   * @param path - The workspace path.
+   * @returns A workspace or null.
+   */
+  get(path: string): Workspace | null;
+
+  /**
    * Returns all of the user's workspaces.
    *
    * @returns The users workspaces.
@@ -60,4 +82,9 @@ export interface WorkspacesApi {
    * @returns Boolean indicating whether the workspace exists.
    */
   exists(path: string): Promise<boolean>;
+
+  /**
+   * Clears the workspaces store. **Intended for testing purposes only.**
+   */
+  _clear(): void;
 }
