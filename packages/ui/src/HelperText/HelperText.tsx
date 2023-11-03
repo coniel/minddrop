@@ -15,11 +15,17 @@ export interface HelperTextProps extends TextProps {
    * text rendering.
    */
   children?: React.ReactNode;
+
+  /**
+   * When true, text has error color.
+   */
+  error?: boolean;
 }
 
 export const HelperText: FC<HelperTextProps> = ({
   children,
   text,
+  error,
   className,
   ...other
 }) => {
@@ -30,7 +36,7 @@ export const HelperText: FC<HelperTextProps> = ({
       className={mapPropsToClasses({ className }, 'helper-text')}
       size="tiny"
       weight="medium"
-      color="light"
+      color={error ? 'danger' : 'light'}
       {...other}
     >
       {text ? t(text) : null}
