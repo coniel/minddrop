@@ -35,6 +35,10 @@
   --bgNeutralActiveHover: var(--neutral6);
   --bgSolidNeutral: var(--neutral9);
 
+  --bgNeutralDark: var(--neutral6);
+  --bgNeutralDarkHover: var(--neutral7);
+  --bgNeutralDarkActive: var(--neutral8);
+
   --bgPrimary: var(--primary3);
   --bgPrimaryHover: var(--primary4);
   --bgPrimaryActive: var(--primary5);
