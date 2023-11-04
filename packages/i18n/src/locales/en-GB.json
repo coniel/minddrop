@@ -6,6 +6,7 @@
   "create": "Create",
   "browse": "Browse",
   "back": "Back",
+  "cancel": "Cancel",
   "openWorkspace": "Open workspace",
   "openWorkspaceDescription": "Open an existing folder of Markdown files to use as a workspace.",
   "quickStart": "Quickstart",
