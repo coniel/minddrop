@@ -1,8 +1,18 @@
 .workspace-nav-item .nav-item {
   display: flex;
   align-items: center;
-  padding: 6px;
+  border-radius: var(--radiusMd);
   cursor: pointer;
+  height: 28px;
+  padding: 0 4px 0 2px;
+}
+
+.workspace-nav-item .nav-item:hover {
+  background-color: var(--bgNeutralHover);
+}
+
+.workspace-nav-item .nav-item:active {
+  background-color: var(--bgNeutralActive);
 }
 
 .workspace-nav-item .nav-item:hover .text,
@@ -10,13 +20,26 @@
   color: var(--textPrimary);
 }
 
-.workspace-nav-item .nav-item:hover .icon,
+.workspace-nav-item .icon {
+  height: 22px;
+  width: 22px;
+}
+
+.workspace-nav-item .nav-item .icon {
+  fill: var(--textNeutralLight);
+}
+
 .workspace-nav-item.active .nav-item .icon {
-  fill: var(--textPrimary);
+  fill: var(--textNeutral);
+}
+
+.workspace-nav-item .nav-item:hover .icon {
+  fill: var(--textNeutral);
 }
 
 .workspace-nav-item .label {
-  margin-left: 6px;
+  padding: 0 4px;
+  flex: 1;
 }
 
 .workspace-nav-item .children {
@@ -29,4 +52,20 @@
 
 .workspace-nav-item.missing .nav-item .icon {
   fill: var(--textDanger);
+}
+
+.workspace-nav-item .nav-item .actions {
+  opacity: 0;
+}
+
+.workspace-nav-item:hover .actions {
+  opacity: 1;
+}
+
+.workspace-nav-item:hover .icon-button:hover {
+  background: var(--bgNeutralDarkHover);
+}
+
+.workspace-nav-item:hover .icon-button:active {
+  background: var(--bgNeutralDarkActive);
 }

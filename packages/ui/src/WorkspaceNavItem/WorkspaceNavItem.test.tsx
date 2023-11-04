@@ -17,6 +17,12 @@ describe('<WorkspaceNavItem />', () => {
     screen.getByText('icon');
   });
 
+  it('renders actions', () => {
+    render(<WorkspaceNavItem label="Projects" actions="actions" />);
+
+    screen.getByText('actions');
+  });
+
   it('supports defaultExpanded', () => {
     render(
       <WorkspaceNavItem defaultExpanded label="Projects">
