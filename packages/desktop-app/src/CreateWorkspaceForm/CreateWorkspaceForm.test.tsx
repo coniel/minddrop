@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RenderResult, render, userEvent } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { appWindow } from '@tauri-apps/api/window';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { cleanup, setup } from '../test-utils';
 import { CreateWorkspaceForm } from './CreateWorkspaceForm';
@@ -16,12 +15,6 @@ vi.mock('@tauri-apps/api/dialog', () => ({
   open: async () => WORKSPACE_LOCATION,
 }));
 
-vi.mock('@tauri-apps/api/window', () => ({
-  appWindow: {
-    close: vi.fn(),
-  },
-}));
-
 const nameFieldLabel = i18n.t('workspaceName');
 const locationButtonLabel = i18n.t('browse');
 const submitButtonLabel = i18n.t('create');
@@ -30,10 +23,17 @@ const locationMissingErrorText = i18n.t('workspaceLocationMissingError');
 const locationConflictErrorText = i18n.t('workspaceLocationConflictError');
 const backButtonLabel = i18n.t('back');
 
-const onClickBack = vi.fn();
+const onSuccess = vi.fn();
+const onClickCancel = vi.fn();
 
 async function renderForm() {
-  return render(<CreateWorkspaceForm onClickBack={onClickBack} />);
+  return render(
+    <CreateWorkspaceForm
+      onSuccess={onSuccess}
+      onClickCancel={onClickCancel}
+      cancelButtonLabel="back"
+    />,
+  );
 }
 
 async function fillAndSubmitForm(
@@ -87,12 +87,12 @@ describe('CreateWorkspaceForm', () => {
     );
   });
 
-  it('closes the window on success', async () => {
+  it('calls onSuccess', async () => {
     // Fill and submit the form with valid data
     await renderAndSubmitForm();
 
-    // Should close the window
-    expect(appWindow.close).toHaveBeenCalledWith();
+    // Should call 'onSuccess' callback
+    expect(onSuccess).toHaveBeenCalledWith(workspace1);
   });
 
   it('shows error if name is missing', async () => {
@@ -129,8 +129,8 @@ describe('CreateWorkspaceForm', () => {
     // Should display error message
     getByText(locationConflictErrorText);
 
-    // Should not close the window]
-    expect(appWindow.close).not.toHaveBeenCalled();
+    // Should not call 'onSuccess' callback
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 
   it('clears errors on submit', async () => {
@@ -175,8 +175,8 @@ describe('CreateWorkspaceForm', () => {
     // Should display error message
     getByText('Something happened');
 
-    // Should not close the window
-    expect(appWindow.close).not.toHaveBeenCalled();
+    // Should not call 'onSuccess' callback
+    expect(onSuccess).not.toHaveBeenCalled();
   });
 
   it('calls onClickBack when back button is clicked', async () => {
@@ -186,6 +186,6 @@ describe('CreateWorkspaceForm', () => {
     await userEvent.click(getByText(backButtonLabel));
 
     // Should call 'onClickBack' prop
-    expect(onClickBack).toHaveBeenCalled();
+    expect(onClickCancel).toHaveBeenCalled();
   });
 });

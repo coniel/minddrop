@@ -50,3 +50,7 @@
   text-align: center;
   line-height: 1.4;
 }
+
+.create-first-workspace .create-workspace-form {
+  padding-top: 50px;
+}

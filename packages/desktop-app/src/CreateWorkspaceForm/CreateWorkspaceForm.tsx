@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { open } from '@tauri-apps/api/dialog';
-import { appWindow } from '@tauri-apps/api/window';
-import { Workspaces } from '@minddrop/workspaces';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import {
   Button,
   ButtonProps,
@@ -15,13 +14,25 @@ import { PathConflictError } from '@minddrop/core';
 
 interface CreateWorkspaceFormProps {
   /**
-   * Callback fired when the back button is clicked.
+   * Callback fired when the workspace is created.
    */
-  onClickBack: ButtonProps['onClick'];
+  onSuccess?: (workspace: Workspace) => void;
+
+  /**
+   * Callback fired when the cancel button is clicked.
+   */
+  onClickCancel: ButtonProps['onClick'];
+
+  /**
+   * Label of the cancel action button.
+   */
+  cancelButtonLabel?: string;
 }
 
 export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
-  onClickBack,
+  onSuccess,
+  onClickCancel,
+  cancelButtonLabel = 'cancel',
 }) => {
   const { t } = useTranslation();
   const [selectedDir, setSelectedDir] = useState('');
@@ -69,7 +80,12 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
 
       try {
         // Create the workspace
-        await Workspaces.create(selectedDir, workspaceName);
+        const workspace = await Workspaces.create(selectedDir, workspaceName);
+
+        // Call the 'onSuccess' callback if provided
+        if (onSuccess) {
+          onSuccess(workspace);
+        }
       } catch (error) {
         if (error instanceof PathConflictError) {
           setWorkspaceLocationError('workspaceLocationConflictError');
@@ -79,9 +95,6 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
 
         return;
       }
-
-      // Close this window
-      appWindow.close();
     },
     [selectedDir, workspaceName],
   );
@@ -125,9 +138,12 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
         </div>
       </div>
       <div className="actions">
-        <Button variant="text" label="back" onClick={onClickBack} />
+        <Button
+          variant="text"
+          label={cancelButtonLabel}
+          onClick={onClickCancel}
+        />
         <Button variant="primary" label="create" type="submit" />
-        <span />
       </div>
     </form>
   );
