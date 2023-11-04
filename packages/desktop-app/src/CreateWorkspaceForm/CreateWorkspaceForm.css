@@ -1,6 +1,5 @@
 .create-workspace-form {
   width: 380px;
-  padding-top: 50px;
   display: flex;
   flex-direction: column;
   row-gap: 24px;

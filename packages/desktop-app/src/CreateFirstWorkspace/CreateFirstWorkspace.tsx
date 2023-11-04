@@ -1,4 +1,5 @@
 import { getVersion } from '@tauri-apps/api/app';
+import { appWindow } from '@tauri-apps/api/window';
 import { IconsProvider } from '@minddrop/icons';
 import { MindDropLogo, Text, Toolbar } from '@minddrop/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -61,7 +62,11 @@ export const CreateFirstWorkspace: React.FC = () => {
             {t('version')} {appVersion}
           </Text>
           {createWorkspace ? (
-            <CreateWorkspaceForm onClickBack={toggleCreateWorkspace} />
+            <CreateWorkspaceForm
+              cancelButtonLabel="back"
+              onClickCancel={toggleCreateWorkspace}
+              onSuccess={appWindow.close}
+            />
           ) : (
             <>
               <div className="action-cards">
