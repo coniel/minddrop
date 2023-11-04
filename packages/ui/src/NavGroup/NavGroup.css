@@ -7,7 +7,6 @@
 
 /* Title */
 .nav-group .title {
-  text-transform: uppercase;
   font-weight: var(--fwBold);
   font-size: var(--fsTiny);
   letter-spacing: 0.03em;
