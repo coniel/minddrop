@@ -9,6 +9,7 @@ import { loadWorkspaces } from './loadWorkspaces';
 import { workspaceExists } from './workspaceExists';
 import { WorkspacesStore } from './WorkspacesStore';
 import { getWorkspace } from './getWorkspace';
+import { removeWorkspace } from './removeWorkspace';
 
 export const Workspaces: WorkspacesApi = {
   load: loadWorkspaces,
@@ -16,6 +17,7 @@ export const Workspaces: WorkspacesApi = {
   create: createWorkspace,
   getAll: getWorkspaces,
   get: getWorkspace,
+  remove: removeWorkspace,
   getConfig: getWorkspacesConfig,
   hasConfig: hasWorkspacesConfig,
   hasValidWorkspace: hasValidWorkspace,

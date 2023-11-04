@@ -21,7 +21,7 @@ export interface WorkspacesStore {
   /**
    * Remove a workspace from the store by path.
    */
-  remove(workspace: string): void;
+  remove(path: string): void;
 
   /**
    * Clear workspaces.

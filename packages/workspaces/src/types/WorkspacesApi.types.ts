@@ -51,6 +51,14 @@ export interface WorkspacesApi {
   getAll(): Workspace[];
 
   /**
+   * Removes a workspace from the store.
+   * Dispatches a 'workspaces:workspace:remove' event.
+   *
+   * @param path - The workspace path.
+   */
+  remove(path: string): void;
+
+  /**
    * Fetches the user's workspaces config from the config file.
    *
    * @returns The user's workspaces config.
