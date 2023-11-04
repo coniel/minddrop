@@ -1,3 +1,4 @@
+export * from './appendDirToPath';
 export * from './arrayContainsObject';
 export * from './backend-utils';
 export * from './contains';
