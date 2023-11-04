@@ -17,3 +17,4 @@ export * from './setDataTransferData';
 export * from './throttle';
 export * from './toKebabCase';
 export * from './types';
+export * from './useToggle';
