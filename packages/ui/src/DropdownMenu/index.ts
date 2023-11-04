@@ -2,6 +2,7 @@ export * from './DropdownMenu';
 export * from './DropdownMenuContent';
 export * from './DropdownMenuItem';
 export * from './DropdownMenuLabel';
+export * from './DropdownMenuPortal';
 export * from './DropdownMenuRadioGroup';
 export * from './DropdownMenuRadioItem';
 export * from './DropdownMenuSeparator';
