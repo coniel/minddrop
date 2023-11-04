@@ -12,7 +12,7 @@
   "quickStart": "Quickstart",
   "quickStartWorkspaceDescription": "Create a new workspace in your Documents folder.",
   "createWorkspace": "Create workspace",
-  "createWorkspaceDescription": "Create a custom workspace anywhere on your computer.",
+  "createWorkspaceDescription": "Create a new workspace anywhere on your computer.",
   "workspaceDefinition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
   "workspaceName": "Workspace name",
   "workspaceNameHelperText": "This will be the name of the parent folder which contains the workspace contents.",
