@@ -7,7 +7,8 @@
   padding: 0 4px 0 2px;
 }
 
-.workspace-nav-item .nav-item:hover {
+.workspace-nav-item .nav-item:hover,
+.workspace-nav-item.hovering .nav-item {
   background-color: var(--bgNeutralHover);
 }
 
@@ -16,11 +17,12 @@
 }
 
 .workspace-nav-item .nav-item:hover .text,
-.workspace-nav-item.active .nav-item .text {
+.workspace-nav-item.active .nav-item .text,
+.workspace-nav-item.hovering .nav-item .text {
   color: var(--textPrimary);
 }
 
-.workspace-nav-item .icon {
+.workspace-nav-item .nav-item .icon-container {
   height: 22px;
   width: 22px;
 }
@@ -33,7 +35,8 @@
   fill: var(--textNeutral);
 }
 
-.workspace-nav-item .nav-item:hover .icon {
+.workspace-nav-item .nav-item:hover .icon,
+.workspace-nav-item.hovering .nav-item .icon {
   fill: var(--textNeutral);
 }
 
@@ -58,7 +61,8 @@
   opacity: 0;
 }
 
-.workspace-nav-item:hover .actions {
+.workspace-nav-item:hover .actions,
+.workspace-nav-item.hovering .actions {
   opacity: 1;
 }
 

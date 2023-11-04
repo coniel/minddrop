@@ -63,6 +63,12 @@ export interface WorkspaceNavItemProps
    * collapsible children changes.
    */
   onExpandedChange?: (expanded: boolean) => void;
+
+  /**
+   * Bit of a hack to enable hover styling when options menu
+   * is open.
+   */
+  hovering?: boolean;
 }
 
 export const WorkspaceNavItem = React.forwardRef<
@@ -80,6 +86,7 @@ export const WorkspaceNavItem = React.forwardRef<
       actions,
       label,
       missing,
+      hovering,
       onExpandedChange,
       ...other
     },
@@ -95,7 +102,7 @@ export const WorkspaceNavItem = React.forwardRef<
         <div
           ref={ref}
           className={mapPropsToClasses(
-            { className, active, missing },
+            { className, active, missing, hovering },
             'workspace-nav-item',
           )}
           {...other}
