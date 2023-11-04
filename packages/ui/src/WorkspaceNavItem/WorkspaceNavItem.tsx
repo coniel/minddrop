@@ -27,6 +27,11 @@ export interface WorkspaceNavItemProps
   icon?: React.ReactNode;
 
   /**
+   * Action buttons show on hover.
+   */
+  actions?: React.ReactNode;
+
+  /**
    * If `true`, the nav item will have 'active' styling.
    */
   active?: boolean;
@@ -72,6 +77,7 @@ export const WorkspaceNavItem = React.forwardRef<
       defaultExpanded,
       expanded,
       icon,
+      actions,
       label,
       missing,
       onExpandedChange,
@@ -107,10 +113,11 @@ export const WorkspaceNavItem = React.forwardRef<
                 color="light"
                 weight="medium"
                 className="label"
-                size="large"
+                size="regular"
               >
                 {label}
               </Text>
+              <div className="actions">{actions}</div>
             </div>
           </CollapsibleTrigger>
           <CollapsibleContent asChild>
