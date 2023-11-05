@@ -1,17 +1,17 @@
+import { useEffect, useState } from 'react';
 import { getVersion } from '@tauri-apps/api/app';
 import { appWindow } from '@tauri-apps/api/window';
 import { IconsProvider } from '@minddrop/icons';
 import { MindDropLogo, Text, Toolbar } from '@minddrop/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from '@minddrop/i18n';
+import { useToggle } from '@minddrop/utils';
 import { OpenWorkspaceCard } from './OpenWorkspaceCard';
 import { ShowWindowOnRendered } from '../utils';
 import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
-import './CreateFirstWorkspace.css';
-import { initializeDesktopApp } from '../initializeDesktopApp';
 import { QuickStartCard } from './QuickStartCard';
 import { CreateWorkspaceCard } from './CreateWorkspaceCard';
-import { useTranslation } from '@minddrop/i18n';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm/CreateWorkspaceForm';
+import './CreateFirstWorkspace.css';
 
 function closeWindow() {
   appWindow.close();
@@ -20,36 +20,20 @@ function closeWindow() {
 export const CreateFirstWorkspace: React.FC = () => {
   const { t } = useTranslation();
   const [appVersion, setAppVersion] = useState('');
-  const [initialized, setInitialized] = useState(false);
-  const [createWorkspace, setCreateWorkspace] = useState(false);
+  const [createWorkspace, toggleCreateWorkspace] = useToggle(false);
 
   useEffect(() => {
-    let cleanup = () => {};
-
     async function init() {
       // Get app version
       setAppVersion(await getVersion());
-
-      // Initialize app
-      cleanup = await initializeDesktopApp();
-
-      setInitialized(true);
     }
 
     init();
-
-    return () => {
-      cleanup();
-    };
   }, []);
 
-  const toggleCreateWorkspace = useCallback(
-    () => setCreateWorkspace((value) => !value),
-    [],
-  );
-
-  if (!initialized) {
-    return 'Loading...';
+  // Wait for app version before rendering
+  if (!appVersion) {
+    return null;
   }
 
   return (
