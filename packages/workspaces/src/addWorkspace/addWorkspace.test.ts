@@ -9,16 +9,6 @@ import { Events } from '@minddrop/events';
 
 const exists = vi.fn();
 
-// Pretend workspace contains topics
-vi.mock('@minddrop/topics', () => ({
-  Topics: {
-    getFrom: () => [
-      { path: workspace1.topics[0] },
-      { path: workspace1.topics[1] },
-    ],
-  },
-}));
-
 describe('addWorkspace', () => {
   beforeEach(() => {
     setup();
@@ -43,7 +33,7 @@ describe('addWorkspace', () => {
     );
   });
 
-  it('adds the workspace to the store, including topics', async () => {
+  it('adds the workspace to the store', async () => {
     // Add a workspace
     await addWorkspace(workspace1.path);
 

@@ -13,9 +13,4 @@ export interface Workspace {
    * The workspace name (same as workspace directory name).
    */
   name: string;
-
-  /**
-   * The absolute paths of the workspace's root topics.
-   */
-  topics: string[];
 }

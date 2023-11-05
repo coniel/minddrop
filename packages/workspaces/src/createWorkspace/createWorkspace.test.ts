@@ -21,7 +21,6 @@ const WORKSPACE: Workspace = {
   path: WORKSPACE_PATH,
   name: WORKSPACE_NAME,
   exists: true,
-  topics: [],
 };
 
 const exists = async (path: string) =>
