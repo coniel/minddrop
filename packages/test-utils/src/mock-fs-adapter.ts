@@ -11,6 +11,8 @@ export const MockFsAdapter: FileSystem = {
   readTextFile: vi.fn(),
   removeDir: vi.fn(),
   removeFile: vi.fn(),
+  trashDir: vi.fn(),
+  trashFile: vi.fn(),
   renameFile: vi.fn(),
   writeBinaryFile: vi.fn(),
   writeTextFile: vi.fn(),

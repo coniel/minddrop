@@ -122,6 +122,22 @@ export interface FileSystem {
   removeFile(path: string, options?: FsFileOptions): Promise<void>;
 
   /**
+   * Moves a dir to the OS Trash/Recycle Bin.
+   *
+   * @param path - The dir path.
+   * @param options - File system file options.
+   */
+  trashDir(path: string, options?: FsFileOptions): Promise<void>;
+
+  /**
+   * Moves a file to the OS Trash/Recycle Bin.
+   *
+   * @param path - The file path.
+   * @param options - File system file options.
+   */
+  trashFile(path: string, options?: FsFileOptions): Promise<void>;
+
+  /**
    * Renames a file.
    *
    * @param oldPath - The old path.

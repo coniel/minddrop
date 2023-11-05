@@ -9,6 +9,7 @@ extern crate objc;
 
 use tauri::{Manager, WindowEvent};
 use window_ext::WindowExt;
+use trash;
 
 mod window_ext;
 
@@ -36,7 +37,14 @@ fn main() {
             }
 
         })
+        .invoke_handler(tauri::generate_handler![move_to_trash])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
+#[tauri::command]
+fn move_to_trash(path: String) -> Result<String, String> {
+    trash::delete(path).map_err(|err| err.to_string())?;
+
+    Ok("Deleted".to_string())
+}
