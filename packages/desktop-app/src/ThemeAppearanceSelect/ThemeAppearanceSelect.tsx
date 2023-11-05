@@ -17,7 +17,7 @@ import {
 } from '@minddrop/ui';
 
 export const ThemeAppearanceSelect: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('theme.appearance');
   const themeAppearance = useThemeAppearance();
   const themeAppearanceSetting = useThemeAppearanceSetting();
 
@@ -31,28 +31,19 @@ export const ThemeAppearanceSelect: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <IconButton
-          label={t('themeAppearanceSetting')}
+          label={t('action')}
           icon={themeAppearance === Theme.Dark ? 'sun' : 'moon'}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="theme-appearance-setting-menu">
-        <DropdownMenuLabel>{t('themeAppearance')}</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('label')}</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={themeAppearanceSetting}
           onValueChange={handleChangeThemeAppearanceSetting}
         >
-          <DropdownMenuRadioItem
-            value="system"
-            label={t('themeAppearanceSystem')}
-          />
-          <DropdownMenuRadioItem
-            value="light"
-            label={t('themeAppearanceLight')}
-          />
-          <DropdownMenuRadioItem
-            value="dark"
-            label={t('themeAppearanceDark')}
-          />
+          <DropdownMenuRadioItem value="system" label={t('system')} />
+          <DropdownMenuRadioItem value="light" label={t('light')} />
+          <DropdownMenuRadioItem value="dark" label={t('dark')} />
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

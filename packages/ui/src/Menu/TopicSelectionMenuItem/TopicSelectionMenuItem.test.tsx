@@ -84,7 +84,7 @@ describe('<TopicSelectionMenuItem />', () => {
       children: <TopicSelectionMenuItem label="subtopic" />,
     });
 
-    const toggleButton = screen.getAllByLabelText('Expand subtopics')[0];
+    const toggleButton = screen.getAllByLabelText('expandSubtopics')[0];
 
     act(() => {
       fireEvent.click(toggleButton);

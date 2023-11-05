@@ -23,7 +23,7 @@ export interface AddWorkspaceMenuProps {
 export const AddWorkspaceMenu: React.FC<AddWorkspaceMenuProps> = ({
   children,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('workspaces.actions');
   const [createDialogOpen, toggleCreateDialog] = useToggle(false);
 
   return (
@@ -35,23 +35,23 @@ export const AddWorkspaceMenu: React.FC<AddWorkspaceMenuProps> = ({
         <DropdownMenuContent align="center" style={{ width: 220 }}>
           <DropdownMenuItem
             icon="folder"
-            label={t('openWorkspace')}
-            tooltipTitle={t('openWorkspace')}
-            tooltipDescription={t('openWorkspaceDescription')}
+            label={t('open.label')}
+            tooltipTitle={t('open.label')}
+            tooltipDescription={t('open.description')}
             onSelect={selectFolderAsWorkspace}
           />
           <DropdownMenuItem
             icon="plus-square"
-            label={t('createWorkspace')}
-            tooltipTitle={t('createWorkspace')}
-            tooltipDescription={t('createWorkspaceDescription')}
+            label={t('create.label')}
+            tooltipTitle={t('create.label')}
+            tooltipDescription={t('create.description')}
             onSelect={toggleCreateDialog}
           />
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={createDialogOpen}>
         <DialogContent width="sm" className="create-workspace-dialog">
-          <DialogTitle>{t('createWorkspace')}</DialogTitle>
+          <DialogTitle>{t('create.label')}</DialogTitle>
           <CreateWorkspaceForm
             onSuccess={toggleCreateDialog}
             onClickCancel={toggleCreateDialog}

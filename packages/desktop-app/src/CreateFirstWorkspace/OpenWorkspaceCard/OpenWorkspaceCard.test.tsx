@@ -16,7 +16,7 @@ vi.mock('@tauri-apps/api/window', () => ({
 }));
 
 describe('OpenWorkspaceCard', () => {
-  const openButtonLabel = i18n.t('open');
+  const openButtonLabel = i18n.t('workspaces.actions.open.action');
   vi.spyOn(appWindow, 'close');
 
   beforeEach(setup);

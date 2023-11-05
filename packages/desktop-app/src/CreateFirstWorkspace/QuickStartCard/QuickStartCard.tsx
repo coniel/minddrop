@@ -8,7 +8,7 @@ import { BaseDirectory, Fs } from '@minddrop/core';
 const WORKSPACE_NAME = 'MindDrop Workspace';
 
 export const QuickStartCard: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('workspaces.actions.quickstart');
 
   const quickStart = useCallback(async () => {
     // Get path to Documents folder
@@ -29,9 +29,11 @@ export const QuickStartCard: React.FC = () => {
   return (
     <ActionCard
       icon="flash"
-      title={t('quickStart')}
-      description={t('quickStartWorkspaceDescription')}
-      action={<Button label="start" variant="contained" onClick={quickStart} />}
+      title={t('label')}
+      description={t('description')}
+      action={
+        <Button label={t('action')} variant="contained" onClick={quickStart} />
+      }
     />
   );
 };

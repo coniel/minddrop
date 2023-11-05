@@ -13,6 +13,10 @@ import { CreateWorkspaceCard } from './CreateWorkspaceCard';
 import { useTranslation } from '@minddrop/i18n';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm/CreateWorkspaceForm';
 
+function closeWindow() {
+  appWindow.close();
+}
+
 export const CreateFirstWorkspace: React.FC = () => {
   const { t } = useTranslation();
   const [appVersion, setAppVersion] = useState('');
@@ -59,13 +63,13 @@ export const CreateFirstWorkspace: React.FC = () => {
           <MindDropLogo size={118} />
           <h1>MindDrop</h1>
           <Text size="tiny" color="light">
-            {t('version')} {appVersion}
+            {t('app.version')} {appVersion}
           </Text>
           {createWorkspace ? (
             <CreateWorkspaceForm
-              cancelButtonLabel="back"
+              cancelButtonLabel={t('actions.back')}
               onClickCancel={toggleCreateWorkspace}
-              onSuccess={appWindow.close}
+              onSuccess={closeWindow}
             />
           ) : (
             <>
@@ -75,7 +79,7 @@ export const CreateFirstWorkspace: React.FC = () => {
                 <OpenWorkspaceCard />
               </div>
               <Text className="workspace-description" color="light">
-                {t('workspaceDefinition')}
+                {t('workspaces.definition')}
               </Text>
             </>
           )}

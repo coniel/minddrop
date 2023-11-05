@@ -15,13 +15,15 @@ vi.mock('@tauri-apps/api/dialog', () => ({
   open: async () => WORKSPACE_LOCATION,
 }));
 
-const nameFieldLabel = i18n.t('workspaceName');
-const locationButtonLabel = i18n.t('browse');
-const submitButtonLabel = i18n.t('create');
-const nameErrorText = i18n.t('workspaceNameMissingError');
-const locationMissingErrorText = i18n.t('workspaceLocationMissingError');
-const locationConflictErrorText = i18n.t('workspaceLocationConflictError');
-const backButtonLabel = i18n.t('back');
+const t = (key: string) => i18n.t(`workspaces.actions.create.form.${key}`);
+
+const nameFieldLabel = t('name.label');
+const locationButtonLabel = t('location.browse');
+const submitButtonLabel = t('submit');
+const nameErrorText = t('name.error.missing');
+const locationMissingErrorText = t('location.error.missing');
+const locationConflictErrorText = t('location.error.conflict');
+const cancelButtonLabel = 'cancel';
 
 const onSuccess = vi.fn();
 const onClickCancel = vi.fn();
@@ -31,7 +33,7 @@ async function renderForm() {
     <CreateWorkspaceForm
       onSuccess={onSuccess}
       onClickCancel={onClickCancel}
-      cancelButtonLabel="back"
+      cancelButtonLabel="cancel"
     />,
   );
 }
@@ -183,7 +185,7 @@ describe('CreateWorkspaceForm', () => {
     const { getByText } = await renderForm();
 
     // Click the back button
-    await userEvent.click(getByText(backButtonLabel));
+    await userEvent.click(getByText(cancelButtonLabel));
 
     // Should call 'onClickBack' prop
     expect(onClickCancel).toHaveBeenCalled();

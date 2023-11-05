@@ -33,7 +33,7 @@ describe('<TopicNavItem />', () => {
     screen.getByText('subtopic');
 
     act(() => {
-      const toggleButton = screen.getAllByLabelText('Expand subtopics')[0];
+      const toggleButton = screen.getAllByLabelText('expandSubtopics')[0];
       fireEvent.click(toggleButton);
     });
 
