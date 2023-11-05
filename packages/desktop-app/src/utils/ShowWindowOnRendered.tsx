@@ -7,7 +7,9 @@ export const ShowWindowOnRendered: React.FC = () => {
       const visible = await appWindow.isVisible();
 
       if (!visible) {
-        appWindow.show();
+        setTimeout(() => {
+          appWindow.show();
+        }, 50);
       }
     }
 
