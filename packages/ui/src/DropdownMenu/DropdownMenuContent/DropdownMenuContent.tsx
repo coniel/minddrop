@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
@@ -21,11 +21,10 @@ export interface DropdownMenuContentProps
   content?: MenuContents;
 }
 
-export const DropdownMenuContent: FC<DropdownMenuContentProps> = ({
-  children,
-  content = [],
-  ...other
-}) => {
+export const DropdownMenuContent = React.forwardRef<
+  HTMLDivElement,
+  DropdownMenuContentProps
+>(({ children, content = [], ...other }, ref) => {
   const items = useMemo(
     () =>
       generateMenu(
@@ -45,11 +44,13 @@ export const DropdownMenuContent: FC<DropdownMenuContentProps> = ({
   );
 
   return (
-    <DropdownMenuPrimitives.Content asChild {...other}>
+    <DropdownMenuPrimitives.Content asChild ref={ref} {...other}>
       <Menu>
         {items}
         {children}
       </Menu>
     </DropdownMenuPrimitives.Content>
   );
-};
+});
+
+DropdownMenuContent.displayName = 'DropdownMenuContent';

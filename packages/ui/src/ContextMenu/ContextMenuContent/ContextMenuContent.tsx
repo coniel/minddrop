@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
@@ -21,11 +21,10 @@ export interface ContextMenuContentProps
   content?: MenuContents;
 }
 
-export const ContextMenuContent: FC<ContextMenuContentProps> = ({
-  children,
-  content = [],
-  ...other
-}) => {
+export const ContextMenuContent = React.forwardRef<
+  HTMLDivElement,
+  ContextMenuContentProps
+>(({ children, content = [], ...other }, ref) => {
   const items = useMemo(
     () =>
       generateMenu(
@@ -45,11 +44,13 @@ export const ContextMenuContent: FC<ContextMenuContentProps> = ({
   );
 
   return (
-    <ContextMenuPrimitives.Content asChild {...other}>
+    <ContextMenuPrimitives.Content asChild ref={ref} {...other}>
       <Menu>
         {items}
         {children}
       </Menu>
     </ContextMenuPrimitives.Content>
   );
-};
+});
+
+ContextMenuContent.displayName = 'ContextMenuItem';
