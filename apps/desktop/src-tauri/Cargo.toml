@@ -15,10 +15,11 @@ tauri-build = { version = "1.2", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2", features = [ "window-show", "window-create", "window-close", "dialog-open", "fs-all", "path-all", "shell-open", "window-start-dragging"] }
+tauri = { version = "1.2", features = [ "shell-open", "window-start-dragging", "window-close", "dialog-open", "window-show", "window-create", "protocol-asset", "fs-all", "path-all"] }
 tauri-plugin-fs-watch = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 objc = "0.2.7"
 cocoa = "0.25.0"
+trash = "3.0.6"
 
 [features]
 # by default Tauri runs in production mode
