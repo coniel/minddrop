@@ -4,16 +4,6 @@ import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { setup, cleanup, workspace1, missingWorkspace } from '../test-utils';
 import { getWorkspaceFromPath } from './getWorkspaceFromPath';
 
-// Pretend workspace contains topics
-vi.mock('@minddrop/topics', () => ({
-  Topics: {
-    getFrom: () => [
-      { path: workspace1.topics[0] },
-      { path: workspace1.topics[1] },
-    ],
-  },
-}));
-
 const exists = vi.fn();
 
 describe('getWorkspaceFromPath', () => {
@@ -36,11 +26,11 @@ describe('getWorkspaceFromPath', () => {
 
   afterEach(cleanup);
 
-  it('returns a workspace with topics', async () => {
+  it('returns a workspace', async () => {
     // Get a workspace
     const workspace = await getWorkspaceFromPath(workspace1.path);
 
-    // Should return workspace including topics
+    // Should return workspace
     expect(workspace).toEqual(workspace1);
   });
 

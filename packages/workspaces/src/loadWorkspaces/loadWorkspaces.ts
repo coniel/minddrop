@@ -15,27 +15,36 @@ import { WorkspacesStore } from '../WorkspacesStore';
  * @throws {JsonParseError} - Failed to parse workspaces config file.
  */
 export async function loadWorkspaces(): Promise<Workspace[]> {
-  // Get the existing workspaces from the store
-  const existingWorkspaces = WorkspacesStore.getState().workspaces;
-
   // Get the user's workspaces config
   const workspacesConfig = await getWorkspacesConfig();
 
-  // Filter out the existing workspace paths from the
-  // config's workspace paths.
-  const newPaths = workspacesConfig.paths.filter(
-    (path) => !existingWorkspaces.find((workspace) => workspace.path === path),
-  );
-
-  // If there are no new paths, there is nothing to load
-  if (newPaths.length === 0) {
+  // If there are no paths, there is nothing to load
+  if (workspacesConfig.paths.length === 0) {
     return [];
   }
 
   // Get workspaces listed in the config
-  const newWorkspaces: Workspace[] = await Promise.all(
-    newPaths.map(getWorkspaceFromPath),
+  const configWorkspaces: Workspace[] = await Promise.all(
+    workspacesConfig.paths.map(getWorkspaceFromPath),
   );
+
+  // Get the existing workspaces from the store
+  const existingWorkspaces = WorkspacesStore.getState().workspaces;
+
+  // Filter out the existing workspaces from the config's
+  // workspaces. Note: we filter out existing workspaces only
+  // after fetching all of them because the existing workspaces
+  // may have changed in the time it takes to complete the
+  // async processes above.
+  const newWorkspaces = configWorkspaces.filter(
+    (workspace) =>
+      !existingWorkspaces.find(({ path }) => workspace.path === path),
+  );
+
+  // If there are no new workspaces, there is nothing to load
+  if (newWorkspaces.length === 0) {
+    return [];
+  }
 
   // Load workspace paths into store
   WorkspacesStore.getState().load(newWorkspaces);

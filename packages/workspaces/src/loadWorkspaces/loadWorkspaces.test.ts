@@ -6,16 +6,6 @@ import { loadWorkspaces } from './loadWorkspaces';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { Events } from '@minddrop/events';
 
-// Pretend workspace contains topics
-vi.mock('@minddrop/topics', () => ({
-  Topics: {
-    getFrom: () => [
-      { path: workspace1.topics[0] },
-      { path: workspace1.topics[1] },
-    ],
-  },
-}));
-
 const workspacesConfigFileContens = JSON.stringify({
   paths: [workspace1.path, missingWorkspace.path],
 });
@@ -33,10 +23,6 @@ describe('loadWorkspaces', () => {
     exists.mockImplementation(
       (path: string) =>
         new Promise((resolve) => resolve(path !== missingWorkspace.path)),
-    );
-    // Pretend that workspace 1 cotains topics
-    readDir.mockResolvedValueOnce(
-      workspace1.topics.map((topicPath) => ({ path: topicPath })),
     );
 
     registerFileSystemAdapter({
