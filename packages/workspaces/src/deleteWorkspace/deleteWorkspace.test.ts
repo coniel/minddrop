@@ -1,18 +1,24 @@
+import { Fs, registerFileSystemAdapter } from '@minddrop/core';
 import { Events } from '@minddrop/events';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { registerFileSystemAdapter } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
-import { setup, cleanup, workspace1 } from '../test-utils';
-import { getWorkspace } from '../getWorkspace';
 import * as WRITE_CONFIG from '../writeWorkspacesConfig';
+import { getWorkspace } from '../getWorkspace';
+import { setup, cleanup, workspace1 } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
-import { removeWorkspace } from './removeWorkspace';
+import { deleteWorkspace } from './deleteWorkspace';
 
 registerFileSystemAdapter(MockFsAdapter);
 
-describe('removeWorkspace', () => {
+describe('deleteWorkspace', () => {
+  beforeEach(setup);
+
+  afterEach(cleanup);
+
   beforeEach(() => {
     setup();
+
+    vi.spyOn(Fs, 'trashDir').mockResolvedValue();
 
     // Add a workspace to the store
     WorkspacesStore.getState().add(workspace1);
@@ -22,48 +28,48 @@ describe('removeWorkspace', () => {
 
   it('removes the workspace from the store', async () => {
     // Remove a workspace
-    await removeWorkspace(workspace1.path);
+    await deleteWorkspace(workspace1.path);
 
     // Workspace should no longer be in the store
     expect(getWorkspace(workspace1.path)).toBeNull();
   });
 
-  it('removes the workspace from the store', async () => {
+  it('deletes the workspace folder', async () => {
     // Remove a workspace
-    await removeWorkspace(workspace1.path);
+    await deleteWorkspace(workspace1.path);
 
-    // Workspace should no longer be in the store
-    expect(getWorkspace(workspace1.path)).toBeNull();
+    // Should delete the workspace folder
+    expect(Fs.trashDir).toHaveBeenCalledWith(workspace1.path);
   });
 
   it('updates the workspaces config file', async () => {
     vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
 
-    // Remove a workspace
-    await removeWorkspace(workspace1.path);
+    // Delete a workspace
+    await deleteWorkspace(workspace1.path);
 
     // Should write updated workspace path to config
     expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
   });
 
-  it('dispatches a `workspaces:workspace:remove` event', () =>
+  it('dispatches a `workspaces:workspace:delete` event', () =>
     new Promise<void>((done) => {
-      // Listen to 'workspaces:workspace:remove' events
-      Events.addListener('workspaces:workspace:remove', 'test', (payload) => {
+      // Listen to 'workspaces:workspace:delete' events
+      Events.addListener('workspaces:workspace:delete', 'test', (payload) => {
         // Payload data should be the workspace
         expect(payload.data).toEqual(workspace1);
         done();
       });
 
       // Remove a workspace
-      removeWorkspace(workspace1.path);
+      deleteWorkspace(workspace1.path);
     }));
 
   it('does nothing if workspace does not exist', async () => {
     vi.spyOn(WorkspacesStore.getState(), 'remove');
 
     // Remove a workspace that does not exist
-    await removeWorkspace('missing');
+    await deleteWorkspace('missing');
 
     expect(WorkspacesStore.getState().remove).not.toHaveBeenCalled();
   });

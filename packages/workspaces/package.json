@@ -11,7 +11,8 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/topics": "workspace:*"
+    "@minddrop/topics": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   },
   "devDependencies": {
     "@minddrop/test-utils": "workspace:*",
