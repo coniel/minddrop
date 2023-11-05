@@ -8,6 +8,7 @@ import { Events } from '@minddrop/events';
 import { getWorkspace } from '../getWorkspace';
 import { Workspace } from '../types';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**
  * Renames a workspace and its directory.
@@ -48,12 +49,15 @@ export async function renameWorkspace(
   await Fs.renameFile(path, newPath);
 
   // Generate the updated workspace object
-  const updatedWorkspace = { ...workspace, path: newPath };
+  const updatedWorkspace = { ...workspace, name, path: newPath };
 
   // Remove old version of the workspace from store
   WorkspacesStore.getState().remove(path);
   // Add new version of the workspace to store
   WorkspacesStore.getState().add(updatedWorkspace);
+
+  // Update workspaces config file
+  await writeWorkspacesConfig();
 
   // Dispatch a 'workspaces:workspace:rename' event
   Events.dispatch('workspaces:workspace:rename', { oldPath: path, newPath });

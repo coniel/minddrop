@@ -8,6 +8,7 @@ import {
 import { Events } from '@minddrop/events';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import * as WRITE_CONFIG from '../writeWorkspacesConfig';
 import { getWorkspace } from '../getWorkspace';
 import { setup, cleanup, workspace1 } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
@@ -19,6 +20,11 @@ const NEW_WORKSPACE_PATH = `${workspace1.path
   .split('/')
   .slice(0, -1)
   .join('/')}/${NEW_WORKSPACE_NAME}`;
+const UPDATED_WORKSPACE = {
+  ...workspace1,
+  name: NEW_WORKSPACE_NAME,
+  path: NEW_WORKSPACE_PATH,
+};
 
 let workspaceDirExists: boolean;
 let newWorkspaceDirConflict: boolean;
@@ -99,9 +105,19 @@ describe('renameWorkspace', () => {
     await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME);
 
     // Store should contain renamed workspace
-    expect(getWorkspace(NEW_WORKSPACE_PATH)?.path).toBe(NEW_WORKSPACE_PATH);
+    expect(getWorkspace(NEW_WORKSPACE_PATH)).toEqual(UPDATED_WORKSPACE);
     // Store should no longer contain original workspace
     expect(getWorkspace(WORKSPACE_PATH)).toBeNull();
+  });
+
+  it('updates the workspaces config file', async () => {
+    vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
+
+    // Rename a workspace
+    await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME);
+
+    // Should write updated workspace path to config
+    expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
   });
 
   it('dispatches a `workspaces:workspace:rename` event', () =>
@@ -122,9 +138,8 @@ describe('renameWorkspace', () => {
 
   it('returns the updated workspace', async () => {
     // Should return updated workspace
-    expect(await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME)).toEqual({
-      ...workspace1,
-      path: NEW_WORKSPACE_PATH,
-    });
+    expect(await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME)).toEqual(
+      UPDATED_WORKSPACE,
+    );
   });
 });
