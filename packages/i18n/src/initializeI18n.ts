@@ -19,6 +19,7 @@ export function initializeI18n(debug = false) {
     .use(initReactI18next)
     .init({
       fallbackLng: 'en-GB',
+      keySeparator: '.',
       debug,
       interpolation: {
         escapeValue: false,
@@ -29,7 +30,7 @@ export function initializeI18n(debug = false) {
     });
 
   languages.forEach((lang) => {
-    i18n.addResources(lang[0], 'translation', lang[1]);
+    i18n.addResourceBundle(lang[0], 'translation', lang[1], true, true);
   });
 }
 

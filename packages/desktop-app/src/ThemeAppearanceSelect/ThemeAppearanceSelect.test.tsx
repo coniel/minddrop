@@ -16,8 +16,8 @@ describe('<AppSidebar />', () => {
   afterEach(cleanup);
 
   it('sets the theme appearance setting', async () => {
-    const menuTriggerLabel = i18n.t('themeAppearanceSetting');
-    const menuOptionLabel = i18n.t('themeAppearanceDark');
+    const menuTriggerLabel = i18n.t('theme.appearance.action');
+    const menuOptionLabel = i18n.t('theme.appearance.dark');
 
     const { getByLabelText, getByText } = render(<ThemeAppearanceSelect />);
 

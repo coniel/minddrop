@@ -8,14 +8,16 @@ interface CreateWorkspaceCardProps {
 export const CreateWorkspaceCard: React.FC<CreateWorkspaceCardProps> = ({
   onClick,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('workspaces.actions.create');
 
   return (
     <ActionCard
       icon="folder-add"
-      title={t('createWorkspace')}
-      description={t('createWorkspaceDescription')}
-      action={<Button label="create" variant="contained" onClick={onClick} />}
+      title={t('label')}
+      description={t('description')}
+      action={
+        <Button label={t('action')} variant="contained" onClick={onClick} />
+      }
     />
   );
 };

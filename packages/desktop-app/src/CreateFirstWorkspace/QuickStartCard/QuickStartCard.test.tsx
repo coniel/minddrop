@@ -25,7 +25,7 @@ vi.mock('@tauri-apps/api/path', () => ({
 registerFileSystemAdapter(MockFsAdapter);
 
 describe('QuickStartCard', () => {
-  const startButtonLabel = i18n.t('start');
+  const startButtonLabel = i18n.t('workspaces.actions.quickstart.action');
   vi.spyOn(appWindow, 'close');
   vi.spyOn(Fs, 'createDir');
   vi.spyOn(Fs, 'getDirPath').mockResolvedValue(DOCUMENTS_DIR);

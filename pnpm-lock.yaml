@@ -282,8 +282,8 @@ importers:
   packages/i18n:
     dependencies:
       i18next:
-        specifier: ^22.4.15
-        version: 22.5.1
+        specifier: ^23.6.0
+        version: 23.6.0
       i18next-intervalplural-postprocessor:
         specifier: ^3.0.0
         version: 3.0.0
@@ -291,8 +291,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       react-i18next:
-        specifier: ^12.2.2
-        version: 12.3.1(i18next@22.5.1)(react@18.2.0)
+        specifier: ^13.3.1
+        version: 13.3.1(i18next@23.6.0)(react@18.2.0)
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -7831,8 +7831,8 @@ packages:
     resolution: {integrity: sha512-ZJWg2Gcb0kQqVI7kygLj9wVwQHK3mzRAg94uLsdoHqss0M9n0HSPr1pThd2AttkBsJFWR26G18hnKCqcTB8shQ==}
     dev: false
 
-  /i18next@22.5.1:
-    resolution: {integrity: sha512-8TGPgM3pAD+VRsMtUMNknRz3kzqwp/gPALrWMsDnmC1mKqJwpWyooQRLMcbTwq8z8YwSmuj+ZYvc+xCuEpkssA==}
+  /i18next@23.6.0:
+    resolution: {integrity: sha512-z0Cxr0MGkt+kli306WS4nNNM++9cgt2b2VCMprY92j+AIab/oclgPxdwtTZVLP1zn5t5uo8M6uLsZmYrcjr3HA==}
     dependencies:
       '@babel/runtime': 7.23.2
     dev: false
@@ -10167,10 +10167,10 @@ packages:
       react: 18.2.0
     dev: true
 
-  /react-i18next@12.3.1(i18next@22.5.1)(react@18.2.0):
-    resolution: {integrity: sha512-5v8E2XjZDFzK7K87eSwC7AJcAkcLt5xYZ4+yTPDAW1i7C93oOY1dnr4BaQM7un4Hm+GmghuiPvevWwlca5PwDA==}
+  /react-i18next@13.3.1(i18next@23.6.0)(react@18.2.0):
+    resolution: {integrity: sha512-JAtYREK879JXaN9GdzfBI4yJeo/XyLeXWUsRABvYXiFUakhZJ40l+kaTo+i+A/3cKIED41kS/HAbZ5BzFtq/Og==}
     peerDependencies:
-      i18next: '>= 19.0.0'
+      i18next: '>= 23.2.3'
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
@@ -10182,7 +10182,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.2
       html-parse-stringify: 3.0.1
-      i18next: 22.5.1
+      i18next: 23.6.0
       react: 18.2.0
     dev: false
 

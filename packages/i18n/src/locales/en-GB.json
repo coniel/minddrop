@@ -1,86 +1,98 @@
 {
   "test": "Test-en-GB",
-  "version": "Version",
-  "open": "Open",
-  "start": "Start",
-  "create": "Create",
-  "browse": "Browse",
-  "back": "Back",
-  "cancel": "Cancel",
-  "openWorkspace": "Open workspace",
-  "openWorkspaceDescription": "Open an existing folder of Markdown files to use as a workspace.",
-  "quickStart": "Quickstart",
-  "quickStartWorkspaceDescription": "Create a new workspace in your Documents folder.",
-  "createWorkspace": "Create workspace",
-  "createWorkspaceDescription": "Create a new workspace anywhere on your computer.",
-  "workspaceDefinition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
-  "workspaceName": "Workspace name",
-  "workspaceNameHelperText": "This will be the name of the parent folder which contains the workspace contents.",
-  "workspaceNamePlaceholder": "My Workspace",
-  "workspaceNameMissingError": "Please enter a name for your workspace.",
-  "workspaceLocation": "Location",
-  "workspaceLocationHelperText": "Where would you like to put your new workspace?",
-  "workspaceLocationSelectedHelperText": "Your new workspace will be created in:",
-  "workspaceLocationMissingError": "Please select a location for your workspace.",
-  "workspaceLocationConflictError": "A folder of the same name already exists at that location.",
-  "primaryNavigation": "Main",
-  "secondaryNavigation": "Tools",
-  "topicsNavigation": "Topics",
-  "addWorkspace": "Add a workspace",
-  "createTopic": "Add topic",
-  "addSubtopic": "Add subtopic",
-  "edit": "Edit",
-  "delete": "Delete",
-  "save": "Save",
-  "deleteEverywhere": "Delete everywhere",
-  "archiveEverywhere": "Archive everywhere",
-  "remove": "Remove",
-  "archive": "Archive",
-  "rename": "Rename",
-  "topicName": "Topic name",
-  "settings": "Settings",
-  "addDrop": "Add drop",
-  "deleteFromTopic": "Delete from this topic",
-  "archiveInTopic": "Archive in this topic",
-  "toDeleteFromAllTopics": "to delete from all topics",
-  "toArchiveInAllTopics": "to archive in all topics",
-  "shiftClick": "Shift + Click",
-  "moveTo": "Move to",
-  "addTo": "Add to",
-  "moveToTopics": "Move to Topics",
-  "addToTopics": "Add to Topics",
-  "addToTopicsTooltip": "Add to the root topics list in the sidebar",
-  "moveToTopicsTooltip": "Move to the root topics list in the sidebar",
-  "color": "Colour",
-  "duplicate": "Duplicate",
-  "dropOptions": "Drop options",
-  "noSubtopics": "No subtopics",
-  "subtopicCount_one": "{{count}} subtopic",
-  "subtopicCount_other": "{{count}} subtopics",
-  "subtopicCount_interval": "(0)[No subtopics];(1)[1 subtopic];(2-inf)[{{count}} subtopics];",
-  "untitled": "Untitled",
-  "openTopic": "Open {{topic}}",
-  "expandSubtopics": "Expand subtopics",
-  "restore": "Restore",
-  "deletePermanently": "Delete permanently",
-  "colorDefault": "Default",
-  "colorBlue": "Blue",
-  "colorCyan": "Cyan",
-  "colorRed": "Red",
-  "colorPink": "Pink",
-  "colorPurple": "Purple",
-  "colorGreen": "Green",
-  "colorOrange": "Orange",
-  "colorYellow": "Yellow",
-  "colorBrown": "Brown",
-  "colorGray": "Gray",
-  "deleteColumn": "Delete column",
-  "bookmarkPlaceholder": "Add a web bookmark",
-  "bookmarkLink": "Bookmark link",
-  "imagePlaceholder": "Add an image",
-  "themeAppearance": "Appearance",
-  "themeAppearanceLabel": "Theme appearance",
-  "themeAppearanceSystem": "Use system setting",
-  "themeAppearanceLight": "Light",
-  "themeAppearanceDark": "Dark"
+  "app": {
+    "version": "Version"
+  },
+  "actions": {
+    "back": "Back",
+    "cancel": "Cancel"
+  },
+  "color": {
+    "default": "Default",
+    "blue": "Blue",
+    "cyan": "Cyan",
+    "red": "Red",
+    "pink": "Pink",
+    "purple": "Purple",
+    "green": "Green",
+    "orange": "Orange",
+    "yellow": "Yellow",
+    "brown": "Brown",
+    "gray": "Gray"
+  },
+  "theme": {
+    "appearance": {
+      "action": "Set theme appearance",
+      "label": "Appearance",
+      "system": "Use system setting",
+      "light": "Light",
+      "dark": "Dark"
+    }
+  },
+  "workspaces": {
+    "label": "Workspaces",
+    "definition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
+    "actions": {
+      "add": "Add a workspace",
+      "rename": "Rename",
+      "changeIcon": "Change icon",
+      "move": {
+        "label": "Move folder",
+        "tooltip": {
+          "title": "Move workspace folder",
+          "description": "Move the workspace folder to a different location on your computer."
+        }
+      },
+      "remove": {
+        "label": "Remove",
+        "tooltip": {
+          "title": "Remove from workspaces",
+          "description": "Remove from your workspaces but preserve the folder on your computer."
+        }
+      },
+      "delete": {
+        "label": "Delete",
+        "tooltip": {
+          "title": "Delete workspace folder",
+          "description": "Delete the workspace folder and all of its contents."
+        }
+      },
+      "quickstart": {
+        "label": "Quickstart",
+        "description": "Create a new workspace in your Documents folder.",
+        "action": "Start"
+      },
+      "create": {
+        "label": "Create workspace",
+        "description": "Create a new workspace anywhere on your computer.",
+        "action": "Create",
+        "form": {
+          "submit": "Create",
+          "name": {
+            "label": "Workspace name",
+            "placeholder": "My Workspace",
+            "helperText": "This will be the name of the parent folder which contains the workspace contents.",
+            "error": {
+              "missing": "Please enter a name for your workspace."
+            }
+          },
+          "location": {
+            "label": "Location",
+            "helperText": "Where would you like to put your new workspace?",
+            "selectedHelperText": "Your new workspace will be created in:",
+            "browse": "Browse",
+            "error": {
+              "missing": "Please select a location for your workspace.",
+              "conflict": "A folder of the same name already exists at that location."
+            }
+          }
+        }
+      },
+      "open": {
+        "label": "Open workspace",
+        "description": "Open an existing folder of Markdown files to use as a workspace.",
+        "action": "Open"
+      }
+    }
+  }
 }

@@ -32,9 +32,10 @@ interface CreateWorkspaceFormProps {
 export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
   onSuccess,
   onClickCancel,
-  cancelButtonLabel = 'cancel',
+  cancelButtonLabel,
 }) => {
-  const { t } = useTranslation();
+  const { t: tRoot } = useTranslation();
+  const { t } = useTranslation('workspaces.actions.create.form');
   const [selectedDir, setSelectedDir] = useState('');
   const [workspaceName, setWorkspaceName] = useState('');
   const [workspaceNameError, setWorkspaceNameError] = useState(false);
@@ -74,7 +75,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
 
       // Location is required
       if (!selectedDir) {
-        setWorkspaceLocationError('workspaceLocationMissingError');
+        setWorkspaceLocationError('location.error.missing');
         return;
       }
 
@@ -88,7 +89,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
         }
       } catch (error) {
         if (error instanceof PathConflictError) {
-          setWorkspaceLocationError('workspaceLocationConflictError');
+          setWorkspaceLocationError('location.error.conflict');
         } else {
           setUnknownError((error as Error).message);
         }
@@ -103,36 +104,36 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
     <form className="create-workspace-form" onSubmit={handleSubmit}>
       {unkownError && <HelperText error>{unkownError}</HelperText>}
       <div className="field">
-        <FieldLabel htmlFor="workspace-name" label="workspaceName" />
-        <HelperText text="workspaceNameHelperText" />
+        <FieldLabel htmlFor="workspace-name" label={t('name.label')} />
+        <HelperText text={t('name.helperText')} />
         {workspaceNameError && (
-          <HelperText error text="workspaceNameMissingError" />
+          <HelperText error text={t('name.error.missing')} />
         )}
         <TextInput
           autoFocus
           id="workspace-name"
           name="workspace-name"
-          placeholder="workspaceNamePlaceholder"
+          placeholder={t('name.placeholder')}
           onChange={(event) => setWorkspaceName(event.currentTarget.value)}
         />
       </div>
       <div className="field">
-        <FieldLabel label="workspaceLocation" />
+        <FieldLabel label={t('location.label')} />
         {selectedDir ? (
           <HelperText>
-            {t('workspaceLocationSelectedHelperText')}{' '}
+            {t('location.selectedHelperText')}{' '}
             <span className="location">{selectedDir}</span>
           </HelperText>
         ) : (
-          <HelperText text="workspaceLocationHelperText" />
+          <HelperText text={t('location.helperText')} />
         )}
         {workspaceLocationError && (
-          <HelperText error text={workspaceLocationError} />
+          <HelperText error text={t(workspaceLocationError)} />
         )}
         <div>
           <Button
             variant="contained"
-            label="browse"
+            label={t('location.browse')}
             onClick={openDirSelection}
           />
         </div>
@@ -140,10 +141,10 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
       <div className="actions">
         <Button
           variant="text"
-          label={cancelButtonLabel}
+          label={cancelButtonLabel || tRoot('actions.cancel')}
           onClick={onClickCancel}
         />
-        <Button variant="primary" label="create" type="submit" />
+        <Button variant="primary" label={t('submit')} type="submit" />
       </div>
     </form>
   );

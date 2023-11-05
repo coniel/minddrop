@@ -5,7 +5,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { selectFolderAsWorkspace } from '../../selectFolderAsWorkspace';
 
 export const OpenWorkspaceCard: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('workspaces.actions.open');
 
   const openDirSelection = useCallback(async () => {
     // Add workspace from folder selection
@@ -20,10 +20,14 @@ export const OpenWorkspaceCard: React.FC = () => {
   return (
     <ActionCard
       icon="folder"
-      title={t('openWorkspace')}
-      description={t('openWorkspaceDescription')}
+      title={t('label')}
+      description={t('description')}
       action={
-        <Button label="open" variant="contained" onClick={openDirSelection} />
+        <Button
+          label={t('action')}
+          variant="contained"
+          onClick={openDirSelection}
+        />
       }
     />
   );
