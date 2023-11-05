@@ -59,6 +59,29 @@ export interface WorkspacesApi {
   remove(path: string): void;
 
   /**
+   * Deletes a workspace dir and removes the workspace
+   * from the store.
+   *
+   * Dispatches a 'workspaces:workspace:remove' event.
+   *
+   * @param path - The path of the workspace to remove.
+   */
+  delete(path: string): Promise<void>;
+
+  /**
+   * Moves a workspace folder to a new location and updates
+   * the workspaces config file. Dispatches a
+   * 'workspaces:workspace:move' event.
+   *
+   * @param path - The current workspace path.
+   * @param destinationPath - The path to which to move the workspace dir.
+   *
+   * @throws {InvalidPathError} - Destination or workspace path does not exist.
+   * @throws {PathConflictError} - A dir of the same name already exists in the destination dir.
+   */
+  move(path: string, destinationPath: string): Promise<void>;
+
+  /**
    * Fetches the user's workspaces config from the config file.
    *
    * @returns The user's workspaces config.

@@ -749,6 +749,9 @@ importers:
       '@minddrop/topics':
         specifier: workspace:*
         version: link:../topics
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@minddrop/test-utils':
         specifier: workspace:*
