@@ -8,7 +8,6 @@ import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
   const view = useCurrentView();
-  console.log('rendered DesktopApp');
 
   if (!view) {
     return null;

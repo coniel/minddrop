@@ -31,7 +31,6 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   onRunTheme();
 
   return () => {
-    console.log('called actual cleanup');
     // Remove config files watcher
     cancelConfigsWatcher();
 
