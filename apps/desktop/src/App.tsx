@@ -1,5 +1,6 @@
 import { fs } from '@tauri-apps/api';
 import { appConfigDir, appDataDir, documentDir } from '@tauri-apps/api/path';
+import { invoke } from '@tauri-apps/api/tauri';
 import {
   FsFileOptions,
   FsDirOptions,
@@ -89,6 +90,16 @@ registerFileSystemAdapter({
     const opts = options ? convertFsOptions(options) : undefined;
 
     return fs.removeFile(path, opts);
+  },
+  trashDir: async (path, opts) => {
+    invoke('move_to_trash', { path }).catch((reason) => {
+      throw new Error(reason);
+    });
+  },
+  trashFile: async (path, opts) => {
+    invoke('move_to_trash', { path }).catch((reason) => {
+      throw new Error(reason);
+    });
   },
   renameFile: async (oldPath, newPath, options) => {
     const opts = options ? convertFsOptions(options) : undefined;
