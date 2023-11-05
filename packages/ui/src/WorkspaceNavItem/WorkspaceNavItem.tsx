@@ -107,16 +107,16 @@ export const WorkspaceNavItem = React.forwardRef<
           )}
           {...other}
         >
-          <CollapsibleTrigger>
-            <div
-              role="button"
-              aria-current={active ? 'true' : 'false'}
-              className={mapPropsToClasses({ className }, 'nav-item')}
-              {...other}
-            >
-              {icon && <div className="icon">{icon}</div>}
+          <div
+            className={mapPropsToClasses({ className }, 'nav-item')}
+            {...other}
+          >
+            {icon && <div className="icon">{icon}</div>}
+            <CollapsibleTrigger>
               <Text
                 as="div"
+                role="button"
+                aria-current={active ? 'true' : 'false'}
                 color="light"
                 weight="medium"
                 className="label"
@@ -124,9 +124,9 @@ export const WorkspaceNavItem = React.forwardRef<
               >
                 {label}
               </Text>
-              <div className="actions">{actions}</div>
-            </div>
-          </CollapsibleTrigger>
+            </CollapsibleTrigger>
+            <div className="actions">{actions}</div>
+          </div>
           <CollapsibleContent asChild>
             <div className="children">{children}</div>
           </CollapsibleContent>
