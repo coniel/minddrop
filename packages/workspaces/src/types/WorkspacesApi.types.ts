@@ -82,6 +82,19 @@ export interface WorkspacesApi {
   move(path: string, destinationPath: string): Promise<void>;
 
   /**
+   * Renames a workspace and its directory.
+   * Dispatches a 'workspaces:workspace:rename' event.
+   *
+   * @param path - The workspace path.
+   * @param name - The new workspace name.
+   * @returns The updated workspace.
+   *
+   * @throws {InvalidPathError} - the workspace path does not exist.
+   * @throws {PathConflictError} - the new name conflicts with an existing dir.
+   */
+  rename(path: string, name: string): Promise<Workspace>;
+
+  /**
    * Fetches the user's workspaces config from the config file.
    *
    * @returns The user's workspaces config.
