@@ -1,5 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Popover.css';
 
@@ -12,25 +12,26 @@ export type PopoverContentProps = PopoverPrimitive.PopoverContentProps;
 export const Popover = PopoverPrimitive.Root;
 export const PopoverAnchor = PopoverPrimitive.Anchor;
 export const PopoverClose = PopoverPrimitive.Close;
+export const PopoverPortal = PopoverPrimitive.Portal;
 
-export const PopoverTrigger: FC<PopoverTriggerProps> = ({
-  children,
-  ...other
-}) => (
-  <PopoverPrimitive.Trigger asChild {...other}>
+export const PopoverTrigger = React.forwardRef<
+  HTMLButtonElement,
+  PopoverTriggerProps
+>(({ children, ...other }, ref) => (
+  <PopoverPrimitive.Trigger asChild ref={ref} {...other}>
     {children}
   </PopoverPrimitive.Trigger>
-);
+));
 
-export const PopoverContent: FC<PopoverContentProps> = ({
-  children,
-  className,
-  asChild,
-  ...other
-}) => (
-  <PopoverPrimitive.Content asChild {...other}>
+export const PopoverContent = React.forwardRef<
+  HTMLDivElement,
+  PopoverContentProps
+>(({ children, className, asChild, ...other }, ref) => (
+  <PopoverPrimitive.Content asChild ref={ref} {...other}>
     <div className={mapPropsToClasses({ className }, 'popover')}>
       {children}
     </div>
   </PopoverPrimitive.Content>
-);
+));
+
+PopoverContent.displayName = 'PopoverContent';
