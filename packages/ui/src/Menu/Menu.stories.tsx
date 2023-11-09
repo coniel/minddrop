@@ -17,15 +17,15 @@ export const Default: React.FC = () => (
     <Menu>
       <MenuItem
         label="Add title"
-        icon="title"
+        icon="text"
         keyboardShortcut={['Ctrl', 'T']}
       />
       <MenuItem
         label="Add note"
-        icon="note"
+        icon="edit-2"
         keyboardShortcut={['Ctrl', 'Shift', 'N']}
       />
-      <MenuItem hasSubmenu label="Turn into" icon="turn-into" />
+      <MenuItem hasSubmenu label="Turn into" icon="refresh" />
       <MenuSeparator />
       <MenuLabel>Actions</MenuLabel>
       <MenuItem
@@ -35,12 +35,12 @@ export const Default: React.FC = () => (
       />
       <MenuItem
         label="Move to"
-        icon="arrow-up-right"
+        icon="diagonal-arrow-right-up"
         keyboardShortcut={['Ctrl', 'Shift', 'M']}
       />
       <MenuItem
         label="Add to"
-        icon="inside"
+        icon="corner-down-right"
         keyboardShortcut={['Ctrl', 'Shift', 'A']}
       />
     </Menu>

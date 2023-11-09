@@ -25,14 +25,14 @@ export const Default: React.FC = () => (
         {
           type: 'menu-item',
           label: 'Add title',
-          icon: 'title',
+          icon: 'text',
           onSelect: () => console.log('Add title'),
           keyboardShortcut: ['Ctrl', 'T'],
         },
         {
           type: 'menu-item',
           label: 'Add note',
-          icon: 'note',
+          icon: 'edit-2',
           onSelect: () => console.log('Add note'),
           keyboardShortcut: ['Ctrl', 'Shift', 'N'],
         },
@@ -50,7 +50,7 @@ export const Default: React.FC = () => (
         {
           type: 'menu-item',
           label: 'Turn into',
-          icon: 'turn-into',
+          icon: 'refresh',
           submenu: [
             {
               type: 'menu-item',
@@ -86,7 +86,7 @@ export const Default: React.FC = () => (
         {
           type: 'menu-item',
           label: 'Move to',
-          icon: 'arrow-up-right',
+          icon: 'diagonal-arrow-right-up',
           onSelect: () => console.log('Move to'),
           submenuContentClass: 'topic-selection-submenu',
           submenu: [
@@ -169,7 +169,7 @@ export const Default: React.FC = () => (
         {
           type: 'menu-item',
           label: 'Add to',
-          icon: 'inside',
+          icon: 'corner-down-right',
           onSelect: () => console.log('Add to'),
           submenuContentClass: 'topic-selection-submenu',
           submenu: [

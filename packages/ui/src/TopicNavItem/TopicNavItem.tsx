@@ -78,10 +78,6 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
     ref,
   ) => {
     const { t } = useTranslation();
-    const childCount = useMemo(
-      () => React.Children.toArray(children).length,
-      [children],
-    );
     const title = label || t('untitled');
 
     return (
@@ -114,19 +110,11 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
                 className="toggle-button"
                 aria-label={t('expandSubtopics') as string}
               >
-                {childCount ? (
-                  <Icon
-                    name="toggle-filled"
-                    color="light"
-                    className="toggle-icon has-subtopics"
-                  />
-                ) : (
-                  <Icon
-                    name="toggle-empty"
-                    color="light"
-                    className="toggle-icon no-subtopics"
-                  />
-                )}
+                <Icon
+                  name="chevron-right"
+                  color="light"
+                  className="toggle-icon has-subtopics"
+                />
               </div>
             </CollapsibleTrigger>
             <div

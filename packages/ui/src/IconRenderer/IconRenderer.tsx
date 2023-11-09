@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { IconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/icons';
 import { Icon, IconProps } from '../Icon';
 import './IconRenderer.css';
 
-export type IconProp = IconName | React.ReactElement;
+export type IconProp = UiIconName | React.ReactElement;
 
 interface IconRendererProps extends Omit<IconProps, 'name'> {
   /**

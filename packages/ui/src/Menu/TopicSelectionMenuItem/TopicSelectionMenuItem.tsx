@@ -141,19 +141,11 @@ export const TopicSelectionMenuItem = React.forwardRef<
               aria-label={t('expandSubtopics') as string}
               onClick={handleClickExpand}
             >
-              {childCount ? (
-                <Icon
-                  name="toggle-filled"
-                  color="light"
-                  className="toggle-icon has-subtopics"
-                />
-              ) : (
-                <Icon
-                  name="toggle-empty"
-                  color="light"
-                  className="toggle-icon no-subtopics"
-                />
-              )}
+              <Icon
+                name="chevron-right"
+                color="light"
+                className="toggle-icon no-subtopics"
+              />
             </div>
             <div role="button" tabIndex={0} className="label-button">
               <Text as="div" className="label" size="regular">

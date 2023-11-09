@@ -1,0 +1,25 @@
+/* Color */
+
+.content-icon.color-current-color {
+  stroke: currentColor;
+}
+
+.content-icon.color-regular {
+  stroke: var(--textNeutral);
+}
+
+.content-icon.color-white {
+  stroke: var(--textWhite);
+}
+
+.content-icon.color-light {
+  stroke: var(--textNeutralLight);
+}
+
+.content-icon.color-contrast {
+  stroke: var(--textContrast);
+}
+
+.content-icon.color-contrast-light {
+  stroke: var(--textContrastLight);
+}

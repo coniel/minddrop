@@ -23,7 +23,7 @@ export const Default = () => {
     >
       <PrimaryNavItem
         label="Daily drops"
-        icon="drop"
+        icon="droplet"
         active={active === 'daily-drops'}
         onClick={() => setActive('daily-drops')}
       />

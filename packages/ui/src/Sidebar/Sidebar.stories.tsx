@@ -29,7 +29,7 @@ export const Default: React.FC = () => {
         <NavGroup label="Main">
           <PrimaryNavItem
             label="Daily drops"
-            icon="drop"
+            icon="droplet"
             active={active === 'daily-drops'}
             onClick={() => setActive('daily-drops')}
           />
@@ -78,7 +78,7 @@ export const Default: React.FC = () => {
               onClick={() => setActive('anchoring')}
             />
           </TopicNavItem>
-          <SecondaryNavItem label="Add topic" icon="add" />
+          <SecondaryNavItem label="Add topic" icon="plus" />
         </NavGroup>
         <NavGroup label="Utilities">
           <SecondaryNavItem
@@ -104,7 +104,7 @@ export const Default: React.FC = () => {
         <Toolbar style={{ padding: '8px 16px' }}>
           <IconButton icon="cloud-upload" label="Sync" color="light" />
           <IconButton icon="settings" label="Settings" color="light" />
-          <IconButton icon="duplicate" label="New window" color="light" />
+          <IconButton icon="copy" label="New window" color="light" />
         </Toolbar>
       </Sidebar>
     </div>

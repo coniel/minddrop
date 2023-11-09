@@ -20,7 +20,7 @@ export const Default: React.FC = () => (
     >
       <ToolbarIconButton icon="cloud-upload" label="Sync" />
       <ToolbarIconButton icon="settings" label="Settings" />
-      <ToolbarIconButton icon="duplicate" label="New window" />
+      <ToolbarIconButton icon="copy" label="New window" />
     </Toolbar>
   </div>
 );
