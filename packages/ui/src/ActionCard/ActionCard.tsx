@@ -1,15 +1,15 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import './ActionCard.css';
-import { IconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/icons';
 import { Icon } from '../Icon';
 import { Text } from '../Text';
+import './ActionCard.css';
 
 export interface ActionCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Icon displayed at the top of the card.
    */
-  icon: IconName;
+  icon: UiIconName;
 
   /**
    * The title.

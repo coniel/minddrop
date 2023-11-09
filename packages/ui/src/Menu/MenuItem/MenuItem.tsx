@@ -88,7 +88,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
         )}
         {hasSubmenu && (
           <Icon
-            name="submenu-indicator"
+            name="chevron-right"
             className="submenu-indicator"
             data-testid="submenu-indicator"
           />

@@ -24,7 +24,7 @@ describe('<MenuItem />', () => {
   });
 
   it('renders icon', () => {
-    render(<MenuItem label="Copy" icon="duplicate" />);
+    render(<MenuItem label="Copy" icon="copy" />);
 
     screen.getByTestId('icon');
   });

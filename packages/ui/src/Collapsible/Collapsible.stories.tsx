@@ -54,7 +54,7 @@ export const Default = () => {
           <NavItem>
             <span>
               <Icon
-                name="toggle-filled"
+                name="chevron-right"
                 style={{
                   transform: open ? 'rotate(90deg)' : 'none',
                 }}

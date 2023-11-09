@@ -1,6 +1,6 @@
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { IconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/icons';
 import { Icon } from '../Icon';
 import './IconButton.css';
 
@@ -9,7 +9,7 @@ export interface IconButtonProps
   /**
    * The name of the icon to render.
    */
-  icon?: IconName;
+  icon?: UiIconName;
 
   /**
    * Icon can also be passed in as a child for more control.

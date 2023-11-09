@@ -1,6 +1,7 @@
 export * from './types';
 export * from './constants';
 export * from './Button';
+export * from './ContentIcon';
 export * from './Text';
 export * from './IconButton';
 export * from './Toolbar';

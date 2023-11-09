@@ -41,9 +41,13 @@ export const ThemeAppearanceSelect: React.FC = () => {
           value={themeAppearanceSetting}
           onValueChange={handleChangeThemeAppearanceSetting}
         >
-          <DropdownMenuRadioItem value="system" label={t('system')} />
-          <DropdownMenuRadioItem value="light" label={t('light')} />
-          <DropdownMenuRadioItem value="dark" label={t('dark')} />
+          <DropdownMenuRadioItem
+            icon="toggle-right"
+            value="system"
+            label={t('system')}
+          />
+          <DropdownMenuRadioItem icon="sun" value="light" label={t('light')} />
+          <DropdownMenuRadioItem icon="moon" value="dark" label={t('dark')} />
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

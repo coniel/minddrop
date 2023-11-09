@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconsProvider, IconsConsumer, IconName } from '@minddrop/icons';
+import { IconsProvider, IconsConsumer, UiIconName } from '@minddrop/icons';
 import { Tooltip } from '../Tooltip';
 import { Icon } from './Icon';
 
@@ -11,7 +11,7 @@ export default {
 export const IconSet: React.FC = () => (
   <IconsProvider>
     <IconsConsumer>
-      {(icons) => (
+      {({ UiIcons }) => (
         <div
           style={{
             display: 'flex',
@@ -20,10 +20,11 @@ export const IconSet: React.FC = () => (
             rowGap: 16,
           }}
         >
-          {Object.keys(icons).map((name) => (
-            <Tooltip key={name} delayDuration={0} title={name}>
+          {Object.keys(UiIcons).map((name) => (
+            <Tooltip key={name} title={name}>
               <div
                 role="button"
+                onClick={() => navigator.clipboard.writeText(name)}
                 style={{
                   border: '1px solid var(--borderNeutralSubtle)',
                   borderRadius: 'var(--radiusSm)',
@@ -31,7 +32,7 @@ export const IconSet: React.FC = () => (
                   padding: 8,
                 }}
               >
-                <Icon name={name as IconName} color="light" />
+                <Icon name={name as UiIconName} color="light" />
               </div>
             </Tooltip>
           ))}
