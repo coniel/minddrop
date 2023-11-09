@@ -463,6 +463,15 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
 
+  packages/scripts:
+    devDependencies:
+      '@types/svg-parser':
+        specifier: ^2.0.6
+        version: 2.0.6
+      svg-parser:
+        specifier: ^2.0.4
+        version: 2.0.4
+
   packages/selection:
     dependencies:
       '@minddrop/core':
@@ -703,6 +712,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@leeoniya/ufuzzy':
+        specifier: ^1.0.11
+        version: 1.0.11
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
@@ -746,9 +758,6 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
-      '@minddrop/topics':
-        specifier: workspace:*
-        version: link:../topics
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2738,6 +2747,10 @@ packages:
 
   /@juggle/resize-observer@3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  /@leeoniya/ufuzzy@1.0.11:
+    resolution: {integrity: sha512-QWyEseqEK9t50h9baDmoPkTPSczWZH5TaZAXSBBWbSI6+AxHFd6ldZRmyvCKfyNvjceJ6MwqKCeizsVT+gyJPw==}
+    dev: false
 
   /@mdx-js/react@2.3.0(react@18.2.0):
     resolution: {integrity: sha512-zQH//gdOmuu7nt2oJR29vFhDv88oGPmVw6BggmrHeMI+xgEkp1B2dX9/bMBSYtK0dyLX/aOmesKS09g222K1/g==}
@@ -5121,6 +5134,10 @@ packages:
       '@types/http-errors': 2.0.2
       '@types/mime': 3.0.2
       '@types/node': 20.8.4
+    dev: true
+
+  /@types/svg-parser@2.0.6:
+    resolution: {integrity: sha512-xrXwOltwMcLrKy79rv4MoalnD82oYLyXAVeeSyrkvR7XdCH4i7YqLNQWxyZ8KPpawtQShiKOse+pmtLeSLtCfQ==}
     dev: true
 
   /@types/unist@2.0.8:
@@ -11053,6 +11070,10 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /svg-parser@2.0.4:
+    resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
+    dev: true
 
   /symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
