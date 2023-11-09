@@ -6,6 +6,7 @@ export * from './createContext';
 export * from './createDataInsertFromDataTransfer';
 export * from './doesNotContain';
 export * from './errors';
+export * from './fuzzySearch';
 export * from './getMissingItems';
 export * from './incrementalPath';
 export * from './isDomainMatch';
