@@ -1,25 +1,64 @@
+.content-icon {
+  border-radius: var(--radiusXs);
+  padding: 2px;
+}
+
 /* Color */
 
 .content-icon.color-current-color {
   stroke: currentColor;
 }
 
-.content-icon.color-regular {
-  stroke: var(--textNeutral);
+.content-icon.color-default {
+  color: var(--textNeutralLight);
 }
 
-.content-icon.color-white {
-  stroke: var(--textWhite);
+.content-icon.color-blue {
+  color: var(--blue9);
+  background-color: var(--blue3);
 }
 
-.content-icon.color-light {
-  stroke: var(--textNeutralLight);
+.content-icon.color-cyan {
+  color: var(--cyan9);
+  background-color: var(--cyan3);
 }
 
-.content-icon.color-contrast {
-  stroke: var(--textContrast);
+.content-icon.color-red {
+  color: var(--red9);
+  background-color: var(--red3);
 }
 
-.content-icon.color-contrast-light {
-  stroke: var(--textContrastLight);
+.content-icon.color-pink {
+  color: var(--pink9);
+  background-color: var(--pink3);
+}
+
+.content-icon.color-purple {
+  color: var(--purple9);
+  background-color: var(--purple3);
+}
+
+.content-icon.color-green {
+  color: var(--green9);
+  background-color: var(--green3);
+}
+
+.content-icon.color-orange {
+  color: var(--orange9);
+  background-color: var(--orange3);
+}
+
+.content-icon.color-yellow {
+  color: var(--yellow9);
+  background-color: var(--yellow3);
+}
+
+.content-icon.color-brown {
+  color: var(--brown9);
+  background-color: var(--brown3);
+}
+
+.content-icon.color-gray {
+  color: var(--gray9);
+  background-color: var(--gray3);
 }
