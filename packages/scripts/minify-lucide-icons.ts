@@ -17,6 +17,7 @@ type MinifiedIconMetadata = [string, number[], number[]];
  */
 
 const iconsSrc = 'lucide-icons';
+const categoriesSrc = 'categories';
 
 const svgOpen = `<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -37,9 +38,25 @@ const svgClose2 = `</svg>
 const files = fs.readdirSync(iconsSrc);
 const svgFiles = files.filter((file) => file.endsWith('.svg'));
 const jsonFiles = files.filter((file) => file.endsWith('.json'));
+const categoryFiles = fs.readdirSync(categoriesSrc);
 
 let iconsJsx = 'export const ContentIcons = {';
 let svgFilesSize = 0;
+
+const categoryNames = categoryFiles.reduce<Record<string, string>>(
+  (map, file) => {
+    const categoryKey = file.slice(0, -5);
+    const category = JSON.parse(
+      fs.readFileSync(`${categoriesSrc}/${file}`, { encoding: 'utf8' }),
+    ) as { title: string };
+
+    return {
+      ...map,
+      [categoryKey]: category.title,
+    };
+  },
+  {},
+);
 
 svgFiles.forEach((file) => {
   const iconPath = `${iconsSrc}/${file}`;
@@ -78,11 +95,13 @@ jsonFiles.forEach((file) => {
   ) as unknown as IconMetadata;
 
   meta.categories.forEach((category) => {
-    if (!categories.includes(category)) {
-      categories.push(category);
+    const categoryTitle = categoryNames[category] || category;
+
+    if (!categories.includes(categoryTitle)) {
+      categories.push(categoryTitle);
     }
 
-    iconCategoryIndexes.push(categories.indexOf(category));
+    iconCategoryIndexes.push(categories.indexOf(categoryTitle));
   });
 
   meta.tags.forEach((tag) => {
