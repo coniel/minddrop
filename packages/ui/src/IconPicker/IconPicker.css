@@ -1,0 +1,111 @@
+.icon-picker {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 424px;
+  border-radius: var(--radiusLg);
+  overflow: hidden;
+  padding-top: 6px;
+}
+
+.icon-picker .toolbar {
+  padding: 8px;
+  background-color: var(--paper);
+  align-items: center;
+}
+
+.icon-picker .text-input {
+  flex: 1;
+}
+
+.icon-picker .nav-group {
+  display: block;
+  padding-top: 16px;
+}
+
+.icon-picker .inline-results {
+  margin-top: 12px;
+}
+
+.icon-picker .nav-group .icon-button,
+.icon-picker .small-subset .icon-button {
+  margin: 1px;
+}
+
+.icon-picker .options {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.icon-picker .icon-selection-button {
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+}
+
+.color-select-popover {
+  padding: 2px;
+  z-index: 999;
+}
+
+.icon-picker .color-selection-button .preview {
+  width: 17px;
+  height: 17px;
+  border-radius: 9px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.icon-picker .color-selection-button .preview.color-default {
+  border-color: var(--borderNeutralSubtle);
+}
+
+.icon-picker .color-selection-button .preview.color-blue {
+  border-color: var(--blue7);
+  background-color: var(--blue6);
+}
+
+.icon-picker .color-selection-button .preview.color-cyan {
+  border-color: var(--cyan7);
+  background-color: var(--cyan6);
+}
+
+.icon-picker .color-selection-button .preview.color-red {
+  border-color: var(--red7);
+  background-color: var(--red6);
+}
+
+.icon-picker .color-selection-button .preview.color-pink {
+  border-color: var(--pink7);
+  background-color: var(--pink6);
+}
+
+.icon-picker .color-selection-button .preview.color-purple {
+  border-color: var(--purple7);
+  background-color: var(--purple6);
+}
+
+.icon-picker .color-selection-button .preview.color-green {
+  border-color: var(--green7);
+  background-color: var(--green6);
+}
+
+.icon-picker .color-selection-button .preview.color-orange {
+  border-color: var(--orange7);
+  background-color: var(--orange6);
+}
+
+.icon-picker .color-selection-button .preview.color-yellow {
+  border-color: var(--yellow7);
+  background-color: var(--yellow6);
+}
+
+.icon-picker .color-selection-button .preview.color-brown {
+  border-color: var(--brown7);
+  background-color: var(--brown6);
+}
+
+.icon-picker .color-selection-button .preview.color-gray {
+  border-color: var(--gray7);
+  background-color: var(--gray6);
+}
