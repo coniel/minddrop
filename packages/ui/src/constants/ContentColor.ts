@@ -14,47 +14,47 @@ export interface ColorValue {
 
 export const ContentColors: ColorValue[] = [
   {
-    labelKey: 'colorDefault',
+    labelKey: 'color.default',
     value: 'default',
   },
   {
-    labelKey: 'colorBlue',
+    labelKey: 'color.blue',
     value: 'blue',
   },
   {
-    labelKey: 'colorCyan',
+    labelKey: 'color.cyan',
     value: 'cyan',
   },
   {
-    labelKey: 'colorRed',
+    labelKey: 'color.red',
     value: 'red',
   },
   {
-    labelKey: 'colorPink',
+    labelKey: 'color.pink',
     value: 'pink',
   },
   {
-    labelKey: 'colorPurple',
+    labelKey: 'color.purple',
     value: 'purple',
   },
   {
-    labelKey: 'colorGreen',
+    labelKey: 'color.green',
     value: 'green',
   },
   {
-    labelKey: 'colorOrange',
+    labelKey: 'color.orange',
     value: 'orange',
   },
   {
-    labelKey: 'colorYellow',
+    labelKey: 'color.yellow',
     value: 'yellow',
   },
   {
-    labelKey: 'colorBrown',
+    labelKey: 'color.brown',
     value: 'brown',
   },
   {
-    labelKey: 'colorGray',
+    labelKey: 'color.gray',
     value: 'gray',
   },
 ];
