@@ -1,105 +1,167 @@
 import fs from 'fs';
 
 interface EmojiJsonItem {
-  emoji: string;
-  description: string;
-  category: string;
-  aliases: string[];
-  tags: string[];
-  skin_tones?: boolean;
+  char: string;
+  name: string;
+  group: string;
+  subgroup: string;
 }
 
-// [emoji, category index, labels, supportsSkinTones]
-type Emoji = [string, number, string[], boolean?];
+// [emoji char, name, group & subgroup indexes, skin tone variant chars]
+type Emoji = [string, string, [number, number], string[]?];
 
 /**
  * Used to minify JSON file containing emoji with associated metadata
  * into a version containing as little text as possible.
  *
- * Emoji JSON file located at:
- * https://github.com/github/gemoji/blob/master/db/emoji.json
+ * Emoji JSON taken from:
+ * https://github.com/amio/emoji.json#readme
  */
+
+// Exclude emoji which aren't yet fully supported
+const exclude = [
+  'head shaking',
+  'walking facing right',
+  'kneeling facing right',
+  'with white cane facing right',
+  'motorized wheelchair facing right',
+  'manual wheelchair facing right',
+  'running facing right',
+  'adult, child',
+  'lime',
+];
 
 const emojiJsonPath = 'emoji.json';
 
 const emojiJsonFile = fs.readFileSync(emojiJsonPath) as unknown as string;
 const emojiFileSize = fs.statSync(emojiJsonPath).size;
-const emojiJson = JSON.parse(emojiJsonFile) as EmojiJsonItem[];
+const rawEmojiJson = JSON.parse(emojiJsonFile) as EmojiJsonItem[];
+const emojiJson: EmojiJsonItem[] = [];
 
-const minifiedEmojiList: Emoji[] = [];
-const categories: string[] = [];
-
-emojiJson.forEach((emojiItem) => {
-  // Add category to the { [category]: char } map if not present
-  if (!categories.includes(emojiItem.category)) {
-    categories.push(emojiItem.category);
+rawEmojiJson.forEach((emojiItem) => {
+  // Many emoji have duplicates with the same name.
+  // Don't include duplicates.
+  if (emojiJson.find((existing) => existing.name === emojiItem.name)) {
+    return;
   }
 
-  // Combine description, aliases, and tags into a single
-  // 'labels' field.
-  let dirtyLabels = [
-    emojiItem.description,
-    ...emojiItem.aliases,
-    ...emojiItem.tags,
-  ]
-    .map((label) => label.toLowerCase())
-    .map((label) => label.split('_').join(' '))
-    .map((label) => label.split('-').join(' '));
+  emojiJson.push(emojiItem);
+});
 
-  // Convert to set to remove duplicates
-  const uniqueLabels = new Set(dirtyLabels);
+const minifiedEmojiList: Emoji[] = [];
+const groups: string[] = [];
+const subgroups: string[] = [];
 
-  // Some emoji have a description like "right facing fist" and
-  // an alias of "right fist", or "arrow up" and "up arrow".
-  // We don't need both (reduces file size by ~10%).
-  const withoutSimilarAliases: string[][] = [];
+const skinToneComponents = [
+  ' light skin tone',
+  ' medium-light skin tone',
+  ' medium skin tone',
+  ' medium-dark skin tone',
+  ' dark skin tone',
+];
 
-  Array.from(uniqueLabels).forEach((label) => {
-    let hasMatchingDescription = false;
-    const parts = label.split(' ');
+function isSupported(emojiItem: EmojiJsonItem) {
+  return !exclude.some((nameSegment) => emojiItem.name.includes(nameSegment));
+}
 
-    withoutSimilarAliases.forEach((otherParts) => {
-      if (parts.every((part) => otherParts.includes(part))) {
-        hasMatchingDescription = true;
+function containsSkinTone(name: string) {
+  return name.includes('skin tone');
+}
+
+function containsSingleSkinTone(emojiItem: EmojiJsonItem) {
+  return emojiItem.name.split(',').filter(containsSkinTone).length === 1;
+}
+
+function isNotComponent(emojiItem: EmojiJsonItem) {
+  return emojiItem.group !== 'Component';
+}
+
+const skinToneMap: Record<string, Record<number, string>> = {};
+
+emojiJson
+  .filter(containsSingleSkinTone)
+  .filter(isSupported)
+  .filter(isNotComponent)
+  .forEach((emojiItem) => {
+    let skinTone = 0;
+
+    skinToneComponents.forEach((skinToneExtension, index) => {
+      if (emojiItem.name.includes(skinToneExtension)) {
+        skinTone = index + 1;
       }
     });
 
-    if (!hasMatchingDescription) {
-      withoutSimilarAliases.push(parts);
+    if (!skinTone) {
+      return;
     }
+
+    const nameParts = emojiItem.name.split(':');
+    const nameBase = nameParts[0];
+    const nameComponents = (nameParts[1] || '')
+      .split(', ')
+      .filter((component) => !component.includes('skin tone'))
+      .join(', ');
+    const emojiName = nameComponents
+      ? `${nameBase}: ${nameComponents.trimStart()}`
+      : nameBase;
+
+    if (!skinToneMap[emojiName]) {
+      skinToneMap[emojiName] = {};
+    }
+
+    skinToneMap[emojiName][skinTone] = emojiItem.char;
   });
 
-  // Join the broken up labels back into strings
-  const labels = withoutSimilarAliases
-    .map((parts) => parts.join(' '))
-    // Remove 'flag: ' prefix from flag emoji labels
-    .map((label) => (label.startsWith('flag: ') ? label.slice(6) : label));
+emojiJson
+  .filter((emojiItem) => !containsSingleSkinTone(emojiItem))
+  .filter(isSupported)
+  .filter(isNotComponent)
+  .forEach((emojiItem) => {
+    // Add group to the group list if not present
+    if (!groups.includes(emojiItem.group)) {
+      groups.push(emojiItem.group);
+    }
 
-  const emoji: Emoji = [
-    emojiItem.emoji,
-    categories.indexOf(emojiItem.category),
-    labels,
-  ];
+    // Add subgroup to the subgroup list if not present
+    if (!subgroups.includes(emojiItem.subgroup)) {
+      subgroups.push(emojiItem.subgroup);
+    }
 
-  if (emojiItem.skin_tones) {
-    emoji.push(true);
-  }
+    let emojiName = emojiItem.name;
 
-  minifiedEmojiList.push(emoji);
-});
+    const emoji: Emoji = [
+      emojiItem.char,
+      emojiName,
+      [groups.indexOf(emojiItem.group), subgroups.indexOf(emojiItem.subgroup)],
+    ];
+
+    if (skinToneMap[emojiItem.name]) {
+      const skinToneVariants = Object.keys(skinToneMap[emojiItem.name])
+        .sort()
+        .map(
+          (skinTone) =>
+            skinToneMap[emojiItem.name][skinTone as unknown as number],
+        );
+      emoji.push(skinToneVariants);
+    }
+
+    minifiedEmojiList.push(emoji);
+  });
 
 const minified = {
-  categories,
+  groups,
+  subgroups,
   emoji: minifiedEmojiList,
 };
 
 // Write the minified file
+const outputPath = '../ui/src/EmojiPicker/emoji.min.json';
 const stringified = JSON.stringify(minified);
 
-fs.writeFileSync('emoji.min.json', stringified);
+fs.writeFileSync(outputPath, stringified);
 
 // Let's see how much we saved
-const minifiedFileSize = fs.statSync('emoji.min.json').size;
+const minifiedFileSize = fs.statSync(outputPath).size;
 
 console.log(`original: ${Math.round(emojiFileSize / 1024)} KB`);
 console.log(`minified: ${Math.round(minifiedFileSize / 1024)} KB`);
