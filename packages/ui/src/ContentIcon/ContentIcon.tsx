@@ -1,5 +1,5 @@
 import { mapPropsToClasses } from '@minddrop/utils';
-import { TextColor } from '../types';
+import { ContentColor } from '../types';
 import { ContentIconName, useIcons } from '@minddrop/icons';
 import './ContentIcon.css';
 
@@ -8,7 +8,7 @@ export interface ContentIconProps extends React.HTMLProps<SVGSVGElement> {
    * The color of the icon, matching Text colors.
    * `current-color` will use the color of the surrounding text.
    */
-  color?: TextColor | 'current-color';
+  color?: ContentColor | 'current-color';
 
   /**
    * The name of the content icon to display.
