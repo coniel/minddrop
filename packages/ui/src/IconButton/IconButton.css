@@ -54,12 +54,12 @@
 /* Sizes */
 
 .icon-button.size-small {
-  padding: 3px;
+  padding: 2px;
 }
 
 .icon-button.size-small .icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 /* Disabled */

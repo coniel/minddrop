@@ -5,7 +5,8 @@
   },
   "actions": {
     "back": "Back",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "clear": "Clear"
   },
   "color": {
     "default": "Default",
@@ -29,13 +30,35 @@
       "dark": "Dark"
     }
   },
+  "emojiPicker": {
+    "random": "Random",
+    "filter": "Filter...",
+    "skinTone": {
+      "action": "Select skin tone",
+      "none": "None",
+      "dark": "Dark skin tone",
+      "mediumDark": "Medium dark skin tone",
+      "medium": "Medium skin tone",
+      "mediumLight": "Medium light skin tone",
+      "light": "Light skin tone"
+    }
+  },
+  "iconPicker": {
+    "filter": "Filter...",
+    "random": "Random",
+    "selectColor": "Select icon color"
+  },
   "workspaces": {
     "label": "Workspaces",
     "definition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
     "actions": {
       "add": "Add a workspace",
-      "rename": "Rename",
       "changeIcon": "Change icon",
+      "revealInFileExplorer": {
+        "macos": "Reveal in Finder",
+        "windows": "Show in File Explorer",
+        "linux": "Show in File Explorer"
+      },
       "move": {
         "label": "Move folder",
         "tooltip": {
@@ -92,6 +115,17 @@
         "label": "Open workspace",
         "description": "Open an existing folder of Markdown files to use as a workspace.",
         "action": "Open"
+      },
+      "rename": {
+        "action": "Rename",
+        "form": {
+          "name": {
+            "placeholder": "Workspace name",
+            "error": {
+              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
+            }
+          }
+        }
       }
     }
   }

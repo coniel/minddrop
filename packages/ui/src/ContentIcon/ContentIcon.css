@@ -14,51 +14,51 @@
 }
 
 .content-icon.color-blue {
-  color: var(--blue9);
+  color: var(--blue10);
   background-color: var(--blue3);
 }
 
 .content-icon.color-cyan {
-  color: var(--cyan9);
+  color: var(--cyan10);
   background-color: var(--cyan3);
 }
 
 .content-icon.color-red {
-  color: var(--red9);
+  color: var(--red10);
   background-color: var(--red3);
 }
 
 .content-icon.color-pink {
-  color: var(--pink9);
+  color: var(--pink10);
   background-color: var(--pink3);
 }
 
 .content-icon.color-purple {
-  color: var(--purple9);
+  color: var(--purple10);
   background-color: var(--purple3);
 }
 
 .content-icon.color-green {
-  color: var(--green9);
+  color: var(--green10);
   background-color: var(--green3);
 }
 
 .content-icon.color-orange {
-  color: var(--orange9);
+  color: var(--orange10);
   background-color: var(--orange3);
 }
 
 .content-icon.color-yellow {
-  color: var(--yellow9);
+  color: var(--yellow10);
   background-color: var(--yellow3);
 }
 
 .content-icon.color-brown {
-  color: var(--brown9);
+  color: var(--brown10);
   background-color: var(--brown3);
 }
 
 .content-icon.color-gray {
-  color: var(--gray9);
+  color: var(--gray10);
   background-color: var(--gray3);
 }

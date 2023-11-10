@@ -34,3 +34,5 @@ export * from './MindDropLogo';
 export * from './TextInput';
 export * from './FieldLabel';
 export * from './HelperText';
+export * from './EmojiPicker';
+export * from './IconPicker';
