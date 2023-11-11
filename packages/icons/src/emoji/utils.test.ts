@@ -6,7 +6,7 @@ import {
   searchEmoji,
   unminifyEmoji,
 } from './utils';
-import { Emoji, MinifiedEmoji, SkinTone } from './EmojiPicker.types';
+import { EmojiItem, MinifiedEmoji, EmojiSkinTone } from './Emoji.types';
 
 const groups = ['group 0', 'group 1', 'group 2'];
 const subgroups = ['subgroup 0', 'subgroup 1', 'subgroup 2', 'subgroup 3'];
@@ -18,7 +18,7 @@ const minifiedEmojiSkinTone: MinifiedEmoji = [
   ['🖖🏻', '🖖🏼', '🖖🏽', '🖖🏾', '🖖🏿'],
 ];
 
-const emoji: Emoji = {
+const emoji: EmojiItem = {
   char: minifiedEmoji[0],
   name: minifiedEmoji[1],
   group: groups[minifiedEmoji[2][0]],
@@ -29,7 +29,7 @@ const emoji: Emoji = {
   ],
 };
 
-const emojiSkinTone: Emoji = {
+const emojiSkinTone: EmojiItem = {
   char: minifiedEmojiSkinTone[0],
   name: minifiedEmojiSkinTone[1],
   group: groups[minifiedEmojiSkinTone[2][0]],
@@ -75,7 +75,7 @@ describe('<EmojiPicker /> utils', () => {
 
     it('returns emoji char if skin tone map does not contain requested tone', () => {
       expect(
-        getSkinToneVariant({ ...emojiSkinTone, char: 'A' }, 6 as SkinTone),
+        getSkinToneVariant({ ...emojiSkinTone, char: 'A' }, 6 as EmojiSkinTone),
       ).toBe('A');
     });
 
