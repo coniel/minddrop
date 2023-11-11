@@ -19,6 +19,11 @@ export interface WorkspacesStore {
   add(workspace: Workspace, index?: number): void;
 
   /**
+   * Updates a workspace in the store by path.
+   */
+  update(path: string, data: Partial<Workspace>): void;
+
+  /**
    * Remove a workspace from the store by path.
    */
   remove(path: string): void;
@@ -47,6 +52,22 @@ export const WorkspacesStore = create<WorkspacesStore>()((set) => ({
               ]
             : [...state.workspaces, workspace],
       };
+    }),
+
+  update: (path, data) =>
+    set((state) => {
+      const index = state.workspaces.findIndex(
+        (workspace) => workspace.path === path,
+      );
+      const workspaces = [...state.workspaces];
+
+      if (index === -1) {
+        return {};
+      }
+
+      workspaces[index] = { ...workspaces[index], ...data };
+
+      return { workspaces };
     }),
 
   remove: (path) =>

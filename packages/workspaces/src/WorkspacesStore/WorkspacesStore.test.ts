@@ -1,5 +1,7 @@
 import { describe, afterEach, it, expect, beforeEach } from 'vitest';
 import { workspace1, missingWorkspace, workspaces } from '../test-utils';
+import { Workspace } from '../types';
+import { Workspaces } from '../Workspaces';
 import { WorkspacesStore } from './WorkspacesStore';
 
 function loadWorkspaces() {
@@ -53,6 +55,38 @@ describe('WorkspacesStore', () => {
         missingWorkspace,
         workspace1,
       ]);
+    });
+  });
+
+  describe('update', () => {
+    beforeEach(() => {
+      // Load workspaces into the store
+      loadWorkspaces();
+    });
+
+    it('updates the specified workspace in the store', () => {
+      // Update a workspace
+      WorkspacesStore.getState().update(workspace1.path, { name: 'New name' });
+
+      // Get the workspace from the store
+      const workspace = WorkspacesStore.getState().workspaces.find(
+        ({ path }) => path === workspace1.path,
+      ) as Workspace;
+
+      // Workspace name should be updated
+      expect(workspace).toEqual({ ...workspace1, name: 'New name' });
+    });
+
+    it('does nothing if the worksapce does not exist', () => {
+      const initialState = [...WorkspacesStore.getState().workspaces];
+
+      // Update a missing workspace
+      WorkspacesStore.getState().update('foo', {
+        name: 'New name',
+      });
+
+      // Workspaces state should remain unchanged
+      expect(WorkspacesStore.getState().workspaces).toEqual(initialState);
     });
   });
 
