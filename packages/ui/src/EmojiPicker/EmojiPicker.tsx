@@ -16,12 +16,7 @@ export interface EmojiPickerProps
   /**
    * Calback fired when an emoji is selected.
    */
-  onSelect?(emoji: string): void;
-
-  /**
-   * Callback fired when the clear button is clicked.
-   */
-  onClear?(): void;
+  onSelect?(emoji: string, skinTone: EmojiSkinTone): void;
 
   /**
    * Callback fired when a skin tone is selected.
@@ -48,7 +43,6 @@ const EMOJI_SELECTION_BUTTONS_PER_ROW = 12;
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({
   onSelect,
-  onClear,
   onSelectSkinTone,
   defaultSkinTone = 0,
   recent,
@@ -66,6 +60,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     const results = Emoji.search(query);
 
     setResults(results);
+    setResultsByGroup(Emoji.group(results));
   }, [query]);
 
   const handleSelect = useCallback(
@@ -74,7 +69,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         return;
       }
 
-      onSelect(Emoji.getSkinToneVariant(value, skinTone));
+      onSelect(Emoji.getSkinToneVariant(value, skinTone), skinTone);
     },
     [onSelect, skinTone],
   );
