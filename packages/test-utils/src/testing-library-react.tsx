@@ -6,7 +6,7 @@ import {
   RenderOptions,
   RenderHookOptions,
 } from '@testing-library/react';
-import { initializeI18n } from '@minddrop/i18n';
+import { i18n, initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
 import userEvent from '@testing-library/user-event';
@@ -43,10 +43,65 @@ const WithProviders: FC<{ children: React.ReactNode }> = ({ children }) => (
   </IconsProvider>
 );
 
-const customRender = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>,
-) => render(ui, { wrapper: WithProviders, ...options });
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+  translationKeyPrefix?: string;
+}
+
+const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
+  const {
+    getByText,
+    getByAltText,
+    getByLabelText,
+    getByPlaceholderText,
+    getAllByText,
+    getAllByAltText,
+    getAllByLabelText,
+    getAllByPlaceholderText,
+    ...other
+  } = render(ui, {
+    wrapper: WithProviders,
+    ...options,
+  });
+
+  const translate = (key: string) =>
+    options?.translationKeyPrefix
+      ? i18n.t(`${options.translationKeyPrefix}.${key}`)
+      : i18n.t(key);
+
+  const getByTranslatedText = (key: string) => getByText(translate(key));
+  const getByTranslatedAltText = (key: string) => getByAltText(translate(key));
+  const getByTranslatedLabelText = (key: string) =>
+    getByLabelText(translate(key));
+  const getByTranslatedPlaceholderText = (key: string) =>
+    getByPlaceholderText(translate(key));
+  const getAllByTranslatedText = (key: string) => getAllByText(translate(key));
+  const getAllByTranslatedAltText = (key: string) =>
+    getAllByAltText(translate(key));
+  const getAllByTranslatedLabelText = (key: string) =>
+    getAllByLabelText(translate(key));
+  const getAllByTranslatedPlaceholderText = (key: string) =>
+    getAllByPlaceholderText(translate(key));
+
+  return {
+    getByText,
+    getByAltText,
+    getByLabelText,
+    getByPlaceholderText,
+    getAllByText,
+    getAllByAltText,
+    getAllByLabelText,
+    getAllByPlaceholderText,
+    getByTranslatedText,
+    getByTranslatedAltText,
+    getByTranslatedLabelText,
+    getByTranslatedPlaceholderText,
+    getAllByTranslatedText,
+    getAllByTranslatedAltText,
+    getAllByTranslatedLabelText,
+    getAllByTranslatedPlaceholderText,
+    ...other,
+  };
+};
 
 const customRenderHook = <TProps, TResult>(
   hook: (props: TProps) => TResult,
