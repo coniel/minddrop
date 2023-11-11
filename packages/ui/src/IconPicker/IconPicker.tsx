@@ -241,7 +241,7 @@ const ColorSelectButton: React.FC<{
       className="color-selection-button"
       onClick={handleSelect}
     >
-      <span className={mapPropsToClasses({ color }, 'preview')} />
+      <ContentIcon name="palette" color={color} />
     </IconButton>
   );
 };
@@ -249,7 +249,7 @@ const ColorSelectButton: React.FC<{
 const IconColorSelect: React.FC<{
   selectedColor: ContentColor;
   onSelect: (value: ContentColor) => void;
-}> = ({ onSelect }) => {
+}> = ({ onSelect, selectedColor }) => {
   const { t } = useTranslation('iconPicker');
   const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
 
@@ -267,11 +267,12 @@ const IconColorSelect: React.FC<{
         <div>
           <Tooltip title={t('selectColor')}>
             <IconButton
-              icon="color-palette"
-              color="light"
+              className="color-select-button"
               label={t('selectedColor')}
               onClick={togglePopover}
-            />
+            >
+              <ContentIcon name="palette" color={selectedColor} />
+            </IconButton>
           </Tooltip>
         </div>
       </PopoverTrigger>
