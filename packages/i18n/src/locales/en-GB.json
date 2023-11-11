@@ -60,21 +60,21 @@
         "linux": "Show in File Explorer"
       },
       "move": {
-        "label": "Move folder",
+        "action": "Move folder",
         "tooltip": {
           "title": "Move workspace folder",
           "description": "Move the workspace folder to a different location on your computer."
         }
       },
       "remove": {
-        "label": "Remove",
+        "action": "Remove",
         "tooltip": {
           "title": "Remove from workspaces",
           "description": "Remove from your workspaces but preserve the folder on your computer."
         }
       },
       "delete": {
-        "label": "Delete",
+        "action": "Delete",
         "tooltip": {
           "title": "Delete workspace folder",
           "description": "Delete the workspace folder and all of its contents."
