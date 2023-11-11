@@ -43,8 +43,15 @@
   height: 32px;
 }
 
+.icon-picker .color-select-button {
+  padding: 0;
+  width: 28px;
+  height: 28px;
+}
+
 .color-select-popover {
   padding: 2px;
+  width: 196px;
   z-index: 999;
 }
 
