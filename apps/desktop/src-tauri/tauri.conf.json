@@ -32,16 +32,19 @@
       },
       "fs": {
         "all": true,
-        "scope": [
-          "$DESKTOP",
-          "$DESKTOP/**",
-          "$HOME",
-          "$HOME/**",
-          "$DOCUMENT",
-          "$DOCUMENT/**",
-          "$APPCONFIG",
-          "$APPCONFIG/**"
-        ]
+        "scope": {
+          "requireLiteralLeadingDot": false,
+          "allow": [
+            "$DESKTOP",
+            "$DESKTOP/**",
+            "$HOME",
+            "$HOME/**",
+            "$DOCUMENT",
+            "$DOCUMENT/**",
+            "$APPCONFIG",
+            "$APPCONFIG/**"
+          ]
+        }
       },
       "dialog": {
         "open": true
