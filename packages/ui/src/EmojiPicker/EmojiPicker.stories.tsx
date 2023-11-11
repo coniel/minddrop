@@ -12,7 +12,7 @@ export const Default: React.FC = () => {
   return (
     <div>
       <div style={{ height: 20 }}>{selected}</div>
-      <EmojiPicker onSelect={setSelected} onClear={() => setSelected('')} />
+      <EmojiPicker onSelect={setSelected} />
     </div>
   );
 };
