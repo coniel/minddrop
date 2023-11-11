@@ -1,4 +1,5 @@
 import { createPersistentConfig } from '@minddrop/core';
+import { EmojiSkinTone } from '@minddrop/icons';
 
 export interface AppUiState {
   /**
@@ -10,15 +11,26 @@ export interface AppUiState {
    * The currently open view.
    */
   view: string | null;
+
+  /**
+   * The default skin tone to use in emoji pickers.
+   */
+  defaultEmojiSkinTone: EmojiSkinTone;
 }
 
-export const AppUiState = createPersistentConfig('app-ui', {
+const defaultState: AppUiState = {
   sidebarWidth: 300,
   view: null,
-});
+  defaultEmojiSkinTone: 0,
+};
+
+export const AppUiState = createPersistentConfig('app-ui', defaultState);
 
 export const useCurrentView = () =>
   AppUiState.useValue('view') as string | null;
 
 export const useSidebarWidth = () =>
   AppUiState.useValue('sidebarWidth') as number;
+
+export const useDefaultEmojiSkinTone = () =>
+  AppUiState.useValue('defaultEmojiSkinTone') as EmojiSkinTone;
