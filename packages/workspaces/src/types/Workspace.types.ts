@@ -1,4 +1,6 @@
-export interface Workspace {
+import { WorkspaceConfig } from './WorkspaceConfig.types';
+
+export interface Workspace extends WorkspaceConfig {
   /**
    * The absolute path to the workspace directory.
    */

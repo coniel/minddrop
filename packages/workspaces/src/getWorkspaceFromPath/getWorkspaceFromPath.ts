@@ -1,3 +1,5 @@
+import { MissingWorkspaceConfig } from '../constants';
+import { getWorkspaceConfig } from '../getWorkspaceConfig';
 import { Workspace } from '../types';
 import { workspaceExists } from '../workspaceExists';
 
@@ -8,11 +10,20 @@ import { workspaceExists } from '../workspaceExists';
  * @returns A workspace object.
  */
 export async function getWorkspaceFromPath(path: string): Promise<Workspace> {
+  let config = MissingWorkspaceConfig;
+
+  // Check if the workspace path exists
   const exists = await workspaceExists(path);
+
+  // If the workspace dir exists, get its config
+  if (exists) {
+    config = await getWorkspaceConfig(path);
+  }
 
   return {
     path,
     exists,
     name: path.split('/').slice(-1)[0],
+    ...config,
   };
 }

@@ -1,11 +1,12 @@
-import { FileNotFoundError, registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { MockFsAdapter } from '@minddrop/test-utils';
+import { FileNotFoundError, registerFileSystemAdapter } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import * as API from '../writeWorkspacesConfig';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import { setup, cleanup, newWorkspace } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { addWorkspace } from './addWorkspace';
-import { Events } from '@minddrop/events';
+import * as GET_WORKSPACE_FROM_PATH from '../getWorkspaceFromPath';
 
 const exists = vi.fn();
 
@@ -15,6 +16,10 @@ describe('addWorkspace', () => {
 
     // Pretend workspace directory exists
     exists.mockResolvedValue(true);
+    // Return newWorkspace when getting workspace from path
+    vi.spyOn(GET_WORKSPACE_FROM_PATH, 'getWorkspaceFromPath').mockResolvedValue(
+      newWorkspace,
+    );
 
     registerFileSystemAdapter({
       ...MockFsAdapter,
@@ -28,24 +33,24 @@ describe('addWorkspace', () => {
     // Pretend workspace directory does not exist
     exists.mockResolvedValueOnce(false);
 
-    expect(() => addWorkspace(workspace1.path)).rejects.toThrowError(
+    expect(() => addWorkspace(newWorkspace.path)).rejects.toThrowError(
       FileNotFoundError,
     );
   });
 
   it('adds the workspace to the store', async () => {
     // Add a workspace
-    await addWorkspace(workspace1.path);
+    await addWorkspace(newWorkspace.path);
 
     // It should add the workspace to the store
-    expect(WorkspacesStore.getState().workspaces[0]).toEqual(workspace1);
+    expect(WorkspacesStore.getState().workspaces[0]).toEqual(newWorkspace);
   });
 
   it('persists workspace to workspaces config file', async () => {
     const writeWorkspacesConfig = vi.spyOn(API, 'writeWorkspacesConfig');
 
     // Add a workspace
-    await addWorkspace(workspace1.path);
+    await addWorkspace(newWorkspace.path);
 
     // It should persist the new workspace
     expect(writeWorkspacesConfig).toHaveBeenCalled();
@@ -56,19 +61,19 @@ describe('addWorkspace', () => {
       // Listen to 'workspaces:workspace:add' events
       Events.addListener('workspaces:workspace:add', 'test', (payload) => {
         // Payload data should be the workspace
-        expect(payload.data).toEqual(workspace1);
+        expect(payload.data).toEqual(newWorkspace);
         done();
       });
 
       // Add a workspace
-      addWorkspace(workspace1.path);
+      addWorkspace(newWorkspace.path);
     }));
 
   it('returns the new workspace', async () => {
     // Add a workspace
-    const workspace = await addWorkspace(workspace1.path);
+    const workspace = await addWorkspace(newWorkspace.path);
 
     // Should return a workspace object
-    expect(workspace).toEqual(workspace1);
+    expect(workspace).toEqual(newWorkspace);
   });
 });

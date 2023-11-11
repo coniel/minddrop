@@ -768,6 +768,9 @@ importers:
         specifier: workspace:*
         version: link:../utils
     devDependencies:
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils

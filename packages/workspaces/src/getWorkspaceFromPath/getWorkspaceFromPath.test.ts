@@ -1,7 +1,14 @@
 import { registerFileSystemAdapter } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { setup, cleanup, workspace1, missingWorkspace } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  missingWorkspace,
+  workspace1Config,
+} from '../test-utils';
+import * as GET_WORKSPACE_CONFIG from '../getWorkspaceConfig';
 import { getWorkspaceFromPath } from './getWorkspaceFromPath';
 
 const exists = vi.fn();
@@ -16,6 +23,11 @@ describe('getWorkspaceFromPath', () => {
         new Promise((resolve) => {
           resolve(path !== missingWorkspace.path);
         }),
+    );
+
+    // Return workspace1Config for workspace1
+    vi.spyOn(GET_WORKSPACE_CONFIG, 'getWorkspaceConfig').mockResolvedValue(
+      workspace1Config,
     );
 
     registerFileSystemAdapter({
