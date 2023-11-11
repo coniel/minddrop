@@ -14,6 +14,7 @@ export { removeWorkspace as remove } from './removeWorkspace';
 export { deleteWorkspace as delete } from './deleteWorkspace';
 export { moveWorkspace as move } from './moveWorkspace';
 export { renameWorkspace as rename } from './renameWorkspace';
+export { setWorkpaceIcon as setIcon } from './setWorkpaceIcon';
 
 export function _clear() {
   WorkspacesStore.getState().clear();
