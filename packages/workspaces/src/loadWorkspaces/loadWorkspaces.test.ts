@@ -1,9 +1,16 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { registerFileSystemAdapter } from '@minddrop/core';
-import { setup, cleanup, missingWorkspace, workspace1 } from '../test-utils';
-import { loadWorkspaces } from './loadWorkspaces';
+import {
+  setup,
+  cleanup,
+  missingWorkspace,
+  workspace1,
+  workspace1Config,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
+import * as GET_WORKSPACE_FROM_PATH from '../getWorkspaceFromPath';
+import { loadWorkspaces } from './loadWorkspaces';
 import { Events } from '@minddrop/events';
 
 const workspacesConfigFileContens = JSON.stringify({
@@ -24,6 +31,21 @@ describe('loadWorkspaces', () => {
       (path: string) =>
         new Promise((resolve) => resolve(path !== missingWorkspace.path)),
     );
+
+    // Return the appropriate workspace when getting from path
+    vi.spyOn(
+      GET_WORKSPACE_FROM_PATH,
+      'getWorkspaceFromPath',
+    ).mockImplementation(async (path) => {
+      switch (path) {
+        case workspace1.path:
+          return workspace1;
+        case missingWorkspace.path:
+          return missingWorkspace;
+        default:
+          throw new Error(`unexpected workspace path ${path}`);
+      }
+    });
 
     registerFileSystemAdapter({
       ...MockFsAdapter,
