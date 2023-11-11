@@ -15,7 +15,9 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "target": "es2015",
+    "lib": ["ES2015", "esnext"]
   },
   "exclude": ["node_modules"]
 }
