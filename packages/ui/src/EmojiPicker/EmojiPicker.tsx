@@ -1,25 +1,15 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
-import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { mapPropsToClasses, useToggle } from '@minddrop/utils';
+import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
 import { IconButton } from '../IconButton';
 import { NavGroup } from '../NavGroup';
 import { TextInput } from '../TextInput';
 import { Toolbar } from '../Toolbar';
-import { Emoji, MinifiedEmojiData, SkinTone } from './EmojiPicker.types';
-import {
-  getAllLabels,
-  getSkinToneVariant,
-  groupByGroup,
-  searchEmoji,
-  unminifyEmoji,
-} from './utils';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Tooltip } from '../Tooltip';
-import emojiJsonData from './emoji.min.json';
 import './EmojiPicker.css';
-
-const emojiData = emojiJsonData as unknown as MinifiedEmojiData;
 
 export interface EmojiPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
@@ -36,7 +26,7 @@ export interface EmojiPickerProps
   /**
    * Callback fired when a skin tone is selected.
    */
-  onSelectSkinTone?(value: SkinTone): void;
+  onSelectSkinTone?(value: EmojiSkinTone): void;
 
   /**
    * Recently used emoji shown as the first category.
@@ -47,7 +37,7 @@ export interface EmojiPickerProps
    * Thedefault skin tone used for emoji with skin tone
    * support.
    */
-  defaultSkinTone?: SkinTone;
+  defaultSkinTone?: EmojiSkinTone;
 }
 
 // Margin top + title height
@@ -55,20 +45,6 @@ const NAV_GROUP_HEADER_HEIGHT = 34;
 // Height + margin
 const EMOJI_SELECTION_BUTTON_HEIGHT = 34;
 const EMOJI_SELECTION_BUTTONS_PER_ROW = 12;
-
-const unminifiedEmoji = emojiData.emoji.map((minifiedEmoji) =>
-  unminifyEmoji(minifiedEmoji, emojiData.groups, emojiData.subgroups),
-);
-const allLabels = getAllLabels(unminifiedEmoji);
-
-const skinTones: { value: SkinTone; label: string }[] = [
-  { value: 0, label: 'none' },
-  { value: 1, label: 'light' },
-  { value: 2, label: 'mediumLight' },
-  { value: 3, label: 'medium' },
-  { value: 4, label: 'mediumDark' },
-  { value: 5, label: 'dark' },
-];
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({
   onSelect,
@@ -81,39 +57,36 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 }) => {
   const { t } = useTranslation('emojiPicker');
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Emoji[]>(unminifiedEmoji);
-  const [resultsByGroup, setResultsByGroup] = useState(
-    groupByGroup(unminifiedEmoji),
-  );
+  const [results, setResults] = useState<EmojiItem[]>(Emoji.all);
+  const [resultsByGroup, setResultsByGroup] = useState(Emoji.group(Emoji.all));
   const [skinTone, setSkinTone] = useState(defaultSkinTone);
 
   // Triggered by changes to the search query
   useEffect(() => {
-    const results = searchEmoji(unminifiedEmoji, allLabels, query);
+    const results = Emoji.search(query);
 
     setResults(results);
   }, [query]);
 
   const handleSelect = useCallback(
-    (value: Emoji) => {
+    (value: EmojiItem) => {
       if (!onSelect) {
         return;
       }
 
-      onSelect(getSkinToneVariant(value, skinTone));
+      onSelect(Emoji.getSkinToneVariant(value, skinTone));
     },
     [onSelect, skinTone],
   );
 
   const handleClickRandom = useCallback(() => {
-    const randomEmoji =
-      unminifiedEmoji[Math.floor(Math.random() * unminifiedEmoji.length)];
+    const randomEmoji = Emoji.all[Math.floor(Math.random() * Emoji.all.length)];
 
     handleSelect(randomEmoji);
   }, [handleSelect]);
 
   const handleSelectSkinTone = useCallback(
-    (value: SkinTone) => {
+    (value: EmojiSkinTone) => {
       setSkinTone(value);
 
       if (onSelectSkinTone) {
@@ -217,14 +190,14 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 };
 
 export const EmojiWithSkinTone: React.FC<{
-  emoji: Emoji;
-  skinTone: SkinTone;
-}> = ({ emoji, skinTone }) => getSkinToneVariant(emoji, skinTone);
+  emoji: EmojiItem;
+  skinTone: EmojiSkinTone;
+}> = ({ emoji, skinTone }) => Emoji.getSkinToneVariant(emoji, skinTone);
 
 const EmojiButton: React.FC<{
-  emoji: Emoji;
-  skinTone: SkinTone;
-  onSelect: (value: Emoji) => void;
+  emoji: EmojiItem;
+  skinTone: EmojiSkinTone;
+  onSelect: (value: EmojiItem) => void;
 }> = ({ emoji, skinTone, onSelect }) => {
   const handleSelect = useCallback(() => onSelect(emoji), [onSelect, emoji]);
 
@@ -239,7 +212,7 @@ const EmojiButton: React.FC<{
   );
 };
 
-const SkinToneSelectEmoji: Emoji = {
+const SkinToneSelectEmoji: EmojiItem = {
   char: '🖖',
   name: '',
   group: '',
@@ -248,14 +221,14 @@ const SkinToneSelectEmoji: Emoji = {
 };
 
 const SkinToneSelect: React.FC<{
-  selectedSkinTone: SkinTone;
-  onSelect: (value: SkinTone) => void;
+  selectedSkinTone: EmojiSkinTone;
+  onSelect: (value: EmojiSkinTone) => void;
 }> = ({ onSelect, selectedSkinTone }) => {
   const { t } = useTranslation('emojiPicker.skinTone');
   const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
 
   const createSelectHandler = useCallback(
-    (value: SkinTone) => {
+    (value: EmojiSkinTone) => {
       return () => {
         togglePopover();
         onSelect(value);
@@ -274,19 +247,19 @@ const SkinToneSelect: React.FC<{
               className="open-skin-tone-popover-button"
               onClick={togglePopover}
             >
-              {getSkinToneVariant(SkinToneSelectEmoji, selectedSkinTone)}
+              {Emoji.getSkinToneVariant(SkinToneSelectEmoji, selectedSkinTone)}
             </IconButton>
           </Tooltip>
         </div>
       </PopoverTrigger>
       <PopoverContent className="skin-tone-select-popover">
-        {skinTones.map((skinTone) => (
+        {Emoji.skinTones.map((skinTone) => (
           <IconButton
             key={skinTone.value}
             label={t(skinTone.label)}
             onClick={createSelectHandler(skinTone.value)}
           >
-            {getSkinToneVariant(SkinToneSelectEmoji, skinTone.value)}
+            {Emoji.getSkinToneVariant(SkinToneSelectEmoji, skinTone.value)}
           </IconButton>
         ))}
       </PopoverContent>
