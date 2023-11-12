@@ -1,7 +1,6 @@
 import { describe, afterEach, it, expect, beforeEach } from 'vitest';
 import { workspace1, missingWorkspace, workspaces } from '../test-utils';
 import { Workspace } from '../types';
-import { Workspaces } from '../Workspaces';
 import { WorkspacesStore } from './WorkspacesStore';
 
 function loadWorkspaces() {
