@@ -1,8 +1,8 @@
-import { WorkspaceIcon } from './WorkspaceIcon.types';
+import { UserIcon } from '@minddrop/icons';
 
 export interface WorkspaceConfig {
   /**
    * The workspace icon.
    */
-  icon: WorkspaceIcon;
+  icon: UserIcon;
 }
