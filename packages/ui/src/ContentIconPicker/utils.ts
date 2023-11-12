@@ -1,5 +1,8 @@
 import { fuzzySearch } from '@minddrop/utils';
-import { UnminifiedContentIcon, MinifiedContentIcon } from './IconPicker.types';
+import {
+  UnminifiedContentIcon,
+  MinifiedContentIcon,
+} from './ContentIconPicker.types';
 
 /**
  * Converts a minified content icon into a content

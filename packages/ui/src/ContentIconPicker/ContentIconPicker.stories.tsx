@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { IconPicker } from './IconPicker';
+import { ContentIconPicker } from './ContentIconPicker';
 import { ContentIcon } from '../ContentIcon';
 import { ContentIconName } from '@minddrop/icons';
 import { ContentColor } from '../types';
 
 export default {
-  title: 'ui/IconPicker',
-  component: IconPicker,
+  title: 'ui/ContentIconPicker',
+  component: ContentIconPicker,
 };
 
 export const Default: React.FC = () => {
@@ -18,14 +18,10 @@ export const Default: React.FC = () => {
       <div style={{ height: 20 }}>
         {icon && <ContentIcon color={color} name={icon} />}
       </div>
-      <IconPicker
+      <ContentIconPicker
         onSelect={(iconValue, colorValue) => {
           setIcon(iconValue);
           setColor(colorValue);
-        }}
-        onClear={() => {
-          setIcon(null);
-          setColor('default');
         }}
       />
     </div>

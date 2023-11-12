@@ -12,16 +12,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
 import { ContentIcon } from '../ContentIcon';
-import { UnminifiedContentIcon, MinifiedContentIcon } from './IconPicker.types';
+import {
+  UnminifiedContentIcon,
+  MinifiedContentIcon,
+} from './ContentIconPicker.types';
 import {
   getAllLabels,
   groupByCategory,
   searchContentIcons,
   unminifyContentIcon,
 } from './utils';
-import './IconPicker.css';
+import './ContentIconPicker.css';
 
-export interface IconPickerProps
+export interface ContentIconPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
   /**
    * Calback fired when an icon is selected.
@@ -32,11 +35,6 @@ export interface IconPickerProps
    * Calback fired when an icon color is selected.
    */
   onSelectColor?(color: ContentColor): void;
-
-  /**
-   * Callback fired when the clear button is clicked.
-   */
-  onClear?(): void;
 
   /**
    * The default selected color.
@@ -65,10 +63,9 @@ const NAV_GROUP_HEADER_HEIGHT = 34;
 const ICON_SELECTION_BUTTON_HEIGHT = 34;
 const ICON_SELECTION_BUTTONS_PER_ROW = 12;
 
-export const IconPicker: FC<IconPickerProps> = ({
+export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   onSelect,
   onSelectColor,
-  onClear,
   recent,
   defaultColor = 'default',
   className,
@@ -157,7 +154,10 @@ export const IconPicker: FC<IconPickerProps> = ({
   };
 
   return (
-    <div className={mapPropsToClasses({ className }, 'icon-picker')} {...other}>
+    <div
+      className={mapPropsToClasses({ className }, 'content-icon-picker')}
+      {...other}
+    >
       <Toolbar>
         <TextInput
           placeholder={t('filter')}

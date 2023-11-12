@@ -1,0 +1,56 @@
+.content-icon-picker {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 424px;
+  border-radius: var(--radiusLg);
+  overflow: hidden;
+  padding-top: 6px;
+}
+
+.content-icon-picker .toolbar {
+  padding: 8px;
+  background-color: var(--paper);
+  align-items: center;
+}
+
+.content-icon-picker .text-input {
+  flex: 1;
+}
+
+.content-icon-picker .nav-group {
+  display: block;
+  padding-top: 16px;
+}
+
+.content-icon-picker .inline-results {
+  margin-top: 12px;
+}
+
+.content-icon-picker .nav-group .icon-button,
+.content-icon-picker .small-subset .icon-button {
+  margin: 1px;
+}
+
+.content-icon-picker .options {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.content-icon-picker .icon-selection-button {
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+}
+
+.content-icon-picker .color-select-button {
+  padding: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.color-select-popover {
+  padding: 2px;
+  width: 196px;
+  z-index: 999;
+}

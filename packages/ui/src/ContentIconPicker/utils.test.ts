@@ -5,7 +5,10 @@ import {
   searchContentIcons,
   unminifyContentIcon,
 } from './utils';
-import { UnminifiedContentIcon, MinifiedContentIcon } from './IconPicker.types';
+import {
+  UnminifiedContentIcon,
+  MinifiedContentIcon,
+} from './ContentIconPicker.types';
 
 const categories = ['category 0', 'category 1', 'category 2'];
 const labels = ['label 0', 'label 1', 'label 2', 'label 3'];
