@@ -312,6 +312,9 @@ importers:
 
   packages/icons:
     dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../core
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
