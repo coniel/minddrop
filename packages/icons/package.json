@@ -16,6 +16,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@minddrop/core": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "react": "^18.2.0"
   }
