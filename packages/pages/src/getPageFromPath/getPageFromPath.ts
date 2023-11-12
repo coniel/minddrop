@@ -24,6 +24,6 @@ export async function getPageFromPath(path: string): Promise<Page> {
     path,
     title: titleFromPath(path),
     wrapped: isWrapped(path),
-    icon: parseIconMetadata(metadata.icon),
+    icon: metadata.icon,
   };
 }
