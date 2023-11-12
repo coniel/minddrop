@@ -4,7 +4,8 @@
   "main": "src/index",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./src/**.ts*"
+    "lint": "eslint ./src/**.ts*",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",

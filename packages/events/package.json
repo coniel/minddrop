@@ -5,6 +5,7 @@
   "types": "src/index",
   "scripts": {
     "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },

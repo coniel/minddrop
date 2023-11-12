@@ -37,11 +37,7 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
         <Icon
           onClick={toggleDone}
           role="button"
-          name={
-            element.done
-              ? 'checkbox-square-checked'
-              : 'checkbox-square-unchecked'
-          }
+          name={element.done ? 'checkmark-square' : 'square'}
         />
       </div>
       <div className="rich-text-content">
