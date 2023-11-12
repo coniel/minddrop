@@ -4,7 +4,7 @@ import {
   registerFileSystemAdapter,
 } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
-import { appendDirToPath } from '@minddrop/utils';
+import { concatPath } from '@minddrop/utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { WorkspaceConfigDir, WorkspaceConfigFile } from '../constants';
 import { setup, cleanup, missingWorkspace, workspace1 } from '../test-utils';
@@ -12,13 +12,13 @@ import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspaceConfig } from './writeWorkspaceConfig';
 
 const WORKSPACE_PATH = workspace1.path;
-const WORKSPACE_CONFIG_DIR_PATH = appendDirToPath(
-  WorkspaceConfigDir,
+const WORKSPACE_CONFIG_DIR_PATH = concatPath(
   workspace1.path,
+  WorkspaceConfigDir,
 );
-const WORKSPACE_CONFIG_FILE_PATH = appendDirToPath(
-  WorkspaceConfigFile,
+const WORKSPACE_CONFIG_FILE_PATH = concatPath(
   WORKSPACE_CONFIG_DIR_PATH,
+  WorkspaceConfigFile,
 );
 
 let workspaceDirExists: boolean;
