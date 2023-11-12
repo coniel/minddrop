@@ -7,7 +7,7 @@ import { Events } from '@minddrop/events';
 import { MockFsAdapter } from '@minddrop/test-utils';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import * as ADD_WORKSPACE from '../addWorkspace';
-import { setup, cleanup } from '../test-utils';
+import { setup, cleanup, workspace1 } from '../test-utils';
 import { Workspace } from '../types';
 import { createWorkspace } from './createWorkspace';
 
@@ -18,6 +18,7 @@ const EXISTING_WORKSPACE_NAME = 'Taken';
 const WORKSPACE_PATH = `${WORKSPACE_LOCATION}${WORKSPACE_NAME}`;
 const EXISTING_WORKSPACE_PATH = `${WORKSPACE_LOCATION}${EXISTING_WORKSPACE_NAME}`;
 const WORKSPACE: Workspace = {
+  ...workspace1,
   path: WORKSPACE_PATH,
   name: WORKSPACE_NAME,
   exists: true,
