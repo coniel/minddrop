@@ -1,14 +1,14 @@
+import { UserIcon, UserIconType } from '@minddrop/icons';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { getWorkspace } from '../getWorkspace';
 import { setup, cleanup, workspace1 } from '../test-utils';
-import { WorkspaceIcon, WorkspaceIconType } from '../types';
 import { WorkspacesStore } from '../WorkspacesStore';
 import * as WRITE_WORKSPACE_CONFIG from '../writeWorkspaceConfig';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 import { setWorkpaceIcon } from './setWorkpaceIcon';
 
-const icon: WorkspaceIcon = {
-  type: WorkspaceIconType.ContentIcon,
+const icon: UserIcon = {
+  type: UserIconType.ContentIcon,
   icon: 'cat',
   color: 'blue',
 };

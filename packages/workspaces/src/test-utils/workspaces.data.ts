@@ -1,11 +1,12 @@
+import { UserIconType } from '@minddrop/icons';
 import { DefaultWorkspaceIcon, MissingWorkspaceIcon } from '../constants';
-import { Workspace, WorkspaceConfig, WorkspaceIconType } from '../types';
+import { Workspace, WorkspaceConfig } from '../types';
 
 export const workspace1: Workspace = {
   path: 'Users/foo/Documents/Workspace 1',
   exists: true,
   name: 'Workspace 1',
-  icon: { type: WorkspaceIconType.ContentIcon, icon: 'cat', color: 'cyan' },
+  icon: { type: UserIconType.ContentIcon, icon: 'cat', color: 'cyan' },
 };
 
 export const missingWorkspace: Workspace = {
@@ -23,7 +24,7 @@ export const newWorkspace: Workspace = {
 };
 
 export const workspace1Config: WorkspaceConfig = {
-  icon: { type: WorkspaceIconType.ContentIcon, icon: 'cat', color: 'cyan' },
+  icon: { type: UserIconType.ContentIcon, icon: 'cat', color: 'cyan' },
 };
 
 export const workspaces = [workspace1, missingWorkspace];

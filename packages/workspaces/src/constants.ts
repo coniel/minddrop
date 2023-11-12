@@ -1,19 +1,19 @@
 import {
-  WorkspaceConfig,
-  WorkspaceIconContentIcon,
-  WorkspaceIconDefault,
-  WorkspaceIconType,
-} from './types';
+  UserIconContentIcon,
+  UserIconDefault,
+  UserIconType,
+} from '@minddrop/icons';
+import { WorkspaceConfig } from './types';
 
 export const WorkspacesConfigFile = 'workspaces.json';
 export const WorkspaceConfigDir = '.minddrop';
 export const WorkspaceConfigFile = 'workspace.json';
 
-export const DefaultWorkspaceIcon: WorkspaceIconDefault = {
-  type: WorkspaceIconType.Default,
+export const DefaultWorkspaceIcon: UserIconDefault = {
+  type: UserIconType.Default,
 };
-export const MissingWorkspaceIcon: WorkspaceIconContentIcon = {
-  type: WorkspaceIconType.ContentIcon,
+export const MissingWorkspaceIcon: UserIconContentIcon = {
+  type: UserIconType.ContentIcon,
   icon: 'alert-circle',
   color: 'red',
 };
