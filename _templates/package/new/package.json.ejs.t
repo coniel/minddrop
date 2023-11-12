@@ -16,5 +16,5 @@ to: packages/<%= name %>/package.json
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
-  },
+  }
 }
