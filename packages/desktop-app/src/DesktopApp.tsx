@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconsProvider } from '@minddrop/icons';
 import { CoreProvider } from '@minddrop/core';
-import { AppSidebar } from './AppSidebar';
+import { AppSidebar } from './components';
 import { useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';

@@ -46,7 +46,8 @@
   "iconPicker": {
     "filter": "Filter...",
     "random": "Random",
-    "selectColor": "Select icon color"
+    "selectColor": "Select icon color",
+    "change": "Change icon"
   },
   "workspaces": {
     "label": "Workspaces",
