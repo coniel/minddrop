@@ -1,8 +1,10 @@
 import { parse } from 'yaml';
-import { PageMetadata } from '../../types';
+import { PageMetadata, SerializedPageMetadata } from '../../types';
+import { parseIconMetadata } from '../parseIconMetadata';
+import { DefaultPageMetadata } from '../../constants';
 
 /**
- * Parses a page's metadata from its content.
+ * Parses and deserializes a page's metadata from its content.
  *
  * @param pageContent - The page content.
  * @returns Page metadata.
@@ -10,7 +12,7 @@ import { PageMetadata } from '../../types';
 export function getPageMetadata(pageContent: string): PageMetadata {
   // If page does not start with ---, it has no metadata
   if (!pageContent.startsWith('---')) {
-    return {};
+    return DefaultPageMetadata;
   }
 
   const yamlLines: string[] = [];
@@ -33,5 +35,13 @@ export function getPageMetadata(pageContent: string): PageMetadata {
     index += 1;
   }
 
-  return parse(yamlLines.join('\n')) || {};
+  // Parse the YAML string into SerializedPageMetadata
+  const serializedMetadata = (parse(yamlLines.join('\n')) ||
+    {}) as SerializedPageMetadata;
+
+  // Deserialize metadata
+  return {
+    ...serializedMetadata,
+    icon: parseIconMetadata(serializedMetadata.icon),
+  };
 }

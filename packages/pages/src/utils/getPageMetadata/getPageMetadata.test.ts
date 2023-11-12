@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { getPageMetadata } from './getPageMetadata';
+import { DefaultPageMetadata } from '../../constants';
+import { PageMetadata } from '../../types';
+import { UserIconType } from '@minddrop/icons';
 
 const markdownFileContent = `---
 icon: content-icon:cat:cyan
@@ -9,16 +12,20 @@ icon: content-icon:cat:cyan
 
 describe('getPageMetadata', () => {
   it('returns page metadata', () => {
-    expect(getPageMetadata(markdownFileContent)).toEqual({
-      icon: 'content-icon:cat:cyan',
+    expect(getPageMetadata(markdownFileContent)).toEqual<PageMetadata>({
+      icon: {
+        type: UserIconType.ContentIcon,
+        icon: 'cat',
+        color: 'cyan',
+      },
     });
   });
 
-  it('returns empty object if page has no metadata', () => {
-    expect(getPageMetadata('')).toEqual({});
+  it('returns default metadata if page has no metadata', () => {
+    expect(getPageMetadata('')).toEqual(DefaultPageMetadata);
   });
 
-  it('returns empty object if page has empty metadata', () => {
-    expect(getPageMetadata('---\n---\n')).toEqual({});
+  it('returns default metadata if page has empty metadata', () => {
+    expect(getPageMetadata('---\n---\n')).toEqual(DefaultPageMetadata);
   });
 });
