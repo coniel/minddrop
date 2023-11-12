@@ -1,1 +1,1 @@
-export * from './useWorkspaces';
+export * from './usePage';
