@@ -1,6 +1,7 @@
 import { InvalidPathError, registerFileSystemAdapter } from '@minddrop/core';
 import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { concatPath } from '@minddrop/utils';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   DefaultWorkspaceConfig,
   WorkspaceConfigDir,
@@ -10,7 +11,11 @@ import { setup, cleanup, workspace1, workspace1Config } from '../test-utils';
 import { getWorkspaceConfig } from './getWorkspaceConfig';
 
 const WORKSPACE_PATH = workspace1.path;
-const WORKSPACE_CONFIG_PATH = `${workspace1.path}/${WorkspaceConfigDir}/${WorkspaceConfigFile}`;
+const WORKSPACE_CONFIG_PATH = concatPath(
+  workspace1.path,
+  WorkspaceConfigDir,
+  WorkspaceConfigFile,
+);
 
 let workspaceDirExists: boolean;
 let workspaceConfigFileExists: boolean;

@@ -1,5 +1,5 @@
 import { Fs, InvalidPathError } from '@minddrop/core';
-import { appendDirToPath } from '@minddrop/utils';
+import { concatPath } from '@minddrop/utils';
 import {
   DefaultWorkspaceConfig,
   WorkspaceConfigDir,
@@ -23,10 +23,7 @@ export async function getWorkspaceConfig(
   }
 
   // Create workspace's config file path
-  const configPath = appendDirToPath(
-    `${WorkspaceConfigDir}/${WorkspaceConfigFile}`,
-    path,
-  );
+  const configPath = concatPath(path, WorkspaceConfigDir, WorkspaceConfigFile);
 
   // If the workspace config file exists, return
   // its contents.

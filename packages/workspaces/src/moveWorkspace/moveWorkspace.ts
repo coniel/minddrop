@@ -1,6 +1,6 @@
 import { Fs, InvalidPathError, PathConflictError } from '@minddrop/core';
 import { Events } from '@minddrop/events';
-import { appendDirToPath } from '@minddrop/utils';
+import { concatPath } from '@minddrop/utils';
 import { getWorkspace } from '../getWorkspace';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
@@ -25,7 +25,7 @@ export async function moveWorkspace(
   // Get workspace dir name from its path
   const workspaceDir = path.split('/').slice(-1)[0];
   // Generate the new workspace path
-  const newPath = appendDirToPath(workspaceDir, destinationPath);
+  const newPath = concatPath(destinationPath, workspaceDir);
 
   if (!workspace) {
     return;
