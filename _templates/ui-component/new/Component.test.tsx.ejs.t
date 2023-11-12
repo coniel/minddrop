@@ -1,7 +1,7 @@
 ---
 to: packages/ui/src/<%= name %>/<%= name %>.test.tsx
 ---
-import React from 'react';
+import { describe, afterEach, it, expect } from 'vitest';
 import { render, cleanup, screen } from '@minddrop/test-utils';
 import { <%= name %> } from './<%= name %>';
 
