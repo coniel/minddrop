@@ -1,0 +1,24 @@
+{
+  "name": "@minddrop/pages",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@minddrop/core": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "eslint": "^8.39.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
+  }
+}

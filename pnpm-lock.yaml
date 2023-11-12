@@ -405,6 +405,37 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
 
+  packages/pages:
+    dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../core
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.2.2
+
   packages/rich-text-editor:
     dependencies:
       '@minddrop/core':
