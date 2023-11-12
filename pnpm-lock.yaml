@@ -176,6 +176,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
+      '@minddrop/pages':
+        specifier: workspace:*
+        version: link:../pages
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
