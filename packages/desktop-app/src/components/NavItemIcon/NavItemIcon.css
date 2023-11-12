@@ -1,0 +1,17 @@
+.nav-item-icon {
+  height: 22px;
+  width: 22px;
+}
+
+.nav-item-icon.content-icon {
+  padding: 0;
+}
+
+.nav-item-icon.content-icon .content-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.nav-item-icon.emoji {
+  padding: 2;
+}

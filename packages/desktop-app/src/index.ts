@@ -1,3 +1,3 @@
 export * from './initializeDesktopApp';
 export * from './DesktopApp';
-export * from './CreateFirstWorkspace';
+export * from './components/CreateFirstWorkspace';
