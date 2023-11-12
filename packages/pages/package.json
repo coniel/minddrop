@@ -11,7 +11,8 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@minddrop/icons": "workspace:*",
