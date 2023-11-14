@@ -13,6 +13,8 @@ export function useChildPages(path: string): Page[] {
   // Get all pages
   const { pages } = usePagesStore();
 
-  // Get child pages
-  return getPageChildren(path, pages);
+  // Get child pages sorted by title in alphabetical order
+  return getPageChildren(path, pages).sort((a, b) =>
+    a.title > b.title ? 1 : -1,
+  );
 }
