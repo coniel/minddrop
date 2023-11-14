@@ -127,9 +127,7 @@ export const WorkspaceNavItem = React.forwardRef<
             </CollapsibleTrigger>
             <div className="actions">{actions}</div>
           </div>
-          <CollapsibleContent asChild>
-            <div className="children">{children}</div>
-          </CollapsibleContent>
+          <CollapsibleContent>{children}</CollapsibleContent>
         </div>
       </Collapsible>
     );
