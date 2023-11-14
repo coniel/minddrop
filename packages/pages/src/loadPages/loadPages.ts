@@ -3,6 +3,7 @@ import { getDirFilesRecursiveFlat } from '../utils';
 import { getPageFromPath } from '../getPageFromPath';
 import { PagesStore } from '../PagesStore';
 import { Events } from '@minddrop/events';
+import { getPage } from '../getPage';
 
 /**
  * Loads pages from the specified directories into the pages
@@ -25,8 +26,15 @@ export async function loadPages(sources: string[]): Promise<void> {
     markdownFiles.map(async (file) => getPageFromPath(file.path)),
   );
 
+  // Filter out pages which are already in the store.
+  // Note: we filter out existing pages only after
+  // fetching all of them because the existing pages
+  // may have changed in the time it takes to complete the
+  // async processes above.
+  const uniquePages = pages.filter((page) => !getPage(page.path));
+
   // Load pages into the store
-  PagesStore.getState().load(pages);
+  PagesStore.getState().load(uniquePages);
 
   // Dispatch a 'pages:load' event
   Events.dispatch('pages:load', pages);
