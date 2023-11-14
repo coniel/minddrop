@@ -12,6 +12,8 @@ import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
 import { NavItemIcon } from '../NavItemIcon';
 import { promptMoveWorkspace, revealInFileExplorer } from '../../api';
 import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
+import { useChildPages } from '@minddrop/pages';
+import { PageNavItem } from '../PageNavItem';
 
 interface WorkspaceNavItemProps {
   /**
@@ -23,6 +25,7 @@ interface WorkspaceNavItemProps {
 export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
   workspace,
 }) => {
+  const pages = useChildPages(workspace.path);
   const [hovering, toggleHovering] = useToggle(false);
   const [renamePopoverOpen, toggleRenamePopover] = useToggle(false);
   const [iconPopoverOpen, toggle, setIconPopoverOpen] = useToggle(false);
@@ -82,7 +85,11 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
                 />
               </div>
             }
-          />
+          >
+            {pages.map((page) => (
+              <PageNavItem key={page.path} page={page} />
+            ))}
+          </BaseWorkspaceNavItem>
         </PopoverAnchor>
         <PopoverPortal>
           <RenameWorkspacePopover
