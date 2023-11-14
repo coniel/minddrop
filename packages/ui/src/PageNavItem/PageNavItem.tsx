@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
@@ -21,6 +21,11 @@ export interface PageNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
    * The page name.
    */
   label: string;
+
+  /**
+   * The page icon.
+   */
+  icon?: React.ReactNode;
 
   /**
    * Internal prop not intended to be set manually.
@@ -70,6 +75,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
       onExpandedChange,
       active,
       label,
+      icon,
       level = 0,
       onClick,
       ...other
@@ -116,6 +122,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
                 />
               </div>
             </CollapsibleTrigger>
+            {icon}
             <div
               role="button"
               tabIndex={0}
