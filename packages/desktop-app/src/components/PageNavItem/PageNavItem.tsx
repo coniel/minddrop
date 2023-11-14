@@ -28,6 +28,7 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
   return (
     <PageNavItemPrimitive
       level={level}
+      hasSubpages={childPages.length > 0}
       label={page.title}
       icon={
         <PageNavItemIcon
