@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { NavGroup } from '../NavGroup';
-import { TopicNavItem } from '../TopicNavItem';
+import { PageNavItem } from '../PageNavItem';
 import { PrimaryNavItem } from '../PrimaryNavItem';
 import { SecondaryNavItem } from '../SecondaryNavItem';
 import { Toolbar } from '../Toolbar';
@@ -40,45 +40,45 @@ export const Default: React.FC = () => {
             onClick={() => setActive('search')}
           />
         </NavGroup>
-        <NavGroup title="Topics">
-          <TopicNavItem
+        <NavGroup title="Pages">
+          <PageNavItem
             label="Sailing"
             active={active === 'sailing'}
             onClick={() => setActive('sailing')}
           >
-            <TopicNavItem
+            <PageNavItem
               label="Sailboats"
               active={active === 'sailboats'}
               onClick={() => setActive('sailboats')}
             />
-            <TopicNavItem
+            <PageNavItem
               active={active === 'sails'}
               label="Sails"
               onClick={() => setActive('sails')}
             />
-            <TopicNavItem
+            <PageNavItem
               label="Navigation"
               active={active === 'navigation'}
               onClick={() => setActive('navigation')}
             >
-              <TopicNavItem
+              <PageNavItem
                 label="Coastal navigation"
                 active={active === 'coastal-navigation'}
                 onClick={() => setActive('coastal-navigation')}
               />
-              <TopicNavItem
+              <PageNavItem
                 label="Offshore navigation"
                 active={active === 'offshore-navigation'}
                 onClick={() => setActive('offshore-navigation')}
               />
-            </TopicNavItem>
-            <TopicNavItem
+            </PageNavItem>
+            <PageNavItem
               label="Anchoring"
               active={active === 'anchoring'}
               onClick={() => setActive('anchoring')}
             />
-          </TopicNavItem>
-          <SecondaryNavItem label="Add topic" icon="plus" />
+          </PageNavItem>
+          <SecondaryNavItem label="Add page" icon="plus" />
         </NavGroup>
         <NavGroup label="Utilities">
           <SecondaryNavItem

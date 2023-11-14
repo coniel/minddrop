@@ -15,7 +15,7 @@ export * from './Menu';
 export * from './DropdownMenu';
 export * from './Sidebar';
 export * from './Collapsible';
-export * from './TopicNavItem';
+export * from './PageNavItem';
 export * from './PrimaryNavItem';
 export * from './SecondaryNavItem';
 export * from './NavGroup';
