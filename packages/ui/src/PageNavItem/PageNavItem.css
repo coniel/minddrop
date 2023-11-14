@@ -1,4 +1,4 @@
-.page-nav-item .item {
+.page-nav-item > .nav-item {
   border-radius: var(--radiusMd);
   display: flex;
   align-items: center;
@@ -7,27 +7,43 @@
   overflow: hidden;
 }
 
-.page-nav-item .item:hover {
+.page-nav-item > .nav-item:hover {
   background-color: var(--bgNeutralHover);
 }
 
-.page-nav-item .item:active,
-.page-nav-item .item.active {
+.page-nav-item > .nav-item:active,
+.page-nav-item > .nav-item.active {
   background-color: var(--bgNeutralActive);
 }
 
-.page-nav-item .item.active:hover {
+.page-nav-item > .nav-item.active:hover {
   background-color: var(--bgNeutralActiveHover);
 }
 
 /* Toggle button */
 
 .page-nav-item .toggle-button {
+  padding-left: 3px;
+  margin-right: -3px;
+}
+
+.page-nav-item .toggle-button .icon {
   height: 24px;
+  fill: var(--neutral8);
 }
 
 .page-nav-item .toggle-button[data-state='open'] .toggle-icon {
   transform: rotate(90deg);
+}
+
+.page-nav-item .toggle-button .toggle-icon.has-subpages {
+  fill: var(--neutral9);
+}
+
+/* Icon */
+
+.page-nav-item > .nav-item .page-icon .icon {
+  fill: var(--textNeutralLight);
 }
 
 /* Label */
@@ -48,7 +64,13 @@
   line-height: 24px;
 }
 
-.page-nav-item .item.active .label {
+.page-nav-item > .nav-item:hover .text,
+.page-nav-item.active .nav-item .text,
+.page-nav-item.hovering .nav-item .text {
+  color: var(--textPrimary);
+}
+
+.page-nav-item > .nav-item.active .label {
   font-weight: var(--fwSemibold);
 }
 

@@ -41,6 +41,11 @@ export interface PageNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
   active?: boolean;
 
   /**
+   * If `true`, the nav item expand icon will have darker styling.
+   */
+  hasSubpages?: boolean;
+
+  /**
    * Callback fired when the non-toggle part of the nav
    * item is clicked.
    */
@@ -77,6 +82,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
       label,
       icon,
       level = 0,
+      hasSubpages,
       onClick,
       ...other
     },
@@ -97,7 +103,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
           className={mapPropsToClasses({ className }, 'page-nav-item')}
           {...other}
         >
-          <div className={mapPropsToClasses({ active }, 'item')}>
+          <div className={mapPropsToClasses({ active }, 'nav-item')}>
             {level > 0 && (
               <div
                 role="button"
@@ -117,12 +123,11 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
               >
                 <Icon
                   name="chevron-right"
-                  color="light"
-                  className="toggle-icon has-subpages"
+                  className={mapPropsToClasses({ hasSubpages }, 'toggle-icon')}
                 />
               </div>
             </CollapsibleTrigger>
-            {icon}
+            <div className="page-icon">{icon}</div>
             <div
               role="button"
               tabIndex={0}
