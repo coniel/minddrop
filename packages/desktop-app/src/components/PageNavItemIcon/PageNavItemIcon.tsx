@@ -94,7 +94,7 @@ export const PageNavItemIcon: React.FC<PageNavItemIconProps> = ({
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon icon={page.icon} />
+        <NavItemIcon defaultIcon="file-text" icon={page.icon} />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent
