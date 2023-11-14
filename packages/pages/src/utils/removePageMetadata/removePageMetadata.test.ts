@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { removePageMetadata } from './removePageMetadata';
 
 // YAML front matter
-const FRONT_MATTER = '---\nicon: "content-icon:cat:cyan"\n---\n';
+const FRONT_MATTER = '---\nicon: "content-icon:cat:cyan"\n---\n\n';
 // Content containing thematic breaks resembling front matter delimeters
 const CONTENT = '# Title\n\n---\n\nContent\n\n---\n';
 
