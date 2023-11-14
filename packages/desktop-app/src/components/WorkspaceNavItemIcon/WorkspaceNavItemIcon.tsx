@@ -88,7 +88,7 @@ export const WorkspaceNavItemIcon: React.FC<{
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon icon={workspace.icon} />
+        <NavItemIcon defaultIcon="folder" icon={workspace.icon} />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent

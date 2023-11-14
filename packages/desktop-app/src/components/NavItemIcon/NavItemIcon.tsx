@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContentIcon, Icon, IconButton, IconButtonProps } from '@minddrop/ui';
-import { UserIcon, UserIconType } from '@minddrop/icons';
+import { UiIconName, UserIcon, UserIconType } from '@minddrop/icons';
 import './NavItemIcon.css';
 import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
@@ -11,12 +11,17 @@ export interface NavItemIconProps
    * The icon to render.
    */
   icon: UserIcon;
+
+  /**
+   * The icon used as the default icon type.
+   */
+  defaultIcon: UiIconName;
 }
 
 export const NavItemIcon = React.forwardRef<
   HTMLButtonElement,
   NavItemIconProps
->(({ icon, ...other }, ref) => {
+>(({ icon, defaultIcon, ...other }, ref) => {
   const { t } = useTranslation();
 
   return (
@@ -33,7 +38,7 @@ export const NavItemIcon = React.forwardRef<
       )}
       {...other}
     >
-      {icon.type === UserIconType.Default && <Icon name="folder" />}
+      {icon.type === UserIconType.Default && <Icon name={defaultIcon} />}
       {icon.type === UserIconType.Emoji && (
         <span style={{ fontSize: '14px' }}>{icon.icon}</span>
       )}
