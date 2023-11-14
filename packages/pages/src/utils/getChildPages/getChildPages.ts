@@ -12,9 +12,14 @@ import { isWrapped } from '../../utils';
 export function getPageChildren(path: string, pages: Page[]): Page[] {
   let rootPathParts = path.split('/');
 
-  // If the path is a markdown file, use the file's
-  // parent dir as the root path.
   if (path.endsWith('.md')) {
+    // Only wrapped pages can contain children
+    if (!isWrapped(path)) {
+      return [];
+    }
+
+    // If the path is a wrapped use the wrapper dir as
+    // the root path.
     rootPathParts = rootPathParts.slice(0, -1);
   }
 
