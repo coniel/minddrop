@@ -1,39 +1,39 @@
 import { describe, afterEach, expect, it, vi } from 'vitest';
 import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
-import { TopicNavItem } from './TopicNavItem';
+import { PageNavItem } from './PageNavItem';
 
-describe('<TopicNavItem />', () => {
+describe('<PageNavItem />', () => {
   afterEach(cleanup);
 
   it('renders the label', () => {
-    render(<TopicNavItem label="Sailing" />);
+    render(<PageNavItem label="Sailing" />);
 
     screen.getByText('Sailing');
   });
 
   it('supports defaultExpanded', () => {
     render(
-      <TopicNavItem defaultExpanded label="topic">
-        <TopicNavItem label="subtopic" />
-      </TopicNavItem>,
+      <PageNavItem defaultExpanded label="page">
+        <PageNavItem label="subpage" />
+      </PageNavItem>,
     );
 
-    screen.getByText('subtopic');
+    screen.getByText('subpage');
   });
 
   it('expanded state can be controlled', () => {
     const onExpandedChange = vi.fn();
 
     render(
-      <TopicNavItem expanded label="topic" onExpandedChange={onExpandedChange}>
-        <TopicNavItem label="subtopic" />
-      </TopicNavItem>,
+      <PageNavItem expanded label="page" onExpandedChange={onExpandedChange}>
+        <PageNavItem label="subpage" />
+      </PageNavItem>,
     );
 
-    screen.getByText('subtopic');
+    screen.getByText('subpage');
 
     act(() => {
-      const toggleButton = screen.getAllByLabelText('expandSubtopics')[0];
+      const toggleButton = screen.getAllByLabelText('expandSubpages')[0];
       fireEvent.click(toggleButton);
     });
 
@@ -43,17 +43,17 @@ describe('<TopicNavItem />', () => {
   it('can be clicked', () => {
     const onClick = vi.fn();
 
-    render(<TopicNavItem label="topic" onClick={onClick} />);
+    render(<PageNavItem label="page" onClick={onClick} />);
 
     act(() => {
-      fireEvent.click(screen.getByText('topic'));
+      fireEvent.click(screen.getByText('page'));
     });
 
     expect(onClick).toHaveBeenCalled();
   });
 
   it('supports being active', () => {
-    render(<TopicNavItem label="topic" active />);
+    render(<PageNavItem label="page" active />);
 
     screen.getByRole('button', { current: true });
   });

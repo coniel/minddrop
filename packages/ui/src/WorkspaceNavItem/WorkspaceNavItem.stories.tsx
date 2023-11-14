@@ -1,7 +1,7 @@
 import React from 'react';
 import { WorkspaceNavItem } from './WorkspaceNavItem';
 import { Icon } from '../Icon';
-import { TopicNavItem } from '../TopicNavItem';
+import { PageNavItem } from '../PageNavItem';
 
 export default {
   title: 'ui/WorkspaceNavItem',
@@ -14,7 +14,7 @@ export const Default: React.FC = () => (
       label="Projects"
       icon={<Icon name="cube" color="light" />}
     >
-      <TopicNavItem label="Minddrop" />
+      <PageNavItem label="Minddrop" />
     </WorkspaceNavItem>
     <WorkspaceNavItem
       active

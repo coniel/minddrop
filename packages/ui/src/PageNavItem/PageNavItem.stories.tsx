@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { TopicNavItem } from './TopicNavItem';
+import { PageNavItem } from './PageNavItem';
 
 export default {
-  title: 'ui/TopicNavItem',
-  component: TopicNavItem,
+  title: 'ui/PageNavItem',
+  component: PageNavItem,
 };
 
 export const Default: React.FC = () => {
@@ -11,54 +11,54 @@ export const Default: React.FC = () => {
 
   return (
     <div style={{ maxWidth: 260 }}>
-      <TopicNavItem
+      <PageNavItem
         label="Home"
         active={active === 'home'}
         onClick={() => setActive('home')}
       />
-      <TopicNavItem
+      <PageNavItem
         label="Sailing"
         active={active === 'sailing'}
         onClick={() => setActive('sailing')}
       >
-        <TopicNavItem
+        <PageNavItem
           level={1}
           label="Sailboats"
           active={active === 'sailboats'}
           onClick={() => setActive('sailboats')}
         />
-        <TopicNavItem
+        <PageNavItem
           level={1}
           active={active === 'sails'}
           label="Sails"
           onClick={() => setActive('sails')}
         />
-        <TopicNavItem
+        <PageNavItem
           level={1}
           label="Navigation"
           active={active === 'navigation'}
           onClick={() => setActive('navigation')}
         >
-          <TopicNavItem
+          <PageNavItem
             level={2}
             label="Coastal navigation"
             active={active === 'coastal-navigation'}
             onClick={() => setActive('coastal-navigation')}
           />
-          <TopicNavItem
+          <PageNavItem
             level={2}
             label="Offshore navigation"
             active={active === 'offshore-navigation'}
             onClick={() => setActive('offshore-navigation')}
           />
-        </TopicNavItem>
-        <TopicNavItem
+        </PageNavItem>
+        <PageNavItem
           level={1}
           label="Anchoring"
           active={active === 'anchoring'}
           onClick={() => setActive('anchoring')}
         />
-      </TopicNavItem>
+      </PageNavItem>
     </div>
   );
 };

@@ -8,26 +8,25 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from '../Collapsible';
-import './TopicNavItem.css';
+import './PageNavItem.css';
 
-export interface TopicNavItemProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface PageNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Children rendered inside a collapsible container.
-   * Typically the topic's subtopic nav items.
+   * Typically the page's subpage nav items.
    */
   children?: React.ReactNode;
 
   /**
-   * The topic name.
+   * The page name.
    */
   label: string;
 
   /**
    * Internal prop not intended to be set manually.
    *
-   * The nesting level of the topic starting from 0 for
-   * top level topics, adding 1 for each subtopic nexting level.
+   * The nesting level of the page starting from 0 for
+   * top level pages, adding 1 for each subpage nexting level.
    */
   level?: number;
 
@@ -43,25 +42,25 @@ export interface TopicNavItemProps
   onClick?: (event: React.MouseEvent) => void;
 
   /**
-   * The open state of the collapsible subtopics list when it is initially
+   * The open state of the collapsible subpages list when it is initially
    * rendered. Use when you do not need to control its open state.
    */
   defaultExpanded?: boolean;
 
   /**
-   * The controlled expanded state of the collapsible subtopics list.
+   * The controlled expanded state of the collapsible subpages list.
    * Must be used in conjunction with `onExpandedChange`.
    */
   expanded?: boolean;
 
   /**
    * Event handler called when the open state of the
-   * collapsible subtopics list changes.
+   * collapsible subpages list changes.
    */
   onExpandedChange?: (expanded: boolean) => void;
 }
 
-export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
+export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
   (
     {
       children,
@@ -89,7 +88,7 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
       >
         <div
           ref={ref}
-          className={mapPropsToClasses({ className }, 'topic-nav-item')}
+          className={mapPropsToClasses({ className }, 'page-nav-item')}
           {...other}
         >
           <div className={mapPropsToClasses({ active }, 'item')}>
@@ -108,12 +107,12 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
                 role="button"
                 tabIndex={0}
                 className="toggle-button"
-                aria-label={t('expandSubtopics') as string}
+                aria-label={t('expandSubpages') as string}
               >
                 <Icon
                   name="chevron-right"
                   color="light"
-                  className="toggle-icon has-subtopics"
+                  className="toggle-icon has-subpages"
                 />
               </div>
             </CollapsibleTrigger>
@@ -144,4 +143,4 @@ export const TopicNavItem = React.forwardRef<HTMLDivElement, TopicNavItemProps>(
   },
 );
 
-TopicNavItem.displayName = 'TopicNavItem';
+PageNavItem.displayName = 'PageNavItem';
