@@ -3,6 +3,8 @@ import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
+import { Pages } from '@minddrop/pages';
+import { Workspaces } from '@minddrop/workspaces';
 
 // Initialize internationalization
 initializeI18n();
@@ -16,6 +18,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize workspaces
   await initializeWorkspaces();
+
+  // Initialize pages
+  await initializePages();
 
   // Watch for app config file changes
   const cancelConfigsWatcher = await watchAppConfigFiles();
@@ -55,4 +60,14 @@ function setThemeAppearanceClassOnBody({ data }: { data: ThemeAppearance }) {
     document.body.classList.remove('dark-theme');
     document.body.classList.add('light-theme');
   }
+}
+
+/**
+ * Initializes pages.
+ */
+async function initializePages() {
+  const workspacePaths = Workspaces.getAll().map((workspace) => workspace.path);
+
+  // Load pages from all workspaces
+  await Pages.load(workspacePaths);
 }
