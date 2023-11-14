@@ -134,9 +134,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
               </Text>
             </div>
           </div>
-          <CollapsibleContent asChild>
-            <div className="children">{children}</div>
-          </CollapsibleContent>
+          <CollapsibleContent>{children}</CollapsibleContent>
         </div>
       </Collapsible>
     );
