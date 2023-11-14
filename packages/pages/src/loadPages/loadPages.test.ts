@@ -78,6 +78,12 @@ describe('loadPages', () => {
     expect(PagesStore.getState().pages).toEqual(PAGES);
   });
 
+  it('does not load duplicates of pages already in the store', async () => {
+    await loadPages(SOURCE_DIRS);
+    await loadPages(SOURCE_DIRS);
+    expect(PagesStore.getState().pages).toEqual(PAGES);
+  });
+
   it('dispatches a `pages:load` event', async () =>
     new Promise<void>((done) => {
       // Listen to 'pages:load' events
