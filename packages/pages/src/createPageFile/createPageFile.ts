@@ -1,5 +1,4 @@
-import { Fs, InvalidPathError, PathConflictError } from '@minddrop/core';
-import { concatPath } from '@minddrop/utils';
+import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 
 /**
  * Creates a new page file inside the specified path.
@@ -22,8 +21,8 @@ export async function createPageFile(
   const fileName = `${title}.md`;
   // Genereate new page path
   const pageFilePath = options.wrap
-    ? concatPath(parentDir, title, fileName)
-    : concatPath(parentDir, fileName);
+    ? Fs.concatPath(parentDir, title, fileName)
+    : Fs.concatPath(parentDir, fileName);
 
   // Ensure parent dir exists
   if (!(await Fs.exists(parentDir))) {
@@ -36,7 +35,7 @@ export async function createPageFile(
   }
 
   if (options.wrap) {
-    const wrapDirPath = concatPath(parentDir, title);
+    const wrapDirPath = Fs.concatPath(parentDir, title);
 
     // Ensure wrap directory does not already exist
     if (await Fs.exists(wrapDirPath)) {
