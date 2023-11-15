@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.11",
-    "@minddrop/core": "workspace:*",
     "is-url": "^1.2.4",
     "react": "^18.2.0",
     "tldts": "^6.0.4"

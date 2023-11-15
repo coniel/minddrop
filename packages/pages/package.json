@@ -12,6 +12,7 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "yaml": "^2.3.4"
   },

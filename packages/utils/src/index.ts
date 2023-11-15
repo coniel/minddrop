@@ -1,4 +1,3 @@
-export * from './concatPath';
 export * from './arrayContainsObject';
 export * from './backend-utils';
 export * from './contains';
@@ -6,7 +5,6 @@ export * from './createContext';
 export * from './errors';
 export * from './fuzzySearch';
 export * from './getMissingItems';
-export * from './incrementalPath';
 export * from './isDomainMatch';
 export * from './isEqual';
 export * from './isImageUrl';
