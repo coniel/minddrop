@@ -129,5 +129,8 @@
         }
       }
     }
+  },
+  "pages": {
+    "untitled": "Untitled"
   }
 }

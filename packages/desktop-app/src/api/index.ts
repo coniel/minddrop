@@ -1,5 +1,7 @@
 export * from './clearPageIcon';
 export * from './clearWorkspaceIcon';
+export * from './createPage';
+export * from './createSubpage';
 export * from './promptMoveWorkspace';
 export * from './revealInFileExplorer';
 export * from './selectFolderAsWorkspace';
