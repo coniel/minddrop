@@ -1,5 +1,6 @@
 import { WebviewWindow, getAll } from '@tauri-apps/api/window';
-import { FileNotFoundError, JsonParseError } from '@minddrop/core';
+import { FileNotFoundError } from '@minddrop/file-system';
+import { JsonParseError } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../../AppUiState';
 import { throttle } from '@minddrop/utils';

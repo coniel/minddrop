@@ -1,8 +1,15 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { render, screen, act, fireEvent } from '@minddrop/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { configsFileDescriptor } from '@minddrop/core/src/test-utils/core.data';
 import { setup, cleanup } from '../../test-utils';
 import { AppUiState } from '../../AppUiState';
 import { AppSidebar } from './AppSidebar';
+
+initializeMockFileSystem([
+  // Persistent configs file
+  configsFileDescriptor,
+]);
 
 describe('<AppSidebar />', () => {
   beforeEach(setup);

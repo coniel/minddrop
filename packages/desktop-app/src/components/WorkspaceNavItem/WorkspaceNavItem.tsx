@@ -9,11 +9,12 @@ import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
 import { RenameWorkspacePopover } from '../RenameWorkspacePopover';
 import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
-import { NavItemIcon } from '../NavItemIcon';
 import { promptMoveWorkspace, revealInFileExplorer } from '../../api';
 import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
-import { useChildPages } from '@minddrop/pages';
+import { Pages, useChildPages } from '@minddrop/pages';
 import { PageNavItem } from '../PageNavItem';
+import { useCallback } from 'react';
+import { createPage } from '../../api/createPage';
 
 interface WorkspaceNavItemProps {
   /**
@@ -35,6 +36,16 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
   const handleRevealInFileExplorer = useCreateCallback(
     revealInFileExplorer,
     workspace.path,
+  );
+
+  const handleClickAddPage = useCallback(
+    async (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      await createPage(workspace.path);
+    },
+    [workspace.path],
   );
 
   return (
@@ -78,10 +89,7 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
                   label="Add a page inside"
                   size="small"
                   icon="plus"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }}
+                  onClick={handleClickAddPage}
                 />
               </div>
             }

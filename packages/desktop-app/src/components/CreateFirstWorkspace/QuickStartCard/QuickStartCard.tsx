@@ -3,7 +3,7 @@ import { appWindow } from '@tauri-apps/api/window';
 import { ActionCard, Button } from '@minddrop/ui';
 import { Workspaces } from '@minddrop/workspaces';
 import { useTranslation } from '@minddrop/i18n';
-import { BaseDirectory, Fs } from '@minddrop/core';
+import { BaseDirectory, Fs } from '@minddrop/file-system';
 
 const WORKSPACE_NAME = 'MindDrop Workspace';
 
@@ -14,7 +14,7 @@ export const QuickStartCard: React.FC = () => {
     // Get path to Documents folder
     const documentsPath = await Fs.getDirPath(BaseDirectory.Documents);
 
-    if (!(await Fs.exists(`${documentsPath}${WORKSPACE_NAME}`))) {
+    if (!(await Fs.exists(Fs.concatPath(documentsPath, WORKSPACE_NAME)))) {
       // Create 'MindDrop Workspace' folder in documents
       await Workspaces.create(documentsPath, WORKSPACE_NAME);
     } else {
