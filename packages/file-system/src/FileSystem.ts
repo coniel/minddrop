@@ -43,8 +43,6 @@ export const registerFileSystemAdapter = (adapter: FileSystemAdapter) =>
  * @param targetPath - The path to check.
  * @returns The incremented path and increment number if incremeneted.
  */
-export async function incrementalPath(
-  targetPath: string,
-): Promise<IncrementedPath> {
+async function incrementalPath(targetPath: string): Promise<IncrementedPath> {
   return incrementalPathFn(FsAdapter, targetPath);
 }
