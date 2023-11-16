@@ -1,4 +1,4 @@
-import { FileNotFoundError, Fs } from '@minddrop/core';
+import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { getWorkspaceFromPath } from '../getWorkspaceFromPath';
 import { Workspace } from '../types';

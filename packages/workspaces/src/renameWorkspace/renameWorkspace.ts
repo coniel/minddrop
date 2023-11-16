@@ -1,9 +1,5 @@
-import {
-  Fs,
-  InvalidParameterError,
-  InvalidPathError,
-  PathConflictError,
-} from '@minddrop/core';
+import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { Events } from '@minddrop/events';
 import { getWorkspace } from '../getWorkspace';
 import { Workspace } from '../types';

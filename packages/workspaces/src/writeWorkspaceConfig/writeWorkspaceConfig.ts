@@ -1,6 +1,6 @@
-import { Fs, InvalidParameterError, InvalidPathError } from '@minddrop/core';
-import { concatPath } from '@minddrop/utils';
-import { WorkspaceConfigDir, WorkspaceConfigFile } from '../constants';
+import { Fs, InvalidPathError } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceConfigDirName, WorkspaceConfigFileName } from '../constants';
 import { getWorkspace } from '../getWorkspace';
 import { WorkspaceConfig } from '../types';
 
@@ -31,7 +31,7 @@ export async function writeWorkspaceConfig(path: string): Promise<void> {
   const config: WorkspaceConfig = { icon: workspace.icon };
 
   // Generate workspace config hidden dir path
-  const configDirPath = concatPath(path, WorkspaceConfigDir);
+  const configDirPath = Fs.concatPath(path, WorkspaceConfigDirName);
 
   // Create hidden workspace config dir if it doesn't exist
   if (!(await Fs.exists(configDirPath))) {
@@ -39,7 +39,7 @@ export async function writeWorkspaceConfig(path: string): Promise<void> {
   }
 
   // Generate workspace config file path
-  const configFilePath = concatPath(configDirPath, WorkspaceConfigFile);
+  const configFilePath = Fs.concatPath(configDirPath, WorkspaceConfigFileName);
 
   // Write values to workspace config file
   Fs.writeTextFile(configFilePath, JSON.stringify(config));

@@ -1,55 +1,45 @@
-import { InvalidPathError, registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { concatPath } from '@minddrop/utils';
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
+  InvalidPathError,
+  initializeMockFileSystem,
+  Fs,
+} from '@minddrop/file-system';
+import {
   DefaultWorkspaceConfig,
-  WorkspaceConfigDir,
-  WorkspaceConfigFile,
+  WorkspaceConfigDirName,
+  WorkspaceConfigFileName,
 } from '../constants';
 import { setup, cleanup, workspace1, workspace1Config } from '../test-utils';
 import { getWorkspaceConfig } from './getWorkspaceConfig';
 
 const WORKSPACE_PATH = workspace1.path;
-const WORKSPACE_CONFIG_PATH = concatPath(
+const WORKSPACE_CONFIG_PATH = Fs.concatPath(
   workspace1.path,
-  WorkspaceConfigDir,
-  WorkspaceConfigFile,
+  WorkspaceConfigDirName,
+  WorkspaceConfigFileName,
 );
 
-let workspaceDirExists: boolean;
-let workspaceConfigFileExists: boolean;
-
-const exists = async (path: string) => {
-  switch (path) {
-    case WORKSPACE_PATH:
-      return workspaceDirExists;
-    case WORKSPACE_CONFIG_PATH:
-      return workspaceConfigFileExists;
-    default:
-      throw new Error(`unexpected path ${path}`);
-  }
-};
-
-const readTextFile = async (path: string) =>
-  path === WORKSPACE_CONFIG_PATH ? JSON.stringify(workspace1Config) : '{}';
-
-registerFileSystemAdapter({ ...MockFsAdapter, exists, readTextFile });
+const MockFs = initializeMockFileSystem([
+  // Workspace 1 config file
+  {
+    path: WORKSPACE_CONFIG_PATH,
+    textContent: JSON.stringify(workspace1Config),
+  },
+]);
 
 describe('getWorkspaceConfig', () => {
   beforeEach(() => {
     setup();
 
-    // Reset FS mock return values
-    workspaceDirExists = true;
-    workspaceConfigFileExists = true;
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
   it('throws if the workspace path does not exist', () => {
     // Pretend workspace dir does not exist
-    workspaceDirExists = false;
+    MockFs.clear();
 
     // Attempt to get the workspace config, should
     // throw a InvalidPathError.
@@ -68,7 +58,7 @@ describe('getWorkspaceConfig', () => {
 
   it('returns the default config if workspace does not have one', async () => {
     // Pretend that workspace config file does not exist
-    workspaceConfigFileExists = false;
+    MockFs.removeDir(Fs.parentDirPath(WORKSPACE_CONFIG_PATH));
 
     // Get the workspace config
     const config = await getWorkspaceConfig(WORKSPACE_PATH);

@@ -1,41 +1,33 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
-  Fs,
   InvalidPathError,
   PathConflictError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { getWorkspace } from '../getWorkspace';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  workspcesConfigFileDescriptor,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
-import * as WRITE_CONFIG from '../writeWorkspacesConfig';
 import { moveWorkspace } from './moveWorkspace';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
 const WORKSPACE_PATH = workspace1.path;
-const DESTINATION_PATH = '/New/Path';
-const NEW_WORKSPACE_PATH = `/New/Path/${workspace1.name}`;
+const DESTINATION_PATH = 'New/Path';
+const NEW_WORKSPACE_PATH = `New/Path/${workspace1.name}`;
 
-let workspaceDirExists: boolean;
-let destinationDirExists: boolean;
-let hasConflictingDir: boolean;
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
-  exists: async (path) => {
-    switch (path) {
-      case WORKSPACE_PATH:
-        return workspaceDirExists;
-      case DESTINATION_PATH:
-        return destinationDirExists;
-      case NEW_WORKSPACE_PATH:
-        return hasConflictingDir;
-      default:
-        throw new Error(`Unexpected path: ${path}`);
-    }
-  },
-});
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace
+  WORKSPACE_PATH,
+  // Destination dir
+  DESTINATION_PATH,
+]);
 
 describe('moveWorkspace', () => {
   beforeEach(() => {
@@ -44,17 +36,15 @@ describe('moveWorkspace', () => {
     // Add a workspace to the store
     WorkspacesStore.getState().add(workspace1);
 
-    // Reset 'exists' responses
-    workspaceDirExists = true;
-    destinationDirExists = true;
-    hasConflictingDir = false;
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
   it('throws if the workspace path does not exist', () => {
     // Pretend workspace path does not exist
-    workspaceDirExists = false;
+    MockFs.removeFile(WORKSPACE_PATH);
 
     // Attempt to move a workspace from an invalid path,
     // should throw a InvalidPathError.
@@ -65,7 +55,7 @@ describe('moveWorkspace', () => {
 
   it('throws if the destination path does not exist', () => {
     // Pretend destination path does not exist
-    destinationDirExists = false;
+    MockFs.removeDir(DESTINATION_PATH);
 
     // Attempt to move a workspace to an invalid destination,
     // should throw a InvalidPathError.
@@ -77,7 +67,7 @@ describe('moveWorkspace', () => {
   it('throws if the there is a conflicting dir', () => {
     // Pretend destination path already contains a dir
     // of the same name.
-    hasConflictingDir = true;
+    MockFs.addFiles([NEW_WORKSPACE_PATH]);
 
     // Attempt to move a workspace with a conflicting dir,
     // should throw a PathConflictError.
@@ -86,17 +76,14 @@ describe('moveWorkspace', () => {
     ).rejects.toThrowError(PathConflictError);
   });
 
-  it('renames the workspace dir', async () => {
-    vi.spyOn(Fs, 'renameFile');
-
+  it('moves the workspace dir', async () => {
     // Move a workspace
     await moveWorkspace(WORKSPACE_PATH, DESTINATION_PATH);
 
-    // Should rename workspace path to new path
-    expect(Fs.renameFile).toHaveBeenCalledWith(
-      WORKSPACE_PATH,
-      NEW_WORKSPACE_PATH,
-    );
+    // Original dir should no longer exist
+    expect(MockFs.exists(WORKSPACE_PATH)).toBeFalsy();
+    // New dir should exist
+    expect(MockFs.exists(NEW_WORKSPACE_PATH)).toBeTruthy();
   });
 
   it('updates the workspace path in the store', async () => {
@@ -110,13 +97,14 @@ describe('moveWorkspace', () => {
   });
 
   it('updates the workspaces config file', async () => {
-    vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
-
     // Move a workspace
     await moveWorkspace(WORKSPACE_PATH, DESTINATION_PATH);
 
+    // Get workspaces config
+    const config = await getWorkspacesConfig();
+
     // Should write updated workspace path to config
-    expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
+    expect(config.paths.includes(NEW_WORKSPACE_PATH)).toBeTruthy();
   });
 
   it('dispatches a `workspaces:workspace:move` event', () =>

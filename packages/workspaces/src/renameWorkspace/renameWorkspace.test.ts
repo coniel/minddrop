@@ -1,18 +1,21 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
-  Fs,
-  InvalidParameterError,
+  initializeMockFileSystem,
   InvalidPathError,
   PathConflictError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
+} from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { Events } from '@minddrop/events';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import * as WRITE_CONFIG from '../writeWorkspacesConfig';
 import { getWorkspace } from '../getWorkspace';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  workspcesConfigFileDescriptor,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { renameWorkspace } from './renameWorkspace';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
 const WORKSPACE_PATH = workspace1.path;
 const NEW_WORKSPACE_NAME = 'New name';
@@ -26,30 +29,19 @@ const UPDATED_WORKSPACE = {
   path: NEW_WORKSPACE_PATH,
 };
 
-let workspaceDirExists: boolean;
-let newWorkspaceDirConflict: boolean;
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
-  exists: async (path: string) => {
-    switch (path) {
-      case WORKSPACE_PATH:
-        return workspaceDirExists;
-      case NEW_WORKSPACE_PATH:
-        return newWorkspaceDirConflict;
-      default:
-        throw new Error(`unexpected path: ${path}`);
-    }
-  },
-});
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace
+  WORKSPACE_PATH,
+]);
 
 describe('renameWorkspace', () => {
   beforeEach(() => {
     setup();
 
-    // Reset exists reponsponses to defaults
-    workspaceDirExists = true;
-    newWorkspaceDirConflict = false;
+    // Reset mock file system
+    MockFs.reset();
 
     // Add a workspace to the store
     WorkspacesStore.getState().add(workspace1);
@@ -67,7 +59,7 @@ describe('renameWorkspace', () => {
 
   it('throws if the workspace dir does not exist', () => {
     // Pretend that workspace dir does not exist
-    workspaceDirExists = false;
+    MockFs.removeDir(WORKSPACE_PATH);
 
     // Attempt to rename a workspace for which the dir is missing,
     // should throw a InvalidPathError.
@@ -76,9 +68,9 @@ describe('renameWorkspace', () => {
     ).rejects.toThrowError(InvalidPathError);
   });
 
-  it('throws if the workspace dir does not exist', () => {
+  it('throws if a conflicting dir already exists', () => {
     // Pretend that a dir with new workspace name already exists
-    newWorkspaceDirConflict = true;
+    MockFs.addFiles([NEW_WORKSPACE_PATH]);
 
     // Attempt to rename a workspace for which the new name would
     // cause a conflict, should throw a PathConflictError.
@@ -88,16 +80,13 @@ describe('renameWorkspace', () => {
   });
 
   it('renames the workspace dir', async () => {
-    vi.spyOn(Fs, 'renameFile');
-
     // Rename a workspace
     await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME);
 
-    // Should rename workspace dir
-    expect(Fs.renameFile).toHaveBeenCalledWith(
-      WORKSPACE_PATH,
-      NEW_WORKSPACE_PATH,
-    );
+    // Old workspace dir should no longer exist
+    expect(MockFs.exists(WORKSPACE_PATH)).toBeFalsy();
+    // New workspace dir should exist
+    expect(MockFs.exists(NEW_WORKSPACE_PATH)).toBeTruthy();
   });
 
   it('updates the workspace in the store', async () => {
@@ -111,13 +100,16 @@ describe('renameWorkspace', () => {
   });
 
   it('updates the workspaces config file', async () => {
-    vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
-
     // Rename a workspace
     await renameWorkspace(WORKSPACE_PATH, NEW_WORKSPACE_NAME);
 
-    // Should write updated workspace path to config
-    expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
+    // Get the workspaces config
+    const config = await getWorkspacesConfig();
+
+    // Config should contain new workspace path
+    expect(config.paths.includes(NEW_WORKSPACE_PATH)).toBeTruthy();
+    // Config should no longer contain old workspace path
+    expect(config.paths.includes(WORKSPACE_PATH)).toBeFalsy();
   });
 
   it('dispatches a `workspaces:workspace:rename` event', () =>

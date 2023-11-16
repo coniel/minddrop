@@ -1,14 +1,23 @@
-import { Events } from '@minddrop/events';
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { Events } from '@minddrop/events';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  workspcesConfigFileDescriptor,
+} from '../test-utils';
 import { getWorkspace } from '../getWorkspace';
-import * as WRITE_CONFIG from '../writeWorkspacesConfig';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { removeWorkspace } from './removeWorkspace';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
-registerFileSystemAdapter(MockFsAdapter);
+initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace 1
+  workspace1.path,
+]);
 
 describe('removeWorkspace', () => {
   beforeEach(() => {
@@ -37,13 +46,14 @@ describe('removeWorkspace', () => {
   });
 
   it('updates the workspaces config file', async () => {
-    vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
-
     // Remove a workspace
     await removeWorkspace(workspace1.path);
 
-    // Should write updated workspace path to config
-    expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
+    // Get the workspaces config
+    const config = await getWorkspacesConfig();
+
+    // Should remove workspace path from workspaces config
+    expect(config.paths.includes(workspace1.path)).toBeFalsy();
   });
 
   it('dispatches a `workspaces:workspace:remove` event', () =>

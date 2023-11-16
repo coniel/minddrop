@@ -10,8 +10,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*"
   },
   "devDependencies": {

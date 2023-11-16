@@ -1,4 +1,4 @@
-import { Fs } from '@minddrop/core';
+import { Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { getWorkspace } from '../getWorkspace';
 import { removeWorkspace } from '../removeWorkspace';
@@ -21,7 +21,7 @@ export async function deleteWorkspace(path: string): Promise<void> {
   }
 
   // Remove the workspace from the store
-  removeWorkspace(path);
+  await removeWorkspace(path);
 
   // Delete the workspace directory
   await Fs.trashDir(path);

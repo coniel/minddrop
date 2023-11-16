@@ -1,4 +1,4 @@
-import { Fs } from '@minddrop/core';
+import { Fs } from '@minddrop/file-system';
 
 /**
  * Checks whether a workspace directory exists.

@@ -1,4 +1,4 @@
-import { Fs, InvalidPathError, PathConflictError } from '@minddrop/core';
+import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { Workspace } from '../types';
 import { addWorkspace } from '../addWorkspace';
@@ -19,12 +19,8 @@ export async function createWorkspace(
   location: string,
   name: string,
 ): Promise<Workspace> {
-  // Add trailing '/' to location path if needed
-  const locationWithTrailingSlash = location.endsWith('/')
-    ? location
-    : `${location}/`;
   // Create workspace path
-  const workspacePath = `${locationWithTrailingSlash}${name}`;
+  const workspacePath = Fs.concatPath(location, name);
 
   // Ensure location exists
   if (!(await Fs.exists(location))) {

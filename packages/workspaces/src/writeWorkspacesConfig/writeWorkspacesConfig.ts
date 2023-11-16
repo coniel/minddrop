@@ -1,5 +1,5 @@
-import { BaseDirectory, Fs } from '@minddrop/core';
-import { WorkspacesConfigFile } from '../constants';
+import { Fs } from '@minddrop/file-system';
+import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
 import { WorkspacesStore } from '../WorkspacesStore';
 
 /**
@@ -14,7 +14,11 @@ export async function writeWorkspacesConfig(): Promise<void> {
   };
 
   // Write config file
-  await Fs.writeTextFile(WorkspacesConfigFile, JSON.stringify(fileContents), {
-    dir: BaseDirectory.AppConfig,
-  });
+  await Fs.writeTextFile(
+    WorkspacesConfigFileName,
+    JSON.stringify(fileContents),
+    {
+      dir: WorkspacesConfigDir,
+    },
+  );
 }

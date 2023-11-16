@@ -1,40 +1,22 @@
-import { registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import {
   setup,
   cleanup,
   workspace1,
   missingWorkspace,
   workspace1Config,
+  workspace1ConfigPath,
 } from '../test-utils';
-import * as GET_WORKSPACE_CONFIG from '../getWorkspaceConfig';
 import { getWorkspaceFromPath } from './getWorkspaceFromPath';
 
-const exists = vi.fn();
+initializeMockFileSystem([
+  // Workspace 1 config file
+  { path: workspace1ConfigPath, textContent: JSON.stringify(workspace1Config) },
+]);
 
 describe('getWorkspaceFromPath', () => {
-  beforeEach(() => {
-    setup();
-
-    // Pretend that workspace 2 does not exist
-    exists.mockImplementation(
-      (path) =>
-        new Promise((resolve) => {
-          resolve(path !== missingWorkspace.path);
-        }),
-    );
-
-    // Return workspace1Config for workspace1
-    vi.spyOn(GET_WORKSPACE_CONFIG, 'getWorkspaceConfig').mockResolvedValue(
-      workspace1Config,
-    );
-
-    registerFileSystemAdapter({
-      ...MockFsAdapter,
-      exists,
-    });
-  });
+  beforeEach(setup);
 
   afterEach(cleanup);
 
