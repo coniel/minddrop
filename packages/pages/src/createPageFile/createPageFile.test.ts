@@ -13,27 +13,24 @@ const PAGE_FILE_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}.md`;
 const WRAPPED_PAGE_DIR_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}`;
 const WRAPPED_PAGE_FILE_PATH = `${WRAPPED_PAGE_DIR_PATH}/${PAGE_TITLE}.md`;
 
-const {
-  printFiles,
-  resetMockFileSystem,
-  clearMockFileSystem,
-  addFiles,
-  exists,
-} = initializeMockFileSystem([PARENT_DIR_PATH]);
+const MockFs = initializeMockFileSystem([
+  // New pages's parent dir
+  PARENT_DIR_PATH,
+]);
 
 describe('createPage', () => {
   beforeEach(() => {
     setup();
 
     // Reset mock file system
-    resetMockFileSystem();
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
   it('throws if the parent dir does not exist', () => {
     // Remove parent dir from file system
-    clearMockFileSystem();
+    MockFs.clear();
 
     // Attempt to create a new page file in missing parent
     // dir. Should throw a InvalidPathError.
@@ -44,7 +41,7 @@ describe('createPage', () => {
 
   it('throws if the new page conflicts with an existing one', () => {
     // Add a conflicting page to the file system
-    addFiles([PAGE_FILE_PATH]);
+    MockFs.addFiles([PAGE_FILE_PATH]);
 
     // Attempt to create a new page file where one of the same
     // name already exists. Should throw a PathConflictError.
@@ -58,7 +55,7 @@ describe('createPage', () => {
     await createPageFile(PARENT_DIR_PATH, PAGE_TITLE);
 
     // Should create the page file
-    expect(exists(PAGE_FILE_PATH)).toBe(true);
+    expect(MockFs.exists(PAGE_FILE_PATH)).toBe(true);
   });
 
   it('returns the new page file path', async () => {
@@ -72,7 +69,7 @@ describe('createPage', () => {
   describe('wrapped', () => {
     it('throws if the new page dir conflicts with an existing one', () => {
       // Add the target page wrapper dir to the file system
-      addFiles([WRAPPED_PAGE_DIR_PATH]);
+      MockFs.addFiles([WRAPPED_PAGE_DIR_PATH]);
 
       // Attempt to create a new wrapped page file where one of the
       // same name already exists. Should throw a PathConflictError.
@@ -86,7 +83,7 @@ describe('createPage', () => {
       await createPageFile(PARENT_DIR_PATH, PAGE_TITLE, { wrap: true });
 
       // Should create the wrapper dir
-      expect(exists(WRAPPED_PAGE_DIR_PATH)).toBe(true);
+      expect(MockFs.exists(WRAPPED_PAGE_DIR_PATH)).toBe(true);
     });
 
     it('creates the wrapped page file', async () => {
@@ -94,7 +91,7 @@ describe('createPage', () => {
       await createPageFile(PARENT_DIR_PATH, PAGE_TITLE, { wrap: true });
 
       // Should create the wrapped page file
-      expect(exists(WRAPPED_PAGE_FILE_PATH)).toBe(true);
+      expect(MockFs.exists(WRAPPED_PAGE_FILE_PATH)).toBe(true);
     });
   });
 });

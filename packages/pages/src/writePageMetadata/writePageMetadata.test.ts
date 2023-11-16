@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   initializeMockFileSystem,
   FileNotFoundError,
@@ -21,12 +21,8 @@ const SERIALIZED_METADATA = serializePageMetadata({ icon: page1.icon });
 const SERIALIZED_NEW_METADATA = serializePageMetadata({ icon: NEW_PAGE_ICON });
 const PAGE_CONTENT = '# Title\n\nContent';
 
-const {
-  resetMockFileSystem,
-  clearMockFileSystem,
-  readTextFile,
-  writeTextFile,
-} = initializeMockFileSystem([
+const MockFs = initializeMockFileSystem([
+  // Page file
   { path: PAGE_PATH, textContent: `${SERIALIZED_METADATA}${PAGE_CONTENT}` },
 ]);
 
@@ -38,7 +34,7 @@ describe('writePageMetadata', () => {
     PagesStore.getState().add(page1);
 
     // Reset mock file system
-    resetMockFileSystem();
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -53,7 +49,7 @@ describe('writePageMetadata', () => {
 
   it('throws if the page file does not exist', () => {
     // Pretend page file does not exist
-    clearMockFileSystem();
+    MockFs.clear();
 
     // Attempt to write the metadata for a page missing its file.
     // Should throw a FileNotFoundError.
@@ -72,14 +68,14 @@ describe('writePageMetadata', () => {
     await writePageMetadata(PAGE_PATH);
 
     // Should write metadata to file
-    expect(readTextFile(PAGE_PATH)).toBe(
+    expect(MockFs.readTextFile(PAGE_PATH)).toBe(
       `${SERIALIZED_NEW_METADATA}${PAGE_CONTENT}`,
     );
   });
 
   it('supports files with no metadata', async () => {
     // Pretend page file has no metadata
-    writeTextFile(PAGE_PATH, PAGE_CONTENT);
+    MockFs.writeTextFile(PAGE_PATH, PAGE_CONTENT);
 
     // Update a page icon
     PagesStore.getState().update(PAGE_PATH, {
@@ -90,7 +86,7 @@ describe('writePageMetadata', () => {
     await writePageMetadata(PAGE_PATH);
 
     // Should write metadata to file
-    expect(readTextFile(PAGE_PATH)).toBe(
+    expect(MockFs.readTextFile(PAGE_PATH)).toBe(
       `${SERIALIZED_NEW_METADATA}${PAGE_CONTENT}`,
     );
   });
@@ -106,6 +102,6 @@ describe('writePageMetadata', () => {
     await writePageMetadata(PAGE_PATH);
 
     // Should write file containing on text content
-    expect(readTextFile(PAGE_PATH)).toBe(PAGE_CONTENT);
+    expect(MockFs.readTextFile(PAGE_PATH)).toBe(PAGE_CONTENT);
   });
 });

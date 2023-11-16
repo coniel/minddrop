@@ -3,10 +3,12 @@ import { isWrapped } from './isWrapped';
 
 describe('isWrapped', () => {
   it('returns true when the page is wrapped', () => {
+    // Check if a wrapped page is wrapped
     expect(isWrapped('path/to/Wrapped page/Wrapped page.md')).toBe(true);
   });
 
   it('returns false when the page is not wrapped', () => {
+    // Check if a non-wrapped page is wrapped
     expect(isWrapped('path/to/Page.md')).toBe(false);
   });
 });

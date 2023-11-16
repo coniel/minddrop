@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { setup, cleanup } from '../test-utils';
-import * as CREATE_PAGE_FILE from '../createPageFile';
 import { createPage } from './createPage';
 import { Page } from '../types';
 import { DefaultPageIcon } from '../constants';
@@ -10,6 +10,7 @@ import { getPage } from '../getPage';
 const PAGE_TITLE = 'Page';
 const PARENT_DIR_PATH = 'path/to/Workspace';
 const PAGE_FILE_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}.md`;
+const WRAPPED_PAGE_FILE_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}/${PAGE_TITLE}.md`;
 
 const PAGE: Page = {
   title: PAGE_TITLE,
@@ -18,30 +19,34 @@ const PAGE: Page = {
   wrapped: false,
 };
 
+const MockFs = initializeMockFileSystem([
+  // New page's parent dir
+  PARENT_DIR_PATH,
+]);
+
 describe('createPage', () => {
   beforeEach(() => {
     setup();
 
-    // Return positive response from createPageFile
-    vi.spyOn(CREATE_PAGE_FILE, 'createPageFile').mockResolvedValue(
-      PAGE_FILE_PATH,
-    );
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
-  it('create the page file', async () => {
-    const options = {};
-
+  it('creates the page file', async () => {
     // Create a page
-    await createPage(PARENT_DIR_PATH, PAGE_TITLE, options);
+    await createPage(PARENT_DIR_PATH, PAGE_TITLE);
 
     // Should create page markdown file
-    expect(CREATE_PAGE_FILE.createPageFile).toHaveBeenCalledWith(
-      PARENT_DIR_PATH,
-      PAGE_TITLE,
-      options,
-    );
+    expect(MockFs.exists(PAGE_FILE_PATH)).toBeTruthy();
+  });
+
+  it('creates a wrapped page file if requested', async () => {
+    // Create a page
+    await createPage(PARENT_DIR_PATH, PAGE_TITLE, { wrap: true });
+
+    // Should create page markdown file
+    expect(MockFs.exists(WRAPPED_PAGE_FILE_PATH)).toBeTruthy();
   });
 
   it('adds the page to the store', async () => {
