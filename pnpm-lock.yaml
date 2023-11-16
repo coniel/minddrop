@@ -217,34 +217,6 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
 
-  packages/drops:
-    dependencies:
-      '@minddrop/markdown':
-        specifier: workspace:*
-        version: link:../markdown
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-      uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
-    devDependencies:
-      '@types/uuid':
-        specifier: ^9.0.2
-        version: 9.0.5
-      eslint:
-        specifier: ^7.32.0
-        version: 7.32.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^4.5.2
-        version: 4.9.5
-
   packages/eslint-config-custom:
     dependencies:
       eslint:
@@ -767,12 +739,12 @@ importers:
 
   packages/workspaces:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -4993,10 +4965,6 @@ packages:
 
   /@types/unist@3.0.0:
     resolution: {integrity: sha512-MFETx3tbTjE7Uk6vvnWINA/1iJ7LuMdO4fcq8UfF0pRbj01aGLduVvQcRyswuACJdpnHgg8E3rQLhaRdNEJS0w==}
-
-  /@types/uuid@9.0.5:
-    resolution: {integrity: sha512-xfHdwa1FMJ082prjSJpoEI57GZITiQz10r3vEJCHa2khEFQjKy91aWKz6+zybzssCvXUwE1LQWgWVwZ4nYUvHQ==}
-    dev: true
 
   /@types/yargs-parser@21.0.1:
     resolution: {integrity: sha512-axdPBuLuEJt0c4yI5OZssC19K2Mq1uKdrfZBzuxLvaztgqUtFYZUNw7lETExPYJR9jdEoIg4mb7RQKRQzOkeGQ==}
