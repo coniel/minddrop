@@ -8,7 +8,7 @@
 }
 
 .workspace-nav-item > .nav-item:hover,
-.workspace-nav-item.hovering .nav-item {
+.workspace-nav-item > .nav-item.hovering {
   background-color: var(--bgNeutralHover);
 }
 
@@ -18,7 +18,7 @@
 
 .workspace-nav-item > .nav-item:hover .text,
 .workspace-nav-item.active .nav-item .text,
-.workspace-nav-item.hovering .nav-item .text {
+.workspace-nav-item > .nav-item.hovering .text {
   color: var(--textPrimary);
 }
 
@@ -43,6 +43,7 @@
 .workspace-nav-item .label {
   padding: 0 4px;
   flex: 1;
+  line-height: 28px;
 }
 
 .workspace-nav-item.missing .nav-item .text {
@@ -57,8 +58,8 @@
   opacity: 0;
 }
 
-.workspace-nav-item:hover .actions,
-.workspace-nav-item.hovering .actions {
+.workspace-nav-item > .nav-item:hover .actions,
+.workspace-nav-item > .nav-item.hovering .actions {
   opacity: 1;
 }
 
