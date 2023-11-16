@@ -1,5 +1,5 @@
+import { Fs } from '@minddrop/file-system';
 import { ConfigsFile, ConfigsFileOptions } from '../../constants';
-import { Fs } from '../../FileSystem';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
 
 /**
@@ -8,7 +8,7 @@ import { PersistentConfigsStore } from '../PersistentConfigsStore';
  *
  * @returns A promise indicating the success or failure of the operation.
  */
-export function persistConfigs(): Promise<void> {
+export async function persistConfigs(): Promise<void> {
   // Get the configs
   const configs = PersistentConfigsStore.getAll();
 

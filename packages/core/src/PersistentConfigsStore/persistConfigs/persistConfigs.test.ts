@@ -1,33 +1,41 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MockFsAdapter } from '../../test-utils';
-import { registerFileSystemAdapter } from '../../FileSystem';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { persistConfigs } from './persistConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
-import { ConfigsFile, ConfigsFileOptions } from '../../constants';
+import { configsFileDescriptor } from '../../test-utils';
+
+const CONFIGS = [
+  { id: 'test-config-1', values: { foo: 'bar' } },
+  { id: 'test-config-2', values: { bar: 'foo' } },
+];
+
+const MockFs = initializeMockFileSystem([configsFileDescriptor]);
 
 describe('persistConfig', () => {
   beforeEach(() => {
-    registerFileSystemAdapter(MockFsAdapter);
+    // Reset mock file system
+    MockFs.reset();
   });
 
-  it('writes the config to "configs.json"', () => {
-    // Load a config
-    PersistentConfigsStore.load([
-      { id: 'test-config-1', values: { foo: 'bar' } },
-      { id: 'test-config-2', values: { bar: 'foo' } },
-    ]);
+  it('writes the configs to "configs.json"', async () => {
+    // Load configs
+    PersistentConfigsStore.load(CONFIGS);
 
     // Perist the config
-    persistConfigs();
+    await persistConfigs();
 
-    // Should write configs to 'configs.json'
-    expect(MockFsAdapter.writeTextFile).toHaveBeenCalledWith(
-      ConfigsFile,
-      JSON.stringify({
-        'test-config-1': { foo: 'bar' },
-        'test-config-2': { bar: 'foo' },
-      }),
-      ConfigsFileOptions,
+    // Get the persisted configs
+    const configs = JSON.parse(
+      MockFs.readTextFile(
+        configsFileDescriptor.path,
+        configsFileDescriptor.options,
+      ),
     );
+
+    // Persisted configs should contain configs data
+    expect(configs).toEqual({
+      'test-config-1': { foo: 'bar' },
+      'test-config-2': { bar: 'foo' },
+    });
   });
 });
