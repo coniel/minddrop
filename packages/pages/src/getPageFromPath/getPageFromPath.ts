@@ -1,11 +1,6 @@
-import { Fs } from '@minddrop/core';
+import { Fs } from '@minddrop/file-system';
 import { Page } from '../types';
-import {
-  getPageMetadata,
-  isWrapped,
-  parseIconMetadata,
-  titleFromPath,
-} from '../utils';
+import { getPageMetadata, isWrapped, titleFromPath } from '../utils';
 
 /**
  * Create a page object from a markdown file.

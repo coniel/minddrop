@@ -1,8 +1,8 @@
-import { FileEntry, Fs } from '@minddrop/core';
+import { FileEntry, Fs } from '@minddrop/file-system';
+import { Events } from '@minddrop/events';
 import { getDirFilesRecursiveFlat } from '../utils';
 import { getPageFromPath } from '../getPageFromPath';
 import { PagesStore } from '../PagesStore';
-import { Events } from '@minddrop/events';
 import { getPage } from '../getPage';
 
 /**

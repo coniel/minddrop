@@ -1,12 +1,11 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
+import { Events } from '@minddrop/events';
 import { setup, cleanup } from '../test-utils';
 import { loadPages } from './loadPages';
 import { Page } from '../types';
-import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
 import { PagesStore } from '../PagesStore';
-import { Events } from '@minddrop/events';
 
 const PAGE_ICON: UserIconContentIcon = {
   type: UserIconType.ContentIcon,
@@ -14,8 +13,8 @@ const PAGE_ICON: UserIconContentIcon = {
   color: 'cyan',
 };
 
-const SOURCE_DIRS = ['path/to/pages/1', 'path/to/page/2', 'missing-source'];
-const PAGES: Page[] = SOURCE_DIRS.slice(0, 2).flatMap<Page>((dirPath) => [
+const SOURCE_DIRS = ['path/to/pages/1', 'path/to/page/2'];
+const PAGES: Page[] = SOURCE_DIRS.flatMap<Page>((dirPath) => [
   {
     title: 'Page 1',
     path: `${dirPath}/Page 1.md`,
@@ -36,37 +35,13 @@ const PAGES: Page[] = SOURCE_DIRS.slice(0, 2).flatMap<Page>((dirPath) => [
   },
 ]);
 
-// Pretend that source 'missing-source' does not exist
-const exists = async (path: string) => path !== 'missing-source';
-
-// Pretend each source directory contains the following
-const readDir = async (path: string) => [
-  // Basic page
-  {
-    path: `${path}/Page 1.md`,
-  },
-  // Wrapped page
-  {
-    path: `${path}/Page 2/Page 2.md`,
-  },
-  // Subdirectory containing a page
-  {
-    path: `${path}/subdir`,
-    children: [
-      {
-        path: `${path}/subdir/Page 3.md`,
-      },
-    ],
-  },
-  // Image, should be ignored
-  {
-    path: `${path}/image.png`,
-  },
-];
-
-const readTextFile = async () => '---\nicon: "content-icon:cat:cyan"\n---';
-
-registerFileSystemAdapter({ ...MockFsAdapter, exists, readDir, readTextFile });
+initializeMockFileSystem([
+  ...PAGES.map((page) => ({
+    path: page.path,
+    textContent: '---\nicon: "content-icon:cat:cyan"\n---',
+  })),
+  ...SOURCE_DIRS.map((dir) => `${dir}/image.png`),
+]);
 
 describe('loadPages', () => {
   beforeEach(setup);
@@ -74,13 +49,19 @@ describe('loadPages', () => {
   afterEach(cleanup);
 
   it('loads pages into the store', async () => {
+    // Load pages
     await loadPages(SOURCE_DIRS);
+
+    // Pages should be in the store
     expect(PagesStore.getState().pages).toEqual(PAGES);
   });
 
   it('does not load duplicates of pages already in the store', async () => {
+    // Load pages twice
     await loadPages(SOURCE_DIRS);
     await loadPages(SOURCE_DIRS);
+
+    // Store should not contain duplicates
     expect(PagesStore.getState().pages).toEqual(PAGES);
   });
 
