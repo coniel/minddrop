@@ -28,6 +28,11 @@ export interface PageNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: React.ReactNode;
 
   /**
+   * Action buttons show on hover.
+   */
+  actions?: React.ReactNode;
+
+  /**
    * Internal prop not intended to be set manually.
    *
    * The nesting level of the page starting from 0 for
@@ -68,6 +73,12 @@ export interface PageNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
    * collapsible subpages list changes.
    */
   onExpandedChange?: (expanded: boolean) => void;
+
+  /**
+   * Bit of a hack to enable hover styling when options menu
+   * is open.
+   */
+  hovering?: boolean;
 }
 
 export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
@@ -81,9 +92,11 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
       active,
       label,
       icon,
+      actions,
       level = 0,
       hasSubpages,
       onClick,
+      hovering,
       ...other
     },
     ref,
@@ -103,7 +116,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
           className={mapPropsToClasses({ className }, 'page-nav-item')}
           {...other}
         >
-          <div className={mapPropsToClasses({ active }, 'nav-item')}>
+          <div className={mapPropsToClasses({ active, hovering }, 'nav-item')}>
             {level > 0 && (
               <div
                 role="button"
@@ -145,6 +158,7 @@ export const PageNavItem = React.forwardRef<HTMLDivElement, PageNavItemProps>(
                 {title}
               </Text>
             </div>
+            <div className="actions">{actions}</div>
           </div>
           <CollapsibleContent>{children}</CollapsibleContent>
         </div>

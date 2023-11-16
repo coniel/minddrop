@@ -5,9 +5,11 @@
   cursor: pointer;
   user-select: none;
   overflow: hidden;
+  padding-right: 2px;
 }
 
-.page-nav-item > .nav-item:hover {
+.page-nav-item > .nav-item:hover,
+.page-nav-item > .nav-item.hovering {
   background-color: var(--bgNeutralHover);
 }
 
@@ -46,6 +48,12 @@
   fill: var(--textNeutralLight);
 }
 
+.page-nav-item > .nav-item:hover > .page-icon .icon,
+.page-nav-item .nav-item.hovering > .page-icon .icon,
+.page-nav-item.active .nav-item > .page-icon .icon {
+  fill: var(--textNeutral);
+}
+
 /* Label */
 
 .page-nav-item .label-button {
@@ -65,6 +73,7 @@
 }
 
 .page-nav-item > .nav-item:hover .text,
+.page-nav-item > .nav-item.hovering .text,
 .page-nav-item.active .nav-item .text,
 .page-nav-item.hovering .nav-item .text {
   color: var(--textPrimary);
@@ -72,6 +81,17 @@
 
 .page-nav-item > .nav-item.active .label {
   font-weight: var(--fwSemibold);
+}
+
+/* Actions */
+
+.page-nav-item > .nav-item .actions {
+  opacity: 0;
+}
+
+.page-nav-item > .nav-item:hover .actions,
+.page-nav-item > .nav-item.hovering .actions {
+  opacity: 1;
 }
 
 /* No subpages helper text */

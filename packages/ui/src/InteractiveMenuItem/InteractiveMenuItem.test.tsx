@@ -4,7 +4,6 @@ import {
   render,
   cleanup,
   screen,
-  act,
   fireEvent,
   waitFor,
   userEvent,
@@ -16,6 +15,7 @@ import {
   DropdownMenuContent,
 } from '../DropdownMenu';
 import { InteractiveMenuItem } from './InteractiveMenuItem';
+import { i18n } from '@minddrop/i18n';
 
 const DropdownMenuItem = DropdownMenuPrimitives.Item;
 
@@ -34,12 +34,29 @@ describe('<InteractiveMenuItem />', () => {
   afterEach(cleanup);
 
   describe('primary state', () => {
-    it('renders the label', () => {
+    it('renders string label as translation', () => {
+      const { queryByText, getByTranslatedText } = render(
+        <Container>
+          <InteractiveMenuItem
+            MenuItemComponent={DropdownMenuItem}
+            label="test"
+            secondaryLabel="Secondary label"
+          />
+        </Container>,
+      );
+
+      // Renders primary label
+      getByTranslatedText('test');
+      // Should not render secondary label
+      expect(queryByText('Secondary label')).toBeNull();
+    });
+
+    it('renders element label as is', () => {
       render(
         <Container>
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
-            label="Primary label"
+            label={<span>Primary label</span>}
             secondaryLabel="Secondary label"
           />
         </Container>,
@@ -115,13 +132,34 @@ describe('<InteractiveMenuItem />', () => {
   });
 
   describe('secondary state', () => {
-    it('renders the secondary label', () => {
+    it('renders string secondary label as translation', () => {
+      const { queryByText, getByTranslatedText } = render(
+        <Container>
+          <InteractiveMenuItem
+            MenuItemComponent={DropdownMenuItem}
+            label="Primary label"
+            secondaryLabel="test"
+            secondaryOnSelect={vi.fn()}
+          />
+        </Container>,
+      );
+
+      // Press shift key
+      fireEvent.keyDown(window, { key: 'Shift' });
+
+      // Renders secondary label
+      getByTranslatedText('test');
+      // Should not render primary label
+      expect(queryByText('Primary label')).toBeNull();
+    });
+
+    it('renders the secondary label element', () => {
       render(
         <Container>
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
             label="Primary label"
-            secondaryLabel="Secondary label"
+            secondaryLabel={<span>Secondary label</span>}
             secondaryOnSelect={vi.fn()}
           />
         </Container>,
