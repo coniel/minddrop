@@ -102,13 +102,13 @@ export const WorkspaceNavItem = React.forwardRef<
         <div
           ref={ref}
           className={mapPropsToClasses(
-            { className, active, missing, hovering },
+            { className, active, missing },
             'workspace-nav-item',
           )}
           {...other}
         >
           <div
-            className={mapPropsToClasses({ className }, 'nav-item')}
+            className={mapPropsToClasses({ className, hovering }, 'nav-item')}
             {...other}
           >
             {icon && <div className="icon">{icon}</div>}
