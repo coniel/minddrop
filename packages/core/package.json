@@ -18,6 +18,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@minddrop/file-system": "workspace:*",
     "react": "^18.2.0",
     "zustand": "^4.3.8"
   }

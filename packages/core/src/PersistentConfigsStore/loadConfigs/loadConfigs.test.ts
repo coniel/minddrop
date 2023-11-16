@@ -1,8 +1,8 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { MockFsAdapter } from '../../test-utils';
-import { registerFileSystemAdapter } from '../../FileSystem';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { loadConfigs } from './loadConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
+import { configsFileDescriptor } from '../../test-utils';
 
 const testConfigs = {
   'test-config-1': {
@@ -13,12 +13,15 @@ const testConfigs = {
   },
 };
 
-describe('loadConfigs', () => {
-  const exists = vi.fn();
-  const readTextFile = vi.fn();
+const MockFs = initializeMockFileSystem([
+  // configs.json file
+  configsFileDescriptor,
+]);
 
+describe('loadConfigs', () => {
   beforeEach(() => {
-    registerFileSystemAdapter({ ...MockFsAdapter, exists, readTextFile });
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(() => {
@@ -26,11 +29,8 @@ describe('loadConfigs', () => {
   });
 
   it('does nothing if the configs.json file does not exist', async () => {
-    // Mock that the 'configs.json' file does not exists
-    exists.mockResolvedValue(false);
-
-    // Throw an error when attempting to read the file
-    readTextFile.mockRejectedValue({});
+    // Pretend config file does not exist
+    MockFs.clear();
 
     // Load the configs
     await loadConfigs();
@@ -40,13 +40,6 @@ describe('loadConfigs', () => {
   });
 
   it('loads the configs from app data "configs.json" file', async () => {
-    // Mock that the 'configs.json' file exists
-    exists.mockResolvedValue(true);
-
-    // Return a stringified version of the test config when reading
-    // the configs.json file.
-    readTextFile.mockResolvedValue(JSON.stringify(testConfigs));
-
     // Load the configs
     await loadConfigs();
 
@@ -64,11 +57,8 @@ describe('loadConfigs', () => {
   });
 
   it('does nothing if configs.json file cannot be parsed', async () => {
-    // Mock that the 'configs.json' file exists
-    exists.mockResolvedValue(true);
-
-    // Return invalid JSON when reading the configs.json file
-    readTextFile.mockResolvedValue('abc');
+    // Add an a configs.json file with invalid content
+    MockFs.setFiles([{ ...configsFileDescriptor, textContent: 'foo' }]);
 
     // Load the configs
     await loadConfigs();

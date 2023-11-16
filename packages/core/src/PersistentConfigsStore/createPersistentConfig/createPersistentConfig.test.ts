@@ -1,14 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { registerFileSystemAdapter } from '../../FileSystem';
-import { MockFsAdapter } from '../../test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
 import { createPersistentConfig } from './createPersistentConfig';
 
-describe('createPersistentConfig', () => {
-  beforeEach(() => {
-    registerFileSystemAdapter(MockFsAdapter);
-  });
+initializeMockFileSystem();
 
+describe('createPersistentConfig', () => {
   afterEach(() => {
     PersistentConfigsStore.clear();
   });

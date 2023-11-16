@@ -4,5 +4,6 @@ export * from './createItemStore';
 export * from './errors';
 export * from './initializeCore';
 export * from './PersistentConfigsStore';
-export * from './FileSystem';
 export * from './types';
+
+export * as CORE_TEST_DATA from './test-utils/core.data';
