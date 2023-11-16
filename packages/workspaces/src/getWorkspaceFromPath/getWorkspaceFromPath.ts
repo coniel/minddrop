@@ -1,3 +1,4 @@
+import { Fs } from '@minddrop/file-system';
 import { MissingWorkspaceConfig } from '../constants';
 import { getWorkspaceConfig } from '../getWorkspaceConfig';
 import { Workspace } from '../types';
@@ -23,7 +24,7 @@ export async function getWorkspaceFromPath(path: string): Promise<Workspace> {
   return {
     path,
     exists,
-    name: path.split('/').slice(-1)[0],
+    name: Fs.fileNameFromPath(path),
     ...config,
   };
 }

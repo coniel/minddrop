@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { setup, cleanup, missingWorkspace, workspace1 } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { hasValidWorkspace } from './hasValidWorkspace';

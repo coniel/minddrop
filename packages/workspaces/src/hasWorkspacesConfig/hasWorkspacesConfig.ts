@@ -1,5 +1,5 @@
-import { BaseDirectory, Fs } from '@minddrop/core';
-import { WorkspacesConfigFile } from '../constants';
+import { Fs } from '@minddrop/file-system';
+import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
 
 /**
  * Checks if the workspaces config file exists.
@@ -8,5 +8,5 @@ import { WorkspacesConfigFile } from '../constants';
  */
 export async function hasWorkspacesConfig(): Promise<boolean> {
   // Check if workspace configs file exists
-  return Fs.exists(WorkspacesConfigFile, { dir: BaseDirectory.AppConfig });
+  return Fs.exists(WorkspacesConfigFileName, { dir: WorkspacesConfigDir });
 }

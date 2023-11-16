@@ -1,37 +1,39 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { FileNotFoundError, registerFileSystemAdapter } from '@minddrop/core';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import {
+  initializeMockFileSystem,
+  FileNotFoundError,
+} from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import * as API from '../writeWorkspacesConfig';
-import { setup, cleanup, newWorkspace } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  newWorkspace,
+  workspcesConfigFileDescriptor,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { addWorkspace } from './addWorkspace';
-import * as GET_WORKSPACE_FROM_PATH from '../getWorkspaceFromPath';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
-const exists = vi.fn();
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace to add
+  newWorkspace.path,
+]);
 
 describe('addWorkspace', () => {
   beforeEach(() => {
     setup();
 
-    // Pretend workspace directory exists
-    exists.mockResolvedValue(true);
-    // Return newWorkspace when getting workspace from path
-    vi.spyOn(GET_WORKSPACE_FROM_PATH, 'getWorkspaceFromPath').mockResolvedValue(
-      newWorkspace,
-    );
-
-    registerFileSystemAdapter({
-      ...MockFsAdapter,
-      exists,
-    });
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
   it('throws if the workspace does not exist', () => {
     // Pretend workspace directory does not exist
-    exists.mockResolvedValueOnce(false);
+    MockFs.clear();
 
     expect(() => addWorkspace(newWorkspace.path)).rejects.toThrowError(
       FileNotFoundError,
@@ -47,13 +49,14 @@ describe('addWorkspace', () => {
   });
 
   it('persists workspace to workspaces config file', async () => {
-    const writeWorkspacesConfig = vi.spyOn(API, 'writeWorkspacesConfig');
-
     // Add a workspace
     await addWorkspace(newWorkspace.path);
 
+    // Get the workspaces config
+    const config = await getWorkspacesConfig();
+
     // It should persist the new workspace
-    expect(writeWorkspacesConfig).toHaveBeenCalled();
+    expect(config.paths.includes(newWorkspace.path)).toBe(true);
   });
 
   it('dispatches a `workspaces:workspace:add` event', async () =>

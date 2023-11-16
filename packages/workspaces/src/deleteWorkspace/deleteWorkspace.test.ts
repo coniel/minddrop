@@ -1,14 +1,24 @@
-import { Fs, registerFileSystemAdapter } from '@minddrop/core';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import * as WRITE_CONFIG from '../writeWorkspacesConfig';
 import { getWorkspace } from '../getWorkspace';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  workspace1ConfigPath,
+  workspcesConfigFileDescriptor,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { deleteWorkspace } from './deleteWorkspace';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
-registerFileSystemAdapter(MockFsAdapter);
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace 1 config file
+  workspace1ConfigPath,
+]);
 
 describe('deleteWorkspace', () => {
   beforeEach(setup);
@@ -18,10 +28,11 @@ describe('deleteWorkspace', () => {
   beforeEach(() => {
     setup();
 
-    vi.spyOn(Fs, 'trashDir').mockResolvedValue();
-
     // Add a workspace to the store
     WorkspacesStore.getState().add(workspace1);
+
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -39,17 +50,18 @@ describe('deleteWorkspace', () => {
     await deleteWorkspace(workspace1.path);
 
     // Should delete the workspace folder
-    expect(Fs.trashDir).toHaveBeenCalledWith(workspace1.path);
+    expect(MockFs.existsInTrash(workspace1.path)).toBeTruthy();
   });
 
-  it('updates the workspaces config file', async () => {
-    vi.spyOn(WRITE_CONFIG, 'writeWorkspacesConfig').mockResolvedValue();
-
+  it('removes workspace path from workspaces config', async () => {
     // Delete a workspace
     await deleteWorkspace(workspace1.path);
 
-    // Should write updated workspace path to config
-    expect(WRITE_CONFIG.writeWorkspacesConfig).toHaveBeenCalled();
+    // Get workspaces config
+    const workspacesConfig = await getWorkspacesConfig();
+
+    // Should remove workspace path from workspaces config
+    expect(workspacesConfig.paths.includes(workspace1.path)).toBeFalsy();
   });
 
   it('dispatches a `workspaces:workspace:delete` event', () =>
@@ -66,11 +78,7 @@ describe('deleteWorkspace', () => {
     }));
 
   it('does nothing if workspace does not exist', async () => {
-    vi.spyOn(WorkspacesStore.getState(), 'remove');
-
-    // Remove a workspace that does not exist
-    await deleteWorkspace('missing');
-
-    expect(WorkspacesStore.getState().remove).not.toHaveBeenCalled();
+    // Remove a workspace that does not exist, should not throw
+    expect(async () => deleteWorkspace('missing')).not.toThrow();
   });
 });

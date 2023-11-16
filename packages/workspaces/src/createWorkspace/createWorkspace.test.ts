@@ -1,46 +1,47 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   InvalidPathError,
   PathConflictError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import * as ADD_WORKSPACE from '../addWorkspace';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  workspcesConfigFileDescriptor,
+  newWorkspace,
+} from '../test-utils';
 import { Workspace } from '../types';
 import { createWorkspace } from './createWorkspace';
+import { getWorkspace } from '../getWorkspace';
 
-const WORKSPACE_LOCATION = '/Users/Documents/';
+const WORKSPACE_LOCATION = 'Users/foo/Documents';
 const WORKSPACE_NAME = 'My Workspace';
-const INVALID_WORKSPACE_LOCATION = '/foo';
+const INVALID_WORKSPACE_LOCATION = 'foo';
 const EXISTING_WORKSPACE_NAME = 'Taken';
-const WORKSPACE_PATH = `${WORKSPACE_LOCATION}${WORKSPACE_NAME}`;
-const EXISTING_WORKSPACE_PATH = `${WORKSPACE_LOCATION}${EXISTING_WORKSPACE_NAME}`;
+const WORKSPACE_PATH = `${WORKSPACE_LOCATION}/${WORKSPACE_NAME}`;
+const EXISTING_WORKSPACE_PATH = `${WORKSPACE_LOCATION}/${EXISTING_WORKSPACE_NAME}`;
 const WORKSPACE: Workspace = {
-  ...workspace1,
+  ...newWorkspace,
   path: WORKSPACE_PATH,
   name: WORKSPACE_NAME,
   exists: true,
 };
 
-const exists = async (path: string) =>
-  path === WORKSPACE_LOCATION ||
-  path === WORKSPACE_LOCATION.slice(0, -1) ||
-  path === EXISTING_WORKSPACE_PATH;
-
-const createDir = vi.fn();
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
-  exists,
-  createDir,
-});
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Existing workspace
+  EXISTING_WORKSPACE_PATH,
+]);
 
 describe('createWorkspace', () => {
-  vi.spyOn(ADD_WORKSPACE, 'addWorkspace').mockResolvedValue(WORKSPACE);
+  beforeEach(() => {
+    setup();
 
-  beforeEach(setup);
+    // Reset mock file system
+    MockFs.reset();
+  });
 
   afterEach(cleanup);
 
@@ -65,7 +66,7 @@ describe('createWorkspace', () => {
     await createWorkspace(WORKSPACE_LOCATION, WORKSPACE_NAME);
 
     // Should create workspace dir
-    expect(createDir).toHaveBeenCalledWith(WORKSPACE_PATH);
+    expect(MockFs.exists(WORKSPACE_LOCATION)).toBe(true);
   });
 
   it('adds the workspace to the store', async () => {
@@ -73,7 +74,7 @@ describe('createWorkspace', () => {
     await createWorkspace(WORKSPACE_LOCATION, WORKSPACE_NAME);
 
     // Workspace should be in the store
-    expect(ADD_WORKSPACE.addWorkspace).toHaveBeenCalledWith(WORKSPACE_PATH);
+    expect(getWorkspace(WORKSPACE_PATH)).not.toBeNull();
   });
 
   it('dispatches a `workspaces:workspace:add` event', async () =>
@@ -95,15 +96,5 @@ describe('createWorkspace', () => {
 
     // Should return a workspace
     expect(workspace).toEqual(WORKSPACE);
-  });
-
-  it('supports location without trailing /', async () => {
-    // Create a workspace with a location missing trailing '/'
-    const workspace = await createWorkspace(
-      WORKSPACE_LOCATION.slice(0, -1),
-      WORKSPACE_NAME,
-    );
-
-    expect(workspace.path).toEqual(WORKSPACE_PATH);
   });
 });

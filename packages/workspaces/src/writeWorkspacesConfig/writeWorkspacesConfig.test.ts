@@ -1,12 +1,24 @@
-import { BaseDirectory, registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { WorkspacesConfigFile } from '../constants';
-import { setup, cleanup, workspace1, missingWorkspace } from '../test-utils';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  missingWorkspace,
+  workspcesConfigFileDescriptor,
+  workspacesConfig,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspacesConfig } from './writeWorkspacesConfig';
 
-const writeTextFile = vi.fn();
+const MockFs = initializeMockFileSystem([
+  // Workspaces config file
+  {
+    ...workspcesConfigFileDescriptor,
+    textContent: JSON.stringify({ ...workspacesConfig, paths: [] }),
+  },
+]);
 
 describe('writeWorkspacesConfig', () => {
   beforeEach(() => {
@@ -15,22 +27,20 @@ describe('writeWorkspacesConfig', () => {
     // Load workspaces into the store
     WorkspacesStore.getState().load([workspace1, missingWorkspace]);
 
-    registerFileSystemAdapter({
-      ...MockFsAdapter,
-      writeTextFile,
-    });
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
 
   it('writes workspace paths to the config file', async () => {
+    // Write current workspaces state to config file
     await writeWorkspacesConfig();
 
-    // It should write paths to the configs file
-    expect(writeTextFile).toHaveBeenCalledWith(
-      WorkspacesConfigFile,
-      JSON.stringify({ paths: [workspace1.path, missingWorkspace.path] }),
-      { dir: BaseDirectory.AppConfig },
-    );
+    // Get workspaces config
+    const config = await getWorkspacesConfig();
+
+    // Should contain workspace paths
+    expect(config.paths).toEqual([workspace1.path, missingWorkspace.path]);
   });
 });

@@ -1,49 +1,29 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
-  InvalidParameterError,
+  Fs,
+  initializeMockFileSystem,
   InvalidPathError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
-import { concatPath } from '@minddrop/utils';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { WorkspaceConfigDir, WorkspaceConfigFile } from '../constants';
+} from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
+import { WorkspaceConfigDirName, WorkspaceConfigFileName } from '../constants';
 import { setup, cleanup, missingWorkspace, workspace1 } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspaceConfig } from './writeWorkspaceConfig';
 
 const WORKSPACE_PATH = workspace1.path;
-const WORKSPACE_CONFIG_DIR_PATH = concatPath(
+const WORKSPACE_CONFIG_DIR_PATH = Fs.concatPath(
   workspace1.path,
-  WorkspaceConfigDir,
+  WorkspaceConfigDirName,
 );
-const WORKSPACE_CONFIG_FILE_PATH = concatPath(
+const WORKSPACE_CONFIG_FILE_PATH = Fs.concatPath(
   WORKSPACE_CONFIG_DIR_PATH,
-  WorkspaceConfigFile,
+  WorkspaceConfigFileName,
 );
 
-let workspaceDirExists: boolean;
-let workspaceConfigDirExists: boolean;
-
-const exists = async (path: string) => {
-  switch (path) {
-    case WORKSPACE_PATH:
-      return workspaceDirExists;
-    case WORKSPACE_CONFIG_DIR_PATH:
-      return workspaceConfigDirExists;
-    default:
-      throw new Error(`unexpected path ${path}`);
-  }
-};
-
-const createDir = vi.fn();
-const writeTextFile = vi.fn();
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
-  exists,
-  createDir,
-  writeTextFile,
-});
+const MockFs = initializeMockFileSystem([
+  // Workspace config dir
+  WORKSPACE_CONFIG_DIR_PATH,
+]);
 
 describe('writeWorkspaceConfig', () => {
   beforeEach(() => {
@@ -52,9 +32,8 @@ describe('writeWorkspaceConfig', () => {
     // Load test workspaces into the store
     WorkspacesStore.getState().add(workspace1);
 
-    // Reset FS return values
-    workspaceDirExists = true;
-    workspaceConfigDirExists = true;
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -68,8 +47,8 @@ describe('writeWorkspaceConfig', () => {
   });
 
   it('throws if the workspace dir does not exist', () => {
-    // Pretend workspace dir does not exist
-    workspaceDirExists = false;
+    // Remove workspace directory
+    MockFs.removeFile(WORKSPACE_PATH);
 
     // Attempt to write the config file of a workspace with a missing dir.
     // Should throw a InvalidPathError.
@@ -80,13 +59,13 @@ describe('writeWorkspaceConfig', () => {
 
   it('creates the workspace config dir if it does not exist', async () => {
     // Pretend workspace config dir does not exist
-    workspaceConfigDirExists = false;
+    MockFs.removeDir(WORKSPACE_CONFIG_DIR_PATH);
 
     // Write workspace config
     await writeWorkspaceConfig(WORKSPACE_PATH);
 
     // Should create workspace config dir
-    expect(createDir).toHaveBeenCalledWith(WORKSPACE_CONFIG_DIR_PATH);
+    expect(MockFs.exists(WORKSPACE_CONFIG_DIR_PATH)).toBe(true);
   });
 
   it('writes config values to the config file', async () => {
@@ -94,8 +73,7 @@ describe('writeWorkspaceConfig', () => {
     await writeWorkspaceConfig(WORKSPACE_PATH);
 
     // Should write config values to config file
-    expect(writeTextFile).toHaveBeenCalledWith(
-      WORKSPACE_CONFIG_FILE_PATH,
+    expect(MockFs.readTextFile(WORKSPACE_CONFIG_FILE_PATH)).toBe(
       JSON.stringify({ icon: workspace1.icon }),
     );
   });

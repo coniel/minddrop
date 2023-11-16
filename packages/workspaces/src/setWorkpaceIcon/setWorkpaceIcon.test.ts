@@ -1,10 +1,15 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { UserIcon, UserIconType } from '@minddrop/icons';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { getWorkspace } from '../getWorkspace';
-import { setup, cleanup, workspace1 } from '../test-utils';
+import { getWorkspaceConfig } from '../getWorkspaceConfig';
+import {
+  setup,
+  cleanup,
+  workspace1,
+  workspace1ConfigPath,
+} from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
-import * as WRITE_WORKSPACE_CONFIG from '../writeWorkspaceConfig';
-import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 import { setWorkpaceIcon } from './setWorkpaceIcon';
 
 const icon: UserIcon = {
@@ -13,17 +18,20 @@ const icon: UserIcon = {
   color: 'blue',
 };
 
+const MockFs = initializeMockFileSystem([
+  // Workspace 1 config file
+  workspace1ConfigPath,
+]);
+
 describe('setWorkpaceIcon', () => {
   beforeEach(() => {
     setup();
 
-    vi.spyOn(
-      WRITE_WORKSPACE_CONFIG,
-      'writeWorkspaceConfig',
-    ).mockResolvedValue();
-
     // Load a test workspace into the store
     WorkspacesStore.getState().add(workspace1);
+
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -40,7 +48,10 @@ describe('setWorkpaceIcon', () => {
     // Set the icon on a workspace
     await setWorkpaceIcon(workspace1.path, icon);
 
-    // Should write the config to file
-    expect(writeWorkspaceConfig).toHaveBeenCalledWith(workspace1.path);
+    // Get the workspace config
+    const config = await getWorkspaceConfig(workspace1.path);
+
+    // Config should contain new icon
+    expect(config.icon).toEqual(icon);
   });
 });
