@@ -36,10 +36,12 @@ const PAGES: Page[] = SOURCE_DIRS.flatMap<Page>((dirPath) => [
 ]);
 
 initializeMockFileSystem([
+  // Page files
   ...PAGES.map((page) => ({
     path: page.path,
     textContent: '---\nicon: "content-icon:cat:cyan"\n---',
   })),
+  // Image files
   ...SOURCE_DIRS.map((dir) => `${dir}/image.png`),
 ]);
 

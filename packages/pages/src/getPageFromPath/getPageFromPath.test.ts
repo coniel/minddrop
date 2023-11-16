@@ -10,8 +10,10 @@ const PAGE_TITLE = 'Page';
 const PAGE_FILE_PATH = `path/to/${PAGE_TITLE}.md`;
 const WRAPPED_PAGE_FILE_PATH = `path/to/${PAGE_TITLE}/${PAGE_TITLE}.md`;
 
-const { resetMockFileSystem, setFiles } = initializeMockFileSystem([
+const MockFs = initializeMockFileSystem([
+  // Page file
   PAGE_FILE_PATH,
+  // Wrapped page file
   WRAPPED_PAGE_FILE_PATH,
 ]);
 
@@ -20,7 +22,7 @@ describe('getPageFromPath', () => {
     setup();
 
     // Reset mock file system
-    resetMockFileSystem();
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -49,7 +51,7 @@ describe('getPageFromPath', () => {
   describe('with icon', () => {
     it('gets page content-icon from page metadata', async () => {
       // Add a page with metadata
-      setFiles([
+      MockFs.setFiles([
         {
           path: PAGE_FILE_PATH,
           textContent: '---\nicon: content-icon:cat:cyan\n---',

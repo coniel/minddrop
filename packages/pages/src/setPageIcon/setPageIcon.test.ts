@@ -1,11 +1,11 @@
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { UserIcon, UserIconType } from '@minddrop/icons';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { getPage } from '../getPage';
 import { setup, cleanup, page1 } from '../test-utils';
 import { PagesStore } from '../PagesStore';
-import * as WRITE_PAGE_METADATA from '../writePageMetadata';
-import { writePageMetadata } from '../writePageMetadata';
 import { setPageIcon } from './setPageIcon';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { getPageMetadata } from '../utils';
 
 const icon: UserIcon = {
   type: UserIconType.ContentIcon,
@@ -13,14 +13,20 @@ const icon: UserIcon = {
   color: 'blue',
 };
 
+const MockFs = initializeMockFileSystem([
+  // Page file
+  page1.path,
+]);
+
 describe('setWorkpaceIcon', () => {
   beforeEach(() => {
     setup();
 
-    vi.spyOn(WRITE_PAGE_METADATA, 'writePageMetadata').mockResolvedValue();
-
     // Load a test page into the store
     PagesStore.getState().add(page1);
+
+    // Reset mock file system
+    MockFs.reset();
   });
 
   afterEach(cleanup);
@@ -37,7 +43,10 @@ describe('setWorkpaceIcon', () => {
     // Set the icon on a page
     await setPageIcon(page1.path, icon);
 
-    // Should write the metadata to file
-    expect(writePageMetadata).toHaveBeenCalledWith(page1.path);
+    // Get page metadata from file
+    const metadata = getPageMetadata(MockFs.readTextFile(page1.path));
+
+    // Metadata should contain the new icon
+    expect(metadata.icon).toEqual(icon);
   });
 });
