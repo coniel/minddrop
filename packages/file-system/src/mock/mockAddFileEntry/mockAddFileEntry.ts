@@ -13,14 +13,14 @@ export function mockAddFileEntry(root: FileEntry, fileEntry: FileEntry): void {
 
   if (parentDir && !mockExists(root, parentDir)) {
     throw new Error(
-      `Mock FS error: cannot add file entry ${fileEntry.path}, parent dir path does not exist`,
+      `Mock FS error: cannot add file entry "${fileEntry.path}", parent dir path does not exist`,
     );
   }
 
   // Ensure new path does not already exist
   if (mockExists(root, fileEntry.path)) {
     throw new Error(
-      `Mock FS error: cannot add file entry ${fileEntry.path}, path already exists`,
+      `Mock FS error: cannot add file entry "${fileEntry.path}", path already exists`,
     );
   }
 

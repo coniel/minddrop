@@ -5,10 +5,15 @@ export interface MockFileSystem {
   MockFs: FileSystem;
   clearMockFileSystem(): void;
   resetMockFileSystem(): void;
-  loadFiles(files: MockFileDescriptor[]): void;
+  clearTrash(): void;
+  setFiles(files: MockFileDescriptor[]): void;
+  addFiles(files: MockFileDescriptor[]): void;
   getFiles(): FileEntry[];
   getTrash(): FileEntry[];
   printFiles(): void;
+  exists(path: string): boolean;
+  readTextFile(path: string): string;
+  writeTextFile(path: string, textContent: string): void;
 }
 
 export type MockFsRoot = Record<string, FileEntry>;

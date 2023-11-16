@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { initializeMockFileSystem } from '../mock';
 import { incrementalPath } from './incrementalPath';
 
-const { loadFiles, MockFs } = initializeMockFileSystem();
+const { setFiles, MockFs } = initializeMockFileSystem();
 
 describe('incrementalFilename', () => {
   it('returns the path as is if the path does not alredy exist', async () => {
@@ -15,7 +15,7 @@ describe('incrementalFilename', () => {
 
   it('increments path if the path already exists', async () => {
     // Add a conflicting file
-    loadFiles(['foo']);
+    setFiles(['foo']);
 
     // Get incremental path
     const result = await incrementalPath(MockFs, 'foo');
@@ -26,7 +26,7 @@ describe('incrementalFilename', () => {
 
   it('recursively increments path if incremented path already exists', async () => {
     // Add multiple levels of conflicting files
-    loadFiles(['foo', 'foo 1', 'foo 2']);
+    setFiles(['foo', 'foo 1', 'foo 2']);
 
     // Get incremental path
     const result = await incrementalPath(MockFs, 'foo');
@@ -37,7 +37,7 @@ describe('incrementalFilename', () => {
 
   it('adds increment suffix before file extension', async () => {
     // Add a conflicting file with a file extension
-    loadFiles(['foo.md']);
+    setFiles(['foo.md']);
 
     // Get incremental path
     const result = await incrementalPath(MockFs, 'foo.md');
