@@ -105,11 +105,38 @@ export function initializeMockFileSystem(
       textFileContents = init.textFileContents;
       trash = [];
     },
-    loadFiles: (filesToLoad) => {
+    clearTrash: () => {
+      trash = [];
+    },
+    setFiles: (filesToLoad) => {
       const init = initializeMockFsRoot(filesToLoad);
       root = init.root;
       textFileContents = init.textFileContents;
-      trash = [];
+    },
+    addFiles: (filesToLoad) => {
+      const init = initializeMockFsRoot(filesToLoad);
+
+      init.root.children?.forEach((child) => {
+        addToFileTree(root, child);
+      });
+
+      textFileContents = {
+        ...textFileContents,
+        ...init.textFileContents,
+      };
+    },
+    exists: (path) => mockExists(root, path),
+    readTextFile: (path) => {
+      // Ensure file entry exists
+      mockGetFileEntry(root, path);
+
+      return textFileContents[path] || '';
+    },
+    writeTextFile: (path, textContent) => {
+      if (!mockExists(root, path)) {
+        mockAddFileEntry(root, { path, name: fileNameFromPath(path) });
+      }
+      textFileContents[path] = textContent;
     },
   };
 }
@@ -149,4 +176,12 @@ function initializeMockFsRoot(fileDescriptors: MockFileDescriptor[]): {
   });
 
   return { root, textFileContents };
+}
+
+function addToFileTree(root: FileEntry, file: FileEntry) {
+  if (!mockExists(root, file.path)) {
+    mockAddFileEntry(root, file);
+  } else if (file.children) {
+    file.children.forEach((child) => addToFileTree(root, child));
+  }
 }
