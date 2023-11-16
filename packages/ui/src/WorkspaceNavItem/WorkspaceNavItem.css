@@ -36,7 +36,7 @@
 }
 
 .workspace-nav-item > .nav-item:hover .icon,
-.workspace-nav-item.hovering .nav-item .icon {
+.workspace-nav-item .nav-item.hovering .icon {
   fill: var(--textNeutral);
 }
 
