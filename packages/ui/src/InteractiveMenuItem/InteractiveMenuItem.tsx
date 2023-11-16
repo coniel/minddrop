@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Tooltip } from '../Tooltip';
 import { MenuItem, MenuItemProps } from '../Menu';
+import { useTranslation } from '@minddrop/i18n';
 
 export interface MenuItemComponentProps {
   /**
@@ -119,14 +120,24 @@ export const InteractiveMenuItem: FC<
   disabled,
   ...other
 }) => {
+  const { t } = useTranslation();
+  const translatedLabel = useMemo(
+    () => (typeof label === 'string' ? t(label) : label),
+    [label],
+  );
+  const translatedSecondaryLabel = useMemo(
+    () =>
+      typeof secondaryLabel === 'string' ? t(secondaryLabel) : secondaryLabel,
+    [secondaryLabel],
+  );
   const [shiftKeyDown, setShiftKeyDown] = useState(false);
   const menuItemProps = shiftKeyDown
     ? {
-        label: secondaryLabel || label,
+        label: translatedSecondaryLabel || translatedLabel,
         icon: secondaryIcon || icon,
         keyboardShortcut: secondaryKeyboardShortcut,
       }
-    : { label, icon, keyboardShortcut };
+    : { label: translatedLabel, icon, keyboardShortcut };
 
   useEffect(() => {
     let hasEventListeners = false;
