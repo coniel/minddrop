@@ -2,6 +2,8 @@ import { fileNameFromPath } from '../fileNameFromPath';
 import {
   FileEntry,
   FileSystem,
+  FsDirOptions,
+  FsFileOptions,
   MockFileDescriptor,
   MockFileSystem,
 } from '../types';
@@ -12,9 +14,10 @@ import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 import { mockAddFileEntry } from './mockAddFileEntry';
+import { concatPath } from '../concatPath';
 
 export function initializeMockFileSystem(
-  filesToLoad: MockFileDescriptor[] = [],
+  filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
   const init = initializeMockFsRoot(filesToLoad);
 
@@ -27,58 +30,86 @@ export function initializeMockFileSystem(
 
   const MockFs: FileSystem = {
     getDirPath: async (dir) => dir,
-    copyFile: async (path, copyPath) => mockCopyFile(root, path, copyPath),
-    exists: async (path) => mockExists(root, path),
+    copyFile: async (path, copyPath, options) =>
+      mockCopyFile(
+        root,
+        getFullPath(path, options),
+        getFullPath(copyPath, options),
+      ),
+    exists: async (path, options) =>
+      mockExists(root, getFullPath(path, options)),
     readBinaryFile: () => {
       throw new Error('readBinaryFile mock not implemented');
     },
     readDir: async (path, options = {}) => {
-      const dir = mockGetFileEntry(root, path);
+      const dir = mockGetFileEntry(root, getFullPath(path, options));
       const children = dir.children as FileEntry[];
 
       return options.recursive
         ? children
         : children.map((child) => ({ ...child, children: [] }));
     },
-    readTextFile: async (path) => {
-      // Ensure file entry exists
-      mockGetFileEntry(root, path);
+    readTextFile: async (path, options) => {
+      const fullPath = getFullPath(path, options);
 
-      return textFileContents[path] || '';
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      return textFileContents[fullPath] || '';
     },
-    removeDir: async (path) => mockRemoveFileEntry(root, path),
-    removeFile: async (path) => {
-      mockRemoveFileEntry(root, path);
+    removeDir: async (path, options) =>
+      mockRemoveFileEntry(root, getFullPath(path, options)),
+    removeFile: async (path, options) => {
+      mockRemoveFileEntry(root, getFullPath(path, options));
       delete textFileContents[path];
     },
-    renameFile: async (oldPath, newPath) =>
-      mockRenameFile(root, oldPath, newPath),
+    renameFile: async (oldPath, newPath, options) =>
+      mockRenameFile(
+        root,
+        getFullPath(oldPath, options),
+        getFullPath(newPath, options),
+      ),
     writeBinaryFile: () => {
       throw new Error('writeBinaryFile mock not implemented');
     },
-    writeTextFile: async (path, textContent) => {
-      if (!mockExists(root, path)) {
-        mockAddFileEntry(root, { path, name: fileNameFromPath(path) });
+    writeTextFile: async (path, textContent, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
       }
-      textFileContents[path] = textContent;
+
+      textFileContents[fullPath] = textContent;
     },
-    createDir: async (path: string) => {
+    createDir: async (path, options) => {
+      const fullPath = getFullPath(path, options);
+
       mockAddFileEntry(root, {
-        path,
+        path: fullPath,
         children: [],
-        name: fileNameFromPath(path),
+        name: fileNameFromPath(fullPath),
       });
     },
-    trashDir: async (path: string) => {
-      const dir = mockGetFileEntry(root, path);
+    trashDir: async (path, options) => {
+      const fullPath = getFullPath(path, options);
+      const dir = mockGetFileEntry(root, fullPath);
+
       trash.push(dir);
-      mockRemoveFileEntry(root, path);
+
+      mockRemoveFileEntry(root, fullPath);
     },
-    trashFile: async (path: string) => {
-      const file = mockGetFileEntry(root, path);
+    trashFile: async (path, options) => {
+      const fullPath = getFullPath(path, options);
+      const file = mockGetFileEntry(root, fullPath);
+
       trash.push(file);
-      mockRemoveFileEntry(root, path);
-      delete textFileContents[path];
+
+      mockRemoveFileEntry(root, fullPath);
+
+      delete textFileContents[fullPath];
     },
   };
 
@@ -88,7 +119,7 @@ export function initializeMockFileSystem(
     MockFs,
     getFiles: () => root.children as FileEntry[],
     getTrash: () => trash,
-    clearMockFileSystem: () => {
+    clear: () => {
       root = { path: 'root', name: 'root', children: [] };
       trash = [];
     },
@@ -97,9 +128,11 @@ export function initializeMockFileSystem(
       console.log(JSON.stringify(root, null, 2));
       console.log('--------------- Trash ----------------');
       console.log(JSON.stringify(trash, null, 2));
+      console.log('-------- Text file contents ----------');
+      console.log(textFileContents);
       console.log('--------------------------------------');
     },
-    resetMockFileSystem: () => {
+    reset: () => {
       const init = initializeMockFsRoot(filesToLoad);
       root = init.root;
       textFileContents = init.textFileContents;
@@ -125,23 +158,41 @@ export function initializeMockFileSystem(
         ...init.textFileContents,
       };
     },
-    exists: (path) => mockExists(root, path),
-    readTextFile: (path) => {
-      // Ensure file entry exists
-      mockGetFileEntry(root, path);
+    exists: (path, options) => mockExists(root, getFullPath(path, options)),
+    existsInTrash: (path, options) =>
+      !!trash.find(
+        (fileEntry) => fileEntry.path === getFullPath(path, options),
+      ),
+    readTextFile: (path, options) => {
+      const fullPath = getFullPath(path, options);
 
-      return textFileContents[path] || '';
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      return textFileContents[fullPath] || '';
     },
-    writeTextFile: (path, textContent) => {
-      if (!mockExists(root, path)) {
-        mockAddFileEntry(root, { path, name: fileNameFromPath(path) });
+    writeTextFile: (path, textContent, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
       }
-      textFileContents[path] = textContent;
+
+      textFileContents[fullPath] = textContent;
     },
+    removeFile: (path, options) =>
+      mockRemoveFileEntry(root, getFullPath(path, options)),
+    removeDir: (path, options) =>
+      mockRemoveFileEntry(root, getFullPath(path, options)),
   };
 }
 
-function initializeMockFsRoot(fileDescriptors: MockFileDescriptor[]): {
+function initializeMockFsRoot(
+  fileDescriptors: (MockFileDescriptor | string)[],
+): {
   root: FileEntry;
   textFileContents: Record<string, string>;
 } {
@@ -150,7 +201,9 @@ function initializeMockFsRoot(fileDescriptors: MockFileDescriptor[]): {
 
   fileDescriptors.forEach((fileDescriptor) => {
     const path =
-      typeof fileDescriptor === 'string' ? fileDescriptor : fileDescriptor.path;
+      typeof fileDescriptor === 'string'
+        ? fileDescriptor
+        : getFullPath(fileDescriptor.path, fileDescriptor.options);
     const pathParts = path.split('/');
 
     let currentPath = '';
@@ -170,8 +223,8 @@ function initializeMockFsRoot(fileDescriptors: MockFileDescriptor[]): {
       currentPath = `${currentPath}/`;
     });
 
-    if (typeof fileDescriptor !== 'string') {
-      textFileContents[fileDescriptor.path] = fileDescriptor.textContent;
+    if (typeof fileDescriptor !== 'string' && fileDescriptor.textContent) {
+      textFileContents[path] = fileDescriptor.textContent;
     }
   });
 
@@ -184,4 +237,11 @@ function addToFileTree(root: FileEntry, file: FileEntry) {
   } else if (file.children) {
     file.children.forEach((child) => addToFileTree(root, child));
   }
+}
+
+function getFullPath(
+  path: string,
+  options?: FsFileOptions | FsDirOptions,
+): string {
+  return options?.dir ? concatPath(options.dir, path) : path;
 }
