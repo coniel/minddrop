@@ -19,12 +19,17 @@ export interface DropdownMenuContentProps
    * item descriptors.
    */
   content?: MenuContents;
+
+  /**
+   * The minimum width (in pixels) of the menu content.
+   */
+  minWidth?: number;
 }
 
 export const DropdownMenuContent = React.forwardRef<
   HTMLDivElement,
   DropdownMenuContentProps
->(({ children, content = [], ...other }, ref) => {
+>(({ children, content = [], minWidth, ...other }, ref) => {
   const items = useMemo(
     () =>
       generateMenu(
@@ -45,7 +50,7 @@ export const DropdownMenuContent = React.forwardRef<
 
   return (
     <DropdownMenuPrimitives.Content asChild ref={ref} {...other}>
-      <Menu>
+      <Menu style={{ minWidth }}>
         {items}
         {children}
       </Menu>
