@@ -1,10 +1,9 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
+  initializeMockFileSystem,
   InvalidPathError,
   PathConflictError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
+} from '@minddrop/file-system';
 import { setup, cleanup } from '../test-utils';
 import { createPageFile } from './createPageFile';
 
@@ -14,50 +13,27 @@ const PAGE_FILE_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}.md`;
 const WRAPPED_PAGE_DIR_PATH = `${PARENT_DIR_PATH}/${PAGE_TITLE}`;
 const WRAPPED_PAGE_FILE_PATH = `${WRAPPED_PAGE_DIR_PATH}/${PAGE_TITLE}.md`;
 
-let parentDirExists: boolean;
-let pageFileExists: boolean;
-let wrappedPageDirExists: boolean;
-
-const exists = async (path: string) => {
-  switch (path) {
-    case PARENT_DIR_PATH:
-      return parentDirExists;
-    case PAGE_FILE_PATH:
-      return pageFileExists;
-    case WRAPPED_PAGE_DIR_PATH:
-      return wrappedPageDirExists;
-    case WRAPPED_PAGE_FILE_PATH:
-      return false;
-    default:
-      throw new Error(`unexpected path: ${path}`);
-  }
-};
-
-const writeTextFile = vi.fn();
-const createDir = vi.fn();
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
+const {
+  printFiles,
+  resetMockFileSystem,
+  clearMockFileSystem,
+  addFiles,
   exists,
-  writeTextFile,
-  createDir,
-});
+} = initializeMockFileSystem([PARENT_DIR_PATH]);
 
 describe('createPage', () => {
   beforeEach(() => {
     setup();
 
-    // Reset Fs return values to favourable values
-    parentDirExists = true;
-    pageFileExists = false;
-    wrappedPageDirExists = false;
+    // Reset mock file system
+    resetMockFileSystem();
   });
 
   afterEach(cleanup);
 
   it('throws if the parent dir does not exist', () => {
-    // Pretend parent dir does not exist
-    parentDirExists = false;
+    // Remove parent dir from file system
+    clearMockFileSystem();
 
     // Attempt to create a new page file in missing parent
     // dir. Should throw a InvalidPathError.
@@ -67,8 +43,8 @@ describe('createPage', () => {
   });
 
   it('throws if the new page conflicts with an existing one', () => {
-    // Pretend page already exists
-    pageFileExists = true;
+    // Add a conflicting page to the file system
+    addFiles([PAGE_FILE_PATH]);
 
     // Attempt to create a new page file where one of the same
     // name already exists. Should throw a PathConflictError.
@@ -82,7 +58,7 @@ describe('createPage', () => {
     await createPageFile(PARENT_DIR_PATH, PAGE_TITLE);
 
     // Should create the page file
-    expect(writeTextFile).toHaveBeenCalledWith(PAGE_FILE_PATH, '');
+    expect(exists(PAGE_FILE_PATH)).toBe(true);
   });
 
   it('returns the new page file path', async () => {
@@ -95,8 +71,8 @@ describe('createPage', () => {
 
   describe('wrapped', () => {
     it('throws if the new page dir conflicts with an existing one', () => {
-      // Pretend wrapped page dir already exists
-      wrappedPageDirExists = true;
+      // Add the target page wrapper dir to the file system
+      addFiles([WRAPPED_PAGE_DIR_PATH]);
 
       // Attempt to create a new wrapped page file where one of the
       // same name already exists. Should throw a PathConflictError.
@@ -110,7 +86,7 @@ describe('createPage', () => {
       await createPageFile(PARENT_DIR_PATH, PAGE_TITLE, { wrap: true });
 
       // Should create the wrapper dir
-      expect(createDir).toHaveBeenCalledWith(WRAPPED_PAGE_DIR_PATH);
+      expect(exists(WRAPPED_PAGE_DIR_PATH)).toBe(true);
     });
 
     it('creates the wrapped page file', async () => {
@@ -118,7 +94,7 @@ describe('createPage', () => {
       await createPageFile(PARENT_DIR_PATH, PAGE_TITLE, { wrap: true });
 
       // Should create the wrapped page file
-      expect(writeTextFile).toHaveBeenCalledWith(WRAPPED_PAGE_FILE_PATH, '');
+      expect(exists(WRAPPED_PAGE_FILE_PATH)).toBe(true);
     });
   });
 });

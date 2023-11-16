@@ -1,4 +1,4 @@
-import { FileNotFoundError, Fs } from '@minddrop/core';
+import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { removePageMetadata, serializePageMetadata } from '../utils';
 import { getPage } from '../getPage';
 import { PageMetadata } from '../types';

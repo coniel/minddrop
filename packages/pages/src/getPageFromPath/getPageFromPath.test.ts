@@ -1,31 +1,26 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
 import { setup, cleanup } from '../test-utils';
 import { getPageFromPath } from './getPageFromPath';
-import { registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
 import { Page } from '../types';
 import { DefaultPageIcon } from '../constants';
-import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
 
 const PAGE_TITLE = 'Page';
 const PAGE_FILE_PATH = `path/to/${PAGE_TITLE}.md`;
 const WRAPPED_PAGE_FILE_PATH = `path/to/${PAGE_TITLE}/${PAGE_TITLE}.md`;
 
-let readTextFileResult = '';
-
-const readTextFile = async () => readTextFileResult;
-
-registerFileSystemAdapter({
-  ...MockFsAdapter,
-  readTextFile,
-});
+const { resetMockFileSystem, setFiles } = initializeMockFileSystem([
+  PAGE_FILE_PATH,
+  WRAPPED_PAGE_FILE_PATH,
+]);
 
 describe('getPageFromPath', () => {
   beforeEach(() => {
     setup();
 
-    // Reset readTextFile result
-    readTextFileResult = '';
+    // Reset mock file system
+    resetMockFileSystem();
   });
 
   afterEach(cleanup);
@@ -53,8 +48,13 @@ describe('getPageFromPath', () => {
 
   describe('with icon', () => {
     it('gets page content-icon from page metadata', async () => {
-      // Pretend page metadata defines a content icon
-      readTextFileResult = '---\nicon: content-icon:cat:cyan\n---';
+      // Add a page with metadata
+      setFiles([
+        {
+          path: PAGE_FILE_PATH,
+          textContent: '---\nicon: content-icon:cat:cyan\n---',
+        },
+      ]);
 
       // Get a page with a content-icon
       const page = await getPageFromPath(PAGE_FILE_PATH);

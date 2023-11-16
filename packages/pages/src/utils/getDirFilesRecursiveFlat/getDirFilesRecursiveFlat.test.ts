@@ -1,22 +1,11 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { registerFileSystemAdapter } from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
+import { describe, it, expect } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { getDirFilesRecursiveFlat } from './getDirFilesRecursiveFlat';
 
-const GRAND_CHILD_FILE = { path: 'path/subpath/file' };
-const CHILD_FILE = { path: 'path/subpath_file' };
+const CHILD_FILE = { path: 'path/file.md', name: 'file.md' };
+const GRAND_CHILD_FILE = { path: 'path/subpath/file 2.md', name: 'file 2.md' };
 
-const readDir = async () => [
-  {
-    path: 'path',
-    children: [
-      CHILD_FILE,
-      { path: 'path/subpath_dir', children: [GRAND_CHILD_FILE] },
-    ],
-  },
-];
-
-registerFileSystemAdapter({ ...MockFsAdapter, readDir });
+initializeMockFileSystem([CHILD_FILE.path, GRAND_CHILD_FILE.path]);
 
 describe('getDirFilesRecursiveFlat', () => {
   it('returns a flattened list of file entries', async () => {
