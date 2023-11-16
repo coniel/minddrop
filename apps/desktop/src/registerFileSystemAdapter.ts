@@ -6,8 +6,8 @@ import {
   FsDirOptions,
   registerFileSystemAdapter as register,
   BaseDirectory,
-  InvalidParameterError,
-} from '@minddrop/core';
+} from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 
 function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
   const opts: fs.FsOptions = {};

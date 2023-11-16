@@ -11,7 +11,8 @@
     "lint": "eslint ./**/*.ts*"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/desktop-app": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@tauri-apps/api": "^1.5.1",
