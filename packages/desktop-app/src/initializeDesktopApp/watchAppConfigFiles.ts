@@ -1,6 +1,6 @@
 import { watchImmediate, RawEvent } from 'tauri-plugin-fs-watch-api';
 import { appConfigDir } from '@tauri-apps/api/path';
-import { Workspaces, WorkspacesConfigFile } from '@minddrop/workspaces';
+import { Workspaces, WorkspacesConfigFileName } from '@minddrop/workspaces';
 import { throttle } from '@minddrop/utils';
 import { AppUiState } from '../AppUiState';
 
@@ -20,7 +20,9 @@ const handleWorkspacesConfigEventThrottled = throttle(
 
 function handleWatcherEvent(id: number, event: RawEvent) {
   if (
-    event.paths.some((eventPath) => eventPath.includes(WorkspacesConfigFile))
+    event.paths.some((eventPath) =>
+      eventPath.includes(WorkspacesConfigFileName),
+    )
   ) {
     handleWorkspacesConfigEventThrottled(id);
   }

@@ -1,9 +1,16 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { render, userEvent } from '@minddrop/test-utils';
-import { setup, cleanup } from '../../test-utils';
-import { ThemeAppearanceSelect } from './ThemeAppearanceSelect';
 import { i18n } from '@minddrop/i18n';
 import { Theme } from '@minddrop/theme';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { configsFileDescriptor } from '@minddrop/core/src/test-utils/core.data';
+import { setup, cleanup } from '../../test-utils';
+import { ThemeAppearanceSelect } from './ThemeAppearanceSelect';
+
+initializeMockFileSystem([
+  // Persistent configs file
+  configsFileDescriptor,
+]);
 
 describe('<AppSidebar />', () => {
   beforeEach(() => {

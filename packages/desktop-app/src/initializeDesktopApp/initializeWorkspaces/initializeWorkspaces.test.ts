@@ -1,96 +1,92 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  FileNotFoundError,
-  JsonParseError,
-  registerFileSystemAdapter,
-} from '@minddrop/core';
-import { MockFsAdapter } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
+import { CORE_TEST_DATA } from '@minddrop/core';
 import { AppUiState } from '../../AppUiState';
 import { initializeWorkspaces } from './initializeWorkspaces';
 
-const { workspace1 } = WORKSPACES_TEST_DATA;
-
-const mocks = vi.hoisted(() => {
-  return {
-    Workspaces: {
-      load: vi.fn(),
-      getAll: vi.fn(),
-      hasValidWorkspace: vi.fn().mockReturnValue(true),
-    },
-  };
-});
-
-vi.mock('@minddrop/workspaces', async () => {
-  const actual = await vi.importActual<{}>('@minddrop/workspaces');
-
-  return {
-    ...actual,
-    Workspaces: mocks.Workspaces,
-  };
-});
+const { configsFileDescriptor } = CORE_TEST_DATA;
+const { workspace1, workspacesConfig, workspcesConfigFileDescriptor } =
+  WORKSPACES_TEST_DATA;
 
 vi.mock('@tauri-apps/api/window', () => ({
   getAll: () => [],
   WebviewWindow: vi.fn(),
 }));
 
-registerFileSystemAdapter(MockFsAdapter);
+const MockFs = initializeMockFileSystem([
+  // Persistant configs file
+  configsFileDescriptor,
+  // Workspaces config file
+  workspcesConfigFileDescriptor,
+  // Workspace 1
+  workspace1.path,
+]);
 
 describe('initializeWorkspaces', () => {
   afterEach(() => {
     // Reset view
     AppUiState.set('view', null);
+
+    // Clear workspaces
+    Workspaces._clear();
+
+    // Reset mock file system
+    MockFs.reset();
   });
 
-  beforeEach(() => {
-    // Pretend config contains a workspce
-    vi.mocked(Workspaces.getAll).mockReturnValue([workspace1]);
-  });
-
-  it('sets view to null if load throw FileNotFoundError', () => {
+  it('sets view to null if load throw FileNotFoundError', async () => {
     // Pretend workspaces config file does not exist
-    vi.mocked(Workspaces.load).mockImplementation(() => {
-      throw new FileNotFoundError('config');
-    });
+    MockFs.removeFile(
+      workspcesConfigFileDescriptor.path,
+      workspcesConfigFileDescriptor.options,
+    );
 
     // Initialize workspaces
-    initializeWorkspaces();
+    await initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
     expect(AppUiState.get('view')).toBeNull();
   });
 
-  it('sets view to null if load throw JsonParseError', () => {
+  it('sets view to null if load throw JsonParseError', async () => {
     // Pretend workspaces config could not be parsed
-    vi.mocked(Workspaces.load).mockImplementation(() => {
-      throw new JsonParseError('foo');
-    });
+    MockFs.setFiles([
+      configsFileDescriptor,
+      { ...workspcesConfigFileDescriptor, textContent: 'foo' },
+    ]);
 
     // Initialize workspaces
-    initializeWorkspaces();
+    await initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
     expect(AppUiState.get('view')).toBeNull();
   });
 
-  it('sets view to null if config contains no workspaces', () => {
+  it('sets view to null if config contains no workspaces', async () => {
     // Pretend workspaces config contains no workspaces
-    vi.mocked(Workspaces.getAll).mockReturnValue([]);
+    MockFs.setFiles([
+      configsFileDescriptor,
+      {
+        ...workspcesConfigFileDescriptor,
+        textContent: JSON.stringify({ ...workspacesConfig, paths: [] }),
+      },
+    ]);
 
     // Initialize workspaces
-    initializeWorkspaces();
+    await initializeWorkspaces();
 
     // Should set view to 'create-first-workspace'
     expect(AppUiState.get('view')).toBeNull();
   });
 
-  it('sets view to `no-valid-workspace` if config contains no workspaces', () => {
-    // Pretend workspaces config contains no workspaces
-    vi.mocked(Workspaces.hasValidWorkspace).mockReturnValue(false);
+  it('sets view to `no-valid-workspace` if config contains no workspaces', async () => {
+    // Pretend that there are no workspaces despite some being listed
+    // in the workspaces config.
+    vi.spyOn(Workspaces, 'hasValidWorkspace').mockReturnValue(false);
 
     // Initialize workspaces
-    initializeWorkspaces();
+    await initializeWorkspaces();
 
     // Should set view to 'no-valid-workspace'
     expect(AppUiState.get('view')).toBe('no-valid-workspace');
