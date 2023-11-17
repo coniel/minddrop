@@ -131,6 +131,41 @@
     }
   },
   "pages": {
-    "untitled": "Untitled"
+    "untitled": "Untitled",
+    "actions": {
+      "add": "Add a page",
+      "addSubpage": "Add a sub-page",
+      "changeIcon": "Change icon",
+      "favourite": {
+        "add": "Add to favourites",
+        "remove": "Remove from favourites"
+      },
+      "revealInFileExplorer": {
+        "macos": "Reveal in Finder",
+        "windows": "Show in File Explorer",
+        "linux": "Show in File Explorer"
+      },
+      "move": {
+        "action": "Move to"
+      },
+      "delete": {
+        "action": "Delete",
+        "tooltip": {
+          "title": "Delete page",
+          "description": "Delete the page and its related files."
+        }
+      },
+      "rename": {
+        "action": "Rename",
+        "form": {
+          "name": {
+            "placeholder": "Page name",
+            "error": {
+              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
+            }
+          }
+        }
+      }
+    }
   }
 }
