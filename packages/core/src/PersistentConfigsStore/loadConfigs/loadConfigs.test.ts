@@ -15,7 +15,10 @@ const testConfigs = {
 
 const MockFs = initializeMockFileSystem([
   // configs.json file
-  configsFileDescriptor,
+  {
+    ...configsFileDescriptor,
+    textContent: JSON.stringify(testConfigs),
+  },
 ]);
 
 describe('loadConfigs', () => {
