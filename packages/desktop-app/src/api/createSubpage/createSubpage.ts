@@ -3,11 +3,11 @@ import { createPage } from '../createPage';
 import { Fs } from '@minddrop/file-system';
 
 /**
- * Creates a new untitled page as a subpage of
- * an existing page.
+ * Creates a new "Untitled" page and its asscoitated markdown file
+ * as a subpage of an existing page.
  *
  * @param parentPagePath - Path of the parent page.
- * @returns The new page.
+ * @returns The newly created page.
  */
 export async function createSubpage(parentPagePath: string): Promise<Page> {
   let wrappedParentPagePath = parentPagePath;
