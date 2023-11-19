@@ -3,7 +3,11 @@ import { Page, Pages } from '@minddrop/pages';
 import { Fs } from '@minddrop/file-system';
 
 /**
- * Does something useful.
+ * Creates a new "Untitled" page and its associated markdown file
+ * in the specified parent directory.
+ *
+ * @param parentPath - The path to the parent directory.
+ * @returns The newly created page.
  */
 export async function createPage(parentPath: string): Promise<Page> {
   // Use 'Untitled' as the default page title
