@@ -40,13 +40,12 @@ describe('<IconButton />', () => {
     expect(screen.getByRole('button').textContent).not.toBe('children');
   });
 
-  it('uses the label', () => {
-    render(<IconButton label="label">I</IconButton>);
+  it('translates the label text', () => {
+    const { getByTranslatedLabelText } = render(
+      <IconButton label="test">I</IconButton>,
+    );
 
-    expect(
-      screen.getByRole('button').attributes.getNamedItem('aria-label')
-        ?.textContent,
-    ).toBe('label');
+    getByTranslatedLabelText('test');
   });
 
   it('supports colors', () => {
