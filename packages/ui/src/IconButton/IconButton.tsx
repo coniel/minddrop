@@ -1,6 +1,7 @@
-import React from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
+import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/icons';
+import { mapPropsToClasses } from '@minddrop/utils';
+import React from 'react';
 import { Icon } from '../Icon';
 import './IconButton.css';
 
@@ -47,6 +48,7 @@ export interface IconButtonProps
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ icon, children, color, as, className, label, size, ...other }, ref) => {
+    const { t } = useTranslation();
     const Component = as || 'button';
 
     return (
@@ -54,7 +56,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         type="button"
         ref={ref}
         tabIndex={0}
-        aria-label={label}
+        aria-label={t(label)}
         className={mapPropsToClasses({ className, color, size }, 'icon-button')}
         {...other}
       >
