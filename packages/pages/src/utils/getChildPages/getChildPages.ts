@@ -9,7 +9,7 @@ import { isWrapped } from '../../utils';
  * @param pages - The pages from which to match.
  * @returns An array of pages.
  */
-export function getPageChildren(path: string, pages: Page[]): Page[] {
+export function getChildPages(path: string, pages: Page[]): Page[] {
   let rootPathParts = path.split('/');
 
   if (path.endsWith('.md')) {

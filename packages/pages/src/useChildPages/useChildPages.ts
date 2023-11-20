@@ -1,6 +1,6 @@
 import { Page } from '../types';
 import { PagesStore as usePagesStore } from '../PagesStore';
-import { getPageChildren } from '../utils';
+import { getChildPages } from '../utils';
 
 /**
  * Returns a list of pages which are direct children of
@@ -14,7 +14,7 @@ export function useChildPages(path: string): Page[] {
   const { pages } = usePagesStore();
 
   // Get child pages sorted by title in alphabetical order
-  return getPageChildren(path, pages).sort((a, b) =>
+  return getChildPages(path, pages).sort((a, b) =>
     a.title > b.title ? 1 : -1,
   );
 }
