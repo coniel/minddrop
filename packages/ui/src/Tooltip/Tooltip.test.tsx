@@ -26,14 +26,44 @@ describe('<Tooltip />', () => {
     window.ResizeObserver = ResizeObserver;
   });
 
-  it('renders the title', async () => {
-    render(
-      <Tooltip open title="Tooltip title">
+  it('translates string title', async () => {
+    const { getAllByTranslatedText } = render(
+      <Tooltip open title="test">
         <button type="button">tooltip</button>
       </Tooltip>,
     );
 
-    screen.getAllByText('Tooltip title');
+    getAllByTranslatedText('test');
+  });
+
+  it('renders non-string title as is', async () => {
+    const { getAllByText } = render(
+      <Tooltip open title={<span>test</span>}>
+        <button type="button">tooltip</button>
+      </Tooltip>,
+    );
+
+    getAllByText('test');
+  });
+
+  it('translates string description', async () => {
+    const { getAllByTranslatedText } = render(
+      <Tooltip open title={<span />} description="test">
+        <button type="button">tooltip</button>
+      </Tooltip>,
+    );
+
+    getAllByTranslatedText('test');
+  });
+
+  it('renders non-string description as is', async () => {
+    const { getAllByText } = render(
+      <Tooltip open title={<span />} description={<span>test</span>}>
+        <button type="button">tooltip</button>
+      </Tooltip>,
+    );
+
+    getAllByText('test');
   });
 
   it('opens on hover', async () => {
@@ -48,16 +78,6 @@ describe('<Tooltip />', () => {
     await user.hover(screen.getByRole('button'));
 
     await waitFor(() => screen.getAllByText('Tooltip title'));
-  });
-
-  it('renders the description', async () => {
-    render(
-      <Tooltip open title="Tooltip title" description="Tooltip description">
-        <button type="button">tooltip</button>
-      </Tooltip>,
-    );
-
-    screen.getAllByText('Tooltip description');
   });
 
   it('renders the keyboard shortcut', async () => {
