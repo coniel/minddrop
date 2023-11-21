@@ -5,3 +5,5 @@ export { setPageIcon as setIcon } from './setPageIcon';
 export { wrapPage as wrap } from './wrapPage';
 export { isWrapped } from './utils';
 export { renamePage as rename } from './renamePage';
+export { deletePage as delete } from './deletePage';
+export { removeChildPages } from './removeChildPages';
