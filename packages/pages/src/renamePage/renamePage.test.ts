@@ -23,13 +23,15 @@ const MockFs = initializeMockFileSystem([
 ]);
 
 describe('renamePage', () => {
-  beforeEach(setup);
-
-  afterEach(() => {
-    cleanup();
+  beforeEach(() => {
+    setup();
 
     // Add test page to store
     PagesStore.getState().add(page1);
+  });
+
+  afterEach(() => {
+    cleanup();
 
     // Reset the mock file system
     MockFs.reset();
@@ -86,7 +88,7 @@ describe('renamePage', () => {
     expect(getPage(NEW_PAGE_PATH)?.title).toBe(NEW_PAGE_NAME);
   });
 
-  it('dispatches a "pages:page:rename" event', async () => {
+  it('dispatches a "pages:page:rename" event', async () =>
     new Promise<void>((done) => {
       // Listen to 'pages:page:rename' events
       Events.addListener('pages:page:rename', 'test', (payload) => {
@@ -100,8 +102,7 @@ describe('renamePage', () => {
 
       // Rename a page
       renamePage(PAGE_PATH, NEW_PAGE_NAME);
-    });
-  });
+    }));
 
   it('returns the updated page', async () => {
     // Rename the page
