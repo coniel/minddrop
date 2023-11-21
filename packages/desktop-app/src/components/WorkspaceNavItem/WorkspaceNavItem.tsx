@@ -11,7 +11,7 @@ import { RenameWorkspacePopover } from '../RenameWorkspacePopover';
 import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
 import { promptMoveWorkspace, revealInFileExplorer } from '../../api';
 import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
-import { Pages, useChildPages } from '@minddrop/pages';
+import { useChildPages } from '@minddrop/pages';
 import { PageNavItem } from '../PageNavItem';
 import { useCallback } from 'react';
 import { createPage } from '../../api/createPage';
