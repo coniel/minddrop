@@ -133,6 +133,7 @@
   "pages": {
     "untitled": "Untitled",
     "actions": {
+      "options": "Page options",
       "add": "Add a page",
       "addSubpage": "Add a sub-page",
       "changeIcon": "Change icon",
