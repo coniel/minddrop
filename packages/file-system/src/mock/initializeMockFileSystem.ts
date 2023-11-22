@@ -30,6 +30,11 @@ export function initializeMockFileSystem(
 
   const MockFs: FileSystem = {
     getDirPath: async (dir) => dir,
+    isDirectory: async (path, options) => {
+      const fileEntry = mockGetFileEntry(root, getFullPath(path, options));
+
+      return !!fileEntry.children;
+    },
     copyFile: async (path, copyPath, options) =>
       mockCopyFile(
         root,

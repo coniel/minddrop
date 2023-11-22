@@ -46,6 +46,17 @@ function getDirPath(dir: BaseDirectory): Promise<string> {
 
 register({
   getDirPath,
+  isDirectory: async (path, options) => {
+    const opts = options ? convertFsOptions(options) : undefined;
+
+    try {
+      await fs.readDir(path, opts);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  },
   copyFile: async (source, destination, options) => {
     const opts = options ? convertFsOptions(options) : undefined;
 

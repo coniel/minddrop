@@ -13,6 +13,15 @@ export interface FileSystemAdapter {
   getDirPath(dir: BaseDirectory): Promise<string>;
 
   /**
+   * Checks if a path is a directory.
+   *
+   * @param path - The path to check.
+   * @param options - File system file options.
+   * @returns A promise resolving to a boolean indicating whether or not the path is a directory.
+   */
+  isDirectory(path: string, options?: FsFileOptions): Promise<boolean>;
+
+  /**
    * Copies a file to a destination.
    *
    * @param source - The source file's path.
@@ -33,7 +42,6 @@ export interface FileSystemAdapter {
    *
    * @param dir - The directory path to create.
    * @param options - File system dir options.
-   * @returns A promise indicating the success or failure of the operation.
    */
   createDir(dir: string, options?: FsDirOptions): Promise<void>;
 
