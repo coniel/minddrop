@@ -30,6 +30,7 @@ export function mockAddFileEntry(root: FileEntry, fileEntry: FileEntry): void {
   // If file entry has no parent, add it to the root
   if (!parentDir) {
     root.children?.push(fileEntry);
+
     return;
   }
 
