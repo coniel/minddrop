@@ -7,3 +7,4 @@ export { isWrapped } from './utils';
 export { renamePage as rename } from './renamePage';
 export { deletePage as delete } from './deletePage';
 export { removeChildPages } from './removeChildPages';
+export { movePage as move } from './movePage';
