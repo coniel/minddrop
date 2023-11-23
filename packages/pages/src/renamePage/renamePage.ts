@@ -9,23 +9,32 @@ import { PageNotFoundError } from '../errors';
 import { getPage } from '../getPage';
 import { Page } from '../types';
 import { isWrapped } from '../utils';
+import { updateChildPagePaths } from '../updateChildPagePaths';
 
 /**
  * Renames a page and its file. Dispatches a 'pages:page:rename' event.
  *
- * @param path - The path of the page to rename.
- * @param name - The new name of the page.
+ * @param path The path of the page to rename.
+ * @param name The new name of the page.
  * @returns The updated page.
+ * @dispatches 'pages:page:renamed'
  *
- * @dispatches 'pages:page:rename'
+ * @throws {PageNotFoundError} If the page does not exist.
+ * @throws {FileNotFoundError} If the page file does not exist.
+ * @throws {PathConflictError} If a page with the same name already exists.
  */
 export async function renamePage(path: string, name: string): Promise<Page> {
   // Get the page from the store
   const page = getPage(path);
-  // The page file's parent dir
-  const parentDir = Fs.parentDirPath(path);
-  // Generate the new page path
-  let newPath = `${Fs.parentDirPath(path)}/${name}.md`;
+  // The path of the renamed page file
+  const renamedFilePath = Fs.concatPath(Fs.parentDirPath(path), `${name}.md`);
+  // The path of the renamed wrapper dir (only applicable if
+  // the page is wrapped).
+  const renamedWrapperDir = Fs.concatPath(Fs.pathSlice(path, 0, -2), name);
+  // The new full path of the page
+  const newPath = isWrapped(path)
+    ? Fs.concatPath(renamedWrapperDir, `${name}.md`)
+    : renamedFilePath;
 
   // Ensure the page exists
   if (!page) {
@@ -42,19 +51,6 @@ export async function renamePage(path: string, name: string): Promise<Page> {
     throw new PathConflictError(path);
   }
 
-  // Rename the page file
-  await Fs.renameFile(path, newPath);
-
-  // If the page is wrapped, rename the parent dir
-  if (isWrapped(path)) {
-    const newParentDir = Fs.concatPath(Fs.parentDirPath(parentDir), name);
-
-    await Fs.renameFile(parentDir, newParentDir);
-
-    // Include the new parent dir in the new path
-    newPath = Fs.concatPath(newParentDir, Fs.fileNameFromPath(newPath));
-  }
-
   // Generate the updated page object
   const updatedPage = {
     ...page,
@@ -62,13 +58,22 @@ export async function renamePage(path: string, name: string): Promise<Page> {
     title: name,
   };
 
-  // Remove the old version of the page from the store
-  PagesStore.getState().remove(path);
-  // Add the new verison of the page to the store
-  PagesStore.getState().add(updatedPage);
+  // Update the page in the store
+  PagesStore.getState().update(path, updatedPage);
 
-  // Dispatch a 'pages:page:rename' event
-  Events.dispatch('pages:page:rename', {
+  // If the page is wrapped, recursively update its children's paths
+  updateChildPagePaths(path, renamedWrapperDir);
+
+  // Rename the page file
+  await Fs.renameFile(path, renamedFilePath);
+
+  // If the page is wrapped, rename the wrapper dir
+  if (isWrapped(path)) {
+    await Fs.renameFile(Fs.parentDirPath(path), renamedWrapperDir);
+  }
+
+  // Dispatch a 'pages:page:renamed' event
+  Events.dispatch('pages:page:renamed', {
     oldPath: path,
     newPath,
   });

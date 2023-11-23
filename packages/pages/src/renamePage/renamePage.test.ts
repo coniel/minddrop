@@ -9,25 +9,43 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PagesStore } from '../PagesStore';
 import { PageNotFoundError } from '../errors';
 import { getPage } from '../getPage';
-import { cleanup, page1, setup } from '../test-utils';
+import {
+  childPage,
+  cleanup,
+  page1,
+  pages,
+  setup,
+  wrappedPage,
+} from '../test-utils';
 import { wrapPage } from '../wrapPage';
 import { renamePage } from './renamePage';
 
 const PAGE_PATH = page1.path;
 const NEW_PAGE_NAME = 'new-name';
 const NEW_PAGE_PATH = `${Fs.parentDirPath(PAGE_PATH)}/${NEW_PAGE_NAME}.md`;
+const WRAPPED_PAGE_PATH = wrappedPage.path;
+const WRAPPED_PAGE_NEW_PATH = Fs.concatPath(
+  Fs.pathSlice(WRAPPED_PAGE_PATH, 0, -2),
+  NEW_PAGE_NAME,
+  `${NEW_PAGE_NAME}.md`,
+);
+const CHILD_PAGE_NEW_PATH = Fs.concatPath(
+  Fs.parentDirPath(WRAPPED_PAGE_NEW_PATH),
+  Fs.fileNameFromPath(childPage.path),
+);
 
 const MockFs = initializeMockFileSystem([
-  // The page file
+  // The page files
   PAGE_PATH,
+  WRAPPED_PAGE_PATH,
 ]);
 
 describe('renamePage', () => {
   beforeEach(() => {
     setup();
 
-    // Add test page to store
-    PagesStore.getState().add(page1);
+    // Add test pages to store
+    PagesStore.getState().load(pages);
   });
 
   afterEach(() => {
@@ -88,10 +106,10 @@ describe('renamePage', () => {
     expect(getPage(NEW_PAGE_PATH)?.title).toBe(NEW_PAGE_NAME);
   });
 
-  it('dispatches a "pages:page:rename" event', async () =>
+  it('dispatches a "pages:page:renamed" event', async () =>
     new Promise<void>((done) => {
-      // Listen to 'pages:page:rename' events
-      Events.addListener('pages:page:rename', 'test', (payload) => {
+      // Listen to 'pages:page:renamed' events
+      Events.addListener('pages:page:renamed', 'test', (payload) => {
         // Payload data should contain old and new paths
         expect(payload.data).toEqual({
           oldPath: PAGE_PATH,
@@ -115,23 +133,21 @@ describe('renamePage', () => {
 
   describe('wrapped page', () => {
     it('renames the wrapping dir', async () => {
-      // Wrap the page
-      const wrappedPath = await wrapPage(PAGE_PATH);
-
-      // Rename the page
-      const renamed = await renamePage(wrappedPath, NEW_PAGE_NAME);
-
-      // The new page path
-      const newPath = Fs.concatPath(
-        Fs.parentDirPath(PAGE_PATH),
-        NEW_PAGE_NAME,
-        `${NEW_PAGE_NAME}.md`,
-      );
+      // Rename a wrapped page
+      const renamed = await renamePage(WRAPPED_PAGE_PATH, NEW_PAGE_NAME);
 
       // It should rename the wrapping dir as well as the page file
-      expect(MockFs.exists(newPath)).toBe(true);
+      expect(MockFs.exists(WRAPPED_PAGE_NEW_PATH)).toBe(true);
       // It should update the page's path including the wrapping dir
-      expect(renamed.path).toBe(newPath);
+      expect(renamed.path).toBe(WRAPPED_PAGE_NEW_PATH);
+    });
+
+    it('recursively updates child page paths', async () => {
+      // Rename a wrapped page
+      await renamePage(WRAPPED_PAGE_PATH, NEW_PAGE_NAME);
+
+      // Child page should have new path in the store
+      expect(getPage(CHILD_PAGE_NEW_PATH)).not.toBeNull();
     });
   });
 });
