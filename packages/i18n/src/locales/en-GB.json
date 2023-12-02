@@ -49,6 +49,9 @@
     "selectColor": "Select icon color",
     "change": "Change icon"
   },
+  "contentPicker": {
+    "filter": "Filter..."
+  },
   "workspaces": {
     "label": "Workspaces",
     "definition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",

@@ -1,0 +1,25 @@
+.content-picker {
+  padding: 8px 8px 0 8px;
+  height: 460px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-picker .search-field input {
+  width: 100%;
+}
+
+.content-picker .content {
+  padding-top: 16px;
+  overflow: scroll;
+  flex: 1;
+}
+
+.content-picker .search-group {
+  margin-bottom: 12px;
+}
+
+.content-picker .title {
+  margin-left: 0;
+}
