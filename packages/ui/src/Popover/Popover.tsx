@@ -23,12 +23,17 @@ export const PopoverTrigger = React.forwardRef<
   </PopoverPrimitive.Trigger>
 ));
 
+PopoverTrigger.displayName = 'PopoverTrigger';
+
 export const PopoverContent = React.forwardRef<
   HTMLDivElement,
-  PopoverContentProps
->(({ children, className, asChild, ...other }, ref) => (
+  PopoverContentProps & { minWidth?: number }
+>(({ children, className, asChild, minWidth, ...other }, ref) => (
   <PopoverPrimitive.Content asChild ref={ref} {...other}>
-    <div className={mapPropsToClasses({ className }, 'popover')}>
+    <div
+      className={mapPropsToClasses({ className }, 'popover')}
+      style={{ minWidth }}
+    >
       {children}
     </div>
   </PopoverPrimitive.Content>
