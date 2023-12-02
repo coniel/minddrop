@@ -12,7 +12,7 @@ import { isWrapped } from '../utils';
 import { updateChildPagePaths } from '../updateChildPagePaths';
 
 /**
- * Renames a page and its file. Dispatches a 'pages:page:rename' event.
+ * Renames a page and its file.
  *
  * @param path The path of the page to rename.
  * @param name The new name of the page.
