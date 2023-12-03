@@ -17,10 +17,11 @@ import {
 import { Page, Pages, useChildPages } from '@minddrop/pages';
 import { PageNavItemIcon } from '../PageNavItemIcon';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { useMemo } from 'react';
-import { createSubpage, revealInFileExplorer } from '../../api';
+import { useCallback, useMemo } from 'react';
+import { createSubpage, revealInFileExplorer, movePage } from '../../api';
 import { createPageOptionsMenu } from '../../menus/createPageOptionsMenu';
 import { RenamePagePopover } from '../RenamePagePopover';
+import { ContentPicker } from '../ContentPicker';
 
 export interface PageNavItemProps {
   /**
@@ -49,6 +50,8 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
     useToggle(false);
   // Used to show the rename page popover
   const [renamePopoverOpen, toggleRenamePopoverOpen] = useToggle(false);
+  // Used to show the move selection popover
+  const [movePopoverOpen, toggleMovePopoverOpen] = useToggle(false);
   // Callback fired when the user selects the "Reveal in File Explorer" option
   const hadnleReavealInFileExplorer = useCreateCallback(
     revealInFileExplorer,
@@ -59,6 +62,11 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
   // Callback fired when the user clicks the "Add Subpage" button
   const handleClickAddSubpage = useCreateCallback(createSubpage, page.path);
 
+  const handleSelectMove = useCallback(
+    (path: string) => movePage(page.path, path),
+    [page.path],
+  );
+
   // Configure the options menu content
   const optionsMenuContent = useMemo(
     () =>
@@ -67,17 +75,19 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
         onSelectRevealInFileExplorer: hadnleReavealInFileExplorer,
         onSelectRename: toggleRenamePopoverOpen,
         onSelectDelete: handleSelectDelete,
+        onSelectMove: toggleMovePopoverOpen,
       }),
     [
       hadnleReavealInFileExplorer,
       toggleShowIconSelection,
       toggleRenamePopoverOpen,
       handleSelectDelete,
+      toggleMovePopoverOpen,
     ],
   );
 
   return (
-    <Popover open={renamePopoverOpen}>
+    <Popover open={renamePopoverOpen || movePopoverOpen}>
       <PopoverAnchor>
         <ContextMenu onOpenChange={toggleHasActiveMenu}>
           <ContextMenuTrigger>
@@ -142,7 +152,18 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
         </ContextMenu>
       </PopoverAnchor>
       <PopoverPortal>
-        <RenamePagePopover page={page} onClose={toggleRenamePopoverOpen} />
+        <>
+          {renamePopoverOpen && (
+            <RenamePagePopover page={page} onClose={toggleRenamePopoverOpen} />
+          )}
+          {movePopoverOpen && (
+            <ContentPicker
+              onClose={toggleMovePopoverOpen}
+              onSelect={handleSelectMove}
+              omit={page.path}
+            />
+          )}
+        </>
       </PopoverPortal>
     </Popover>
   );
