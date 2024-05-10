@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
 import { Page } from '../types';
-import { getPageMetadata, isWrapped, titleFromPath } from '../utils';
+import { deserializePageMetadata, isWrapped, titleFromPath } from '../utils';
 
 /**
  * Create a page object from a markdown file.
@@ -12,7 +12,7 @@ export async function getPageFromPath(path: string): Promise<Page> {
   const pageContent = await Fs.readTextFile(path);
 
   // Get the page metadata
-  const metadata = getPageMetadata(pageContent);
+  const metadata = deserializePageMetadata(pageContent);
 
   // Create a page object
   return {

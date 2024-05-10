@@ -1,6 +1,7 @@
 export * from './getChildPages';
 export * from './getDirFilesRecursiveFlat';
 export * from './getPageMetadata';
+export * from './deserializePageMetadata';
 export * from './isWrapped';
 export * from './parseIconMetadata';
 export * from './removePageMetadata';

@@ -4,12 +4,12 @@ import {
   FileNotFoundError,
 } from '@minddrop/file-system';
 import { UserIcon, UserIconType } from '@minddrop/icons';
-import { InvalidParameterError } from '@minddrop/utils';
 import { cleanup, page1, setup } from '../test-utils';
 import { PagesStore } from '../PagesStore';
 import { writePageMetadata } from './writePageMetadata';
 import { serializePageMetadata } from '../utils';
 import { DefaultPageIcon } from '../constants';
+import { PageNotFoundError } from '../errors';
 
 const PAGE_PATH = page1.path;
 const NEW_PAGE_ICON: UserIcon = {
@@ -30,7 +30,7 @@ describe('writePageMetadata', () => {
   beforeEach(() => {
     setup();
 
-    // Load a workspace into the store
+    // Load a page into the store
     PagesStore.getState().add(page1);
 
     // Reset mock file system
@@ -43,7 +43,7 @@ describe('writePageMetadata', () => {
     // Attempt to write the metadata for a page that does not exist.
     // Should throw a InvalidParameterError.
     expect(() => writePageMetadata('missing')).rejects.toThrowError(
-      InvalidParameterError,
+      PageNotFoundError,
     );
   });
 

@@ -1,8 +1,12 @@
 import { FileNotFoundError, Fs } from '@minddrop/file-system';
-import { removePageMetadata, serializePageMetadata } from '../utils';
+import {
+  getPageMetadata,
+  removePageMetadata,
+  serializePageMetadata,
+} from '../utils';
 import { getPage } from '../getPage';
-import { PageMetadata } from '../types';
-import { InvalidParameterError } from '@minddrop/utils';
+import { writePage } from '../writePage/writePage';
+import { PageNotFoundError } from '../errors';
 
 /**
  * Writes the relevant values from the current page state
@@ -18,7 +22,7 @@ export async function writePageMetadata(path: string): Promise<void> {
 
   // Ensure page exists
   if (!page) {
-    throw new InvalidParameterError(`page does not exist: ${path}`);
+    throw new PageNotFoundError(path);
   }
 
   // Ensure page file exists
@@ -34,17 +38,15 @@ export async function writePageMetadata(path: string): Promise<void> {
 
   // Generate the new page metadata from the
   // current page state.
-  const newMetadata: PageMetadata = {
-    icon: page.icon,
-  };
+  const newMetadata = getPageMetadata(page);
 
   // Serialize the new page metadata
   const serializedMetadata = serializePageMetadata(newMetadata);
 
   // Combine new serialized metadata and page
-  // text conent.
-  const newContent = `${serializedMetadata}${pureContent}`;
+  // text content.
+  const markdown = `${serializedMetadata}${pureContent}`;
 
-  // Wrote the updated file contents
-  Fs.writeTextFile(path, newContent);
+  // Write the updated file contents
+  writePage(path, markdown);
 }
