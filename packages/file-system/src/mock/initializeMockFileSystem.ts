@@ -1,5 +1,6 @@
 import { fileNameFromPath } from '../fileNameFromPath';
 import {
+  BaseDirectory,
   FileEntry,
   FileSystem,
   FsDirOptions,
@@ -19,7 +20,12 @@ import { concatPath } from '../concatPath';
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
-  const init = initializeMockFsRoot(filesToLoad);
+  const init = initializeMockFsRoot([
+    { path: BaseDirectory.AppData },
+    { path: BaseDirectory.AppConfig },
+    { path: BaseDirectory.Documents },
+    ...filesToLoad,
+  ]);
 
   // The mock file system root
   let root: FileEntry = init.root;
