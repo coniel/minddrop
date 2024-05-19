@@ -339,9 +339,6 @@ importers:
 
   packages/markdown:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       mdast-util-gfm:
         specifier: ^3.0.0
         version: 3.0.0
@@ -415,6 +412,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
+      '@minddrop/markdown':
+        specifier: workspace:*
+        version: link:../markdown
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
