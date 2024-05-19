@@ -6,6 +6,7 @@ export * from './movePage';
 export * from './promptMoveWorkspace';
 export * from './revealInFileExplorer';
 export * from './selectFolderAsWorkspace';
+export * from './setActivePage';
 export * from './setPageContentIcon';
 export * from './setPageContentIconColor';
 export * from './setPageEmoji';

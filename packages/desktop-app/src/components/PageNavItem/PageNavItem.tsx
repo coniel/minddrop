@@ -18,10 +18,16 @@ import { Page, Pages, useChildPages } from '@minddrop/pages';
 import { PageNavItemIcon } from '../PageNavItemIcon';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
 import { useCallback, useMemo } from 'react';
-import { createSubpage, revealInFileExplorer, movePage } from '../../api';
+import {
+  createSubpage,
+  revealInFileExplorer,
+  movePage,
+  setActivePage,
+} from '../../api';
 import { createPageOptionsMenu } from '../../menus/createPageOptionsMenu';
 import { RenamePagePopover } from '../RenamePagePopover';
 import { ContentPicker } from '../ContentPicker';
+import { useCurrentPath } from '../../AppUiState';
 
 export interface PageNavItemProps {
   /**
@@ -41,6 +47,8 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
   level = 0,
   ...other
 }) => {
+  // Get the current active path
+  const currentPath = useCurrentPath();
   // Get the page's child pages
   const childPages = useChildPages(page.path);
   // Used to add active styles when the context/dropdown menu is open
@@ -61,6 +69,8 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
   const handleSelectDelete = useCreateCallback(Pages.delete, page.path);
   // Callback fired when the user clicks the "Add Subpage" button
   const handleClickAddSubpage = useCreateCallback(createSubpage, page.path);
+  // Callback fired when the user clicks the nav item
+  const handleClick = useCreateCallback(setActivePage, page.path);
 
   const handleSelectMove = useCallback(
     (path: string) => movePage(page.path, path),
@@ -93,6 +103,7 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
           <ContextMenuTrigger>
             <PageNavItemPrimitive
               level={level}
+              active={currentPath === page.path}
               hovering={hasActiveMenu}
               hasSubpages={childPages.length > 0}
               label={page.title}
@@ -103,6 +114,7 @@ export const PageNavItem: React.FC<PageNavItemProps> = ({
                   onShowIconSelectionChange={setShowIconSelection}
                 />
               }
+              onClick={handleClick}
               actions={
                 <div style={{ columnGap: 2, display: 'flex' }}>
                   <DropdownMenu onOpenChange={toggleHasActiveMenu}>
