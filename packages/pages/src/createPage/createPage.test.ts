@@ -17,6 +17,8 @@ const PAGE: Page = {
   path: PAGE_FILE_PATH,
   icon: DefaultPageIcon,
   wrapped: false,
+  contentRaw: '',
+  contentParsed: null,
 };
 
 const MockFs = initializeMockFileSystem([

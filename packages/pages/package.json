@@ -13,6 +13,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "yaml": "^2.3.4"
   },

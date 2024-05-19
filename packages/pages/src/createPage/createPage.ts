@@ -31,6 +31,8 @@ export async function createPage(
     path: pageFilePath,
     icon: DefaultPageIcon,
     wrapped: !!options.wrap,
+    contentRaw: '',
+    contentParsed: null,
   };
 
   // Add page to the store

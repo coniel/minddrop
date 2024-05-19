@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
-import { setup, cleanup } from '../test-utils';
+import { setup, cleanup, page1, page1FileContent } from '../test-utils';
 import { getPageFromPath } from './getPageFromPath';
 import { Page } from '../types';
 import { DefaultPageIcon } from '../constants';
@@ -15,6 +15,11 @@ const MockFs = initializeMockFileSystem([
   PAGE_FILE_PATH,
   // Wrapped page file
   WRAPPED_PAGE_FILE_PATH,
+  // Page file with content
+  {
+    path: page1.path,
+    textContent: page1FileContent,
+  },
 ]);
 
 describe('getPageFromPath', () => {
@@ -37,7 +42,17 @@ describe('getPageFromPath', () => {
       path: PAGE_FILE_PATH,
       wrapped: false,
       icon: DefaultPageIcon,
+      contentRaw: '',
+      contentParsed: null,
     });
+  });
+
+  it('returns ', async () => {
+    // Get a page with content
+    const page = await getPageFromPath(page1.path);
+
+    // Should set contentRaw to the page markdown content
+    expect(page.contentRaw).toBe(page1.contentRaw);
   });
 
   it('marks page as wrapped if it is wrapped', async () => {

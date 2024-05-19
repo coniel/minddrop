@@ -1,4 +1,5 @@
 import { UserIcon } from '@minddrop/icons';
+import { RootContent } from '@minddrop/markdown';
 
 export interface Page {
   /**
@@ -21,4 +22,14 @@ export interface Page {
    * same name.
    */
   wrapped: boolean;
+
+  /**
+   * The raw page content as read from the file.
+   */
+  contentRaw: string;
+
+  /**
+   * The parsed page content.
+   */
+  contentParsed: RootContent[] | null;
 }

@@ -4,12 +4,14 @@ import {
   Fs,
   PathConflictError,
 } from '@minddrop/file-system';
+import { Markdown } from '@minddrop/markdown';
 import { PagesStore } from '../PagesStore';
 import { PageNotFoundError } from '../errors';
 import { getPage } from '../getPage';
 import { Page } from '../types';
 import { isWrapped } from '../utils';
 import { updateChildPagePaths } from '../updateChildPagePaths';
+import { writePageContent } from '../writePageContent';
 
 /**
  * Renames a page and its file.
@@ -51,12 +53,19 @@ export async function renamePage(path: string, name: string): Promise<Page> {
     throw new PathConflictError(path);
   }
 
+  // Update the markdown heading to the new name
+  const newContent = Markdown.updateHeading(page.contentRaw, name);
+
   // Generate the updated page object
   const updatedPage = {
     ...page,
     path: newPath,
     title: name,
+    contentRaw: newContent,
   };
+
+  // Update the file's markdown heading
+  await writePageContent(path, newContent);
 
   // Update the page in the store
   PagesStore.getState().update(path, updatedPage);
