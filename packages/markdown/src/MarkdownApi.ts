@@ -6,3 +6,4 @@ export { parseMarkdown as parse } from './parseMarkdown';
 export { removeMdastNodes as remove } from './removeMdastNodes';
 export { updateMarkdownHeading as updateHeading } from './updateMarkdownHeading';
 export { removeFrontmatter } from './removeFrontmatter';
+export { getMarkdownContent as getContent } from './getMarkdownContent';
