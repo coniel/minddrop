@@ -20,18 +20,24 @@ const PAGES: Page[] = SOURCE_DIRS.flatMap<Page>((dirPath) => [
     path: `${dirPath}/Page 1.md`,
     icon: PAGE_ICON,
     wrapped: false,
+    contentRaw: '',
+    contentParsed: null,
   },
   {
     title: 'Page 2',
     path: `${dirPath}/Page 2/Page 2.md`,
     icon: PAGE_ICON,
     wrapped: true,
+    contentRaw: '',
+    contentParsed: null,
   },
   {
     title: 'Page 3',
     path: `${dirPath}/subdir/Page 3.md`,
     icon: PAGE_ICON,
     wrapped: false,
+    contentRaw: '',
+    contentParsed: null,
   },
 ]);
 

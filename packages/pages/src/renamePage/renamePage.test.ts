@@ -13,11 +13,11 @@ import {
   childPage,
   cleanup,
   page1,
+  page1FileContent,
   pages,
   setup,
   wrappedPage,
 } from '../test-utils';
-import { wrapPage } from '../wrapPage';
 import { renamePage } from './renamePage';
 
 const PAGE_PATH = page1.path;
@@ -36,7 +36,7 @@ const CHILD_PAGE_NEW_PATH = Fs.concatPath(
 
 const MockFs = initializeMockFileSystem([
   // The page files
-  PAGE_PATH,
+  { path: PAGE_PATH, textContent: page1FileContent },
   WRAPPED_PAGE_PATH,
 ]);
 
@@ -93,6 +93,18 @@ describe('renamePage', () => {
     );
   });
 
+  it('updates the markdown heading', async () => {
+    // Rename the page
+    await renamePage(PAGE_PATH, 'New name');
+
+    // The markdown content should be updated with the new heading
+    const content = MockFs.readTextFile(
+      `${Fs.parentDirPath(PAGE_PATH)}/New name.md`,
+    );
+
+    expect(content).toContain('# New name');
+  });
+
   it('updates the page in the store', async () => {
     // Rename the page
     await renamePage(PAGE_PATH, 'new-name');
@@ -104,6 +116,8 @@ describe('renamePage', () => {
     // the new path and title.
     expect(getPage(NEW_PAGE_PATH)?.path).toBe(NEW_PAGE_PATH);
     expect(getPage(NEW_PAGE_PATH)?.title).toBe(NEW_PAGE_NAME);
+    // The page heading should be updated
+    expect(getPage(NEW_PAGE_PATH)?.contentRaw).toContain(`# ${NEW_PAGE_NAME}`);
   });
 
   it('dispatches a "pages:page:renamed" event', async () =>
@@ -126,9 +140,10 @@ describe('renamePage', () => {
     // Rename the page
     const updatedPage = await renamePage(PAGE_PATH, NEW_PAGE_NAME);
 
-    // Path and title should be updated
+    // Path, title, and markdown heading should be updated
     expect(updatedPage.path).toBe(NEW_PAGE_PATH);
     expect(updatedPage.title).toBe(NEW_PAGE_NAME);
+    expect(updatedPage.contentRaw).toContain(`# ${NEW_PAGE_NAME}`);
   });
 
   describe('wrapped page', () => {

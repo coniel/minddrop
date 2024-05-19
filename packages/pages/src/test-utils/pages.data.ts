@@ -10,13 +10,27 @@ export const page1: Page = {
   title: 'Page 1',
   icon: { type: UserIconType.ContentIcon, icon: 'cat', color: 'cyan' },
   wrapped: false,
+  contentRaw: `# Page 1
+
+`,
+  contentParsed: null,
 };
+
+export const page1FileContent = `---
+icon: content-icon:cat:cyan
+---
+
+# Page 1
+
+`;
 
 export const wrappedPage: Page = {
   path: Fs.concatPath(parentDir, 'Page 2', 'Page 2.md'),
   title: 'Page 2',
   wrapped: true,
   icon: DefaultPageIcon,
+  contentRaw: '# Page 2',
+  contentParsed: null,
 };
 
 export const childPage: Page = {
@@ -24,6 +38,8 @@ export const childPage: Page = {
   title: 'Page 3',
   wrapped: false,
   icon: DefaultPageIcon,
+  contentRaw: '# Page 3',
+  contentParsed: null,
 };
 
 export const wrappedChildPage: Page = {
@@ -31,6 +47,8 @@ export const wrappedChildPage: Page = {
   title: 'Page 4',
   wrapped: true,
   icon: DefaultPageIcon,
+  contentRaw: '# Page 4',
+  contentParsed: null,
 };
 
 export const grandChildPage: Page = {
@@ -38,6 +56,8 @@ export const grandChildPage: Page = {
   title: 'Page 5',
   wrapped: false,
   icon: DefaultPageIcon,
+  contentRaw: '# Page 5',
+  contentParsed: null,
 };
 
 export const pages = [
