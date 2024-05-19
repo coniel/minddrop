@@ -55,7 +55,6 @@ describe('movePage', () => {
   it('moves the page', async () => {
     // Move a page into another page which is not wrapped
     await movePage(PATH_TO_MOVE, page1.path);
-    MockFs.printFiles();
 
     // Should move the page
     expect(Pages.get(PATH_TO_MOVE)).toBeNull();
