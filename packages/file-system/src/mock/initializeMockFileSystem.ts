@@ -68,12 +68,18 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, getFullPath(path, options));
       delete textFileContents[path];
     },
-    renameFile: async (oldPath, newPath, options) =>
+    renameFile: async (oldPath, newPath, options) => {
       mockRenameFile(
         root,
         getFullPath(oldPath, options),
         getFullPath(newPath, options),
-      ),
+      );
+
+      if (textFileContents[oldPath]) {
+        textFileContents[newPath] = textFileContents[oldPath];
+        delete textFileContents[oldPath];
+      }
+    },
     writeBinaryFile: () => {
       throw new Error('writeBinaryFile mock not implemented');
     },
