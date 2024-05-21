@@ -140,6 +140,21 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
 
+  packages/blocks:
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.2.2
+
   packages/core:
     dependencies:
       '@minddrop/file-system':
