@@ -10,9 +10,14 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/ui": "workspace:*"
   }
 }

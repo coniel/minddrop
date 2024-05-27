@@ -141,7 +141,17 @@ importers:
         version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
 
   packages/blocks:
+    dependencies:
+      '@minddrop/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       eslint:
         specifier: ^8.39.0
         version: 8.51.0
