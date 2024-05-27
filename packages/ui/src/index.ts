@@ -7,7 +7,6 @@ export * from './ContentIconPicker';
 export * from './ContentListItem';
 export * from './ContextMenu';
 export * from './Dialog';
-export * from './Drop';
 export * from './DropdownMenu';
 export * from './EmojiPicker';
 export * from './FieldLabel';
