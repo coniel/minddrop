@@ -6,7 +6,7 @@ import { withMarkHotkeys } from '../withMarkHotkeys';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { ElementConfigsStore } from '../ElementConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
-import './Editor.css';
+import './RichTextEditor.css';
 import { BlockElement } from '../types';
 import { Descendant } from 'slate';
 import { withBlockShortcuts } from '../withBlockShortcuts';
@@ -39,7 +39,7 @@ export interface EditorProps {
   onBlur?: React.FocusEventHandler<HTMLDivElement>;
 }
 
-export const Editor: React.FC<EditorProps> = ({
+export const RichTextEditor: React.FC<EditorProps> = ({
   initialValue,
   onChange,
   onFocus,

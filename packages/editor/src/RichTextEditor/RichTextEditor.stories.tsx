@@ -1,5 +1,5 @@
 import React from 'react';
-import { Editor } from './Editor';
+import { RichTextEditor } from './RichTextEditor';
 import {
   headingElement1,
   paragraphElement1,
@@ -14,7 +14,7 @@ import { registerMarkConfig } from '../registerMarkConfig';
 
 export default {
   title: 'editor/Editor',
-  component: Editor,
+  component: RichTextEditor,
 };
 
 [HeadingOneElementConfig, ParagraphElementConfig, ToDoElementConfig].forEach(
@@ -25,7 +25,7 @@ defaultMarkConfigs.forEach((config) => registerMarkConfig(config));
 
 export const Default: React.FC = () => (
   <div>
-    <Editor
+    <RichTextEditor
       initialValue={[headingElement1, paragraphElement1, paragraphElement2]}
     />
   </div>

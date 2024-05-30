@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { act, fireEvent, render } from '@minddrop/test-utils';
 import { ToDoElementData } from './ToDoElement.types';
 import { cleanup } from '../../test-utils';
-import { Editor } from '../../Editor';
+import { RichTextEditor } from '../../RichTextEditor';
 import { ToDoElementConfig } from './ToDoElementConfig';
 import { registerElementConfig } from '../../registerElementConfig';
 import { BlockElement } from '../../types';
@@ -26,7 +26,9 @@ describe('ToDoElementComponent', () => {
 
   it('renders it children', () => {
     // Render an editor containing a 'to-do' element
-    const { getByText } = render(<Editor initialValue={[toDoElement]} />);
+    const { getByText } = render(
+      <RichTextEditor initialValue={[toDoElement]} />,
+    );
 
     // Should render children
     getByText('children');
@@ -36,7 +38,7 @@ describe('ToDoElementComponent', () => {
     new Promise<void>((done) => {
       // Render an editor containing a 'to-do' element
       const { getByRole } = render(
-        <Editor
+        <RichTextEditor
           initialValue={[toDoElement]}
           onChange={(value) => {
             expect(value[0]).toMatchObject({ done: true });
@@ -55,7 +57,7 @@ describe('ToDoElementComponent', () => {
     new Promise<void>((done) => {
       // Render an editor containing a done 'to-do' element
       const { getByRole } = render(
-        <Editor
+        <RichTextEditor
           initialValue={[toDoElementDone]}
           onChange={(value) => {
             expect(value[0]).toMatchObject({ done: false });
