@@ -8,6 +8,7 @@ export type { ToDoElement } from './ToDoElement';
 export type { BookmarkElement } from './BookmarkElement';
 export type { ImageElement } from './ImageElement';
 export type { FileElement } from './FileElement';
+export type { HorizontalRuleElement } from './HorizontalRuleElement';
 
 export * from './HeadingOneElement';
 export * from './HeadingTwoElement';
