@@ -5,6 +5,7 @@ import { ParagraphElementConfig } from './ParagraphElement';
 import { ToDoElementConfig } from './ToDoElement';
 
 export type { ToDoElement } from './ToDoElement';
+export type { BookmarkElement } from './BookmarkElement';
 
 export * from './HeadingOneElement';
 export * from './HeadingTwoElement';
