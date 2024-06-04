@@ -4,6 +4,8 @@ import { HeadingTwoElementConfig } from './HeadingTwoElement';
 import { ParagraphElementConfig } from './ParagraphElement';
 import { ToDoElementConfig } from './ToDoElement';
 
+export type { ToDoElement } from './ToDoElement';
+
 export * from './HeadingOneElement';
 export * from './HeadingTwoElement';
 export * from './HeadingThreeElement';
