@@ -4,6 +4,9 @@ export type {
   RootContent,
   PhrasingContent,
   ListItem as MdastListItem,
+  Strong as Bold,
+  Emphasis as Italic,
+  Delete as Strikethrough,
 } from 'mdast';
 
 export type MdastBuilder<T extends string> = (

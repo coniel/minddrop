@@ -428,6 +428,12 @@ importers:
 
   packages/markdown:
     dependencies:
+      '@minddrop/editor':
+        specifier: workspace:*
+        version: link:../editor
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       mdast-util-gfm:
         specifier: ^3.0.0
         version: 3.0.0
