@@ -1,5 +1,5 @@
 import { BlockElement } from '@minddrop/editor';
-import { BlockElementParser } from '../../types/BlockElementParser.types';
+import { BlockElementParser } from '../../types';
 
 /**
  * Parses heading elements from level 1 to 6, including the alternative
