@@ -1,6 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { render } from '@minddrop/test-utils';
-import { BlockElement, Text } from '../types';
+import { Ast, BlockElement } from '@minddrop/ast';
+import { Text } from '../types';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { withMarks } from './withMarks';
 import { Editable, Slate } from 'slate-react';
@@ -9,10 +10,7 @@ import { Node } from 'slate';
 
 const renderEditor = (children: Text[]) => {
   const content: BlockElement[] = [
-    {
-      ...paragraphElement1,
-      children,
-    },
+    Ast.generateBlockElement(paragraphElement1.type, { children }),
   ];
 
   // Create an editor with a 'bold' mark config

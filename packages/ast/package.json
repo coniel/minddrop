@@ -5,6 +5,7 @@
   "types": "src/index",
   "scripts": {
     "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -13,5 +14,8 @@
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@minddrop/events": "workspace:*"
   }
 }

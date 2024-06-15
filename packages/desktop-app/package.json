@@ -21,10 +21,13 @@
     "react": "^18.2.0"
   },
   "dependencies": {
+    "@minddrop/blocks": "workspace:*",
     "@minddrop/core": "workspace:*",
+    "@minddrop/editor": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
+    "@minddrop/ast": "workspace:*",
     "@minddrop/pages": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/theme": "workspace:*",

@@ -1,6 +1,8 @@
 import { createItemStore } from '@minddrop/core';
-import { ElementConfig } from './types';
+import { EditorBlockElementConfig, EditorInlineElementConfig } from './types';
 
 export const ElementConfigsStore = createItemStore<
-  ElementConfig<any> & { id: string }
+  (EditorBlockElementConfig<any> | EditorInlineElementConfig<any>) & {
+    id: string;
+  }
 >();

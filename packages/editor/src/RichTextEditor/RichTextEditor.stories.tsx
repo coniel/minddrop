@@ -6,7 +6,7 @@ import {
   paragraphElement2,
 } from '../test-utils/editor.data';
 import { registerElementConfig } from '../registerElementConfig';
-import { HeadingOneElementConfig } from '../default-element-configs/HeadingOneElement';
+import { HeadingOneElementConfig } from '../default-element-configs/HeadingElement';
 import { ParagraphElementConfig } from '../default-element-configs/ParagraphElement';
 import { ToDoElementConfig } from '../default-element-configs/ToDoElement';
 import { defaultMarkConfigs } from '../default-mark-configs';

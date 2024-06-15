@@ -1,16 +1,16 @@
 import { describe, afterEach, it, expect } from 'vitest';
+import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
 import {
   render,
   waitFor,
   waitForElementToBeRemoved,
 } from '@minddrop/test-utils';
-import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
+import { BlockElement } from '@minddrop/ast';
 import {
   ElementPlaceholderText,
   ElementPlaceholderTextProps,
 } from './ElementPlaceholderText';
 import { cleanup, headingElement1 } from '../test-utils';
-import { BlockElement } from '../types';
 import { createEditor } from '../utils';
 import { Editor, Transforms } from 'slate';
 

@@ -27,10 +27,10 @@ describe('convertElement', () => {
   describe('without `convert` callback', () => {
     it('changes the element type to the new type', () => {
       // Convert a paragraph into a heading
-      const converted = convertElement(paragraphElement1, 'heading-1');
+      const converted = convertElement(paragraphElement1, 'heading');
 
-      // Should change type to 'heading-1'
-      expect(converted.type).toBe('heading-1');
+      // Should change type to 'heading'
+      expect(converted.type).toBe('heading');
     });
   });
 

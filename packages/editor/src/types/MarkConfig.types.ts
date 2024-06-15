@@ -1,5 +1,4 @@
-import { BlockElement } from './BlockElement.types';
-import { Fragment } from './Fragment.types';
+import { BlockElement, Fragment } from '@minddrop/ast';
 import { RenderLeafProps } from 'slate-react';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 

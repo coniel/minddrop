@@ -1,4 +1,4 @@
-import { Element } from '../../types';
+import { Element } from '@minddrop/ast';
 import {
   Editor,
   Element as SlateElement,

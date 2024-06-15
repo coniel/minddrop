@@ -1,38 +1,28 @@
 import { Editor as SlateEditor, Path, Range, Text } from 'slate';
-import {
-  Editor,
-  BlockElement,
-  BlockElementConfig,
-  ElementConfig,
-} from '../types';
+import { Ast, BlockElement } from '@minddrop/ast';
+import { Editor, EditorBlockElementConfig } from '../types';
 import { getElementAbove } from '../utils';
 import { Transforms } from '../Transforms';
 import { convertElement } from '../convertElement';
-import { ElementConfigsStore } from '../ElementConfigsStore';
 
 /**
  * Adds support for block element shortcuts, enabling
  * the shortcuts of the given block element configs.
  *
  * @param editor - An editor instance.
- * @param configs - ElementConfig objects.
+ * @param configs - The block element configurations to enable shortcuts for.
  * @returns The editor instance with the plugin behaviour.
  */
 export function withBlockShortcuts(
   editor: Editor,
-  configs: ElementConfig[],
+  configs: EditorBlockElementConfig[],
 ): Editor {
   const { apply } = editor;
-
-  // Get the configs of block level elements
-  const blockConfigs = configs.filter(
-    (config) => config.level === 'block',
-  ) as BlockElementConfig[];
 
   // Create a `{ [shortcutString]: convertFn }` map of
   // shortcuts and their action.
   const shortcuts: Record<string, (element: BlockElement) => BlockElement> =
-    blockConfigs.reduce((map, config) => {
+    configs.reduce((map, config) => {
       if (!config.shortcuts) {
         // If the config has no shortcuts, there is nothing to add
         return map;
@@ -43,7 +33,7 @@ export function withBlockShortcuts(
         (nextMap, shortcut) => ({
           // Shortcut converts the element into the config's element type
           [shortcut]: (element: BlockElement) =>
-            convertElement(element, config.type),
+            convertElement(element, config.type, shortcut),
           ...nextMap,
         }),
         map,
@@ -68,10 +58,7 @@ export function withBlockShortcuts(
 
       const element = entry[0] as BlockElement;
 
-      // Get the element's config
-      const config = ElementConfigsStore.get(element.type);
-
-      if (config.level !== 'block') {
+      if (!Ast.isBlock(element)) {
         // If the element is not a block level element, stop here
         return;
       }
@@ -115,7 +102,7 @@ export function withBlockShortcuts(
           const data = shortcuts[match](element);
 
           // Apply the conversion data to the element to convert it
-          Transforms.setNodes(editor, data, {
+          Transforms.setNodes<BlockElement>(editor, data, {
             at: Path.parent(operation.path),
           });
         }

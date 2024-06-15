@@ -1,9 +1,8 @@
-/* eslint-disable no-param-reassign */
 import { Editor as SlateEditor } from 'slate';
+import { Ast, BlockElement } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
-import { Editor, BlockElement } from '../types';
+import { Editor } from '../types';
 import { getElementAbove } from '../utils';
-import { toPlainText } from '../toPlainText';
 import { convertElement } from '../convertElement';
 
 /**
@@ -38,7 +37,7 @@ export function withBlockReset(
       // Is not of the default type
       element.type !== defaultType &&
       // Does not contain text
-      toPlainText([element]) === ''
+      Ast.toPlainText([element]) === ''
     ) {
       // Convert the element to the default type
       const converted = convertElement(element, defaultType);
@@ -50,7 +49,7 @@ export function withBlockReset(
       );
 
       // Set the converted element data
-      Transforms.setNodes(editor, converted as BlockElement);
+      Transforms.setNodes<BlockElement>(editor, converted);
     } else {
       // Insert a break as normal
       insertBreak();
@@ -83,7 +82,7 @@ export function withBlockReset(
       );
 
       // Set the converted element data
-      Transforms.setNodes(editor, converted as BlockElement);
+      Transforms.setNodes<BlockElement>(editor, converted);
     } else {
       deleteBackward(unit);
     }

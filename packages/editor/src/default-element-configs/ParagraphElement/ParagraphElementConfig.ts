@@ -1,8 +1,8 @@
-import { BlockElementConfig } from '../../types';
+import { EditorBlockElementConfig } from '../../types';
 import { ParagraphElementComponent } from './ParagraphElementComponent';
 
-export const ParagraphElementConfig: BlockElementConfig = {
+export const ParagraphElementConfig: EditorBlockElementConfig = {
   type: 'paragraph',
-  level: 'block',
+  display: 'block',
   component: ParagraphElementComponent,
 };

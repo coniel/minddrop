@@ -1,19 +1,19 @@
 import { describe, it } from 'vitest';
-import { BlockElementConfig, BlockElementProps } from '../../types';
-import { createRenderElement } from './createRenderElement';
 import { render } from '@minddrop/test-utils';
+import { EditorBlockElementConfig, BlockElementProps } from '../../types';
 import {
   headingElementConfig,
   paragraphElement1,
   paragraphElementConfig,
 } from '../../test-utils/editor.data';
+import { createRenderElement } from './createRenderElement';
 
-const headingConfig: BlockElementConfig = {
+const headingConfig: EditorBlockElementConfig<any> = {
   ...headingElementConfig,
   component: () => <div>heading</div>,
 };
 
-const paragraphConfig: BlockElementConfig = {
+const paragraphConfig: EditorBlockElementConfig<any> = {
   ...paragraphElementConfig,
   component: () => <div>paragraph</div>,
 };

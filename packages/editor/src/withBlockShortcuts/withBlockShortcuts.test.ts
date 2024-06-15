@@ -1,29 +1,23 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Node, Editor } from 'slate';
-import { BlockElementConfig, Element, InlineElementConfig } from '../types';
+import { Ast, BlockElement, Element } from '@minddrop/ast';
+import { EditorBlockElementConfig } from '../types';
 import {
   setup,
   cleanup,
   createTestEditor,
   headingElementConfig,
-  linkElementConfig,
   emptyParagraphElement,
   paragraphElement1,
   linkElement1,
 } from '../test-utils';
 import { Transforms } from '../Transforms';
 import { withBlockShortcuts } from './withBlockShortcuts';
-import { toPlainText } from '../toPlainText';
 
-const headingConfig: BlockElementConfig = {
+const headingConfig: EditorBlockElementConfig<any> = {
   ...headingElementConfig,
   shortcuts: ['# '],
 };
-
-const linkConfig = {
-  ...linkElementConfig,
-  shortcuts: ['[['],
-} as InlineElementConfig;
 
 describe('withBlockShortcuts', () => {
   beforeEach(setup);
@@ -77,10 +71,10 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as Element;
+    const element = Node.get(editor, [0]) as BlockElement;
 
     // Should remove the '# ' shortcut from the text
-    expect(toPlainText([element])).toBe('');
+    expect(Ast.toPlainText([element])).toBe('');
   });
 
   it('only runs the shortcut if typed at the start of the block', () => {
@@ -154,25 +148,5 @@ describe('withBlockShortcuts', () => {
 
     // Element type should have remained 'link'
     expect(element.type).toBe(linkElement1.type);
-  });
-
-  it('does not run inline element shortcuts', () => {
-    // Create an editor instance configured with the plugin using the link
-    // (inline) element configuration containing an empty paragraph element.
-    const editor = withBlockShortcuts(
-      createTestEditor([emptyParagraphElement]),
-      [linkConfig],
-    );
-
-    // Insert the link shortcut text at the beggining of the paragraph element
-    Transforms.insertText(editor, '[[', { at: [0, 0] });
-
-    // Get the element from the document
-    const element = Node.get(editor, [0]) as Element;
-
-    // The element should have remained a paragraph element
-    expect(element.type).toBe(paragraphElement1.type);
-    // The shortcut text should not have been removed
-    expect(toPlainText([element])).toBe('[[');
   });
 });

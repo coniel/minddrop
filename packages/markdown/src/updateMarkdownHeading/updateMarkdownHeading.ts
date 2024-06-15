@@ -1,6 +1,3 @@
-import { mdastNodesToMarkdown } from '../mdastNodesToMarkdown';
-import { parseMarkdown } from '../parseMarkdown';
-
 /**
  * Updates the heading of a markdown document.
  *
@@ -12,16 +9,14 @@ export function updateMarkdownHeading(
   markdown: string,
   heading: string,
 ): string {
-  // Parse the markdown
-  const nodes = parseMarkdown(markdown);
+  // Split the markdown into lines
+  const lines = markdown.split('\n');
 
-  // If the first node is a level 1 heading
-  // replace its text.
-  if (nodes[0].type === 'heading' && nodes[0].depth === 1) {
-    const [newHeading] = parseMarkdown(`# ${heading}\n`);
-    nodes[0] = newHeading;
+  // If the first line is a heading, update it
+  if (lines[0].startsWith('# ')) {
+    lines[0] = `# ${heading}`;
   }
 
-  // Convert tokens back to markdown
-  return mdastNodesToMarkdown(nodes);
+  // Join the lines back together
+  return lines.join('\n');
 }

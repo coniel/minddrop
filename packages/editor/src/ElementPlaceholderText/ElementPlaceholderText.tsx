@@ -1,7 +1,7 @@
 import React from 'react';
 import { Node, Range } from 'slate';
 import { useSlate, useSelected, useFocused } from 'slate-react';
-import { Element } from '../types';
+import { Element } from '@minddrop/ast';
 import './ElementPlaceholderText.css';
 
 export interface ElementPlaceholderTextProps {

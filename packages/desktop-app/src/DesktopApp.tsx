@@ -11,10 +11,6 @@ export const DesktopApp: React.FC = () => {
   const view = useCurrentView();
   const path = useCurrentPath();
 
-  if (!view) {
-    return null;
-  }
-
   return (
     <CoreProvider>
       <IconsProvider>

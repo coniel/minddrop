@@ -1,9 +1,0 @@
-.heading-3-element {
-  font-size: var(--fsContentTitle);
-  font-weight: var(--fwSemibold);
-  padding-top: 16px;
-}
-
-.heading-3-element:first-child {
-  padding-top: 0;
-}

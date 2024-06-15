@@ -21,6 +21,7 @@
     "react": "^18.2.0"
   },
   "dependencies": {
+    "@minddrop/ast": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/ui": "workspace:*",

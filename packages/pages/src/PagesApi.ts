@@ -9,3 +9,4 @@ export { deletePage as delete } from './deletePage';
 export { removeChildPages } from './removeChildPages';
 export { movePage as move } from './movePage';
 export { getWrappedPath } from './getWrappedPath';
+export { writePageContent as writeContent } from './writePageContent';

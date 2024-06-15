@@ -1,5 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Transforms } from 'slate';
+import { BlockElement, Ast } from '@minddrop/ast';
 import {
   setup,
   cleanup,
@@ -11,7 +12,7 @@ import {
   paragraphElement1,
   paragraphElementConfig,
 } from '../test-utils';
-import { Editor, BlockElement } from '../types';
+import { Editor } from '../types';
 import { withReturnBehaviour } from './withReturnBehaviour';
 import { registerElementConfig } from '../registerElementConfig';
 
@@ -94,11 +95,10 @@ describe('withReturnBehaviour', () => {
 
     // Create an editor containing a 'test-code' element
     const editor = createEditor([
-      {
+      Ast.generateBlockElement('test-code', {
         ...paragraphElement1,
-        type: 'test-code',
         children: [{ text: 'Test' }],
-      },
+      }),
     ]);
 
     // Insert a break at the end of the text

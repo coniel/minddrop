@@ -1,17 +1,15 @@
-import { BlockElementConfig } from '../../types';
-import { ToDoElementData } from './ToDoElement.types';
+import { Ast, ToDoElement } from '@minddrop/ast';
+import { EditorBlockElementConfig } from '../../types';
 import { ToDoElementComponent } from './ToDoElementComponent';
 
-export const ToDoElementConfig: BlockElementConfig<ToDoElementData> = {
+export const ToDoElementConfig: EditorBlockElementConfig<ToDoElement> = {
   type: 'to-do',
-  level: 'block',
-  initialize: () => ({
-    type: 'to-do',
-    level: 'block',
-    children: [{ text: '' }],
-    done: false,
-  }),
+  display: 'block',
+  initialize: () =>
+    Ast.generateBlockElement<ToDoElement>('to-do', {
+      checked: false,
+    }),
   component: ToDoElementComponent,
-  shortcuts: ['[] '],
-  returnBehaviour: () => ({ done: false }),
+  shortcuts: ['[] ', '- [ ]'],
+  returnBehaviour: () => ({ checked: false }),
 };

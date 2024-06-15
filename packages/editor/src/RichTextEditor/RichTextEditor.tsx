@@ -1,21 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Editable, Slate } from 'slate-react';
-import { createEditor, createRenderElement } from '../utils';
+import { useDebouncedCallback } from 'use-debounce';
+import { BlockElement } from '@minddrop/ast';
+import {
+  createEditor,
+  createRenderElement,
+  getBlockElementConfigs,
+} from '../utils';
 import { withMarks } from '../withMarks';
 import { withMarkHotkeys } from '../withMarkHotkeys';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { ElementConfigsStore } from '../ElementConfigsStore';
 import { MarkConfigsStore } from '../MarkConfigsStore';
-import './RichTextEditor.css';
-import { BlockElement } from '../types';
 import { Descendant } from 'slate';
 import { withBlockShortcuts } from '../withBlockShortcuts';
 import { withBlockReset } from '../withBlockReset';
 import { withReturnBehaviour } from '../withReturnBehaviour';
-import { withInlineMenus } from '../withInlineMenu';
-
-let query = '';
-let close: (removeQuery: boolean) => void;
+import './RichTextEditor.css';
 
 export interface EditorProps {
   /**
@@ -26,7 +27,14 @@ export interface EditorProps {
   /**
    * Callback fired when the editor value changes.
    */
-  onChange?: (value: Descendant[]) => void;
+  onChange?: (value: BlockElement[]) => void;
+
+  /**
+   * Callback fired when the editor value changes, debounced
+   * to wait for 1 second of inactivity before firing, up to
+   * a maximum of 5 seconds.
+   */
+  onChangeDebounced?: (value: BlockElement[]) => void;
 
   /**
    * Callback fired when the editor is focused.
@@ -42,10 +50,29 @@ export interface EditorProps {
 export const RichTextEditor: React.FC<EditorProps> = ({
   initialValue,
   onChange,
+  onChangeDebounced,
   onFocus,
   onBlur,
 }) => {
   const editor = useMemo(() => createEditor(), []);
+  const handleDebouncedChange = useDebouncedCallback(
+    (value: BlockElement[]) =>
+      onChangeDebounced ? onChangeDebounced(value) : null,
+    1000,
+    { leading: false, maxWait: 5000 },
+  );
+  const handleChange = useCallback(
+    (value: Descendant[]) => {
+      if (onChange) {
+        onChange(value as BlockElement[]);
+      }
+
+      if (onChangeDebounced) {
+        handleDebouncedChange(value as BlockElement[]);
+      }
+    },
+    [onChange, onChangeDebounced, handleDebouncedChange],
+  );
 
   const elementConfigsMap = ElementConfigsStore.useAllItems();
   const elementConfigs = Object.values(elementConfigsMap);
@@ -61,7 +88,10 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     () =>
       withMarks(
         withBlockReset(
-          withBlockShortcuts(withReturnBehaviour(editor), elementConfigs),
+          withBlockShortcuts(
+            withReturnBehaviour(editor),
+            getBlockElementConfigs(elementConfigs),
+          ),
           'paragraph',
         ),
         Object.values(MarkConfigsStore.getAll()),
@@ -78,7 +108,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     <Slate
       editor={editorWithPlugins}
       initialValue={initialValue}
-      onChange={onChange}
+      onChange={handleChange}
     >
       <Editable
         className="editor"

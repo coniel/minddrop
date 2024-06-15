@@ -1,7 +1,5 @@
 import {
   HeadingOneElementConfig,
-  HeadingThreeElementConfig,
-  HeadingTwoElementConfig,
   ParagraphElementConfig,
   ToDoElementConfig,
 } from '../../default-element-configs';
@@ -9,8 +7,6 @@ import { registerElementConfig } from '../../registerElementConfig';
 
 const configs = [
   HeadingOneElementConfig,
-  HeadingTwoElementConfig,
-  HeadingThreeElementConfig,
   ParagraphElementConfig,
   ToDoElementConfig,
 ];

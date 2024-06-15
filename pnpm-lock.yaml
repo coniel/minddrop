@@ -140,6 +140,25 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
 
+  packages/ast:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.2.2
+
   packages/blocks:
     dependencies:
       '@minddrop/ui':
@@ -198,6 +217,12 @@ importers:
 
   packages/desktop-app:
     dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../blocks
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
@@ -256,6 +281,9 @@ importers:
 
   packages/editor:
     dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../ast
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
@@ -498,6 +526,9 @@ importers:
 
   packages/pages:
     dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../ast
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core

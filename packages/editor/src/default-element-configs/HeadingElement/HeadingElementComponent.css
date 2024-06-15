@@ -1,0 +1,26 @@
+.heading-1-element {
+  font-size: var(--fsTitle);
+  font-weight: var(--fwSemibold);
+  padding-top: 20px;
+}
+
+.heading-2-element {
+  font-size: 26px;
+  font-weight: var(--fwSemibold);
+  padding-top: 16px;
+}
+
+.heading-3-element {
+  font-size: var(--fsContentTitle);
+  font-weight: var(--fwSemibold);
+  padding-top: 16px;
+}
+
+.heading-1-element:first-child,
+.heading-2-element:first-child,
+.heading-3-element:first-child,
+.heading-4-element:first-child,
+.heading-5-element:first-child,
+.heading-6-element:first-child {
+  padding-top: 0;
+}

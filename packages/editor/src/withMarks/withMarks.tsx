@@ -1,6 +1,7 @@
 import { Node, Path, Range, Text, Transforms } from 'slate';
 import { RenderLeafProps } from 'slate-react';
-import { Editor, InlineShortcut, MarkConfig, Element } from '../types';
+import { Element } from '@minddrop/ast';
+import { Editor, InlineShortcut, MarkConfig } from '../types';
 import { withInlineShortcuts } from '../withInlineShortcuts';
 
 /**

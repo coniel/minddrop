@@ -1,5 +1,5 @@
 import { Transforms } from 'slate';
-import { Editor, BlockElement, BlockElementConfig } from '../types';
+import { Editor } from '../types';
 import { getElementAbove } from '../utils';
 import { ElementConfigsStore } from '../ElementConfigsStore';
 
@@ -25,9 +25,13 @@ export function withReturnBehaviour(editor: Editor): Editor {
     }
 
     // Get the element's type config
-    const config = ElementConfigsStore.get(element.type) as BlockElementConfig;
+    const config = ElementConfigsStore.get(element.type);
 
-    if (config && config.returnBehaviour === 'line-break') {
+    if (
+      config &&
+      'returnBehaviour' in config &&
+      config.returnBehaviour === 'line-break'
+    ) {
       // Insert a line break
       Transforms.insertText(editor, '\n');
 
@@ -42,20 +46,19 @@ export function withReturnBehaviour(editor: Editor): Editor {
       return;
     }
 
-    if (!config.returnBehaviour || config.returnBehaviour === 'break-out') {
+    if (
+      !('returnBehaviour' in config) ||
+      config.returnBehaviour === 'break-out'
+    ) {
       Transforms.setNodes(
         editor,
         { type: 'paragraph' },
         { at: editor.selection },
       );
     } else if (typeof config.returnBehaviour === 'function') {
-      Transforms.setNodes(
-        editor,
-        config.returnBehaviour(element as BlockElement),
-        {
-          at: editor.selection,
-        },
-      );
+      Transforms.setNodes(editor, config.returnBehaviour(element), {
+        at: editor.selection,
+      });
     }
   };
 

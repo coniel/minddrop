@@ -1,7 +1,6 @@
 import { BaseEditor, Editor as SlateEditor } from 'slate';
 import { ReactEditor } from 'slate-react';
-import { Text } from './Text.types';
-import { Element } from './Element.types';
+import { BlockElement, InlineElement, TextElement } from '@minddrop/ast';
 
 interface MindDropEditor {
   /**
@@ -13,8 +12,10 @@ interface MindDropEditor {
 declare module 'slate' {
   interface CustomTypes {
     Editor: BaseEditor & ReactEditor;
-    Element: Element;
-    Text: Text;
+    Element: BlockElement | InlineElement;
+    Text: TextElement;
+    Descendant: BlockElement | InlineElement | TextElement;
+    Node: BlockElement | InlineElement | TextElement;
   }
 }
 

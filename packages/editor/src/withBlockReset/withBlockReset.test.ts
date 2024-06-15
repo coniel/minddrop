@@ -1,5 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Editor, Node } from 'slate';
+import { Ast, BlockElement, Element } from '@minddrop/ast';
 import {
   setup,
   cleanup,
@@ -7,10 +8,8 @@ import {
   headingElement1,
   linkElement1,
 } from '../test-utils';
-import { Element } from '../types';
 import { Transforms } from '../Transforms';
 import { withBlockReset } from './withBlockReset';
-import { toPlainText } from '../toPlainText';
 
 // An empty heading element
 const emptyHeading = { ...headingElement1, children: [{ text: '' }] };
@@ -127,12 +126,12 @@ describe('withBlockReset', () => {
     editor.deleteBackward('character');
 
     // Get the element
-    const element = Node.get(editor, [0]) as Element;
+    const element = Node.get(editor, [0]) as BlockElement;
 
     // Element should remain a heading
     expect(element.type).toBe(headingElement1.type);
     // Last character should have been deleted
-    expect(toPlainText([element])).toBe('Hello worl');
+    expect(Ast.toPlainText([element])).toBe('Hello worl');
   });
 
   it('does not reset inline elements when deleting backwards', () => {

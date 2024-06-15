@@ -1,5 +1,5 @@
 import { UserIcon } from '@minddrop/icons';
-import { RootContent } from '@minddrop/markdown';
+import { BlockElement } from '@minddrop/ast';
 
 export interface Page {
   /**
@@ -31,5 +31,5 @@ export interface Page {
   /**
    * The parsed page content.
    */
-  contentParsed: RootContent[] | null;
+  contentParsed: BlockElement[] | null;
 }

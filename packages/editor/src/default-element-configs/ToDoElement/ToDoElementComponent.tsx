@@ -4,8 +4,9 @@ import { mapPropsToClasses } from '@minddrop/utils';
 import { Icon } from '@minddrop/ui';
 import { Transforms } from '../../Transforms';
 import { ElementPlaceholderText } from '../../ElementPlaceholderText';
-import { ToDoElement, ToDoElementProps } from './ToDoElement.types';
+import { ToDoElementProps } from './ToDoElement.types';
 import './ToDoElementComponent.css';
+import { ToDoElement } from '@minddrop/ast';
 
 export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
   children,
@@ -14,30 +15,33 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
 }) => {
   const editor = useSlate();
 
-  // Toggles the to-do's `done` state
-  const toggleDone = () => {
+  // Toggles the to-do's `checked` state
+  const togglechecked = () => {
     // Get the element's path
     const path = ReactEditor.findPath(editor, element);
 
     // Update the element's data
     Transforms.setNodes<ToDoElement>(
       editor,
-      // Toggle the `done` value
-      { done: !element.done },
+      // Toggle the `checked` value
+      { checked: !element.checked },
       { at: path },
     );
   };
 
   return (
     <div
-      className={mapPropsToClasses({ done: element.done }, 'to-do-element')}
+      className={mapPropsToClasses(
+        { checked: element.checked },
+        'to-do-element',
+      )}
       {...attributes}
     >
       <div contentEditable={false}>
         <Icon
-          onClick={toggleDone}
+          onClick={togglechecked}
           role="button"
-          name={element.done ? 'checkmark-square' : 'square'}
+          name={element.checked ? 'checkmark-square-2' : 'square'}
         />
       </div>
       <div className="content">

@@ -1,11 +1,10 @@
 import { Editor as SlateEditor, Path, Text, Transforms, Range } from 'slate';
+import { BlockElement, Element } from '@minddrop/ast';
 import {
   Editor,
   InlineShortcut,
   InlineShortcutAction,
   InlineShortcutWrapTrigger,
-  BlockElement,
-  Element,
 } from '../types';
 
 type StringShortcutTuple = [string, InlineShortcutAction];

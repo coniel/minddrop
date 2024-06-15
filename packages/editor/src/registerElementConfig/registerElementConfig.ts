@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { ElementConfigsStore } from '../ElementConfigsStore';
-import { ElementConfig } from '../types';
+import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
 
 /**
  * Registers a new ElementConfig and dispatches a
@@ -8,7 +8,9 @@ import { ElementConfig } from '../types';
  *
  * @param config - The config to register.
  */
-export function registerElementConfig(config: ElementConfig<any>): void {
+export function registerElementConfig(
+  config: EditorBlockElementConfig<any> | EditorInlineElementConfig<any>,
+): void {
   // Add the config to the ElementConfigsStore,
   // using the type as its ID.
   const registeredConfig = { ...config, id: config.type };

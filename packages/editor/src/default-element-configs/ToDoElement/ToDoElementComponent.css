@@ -15,55 +15,55 @@
   outline: none;
 }
 
-.to-do-element.done .content {
+.to-do-element.checked .content {
   text-decoration: line-through;
   opacity: 0.5;
 }
 
-.to-do-element.done .icon {
+.to-do-element.checked .icon {
   fill: var(--primary10);
 }
 
-.color-blue .to-do-element.done .icon {
+.color-blue .to-do-element.checked .icon {
   fill: var(--blue10);
 }
 
-.color-cyan .to-do-element.done .icon {
+.color-cyan .to-do-element.checked .icon {
   fill: var(--cyan10);
 }
 
-.color-red .to-do-element.done .icon {
+.color-red .to-do-element.checked .icon {
   fill: var(--red10);
 }
 
-.color-red .to-do-element.done .icon {
+.color-red .to-do-element.checked .icon {
   fill: var(--red10);
 }
 
-.color-pink .to-do-element.done .icon {
+.color-pink .to-do-element.checked .icon {
   fill: var(--pink10);
 }
 
-.color-purple .to-do-element.done .icon {
+.color-purple .to-do-element.checked .icon {
   fill: var(--purple10);
 }
 
-.color-green .to-do-element.done .icon {
+.color-green .to-do-element.checked .icon {
   fill: var(--green10);
 }
 
-.color-orange .to-do-element.done .icon {
+.color-orange .to-do-element.checked .icon {
   fill: var(--orange10);
 }
 
-.color-yellow .to-do-element.done .icon {
+.color-yellow .to-do-element.checked .icon {
   fill: var(--yellow10);
 }
 
-.color-brown .to-do-element.done .icon {
+.color-brown .to-do-element.checked .icon {
   fill: var(--brown10);
 }
 
-.color-gray .to-do-element.done .icon {
+.color-gray .to-do-element.checked .icon {
   fill: var(--gray10);
 }

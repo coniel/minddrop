@@ -1,13 +1,5 @@
-import { BlockElement, BlockElementProps } from '../../types';
-
-export interface HorizontalRuleElementData {
-  /**
-   * The markdown used to create the horizontal rule.
-   */
-  markdown: string;
-}
-
-export type HorizontalRuleElement = BlockElement<HorizontalRuleElementData>;
+import { HorizontalRuleElement } from '@minddrop/ast';
+import { BlockElementProps } from '../../types';
 
 export type HorizontalRuleElementProps =
   BlockElementProps<HorizontalRuleElement>;

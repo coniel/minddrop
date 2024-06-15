@@ -1,4 +1,4 @@
-import { BlockElement } from '../types';
+import { BlockElement } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { createEditor } from '../utils';
 import { emptyParagraphElement } from './editor.data';

@@ -1,10 +1,9 @@
 import {
-  BlockElementConfig,
+  EditorBlockElementConfig,
   BlockElementProps,
-  ElementConfig,
+  EditorElementConfig,
   ElementProps,
 } from '../../types';
-import React from 'react';
 
 /**
  * Creates a `renderElement` function used by Slate's `Editable` component
@@ -17,7 +16,7 @@ import React from 'react';
  * @returns A renderElement function.
  */
 export function createRenderElement(
-  configs: ElementConfig[],
+  configs: EditorElementConfig[],
 ): (props: ElementProps) => React.ReactElement {
   // eslint-disable-next-line react/display-name
   return (props: ElementProps) => {
@@ -27,7 +26,7 @@ export function createRenderElement(
     if (config) {
       // Typecast as block element to prevent TS complaining
       // about block/inline element component/props mismatch.
-      const Component = (config as BlockElementConfig).component;
+      const Component = (config as EditorBlockElementConfig).component;
 
       // Render the config's component
       return <Component {...(props as BlockElementProps)} />;
