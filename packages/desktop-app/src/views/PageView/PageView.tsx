@@ -23,7 +23,6 @@ export const PageView: React.FC<PageViewProps> = ({ path }) => {
       ? Ast.fromMarkdown(page.contentRaw)
       : [
           Ast.generateBlockElement<ParagraphElement>('paragraph', {
-            elementLevel: 'block',
             children: [{ text: '' }],
           }),
         ];

@@ -8,20 +8,21 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "lint": "eslint ./**/*.ts*"
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "dependencies": {
-    "@minddrop/file-system": "workspace:*",
-    "@minddrop/utils": "workspace:*",
     "@minddrop/desktop-app": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/theme": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@tauri-apps/api": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tauri-plugin-fs-watch-api": "github:tauri-apps/tauri-plugin-fs-watch#v1"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.5.6",
+    "@tauri-apps/cli": "2.0.0-beta.20",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.0",
