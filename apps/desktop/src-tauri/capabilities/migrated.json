@@ -21,6 +21,7 @@
     "fs:allow-remove",
     "fs:allow-rename",
     "fs:allow-exists",
+    "upload:allow-download",
     {
       "identifier": "fs:scope",
       "requireLiteralLeadingDot": false,

@@ -56,6 +56,9 @@ importers:
       '@tauri-apps/plugin-fs':
         specifier: 2.0.0-beta.5
         version: 2.0.0-beta.5
+      '@tauri-apps/plugin-upload':
+        specifier: 2.0.0-beta.6
+        version: 2.0.0-beta.6
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -5064,6 +5067,12 @@ packages:
 
   /@tauri-apps/plugin-fs@2.0.0-beta.5:
     resolution: {integrity: sha512-uTqCDFA1z8KDtTe5fKlbRrKV4zxh63UVUvD/PR8GnyNLV+qxj/fEuJuGvMdfMbVKrTljGqSpun5wnP5jqD5fMg==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-beta.13
+    dev: false
+
+  /@tauri-apps/plugin-upload@2.0.0-beta.6:
+    resolution: {integrity: sha512-CbIj5ew167/Xfi/tsomPlRhty8U52m+FXEIj2tVNu6F1Kc6NEfd5BQM6iLf6RfKQ4WsUo+zwUkftnlpgP4FCpA==}
     dependencies:
       '@tauri-apps/api': 2.0.0-beta.13
     dev: false

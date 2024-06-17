@@ -18,11 +18,13 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "2.0.0-beta", features = ["protocol-asset"] }
 objc = "0.2.7"
 cocoa = "0.25.0"
-trash = "3.0.6"
+trash = "4.1.1"
 tauri-plugin-fs = { version = "2.0.0-beta.9", features = ["watch"] }
 tauri-plugin-dialog = "2.0.0-beta.9"
 tauri-plugin-shell = "2.0.0-beta.7"
 tauri-plugin-os = "2.0.0-beta.6"
+tauri-plugin-upload = "2.0.0-beta"
+webpage = { version = "2.0.1", features = ["serde"] }
 
 [features]
 # by default Tauri runs in production mode

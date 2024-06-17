@@ -5437,6 +5437,40 @@
           ]
         },
         {
+          "type": "string",
+          "enum": [
+            "upload:default"
+          ]
+        },
+        {
+          "description": "upload:allow-download -> Enables the download command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "upload:allow-download"
+          ]
+        },
+        {
+          "description": "upload:allow-upload -> Enables the upload command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "upload:allow-upload"
+          ]
+        },
+        {
+          "description": "upload:deny-download -> Denies the download command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "upload:deny-download"
+          ]
+        },
+        {
+          "description": "upload:deny-upload -> Denies the upload command without any pre-configured scope.",
+          "type": "string",
+          "enum": [
+            "upload:deny-upload"
+          ]
+        },
+        {
           "description": "webview:default -> Default permissions for the plugin.",
           "type": "string",
           "enum": [

@@ -3,15 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-#[cfg(target_os = "macos")]
-#[macro_use]
-extern crate objc;
-
-use tauri::{Manager, WindowEvent};
-use trash;
-use window_ext::WindowExt;
-
-mod window_ext;
+use webpage::{Webpage, WebpageOptions, HTML};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn main() {
@@ -20,26 +12,12 @@ pub fn main() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        // .plugin(tauri_plugin_fs_watch::init())
-        .setup(|app| {
-            let win = app.get_webview_window("main").unwrap();
-            // win.set_transparent_titlebar(true);
-            // win.position_traffic_lights(14.0, 16.0);
-            Ok(())
-        })
-        // .on_window_event(|e| {
-        //     let apply_offset = || {
-        //         let win = e.window();
-        //         win.position_traffic_lights(14.0, 16.0);
-        //     };
-        //
-        //     match e.event() {
-        //         WindowEvent::Resized(..) => apply_offset(),
-        //         WindowEvent::ThemeChanged(..) => apply_offset(),
-        //         _ => {}
-        //     }
-        // })
-        .invoke_handler(tauri::generate_handler![move_to_trash, show_in_folder])
+        .plugin(tauri_plugin_upload::init())
+        .invoke_handler(tauri::generate_handler![
+            move_to_trash,
+            show_in_folder,
+            webpage_metadata
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -101,5 +79,19 @@ fn show_in_folder(path: String) {
     #[cfg(target_os = "macos")]
     {
         Command::new("open").args(["-R", &path]).spawn().unwrap();
+    }
+}
+
+#[tauri::command]
+async fn webpage_metadata(url: &str) -> Result<HTML, String> {
+    let webpage = Webpage::from_url(url, WebpageOptions::default());
+
+    if webpage.is_ok() {
+        // the parsed HTML info
+        let html = webpage.unwrap().html;
+
+        Ok(html)
+    } else {
+        Err("No result".into())
     }
 }
