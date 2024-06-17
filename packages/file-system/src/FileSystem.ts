@@ -26,6 +26,7 @@ export const Fs: FileSystem &
   rename: (...args) => FsAdapter.rename(...args),
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
+  downloadFile: (...args) => FsAdapter.downloadFile(...args),
 };
 
 /**

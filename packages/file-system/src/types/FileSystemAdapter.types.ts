@@ -2,6 +2,7 @@ import { BaseDirectory } from './BaseDirectory.types';
 import { FsEntry } from './FileEntry.types';
 import {
   CopyFileOptions,
+  DownlodFileOptions,
   FsCreateDirOptions,
   FsExistsOptions,
   FsReadDirOptions,
@@ -161,5 +162,19 @@ export interface FileSystemAdapter {
     path: string,
     contents: string,
     options?: FsWriteFileOptions,
+  ): Promise<void>;
+
+  /**
+   * Downloads a file from a URL to the given path.
+   *
+   * @param url - The URL to download the file from.
+   * @param path - The path to save the file to.
+   * @param options - Download file options.
+   * @returns A promise indicating the success or failure of the operation.
+   */
+  downloadFile(
+    url: string,
+    path: string,
+    options?: DownlodFileOptions,
   ): Promise<void>;
 }

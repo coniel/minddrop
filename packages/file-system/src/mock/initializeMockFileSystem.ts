@@ -128,6 +128,7 @@ export function initializeMockFileSystem(
 
       delete textFileContents[fullPath];
     },
+    downloadFile: async (url, path, options) => {},
   };
 
   registerFileSystemAdapter(MockFs);
@@ -204,6 +205,7 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeDir: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
+    downloadFile: (url, path, options) => {},
   };
 }
 

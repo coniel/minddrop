@@ -32,6 +32,7 @@ export type FsCreateFileOptions = FsFileOptions;
 export type FsReadFileOptions = FsFileOptions;
 export type FsWriteFileOptions = FsFileOptions;
 export type FsRemoveFileOptions = FsFileOptions;
+export type DownlodFileOptions = FsFileOptions;
 
 export interface CopyFileOptions {
   /**
