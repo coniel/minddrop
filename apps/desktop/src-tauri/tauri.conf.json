@@ -2,102 +2,57 @@
   "build": {
     "beforeDevCommand": "pnpm dev",
     "beforeBuildCommand": "pnpm build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist",
-    "withGlobalTauri": false
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
   },
-  "package": {
-    "productName": "MindDrop",
-    "version": "0.1.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "os": {
-        "all": true
-      },
-      "protocol": {
-        "asset": true,
-        "assetScope": [
-          "$DOCUMENT",
-          "$DOCUMENT/**"
-        ]
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "path": {
-        "all": true
-      },
-      "fs": {
-        "all": true,
-        "scope": {
-          "requireLiteralLeadingDot": false,
-          "allow": [
-            "$DESKTOP",
-            "$DESKTOP/**",
-            "$HOME",
-            "$HOME/**",
-            "$DOCUMENT",
-            "$DOCUMENT/**",
-            "$APPCONFIG",
-            "$APPCONFIG/**"
-          ]
-        }
-      },
-      "dialog": {
-        "open": true
-      },
-      "window": {
-        "startDragging": true,
-        "create": true,
-        "close": true,
-        "show": true
-      }
+  "bundle": {
+    "active": true,
+    "category": "DeveloperTool",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "",
+    "linux": {
       "deb": {
         "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "MindDrop",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
       }
-    },
-    "security": {
-      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost"
-    },
-    "updater": {
-      "active": false
-    },
+    }
+  },
+  "productName": "MindDrop",
+  "version": "0.1.0",
+  "identifier": "MindDrop",
+  "plugins": {
+    "fs": {
+      "requireLiteralLeadingDot": false,
+      "require_literal_leading_dot": false
+    }
+  },
+  "app": {
+    "withGlobalTauri": false,
     "windows": [
       {
-        "fileDropEnabled": false,
+        "dragDropEnabled": false,
         "fullscreen": false,
         "height": 800,
         "width": 1200,
@@ -108,6 +63,17 @@
         "hiddenTitle": true,
         "visible": false
       }
-    ]
+    ],
+    "security": {
+      "assetProtocol": {
+        "scope": {
+          "requireLiteralLeadingDot": false,
+          "require_literal_leading_dot": false,
+          "allow": ["$DOCUMENT", "$DOCUMENT/**"]
+        },
+        "enable": true
+      },
+      "csp": "default-src 'self'; img-src 'self' asset: https://asset.localhost; connect-src ipc: http://ipc.localhost"
+    }
   }
 }

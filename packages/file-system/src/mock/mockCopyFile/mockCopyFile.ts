@@ -1,4 +1,4 @@
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockAddFileEntry } from '../mockAddFileEntry';
 import { mockExists } from '../mockExists';
 import { mockGetFileEntry } from '../mockGetFileEntry';
@@ -11,7 +11,7 @@ import { mockGetFileEntry } from '../mockGetFileEntry';
  * @param copyPath - The path to where to copy the file entry.
  */
 export async function mockCopyFile(
-  root: FileEntry,
+  root: FsEntry,
   path: string,
   copyPath: string,
 ): Promise<void> {

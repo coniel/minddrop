@@ -1,4 +1,3 @@
-import { Core } from '@minddrop/core';
 import { InvalidParameterError } from '@minddrop/utils';
 import { Events } from '@minddrop/events';
 import { ThemeConfig } from '../ThemeConfig';

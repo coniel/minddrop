@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { promptMoveWorkspace } from './promptMoveWorkspace';
 import { Workspaces } from '@minddrop/workspaces';
 
@@ -6,7 +6,7 @@ const WORKSPACE_PATH = 'path/to/Workspace';
 
 let openResponse: string | null;
 
-vi.mock('@tauri-apps/api/dialog', () => ({
+vi.mock('@tauri-apps/plugin-dialog', () => ({
   open: () => openResponse,
 }));
 

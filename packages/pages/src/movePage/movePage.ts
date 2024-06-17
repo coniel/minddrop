@@ -1,11 +1,15 @@
 import { Events } from '@minddrop/events';
-import { FileNotFoundError, Fs, InvalidPathError } from '@minddrop/file-system';
+import {
+  FileNotFoundError,
+  Fs,
+  InvalidPathError,
+  PathConflictError,
+} from '@minddrop/file-system';
 import { PagesStore } from '../PagesStore';
 import { PageNotFoundError } from '../errors';
 import { getPage } from '../getPage';
 import { updateChildPagePaths } from '../updateChildPagePaths';
 import { titleFromPath } from '../utils';
-import { PathConflictError } from '@minddrop/core';
 
 /**
  * Moves a page to a new parent directory. If the page is wrapped, its children
@@ -64,7 +68,7 @@ export async function movePage(
   }
 
   // Move the page file/dir
-  await Fs.renameFile(pathToMove, movedPath);
+  await Fs.rename(pathToMove, movedPath);
 
   // Update the page path in the store
   PagesStore.getState().update(page.path, {

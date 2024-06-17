@@ -48,7 +48,7 @@ export const workspacesConfig: WorkspacesConfig = {
 export const workspcesConfigFileDescriptor: MockFileDescriptor = {
   path: WorkspacesConfigFileName,
   textContent: JSON.stringify(workspacesConfig),
-  options: { dir: WorkspacesConfigDir },
+  options: { baseDir: WorkspacesConfigDir },
 };
 
 export const workspaces = [workspace1, missingWorkspace];

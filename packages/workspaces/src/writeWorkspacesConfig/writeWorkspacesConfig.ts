@@ -18,7 +18,7 @@ export async function writeWorkspacesConfig(): Promise<void> {
     WorkspacesConfigFileName,
     JSON.stringify(fileContents),
     {
-      dir: WorkspacesConfigDir,
+      baseDir: WorkspacesConfigDir,
     },
   );
 }

@@ -1,4 +1,4 @@
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 
 /**
  * Checks whether a mock file entry exists by traversing
@@ -7,7 +7,7 @@ import { FileEntry } from '../../types';
  * @param root - The root file entry.
  * @param path - The file path to check for.
  */
-export function mockExists(root: FileEntry, path: string): boolean {
+export function mockExists(root: FsEntry, path: string): boolean {
   const pathParts = path.split('/');
   let currentFileEntry = root;
   let currentPath = '';
@@ -27,6 +27,7 @@ export function mockExists(root: FileEntry, path: string): boolean {
 
     if (child) {
       currentFileEntry = child;
+
       return true;
     }
   });

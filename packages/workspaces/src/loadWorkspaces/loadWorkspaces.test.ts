@@ -36,7 +36,9 @@ describe('loadWorkspaces', () => {
 
   it('throws if the workspaces config could not be read', () => {
     // Pretend workspaces file does not exist
-    MockFs.removeFile(WorkspacesConfigFileName, { dir: WorkspacesConfigDir });
+    MockFs.removeFile(WorkspacesConfigFileName, {
+      baseDir: WorkspacesConfigDir,
+    });
 
     // Should throw
     expect(() => loadWorkspaces()).rejects.toThrow();

@@ -1,5 +1,4 @@
-import { Fs } from '@minddrop/file-system';
-import { ConfigsFile, ConfigsFileOptions } from '../../constants';
+import { Fs, ConfigsFile, ConfigsFileOptions } from '@minddrop/file-system';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
 
 /**

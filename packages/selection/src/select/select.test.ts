@@ -2,7 +2,6 @@ import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   setup,
   cleanup,
-  core,
   selectedDrop1,
   selectedDrop2,
   selectedTopic1,
@@ -23,7 +22,7 @@ describe('select', () => {
       .addSelectedItems([selectedDrop1, selectedDrop2]);
 
     // Select an item
-    select(core, [selectedTopic1]);
+    select([selectedTopic1]);
 
     // Get the current selection
     const selection = useSelectionStore.getState().selectedItems;
@@ -39,7 +38,7 @@ describe('select', () => {
     useSelectionStore.getState().addSelectedItems([selectedDrop1]);
 
     // Select a couple of items
-    select(core, [selectedTopic1, selectedDrop1]);
+    select([selectedTopic1, selectedDrop1]);
 
     // Get the current selection
     const selection = useSelectionStore.getState().selectedItems;

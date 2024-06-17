@@ -1,7 +1,10 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Fs } from '@minddrop/file-system';
-import { FileNotFoundError, PathConflictError } from '@minddrop/core';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  FileNotFoundError,
+  PathConflictError,
+} from '@minddrop/file-system';
 import { setup, cleanup, page1 } from '../test-utils';
 import { wrapPage } from './wrapPage';
 import { getPage } from '../getPage';

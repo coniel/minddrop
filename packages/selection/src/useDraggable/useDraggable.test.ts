@@ -107,11 +107,7 @@ describe('useDraggable', () => {
       });
 
       // Should initialize the drag with `dragStart`
-      expect(dragStart).toHaveBeenCalledWith(
-        expect.anything(),
-        dragEvent,
-        'sort',
-      );
+      expect(dragStart).toHaveBeenCalledWith(dragEvent, 'sort');
     });
   });
 
@@ -125,7 +121,7 @@ describe('useDraggable', () => {
       });
 
       // Should end the drag with `dragEnd`
-      expect(dragEnd).toHaveBeenCalledWith(expect.anything(), dragEvent);
+      expect(dragEnd).toHaveBeenCalledWith(dragEvent);
     });
   });
 });

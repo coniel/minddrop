@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, userEvent } from '@minddrop/test-utils';
-import { appWindow } from '@tauri-apps/api/window';
 import { BaseDirectory, initializeMockFileSystem } from '@minddrop/file-system';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { cleanup, setup } from '../../../test-utils';
@@ -10,10 +9,12 @@ const DOCUMENTS_DIR = BaseDirectory.Documents;
 const WORKSPACE_NAME = 'MindDrop Workspace';
 const WORKSPACE_PATH = `${DOCUMENTS_DIR}/${WORKSPACE_NAME}`;
 
+const appWindow = {
+  close: vi.fn(),
+};
+
 vi.mock('@tauri-apps/api/window', () => ({
-  appWindow: {
-    close: vi.fn(),
-  },
+  getCurrent: () => appWindow,
 }));
 
 vi.mock('@tauri-apps/api/path', () => ({

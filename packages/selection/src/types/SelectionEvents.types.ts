@@ -1,4 +1,4 @@
-import { EventListenerCallback } from '@minddrop/core';
+import { EventListenerCallback } from '@minddrop/events';
 import React from 'react';
 import { SelectionItem } from './SelectionItem.types';
 
@@ -38,27 +38,15 @@ export interface SelectionClipboardEventData {
   selection: SelectionItem[];
 }
 
-export type SelectionAddEventCallback = EventListenerCallback<
-  SelectionAddEvent,
-  SelectionAddEventData
->;
-export type SelectionRemoveEventCallback = EventListenerCallback<
-  SelectionRemoveEvent,
-  SelectionRemoveEventData
->;
-export type SelectionDragStartEventCallback = EventListenerCallback<
-  SelectionDragStartEvent,
-  SelectionDragEventData
->;
-export type SelectionDragEndEventCallback = EventListenerCallback<
-  SelectionDragEndEvent,
-  SelectionDragEventData
->;
-export type SelectionCopyEventCallback = EventListenerCallback<
-  SelectionCopyEvent,
-  SelectionClipboardEventData
->;
-export type SelectionCutEventCallback = EventListenerCallback<
-  SelectionCutEvent,
-  SelectionClipboardEventData
->;
+export type SelectionAddEventCallback =
+  EventListenerCallback<SelectionAddEventData>;
+export type SelectionRemoveEventCallback =
+  EventListenerCallback<SelectionRemoveEventData>;
+export type SelectionDragStartEventCallback =
+  EventListenerCallback<SelectionDragEventData>;
+export type SelectionDragEndEventCallback =
+  EventListenerCallback<SelectionDragEventData>;
+export type SelectionCopyEventCallback =
+  EventListenerCallback<SelectionClipboardEventData>;
+export type SelectionCutEventCallback =
+  EventListenerCallback<SelectionClipboardEventData>;

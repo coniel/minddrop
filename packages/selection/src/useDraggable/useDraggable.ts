@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { useCore } from '@minddrop/core';
 import { SelectionItem } from '../types';
 import { select } from '../select';
 import { isSelected } from '../isSelected';
@@ -31,8 +30,6 @@ export interface DragUtils {
  * @returns Drag utility functions.
  */
 export function useDraggable(selectionItem: SelectionItem): DragUtils {
-  const core = useCore('minddrop:selection');
-
   const onDragStart = useCallback(
     (event: DragEvent | React.DragEvent) => {
       // Prevent parent from becoming the dragged element
@@ -42,26 +39,23 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
         if (event.shiftKey) {
           // If the Shift key is pressed, add the item to the
           // current selection.
-          addToSelection(core, [selectionItem]);
+          addToSelection([selectionItem]);
         } else {
           // Exclusively select the item if not already selected
-          select(core, [selectionItem]);
+          select([selectionItem]);
         }
       }
 
       // Initialize the dragging state
-      dragStart(core, event, 'sort');
+      dragStart(event, 'sort');
     },
-    [core, selectionItem],
+    [selectionItem],
   );
 
-  const onDragEnd = useCallback(
-    (event: DragEvent | React.DragEvent) => {
-      // End the drag
-      dragEnd(core, event);
-    },
-    [core],
-  );
+  const onDragEnd = useCallback((event: DragEvent | React.DragEvent) => {
+    // End the drag
+    dragEnd(event);
+  }, []);
 
   return {
     onDragStart,

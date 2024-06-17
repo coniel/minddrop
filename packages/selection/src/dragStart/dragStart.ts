@@ -1,5 +1,6 @@
 import React from 'react';
-import { Core, DataInsertAction } from '@minddrop/core';
+import { Events } from '@minddrop/events';
+import { DataInsertAction } from '@minddrop/core';
 import { selectionToEventData } from '../utils/selectionToEventData';
 import { useSelectionStore } from '../useSelectionStore';
 import { getSelection } from '../getSelection';
@@ -11,12 +12,11 @@ import { getSelection } from '../getSelection';
  * by resource, with each resource being set as
  * `minddrop-selection/[resource]`.
  *
- * @param core - A MindDrop core instance.
  * @param event - The drag event for which to set the data.
  * @param action - The data transfer action to assign to the event.
+ * @dispatches 'selection:drag:start'
  */
 export function dragStart(
-  core: Core,
   event: DragEvent | React.DragEvent,
   action: DataInsertAction,
 ): void {
@@ -34,5 +34,5 @@ export function dragStart(
   useSelectionStore.getState().setIsDragging(true);
 
   // Dispatch a 'selection:drag:start' event
-  core.dispatch('selection:drag:start', { event, selection: getSelection() });
+  Events.dispatch('selection:drag:start', { event, selection: getSelection() });
 }

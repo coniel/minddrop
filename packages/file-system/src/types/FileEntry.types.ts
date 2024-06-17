@@ -1,4 +1,4 @@
-export interface FileEntry {
+export interface FsEntry {
   /**
    * The file's path.
    */
@@ -14,5 +14,5 @@ export interface FileEntry {
    * Children of this entry if it's a directory;
    * null otherwise
    */
-  children?: FileEntry[];
+  children?: FsEntry[];
 }

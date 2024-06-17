@@ -1,4 +1,4 @@
-import { FileEntry, Fs } from '@minddrop/file-system';
+import { FsEntry, Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { getDirFilesRecursiveFlat } from '../utils';
 import { getPageFromPath } from '../getPageFromPath';
@@ -51,7 +51,7 @@ async function filterValidSources(sources: string[]): Promise<string[]> {
 
 // Recersively gets all files from all sources as a list
 // of file entries.
-async function getFiles(sources: string[]): Promise<FileEntry[]> {
+async function getFiles(sources: string[]): Promise<FsEntry[]> {
   const files = await Promise.all(
     sources.flatMap(async (source) => getDirFilesRecursiveFlat(source)),
   );

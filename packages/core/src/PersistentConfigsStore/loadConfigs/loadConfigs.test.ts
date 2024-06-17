@@ -1,8 +1,11 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  ConfigsFile,
+  ConfigsFileOptions,
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
 import { loadConfigs } from './loadConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
-import { configsFileDescriptor } from '../../test-utils';
 
 const testConfigs = {
   'test-config-1': {
@@ -16,7 +19,8 @@ const testConfigs = {
 const MockFs = initializeMockFileSystem([
   // configs.json file
   {
-    ...configsFileDescriptor,
+    path: ConfigsFile,
+    options: ConfigsFileOptions,
     textContent: JSON.stringify(testConfigs),
   },
 ]);
@@ -61,7 +65,9 @@ describe('loadConfigs', () => {
 
   it('does nothing if configs.json file cannot be parsed', async () => {
     // Add an a configs.json file with invalid content
-    MockFs.setFiles([{ ...configsFileDescriptor, textContent: 'foo' }]);
+    MockFs.setFiles([
+      { path: ConfigsFile, options: ConfigsFileOptions, textContent: 'foo' },
+    ]);
 
     // Load the configs
     await loadConfigs();

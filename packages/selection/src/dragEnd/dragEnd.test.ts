@@ -1,11 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import {
-  setup,
-  cleanup,
-  core,
-  selectedDrop1,
-  selectedTopic1,
-} from '../test-utils';
+import { Events } from '@minddrop/events';
+import { setup, cleanup, selectedDrop1, selectedTopic1 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { dragEnd } from './dragEnd';
 
@@ -29,7 +24,7 @@ describe('dragEnd', () => {
 
   it('sets `isDragging` to `false`', () => {
     // End a drag
-    dragEnd(core, dragEvent);
+    dragEnd(dragEvent);
 
     // Should set `isDragging` to `false`
     expect(useSelectionStore.getState().isDragging).toBe(false);
@@ -38,7 +33,7 @@ describe('dragEnd', () => {
   it('dispatches a `selection:drag:end: event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:drag:end' events
-      core.addEventListener('selection:drag:end', (payload) => {
+      Events.addListener('selection:drag:end', 'test', (payload) => {
         // Payload data should contain the event
         expect(payload.data.event).toEqual(dragEvent);
         // Payload data should contain the selection
@@ -47,6 +42,6 @@ describe('dragEnd', () => {
       });
 
       // End a drag
-      dragEnd(core, dragEvent);
+      dragEnd(dragEvent);
     }));
 });

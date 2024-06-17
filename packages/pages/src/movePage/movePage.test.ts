@@ -2,6 +2,7 @@ import {
   FileNotFoundError,
   Fs,
   InvalidPathError,
+  PathConflictError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -19,7 +20,6 @@ import { movePage } from './movePage';
 import { PagesStore } from '../PagesStore';
 import { getPage } from '../getPage';
 import { Events } from '@minddrop/events';
-import { PathConflictError } from '@minddrop/core';
 
 const TARGET_DIR = 'path/to/target';
 const PAGE_PATH = page1.path;

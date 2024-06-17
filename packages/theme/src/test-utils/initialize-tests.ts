@@ -1,17 +1,27 @@
-import { act, MockFsAdapter } from '@minddrop/test-utils';
-import { registerFileSystemAdapter } from '@minddrop/core';
+import { act } from '@minddrop/test-utils';
+import {
+  MockFileSystem,
+  initializeMockFileSystem,
+  FILE_SYSTEM_TEST_DATA,
+} from '@minddrop/file-system';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeLight, ThemeSystem } from '../constants';
 import { Events } from '@minddrop/events';
 
+const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
+
+let MockFsAdapter: MockFileSystem;
+
 export function setup() {
-  // Reigster mock file system adapter
-  registerFileSystemAdapter(MockFsAdapter);
+  // Initialize mock file system
+  MockFsAdapter = initializeMockFileSystem([configsFileDescriptor]);
 }
 
 export function cleanup() {
   // Clear all event listeners
   Events._clearAll();
+  // Clear the mock file system
+  MockFsAdapter.reset();
 
   act(() => {
     // Reset the appearance to the default value

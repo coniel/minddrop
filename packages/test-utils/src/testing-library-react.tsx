@@ -8,7 +8,6 @@ import {
 } from '@testing-library/react';
 import { i18n, initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
-import { CoreProvider } from '@minddrop/core';
 import userEvent from '@testing-library/user-event';
 import type {} from '@testing-library/dom';
 
@@ -38,9 +37,7 @@ Object.defineProperty(window, 'matchMedia', {
 initializeI18n();
 
 const WithProviders: FC<{ children: React.ReactNode }> = ({ children }) => (
-  <IconsProvider>
-    <CoreProvider>{children}</CoreProvider>
-  </IconsProvider>
+  <IconsProvider>{children}</IconsProvider>
 );
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -108,7 +105,6 @@ const customRenderHook = <TProps, TResult>(
   options?: RenderHookOptions<TProps>,
 ) =>
   renderHook(hook, {
-    wrapper: CoreProvider,
     ...options,
   });
 

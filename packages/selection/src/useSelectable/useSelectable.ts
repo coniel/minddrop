@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useCore } from '@minddrop/core';
 import { SelectionItem } from '../types';
 import { useSelection } from '../useSelection';
 import { containsSelectionItem } from '../utils';
@@ -54,7 +53,6 @@ export interface SelectionUtils {
  * @returns Selection utility functions.
  */
 export function useSelectable(item: SelectionItem): SelectionUtils {
-  const core = useCore('minddrop:selection');
   const selection = useSelection();
 
   const onClick = useCallback(
@@ -65,33 +63,30 @@ export function useSelectable(item: SelectionItem): SelectionUtils {
 
       if (!event.shiftKey) {
         // If not a shift click, exclusively select the item
-        select(core, [item]);
+        select([item]);
       } else if (isSelected(item)) {
         // Shift clicked an item that is already selected,
         // remove it from the selection.
-        removeFromSelection(core, [item]);
+        removeFromSelection([item]);
       } else {
         // Shift clicked an item that is not selected,
         // add it to the selection.
-        addToSelection(core, [item]);
+        addToSelection([item]);
       }
     },
-    [core, item],
+    [item],
   );
 
-  const addItemToSelection = useCallback(
-    () => addToSelection(core, [item]),
-    [core, item],
-  );
+  const addItemToSelection = useCallback(() => addToSelection([item]), [item]);
 
   const removeItemFromSelection = useCallback(
-    () => removeFromSelection(core, [item]),
-    [core, item],
+    () => removeFromSelection([item]),
+    [item],
   );
 
-  const selectItem = useCallback(() => select(core, [item]), [core, item]);
+  const selectItem = useCallback(() => select([item]), [item]);
 
-  const clear = useCallback(() => clearSelection(core), [core]);
+  const clear = useCallback(() => clearSelection(), []);
 
   return {
     selected: containsSelectionItem(selection, item),

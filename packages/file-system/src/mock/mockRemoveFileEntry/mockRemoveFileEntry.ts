@@ -1,4 +1,4 @@
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 
 /**
@@ -7,7 +7,7 @@ import { mockExists } from '../mockExists';
  * @param root - The mock file system root.
  * @param path - The path of the entry to remove.
  */
-export function mockRemoveFileEntry(root: FileEntry, path: string): void {
+export function mockRemoveFileEntry(root: FsEntry, path: string): void {
   if (!mockExists(root, path)) {
     throw new Error(
       `Mock FS error: cannot remove file entry ${path}, path does not exist`,

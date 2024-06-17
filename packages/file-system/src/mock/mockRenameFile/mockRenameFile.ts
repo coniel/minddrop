@@ -1,5 +1,5 @@
 import { fileNameFromPath } from '../../fileNameFromPath';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockAddFileEntry } from '../mockAddFileEntry';
 import { mockGetFileEntry } from '../mockGetFileEntry';
 import { mockRemoveFileEntry } from '../mockRemoveFileEntry';
@@ -13,7 +13,7 @@ import { mockRemoveFileEntry } from '../mockRemoveFileEntry';
  * @param newPath - The new file entry path.
  */
 export function mockRenameFile(
-  root: FileEntry,
+  root: FsEntry,
   oldPath: string,
   newPath: string,
 ): void {
@@ -32,10 +32,10 @@ export function mockRenameFile(
 }
 
 function renameDescendant(
-  descendant: FileEntry,
+  descendant: FsEntry,
   oldBasePath: string,
   newBasePath: string,
-): FileEntry {
+): FsEntry {
   return {
     ...descendant,
     path: descendant.path.replace(oldBasePath, newBasePath),

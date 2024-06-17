@@ -1,5 +1,5 @@
 import React from 'react';
-import { Core } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import { useSelectionStore } from '../useSelectionStore';
 import { getSelection } from '../getSelection';
 
@@ -7,13 +7,13 @@ import { getSelection } from '../getSelection';
  * Toggles the dragging state to `false`. Dispatches a
  * `selection:drag:end` event.
  *
- * @param core - A MindDrop core instance.
  * @param event - The drag end event.
+ * @dispatches 'selection:drag:end'
  */
-export function dragEnd(core: Core, event: DragEvent | React.DragEvent): void {
+export function dragEnd(event: DragEvent | React.DragEvent): void {
   // Set the dragging state to `false`
   useSelectionStore.getState().setIsDragging(false);
 
   // Dispatch a 'selection:drag:end' event
-  core.dispatch('selection:drag:end', { event, selection: getSelection() });
+  Events.dispatch('selection:drag:end', { event, selection: getSelection() });
 }

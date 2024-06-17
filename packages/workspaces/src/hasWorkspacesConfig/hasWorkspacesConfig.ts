@@ -8,5 +8,5 @@ import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
  */
 export async function hasWorkspacesConfig(): Promise<boolean> {
   // Check if workspace configs file exists
-  return Fs.exists(WorkspacesConfigFileName, { dir: WorkspacesConfigDir });
+  return Fs.exists(WorkspacesConfigFileName, { baseDir: WorkspacesConfigDir });
 }

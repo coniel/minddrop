@@ -5,7 +5,6 @@ import {
   selectedDrop1,
   selectedDrop2,
   selectedTopic1,
-  core,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { clearSelection } from './clearSelection';
@@ -26,7 +25,7 @@ describe('clearSelection', () => {
 
   it('clears the selected items list', () => {
     // Clear selection
-    clearSelection(core);
+    clearSelection();
 
     // Selection should be empty
     expect(useSelectionStore.getState().selectedItems).toEqual([]);
@@ -34,7 +33,7 @@ describe('clearSelection', () => {
 
   it('resets the dragging state', () => {
     // Clear selection
-    clearSelection(core);
+    clearSelection();
 
     // Should set `isDragging` to false
     expect(useSelectionStore.getState().isDragging).toBe(false);

@@ -1,10 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
-import { InvisibleTextField, PopoverContent, Tooltip } from '@minddrop/ui';
+import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { InvisibleTextField, PopoverContent, Tooltip } from '@minddrop/ui';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
+import { PathConflictError } from '@minddrop/file-system';
 import './RenameWorkspacePopover.css';
-import React from 'react';
-import { PathConflictError } from '@minddrop/core';
 
 export interface RenameWorkspacePopoverProps {
   /**
@@ -62,6 +61,7 @@ export const RenameWorkspacePopover = React.forwardRef<
       // close on click away when there is an error).
       if (!name || name === workspace.name || name === errorValue) {
         onClose();
+
         return;
       }
 
@@ -81,7 +81,7 @@ export const RenameWorkspacePopover = React.forwardRef<
       // Close the popover
       onClose();
     },
-    [workspace, name, errorValue],
+    [workspace, name, errorValue, onClose],
   );
 
   return (
@@ -116,3 +116,5 @@ export const RenameWorkspacePopover = React.forwardRef<
     </PopoverContent>
   );
 });
+
+RenameWorkspacePopover.displayName = 'RenameWorkspacePopover';

@@ -1,13 +1,15 @@
-import { initializeCore } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import { vi } from 'vitest';
 import { WorkspacesStore } from '../WorkspacesStore';
-
-export const core = initializeCore({ extensionId: 'minddrop:workspaces' });
 
 export function setup() {}
 
 export function cleanup() {
   vi.clearAllMocks();
-  core.removeAllEventListeners();
+
+  // Clear all event listeners
+  Events._clearAll();
+
+  // Clear the workspaces store
   WorkspacesStore.getState().clear();
 }

@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 import { pageA1, createTestFsRoot } from '../../test-utils';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 
 describe('mockRemoveFileEntry', () => {
-  let root: FileEntry;
+  let root: FsEntry;
 
   beforeEach(() => {
     root = createTestFsRoot();

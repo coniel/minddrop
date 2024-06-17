@@ -1,11 +1,11 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { mockAddFileEntry } from './mockAddFileEntry';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { createTestFsRoot, pageA1, workspaceA } from '../../test-utils';
 import { mockExists } from '../mockExists';
 
 describe('mockAddFileEntry', () => {
-  let root: FileEntry;
+  let root: FsEntry;
 
   beforeEach(() => {
     root = createTestFsRoot();
@@ -22,7 +22,7 @@ describe('mockAddFileEntry', () => {
   });
 
   it('adds the file entry', () => {
-    const fileEntry: FileEntry = {
+    const fileEntry: FsEntry = {
       path: `${workspaceA.path}/New file.md`,
       name: 'New file.md',
     };
@@ -33,7 +33,7 @@ describe('mockAddFileEntry', () => {
   });
 
   it('adds root entries to the root', () => {
-    const fileEntry: FileEntry = {
+    const fileEntry: FsEntry = {
       path: 'foo',
       name: 'foo',
     };

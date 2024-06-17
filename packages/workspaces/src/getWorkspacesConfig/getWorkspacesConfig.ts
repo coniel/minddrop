@@ -24,7 +24,7 @@ export async function getWorkspacesConfig(): Promise<WorkspacesConfig> {
   try {
     // Read workspace paths from configs file
     stringConfig = await Fs.readTextFile(WorkspacesConfigFileName, {
-      dir: WorkspacesConfigDir,
+      baseDir: WorkspacesConfigDir,
     });
 
     // Parse and return the config

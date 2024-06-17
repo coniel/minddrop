@@ -1,15 +1,12 @@
-import { initializeCore } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import { useSelectionStore } from '../useSelectionStore';
 
-export const core = initializeCore({
-  extensionId: 'minddrop:selection',
-});
-
-export function setup() {
-  //
-}
+export function setup() {}
 
 export function cleanup() {
   // Clear the state
   useSelectionStore.getState().clear();
+
+  // Clear event listeners
+  Events._clearAll();
 }

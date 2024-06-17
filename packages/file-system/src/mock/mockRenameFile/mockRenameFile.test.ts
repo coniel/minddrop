@@ -1,6 +1,6 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { mockRenameFile } from './mockRenameFile';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import {
   createTestFsRoot,
   documents,
@@ -13,7 +13,7 @@ import { mockGetFileEntry } from '../mockGetFileEntry';
 const NEW_PATH = `${workspaceA.path}/New name.md`;
 
 describe('mockRenameFile', () => {
-  let root: FileEntry;
+  let root: FsEntry;
 
   beforeEach(() => {
     root = createTestFsRoot();

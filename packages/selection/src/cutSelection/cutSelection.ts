@@ -1,5 +1,5 @@
 import React from 'react';
-import { Core } from '@minddrop/core';
+import { Events } from '@minddrop/events';
 import { setClipboardData } from '../utils';
 import { getSelection } from '../getSelection';
 
@@ -9,20 +9,17 @@ import { getSelection } from '../getSelection';
  * items grouped by type, with each type being set
  * as `minddrop-selection/[type]`.
  *
- * Dispatches a `selection:clipboard:cut` event.
- *
- * @param core - A MindDrop core instance.
  * @param event - The clipboard event.
+ * @dispatches 'selection:clipboard:cut'
  */
 export function cutSelection(
-  core: Core,
   event: ClipboardEvent | React.ClipboardEvent,
 ): void {
   // Set the clipboard event data
   setClipboardData(event, 'cut');
 
   // Dispatch a 'selection:clipboard:cut' event
-  core.dispatch('selection:clipboard:cut', {
+  Events.dispatch('selection:clipboard:cut', {
     event,
     selection: getSelection(),
   });

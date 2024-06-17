@@ -1,13 +1,13 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { mockCopyFile } from './mockCopyFile';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { createTestFsRoot, pageA1, workspaceA } from '../../test-utils';
 import { mockExists } from '../mockExists';
 
 const COPY_PATH = `${workspaceA.path}/Page 1 copy.md`;
 
 describe('copyFile', () => {
-  let root: FileEntry;
+  let root: FsEntry;
 
   beforeEach(() => {
     root = createTestFsRoot();

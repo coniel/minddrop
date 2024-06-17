@@ -1,4 +1,4 @@
-import { tauri } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 
 /**
  * Opens the parent directory of the specified path
@@ -7,5 +7,5 @@ import { tauri } from '@tauri-apps/api';
  * @param path - The target path.
  */
 export async function revealInFileExplorer(path: string): Promise<void> {
-  await tauri.invoke('show_in_folder', { path });
+  await invoke('show_in_folder', { path });
 }

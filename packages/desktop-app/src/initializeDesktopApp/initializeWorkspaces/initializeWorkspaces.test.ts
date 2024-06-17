@@ -1,11 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  FILE_SYSTEM_TEST_DATA,
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
-import { CORE_TEST_DATA } from '@minddrop/core';
 import { AppUiState } from '../../AppUiState';
 import { initializeWorkspaces } from './initializeWorkspaces';
 
-const { configsFileDescriptor } = CORE_TEST_DATA;
+const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
 const { workspace1, workspacesConfig, workspcesConfigFileDescriptor } =
   WORKSPACES_TEST_DATA;
 

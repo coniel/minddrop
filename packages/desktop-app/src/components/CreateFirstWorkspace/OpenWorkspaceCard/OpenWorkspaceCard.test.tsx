@@ -1,18 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, userEvent } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
-import { appWindow } from '@tauri-apps/api/window';
 import { WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { cleanup, setup } from '../../../test-utils';
 import * as SELECT_AS_WORKSPACE from '../../../api/selectFolderAsWorkspace';
 import { OpenWorkspaceCard } from './OpenWorkSpaceCard';
 
 const { workspace1 } = WORKSPACES_TEST_DATA;
+const appWindow = {
+  close: vi.fn(),
+};
 
 vi.mock('@tauri-apps/api/window', () => ({
-  appWindow: {
-    close: vi.fn(),
-  },
+  getCurrent: () => appWindow,
 }));
 
 describe('OpenWorkspaceCard', () => {

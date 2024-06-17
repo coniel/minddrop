@@ -1,4 +1,5 @@
-import { WebviewWindow, getAll } from '@tauri-apps/api/window';
+import { getAll } from '@tauri-apps/api/window';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { FileNotFoundError } from '@minddrop/file-system';
 import { JsonParseError } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';

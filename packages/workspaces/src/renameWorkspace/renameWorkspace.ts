@@ -42,7 +42,7 @@ export async function renameWorkspace(
   }
 
   // Update the workspace dir name
-  await Fs.renameFile(path, newPath);
+  await Fs.rename(path, newPath);
 
   // Generate the updated workspace object
   const updatedWorkspace = { ...workspace, name, path: newPath };

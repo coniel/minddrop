@@ -1,5 +1,5 @@
 import { parentDirPath } from '../../parentDirPath';
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 
 /**
@@ -8,7 +8,7 @@ import { mockExists } from '../mockExists';
  * @param root - The file system root file entry.
  * @param fileEntry - The file entry to add.
  */
-export function mockAddFileEntry(root: FileEntry, fileEntry: FileEntry): void {
+export function mockAddFileEntry(root: FsEntry, fileEntry: FsEntry): void {
   const parentDir = parentDirPath(fileEntry.path);
 
   if (parentDir && !mockExists(root, parentDir)) {
@@ -39,7 +39,7 @@ export function mockAddFileEntry(root: FileEntry, fileEntry: FileEntry): void {
 
     currentEntry = currentEntry.children?.find(
       (child) => child.path === currentPath,
-    ) as FileEntry;
+    ) as FsEntry;
 
     currentPath = `${currentPath}/`;
   });

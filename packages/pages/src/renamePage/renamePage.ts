@@ -74,11 +74,11 @@ export async function renamePage(path: string, name: string): Promise<Page> {
   updateChildPagePaths(path, renamedWrapperDir);
 
   // Rename the page file
-  await Fs.renameFile(path, renamedFilePath);
+  await Fs.rename(path, renamedFilePath);
 
   // If the page is wrapped, rename the wrapper dir
   if (isWrapped(path)) {
-    await Fs.renameFile(Fs.parentDirPath(path), renamedWrapperDir);
+    await Fs.rename(Fs.parentDirPath(path), renamedWrapperDir);
   }
 
   // Dispatch a 'pages:page:renamed' event

@@ -1,4 +1,4 @@
-import { FileEntry, Fs } from '@minddrop/file-system';
+import { FsEntry, Fs } from '@minddrop/file-system';
 
 /**
  * Recursively reads the contents of a directory and returns
@@ -9,15 +9,15 @@ import { FileEntry, Fs } from '@minddrop/file-system';
  */
 export async function getDirFilesRecursiveFlat(
   path: string,
-): Promise<FileEntry[]> {
+): Promise<FsEntry[]> {
   // Get all files from dir recursively
   const fileEntries = await Fs.readDir(path, { recursive: true });
 
   return flatten(fileEntries);
 }
 
-function flatten(fileEntries: FileEntry[]): FileEntry[] {
-  return fileEntries.reduce<FileEntry[]>((flattened, fileEntry) => {
+function flatten(fileEntries: FsEntry[]): FsEntry[] {
+  return fileEntries.reduce<FsEntry[]>((flattened, fileEntry) => {
     return fileEntry.children
       ? flattened.concat(flatten(fileEntry.children))
       : flattened.concat([fileEntry]);

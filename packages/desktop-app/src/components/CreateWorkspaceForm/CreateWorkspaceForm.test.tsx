@@ -2,16 +2,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RenderResult, render, userEvent } from '@minddrop/test-utils';
 import { i18n } from '@minddrop/i18n';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
+import { PathConflictError } from '@minddrop/file-system';
 import { cleanup, setup } from '../../test-utils';
 import { CreateWorkspaceForm } from './CreateWorkspaceForm';
-import { PathConflictError } from '@minddrop/core';
 
 const { workspace1 } = WORKSPACES_TEST_DATA;
 
 const WORKSPACE_NAME = 'My Workspace';
 const WORKSPACE_LOCATION = '/User/Documents';
 
-vi.mock('@tauri-apps/api/dialog', () => ({
+vi.mock('@tauri-apps/plugin-dialog', () => ({
   open: async () => WORKSPACE_LOCATION,
 }));
 

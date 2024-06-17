@@ -1,14 +1,14 @@
-import { appWindow } from '@tauri-apps/api/window';
+import { getCurrent } from '@tauri-apps/api/window';
 import { useEffect } from 'react';
 
 export const ShowWindowOnRendered: React.FC = () => {
   useEffect(() => {
     async function showWindow() {
-      const visible = await appWindow.isVisible();
+      const visible = await getCurrent().isVisible();
 
       if (!visible) {
         setTimeout(() => {
-          appWindow.show();
+          getCurrent().show();
         }, 50);
       }
     }

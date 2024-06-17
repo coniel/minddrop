@@ -44,9 +44,18 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       '@tauri-apps/api':
-        specifier: ^1.5.1
-        version: 1.5.1
+        specifier: 2.0.0-beta.13
+        version: 2.0.0-beta.13
+      '@tauri-apps/plugin-dialog':
+        specifier: 2.0.0-beta.5
+        version: 2.0.0-beta.5
+      '@tauri-apps/plugin-fs':
+        specifier: 2.0.0-beta.5
+        version: 2.0.0-beta.5
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -198,7 +207,7 @@ importers:
     devDependencies:
       '@testing-library/react':
         specifier: ^14.0.0
-        version: 14.0.0(react-dom@18.3.1)(react@18.2.0)
+        version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: ^18.2.5
         version: 18.2.28
@@ -229,6 +238,9 @@ importers:
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../editor
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -262,7 +274,7 @@ importers:
     devDependencies:
       '@testing-library/react':
         specifier: ^14.0.0
-        version: 14.0.0(react-dom@18.3.1)(react@18.2.0)
+        version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
       '@types/react':
         specifier: ^18.2.5
         version: 18.2.28
@@ -313,7 +325,7 @@ importers:
         version: 0.77.0(slate@0.94.1)
       slate-react:
         specifier: ^0.99.0
-        version: 0.99.0(react-dom@18.3.1)(react@18.2.0)(slate@0.94.1)
+        version: 0.99.0(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1)
       use-debounce:
         specifier: ^9.0.4
         version: 9.0.4(react@18.2.0)
@@ -581,6 +593,9 @@ importers:
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -664,6 +679,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -4926,6 +4944,11 @@ packages:
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
+  /@tauri-apps/api@2.0.0-beta.13:
+    resolution: {integrity: sha512-Np1opKANzRMF3lgJ9gDquBCB9SxlE2lRmNpVx1+L6RyzAmigkuh0ZulT5jMnDA3JLsuSDU135r/s4t/Pmx4atg==}
+    engines: {node: '>= 18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
+    dev: false
+
   /@tauri-apps/cli-darwin-arm64@2.0.0-beta.20:
     resolution: {integrity: sha512-oCJOCib7GuYkwkBXx+ekamR8NZZU+2i3MLP+DHpDxK5gS2uhCE+CBkamJkNt6y1x6xdVnwyqZOm5RvN4SRtyIA==}
     engines: {node: '>= 10'}
@@ -5033,6 +5056,18 @@ packages:
       '@tauri-apps/cli-win32-x64-msvc': 2.0.0-beta.20
     dev: true
 
+  /@tauri-apps/plugin-dialog@2.0.0-beta.5:
+    resolution: {integrity: sha512-jkaBCsx2v6WB6sB77fTMCeijuvT3FlzwschiHnPlD7aU6CHvQgRlpCv/FttPdTq4ih2t6MIlM4oX85hNYgfs6w==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-beta.13
+    dev: false
+
+  /@tauri-apps/plugin-fs@2.0.0-beta.5:
+    resolution: {integrity: sha512-uTqCDFA1z8KDtTe5fKlbRrKV4zxh63UVUvD/PR8GnyNLV+qxj/fEuJuGvMdfMbVKrTljGqSpun5wnP5jqD5fMg==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-beta.13
+    dev: false
+
   /@testing-library/dom@8.20.1:
     resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
     engines: {node: '>=12'}
@@ -5096,20 +5131,6 @@ packages:
       '@types/react-dom': 18.2.13
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: true
-
-  /@testing-library/react@14.0.0(react-dom@18.3.1)(react@18.2.0):
-    resolution: {integrity: sha512-S04gSNJbYE30TlIMLTzv6QCTzt9AqIF5y6s6SzVFILNcNvbV/jU96GeiTPillGQo+Ny64M/5PV7klNYYgv5Dfg==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
-    dependencies:
-      '@babel/runtime': 7.23.2
-      '@testing-library/dom': 9.3.3
-      '@types/react-dom': 18.2.13
-      react: 18.2.0
-      react-dom: 18.3.1(react@18.2.0)
     dev: true
 
   /@testing-library/user-event@13.5.0(@testing-library/dom@8.20.1):
@@ -10517,15 +10538,6 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-dom@18.3.1(react@18.2.0):
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
-    peerDependencies:
-      react: ^18.3.1
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.2
-
   /react-element-to-jsx-string@15.0.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-UDg4lXB6BzlobN60P8fHWVPX3Kyw8ORrTeBtClmIlGdkOOE+GYQSFvmEU5iLLpwp/6v42DINwNcwOhOLfQ//FQ==}
     peerDependencies:
@@ -11024,11 +11036,6 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
-  /scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
-    dependencies:
-      loose-envify: 1.4.0
-
   /scroll-into-view-if-needed@2.2.31:
     resolution: {integrity: sha512-dGCXy99wZQivjmjIqihaBQNjryrz5rueJY7eHfTdyWEiR4ttYpsajb14rn9s5d4DY4EcY6+4+U/maARBXJedkA==}
     dependencies:
@@ -11166,7 +11173,7 @@ packages:
       slate: 0.94.1
     dev: false
 
-  /slate-react@0.99.0(react-dom@18.3.1)(react@18.2.0)(slate@0.94.1):
+  /slate-react@0.99.0(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1):
     resolution: {integrity: sha512-E+mU87L5epS/Cj9Z35aRkTEMrBXdX8URbFh8B2zTq2DDQKn+MT6/ag41g1InMdRoQ/kipGsbtcrM8dEicY8o/Q==}
     peerDependencies:
       react: '>=16.8.0'
@@ -11181,7 +11188,7 @@ packages:
       is-plain-object: 5.0.0
       lodash: 4.17.21
       react: 18.2.0
-      react-dom: 18.3.1(react@18.2.0)
+      react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 2.2.31
       slate: 0.94.1
       tiny-invariant: 1.0.6

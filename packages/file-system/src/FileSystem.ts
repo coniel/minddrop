@@ -11,7 +11,7 @@ export const Fs: FileSystem &
   typeof Api & { incrementalPath: typeof incrementalPath } = {
   ...Api,
   incrementalPath,
-  getDirPath: (...args) => FsAdapter.getDirPath(...args),
+  getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
   copyFile: (...args) => FsAdapter.copyFile(...args),
   createDir: (...args) => FsAdapter.createDir(...args),
@@ -23,7 +23,7 @@ export const Fs: FileSystem &
   removeFile: (...args) => FsAdapter.removeFile(...args),
   trashDir: (...args) => FsAdapter.trashDir(...args),
   trashFile: (...args) => FsAdapter.trashFile(...args),
-  renameFile: (...args) => FsAdapter.renameFile(...args),
+  rename: (...args) => FsAdapter.rename(...args),
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
 };

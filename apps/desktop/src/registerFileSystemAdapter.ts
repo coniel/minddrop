@@ -1,125 +1,215 @@
-import { fs } from '@tauri-apps/api';
-import { appConfigDir, appDataDir, documentDir } from '@tauri-apps/api/path';
-import { invoke } from '@tauri-apps/api/tauri';
 import {
-  FsFileOptions,
-  FsDirOptions,
-  registerFileSystemAdapter as register,
+  copyFile,
+  exists,
+  readFile,
+  readTextFile,
+  readDir,
+  writeFile,
+  writeTextFile,
+  rename,
+  remove,
+  mkdir,
+  DirEntry,
+  CopyFileOptions,
+  RenameOptions,
+} from '@tauri-apps/plugin-fs';
+import {
   BaseDirectory,
+  appConfigDir,
+  appDataDir,
+  documentDir,
+} from '@tauri-apps/api/path';
+import { invoke } from '@tauri-apps/api/core';
+import { WorkspaceConfigDirName } from '@minddrop/workspaces';
+
+interface BaseDirOptions {
+  baseDir?: BaseDirectory;
+}
+
+import {
+  registerFileSystemAdapter as register,
+  BaseDirectory as FsBaseDirectory,
+  FsEntry,
 } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 
-function convertFsOptions(options: FsFileOptions | FsDirOptions): fs.FsOptions {
-  const opts: fs.FsOptions = {};
-
-  switch (options.dir) {
-    case BaseDirectory.AppData:
-      opts.dir = fs.BaseDirectory.AppData;
-      break;
-    case BaseDirectory.AppConfig:
-      opts.dir = fs.BaseDirectory.AppConfig;
-      break;
-    case BaseDirectory.Documents:
-      opts.dir = fs.BaseDirectory.Document;
-      break;
-  }
-
-  if ('recursive' in options && typeof options.recursive === 'boolean') {
-    (opts as FsDirOptions).recursive = options.recursive;
-  }
-
-  return opts;
-}
-
-function getDirPath(dir: BaseDirectory): Promise<string> {
+function getBaseDirPath(dir: FsBaseDirectory): Promise<string> {
   switch (dir) {
-    case BaseDirectory.AppData:
+    case FsBaseDirectory.AppData:
       return appDataDir();
-    case BaseDirectory.AppConfig:
+    case FsBaseDirectory.AppConfig:
       return appConfigDir();
-    case BaseDirectory.Documents:
+    case FsBaseDirectory.Documents:
       return documentDir();
     default:
       throw new InvalidParameterError(`Invalid BaseDirectory value: ${dir}`);
   }
 }
 
+function getBaseDir(dir: FsBaseDirectory): BaseDirectory {
+  switch (dir) {
+    case FsBaseDirectory.AppData:
+      return BaseDirectory.AppData;
+    case FsBaseDirectory.AppConfig:
+      return BaseDirectory.AppConfig;
+    case FsBaseDirectory.Documents:
+      return BaseDirectory.Document;
+    default:
+      throw new InvalidParameterError(`Invalid BaseDirectory value: ${dir}`);
+  }
+}
+
+function translateBaseDir(
+  fsOptions: {
+    baseDir?: FsBaseDirectory;
+  } = {},
+): BaseDirOptions {
+  const options: BaseDirOptions = {};
+
+  if (fsOptions.baseDir) {
+    options.baseDir = getBaseDir(fsOptions.baseDir);
+  }
+
+  return options;
+}
+
+async function dirEntryToFsEntry(
+  entry: DirEntry,
+  recursive = false,
+  depth = 0,
+): Promise<FsEntry> {
+  const fsEntry: FsEntry = {
+    name: entry.name.split('/').pop(),
+    path: entry.name,
+  };
+
+  if (entry.isDirectory && (depth === 0 || recursive)) {
+    fsEntry.children = await Promise.all(
+      await readDir(entry.name).then((entries) =>
+        entries
+          .filter(isNonHiddenFileOrWorkspaceConfig)
+          .map((childEntry) =>
+            dirEntryToFsEntry(
+              { ...childEntry, name: `${entry.name}/${childEntry.name}` },
+              recursive,
+              depth,
+            ),
+          ),
+      ),
+    );
+  }
+
+  return fsEntry;
+}
+
+function isNonHiddenFileOrWorkspaceConfig(entry: DirEntry): boolean {
+  return !entry.name.startsWith('.') || entry.name === WorkspaceConfigDirName;
+}
+
 register({
-  getDirPath,
-  isDirectory: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  getBaseDirPath,
+  isDirectory: async (path, fsOptions = {}) => {
+    const options = translateBaseDir(fsOptions);
 
     try {
-      await fs.readDir(path, opts);
+      await readDir(path, options);
 
       return true;
     } catch (error) {
       return false;
     }
   },
-  copyFile: async (source, destination, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  copyFile: async (source, destination, fsOptions = {}) => {
+    const options: CopyFileOptions = {};
 
-    return fs.copyFile(source, destination, opts);
-  },
-  createDir: async (dir, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+    if (fsOptions.fromPathBaseDir) {
+      options.fromPathBaseDir = getBaseDir(fsOptions.fromPathBaseDir);
+    }
 
-    return fs.createDir(dir, opts);
-  },
-  exists: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+    if (fsOptions.toPathBaseDir) {
+      options.toPathBaseDir = getBaseDir(fsOptions.toPathBaseDir);
+    }
 
-    return fs.exists(path, opts);
+    return copyFile(source, destination);
   },
-  readBinaryFile: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  createDir: async (dir, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.readBinaryFile(path, opts);
+    mkdir(dir, options);
   },
-  readDir: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  exists: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.readDir(path, opts);
+    return exists(path, options);
   },
-  readTextFile: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  readBinaryFile: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.readTextFile(path, opts);
+    return readFile(path, options);
   },
-  removeDir: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  readDir: async (path, fsOptions = {}) => {
+    const options = translateBaseDir(fsOptions);
+    const dirs = await readDir(path, options);
 
-    return fs.removeDir(path, opts);
+    return await Promise.all(
+      dirs
+        .filter(isNonHiddenFileOrWorkspaceConfig)
+        .map((dir) =>
+          dirEntryToFsEntry(
+            { ...dir, name: `${path}/${dir.name}` },
+            fsOptions.recursive,
+          ),
+        ),
+    );
   },
-  removeFile: async (path, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  readTextFile: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.removeFile(path, opts);
+    return readTextFile(path, options);
   },
-  trashDir: async (path, opts) => {
+  removeDir: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
+
+    return remove(path, options);
+  },
+  removeFile: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
+
+    return remove(path, options);
+  },
+  trashDir: async (path) => {
     invoke('move_to_trash', { path }).catch((reason) => {
       throw new Error(reason);
     });
   },
-  trashFile: async (path, opts) => {
+  trashFile: async (path) => {
     invoke('move_to_trash', { path }).catch((reason) => {
       throw new Error(reason);
     });
   },
-  renameFile: async (oldPath, newPath, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  rename: async (oldPath, newPath, fsOptions = {}) => {
+    const options: RenameOptions = {};
 
-    return fs.renameFile(oldPath, newPath, opts);
+    if (fsOptions.oldPathBaseDir) {
+      options.oldPathBaseDir = getBaseDir(fsOptions.oldPathBaseDir);
+    }
+
+    if (fsOptions.newPathBaseDir) {
+      options.newPathBaseDir = getBaseDir(fsOptions.newPathBaseDir);
+    }
+
+    return rename(oldPath, newPath, options);
   },
-  writeBinaryFile: async (path, contents, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  writeBinaryFile: async (path, file, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.writeBinaryFile(path, contents, opts);
+    file.arrayBuffer().then((buff) => {
+      writeFile(path, new Uint8Array(buff), options);
+    });
   },
-  writeTextFile: async (path, contents, options) => {
-    const opts = options ? convertFsOptions(options) : undefined;
+  writeTextFile: async (path, contents, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
 
-    return fs.writeTextFile(path, contents, opts);
+    return writeTextFile(path, contents, options);
   },
 });

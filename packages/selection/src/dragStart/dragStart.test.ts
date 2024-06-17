@@ -1,11 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  selectedDrop1,
-  selectedTopic1,
-  core,
-} from '../test-utils';
+import { Events } from '@minddrop/events';
+import { setup, cleanup, selectedDrop1, selectedTopic1 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { dragStart } from './dragStart';
 
@@ -37,7 +32,7 @@ describe('dragStart', () => {
 
   it('sets the action on the event', () => {
     // Initiate a drag with an action of 'move'
-    dragStart(core, dragEvent, 'move');
+    dragStart(dragEvent, 'move');
 
     // Should set the 'minddrop/action' data to 'move'
     expect(data['minddrop/action']).toBe('move');
@@ -45,7 +40,7 @@ describe('dragStart', () => {
 
   it('sets the selection data', () => {
     // Initiate a drag
-    dragStart(core, dragEvent, 'move');
+    dragStart(dragEvent, 'move');
 
     // Should set the current selection items grouped
     // by resource.
@@ -59,7 +54,7 @@ describe('dragStart', () => {
 
   it('sets `isDragging` to `true`', () => {
     // Initiate a drag
-    dragStart(core, dragEvent, 'move');
+    dragStart(dragEvent, 'move');
 
     // Should set `isDragging` to `true`
     expect(useSelectionStore.getState().isDragging).toBe(true);
@@ -68,7 +63,7 @@ describe('dragStart', () => {
   it('dispatches a `selection:drag:start: event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:drag:start' events
-      core.addEventListener('selection:drag:start', (payload) => {
+      Events.addListener('selection:drag:start', 'test', (payload) => {
         // Payload data should contain the event
         expect(payload.data.event).toEqual(dragEvent);
         // Payload data should contain the selection
@@ -77,6 +72,6 @@ describe('dragStart', () => {
       });
 
       // Initiate a drag
-      dragStart(core, dragEvent, 'move');
+      dragStart(dragEvent, 'move');
     }));
 });

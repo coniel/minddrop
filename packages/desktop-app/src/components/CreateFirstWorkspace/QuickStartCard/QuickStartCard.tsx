@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { appWindow } from '@tauri-apps/api/window';
+import { getCurrent } from '@tauri-apps/api/window';
 import { ActionCard, Button } from '@minddrop/ui';
 import { Workspaces } from '@minddrop/workspaces';
 import { useTranslation } from '@minddrop/i18n';
@@ -12,7 +12,7 @@ export const QuickStartCard: React.FC = () => {
 
   const quickStart = useCallback(async () => {
     // Get path to Documents folder
-    const documentsPath = await Fs.getDirPath(BaseDirectory.Documents);
+    const documentsPath = await Fs.getBaseDirPath(BaseDirectory.Documents);
 
     if (!(await Fs.exists(Fs.concatPath(documentsPath, WORKSPACE_NAME)))) {
       // Create 'MindDrop Workspace' folder in documents
@@ -23,7 +23,7 @@ export const QuickStartCard: React.FC = () => {
     }
 
     // Close this window
-    appWindow.close();
+    getCurrent().close();
   }, []);
 
   return (

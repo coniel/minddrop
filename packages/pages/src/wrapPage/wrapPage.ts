@@ -1,5 +1,8 @@
-import { FileNotFoundError, PathConflictError } from '@minddrop/core';
-import { Fs } from '@minddrop/file-system';
+import {
+  Fs,
+  FileNotFoundError,
+  PathConflictError,
+} from '@minddrop/file-system';
 import { PagesStore } from '../PagesStore';
 
 /**
@@ -30,7 +33,7 @@ export async function wrapPage(path: string): Promise<string> {
   await Fs.createDir(wrapperDirPath);
 
   // Move page file to wrapper dir
-  await Fs.renameFile(path, wrappedPath);
+  await Fs.rename(path, wrappedPath);
 
   // Update the page in the store
   PagesStore.getState().update(path, { path: wrappedPath, wrapped: true });

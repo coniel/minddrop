@@ -8,7 +8,7 @@ const { workspace1 } = WORKSPACES_TEST_DATA;
 // Response returned by the file selection dialog
 let dirSelectionDialogResponse: string | null = null;
 
-vi.mock('@tauri-apps/api/dialog', () => ({
+vi.mock('@tauri-apps/plugin-dialog', () => ({
   open: async () => dirSelectionDialogResponse,
 }));
 

@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup } from '../../test-utils';
+import { i18n } from '@minddrop/i18n';
+import { Popover } from '@minddrop/ui';
+import { PathConflictError } from '@minddrop/file-system';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { render, userEvent, waitFor } from '@minddrop/test-utils';
-import { Popover } from '@minddrop/ui';
+import { cleanup } from '../../test-utils';
 import { RenameWorkspacePopover } from './RenameWorkspacePopover';
-import { i18n } from '@minddrop/i18n';
-import { PathConflictError } from '@minddrop/core';
 
 const { workspace1 } = WORKSPACES_TEST_DATA;
 

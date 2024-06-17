@@ -46,7 +46,7 @@ export async function moveWorkspace(
   }
 
   // Move the workspace dir
-  await Fs.renameFile(path, newPath);
+  await Fs.rename(path, newPath);
 
   // Remove old version of the workspace
   WorkspacesStore.getState().remove(path);

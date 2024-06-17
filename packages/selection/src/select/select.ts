@@ -1,4 +1,3 @@
-import { Core } from '@minddrop/core';
 import { addToSelection } from '../addToSelection';
 import { clearSelection } from '../clearSelection';
 import { SelectionItem } from '../types';
@@ -8,13 +7,12 @@ import { SelectionItem } from '../types';
  * Dispatches as a selection:add event as well as a selection:remove event
  * if there were any selected items when the method was called.
  *
- * @param core - A MindDrop core instance.
  * @param items - The selection items of the items to select.
  */
-export function select(core: Core, items: SelectionItem[]): void {
+export function select(items: SelectionItem[]): void {
   // Clear the current selection
-  clearSelection(core);
+  clearSelection();
 
   // Add the items to the selection
-  addToSelection(core, items);
+  addToSelection(items);
 }

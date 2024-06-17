@@ -1,7 +1,7 @@
 import { fileNameFromPath } from '../fileNameFromPath';
 import {
   BaseDirectory,
-  FileEntry,
+  FsEntry,
   FileSystem,
   FsDirOptions,
   FsFileOptions,
@@ -28,14 +28,14 @@ export function initializeMockFileSystem(
   ]);
 
   // The mock file system root
-  let root: FileEntry = init.root;
+  let root: FsEntry = init.root;
   // Files which have been moved to the mock OS trash
-  let trash: FileEntry[] = [];
+  let trash: FsEntry[] = [];
   // A { path: text-content } map of text file contents
   let textFileContents: Record<string, string> = init.textFileContents;
 
   const MockFs: FileSystem = {
-    getDirPath: async (dir) => dir,
+    getBaseDirPath: async (dir) => dir,
     isDirectory: async (path, options) => {
       const fileEntry = mockGetFileEntry(root, getFullPath(path, options));
 
@@ -44,8 +44,8 @@ export function initializeMockFileSystem(
     copyFile: async (path, copyPath, options) =>
       mockCopyFile(
         root,
-        getFullPath(path, options),
-        getFullPath(copyPath, options),
+        getFullPath(path, { baseDir: options?.fromPathBaseDir }),
+        getFullPath(copyPath, { baseDir: options?.toPathBaseDir }),
       ),
     exists: async (path, options) =>
       mockExists(root, getFullPath(path, options)),
@@ -54,7 +54,7 @@ export function initializeMockFileSystem(
     },
     readDir: async (path, options = {}) => {
       const dir = mockGetFileEntry(root, getFullPath(path, options));
-      const children = dir.children as FileEntry[];
+      const children = dir.children as FsEntry[];
 
       return options.recursive
         ? children
@@ -74,11 +74,11 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, getFullPath(path, options));
       delete textFileContents[path];
     },
-    renameFile: async (oldPath, newPath, options) => {
+    rename: async (oldPath, newPath, options) => {
       mockRenameFile(
         root,
-        getFullPath(oldPath, options),
-        getFullPath(newPath, options),
+        getFullPath(oldPath, { baseDir: options?.oldPathBaseDir }),
+        getFullPath(newPath, { baseDir: options?.newPathBaseDir }),
       );
 
       if (textFileContents[oldPath]) {
@@ -110,16 +110,16 @@ export function initializeMockFileSystem(
         name: fileNameFromPath(fullPath),
       });
     },
-    trashDir: async (path, options) => {
-      const fullPath = getFullPath(path, options);
+    trashDir: async (path) => {
+      const fullPath = getFullPath(path);
       const dir = mockGetFileEntry(root, fullPath);
 
       trash.push(dir);
 
       mockRemoveFileEntry(root, fullPath);
     },
-    trashFile: async (path, options) => {
-      const fullPath = getFullPath(path, options);
+    trashFile: async (path) => {
+      const fullPath = getFullPath(path);
       const file = mockGetFileEntry(root, fullPath);
 
       trash.push(file);
@@ -134,7 +134,7 @@ export function initializeMockFileSystem(
 
   return {
     MockFs,
-    getFiles: () => root.children as FileEntry[],
+    getFiles: () => root.children as FsEntry[],
     getTrash: () => trash,
     clear: () => {
       root = { path: 'root', name: 'root', children: [] };
@@ -210,10 +210,10 @@ export function initializeMockFileSystem(
 function initializeMockFsRoot(
   fileDescriptors: (MockFileDescriptor | string)[],
 ): {
-  root: FileEntry;
+  root: FsEntry;
   textFileContents: Record<string, string>;
 } {
-  const root: FileEntry = { path: 'root', name: 'root', children: [] };
+  const root: FsEntry = { path: 'root', name: 'root', children: [] };
   const textFileContents: Record<string, string> = {};
 
   fileDescriptors.forEach((fileDescriptor) => {
@@ -248,7 +248,7 @@ function initializeMockFsRoot(
   return { root, textFileContents };
 }
 
-function addToFileTree(root: FileEntry, file: FileEntry) {
+function addToFileTree(root: FsEntry, file: FsEntry) {
   if (!mockExists(root, file.path)) {
     mockAddFileEntry(root, file);
   } else if (file.children) {
@@ -260,5 +260,5 @@ function getFullPath(
   path: string,
   options?: FsFileOptions | FsDirOptions,
 ): string {
-  return options?.dir ? concatPath(options.dir, path) : path;
+  return options?.baseDir ? concatPath(options.baseDir, path) : path;
 }

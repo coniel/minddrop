@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
-import { open } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/plugin-dialog';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
+import { useTranslation } from '@minddrop/i18n';
+import { PathConflictError } from '@minddrop/file-system';
 import {
   Button,
   ButtonProps,
@@ -9,8 +11,6 @@ import {
   TextInput,
 } from '@minddrop/ui';
 import './CreateWorkspaceForm.css';
-import { useTranslation } from '@minddrop/i18n';
-import { PathConflictError } from '@minddrop/core';
 
 interface CreateWorkspaceFormProps {
   /**
@@ -70,12 +70,14 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
       // Name is required
       if (!workspaceName) {
         setWorkspaceNameError(true);
+
         return;
       }
 
       // Location is required
       if (!selectedDir) {
         setWorkspaceLocationError('location.error.missing');
+
         return;
       }
 
@@ -97,7 +99,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
         return;
       }
     },
-    [selectedDir, workspaceName],
+    [selectedDir, workspaceName, onSuccess],
   );
 
   return (

@@ -1,15 +1,23 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  initializeMockFileSystem,
+  ConfigsFile,
+  ConfigsFileOptions,
+} from '@minddrop/file-system';
 import { persistConfigs } from './persistConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
-import { configsFileDescriptor } from '../../test-utils';
 
 const CONFIGS = [
   { id: 'test-config-1', values: { foo: 'bar' } },
   { id: 'test-config-2', values: { bar: 'foo' } },
 ];
 
-const MockFs = initializeMockFileSystem([configsFileDescriptor]);
+const MockFs = initializeMockFileSystem([
+  {
+    path: ConfigsFile,
+    options: ConfigsFileOptions,
+  },
+]);
 
 describe('persistConfig', () => {
   beforeEach(() => {
@@ -26,10 +34,7 @@ describe('persistConfig', () => {
 
     // Get the persisted configs
     const configs = JSON.parse(
-      MockFs.readTextFile(
-        configsFileDescriptor.path,
-        configsFileDescriptor.options,
-      ),
+      MockFs.readTextFile(ConfigsFile, ConfigsFileOptions),
     );
 
     // Persisted configs should contain configs data

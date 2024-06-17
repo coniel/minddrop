@@ -1,4 +1,4 @@
-import { FileEntry } from '../../types';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 
 /**
@@ -7,7 +7,7 @@ import { mockExists } from '../mockExists';
  * @param root - The mock file system root entry.
  * @param path - The path of the file entry to get.
  */
-export function mockGetFileEntry(root: FileEntry, path: string): FileEntry {
+export function mockGetFileEntry(root: FsEntry, path: string): FsEntry {
   if (!mockExists(root, path)) {
     throw new Error(
       `Mock FS error: cannot get file entry ${path}, path does not exist`,
