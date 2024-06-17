@@ -30,7 +30,7 @@ export const PageView: React.FC<PageViewProps> = ({ path }) => {
 
   const onChange = useCallback(
     (value: BlockElement[]) => {
-      Pages.writeContent(path, Ast.toMarkdown(value));
+      Pages.updateContent(path, Ast.toMarkdown(value));
     },
     [path],
   );

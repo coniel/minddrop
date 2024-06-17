@@ -66,7 +66,7 @@ describe('deletePage', () => {
     expect(MockFs.getTrash()[0].path).toEqual(PAGE_PATH);
   });
 
-  it('dispatches a "pages:page:deleted" event', async () =>
+  it('dispatches a "pages:page:delete" event', async () =>
     new Promise<void>((done) => {
       // Listen to 'pages:page:delete' events
       Events.addListener('pages:page:delete', 'test', (payload) => {

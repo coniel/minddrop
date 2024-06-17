@@ -11,7 +11,7 @@ import { getPage } from '../getPage';
 import { Page } from '../types';
 import { isWrapped } from '../utils';
 import { updateChildPagePaths } from '../updateChildPagePaths';
-import { writePageContent } from '../writePageContent';
+import { updatePageContent } from '../updatePageContent';
 
 /**
  * Renames a page and its file.
@@ -64,8 +64,8 @@ export async function renamePage(path: string, name: string): Promise<Page> {
     contentRaw: newContent,
   };
 
-  // Update the file's markdown heading
-  await writePageContent(path, newContent);
+  // Update the page markdown with the new heading
+  await updatePageContent(path, newContent);
 
   // Update the page in the store
   PagesStore.getState().update(path, updatedPage);
