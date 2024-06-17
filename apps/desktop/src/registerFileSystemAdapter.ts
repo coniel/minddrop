@@ -32,6 +32,7 @@ import {
   FsEntry,
 } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
+import { download } from '@tauri-apps/plugin-upload';
 
 function getBaseDirPath(dir: FsBaseDirectory): Promise<string> {
   switch (dir) {
@@ -211,5 +212,12 @@ register({
     const options = translateBaseDir(fsOptions);
 
     return writeTextFile(path, contents, options);
+  },
+  downloadFile: async (url, path, options = {}) => {
+    const fullPath = options.baseDir
+      ? `${await getBaseDirPath(options.baseDir)}/${path}`
+      : path;
+
+    download(url, fullPath);
   },
 });
