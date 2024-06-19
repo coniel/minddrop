@@ -1,0 +1,35 @@
+.unordered-list-item-element {
+  display: flex;
+  flex-direction: row;
+  min-width: 1px;
+}
+
+.unordered-list-item-element .content {
+  font-size: var(--fsContentRegular);
+  line-height: var(--lhContentRegular);
+  font-weight: var(--fwRegular);
+  /* Fix for caret dissapearing due to 'display: flex' on
+   * parent causing div to collapse to 0 width. */
+  min-width: 10px;
+}
+
+.unordered-list-item-element .bullet {
+  user-select: none;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(1em + 3px + 3px);
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding-right: 2px;
+}
+
+.unordered-list-item-element .bullet::before {
+  content: '•';
+  font-size: 1.5em;
+  line-height: 1;
+  font-family: Arial, sans-serif;
+  color: currentcolor;
+}
