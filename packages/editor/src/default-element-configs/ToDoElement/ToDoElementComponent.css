@@ -7,6 +7,9 @@
   font-size: var(--fsContentRegular);
   line-height: var(--lhContentRegular);
   font-weight: var(--fwRegular);
+  /* Fix for caret dissapearing due to 'display: flex' on
+   * parent causing div to collapse to 0 width. */
+  min-width: 10px;
 }
 
 .to-do-element .icon {
