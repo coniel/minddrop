@@ -5,6 +5,7 @@ import {
   FileElementConfig,
   HorizontalRuleElementConfig,
   ParagraphElementConfig,
+  UnorderedListItemElementConfig,
 } from '../block-element-configs';
 import { registerBlockElementConfig } from '../registerBlockElementConfig';
 
@@ -18,6 +19,7 @@ export function registerDefaultElementConfigs() {
     ToDoElementConfig,
     FileElementConfig,
     HorizontalRuleElementConfig,
+    UnorderedListItemElementConfig,
     // Register the paragraph element config last so that acts as a fallback
     ParagraphElementConfig,
   ];

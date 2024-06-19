@@ -5,3 +5,4 @@ export * from './HorizontalRuleElement';
 export * from './MathBlockElement';
 export * from './ParagraphElement';
 export * from './ToDoElement';
+export * from './UnorderedListItemElement';
