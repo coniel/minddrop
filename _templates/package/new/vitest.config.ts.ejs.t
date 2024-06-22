@@ -1,5 +1,5 @@
 ---
-to: "<%= locals.react ? `packages/${name}/vitest.config.ts` : null %>"
+to: "<%= locals.react ? `${module}/${name}/vitest.config.ts` : null %>"
 ---
 import { defineConfig } from 'vitest/config';
 

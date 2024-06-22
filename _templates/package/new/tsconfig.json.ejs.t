@@ -1,5 +1,5 @@
 ---
-to: packages/<%= name %>/tsconfig.json
+to: <%= module %>/<%= name %>/tsconfig.json
 ---
 {
   "extends": "tsconfig/<% if(locals.react){ -%>react-library<% } else { -%>base<% } -%>.json",

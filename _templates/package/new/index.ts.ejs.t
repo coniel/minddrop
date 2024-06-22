@@ -1,3 +1,3 @@
 ---
-to: packages/<%= name %>/src/index.ts
+to: <%= module %>/<%= name %>/src/index.ts
 ---

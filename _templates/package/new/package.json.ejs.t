@@ -1,5 +1,5 @@
 ---
-to: packages/<%= name %>/package.json
+to: <%= module %>/<%= name %>/package.json
 ---
 {
   "name": "@minddrop/<%= name %>",
