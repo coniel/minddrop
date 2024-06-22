@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockGetFileEntry } from './mockGetFileEntry';
-import { pageA1, root } from '../../test-utils';
+import { documentA1, root } from '../../test-utils';
 
 describe('mockGetFileEntry', () => {
   it('throws if the file entry does not exist', () => {
@@ -10,6 +10,6 @@ describe('mockGetFileEntry', () => {
   });
 
   it('does something useful', () => {
-    expect(mockGetFileEntry(root, pageA1.path)).toEqual(pageA1);
+    expect(mockGetFileEntry(root, documentA1.path)).toEqual(documentA1);
   });
 });

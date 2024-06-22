@@ -1,1 +1,1 @@
-export * from './createPageOptionsMenu';
+export * from './createDocumentOptionsMenu';

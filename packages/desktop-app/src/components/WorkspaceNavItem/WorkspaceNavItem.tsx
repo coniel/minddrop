@@ -11,10 +11,10 @@ import { RenameWorkspacePopover } from '../RenameWorkspacePopover';
 import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
 import { promptMoveWorkspace, revealInFileExplorer } from '../../api';
 import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
-import { useChildPages } from '@minddrop/pages';
-import { PageNavItem } from '../PageNavItem';
+import { useChildDocuments } from '@minddrop/documents';
+import { DocumentNavItem } from '../DocumentNavItem';
 import { useCallback } from 'react';
-import { createPage } from '../../api/createPage';
+import { createDocument } from '../../api/createDocument';
 
 interface WorkspaceNavItemProps {
   /**
@@ -26,7 +26,7 @@ interface WorkspaceNavItemProps {
 export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
   workspace,
 }) => {
-  const pages = useChildPages(workspace.path);
+  const documents = useChildDocuments(workspace.path);
   const [hovering, toggleHovering] = useToggle(false);
   const [renamePopoverOpen, toggleRenamePopover] = useToggle(false);
   const [iconPopoverOpen, toggle, setIconPopoverOpen] = useToggle(false);
@@ -38,12 +38,12 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
     workspace.path,
   );
 
-  const handleClickAddPage = useCallback(
+  const handleClickAddDocument = useCallback(
     async (event: React.MouseEvent) => {
       event.preventDefault();
       event.stopPropagation();
 
-      await createPage(workspace.path);
+      await createDocument(workspace.path);
     },
     [workspace.path],
   );
@@ -86,16 +86,16 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
                   />
                 </WorkspaceOptionsMenu>
                 <IconButton
-                  label="Add a page inside"
+                  label="Add a document inside"
                   size="small"
                   icon="plus"
-                  onClick={handleClickAddPage}
+                  onClick={handleClickAddDocument}
                 />
               </div>
             }
           >
-            {pages.map((page) => (
-              <PageNavItem key={page.path} page={page} />
+            {documents.map((document) => (
+              <DocumentNavItem key={document.path} document={document} />
             ))}
           </BaseWorkspaceNavItem>
         </PopoverAnchor>

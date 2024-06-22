@@ -1,9 +1,9 @@
-import { useChildPages } from '@minddrop/pages';
+import { useChildDocuments } from '@minddrop/documents';
 import { ContentListItem, ContentListItemProps } from '@minddrop/ui';
 import { useCreateCallback } from '@minddrop/utils';
 import { useWorkspace } from '@minddrop/workspaces';
 import { NavItemIcon } from '../NavItemIcon';
-import { ContentPickerPageItem } from './ContentPickerPageItem';
+import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
 
 export interface ContentPickerWorkspaceItemProps
   extends Pick<ContentListItemProps, 'level'> {
@@ -13,22 +13,22 @@ export interface ContentPickerWorkspaceItemProps
   path: string;
 
   /**
-   * Callback fired when the workspace or one of its pages
+   * Callback fired when the workspace or one of its documents
    * is selected.
    */
   onClick(path: string): void;
 
   /**
-   * Path of a page to omit from child pages.
+   * Path of a document to omit from child documents.
    */
-  omitPage?: string;
+  omitDocument?: string;
 }
 
 export const ContentPickerWorkspaceItem: React.FC<
   ContentPickerWorkspaceItemProps
-> = ({ path, onClick, omitPage }) => {
+> = ({ path, onClick, omitDocument }) => {
   const workspace = useWorkspace(path);
-  const pages = useChildPages(path).filter((page) => page.path !== omitPage);
+  const documents = useChildDocuments(path).filter((document) => document.path !== omitDocument);
 
   const handleClick = useCreateCallback(onClick, path);
 
@@ -38,17 +38,17 @@ export const ContentPickerWorkspaceItem: React.FC<
 
   return (
     <ContentListItem
-      hasChildren={!!pages.length}
+      hasChildren={!!documents.length}
       label={workspace.name}
       onClick={handleClick}
       icon={<NavItemIcon icon={workspace.icon} defaultIcon="folder" />}
     >
-      {pages.map((page) => (
-        <ContentPickerPageItem
-          key={page.path}
+      {documents.map((document) => (
+        <ContentPickerDocumentItem
+          key={document.path}
           level={1}
-          path={page.path}
-          omitSubpage={omitPage}
+          path={document.path}
+          omitSubdocument={omitDocument}
           onClick={onClick}
         />
       ))}

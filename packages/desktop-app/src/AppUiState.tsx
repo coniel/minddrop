@@ -13,7 +13,7 @@ export interface AppUiState {
   view: string | null;
 
   /**
-   * The path of the currently open file, such as a page.
+   * The path of the currently open file, such as a document.
    */
   path: string | null;
 

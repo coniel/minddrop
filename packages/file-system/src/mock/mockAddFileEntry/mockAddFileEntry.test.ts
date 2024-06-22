@@ -1,7 +1,7 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { mockAddFileEntry } from './mockAddFileEntry';
 import { FsEntry } from '../../types';
-import { createTestFsRoot, pageA1, workspaceA } from '../../test-utils';
+import { createTestFsRoot, documentA1, workspaceA } from '../../test-utils';
 import { mockExists } from '../mockExists';
 
 describe('mockAddFileEntry', () => {
@@ -18,7 +18,7 @@ describe('mockAddFileEntry', () => {
   });
 
   it('throws if the file entry already exists', () => {
-    expect(async () => mockAddFileEntry(root, pageA1)).rejects.toThrow();
+    expect(async () => mockAddFileEntry(root, documentA1)).rejects.toThrow();
   });
 
   it('adds the file entry', () => {

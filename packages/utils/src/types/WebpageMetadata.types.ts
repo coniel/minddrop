@@ -5,7 +5,7 @@ export interface WebpageMetadata {
   domain: string;
 
   /**
-   * The webpage title or domain if a title
+   * The webdocument title or domain if a title
    * is not present.
    */
   title: string;
@@ -21,17 +21,17 @@ export interface WebpageMetadata {
   icon?: string;
 
   /**
-   * The webpage's preview/thumbnail image.
+   * The webdocument's preview/thumbnail image.
    */
   image?: string;
 
   /**
-   * The webpage meta description.
+   * The webdocument meta description.
    */
   description?: string;
 
   /**
-   * The webpage meta keywords.
+   * The webdocument meta keywords.
    */
   keywords?: string[];
 }

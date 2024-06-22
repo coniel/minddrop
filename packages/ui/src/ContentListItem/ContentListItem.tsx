@@ -29,7 +29,7 @@ export interface ContentListItemProps extends React.HTMLProps<HTMLDivElement> {
    * Internal prop not intended to be set manually.
    *
    * The nesting level of the item starting from 0 for
-   * top level items, adding 1 for each subpage nexting level.
+   * top level items, adding 1 for each subdocument nexting level.
    */
   level?: number;
 

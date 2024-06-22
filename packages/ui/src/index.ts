@@ -20,7 +20,7 @@ export * from './KeyboardShortcut';
 export * from './Menu';
 export * from './MindDropLogo';
 export * from './NavGroup';
-export * from './PageNavItem';
+export * from './DocumentNavItem';
 export * from './Popover';
 export * from './PrimaryNavItem';
 export * from './SecondaryNavItem';

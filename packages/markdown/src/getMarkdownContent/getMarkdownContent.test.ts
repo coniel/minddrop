@@ -1,10 +1,10 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { getMarkdownContent } from './getMarkdownContent';
 
-const markdown = `# Page`;
+const markdown = `# Document`;
 
 const markdownWithFrontmatter = `---
-  title: Page
+  title: Document
   icon: content-icon:box:orange
 ---
 

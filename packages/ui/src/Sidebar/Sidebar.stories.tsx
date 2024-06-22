@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { NavGroup } from '../NavGroup';
-import { PageNavItem } from '../PageNavItem';
+import { DocumentNavItem } from '../DocumentNavItem';
 import { PrimaryNavItem } from '../PrimaryNavItem';
 import { SecondaryNavItem } from '../SecondaryNavItem';
 import { Toolbar } from '../Toolbar';
@@ -40,45 +40,45 @@ export const Default: React.FC = () => {
             onClick={() => setActive('search')}
           />
         </NavGroup>
-        <NavGroup title="Pages">
-          <PageNavItem
+        <NavGroup title="Documents">
+          <DocumentNavItem
             label="Sailing"
             active={active === 'sailing'}
             onClick={() => setActive('sailing')}
           >
-            <PageNavItem
+            <DocumentNavItem
               label="Sailboats"
               active={active === 'sailboats'}
               onClick={() => setActive('sailboats')}
             />
-            <PageNavItem
+            <DocumentNavItem
               active={active === 'sails'}
               label="Sails"
               onClick={() => setActive('sails')}
             />
-            <PageNavItem
+            <DocumentNavItem
               label="Navigation"
               active={active === 'navigation'}
               onClick={() => setActive('navigation')}
             >
-              <PageNavItem
+              <DocumentNavItem
                 label="Coastal navigation"
                 active={active === 'coastal-navigation'}
                 onClick={() => setActive('coastal-navigation')}
               />
-              <PageNavItem
+              <DocumentNavItem
                 label="Offshore navigation"
                 active={active === 'offshore-navigation'}
                 onClick={() => setActive('offshore-navigation')}
               />
-            </PageNavItem>
-            <PageNavItem
+            </DocumentNavItem>
+            <DocumentNavItem
               label="Anchoring"
               active={active === 'anchoring'}
               onClick={() => setActive('anchoring')}
             />
-          </PageNavItem>
-          <SecondaryNavItem label="Add page" icon="plus" />
+          </DocumentNavItem>
+          <SecondaryNavItem label="Add document" icon="plus" />
         </NavGroup>
         <NavGroup label="Utilities">
           <SecondaryNavItem

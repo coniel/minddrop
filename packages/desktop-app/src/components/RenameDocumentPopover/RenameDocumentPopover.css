@@ -1,0 +1,10 @@
+.rename-document-popover input {
+  padding: 4px 8px;
+  min-width: 260px;
+}
+
+.rename-document-popover .helper-text {
+  display: block;
+  max-width: 260px;
+  padding: 4px 8px;
+}

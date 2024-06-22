@@ -253,9 +253,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
-      '@minddrop/pages':
+      '@minddrop/documents':
         specifier: workspace:*
-        version: link:../pages
+        version: link:../documents
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
@@ -539,7 +539,7 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
 
-  packages/pages:
+  packages/documents:
     dependencies:
       '@minddrop/ast':
         specifier: workspace:*

@@ -2,24 +2,24 @@ import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { removeFrontmatter } from './removeFrontmatter';
 
 const markdown = `---
-  title: Page
+  title: Document
   icon: content-icon:box:orange
 ---
 
-# Page`;
+# Document`;
 
 const markdownMissingNewline = `---
-  title: Page
+  title: Document
   icon: content-icon:box:orange
 ---
-# Page`;
+# Document`;
 
 describe('removeFrontmatter', () => {
   it('removes frontmatter from markdown', () => {
-    expect(removeFrontmatter(markdown)).toBe('# Page');
+    expect(removeFrontmatter(markdown)).toBe('# Document');
   });
 
   it('removes frontmatter from markdown missing a second newline after ---', () => {
-    expect(removeFrontmatter(markdownMissingNewline)).toBe('# Page');
+    expect(removeFrontmatter(markdownMissingNewline)).toBe('# Document');
   });
 });

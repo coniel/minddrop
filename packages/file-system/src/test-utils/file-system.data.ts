@@ -6,46 +6,46 @@ export const configsFileDescriptor: MockFileDescriptor = {
   options: ConfigsFileOptions,
 };
 
-export const pageA1: FsEntry = {
-  path: 'Documents/Workspace A/Page 1.md',
-  name: 'Page 1.md',
+export const documentA1: FsEntry = {
+  path: 'Documents/Workspace A/Document 1.md',
+  name: 'Document 1.md',
 };
 
-export const pageA2: FsEntry = {
-  path: 'Documents/Workspace A/Page 2.md',
-  name: 'Page 2.md',
+export const documentA2: FsEntry = {
+  path: 'Documents/Workspace A/Document 2.md',
+  name: 'Document 2.md',
 };
 
-export const pageA3: FsEntry = {
-  path: 'Documents/Workspace A/Page A3.md',
-  name: 'Page A3.md',
+export const documentA3: FsEntry = {
+  path: 'Documents/Workspace A/Document A3.md',
+  name: 'Document A3.md',
 };
 
 export const workspaceA: FsEntry = {
   path: 'Documents/Workspace A',
   name: 'Workspace A',
-  children: [pageA1, pageA2, pageA3],
+  children: [documentA1, documentA2, documentA3],
 };
 
-export const pageB1: FsEntry = {
-  path: 'Documents/Workspace B/Page 1.md',
-  name: 'Page 1.md',
+export const documentB1: FsEntry = {
+  path: 'Documents/Workspace B/Document 1.md',
+  name: 'Document 1.md',
 };
 
-export const pageB2: FsEntry = {
-  path: 'Documents/Workspace B/Page 2.md',
-  name: 'Page 2.md',
+export const documentB2: FsEntry = {
+  path: 'Documents/Workspace B/Document 2.md',
+  name: 'Document 2.md',
 };
 
-export const pageB3: FsEntry = {
-  path: 'Documents/Workspace B/Page B3.md',
-  name: 'Page B3.md',
+export const documentB3: FsEntry = {
+  path: 'Documents/Workspace B/Document B3.md',
+  name: 'Document B3.md',
 };
 
 export const workspaceB: FsEntry = {
   path: 'Documents/Workspace B',
   name: 'Workspace B',
-  children: [pageB1, pageB2, pageB3],
+  children: [documentB1, documentB2, documentB3],
 };
 
 export const documents: FsEntry = {

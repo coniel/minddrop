@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
-import { pageA1, createTestFsRoot } from '../../test-utils';
+import { documentA1, createTestFsRoot } from '../../test-utils';
 import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 
@@ -18,8 +18,8 @@ describe('mockRemoveFileEntry', () => {
   });
 
   it('removes the file entry from the mock file system', () => {
-    mockRemoveFileEntry(root, pageA1.path);
+    mockRemoveFileEntry(root, documentA1.path);
 
-    expect(mockExists(root, pageA1.path)).toBe(false);
+    expect(mockExists(root, documentA1.path)).toBe(false);
   });
 });

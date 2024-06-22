@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavGroup } from './NavGroup';
-import { PageNavItem } from '../PageNavItem';
+import { DocumentNavItem } from '../DocumentNavItem';
 
 export default {
   title: 'ui/NavGroup',
@@ -11,45 +11,45 @@ export const Default: React.FC = () => {
   const [active, setActive] = useState('');
 
   return (
-    <NavGroup title="Pages" style={{ maxWidth: 260 }}>
-      <PageNavItem
+    <NavGroup title="Documents" style={{ maxWidth: 260 }}>
+      <DocumentNavItem
         defaultExpanded
         label="Sailing"
         active={active === 'sailing'}
         onClick={() => setActive('sailing')}
       >
-        <PageNavItem
+        <DocumentNavItem
           label="Sailboats"
           active={active === 'sailboats'}
           onClick={() => setActive('sailboats')}
         />
-        <PageNavItem
+        <DocumentNavItem
           active={active === 'sails'}
           label="Sails"
           onClick={() => setActive('sails')}
         />
-        <PageNavItem
+        <DocumentNavItem
           label="Navigation"
           active={active === 'navigation'}
           onClick={() => setActive('navigation')}
         >
-          <PageNavItem
+          <DocumentNavItem
             label="Coastal navigation"
             active={active === 'coastal-navigation'}
             onClick={() => setActive('coastal-navigation')}
           />
-          <PageNavItem
+          <DocumentNavItem
             label="Offshore navigation"
             active={active === 'offshore-navigation'}
             onClick={() => setActive('offshore-navigation')}
           />
-        </PageNavItem>
-        <PageNavItem
+        </DocumentNavItem>
+        <DocumentNavItem
           label="Anchoring"
           active={active === 'anchoring'}
           onClick={() => setActive('anchoring')}
         />
-      </PageNavItem>
+      </DocumentNavItem>
     </NavGroup>
   );
 };

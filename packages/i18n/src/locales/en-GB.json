@@ -54,7 +54,7 @@
   },
   "workspaces": {
     "label": "Workspaces",
-    "definition": "A workspace is simply a folder inside which your pages are stored as plain text Markdown files.",
+    "definition": "A workspace is simply a folder inside which your documents are stored as plain text Markdown files.",
     "actions": {
       "add": "Add a workspace",
       "changeIcon": "Change icon",
@@ -133,12 +133,12 @@
       }
     }
   },
-  "pages": {
+  "documents": {
     "untitled": "Untitled",
     "actions": {
-      "options": "Page options",
-      "add": "Add a page",
-      "addSubpage": "Add a sub-page",
+      "options": "Document options",
+      "add": "Add a document",
+      "addSubdocument": "Add a sub-document",
       "changeIcon": "Change icon",
       "favourite": {
         "add": "Add to favourites",
@@ -155,15 +155,15 @@
       "delete": {
         "action": "Delete",
         "tooltip": {
-          "title": "Delete page",
-          "description": "Delete the page and its related files."
+          "title": "Delete document",
+          "description": "Delete the document and its related files."
         }
       },
       "rename": {
         "action": "Rename",
         "form": {
           "name": {
-            "placeholder": "Page name",
+            "placeholder": "Document name",
             "error": {
               "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
             }

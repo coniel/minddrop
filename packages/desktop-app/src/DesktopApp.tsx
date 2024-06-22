@@ -3,7 +3,7 @@ import { IconsProvider } from '@minddrop/icons';
 import { AppSidebar } from './components';
 import { useCurrentPath, useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
-import { PageView } from './views';
+import { DocumentView } from './views';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -16,7 +16,7 @@ export const DesktopApp: React.FC = () => {
         <AppSidebar />
         <div className="app-content">
           <div data-tauri-drag-region className="app-drag-handle" />
-          {view === 'page' && path && <PageView path={path} />}
+          {view === 'document' && path && <DocumentView path={path} />}
         </div>
       </div>
       <ShowWindowOnRendered />

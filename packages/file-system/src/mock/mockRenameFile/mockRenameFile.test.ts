@@ -4,7 +4,7 @@ import { FsEntry } from '../../types';
 import {
   createTestFsRoot,
   documents,
-  pageA1,
+  documentA1,
   workspaceA,
 } from '../../test-utils';
 import { mockExists } from '../mockExists';
@@ -20,16 +20,16 @@ describe('mockRenameFile', () => {
   });
 
   it('removes the original file entry', () => {
-    mockRenameFile(root, pageA1.path, NEW_PATH);
+    mockRenameFile(root, documentA1.path, NEW_PATH);
 
-    expect(mockExists(root, pageA1.path)).toBe(false);
+    expect(mockExists(root, documentA1.path)).toBe(false);
   });
 
   it('adds the renamed file entry', () => {
-    mockRenameFile(root, pageA1.path, NEW_PATH);
+    mockRenameFile(root, documentA1.path, NEW_PATH);
 
     expect(mockGetFileEntry(root, NEW_PATH)).toEqual({
-      ...pageA1,
+      ...documentA1,
       path: NEW_PATH,
       name: 'New name.md',
     });
@@ -40,7 +40,7 @@ describe('mockRenameFile', () => {
 
     mockRenameFile(root, workspaceA.path, newPath);
 
-    expect(mockExists(root, pageA1.path)).toBe(false);
-    expect(mockExists(root, `${newPath}/${pageA1.name}`)).toBe(true);
+    expect(mockExists(root, documentA1.path)).toBe(false);
+    expect(mockExists(root, `${newPath}/${documentA1.name}`)).toBe(true);
   });
 });

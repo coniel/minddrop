@@ -1,10 +1,10 @@
 import { describe, beforeEach, it, expect } from 'vitest';
 import { mockCopyFile } from './mockCopyFile';
 import { FsEntry } from '../../types';
-import { createTestFsRoot, pageA1, workspaceA } from '../../test-utils';
+import { createTestFsRoot, documentA1, workspaceA } from '../../test-utils';
 import { mockExists } from '../mockExists';
 
-const COPY_PATH = `${workspaceA.path}/Page 1 copy.md`;
+const COPY_PATH = `${workspaceA.path}/Document 1 copy.md`;
 
 describe('copyFile', () => {
   let root: FsEntry;
@@ -18,7 +18,7 @@ describe('copyFile', () => {
   });
 
   it('copies the file to a new path', () => {
-    mockCopyFile(root, pageA1.path, COPY_PATH);
+    mockCopyFile(root, documentA1.path, COPY_PATH);
 
     expect(mockExists(root, COPY_PATH)).toBe(true);
   });

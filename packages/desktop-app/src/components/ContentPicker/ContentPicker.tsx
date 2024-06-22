@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import { NavGroup, PopoverContent, TextInput } from '@minddrop/ui';
 import { Workspace, useWorkspaces } from '@minddrop/workspaces';
 import { ContentPickerWorkspaceItem } from './ContentPickerWorkspaceItem';
-import { Page, usePages } from '@minddrop/pages';
+import { Document, useDocuments } from '@minddrop/documents';
 import { fuzzySearch } from '@minddrop/utils';
-import { ContentPickerPageItem } from './ContentPickerPageItem';
+import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
 import './ContentPicker.css';
 
 export interface ContentPickerProps {
@@ -32,14 +32,14 @@ export const ContentPicker = React.forwardRef<
   const allWorkspaces = useWorkspaces().filter(
     (workspace) => workspace.path !== omit,
   );
-  // Get all pages except for possible omitted one
-  const allPages = usePages().filter((page) => page.path !== omit);
+  // Get all documents except for possible omitted one
+  const allDocuments = useDocuments().filter((document) => document.path !== omit);
   // Filter search query
   const [query, setQuery] = useState('');
   // Filtered workspaces
   const [filteredWorkspaces, setFilteredWorkspaces] = useState(allWorkspaces);
-  // Filtered pages
-  const [filteredPages, setFilteredPages] = useState(allPages);
+  // Filtered documents
+  const [filteredDocuments, setFilteredDocuments] = useState(allDocuments);
   console.log('render');
 
   const handleQueryChange = useCallback(
@@ -52,8 +52,8 @@ export const ContentPicker = React.forwardRef<
           allWorkspaces.map((workspace) => workspace.name),
           value,
         );
-        const filteredPagePaths = fuzzySearch(
-          allPages.map((page) => page.title),
+        const filteredDocumentPaths = fuzzySearch(
+          allDocuments.map((document) => document.title),
           value,
         );
 
@@ -65,14 +65,14 @@ export const ContentPicker = React.forwardRef<
             .filter((workspace): workspace is Workspace => workspace !== null),
         );
 
-        setFilteredPages(
-          filteredPagePaths
-            .map((title) => allPages.find((page) => page.title === title))
-            .filter((page): page is Page => page !== null),
+        setFilteredDocuments(
+          filteredDocumentPaths
+            .map((title) => allDocuments.find((document) => document.title === title))
+            .filter((document): document is Document => document !== null),
         );
       }
     },
-    [allPages, allWorkspaces],
+    [allDocuments, allWorkspaces],
   );
 
   return (
@@ -97,7 +97,7 @@ export const ContentPicker = React.forwardRef<
             <ContentPickerWorkspaceItem
               key={workspace.path}
               path={workspace.path}
-              omitPage={omit}
+              omitDocument={omit}
               onClick={onSelect}
             />
           ))}
@@ -109,18 +109,18 @@ export const ContentPicker = React.forwardRef<
                 <ContentPickerWorkspaceItem
                   key={workspace.path}
                   path={workspace.path}
-                  omitPage={omit}
+                  omitDocument={omit}
                   onClick={onSelect}
                 />
               ))}
             </div>
             <div className="search-group">
-              <NavGroup title="Pages" />
-              {filteredPages.map((page) => (
-                <ContentPickerPageItem
-                  key={page.path}
-                  path={page.path}
-                  omitSubpage={omit}
+              <NavGroup title="Documents" />
+              {filteredDocuments.map((document) => (
+                <ContentPickerDocumentItem
+                  key={document.path}
+                  path={document.path}
+                  omitSubdocument={omit}
                   onClick={onSelect}
                 />
               ))}
