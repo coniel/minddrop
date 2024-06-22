@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContentIcon, Icon, IconButton, IconButtonProps } from '@minddrop/ui';
-import { UiIconName, UserIcon, UserIconType } from '@minddrop/icons';
+import { ContentIcon, IconButton, IconButtonProps } from '@minddrop/ui';
+import { UserIcon, UserIconType, useIcon } from '@minddrop/icons';
 import './NavItemIcon.css';
 import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
@@ -8,20 +8,22 @@ import { mapPropsToClasses } from '@minddrop/utils';
 export interface NavItemIconProps
   extends Omit<IconButtonProps, 'icon' | 'label'> {
   /**
-   * The icon to render.
+   * The stringified icon.
    */
-  icon: UserIcon;
+  icon?: string;
 
   /**
-   * The icon used as the default icon type.
+   * The icon used as the default icon type in case
+   * the stringified icon is not present or is invalid.
    */
-  defaultIcon: UiIconName;
+  defaultIcon: UserIcon;
 }
 
 export const NavItemIcon = React.forwardRef<
   HTMLButtonElement,
   NavItemIconProps
->(({ icon, defaultIcon, ...other }, ref) => {
+>(({ icon: iconString, defaultIcon, ...other }, ref) => {
+  const { icon } = useIcon(iconString || '', defaultIcon);
   const { t } = useTranslation();
 
   return (
@@ -38,7 +40,6 @@ export const NavItemIcon = React.forwardRef<
       )}
       {...other}
     >
-      {icon.type === UserIconType.Default && <Icon name={defaultIcon} />}
       {icon.type === UserIconType.Emoji && (
         <span style={{ fontSize: '14px' }}>{icon.icon}</span>
       )}

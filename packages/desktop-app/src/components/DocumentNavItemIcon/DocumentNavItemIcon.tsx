@@ -1,7 +1,7 @@
 import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { Document } from '@minddrop/documents';
-import { useCallback, useEffect, useMemo } from 'react';
-import { ContentIconName, EmojiSkinTone, UserIconType } from '@minddrop/icons';
+import { DefaultDocumentIcon, Document } from '@minddrop/documents';
+import { useCallback, useEffect } from 'react';
+import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { ContentColor } from '@minddrop/core';
 import {
   Popover,
@@ -18,7 +18,8 @@ import {
 import { NavItemIcon } from '../NavItemIcon';
 import { IconPicker } from '../IconPicker';
 
-export interface DocumentNavItemIconProps extends React.HTMLProps<HTMLDivElement> {
+export interface DocumentNavItemIconProps
+  extends React.HTMLProps<HTMLDivElement> {
   /**
    * The associated document.
    */
@@ -41,18 +42,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
   onShowIconSelectionChange,
   document,
 }) => {
-  // Use current content-icon color (if set) as the default icon color
-  const defaultIconColor = useMemo(
-    () =>
-      document.icon.type === UserIconType.ContentIcon ? document.icon.color : undefined,
-    [document.icon],
-  );
-  // Use current emoji skin tone (if set) as the default icon color
-  const defaultEmojiSkinTone = useMemo(
-    () =>
-      document.icon.type === UserIconType.Emoji ? document.icon.skinTone : undefined,
-    [document.icon],
-  );
+  const { icon, color, skinTone } = useIcon(document.icon, DefaultDocumentIcon);
 
   const [pickerPopoverOpen, _, setPickerPopoverOpen] =
     useToggle(showIconSelection);
@@ -94,7 +84,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon defaultIcon="file-text" icon={document.icon} />
+        <NavItemIcon defaultIcon={DefaultDocumentIcon} icon={document.icon} />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent
@@ -104,9 +94,9 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
           collisionPadding={{ left: 14 }}
         >
           <IconPicker
-            defaultPicker={document.icon.type}
-            defaultIconColor={defaultIconColor}
-            defaultEmojiSkinTone={defaultEmojiSkinTone}
+            defaultPicker={icon.type}
+            defaultIconColor={color}
+            defaultEmojiSkinTone={skinTone}
             onClear={handleClear}
             onSelectIcon={handleSelectContentIcon}
             onSelectIconColor={handleSelectIconColor}

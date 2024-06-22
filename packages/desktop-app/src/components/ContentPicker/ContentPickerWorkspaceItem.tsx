@@ -1,7 +1,7 @@
 import { useChildDocuments } from '@minddrop/documents';
 import { ContentListItem, ContentListItemProps } from '@minddrop/ui';
 import { useCreateCallback } from '@minddrop/utils';
-import { useWorkspace } from '@minddrop/workspaces';
+import { DefaultWorkspaceIcon, useWorkspace } from '@minddrop/workspaces';
 import { NavItemIcon } from '../NavItemIcon';
 import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
 
@@ -28,7 +28,9 @@ export const ContentPickerWorkspaceItem: React.FC<
   ContentPickerWorkspaceItemProps
 > = ({ path, onClick, omitDocument }) => {
   const workspace = useWorkspace(path);
-  const documents = useChildDocuments(path).filter((document) => document.path !== omitDocument);
+  const documents = useChildDocuments(path).filter(
+    (document) => document.path !== omitDocument,
+  );
 
   const handleClick = useCreateCallback(onClick, path);
 
@@ -41,7 +43,9 @@ export const ContentPickerWorkspaceItem: React.FC<
       hasChildren={!!documents.length}
       label={workspace.name}
       onClick={handleClick}
-      icon={<NavItemIcon icon={workspace.icon} defaultIcon="folder" />}
+      icon={
+        <NavItemIcon icon={workspace.icon} defaultIcon={DefaultWorkspaceIcon} />
+      }
     >
       {documents.map((document) => (
         <ContentPickerDocumentItem

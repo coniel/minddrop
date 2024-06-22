@@ -1,5 +1,5 @@
 import { ContentColor } from '@minddrop/core';
-import { UserIconType } from '@minddrop/icons';
+import { Icons } from '@minddrop/icons';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
 
 /**
@@ -14,9 +14,11 @@ export async function setWorkspaceContentIconColor(
   workspace: Workspace,
   color: ContentColor,
 ): Promise<void> {
-  if (workspace.icon.type !== UserIconType.ContentIcon) {
+  const icon = Icons.parse(workspace.icon);
+
+  if (!icon || !Icons.isContentIcon(icon)) {
     return;
   }
 
-  Workspaces.setIcon(workspace.path, { ...workspace.icon, color });
+  Workspaces.setIcon(workspace.path, { ...icon, color });
 }

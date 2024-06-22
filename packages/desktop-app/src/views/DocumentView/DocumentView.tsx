@@ -19,8 +19,8 @@ export const DocumentView: React.FC<DocumentViewProps> = ({ path }) => {
   const document = useDocument(path);
 
   const initialContent = useMemo<BlockElement[]>(() => {
-    return document?.contentRaw
-      ? Ast.fromMarkdown(document.contentRaw)
+    return document?.fileTextContent
+      ? Ast.fromMarkdown(document.fileTextContent)
       : [
           Ast.generateBlockElement<ParagraphElement>('paragraph', {
             children: [{ text: '' }],

@@ -1,5 +1,5 @@
 import { ContentColor } from '@minddrop/core';
-import { UserIconType } from '@minddrop/icons';
+import { Icons, UserIconType } from '@minddrop/icons';
 import { Document, Documents } from '@minddrop/documents';
 
 /**
@@ -14,9 +14,11 @@ export async function setDocumentContentIconColor(
   document: Document,
   color: ContentColor,
 ): Promise<void> {
-  if (document.icon.type !== UserIconType.ContentIcon) {
+  const icon = Icons.parse(document.icon);
+
+  if (icon?.type !== UserIconType.ContentIcon) {
     return;
   }
 
-  Documents.setIcon(document.path, { ...document.icon, color });
+  Documents.setIcon(document.path, { ...icon, color });
 }

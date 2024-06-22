@@ -12,8 +12,12 @@ const { document1 } = DOCUMENTS_TEST_DATA;
 const document_PATH = document1.path;
 const NEW_document_NAME = 'New name';
 
-const inputPlaceholder = i18n.t('documents.actions.rename.form.name.placeholder');
-const conflictError = i18n.t('documents.actions.rename.form.name.error.conflict');
+const inputPlaceholder = i18n.t(
+  'documents.actions.rename.form.name.placeholder',
+);
+const conflictError = i18n.t(
+  'documents.actions.rename.form.name.error.conflict',
+);
 
 const onClose = vi.fn();
 
@@ -53,7 +57,10 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.type(nameInput, '{enter}');
 
     // Should rename the document
-    expect(Documents.rename).toHaveBeenCalledWith(document_PATH, NEW_document_NAME);
+    expect(Documents.rename).toHaveBeenCalledWith(
+      document_PATH,
+      NEW_document_NAME,
+    );
 
     // Should close the popover
     expect(onClose).toHaveBeenCalled();
@@ -72,7 +79,10 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.click(getByTestId('click-away'));
 
     // Should rename the document
-    expect(Documents.rename).toHaveBeenCalledWith(document_PATH, NEW_document_NAME);
+    expect(Documents.rename).toHaveBeenCalledWith(
+      document_PATH,
+      NEW_document_NAME,
+    );
 
     // Should close the popover
     expect(onClose).toHaveBeenCalled();

@@ -1,5 +1,4 @@
-import { UserIconType } from '@minddrop/icons';
-import { Documents } from '@minddrop/documents';
+import { DefaultDocumentIcon, Documents } from '@minddrop/documents';
 
 /**
  * Clears a documents's icon, resetting it to the default
@@ -8,5 +7,5 @@ import { Documents } from '@minddrop/documents';
  * @param path - The document path.
  */
 export async function clearDocumentIcon(path: string): Promise<void> {
-  Documents.setIcon(path, { type: UserIconType.Default });
+  Documents.setIcon(path, DefaultDocumentIcon);
 }

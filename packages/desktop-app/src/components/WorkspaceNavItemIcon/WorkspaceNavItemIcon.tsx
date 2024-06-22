@@ -1,7 +1,7 @@
 import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { Workspace } from '@minddrop/workspaces';
-import { useCallback, useEffect, useMemo } from 'react';
-import { ContentIconName, EmojiSkinTone, UserIconType } from '@minddrop/icons';
+import { DefaultWorkspaceIcon, Workspace } from '@minddrop/workspaces';
+import { useCallback, useEffect } from 'react';
+import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { ContentColor } from '@minddrop/core';
 import {
   Popover,
@@ -31,21 +31,9 @@ export const WorkspaceNavItemIcon: React.FC<{
   showIconSelection: boolean;
   onShowIconSelectionChange(value: boolean): void;
 }> = ({ showIconSelection = false, onShowIconSelectionChange, workspace }) => {
-  // Use current content-icon color (if set) as the default icon color
-  const defaultIconColor = useMemo(
-    () =>
-      workspace.icon.type === UserIconType.ContentIcon
-        ? workspace.icon.color
-        : undefined,
-    [workspace.icon],
-  );
-  // Use current emoji skin tone (if set) as the default icon color
-  const defaultEmojiSkinTone = useMemo(
-    () =>
-      workspace.icon.type === UserIconType.Emoji
-        ? workspace.icon.skinTone
-        : undefined,
-    [workspace.icon],
+  const { icon, color, skinTone } = useIcon(
+    workspace.icon,
+    DefaultWorkspaceIcon,
   );
 
   const [pickerPopoverOpen, _, setPickerPopoverOpen] =
@@ -88,7 +76,7 @@ export const WorkspaceNavItemIcon: React.FC<{
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon defaultIcon="folder" icon={workspace.icon} />
+        <NavItemIcon defaultIcon={DefaultWorkspaceIcon} icon={workspace.icon} />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent
@@ -98,9 +86,9 @@ export const WorkspaceNavItemIcon: React.FC<{
           collisionPadding={{ left: 14 }}
         >
           <IconPicker
-            defaultPicker={workspace.icon.type}
-            defaultIconColor={defaultIconColor}
-            defaultEmojiSkinTone={defaultEmojiSkinTone}
+            defaultPicker={icon.type}
+            defaultIconColor={color}
+            defaultEmojiSkinTone={skinTone}
             onClear={handleClear}
             onSelectIcon={handleSelectContentIcon}
             onSelectIconColor={handleSelectIconColor}

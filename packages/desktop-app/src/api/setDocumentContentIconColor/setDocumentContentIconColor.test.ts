@@ -1,10 +1,10 @@
 import { describe, afterEach, it, expect, vi, beforeAll } from 'vitest';
 import { setDocumentContentIconColor } from './setDocumentContentIconColor';
 import { DOCUMENTS_TEST_DATA, Documents } from '@minddrop/documents';
-import { UserIconType } from '@minddrop/icons';
+import { Icons, UserIconType } from '@minddrop/icons';
 import { cleanup } from '../../test-utils';
 
-const { document1 } = DOCUMENTS_TEST_DATA;
+const { document1, document1Icon } = DOCUMENTS_TEST_DATA;
 
 describe('setDocumentContentIconColor', () => {
   beforeAll(() => {
@@ -20,7 +20,8 @@ describe('setDocumentContentIconColor', () => {
 
     // Should set the new icon color
     expect(Documents.setIcon).toHaveBeenCalledWith(document1.path, {
-      ...document1.icon,
+      type: document1Icon.type,
+      icon: document1Icon.icon,
       color: 'cyan',
     });
   });
@@ -29,7 +30,14 @@ describe('setDocumentContentIconColor', () => {
     // Set the icon color on a document with a default icon
     // as its icon.
     await setDocumentContentIconColor(
-      { ...document1, icon: { type: UserIconType.Default } },
+      {
+        ...document1,
+        icon: Icons.stringify({
+          type: UserIconType.Emoji,
+          icon: '',
+          skinTone: 0,
+        }),
+      },
       'cyan',
     );
 

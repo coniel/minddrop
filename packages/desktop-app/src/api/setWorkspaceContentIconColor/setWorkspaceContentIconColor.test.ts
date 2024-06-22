@@ -1,10 +1,11 @@
 import { describe, afterEach, it, expect, vi, beforeAll } from 'vitest';
+import { ICONS_TEST_DATA } from '@minddrop/icons';
 import { setWorkspaceContentIconColor } from './setWorkspaceContentIconColor';
 import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
-import { UserIconType } from '@minddrop/icons';
 import { cleanup } from '../../test-utils';
 
-const { workspace1 } = WORKSPACES_TEST_DATA;
+const { workspace1, workspace1Icon } = WORKSPACES_TEST_DATA;
+const { emojiIconString } = ICONS_TEST_DATA;
 
 describe('setWorkspaceContentIconColor', () => {
   beforeAll(() => {
@@ -20,7 +21,7 @@ describe('setWorkspaceContentIconColor', () => {
 
     // Should set the new icon color
     expect(Workspaces.setIcon).toHaveBeenCalledWith(workspace1.path, {
-      ...workspace1.icon,
+      ...workspace1Icon,
       color: 'cyan',
     });
   });
@@ -29,7 +30,7 @@ describe('setWorkspaceContentIconColor', () => {
     // Set the icon color on a workspace with a default icon
     // as its icon.
     await setWorkspaceContentIconColor(
-      { ...workspace1, icon: { type: UserIconType.Default } },
+      { ...workspace1, icon: emojiIconString },
       'cyan',
     );
 
