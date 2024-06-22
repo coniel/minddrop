@@ -36,4 +36,4 @@ export type UserIconContentIcon = {
   color: ContentColor;
 };
 
-export type UserIcon = UserIconDefault | UserIconEmoji | UserIconContentIcon;
+export type UserIcon = UserIconEmoji | UserIconContentIcon;
