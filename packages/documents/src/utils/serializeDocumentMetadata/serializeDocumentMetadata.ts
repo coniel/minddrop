@@ -1,5 +1,5 @@
-import { UserIconType } from '@minddrop/icons';
-import { DocumentMetadata, SerializedDocumentMetadata } from '../../types';
+import { DefaultDocumentIconString } from '../../constants';
+import { DocumentProperties, SerializedDocumentMetadata } from '../../types';
 import { stringify } from 'yaml';
 
 /**
@@ -10,19 +10,14 @@ import { stringify } from 'yaml';
  * @param metadata - The document metadata.
  * @returns Stringified serialized metadata.
  */
-export function serializeDocumentMetadata(metadata: DocumentMetadata): string {
+export function serializeDocumentMetadata(
+  metadata: DocumentProperties,
+): string {
   const serializedMetadata: SerializedDocumentMetadata = {};
 
-  // Handle content-icon icon
-  if (metadata.icon?.type === UserIconType.ContentIcon) {
-    serializedMetadata.icon = `${UserIconType.ContentIcon}:${
-      metadata.icon.icon as string
-    }:${metadata.icon.color}`;
-  }
-
-  // Handle emoji icon
-  if (metadata.icon?.type === UserIconType.Emoji) {
-    serializedMetadata.icon = `${UserIconType.Emoji}:${metadata.icon.icon}:${metadata.icon.skinTone}`;
+  // Only include non-default icon in serialized metadata
+  if (metadata.icon !== DefaultDocumentIconString) {
+    serializedMetadata.icon = metadata.icon;
   }
 
   // If there is no metadata, don't generate serialized

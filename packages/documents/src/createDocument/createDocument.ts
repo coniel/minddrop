@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { DocumentsStore } from '../DocumentsStore';
-import { DefaultDocumentIcon } from '../constants';
+import { DefaultDocumentIconString } from '../constants';
 import { createDocumentFile } from '../createDocumentFile';
 import { Document } from '../types';
 
@@ -29,10 +29,10 @@ export async function createDocument(
   const document: Document = {
     title,
     path: documentFilePath,
-    icon: DefaultDocumentIcon,
+    icon: DefaultDocumentIconString,
     wrapped: !!options.wrap,
-    contentRaw: '',
-    contentParsed: null,
+    fileTextContent: '',
+    content: null,
   };
 
   // Add document to the store

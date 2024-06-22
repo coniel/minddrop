@@ -1,44 +1,29 @@
 import { describe, it, expect } from 'vitest';
-import {
-  UserIconContentIcon,
-  UserIconEmoji,
-  UserIconType,
-} from '@minddrop/icons';
-import { DefaultDocumentIcon } from '../../constants';
+import { Icons, UserIconType } from '@minddrop/icons';
+import { DefaultDocumentIconString } from '../../constants';
 import { serializeDocumentMetadata } from './serializeDocumentMetadata';
 
-const CONTENT_ICON: UserIconContentIcon = {
+const USER_ICON = Icons.stringify({
   type: UserIconType.ContentIcon,
   icon: 'cat',
   color: 'cyan',
-};
-
-const EMOJI_ICON: UserIconEmoji = {
-  type: UserIconType.Emoji,
-  icon: '🐈',
-  skinTone: 0,
-};
+});
 
 const frontMatter = (metadata: string) => `---\n${metadata}\n---\n\n`;
 
 describe('serializeDocumentMetadata', () => {
-  it('serializes content-icon', () => {
+  it('serializes user selected icon', () => {
     // Serialize document metadata contaning a content-icon icon
-    expect(serializeDocumentMetadata({ icon: CONTENT_ICON })).toBe(
-      frontMatter('icon: content-icon:cat:cyan'),
-    );
-  });
-
-  it('serializes emoji icon', () => {
-    // Serialize document metadata contaning a emoji icon
-    expect(serializeDocumentMetadata({ icon: EMOJI_ICON })).toBe(
-      frontMatter('icon: emoji:🐈:0'),
+    expect(serializeDocumentMetadata({ icon: USER_ICON })).toBe(
+      frontMatter(`icon: ${USER_ICON}`),
     );
   });
 
   it('does not add default icon to metadata', () => {
     // Serialize document metadata containing a default document icon.
     // Icon should not be added to metadata.
-    expect(serializeDocumentMetadata({ icon: DefaultDocumentIcon })).toBe('');
+    expect(serializeDocumentMetadata({ icon: DefaultDocumentIconString })).toBe(
+      '',
+    );
   });
 });

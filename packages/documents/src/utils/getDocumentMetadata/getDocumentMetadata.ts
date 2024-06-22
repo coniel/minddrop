@@ -1,4 +1,4 @@
-import { Document, DocumentMetadata } from '../../types';
+import { Document, DocumentProperties } from '../../types';
 
 /**
  * Returns a document's metadata.
@@ -6,7 +6,7 @@ import { Document, DocumentMetadata } from '../../types';
  * @document - The document.
  * @returns The document metadata.
  */
-export function getDocumentMetadata(document: Document): DocumentMetadata {
+export function getDocumentMetadata(document: Document): DocumentProperties {
   return {
     icon: document.icon,
   };

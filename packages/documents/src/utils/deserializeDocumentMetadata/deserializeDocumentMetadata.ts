@@ -1,6 +1,5 @@
 import { parse } from 'yaml';
-import { DocumentMetadata, SerializedDocumentMetadata } from '../../types';
-import { parseIconMetadata } from '../parseIconMetadata';
+import { DocumentProperties, SerializedDocumentMetadata } from '../../types';
 import { DefaultDocumentMetadata } from '../../constants';
 
 /**
@@ -9,7 +8,9 @@ import { DefaultDocumentMetadata } from '../../constants';
  * @param documentContent - The document content.
  * @returns Document metadata.
  */
-export function deserializeDocumentMetadata(documentContent: string): DocumentMetadata {
+export function deserializeDocumentMetadata(
+  documentContent: string,
+): DocumentProperties {
   // If document does not start with ---, it has no metadata
   if (!documentContent.startsWith('---')) {
     return DefaultDocumentMetadata;
@@ -41,7 +42,7 @@ export function deserializeDocumentMetadata(documentContent: string): DocumentMe
 
   // Deserialize metadata
   return {
+    ...DefaultDocumentMetadata,
     ...serializedMetadata,
-    icon: parseIconMetadata(serializedMetadata.icon),
   };
 }

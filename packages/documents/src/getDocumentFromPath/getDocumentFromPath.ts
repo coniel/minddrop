@@ -1,7 +1,11 @@
 import { Fs } from '@minddrop/file-system';
 import { Markdown } from '@minddrop/markdown';
 import { Document } from '../types';
-import { deserializeDocumentMetadata, isWrapped, titleFromPath } from '../utils';
+import {
+  deserializeDocumentMetadata,
+  isWrapped,
+  titleFromPath,
+} from '../utils';
 
 /**
  * Create a document object from a markdown file.
@@ -23,7 +27,7 @@ export async function getDocumentFromPath(path: string): Promise<Document> {
     title: titleFromPath(path),
     wrapped: isWrapped(path),
     icon: metadata.icon,
-    contentRaw: markdown,
-    contentParsed: null,
+    fileTextContent: markdown,
+    content: null,
   };
 }

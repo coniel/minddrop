@@ -9,7 +9,9 @@ import { getDocument } from '../getDocument';
 import { Events } from '@minddrop/events';
 
 const DOCUMENT_PATH = document1.path;
-const SERIALIZED_METADATA = serializeDocumentMetadata(getDocumentMetadata(document1));
+const SERIALIZED_METADATA = serializeDocumentMetadata(
+  getDocumentMetadata(document1),
+);
 const NEW_DOCUMENT_CONTENT = '# Title\n\nNew content';
 
 const MockFs = initializeMockFileSystem([
@@ -46,7 +48,9 @@ describe('updateDocumentContent', () => {
     await updateDocumentContent(DOCUMENT_PATH, NEW_DOCUMENT_CONTENT);
 
     // Should update the document content in the store
-    expect(getDocument(DOCUMENT_PATH)?.contentRaw).toBe(NEW_DOCUMENT_CONTENT);
+    expect(getDocument(DOCUMENT_PATH)?.fileTextContent).toBe(
+      NEW_DOCUMENT_CONTENT,
+    );
   });
 
   it('writes the document content to the document file', async () => {
@@ -62,11 +66,15 @@ describe('updateDocumentContent', () => {
   it('dispatches a "documents:document:update-content" event', async () =>
     new Promise<void>((done) => {
       // Listen to 'documents:document:update-content' events
-      Events.addListener('documents:document:update-content', 'test', (payload) => {
-        // Payload data should contain old and new paths
-        expect(payload.data).toEqual(DOCUMENT_PATH);
-        done();
-      });
+      Events.addListener(
+        'documents:document:update-content',
+        'test',
+        (payload) => {
+          // Payload data should contain old and new paths
+          expect(payload.data).toEqual(DOCUMENT_PATH);
+          done();
+        },
+      );
 
       // Update the document content
       updateDocumentContent(DOCUMENT_PATH, NEW_DOCUMENT_CONTENT);

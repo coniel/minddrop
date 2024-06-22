@@ -31,7 +31,7 @@ export async function updateDocumentContent(
   const frontMatter = serializeDocumentMetadata(getDocumentMetadata(document));
 
   // Update the document's raw content in the store
-  DocumentsStore.getState().update(path, { contentRaw: content });
+  DocumentsStore.getState().update(path, { fileTextContent: content });
 
   // Write the document's content, including front matter,
   // to the markdown file.

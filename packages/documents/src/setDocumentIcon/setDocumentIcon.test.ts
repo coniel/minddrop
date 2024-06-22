@@ -1,5 +1,5 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { UserIcon, UserIconType } from '@minddrop/icons';
+import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import { getDocument } from '../getDocument';
 import { setup, cleanup, document1 } from '../test-utils';
 import { DocumentsStore } from '../DocumentsStore';
@@ -12,6 +12,8 @@ const icon: UserIcon = {
   icon: 'cat',
   color: 'blue',
 };
+
+const iconString = Icons.stringify(icon);
 
 const MockFs = initializeMockFileSystem([
   // Document file
@@ -36,7 +38,7 @@ describe('setWorkpaceIcon', () => {
     await setDocumentIcon(document1.path, icon);
 
     // Should update the document in the store
-    expect(getDocument(document1.path)?.icon).toEqual(icon);
+    expect(getDocument(document1.path)?.icon).toEqual(iconString);
   });
 
   it('writes the changes to the document config file', async () => {
@@ -44,9 +46,11 @@ describe('setWorkpaceIcon', () => {
     await setDocumentIcon(document1.path, icon);
 
     // Get document metadata from file
-    const metadata = deserializeDocumentMetadata(MockFs.readTextFile(document1.path));
+    const metadata = deserializeDocumentMetadata(
+      MockFs.readTextFile(document1.path),
+    );
 
     // Metadata should contain the new icon
-    expect(metadata.icon).toEqual(icon);
+    expect(metadata.icon).toEqual(iconString);
   });
 });

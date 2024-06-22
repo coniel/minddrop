@@ -1,10 +1,14 @@
-import { UserIcon } from '@minddrop/icons';
+export type DocumentPropertyPrimitive = string | number | boolean | null;
 
-export interface DocumentMetadata {
+export type DocumentProperty =
+  | DocumentPropertyPrimitive
+  | DocumentPropertyPrimitive[];
+
+export interface DocumentProperties extends Record<string, DocumentProperty> {
   /**
    * The document icon.
    */
-  icon: UserIcon;
+  icon: string;
 }
 
 export interface SerializedDocumentMetadata {

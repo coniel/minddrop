@@ -1,17 +1,17 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { UserIconContentIcon, UserIconType } from '@minddrop/icons';
+import { Icons, UserIconType } from '@minddrop/icons';
 import { Events } from '@minddrop/events';
 import { setup, cleanup } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
 import { Document } from '../types';
 import { DocumentsStore } from '../DocumentsStore';
 
-const DOCUMENT_ICON: UserIconContentIcon = {
+const DOCUMENT_ICON = Icons.stringify({
   type: UserIconType.ContentIcon,
   icon: 'cat',
   color: 'cyan',
-};
+});
 
 const SOURCE_DIRS = ['path/to/documents/1', 'path/to/document/2'];
 const DOCUMENTS: Document[] = SOURCE_DIRS.flatMap<Document>((dirPath) => [
@@ -20,24 +20,24 @@ const DOCUMENTS: Document[] = SOURCE_DIRS.flatMap<Document>((dirPath) => [
     path: `${dirPath}/Document 1.md`,
     icon: DOCUMENT_ICON,
     wrapped: false,
-    contentRaw: '',
-    contentParsed: null,
+    fileTextContent: '',
+    content: null,
   },
   {
     title: 'Document 2',
     path: `${dirPath}/Document 2/Document 2.md`,
     icon: DOCUMENT_ICON,
     wrapped: true,
-    contentRaw: '',
-    contentParsed: null,
+    fileTextContent: '',
+    content: null,
   },
   {
     title: 'Document 3',
     path: `${dirPath}/subdir/Document 3.md`,
     icon: DOCUMENT_ICON,
     wrapped: false,
-    contentRaw: '',
-    contentParsed: null,
+    fileTextContent: '',
+    content: null,
   },
 ]);
 

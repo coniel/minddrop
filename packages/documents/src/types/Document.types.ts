@@ -1,7 +1,6 @@
 import { UserIcon } from '@minddrop/icons';
-import { BlockElement } from '@minddrop/ast';
 
-export interface Document {
+export interface Document<TContent = unknown> {
   /**
    * Absolute path to the document markdown file.
    */
@@ -15,7 +14,7 @@ export interface Document {
   /**
    * The document icon.
    */
-  icon: UserIcon;
+  icon: string;
 
   /**
    * Whether or not the document is wrapped in a directory of the
@@ -24,12 +23,12 @@ export interface Document {
   wrapped: boolean;
 
   /**
-   * The raw document content as read from the file.
+   * The raw text content as read from the file.
    */
-  contentRaw: string;
+  fileTextContent: string;
 
   /**
    * The parsed document content.
    */
-  contentParsed: BlockElement[] | null;
+  content: TContent;
 }

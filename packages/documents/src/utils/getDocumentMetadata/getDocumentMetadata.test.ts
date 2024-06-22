@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { document1 } from '../../test-utils';
 import { getDocumentMetadata } from './getDocumentMetadata';
-import { DocumentMetadata } from '../../types';
+import { DocumentProperties } from '../../types';
 
-const DOCUMENT_METADATA: DocumentMetadata = {
+const DOCUMENT_METADATA: DocumentProperties = {
   icon: document1.icon,
 };
 

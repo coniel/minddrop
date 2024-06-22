@@ -25,7 +25,10 @@ import { updateDocumentContent } from '../updateDocumentContent';
  * @throws {FileNotFoundError} If the document file does not exist.
  * @throws {PathConflictError} If a document with the same name already exists.
  */
-export async function renameDocument(path: string, name: string): Promise<Document> {
+export async function renameDocument(
+  path: string,
+  name: string,
+): Promise<Document> {
   // Get the document from the store
   const document = getDocument(path);
   // The path of the renamed document file
@@ -54,14 +57,14 @@ export async function renameDocument(path: string, name: string): Promise<Docume
   }
 
   // Update the markdown heading to the new name
-  const newContent = Markdown.updateHeading(document.contentRaw, name);
+  const newContent = Markdown.updateHeading(document.fileTextContent, name);
 
   // Generate the updated document object
   const updatedDocument = {
     ...document,
     path: newPath,
     title: name,
-    contentRaw: newContent,
+    fileTextContent: newContent,
   };
 
   // Update the document markdown with the new heading

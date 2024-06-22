@@ -1,10 +1,13 @@
-import { UserIconDefault, UserIconType } from '@minddrop/icons';
-import { DocumentMetadata } from './types';
+import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 
-export const DefaultDocumentIcon: UserIconDefault = {
-  type: UserIconType.Default,
+export const DefaultDocumentIcon: UserIcon = {
+  type: UserIconType.ContentIcon,
+  icon: 'text',
+  color: 'default',
 };
 
-export const DefaultDocumentMetadata: DocumentMetadata = {
-  icon: DefaultDocumentIcon,
+export const DefaultDocumentIconString = Icons.stringify(DefaultDocumentIcon);
+
+export const DefaultDocumentMetadata = {
+  icon: DefaultDocumentIconString,
 };

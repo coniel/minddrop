@@ -3,27 +3,32 @@ import {
   initializeMockFileSystem,
   FileNotFoundError,
 } from '@minddrop/file-system';
-import { UserIcon, UserIconType } from '@minddrop/icons';
+import { Icons, UserIconType } from '@minddrop/icons';
 import { cleanup, document1, setup } from '../test-utils';
 import { DocumentsStore } from '../DocumentsStore';
 import { writeDocumentMetadata } from './writeDocumentMetadata';
 import { serializeDocumentMetadata } from '../utils';
-import { DefaultDocumentIcon } from '../constants';
+import { DefaultDocumentIconString } from '../constants';
 import { DocumentNotFoundError } from '../errors';
 
 const DOCUMENT_PATH = document1.path;
-const NEW_DOCUMENT_ICON: UserIcon = {
+const NEW_DOCUMENT_ICON = Icons.stringify({
   type: UserIconType.ContentIcon,
   icon: 'dog',
   color: 'red',
-};
+});
 const SERIALIZED_METADATA = serializeDocumentMetadata({ icon: document1.icon });
-const SERIALIZED_NEW_METADATA = serializeDocumentMetadata({ icon: NEW_DOCUMENT_ICON });
+const SERIALIZED_NEW_METADATA = serializeDocumentMetadata({
+  icon: NEW_DOCUMENT_ICON,
+});
 const DOCUMENT_CONTENT = '# Title\n\nContent';
 
 const MockFs = initializeMockFileSystem([
   // Document file
-  { path: DOCUMENT_PATH, textContent: `${SERIALIZED_METADATA}${DOCUMENT_CONTENT}` },
+  {
+    path: DOCUMENT_PATH,
+    textContent: `${SERIALIZED_METADATA}${DOCUMENT_CONTENT}`,
+  },
 ]);
 
 describe('writeDocumentMetadata', () => {
@@ -95,7 +100,7 @@ describe('writeDocumentMetadata', () => {
     // Update a document icon to the default one.
     // No metadata will be written as a result.
     DocumentsStore.getState().update(DOCUMENT_PATH, {
-      icon: DefaultDocumentIcon,
+      icon: DefaultDocumentIconString,
     });
 
     // Write the document metadata

@@ -4,7 +4,7 @@ import { Events } from '@minddrop/events';
 import { setup, cleanup } from '../test-utils';
 import { createDocument } from './createDocument';
 import { Document } from '../types';
-import { DefaultDocumentIcon } from '../constants';
+import { DefaultDocumentIconString } from '../constants';
 import { getDocument } from '../getDocument';
 
 const DOCUMENT_TITLE = 'Document';
@@ -15,10 +15,10 @@ const WRAPPED_DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${DOCUMENT_TITLE}/${DOCUM
 const DOCUMENT: Document = {
   title: DOCUMENT_TITLE,
   path: DOCUMENT_FILE_PATH,
-  icon: DefaultDocumentIcon,
+  icon: DefaultDocumentIconString,
   wrapped: false,
-  contentRaw: '',
-  contentParsed: null,
+  fileTextContent: '',
+  content: null,
 };
 
 const MockFs = initializeMockFileSystem([

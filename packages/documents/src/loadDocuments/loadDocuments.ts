@@ -31,7 +31,9 @@ export async function loadDocuments(sources: string[]): Promise<void> {
   // fetching all of them because the existing documents
   // may have changed in the time it takes to complete the
   // async processes above.
-  const uniqueDocuments = documents.filter((document) => !getDocument(document.path));
+  const uniqueDocuments = documents.filter(
+    (document) => !getDocument(document.path),
+  );
 
   // Load documents into the store
   DocumentsStore.getState().load(uniqueDocuments);

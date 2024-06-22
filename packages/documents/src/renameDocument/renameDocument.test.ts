@@ -22,7 +22,9 @@ import { renameDocument } from './renameDocument';
 
 const DOCUMENT_PATH = document1.path;
 const NEW_DOCUMENT_NAME = 'new-name';
-const NEW_DOCUMENT_PATH = `${Fs.parentDirPath(DOCUMENT_PATH)}/${NEW_DOCUMENT_NAME}.md`;
+const NEW_DOCUMENT_PATH = `${Fs.parentDirPath(
+  DOCUMENT_PATH,
+)}/${NEW_DOCUMENT_NAME}.md`;
 const WRAPPED_DOCUMENT_PATH = wrappedDocument.path;
 const WRAPPED_DOCUMENT_NEW_PATH = Fs.concatPath(
   Fs.pathSlice(WRAPPED_DOCUMENT_PATH, 0, -2),
@@ -76,9 +78,9 @@ describe('renameDocument', () => {
   it('throws if a document with the same name already exists', () => {
     // Attempt to rename the document to the same name. Should throw
     // a PathConflictError.
-    expect(() => renameDocument(DOCUMENT_PATH, document1.title)).rejects.toThrow(
-      PathConflictError,
-    );
+    expect(() =>
+      renameDocument(DOCUMENT_PATH, document1.title),
+    ).rejects.toThrow(PathConflictError);
   });
 
   it('renames the document file', async () => {
@@ -88,9 +90,9 @@ describe('renameDocument', () => {
     // Old path should not exist
     expect(MockFs.exists(DOCUMENT_PATH)).toBe(false);
     // New path should exist
-    expect(MockFs.exists(`${Fs.parentDirPath(DOCUMENT_PATH)}/new-name.md`)).toBe(
-      true,
-    );
+    expect(
+      MockFs.exists(`${Fs.parentDirPath(DOCUMENT_PATH)}/new-name.md`),
+    ).toBe(true);
   });
 
   it('updates the markdown heading', async () => {
@@ -117,7 +119,9 @@ describe('renameDocument', () => {
     expect(getDocument(NEW_DOCUMENT_PATH)?.path).toBe(NEW_DOCUMENT_PATH);
     expect(getDocument(NEW_DOCUMENT_PATH)?.title).toBe(NEW_DOCUMENT_NAME);
     // The document heading should be updated
-    expect(getDocument(NEW_DOCUMENT_PATH)?.contentRaw).toContain(`# ${NEW_DOCUMENT_NAME}`);
+    expect(getDocument(NEW_DOCUMENT_PATH)?.fileTextContent).toContain(
+      `# ${NEW_DOCUMENT_NAME}`,
+    );
   });
 
   it('dispatches a "documents:document:renamed" event', async () =>
@@ -138,18 +142,24 @@ describe('renameDocument', () => {
 
   it('returns the updated document', async () => {
     // Rename the document
-    const updatedDocument = await renameDocument(DOCUMENT_PATH, NEW_DOCUMENT_NAME);
+    const updatedDocument = await renameDocument(
+      DOCUMENT_PATH,
+      NEW_DOCUMENT_NAME,
+    );
 
     // Path, title, and markdown heading should be updated
     expect(updatedDocument.path).toBe(NEW_DOCUMENT_PATH);
     expect(updatedDocument.title).toBe(NEW_DOCUMENT_NAME);
-    expect(updatedDocument.contentRaw).toContain(`# ${NEW_DOCUMENT_NAME}`);
+    expect(updatedDocument.fileTextContent).toContain(`# ${NEW_DOCUMENT_NAME}`);
   });
 
   describe('wrapped document', () => {
     it('renames the wrapping dir', async () => {
       // Rename a wrapped document
-      const renamed = await renameDocument(WRAPPED_DOCUMENT_PATH, NEW_DOCUMENT_NAME);
+      const renamed = await renameDocument(
+        WRAPPED_DOCUMENT_PATH,
+        NEW_DOCUMENT_NAME,
+      );
 
       // It should rename the wrapping dir as well as the document file
       expect(MockFs.exists(WRAPPED_DOCUMENT_NEW_PATH)).toBe(true);
