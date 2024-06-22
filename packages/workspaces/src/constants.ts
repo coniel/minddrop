@@ -1,7 +1,8 @@
 import { BaseDirectory } from '@minddrop/file-system';
 import {
+  Icons,
+  UserIcon,
   UserIconContentIcon,
-  UserIconDefault,
   UserIconType,
 } from '@minddrop/icons';
 import { WorkspaceConfig } from './types';
@@ -11,8 +12,10 @@ export const WorkspacesConfigFileName = 'workspaces.json';
 export const WorkspaceConfigDirName = '.minddrop';
 export const WorkspaceConfigFileName = 'workspace.json';
 
-export const DefaultWorkspaceIcon: UserIconDefault = {
-  type: UserIconType.Default,
+export const DefaultWorkspaceIcon: UserIcon = {
+  type: UserIconType.ContentIcon,
+  icon: 'folder',
+  color: 'default',
 };
 export const MissingWorkspaceIcon: UserIconContentIcon = {
   type: UserIconType.ContentIcon,
@@ -21,8 +24,8 @@ export const MissingWorkspaceIcon: UserIconContentIcon = {
 };
 
 export const DefaultWorkspaceConfig: WorkspaceConfig = {
-  icon: DefaultWorkspaceIcon,
+  icon: Icons.stringify(DefaultWorkspaceIcon),
 };
 export const MissingWorkspaceConfig: WorkspaceConfig = {
-  icon: MissingWorkspaceIcon,
+  icon: Icons.stringify(MissingWorkspaceIcon),
 };

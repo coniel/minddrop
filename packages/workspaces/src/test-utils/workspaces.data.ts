@@ -1,5 +1,5 @@
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
-import { UserIconType } from '@minddrop/icons';
+import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import {
   DefaultWorkspaceIcon,
   MissingWorkspaceIcon,
@@ -10,29 +10,36 @@ import {
 } from '../constants';
 import { Workspace, WorkspaceConfig, WorkspacesConfig } from '../types';
 
+export const workspace1Icon: UserIcon = {
+  type: UserIconType.ContentIcon,
+  icon: 'cat',
+  color: 'cyan',
+};
 export const workspace1: Workspace = {
   path: 'Users/foo/Documents/Workspace 1',
   exists: true,
   name: 'Workspace 1',
-  icon: { type: UserIconType.ContentIcon, icon: 'cat', color: 'cyan' },
+  icon: Icons.stringify(workspace1Icon),
 };
 
+export const missingWorkspaceIcon = MissingWorkspaceIcon;
 export const missingWorkspace: Workspace = {
   path: 'Users/foo/Documents/Workspace 2',
   exists: false,
   name: 'Workspace 2',
-  icon: MissingWorkspaceIcon,
+  icon: Icons.stringify(missingWorkspaceIcon),
 };
 
+export const newWorkspaceIcon = DefaultWorkspaceIcon;
 export const newWorkspace: Workspace = {
   path: 'Users/foo/Documents/New workspace',
   exists: true,
   name: 'New workspace',
-  icon: DefaultWorkspaceIcon,
+  icon: Icons.stringify(newWorkspaceIcon),
 };
 
 export const workspace1Config: WorkspaceConfig = {
-  icon: { type: UserIconType.ContentIcon, icon: 'cat', color: 'cyan' },
+  icon: Icons.stringify(workspace1Icon),
 };
 
 export const workspace1ConfigPath = Fs.concatPath(

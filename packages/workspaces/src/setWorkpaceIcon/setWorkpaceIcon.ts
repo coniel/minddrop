@@ -1,4 +1,4 @@
-import { UserIcon } from '@minddrop/icons';
+import { Icons, UserIcon } from '@minddrop/icons';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 
@@ -14,7 +14,7 @@ export async function setWorkpaceIcon(
   icon: UserIcon,
 ): Promise<void> {
   // Update the workspace in the store
-  WorkspacesStore.getState().update(path, { icon });
+  WorkspacesStore.getState().update(path, { icon: Icons.stringify(icon) });
 
   // Persist the change to the workspace config file
   await writeWorkspaceConfig(path);

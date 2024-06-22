@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { UserIcon, UserIconType } from '@minddrop/icons';
+import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import { getWorkspace } from '../getWorkspace';
 import { getWorkspaceConfig } from '../getWorkspaceConfig';
 import {
@@ -17,6 +17,7 @@ const icon: UserIcon = {
   icon: 'cat',
   color: 'blue',
 };
+const iconString = Icons.stringify(icon);
 
 const MockFs = initializeMockFileSystem([
   // Workspace 1 config file
@@ -41,7 +42,7 @@ describe('setWorkpaceIcon', () => {
     await setWorkpaceIcon(workspace1.path, icon);
 
     // Should update the workspace in the store
-    expect(getWorkspace(workspace1.path)?.icon).toEqual(icon);
+    expect(getWorkspace(workspace1.path)?.icon).toEqual(iconString);
   });
 
   it('writes the changes to the workspace config file', async () => {
@@ -52,6 +53,6 @@ describe('setWorkpaceIcon', () => {
     const config = await getWorkspaceConfig(workspace1.path);
 
     // Config should contain new icon
-    expect(config.icon).toEqual(icon);
+    expect(config.icon).toEqual(iconString);
   });
 });
