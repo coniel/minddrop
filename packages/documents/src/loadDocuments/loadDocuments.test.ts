@@ -1,54 +1,31 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
-import { Icons, UserIconType } from '@minddrop/icons';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { setup, cleanup } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  document1,
+  wrappedDocument,
+  childDocument,
+  parentDir,
+} from '../test-utils';
 import { loadDocuments } from './loadDocuments';
 import { Document } from '../types';
 import { DocumentsStore } from '../DocumentsStore';
 
-const DOCUMENT_ICON = Icons.stringify({
-  type: UserIconType.ContentIcon,
-  icon: 'cat',
-  color: 'cyan',
-});
-
-const SOURCE_DIRS = ['path/to/documents/1', 'path/to/document/2'];
-const DOCUMENTS: Document[] = SOURCE_DIRS.flatMap<Document>((dirPath) => [
-  {
-    title: 'Document 1',
-    path: `${dirPath}/Document 1.md`,
-    icon: DOCUMENT_ICON,
-    wrapped: false,
-    fileTextContent: '',
-    content: null,
-  },
-  {
-    title: 'Document 2',
-    path: `${dirPath}/Document 2/Document 2.md`,
-    icon: DOCUMENT_ICON,
-    wrapped: true,
-    fileTextContent: '',
-    content: null,
-  },
-  {
-    title: 'Document 3',
-    path: `${dirPath}/subdir/Document 3.md`,
-    icon: DOCUMENT_ICON,
-    wrapped: false,
-    fileTextContent: '',
-    content: null,
-  },
-]);
+const SOURCE_DIR = parentDir;
+const DOCUMENTS: Document[] = [document1, wrappedDocument, childDocument];
 
 initializeMockFileSystem([
   // Document files
   ...DOCUMENTS.map((document) => ({
     path: document.path,
-    textContent: '---\nicon: "content-icon:cat:cyan"\n---',
+    textContent: document.fileTextContent,
   })),
   // Image files
-  ...SOURCE_DIRS.map((dir) => `${dir}/image.png`),
+  ...DOCUMENTS.map(
+    (document) => `${Fs.parentDirPath(document.path)}/image.png`,
+  ),
 ]);
 
 describe('loadDocuments', () => {
@@ -58,7 +35,7 @@ describe('loadDocuments', () => {
 
   it('loads documents into the store', async () => {
     // Load documents
-    await loadDocuments(SOURCE_DIRS);
+    await loadDocuments([SOURCE_DIR]);
 
     // Documents should be in the store
     expect(DocumentsStore.getState().documents).toEqual(DOCUMENTS);
@@ -66,8 +43,8 @@ describe('loadDocuments', () => {
 
   it('does not load duplicates of documents already in the store', async () => {
     // Load documents twice
-    await loadDocuments(SOURCE_DIRS);
-    await loadDocuments(SOURCE_DIRS);
+    await loadDocuments([SOURCE_DIR]);
+    await loadDocuments([SOURCE_DIR]);
 
     // Store should not contain duplicates
     expect(DocumentsStore.getState().documents).toEqual(DOCUMENTS);
@@ -83,6 +60,6 @@ describe('loadDocuments', () => {
       });
 
       // Load documents
-      loadDocuments(SOURCE_DIRS);
+      loadDocuments([SOURCE_DIR]);
     }));
 });

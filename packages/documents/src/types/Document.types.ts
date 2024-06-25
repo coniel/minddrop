@@ -1,10 +1,21 @@
-import { UserIcon } from '@minddrop/icons';
+import {
+  DocumentProperties,
+  DocumentPropertiesMap,
+} from './DocumentMetadata.types';
 
-export interface Document<TContent = unknown> {
+export interface Document<
+  TContent = unknown,
+  TProperties extends DocumentPropertiesMap = {},
+> {
   /**
    * Absolute path to the document markdown file.
    */
   path: string;
+
+  /**
+   * The document file type.
+   */
+  fileType: string;
 
   /**
    * The document title, also serves as the file/directory name.
@@ -12,9 +23,10 @@ export interface Document<TContent = unknown> {
   title: string;
 
   /**
-   * The document icon.
+   * Document properties, including the document icon and any
+   * custom properties defined by the document type.
    */
-  icon: string;
+  properties: DocumentProperties<TProperties>;
 
   /**
    * Whether or not the document is wrapped in a directory of the
@@ -29,6 +41,7 @@ export interface Document<TContent = unknown> {
 
   /**
    * The parsed document content.
+   * Null if the document has not been opened.
    */
-  content: TContent;
+  content: TContent | null;
 }

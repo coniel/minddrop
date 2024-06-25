@@ -36,7 +36,8 @@ export interface DocumentsStore {
 export const DocumentsStore = create<DocumentsStore>()((set) => ({
   documents: [],
 
-  load: (documents) => set((state) => ({ documents: [...state.documents, ...documents] })),
+  load: (documents) =>
+    set((state) => ({ documents: [...state.documents, ...documents] })),
 
   add: (document) =>
     set((state) => {
@@ -47,7 +48,9 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
 
   update: (path, data) =>
     set((state) => {
-      const index = state.documents.findIndex((document) => document.path === path);
+      const index = state.documents.findIndex(
+        (document) => document.path === path,
+      );
       const documents = [...state.documents];
 
       if (index === -1) {

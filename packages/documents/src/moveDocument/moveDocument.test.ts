@@ -94,9 +94,9 @@ describe('moveDocument', () => {
   it('throws if the target parent directory is not a directory', () => {
     // Attempt to move a document to a file.
     // Should throw a InvalidPathError.
-    expect(() => moveDocument(document1.path, childDocument.path)).rejects.toThrow(
-      InvalidPathError,
-    );
+    expect(() =>
+      moveDocument(document1.path, childDocument.path),
+    ).rejects.toThrow(InvalidPathError);
   });
 
   it('throws if a child document with the same name exists in the target parent directory', () => {
@@ -115,7 +115,9 @@ describe('moveDocument', () => {
     expect(MockFs.exists(document1.path)).toBe(false);
     // New path should exist
     expect(
-      MockFs.exists(Fs.concatPath(TARGET_DIR, Fs.fileNameFromPath(DOCUMENT_PATH))),
+      MockFs.exists(
+        Fs.concatPath(TARGET_DIR, Fs.fileNameFromPath(DOCUMENT_PATH)),
+      ),
     ).toBe(true);
   });
 

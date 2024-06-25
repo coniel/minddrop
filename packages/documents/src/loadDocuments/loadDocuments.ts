@@ -1,6 +1,6 @@
 import { FsEntry, Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { getDirFilesRecursiveFlat } from '../utils';
+import { getDirFilesRecursiveFlat, isDocumentFile } from '../utils';
 import { getDocumentFromPath } from '../getDocumentFromPath';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
@@ -18,12 +18,12 @@ export async function loadDocuments(sources: string[]): Promise<void> {
   // Recursively fetch files from sources dirs
   const files = await getFiles(validSources);
 
-  // Get markdown files
-  const markdownFiles = files.filter((file) => file.path.endsWith('.md'));
+  // Get files that are registered document types
+  const documentFiles = files.filter((file) => isDocumentFile(file.path));
 
-  // Create document objects from markdown files
+  // Create document objects from files
   const documents = await Promise.all(
-    markdownFiles.map(async (file) => getDocumentFromPath(file.path)),
+    documentFiles.map(async (file) => getDocumentFromPath(file.path)),
   );
 
   // Filter out documents which are already in the store.

@@ -5,18 +5,16 @@ import {
 } from '@minddrop/file-system';
 import { cleanup, document1, setup } from '../test-utils';
 import { DocumentsStore } from '../DocumentsStore';
-import { serializeDocumentMetadata, getDocumentMetadata } from '../utils';
 import { writeDocument } from './writeDocument';
 
 const DOCUMENT_PATH = document1.path;
-const SERIALIZED_METADATA = serializeDocumentMetadata(getDocumentMetadata(document1));
 const NEW_DOCUMENT_CONTENT = '# Title\n\nNew content';
 
 const MockFs = initializeMockFileSystem([
   // Document file
   {
     path: DOCUMENT_PATH,
-    textContent: `${SERIALIZED_METADATA}# Title\n\nOld content`,
+    textContent: `# Title\n\nOld content`,
   },
 ]);
 
@@ -43,11 +41,9 @@ describe('writeDocument', () => {
 
   it('writes the document content to the document file', async () => {
     // Wite the document
-    await writeDocument(DOCUMENT_PATH, `${SERIALIZED_METADATA}${NEW_DOCUMENT_CONTENT}`);
+    await writeDocument(DOCUMENT_PATH, NEW_DOCUMENT_CONTENT);
 
     // Should write content to file
-    expect(MockFs.readTextFile(DOCUMENT_PATH)).toBe(
-      `${SERIALIZED_METADATA}${NEW_DOCUMENT_CONTENT}`,
-    );
+    expect(MockFs.readTextFile(DOCUMENT_PATH)).toBe(NEW_DOCUMENT_CONTENT);
   });
 });

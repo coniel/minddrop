@@ -4,12 +4,17 @@ export type DocumentProperty =
   | DocumentPropertyPrimitive
   | DocumentPropertyPrimitive[];
 
-export interface DocumentProperties extends Record<string, DocumentProperty> {
+export type DocumentPropertiesMap = Record<string, DocumentProperty>;
+
+export interface BaseDocumentProperties extends DocumentPropertiesMap {
   /**
    * The document icon.
    */
   icon: string;
 }
+
+export type DocumentProperties<TProperties extends DocumentPropertiesMap = {}> =
+  BaseDocumentProperties & TProperties;
 
 export interface SerializedDocumentMetadata {
   /**

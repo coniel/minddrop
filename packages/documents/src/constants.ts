@@ -11,3 +11,7 @@ export const DefaultDocumentIconString = Icons.stringify(DefaultDocumentIcon);
 export const DefaultDocumentMetadata = {
   icon: DefaultDocumentIconString,
 };
+
+export const DefaultDocumentProperties = {
+  icon: DefaultDocumentIconString,
+};

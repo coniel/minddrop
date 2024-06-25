@@ -5,6 +5,6 @@
  * @returns The document title.
  */
 export function titleFromPath(path: string): string {
-  // Get the last path segment and remove '.md' extension
-  return path.split('/').slice(-1)[0].slice(0, -3);
+  // Get the last path segment and remove file extension
+  return path.split('/').slice(-1)[0].split('.').slice(0, -1).join('.');
 }

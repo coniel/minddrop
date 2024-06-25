@@ -8,5 +8,9 @@ import { DocumentsStore } from '../DocumentsStore';
  * @returns A document or null.
  */
 export function getDocument(path: string): Document | null {
-  return DocumentsStore.getState().documents.find((document) => document.path === path) || null;
+  return (
+    DocumentsStore.getState().documents.find(
+      (document) => document.path === path,
+    ) || null
+  );
 }

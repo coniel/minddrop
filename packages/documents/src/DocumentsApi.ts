@@ -9,4 +9,9 @@ export { deleteDocument as delete } from './deleteDocument';
 export { removeChildDocuments } from './removeChildDocuments';
 export { moveDocument as move } from './moveDocument';
 export { getWrappedPath } from './getWrappedPath';
-export { updateDocumentContent as updateContent } from './updateDocumentContent';
+export { setDocumentProperties as setProperties } from './setDocumentProperties';
+export { updateDocument as update } from './updateDocument';
+export {
+  registerDocumentTypeConfig as register,
+  unregisterDocumentTypeConfig as unregister,
+} from './DocumentTypeConfigsStore';

@@ -8,7 +8,10 @@ import { getChildDocuments } from '../utils';
  */
 export function removeChildDocuments(parentPath: string): void {
   // Get the child documents
-  const childDocuments = getChildDocuments(parentPath, DocumentsStore.getState().documents);
+  const childDocuments = getChildDocuments(
+    parentPath,
+    DocumentsStore.getState().documents,
+  );
 
   // Remove each child document and its own child documents
   // if it has any.

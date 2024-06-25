@@ -12,9 +12,9 @@ import { DocumentsStore } from '../DocumentsStore';
  * @returns The new document path.
  */
 export async function wrapDocument(path: string): Promise<string> {
-  // Remove '.md' file extension to get desired
+  // Remove document file extension to get desired
   // wrapper dir path.
-  const wrapperDirPath = path.slice(0, -3);
+  const wrapperDirPath = Fs.removeExtension(path);
   // Create the final wrapped path
   const wrappedPath = Fs.concatPath(wrapperDirPath, Fs.fileNameFromPath(path));
 

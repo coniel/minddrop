@@ -15,7 +15,11 @@ const DOCUMENT_TITLE = document1.title;
 const DOCUMENT_FILENAME = Fs.fileNameFromPath(document1.path);
 const DOCUMENT_PATH = Fs.concatPath(BASE_PATH, DOCUMENT_FILENAME);
 const WRAPPER_DIR_PATH = Fs.concatPath(BASE_PATH, DOCUMENT_TITLE);
-const WRAPPED_DOCUMENT_PATH = Fs.concatPath(BASE_PATH, DOCUMENT_TITLE, DOCUMENT_FILENAME);
+const WRAPPED_DOCUMENT_PATH = Fs.concatPath(
+  BASE_PATH,
+  DOCUMENT_TITLE,
+  DOCUMENT_FILENAME,
+);
 
 const MockFs = initializeMockFileSystem([
   // Document file
@@ -43,7 +47,9 @@ describe('wrapDocument', () => {
 
     // Attempt to wrap a document which does not exist, should
     // throw a FileNotFoundError.
-    expect(() => wrapDocument('foo.md')).rejects.toThrowError(FileNotFoundError);
+    expect(() => wrapDocument('foo.md')).rejects.toThrowError(
+      FileNotFoundError,
+    );
   });
 
   it('throws if conflicting dir already exists', () => {
@@ -51,7 +57,9 @@ describe('wrapDocument', () => {
     MockFs.addFiles([WRAPPER_DIR_PATH]);
 
     // Attempt to wrap the document, should throw a PathConflictError
-    expect(() => wrapDocument(DOCUMENT_PATH)).rejects.toThrowError(PathConflictError);
+    expect(() => wrapDocument(DOCUMENT_PATH)).rejects.toThrowError(
+      PathConflictError,
+    );
   });
 
   it('creates the wrapper dir', async () => {

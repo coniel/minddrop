@@ -14,11 +14,14 @@ export function updateChildDocumentPaths(
   newParentPath: string,
 ): void {
   // Get child documents from the old parent path
-  const childDocuments = getChildDocuments(oldParentPath, DocumentsStore.getState().documents);
+  const childDocuments = getChildDocuments(
+    oldParentPath,
+    DocumentsStore.getState().documents,
+  );
 
   // Recursively update the child documents' paths
   childDocuments.forEach((childDocument) => {
-    // The new child document path
+    // Replace the old parent path with the new parent path
     const newChildDocumentPath = Fs.concatPath(
       newParentPath,
       Fs.pathSlice(childDocument.path, childDocument.wrapped ? -2 : -1),
@@ -32,7 +35,10 @@ export function updateChildDocumentPaths(
 
     // If the child document is wrapped, update its children's paths
     if (childDocument.wrapped) {
-      updateChildDocumentPaths(childDocument.path, Fs.parentDirPath(newChildDocumentPath));
+      updateChildDocumentPaths(
+        childDocument.path,
+        Fs.parentDirPath(newChildDocumentPath),
+      );
     }
   });
 }

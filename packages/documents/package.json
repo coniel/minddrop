@@ -19,6 +19,9 @@
     "@minddrop/utils": "workspace:*",
     "yaml": "^2.3.4"
   },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
   "devDependencies": {
     "@minddrop/icons": "workspace:*",
     "@minddrop/test-utils": "workspace:*",

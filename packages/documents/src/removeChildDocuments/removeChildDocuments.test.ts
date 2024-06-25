@@ -1,5 +1,11 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, document1, wrappedDocument } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  document1,
+  wrappedDocument,
+  documentTypeConfig,
+} from '../test-utils';
 import { removeChildDocuments } from './removeChildDocuments';
 import { Fs } from '@minddrop/file-system';
 import { Document } from '../types';
@@ -7,6 +13,7 @@ import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
 
 const PARENT_PATH = 'path/to/parent';
+const EXT = documentTypeConfig.fileType;
 
 let child1: Document;
 let child2: Document;
@@ -15,15 +22,15 @@ let child3: Document;
 function setupChildDocuments(parentPath: string): void {
   child1 = {
     ...document1,
-    path: `${parentPath}/child1.md`,
+    path: `${parentPath}/child1.${EXT}`,
   };
   child2 = {
     ...document1,
-    path: `${parentPath}/child2/child2.md`,
+    path: `${parentPath}/child2/child2.${EXT}`,
   };
   child3 = {
     ...document1,
-    path: `${parentPath}/child2/child3.md`,
+    path: `${parentPath}/child2/child3.${EXT}`,
   };
 
   // Add the child documents to the store

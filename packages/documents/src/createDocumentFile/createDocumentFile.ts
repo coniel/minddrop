@@ -5,6 +5,8 @@ import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
  *
  * @param parentDir - The path to the parent directory.
  * @param title - The document title, used as the file name.
+ * @param fileType - The document file type.
+ * @param content - The initial content of the document.
  * @param options - File creation options.
  * @param options.wrap - Whether the document should be wrapped in a directory of the same name.
  * @returns The new document file path.
@@ -15,10 +17,12 @@ import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 export async function createDocumentFile(
   parentDir: string,
   title: string,
+  fileType: string,
+  content: string,
   options: { wrap?: boolean } = {},
 ): Promise<string> {
-  // Markdown file name
-  const fileName = `${title}.md`;
+  // Generate file name
+  const fileName = `${title}.${fileType}`;
   // Genereate new document path
   const documentFilePath = options.wrap
     ? Fs.concatPath(parentDir, title, fileName)
@@ -47,7 +51,7 @@ export async function createDocumentFile(
   }
 
   // Create the empty document file
-  await Fs.writeTextFile(documentFilePath, '');
+  await Fs.writeTextFile(documentFilePath, content);
 
   return documentFilePath;
 }

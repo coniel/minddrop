@@ -37,7 +37,9 @@ describe('updateChildDocumentPaths', () => {
     updateChildDocumentPaths(OLD_PARENT_PATH, NEW_PARENT_PATH);
 
     // Child document path should be updated
-    expect(getDocument(Fs.concatPath(NEW_PARENT_PATH, CHILD_DOCUMENT))).not.toBeNull();
+    expect(
+      getDocument(Fs.concatPath(NEW_PARENT_PATH, CHILD_DOCUMENT)),
+    ).not.toBeNull();
     // Wrapped child document path should be updated
     expect(
       getDocument(Fs.concatPath(NEW_PARENT_PATH, WRAPPED_CHILD_DOCUMENT)),

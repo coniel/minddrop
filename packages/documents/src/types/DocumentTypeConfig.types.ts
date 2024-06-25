@@ -1,13 +1,33 @@
-import { DocumentProperties } from './DocumentMetadata.types';
+import { Document } from './Document.types';
+import {
+  DocumentProperties,
+  DocumentPropertiesMap,
+} from './DocumentMetadata.types';
 
-export interface DocumentTypeConfig<TContent = unknown> {
-  type: string;
+export interface DocumentTypeConfig<
+  TContent = unknown,
+  TProperties extends DocumentPropertiesMap = {},
+> {
   fileType: string;
 
-  parse: (textContent: string) => {
-    properties: DocumentProperties;
+  initialize: () => {
+    properties: TProperties & Partial<DocumentProperties>;
     content: TContent;
   };
 
-  stringify: (parameters: DocumentProperties, content: TContent) => string;
+  parseProperties: (textContent: string) => TProperties & DocumentProperties;
+
+  parseContent: (textContent: string) => TContent;
+
+  stringify: (properties: DocumentProperties, content: TContent) => string;
+
+  onRename?: (
+    newName: string,
+    document: Document<TContent>,
+  ) => {
+    properties?: TProperties & Partial<DocumentProperties>;
+    content?: TContent;
+  };
+
+  component: React.ComponentType<Document<TContent>>;
 }

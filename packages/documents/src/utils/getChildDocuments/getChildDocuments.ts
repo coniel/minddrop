@@ -1,5 +1,5 @@
 import { Document } from '../../types';
-import { isWrapped } from '../../utils';
+import { isDocumentFile, isWrapped } from '../../utils';
 
 /**
  * Returns a path's direct child documents from the given
@@ -9,10 +9,13 @@ import { isWrapped } from '../../utils';
  * @param documents - The documents from which to match.
  * @returns An array of documents.
  */
-export function getChildDocuments(path: string, documents: Document[]): Document[] {
+export function getChildDocuments(
+  path: string,
+  documents: Document[],
+): Document[] {
   let rootPathParts = path.split('/');
 
-  if (path.endsWith('.md')) {
+  if (isDocumentFile(path)) {
     // Only wrapped documents can contain children
     if (!isWrapped(path)) {
       return [];
@@ -38,7 +41,8 @@ export function getChildDocuments(path: string, documents: Document[]): Document
           // Document is a file inside parent dir
           documentPathLength === rootPathParts.length + 1 ||
           // Document is one level deeper in a dir which is a wrapper for it
-          (documentPathLength === rootPathParts.length + 2 && isWrapped(document.path))
+          (documentPathLength === rootPathParts.length + 2 &&
+            isWrapped(document.path))
         );
       })
   );

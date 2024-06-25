@@ -1,24 +1,31 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { setup, cleanup } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  documentTypeConfig,
+  configDefaultFileTextContent,
+  configDefaultProperties,
+} from '../test-utils';
 import { createDocument } from './createDocument';
 import { Document } from '../types';
-import { DefaultDocumentIconString } from '../constants';
 import { getDocument } from '../getDocument';
 
-const DOCUMENT_TITLE = 'Document';
+const FILE_TYPE = documentTypeConfig.fileType;
+const TITLE = 'Document';
 const PARENT_DIR_PATH = 'path/to/Workspace';
-const DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${DOCUMENT_TITLE}.md`;
-const WRAPPED_DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${DOCUMENT_TITLE}/${DOCUMENT_TITLE}.md`;
+const DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${TITLE}.${FILE_TYPE}`;
+const WRAPPED_DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${TITLE}/${TITLE}.${FILE_TYPE}`;
 
 const DOCUMENT: Document = {
-  title: DOCUMENT_TITLE,
+  title: TITLE,
+  fileType: FILE_TYPE,
   path: DOCUMENT_FILE_PATH,
-  icon: DefaultDocumentIconString,
+  properties: configDefaultProperties,
   wrapped: false,
-  fileTextContent: '',
-  content: null,
+  fileTextContent: configDefaultFileTextContent,
+  content: documentTypeConfig.initialize().content,
 };
 
 const MockFs = initializeMockFileSystem([
@@ -37,7 +44,7 @@ describe('createDocument', () => {
 
   it('creates the document file', async () => {
     // Create a document
-    await createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE);
+    await createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE);
 
     // Should create document markdown file
     expect(MockFs.exists(DOCUMENT_FILE_PATH)).toBeTruthy();
@@ -45,7 +52,7 @@ describe('createDocument', () => {
 
   it('creates a wrapped document file if requested', async () => {
     // Create a document
-    await createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE, { wrap: true });
+    await createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE, { wrap: true });
 
     // Should create document markdown file
     expect(MockFs.exists(WRAPPED_DOCUMENT_FILE_PATH)).toBeTruthy();
@@ -53,7 +60,7 @@ describe('createDocument', () => {
 
   it('adds the document to the store', async () => {
     // Create a document
-    await createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE);
+    await createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE);
 
     // Document should be in the store
     expect(getDocument(DOCUMENT_FILE_PATH)).toEqual(DOCUMENT);
@@ -69,12 +76,12 @@ describe('createDocument', () => {
       });
 
       // Create a document
-      createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE);
+      createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE);
     }));
 
   it('returns the new document', async () => {
     // Create a document
-    const document = await createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE);
+    const document = await createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE);
 
     // Should return the new document
     expect(document).toEqual(DOCUMENT);
@@ -83,7 +90,7 @@ describe('createDocument', () => {
   describe('wrapped', () => {
     it('wraps the document', async () => {
       // Create a wrapped document
-      const document = await createDocument(PARENT_DIR_PATH, DOCUMENT_TITLE, {
+      const document = await createDocument(PARENT_DIR_PATH, FILE_TYPE, TITLE, {
         wrap: true,
       });
 
