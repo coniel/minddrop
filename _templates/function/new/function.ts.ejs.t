@@ -1,5 +1,5 @@
 ---
-to: packages/<%= package %>/src/<%= name %>/<%= name %>.ts
+to: <%= location %>/<%= package %>/src/<%= name %>/<%= name %>.ts
 ---
 /**
  * Does something useful.

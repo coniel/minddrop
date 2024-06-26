@@ -1,5 +1,5 @@
 ---
-to: packages/<%= package %>/src/<%= name %>/<%= name %>.test.ts
+to: <%= location %>/<%= package %>/src/<%= name %>/<%= name %>.test.ts
 ---
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { setup, cleanup } from '../test-utils';
