@@ -25,7 +25,7 @@ const DOCUMENT: Document = {
   properties: configDefaultProperties,
   wrapped: false,
   fileTextContent: configDefaultFileTextContent,
-  content: documentTypeConfig.initialize().content,
+  content: documentTypeConfig.initialize(TITLE).content,
 };
 
 const MockFs = initializeMockFileSystem([

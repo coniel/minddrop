@@ -28,7 +28,7 @@ export async function createDocument(
   // Get the config for the document type
   const config = getDocumentTypeConfig(type);
   // Initialize the document content
-  const { content, properties } = config.initialize();
+  const { content, properties } = config.initialize(title);
   // Add the default icon to the config's default properties
   const defaultProperties = { ...DefaultDocumentProperties, ...properties };
   // Create the stringified file content

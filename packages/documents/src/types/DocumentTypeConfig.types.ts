@@ -10,7 +10,7 @@ export interface DocumentTypeConfig<
 > {
   fileType: string;
 
-  initialize: () => {
+  initialize: (title: string) => {
     properties: TProperties & Partial<DocumentProperties>;
     content: TContent;
   };
