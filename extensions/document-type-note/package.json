@@ -1,0 +1,26 @@
+{
+  "name": "@minddrop/document-type-note",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@minddrop/ast": "workspace:*",
+    "@minddrop/documents": "workspace:*",
+    "@minddrop/editor": "workspace:*",
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/markdown": "workspace:*",
+    "yaml": "^2.3.4"
+  }
+}
