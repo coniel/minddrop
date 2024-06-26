@@ -31,7 +31,9 @@ export async function moveDocument(
   // Use the wrapper dir path as destination path if the
   // destination is a document.
   if (destinationDocument) {
-    newParentDirPath = Fs.parentDirPath(Documents.getWrappedPath(newParentPath));
+    newParentDirPath = Fs.parentDirPath(
+      Documents.getWrappedPath(newParentPath),
+    );
   }
 
   // Move the document

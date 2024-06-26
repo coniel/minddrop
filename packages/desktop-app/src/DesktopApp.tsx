@@ -1,9 +1,9 @@
 import React from 'react';
 import { IconsProvider } from '@minddrop/icons';
+import { DocumentView } from '@minddrop/documents';
 import { AppSidebar } from './components';
 import { useCurrentPath, useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
-import { DocumentView } from './views';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {

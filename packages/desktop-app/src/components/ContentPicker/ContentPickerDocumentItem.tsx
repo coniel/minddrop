@@ -49,7 +49,7 @@ export const ContentPickerDocumentItem: React.FC<
       onClick={handleClick}
       icon={
         <NavItemIcon
-          icon={document.icon}
+          icon={document.properties.icon}
           defaultIcon={DefaultDocumentIcon}
           color="light"
         />

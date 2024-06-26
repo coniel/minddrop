@@ -28,6 +28,7 @@
     "@minddrop/documents": "workspace:*",
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/document-type-note": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",

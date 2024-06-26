@@ -14,7 +14,7 @@ export async function setDocumentContentIconColor(
   document: Document,
   color: ContentColor,
 ): Promise<void> {
-  const icon = Icons.parse(document.icon);
+  const icon = Icons.parse(document.properties.icon);
 
   if (icon?.type !== UserIconType.ContentIcon) {
     return;

@@ -68,7 +68,11 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
   // Callback fired when the user selects the "Delete" option
   const handleSelectDelete = useCreateCallback(Documents.delete, document.path);
   // Callback fired when the user clicks the "Add Subdocument" button
-  const handleClickAddSubdocument = useCreateCallback(createSubdocument, document.path);
+  const handleClickAddSubdocument = useCreateCallback(
+    createSubdocument,
+    document.path,
+    'md',
+  );
   // Callback fired when the user clicks the nav item
   const handleClick = useCreateCallback(setActiveDocument, document.path);
 
@@ -166,7 +170,10 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
       <PopoverPortal>
         <>
           {renamePopoverOpen && (
-            <RenameDocumentPopover document={document} onClose={toggleRenamePopoverOpen} />
+            <RenameDocumentPopover
+              document={document}
+              onClose={toggleRenamePopoverOpen}
+            />
           )}
           {movePopoverOpen && (
             <ContentPicker

@@ -42,7 +42,10 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
   onShowIconSelectionChange,
   document,
 }) => {
-  const { icon, color, skinTone } = useIcon(document.icon, DefaultDocumentIcon);
+  const { icon, color, skinTone } = useIcon(
+    document.properties.icon,
+    DefaultDocumentIcon,
+  );
 
   const [pickerPopoverOpen, _, setPickerPopoverOpen] =
     useToggle(showIconSelection);
@@ -84,7 +87,10 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon defaultIcon={DefaultDocumentIcon} icon={document.icon} />
+        <NavItemIcon
+          defaultIcon={DefaultDocumentIcon}
+          icon={document.properties.icon}
+        />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent

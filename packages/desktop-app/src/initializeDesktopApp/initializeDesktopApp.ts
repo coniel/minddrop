@@ -1,10 +1,13 @@
 import { loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
-import { initializeWorkspaces } from './initializeWorkspaces';
-import { watchAppConfigFiles } from './watchAppConfigFiles';
 import { Documents } from '@minddrop/documents';
 import { Workspaces } from '@minddrop/workspaces';
+import { EditorElements, EditorMarks } from '@minddrop/editor';
+import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
+import { Ast } from '@minddrop/ast';
+import { initializeWorkspaces } from './initializeWorkspaces';
+import { watchAppConfigFiles } from './watchAppConfigFiles';
 
 // Initialize internationalization
 initializeI18n();
@@ -13,6 +16,11 @@ initializeI18n();
  * Initializes the desktop app.
  */
 export async function initializeDesktopApp(): Promise<VoidFunction> {
+  EditorElements.registerDefaults();
+  EditorMarks.registerDefaults();
+  Ast.registerDefaultConfigs();
+  Documents.register(NoteDocumentTypeConfig);
+
   // Load persisted config values
   await loadConfigs();
 

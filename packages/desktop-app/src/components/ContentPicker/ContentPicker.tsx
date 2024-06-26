@@ -33,7 +33,9 @@ export const ContentPicker = React.forwardRef<
     (workspace) => workspace.path !== omit,
   );
   // Get all documents except for possible omitted one
-  const allDocuments = useDocuments().filter((document) => document.path !== omit);
+  const allDocuments = useDocuments().filter(
+    (document) => document.path !== omit,
+  );
   // Filter search query
   const [query, setQuery] = useState('');
   // Filtered workspaces
@@ -67,7 +69,9 @@ export const ContentPicker = React.forwardRef<
 
         setFilteredDocuments(
           filteredDocumentPaths
-            .map((title) => allDocuments.find((document) => document.title === title))
+            .map((title) =>
+              allDocuments.find((document) => document.title === title),
+            )
             .filter((document): document is Document => document !== null),
         );
       }

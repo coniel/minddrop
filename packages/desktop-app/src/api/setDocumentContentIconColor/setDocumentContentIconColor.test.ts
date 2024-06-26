@@ -8,7 +8,7 @@ const { document1, document1Icon } = DOCUMENTS_TEST_DATA;
 
 describe('setDocumentContentIconColor', () => {
   beforeAll(() => {
-    vi.spyOn(Documents, 'setIcon').mockResolvedValue();
+    vi.spyOn(Documents, 'setIcon').mockResolvedValue(document1);
   });
 
   afterEach(cleanup);
@@ -32,11 +32,14 @@ describe('setDocumentContentIconColor', () => {
     await setDocumentContentIconColor(
       {
         ...document1,
-        icon: Icons.stringify({
-          type: UserIconType.Emoji,
-          icon: '',
-          skinTone: 0,
-        }),
+        properties: {
+          ...document1.properties,
+          icon: Icons.stringify({
+            type: UserIconType.Emoji,
+            icon: '',
+            skinTone: 0,
+          }),
+        },
       },
       'cyan',
     );

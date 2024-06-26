@@ -7,9 +7,13 @@ import { Fs } from '@minddrop/file-system';
  * as a subdocument of an existing document.
  *
  * @param parentDocumentPath - Path of the parent document.
+ * @param fileType - The file type of the document.
  * @returns The newly created document.
  */
-export async function createSubdocument(parentDocumentPath: string): Promise<Document> {
+export async function createSubdocument(
+  parentDocumentPath: string,
+  fileType: string,
+): Promise<Document> {
   let wrappedParentDocumentPath = parentDocumentPath;
 
   // Wrap the document if it is not already wrapped
@@ -18,5 +22,5 @@ export async function createSubdocument(parentDocumentPath: string): Promise<Doc
   }
 
   // Create a new document inside parent document wrapper dir
-  return createDocument(Fs.parentDirPath(wrappedParentDocumentPath));
+  return createDocument(Fs.parentDirPath(wrappedParentDocumentPath), fileType);
 }

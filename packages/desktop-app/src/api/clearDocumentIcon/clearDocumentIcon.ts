@@ -1,5 +1,6 @@
 import { DefaultDocumentIcon, Documents } from '@minddrop/documents';
 
+// TODO: move this to Documents API
 /**
  * Clears a documents's icon, resetting it to the default
  * icon.

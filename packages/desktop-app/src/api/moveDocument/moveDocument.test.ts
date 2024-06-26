@@ -1,5 +1,9 @@
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
-import { DOCUMENTS_TEST_DATA, Documents, DocumentsStore } from '@minddrop/documents';
+import {
+  DOCUMENTS_TEST_DATA,
+  Documents,
+  DocumentsStore,
+} from '@minddrop/documents';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, setup } from '../../test-utils';
 import { moveDocument } from './moveDocument';
@@ -7,7 +11,7 @@ import { moveDocument } from './moveDocument';
 const { document1 } = DOCUMENTS_TEST_DATA;
 
 const WORKSPACE_PATH = 'path/to/workspace';
-const PATH_TO_MOVE = 'path/to/Document to move.md';
+const PATH_TO_MOVE = 'path/to/Document to move.test';
 const DOCUMENT_TO_MOVE = { ...document1, path: PATH_TO_MOVE };
 const NEW_SUBDOCUMENT_PATH = Fs.concatPath(
   Fs.parentDirPath(Documents.getWrappedPath(document1.path)),
@@ -49,7 +53,9 @@ describe('moveDocument', () => {
     await moveDocument(PATH_TO_MOVE, document1.path);
 
     // Should wrap the destination document
-    expect(Documents.get(Documents.getWrappedPath(document1.path))).not.toBeNull();
+    expect(
+      Documents.get(Documents.getWrappedPath(document1.path)),
+    ).not.toBeNull();
   });
 
   it('moves the document', async () => {
