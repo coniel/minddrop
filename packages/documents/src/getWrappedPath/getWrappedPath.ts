@@ -14,8 +14,8 @@ export function getWrappedPath(path: string): string {
     return path;
   }
 
-  // Remove '.md' file extension to get desired wrapper dir path
-  const wrapperDirPath = path.slice(0, -3);
+  // Remove file extension to get desired wrapper dir path
+  const wrapperDirPath = Fs.removeExtension(path);
 
   // Crate the wrapped path
   return Fs.concatPath(wrapperDirPath, Fs.fileNameFromPath(path));

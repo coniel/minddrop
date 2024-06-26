@@ -3,7 +3,7 @@ import { DocumentPropertiesMap, DocumentTypeConfig } from './types';
 import { DocumentTypeConfigNotFoundError } from './errors';
 
 export const DocumentTypeConfigsStore = createItemStore<
-  DocumentTypeConfig<any> & {
+  DocumentTypeConfig<any, any> & {
     id: string;
   }
 >();
