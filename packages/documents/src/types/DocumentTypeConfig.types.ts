@@ -29,5 +29,12 @@ export interface DocumentTypeConfig<
     content?: TContent;
   };
 
-  component: React.ComponentType<Document<TContent>>;
+  component: React.ComponentType<DocumentViewProps<TContent, TProperties>>;
+}
+
+export interface DocumentViewProps<
+  TContent = unknown,
+  TProperties extends DocumentPropertiesMap = {},
+> {
+  document: Document<TContent, TProperties>;
 }
