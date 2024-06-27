@@ -16,8 +16,12 @@
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
   },
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
   "dependencies": {
     "@minddrop/core": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "uuid": "^9.0.0"
   }
 }
