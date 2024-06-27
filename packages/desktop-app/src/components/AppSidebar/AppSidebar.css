@@ -23,3 +23,7 @@
 .theme-appearance-setting-menu {
   width: 200px;
 }
+
+.app-sidebar .document-nav-item {
+  margin-bottom: 1px;
+}
