@@ -1,13 +1,13 @@
 import {
+  BaseNode,
   FileNode,
   GroupNode,
   LinkNode,
-  Node,
   TextNode,
   WidgetNode,
 } from './Node.types';
 
-export interface NodeRendererConfig<TNode extends Node = Node> {
+export interface BaseNodeRendererConfig<TNode extends BaseNode = BaseNode> {
   /**
    * A unique id for the renderer. Nodes will use this as their
    * 'display' property to select the renderer to use.
@@ -25,20 +25,32 @@ export interface NodeRendererConfig<TNode extends Node = Node> {
   component: React.ComponentType<NodeRendererProps<TNode>>;
 }
 
-export interface NodeRendererProps<TNode extends Node = Node> {
+export interface NodeRendererProps<TNode extends BaseNode = BaseNode> {
   /**
    * The node to render.
    */
   node: TNode;
+
+  /**
+   * Callback to update the node.
+   */
+  onChange: (node: TNode) => void;
 }
 
-export type TextNodeRendererConfig = NodeRendererConfig<TextNode>;
+export type TextNodeRendererConfig = BaseNodeRendererConfig<TextNode>;
 export type TextNodeRendererProps = NodeRendererProps<TextNode>;
-export type FileNodeRendererConfig = NodeRendererConfig<FileNode>;
+export type FileNodeRendererConfig = BaseNodeRendererConfig<FileNode>;
 export type FileNodeRendererProps = NodeRendererProps<FileNode>;
-export type LinkNodeRendererConfig = NodeRendererConfig<LinkNode>;
+export type LinkNodeRendererConfig = BaseNodeRendererConfig<LinkNode>;
 export type LinkNodeRendererProps = NodeRendererProps<LinkNode>;
-export type GroupNodeRendererConfig = NodeRendererConfig<GroupNode>;
+export type GroupNodeRendererConfig = BaseNodeRendererConfig<GroupNode>;
 export type GroupNodeRendererProps = NodeRendererProps<GroupNode>;
-export type WidgetNodeRendererConfig = NodeRendererConfig<WidgetNode>;
+export type WidgetNodeRendererConfig = BaseNodeRendererConfig<WidgetNode>;
 export type WidgetNodeRendererProps = NodeRendererProps<WidgetNode>;
+
+export type NodeRendererConfig =
+  | TextNodeRendererConfig
+  | FileNodeRendererConfig
+  | LinkNodeRendererConfig
+  | GroupNodeRendererConfig
+  | WidgetNodeRendererConfig;

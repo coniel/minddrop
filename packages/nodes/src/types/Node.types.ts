@@ -1,35 +1,8 @@
 import { ContentColor } from '@minddrop/core';
 
-export enum NodeType {
-  /**
-   * Text type nodes store text.
-   */
-  Text = 'text',
+export type NodeType = 'text' | 'file' | 'link' | 'group' | 'widget';
 
-  /**
-   * File type nodes reference other documents or attachments,
-   * such as images, videos, etc.
-   */
-  File = 'file',
-
-  /**
-   * Link type nodes reference a URL.
-   */
-  Link = 'link',
-
-  /**
-   * Group type nodes are used as a visual container for nodes
-   * within it.
-   */
-  Group = 'group',
-
-  /**
-   * Widget type nodes are used to render interactive content.
-   */
-  Widget = 'widget',
-}
-
-export interface Node {
+export interface BaseNode {
   /**
    * A unique identifier for the node.
    */
@@ -38,7 +11,7 @@ export interface Node {
   /**
    * The type of node.
    */
-  type: NodeType;
+  type: 'text' | 'file' | 'link' | 'group' | 'widget';
 
   /**
    * Controls how the node is rendered. If absent,
@@ -52,8 +25,11 @@ export interface Node {
   color?: ContentColor;
 }
 
-export interface TextNode extends Node {
-  type: NodeType.Text;
+/**
+ * Text type nodes store text.
+ */
+export interface TextNode extends BaseNode {
+  type: 'text';
 
   /**
    * The text content of the node.
@@ -61,8 +37,12 @@ export interface TextNode extends Node {
   text: string;
 }
 
-export interface FileNode extends Node {
-  type: NodeType.File;
+/**
+ * File type nodes reference other documents or attachments,
+ * such as images, videos, etc.
+ */
+export interface FileNode extends BaseNode {
+  type: 'file';
 
   /**
    * The path to the file within the system.
@@ -76,8 +56,11 @@ export interface FileNode extends Node {
   subpath?: string;
 }
 
-export interface LinkNode extends Node {
-  type: NodeType.Link;
+/**
+ * Link type nodes reference a URL.
+ */
+export interface LinkNode extends BaseNode {
+  type: 'link';
 
   /**
    * The link URL.
@@ -85,8 +68,12 @@ export interface LinkNode extends Node {
   url: string;
 }
 
-export interface GroupNode extends Node {
-  type: NodeType.Group;
+/**
+ * Group type nodes are used as a visual container for nodes
+ * within it.
+ */
+export interface GroupNode extends BaseNode {
+  type: 'group';
 
   /**
    * The IDs of the nodes contained within the group.
@@ -99,8 +86,11 @@ export interface GroupNode extends Node {
   label?: string;
 }
 
-export interface WidgetNode extends Node {
-  type: NodeType.Widget;
+/**
+ * Widget type nodes are used to render interactive content.
+ */
+export interface WidgetNode extends BaseNode {
+  type: 'widget';
 
   /**
    * The widget to render.
@@ -112,3 +102,5 @@ export interface WidgetNode extends Node {
    */
   data?: string;
 }
+
+export type Node = TextNode | FileNode | LinkNode | GroupNode | WidgetNode;

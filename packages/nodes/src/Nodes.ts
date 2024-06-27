@@ -1,5 +1,12 @@
 import { v4 as uuid } from 'uuid';
-import { Node, NodeType, TextNode } from './types';
+import { Node, TextNode } from './types';
+import { TextNodeRendererConfig } from './node-renderer-configs';
+import { registerNodeRendererConfig } from './NodeRendererConfigsStore';
+
+export {
+  registerNodeRendererConfig,
+  unregisterNodeRendererConfig,
+} from './NodeRendererConfigsStore';
 
 const removeUndefied = <T extends Node>(node: T): T => {
   Object.keys(node).forEach(
@@ -19,7 +26,7 @@ const removeUndefied = <T extends Node>(node: T): T => {
  */
 export const generateTextNode = (text = '', display?: string): TextNode =>
   removeUndefied({
-    type: NodeType.Text,
+    type: 'text',
     id: uuid(),
     text,
     display,
@@ -34,7 +41,7 @@ export const generateTextNode = (text = '', display?: string): TextNode =>
  */
 export const generateFileNode = (path = '', display?: string) =>
   removeUndefied({
-    type: NodeType.File,
+    type: 'file',
     id: uuid(),
     path,
     display,
@@ -49,7 +56,7 @@ export const generateFileNode = (path = '', display?: string) =>
  */
 export const generateLinkNode = (url = '', display?: string) =>
   removeUndefied({
-    type: NodeType.Link,
+    type: 'link',
     id: uuid(),
     url,
     display,
@@ -64,7 +71,7 @@ export const generateLinkNode = (url = '', display?: string) =>
  */
 export const generateGroupNode = (children?: string[], display?: string) =>
   removeUndefied({
-    type: NodeType.Group,
+    type: 'group',
     id: uuid(),
     children,
     display,
@@ -80,7 +87,14 @@ export const generateGroupNode = (children?: string[], display?: string) =>
 export const generateWidgetNode = (display: string, data?: string) =>
   removeUndefied({
     id: uuid(),
-    type: NodeType.Widget,
+    type: 'widget',
     display,
     data,
   });
+
+/**
+ * Registers the default node renderer configurations.
+ */
+export const registerDefaultNodeRendererConfigs = () => {
+  registerNodeRendererConfig(TextNodeRendererConfig);
+};
