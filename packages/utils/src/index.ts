@@ -1,6 +1,7 @@
 export * from './arrayContainsObject';
 export * from './backend-utils';
 export * from './contains';
+export * from './createArrayStore';
 export * from './createContext';
 export * from './errors';
 export * from './fuzzySearch';
