@@ -20,7 +20,9 @@
     "react": "^18.2.0"
   },
   "dependencies": {
+    "@minddrop/ast": "workspace:*",
     "@minddrop/core": "workspace:*",
+    "@minddrop/editor": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "uuid": "^9.0.0"
   }

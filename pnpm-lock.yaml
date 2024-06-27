@@ -627,9 +627,15 @@ importers:
 
   packages/nodes:
     dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../ast
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
+      '@minddrop/editor':
+        specifier: workspace:*
+        version: link:../editor
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
