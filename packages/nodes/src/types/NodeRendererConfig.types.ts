@@ -1,13 +1,14 @@
 import {
-  BaseNode,
+  Node,
   FileNode,
   GroupNode,
   LinkNode,
+  NodeType,
   TextNode,
   WidgetNode,
 } from './Node.types';
 
-export interface BaseNodeRendererConfig<TNode extends BaseNode = BaseNode> {
+export interface BaseNodeRendererConfig<TNode extends Node = Node> {
   /**
    * A unique id for the renderer. Nodes will use this as their
    * 'display' property to select the renderer to use.
@@ -17,7 +18,7 @@ export interface BaseNodeRendererConfig<TNode extends BaseNode = BaseNode> {
   /**
    * The node type that this renderer will be used for.
    */
-  nodeType: TNode['type'];
+  nodeType: NodeType;
 
   /**
    * The component used to render the node.
@@ -25,7 +26,7 @@ export interface BaseNodeRendererConfig<TNode extends BaseNode = BaseNode> {
   component: React.ComponentType<NodeRendererProps<TNode>>;
 }
 
-export interface NodeRendererProps<TNode extends BaseNode = BaseNode> {
+export interface NodeRendererProps<TNode extends Node = Node> {
   /**
    * The node to render.
    */

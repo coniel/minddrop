@@ -1,5 +1,12 @@
 import { v4 as uuid } from 'uuid';
-import { Node, TextNode } from './types';
+import {
+  FileNode,
+  GroupNode,
+  LinkNode,
+  Node,
+  TextNode,
+  WidgetNode,
+} from './types';
 import { TextNodeRendererConfig } from './node-renderer-configs';
 import { registerNodeRendererConfig } from './NodeRendererConfigsStore';
 
@@ -98,3 +105,48 @@ export const generateWidgetNode = (display: string, data?: string) =>
 export const registerDefaultNodeRendererConfigs = () => {
   registerNodeRendererConfig(TextNodeRendererConfig);
 };
+
+/**
+ * Checks if a node is a `text` node.
+ *
+ * @param node - The node to check.
+ * @returns `true` if the node is a `text` node, `false` otherwise.
+ */
+export const isTextNode = (node: Node): node is TextNode =>
+  node.type === 'text';
+
+/**
+ * Checks if a node is a `file` node.
+ *
+ * @param node - The node to check.
+ * @returns `true` if the node is a `file` node, `false` otherwise.
+ */
+export const isFileNode = (node: Node): node is FileNode =>
+  node.type === 'file';
+
+/**
+ * Checks if a node is a `link` node.
+ *
+ * @param node - The node to check.
+ * @returns `true` if the node is a `link` node, `false` otherwise.
+ */
+export const isLinkNode = (node: Node): node is LinkNode =>
+  node.type === 'link';
+
+/**
+ * Checks if a node is a `group` node.
+ *
+ * @param node - The node to check.
+ * @returns `true` if the node is a `group` node, `false` otherwise.
+ */
+export const isGroupNode = (node: Node): node is GroupNode =>
+  node.type === 'group';
+
+/**
+ * Checks if a node is a `widget` node.
+ *
+ * @param node - The node to check.
+ * @returns `true` if the node is a `widget` node, `false` otherwise.
+ */
+export const isWidgetNode = (node: Node): node is WidgetNode =>
+  node.type === 'widget';

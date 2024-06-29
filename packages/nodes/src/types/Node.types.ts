@@ -2,16 +2,16 @@ import { ContentColor } from '@minddrop/core';
 
 export type NodeType = 'text' | 'file' | 'link' | 'group' | 'widget';
 
-export interface BaseNode {
+export interface BaseNodeData {
   /**
    * A unique identifier for the node.
    */
   id: string;
 
   /**
-   * The type of node.
+   * The node type.
    */
-  type: 'text' | 'file' | 'link' | 'group' | 'widget';
+  type: NodeType;
 
   /**
    * Controls how the node is rendered. If absent,
@@ -28,7 +28,7 @@ export interface BaseNode {
 /**
  * Text type nodes store text.
  */
-export interface TextNode extends BaseNode {
+export interface TextNode extends BaseNodeData {
   type: 'text';
 
   /**
@@ -41,7 +41,7 @@ export interface TextNode extends BaseNode {
  * File type nodes reference other documents or attachments,
  * such as images, videos, etc.
  */
-export interface FileNode extends BaseNode {
+export interface FileNode extends BaseNodeData {
   type: 'file';
 
   /**
@@ -59,7 +59,7 @@ export interface FileNode extends BaseNode {
 /**
  * Link type nodes reference a URL.
  */
-export interface LinkNode extends BaseNode {
+export interface LinkNode extends BaseNodeData {
   type: 'link';
 
   /**
@@ -72,7 +72,7 @@ export interface LinkNode extends BaseNode {
  * Group type nodes are used as a visual container for nodes
  * within it.
  */
-export interface GroupNode extends BaseNode {
+export interface GroupNode extends BaseNodeData {
   type: 'group';
 
   /**
@@ -89,7 +89,7 @@ export interface GroupNode extends BaseNode {
 /**
  * Widget type nodes are used to render interactive content.
  */
-export interface WidgetNode extends BaseNode {
+export interface WidgetNode extends BaseNodeData {
   type: 'widget';
 
   /**
