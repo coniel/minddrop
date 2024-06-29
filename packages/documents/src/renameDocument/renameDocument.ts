@@ -11,7 +11,6 @@ import { Document, DocumentProperties } from '../types';
 import { isWrapped } from '../utils';
 import { updateChildDocumentPaths } from '../updateChildDocumentPaths';
 import { getDocumentTypeConfig } from '../DocumentTypeConfigsStore';
-import { writeDocument } from '../writeDocument';
 import { updateDocument } from '../updateDocument';
 
 /**
