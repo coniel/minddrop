@@ -9,6 +9,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
@@ -16,7 +17,8 @@
   },
   "dependencies": {
     "@minddrop/documents": "workspace:*",
+    "@minddrop/icons": "workspace:*",
     "@minddrop/nodes": "workspace:*",
-    "@minddrop/icons": "workspace:*"
+    "@minddrop/utils": "workspace:*"
   }
 }

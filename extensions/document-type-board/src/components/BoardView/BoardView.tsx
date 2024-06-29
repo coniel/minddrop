@@ -1,10 +1,36 @@
+import { useMemo } from 'react';
+import { Node } from '@minddrop/nodes';
 import { DocumentViewProps } from '@minddrop/documents';
 import { BoardData } from '../../types';
+import { BoardNodesProvider } from '../../BoardNodesProvider';
+import { BoardNode } from '../BoardNode';
 
 export const BoardView: React.FC<DocumentViewProps<BoardData>> = ({
   document,
 }) => {
-  console.log(document);
+  const content = useMemo(
+    () =>
+      document.content
+        ? document.content
+        : (JSON.parse(document.fileTextContent).content as BoardData),
+    [document.content, document.fileTextContent],
+  );
 
-  return <div className="board-view">Board</div>;
+  const rootNodes = useMemo(() => {
+    return content.rootNodes
+      .map((id) => content.nodes.find((node) => node.id === id))
+      .filter(isNode);
+  }, [content]);
+
+  return (
+    <BoardNodesProvider value={content.nodes}>
+      {rootNodes.map((node) => (
+        <BoardNode key={node.id} node={node} />
+      ))}
+    </BoardNodesProvider>
+  );
 };
+
+function isNode(node: Node | undefined): node is Node {
+  return node !== undefined;
+}

@@ -1,0 +1,7 @@
+.board-column-node {
+  background-color: var(--bgNeutral);
+  min-width: 200px;
+  min-height: 200px;
+  flex: 1;
+  margin: 8px;
+}
