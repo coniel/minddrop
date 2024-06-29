@@ -1,9 +1,13 @@
 import React, { useCallback } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { BoardColumnNode as ColumnNode } from '../../types';
-import { useChildNodes } from '../../BoardNodesProvider';
-import { BoardNode } from '../BoardNode';
 import { Button } from '@minddrop/ui';
+import { Documents } from '@minddrop/documents';
+import { BoardColumnNode as ColumnNode } from '../../types';
+import { useBoardDocument, useChildNodes } from '../../BoardDocumentProvider';
+import { generateBoardContentNodesFromDataTransfer } from '../../generateBoardContentNodesFromDataTransfer';
+import { addChildNodesToBoard } from '../../addChildNodesToBoard';
+import { getBoardContent } from '../../getBoardContent';
+import { BoardNode } from '../BoardNode';
 import { BoardDropZone } from '../BoardDropZone';
 import './BoardColumnNode.css';
 
@@ -15,26 +19,44 @@ export interface BoardColumnNodeProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
-  node,
+  node: columnNode,
   className,
   ...other
 }) => {
-  const nodes = useChildNodes(node.children);
+  const board = useBoardDocument();
+  const nodes = useChildNodes(columnNode.children);
 
-  const onDropSpacerDropZone = useCallback(
-    (event: React.DragEvent, nodeId: string) => {
-      console.log(event, nodeId);
+  const onDrop = useCallback(
+    async (event: React.DragEvent, index: number) => {
+      console.log(event.dataTransfer.files);
+      // Generate new content nodes from the data transfer
+      const [nodes, boardPath] =
+        await generateBoardContentNodesFromDataTransfer(
+          board.path,
+          event.dataTransfer,
+        );
+      console.log(event.dataTransfer.files);
+
+      // Add new content nodes as children to the column node
+      const updatedContent = addChildNodesToBoard(
+        getBoardContent(board),
+        columnNode,
+        nodes,
+        index,
+      );
+
+      // Update the board document
+      Documents.update(boardPath, { content: updatedContent });
     },
-    [],
+    [board, columnNode],
   );
 
-  const onDropVerticalZone = useCallback((event: React.DragEvent) => {
-    console.log(event);
-  }, []);
-
-  const onDropColumnEnd = useCallback((event: React.DragEvent) => {
-    console.log(event);
-  }, []);
+  const onDropColumnEnd = useCallback(
+    async (event: React.DragEvent) => {
+      onDrop(event, nodes.length);
+    },
+    [nodes, onDrop],
+  );
 
   const onClickDelete = useCallback(() => {
     console.log('delete column');
@@ -45,37 +67,33 @@ export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
       className={mapPropsToClasses({ className }, 'board-column-node')}
       {...other}
     >
-      <BoardDropZone
-        className="vertical-drop-zone"
-        onDrop={onDropVerticalZone}
+      {nodes.map((childNode, nodeIndex) => (
+        <div key={childNode.id}>
+          <SpacerDropZone
+            parentNodeId={columnNode.id}
+            nodeIndex={nodeIndex}
+            onDrop={onDrop}
+          />
+          <BoardNode key={childNode.id} node={childNode} />
+        </div>
+      ))}
+      <BoardColumnNodeEnd
+        enableDelete={nodes.length === 0}
+        onClickDelete={onClickDelete}
+        onDrop={onDropColumnEnd}
       />
-      <div className="board-column-node-content">
-        {nodes.map((childNode) => (
-          <div key={childNode.id}>
-            <SpacerDropZone
-              nodeId={childNode.id}
-              onDrop={onDropSpacerDropZone}
-            />
-            <BoardNode key={childNode.id} node={childNode} />
-          </div>
-        ))}
-        <BoardColumnNodeEnd
-          enableDelete={nodes.length === 0}
-          onClickDelete={onClickDelete}
-          onDrop={onDropColumnEnd}
-        />
-      </div>
     </div>
   );
 };
 
 const SpacerDropZone: React.FC<{
-  onDrop(event: React.DragEvent<HTMLDivElement>, nodeId: string): void;
-  nodeId: string;
-}> = ({ onDrop, nodeId }) => {
+  onDrop(event: React.DragEvent<HTMLDivElement>, nodeIndex: number): void;
+  parentNodeId: string;
+  nodeIndex: number;
+}> = ({ onDrop, nodeIndex }) => {
   const handleOnDrop = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => onDrop(event, nodeId),
-    [onDrop, nodeId],
+    (event: React.DragEvent<HTMLDivElement>) => onDrop(event, nodeIndex),
+    [onDrop, nodeIndex],
   );
 
   return <BoardDropZone className="spacer-drop-zone" onDrop={handleOnDrop} />;

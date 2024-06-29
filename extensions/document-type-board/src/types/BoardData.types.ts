@@ -1,6 +1,6 @@
 import { Node } from '@minddrop/nodes';
 
-export interface BoardData {
+export interface BoardContent {
   /**
    * All nodes in the board.
    */

@@ -1,10 +1,10 @@
 import { DocumentTypeConfig } from '@minddrop/documents';
 import { DefaultBoardProperties } from './constants';
 import { BoardView } from './components';
-import { BoardData } from './types';
+import { BoardContent } from './types';
 import { Nodes } from '@minddrop/nodes';
 
-export const BoardDocumentTypeConfig: DocumentTypeConfig<BoardData> = {
+export const BoardDocumentTypeConfig: DocumentTypeConfig<BoardContent> = {
   fileType: 'board',
   initialize: () => {
     const columns = [

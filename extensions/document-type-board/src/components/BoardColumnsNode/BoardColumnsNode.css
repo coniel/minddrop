@@ -20,6 +20,11 @@
   flex-wrap: wrap;
 }
 
+.board-view .board-column-node-container {
+  display: flex;
+  align-items: stretch;
+}
+
 .board-view .drag-over-indicator {
   transition: background-color 0.2s ease-in-out;
 }

@@ -1,9 +1,4 @@
 .board-view .board-column-node {
-  display: flex;
-  align-items: stretch;
-}
-
-.board-view .board-column-node-content {
   flex: 1;
 }
 

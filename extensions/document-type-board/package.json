@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint ./**/*.ts*",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
     "@minddrop/test-utils": "workspace:*",
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "@minddrop/documents": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/nodes": "workspace:*",
     "@minddrop/utils": "workspace:*",

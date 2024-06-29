@@ -1,19 +1,19 @@
 import { useMemo } from 'react';
 import { Node } from '@minddrop/nodes';
 import { DocumentViewProps } from '@minddrop/documents';
-import { BoardData } from '../../types';
-import { BoardNodesProvider } from '../../BoardNodesProvider';
+import { BoardContent } from '../../types';
+import { BoardNodesProvider } from '../../BoardDocumentProvider';
 import { BoardNode } from '../BoardNode';
 import './BoardView.css';
 
-export const BoardView: React.FC<DocumentViewProps<BoardData>> = ({
+export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
   document,
 }) => {
   const content = useMemo(
     () =>
       document.content
         ? document.content
-        : (JSON.parse(document.fileTextContent).content as BoardData),
+        : (JSON.parse(document.fileTextContent).content as BoardContent),
     [document.content, document.fileTextContent],
   );
 
@@ -24,7 +24,7 @@ export const BoardView: React.FC<DocumentViewProps<BoardData>> = ({
   }, [content]);
 
   return (
-    <BoardNodesProvider value={content.nodes}>
+    <BoardNodesProvider value={document}>
       <div className="board-view">
         {rootNodes.map((node) => (
           <BoardNode key={node.id} node={node} />
