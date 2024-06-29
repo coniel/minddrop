@@ -33,6 +33,8 @@ export function initializeMockFileSystem(
   let trash: FsEntry[] = [];
   // A { path: text-content } map of text file contents
   let textFileContents: Record<string, string> = init.textFileContents;
+  // A { path: File } map of binary files
+  let binaryFiles: Record<string, any> = init.binaryFiles;
 
   const MockFs: FileSystem = {
     getBaseDirPath: async (dir) => dir,
@@ -85,9 +87,23 @@ export function initializeMockFileSystem(
         textFileContents[newPath] = textFileContents[oldPath];
         delete textFileContents[oldPath];
       }
+
+      if (binaryFiles[oldPath]) {
+        binaryFiles[newPath] = binaryFiles[oldPath];
+        delete binaryFiles[oldPath];
+      }
     },
-    writeBinaryFile: () => {
-      throw new Error('writeBinaryFile mock not implemented');
+    writeBinaryFile: async (path, file, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+
+      binaryFiles[fullPath] = file;
     },
     writeTextFile: async (path, textContent, options) => {
       const fullPath = getFullPath(path, options);
@@ -127,6 +143,7 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, fullPath);
 
       delete textFileContents[fullPath];
+      delete binaryFiles[fullPath];
     },
     downloadFile: async (url, path, options) => {},
   };
@@ -147,13 +164,16 @@ export function initializeMockFileSystem(
       console.log('--------------- Trash ----------------');
       console.log(JSON.stringify(trash, null, 2));
       console.log('-------- Text file contents ----------');
-      console.log(textFileContents);
+      console.log(JSON.stringify(textFileContents, null, 2));
+      console.log('----------- Binary files -------------');
+      console.log(binaryFiles);
       console.log('--------------------------------------');
     },
     reset: () => {
       const init = initializeMockFsRoot(filesToLoad);
       root = init.root;
       textFileContents = init.textFileContents;
+      binaryFiles = init.binaryFiles;
       trash = [];
     },
     clearTrash: () => {
@@ -163,6 +183,7 @@ export function initializeMockFileSystem(
       const init = initializeMockFsRoot(filesToLoad);
       root = init.root;
       textFileContents = init.textFileContents;
+      binaryFiles = init.binaryFiles;
     },
     addFiles: (filesToLoad) => {
       const init = initializeMockFsRoot(filesToLoad);
@@ -174,6 +195,11 @@ export function initializeMockFileSystem(
       textFileContents = {
         ...textFileContents,
         ...init.textFileContents,
+      };
+
+      binaryFiles = {
+        ...binaryFiles,
+        ...init.binaryFiles,
       };
     },
     exists: (path, options) => mockExists(root, getFullPath(path, options)),
@@ -214,9 +240,11 @@ function initializeMockFsRoot(
 ): {
   root: FsEntry;
   textFileContents: Record<string, string>;
+  binaryFiles: Record<string, any>;
 } {
   const root: FsEntry = { path: 'root', name: 'root', children: [] };
   const textFileContents: Record<string, string> = {};
+  const binaryFiles: Record<string, any> = {};
 
   fileDescriptors.forEach((fileDescriptor) => {
     const path =
@@ -242,12 +270,18 @@ function initializeMockFsRoot(
       currentPath = `${currentPath}/`;
     });
 
-    if (typeof fileDescriptor !== 'string' && fileDescriptor.textContent) {
-      textFileContents[path] = fileDescriptor.textContent;
+    if (typeof fileDescriptor !== 'string') {
+      if (fileDescriptor.textContent) {
+        textFileContents[path] = fileDescriptor.textContent;
+      }
+
+      if (fileDescriptor.binaryFile) {
+        binaryFiles[path] = fileDescriptor.binaryFile;
+      }
     }
   });
 
-  return { root, textFileContents };
+  return { root, textFileContents, binaryFiles };
 }
 
 function addToFileTree(root: FsEntry, file: FsEntry) {

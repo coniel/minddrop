@@ -37,5 +37,6 @@ export type MockFsRoot = Record<string, FsEntry>;
 export type MockFileDescriptor = {
   path: string;
   textContent?: string;
+  binaryFile?: any;
   options?: FsFileOptions;
 };
