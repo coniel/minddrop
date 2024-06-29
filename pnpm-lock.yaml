@@ -318,6 +318,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
+      '@minddrop/nodes':
+        specifier: workspace:*
+        version: link:../nodes
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils

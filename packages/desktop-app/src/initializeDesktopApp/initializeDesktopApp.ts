@@ -2,6 +2,7 @@ import { loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
 import { Documents } from '@minddrop/documents';
+import { Nodes } from '@minddrop/nodes';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
@@ -19,6 +20,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
+  Nodes.registerDefaultNodeRendererConfigs();
   Documents.register(NoteDocumentTypeConfig);
 
   // Load persisted config values
