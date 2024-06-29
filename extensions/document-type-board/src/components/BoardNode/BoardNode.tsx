@@ -1,13 +1,5 @@
 import { useCallback } from 'react';
-import {
-  Node,
-  NodeRenderer,
-  NodeRendererProps,
-  Nodes,
-  TextNode,
-} from '@minddrop/nodes';
-import { mapPropsToClasses } from '@minddrop/utils';
-import './BoardNode.css';
+import { NodeRenderer, NodeRendererProps, Nodes } from '@minddrop/nodes';
 import { BoardColumnNode } from '../BoardColumnNode';
 import { BoardColumnsNode } from '../BoardColumnsNode';
 

@@ -4,6 +4,7 @@ import { DocumentViewProps } from '@minddrop/documents';
 import { BoardData } from '../../types';
 import { BoardNodesProvider } from '../../BoardNodesProvider';
 import { BoardNode } from '../BoardNode';
+import './BoardView.css';
 
 export const BoardView: React.FC<DocumentViewProps<BoardData>> = ({
   document,
@@ -24,9 +25,11 @@ export const BoardView: React.FC<DocumentViewProps<BoardData>> = ({
 
   return (
     <BoardNodesProvider value={content.nodes}>
-      {rootNodes.map((node) => (
-        <BoardNode key={node.id} node={node} />
-      ))}
+      <div className="board-view">
+        {rootNodes.map((node) => (
+          <BoardNode key={node.id} node={node} />
+        ))}
+      </div>
     </BoardNodesProvider>
   );
 };

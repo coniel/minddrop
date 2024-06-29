@@ -19,6 +19,7 @@
     "@minddrop/documents": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/nodes": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/ui": "workspace:*"
   }
 }
