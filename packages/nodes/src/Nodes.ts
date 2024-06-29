@@ -8,9 +8,23 @@ import {
   WidgetNode,
 } from './types';
 import { TextNodeRendererConfig } from './node-renderer-configs';
+import {
+  FileNodeRendererConfig,
+  LinkNodeRendererConfig,
+  TextNodeRendererConfig,
+} from './node-renderer-configs';
 import { registerNodeRendererConfig } from './NodeRendererConfigsStore';
 
 export { generateNodesFromDataTransfer as fromDataTransfer } from './generateNodesFromDataTransfer';
+
+/**
+ * Registers the default node renderer configurations.
+ */
+export const registerDefaultNodeRendererConfigs = () => {
+  registerNodeRendererConfig(FileNodeRendererConfig);
+  registerNodeRendererConfig(LinkNodeRendererConfig);
+  registerNodeRendererConfig(TextNodeRendererConfig);
+};
 
 export {
   registerNodeRendererConfig,
@@ -100,13 +114,6 @@ export const generateWidgetNode = (display: string, data?: string) =>
     display,
     data,
   });
-
-/**
- * Registers the default node renderer configurations.
- */
-export const registerDefaultNodeRendererConfigs = () => {
-  registerNodeRendererConfig(TextNodeRendererConfig);
-};
 
 /**
  * Checks if a node is a `text` node.
