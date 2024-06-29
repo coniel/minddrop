@@ -9,7 +9,8 @@ to: <%= module %>/<%= name %>/package.json
   "scripts": {
     "lint": "eslint ./**/*.ts*",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
     "eslint": "^8.39.0",
