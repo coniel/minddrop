@@ -297,6 +297,9 @@ importers:
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
+      '@minddrop/document-type-board':
+        specifier: workspace:*
+        version: link:../../extensions/document-type-board
       '@minddrop/document-type-note':
         specifier: workspace:*
         version: link:../../extensions/document-type-note

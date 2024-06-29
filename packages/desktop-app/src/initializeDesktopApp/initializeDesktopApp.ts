@@ -6,6 +6,7 @@ import { Nodes } from '@minddrop/nodes';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
+import { BoardDocumentTypeConfig } from '@minddrop/document-type-board';
 import { Ast } from '@minddrop/ast';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
@@ -22,6 +23,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   Ast.registerDefaultConfigs();
   Nodes.registerDefaultNodeRendererConfigs();
   Documents.register(NoteDocumentTypeConfig);
+  Documents.register(BoardDocumentTypeConfig);
 
   // Load persisted config values
   await loadConfigs();
