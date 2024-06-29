@@ -47,7 +47,7 @@ export interface FileNode extends BaseNodeData {
   /**
    * The path to the file within the system.
    */
-  path: string;
+  path: string | null;
 
   /**
    * A subpath that may link to a heading or a block.
@@ -65,7 +65,7 @@ export interface LinkNode extends BaseNodeData {
   /**
    * The link URL.
    */
-  url: string;
+  url: string | null;
 }
 
 /**
@@ -78,7 +78,7 @@ export interface GroupNode extends BaseNodeData {
   /**
    * The IDs of the nodes contained within the group.
    */
-  children?: string[];
+  children: string[];
 
   /**
    * A text label for the group
