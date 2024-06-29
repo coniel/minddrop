@@ -10,6 +10,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/test-utils": "workspace:*",
     "@types/uuid": "^10.0.0",
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
@@ -23,6 +24,7 @@
     "@minddrop/ast": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/editor": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "uuid": "^9.0.0"
   }

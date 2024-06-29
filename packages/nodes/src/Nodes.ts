@@ -10,6 +10,8 @@ import {
 import { TextNodeRendererConfig } from './node-renderer-configs';
 import { registerNodeRendererConfig } from './NodeRendererConfigsStore';
 
+export { generateNodesFromDataTransfer as fromDataTransfer } from './generateNodesFromDataTransfer';
+
 export {
   registerNodeRendererConfig,
   unregisterNodeRendererConfig,

@@ -661,6 +661,9 @@ importers:
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../editor
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -671,6 +674,9 @@ importers:
         specifier: ^9.0.0
         version: 9.0.1
     devDependencies:
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
