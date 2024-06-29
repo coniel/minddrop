@@ -14,6 +14,7 @@ export * from './mapPropsToClasses';
 export * from './removeObjectsFromArray';
 export * from './throttle';
 export * from './toKebabCase';
+export * from './toMindDropDataTransfer';
 export * from './types';
 export * from './useToggle';
 export * from './useCreateCallback';
