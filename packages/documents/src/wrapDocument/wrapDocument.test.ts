@@ -1,5 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Fs } from '@minddrop/file-system';
+import { Events } from '@minddrop/events';
 import {
   initializeMockFileSystem,
   FileNotFoundError,
@@ -94,4 +95,20 @@ describe('wrapDocument', () => {
     // Document with old path should no longer exists in the store
     expect(getDocument(DOCUMENT_PATH)).toBeNull();
   });
+
+  it('dispatches a document wrapped event', async () =>
+    new Promise<void>((done) => {
+      // Listen to document wrapped events
+      Events.addListener('documents:document:wrap', 'test', (payload) => {
+        // Payload data should be the old and new document paths
+        expect(payload.data).toEqual({
+          oldPath: document1.path,
+          newPath: WRAPPED_DOCUMENT_PATH,
+        });
+        done();
+      });
+
+      // Wrap the document
+      wrapDocument(DOCUMENT_PATH);
+    }));
 });

@@ -4,6 +4,7 @@ import {
   PathConflictError,
 } from '@minddrop/file-system';
 import { DocumentsStore } from '../DocumentsStore';
+import { Events } from '@minddrop/events';
 
 /**
  * Wraps a document in a directory of the same name.
@@ -37,6 +38,12 @@ export async function wrapDocument(path: string): Promise<string> {
 
   // Update the document in the store
   DocumentsStore.getState().update(path, { path: wrappedPath, wrapped: true });
+
+  // Dispatch document wrapped event
+  Events.dispatch('documents:document:wrap', {
+    oldPath: path,
+    newPath: wrappedPath,
+  });
 
   // Return new document path
   return wrappedPath;
