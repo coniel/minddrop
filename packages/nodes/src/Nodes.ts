@@ -7,7 +7,6 @@ import {
   TextNode,
   WidgetNode,
 } from './types';
-import { TextNodeRendererConfig } from './node-renderer-configs';
 import {
   FileNodeRendererConfig,
   LinkNodeRendererConfig,
@@ -62,7 +61,10 @@ export const generateTextNode = (text = '', display?: string): TextNode =>
  * @param display - The node renderer type to use.
  * @returns A new file node.
  */
-export const generateFileNode = (path = '', display?: string) =>
+export const generateFileNode = (
+  path: string | null = null,
+  display?: string,
+): FileNode =>
   removeUndefied({
     type: 'file',
     id: uuid(),
@@ -77,7 +79,10 @@ export const generateFileNode = (path = '', display?: string) =>
  * @param display - The node renderer type to use.
  * @returns A new link node.
  */
-export const generateLinkNode = (url = '', display?: string) =>
+export const generateLinkNode = (
+  url: string | null = null,
+  display?: string,
+): LinkNode =>
   removeUndefied({
     type: 'link',
     id: uuid(),
@@ -92,7 +97,10 @@ export const generateLinkNode = (url = '', display?: string) =>
  * @param display - The node renderer type to use.
  * @returns A new group node.
  */
-export const generateGroupNode = (children?: string[], display?: string) =>
+export const generateGroupNode = (
+  children: string[],
+  display?: string,
+): GroupNode =>
   removeUndefied({
     type: 'group',
     id: uuid(),
@@ -107,7 +115,10 @@ export const generateGroupNode = (children?: string[], display?: string) =>
  * @param data - The node's JSON data stringified.
  * @returns A new widget node.
  */
-export const generateWidgetNode = (display: string, data?: string) =>
+export const generateWidgetNode = (
+  display: string,
+  data?: string,
+): WidgetNode =>
   removeUndefied({
     id: uuid(),
     type: 'widget',
