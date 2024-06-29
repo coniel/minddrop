@@ -157,13 +157,25 @@ importers:
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../../packages/documents
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../../packages/icons
       '@minddrop/nodes':
         specifier: workspace:*
         version: link:../../packages/nodes
+      '@minddrop/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
       eslint:
         specifier: ^8.39.0
         version: 8.51.0
