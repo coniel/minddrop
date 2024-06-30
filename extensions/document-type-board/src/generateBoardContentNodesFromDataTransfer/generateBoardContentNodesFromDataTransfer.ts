@@ -36,11 +36,8 @@ export async function generateBoardContentNodesFromDataTransfer(
   // Get the path of the board's wrapper directory
   const parentPath = Fs.parentDirPath(path);
 
-  console.log('transfer', transfer);
   // Generate new nodes from the data transfer
   const nodes = await Nodes.fromDataTransfer(transfer, parentPath);
-
-  console.log('nodes', nodes);
 
   return [nodes, path];
 }
