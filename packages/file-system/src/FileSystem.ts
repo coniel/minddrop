@@ -12,6 +12,7 @@ export const Fs: FileSystem &
   ...Api,
   incrementalPath,
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
+  convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
   copyFile: (...args) => FsAdapter.copyFile(...args),
   createDir: (...args) => FsAdapter.createDir(...args),

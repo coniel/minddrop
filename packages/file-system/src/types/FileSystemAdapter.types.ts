@@ -23,6 +23,15 @@ export interface FileSystemAdapter {
   getBaseDirPath(dir: BaseDirectory): Promise<string>;
 
   /**
+   * Converts a file path to a URL that can be loaded into the app webview
+   * as a src attribute.
+   *
+   * @param path - The file path.
+   * @returns A URL to the file.
+   */
+  convertFileSrc(path: string): string;
+
+  /**
    * Checks if a path is a directory.
    *
    * @param path - The path to check.
