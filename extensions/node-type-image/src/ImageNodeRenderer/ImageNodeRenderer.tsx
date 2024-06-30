@@ -4,12 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 export const ImageNodeRenderer: React.FC<FileNodeRendererProps> = ({
   node,
 }) => {
-  const { Fs } = useApi();
+  const { Fs, Utils } = useApi();
+  const parentDir = Utils.useParentDir();
   const [imageAvailable, setImageAvailable] = useState(true);
 
   const src = useMemo(
-    () => (node.path ? Fs.convertFileSrc(node.path) : null),
-    [node.path, Fs],
+    () => Fs.convertFileSrc(Fs.concatPath(parentDir, node.file)),
+    [node.file, parentDir, Fs],
   );
 
   // When adding a new image, it occasionally takes a moment
@@ -60,7 +61,7 @@ export const ImageNodeRenderer: React.FC<FileNodeRendererProps> = ({
   return (
     <img
       src={src}
-      alt={node.path?.split('/').pop()}
+      alt={node.file}
       style={{ maxWidth: '100%', maxHeight: '100%' }}
     />
   );
