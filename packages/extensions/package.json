@@ -1,0 +1,33 @@
+{
+  "name": "@minddrop/extensions",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint ./**/*.ts*",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@minddrop/ast": "workspace:*",
+    "@minddrop/documents": "workspace:*",
+    "@minddrop/editor": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/markdown": "workspace:*",
+    "@minddrop/nodes": "workspace:*",
+    "@minddrop/selection": "workspace:*",
+    "@minddrop/theme": "workspace:*",
+    "@minddrop/ui": "workspace:*",
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
+  }
+}
