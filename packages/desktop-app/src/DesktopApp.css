@@ -6,6 +6,7 @@
 .app .app-content {
   flex: 1;
   position: relative;
+  overflow: scroll;
 }
 
 .app .app-content .app-drag-handle {
