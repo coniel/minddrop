@@ -524,6 +524,64 @@ importers:
         specifier: ^4.5.2
         version: 4.9.5
 
+  packages/extension:
+    dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../ast
+      '@minddrop/documents':
+        specifier: workspace:*
+        version: link:../documents
+      '@minddrop/editor':
+        specifier: workspace:*
+        version: link:../editor
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/extensions':
+        specifier: workspace:*
+        version: link:../extensions
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/markdown':
+        specifier: workspace:*
+        version: link:../markdown
+      '@minddrop/nodes':
+        specifier: workspace:*
+        version: link:../nodes
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../selection
+      '@minddrop/theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@minddrop/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
+
   packages/extensions:
     dependencies:
       '@minddrop/ast':
