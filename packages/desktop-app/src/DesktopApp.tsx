@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { IconsProvider } from '@minddrop/icons';
 import { DocumentView } from '@minddrop/documents';
 import { Events } from '@minddrop/events';
+import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from './components';
 import { useCurrentPath, useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
@@ -33,14 +34,16 @@ export const DesktopApp: React.FC = () => {
 
   return (
     <IconsProvider>
-      <div className="app">
-        <AppSidebar />
-        <div className="app-content">
-          <div data-tauri-drag-region className="app-drag-handle" />
-          {view === 'document' && path && <DocumentView path={path} />}
+      <MindDropApiProvider>
+        <div className="app">
+          <AppSidebar />
+          <div className="app-content">
+            <div data-tauri-drag-region className="app-drag-handle" />
+            {view === 'document' && path && <DocumentView path={path} />}
+          </div>
         </div>
-      </div>
-      <ShowWindowOnRendered />
+        <ShowWindowOnRendered />
+      </MindDropApiProvider>
     </IconsProvider>
   );
 };

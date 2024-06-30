@@ -7,6 +7,8 @@ import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
 import { BoardDocumentTypeConfig } from '@minddrop/document-type-board';
+import { initializeExtensions } from '@minddrop/extensions';
+import NodeTypeImageExtension from '@minddrop/node-type-image';
 import { Ast } from '@minddrop/ast';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
@@ -46,6 +48,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Run core extensions
   onRunTheme();
+
+  // Initialize extensions
+  await initializeExtensions([NodeTypeImageExtension]);
 
   return () => {
     // Remove config files watcher

@@ -343,6 +343,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/extensions':
+        specifier: workspace:*
+        version: link:../extensions
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -352,6 +355,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
+      '@minddrop/node-type-image':
+        specifier: workspace:*
+        version: link:../../extensions/node-type-image
       '@minddrop/nodes':
         specifier: workspace:*
         version: link:../nodes
