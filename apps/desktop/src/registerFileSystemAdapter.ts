@@ -19,7 +19,7 @@ import {
   appDataDir,
   documentDir,
 } from '@tauri-apps/api/path';
-import { invoke } from '@tauri-apps/api/core';
+import { convertFileSrc, invoke } from '@tauri-apps/api/core';
 import { WorkspaceConfigDirName } from '@minddrop/workspaces';
 
 interface BaseDirOptions {
@@ -109,6 +109,7 @@ function isNonHiddenFileOrWorkspaceConfig(entry: DirEntry): boolean {
 
 register({
   getBaseDirPath,
+  convertFileSrc: (path) => convertFileSrc(path),
   isDirectory: async (path, fsOptions = {}) => {
     const options = translateBaseDir(fsOptions);
 
