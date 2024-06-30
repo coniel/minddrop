@@ -21,6 +21,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'file',
       id: expect.any(String),
       path: `${parentPath}/${textFile.name}`,
+      display: 'file',
     });
   });
 
@@ -43,6 +44,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'link',
       id: expect.any(String),
       url: 'https://example.com',
+      display: 'link',
     });
   });
 
@@ -57,6 +59,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'text',
       id: expect.any(String),
       text: 'Hello, world!',
+      display: 'text',
     });
   });
 });

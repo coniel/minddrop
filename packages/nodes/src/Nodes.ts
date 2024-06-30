@@ -13,6 +13,9 @@ import {
   TextNodeRendererConfig,
 } from './node-renderer-configs';
 import { registerNodeRendererConfig } from './NodeRendererConfigsStore';
+import { classifyFileNode } from './classifyFileNode';
+import { classifyTextNode } from './classifyTextNode';
+import { classifyLinkNode } from './classifyLinkNode';
 
 export { generateNodesFromDataTransfer as fromDataTransfer } from './generateNodesFromDataTransfer';
 
@@ -30,6 +33,11 @@ export {
   unregisterNodeRendererConfig,
 } from './NodeRendererConfigsStore';
 
+export {
+  registerNodeClassifierConfig as registerClassifier,
+  unregisterNodeClassifierConfig as unregisterClassifier,
+} from './NodeClassifierConfigsStore';
+
 const removeUndefied = <T extends Node>(node: T): T => {
   Object.keys(node).forEach(
     (key) =>
@@ -40,22 +48,32 @@ const removeUndefied = <T extends Node>(node: T): T => {
 };
 
 /**
- * Generates a new text node.
+ * Generates a new text node. If no 'display' value is provided, it will be
+ * classified using registered text node classifiers.
  *
  * @param text - The text content of the node.
  * @param display - The node renderer type to use.
  * @returns A new text node.
  */
-export const generateTextNode = (text = '', display?: string): TextNode =>
-  removeUndefied({
+export const generateTextNode = (text = '', display = 'text'): TextNode => {
+  const node: TextNode = {
     type: 'text',
     id: uuid(),
     text,
     display,
-  });
+  };
+
+  if (node.display === 'text') {
+    node.display = classifyTextNode(node);
+  }
+
+  return node;
+};
 
 /**
- * Generates a new file node.
+ * Generates a new file node. If no 'display' value is provided, it will be
+ * classified using registered file node classifiers.
+ *
  *
  * @param path - The path to the file within the system.
  * @param display - The node renderer type to use.
@@ -63,17 +81,25 @@ export const generateTextNode = (text = '', display?: string): TextNode =>
  */
 export const generateFileNode = (
   path: string | null = null,
-  display?: string,
-): FileNode =>
-  removeUndefied({
+  display = 'file',
+): FileNode => {
+  const node: FileNode = {
     type: 'file',
     id: uuid(),
     path,
     display,
-  });
+  };
+
+  if (node.display === 'file') {
+    node.display = classifyFileNode(node);
+  }
+
+  return node;
+};
 
 /**
- * Generates a new link node.
+ * Generates a new link node. If no 'display' value is provided, it will be
+ * classified using registered link node classifiers.
  *
  * @param url - The URL to link to.
  * @param display - The node renderer type to use.
@@ -81,14 +107,21 @@ export const generateFileNode = (
  */
 export const generateLinkNode = (
   url: string | null = null,
-  display?: string,
-): LinkNode =>
-  removeUndefied({
+  display = 'link',
+): LinkNode => {
+  const node: LinkNode = {
     type: 'link',
     id: uuid(),
     url,
     display,
-  });
+  };
+
+  if (node.display === 'link') {
+    node.display = classifyLinkNode(node);
+  }
+
+  return node;
+};
 
 /**
  * Generates a new group node.
@@ -99,14 +132,13 @@ export const generateLinkNode = (
  */
 export const generateGroupNode = (
   children: string[],
-  display?: string,
-): GroupNode =>
-  removeUndefied({
-    type: 'group',
-    id: uuid(),
-    children,
-    display,
-  });
+  display = 'group',
+): GroupNode => ({
+  type: 'group',
+  id: uuid(),
+  children,
+  display,
+});
 
 /**
  * Generates a new widget node.
