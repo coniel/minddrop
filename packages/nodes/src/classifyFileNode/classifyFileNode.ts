@@ -21,7 +21,7 @@ export function classifyFileNode(node: FileNode): string | undefined {
   // Use the node's current display value as the default
   let display = node.display;
   // Get the file extension
-  const fileType = node.path?.split('.').pop() || '';
+  const fileType = node.file?.split('.').pop() || '';
 
   // Loop through all classifier configs until a match is found
   classifierConfigs.every((config) => {

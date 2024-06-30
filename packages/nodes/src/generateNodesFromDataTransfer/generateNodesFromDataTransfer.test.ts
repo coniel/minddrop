@@ -20,7 +20,7 @@ describe('generateNodesFromDataTransfer', () => {
     expect(nodes[0]).toEqual({
       type: 'file',
       id: expect.any(String),
-      path: `${parentPath}/${textFile.name}`,
+      file: textFile.name,
       display: 'file',
     });
   });

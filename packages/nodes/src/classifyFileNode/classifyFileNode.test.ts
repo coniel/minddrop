@@ -2,21 +2,20 @@ import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { setup, cleanup } from '../test-utils';
 import { classifyFileNode } from './classifyFileNode';
 import { registerNodeClassifierConfig } from '../NodeClassifierConfigsStore';
-import { generateFileNode } from '../Nodes';
 import { FileNode } from '../types';
 
 const imageNode: FileNode = {
   type: 'file',
   display: 'file',
   id: 'id-1',
-  path: 'image.jpg',
+  file: 'image.jpg',
 };
 
 const textNode: FileNode = {
   type: 'file',
   display: 'file',
   id: 'id-2',
-  path: 'file.txt',
+  file: 'file.txt',
 };
 
 describe('classifyNode', () => {

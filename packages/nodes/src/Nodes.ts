@@ -75,18 +75,18 @@ export const generateTextNode = (text = '', display = 'text'): TextNode => {
  * classified using registered file node classifiers.
  *
  *
- * @param path - The path to the file within the system.
+ * @param fileName - The file name.
  * @param display - The node renderer type to use.
  * @returns A new file node.
  */
 export const generateFileNode = (
-  path: string | null = null,
+  fileName: string,
   display = 'file',
 ): FileNode => {
   const node: FileNode = {
     type: 'file',
     id: uuid(),
-    path,
+    file: fileName,
     display,
   };
 
@@ -105,10 +105,7 @@ export const generateFileNode = (
  * @param display - The node renderer type to use.
  * @returns A new link node.
  */
-export const generateLinkNode = (
-  url: string | null = null,
-  display = 'link',
-): LinkNode => {
+export const generateLinkNode = (url: string, display = 'link'): LinkNode => {
   const node: LinkNode = {
     type: 'link',
     id: uuid(),

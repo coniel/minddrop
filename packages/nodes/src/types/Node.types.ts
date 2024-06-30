@@ -45,9 +45,9 @@ export interface FileNode extends BaseNodeData {
   type: 'file';
 
   /**
-   * The path to the file within the system.
+   * The file name.
    */
-  path: string | null;
+  file: string;
 
   /**
    * A subpath that may link to a heading or a block.
@@ -65,7 +65,7 @@ export interface LinkNode extends BaseNodeData {
   /**
    * The link URL.
    */
-  url: string | null;
+  url: string;
 }
 
 /**

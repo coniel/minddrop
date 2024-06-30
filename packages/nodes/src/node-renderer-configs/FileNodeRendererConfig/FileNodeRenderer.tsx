@@ -13,5 +13,5 @@ interface FileNodeRendererProps {
 }
 
 export const FileNodeRenderer: React.FC<FileNodeRendererProps> = ({ node }) => {
-  return <div className="file-node">{node.path?.split('/').slice(-1)[0]}</div>;
+  return <div className="file-node">{node.file}</div>;
 };
