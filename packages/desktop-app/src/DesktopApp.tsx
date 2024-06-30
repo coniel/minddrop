@@ -1,36 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { IconsProvider } from '@minddrop/icons';
-import { DocumentView } from '@minddrop/documents';
-import { Events } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
+import { DocumentView } from './views';
 import { AppSidebar } from './components';
 import { useCurrentPath, useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
-import { setActiveDocument } from './api';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
   const view = useCurrentView();
   const path = useCurrentPath();
-
-  useEffect(() => {
-    Events.addListener(
-      'documents:document:wrap',
-      'reopen-document-view-on-wrapped',
-      ({ data }) => {
-        if (path === data.oldPath) {
-          setActiveDocument(data.newPath);
-        }
-      },
-    );
-
-    return () => {
-      Events.removeListener(
-        'documents:document:wrap',
-        'reopen-document-view-on-wrapped',
-      );
-    };
-  }, [path]);
 
   return (
     <IconsProvider>
