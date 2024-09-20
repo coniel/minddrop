@@ -35,13 +35,13 @@ export function toMindDropDataTransfer(
     delete data['minddrop/action'];
   }
 
-  // Add 'text/url' data if 'text/plain' is a URL
+  // Add 'text/uri-list' data if 'text/plain' is a URL
   if (
     dataTransfer.types.includes('text/plain') &&
     isUrl(dataTransfer.getData('text/plain'))
   ) {
-    dataInsert.types.push('text/url');
-    dataInsert.data['text/url'] = dataTransfer.getData('text/plain');
+    dataInsert.types.push('text/uri-list');
+    dataInsert.data['text/uri-list'] = dataTransfer.getData('text/plain');
   }
 
   // Add remaining data as raw data

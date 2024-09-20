@@ -102,7 +102,23 @@ describe('toMindDropDataTransfer', () => {
     });
   });
 
-  it('adds `text/url` data if the plain text is a URL', () => {
+  it('adds `text/uri-list` if present', () => {
+    const dataTransfer = createDataTransfer({
+      data: {
+        'text/uri-list': 'https://ibguides.com',
+      },
+    });
+    const result = toMindDropDataTransfer(dataTransfer);
+    expect(result).toEqual({
+      action: 'insert',
+      types: ['text/uri-list'],
+      data: {
+        'text/uri-list': 'https://ibguides.com',
+      },
+    });
+  });
+
+  it('adds `text/uri-list` data if the plain text is a URL', () => {
     const dataTransfer = createDataTransfer({
       data: {
         'text/plain': 'https://ibguides.com',
@@ -113,10 +129,10 @@ describe('toMindDropDataTransfer', () => {
 
     expect(result).toEqual({
       action: 'insert',
-      types: ['text/url', 'text/plain'],
+      types: ['text/uri-list', 'text/plain'],
       data: {
         'text/plain': 'https://ibguides.com',
-        'text/url': 'https://ibguides.com',
+        'text/uri-list': 'https://ibguides.com',
       },
     });
   });
