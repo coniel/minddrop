@@ -12,6 +12,36 @@ describe('generateNodesFromDataTransfer', () => {
     MockFs.reset();
   });
 
+  it('generates link node from text/uri-list', async () => {
+    const dataTransfer = createDataTransfer({
+      'text/uri-list': 'https://example.com',
+    });
+
+    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
+
+    expect(nodes[0]).toEqual({
+      type: 'link',
+      id: expect.any(String),
+      url: 'https://example.com',
+      display: 'link',
+    });
+  });
+
+  it('generates link node from plain text URL', async () => {
+    const dataTransfer = createDataTransfer({
+      'text/plain': 'https://example.com',
+    });
+
+    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
+
+    expect(nodes[0]).toEqual({
+      type: 'link',
+      id: expect.any(String),
+      url: 'https://example.com',
+      display: 'link',
+    });
+  });
+
   it('generates file nodes from file data transfer', async () => {
     const dataTransfer = createDataTransfer({}, [textFile]);
 
@@ -31,21 +61,6 @@ describe('generateNodesFromDataTransfer', () => {
     await generateNodesFromDataTransfer(dataTransfer, parentPath);
 
     expect(MockFs.exists(`${parentPath}/${textFile.name}`)).toBe(true);
-  });
-
-  it('generates link node from URL data transfer', async () => {
-    const dataTransfer = createDataTransfer({
-      'text/plain': 'https://example.com',
-    });
-
-    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
-
-    expect(nodes[0]).toEqual({
-      type: 'link',
-      id: expect.any(String),
-      url: 'https://example.com',
-      display: 'link',
-    });
   });
 
   it('generates text node from plain text data transfer', async () => {
