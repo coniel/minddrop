@@ -17,22 +17,27 @@ export async function generateNodesFromDataTransfer(
 ): Promise<Node[]> {
   const transfer = toMindDropDataTransfer(dataTransfer);
 
-  // Generate a link node if a URL is present
+  // Generate file nodes if files are present.
+  // Ignores .webloc files created by Safari when dragging a link.
+  if ('files' in transfer) {
+    // Get non .webloc files
+    const files =
+      transfer.files?.filter((file) => !file.name.endsWith('.webloc')) || [];
+
+    if (files.length) {
+      return await Promise.all(
+        transfer.files?.map(async (file) =>
+          createNodeFromFile(file, parentPath),
+        ) || [],
+      );
+    }
+  }
+
+  // Generate a link node if a uri-list is present
   if (transfer.types.includes('text/uri-list')) {
     const url = transfer.data['text/uri-list'];
 
     return [Nodes.generateLinkNode(url)];
-  }
-
-  // Generate file nodes if files are present.
-  // Files are handled after text/uri-list to ensure that URLs are
-  // not treated as files is Mac OS which creates a .webloc file.
-  if ('files' in transfer) {
-    return await Promise.all(
-      transfer.files?.map(async (file) =>
-        createNodeFromFile(file, parentPath),
-      ) || [],
-    );
   }
 
   // Generate a text node if plain text is present

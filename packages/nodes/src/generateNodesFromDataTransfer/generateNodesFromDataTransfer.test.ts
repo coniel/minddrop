@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { textFile, createDataTransfer } from '@minddrop/test-utils';
+import { textFile, weblocFile, createDataTransfer } from '@minddrop/test-utils';
 import { generateNodesFromDataTransfer } from './generateNodesFromDataTransfer';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 
@@ -12,10 +12,41 @@ describe('generateNodesFromDataTransfer', () => {
     MockFs.reset();
   });
 
-  it('generates link node from text/uri-list', async () => {
-    const dataTransfer = createDataTransfer({
-      'text/uri-list': 'https://example.com',
+  it('generates file nodes from file data transfer', async () => {
+    const dataTransfer = createDataTransfer({}, [textFile]);
+
+    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
+
+    expect(nodes[0]).toEqual({
+      type: 'file',
+      id: expect.any(String),
+      file: textFile.name,
+      display: 'file',
     });
+  });
+
+  it('writes files to the file system', async () => {
+    const dataTransfer = createDataTransfer({}, [textFile]);
+
+    await generateNodesFromDataTransfer(dataTransfer, parentPath);
+
+    expect(MockFs.exists(`${parentPath}/${textFile.name}`)).toBe(true);
+  });
+
+  it('ignores .webloc files', async () => {
+    const dataTransfer = createDataTransfer({}, [weblocFile]);
+    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
+
+    expect(nodes).toEqual([]);
+  });
+
+  it('generates link node from text/uri-list', async () => {
+    const dataTransfer = createDataTransfer(
+      {
+        'text/uri-list': 'https://example.com',
+      },
+      [weblocFile],
+    );
 
     const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
 
@@ -40,27 +71,6 @@ describe('generateNodesFromDataTransfer', () => {
       url: 'https://example.com',
       display: 'link',
     });
-  });
-
-  it('generates file nodes from file data transfer', async () => {
-    const dataTransfer = createDataTransfer({}, [textFile]);
-
-    const nodes = await generateNodesFromDataTransfer(dataTransfer, parentPath);
-
-    expect(nodes[0]).toEqual({
-      type: 'file',
-      id: expect.any(String),
-      file: textFile.name,
-      display: 'file',
-    });
-  });
-
-  it('writes files to the file system', async () => {
-    const dataTransfer = createDataTransfer({}, [textFile]);
-
-    await generateNodesFromDataTransfer(dataTransfer, parentPath);
-
-    expect(MockFs.exists(`${parentPath}/${textFile.name}`)).toBe(true);
   });
 
   it('generates text node from plain text data transfer', async () => {
