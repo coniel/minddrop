@@ -17,8 +17,6 @@ export const DocumentView: React.FC<DocumentViewProps> = ({
   const document = useDocument(path);
   const config = useDocumentTypeConfig(document?.fileType || '');
 
-  console.log('DocumentView', document, config);
-
   if (!document || !config) {
     console.warn('DocumentView: document or config not found');
 
