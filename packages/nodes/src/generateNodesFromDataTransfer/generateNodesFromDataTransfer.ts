@@ -59,5 +59,5 @@ async function createNodeFromFile(
   );
   await Fs.writeBinaryFile(filePath.path, file);
 
-  return Nodes.generateFileNode(file.name);
+  return Nodes.generateFileNode(filePath.name);
 }
