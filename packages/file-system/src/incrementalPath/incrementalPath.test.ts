@@ -10,7 +10,7 @@ describe('incrementalFilename', () => {
     const result = await incrementalPath(MockFs, '/foo');
 
     // Should return original target path
-    expect(result).toEqual({ path: '/foo' });
+    expect(result).toEqual({ path: '/foo', name: 'foo' });
   });
 
   it('increments path if the path already exists', async () => {
@@ -21,7 +21,7 @@ describe('incrementalFilename', () => {
     const result = await incrementalPath(MockFs, 'foo');
 
     // Should increment path by 1
-    expect(result).toEqual({ path: 'foo 1', increment: 1 });
+    expect(result).toEqual({ path: 'foo 1', name: 'foo 1', increment: 1 });
   });
 
   it('recursively increments path if incremented path already exists', async () => {
@@ -32,7 +32,7 @@ describe('incrementalFilename', () => {
     const result = await incrementalPath(MockFs, 'foo');
 
     // Should increment path by 3
-    expect(result).toEqual({ path: 'foo 3', increment: 3 });
+    expect(result).toEqual({ path: 'foo 3', name: 'foo 3', increment: 3 });
   });
 
   it('adds increment suffix before file extension', async () => {
@@ -42,6 +42,10 @@ describe('incrementalFilename', () => {
     // Get incremental path
     const result = await incrementalPath(MockFs, 'foo.md');
 
-    expect(result).toEqual({ path: 'foo 1.md', increment: 1 });
+    expect(result).toEqual({
+      path: 'foo 1.md',
+      name: 'foo 1.md',
+      increment: 1,
+    });
   });
 });

@@ -1,7 +1,9 @@
+import { fileNameFromPath } from '../fileNameFromPath';
 import { FileSystemAdapter } from '../types';
 
 export interface IncrementedPath {
   path: string;
+  name: string;
   increment?: number;
 }
 
@@ -21,6 +23,7 @@ export async function incrementalPath(
 ): Promise<IncrementedPath> {
   let incrementedPath: IncrementedPath = {
     path: targetPath,
+    name: fileNameFromPath(targetPath),
     increment: currentIncrement,
   };
 
@@ -40,6 +43,9 @@ export async function incrementalPath(
   incrementedPath.path = currentIncrement
     ? `${pathWithoutExtension} ${currentIncrement}${extension}`
     : targetPath;
+
+  // Update file name
+  incrementedPath.name = fileNameFromPath(incrementedPath.path);
 
   // Cap increment to 200 to prevent accidental infinite loops
   if (currentIncrement && currentIncrement > 200) {
