@@ -23,6 +23,11 @@ export const imageFile = dataURLtoFile(
   'image.jpeg',
 );
 
+export const weblocFile = dataURLtoFile(
+  'data:application/octate-stream;base64,YnBsaXN0MDDigJQBAlNVUkxfECFodHRwczovL3d3dy50d2l0Y2gudHYvdDkwb2ZmaWNpYWwICw8AAAAAAAABAQAAAAAAAAADAAAAAAAAAAAAAAAAAAAAMw==',
+  'example.webloc',
+);
+
 const createFileList = (files: File[]): FileList => {
   const fileList = {
     length: files.length,
