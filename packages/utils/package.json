@@ -21,6 +21,7 @@
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.11",
     "is-url": "^1.2.4",
+    "open-graph-scraper-lite": "^2.1.0",
     "react": "^18.2.0",
     "tldts": "^6.0.4",
     "zustand": "^4.3.8"

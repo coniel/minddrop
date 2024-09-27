@@ -1,6 +1,6 @@
 export * from './ParentDirContext';
 export * from './arrayContainsObject';
-export * from './backend-utils';
+export * from './back-end-utils';
 export * from './contains';
 export * from './createArrayStore';
 export * from './createContext';

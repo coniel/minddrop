@@ -1,14 +1,15 @@
 import { describe, afterEach, it, expect } from 'vitest';
 import { AdapterNotRegisteredError, InvalidParameterError } from '../errors';
-import { BackendUtilsApi, WebpageMetadata } from '../types';
+import { BackendUtilsAdapter } from '../types';
 import {
   registerBackendUtilsAdapter,
-  getWebpageMedata,
+  getWebpageMetadata,
   unregisterBackendUtilsAdapter,
-} from './backend-utils';
+} from './back-end-utils';
 
-const adapter: BackendUtilsApi = {
-  getWebpageMedata: async () => ({ title: 'IB Guides' } as WebpageMetadata),
+const adapter: BackendUtilsAdapter = {
+  getWebpageHtml: async () =>
+    '<html><head><title>IB Guides</title></head></html>',
 };
 
 describe('backend-utils', () => {
@@ -22,7 +23,7 @@ describe('backend-utils', () => {
       registerBackendUtilsAdapter(adapter);
 
       // Call the getWebpageMetadata function
-      const metadata = await getWebpageMedata('https://ibguides.com');
+      const metadata = await getWebpageMetadata('https://ibguides.com');
 
       // Should return the data from the reigstered
       // adapter's 'getWebpageMetadata' method.
@@ -39,9 +40,9 @@ describe('backend-utils', () => {
 
       // Call the getWebpageMetadata function, should
       // throw a `AdapterNotRegisteredError`.
-      expect(() => getWebpageMedata('https://ibguides.com')).toThrowError(
-        AdapterNotRegisteredError,
-      );
+      expect(() =>
+        getWebpageMetadata('https://ibguides.com'),
+      ).rejects.toThrowError(AdapterNotRegisteredError);
     });
   });
 
@@ -49,16 +50,18 @@ describe('backend-utils', () => {
     it('throws if there is no registered adapter', () => {
       // Call without a registered adapter, should
       // throw a `AdapterNotRegisteredError`.
-      expect(() => getWebpageMedata('https://ibguides.com')).toThrowError(
-        AdapterNotRegisteredError,
-      );
+      expect(() =>
+        getWebpageMetadata('https://ibguides.com'),
+      ).rejects.toThrowError(AdapterNotRegisteredError);
     });
 
     it('throws if the URL is invalid', () => {
       // Call with an invalid URL, should
       // throw a `ValidationError`.
       // @ts-ignore
-      expect(() => getWebpageMedata(1234)).toThrowError(InvalidParameterError);
+      expect(() => getWebpageMetadata(1234)).rejects.toThrowError(
+        InvalidParameterError,
+      );
     });
 
     it("calls the registered adapter's `getWebpageMedata` method", async () => {
@@ -66,7 +69,7 @@ describe('backend-utils', () => {
       registerBackendUtilsAdapter(adapter);
 
       // Call the getWebpageMetadata function
-      const metadata = await getWebpageMedata('https://ibguides.com');
+      const metadata = await getWebpageMetadata('https://ibguides.com');
 
       // Should return the result from the adapter's
       // 'getWebpageMetadata' method.
