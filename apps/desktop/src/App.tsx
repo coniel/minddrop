@@ -6,6 +6,7 @@ import '@minddrop/theme/src/animations.css';
 import { useEffect, useState } from 'react';
 import { initializeDesktopApp } from '@minddrop/desktop-app';
 import './registerFileSystemAdapter';
+import './registerBackEndUtilsAdapter';
 
 export const App: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [initializingApp, setInitializingApp] = useState(true);

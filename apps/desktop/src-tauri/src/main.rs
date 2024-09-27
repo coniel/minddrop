@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use webpage::{Webpage, WebpageOptions, HTML};
+use webpage::{Webpage, WebpageOptions};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn main() {
@@ -16,7 +16,7 @@ pub fn main() {
         .invoke_handler(tauri::generate_handler![
             move_to_trash,
             show_in_folder,
-            webpage_metadata
+            webpage_html
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -83,14 +83,14 @@ fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
-async fn webpage_metadata(url: &str) -> Result<HTML, String> {
+async fn webpage_html(url: &str) -> Result<String, String> {
     let webpage = Webpage::from_url(url, WebpageOptions::default());
 
     if webpage.is_ok() {
         // the parsed HTML info
-        let html = webpage.unwrap().html;
+        let http = webpage.unwrap().http;
 
-        Ok(html)
+        Ok(http.body)
     } else {
         Err("No result".into())
     }
