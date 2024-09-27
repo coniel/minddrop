@@ -21,10 +21,6 @@ const MockFs = initializeMockFileSystem([
 ]);
 
 describe('deleteWorkspace', () => {
-  beforeEach(setup);
-
-  afterEach(cleanup);
-
   beforeEach(() => {
     setup();
 

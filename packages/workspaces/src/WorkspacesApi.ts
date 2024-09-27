@@ -10,6 +10,7 @@ export { hasWorkspacesConfig as hasConfig } from './hasWorkspacesConfig';
 export { workspaceExists as exists } from './workspaceExists';
 export { getWorkspace as get } from './getWorkspace';
 export { getWorkspaceConfig } from './getWorkspaceConfig';
+export { getParentWorkspace as getParentWorkspace } from './getParentWorkspace';
 export { removeWorkspace as remove } from './removeWorkspace';
 export { deleteWorkspace as delete } from './deleteWorkspace';
 export { moveWorkspace as move } from './moveWorkspace';

@@ -21,12 +21,40 @@ export const workspace1: Workspace = {
   name: 'Workspace 1',
   icon: Icons.stringify(workspace1Icon),
 };
+export const workspace1Config: WorkspaceConfig = {
+  icon: Icons.stringify(workspace1Icon),
+};
+export const workspace1ConfigPath = Fs.concatPath(
+  workspace1.path,
+  WorkspaceConfigDirName,
+  WorkspaceConfigFileName,
+);
+
+export const workspace2Icon: UserIcon = {
+  type: UserIconType.ContentIcon,
+  icon: 'cat',
+  color: 'cyan',
+};
+export const workspace2: Workspace = {
+  path: 'Users/foo/Documents/Workspace 2',
+  exists: true,
+  name: 'Workspace 2',
+  icon: Icons.stringify(workspace2Icon),
+};
+export const workspace2Config: WorkspaceConfig = {
+  icon: Icons.stringify(workspace2Icon),
+};
+export const workspace2ConfigPath = Fs.concatPath(
+  workspace2.path,
+  WorkspaceConfigDirName,
+  WorkspaceConfigFileName,
+);
 
 export const missingWorkspaceIcon = MissingWorkspaceIcon;
 export const missingWorkspace: Workspace = {
-  path: 'Users/foo/Documents/Workspace 2',
+  path: 'Users/foo/Documents/Workspace 3',
   exists: false,
-  name: 'Workspace 2',
+  name: 'Workspace 3',
   icon: Icons.stringify(missingWorkspaceIcon),
 };
 
@@ -38,18 +66,8 @@ export const newWorkspace: Workspace = {
   icon: Icons.stringify(newWorkspaceIcon),
 };
 
-export const workspace1Config: WorkspaceConfig = {
-  icon: Icons.stringify(workspace1Icon),
-};
-
-export const workspace1ConfigPath = Fs.concatPath(
-  workspace1.path,
-  WorkspaceConfigDirName,
-  WorkspaceConfigFileName,
-);
-
 export const workspacesConfig: WorkspacesConfig = {
-  paths: [workspace1.path, missingWorkspace.path],
+  paths: [workspace1.path, workspace2.path, missingWorkspace.path],
 };
 
 export const workspcesConfigFileDescriptor: MockFileDescriptor = {
@@ -58,4 +76,4 @@ export const workspcesConfigFileDescriptor: MockFileDescriptor = {
   options: { baseDir: WorkspacesConfigDir },
 };
 
-export const workspaces = [workspace1, missingWorkspace];
+export const workspaces = [workspace1, workspace2, missingWorkspace];

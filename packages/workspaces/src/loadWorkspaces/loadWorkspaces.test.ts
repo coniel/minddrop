@@ -4,11 +4,13 @@ import { Events } from '@minddrop/events';
 import {
   setup,
   cleanup,
-  missingWorkspace,
   workspace1,
   workspace1ConfigPath,
   workspace1Config,
   workspcesConfigFileDescriptor,
+  workspaces,
+  workspace2Config,
+  workspace2ConfigPath,
 } from '../test-utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { loadWorkspaces } from './loadWorkspaces';
@@ -17,10 +19,14 @@ import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
 const MockFs = initializeMockFileSystem([
   // Workspaces config file
   workspcesConfigFileDescriptor,
-  // Workspace 1 config file
+  // Workspace config files
   {
     path: workspace1ConfigPath,
     textContent: JSON.stringify(workspace1Config),
+  },
+  {
+    path: workspace2ConfigPath,
+    textContent: JSON.stringify(workspace2Config),
   },
 ]);
 
@@ -49,10 +55,7 @@ describe('loadWorkspaces', () => {
     await loadWorkspaces();
 
     // Store should contain the workspaces
-    expect(WorkspacesStore.getState().workspaces).toEqual([
-      workspace1,
-      missingWorkspace,
-    ]);
+    expect(WorkspacesStore.getState().workspaces).toEqual(workspaces);
   });
 
   it('does not load workspaces already present in the store', async () => {
@@ -63,10 +66,7 @@ describe('loadWorkspaces', () => {
     await loadWorkspaces();
 
     // Store should contain the workspaces
-    expect(WorkspacesStore.getState().workspaces).toEqual([
-      workspace1,
-      missingWorkspace,
-    ]);
+    expect(WorkspacesStore.getState().workspaces).toEqual(workspaces);
   });
 
   it('dispatches a `workspaces:load` event', async () =>
@@ -74,7 +74,7 @@ describe('loadWorkspaces', () => {
       // Listen to 'workspaces:load' events
       Events.addListener('workspaces:load', 'test', (payload) => {
         // Payload data should be the workspaces
-        expect(payload.data).toEqual([workspace1, missingWorkspace]);
+        expect(payload.data).toEqual(workspaces);
         done();
       });
 
