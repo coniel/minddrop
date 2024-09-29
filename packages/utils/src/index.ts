@@ -19,3 +19,4 @@ export * from './toMindDropDataTransfer';
 export * from './types';
 export * from './useToggle';
 export * from './useCreateCallback';
+export { v4 as uuid } from 'uuid';
