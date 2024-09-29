@@ -76,10 +76,20 @@ export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (
       description: result.ogDescription,
       title: result.ogTitle || url,
       image: result.ogImage && result.ogImage[0] ? result.ogImage[0].url : '',
-      icon: `${urlObject.origin}${result.favicon}`,
+      icon: result.favicon
+        ? getImageAbsoluteUrl(result.favicon, urlObject.origin)
+        : '',
       domain: urlObject.hostname.replace('www.', ''),
     };
   } catch (error) {
     throw new Error(`Error getting webpage metadata: ${error}`);
   }
 };
+
+function getImageAbsoluteUrl(imageUrl: string, origin: string) {
+  if (imageUrl.startsWith('http')) {
+    return imageUrl;
+  }
+
+  return `${origin}/${imageUrl}`;
+}
