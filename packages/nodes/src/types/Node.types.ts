@@ -56,16 +56,44 @@ export interface FileNode extends BaseNodeData {
   subpath?: string;
 }
 
+export interface LinkNodeMetadata {
+  /**
+   * The linked web page title.
+   */
+  title?: string;
+
+  /**
+   * The linked web page description.
+   */
+  description?: string;
+
+  /**
+   * The linked web page image file name.
+   */
+  image?: string;
+
+  /**
+   * The linked web page icon file name.
+   */
+  icon?: string;
+}
+
 /**
  * Link type nodes reference a URL.
  */
-export interface LinkNode extends BaseNodeData {
+export interface LinkNode<TMetadata extends LinkNodeMetadata = LinkNodeMetadata>
+  extends BaseNodeData {
   type: 'link';
 
   /**
    * The link URL.
    */
   url: string;
+
+  /**
+   * Linked web page meta data.
+   */
+  metadata?: TMetadata;
 }
 
 /**
