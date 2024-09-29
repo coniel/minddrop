@@ -1,5 +1,6 @@
 .board-view .board-column-node {
   flex: 1;
+  min-width: 0;
 }
 
 .board-view .board-column-node-end {
