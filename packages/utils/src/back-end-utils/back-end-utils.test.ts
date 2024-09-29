@@ -10,6 +10,7 @@ import {
 const adapter: BackendUtilsAdapter = {
   getWebpageHtml: async () =>
     '<html><head><title>IB Guides</title></head></html>',
+  open: async () => {},
 };
 
 describe('backend-utils', () => {

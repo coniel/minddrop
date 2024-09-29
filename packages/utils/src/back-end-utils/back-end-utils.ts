@@ -6,6 +6,9 @@ const placeholderApi: BackendUtilsAdapter = {
   getWebpageHtml: () => {
     throw new AdapterNotRegisteredError('backend utils');
   },
+  open: () => {
+    throw new AdapterNotRegisteredError('backend utils');
+  },
 };
 
 let adapterRegistered = false;
@@ -33,6 +36,10 @@ export function registerBackendUtilsAdapter(adapter: BackendUtilsAdapter) {
 export function unregisterBackendUtilsAdapter() {
   backEndUtilsAdapter = placeholderApi;
   adapterRegistered = false;
+}
+
+export async function open(path: string, openWith?: string): Promise<void> {
+  return backEndUtilsAdapter.open(path, openWith);
 }
 
 export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (
