@@ -666,6 +666,10 @@ importers:
         version: 5.4.5
 
   packages/file-system:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
     devDependencies:
       eslint:
         specifier: ^8.39.0
