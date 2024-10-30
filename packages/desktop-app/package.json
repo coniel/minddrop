@@ -36,6 +36,7 @@
     "@minddrop/icons": "workspace:*",
     "@minddrop/nodes": "workspace:*",
     "@minddrop/node-type-image": "workspace:*",
+    "@minddrop/node-type-link": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@minddrop/ui": "workspace:*",
