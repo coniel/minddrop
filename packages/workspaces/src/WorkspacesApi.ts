@@ -16,6 +16,8 @@ export { deleteWorkspace as delete } from './deleteWorkspace';
 export { moveWorkspace as move } from './moveWorkspace';
 export { renameWorkspace as rename } from './renameWorkspace';
 export { setWorkpaceIcon as setIcon } from './setWorkpaceIcon';
+export { downloadToCache } from './downloadToCache';
+export { getCacheFilePath } from './getCacheFilePath';
 
 export function _clear() {
   WorkspacesStore.getState().clear();

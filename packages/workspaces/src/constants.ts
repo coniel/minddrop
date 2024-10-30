@@ -11,6 +11,7 @@ export const WorkspacesConfigDir = BaseDirectory.AppConfig;
 export const WorkspacesConfigFileName = 'workspaces.json';
 export const WorkspaceConfigDirName = '.minddrop';
 export const WorkspaceConfigFileName = 'workspace.json';
+export const WorkspaceCacheDirName = 'cache';
 
 export const DefaultWorkspaceIcon: UserIcon = {
   type: UserIconType.ContentIcon,
