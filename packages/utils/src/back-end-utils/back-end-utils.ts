@@ -57,6 +57,8 @@ export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (
     throw new AdapterNotRegisteredError('BackEndUtilsAdapter');
   }
 
+  const urlObject = new URL(url);
+
   try {
     // Get the webpage HTML
     const html = await backEndUtilsAdapter.getWebpageHtml(url);
@@ -67,10 +69,8 @@ export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (
     const { result } = data;
 
     if (result.error) {
-      throw new Error(`Error getting webpage metadata: ${result.error}`);
+      throw new Error(`Error getting webpage metadata: ${result.error})`);
     }
-
-    const urlObject = new URL(url);
 
     return {
       description: result.ogDescription,
@@ -82,7 +82,12 @@ export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (
       domain: urlObject.hostname.replace('www.', ''),
     };
   } catch (error) {
-    throw new Error(`Error getting webpage metadata: ${error}`);
+    console.error(error);
+
+    return {
+      title: url,
+      domain: urlObject.hostname.replace('www.', ''),
+    };
   }
 };
 
