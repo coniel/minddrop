@@ -146,7 +146,16 @@ export function initializeMockFileSystem(
       delete textFileContents[fullPath];
       delete binaryFiles[fullPath];
     },
-    downloadFile: async (url, path, options) => {},
+    downloadFile: async (url, path, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+    },
   };
 
   registerFileSystemAdapter(MockFs);
@@ -232,7 +241,16 @@ export function initializeMockFileSystem(
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeDir: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
-    downloadFile: (url, path, options) => {},
+    downloadFile: (url, path, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+    },
   };
 }
 
