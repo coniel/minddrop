@@ -245,6 +245,25 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
+  extensions/node-type-link:
+    dependencies:
+      '@minddrop/extension':
+        specifier: workspace:*
+        version: link:../../packages/extension
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
+
   packages/ast:
     dependencies:
       '@minddrop/events':
@@ -361,6 +380,9 @@ importers:
       '@minddrop/node-type-image':
         specifier: workspace:*
         version: link:../../extensions/node-type-image
+      '@minddrop/node-type-link':
+        specifier: workspace:*
+        version: link:../../extensions/node-type-link
       '@minddrop/nodes':
         specifier: workspace:*
         version: link:../nodes
