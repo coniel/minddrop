@@ -411,6 +411,9 @@ importers:
       '@minddrop/node-type-link':
         specifier: workspace:*
         version: link:../../extensions/node-type-link
+      '@minddrop/node-type-text':
+        specifier: workspace:*
+        version: link:../../extensions/node-type-text
       '@minddrop/nodes':
         specifier: workspace:*
         version: link:../nodes

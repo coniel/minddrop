@@ -8,6 +8,7 @@ import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
 import { BoardDocumentTypeConfig } from '@minddrop/document-type-board';
 import { initializeExtensions } from '@minddrop/extensions';
+import NodeTypeTextExtension from '@minddrop/node-type-text';
 import NodeTypeImageExtension from '@minddrop/node-type-image';
 import NodeTypeLinkExtension from '@minddrop/node-type-link';
 import { Ast } from '@minddrop/ast';
@@ -51,7 +52,11 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   onRunTheme();
 
   // Initialize extensions
-  await initializeExtensions([NodeTypeImageExtension, NodeTypeLinkExtension]);
+  await initializeExtensions([
+    NodeTypeImageExtension,
+    NodeTypeLinkExtension,
+    NodeTypeTextExtension,
+  ]);
 
   return () => {
     // Remove config files watcher
