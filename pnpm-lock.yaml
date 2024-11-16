@@ -264,6 +264,34 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
+  extensions/node-type-text:
+    dependencies:
+      '@minddrop/ast':
+        specifier: workspace:*
+        version: link:../../packages/ast
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../../packages/blocks
+      '@minddrop/editor':
+        specifier: workspace:*
+        version: link:../../packages/editor
+      '@minddrop/extension':
+        specifier: workspace:*
+        version: link:../../packages/extension
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
+
   packages/ast:
     dependencies:
       '@minddrop/events':
