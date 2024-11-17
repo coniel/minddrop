@@ -160,6 +160,9 @@ importers:
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../../packages/documents
+      '@minddrop/extension':
+        specifier: workspace:*
+        version: link:../../packages/extension
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system

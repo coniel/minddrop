@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@minddrop/documents": "workspace:*",
+    "@minddrop/extension": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/nodes": "workspace:*",

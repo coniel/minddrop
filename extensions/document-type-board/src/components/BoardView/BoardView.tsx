@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Node } from '@minddrop/nodes';
+import { useApi } from '@minddrop/extension';
 import { DocumentViewProps } from '@minddrop/documents';
 import { BoardContent } from '../../types';
 import { BoardNodesProvider } from '../../BoardDocumentProvider';
@@ -9,6 +10,7 @@ import './BoardView.css';
 export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
   document,
 }) => {
+  const { Selection } = useApi();
   const content = useMemo(
     () =>
       document.content
@@ -25,7 +27,7 @@ export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
 
   return (
     <BoardNodesProvider value={document}>
-      <div className="board-view">
+      <div className="board-view" onMouseDown={Selection.clear}>
         {rootNodes.map((node) => (
           <BoardNode key={node.id} node={node} />
         ))}
