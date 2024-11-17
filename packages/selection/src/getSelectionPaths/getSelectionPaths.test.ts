@@ -2,63 +2,31 @@ import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   setup,
   cleanup,
-  selectedDrop1,
-  selectedDrop2,
-  selectedTopic1,
-  selectedTopic2,
-  selectedRichTextElement1,
+  selectedItem1,
+  selectedItem2,
+  selectedItem3,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
-import { getSelectionPaths } from './getSelectionPaths';
+import { getSelectionIds } from './getSelectionPaths';
 
 describe('getSelectionPaths', () => {
   beforeEach(() => {
     setup();
 
-    // Selected drops and topics
+    // Add items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([
-        selectedDrop1,
-        selectedDrop2,
-        selectedTopic1,
-        selectedTopic2,
-        selectedRichTextElement1,
-      ]);
+      .addSelectedItems([selectedItem1, selectedItem2, selectedItem3]);
   });
 
   afterEach(cleanup);
 
-  describe('without parameters', () => {
-    it('returns the paths of the entire selection', () => {
-      // Should return the paths of the entire selection
-      expect(getSelectionPaths()).toEqual([
-        selectedDrop1.path,
-        selectedDrop2.path,
-        selectedTopic1.path,
-        selectedTopic2.path,
-        selectedRichTextElement1.path,
-      ]);
-    });
-  });
-
-  describe('with resource type filter', () => {
-    it('returns the paths of selected resources matching the given type', () => {
-      // Should return the paths of  selected drops
-      expect(getSelectionPaths('drop')).toEqual([
-        selectedDrop1.path,
-        selectedDrop2.path,
-      ]);
-    });
-
-    it('returns the paths of selected resources matching the given types', () => {
-      // Should return the paths of selected drops and topics
-      expect(getSelectionPaths(['drop', 'topic'])).toEqual([
-        selectedDrop1.path,
-        selectedDrop2.path,
-        selectedTopic1.path,
-        selectedTopic2.path,
-      ]);
-    });
+  it('returns the paths of the entire selection', () => {
+    // Should return the paths of the entire selection
+    expect(getSelectionIds()).toEqual([
+      selectedItem1.id,
+      selectedItem2.id,
+      selectedItem3.id,
+    ]);
   });
 });

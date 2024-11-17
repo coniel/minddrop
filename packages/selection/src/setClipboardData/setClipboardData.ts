@@ -1,6 +1,7 @@
 import React from 'react';
 import { DataInsertAction } from '@minddrop/core';
 import { selectionToEventData } from '../utils/selectionToEventData';
+import { ACTION_DATA_KEY } from '../constants';
 
 /**
  * Sets the current selection as a clipboard event's data.
@@ -19,9 +20,10 @@ export function setClipboardData(
   const selectionData = selectionToEventData();
 
   // Set the action on the event
-  event.clipboardData?.setData('minddrop/action', action);
+  event.clipboardData?.setData(ACTION_DATA_KEY, action);
+
   // Set the selection data on the event
-  Object.keys(selectionData).forEach((key) => {
-    event.clipboardData?.setData(key, selectionData[key]);
+  Object.entries(selectionData).forEach(([key, value]) => {
+    event.clipboardData?.setData(key, value);
   });
 }

@@ -6,7 +6,6 @@ import { dedupeSelectionItemsArray } from '../utils';
 /**
  * Removes the provided items from the current selection.
  *
- * @param core - A MindDrop core instance.
  * @param items - The selection items to remove from the current selection.
  * @dispatches 'selection:items:remove'
  */

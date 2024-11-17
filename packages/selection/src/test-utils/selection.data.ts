@@ -1,31 +1,18 @@
+import { imageFile } from '@minddrop/test-utils';
 import { SelectionItem } from '../types';
 
-export const selectedDrop1: SelectionItem = {
-  type: 'drop',
-  path: '/topic-1/__drops__/0/0',
-};
+function genereateSelectionItem(id: string): Required<SelectionItem> {
+  return {
+    id,
+    getPlainTextContent: () => `Item ${id}`,
+    getHtmlTextContent: () => `<p>Item ${id}</p>`,
+    getFiles: () => [imageFile],
+    getUriList: () => [`uri-${id}`],
+    getData: () => ({ id }),
+  };
+}
 
-export const selectedDrop2: SelectionItem = {
-  type: 'drop',
-  path: '/topic-1/__drops__/0/1',
-};
-
-export const selectedDrop3: SelectionItem = {
-  type: 'drop',
-  path: '/topic-1/__drops__/0/2',
-};
-
-export const selectedTopic1: SelectionItem = {
-  type: 'topic',
-  path: '/topic-1',
-};
-
-export const selectedTopic2: SelectionItem = {
-  type: 'topic',
-  path: '/topic-1/topic-2',
-};
-
-export const selectedRichTextElement1: SelectionItem = {
-  type: 'rich-text-element',
-  path: '/topic-1/__drops__/0/0/__rich-text-element__/0',
-};
+export const selectedItem1 = genereateSelectionItem('1');
+export const selectedItem2 = genereateSelectionItem('2');
+export const selectedItem3 = genereateSelectionItem('3');
+export const selectedItemWithoutCallbacks = { id: 'no-callbacks' };

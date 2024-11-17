@@ -1,11 +1,39 @@
 export interface SelectionItem {
   /**
-   * The item type, e.g. 'drop'.
+   * Callback fired when the item is dragged, copied, or cut.
+   * Should return a plain text version of the item's content if
+   * applicable.
    */
-  type: string;
+  getPlainTextContent?(): string;
 
   /**
-   * The path to the selected item.
+   * Callback fired when the item is dragged, copied, or cut.
+   * Should return HTML text version of the item's content if
+   * applicable.
    */
-  path: string;
+  getHtmlTextContent?(): string;
+
+  /**
+   * Callback fired when the item is dragged, copied, or cut.
+   * Should return the files associated with the item if applicable.
+   */
+  getFiles?(): File[];
+
+  /**
+   * Callback fired when the item is dragged, copied, or cut.
+   * Should return URIs associated with the item if applicable.
+   */
+  getUriList?(): string[];
+
+  /**
+   * Callback fired when the item is dragged, copied, or cut.
+   * Should return a JSON serterializable object with the item's data.
+   */
+  getData?(): Record<string, any>;
+
+  /**
+   * A unique identifier for the item, usful for checking if the item is
+   * in the current selection.
+   */
+  id: string;
 }

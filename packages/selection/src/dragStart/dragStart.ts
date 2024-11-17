@@ -4,6 +4,7 @@ import { DataInsertAction } from '@minddrop/core';
 import { selectionToEventData } from '../utils/selectionToEventData';
 import { useSelectionStore } from '../useSelectionStore';
 import { getSelection } from '../getSelection';
+import { ACTION_DATA_KEY } from '../constants';
 
 /**
  * Sets the current selection as a drag event's data transfer data.
@@ -24,10 +25,11 @@ export function dragStart(
   const selectionData = selectionToEventData();
 
   // Set the action on the event
-  event.dataTransfer?.setData('minddrop/action', action);
+  event.dataTransfer?.setData(ACTION_DATA_KEY, action);
+
   // Set the selection data on the event
-  Object.keys(selectionData).forEach((key) => {
-    event.dataTransfer?.setData(key, selectionData[key]);
+  Object.entries(selectionData).forEach(([key, value]) => {
+    event.dataTransfer?.setData(key, value);
   });
 
   // Set the dragging state to `true`

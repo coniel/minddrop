@@ -1,7 +1,8 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, selectedDrop1, selectedTopic1 } from '../test-utils';
+import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { setClipboardData } from './setClipboardData';
+import { ACTION_DATA_KEY, SELECTION_DATA_KEY } from '../constants';
 
 describe('setClipboardData', () => {
   let data: Record<string, string> = {};
@@ -19,7 +20,7 @@ describe('setClipboardData', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedDrop1, selectedTopic1]);
+      .addSelectedItems([selectedItem1, selectedItem3]);
   });
 
   afterEach(() => {
@@ -32,21 +33,17 @@ describe('setClipboardData', () => {
     // Set clipboard data with an action of 'move'
     setClipboardData(clipboardEvent, 'move');
 
-    // Should set the 'minddrop/action' data to 'move'
-    expect(data['minddrop/action']).toBe('move');
+    // Should set the action to 'move'
+    expect(data[ACTION_DATA_KEY]).toBe('move');
   });
 
   it('sets the selection data', () => {
     // Set clipboard data
     setClipboardData(clipboardEvent, 'move');
 
-    // Should set the current selection items grouped
-    // by type.
-    expect(data[`minddrop-selection/${selectedDrop1.type}`]).toEqual(
-      JSON.stringify([selectedDrop1]),
-    );
-    expect(data[`minddrop-selection/${selectedTopic1.type}`]).toEqual(
-      JSON.stringify([selectedTopic1]),
+    // Should set the current selection items
+    expect(data[SELECTION_DATA_KEY]).toBe(
+      JSON.stringify([selectedItem1.getData(), selectedItem3.getData()]),
     );
   });
 });

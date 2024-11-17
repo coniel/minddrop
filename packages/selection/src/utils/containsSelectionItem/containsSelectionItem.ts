@@ -13,6 +13,6 @@ export function containsSelectionItem(
   searchItem: SelectionItem,
 ): boolean {
   // Check if the items contains the search item by checking
-  // for a matching path.
-  return !!items.find((item) => item.path === searchItem.path);
+  // for a matching id.
+  return !!items.find((item) => item.id === searchItem.id);
 }

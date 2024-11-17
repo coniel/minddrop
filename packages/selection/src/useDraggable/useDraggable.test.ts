@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@minddrop/test-utils';
-import { setup, cleanup, selectedDrop2, selectedDrop1 } from '../test-utils';
+import { setup, cleanup, selectedItem2, selectedItem1 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { useDraggable } from './useDraggable';
 import { dragStart } from '../dragStart';
@@ -34,13 +34,13 @@ describe('useDraggable', () => {
   });
 
   function init() {
-    return renderHook(() => useDraggable(selectedDrop1));
+    return renderHook(() => useDraggable(selectedItem1));
   }
 
   describe('onDragStart', () => {
     it('exclusively selects the item if not already selected', () => {
       // Set an item as the current selection
-      useSelectionStore.getState().addSelectedItems([selectedDrop2]);
+      useSelectionStore.getState().addSelectedItems([selectedItem2]);
 
       const { result } = init();
 
@@ -51,13 +51,13 @@ describe('useDraggable', () => {
 
       // Selection should only contain the target item
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedDrop1,
+        selectedItem1,
       ]);
     });
 
     it('preserves current selection if the item is not already selected and Shift key is pressed', () => {
       // Set an item as the current selection
-      useSelectionStore.getState().addSelectedItems([selectedDrop2]);
+      useSelectionStore.getState().addSelectedItems([selectedItem2]);
 
       const { result } = init();
 
@@ -72,8 +72,8 @@ describe('useDraggable', () => {
 
       // Selection should contain the original selection
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedDrop2,
-        selectedDrop1,
+        selectedItem2,
+        selectedItem1,
       ]);
     });
 
@@ -82,7 +82,7 @@ describe('useDraggable', () => {
       // including the target item.
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedDrop1, selectedDrop2]);
+        .addSelectedItems([selectedItem1, selectedItem2]);
 
       const { result } = init();
 
@@ -93,8 +93,8 @@ describe('useDraggable', () => {
 
       // Selection should contain the original selection
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedDrop1,
-        selectedDrop2,
+        selectedItem1,
+        selectedItem2,
       ]);
     });
 

@@ -1,10 +1,8 @@
 export { getSelection as get } from './getSelection';
-export { getSelectionPaths as getPaths } from './getSelectionPaths';
-export { getFromDataInsert as fromDataInsert } from './getFromDataInsert';
+export { getSelectionIds as getPaths } from './getSelectionPaths';
+export { fromDataInsert as fromDataInsert } from './fromDataInsert';
 export { isSelected } from './isSelected';
-export { selectionContains as contains } from './selectionContains';
 export { selectionIsEmpty as isEmpty } from './selectionIsEmpty';
-export { filterSelectionItems as filter } from './filterSelectionItems';
 export { addToSelection as add } from './addToSelection';
 export { removeFromSelection as remove } from './removeFromSelection';
 export { select } from './select';

@@ -2,9 +2,9 @@ import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import {
   setup,
   cleanup,
-  selectedDrop1,
-  selectedDrop2,
-  selectedTopic1,
+  selectedItem1,
+  selectedItem2,
+  selectedItem3,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { clearSelection } from './clearSelection';
@@ -16,7 +16,7 @@ describe('clearSelection', () => {
     // Add some items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedDrop1, selectedDrop2, selectedTopic1]);
+      .addSelectedItems([selectedItem1, selectedItem2, selectedItem3]);
     // Set `isDragging` to true
     useSelectionStore.getState().setIsDragging(true);
   });

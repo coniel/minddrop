@@ -1,32 +1,73 @@
-import { SelectionItem } from '../../types';
-import { useSelectionStore } from '../../useSelectionStore';
+import { SELECTION_DATA_KEY } from '../../constants';
+import { getSelection } from '../../getSelection';
+
+export interface EventData {
+  'text/plain'?: string;
+  'text/html'?: string;
+  'text/uri-list'?: string;
+  Files?: File[];
+  'application/minddrop-selection'?: string;
+}
 
 /**
- * Converts the current selection into a map of stringified
- * selection item arrays in which items are grouped by type.
+ * Converts the current selection to an object that can be used as
+ * the data for a `ClipboardEvent` or a `DropEvent`.
  *
- * @returns A `{ 'minddrop-selection/[type]': string }` map.
+ * @returns An object containing the formatted selection data.
  */
-export function selectionToEventData(): Record<string, string> {
-  // Get the current selection
-  const selection = useSelectionStore.getState().selectedItems;
+export function selectionToEventData(): EventData {
+  const eventData: EventData = {};
+  const selection = getSelection();
 
-  // Group the selection items by type
-  const grouped = selection.reduce(
-    (groups, item) => ({
-      ...groups,
-      [item.type]: groups[item.type] ? [...groups[item.type], item] : [item],
-    }),
-    {} as Record<string, SelectionItem[]>,
+  // Combine the plain text data into a single string
+  // and set it as 'text/plain'.
+  eventData['text/plain'] = selection
+    .map((item) => item.getPlainTextContent?.())
+    .filter((textContent) => textContent !== undefined)
+    .join('\n\n');
+
+  // Combine the HTML text data into a single string
+  // and set it as 'text/html'.
+  eventData['text/html'] = selection
+    .map((item) => item.getHtmlTextContent?.())
+    .filter((htmlContent) => htmlContent !== undefined)
+    .join('\n\n');
+
+  // Combine the URIs into a single string
+  // and set it as 'text/uri-list'.
+  eventData['text/uri-list'] = selection
+    .map((item) => item.getUriList?.())
+    .filter((uriList) => uriList !== undefined)
+    .join('\n');
+
+  // Combine all the files into a single array
+  // and set it as 'Files'.
+  eventData.Files = selection
+    .map((item) => item.getFiles?.())
+    .reduce<File[]>(
+      (allFiles, files) => (files ? allFiles.concat(files) : allFiles),
+      [],
+    );
+
+  // Combine the item data into a single object
+  // and set it as the selection data key.
+  eventData[SELECTION_DATA_KEY] = JSON.stringify(
+    selection
+      .map((item) => item.getData?.())
+      .filter((data) => data !== undefined),
   );
 
-  // Stringify the grouped items and add 'mindrop-selection/'
-  // prefix to the keys.
-  return Object.keys(grouped).reduce(
-    (stringified, item) => ({
-      ...stringified,
-      [`minddrop-selection/${item}`]: JSON.stringify(grouped[item]),
-    }),
-    {},
-  );
+  // Remove any empty string properties
+  Object.entries(eventData).forEach(([key, value]) => {
+    if (value === '' || value === '[]') {
+      delete eventData[key as keyof EventData];
+    }
+  });
+
+  // Remove Files if it is empty
+  if (eventData.Files?.length === 0) {
+    delete eventData.Files;
+  }
+
+  return eventData;
 }

@@ -1,8 +1,9 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup, selectedDrop1, selectedTopic1 } from '../test-utils';
+import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { cutSelection } from './cutSelection';
+import { SELECTION_DATA_KEY } from '../constants';
 
 describe('cutSelection', () => {
   let data: Record<string, string> = {};
@@ -22,7 +23,7 @@ describe('cutSelection', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedDrop1, selectedTopic1]);
+      .addSelectedItems([selectedItem1, selectedItem3]);
   });
 
   afterEach(() => {
@@ -36,8 +37,8 @@ describe('cutSelection', () => {
     cutSelection(clipboardEvent);
 
     // Should set the clipboard data
-    expect(data[`minddrop-selection/${selectedDrop1.type}`]).toEqual(
-      JSON.stringify([selectedDrop1]),
+    expect(data[SELECTION_DATA_KEY]).toEqual(
+      JSON.stringify([selectedItem1, selectedItem3]),
     );
   });
 
@@ -48,7 +49,7 @@ describe('cutSelection', () => {
         // Payload data should contain the event
         expect(payload.data.event).toEqual(clipboardEvent);
         // Payload data should contain the selection
-        expect(payload.data.selection).toEqual([selectedDrop1, selectedTopic1]);
+        expect(payload.data.selection).toEqual([selectedItem1, selectedItem3]);
         done();
       });
 

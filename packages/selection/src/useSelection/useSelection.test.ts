@@ -1,12 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { renderHook, act } from '@minddrop/test-utils';
-import {
-  setup,
-  cleanup,
-  selectedDrop1,
-  selectedDrop2,
-  selectedTopic1,
-} from '../test-utils';
+import { setup, cleanup, selectedItem1, selectedItem2 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { useSelection } from './useSelection';
 
@@ -15,7 +9,7 @@ describe('useSelection', () => {
     setup();
 
     // Add an item to the selection
-    useSelectionStore.getState().addSelectedItems([selectedDrop1]);
+    useSelectionStore.getState().addSelectedItems([selectedItem1]);
   });
 
   afterEach(() => {
@@ -30,22 +24,10 @@ describe('useSelection', () => {
 
     act(() => {
       // Add an item to the selection
-      useSelectionStore.getState().addSelectedItems([selectedDrop2]);
+      useSelectionStore.getState().addSelectedItems([selectedItem2]);
     });
 
     // Should return the current selection
-    expect(result.current).toEqual([selectedDrop1, selectedDrop2]);
-  });
-
-  it('filters selection by item type', () => {
-    // Add a 'topic' item to the selection
-    useSelectionStore.getState().addSelectedItems([selectedTopic1]);
-
-    // Get the current selection, filtering for the
-    // 'topic' item type.
-    const { result } = renderHook(() => useSelection('topic'));
-
-    // Should return the current selection
-    expect(result.current).toEqual([selectedTopic1]);
+    expect(result.current).toEqual([selectedItem1, selectedItem2]);
   });
 });
