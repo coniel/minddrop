@@ -1,4 +1,3 @@
-import { imageFile } from '@minddrop/test-utils';
 import { SelectionItem } from '../types';
 
 function genereateSelectionItem(id: string): Required<SelectionItem> {
@@ -6,7 +5,7 @@ function genereateSelectionItem(id: string): Required<SelectionItem> {
     id,
     getPlainTextContent: () => `Item ${id}`,
     getHtmlTextContent: () => `<p>Item ${id}</p>`,
-    getFiles: () => [imageFile],
+    getFiles: () => [{} as File],
     getUriList: () => [`uri-${id}`],
     getData: () => ({ id }),
   };
