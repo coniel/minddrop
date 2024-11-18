@@ -9,6 +9,7 @@ import { Nodes } from '@minddrop/nodes';
 import { Selection } from '@minddrop/Selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
+import * as Ui from '@minddrop/ui';
 import { MindDropApi as Api } from './types';
 
 export const MindDropApi: Api = {
@@ -22,6 +23,7 @@ export const MindDropApi: Api = {
   Markdown,
   Nodes,
   Selection,
+  Ui,
   Utils,
   Workspaces,
 };

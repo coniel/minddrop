@@ -1,6 +1,6 @@
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { ContentColor } from '@minddrop/ui';
+import { ContentColor } from '../types';
 import './Block.css';
 
 export interface BlockProps extends React.HTMLAttributes<HTMLDivElement> {

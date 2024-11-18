@@ -9,6 +9,7 @@ import { Nodes } from '@minddrop/nodes';
 import { Selection } from '@minddrop/selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
+import * as Ui from '@minddrop/ui';
 
 export interface MindDropApi {
   Ast: typeof Ast;
@@ -22,5 +23,6 @@ export interface MindDropApi {
   Nodes: typeof Nodes;
   Selection: typeof Selection;
   Workspaces: typeof Workspaces;
+  Ui: typeof Ui;
   Utils: typeof Utils;
 }
