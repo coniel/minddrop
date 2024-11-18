@@ -11,14 +11,31 @@ export const LinkNodeRenderer: React.FC<LinkNodeRendererProps> = ({
   node,
   onChange,
 }) => {
-  const { Fs, Utils, Workspaces } = useApi();
+  const {
+    Fs,
+    Utils,
+    Workspaces,
+    Selection,
+    Ui: { Block },
+  } = useApi();
+  // Path to the parent document
   const parentPath = Utils.useParentDir();
+  // Path to the current node considering the parent path
+  // and node ID as a subpath.
+  const path = `${parentPath}#${node.id}`;
   const [imageStatus, setImageStatus] = useState<
     'hidden' | 'ready' | 'downloading'
   >('hidden');
   const [iconStatus, setIconStatus] = useState<
     'hidden' | 'ready' | 'downloading'
   >('hidden');
+  // Make the node selectable
+  const { selected, onClick } = Selection.useSelectable({
+    id: path,
+    getUriList: () => [node.url],
+  });
+  // Make the node draggable
+  const { onDragStart } = Selection.useDraggable({ id: path });
 
   const workspace = useMemo(
     () => Workspaces.getParentWorkspace(parentPath),
@@ -190,32 +207,40 @@ export const LinkNodeRenderer: React.FC<LinkNodeRendererProps> = ({
   );
 
   return (
-    <a className="link-node-renderer" href={node.url} onClick={openLink}>
-      <div
-        className={Utils.mapPropsToClasses(
-          { hasImage: !!node.metadata?.image },
-          'description-container',
-        )}
-      >
-        <div className="title">{node.metadata?.title || node.url}</div>
-        {node.metadata?.description && (
-          <div className="description">{node.metadata.description}</div>
-        )}
-        <div className="domain-container">
-          {iconStatus === 'ready' && (
-            <LocalImage className="favicon" path={iconFilePath} />
+    <Block
+      draggable
+      className="link-node-renderer"
+      selected={selected}
+      onDragStart={onDragStart}
+    >
+      <a href={node.url} onClick={openLink}>
+        <div
+          className={Utils.mapPropsToClasses(
+            { hasImage: !!node.metadata?.image },
+            'description-container',
           )}
-          <div className="domain">{domain}</div>
+        >
+          <div className="title">{node.metadata?.title || node.url}</div>
+          {node.metadata?.description && (
+            <div className="description">{node.metadata.description}</div>
+          )}
+          <div className="domain-container">
+            {iconStatus === 'ready' && (
+              <LocalImage className="favicon" path={iconFilePath} />
+            )}
+            <div className="domain">{domain}</div>
+          </div>
         </div>
-      </div>
-      {imageStatus === 'ready' && (
-        <div className="image-container">
-          <LocalImage className="image" path={imageFilePath} />
-        </div>
-      )}
-      {imageStatus === 'downloading' && (
-        <div className="image-container">Downloading image...</div>
-      )}
-    </a>
+        {imageStatus === 'ready' && (
+          <div className="image-container">
+            <LocalImage className="image" path={imageFilePath} />
+          </div>
+        )}
+        {imageStatus === 'downloading' && (
+          <div className="image-container">Downloading image...</div>
+        )}
+      </a>
+      <div className="drag-handle" onClick={onClick} />
+    </Block>
   );
 };
