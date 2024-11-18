@@ -27,7 +27,7 @@ export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
 
   return (
     <BoardNodesProvider value={document}>
-      <div className="board-view" onMouseDown={Selection.clear}>
+      <div className="board-view" onClick={Selection.clear}>
         {rootNodes.map((node) => (
           <BoardNode key={node.id} node={node} />
         ))}
