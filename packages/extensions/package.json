@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
-    "@minddrop/blocks": "workspace:*",
     "@minddrop/documents": "workspace:*",
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
