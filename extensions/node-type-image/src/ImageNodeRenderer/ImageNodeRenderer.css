@@ -1,0 +1,22 @@
+.image-node-renderer {
+  padding: 0;
+  overflow: hidden;
+}
+
+.image-node-renderer .drag-handle {
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  cursor: move;
+}
+
+.image-node-renderer .drag-handle {
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  cursor: move;
+}
