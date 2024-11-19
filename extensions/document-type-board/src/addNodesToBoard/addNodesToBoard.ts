@@ -1,5 +1,5 @@
 import { Node } from '@minddrop/nodes';
-import { BoardContent, BoardDocument } from '../types';
+import { BoardContent } from '../types';
 
 /**
  * Adds nodes to the board content.

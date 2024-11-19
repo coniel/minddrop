@@ -6,6 +6,7 @@ import { BoardColumnsNode } from '../BoardColumnsNode';
 import { useBoardDocument } from '../../BoardDocumentProvider';
 import { updateNodeInBoard } from '../../updateNodeInBoard';
 import { getBoardContent } from '../../getBoardContent';
+import { removeNodeFromBoard } from '../../removeNodeFromBoard';
 
 export const BoardNode: React.FC<Pick<NodeRendererProps, 'node'>> = ({
   node,
@@ -22,8 +23,22 @@ export const BoardNode: React.FC<Pick<NodeRendererProps, 'node'>> = ({
     [board],
   );
 
+  const onDelete = useCallback(
+    (node: Node) => {
+      removeNodeFromBoard({ ...board, content: getBoardContent(board) }, node);
+    },
+    [board],
+  );
+
   if (!Nodes.isGroupNode(node)) {
-    return <NodeRenderer node={node} onChange={onChange} {...other} />;
+    return (
+      <NodeRenderer
+        node={node}
+        onChange={onChange}
+        onDelete={onDelete}
+        {...other}
+      />
+    );
   }
 
   switch (node.display) {
@@ -32,6 +47,13 @@ export const BoardNode: React.FC<Pick<NodeRendererProps, 'node'>> = ({
     case 'board-column':
       return <BoardColumnNode node={node} {...other} />;
     default:
-      return <NodeRenderer node={node} onChange={onChange} {...other} />;
+      return (
+        <NodeRenderer
+          node={node}
+          onChange={onChange}
+          onDelete={onDelete}
+          {...other}
+        />
+      );
   }
 };

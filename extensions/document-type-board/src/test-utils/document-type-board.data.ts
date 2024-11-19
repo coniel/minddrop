@@ -23,7 +23,15 @@ export const columnsNode = Nodes.generateGroupNode(
 export const boardProperties = { ...DefaultBoardProperties };
 
 export const boardContent: BoardContent = {
-  nodes: [columnsNode, column1Node, column2Node, column3Node],
+  nodes: [
+    columnsNode,
+    column1Node,
+    column2Node,
+    column3Node,
+    textNode1,
+    textNode2,
+    textNode3,
+  ],
   rootNodes: [columnsNode.id],
 };
 
