@@ -10,6 +10,7 @@ import './LinkNodeRenderer.css';
 export const LinkNodeRenderer: React.FC<LinkNodeRendererProps> = ({
   node,
   onChange,
+  onDelete,
 }) => {
   const {
     Fs,
@@ -33,6 +34,7 @@ export const LinkNodeRenderer: React.FC<LinkNodeRendererProps> = ({
   const { selected, onClick } = Selection.useSelectable({
     id: path,
     getUriList: () => [node.url],
+    onDelete: () => onDelete(node),
   });
   // Make the node draggable
   const { onDragStart } = Selection.useDraggable({ id: path });
