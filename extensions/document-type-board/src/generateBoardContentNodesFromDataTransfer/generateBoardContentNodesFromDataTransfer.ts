@@ -1,20 +1,21 @@
-import { Documents } from '@minddrop/documents';
-import { Fs } from '@minddrop/file-system';
-import { Nodes, Node } from '@minddrop/nodes';
+import { MindDropApi, Node } from '@minddrop/extension';
 
 /**
  * Generates nodes from a data transfer object.
  * If the data transfer contains files and the board is not wrapped,
  * the board document will be wrapped before generating the nodes.
  *
+ * @param api - The MindDrop API.
  * @param boardPath - The path of the board document.
  * @param dataTransfer - The data transfer object.
  * @returns A tuple containing the generated nodes and the path of the board document.
  */
 export async function generateBoardContentNodesFromDataTransfer(
+  API: MindDropApi,
   boardPath: string,
   dataTransfer: DataTransfer,
 ): Promise<[Node[], string]> {
+  const { Documents, Fs, Nodes } = API;
   let path = boardPath;
   const transfer = {
     files: dataTransfer.files,

@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
+import { Utils } from '@minddrop/extension';
 import { addNodesToBoard } from './addNodesToBoard';
-import { Nodes } from '@minddrop/nodes';
 import { boardDocument } from '../test-utils';
 
 const newNodes = [
-  Nodes.generateGroupNode([], 'board-column'),
-  Nodes.generateGroupNode([], 'board-column'),
+  Utils.generateGroupNode([], 'board-column'),
+  Utils.generateGroupNode([], 'board-column'),
 ];
 
 describe('addNodeToBoard', () => {

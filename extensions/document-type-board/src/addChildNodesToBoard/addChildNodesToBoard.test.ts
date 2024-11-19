@@ -1,9 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { GroupNode, Nodes } from '@minddrop/nodes';
-import { boardDocument, column1Node } from '../test-utils';
+import { GroupNode } from '@minddrop/extension';
+import {
+  boardDocument,
+  column1Node,
+  textNode1,
+  textNode2,
+} from '../test-utils';
 import { addChildNodesToBoard } from './addChildNodesToBoard';
 
-const childNodes = [Nodes.generateTextNode(), Nodes.generateTextNode()];
+const childNodes = [textNode1, textNode2];
 const parentNode = column1Node;
 
 describe('addNodeToBoard', () => {

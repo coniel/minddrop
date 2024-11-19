@@ -10,19 +10,12 @@
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
-    "@minddrop/test-utils": "workspace:*",
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@minddrop/documents": "workspace:*",
-    "@minddrop/extension": "workspace:*",
-    "@minddrop/file-system": "workspace:*",
-    "@minddrop/icons": "workspace:*",
-    "@minddrop/nodes": "workspace:*",
-    "@minddrop/utils": "workspace:*",
-    "@minddrop/ui": "workspace:*"
+    "@minddrop/extension": "workspace:*"
   }
 }

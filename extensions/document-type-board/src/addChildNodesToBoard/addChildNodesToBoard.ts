@@ -1,4 +1,4 @@
-import { GroupNode, Node } from '@minddrop/nodes';
+import { GroupNode, Node } from '@minddrop/extension';
 import { BoardContent } from '../types';
 import { addNodesToBoard } from '../addNodesToBoard';
 import { updateNodeInBoard } from '../updateNodeInBoard';

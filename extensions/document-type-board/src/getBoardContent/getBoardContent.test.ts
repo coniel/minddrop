@@ -1,7 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { getBoardContent } from './getBoardContent';
-import { BoardDocumentTypeConfig } from '../BoardDocumentTypeConfig';
-import { Documents } from '@minddrop/documents';
 import {
   boardDocument,
   boardContent,

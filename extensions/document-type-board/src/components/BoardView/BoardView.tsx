@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
-import { Node } from '@minddrop/nodes';
-import { useApi } from '@minddrop/extension';
-import { DocumentViewProps } from '@minddrop/documents';
+import { useApi, Node, DocumentViewProps } from '@minddrop/extension';
 import { BoardContent } from '../../types';
 import { BoardNodesProvider } from '../../BoardDocumentProvider';
 import { BoardNode } from '../BoardNode';

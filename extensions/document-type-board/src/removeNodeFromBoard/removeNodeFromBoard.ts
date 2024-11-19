@@ -1,7 +1,7 @@
-import { Node } from '@minddrop/nodes';
+import { Node } from '@minddrop/extension';
 import { BoardDocument } from '../types';
 import { removeNodesFromBoard } from '../removeNodesFromBoard';
-import { Documents } from '@minddrop/documents';
+import { MindDropApi } from '../../../../packages/extensions/src';
 
 // Timeout ID to manage debounce delay
 let debounceTimeout: NodeJS.Timeout | null = null;
@@ -16,11 +16,16 @@ const debounceDelay = 20;
  * This function is debounced to allow multiple
  * calls to be batched into a single operation.
  *
+ * @param API - The MindDrop API.
  * @param boardDocument - The current board content.
  * @param nodes - The nodes to remove from the board.
  * @returns The updated board content.
  */
-export function removeNodeFromBoard(board: BoardDocument, node: Node): void {
+export function removeNodeFromBoard(
+  API: MindDropApi,
+  board: BoardDocument,
+  node: Node,
+): void {
   // Add the node to the array of nodes to delete
   nodesToDelete.push(node);
 
@@ -32,15 +37,13 @@ export function removeNodeFromBoard(board: BoardDocument, node: Node): void {
   // Set a new timeout to call removeNodeFromBoard after the
   // debounce delay.
   debounceTimeout = setTimeout(() => {
-    console.log('board', board);
     // Call the function to delete the nodes
     const updatedContent = removeNodesFromBoard(board.content!, nodesToDelete);
-    console.log('running removeNodeFromBoard');
 
     // Clear the array after the nodes have been deleted
     nodesToDelete = [];
 
     // Update the board document with the new content
-    Documents.update(board.path, { content: updatedContent });
+    API.Documents.update(board.path, { content: updatedContent });
   }, debounceDelay);
 }

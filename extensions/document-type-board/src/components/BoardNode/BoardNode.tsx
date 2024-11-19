@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { Node, NodeRenderer, NodeRendererProps, Nodes } from '@minddrop/nodes';
-import { Documents } from '@minddrop/documents';
+import { NodeRendererProps, Node, useApi } from '@minddrop/extension';
 import { BoardColumnNode } from '../BoardColumnNode';
 import { BoardColumnsNode } from '../BoardColumnsNode';
 import { useBoardDocument } from '../../BoardDocumentProvider';
@@ -12,25 +11,33 @@ export const BoardNode: React.FC<Pick<NodeRendererProps, 'node'>> = ({
   node,
   ...other
 }) => {
+  const {
+    Nodes: { isGroupNode, NodeRenderer },
+  } = useApi();
+  const API = useApi();
   const board = useBoardDocument();
 
   const onChange = useCallback(
     (node: Node) => {
       const content = updateNodeInBoard(getBoardContent(board), node);
 
-      Documents.update(board.path, { content });
+      API.Documents.update(board.path, { content });
     },
-    [board],
+    [board, API],
   );
 
   const onDelete = useCallback(
     (node: Node) => {
-      removeNodeFromBoard({ ...board, content: getBoardContent(board) }, node);
+      removeNodeFromBoard(
+        API,
+        { ...board, content: getBoardContent(board) },
+        node,
+      );
     },
-    [board],
+    [board, API],
   );
 
-  if (!Nodes.isGroupNode(node)) {
+  if (!isGroupNode(node)) {
     return (
       <NodeRenderer
         node={node}

@@ -1,4 +1,4 @@
-import { Document } from '@minddrop/documents';
+import { Document } from '@minddrop/extension';
 import { BoardContent } from './BoardData.types';
 
 export type BoardDocument = Document<BoardContent>;

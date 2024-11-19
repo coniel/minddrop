@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
-import { Button } from '@minddrop/ui';
-import { Documents } from '@minddrop/documents';
+import { useApi } from '@minddrop/extension';
 import { BoardColumnNode as ColumnNode } from '../../types';
 import { useBoardDocument, useChildNodes } from '../../BoardDocumentProvider';
 import { generateBoardContentNodesFromDataTransfer } from '../../generateBoardContentNodesFromDataTransfer';
@@ -23,6 +21,7 @@ export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
   className,
   ...other
 }) => {
+  const API = useApi();
   const board = useBoardDocument();
   const nodes = useChildNodes(columnNode.children);
 
@@ -32,6 +31,7 @@ export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
       // Generate new content nodes from the data transfer
       const [nodes, boardPath] =
         await generateBoardContentNodesFromDataTransfer(
+          API,
           board.path,
           event.dataTransfer,
         );
@@ -46,9 +46,9 @@ export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
       );
 
       // Update the board document
-      Documents.update(boardPath, { content: updatedContent });
+      API.Documents.update(boardPath, { content: updatedContent });
     },
-    [board, columnNode],
+    [board, columnNode, API],
   );
 
   const onDropColumnEnd = useCallback(
@@ -64,7 +64,10 @@ export const BoardColumnNode: React.FC<BoardColumnNodeProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses({ className }, 'board-column-node')}
+      className={API.Utils.mapPropsToClasses(
+        { className },
+        'board-column-node',
+      )}
       {...other}
     >
       {nodes.map((childNode, nodeIndex) => (
@@ -104,6 +107,10 @@ const BoardColumnNodeEnd: React.FC<{
   onClickDelete(): void;
   onDrop(event: React.DragEvent<HTMLDivElement>): void;
 }> = ({ enableDelete, onClickDelete, onDrop }) => {
+  const {
+    Ui: { Button },
+  } = useApi();
+
   return (
     <div className="board-column-node-end">
       <BoardDropZone

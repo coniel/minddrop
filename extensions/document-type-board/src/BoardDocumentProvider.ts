@@ -1,9 +1,8 @@
-import { Node } from '@minddrop/nodes';
-import { createContext } from '@minddrop/utils';
+import { Node, Utils } from '@minddrop/extension';
 import { BoardDocument } from './types';
 import { getBoardContent } from './getBoardContent';
 
-const [hook, Provider] = createContext<BoardDocument>();
+const [hook, Provider] = Utils.createContext<BoardDocument>();
 
 export const useBoardDocument = hook;
 export const BoardNodesProvider = Provider;

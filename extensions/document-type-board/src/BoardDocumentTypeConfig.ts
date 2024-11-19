@@ -1,18 +1,17 @@
-import { DocumentTypeConfig } from '@minddrop/documents';
+import { DocumentTypeConfig, Utils } from '@minddrop/extension';
 import { DefaultBoardProperties } from './constants';
 import { BoardView } from './components';
 import { BoardContent } from './types';
-import { Nodes } from '@minddrop/nodes';
 
 export const BoardDocumentTypeConfig: DocumentTypeConfig<BoardContent> = {
   fileType: 'board',
   initialize: () => {
     const columns = [
-      Nodes.generateGroupNode([], 'board-column'),
-      Nodes.generateGroupNode([], 'board-column'),
-      Nodes.generateGroupNode([], 'board-column'),
+      Utils.generateGroupNode([], 'board-column'),
+      Utils.generateGroupNode([], 'board-column'),
+      Utils.generateGroupNode([], 'board-column'),
     ];
-    const container = Nodes.generateGroupNode(
+    const container = Utils.generateGroupNode(
       columns.map((col) => col.id),
       'board-columns',
     );

@@ -1,7 +1,5 @@
-import React from 'react';
-import { useCallback } from 'react';
-import { Nodes } from '@minddrop/nodes';
-import { Documents } from '@minddrop/documents';
+import React, { useCallback } from 'react';
+import { useApi } from '@minddrop/extension';
 import { useBoardDocument, useChildNodes } from '../../BoardDocumentProvider';
 import { BoardColumnsNode as ColumnsNode } from '../../types';
 import { generateBoardContentNodesFromDataTransfer } from '../../generateBoardContentNodesFromDataTransfer';
@@ -23,13 +21,14 @@ export const BoardColumnsNode: React.FC<BoardColumnsNodeProps> = ({
   className,
   ...other
 }) => {
+  const API = useApi();
   const board = useBoardDocument();
   const nodes = useChildNodes(columnsNode.children);
 
   const onDropVerticalZone = useCallback(
     async (event: React.DragEvent, index: number) => {
       // Generate a new column node
-      const newColumn = Nodes.generateGroupNode([], 'board-column');
+      const newColumn = API.Nodes.generateGroupNode([], 'board-column');
 
       // Add the new column node as a child to the columns node
       let updatedContent = addChildNodesToBoard(
@@ -42,6 +41,7 @@ export const BoardColumnsNode: React.FC<BoardColumnsNodeProps> = ({
       // Generate new content nodes from the data transfer
       const [nodes, boardPath] =
         await generateBoardContentNodesFromDataTransfer(
+          API,
           board.path,
           event.dataTransfer,
         );
@@ -50,9 +50,9 @@ export const BoardColumnsNode: React.FC<BoardColumnsNodeProps> = ({
       updatedContent = addChildNodesToBoard(updatedContent, newColumn, nodes);
 
       // Update the board document
-      Documents.update(boardPath, { content: updatedContent });
+      API.Documents.update(boardPath, { content: updatedContent });
     },
-    [columnsNode, board],
+    [columnsNode, board, API],
   );
 
   return (

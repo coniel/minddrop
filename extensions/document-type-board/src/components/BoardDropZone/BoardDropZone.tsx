@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
+import { useApi } from '@minddrop/extension';
 
 export interface BoardDropZoneProps extends React.HTMLProps<HTMLDivElement> {
   /**
@@ -25,6 +25,9 @@ export const BoardDropZone: React.FC<BoardDropZoneProps> = ({
   children,
   ...other
 }) => {
+  const {
+    Utils: { mapPropsToClasses },
+  } = useApi();
   const [dragOver, setDragOver] = useState(false);
 
   const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {

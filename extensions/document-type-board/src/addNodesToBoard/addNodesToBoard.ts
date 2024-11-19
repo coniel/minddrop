@@ -1,4 +1,4 @@
-import { Node } from '@minddrop/nodes';
+import { Node } from '@minddrop/extension';
 import { BoardContent } from '../types';
 
 /**

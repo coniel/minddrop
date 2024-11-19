@@ -1,4 +1,4 @@
-import { Icons, UserIconType } from '@minddrop/icons';
+import { Icons, UserIconType } from '@minddrop/extension';
 
 export const DefaultBoardIcon = Icons.stringify({
   type: UserIconType.ContentIcon,
