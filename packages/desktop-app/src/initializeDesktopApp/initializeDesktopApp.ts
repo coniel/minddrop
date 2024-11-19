@@ -6,7 +6,7 @@ import { Nodes } from '@minddrop/nodes';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
-import { BoardDocumentTypeConfig } from '@minddrop/document-type-board';
+import DocumentTypeBoardExtension from '@minddrop/document-type-board';
 import { initializeExtensions } from '@minddrop/extensions';
 import NodeTypeTextExtension from '@minddrop/node-type-text';
 import NodeTypeImageExtension from '@minddrop/node-type-image';
@@ -28,16 +28,12 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   Ast.registerDefaultConfigs();
   Nodes.registerDefaultNodeRendererConfigs();
   Documents.register(NoteDocumentTypeConfig);
-  Documents.register(BoardDocumentTypeConfig);
 
   // Load persisted config values
   await loadConfigs();
 
   // Initialize workspaces
   await initializeWorkspaces();
-
-  // Initialize documents
-  await initializeDocuments();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
@@ -57,10 +53,14 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize extensions
   await initializeExtensions([
+    DocumentTypeBoardExtension,
     NodeTypeImageExtension,
     NodeTypeLinkExtension,
     NodeTypeTextExtension,
   ]);
+
+  // Initialize documents
+  await initializeDocuments();
 
   return () => {
     // Remove config files watcher
