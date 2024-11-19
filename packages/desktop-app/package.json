@@ -38,6 +38,7 @@
     "@minddrop/node-type-image": "workspace:*",
     "@minddrop/node-type-link": "workspace:*",
     "@minddrop/node-type-text": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@minddrop/ui": "workspace:*",

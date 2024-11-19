@@ -14,6 +14,7 @@ import NodeTypeLinkExtension from '@minddrop/node-type-link';
 import { Ast } from '@minddrop/ast';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
+import { initializeSelection } from './initializeSelection';
 
 // Initialize internationalization
 initializeI18n();
@@ -37,6 +38,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize documents
   await initializeDocuments();
+
+  // Initialize global selection keyboard shortcuts
+  initializeSelection();
 
   // Watch for app config file changes
   const cancelConfigsWatcher = await watchAppConfigFiles();
