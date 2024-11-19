@@ -9,13 +9,23 @@ interface NodeRendererProps {
 
   /**
    * Callback fired when the node changes.
+   *
+   * @param node - The updated node.
    */
   onChange: (node: Node) => void;
+
+  /**
+   * Callback fired when the node is deleted.
+   *
+   * @param node - The node to delete.
+   */
+  onDelete: (node: Node) => void;
 }
 
 export const NodeRenderer: React.FC<NodeRendererProps> = ({
   node,
   onChange,
+  onDelete,
 }) => {
   const nodeRenderer = useNodeRendererConfig(
     node.type,
@@ -26,5 +36,11 @@ export const NodeRenderer: React.FC<NodeRendererProps> = ({
     return null;
   }
 
-  return <nodeRenderer.component node={node as TextNode} onChange={onChange} />;
+  return (
+    <nodeRenderer.component
+      node={node as TextNode}
+      onChange={onChange}
+      onDelete={onDelete}
+    />
+  );
 };

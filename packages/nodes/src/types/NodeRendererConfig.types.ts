@@ -34,8 +34,17 @@ export interface NodeRendererProps<TNode extends Node = Node> {
 
   /**
    * Callback to update the node.
+   *
+   * @param node - The updated node.
    */
   onChange: (node: TNode) => void;
+
+  /**
+   * Callback to delete the node.
+   *
+   * @param node - The node to delete.
+   */
+  onDelete: (node: TNode) => void;
 }
 
 export type TextNodeRendererConfig = BaseNodeRendererConfig<TextNode>;
