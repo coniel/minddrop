@@ -7,10 +7,12 @@ import { DocumentsStore } from '../DocumentsStore';
  * @param path - The document path.
  * @returns A document or null.
  */
-export function getDocument(path: string): Document | null {
+export function getDocument<TDocument extends Document>(
+  path: string,
+): TDocument | null {
   return (
-    DocumentsStore.getState().documents.find(
+    (DocumentsStore.getState().documents.find(
       (document) => document.path === path,
-    ) || null
+    ) as TDocument) || null
   );
 }
