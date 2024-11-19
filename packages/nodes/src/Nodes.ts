@@ -19,6 +19,8 @@ import { classifyLinkNode } from './classifyLinkNode';
 
 export { generateNodesFromDataTransfer as fromDataTransfer } from './generateNodesFromDataTransfer';
 
+export * from './components';
+
 /**
  * Registers the default node renderer configurations.
  */
