@@ -7,6 +7,7 @@ import './TextNodeEditorRenderer.css';
 export const TextNodeRenderer: React.FC<TextNodeRendererProps> = ({
   node,
   onChange,
+  onDelete,
 }) => {
   const {
     Utils,
@@ -23,6 +24,7 @@ export const TextNodeRenderer: React.FC<TextNodeRendererProps> = ({
   const { selected, onClick } = Selection.useSelectable({
     id: path,
     getPlainTextContent: () => node.text,
+    onDelete: () => onDelete(node),
   });
   // Make the node draggable
   const { onDragStart } = Selection.useDraggable({ id: path });
