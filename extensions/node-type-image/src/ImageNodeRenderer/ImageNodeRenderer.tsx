@@ -8,6 +8,7 @@ import './ImageNodeRenderer.css';
 
 export const ImageNodeRenderer: React.FC<FileNodeRendererProps> = ({
   node,
+  onDelete,
 }) => {
   const {
     Fs,
@@ -28,8 +29,12 @@ export const ImageNodeRenderer: React.FC<FileNodeRendererProps> = ({
     [node.file, parentDir, Fs],
   );
   const selectionItem: SelectionItem = useMemo(
-    () => ({ id: path, getPlainTextContent: () => node.file }),
-    [path, node.file],
+    () => ({
+      id: path,
+      getPlainTextContent: () => node.file,
+      onDelete: () => onDelete(node),
+    }),
+    [path, node, onDelete],
   );
   // Make the node selectable
   const { selected, onClick } = Selection.useSelectable(selectionItem);
