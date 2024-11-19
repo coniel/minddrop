@@ -32,6 +32,12 @@ export interface SelectionItem {
   getData?(): Record<string, any>;
 
   /**
+   * Callback fired when the Delete or Backspace key is pressed
+   * while the item is selected.
+   */
+  onDelete?(): void;
+
+  /**
    * A unique identifier for the item, usful for checking if the item is
    * in the current selection.
    */

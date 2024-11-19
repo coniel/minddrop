@@ -8,6 +8,7 @@ function genereateSelectionItem(id: string): Required<SelectionItem> {
     getFiles: () => [{} as File],
     getUriList: () => [`uri-${id}`],
     getData: () => ({ id }),
+    onDelete: () => {},
   };
 }
 
