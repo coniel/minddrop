@@ -10,7 +10,6 @@ export * from './getMissingItems';
 export * from './isDomainMatch';
 export * from './isEqual';
 export * from './isImageUrl';
-export * from './mapById';
 export * from './mapPropsToClasses';
 export * from './removeObjectsFromArray';
 export * from './throttle';
