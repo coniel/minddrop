@@ -29,7 +29,7 @@ export const NodeRenderer: React.FC<NodeRendererProps> = ({
 }) => {
   const nodeRenderer = useNodeRendererConfig(
     node.type,
-    node.display,
+    node.layout,
   ) as TextNodeRendererConfig;
 
   if (!nodeRenderer) {

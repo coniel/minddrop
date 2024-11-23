@@ -21,7 +21,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'file',
       id: expect.any(String),
       file: textFile.name,
-      display: 'file',
+      layout: 'file',
     });
   });
 
@@ -54,7 +54,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'link',
       id: expect.any(String),
       url: 'https://example.com',
-      display: 'link',
+      layout: 'link',
     });
   });
 
@@ -69,7 +69,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'link',
       id: expect.any(String),
       url: 'https://example.com',
-      display: 'link',
+      layout: 'link',
     });
   });
 
@@ -84,7 +84,7 @@ describe('generateNodesFromDataTransfer', () => {
       type: 'text',
       id: expect.any(String),
       text: 'Hello, world!',
-      display: 'text',
+      layout: 'text',
     });
   });
 });

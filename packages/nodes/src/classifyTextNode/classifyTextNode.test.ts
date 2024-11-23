@@ -6,14 +6,14 @@ import { TextNode } from '../types';
 
 const mathNode: TextNode = {
   type: 'text',
-  display: 'text',
+  layout: 'text',
   id: 'id-1',
   text: '$$\n1 + 1 = 2\n$$',
 };
 
 const textNode: TextNode = {
   type: 'text',
-  display: 'text',
+  layout: 'text',
   id: 'id-2',
   text: 'Hello, world!',
 };
@@ -26,7 +26,7 @@ describe('classifyNode', () => {
     registerNodeClassifierConfig({
       id: 'math',
       nodeType: 'text',
-      display: 'math',
+      layout: 'math',
       callback: (node) =>
         node.text.startsWith('$$') && node.text.endsWith('$$'),
     });
@@ -35,14 +35,14 @@ describe('classifyNode', () => {
   afterEach(cleanup);
 
   it('classifies a node', () => {
-    const display = classifyTextNode(mathNode);
+    const layout = classifyTextNode(mathNode);
 
-    expect(display).toBe('math');
+    expect(layout).toBe('math');
   });
 
-  it('falls back to the default display', () => {
-    const display = classifyTextNode(textNode);
+  it('falls back to the default layout', () => {
+    const layout = classifyTextNode(textNode);
 
-    expect(display).toBe('text');
+    expect(layout).toBe('text');
   });
 });

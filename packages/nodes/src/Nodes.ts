@@ -50,73 +50,73 @@ const removeUndefied = <T extends Node>(node: T): T => {
 };
 
 /**
- * Generates a new text node. If no 'display' value is provided, it will be
+ * Generates a new text node. If no 'layout' value is provided, it will be
  * classified using registered text node classifiers.
  *
  * @param text - The text content of the node.
- * @param display - The node renderer type to use.
+ * @param layout - The node renderer type to use.
  * @returns A new text node.
  */
-export const generateTextNode = (text = '', display = 'text'): TextNode => {
+export const generateTextNode = (text = '', layout = 'text'): TextNode => {
   const node: TextNode = {
     type: 'text',
     id: uuid(),
     text,
-    display,
+    layout: layout,
   };
 
-  if (node.display === 'text') {
-    node.display = classifyTextNode(node);
+  if (node.layout === 'text') {
+    node.layout = classifyTextNode(node);
   }
 
   return node;
 };
 
 /**
- * Generates a new file node. If no 'display' value is provided, it will be
+ * Generates a new file node. If no 'layout' value is provided, it will be
  * classified using registered file node classifiers.
  *
  *
  * @param fileName - The file name.
- * @param display - The node renderer type to use.
+ * @param layout - The node renderer type to use.
  * @returns A new file node.
  */
 export const generateFileNode = (
   fileName: string,
-  display = 'file',
+  layout = 'file',
 ): FileNode => {
   const node: FileNode = {
     type: 'file',
     id: uuid(),
     file: fileName,
-    display,
+    layout: layout,
   };
 
-  if (node.display === 'file') {
-    node.display = classifyFileNode(node);
+  if (node.layout === 'file') {
+    node.layout = classifyFileNode(node);
   }
 
   return node;
 };
 
 /**
- * Generates a new link node. If no 'display' value is provided, it will be
+ * Generates a new link node. If no 'layout' value is provided, it will be
  * classified using registered link node classifiers.
  *
  * @param url - The URL to link to.
- * @param display - The node renderer type to use.
+ * @param layout - The node renderer type to use.
  * @returns A new link node.
  */
-export const generateLinkNode = (url: string, display = 'link'): LinkNode => {
+export const generateLinkNode = (url: string, layout = 'link'): LinkNode => {
   const node: LinkNode = {
     type: 'link',
     id: uuid(),
     url,
-    display,
+    layout: layout,
   };
 
-  if (node.display === 'link') {
-    node.display = classifyLinkNode(node);
+  if (node.layout === 'link') {
+    node.layout = classifyLinkNode(node);
   }
 
   return node;
@@ -126,34 +126,31 @@ export const generateLinkNode = (url: string, display = 'link'): LinkNode => {
  * Generates a new group node.
  *
  * @param children - The IDs of the nodes contained within the group.
- * @param display - The node renderer type to use.
+ * @param layout - The node renderer type to use.
  * @returns A new group node.
  */
 export const generateGroupNode = (
   children: string[],
-  display = 'group',
+  layout = 'group',
 ): GroupNode => ({
   type: 'group',
   id: uuid(),
   children,
-  display,
+  layout: layout,
 });
 
 /**
  * Generates a new widget node.
  *
- * @param display - The node renderer type to use.
+ * @param layout - The node renderer type to use.
  * @param data - The node's JSON data stringified.
  * @returns A new widget node.
  */
-export const generateWidgetNode = (
-  display: string,
-  data?: string,
-): WidgetNode =>
+export const generateWidgetNode = (layout: string, data?: string): WidgetNode =>
   removeUndefied({
     id: uuid(),
     type: 'widget',
-    display,
+    layout,
     data,
   });
 

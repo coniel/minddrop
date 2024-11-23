@@ -2,14 +2,14 @@ import { LinkNode, LinkNodeClassifierConfig } from '../types';
 import { NodeClassifierConfigsStore } from '../NodeClassifierConfigsStore';
 
 /**
- * Adds a display value to a link node based on its content,
+ * Adds a layout value to a link node based on its content,
  * checking against registered link node classifier configs.
  *
- * If no classifier returns a match, the node's original display
+ * If no classifier returns a match, the node's original layout
  * value is returned.
  *
  * @param node - The link node to classify.
- * @returns The display value.
+ * @returns The layout value.
  */
 export function classifyLinkNode(node: LinkNode): string | undefined {
   // Get all link node classifier configs
@@ -18,8 +18,8 @@ export function classifyLinkNode(node: LinkNode): string | undefined {
       classifierConfig.nodeType === 'link',
   );
 
-  // Use the node's current display value as the default
-  let display = node.display;
+  // Use the node's current layout value as the default
+  let layout = node.layout;
 
   // Loop through all classifier configs until a match is found
   classifierConfigs.every((config) => {
@@ -32,7 +32,7 @@ export function classifyLinkNode(node: LinkNode): string | undefined {
         new RegExp(pattern.replace(/\*/g, '[^ ]*')).test(node.url as string),
       )
     ) {
-      display = config.display;
+      layout = config.layout;
 
       return false;
     }
@@ -40,7 +40,7 @@ export function classifyLinkNode(node: LinkNode): string | undefined {
     // Attempt to match using the config's callback function
     // if provided.
     if (config.callback && config.callback(node)) {
-      display = config.display;
+      layout = config.layout;
 
       return false;
     }
@@ -48,5 +48,5 @@ export function classifyLinkNode(node: LinkNode): string | undefined {
     return true;
   });
 
-  return display;
+  return layout;
 }

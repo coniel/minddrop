@@ -2,14 +2,14 @@ import { TextNode, TextNodeClassifierConfig } from '../types';
 import { NodeClassifierConfigsStore } from '../NodeClassifierConfigsStore';
 
 /**
- * Adds a display value to a text node based on its content,
+ * Adds a layout value to a text node based on its content,
  * checking against registered text node classifier configs.
  *
- * If no classifier returns a match, the node's original display
+ * If no classifier returns a match, the node's original layout
  * value is returned.
  *
  * @param node - The text node to classify.
- * @returns The display value.
+ * @returns The layout value.
  */
 export function classifyTextNode(node: TextNode): string | undefined {
   // Get all text node classifier configs
@@ -18,13 +18,13 @@ export function classifyTextNode(node: TextNode): string | undefined {
       classifierConfig.nodeType === 'text',
   );
 
-  // Use the node's current display value as the default
-  let display = node.display;
+  // Use the node's current layout value as the default
+  let layout = node.layout;
 
   // Loop through all classifier configs until a match is found
   classifierConfigs.every((config) => {
     if (config.callback(node)) {
-      display = config.display;
+      layout = config.layout;
 
       return false;
     }
@@ -32,5 +32,5 @@ export function classifyTextNode(node: TextNode): string | undefined {
     return true;
   });
 
-  return display;
+  return layout;
 }

@@ -6,14 +6,14 @@ import { FileNode } from '../types';
 
 const imageNode: FileNode = {
   type: 'file',
-  display: 'file',
+  layout: 'file',
   id: 'id-1',
   file: 'image.jpg',
 };
 
 const textNode: FileNode = {
   type: 'file',
-  display: 'file',
+  layout: 'file',
   id: 'id-2',
   file: 'file.txt',
 };
@@ -26,19 +26,19 @@ describe('classifyNode', () => {
     registerNodeClassifierConfig({
       id: 'image-png',
       nodeType: 'file',
-      display: 'image-png',
+      layout: 'image-png',
       fileTypes: ['png'],
     });
     registerNodeClassifierConfig({
       id: 'image-jpg',
       nodeType: 'file',
-      display: 'image-jpg',
+      layout: 'image-jpg',
       fileTypes: ['jpg', 'jpeg'],
     });
     registerNodeClassifierConfig({
       id: 'image-gif',
       nodeType: 'file',
-      display: 'image-gif',
+      layout: 'image-gif',
       fileTypes: ['gif'],
     });
   });
@@ -46,14 +46,14 @@ describe('classifyNode', () => {
   afterEach(cleanup);
 
   it('classifies a node', () => {
-    const display = classifyFileNode(imageNode);
+    const layout = classifyFileNode(imageNode);
 
-    expect(display).toBe('image-jpg');
+    expect(layout).toBe('image-jpg');
   });
 
-  it('falls back to the default display', () => {
-    const display = classifyFileNode(textNode);
+  it('falls back to the default layout', () => {
+    const layout = classifyFileNode(textNode);
 
-    expect(display).toBe('file');
+    expect(layout).toBe('file');
   });
 });

@@ -12,10 +12,12 @@ export interface BaseNodeClassifierConfig<TNode extends Node = Node> {
   nodeType: TNode['type'];
 
   /**
-   * The display value applied to a node when the classifier
-   * returns a match.
    */
-  display: string;
+  /**
+   * The layout value applied to a node when the classifier returns a
+   * match. Must be the ID of a registered renderer.
+   */
+  layout: string;
 }
 
 export interface FileNodeClassifierConfig

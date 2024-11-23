@@ -16,8 +16,8 @@ export interface BaseNodeData {
   /**
    * Controls how the node is rendered. If absent,
    * the default rendering behavior is used.
+  layout?: string;
    */
-  display?: string;
 
   /**
    * The node color.
