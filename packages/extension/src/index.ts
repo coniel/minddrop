@@ -9,7 +9,7 @@ export type * from '@minddrop/documents';
 export type * from '@minddrop/events';
 export type * from '@minddrop/file-system';
 export type * from '@minddrop/markdown';
-export type * from '@minddrop/nodes';
+export type * from '../../blocks/src';
 export type * from '@minddrop/selection';
 export type * from '@minddrop/theme';
 export type * from '@minddrop/ui';

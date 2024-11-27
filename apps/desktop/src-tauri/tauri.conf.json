@@ -61,7 +61,7 @@
         "title": "MindDrop",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
-        "visible": false
+        "visible": true
       }
     ],
     "security": {

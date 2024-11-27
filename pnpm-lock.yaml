@@ -155,6 +155,25 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
 
+  extensions/bookmark-block:
+    dependencies:
+      '@minddrop/extension':
+        specifier: workspace:*
+        version: link:../../packages/extension
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
+
   extensions/document-type-board:
     dependencies:
       '@minddrop/extension':
@@ -208,7 +227,7 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
-  extensions/node-type-image:
+  extensions/image-block:
     dependencies:
       '@minddrop/extension':
         specifier: workspace:*
@@ -227,26 +246,7 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
-  extensions/node-type-link:
-    dependencies:
-      '@minddrop/extension':
-        specifier: workspace:*
-        version: link:../../packages/extension
-    devDependencies:
-      eslint:
-        specifier: ^8.39.0
-        version: 8.51.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.0.4
-        version: 5.4.5
-
-  extensions/node-type-text:
+  extensions/text-block:
     dependencies:
       '@minddrop/ast':
         specifier: workspace:*
@@ -295,16 +295,37 @@ importers:
 
   packages/blocks:
     dependencies:
-      '@minddrop/ui':
+      '@minddrop/ast':
         specifier: workspace:*
-        version: link:../ui
+        version: link:../ast
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../core
+      '@minddrop/editor':
+        specifier: workspace:*
+        version: link:../editor
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      uuid:
+        specifier: ^9.0.0
+        version: 9.0.1
     devDependencies:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
       eslint:
         specifier: ^8.39.0
         version: 8.51.0
@@ -357,6 +378,9 @@ importers:
       '@minddrop/blocks':
         specifier: workspace:*
         version: link:../blocks
+      '@minddrop/bookmark-block':
+        specifier: workspace:*
+        version: link:../../extensions/bookmark-block
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
@@ -387,24 +411,18 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
-      '@minddrop/node-type-image':
+      '@minddrop/image-block':
         specifier: workspace:*
-        version: link:../../extensions/node-type-image
-      '@minddrop/node-type-link':
-        specifier: workspace:*
-        version: link:../../extensions/node-type-link
-      '@minddrop/node-type-text':
-        specifier: workspace:*
-        version: link:../../extensions/node-type-text
-      '@minddrop/nodes':
-        specifier: workspace:*
-        version: link:../nodes
+        version: link:../../extensions/image-block
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../test-utils
+      '@minddrop/text-block':
+        specifier: workspace:*
+        version: link:../../extensions/text-block
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
@@ -595,6 +613,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../blocks
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../documents
@@ -616,9 +637,6 @@ importers:
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
-      '@minddrop/nodes':
-        specifier: workspace:*
-        version: link:../nodes
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
@@ -653,6 +671,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../blocks
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../documents
@@ -671,9 +692,6 @@ importers:
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
-      '@minddrop/nodes':
-        specifier: workspace:*
-        version: link:../nodes
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
@@ -850,49 +868,6 @@ importers:
       typescript:
         specifier: ^5.0.4
         version: 5.2.2
-
-  packages/nodes:
-    dependencies:
-      '@minddrop/ast':
-        specifier: workspace:*
-        version: link:../ast
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
-      '@minddrop/editor':
-        specifier: workspace:*
-        version: link:../editor
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-      react:
-        specifier: ^18.2.0
-        version: 18.2.0
-      uuid:
-        specifier: ^9.0.0
-        version: 9.0.1
-    devDependencies:
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../test-utils
-      '@types/uuid':
-        specifier: ^10.0.0
-        version: 10.0.0
-      eslint:
-        specifier: ^8.39.0
-        version: 8.51.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.0.4
-        version: 5.4.5
 
   packages/scripts:
     devDependencies:
@@ -2503,7 +2478,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.0
       '@babel/types': 7.23.0
-      debug: 4.3.4
+      debug: 4.3.5
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6989,7 +6964,7 @@ packages:
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.5
       esbuild: 0.18.20
     transitivePeerDependencies:
       - supports-color
@@ -12293,7 +12268,7 @@ packages:
     hasBin: true
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4
+      debug: 4.3.5
       mlly: 1.4.2
       pathe: 1.1.1
       picocolors: 1.0.0

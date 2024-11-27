@@ -26,7 +26,7 @@ export interface MindDropDataTransfer {
    * - 'text/plain' if plain text was inserted.
    * - 'text/html' if HTML text was inserted.
    * - 'text/url' if a URL was inserted.
-   * - 'minddrop/nodes' if nodes were inserted.
+   * - 'minddrop/blocks' if blocks were inserted.
    */
   types: string[];
 

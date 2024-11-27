@@ -5,7 +5,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Icons } from '@minddrop/icons';
 import { Markdown } from '@minddrop/markdown';
-import { Nodes } from '@minddrop/nodes';
+import { Blocks } from '../../blocks/src';
 import { Selection } from '@minddrop/Selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
@@ -21,7 +21,7 @@ export const MindDropApi: Api = {
   Fs,
   Icons,
   Markdown,
-  Nodes,
+  Blocks,
   Selection,
   Ui,
   Utils,

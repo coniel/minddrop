@@ -7,20 +7,19 @@ export const BoardDocumentTypeConfig: DocumentTypeConfig<BoardContent> = {
   fileType: 'board',
   initialize: () => {
     const columns = [
-      Utils.generateGroupNode([], 'board-column'),
-      Utils.generateGroupNode([], 'board-column'),
-      Utils.generateGroupNode([], 'board-column'),
+      Utils.generateBlock('board-column'),
+      Utils.generateBlock('board-column'),
+      Utils.generateBlock('board-column'),
     ];
-    const container = Utils.generateGroupNode(
-      columns.map((col) => col.id),
-      'board-columns',
-    );
+    const container = Utils.generateBlock('board-columns', {
+      children: columns.map((col) => col.id),
+    });
 
     return {
       properties: DefaultBoardProperties,
       content: {
-        nodes: [container, ...columns],
-        rootNodes: [container.id],
+        blocks: [container, ...columns],
+        rootBlocks: [container.id],
       },
     };
   },
@@ -34,7 +33,7 @@ export const BoardDocumentTypeConfig: DocumentTypeConfig<BoardContent> = {
     return DefaultBoardProperties;
   },
   parseContent: (textContent) =>
-    JSON.parse(textContent).content || { nodes: [], rootNodes: [] },
+    JSON.parse(textContent).content || { blocks: [], rootBlocks: [] },
   stringify: (properties, content) => JSON.stringify({ properties, content }),
   component: BoardView,
 };

@@ -1,6 +1,6 @@
 export * from './BoardView';
-export * from './BoardColumnsNode';
-export * from './BoardNode';
+export * from './BoardColumnsBlock';
+export * from './BoardBlock';
 
-export * from './BoardColumnNode';
+export * from './BoardColumnBlock';
 

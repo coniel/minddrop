@@ -4,37 +4,34 @@ import { BoardContent, BoardDocument } from '../types';
 
 export const PARENT_DIR_PATH = 'path/to';
 
-export const textNode1 = Utils.generateTextNode('Text 1');
-export const textNode2 = Utils.generateTextNode('Text 2');
-export const textNode3 = Utils.generateTextNode('Text 3');
+export const textBlock1 = Utils.generateTextBlock('Text 1');
+export const textBlock2 = Utils.generateTextBlock('Text 2');
+export const textBlock3 = Utils.generateTextBlock('Text 3');
 
-export const column1Node = Utils.generateGroupNode(
-  [textNode1.id, textNode2.id],
-  'board-column',
-);
-export const column2Node = Utils.generateGroupNode(
-  [textNode3.id],
-  'board-column',
-);
-export const column3Node = Utils.generateGroupNode([], 'board-column');
-export const columnsNode = Utils.generateGroupNode(
-  [column1Node.id, column2Node.id, column3Node.id],
-  'board-columns',
-);
+export const column1Block = Utils.generateBlock('board-column', {
+  children: [textBlock1.id, textBlock2.id],
+});
+export const column2Block = Utils.generateBlock('board-column', {
+  children: [textBlock3.id],
+});
+export const column3Block = Utils.generateBlock('board-column');
+export const columnsBlock = Utils.generateBlock('board-columns', {
+  children: [column1Block.id, column2Block.id, column3Block.id],
+});
 
 export const boardProperties = { ...DefaultBoardProperties };
 
 export const boardContent: BoardContent = {
-  nodes: [
-    columnsNode,
-    column1Node,
-    column2Node,
-    column3Node,
-    textNode1,
-    textNode2,
-    textNode3,
+  blocks: [
+    columnsBlock,
+    column1Block,
+    column2Block,
+    column3Block,
+    textBlock1,
+    textBlock2,
+    textBlock3,
   ],
-  rootNodes: [columnsNode.id],
+  rootBlocks: [columnsBlock.id],
 };
 
 export const boardFileTextContent = JSON.stringify({

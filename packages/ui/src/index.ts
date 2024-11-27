@@ -1,5 +1,5 @@
 export * from './ActionCard';
-export * from './Block';
+export * from './BlockContainer';
 export * from './Breadcrumbs';
 export * from './Button';
 export * from './Collapsible';

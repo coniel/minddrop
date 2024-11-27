@@ -1,7 +1,6 @@
-import { Nodes } from '@minddrop/nodes';
+import { Blocks } from '../../blocks/src';
 
-export const generateTextNode = Nodes.generateTextNode;
-export const generateGroupNode = Nodes.generateGroupNode;
-export const generateFileNode = Nodes.generateFileNode;
-export const generateLinkNode = Nodes.generateLinkNode;
-export const generateWidgetNode = Nodes.generateWidgetNode;
+export const generateBlock = Blocks.generateBlock;
+export const generateTextBlock = Blocks.generateTextBlock;
+export const generateFileBlock = Blocks.generateFileBlock;
+export const generateLinkBlock = Blocks.generateLinkBlock;

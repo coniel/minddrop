@@ -1,0 +1,8 @@
+.text-block-editor .drag-handle {
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  cursor: move;
+}

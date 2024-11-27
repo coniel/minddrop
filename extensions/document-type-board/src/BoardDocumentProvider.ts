@@ -1,24 +1,24 @@
-import { Node, Utils } from '@minddrop/extension';
+import { Block, Utils } from '@minddrop/extension';
 import { BoardDocument } from './types';
 import { getBoardContent } from './getBoardContent';
 
 const [hook, Provider] = Utils.createContext<BoardDocument>();
 
 export const useBoardDocument = hook;
-export const BoardNodesProvider = Provider;
+export const BoardBlocksProvider = Provider;
 
-export const useNodes = () => {
+export const useBlocks = () => {
   const board = useBoardDocument();
 
-  const { nodes } = getBoardContent(board);
+  const { blocks } = getBoardContent(board);
 
-  return nodes;
+  return blocks;
 };
 
-export const useChildNodes = (childNodeIds: string[] = []) => {
-  const nodes = useNodes();
+export const useChildBlocks = (childBlockIds: string[] = []) => {
+  const blocks = useBlocks();
 
-  return childNodeIds
-    .map((id) => nodes.find((node) => node.id === id))
-    .filter(Boolean) as Node[];
+  return childBlockIds
+    .map((id) => blocks.find((block) => block.id === id))
+    .filter(Boolean) as Block[];
 };

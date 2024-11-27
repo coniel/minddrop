@@ -1,206 +1,90 @@
-export interface HeadingOneBlock {
+import { ContentColor } from '@minddrop/core';
+
+export interface CoreBlockProperties {
+  /**
+   * A unique identifier for the block.
+   */
+  id: string;
+
   /**
    * The block type.
    */
-  type: 'heading-1';
+  type: string;
 
   /**
-   * The raw markdown content of the block.
+   * Controls which variant of the block will be renderer. If absent,
+   * the default variant will be used.
+   *
+   * Must be the ID of a registered variant. If the variant is not
+   * found, the default variant will be used.
    */
-  markdown: string;
+  variant?: string;
 
   /**
-   * The syntax used to create the heading.
+   * The block title. Can be set by the user or automatically
+   * when creating a block (e.g. web page title).
    */
-  headingSyntax: '=' | '#';
-}
-
-export interface HeadingTwoBlock {
-  /**
-   * The block type.
-   */
-  type: 'heading-2';
+  title?: string;
 
   /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-
-  /**
-   * The syntax used to create the heading.
-   */
-  headingSyntax: '-' | '#';
-}
-
-export interface TextBlock {
-  /**
-   * The block type.
-   */
-  type: 'text';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-}
-
-export interface ImageBlock {
-  /**
-   * The block type.
-   */
-  type: 'image';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-
-  /**
-   * The URL of the image.
-   */
-  url: string;
-
-  /**
-   * The title of the image.
-   */
-  title: string;
-
-  /**
-   * The optional description (tooltip) of the image.
+   * Plain text describing the block content. Can be set by the user
+   * or automatically when creating a block (e.g. web wpage description).
    */
   description?: string;
+
+  /**
+   * The block's text content in markdown format.
+   */
+  text?: string;
+
+  /**
+   * The filename of the file associated with the block.
+   */
+  file?: string;
+
+  /**
+   * The URL associated with the block.
+   */
+  url?: string;
+
+  /**
+   * The block color chosen by the user. Block variants may use this
+   * to highlgiht the block in the UI in different ways.
+   */
+  color?: ContentColor;
+
+  /**
+   * The block icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
+   */
+  icon?: string;
+
+  /**
+   * Filename of a document asset. Usefull for associating a decorative image
+   * with a block, such as a cover image or webpage thumbnail.
+   *
+   * **Note**: Not intended to be used as the main content of the block. If the
+   * block is an image, use the `file` property instead.
+   */
+  image?: string;
+
+  /**
+   * IDs of blocks that are children of this block.
+   */
+  children?: string[];
 }
 
-export interface FileBlock {
-  /**
-   * The block type.
-   */
-  type: 'file';
+export type CoreBlockData = Omit<
+  CoreBlockProperties,
+  'id' | 'type' | 'variant'
+>;
 
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
+export type CustomBlockData = Record<string, unknown>;
 
-  /**
-   * The URL of the file.
-   */
-  url: string;
+export type BlockData<TCustomData extends CustomBlockData = {}> =
+  CoreBlockData & TCustomData;
 
-  /**
-   * The title of the file.
-   */
-  title: string;
-
-  /**
-   * The optional description (tooltip) of the file.
-   */
-  description?: string;
-}
-
-export interface BlockquoteBlock {
-  /**
-   * The block type.
-   */
-  type: 'blockquote';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-}
-
-export interface TableBlock {
-  /**
-   * The block type.
-   */
-  type: 'table';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-}
-
-export interface LinkBlock {
-  /**
-   * The block type.
-   */
-  type: 'link';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-
-  /**
-   * The URL of the link.
-   */
-  url: string;
-
-  /**
-   * The title of the link.
-   */
-  title: string;
-
-  /**
-   * The optional description (tooltip) of the link.
-   */
-  description?: string;
-}
-
-export interface CodeBlock {
-  /**
-   * The block type.
-   */
-  type: 'code';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-
-  /**
-   * The language of the code block.
-   */
-  language?: string;
-
-  /**
-   * The delimiter used for the code block (backticks or tildes).
-   */
-  delimiter: '```' | '~~~';
-
-  /**
-   * The code content of the block.
-   */
-  code: string;
-}
-
-export interface MathBlock {
-  /**
-   * The block type.
-   */
-  type: 'math';
-
-  /**
-   * The raw markdown content of the block.
-   */
-  markdown: string;
-
-  /**
-   * The math expression content of the block.
-   */
-  expression: string;
-}
-
-export type Block =
-  | HeadingOneBlock
-  | HeadingTwoBlock
-  | TextBlock
-  | ImageBlock
-  | FileBlock
-  | BlockquoteBlock
-  | TableBlock
-  | LinkBlock
-  | CodeBlock
-  | MathBlock;
+export type Block<TCustomData extends CustomBlockData = {}> =
+  CoreBlockProperties & TCustomData;

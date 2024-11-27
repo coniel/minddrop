@@ -1,14 +1,15 @@
 import { useMemo } from 'react';
-import { useApi, Node, DocumentViewProps } from '@minddrop/extension';
+import { useApi, Block, DocumentViewProps } from '@minddrop/extension';
 import { BoardContent } from '../../types';
-import { BoardNodesProvider } from '../../BoardDocumentProvider';
-import { BoardNode } from '../BoardNode';
+import { BoardBlocksProvider } from '../../BoardDocumentProvider';
+import { BoardBlock } from '../BoardBlock';
 import './BoardView.css';
 
 export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
   document,
 }) => {
   const { Selection } = useApi();
+  console.log(document);
   const content = useMemo(
     () =>
       document.content
@@ -17,23 +18,23 @@ export const BoardView: React.FC<DocumentViewProps<BoardContent>> = ({
     [document.content, document.fileTextContent],
   );
 
-  const rootNodes = useMemo(() => {
-    return content.rootNodes
-      .map((id) => content.nodes.find((node) => node.id === id))
-      .filter(isNode);
+  const rootBlocks = useMemo(() => {
+    return content.rootBlocks
+      .map((id) => content.blocks.find((block) => block.id === id))
+      .filter(isBlock);
   }, [content]);
 
   return (
-    <BoardNodesProvider value={document}>
+    <BoardBlocksProvider value={document}>
       <div className="board-view" onClick={Selection.clear}>
-        {rootNodes.map((node) => (
-          <BoardNode key={node.id} node={node} />
+        {rootBlocks.map((block) => (
+          <BoardBlock key={block.id} block={block} />
         ))}
       </div>
-    </BoardNodesProvider>
+    </BoardBlocksProvider>
   );
 };
 
-function isNode(node: Node | undefined): node is Node {
-  return node !== undefined;
+function isBlock(block: Block | undefined): block is Block {
+  return block !== undefined;
 }

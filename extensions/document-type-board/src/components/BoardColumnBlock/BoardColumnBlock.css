@@ -1,0 +1,44 @@
+.board-view .board-column-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.board-view .board-column-block-end {
+  flex: 1;
+  padding-top: 28px;
+}
+
+.board-view .bottom-drop-zone {
+  border-radius: var(--radiusLg);
+  height: 140px;
+  text-align: center;
+}
+
+.board-view .board-column-block .delete-column-button {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.board-view .board-column-block-content:hover .delete-column-button {
+  opacity: 0.7;
+}
+
+.board-view .delete-column-button:hover {
+  opacity: 1;
+}
+
+.board-view .bottom-drop-zone.active {
+  background-color: var(--bgNeutral);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.board-view .spacer-drop-zone {
+  height: 2px;
+  padding: 13px 0;
+}
+
+.board-view .spacer-drop-zone.active .drag-over-indicator {
+  height: 2px;
+  background-color: var(--primary10);
+  pointer-events: none;
+}

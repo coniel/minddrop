@@ -1,14 +1,14 @@
-import { Node } from '@minddrop/extension';
+import { Block } from '@minddrop/extension';
 
 export interface BoardContent {
   /**
-   * All nodes in the board.
+   * All blocks in the board.
    */
-  nodes: Node[];
+  blocks: Block[];
 
   /**
-   * IDs of the nodes that are at the root of the board,
+   * IDs of the blocks that are at the root of the board,
    * in the order they should be displayed.
    */
-  rootNodes: string[];
+  rootBlocks: string[];
 }

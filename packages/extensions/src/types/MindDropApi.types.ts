@@ -5,7 +5,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Icons } from '@minddrop/icons';
 import { Markdown } from '@minddrop/markdown';
-import { Nodes } from '@minddrop/nodes';
+import { Blocks } from '@minddrop/blocks';
 import { Selection } from '@minddrop/selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
@@ -20,7 +20,7 @@ export interface MindDropApi {
   Fs: typeof Fs;
   Icons: typeof Icons;
   Markdown: typeof Markdown;
-  Nodes: typeof Nodes;
+  Blocks: typeof Blocks;
   Selection: typeof Selection;
   Workspaces: typeof Workspaces;
   Ui: typeof Ui;

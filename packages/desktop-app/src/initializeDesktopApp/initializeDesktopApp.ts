@@ -2,15 +2,14 @@ import { loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
 import { Documents } from '@minddrop/documents';
-import { Nodes } from '@minddrop/nodes';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
 import DocumentTypeBoardExtension from '@minddrop/document-type-board';
 import { initializeExtensions } from '@minddrop/extensions';
-import NodeTypeTextExtension from '@minddrop/node-type-text';
-import NodeTypeImageExtension from '@minddrop/node-type-image';
-import NodeTypeLinkExtension from '@minddrop/node-type-link';
+import NodeTypeTextExtension from '@minddrop/text-block';
+import NodeTypeImageExtension from '@minddrop/image-block';
+import NodeTypeLinkExtension from '@minddrop/bookmark-block';
 import { Ast } from '@minddrop/ast';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
@@ -26,7 +25,6 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
-  Nodes.registerDefaultNodeRendererConfigs();
   Documents.register(NoteDocumentTypeConfig);
 
   // Load persisted config values
