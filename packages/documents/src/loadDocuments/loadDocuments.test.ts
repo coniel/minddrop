@@ -4,26 +4,19 @@ import { Events } from '@minddrop/events';
 import {
   setup,
   cleanup,
-  document1,
-  wrappedDocument,
-  childDocument,
-  parentDir,
+  workspaceDir,
+  documentFiles,
+  documents,
 } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
-import { Document } from '../types';
 import { DocumentsStore } from '../DocumentsStore';
-
-const SOURCE_DIR = parentDir;
-const DOCUMENTS: Document[] = [document1, wrappedDocument, childDocument];
+import { getDocument } from '../getDocument';
 
 initializeMockFileSystem([
   // Document files
-  ...DOCUMENTS.map((document) => ({
-    path: document.path,
-    textContent: document.fileTextContent,
-  })),
+  ...documentFiles,
   // Image files
-  ...DOCUMENTS.map(
+  ...documents.map(
     (document) => `${Fs.parentDirPath(document.path)}/image.png`,
   ),
 ]);
@@ -33,21 +26,30 @@ describe('loadDocuments', () => {
 
   afterEach(cleanup);
 
+  it('ignores invalid sources', async () => {
+    // Load documents from an invalid source, should not throw
+    expect(loadDocuments(['invalid-source'])).resolves.not.toThrow();
+  });
+
   it('loads documents into the store', async () => {
     // Load documents
-    await loadDocuments([SOURCE_DIR]);
+    await loadDocuments([workspaceDir]);
 
     // Documents should be in the store
-    expect(DocumentsStore.getState().documents).toEqual(DOCUMENTS);
+    documents.forEach((document) => {
+      expect(getDocument(document.id)).toEqual(document);
+    });
   });
 
   it('does not load duplicates of documents already in the store', async () => {
     // Load documents twice
-    await loadDocuments([SOURCE_DIR]);
-    await loadDocuments([SOURCE_DIR]);
+    await loadDocuments([workspaceDir]);
+    await loadDocuments([workspaceDir]);
 
     // Store should not contain duplicates
-    expect(DocumentsStore.getState().documents).toEqual(DOCUMENTS);
+    expect(DocumentsStore.getState().documents.length).toEqual(
+      documents.length,
+    );
   });
 
   it('dispatches a `documents:load` event', async () =>
@@ -55,11 +57,11 @@ describe('loadDocuments', () => {
       // Listen to 'documents:load' events
       Events.addListener('documents:load', 'test', (payload) => {
         // Payload data should be the loaded documents
-        expect(payload.data).toEqual(DOCUMENTS);
+        expect(payload.data).toEqual(documents);
         done();
       });
 
       // Load documents
-      loadDocuments([SOURCE_DIR]);
+      loadDocuments([workspaceDir]);
     }));
 });

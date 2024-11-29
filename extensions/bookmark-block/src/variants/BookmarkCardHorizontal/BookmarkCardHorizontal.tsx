@@ -1,10 +1,10 @@
 import { useMemo, useCallback } from 'react';
-import { BlockRendererProps, useApi } from '@minddrop/extension';
+import { BlockVariantProps, useApi } from '@minddrop/extension';
 import './BookmarkCardHorizontal.css';
 
-export const BookmarkCardHorizontal: React.FC<BlockRendererProps> = ({
+export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
   block,
-  onDelete,
+  deleteBlock,
 }) => {
   const {
     Utils,
@@ -20,7 +20,7 @@ export const BookmarkCardHorizontal: React.FC<BlockRendererProps> = ({
   const { selected, onClick } = Selection.useSelectable({
     id: path,
     getUriList: () => (block.url ? [block.url] : []),
-    onDelete: () => onDelete(block),
+    onDelete: deleteBlock,
   });
   // Make the node draggable
   const { onDragStart } = Selection.useDraggable({ id: path });

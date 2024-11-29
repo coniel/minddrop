@@ -67,7 +67,7 @@ export const RenameDocumentPopover = React.forwardRef<
 
       try {
         // Rename the document
-        await Documents.rename(document.path, title);
+        await Documents.rename(document.id, title);
       } catch (error) {
         console.log(error);
 

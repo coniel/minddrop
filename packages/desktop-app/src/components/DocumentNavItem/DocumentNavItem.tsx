@@ -27,7 +27,7 @@ import {
 import { createDocumentOptionsMenu } from '../../menus/createDocumentOptionsMenu';
 import { RenameDocumentPopover } from '../RenameDocumentPopover';
 import { ContentPicker } from '../ContentPicker';
-import { useCurrentPath } from '../../AppUiState';
+import { useCurrentDocumentId } from '../../AppUiState';
 
 export interface DocumentNavItemProps {
   /**
@@ -47,8 +47,7 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
   level = 0,
   ...other
 }) => {
-  // Get the current active path
-  const currentPath = useCurrentPath();
+  const currentDocumentId = useCurrentDocumentId();
   // Get the document's child documents
   const childDocuments = useChildDocuments(document.path);
   // Used to add active styles when the context/dropdown menu is open
@@ -66,19 +65,18 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
     document.path,
   );
   // Callback fired when the user selects the "Delete" option
-  const handleSelectDelete = useCreateCallback(Documents.delete, document.path);
+  const handleSelectDelete = useCreateCallback(Documents.delete, document.id);
   // Callback fired when the user clicks the "Add Subdocument" button
   const handleClickAddSubdocument = useCreateCallback(
     createSubdocument,
-    document.path,
-    'md',
+    document.id,
   );
   // Callback fired when the user clicks the nav item
-  const handleClick = useCreateCallback(setActiveDocument, document.path);
+  const handleClick = useCreateCallback(setActiveDocument, document.id);
 
   const handleSelectMove = useCallback(
-    (path: string) => moveDocument(document.path, path),
-    [document.path],
+    (path: string) => moveDocument(document.id, path),
+    [document.id],
   );
 
   // Configure the options menu content
@@ -107,7 +105,7 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
           <ContextMenuTrigger>
             <DocumentNavItemPrimitive
               level={level}
-              active={currentPath === document.path}
+              active={currentDocumentId === document.id}
               hovering={hasActiveMenu}
               hasSubdocuments={childDocuments.length > 0}
               label={document.title}
@@ -155,7 +153,7 @@ export const DocumentNavItem: React.FC<DocumentNavItemProps> = ({
             >
               {childDocuments.map((childDocument) => (
                 <DocumentNavItem
-                  key={childDocument.path}
+                  key={childDocument.id}
                   level={level + 1}
                   document={childDocument}
                 />

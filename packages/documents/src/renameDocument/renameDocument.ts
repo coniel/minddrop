@@ -4,19 +4,17 @@ import {
   Fs,
   PathConflictError,
 } from '@minddrop/file-system';
-import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
-import { Document, DocumentProperties } from '../types';
+import { Document } from '../types';
 import { isWrapped } from '../utils';
 import { updateChildDocumentPaths } from '../updateChildDocumentPaths';
-import { getDocumentTypeConfig } from '../DocumentTypeConfigsStore';
-import { updateDocument } from '../updateDocument';
+import { DocumentsStore } from '../DocumentsStore';
 
 /**
  * Renames a document and its file.
  *
- * @param path - The path of the document to rename.
+ * @param id - The id of the document to rename.
  * @param name - The new name of the document.
  * @returns The updated document.
  * @dispatches 'documents:document:rename'
@@ -27,21 +25,21 @@ import { updateDocument } from '../updateDocument';
  * @throws {PathConflictError} - If a document with the same name already exists.
  */
 export async function renameDocument(
-  path: string,
+  id: string,
   name: string,
 ): Promise<Document> {
   // Get the document from the store
-  const document = getDocument(path);
+  const document = getDocument(id);
 
   // Ensure the document exists
   if (!document) {
-    throw new DocumentNotFoundError(path);
+    throw new DocumentNotFoundError(id);
   }
 
-  // Get the document type config
-  const config = getDocumentTypeConfig(document.fileType);
+  const { path } = document;
+
   // Generate the new file name
-  const newFileName = `${name}.${document.fileType}`;
+  const newFileName = `${name}.minddrop`;
   // Concat new file name to the parent dir path
   const renamedFilePath = Fs.concatPath(Fs.parentDirPath(path), newFileName);
   // The path of the renamed wrapper dir (only applicable if
@@ -62,35 +60,6 @@ export async function renameDocument(
     throw new PathConflictError(path);
   }
 
-  // Generate the updated document object
-  const updatedDocument = {
-    ...document,
-    path: newPath,
-    title: name,
-  };
-
-  if (config.onRename) {
-    const { properties, content } = config.onRename(name, document);
-
-    if (properties) {
-      updatedDocument.properties = {
-        ...document.properties,
-        // Remove properties with undefined values
-        ...Object.entries(properties).reduce((props, [key, value]) => {
-          if (value !== undefined) {
-            props[key] = value;
-          }
-
-          return props;
-        }, {} as DocumentProperties),
-      };
-    }
-
-    if (content) {
-      updatedDocument.content = content;
-    }
-  }
-
   // Rename the document file
   await Fs.rename(path, renamedFilePath);
 
@@ -99,14 +68,16 @@ export async function renameDocument(
     await Fs.rename(Fs.parentDirPath(path), renamedWrapperDir);
   }
 
-  // Update the document path in the store
-  DocumentsStore.getState().update(path, { path: newPath });
+  // Update the document's path and title in the store
+  const updatedData = {
+    path: newPath,
+    title: name,
+  };
 
-  // Update the document data
-  await updateDocument(newPath, updatedDocument);
+  DocumentsStore.getState().update(id, updatedData);
 
   // If the document is wrapped, recursively update its children's paths
-  updateChildDocumentPaths(path, renamedWrapperDir);
+  updateChildDocumentPaths(document.path, renamedWrapperDir);
 
   // Dispatch a 'documents:document:rename' event
   Events.dispatch('documents:document:rename', {
@@ -114,5 +85,6 @@ export async function renameDocument(
     newPath,
   });
 
-  return updatedDocument;
+  // Return the updated document
+  return { ...document, ...updatedData };
 }

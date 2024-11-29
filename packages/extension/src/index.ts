@@ -17,13 +17,7 @@ export type * from '@minddrop/workspaces';
 
 export * from '@minddrop/icons';
 
-import * as UtilsPackage from '@minddrop/utils';
-import * as LocalUtils from './utils';
-
-export const Utils = {
-  ...UtilsPackage,
-  ...LocalUtils,
-};
+export * as Utils from '@minddrop/utils';
 
 export type { MindDropExtension, MindDropApi } from '@minddrop/extensions';
 

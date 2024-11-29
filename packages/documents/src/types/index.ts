@@ -1,3 +1,4 @@
 export * from './Document.types';
-export * from './DocumentTypeConfig.types';
-export * from './DocumentMetadata.types';
+export * from './DocumentView.types';
+export * from './DocumentViewProps.types';
+export * from './DocumentViewTypeConfig.types';

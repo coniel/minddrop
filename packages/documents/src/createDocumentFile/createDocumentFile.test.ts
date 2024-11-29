@@ -4,16 +4,15 @@ import {
   InvalidPathError,
   PathConflictError,
 } from '@minddrop/file-system';
-import { setup, cleanup, documentTypeConfig } from '../test-utils';
+import { setup, cleanup } from '../test-utils';
 import { createDocumentFile } from './createDocumentFile';
 
-const FILE_TYPE = documentTypeConfig.fileType;
 const TITLE = 'Document';
 const CONTENT = 'Hello, world!';
 const PARENT_DIR_PATH = 'path/to/Workspace';
-const DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${TITLE}.${FILE_TYPE}`;
+const DOCUMENT_FILE_PATH = `${PARENT_DIR_PATH}/${TITLE}.minddrop`;
 const WRAPPED_DOCUMENT_DIR_PATH = `${PARENT_DIR_PATH}/${TITLE}`;
-const WRAPPED_DOCUMENT_FILE_PATH = `${WRAPPED_DOCUMENT_DIR_PATH}/${TITLE}.${FILE_TYPE}`;
+const WRAPPED_DOCUMENT_FILE_PATH = `${WRAPPED_DOCUMENT_DIR_PATH}/${TITLE}.minddrop`;
 
 const MockFs = initializeMockFileSystem([
   // New documents's parent dir
@@ -37,7 +36,7 @@ describe('createDocument', () => {
     // Attempt to create a new document file in missing parent
     // dir. Should throw a InvalidPathError.
     expect(() =>
-      createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT),
+      createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT),
     ).rejects.toThrowError(InvalidPathError);
   });
 
@@ -48,13 +47,13 @@ describe('createDocument', () => {
     // Attempt to create a new document file where one of the same
     // name already exists. Should throw a PathConflictError.
     expect(() =>
-      createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT),
+      createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT),
     ).rejects.toThrowError(PathConflictError);
   });
 
   it('creates the document file with content', async () => {
     // Create a document file
-    await createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT);
+    await createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT);
 
     // Should create the document file
     expect(MockFs.exists(DOCUMENT_FILE_PATH)).toBe(true);
@@ -64,12 +63,7 @@ describe('createDocument', () => {
 
   it('returns the new document file path', async () => {
     // Create a document file
-    const path = await createDocumentFile(
-      PARENT_DIR_PATH,
-      TITLE,
-      FILE_TYPE,
-      CONTENT,
-    );
+    const path = await createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT);
 
     // Should return the document file path
     expect(path).toBe(DOCUMENT_FILE_PATH);
@@ -83,7 +77,7 @@ describe('createDocument', () => {
       // Attempt to create a new wrapped document file where one of the
       // same name already exists. Should throw a PathConflictError.
       expect(() =>
-        createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT, {
+        createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT, {
           wrap: true,
         }),
       ).rejects.toThrowError(PathConflictError);
@@ -91,7 +85,7 @@ describe('createDocument', () => {
 
     it('creates the document wrapper directory', async () => {
       // Create a wrapped document file
-      await createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT, {
+      await createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT, {
         wrap: true,
       });
 
@@ -101,7 +95,7 @@ describe('createDocument', () => {
 
     it('creates the wrapped document file', async () => {
       // Create a wrapped document file
-      await createDocumentFile(PARENT_DIR_PATH, TITLE, FILE_TYPE, CONTENT, {
+      await createDocumentFile(PARENT_DIR_PATH, TITLE, CONTENT, {
         wrap: true,
       });
 

@@ -16,17 +16,17 @@ describe('setActiveDocument', () => {
 
   it('sets active view to "document"', () => {
     // Set an active document
-    setActiveDocument(document1.path);
+    setActiveDocument(document1.id);
 
     // UI view state should be "document"
     expect(AppUiState.get('view')).toBe('document');
   });
 
-  it('sets active resource path to the given path', () => {
+  it('sets active document ID to the specified ID', () => {
     // Set an active document
-    setActiveDocument(document1.path);
+    setActiveDocument(document1.id);
 
     // Active path should be the given path
-    expect(AppUiState.get('path')).toBe(document1.path);
+    expect(AppUiState.get('activeDocumentId')).toBe(document1.id);
   });
 });

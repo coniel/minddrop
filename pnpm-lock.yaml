@@ -155,7 +155,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.1(react-dom@18.2.0)(react@18.2.0)
 
-  extensions/bookmark-block:
+  extensions/board-view:
     dependencies:
       '@minddrop/extension':
         specifier: workspace:*
@@ -174,7 +174,7 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
-  extensions/document-type-board:
+  extensions/bookmark-block:
     dependencies:
       '@minddrop/extension':
         specifier: workspace:*
@@ -304,6 +304,9 @@ importers:
       '@minddrop/editor':
         specifier: workspace:*
         version: link:../editor
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -378,15 +381,15 @@ importers:
       '@minddrop/blocks':
         specifier: workspace:*
         version: link:../blocks
+      '@minddrop/board-view':
+        specifier: workspace:*
+        version: link:../../extensions/board-view
       '@minddrop/bookmark-block':
         specifier: workspace:*
         version: link:../../extensions/bookmark-block
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
-      '@minddrop/document-type-board':
-        specifier: workspace:*
-        version: link:../../extensions/document-type-board
       '@minddrop/document-type-note':
         specifier: workspace:*
         version: link:../../extensions/document-type-note
@@ -466,6 +469,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../blocks
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core

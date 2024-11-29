@@ -17,7 +17,7 @@ export interface BlockType<TData extends BlockData = {}> {
   defaultVariant: string;
 
   /**
-   * User frienfly description of the block type arranged as a
+   * User friendly description of the block type arranged as a
    * [language code]: { name: string, details: string } map.
    */
   description: Record<string, BlockDescription>;

@@ -7,24 +7,27 @@ import { isWrapped } from '../utils';
 import { removeChildDocuments } from '../removeChildDocuments';
 
 /**
- * Deletes a document from the store and moves the document
- * file to system trash. If the document is wrapped, moves
- * the entire wrapper directory to system trash.
+ * Deletes a document and its children (recursively) from the
+ * store and moves the document file to system trash. If the
+ * document is wrapped, moves the entire wrapper directory to
+ * system trash.
  *
- * Dispatches a 'documents:document:deleted' event.
+ * @param id - The ID of the document to delete.
  *
- * @param path - The path of the document to delete.
- *
- * @dispatches 'documents:document:deleted'
+ * @dispatches documents:document:deleted
  */
-export async function deleteDocument(path: string): Promise<void> {
-  // If document is wrapped, delete the wrapper directory
-  const pathToDelete = isWrapped(path) ? Fs.parentDirPath(path) : path;
+export async function deleteDocument(id: string): Promise<void> {
+  // Get the document from the store
+  const document = getDocument(id);
 
   // Ensure that the document exists
-  if (!getDocument(path)) {
-    throw new DocumentNotFoundError(path);
+  if (!document) {
+    throw new DocumentNotFoundError(id);
   }
+
+  // If document is wrapped, delete the wrapper directory
+  const path = document?.path;
+  const pathToDelete = isWrapped(path) ? Fs.parentDirPath(path) : path;
 
   // Ensure that the document file exists
   if (!(await Fs.exists(path))) {
@@ -32,16 +35,16 @@ export async function deleteDocument(path: string): Promise<void> {
   }
 
   // Remove the document from the store
-  DocumentsStore.getState().remove(path);
+  DocumentsStore.getState().remove(id);
 
-  // If the document is wrapped, remove its children from the store
-  if (isWrapped(path)) {
-    removeChildDocuments(path);
-  }
+  // Remove any child documents from the store
+  removeChildDocuments(document.path);
 
-  // Move the document file to system trash
+  // Move the document file/directory to system trash.
+  // Any child documents will also be moved to trash as
+  // they are located within the wrapper directory.
   await Fs.trashFile(pathToDelete);
 
   // Dispatch a 'documents:document:delete' event
-  Events.dispatch('documents:document:delete', path);
+  Events.dispatch('documents:document:delete', id);
 }

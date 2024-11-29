@@ -15,8 +15,8 @@ import { titleFromPath } from '../utils';
  * Moves a document to a new parent directory. If the document is wrapped, its children
  * will also be moved.
  *
- * @param path The path of the document to move.
- * @param newParentPath The path of the new parent directory.
+ * @param id - The ID of the document to move.
+ * @param newParentPath - The path of the new parent directory.
  * @returns The new document path.
  *
  * @throws {DocumentNotFoundError} If the document does not exist.
@@ -25,14 +25,22 @@ import { titleFromPath } from '../utils';
  *
  */
 export async function moveDocument(
-  path: string,
+  id: string,
   newParentPath: string,
 ): Promise<string> {
   // Get the document
-  const document = getDocument(path);
+  const document = getDocument(id);
+
+  // Ensure that the document exists
+  if (!document) {
+    throw new DocumentNotFoundError(id);
+  }
+
+  const { path } = document;
+
   // The path to move
   const pathToMove = document?.wrapped ? Fs.parentDirPath(path) : path;
-  // The moved document's or wrapper dir's new path
+  // The wrapper dir path, or document path if not wrapped
   const movedPath = document?.wrapped
     ? Fs.concatPath(newParentPath, titleFromPath(path))
     : Fs.concatPath(newParentPath, Fs.fileNameFromPath(path));
@@ -40,11 +48,6 @@ export async function moveDocument(
   const newPath = document?.wrapped
     ? Fs.concatPath(movedPath, Fs.fileNameFromPath(path))
     : movedPath;
-
-  // Ensure that the document exists
-  if (!document) {
-    throw new DocumentNotFoundError(path);
-  }
 
   // Ensure that the document path exists
   if (!(await Fs.exists(pathToMove))) {
@@ -71,14 +74,13 @@ export async function moveDocument(
   await Fs.rename(pathToMove, movedPath);
 
   // Update the document path in the store
-  DocumentsStore.getState().update(document.path, {
-    ...document,
+  DocumentsStore.getState().update(document.id, {
     path: newPath,
   });
 
   // If the document is wrapped, recursively update its children's paths
   if (document.wrapped) {
-    updateChildDocumentPaths(document.path, movedPath);
+    updateChildDocumentPaths(document.path, newPath);
   }
 
   // Dispatch a 'documents:document:moved' event

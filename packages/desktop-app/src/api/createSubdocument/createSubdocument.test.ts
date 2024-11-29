@@ -1,55 +1,76 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { initializeMockFileSystem, Fs } from '@minddrop/file-system';
-import { i18n } from '@minddrop/i18n';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  DOCUMENTS_TEST_DATA,
+  Documents,
+  DocumentsStore,
+} from '@minddrop/documents';
 import { setup, cleanup } from '../../test-utils';
 import { createSubdocument } from './createSubdocument';
-import { Documents } from '@minddrop/documents';
+import { i18n } from '@minddrop/i18n';
 
-const PARENT_DOCUMENT_PATH = 'path/to/Document.test';
-const WRAPPRED_PARENT_DOCUMENT_PATH = 'path/to/Document/Document.test';
-const UNTITLED_MD = `${i18n.t('documents.untitled')}.test`;
-const SUBDOCUMENT_PATH = Fs.concatPath(
-  Fs.parentDirPath(WRAPPRED_PARENT_DOCUMENT_PATH),
-  UNTITLED_MD,
-);
+const { documentFiles, documents, document1, wrappedDocument } =
+  DOCUMENTS_TEST_DATA;
+const NEW_FILE_NAME = `${i18n.t('documents.untitled')}.minddrop`;
 
-const MockFs = initializeMockFileSystem([
-  // Parent document
-  PARENT_DOCUMENT_PATH,
-]);
+const MockFs = initializeMockFileSystem(documentFiles);
 
 describe('createSubdocument', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Add test documents to the store
+    DocumentsStore.getState().load(documents);
+  });
 
   afterEach(() => {
     cleanup();
 
-    // Reset mock file system
+    // Clear documents store
+    DocumentsStore.getState().clear();
+
+    // Reset the mock file system
     MockFs.reset();
   });
 
   it('wraps parent document if it is not already wrapped', async () => {
-    // Create a document as a child of another document that is not wrapped
-    await createSubdocument(PARENT_DOCUMENT_PATH, 'test');
+    // Create a document as a child of document1 which is not wrapped
+    await createSubdocument(document1.id);
+
+    const updatedDocument1 = Documents.get(document1.id);
 
     // Parent document should be wrapped
-    expect(MockFs.exists(WRAPPRED_PARENT_DOCUMENT_PATH)).toBeTruthy();
-    expect(MockFs.exists(PARENT_DOCUMENT_PATH)).toBeFalsy();
+    expect(Documents.isWrapped(updatedDocument1!.path)).toBeTruthy();
   });
 
-  it('creates new untitled document', async () => {
-    // Create a subdocument
-    await createSubdocument(PARENT_DOCUMENT_PATH, 'test');
+  it('adds new document to parent wrapper dir if parent document is wrapped', async () => {
+    // Create a document as a child of wrappedDocument
+    const document = await createSubdocument(wrappedDocument.id);
 
-    // Should create new untitled document
-    expect(MockFs.exists(SUBDOCUMENT_PATH)).toBeTruthy();
+    expect(document.path).toContain(Fs.parentDirPath(wrappedDocument.path));
   });
 
-  it('returns the new document', async () => {
+  it('creates new untitled document file', async () => {
     // Create a subdocument
-    const document = await createSubdocument(PARENT_DOCUMENT_PATH, 'test');
+    await createSubdocument(document1.id);
 
-    // Should create new untitled document
-    expect(document).toEqual(Documents.get(SUBDOCUMENT_PATH));
+    const updatedDocument1 = Documents.get(document1.id);
+
+    const newDocumentPath = Fs.concatPath(
+      Fs.parentDirPath(updatedDocument1!.path),
+      NEW_FILE_NAME,
+    );
+
+    // Should create new Untitled.minddrop file
+    expect(MockFs.exists(newDocumentPath)).toBeTruthy();
+  });
+
+  it('creates the new document', async () => {
+    // Create a subdocument
+    const result = await createSubdocument(document1.id);
+
+    const document = Documents.get(result.id);
+
+    expect(document).toEqual(result);
   });
 });

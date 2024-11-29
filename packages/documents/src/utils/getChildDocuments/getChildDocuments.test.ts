@@ -1,21 +1,14 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  document1,
-  documentTypeConfig,
-} from '../../test-utils';
+import { setup, cleanup, document1 } from '../../test-utils';
 import { getChildDocuments } from './getChildDocuments';
 import { Document } from '../../types';
 
-const EXT = documentTypeConfig.fileType;
-
 const DOCUMENTS: Document[] = [
-  { ...document1, path: `path/to/Document 1/Document 1.${EXT}` },
-  { ...document1, path: `path/to/Document 1/Document 2.${EXT}` },
-  { ...document1, path: `path/to/Document 1/Document 3/Document 3.${EXT}` },
-  { ...document1, path: `path/to/Document 1/Document 3/Document 4.${EXT}` },
-  { ...document1, path: `path/to/Document 5.${EXT}` },
+  { ...document1, path: `path/to/Document 1/Document 1.minddrop` },
+  { ...document1, path: `path/to/Document 1/Document 2.minddrop` },
+  { ...document1, path: `path/to/Document 1/Document 3/Document 3.minddrop` },
+  { ...document1, path: `path/to/Document 1/Document 3/Document 4.minddrop` },
+  { ...document1, path: `path/to/Document 5.minddrop` },
 ];
 
 describe('getDocumentChildren', () => {

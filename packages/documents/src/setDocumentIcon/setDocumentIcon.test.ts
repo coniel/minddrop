@@ -1,7 +1,7 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import { getDocument } from '../getDocument';
-import { setup, cleanup, document1 } from '../test-utils';
+import { setup, cleanup, document1, documentFiles } from '../test-utils';
 import { DocumentsStore } from '../DocumentsStore';
 import { setDocumentIcon } from './setDocumentIcon';
 import { initializeMockFileSystem } from '@minddrop/file-system';
@@ -14,10 +14,7 @@ const icon: UserIcon = {
 
 const iconString = Icons.stringify(icon);
 
-const MockFs = initializeMockFileSystem([
-  // Document file
-  document1.path,
-]);
+const MockFs = initializeMockFileSystem(documentFiles);
 
 describe('setWorkpaceIcon', () => {
   beforeEach(() => {
@@ -34,9 +31,9 @@ describe('setWorkpaceIcon', () => {
 
   it('updates the document icon', async () => {
     // Set the icon on a document
-    await setDocumentIcon(document1.path, icon);
+    await setDocumentIcon(document1.id, icon);
 
     // Should update the document
-    expect(getDocument(document1.path)?.properties.icon).toEqual(iconString);
+    expect(getDocument(document1.id)?.icon).toEqual(iconString);
   });
 });

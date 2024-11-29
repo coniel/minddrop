@@ -1,35 +1,43 @@
-import { Fs } from '@minddrop/file-system';
-import { Document } from '../types';
-import { isWrapped, titleFromPath } from '../utils';
-import { getDocumentTypeConfig } from '../DocumentTypeConfigsStore';
-import { DefaultDocumentProperties } from '../constants';
+import { FileNotFoundError, Fs } from '@minddrop/file-system';
+import { Document, JsonParsedDocumentData } from '../types';
+import { DocumentParseError } from '../errors';
+import { isWrapped } from '../utils';
 
 /**
  * Create a document object from a document file.
  *
  * @param path - The document file path.
  * @returns A document object.
+ *
+ * @throws {DocumentParseError} - The document file could not be parsed.
  */
 export async function getDocumentFromPath(path: string): Promise<Document> {
-  // Get the document type configuration
-  const config = getDocumentTypeConfig(Fs.getExtension(path));
-  // Get the document file's text content
-  const fileTextContent = await Fs.readTextFile(path);
-  // Parse the document properties
-  const properties = config.parseProperties(fileTextContent);
+  let parsedDocument: JsonParsedDocumentData;
+  let fileTextContent: string;
 
-  // Create a document object
+  // Attempt to read the file's text content
+  try {
+    fileTextContent = await Fs.readTextFile(path);
+  } catch (error) {
+    throw new FileNotFoundError(path);
+  }
+
+  // Attempt to parse the document file's text content
+  try {
+    parsedDocument = JSON.parse(fileTextContent);
+  } catch (error) {
+    throw new DocumentParseError(path);
+  }
+
   return {
+    ...parsedDocument,
     path,
-    fileType: Fs.getExtension(path),
-    title: titleFromPath(path),
+    // Use the file name as the document title
+    title: Fs.fileNameFromPath(path).split('.')[0],
+    // Parse date strings into Date objects
+    created: new Date(parsedDocument.created),
+    lastModified: new Date(parsedDocument.lastModified),
+    // Mark the document as wrapped if it is located in a wrapper directory
     wrapped: isWrapped(path),
-    properties: {
-      ...DefaultDocumentProperties,
-      ...properties,
-    },
-    fileTextContent,
-    // Content is parsed when the document is opened
-    content: null,
   };
 }

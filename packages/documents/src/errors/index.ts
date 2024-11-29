@@ -1,2 +1,3 @@
 export * from './DocumentNotFoundError';
-export * from './DocumentTypeConfigNotFoundError';
+export * from './DocumentParseError';
+export * from './DocumentViewTypeConfigNotRegisteredError';

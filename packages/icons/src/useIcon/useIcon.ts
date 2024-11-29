@@ -25,10 +25,10 @@ interface IconData {
  * @param defaultIcon - The default icon to use if the icon string is invalid.
  * @returns The icon data.
  */
-export function useIcon(iconString: string, defaultIcon?: UserIcon): IconData {
+export function useIcon(iconString?: string, defaultIcon?: UserIcon): IconData {
   const icon: UserIcon = useMemo(
     () =>
-      parseIcon(iconString) ||
+      (iconString && parseIcon(iconString)) ||
       defaultIcon || {
         type: UserIconType.ContentIcon,
         icon: 'file',

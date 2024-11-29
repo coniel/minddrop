@@ -2,21 +2,17 @@ import { DocumentsStore } from '../DocumentsStore';
 import { getChildDocuments } from '../utils';
 
 /**
- * Recursively removes all child documents of the given parent path.
+ * Recursively removes all child documents of the specified parent document.
  *
- * @param parentPath - The path of the parent
+ * @param path - The path of the parent document.
  */
-export function removeChildDocuments(parentPath: string): void {
-  // Get the child documents
-  const childDocuments = getChildDocuments(
-    parentPath,
-    DocumentsStore.getState().documents,
-  );
+export function removeChildDocuments(path: string): void {
+  const children = getChildDocuments(path);
 
-  // Remove each child document and its own child documents
-  // if it has any.
-  childDocuments.forEach((document) => {
-    DocumentsStore.getState().remove(document.path);
-    removeChildDocuments(document.path);
+  children.forEach((child) => {
+    if (child) {
+      DocumentsStore.getState().remove(child.id);
+      removeChildDocuments(child.path);
+    }
   });
 }

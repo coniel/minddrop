@@ -7,9 +7,11 @@ import { getDocument } from '../getDocument';
 
 /**
  * Loads documents from the specified directories into the documents
- * store. Dispatches a 'documents:load' event.
+ * store.
  *
  * @param sources - Paths of the directories from which to load documents.
+ *
+ * @dispatches documents:load
  */
 export async function loadDocuments(sources: string[]): Promise<void> {
   // Filter sources to only include dirs that exist
@@ -32,7 +34,7 @@ export async function loadDocuments(sources: string[]): Promise<void> {
   // may have changed in the time it takes to complete the
   // async processes above.
   const uniqueDocuments = documents.filter(
-    (document) => !getDocument(document.path),
+    (document) => !getDocument(document.id),
   );
 
   // Load documents into the store

@@ -23,8 +23,8 @@ describe('createDocument', () => {
     );
 
     // Create test parent documents
-    Documents.create(PARENT_DIR_PATH, 'test', 'Document');
-    Documents.create(PARENT_DIR_PATH, 'test', 'Wrapped', { wrap: true });
+    Documents.create(PARENT_DIR_PATH, 'Document');
+    Documents.create(PARENT_DIR_PATH, 'Wrapped', { wrap: true });
   });
 
   afterEach(() => {
@@ -36,22 +36,22 @@ describe('createDocument', () => {
 
   it('creates a new "Untitled" document', async () => {
     // Create a document
-    const document = await createDocument(PARENT_DIR_PATH, 'test');
+    const document = await createDocument(PARENT_DIR_PATH);
 
     // Document should be titled 'Untitled'
     expect(document.title).toEqual(UNTITLED);
   });
 
   it('increments file name and title if it conflicts', async () => {
-    // Pretend file 'Untitled.test' already exists
-    MockFs.addFiles([Fs.concatPath(PARENT_DIR_PATH, `${UNTITLED}.test`)]);
+    // Pretend file 'Untitled.minddrop' already exists
+    MockFs.addFiles([Fs.concatPath(PARENT_DIR_PATH, `${UNTITLED}.minddrop`)]);
 
     // Create a document
-    const document = await createDocument(PARENT_DIR_PATH, 'test');
+    const document = await createDocument(PARENT_DIR_PATH);
 
     // Document should be titled 'Untitled 1'
     expect(document.title).toEqual(`${UNTITLED} 1`);
-    // Document file name should be `Untitled 1.test`
-    expect(document.path).toEqual(`${PARENT_DIR_PATH}/${UNTITLED} 1.test`);
+    // Document file name should be `Untitled 1.minddrop`
+    expect(document.path).toEqual(`${PARENT_DIR_PATH}/${UNTITLED} 1.minddrop`);
   });
 });

@@ -1,32 +1,28 @@
-import {
-  DocumentProperties,
-  DocumentPropertiesMap,
-} from './DocumentMetadata.types';
-
-export interface Document<
-  TContent = unknown,
-  TProperties extends DocumentPropertiesMap = {},
-> {
+export interface Document {
   /**
-   * Absolute path to the document markdown file.
+   * A unique identifier for the document.
+   */
+  id: string;
+
+  /**
+   * The absolute path to the document file.
    */
   path: string;
 
   /**
-   * The document file type.
+   * Date and time the document was created.
    */
-  fileType: string;
+  created: Date;
+
+  /**
+   * Date and time the document was last modified.
+   */
+  lastModified: Date;
 
   /**
    * The document title, also serves as the file/directory name.
    */
   title: string;
-
-  /**
-   * Document properties, including the document icon and any
-   * custom properties defined by the document type.
-   */
-  properties: DocumentProperties<TProperties>;
 
   /**
    * Whether or not the document is wrapped in a directory of the
@@ -35,13 +31,42 @@ export interface Document<
   wrapped: boolean;
 
   /**
-   * The raw text content as read from the file.
+   * The IDs of the views contained in the document.
    */
-  fileTextContent: string;
+  views: string[];
 
   /**
-   * The parsed document content.
-   * Null if the document has not been opened.
+   * IDs of the blocks contained in the document.
    */
-  content: TContent | null;
+  blocks: string[];
+
+  /**
+   * The document icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
+   */
+  icon?: string;
+}
+
+/**
+ * Data for a document file.
+ *
+ * Certain fields are omitted because they are not stored in
+ * the document file. Instead, they are derived at runtime.
+ */
+export type PersistedDocumentData = Omit<
+  Document,
+  'path' | 'wrapped' | 'title'
+>;
+
+/**
+ * Data for a document file that has been parsed from JSON.
+ *
+ * Date and time properties are stored as strings in the JSON file.
+ */
+export interface JsonParsedDocumentData
+  extends Omit<PersistedDocumentData, 'created' | 'lastModified'> {
+  created: string;
+  lastModified: string;
 }

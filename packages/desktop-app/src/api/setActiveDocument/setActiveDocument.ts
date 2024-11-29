@@ -1,11 +1,11 @@
 import { AppUiState } from '../../AppUiState';
 
 /**
- * Sets the given path as the active document.
+ * Sets the given document ID as the active document ID.
  *
- * @param path The path to set as the active document.
+ * @param id - The document ID.
  */
-export function setActiveDocument(path: string): void {
+export function setActiveDocument(id: string): void {
   AppUiState.set('view', 'document');
-  AppUiState.set('path', path);
+  AppUiState.set('activeDocumentId', id);
 }

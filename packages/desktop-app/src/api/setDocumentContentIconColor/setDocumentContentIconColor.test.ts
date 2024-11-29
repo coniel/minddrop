@@ -19,7 +19,7 @@ describe('setDocumentContentIconColor', () => {
     await setDocumentContentIconColor(document1, 'cyan');
 
     // Should set the new icon color
-    expect(Documents.setIcon).toHaveBeenCalledWith(document1.path, {
+    expect(Documents.setIcon).toHaveBeenCalledWith(document1.id, {
       type: document1Icon.type,
       icon: document1Icon.icon,
       color: 'cyan',
@@ -32,14 +32,11 @@ describe('setDocumentContentIconColor', () => {
     await setDocumentContentIconColor(
       {
         ...document1,
-        properties: {
-          ...document1.properties,
-          icon: Icons.stringify({
-            type: UserIconType.Emoji,
-            icon: '',
-            skinTone: 0,
-          }),
-        },
+        icon: Icons.stringify({
+          type: UserIconType.Emoji,
+          icon: '',
+          skinTone: 0,
+        }),
       },
       'cyan',
     );

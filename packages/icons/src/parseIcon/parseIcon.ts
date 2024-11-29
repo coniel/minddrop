@@ -8,7 +8,11 @@ import { EmojiSkinTone } from '../emoji';
  * @param iconString - The string representation of the icon.
  * @returns A UserIcon or null if the an icon could not be matched.
  */
-export function parseIcon(iconString: string): UserIcon | null {
+export function parseIcon(iconString?: string): UserIcon | null {
+  if (!iconString) {
+    return null;
+  }
+
   // Stringified icon config is in the format 'icon-set:icon:color'
   const [type, icon, color] = iconString.split(':');
 

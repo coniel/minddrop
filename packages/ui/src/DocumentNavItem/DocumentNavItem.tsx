@@ -10,7 +10,8 @@ import {
 } from '../Collapsible';
 import './DocumentNavItem.css';
 
-export interface DocumentNavItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DocumentNavItemProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Children rendered inside a collapsible container.
    * Typically the document's subdocument nav items.
@@ -81,7 +82,10 @@ export interface DocumentNavItemProps extends React.HTMLAttributes<HTMLDivElemen
   hovering?: boolean;
 }
 
-export const DocumentNavItem = React.forwardRef<HTMLDivElement, DocumentNavItemProps>(
+export const DocumentNavItem = React.forwardRef<
+  HTMLDivElement,
+  DocumentNavItemProps
+>(
   (
     {
       children,
@@ -136,7 +140,10 @@ export const DocumentNavItem = React.forwardRef<HTMLDivElement, DocumentNavItemP
               >
                 <Icon
                   name="chevron-right"
-                  className={mapPropsToClasses({ hasSubdocuments }, 'toggle-icon')}
+                  className={mapPropsToClasses(
+                    { hasSubdocuments },
+                    'toggle-icon',
+                  )}
                 />
               </div>
             </CollapsibleTrigger>

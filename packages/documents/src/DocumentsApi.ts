@@ -1,17 +1,18 @@
-export { getDocument as get } from './getDocument';
 export { createDocument as create } from './createDocument';
-export { loadDocuments as load } from './loadDocuments';
-export { setDocumentIcon as setIcon } from './setDocumentIcon';
-export { wrapDocument as wrap } from './wrapDocument';
-export { isWrapped } from './utils';
-export { renameDocument as rename } from './renameDocument';
 export { deleteDocument as delete } from './deleteDocument';
-export { removeChildDocuments } from './removeChildDocuments';
-export { moveDocument as move } from './moveDocument';
+export { getDocument as get } from './getDocument';
+export { getDocumentByPath as getByPath } from './getDocumentByPath';
+export { getDocumentFromPath as getFromPath } from './getDocumentFromPath';
 export { getWrappedPath } from './getWrappedPath';
-export { setDocumentProperties as setProperties } from './setDocumentProperties';
+export { isWrapped } from './utils';
+export { loadDocuments as load } from './loadDocuments';
+export { moveDocument as move } from './moveDocument';
+export { removeChildDocuments } from './removeChildDocuments';
+export { renameDocument as rename } from './renameDocument';
+export { setDocumentIcon as setIcon } from './setDocumentIcon';
 export { updateDocument as update } from './updateDocument';
+export { wrapDocument as wrap } from './wrapDocument';
 export {
-  registerDocumentTypeConfig as register,
-  unregisterDocumentTypeConfig as unregister,
-} from './DocumentTypeConfigsStore';
+  registerDocumentViewTypeConfig as registerView,
+  unregisterDocumentViewTypeConfig as unregisterView,
+} from './DocumentViewTypeConfigsStore';

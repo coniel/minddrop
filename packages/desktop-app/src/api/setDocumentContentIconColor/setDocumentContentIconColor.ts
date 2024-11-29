@@ -14,11 +14,11 @@ export async function setDocumentContentIconColor(
   document: Document,
   color: ContentColor,
 ): Promise<void> {
-  const icon = Icons.parse(document.properties.icon);
+  const icon = Icons.parse(document.icon);
 
   if (icon?.type !== UserIconType.ContentIcon) {
     return;
   }
 
-  Documents.setIcon(document.path, { ...icon, color });
+  Documents.setIcon(document.id, { ...icon, color });
 }

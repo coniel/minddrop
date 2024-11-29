@@ -42,10 +42,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
   onShowIconSelectionChange,
   document,
 }) => {
-  const { icon, color, skinTone } = useIcon(
-    document.properties.icon,
-    DefaultDocumentIcon,
-  );
+  const { icon, color, skinTone } = useIcon(document.icon, DefaultDocumentIcon);
 
   const [pickerPopoverOpen, _, setPickerPopoverOpen] =
     useToggle(showIconSelection);
@@ -54,7 +51,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
     setPickerPopoverOpen(showIconSelection);
   }, [showIconSelection]);
 
-  const handleClear = useCreateCallback(clearDocumentIcon, document.path);
+  const handleClear = useCreateCallback(clearDocumentIcon, document.id);
 
   const handleShowIconSelectionChange = useCallback(
     (value: boolean) => {
@@ -66,8 +63,8 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
 
   const handleSelectContentIcon = useCallback(
     (icon: ContentIconName, color: ContentColor) =>
-      setDocumentContentIcon(document.path, icon, color),
-    [document.path],
+      setDocumentContentIcon(document.id, icon, color),
+    [document.id],
   );
 
   const handleSelectIconColor = useCallback(
@@ -77,8 +74,8 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
 
   const handleSelectEmoji = useCallback(
     (emoji: string, skinTone: EmojiSkinTone) =>
-      setDocumentEmoji(document.path, emoji, skinTone),
-    [document.path],
+      setDocumentEmoji(document.id, emoji, skinTone),
+    [document.id],
   );
 
   return (
@@ -87,10 +84,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
       onOpenChange={handleShowIconSelectionChange}
     >
       <PopoverTrigger asChild>
-        <NavItemIcon
-          defaultIcon={DefaultDocumentIcon}
-          icon={document.properties.icon}
-        />
+        <NavItemIcon defaultIcon={DefaultDocumentIcon} icon={document.icon} />
       </PopoverTrigger>
       <PopoverPortal>
         <PopoverContent

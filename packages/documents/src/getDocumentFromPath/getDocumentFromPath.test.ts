@@ -1,67 +1,55 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  FileNotFoundError,
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
 import {
   setup,
   cleanup,
   document1,
-  documentTypeConfig,
   wrappedDocument,
-  childDocument,
+  documentFiles,
 } from '../test-utils';
-import { getDocumentFromPath } from './getDocumentFromPath';
-import { Document } from '../types';
-import { DefaultDocumentIconString } from '../constants';
 import { DocumentsStore } from '../DocumentsStore';
-
-const emptyDocumentContent = '{"properties":{},"content":{}}';
+import { DocumentParseError } from '../errors';
+import { getDocumentFromPath } from './getDocumentFromPath';
 
 const MockFs = initializeMockFileSystem([
-  // Document file
-  { path: childDocument.path, textContent: emptyDocumentContent },
-  // Wrapped document file
-  { path: wrappedDocument.path, textContent: wrappedDocument.fileTextContent },
-  // Document file with content
-  {
-    path: document1.path,
-    textContent: document1.fileTextContent,
-  },
+  ...documentFiles,
+  { path: 'invalid.minddrop', textContent: 'invalid-json' },
 ]);
 
 describe('getDocumentFromPath', () => {
   beforeEach(() => {
     setup();
     DocumentsStore.getState().clear();
-
-    // Reset mock file system
     MockFs.reset();
   });
 
   afterEach(cleanup);
 
-  it('returns default document data if document has no metadata', async () => {
-    // Get a document with no metadata
-    const document = await getDocumentFromPath(childDocument.path);
+  it('thows if the document file does not exist', async () => {
+    // Get a document from a non-existing path
+    const getDocument = getDocumentFromPath('non-existing-path');
 
-    // Should return a document with default data
-    expect(document).toEqual<Document>({
-      title: childDocument.title,
-      fileType: documentTypeConfig.fileType,
-      path: childDocument.path,
-      wrapped: false,
-      properties: {
-        icon: DefaultDocumentIconString,
-      },
-      fileTextContent: emptyDocumentContent,
-      content: null,
-    });
+    // Should throw an error
+    await expect(getDocument).rejects.toThrow(FileNotFoundError);
   });
 
-  it('returns ', async () => {
-    // Get a document with content
+  it('throws if the document file could not be parsed', async () => {
+    // Get a document from a path with invalid JSON
+    const getDocument = getDocumentFromPath('invalid.minddrop');
+
+    // Should throw an error
+    await expect(getDocument).rejects.toThrow(DocumentParseError);
+  });
+
+  it('returns a document object', async () => {
+    // Read a dicument from path
     const document = await getDocumentFromPath(document1.path);
 
-    // Should set contentRaw to the document markdown content
-    expect(document.fileTextContent).toBe(document1.fileTextContent);
+    // Should return a document object
+    expect(document).toEqual(document1);
   });
 
   it('marks document as wrapped if it is wrapped', async () => {
@@ -70,15 +58,5 @@ describe('getDocumentFromPath', () => {
 
     // Document should be marked as wrapped
     expect(document.wrapped).toBe(true);
-  });
-
-  describe('with custom properties', () => {
-    it('parses custom properties', async () => {
-      // Get a document with custom properties
-      const document = await getDocumentFromPath(document1.path);
-
-      // Should parse the custom properties
-      expect(document.properties).toEqual(document1.properties);
-    });
   });
 });

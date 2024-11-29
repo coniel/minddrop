@@ -1,10 +1,10 @@
-import { BlockRendererProps, SelectionItem, useApi } from '@minddrop/extension';
+import { BlockVariantProps, SelectionItem, useApi } from '@minddrop/extension';
 import { useEffect, useMemo, useState } from 'react';
 import './Image.css';
 
-export const ImageCard: React.FC<BlockRendererProps> = ({
+export const ImageCard: React.FC<BlockVariantProps> = ({
   block,
-  onDelete,
+  deleteBlock,
 }) => {
   const {
     Fs,
@@ -29,9 +29,9 @@ export const ImageCard: React.FC<BlockRendererProps> = ({
     () => ({
       id: path,
       getPlainTextContent: () => block.file || '',
-      onDelete: () => onDelete(block),
+      onDelete: deleteBlock,
     }),
-    [path, block, onDelete],
+    [path, block, deleteBlock],
   );
   // Make the block selectable
   const { selected, onClick } = Selection.useSelectable(selectionItem);

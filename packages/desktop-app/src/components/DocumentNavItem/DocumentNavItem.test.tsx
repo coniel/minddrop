@@ -23,6 +23,6 @@ describe('<DocumentNavItem />', () => {
     fireEvent.click(getByText(document1.title));
 
     // Should make the document active
-    expect(AppUiState.get('path')).toBe(document1.path);
+    expect(AppUiState.get('activeDocumentId')).toBe(document1.id);
   });
 });

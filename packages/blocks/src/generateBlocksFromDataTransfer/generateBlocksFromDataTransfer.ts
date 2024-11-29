@@ -1,7 +1,11 @@
 import { toMindDropDataTransfer } from '@minddrop/utils';
 import { Fs } from '@minddrop/file-system';
 import { Block } from '../types';
-import * as Blocks from '../Blocks';
+import {
+  generateTextBlock,
+  generateLinkBlock,
+  generateFileBlock,
+} from '../generateBlock';
 
 /**
  * Generates blocks from a data transfer object.
@@ -37,14 +41,14 @@ export async function generateBlocksFromDataTransfer(
   if (transfer.types.includes('text/uri-list')) {
     const url = transfer.data['text/uri-list'];
 
-    return [Blocks.generateLinkBlock(url)];
+    return [generateLinkBlock(url)];
   }
 
   // Generate a text block if plain text is present
   if (transfer.types.includes('text/plain')) {
     const text = transfer.data['text/plain'];
 
-    return [Blocks.generateTextBlock(text)];
+    return [generateTextBlock(text)];
   }
 
   return [];
@@ -59,5 +63,5 @@ async function createBlockFromFile(
   );
   await Fs.writeBinaryFile(filePath.path, file);
 
-  return Blocks.generateFileBlock(file);
+  return generateFileBlock(file);
 }

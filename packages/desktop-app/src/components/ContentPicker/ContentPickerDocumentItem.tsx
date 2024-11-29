@@ -12,7 +12,7 @@ export interface ContentPickerDocumentItemProps
   /**
    * The document path.
    */
-  path: string;
+  id: string;
 
   /**
    * Callback fired when the document is selected.
@@ -27,15 +27,15 @@ export interface ContentPickerDocumentItemProps
 
 export const ContentPickerDocumentItem: React.FC<
   ContentPickerDocumentItemProps
-> = ({ path, omitSubdocument, onClick, level = 0 }) => {
-  const document = useDocument(path);
+> = ({ id, omitSubdocument, onClick, level = 0 }) => {
+  const document = useDocument(id);
   // Get the document's child documents, except for possible
   // omitted one.
-  const subdocuments = useChildDocuments(path).filter(
+  const subdocuments = useChildDocuments(document?.path || '').filter(
     (subdocument) => subdocument.path !== omitSubdocument,
   );
 
-  const handleClick = useCreateCallback(onClick, path);
+  const handleClick = useCreateCallback(onClick, document?.path);
 
   if (!document) {
     return null;
@@ -49,7 +49,7 @@ export const ContentPickerDocumentItem: React.FC<
       onClick={handleClick}
       icon={
         <NavItemIcon
-          icon={document.properties.icon}
+          icon={document.icon}
           defaultIcon={DefaultDocumentIcon}
           color="light"
         />
@@ -59,7 +59,7 @@ export const ContentPickerDocumentItem: React.FC<
         <ContentPickerDocumentItem
           key={subdocument.path}
           level={level + 1}
-          path={subdocument.path}
+          id={subdocument.id}
           omitSubdocument={omitSubdocument}
           onClick={onClick}
         />

@@ -3,7 +3,11 @@ import uFuzzy from '@leeoniya/ufuzzy';
 const fuzzy = new uFuzzy();
 
 /**
- * Does something useful.
+ * Perform fuzzy search on a list of strings.
+ *
+ * @param haystack - List of strings to search through.
+ * @param needle - The search query.
+ * @returns A list of strings that match the search query.
  */
 export function fuzzySearch(haystack: string[], needle: string): string[] {
   const [, info, order] = fuzzy.search(haystack, needle);

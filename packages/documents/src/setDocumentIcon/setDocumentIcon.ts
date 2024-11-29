@@ -1,18 +1,18 @@
 import { Icons, UserIcon } from '@minddrop/icons';
 import { Document } from '../types';
-import { setDocumentProperties } from '../setDocumentProperties/setDocumentProperties';
+import { updateDocument } from '../updateDocument';
 
 /**
  * Sets the document icon and persists the change to the
  * document file.
  *
- * @param path - The document path.
+ * @param id - The document ID.
  * @param icon - The new icon.
  * @returns The updated document.
  */
 export async function setDocumentIcon(
-  path: string,
+  id: string,
   icon: UserIcon,
 ): Promise<Document> {
-  return setDocumentProperties(path, { icon: Icons.stringify(icon) });
+  return updateDocument(id, { icon: Icons.stringify(icon) });
 }

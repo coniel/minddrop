@@ -8,37 +8,23 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, setup } from '../../test-utils';
 import { moveDocument } from './moveDocument';
 
-const { document1 } = DOCUMENTS_TEST_DATA;
+const {
+  document1,
+  document2,
+  childDocument,
+  workspaceDir,
+  documentFiles,
+  documents,
+} = DOCUMENTS_TEST_DATA;
 
-const WORKSPACE_PATH = 'path/to/workspace';
-const PATH_TO_MOVE = 'path/to/Document to move.test';
-const DOCUMENT_TO_MOVE = { ...document1, path: PATH_TO_MOVE };
-const NEW_SUBDOCUMENT_PATH = Fs.concatPath(
-  Fs.parentDirPath(Documents.getWrappedPath(document1.path)),
-  Fs.fileNameFromPath(PATH_TO_MOVE),
-);
-const NEW_WORKSPACE_DOCUMENT_PATH = Fs.concatPath(
-  WORKSPACE_PATH,
-  Fs.fileNameFromPath(PATH_TO_MOVE),
-);
-
-const MockFs = initializeMockFileSystem([
-  // Documents
-  document1.path,
-  PATH_TO_MOVE,
-  // Workspace
-  WORKSPACE_PATH,
-]);
+const MockFs = initializeMockFileSystem(documentFiles);
 
 describe('moveDocument', () => {
   beforeEach(() => {
     setup();
 
     // Add test documents to the store
-    DocumentsStore.getState().load([document1, DOCUMENT_TO_MOVE]);
-
-    // Reset the mock file system
-    MockFs.reset();
+    DocumentsStore.getState().load(documents);
   });
 
   afterEach(() => {
@@ -46,33 +32,41 @@ describe('moveDocument', () => {
 
     // Clear documents store
     DocumentsStore.getState().clear();
+
+    // Reset the mock file system
+    MockFs.reset();
   });
 
   it('wraps the destination document if it is not wrapped', async () => {
-    // Move a document into another document which is not wrapped
-    await moveDocument(PATH_TO_MOVE, document1.path);
+    // Move document1 into document2 which is not wrapped
+    await moveDocument(document1.id, document2.path);
 
-    // Should wrap the destination document
-    expect(
-      Documents.get(Documents.getWrappedPath(document1.path)),
-    ).not.toBeNull();
+    const updatedDocument2 = Documents.get(document2.id);
+
+    expect(Documents.isWrapped(updatedDocument2!.path)).toBeTruthy();
   });
 
   it('moves the document', async () => {
-    // Move a document into another document which is not wrapped
-    await moveDocument(PATH_TO_MOVE, document1.path);
+    // Move document1 into document2 which is not wrapped
+    await moveDocument(document1.id, document2.path);
 
-    // Should move the document
-    expect(Documents.get(PATH_TO_MOVE)).toBeNull();
-    expect(Documents.get(NEW_SUBDOCUMENT_PATH)).not.toBeNull();
+    const updatedDocument1 = Documents.get(document1.id);
+    const updatedDocument2 = Documents.get(document2.id);
+
+    // Document1 should path should start with document2 dir path
+    expect(updatedDocument1!.path).toContain(
+      Fs.parentDirPath(updatedDocument2!.path),
+    );
   });
 
   it('supports moving a document into a workspace', async () => {
-    // Move a document into a workspace
-    await moveDocument(PATH_TO_MOVE, WORKSPACE_PATH);
+    // Move childDocument into workspace
+    await moveDocument(childDocument.id, workspaceDir);
 
-    // Should move the document
-    expect(Documents.get(PATH_TO_MOVE)).toBeNull();
-    expect(Documents.get(NEW_WORKSPACE_DOCUMENT_PATH)).not.toBeNull();
+    const updatedChildDocument = Documents.get(childDocument.id);
+
+    expect(updatedChildDocument!.path).toBe(
+      `${workspaceDir}/${childDocument.title}.minddrop`,
+    );
   });
 });

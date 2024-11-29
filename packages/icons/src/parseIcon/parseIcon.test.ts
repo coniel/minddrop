@@ -23,6 +23,10 @@ describe('parseIcon', () => {
     expect(parseIcon('my-icons:burger:green')).toBeNull();
   });
 
+  it('returns null for undefined values', () => {
+    expect(parseIcon()).toBeNull();
+  });
+
   it('returns null for invalid values', () => {
     expect(parseIcon('foo')).toBeNull();
   });

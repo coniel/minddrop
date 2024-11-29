@@ -12,6 +12,16 @@ export interface CoreBlockProperties {
   type: string;
 
   /**
+   * Timestamp of when the block was created.
+   */
+  created: Date;
+
+  /**
+   * Timestamp of when the block was last modified.
+   */
+  lastModified: Date;
+
+  /**
    * Controls which variant of the block will be renderer. If absent,
    * the default variant will be used.
    *
@@ -78,7 +88,7 @@ export interface CoreBlockProperties {
 
 export type CoreBlockData = Omit<
   CoreBlockProperties,
-  'id' | 'type' | 'variant'
+  'id' | 'type' | 'variant' | 'created' | 'lastModified'
 >;
 
 export type CustomBlockData = Record<string, unknown>;

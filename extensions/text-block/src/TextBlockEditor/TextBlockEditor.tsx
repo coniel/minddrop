@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Ast, BlockElement } from '@minddrop/ast';
 import { RichTextEditor } from '@minddrop/editor';
-import { BlockRendererProps, useApi } from '@minddrop/extension';
+import { BlockVariantProps, useApi } from '@minddrop/extension';
 import './TextBlockEditor.css';
 
-export const TextBlockEditor: React.FC<BlockRendererProps> = ({
+export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   block,
-  onChange,
-  onDelete,
+  updateBlock,
+  deleteBlock,
 }) => {
   const {
     Utils,
@@ -24,7 +24,7 @@ export const TextBlockEditor: React.FC<BlockRendererProps> = ({
   const { selected, onClick } = Selection.useSelectable({
     id: path,
     getPlainTextContent: () => block.text || '',
-    onDelete: () => onDelete(block),
+    onDelete: deleteBlock,
   });
   // Make the block draggable
   const { onDragStart } = Selection.useDraggable({ id: path });
@@ -38,12 +38,12 @@ export const TextBlockEditor: React.FC<BlockRendererProps> = ({
 
   const onEditorChange = useCallback(
     (value: BlockElement[]) => {
-      onChange({
+      updateBlock({
         ...block,
         text: Ast.toMarkdown(value),
       });
     },
-    [onChange, block],
+    [updateBlock, block],
   );
 
   const enableDrag = useCallback(() => {

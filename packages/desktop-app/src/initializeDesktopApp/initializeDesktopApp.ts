@@ -1,12 +1,11 @@
 import { loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
+import { initializeExtensions } from '@minddrop/extensions';
 import { Documents } from '@minddrop/documents';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
-import { NoteDocumentTypeConfig } from '@minddrop/document-type-note';
-import DocumentTypeBoardExtension from '@minddrop/document-type-board';
-import { initializeExtensions } from '@minddrop/extensions';
+import DocumentBoardView from '@minddrop/board-view';
 import NodeTypeTextExtension from '@minddrop/text-block';
 import NodeTypeImageExtension from '@minddrop/image-block';
 import NodeTypeLinkExtension from '@minddrop/bookmark-block';
@@ -25,7 +24,6 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
-  Documents.register(NoteDocumentTypeConfig);
 
   // Load persisted config values
   await loadConfigs();
@@ -51,7 +49,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize extensions
   await initializeExtensions([
-    DocumentTypeBoardExtension,
+    DocumentBoardView,
     NodeTypeImageExtension,
     NodeTypeLinkExtension,
     NodeTypeTextExtension,

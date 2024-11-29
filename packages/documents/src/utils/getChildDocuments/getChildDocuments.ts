@@ -1,3 +1,4 @@
+import { DocumentsStore } from '../../DocumentsStore';
 import { Document } from '../../types';
 import { isDocumentFile, isWrapped } from '../../utils';
 
@@ -6,13 +7,14 @@ import { isDocumentFile, isWrapped } from '../../utils';
  * list of documents.
  *
  * @param path - The root path from which to get the children.
- * @param documents - The documents from which to match.
+ * @param documents - The documents from which to match, defaults to all documents.
  * @returns An array of documents.
  */
 export function getChildDocuments(
   path: string,
-  documents: Document[],
+  documents?: Document[],
 ): Document[] {
+  const docs = documents || DocumentsStore.getState().documents;
   let rootPathParts = path.split('/');
 
   if (isDocumentFile(path)) {
@@ -29,7 +31,7 @@ export function getChildDocuments(
   const rootPath = rootPathParts.join('/');
 
   return (
-    documents
+    docs
       // Filter out the document itself
       .filter((document) => document.path !== path)
       // Filter out documents which are not descendants

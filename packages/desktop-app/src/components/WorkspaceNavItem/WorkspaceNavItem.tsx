@@ -43,7 +43,7 @@ export const WorkspaceNavItem: React.FC<WorkspaceNavItemProps> = ({
       event.preventDefault();
       event.stopPropagation();
 
-      await createDocument(workspace.path, 'board');
+      await createDocument(workspace.path);
     },
     [workspace.path],
   );

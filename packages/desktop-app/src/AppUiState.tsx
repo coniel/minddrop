@@ -13,9 +13,9 @@ export interface AppUiState {
   view: string | null;
 
   /**
-   * The path of the currently open file, such as a document.
+   * The ID of the currently open document.
    */
-  path: string | null;
+  activeDocumentId: string | null;
 
   /**
    * The default skin tone to use in emoji pickers.
@@ -26,7 +26,7 @@ export interface AppUiState {
 const defaultState: AppUiState = {
   sidebarWidth: 300,
   view: null,
-  path: null,
+  activeDocumentId: null,
   defaultEmojiSkinTone: 0,
 };
 
@@ -35,8 +35,8 @@ export const AppUiState = createPersistentConfig('app-ui', defaultState);
 export const useCurrentView = () =>
   AppUiState.useValue('view') as string | null;
 
-export const useCurrentPath = () =>
-  AppUiState.useValue('path') as string | null;
+export const useCurrentDocumentId = () =>
+  AppUiState.useValue('activeDocumentId') as string | null;
 
 export const useSidebarWidth = () =>
   AppUiState.useValue('sidebarWidth') as number;

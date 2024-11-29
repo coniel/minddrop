@@ -9,8 +9,7 @@ import { RenameDocumentPopover } from './RenameDocumentPopover';
 
 const { document1 } = DOCUMENTS_TEST_DATA;
 
-const document_PATH = document1.path;
-const NEW_document_NAME = 'New name';
+const NEW_DOCUMENT_NAME = 'New name';
 
 const inputPlaceholder = i18n.t(
   'documents.actions.rename.form.name.placeholder',
@@ -51,15 +50,15 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.clear(nameInput);
 
     // Type new name
-    await userEvent.type(nameInput, NEW_document_NAME);
+    await userEvent.type(nameInput, NEW_DOCUMENT_NAME);
 
     // Press Enter key to sumbit form
     await userEvent.type(nameInput, '{enter}');
 
     // Should rename the document
     expect(Documents.rename).toHaveBeenCalledWith(
-      document_PATH,
-      NEW_document_NAME,
+      document1.id,
+      NEW_DOCUMENT_NAME,
     );
 
     // Should close the popover
@@ -73,15 +72,15 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.clear(nameInput);
 
     // Append some text to the end of the document name
-    await userEvent.type(nameInput, NEW_document_NAME);
+    await userEvent.type(nameInput, NEW_DOCUMENT_NAME);
 
     // Press Enter key to sumbit form
     await userEvent.click(getByTestId('click-away'));
 
     // Should rename the document
     expect(Documents.rename).toHaveBeenCalledWith(
-      document_PATH,
-      NEW_document_NAME,
+      document1.id,
+      NEW_DOCUMENT_NAME,
     );
 
     // Should close the popover
@@ -95,7 +94,7 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.clear(nameInput);
 
     // Type new name
-    await userEvent.type(nameInput, NEW_document_NAME);
+    await userEvent.type(nameInput, NEW_DOCUMENT_NAME);
 
     // Press Escape key to cancel
     await userEvent.type(nameInput, '{escape}');
@@ -148,7 +147,7 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.clear(nameInput);
 
     // Type new name
-    await userEvent.type(nameInput, NEW_document_NAME);
+    await userEvent.type(nameInput, NEW_DOCUMENT_NAME);
 
     // Press Enter key to sumbit form
     await userEvent.type(nameInput, '{enter}');
@@ -172,7 +171,7 @@ describe('<RenameDocumentPopover>', () => {
     await userEvent.clear(nameInput);
 
     // Type new name
-    await userEvent.type(nameInput, NEW_document_NAME);
+    await userEvent.type(nameInput, NEW_DOCUMENT_NAME);
 
     // Press Enter key to sumbit form
     await userEvent.type(nameInput, '{enter}');

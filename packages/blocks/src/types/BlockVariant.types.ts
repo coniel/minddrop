@@ -15,7 +15,7 @@ export interface BlockVariant<TBlock extends Block = Block> {
   /**
    * The component used to render the block.
    */
-  component: React.ComponentType<BlockRendererProps<TBlock>>;
+  component: React.ComponentType<BlockVariantProps<TBlock>>;
 
   /**
    * User friendly description of the block variant arranged as
@@ -24,7 +24,7 @@ export interface BlockVariant<TBlock extends Block = Block> {
   description: Record<string, { name: string }>;
 }
 
-export interface BlockRendererProps<TBlock extends Block = Block> {
+export interface BlockVariantProps<TBlock extends Block = Block> {
   /**
    * The block to render.
    */
@@ -33,14 +33,12 @@ export interface BlockRendererProps<TBlock extends Block = Block> {
   /**
    * Callback to update the block.
    *
-   * @param block - The updated block.
+   * @param data - The data to update the block with.
    */
-  onChange: (block: TBlock) => void;
+  updateBlock: (data: Partial<TBlock>) => void;
 
   /**
    * Callback to delete the block.
-   *
-   * @param block - The block to delete.
    */
-  onDelete: (block: TBlock) => void;
+  deleteBlock: () => void;
 }

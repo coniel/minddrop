@@ -13,7 +13,7 @@ describe('getDocument', () => {
     DocumentsStore.getState().add(document1);
 
     // Should return document from the store
-    expect(getDocument(document1.path)).toEqual(document1);
+    expect(getDocument(document1.id)).toEqual(document1);
   });
 
   it('returns null if the document does not exist', () => {

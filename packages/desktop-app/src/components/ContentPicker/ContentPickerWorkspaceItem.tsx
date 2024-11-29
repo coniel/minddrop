@@ -21,16 +21,18 @@ export interface ContentPickerWorkspaceItemProps
   /**
    * Path of a document to omit from child documents.
    */
-  omitDocument?: string;
+  omitDocumentId?: string;
 }
 
 export const ContentPickerWorkspaceItem: React.FC<
   ContentPickerWorkspaceItemProps
-> = ({ path, onClick, omitDocument }) => {
+> = ({ path, onClick, omitDocumentId: omitDocument }) => {
   const workspace = useWorkspace(path);
   const documents = useChildDocuments(path).filter(
-    (document) => document.path !== omitDocument,
+    (document) => document.id !== omitDocument,
   );
+
+  console.log('documents', documents);
 
   const handleClick = useCreateCallback(onClick, path);
 
@@ -49,9 +51,9 @@ export const ContentPickerWorkspaceItem: React.FC<
     >
       {documents.map((document) => (
         <ContentPickerDocumentItem
-          key={document.path}
+          key={document.id}
           level={1}
-          path={document.path}
+          id={document.id}
           omitSubdocument={omitDocument}
           onClick={onClick}
         />

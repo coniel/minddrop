@@ -1,12 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Events } from '@minddrop/events';
-import {
-  setup,
-  cleanup,
-  document1,
-  documentTypeConfig,
-  document1Content,
-} from '../test-utils';
+import { setup, cleanup, document1, documentFiles } from '../test-utils';
 import { updateDocument } from './updateDocument';
 import { DocumentNotFoundError } from '../errors';
 import { DocumentsStore } from '../DocumentsStore';
@@ -15,33 +9,24 @@ import {
   initializeMockFileSystem,
 } from '@minddrop/file-system';
 import { getDocument } from '../getDocument';
+import { serializeDocumentToJsonString } from '../utils';
 
 const UPDATE_DATA = {
-  properties: { icon: 'new-icon' },
-  content: 'new-content',
-};
-
-const NO_CONTENT_UPDATE_DATA = {
-  properties: { icon: 'new-icon' },
+  icon: 'new-icon',
 };
 
 const NO_FILE_DOCUMENT = {
   ...document1,
+  id: 'no-file',
   path: 'no-file',
 };
 
 const UPDATED_DOCUMENT = {
   ...document1,
-  ...UPDATE_DATA,
-  fileTextContent: documentTypeConfig.stringify(
-    UPDATE_DATA.properties,
-    UPDATE_DATA.content,
-  ),
+  icon: 'new-icon',
 };
 
-const MockFs = initializeMockFileSystem([
-  { path: document1.path, textContent: document1.fileTextContent },
-]);
+const MockFs = initializeMockFileSystem(documentFiles);
 
 describe('updateDocument', () => {
   beforeEach(() => {
@@ -67,39 +52,40 @@ describe('updateDocument', () => {
 
   it('throws an error if the document file does not exist', async () => {
     expect(async () =>
-      updateDocument(NO_FILE_DOCUMENT.path, UPDATE_DATA),
+      updateDocument(NO_FILE_DOCUMENT.id, UPDATE_DATA),
     ).rejects.toThrow(FileNotFoundError);
   });
 
   it('updates the document in the store', async () => {
-    await updateDocument(document1.path, UPDATE_DATA);
+    await updateDocument(document1.id, UPDATE_DATA);
 
-    const updatedDocument = getDocument(document1.path);
+    const updatedDocument = getDocument(document1.id);
 
     expect(updatedDocument).toEqual(UPDATED_DOCUMENT);
   });
 
   it('writes the updated document to the file', async () => {
-    await updateDocument(document1.path, UPDATE_DATA);
+    await updateDocument(document1.id, UPDATE_DATA);
 
     const fileContent = MockFs.readTextFile(document1.path);
 
-    expect(fileContent).toEqual(UPDATED_DOCUMENT.fileTextContent);
+    expect(fileContent).toEqual(
+      serializeDocumentToJsonString(UPDATED_DOCUMENT),
+    );
   });
 
-  it('works with updates involving no content on documents with content: null', async () => {
-    // Documents which have not been opened have content: null.
-    // Updating the non-content values should maintain the document's
-    // content in the file as it was.
-    await updateDocument(document1.path, NO_CONTENT_UPDATE_DATA);
+  it('updates the document lastModified timestamp if requested', async () => {
+    const updatedDocument = await updateDocument(
+      document1.id,
+      UPDATE_DATA,
+      true,
+    );
 
-    const fileContent = MockFs.readTextFile(document1.path);
-
-    expect(fileContent.includes(document1Content)).toBe(true);
+    expect(updatedDocument.lastModified > document1.lastModified).toBeTruthy();
   });
 
   it('returns the updated document', async () => {
-    const updatedDocument = await updateDocument(document1.path, UPDATE_DATA);
+    const updatedDocument = await updateDocument(document1.id, UPDATE_DATA);
 
     expect(updatedDocument).toEqual(UPDATED_DOCUMENT);
   });
@@ -111,6 +97,6 @@ describe('updateDocument', () => {
         done();
       });
 
-      updateDocument(document1.path, UPDATE_DATA);
+      updateDocument(document1.id, UPDATE_DATA);
     }));
 });

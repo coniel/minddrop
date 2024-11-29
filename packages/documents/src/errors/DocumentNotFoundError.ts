@@ -1,11 +1,11 @@
 export class DocumentNotFoundError extends Error {
   /**
-   * @param path - The path to the document that does not exist.
+   * @param id - The ID to the document that does not exist.
    */
-  constructor(path: string) {
-    const message = `Document ${path} does not exist.`;
+  constructor(id: string) {
+    const message = `Document ${id} does not exist.`;
 
-    super(path);
+    super(id);
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, DocumentNotFoundError);

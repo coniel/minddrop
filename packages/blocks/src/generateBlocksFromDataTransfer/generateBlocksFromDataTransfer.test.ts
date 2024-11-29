@@ -76,6 +76,8 @@ describe('generateBlocksFromDataTransfer', () => {
     expect(blocks[0]).toEqual({
       type: 'text-file',
       id: expect.any(String),
+      created: expect.any(Date),
+      lastModified: expect.any(Date),
       file: textFile.name,
       text: textFileContent,
     });
@@ -115,6 +117,8 @@ describe('generateBlocksFromDataTransfer', () => {
     expect(blocks[0]).toEqual({
       type: 'youtube',
       id: expect.any(String),
+      created: expect.any(Date),
+      lastModified: expect.any(Date),
       url,
       title: 'YouTube Video',
     });
@@ -134,6 +138,8 @@ describe('generateBlocksFromDataTransfer', () => {
       type: 'youtube',
       url,
       id: expect.any(String),
+      created: expect.any(Date),
+      lastModified: expect.any(Date),
       title: 'YouTube Video',
     });
   });
@@ -151,6 +157,8 @@ describe('generateBlocksFromDataTransfer', () => {
     expect(blocks[0]).toEqual({
       type: 'math',
       id: expect.any(String),
+      created: expect.any(Date),
+      lastModified: expect.any(Date),
       text,
       expression: '1 + 1 = 2',
     });

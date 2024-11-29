@@ -24,6 +24,7 @@
     "@minddrop/ast": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/editor": "workspace:*",
+    "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/utils": "workspace:*",

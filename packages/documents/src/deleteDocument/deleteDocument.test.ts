@@ -5,6 +5,8 @@ import {
   document1,
   wrappedDocument,
   childDocument,
+  wrappedChildDocument,
+  grandChildDocument,
 } from '../test-utils';
 import { deleteDocument } from './deleteDocument';
 import {
@@ -22,6 +24,8 @@ const MockFs = initializeMockFileSystem([
   document1.path,
   wrappedDocument.path,
   childDocument.path,
+  wrappedChildDocument.path,
+  grandChildDocument.path,
 ]);
 
 describe('deleteDocument', () => {
@@ -52,22 +56,22 @@ describe('deleteDocument', () => {
     MockFs.removeFile(document1.path);
 
     // Attempt to delete the document, should throw a FileNotFoudError
-    expect(() => deleteDocument(document1.path)).rejects.toThrow(
+    expect(() => deleteDocument(document1.id)).rejects.toThrow(
       FileNotFoundError,
     );
   });
 
   it('removes the document from the store', async () => {
     // Delete the document
-    await deleteDocument(document1.path);
+    await deleteDocument(document1.id);
 
     // Document should no longer exist in the store
-    expect(getDocument(document1.path)).toBeNull();
+    expect(getDocument(document1.id)).toBeNull();
   });
 
   it('moves the document file to system trash', async () => {
     // Delete the document
-    await deleteDocument(document1.path);
+    await deleteDocument(document1.id);
 
     // Document file should be in system trash
     expect(MockFs.getTrash()[0].path).toEqual(document1.path);
@@ -78,29 +82,30 @@ describe('deleteDocument', () => {
       // Listen to 'documents:document:delete' events
       Events.addListener('documents:document:delete', 'test', (payload) => {
         // Payload data should contain old and new paths
-        expect(payload.data).toEqual(document1.path);
+        expect(payload.data).toEqual(document1.id);
         done();
       });
 
       // Delete the document
-      deleteDocument(document1.path);
+      deleteDocument(document1.id);
     }));
 
   describe('wrapped document', () => {
     it('deletes the wrapper directory', async () => {
       // Delete the document
-      await deleteDocument(wrappedDocument.path);
+      await deleteDocument(wrappedDocument.id);
 
       // Wrapper directory should not exist
-      expect(MockFs.exists(Fs.parentDirPath(wrappedDocument.path))).toBe(false);
+      expect(MockFs.exists(Fs.parentDirPath(wrappedDocument.id))).toBe(false);
     });
 
-    it("removes the wrapped document's children from the store", async () => {
+    it("recursively removes the document's children from the store", async () => {
       // Delete the document
-      await deleteDocument(wrappedDocument.path);
+      await deleteDocument(wrappedDocument.id);
 
       // Wrapped document's children should not exist in the store
-      expect(getDocument(childDocument.path)).toBeNull();
+      expect(getDocument(childDocument.id)).toBeNull();
+      expect(getDocument(grandChildDocument.id)).toBeNull();
     });
   });
 });

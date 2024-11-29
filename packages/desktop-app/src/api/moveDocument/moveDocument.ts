@@ -6,8 +6,8 @@ import { Documents } from '@minddrop/documents';
  * If the destination is a document, the document will be wrapped
  * if it is not already wrapped.
  *
- * @param path The path of the document to move.
- * @param newParentPath The path of the new parent document or workspace.
+ * @param id - The path of the document to move.
+ * @param newParentPath - The path of the new parent document or workspace.
  * @returns The new path of the document.
  *
  * @throws {DocumentNotFoundError} If the document does not exist.
@@ -15,17 +15,17 @@ import { Documents } from '@minddrop/documents';
  * @throws {InvalidPathError} If the target parent document/workspace does not exist.
  */
 export async function moveDocument(
-  path: string,
+  id: string,
   newParentPath: string,
 ): Promise<string> {
   let newParentDirPath = newParentPath;
 
   // Get the destination document (if it is one)
-  const destinationDocument = Documents.get(newParentPath);
+  const destinationDocument = Documents.getByPath(newParentPath);
 
   // If destination is an unwrapped document, wrap it
   if (destinationDocument && !destinationDocument.wrapped) {
-    await Documents.wrap(newParentPath);
+    await Documents.wrap(destinationDocument.id);
   }
 
   // Use the wrapper dir path as destination path if the
@@ -37,5 +37,5 @@ export async function moveDocument(
   }
 
   // Move the document
-  return Documents.move(path, newParentDirPath);
+  return Documents.move(id, newParentDirPath);
 }

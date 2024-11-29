@@ -1,3 +1,4 @@
+import { Events } from '@minddrop/events';
 import {
   FileNotFoundError,
   Fs,
@@ -15,22 +16,20 @@ import {
   documents,
   setup,
   wrappedDocument,
+  documentFiles,
 } from '../test-utils';
-import { moveDocument } from './moveDocument';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
-import { Events } from '@minddrop/events';
+import { moveDocument } from './moveDocument';
 
 const TARGET_DIR = 'path/to/target';
-const DOCUMENT_PATH = document1.path;
-const WRAPPED_DOCUMENT_PATH = wrappedDocument.path;
 const MOVED_DOCUMENT_PATH = Fs.concatPath(
   TARGET_DIR,
-  Fs.fileNameFromPath(DOCUMENT_PATH),
+  Fs.fileNameFromPath(document1.path),
 );
 const MOVED_WRAPPED_DOCUMENT_PATH = Fs.concatPath(
   TARGET_DIR,
-  Fs.pathSlice(WRAPPED_DOCUMENT_PATH, -2),
+  Fs.pathSlice(wrappedDocument.path, -2),
 );
 const MOVED_CHILD_DOCUMENT_PATH = Fs.concatPath(
   Fs.parentDirPath(MOVED_WRAPPED_DOCUMENT_PATH),
@@ -43,8 +42,7 @@ const MOVED_GRAND_CHILD_DOCUMENT_PATH = Fs.concatPath(
 
 const MockFs = initializeMockFileSystem([
   // Document files
-  DOCUMENT_PATH,
-  WRAPPED_DOCUMENT_PATH,
+  ...documentFiles,
   // Target directory
   TARGET_DIR,
 ]);
@@ -78,7 +76,7 @@ describe('moveDocument', () => {
 
     // Attempt to move a document that does not have a file.
     // Should throw a FileNotFoundError.
-    expect(() => moveDocument(document1.path, TARGET_DIR)).rejects.toThrow(
+    expect(() => moveDocument(document1.id, TARGET_DIR)).rejects.toThrow(
       FileNotFoundError,
     );
   });
@@ -86,7 +84,7 @@ describe('moveDocument', () => {
   it('throws if the target parent directory does not exist', () => {
     // Attempt to move a document to a directory that does not exist.
     // Should throw a InvalidPathError.
-    expect(() => moveDocument(document1.path, 'missing')).rejects.toThrow(
+    expect(() => moveDocument(document1.id, 'missing')).rejects.toThrow(
       InvalidPathError,
     );
   });
@@ -95,7 +93,7 @@ describe('moveDocument', () => {
     // Attempt to move a document to a file.
     // Should throw a InvalidPathError.
     expect(() =>
-      moveDocument(document1.path, childDocument.path),
+      moveDocument(document1.id, childDocument.path),
     ).rejects.toThrow(InvalidPathError);
   });
 
@@ -103,32 +101,30 @@ describe('moveDocument', () => {
     // Attempt to move a document to a directory that already has a child document with the same name.
     // Should throw a PathConflictError.
     expect(() =>
-      moveDocument(document1.path, Fs.parentDirPath(document1.path)),
+      moveDocument(document1.id, Fs.parentDirPath(document1.path)),
     ).rejects.toThrow(PathConflictError);
   });
 
   it('moves the document file', async () => {
     // Move the document
-    await moveDocument(document1.path, TARGET_DIR);
+    await moveDocument(document1.id, TARGET_DIR);
 
     // Old path should not exist
     expect(MockFs.exists(document1.path)).toBe(false);
     // New path should exist
     expect(
       MockFs.exists(
-        Fs.concatPath(TARGET_DIR, Fs.fileNameFromPath(DOCUMENT_PATH)),
+        Fs.concatPath(TARGET_DIR, Fs.fileNameFromPath(document1.path)),
       ),
     ).toBe(true);
   });
 
   it('updates the document path in the store', async () => {
     // Move the document
-    await moveDocument(document1.path, TARGET_DIR);
+    await moveDocument(document1.id, TARGET_DIR);
 
     // The document should have been updated
-    expect(getDocument(MOVED_DOCUMENT_PATH)).not.toBeNull();
-    // Old document should not exist
-    expect(getDocument(document1.path)).toBeNull();
+    expect(getDocument(document1.id)?.path).toBe(MOVED_DOCUMENT_PATH);
   });
 
   it("dispatches a 'documents:document:moved' event", async () =>
@@ -144,12 +140,12 @@ describe('moveDocument', () => {
       });
 
       // Move the document
-      moveDocument(document1.path, TARGET_DIR);
+      moveDocument(document1.id, TARGET_DIR);
     }));
 
   it('returns the new document path', async () => {
     // Move the document
-    const newPath = await moveDocument(document1.path, TARGET_DIR);
+    const newPath = await moveDocument(document1.id, TARGET_DIR);
 
     // Should return the new document path
     expect(newPath).toBe(MOVED_DOCUMENT_PATH);
@@ -158,26 +154,30 @@ describe('moveDocument', () => {
   describe('when the document is wrapped', () => {
     it('updates the document path in the store', async () => {
       // Move the document
-      await moveDocument(wrappedDocument.path, TARGET_DIR);
+      await moveDocument(wrappedDocument.id, TARGET_DIR);
 
       // The document should have been updated
-      expect(getDocument(MOVED_WRAPPED_DOCUMENT_PATH)).not.toBeNull();
-      // Old document should not exist
-      expect(getDocument(WRAPPED_DOCUMENT_PATH)).toBeNull();
+      expect(getDocument(wrappedDocument.id)?.path).toBe(
+        MOVED_WRAPPED_DOCUMENT_PATH,
+      );
     });
 
     it('recursively updates the children paths', async () => {
       // Move the document
-      await moveDocument(wrappedDocument.path, TARGET_DIR);
+      await moveDocument(wrappedDocument.id, TARGET_DIR);
 
       // Child documents paths should be recursively updated
-      expect(getDocument(MOVED_CHILD_DOCUMENT_PATH)).not.toBeNull();
-      expect(getDocument(MOVED_GRAND_CHILD_DOCUMENT_PATH)).not.toBeNull();
+      expect(getDocument(childDocument.id)?.path).toBe(
+        MOVED_CHILD_DOCUMENT_PATH,
+      );
+      expect(getDocument(grandChildDocument.id)?.path).toBe(
+        MOVED_GRAND_CHILD_DOCUMENT_PATH,
+      );
     });
 
-    it('retuerns the new document path', async () => {
+    it('returns the new document path', async () => {
       // Move the document
-      const newPath = await moveDocument(wrappedDocument.path, TARGET_DIR);
+      const newPath = await moveDocument(wrappedDocument.id, TARGET_DIR);
 
       // Should return the new document path
       expect(newPath).toBe(MOVED_WRAPPED_DOCUMENT_PATH);

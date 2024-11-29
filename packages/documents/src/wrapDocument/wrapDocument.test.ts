@@ -6,26 +6,23 @@ import {
   FileNotFoundError,
   PathConflictError,
 } from '@minddrop/file-system';
-import { setup, cleanup, document1 } from '../test-utils';
+import { setup, cleanup, document1, documentFiles } from '../test-utils';
 import { wrapDocument } from './wrapDocument';
 import { getDocument } from '../getDocument';
 import { DocumentsStore } from '../DocumentsStore';
+import { DocumentNotFoundError } from '../errors';
 
 const BASE_PATH = Fs.parentDirPath(document1.path);
-const DOCUMENT_TITLE = document1.title;
 const DOCUMENT_FILENAME = Fs.fileNameFromPath(document1.path);
 const DOCUMENT_PATH = Fs.concatPath(BASE_PATH, DOCUMENT_FILENAME);
-const WRAPPER_DIR_PATH = Fs.concatPath(BASE_PATH, DOCUMENT_TITLE);
+const WRAPPER_DIR_PATH = Fs.concatPath(BASE_PATH, document1.title);
 const WRAPPED_DOCUMENT_PATH = Fs.concatPath(
   BASE_PATH,
-  DOCUMENT_TITLE,
+  document1.title,
   DOCUMENT_FILENAME,
 );
 
-const MockFs = initializeMockFileSystem([
-  // Document file
-  DOCUMENT_PATH,
-]);
+const MockFs = initializeMockFileSystem(documentFiles);
 
 describe('wrapDocument', () => {
   beforeEach(() => {
@@ -42,13 +39,21 @@ describe('wrapDocument', () => {
 
   afterEach(cleanup);
 
+  it('throws if the document does not exist', () => {
+    // Attempt to wrap a document which does not exist, should
+    // throw a DocumentNotFoundError.
+    expect(() => wrapDocument('invalid-id')).rejects.toThrowError(
+      DocumentNotFoundError,
+    );
+  });
+
   it('throws if the document file does not exist', () => {
     // Remove document file
     MockFs.clear();
 
     // Attempt to wrap a document which does not exist, should
     // throw a FileNotFoundError.
-    expect(() => wrapDocument('foo.md')).rejects.toThrowError(
+    expect(() => wrapDocument(document1.id)).rejects.toThrowError(
       FileNotFoundError,
     );
   });
@@ -58,14 +63,14 @@ describe('wrapDocument', () => {
     MockFs.addFiles([WRAPPER_DIR_PATH]);
 
     // Attempt to wrap the document, should throw a PathConflictError
-    expect(() => wrapDocument(DOCUMENT_PATH)).rejects.toThrowError(
+    expect(() => wrapDocument(document1.id)).rejects.toThrowError(
       PathConflictError,
     );
   });
 
   it('creates the wrapper dir', async () => {
     // Wrap the document
-    await wrapDocument(DOCUMENT_PATH);
+    await wrapDocument(document1.id);
 
     // Wrapper dir should exist
     expect(MockFs.exists(WRAPPER_DIR_PATH)).toBe(true);
@@ -73,7 +78,7 @@ describe('wrapDocument', () => {
 
   it('moves the document file into the wrapper dir', async () => {
     // Wrap the document
-    await wrapDocument(DOCUMENT_PATH);
+    await wrapDocument(document1.id);
 
     // Should move the file into wrapper dir
     expect(MockFs.exists(WRAPPED_DOCUMENT_PATH)).toBe(true);
@@ -83,17 +88,15 @@ describe('wrapDocument', () => {
 
   it('updates the document in the store', async () => {
     // Wrap the document
-    const newPath = await wrapDocument(DOCUMENT_PATH);
+    const newPath = await wrapDocument(document1.id);
 
     // Get the document from the store
-    const document = getDocument(newPath);
+    const document = getDocument(document1.id);
 
     // Document with new path should exists in the store
-    expect(document).not.toBeNull();
+    expect(document?.path).toBe(newPath);
     // Document should be marked as wrapped
     expect(document?.wrapped).toBe(true);
-    // Document with old path should no longer exists in the store
-    expect(getDocument(DOCUMENT_PATH)).toBeNull();
   });
 
   it('dispatches a document wrapped event', async () =>
@@ -109,6 +112,6 @@ describe('wrapDocument', () => {
       });
 
       // Wrap the document
-      wrapDocument(DOCUMENT_PATH);
+      wrapDocument(document1.id);
     }));
 });

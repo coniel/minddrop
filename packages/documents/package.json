@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
+    "@minddrop/blocks": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/file-system": "workspace:*",

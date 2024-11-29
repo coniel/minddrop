@@ -20,7 +20,10 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().load([wrappedDocument]);
 
       // Both documents should be in the store
-      expect(DocumentsStore.getState().documents).toEqual([document1, wrappedDocument]);
+      expect(DocumentsStore.getState().documents).toEqual([
+        document1,
+        wrappedDocument,
+      ]);
     });
   });
 
@@ -33,7 +36,10 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().add(wrappedDocument);
 
       // Both documents should be in the store
-      expect(DocumentsStore.getState().documents).toEqual([document1, wrappedDocument]);
+      expect(DocumentsStore.getState().documents).toEqual([
+        document1,
+        wrappedDocument,
+      ]);
     });
   });
 
@@ -45,18 +51,18 @@ describe('DocumentsStore', () => {
 
     it('updates the specified document in the store', () => {
       // Update a document
-      DocumentsStore.getState().update(document1.path, { title: 'New title' });
+      DocumentsStore.getState().update(document1.id, { title: 'New title' });
 
       // Get the document from the store
       const document = DocumentsStore.getState().documents.find(
-        ({ path }) => path === document1.path,
+        ({ id }) => id === document1.id,
       ) as Document;
 
       // Document title should be updated
       expect(document).toEqual({ ...document1, title: 'New title' });
     });
 
-    it('does nothing if the worksapce does not exist', () => {
+    it('does nothing if the document does not exist', () => {
       const initialState = [...DocumentsStore.getState().documents];
 
       // Update a missing document
@@ -77,11 +83,13 @@ describe('DocumentsStore', () => {
 
     it('removes the document from the store', () => {
       // Remove a document
-      DocumentsStore.getState().remove(document1.path);
+      DocumentsStore.getState().remove(document1.id);
 
       // document should no longer be in the store
       expect(
-        DocumentsStore.getState().documents.find((document) => document.path === document1.path),
+        DocumentsStore.getState().documents.find(
+          (document) => document.id === document1.id,
+        ),
       ).toBeUndefined();
     });
   });

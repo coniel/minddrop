@@ -1,32 +1,33 @@
-import { Fs } from '@minddrop/file-system';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
 import {
-  childDocument,
   cleanup,
-  document1,
   documents,
-  parentDir,
+  grandChildDocument,
+  workspaceDir,
   setup,
+  wrappedChildDocument,
   wrappedDocument,
 } from '../test-utils';
 import { updateChildDocumentPaths } from './updateChildDocumentPaths';
 
-const OLD_PARENT_PATH = parentDir;
-const NEW_PARENT_PATH = 'new-parent';
-const CHILD_DOCUMENT = Fs.fileNameFromPath(document1.path);
-const WRAPPED_CHILD_DOCUMENT = Fs.pathSlice(wrappedDocument.path, -2);
-const GRANDCHILD_DOCUMENT = Fs.concatPath(
-  Fs.parentDirPath(WRAPPED_CHILD_DOCUMENT),
-  Fs.fileNameFromPath(childDocument.path),
+const NEW_PARENT_NAME = 'New name';
+const NEW_PARENT_PATH = wrappedDocument.path.replace(
+  wrappedDocument.title,
+  NEW_PARENT_NAME,
 );
+const NEW_WORKSPACE_NAME = 'New workspace';
+const NEW_WORKSPACE_PATH = workspaceDir
+  .split('/')
+  .slice(0, -1)
+  .concat(NEW_PARENT_NAME)
+  .join('/');
 
 describe('updateChildDocumentPaths', () => {
   beforeEach(() => {
     setup();
 
-    // Add test documents to the store
     DocumentsStore.getState().load(documents);
   });
 
@@ -34,19 +35,33 @@ describe('updateChildDocumentPaths', () => {
 
   it("recursively updates the child documents' paths", () => {
     // Update the child document paths
-    updateChildDocumentPaths(OLD_PARENT_PATH, NEW_PARENT_PATH);
+    updateChildDocumentPaths(wrappedDocument.path, NEW_PARENT_PATH);
 
     // Child document path should be updated
-    expect(
-      getDocument(Fs.concatPath(NEW_PARENT_PATH, CHILD_DOCUMENT)),
-    ).not.toBeNull();
-    // Wrapped child document path should be updated
-    expect(
-      getDocument(Fs.concatPath(NEW_PARENT_PATH, WRAPPED_CHILD_DOCUMENT)),
-    ).not.toBeNull();
+    expect(getDocument(wrappedChildDocument.id)?.path).toBe(
+      wrappedChildDocument.path.replace(wrappedDocument.title, NEW_PARENT_NAME),
+    );
     // Grandchild document path should be updated
-    expect(
-      getDocument(Fs.concatPath(NEW_PARENT_PATH, GRANDCHILD_DOCUMENT)),
-    ).not.toBeNull();
+    expect(getDocument(grandChildDocument.id)?.path).toBe(
+      grandChildDocument.path.replace(wrappedDocument.title, NEW_PARENT_NAME),
+    );
+  });
+
+  it('supports using directories as paths', () => {
+    // Update the child document paths
+    updateChildDocumentPaths(workspaceDir, NEW_WORKSPACE_PATH);
+
+    // Child document path should be updated
+    expect(getDocument(wrappedDocument.id)?.path).toBe(
+      wrappedDocument.path.replace(workspaceDir, NEW_WORKSPACE_PATH),
+    );
+    // Child document path should be updated
+    expect(getDocument(wrappedChildDocument.id)?.path).toBe(
+      wrappedChildDocument.path.replace(workspaceDir, NEW_WORKSPACE_PATH),
+    );
+    // Grandchild document path should be updated
+    expect(getDocument(grandChildDocument.id)?.path).toBe(
+      grandChildDocument.path.replace(workspaceDir, NEW_WORKSPACE_PATH),
+    );
   });
 });

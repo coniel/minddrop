@@ -18,14 +18,14 @@ export interface DocumentsStore {
   add(document: Document): void;
 
   /**
-   * Updates a document in the store by path.
+   * Updates a document in the store by id.
    */
-  update(path: string, data: Partial<Document>): void;
+  update(id: string, data: Partial<Document>): void;
 
   /**
-   * Remove a document from the store by path.
+   * Remove a document from the store by id.
    */
-  remove(path: string): void;
+  remove(id: string): void;
 
   /**
    * Clear all documents.
@@ -46,11 +46,9 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
       };
     }),
 
-  update: (path, data) =>
+  update: (id, data) =>
     set((state) => {
-      const index = state.documents.findIndex(
-        (document) => document.path === path,
-      );
+      const index = state.documents.findIndex((document) => document.id === id);
       const documents = [...state.documents];
 
       if (index === -1) {
@@ -62,10 +60,10 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
       return { documents };
     }),
 
-  remove: (path) =>
+  remove: (id) =>
     set((state) => {
       return {
-        documents: state.documents.filter((document) => path !== document.path),
+        documents: state.documents.filter((document) => id !== document.id),
       };
     }),
 

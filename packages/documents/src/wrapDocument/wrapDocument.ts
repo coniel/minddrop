@@ -3,16 +3,27 @@ import {
   FileNotFoundError,
   PathConflictError,
 } from '@minddrop/file-system';
-import { DocumentsStore } from '../DocumentsStore';
 import { Events } from '@minddrop/events';
+import { DocumentsStore } from '../DocumentsStore';
+import { getDocument } from '../getDocument';
+import { DocumentNotFoundError } from '../errors';
 
 /**
  * Wraps a document in a directory of the same name.
  *
- * @param path - The document path.
+ * @param id - The document id.
  * @returns The new document path.
  */
-export async function wrapDocument(path: string): Promise<string> {
+export async function wrapDocument(id: string): Promise<string> {
+  const document = getDocument(id);
+
+  // Ensure the document exists
+  if (!document) {
+    throw new DocumentNotFoundError(id);
+  }
+
+  const { path } = document;
+
   // Remove document file extension to get desired
   // wrapper dir path.
   const wrapperDirPath = Fs.removeExtension(path);
@@ -37,7 +48,7 @@ export async function wrapDocument(path: string): Promise<string> {
   await Fs.rename(path, wrappedPath);
 
   // Update the document in the store
-  DocumentsStore.getState().update(path, { path: wrappedPath, wrapped: true });
+  DocumentsStore.getState().update(id, { path: wrappedPath, wrapped: true });
 
   // Dispatch document wrapped event
   Events.dispatch('documents:document:wrap', {
