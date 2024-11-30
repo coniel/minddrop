@@ -1,3 +1,4 @@
+export { addBlocksToDocument as addBlocks } from './addBlocksToDocument';
 export { createDocument as create } from './createDocument';
 export { deleteDocument as delete } from './deleteDocument';
 export { getDocument as get } from './getDocument';

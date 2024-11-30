@@ -1,7 +1,10 @@
 import { getDocumentView } from './getDocumentView';
 import { getDocumentViews } from './getDocumentViews';
 import { DocumentView } from './types';
+
 export { createDocumentView as create } from './createDocumentView';
+export { deleteDocumentView as delete } from './deleteDocumentView';
+export { updateDocumentView as update } from './updateDocumentView';
 
 /**
  * Returns one or more document views with the given IDs.

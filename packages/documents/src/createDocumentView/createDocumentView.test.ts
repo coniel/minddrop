@@ -5,7 +5,7 @@ import {
   cleanup,
   document1,
   documentFiles,
-  viewTypeConfig,
+  boardViewTypeConfig,
   TestDocumentView,
 } from '../test-utils';
 import { createDocumentView } from './createDocumentView';
@@ -23,7 +23,6 @@ const view: TestDocumentView = {
   id: expect.any(String),
   type: 'board',
   blocks: [],
-  foo: 'bar',
 };
 
 const MockFs = initializeMockFileSystem(documentFiles);
@@ -33,7 +32,7 @@ describe('createDocumentView', () => {
     setup();
 
     DocumentsStore.getState().load([document1]);
-    DocumentViewTypeConfigsStore.load([viewTypeConfig]);
+    DocumentViewTypeConfigsStore.load([boardViewTypeConfig]);
   });
 
   afterEach(() => {

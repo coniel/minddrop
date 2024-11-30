@@ -28,8 +28,6 @@ export function updateDocumentView<TView extends DocumentView = DocumentView>(
   // Update the view in the store
   DocumentViewsStore.getState().update(id, updatedView);
 
-  // Write the doucument to file to persist the changes
-
   // Dispatch a view update event
   Events.dispatch('documents:view:update', updatedView);
 
