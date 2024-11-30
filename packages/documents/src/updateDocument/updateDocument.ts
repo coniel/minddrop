@@ -14,19 +14,19 @@ import { serializeDocumentToJsonString } from '../utils';
  *
  * @param id - The id of the document to update.
  * @param updateData - The data to update the document with.
- * @param updateTimestamp - Whether to update the document's `modified` timestamp.
+ * @param updateTimestamp - Whether to update the document's `modified` timestamp, defaults to `true`.
  * @returns The updated document.
  *
  * @throws {DocumentNotFoundError} - If the document does not exist.
  * @throws {FileNotFoundError} - If the document file does not exist.
  * @throws {DocumentTypeConfigNotFoundError} - If the document type is not reigstered.
  *
- * @dispatches 'documents:document:update'
+ * @dispatches documents:document:update
  */
 export async function updateDocument(
   id: string,
   updateData: Partial<Document>,
-  updateTimestamp = false,
+  updateTimestamp = true,
 ): Promise<Document> {
   // Get the document from the store
   const document = getDocument(id);
@@ -54,7 +54,7 @@ export async function updateDocument(
   // Write updated document to file
   await writeDocument(
     document.path,
-    serializeDocumentToJsonString(updatedDocument),
+    serializeDocumentToJsonString(document.id),
   );
 
   // Dispatch a document update event

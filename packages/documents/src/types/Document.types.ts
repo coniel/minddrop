@@ -1,3 +1,6 @@
+import { Block, DeserializedBlockData } from '@minddrop/blocks';
+import { DocumentView } from './DocumentView.types';
+
 export interface Document {
   /**
    * A unique identifier for the document.
@@ -55,18 +58,30 @@ export interface Document {
  * Certain fields are omitted because they are not stored in
  * the document file. Instead, they are derived at runtime.
  */
-export type PersistedDocumentData = Omit<
-  Document,
-  'path' | 'wrapped' | 'title'
->;
+export interface SerializableDocumentData
+  extends Omit<Document, 'path' | 'wrapped' | 'blocks' | 'views'> {
+  /**
+   * The document views.
+   */
+  views: DocumentView[];
+
+  /**
+   * The document blocks.
+   */
+  blocks: Block[];
+}
 
 /**
  * Data for a document file that has been parsed from JSON.
  *
  * Date and time properties are stored as strings in the JSON file.
  */
-export interface JsonParsedDocumentData
-  extends Omit<PersistedDocumentData, 'created' | 'lastModified'> {
+export interface DeserializedDocumentData
+  extends Omit<
+    SerializableDocumentData,
+    'created' | 'lastModified' | 'blocks'
+  > {
   created: string;
   lastModified: string;
+  blocks: DeserializedBlockData[];
 }

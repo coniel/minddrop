@@ -1,9 +1,12 @@
 import { FsEntry, Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
+import { Block, Blocks } from '@minddrop/blocks';
 import { getDirFilesRecursiveFlat, isDocumentFile } from '../utils';
 import { getDocumentFromPath } from '../getDocumentFromPath';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
+import { Document, DocumentView } from '../types';
+import { DocumentViewsStore } from '../DocumentViewsStore';
 
 /**
  * Loads documents from the specified directories into the documents
@@ -12,6 +15,8 @@ import { getDocument } from '../getDocument';
  * @param sources - Paths of the directories from which to load documents.
  *
  * @dispatches documents:load
+ * @dispatches documents:views:load
+ * @dispatches blocks:load
  */
 export async function loadDocuments(sources: string[]): Promise<void> {
   // Filter sources to only include dirs that exist
@@ -23,9 +28,24 @@ export async function loadDocuments(sources: string[]): Promise<void> {
   // Get files that are registered document types
   const documentFiles = files.filter((file) => isDocumentFile(file.path));
 
-  // Create document objects from files
-  const documents = await Promise.all(
+  // Get documents, views, and blocks from document files
+  const data = await Promise.all(
     documentFiles.map(async (file) => getDocumentFromPath(file.path)),
+  );
+
+  const { documents, views, blocks } = data.reduce<{
+    documents: Document[];
+    views: DocumentView[];
+    blocks: Block[];
+  }>(
+    (acc, curr) => {
+      acc.documents.push(curr.document);
+      acc.views.push(...curr.views);
+      acc.blocks.push(...curr.blocks);
+
+      return acc;
+    },
+    { documents: [], views: [], blocks: [] },
   );
 
   // Filter out documents which are already in the store.
@@ -37,11 +57,14 @@ export async function loadDocuments(sources: string[]): Promise<void> {
     (document) => !getDocument(document.id),
   );
 
-  // Load documents into the store
+  // Load documents, views, and blocks into the store
   DocumentsStore.getState().load(uniqueDocuments);
+  DocumentViewsStore.getState().load(views);
+  Blocks.load(blocks);
 
-  // Dispatch a 'documents:load' event
+  // Dispatch document and view load events
   Events.dispatch('documents:load', documents);
+  Events.dispatch('documents:views:load', views);
 }
 
 // Filters sources to only include paths that exists

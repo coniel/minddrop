@@ -2,8 +2,7 @@ import { Events } from '@minddrop/events';
 import { uuid } from '@minddrop/utils';
 import { DocumentsStore } from '../DocumentsStore';
 import { createDocumentFile } from '../createDocumentFile';
-import { Document, PersistedDocumentData } from '../types';
-import { serializeDocumentToJsonString } from '../utils';
+import { Document, SerializableDocumentData } from '../types';
 
 /**
  * Create a document and its associated file.
@@ -24,10 +23,11 @@ export async function createDocument(
   title: string,
   options: { wrap?: boolean } = {},
 ): Promise<Document> {
-  const documentData: PersistedDocumentData = {
+  const documentData: SerializableDocumentData = {
     id: uuid(),
     created: new Date(),
     lastModified: new Date(),
+    title,
     blocks: [],
     views: [],
   };
@@ -36,16 +36,17 @@ export async function createDocument(
   const documentFilePath = await createDocumentFile(
     parentDir,
     title,
-    serializeDocumentToJsonString(documentData),
+    JSON.stringify(documentData),
     options,
   );
 
   // Add derived properties to document
   const document: Document = {
     path: documentFilePath,
-    title,
     wrapped: options.wrap || false,
     ...documentData,
+    blocks: [],
+    views: [],
   };
 
   // Add document to the store

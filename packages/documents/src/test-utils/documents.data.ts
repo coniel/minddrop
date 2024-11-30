@@ -1,20 +1,38 @@
 import { Fs } from '@minddrop/file-system';
 import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import { DefaultDocumentIconString } from '../constants';
-import { Document, PersistedDocumentData, DocumentView } from '../types';
-import { serializeDocumentToJsonString } from '../utils';
-
-export const configDefaultProperties = {
-  icon: 'content-icon:cat:cyan',
-};
-export const configDefaultContent = 'Hello, world!';
-export const configDefaultFileTextContent = JSON.stringify({
-  properties: configDefaultProperties,
-  content: configDefaultContent,
-});
+import {
+  Document,
+  SerializableDocumentData,
+  DocumentView,
+  DocumentViewTypeConfig,
+} from '../types';
+import { Block } from '@minddrop/blocks';
 
 export const workspaceDir = 'Users/foo/Documents/Workspace';
 export const parentWorkspaceId = 'workspace-1';
+
+export interface TestDocumentView extends DocumentView {
+  foo: string;
+}
+
+export const viewTypeConfig: DocumentViewTypeConfig<TestDocumentView> = {
+  id: 'board',
+  icon: 'kanban-square',
+  component: () => null,
+  onRemoveBlocks: () => {},
+  description: {
+    'en-US': {
+      name: 'Board',
+      details: 'A board view.',
+    },
+  },
+  initialize: () => ({ foo: 'bar' }),
+};
+
+/************************/
+/****** Document 1 ******/
+/************************/
 
 export const document1Icon: UserIcon = {
   type: UserIconType.ContentIcon,
@@ -22,15 +40,9 @@ export const document1Icon: UserIcon = {
   color: 'cyan',
 };
 
-export const document2Icon: UserIcon = {
-  type: UserIconType.ContentIcon,
-  icon: 'dog',
-  color: 'cyan',
-};
-
 export const document1View1: DocumentView = {
   id: 'document-1-view-1',
-  type: 'board',
+  type: viewTypeConfig.id,
   blocks: [],
 };
 
@@ -40,134 +52,195 @@ export const document1View2: DocumentView = {
   blocks: [],
 };
 
+export const document1Views = [document1View1, document1View2];
+
+export const document1Blocks: Block[] = [
+  {
+    id: 'block-1',
+    type: 'text',
+    created: new Date(),
+    lastModified: new Date(),
+    text: 'Document 1 block 1',
+  },
+  {
+    id: 'block-2',
+    type: 'text',
+    created: new Date(),
+    lastModified: new Date(),
+    text: 'Document 1 block 2',
+  },
+];
+
+/**
+ * A workspace level document with no children and two views.
+ */
+export const document1: Document = {
+  id: 'document-1',
+  created: new Date(),
+  lastModified: new Date(),
+  path: Fs.concatPath(workspaceDir, 'Document 1.minddrop'),
+  title: 'Document 1',
+  icon: Icons.stringify(document1Icon),
+  wrapped: false,
+  blocks: document1Blocks.map((block) => block.id),
+  views: document1Views.map((view) => view.id),
+};
+
+export const document1Data: SerializableDocumentData = {
+  id: document1.id,
+  created: document1.created,
+  lastModified: document1.lastModified,
+  title: document1.title,
+  icon: document1.icon,
+  blocks: document1Blocks,
+  views: document1Views,
+};
+
+export const document1Serialized = JSON.stringify(document1Data);
+
+/************************/
+/****** Document 2 ******/
+/************************/
+
+export const document2Icon: UserIcon = {
+  type: UserIconType.ContentIcon,
+  icon: 'dog',
+  color: 'cyan',
+};
+
 export const document2View: DocumentView = {
   id: 'document-2-view',
   type: 'page',
   blocks: [],
 };
 
-export const wrappedDocumentView: DocumentView = {
-  id: 'wrtapped-document-view',
-  type: 'board',
-  blocks: [],
-};
-
-export const childDocumentView: DocumentView = {
-  id: 'child-document-view',
-  type: 'board',
-  blocks: [],
-};
-
-export const wrappedChildDocumentView: DocumentView = {
-  id: 'wrapped-child-document-view',
-  type: 'board',
-  blocks: [],
-};
-
-export const grandchildDocumentView: DocumentView = {
-  id: 'grandchild-document-view',
-  type: 'board',
-  blocks: [],
-};
-
-export const document1Data: PersistedDocumentData = {
-  id: 'document-1',
-  created: new Date(),
-  lastModified: new Date(),
-  blocks: [],
-  views: [document1View1.id, document1View2.id],
-  icon: Icons.stringify(document1Icon),
-};
-
-/**
- * A workspace level document with no children and two views.
- */
-export const document1: Document = {
-  ...document1Data,
-  path: Fs.concatPath(workspaceDir, 'Document 1.minddrop'),
-  title: 'Document 1',
-  wrapped: false,
-};
-
-export const document2Data: PersistedDocumentData = {
-  id: 'document-2',
-  created: new Date(),
-  lastModified: new Date(),
-  blocks: [],
-  views: [document1View2.id],
-  icon: Icons.stringify(document2Icon),
-};
-
 /**
  * A workspace level document with no children and one view.
  */
 export const document2: Document = {
-  ...document2Data,
-  path: Fs.concatPath(workspaceDir, 'Document 2.minddrop'),
-  title: 'Document 2',
-  wrapped: false,
-};
-
-export const wrappedDocumentData: PersistedDocumentData = {
-  id: 'wrapped-document',
+  id: 'document-2',
   created: new Date(),
   lastModified: new Date(),
+  path: Fs.concatPath(workspaceDir, 'Document 2.minddrop'),
+  title: 'Document 2',
+  icon: Icons.stringify(document2Icon),
+  wrapped: false,
   blocks: [],
-  views: [wrappedDocumentView.id],
-  icon: DefaultDocumentIconString,
+  views: [document2View.id],
+};
+
+export const document2Data: SerializableDocumentData = {
+  id: document2.id,
+  created: document2.created,
+  lastModified: document2.lastModified,
+  title: document2.title,
+  icon: document2.icon,
+  blocks: [],
+  views: [document2View],
+};
+
+export const document2Serialized = JSON.stringify(document2Data);
+
+/******************************/
+/****** Wrapped Document ******/
+/******************************/
+
+export const wrappedDocumentView: DocumentView = {
+  id: 'wrtapped-document-view',
+  type: viewTypeConfig.id,
+  blocks: [],
 };
 
 /**
  * A workspace level document with one child (`childDocument`) document and one view.
  */
 export const wrappedDocument: Document = {
-  ...wrappedDocumentData,
+  id: 'wrapped-document',
+  created: new Date(),
+  lastModified: new Date(),
   path: Fs.concatPath(
     workspaceDir,
     'Wrapped document',
     'Wrapped document.minddrop',
   ),
   title: 'Wrapped document',
+  icon: DefaultDocumentIconString,
   wrapped: true,
+  blocks: [],
+  views: [wrappedDocumentView.id],
 };
 
-export const childDocumentData: PersistedDocumentData = {
-  id: 'child-document',
-  created: new Date(),
-  lastModified: new Date(),
+export const wrappedDocumentData: SerializableDocumentData = {
+  id: wrappedDocument.id,
+  created: wrappedDocument.created,
+  lastModified: wrappedDocument.lastModified,
+  title: wrappedDocument.title,
+  icon: wrappedDocument.icon,
   blocks: [],
-  views: [childDocumentView.id],
-  icon: DefaultDocumentIconString,
+  views: [wrappedDocumentView],
+};
+
+export const wrappedDocumentSerialized = JSON.stringify(wrappedDocumentData);
+
+/******************************/
+/******** Child Document ******/
+/******************************/
+
+export const childDocumentView: DocumentView = {
+  id: 'child-document-view',
+  type: viewTypeConfig.id,
+  blocks: [],
 };
 
 /**
  * A child document of `wrappedDocument` with one view.
  */
 export const childDocument: Document = {
-  ...childDocumentData,
+  id: 'child-document',
+  created: new Date(),
+  lastModified: new Date(),
   path: Fs.concatPath(
     workspaceDir,
     wrappedDocument.title,
     'Child document.minddrop',
   ),
   title: 'Child document',
+  icon: DefaultDocumentIconString,
   wrapped: false,
+  blocks: [],
+  views: [childDocumentView.id],
 };
 
-export const wrappedChildDocumentData: PersistedDocumentData = {
-  id: 'wrapped-child-document',
-  created: new Date(),
-  lastModified: new Date(),
+export const childDocumentData: SerializableDocumentData = {
+  id: childDocument.id,
+  created: childDocument.created,
+  lastModified: childDocument.lastModified,
+  title: childDocument.title,
+  icon: childDocument.icon,
   blocks: [],
-  views: [wrappedChildDocumentView.id],
-  icon: DefaultDocumentIconString,
+  views: [childDocumentView],
+};
+
+export const childDocumentSerialized = JSON.stringify(childDocumentData);
+
+/************************************/
+/****** Wrapped Child Document ******/
+/************************************/
+
+export const wrappedChildDocumentView: DocumentView = {
+  id: 'wrapped-child-document-view',
+  type: viewTypeConfig.id,
+  blocks: [],
 };
 
 /**
  * A child document of `wrappedDocument` with one child (`grandChildDocument`) document and one view.
  */
 export const wrappedChildDocument: Document = {
-  ...wrappedChildDocumentData,
+  id: 'wrapped-child-document',
+  created: new Date(),
+  lastModified: new Date(),
+  icon: DefaultDocumentIconString,
   path: Fs.concatPath(
     workspaceDir,
     wrappedDocument.title,
@@ -176,22 +249,42 @@ export const wrappedChildDocument: Document = {
   ),
   title: 'Wrapped child document',
   wrapped: true,
+  blocks: [],
+  views: [wrappedChildDocumentView.id],
 };
 
-export const grandChildDocumentData: PersistedDocumentData = {
-  id: 'grand-child-document',
-  created: new Date(),
-  lastModified: new Date(),
+export const wrappedChildDocumentData: SerializableDocumentData = {
+  id: wrappedChildDocument.id,
+  created: wrappedChildDocument.created,
+  lastModified: wrappedChildDocument.lastModified,
+  title: wrappedChildDocument.title,
+  icon: wrappedChildDocument.icon,
   blocks: [],
-  views: [grandchildDocumentView.id],
-  icon: DefaultDocumentIconString,
+  views: [wrappedChildDocumentView],
+};
+
+export const wrappedChildDocumentSerialized = JSON.stringify(
+  wrappedChildDocumentData,
+);
+
+/**********************************/
+/****** Grand Child Document ******/
+/**********************************/
+
+export const grandchildDocumentView: DocumentView = {
+  id: 'grandchild-document-view',
+  type: viewTypeConfig.id,
+  blocks: [],
 };
 
 /**
  * A child of document `childDocument` with no children and one view.
  */
 export const grandChildDocument: Document = {
-  ...grandChildDocumentData,
+  id: 'grand-child-document',
+  created: new Date(),
+  lastModified: new Date(),
+  icon: DefaultDocumentIconString,
   path: Fs.concatPath(
     workspaceDir,
     wrappedDocument.title,
@@ -200,16 +293,44 @@ export const grandChildDocument: Document = {
   ),
   title: 'Grand child document',
   wrapped: false,
+  blocks: [],
+  views: [grandchildDocumentView.id],
 };
 
+export const grandChildDocumentData: SerializableDocumentData = {
+  id: grandChildDocument.id,
+  created: grandChildDocument.created,
+  lastModified: grandChildDocument.lastModified,
+  title: grandChildDocument.title,
+  icon: grandChildDocument.icon,
+  blocks: [],
+  views: [grandchildDocumentView],
+};
+
+export const grandChildDocumentSerialized = JSON.stringify(
+  grandChildDocumentData,
+);
+
+/*******************/
+/** Combined Data **/
+/*******************/
+
 export const documentViews = [
-  document1View1,
-  document1View2,
-  document2View,
-  wrappedDocumentView,
-  childDocumentView,
-  wrappedChildDocumentView,
-  grandchildDocumentView,
+  ...document1Views,
+  ...document2Data.views,
+  ...wrappedDocumentData.views,
+  ...childDocumentData.views,
+  ...wrappedChildDocumentData.views,
+  ...grandChildDocumentData.views,
+];
+
+export const documentBlocks = [
+  ...document1Blocks,
+  ...document2Data.blocks,
+  ...wrappedDocumentData.blocks,
+  ...childDocumentData.blocks,
+  ...wrappedChildDocumentData.blocks,
+  ...grandChildDocumentData.blocks,
 ];
 
 export const documents = [
@@ -221,7 +342,29 @@ export const documents = [
   grandChildDocument,
 ];
 
-export const documentFiles = documents.map((document) => ({
-  path: document.path,
-  textContent: serializeDocumentToJsonString(document),
-}));
+export const documentFiles = [
+  {
+    path: document1.path,
+    textContent: document1Serialized,
+  },
+  {
+    path: document2.path,
+    textContent: document2Serialized,
+  },
+  {
+    path: wrappedDocument.path,
+    textContent: wrappedDocumentSerialized,
+  },
+  {
+    path: childDocument.path,
+    textContent: childDocumentSerialized,
+  },
+  {
+    path: wrappedChildDocument.path,
+    textContent: wrappedChildDocumentSerialized,
+  },
+  {
+    path: grandChildDocument.path,
+    textContent: grandChildDocumentSerialized,
+  },
+];

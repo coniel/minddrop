@@ -9,6 +9,8 @@ import {
   document1,
   wrappedDocument,
   documentFiles,
+  document1Views,
+  document1Blocks,
 } from '../test-utils';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentParseError } from '../errors';
@@ -46,7 +48,7 @@ describe('getDocumentFromPath', () => {
 
   it('returns a document object', async () => {
     // Read a dicument from path
-    const document = await getDocumentFromPath(document1.path);
+    const { document } = await getDocumentFromPath(document1.path);
 
     // Should return a document object
     expect(document).toEqual(document1);
@@ -54,9 +56,56 @@ describe('getDocumentFromPath', () => {
 
   it('marks document as wrapped if it is wrapped', async () => {
     // Get a wrapped document
-    const document = await getDocumentFromPath(wrappedDocument.path);
+    const { document } = await getDocumentFromPath(wrappedDocument.path);
 
     // Document should be marked as wrapped
     expect(document.wrapped).toBe(true);
+  });
+
+  it('returns the document views', async () => {
+    // Read a document from path
+    const { views } = await getDocumentFromPath(document1.path);
+
+    // Should return the document's views
+    expect(views).toEqual(document1Views);
+  });
+
+  it('returns the document blocks', async () => {
+    // Read a document from path
+    const { blocks } = await getDocumentFromPath(document1.path);
+
+    // Should return the document's blocks
+    expect(blocks).toEqual(document1Blocks);
+  });
+
+  it('handles invalid date strings', async () => {
+    // Replace date strings with invalid date strings in the document file
+    MockFs.writeTextFile(
+      document1.path,
+      JSON.stringify({
+        ...document1,
+        created: 'invalid-date',
+        lastModified: 'invalid-date',
+        blocks: document1Blocks.map((block) => ({
+          ...block,
+          created: 'invalid-date',
+          lastModified: 'invalid-date',
+        })),
+      }),
+    );
+
+    // Get a document with invalid date strings
+    const { document, blocks } = await getDocumentFromPath(document1.path);
+
+    // Document and block dates should be valid
+    expect(document.created).toBeInstanceOf(Date);
+    expect(document.lastModified).toBeInstanceOf(Date);
+    expect(blocks[0].created).toBeInstanceOf(Date);
+    expect(blocks[0].lastModified).toBeInstanceOf(Date);
+
+    expect(document.created.getTime()).not.toBeNaN();
+    expect(document.lastModified.getTime()).not.toBeNaN();
+    expect(blocks[0].created.getTime()).not.toBeNaN();
+    expect(blocks[0].lastModified.getTime()).not.toBeNaN();
   });
 });

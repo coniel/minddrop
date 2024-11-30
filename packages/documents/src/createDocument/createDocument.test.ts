@@ -3,9 +3,8 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { setup, cleanup } from '../test-utils';
 import { createDocument } from './createDocument';
-import { Document } from '../types';
+import { Document, SerializableDocumentData } from '../types';
 import { getDocument } from '../getDocument';
-import { serializeDocumentToJsonString } from '../utils';
 
 const TITLE = 'Document';
 const PARENT_DIR_PATH = 'path/to/Workspace';
@@ -65,9 +64,18 @@ describe('createDocument', () => {
     // Create a document
     const document = (await createDocument(PARENT_DIR_PATH, TITLE)) as any;
 
+    const serializedDocument: SerializableDocumentData = {
+      id: document.id,
+      created: document.created,
+      lastModified: document.lastModified,
+      title: document.title,
+      blocks: [],
+      views: [],
+    };
+
     // Document file should contain serialized data
     expect(MockFs.readTextFile(DOCUMENT_FILE_PATH)).toEqual(
-      serializeDocumentToJsonString(document),
+      JSON.stringify(serializedDocument),
     );
   });
 

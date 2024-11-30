@@ -1,11 +1,11 @@
 export class DocumentParseError extends Error {
   /**
-   * @param path - The path to the document that could not be parsed.
+   * @param jsonString - The path to the document that could not be parsed.
    */
-  constructor(path: string) {
-    const message = `Failed to parse document ${path}.`;
+  constructor(jsonString: string) {
+    const message = `Failed to parse document ${jsonString}.`;
 
-    super(path);
+    super(jsonString);
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, DocumentParseError);

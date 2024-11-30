@@ -1,16 +1,20 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
+import { Blocks } from '@minddrop/blocks';
 import {
   setup,
   cleanup,
   workspaceDir,
   documentFiles,
   documents,
+  documentViews,
+  documentBlocks,
 } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
+import { DocumentViewsStore } from '../DocumentViewsStore';
 
 initializeMockFileSystem([
   // Document files
@@ -52,12 +56,39 @@ describe('loadDocuments', () => {
     );
   });
 
+  it('loads views itno the store', async () => {
+    // Load documents
+    await loadDocuments([workspaceDir]);
+
+    // Views should be in the store
+    expect(DocumentViewsStore.getState().documents).toEqual(documentViews);
+  });
+
+  it('loads blocks into the store', async () => {
+    // Load documents
+    await loadDocuments([workspaceDir]);
+
+    // Blocks should be in the store
+    expect(Blocks.getAll()).toEqual(documentBlocks);
+  });
+
   it('dispatches a `documents:load` event', async () =>
     new Promise<void>((done) => {
-      // Listen to 'documents:load' events
       Events.addListener('documents:load', 'test', (payload) => {
         // Payload data should be the loaded documents
         expect(payload.data).toEqual(documents);
+        done();
+      });
+
+      // Load documents
+      loadDocuments([workspaceDir]);
+    }));
+
+  it('dispatches a `documents:views:load` event', async () =>
+    new Promise<void>((done) => {
+      Events.addListener('documents:views:load', 'test', (payload) => {
+        // Payload data should be the loaded views
+        expect(payload.data).toEqual(documentViews);
         done();
       });
 
