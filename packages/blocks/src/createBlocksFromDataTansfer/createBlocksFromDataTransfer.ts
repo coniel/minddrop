@@ -1,6 +1,7 @@
 import { Events } from '@minddrop/events';
 import { BlocksStore } from '../BlocksStore';
 import { Block } from '../types';
+import { generateBlocksFromDataTransfer } from '../generateBlocksFromDataTransfer';
 
 /**
  * Create blocks from a data transfer object and isnerts them into
@@ -17,7 +18,7 @@ export async function createBlocksFromDataTransfer(
   parentPath: string,
 ): Promise<Block[]> {
   // Create the blocks from the data transfer object
-  const blocks = await createBlocksFromDataTransfer(dataTransfer, parentPath);
+  const blocks = await generateBlocksFromDataTransfer(dataTransfer, parentPath);
 
   // Insert the blocks into the store
   BlocksStore.getState().load(blocks);

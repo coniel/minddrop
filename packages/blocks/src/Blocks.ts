@@ -3,7 +3,10 @@ import { BlocksStore } from './BlocksStore';
 export { getBlock as get } from './getBlock';
 export { loadBlocks as load } from './loadBlocks';
 export { clearBlocks as clear } from './BlocksStore';
-export { generateBlocksFromDataTransfer as fromDataTransfer } from './generateBlocksFromDataTransfer';
+export { createBlock as create } from './createBlock';
+export { updateBlock as update } from './updateBlock';
+export { deleteBlock as delete } from './deleteBlock';
+export { createBlocksFromDataTransfer as createFromDataTransfer } from './createBlocksFromDataTansfer';
 export {
   registerBlockVariant as registerVariant,
   unregisterBlockVariant as unregisterVariant,
