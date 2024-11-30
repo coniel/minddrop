@@ -13,21 +13,39 @@ export const workspaceDir = 'Users/foo/Documents/Workspace';
 export const parentWorkspaceId = 'workspace-1';
 
 export interface TestDocumentView extends DocumentView {
-  foo: string;
+  blocks: string[];
 }
 
-export const viewTypeConfig: DocumentViewTypeConfig<TestDocumentView> = {
+export const boardViewTypeConfig: DocumentViewTypeConfig<TestDocumentView> = {
   id: 'board',
   icon: 'kanban-square',
   component: () => null,
-  onRemoveBlocks: () => {},
+  onRemoveBlocks: (view, blocks) => ({
+    ...view,
+    blocks: view.blocks.filter((id) => !blocks.find((b) => b.id === id)),
+  }),
+  onAddBlocks: (view, blocks) => ({
+    ...view,
+    blocks: view.blocks.concat(blocks.map((b) => b.id)),
+  }),
   description: {
     'en-US': {
       name: 'Board',
       details: 'A board view.',
     },
   },
-  initialize: () => ({ foo: 'bar' }),
+  initialize: () => ({ blocks: [] }),
+};
+
+export const pageViewTypeConfig: DocumentViewTypeConfig<TestDocumentView> = {
+  ...boardViewTypeConfig,
+  id: 'page',
+  description: {
+    'en-US': {
+      name: 'Page',
+      details: 'A Page view.',
+    },
+  },
 };
 
 /************************/
@@ -42,7 +60,7 @@ export const document1Icon: UserIcon = {
 
 export const document1View1: DocumentView = {
   id: 'document-1-view-1',
-  type: viewTypeConfig.id,
+  type: boardViewTypeConfig.id,
   blocks: [],
 };
 
@@ -147,7 +165,7 @@ export const document2Serialized = JSON.stringify(document2Data);
 
 export const wrappedDocumentView: DocumentView = {
   id: 'wrtapped-document-view',
-  type: viewTypeConfig.id,
+  type: boardViewTypeConfig.id,
   blocks: [],
 };
 
@@ -188,7 +206,7 @@ export const wrappedDocumentSerialized = JSON.stringify(wrappedDocumentData);
 
 export const childDocumentView: DocumentView = {
   id: 'child-document-view',
-  type: viewTypeConfig.id,
+  type: boardViewTypeConfig.id,
   blocks: [],
 };
 
@@ -229,7 +247,7 @@ export const childDocumentSerialized = JSON.stringify(childDocumentData);
 
 export const wrappedChildDocumentView: DocumentView = {
   id: 'wrapped-child-document-view',
-  type: viewTypeConfig.id,
+  type: boardViewTypeConfig.id,
   blocks: [],
 };
 
@@ -273,7 +291,7 @@ export const wrappedChildDocumentSerialized = JSON.stringify(
 
 export const grandchildDocumentView: DocumentView = {
   id: 'grandchild-document-view',
-  type: viewTypeConfig.id,
+  type: boardViewTypeConfig.id,
   blocks: [],
 };
 
@@ -368,3 +386,5 @@ export const documentFiles = [
     textContent: grandChildDocumentSerialized,
   },
 ];
+
+export const viewTypeConfigs = [boardViewTypeConfig, pageViewTypeConfig];
