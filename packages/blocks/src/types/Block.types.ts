@@ -98,3 +98,9 @@ export type BlockData<TCustomData extends CustomBlockData = {}> =
 
 export type Block<TCustomData extends CustomBlockData = {}> =
   CoreBlockProperties & TCustomData;
+
+export interface DeserializedBlockData
+  extends Omit<Block, 'created' | 'lastModified'> {
+  created: string;
+  lastModified: string;
+}
