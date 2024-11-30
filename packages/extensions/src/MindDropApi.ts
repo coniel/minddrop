@@ -1,5 +1,5 @@
 import { Ast } from '@minddrop/ast';
-import { Documents } from '@minddrop/documents';
+import { Documents, DocumentViews } from '@minddrop/documents';
 import { EditorMarks, EditorElements } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -15,6 +15,7 @@ import { MindDropApi as Api } from './types';
 export const MindDropApi: Api = {
   Ast,
   Documents,
+  DocumentViews,
   EditorMarks,
   EditorElements,
   Events,

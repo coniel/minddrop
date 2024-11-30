@@ -1,6 +1,6 @@
 import { Ast } from '@minddrop/ast';
 import { EditorMarks, EditorElements } from '@minddrop/editor';
-import { Documents } from '@minddrop/documents';
+import { DocumentViews, Documents } from '@minddrop/documents';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Icons } from '@minddrop/icons';
@@ -16,6 +16,7 @@ export interface MindDropApi {
   EditorMarks: typeof EditorMarks;
   EditorElements: typeof EditorElements;
   Documents: typeof Documents;
+  DocumentViews: typeof DocumentViews;
   Events: typeof Events;
   Fs: typeof Fs;
   Icons: typeof Icons;
