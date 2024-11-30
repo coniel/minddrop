@@ -68,3 +68,7 @@ export const BlocksStore = create<BlocksStore>()((set) => ({
 
   clear: () => set({ blocks: [] }),
 }));
+
+export function clearBlocks() {
+  BlocksStore.getState().clear();
+}
