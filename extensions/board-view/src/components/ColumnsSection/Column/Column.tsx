@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
-import { DocumentViewProps, useApi } from '@minddrop/extension';
+import { Block, useApi } from '@minddrop/extension';
 import { BoardColumn } from '../../../types';
 import { BoardDropZone } from '../../BoardDropZone';
 import './Column.css';
 
-export interface ColumnProps
-  extends Pick<DocumentViewProps, 'createBlocksFromDataInsert'> {
+export interface ColumnProps {
   /**
    * The column object.
    */
@@ -20,13 +19,20 @@ export interface ColumnProps
    * Callback to update the column.
    */
   updateColumn: (data: Partial<BoardColumn>) => void;
+
+  /**
+   * Callback to create blocks from a data transfer.
+   */
+  createBlocksFromDataTransfer: (
+    dataTransfer: DataTransfer,
+  ) => Promise<Block[]>;
 }
 
 export const Column: React.FC<ColumnProps> = ({
   column,
   deleteColumn,
   updateColumn,
-  createBlocksFromDataInsert,
+  createBlocksFromDataTransfer,
 }) => {
   const {
     Blocks: { BlockRenderer },
@@ -35,21 +41,22 @@ export const Column: React.FC<ColumnProps> = ({
   const onDrop = useCallback(
     async (event: React.DragEvent, index: number) => {
       // Create blocks from the data insert
-      const blocks = await createBlocksFromDataInsert(event.dataTransfer);
+      const blocks = await createBlocksFromDataTransfer(event.dataTransfer);
+      console.log(blocks);
+
+      const newBlocks = [...column.blocks];
+      newBlocks.splice(index, 0, ...blocks.map((block) => block.id));
 
       // Insert the blocks into the column
       const columnUpdate = {
-        blocks: [...column.blocks].splice(
-          index,
-          0,
-          ...blocks.map((block) => block.id),
-        ),
+        blocks: newBlocks,
       };
+      console.log(columnUpdate);
 
       // Update the column
       updateColumn(columnUpdate);
     },
-    [createBlocksFromDataInsert, updateColumn, column.blocks],
+    [createBlocksFromDataTransfer, updateColumn, column.blocks],
   );
 
   const onDropColumnEnd = useCallback(

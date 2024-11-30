@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-import { DocumentViewProps } from '@minddrop/extension';
+import { Block, DocumentViewProps } from '@minddrop/extension';
 import { BoardDropZone } from '../BoardDropZone';
 import { BoardColumn, BoardColumnsSection } from '../../types';
 import './ColumnsSection.css';
 import { Column } from './Column/Column';
 
-export interface ColumnsSectionProps
-  extends Pick<DocumentViewProps, 'createBlocksFromDataInsert'> {
+export interface ColumnsSectionProps {
   /**
    * The board columns block.
    */
@@ -16,17 +15,24 @@ export interface ColumnsSectionProps
    * Callback to update the section.
    */
   updateSection: (data: Partial<BoardColumnsSection>) => void;
+
+  /**
+   * Callback to create blocks from a data transfer.
+   */
+  createBlocksFromDataTransfer: (
+    dataTransfer: DataTransfer,
+  ) => Promise<Block[]>;
 }
 
 export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
   section,
   updateSection,
-  createBlocksFromDataInsert,
+  createBlocksFromDataTransfer,
 }) => {
   const onDropVerticalZone = useCallback(
     async (event: React.DragEvent, index: number) => {
       // Create blocks from the data insert
-      const blocks = await createBlocksFromDataInsert(event.dataTransfer);
+      const blocks = await createBlocksFromDataTransfer(event.dataTransfer);
       // Create a new column with the blocks
       const newColumn: BoardColumn = {
         id: `${Date.now()}`,
@@ -37,7 +43,7 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
 
       updateSection({ columns });
     },
-    [updateSection, section.columns, createBlocksFromDataInsert],
+    [updateSection, section.columns, createBlocksFromDataTransfer],
   );
 
   const onUpdateColumn = useCallback(
@@ -71,7 +77,7 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
               column={column}
               updateColumn={(data) => onUpdateColumn(index, data)}
               deleteColumn={() => onDeleteColumn(index)}
-              createBlocksFromDataInsert={createBlocksFromDataInsert}
+              createBlocksFromDataTransfer={createBlocksFromDataTransfer}
             />
           </div>
         ))}

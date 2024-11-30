@@ -1,9 +1,8 @@
-import { DocumentViewProps } from '@minddrop/extension';
+import { Block, DocumentViewProps } from '@minddrop/extension';
 import { BoardListSection } from '../../types';
 import './ListSection.css';
 
-export interface ListSectionProps
-  extends Pick<DocumentViewProps, 'createBlocksFromDataInsert'> {
+export interface ListSectionProps {
   /**
    * The list section.
    */
@@ -13,6 +12,13 @@ export interface ListSectionProps
    * Callback to update the section.
    */
   updateSection: (data: Partial<BoardListSection>) => void;
+
+  /**
+   * Callback to create blocks from a data transfer.
+   */
+  createBlocksFromDataTransfer: (
+    dataTransfer: DataTransfer,
+  ) => Promise<Block[]>;
 }
 
 export const ListSection: React.FC<ListSectionProps> = ({}) => {

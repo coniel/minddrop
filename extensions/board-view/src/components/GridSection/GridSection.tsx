@@ -1,9 +1,8 @@
-import { DocumentViewProps } from '@minddrop/extension';
+import { Block } from '@minddrop/extension';
 import { BoardGridSection } from '../../types';
 import './GridSection.css';
 
-export interface GridSectionProps
-  extends Pick<DocumentViewProps, 'createBlocksFromDataInsert'> {
+export interface GridSectionProps {
   /**
    * The grid section.
    */
@@ -13,6 +12,13 @@ export interface GridSectionProps
    * Callback to update the section.
    */
   updateSection: (data: Partial<BoardGridSection>) => void;
+
+  /**
+   * Callback to create blocks from a data transfer.
+   */
+  createBlocksFromDataTransfer: (
+    dataTransfer: DataTransfer,
+  ) => Promise<Block[]>;
 }
 
 export const GridSection: React.FC<GridSectionProps> = ({}) => {

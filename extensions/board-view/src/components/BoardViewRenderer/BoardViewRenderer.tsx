@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useApi, DocumentViewProps } from '@minddrop/extension';
+import { useApi, DocumentViewProps, Block } from '@minddrop/extension';
 import { BoardListSection, BoardSection, BoardView } from '../../types';
 import { ColumnsSection } from '../ColumnsSection';
 import { ListSection } from '../ListSection';
@@ -8,21 +8,53 @@ import './BoardViewRenderer.css';
 
 export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
   view,
-  updateView,
-  createBlocksFromDataInsert,
+  documentId,
+  documentPath,
 }) => {
-  const { Selection } = useApi();
+  const {
+    Selection,
+    DocumentViews: { update: updateView },
+    Documents: { addBlocks },
+    Blocks: { createFromDataTransfer },
+  } = useApi();
 
   const updateSection = useCallback(
     (index: number, data: Partial<BoardSection>) => {
-      const updatedSections = [...view.sections].splice(index, 1, {
+      const updatedSections = [...view.sections];
+
+      updatedSections.splice(index, 1, {
         ...view.sections[index],
         ...data,
       } as BoardListSection);
 
-      updateView({ sections: updatedSections });
+      updateView<BoardView>(view.id, { sections: updatedSections });
     },
-    [view.sections, updateView],
+    [view.id, view.sections, updateView],
+  );
+
+  const createBlocksFromDataTransfer = useCallback(
+    async (dataTransfer: DataTransfer): Promise<Block[]> => {
+      const blocks = await createFromDataTransfer(dataTransfer, documentPath);
+
+      if (blocks.length) {
+        addBlocks(documentId, blocks, view.id);
+        const v = updateView(view.id, {
+          blocks: [...view.blocks, ...blocks.map((block) => block.id)],
+        });
+        console.log(v);
+      }
+
+      return blocks;
+    },
+    [
+      createFromDataTransfer,
+      addBlocks,
+      updateView,
+      view.blocks,
+      documentPath,
+      documentId,
+      view.id,
+    ],
   );
 
   return (
@@ -34,7 +66,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
               <ColumnsSection
                 key={section.id}
                 section={section}
-                createBlocksFromDataInsert={createBlocksFromDataInsert}
+                createBlocksFromDataTransfer={createBlocksFromDataTransfer}
                 updateSection={(data) => updateSection(index, data)}
               />
             );
@@ -43,7 +75,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
               <ListSection
                 key={section.id}
                 section={section}
-                createBlocksFromDataInsert={createBlocksFromDataInsert}
+                createBlocksFromDataTransfer={createBlocksFromDataTransfer}
                 updateSection={(data) => updateSection(index, data)}
               />
             );
@@ -52,7 +84,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
               <GridSection
                 key={section.id}
                 section={section}
-                createBlocksFromDataInsert={createBlocksFromDataInsert}
+                createBlocksFromDataTransfer={createBlocksFromDataTransfer}
                 updateSection={(data) => updateSection(index, data)}
               />
             );

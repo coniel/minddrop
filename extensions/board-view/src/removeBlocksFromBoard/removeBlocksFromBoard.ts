@@ -8,11 +8,10 @@ import { BoardView } from '../types';
  * @param blocks - The blocks to remove.
  * @param updateView - Callback to update the view.
  */
-export async function removeBlocksFromBoard(
+export function removeBlocksFromBoard(
   view: BoardView,
   blocks: Block[],
-  updateView: (data: Partial<BoardView>) => Promise<void>,
-): Promise<void> {
+): BoardView {
   const newBlocks = view.blocks.filter(
     (blockId) => !blocks.some((block) => block.id === blockId),
   );
@@ -40,5 +39,5 @@ export async function removeBlocksFromBoard(
     };
   });
 
-  updateView({ blocks: newBlocks, sections: newSections });
+  return { ...view, blocks: newBlocks, sections: newSections };
 }
