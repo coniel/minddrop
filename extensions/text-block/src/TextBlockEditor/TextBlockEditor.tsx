@@ -10,24 +10,18 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   deleteBlock,
 }) => {
   const {
-    Utils,
     Selection,
     Ui: { BlockContainer },
   } = useApi();
 
-  // Path to the parent document
-  const parentPath = Utils.useParentDir();
-  // Path to the current block considering the parent path
-  // and block ID as a subpath.
-  const path = `${parentPath}#${block.id}`;
   // Make the block selectable
   const { selected, onClick } = Selection.useSelectable({
-    id: path,
+    id: block.id,
     getPlainTextContent: () => block.text || '',
     onDelete: deleteBlock,
   });
   // Make the block draggable
-  const { onDragStart } = Selection.useDraggable({ id: path });
+  const { onDragStart } = Selection.useDraggable({ id: block.id });
   // Used to disable dragging when editor is focused
   const [draggable, setDraggable] = useState(true);
 

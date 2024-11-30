@@ -11,19 +11,14 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
     Selection,
     Ui: { BlockContainer },
   } = useApi();
-  // Path to the parent document
-  const parentPath = Utils.useParentDir();
-  // Path to the current node considering the parent path
-  // and node ID as a subpath.
-  const path = `${parentPath}#${block.id}`;
   // Make the node selectable
   const { selected, onClick } = Selection.useSelectable({
-    id: path,
+    id: block.id,
     getUriList: () => (block.url ? [block.url] : []),
     onDelete: deleteBlock,
   });
   // Make the node draggable
-  const { onDragStart } = Selection.useDraggable({ id: path });
+  const { onDragStart } = Selection.useDraggable({ id: block.id });
 
   const domain = useMemo(() => {
     try {

@@ -8,16 +8,11 @@ export const ImageCard: React.FC<BlockVariantProps> = ({
 }) => {
   const {
     Fs,
-    Utils,
     Selection,
     Ui: { BlockContainer },
+    Utils,
   } = useApi();
   const parentDir = Utils.useParentDir();
-  // Path to the parent document
-  const parentPath = Utils.useParentDir();
-  // Path to the current block considering the parent path
-  // and block ID as a subpath.
-  const path = `${parentPath}#${block.id}`;
   const [imageAvailable, setImageAvailable] = useState(true);
 
   const src = useMemo(
@@ -27,11 +22,11 @@ export const ImageCard: React.FC<BlockVariantProps> = ({
   );
   const selectionItem: SelectionItem = useMemo(
     () => ({
-      id: path,
+      id: block.id,
       getPlainTextContent: () => block.file || '',
       onDelete: deleteBlock,
     }),
-    [path, block, deleteBlock],
+    [block.id, block.file, deleteBlock],
   );
   // Make the block selectable
   const { selected, onClick } = Selection.useSelectable(selectionItem);
