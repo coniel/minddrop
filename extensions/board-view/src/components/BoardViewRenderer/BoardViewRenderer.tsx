@@ -9,14 +9,15 @@ import './BoardViewRenderer.css';
 export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
   view,
   documentId,
-  documentPath,
 }) => {
   const {
     Selection,
     DocumentViews: { update: updateView },
     Documents: { addBlocks },
     Blocks: { createFromDataTransfer },
+    Utils: { useParentDir },
   } = useApi();
+  const parentDir = useParentDir();
 
   const updateSection = useCallback(
     (index: number, data: Partial<BoardSection>) => {
@@ -34,7 +35,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
 
   const createBlocksFromDataTransfer = useCallback(
     async (dataTransfer: DataTransfer): Promise<Block[]> => {
-      const blocks = await createFromDataTransfer(dataTransfer, documentPath);
+      const blocks = await createFromDataTransfer(dataTransfer, parentDir);
 
       if (blocks.length) {
         addBlocks(documentId, blocks, view.id);
@@ -51,7 +52,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
       addBlocks,
       updateView,
       view.blocks,
-      documentPath,
+      parentDir,
       documentId,
       view.id,
     ],
