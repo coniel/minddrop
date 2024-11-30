@@ -11,6 +11,7 @@ export * from './isDomainMatch';
 export * from './isEqual';
 export * from './isImageUrl';
 export * from './mapPropsToClasses';
+export * from './parseDateOrNow';
 export * from './removeObjectsFromArray';
 export * from './throttle';
 export * from './toKebabCase';
