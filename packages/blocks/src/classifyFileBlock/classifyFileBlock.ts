@@ -58,5 +58,5 @@ export function classifyFileBlock(
     };
   }
 
-  return { type: matchedClassifier.id };
+  return { type: matchedClassifier.blockType };
 }
