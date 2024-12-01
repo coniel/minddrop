@@ -1,1 +1,1 @@
-export * as Asserts from './Assets';
+export * as Assets from './Assets';
