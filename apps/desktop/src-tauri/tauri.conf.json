@@ -69,7 +69,20 @@
         "scope": {
           "requireLiteralLeadingDot": false,
           "require_literal_leading_dot": false,
-          "allow": ["$DOCUMENT", "$DOCUMENT/**"]
+          "allow": [
+            "$DOCUMENT",
+            "$DOCUMENT/**",
+            "$DOCUMENT/**/.minddrop",
+            "$DOCUMENT/**/.minddrop/**",
+            "$DESKTOP",
+            "$DESKTOP/**",
+            "$DESKTOP/**/.minddrop",
+            "$DESKTOP/**/.minddrop/**",
+            "$HOME",
+            "$HOME/**",
+            "$HOME/**/.minddrop",
+            "$HOME/**/.minddrop/**"
+          ]
         },
         "enable": true
       },
