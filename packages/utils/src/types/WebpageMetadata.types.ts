@@ -26,6 +26,11 @@ export interface WebpageMetadata {
   image?: string;
 
   /**
+   * The website's theme color.
+   */
+  themeColor?: string;
+
+  /**
    * The webdocument meta description.
    */
   description?: string;
