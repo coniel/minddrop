@@ -10,6 +10,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@minddrop/assets": "workspace:*",
     "@minddrop/ast": "workspace:*",
     "@minddrop/blocks": "workspace:*",
     "@minddrop/events": "workspace:*",

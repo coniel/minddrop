@@ -7,6 +7,7 @@ export * from './useDocument';
 export * from './useDocuments';
 export * from './components';
 export * from './errors';
+export * from './initializeDocuments';
 
 export * as Documents from './DocumentsApi';
 export * as DocumentViews from './DocumentViewsApi';
