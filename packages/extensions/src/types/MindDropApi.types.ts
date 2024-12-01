@@ -1,3 +1,4 @@
+import { Assets } from '@minddrop/assets';
 import { Ast } from '@minddrop/ast';
 import { EditorMarks, EditorElements } from '@minddrop/editor';
 import { DocumentViews, Documents } from '@minddrop/documents';
@@ -12,6 +13,7 @@ import * as Utils from '@minddrop/utils';
 import * as Ui from '@minddrop/ui';
 
 export interface MindDropApi {
+  Assets: typeof Assets;
   Ast: typeof Ast;
   EditorMarks: typeof EditorMarks;
   EditorElements: typeof EditorElements;

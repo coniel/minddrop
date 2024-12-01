@@ -1,3 +1,4 @@
+import { Assets } from '@minddrop/assets';
 import { Ast } from '@minddrop/ast';
 import { Documents, DocumentViews } from '@minddrop/documents';
 import { EditorMarks, EditorElements } from '@minddrop/editor';
@@ -13,6 +14,7 @@ import * as Ui from '@minddrop/ui';
 import { MindDropApi as Api } from './types';
 
 export const MindDropApi: Api = {
+  Assets,
   Ast,
   Documents,
   DocumentViews,
