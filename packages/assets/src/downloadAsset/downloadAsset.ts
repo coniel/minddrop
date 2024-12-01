@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
-import { AssetHandlersStore } from '../AssetHandlersStore';
 import { AssetResourceNotMatchedError } from '../errors';
 import { AssetHandler } from '../types';
+import { getAssetHandler } from '../getAssetHandler';
 
 /**
  * Downloads an asset from a given URL and saves it to the appropriate assets directory.
@@ -20,18 +20,8 @@ export async function downloadAsset(
   filename: string,
   url: string,
 ): Promise<string> {
-  let handler: AssetHandler | null = null;
-
-  // Loop through all asset handlers until one matches the resource
-  AssetHandlersStore.some((assetHandler) => {
-    if (assetHandler.getResourceAssetsPath(resourceId)) {
-      handler = assetHandler;
-
-      return true;
-    }
-
-    return false;
-  });
+  // Get the asset handler for the resource
+  const handler = getAssetHandler(resourceId);
 
   // If no handler was found, throw an error
   if (!handler) {

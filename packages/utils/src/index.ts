@@ -6,6 +6,7 @@ export * from './createArrayStore';
 export * from './createContext';
 export * from './errors';
 export * from './fuzzySearch';
+export * from './getFileExtensionFromUrl';
 export * from './getMissingItems';
 export * from './isDomainMatch';
 export * from './isEqual';
