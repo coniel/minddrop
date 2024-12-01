@@ -193,40 +193,6 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
-  extensions/document-type-note:
-    dependencies:
-      '@minddrop/ast':
-        specifier: workspace:*
-        version: link:../../packages/ast
-      '@minddrop/documents':
-        specifier: workspace:*
-        version: link:../../packages/documents
-      '@minddrop/editor':
-        specifier: workspace:*
-        version: link:../../packages/editor
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../packages/icons
-      '@minddrop/markdown':
-        specifier: workspace:*
-        version: link:../../packages/markdown
-      yaml:
-        specifier: ^2.3.4
-        version: 2.3.4
-    devDependencies:
-      eslint:
-        specifier: ^8.39.0
-        version: 8.51.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.0.4
-        version: 5.4.5
-
   extensions/image-block:
     dependencies:
       '@minddrop/extension':
@@ -270,6 +236,21 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
+
+    dependencies:
+      '@minddrop/file-system':
+        specifier: workspace:*
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+      tsconfig:
+        specifier: workspace:*
       typescript:
         specifier: ^5.0.4
         version: 5.4.5
@@ -390,9 +371,6 @@ importers:
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
-      '@minddrop/document-type-note':
-        specifier: workspace:*
-        version: link:../../extensions/document-type-note
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../documents

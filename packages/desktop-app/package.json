@@ -30,7 +30,6 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
     "@minddrop/board-view": "workspace:*",
-    "@minddrop/document-type-note": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
