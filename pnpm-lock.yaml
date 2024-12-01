@@ -448,6 +448,9 @@ importers:
 
   packages/documents:
     dependencies:
+      '@minddrop/assets':
+        specifier: workspace:*
+        version: link:../assets
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
@@ -598,6 +601,9 @@ importers:
 
   packages/extension:
     dependencies:
+      '@minddrop/assets':
+        specifier: workspace:*
+        version: link:../assets
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
@@ -656,6 +662,9 @@ importers:
 
   packages/extensions:
     dependencies:
+      '@minddrop/assets':
+        specifier: workspace:*
+        version: link:../assets
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
