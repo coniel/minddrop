@@ -1,7 +1,7 @@
-import { BlockData } from './Block.types';
+import { Block, CustomBlockData } from './Block.types';
 import { BlockPropertiesSchema } from './BlockPropertiesSchema.types';
 
-export interface BlockType<TData extends BlockData = {}> {
+export interface BlockType<TData extends CustomBlockData = {}> {
   /**
    * A unique identifier for the block type. Used as the block's
    * type property.
@@ -32,6 +32,18 @@ export interface BlockType<TData extends BlockData = {}> {
    * type.
    */
   initialProperties?: TData;
+
+  /**
+   * Callback used to asynchronously update a new block after creation.
+   *
+   * This can be useful for fetching metadata from the web or other async operations that
+   * need to be performed when a new block of this type is created.
+   *
+   * Receives the new block, including the initial properties.
+   *
+   * @param block - The block in its initial state.
+   */
+  onCreate?: (block: Block<TData>) => Promise<void>;
 }
 
 interface BlockDescription {

@@ -10,24 +10,6 @@ export interface BaseBlockClassifier<TData extends BlockData = {}> {
    * The block type this classifier is associated with.
    */
   blockType: string;
-
-  /**
-   * Callback used to asynchronously update a new block's parameters after creation.
-   * This can be useful for fetching parameters from the web or other async operations that
-   * need to be performed when a new block of this type is created.
-   *
-   * Receives the new block, including the initial parameters set by the `initializeData`
-   * function if provided. Overwrites the block's current properties with the returned value,
-   * removing any properties not included in the returned object.
-   *
-   * Note: when creating a new block based on a match, the block is inserted into the document
-   * synchronously. The block will be updated with the parameters returned by this function
-   * after it has been inserted.
-   *
-   * @param block - The block in its initial state.
-   * @returns The updated block parameters.
-   */
-  updateDataAsync?: (block: Block<TData>) => Promise<TData>;
 }
 
 export interface TextBlockClassifier<TData extends BlockData = {}>

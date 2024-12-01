@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { BlocksStore } from '../BlocksStore';
 import { Block } from '../types';
 import { generateBlocksFromDataTransfer } from '../generateBlocksFromDataTransfer';
+import { getBlockType } from '../BlockTypesStore';
 
 /**
  * Create blocks from a data transfer object and isnerts them into
@@ -26,6 +27,12 @@ export async function createBlocksFromDataTransfer(
   // Dispatch a block create event for each block
   blocks.forEach((block) => {
     Events.dispatch('blocks:block:create', block);
+
+    const blockTypeConfig = getBlockType(block.type);
+
+    if (blockTypeConfig?.onCreate) {
+      blockTypeConfig.onCreate(block);
+    }
   });
 
   return blocks;

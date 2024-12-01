@@ -1,6 +1,10 @@
+import { BlocksStore } from '../BlocksStore';
 import { Block, BlockType, BlockVariant, TextBlockClassifier } from '../types';
 
-export const textBlockConfig: BlockType = {
+export type TextTextBlockData = { foo?: string; bar?: string };
+export type TestTextBlock = Block & TextTextBlockData;
+
+export const textBlockConfig: BlockType<TextTextBlockData> = {
   id: 'text',
   defaultVariant: 'editor',
   description: {
@@ -8,6 +12,15 @@ export const textBlockConfig: BlockType = {
       name: 'Text',
       details: 'A block of text.',
     },
+  },
+  initialProperties: {
+    foo: 'foo',
+  },
+  onCreate: async (block) => {
+    setTimeout(() => {
+      // @ts-expect-error
+      BlocksStore.getState().update(block.id, { bar: 'bar' });
+    }, 1000);
   },
 };
 
