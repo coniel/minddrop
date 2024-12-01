@@ -2,6 +2,7 @@
  * This package re-exports types from other packages to make them
  * available to extenion developers.
  */
+export type * from '@minddrop/assets';
 export type * from '@minddrop/ast';
 export type * from '@minddrop/documents';
 // TODO: fix type conflicts with Ast

@@ -14,6 +14,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@minddrop/assets": "workspace:*",
     "@minddrop/ast": "workspace:*",
     "@minddrop/blocks": "workspace:*",
     "@minddrop/documents": "workspace:*",
