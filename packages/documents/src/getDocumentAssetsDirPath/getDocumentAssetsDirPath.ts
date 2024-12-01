@@ -11,7 +11,7 @@ import { getDocument } from '../getDocument/getDocument';
  * @throws {DocumentNotFoundError} Thrown if the document does not exist.
  * @throws {DocumentFileNotFoundError} Thrown if the document file does not exist.
  */
-export function getDocumentAssetDirPath(documentId: string): string {
+export function getDocumentAssetsDirPath(documentId: string): string {
   // Get the document
   const document = getDocument(documentId);
 

@@ -9,7 +9,7 @@ import {
   document1,
   workspaceDir,
 } from '../test-utils';
-import { getDocumentAssetDirPath } from './getDocumentAssetDirPath';
+import { getDocumentAssetsDirPath } from './getDocumentAssetsDirPath';
 import { DocumentsStore } from '../DocumentsStore';
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { DocumentNotFoundError } from '../errors';
@@ -30,13 +30,13 @@ describe('getDocumentAssetDirPath', () => {
   });
 
   it('throws if the document does not exist', () => {
-    expect(() => getDocumentAssetDirPath('nonexistent')).toThrow(
+    expect(() => getDocumentAssetsDirPath('nonexistent')).toThrow(
       DocumentNotFoundError,
     );
   });
 
   it('returns the assets dir of parent document for unwrapped documents', () => {
-    expect(getDocumentAssetDirPath(childDocument.id)).toBe(
+    expect(getDocumentAssetsDirPath(childDocument.id)).toBe(
       Fs.concatPath(
         Fs.parentDirPath(wrappedDocument.path),
         '.minddrop',
@@ -46,7 +46,7 @@ describe('getDocumentAssetDirPath', () => {
   });
 
   it('returns document assets dir for wrapped documents', () => {
-    expect(getDocumentAssetDirPath(wrappedDocument.id)).toBe(
+    expect(getDocumentAssetsDirPath(wrappedDocument.id)).toBe(
       Fs.concatPath(
         Fs.parentDirPath(wrappedDocument.path),
         '.minddrop',
@@ -56,7 +56,7 @@ describe('getDocumentAssetDirPath', () => {
   });
 
   it('returns the workspace assets dir for root level documents', () => {
-    expect(getDocumentAssetDirPath(document1.id)).toBe(
+    expect(getDocumentAssetsDirPath(document1.id)).toBe(
       Fs.concatPath(workspaceDir, '.minddrop', 'assets'),
     );
   });
