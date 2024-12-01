@@ -70,6 +70,8 @@
           "requireLiteralLeadingDot": false,
           "require_literal_leading_dot": false,
           "allow": [
+            "$APPDATA",
+            "$APPDATA/**",
             "$DOCUMENT",
             "$DOCUMENT/**",
             "$DOCUMENT/**/.minddrop",
@@ -81,7 +83,9 @@
             "$HOME",
             "$HOME/**",
             "$HOME/**/.minddrop",
-            "$HOME/**/.minddrop/**"
+            "$HOME/**/.minddrop/**",
+            "$APPCONFIG",
+            "$APPCONFIG/**"
           ]
         },
         "enable": true
