@@ -240,17 +240,21 @@ importers:
         specifier: ^5.0.4
         version: 5.4.5
 
+  packages/assets:
     dependencies:
       '@minddrop/file-system':
         specifier: workspace:*
+        version: link:../file-system
     devDependencies:
       eslint:
         specifier: ^8.39.0
         version: 8.51.0
       eslint-config-custom:
         specifier: workspace:*
+        version: link:../eslint-config-custom
       tsconfig:
         specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ^5.0.4
         version: 5.4.5
