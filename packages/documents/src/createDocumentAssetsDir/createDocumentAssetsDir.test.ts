@@ -9,7 +9,7 @@ import {
   wrappedDocument,
   childDocument,
 } from '../test-utils';
-import { createAssetsDir } from './createAssetsDir';
+import { createDocumentAssetsDir } from './createDocumentAssetsDir';
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
@@ -30,14 +30,14 @@ describe('createAssetsDir', () => {
   });
 
   it('throws if the document does not exist', async () => {
-    expect(() => createAssetsDir('nonexistent')).rejects.toThrow(
+    expect(() => createDocumentAssetsDir('nonexistent')).rejects.toThrow(
       DocumentNotFoundError,
     );
   });
 
   describe('workspace level document', () => {
     it('creates the .minddrop directory in the parent/workspace directory if missing', async () => {
-      await createAssetsDir(document1.id);
+      await createDocumentAssetsDir(document1.id);
 
       const minddropDir = Fs.concatPath(workspaceDir, '.minddrop');
 
@@ -45,7 +45,7 @@ describe('createAssetsDir', () => {
     });
 
     it('creates the assets directory in the parent/workspace directory and returns its path', async () => {
-      const assetsDir = await createAssetsDir(document1.id);
+      const assetsDir = await createDocumentAssetsDir(document1.id);
 
       expect(assetsDir).toBe(
         Fs.concatPath(workspaceDir, '.minddrop', 'assets'),
@@ -59,7 +59,7 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([minddropDir]);
 
-      expect(createAssetsDir(document1.id)).resolves.not.toThrow();
+      expect(createDocumentAssetsDir(document1.id)).resolves.not.toThrow();
     });
 
     it('does not recreate the assets directory if it already exists', async () => {
@@ -67,13 +67,13 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([assetsDir]);
 
-      expect(createAssetsDir(document1.id)).resolves.not.toThrow();
+      expect(createDocumentAssetsDir(document1.id)).resolves.not.toThrow();
     });
   });
 
   describe('wrapped document', () => {
     it('creates the .minddrop directory in the parent/workspace directory if missing', async () => {
-      await createAssetsDir(wrappedDocument.id);
+      await createDocumentAssetsDir(wrappedDocument.id);
 
       const minddropDir = Fs.concatPath(
         Fs.parentDirPath(wrappedDocument.path),
@@ -84,7 +84,7 @@ describe('createAssetsDir', () => {
     });
 
     it('creates the assets directory in the parent/workspace directory and returns its path', async () => {
-      const assetsDir = await createAssetsDir(wrappedDocument.id);
+      const assetsDir = await createDocumentAssetsDir(wrappedDocument.id);
 
       expect(assetsDir).toBe(
         Fs.concatPath(
@@ -105,7 +105,9 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([minddropDir]);
 
-      expect(createAssetsDir(wrappedDocument.id)).resolves.not.toThrow();
+      expect(
+        createDocumentAssetsDir(wrappedDocument.id),
+      ).resolves.not.toThrow();
     });
 
     it('does not recreate the assets directory if it already exists', async () => {
@@ -117,13 +119,15 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([assetsDir]);
 
-      expect(createAssetsDir(wrappedDocument.id)).resolves.not.toThrow();
+      expect(
+        createDocumentAssetsDir(wrappedDocument.id),
+      ).resolves.not.toThrow();
     });
   });
 
   describe('child document', () => {
     it('creates the .minddrop directory in the parent/workspace directory if missing', async () => {
-      await createAssetsDir(childDocument.id);
+      await createDocumentAssetsDir(childDocument.id);
 
       const minddropDir = Fs.concatPath(
         Fs.parentDirPath(childDocument.path),
@@ -134,7 +138,7 @@ describe('createAssetsDir', () => {
     });
 
     it('creates the assets directory in the parent/workspace directory and returns its path', async () => {
-      const assetsDir = await createAssetsDir(wrappedDocument.id);
+      const assetsDir = await createDocumentAssetsDir(wrappedDocument.id);
 
       expect(assetsDir).toBe(
         Fs.concatPath(
@@ -155,7 +159,7 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([minddropDir]);
 
-      expect(createAssetsDir(childDocument.id)).resolves.not.toThrow();
+      expect(createDocumentAssetsDir(childDocument.id)).resolves.not.toThrow();
     });
 
     it('does not recreate the assets directory if it already exists', async () => {
@@ -167,7 +171,7 @@ describe('createAssetsDir', () => {
 
       MockFs.addFiles([assetsDir]);
 
-      expect(createAssetsDir(childDocument.id)).resolves.not.toThrow();
+      expect(createDocumentAssetsDir(childDocument.id)).resolves.not.toThrow();
     });
   });
 });

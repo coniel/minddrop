@@ -13,7 +13,9 @@ import { getDocument } from '../getDocument';
  * @param documentId - The ID of the document for which to create the assets directory.
  * @returns The path to the created assets directory.
  */
-export async function createAssetsDir(documentId: string): Promise<string> {
+export async function createDocumentAssetsDir(
+  documentId: string,
+): Promise<string> {
   // Get the document
   const document = getDocument(documentId);
 
