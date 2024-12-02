@@ -58,10 +58,13 @@ async function createBlockFromFile(
   file: File,
   parentPath: string,
 ): Promise<Block> {
-  const filePath = await Fs.incrementalPath(
+  const { path } = await Fs.incrementalPath(
     Fs.concatPath(parentPath, file.name),
   );
-  await Fs.writeBinaryFile(filePath.path, file);
 
-  return generateFileBlock(file);
+  await Fs.writeBinaryFile(path, file);
+
+  Fs.fileNameFromPath(path);
+
+  return generateFileBlock(file, Fs.fileNameFromPath(path));
 }

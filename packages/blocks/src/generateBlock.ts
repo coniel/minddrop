@@ -63,10 +63,11 @@ export function generateTextBlock(text = ''): Block {
  * Falls back to a basic file block if no classifier matches.
  *
  * @param file - The file from which to generate a block.
+ * @param filename - The name of the file on disk (may differ from the file name).
  * @returns A new block.
  */
-export function generateFileBlock(file: File): Block {
-  const block = generateBlock('file', { file: file.name });
+export function generateFileBlock(file: File, filename: string): Block {
+  const block = generateBlock('file', { file: filename });
 
   const properties = classifyFileBlock(file) || block;
 
