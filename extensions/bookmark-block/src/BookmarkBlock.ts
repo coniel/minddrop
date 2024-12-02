@@ -1,5 +1,6 @@
 import { MindDropExtension } from '@minddrop/extension';
 import { BookmarkCardHorizontal } from './variants';
+import { fetchBookmarkMetadata } from './fetchBookmarkMetadata';
 
 const CLASSIFIER_ID = 'minddrop-core-extension-link';
 const VARIANT_HORIZONTAL_CARD_ID = 'horizontal-card';
@@ -29,6 +30,7 @@ export const extension: MindDropExtension = {
         { name: 'image', type: 'asset' },
         { name: 'icon', type: 'asset' },
       ],
+      onCreate: async (block) => fetchBookmarkMetadata(MindDropApi, block),
     });
 
     Blocks.registerLinkClassifier({

@@ -1,12 +1,16 @@
 import { useApi } from '@minddrop/extension';
 
-export const LocalImage: React.FC<{ path: string; className?: string }> = ({
-  path,
-  ...other
-}) => {
-  const { Fs } = useApi();
+export const LocalImage: React.FC<{
+  file: string;
+  blockId: string;
+  className?: string;
+}> = ({ file, blockId, ...other }) => {
+  const {
+    Assets: { getPath },
+    Fs: { useImageSrc },
+  } = useApi();
 
-  const src = Fs.useImageSrc(path);
+  const src = useImageSrc(getPath(blockId, file));
 
   if (!src) {
     return null;
@@ -15,7 +19,7 @@ export const LocalImage: React.FC<{ path: string; className?: string }> = ({
   return (
     <img
       src={src}
-      alt={path}
+      alt=""
       style={{ maxWidth: '100%', maxHeight: '100%' }}
       {...other}
     />

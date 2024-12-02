@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import { BlockVariantProps, useApi } from '@minddrop/extension';
 import './BookmarkCardHorizontal.css';
+import { LocalImage } from '../Image';
 
 export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
   block,
@@ -58,20 +59,25 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
             <div className="description">{block.description}</div>
           )}
           <div className="domain-container">
-            {/* {iconStatus === 'ready' && ( */}
-            {/*   <LocalImage className="favicon" path={iconFilePath} /> */}
-            {/* )} */}
+            {block.icon && (
+              <LocalImage
+                className="favicon"
+                file={block.icon}
+                blockId={block.id}
+              />
+            )}
             <div className="domain">{domain}</div>
           </div>
         </div>
-        {/* {imageStatus === 'ready' && ( */}
-        {/*   <div className="image-container"> */}
-        {/*     <LocalImage className="image" path={imageFilePath} /> */}
-        {/*   </div> */}
-        {/* )} */}
-        {/* {imageStatus === 'downloading' && ( */}
-        {/*   <div className="image-container">Downloading image...</div> */}
-        {/* )} */}
+        {block.image && (
+          <div className="image-container">
+            <LocalImage
+              className="image"
+              file={block.image}
+              blockId={block.id}
+            />
+          </div>
+        )}
       </a>
       <div className="drag-handle" onClick={onClick} />
     </BlockContainer>

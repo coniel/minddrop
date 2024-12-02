@@ -58,6 +58,7 @@
   width: 16px;
   height: 16px;
   margin-right: 6px;
+  border-radius: 2px;
 }
 
 .link-node-renderer .domain-container .domain {
