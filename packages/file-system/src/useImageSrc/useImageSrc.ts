@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Fs } from '../FileSystem';
 
 /**
@@ -8,73 +8,80 @@ import { Fs } from '../FileSystem';
  * @param path - The path to the image file.
  * @returns The src of the image or null if it does not exist.
  */
-export function useImageSrc(path: string): string | null {
-  const [imageAvailable, setImageAvailable] = useState(true);
-  const [loops, setLoops] = useState(0);
-  const [keepTrying, setKeepTrying] = useState(true);
-  const tester = useMemo(() => new Image(), []);
-
-  const src = useMemo(() => Fs.convertFileSrc(path), [path]);
-
-  const testImage = useCallback(async () => {
-    if (keepTrying && !(await Fs.exists(path))) {
-      setLoops((loops) => loops + 1);
-      setTimeout(() => {
-        testImage();
-      }, 200);
-    }
-    tester.src = src;
-  }, [src, tester, path, keepTrying]);
-
-  const imageNotFound = useCallback(() => {
-    setImageAvailable(false);
-    setLoops((loops) => loops + 1);
-
-    setTimeout(() => {
-      testImage();
-    }, 200);
-  }, [testImage]);
-
-  const imageFound = useCallback(() => {
-    setImageAvailable(true);
-
-    tester.removeEventListener('load', imageFound);
-    tester.removeEventListener('error', imageNotFound);
-  }, [imageNotFound, tester]);
-
-  // When adding a new image, it occasionally takes a moment
-  // for the image to be available. This effect checks if the
-  // image is available. If not, it will try again after a
-  // timeout.
-  useEffect(() => {
-    tester.addEventListener('load', imageFound);
-    tester.addEventListener('error', imageNotFound);
-
-    if (src) {
-      testImage();
-    }
-
-    return () => {
-      tester.removeEventListener('load', imageFound);
-      tester.removeEventListener('error', imageNotFound);
-    };
-  }, [src, tester, imageFound, imageNotFound, testImage]);
+export function useImageSrc(path: string | null): string | null {
+  const [src, setSrc] = useState(path ? Fs.convertFileSrc(path) : '');
 
   useEffect(() => {
-    if (loops > 30) {
-      setKeepTrying(false);
-      tester.removeEventListener('load', imageFound);
-      tester.removeEventListener('error', imageNotFound);
+    async function setSrcWhenReady(imagePath: string) {
+      try {
+        const imageSrc = await waitForImageToBeReady(imagePath);
+
+        if (imageSrc) {
+          setSrc(imageSrc.src);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [loops, imageFound, imageNotFound, tester]);
+
+    if (path) {
+      setSrcWhenReady(path);
+    }
+  }, [path]);
 
   if (!src) {
     return null;
   }
 
-  if (!imageAvailable) {
-    return null;
-  }
-
   return src;
+}
+
+/**
+ * Waits for an image file to be ready by repeatedly checking its availability.
+ * @param filePath - The file path to the image.
+ * @param maxRetries - Maximum number of retries before giving up.
+ * @param retryDelay - Delay between retries in milliseconds.
+ * @returns A promise that resolves when the image is ready or rejects if it fails.
+ */
+async function waitForImageToBeReady(
+  filePath: string,
+  maxRetries: number = 10,
+  retryDelay: number = 100,
+): Promise<HTMLImageElement> {
+  const imageSrc = Fs.convertFileSrc(filePath);
+
+  return new Promise((resolve, reject) => {
+    let retries = 0;
+
+    const img = new Image();
+
+    const onLoad = () => {
+      cleanUp();
+      resolve(img);
+    };
+
+    const onError = () => {
+      retries++;
+
+      if (retries > maxRetries) {
+        cleanUp();
+        reject(new Error(`Image not ready after ${maxRetries} retries.`));
+      } else {
+        setTimeout(() => {
+          img.src = `${imageSrc}?cacheBust=${Date.now()}`; // Cache-busting to force reload
+        }, retryDelay);
+      }
+    };
+
+    const cleanUp = () => {
+      img.removeEventListener('load', onLoad);
+      img.removeEventListener('error', onError);
+    };
+
+    img.addEventListener('load', onLoad);
+    img.addEventListener('error', onError);
+
+    // Initial attempt to load the image
+    img.src = imageSrc;
+  });
 }
