@@ -32,8 +32,6 @@ export const ContentPickerWorkspaceItem: React.FC<
     (document) => document.id !== omitDocument,
   );
 
-  console.log('documents', documents);
-
   const handleClick = useCreateCallback(onClick, path);
 
   if (!workspace) {

@@ -39,10 +39,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
 
       if (blocks.length) {
         addBlocks(documentId, blocks, view.id);
-        const v = updateView(view.id, {
+        updateView(view.id, {
           blocks: [...view.blocks, ...blocks.map((block) => block.id)],
         });
-        console.log(v);
       }
 
       return blocks;

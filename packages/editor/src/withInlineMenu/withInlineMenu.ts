@@ -44,7 +44,6 @@ export function withInlineMenus(
   // Callback fired by the menu when it closes
   const onCloseMenu = (clearQuery = false) => {
     if (clearQuery && triggerCharaterLocation && editor.selection) {
-      console.log(triggerCharaterLocation, editor.selection.focus);
       // Delete the trigger character and query text
       Transforms.delete(editor, {
         distance:
@@ -95,7 +94,6 @@ export function withInlineMenus(
       // close the menu.
       activeMenu.close();
       onCloseMenu();
-      console.log('closing here');
 
       // Stop here
       return;

@@ -19,7 +19,6 @@ export const DocumentViewsRenderer: React.FC<DocumentViewsRendererProps> = ({
 }) => {
   const createView = useCallback(
     (type: string) => {
-      console.log('createView');
       const viewTypeConfig = getDocumentViewTypeConfig(type);
 
       if (!viewTypeConfig) {

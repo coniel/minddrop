@@ -42,7 +42,6 @@ export const Column: React.FC<ColumnProps> = ({
     async (event: React.DragEvent, index: number) => {
       // Create blocks from the data insert
       const blocks = await createBlocksFromDataTransfer(event.dataTransfer);
-      console.log(blocks);
 
       const newBlocks = [...column.blocks];
       newBlocks.splice(index, 0, ...blocks.map((block) => block.id));
@@ -51,7 +50,6 @@ export const Column: React.FC<ColumnProps> = ({
       const columnUpdate = {
         blocks: newBlocks,
       };
-      console.log(columnUpdate);
 
       // Update the column
       updateColumn(columnUpdate);

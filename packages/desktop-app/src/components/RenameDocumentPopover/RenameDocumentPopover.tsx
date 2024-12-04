@@ -69,8 +69,6 @@ export const RenameDocumentPopover = React.forwardRef<
         // Rename the document
         await Documents.rename(document.id, title);
       } catch (error) {
-        console.log(error);
-
         // New workspce title conflicts with an existing dir
         if (error instanceof PathConflictError) {
           setErrorValue(title);
