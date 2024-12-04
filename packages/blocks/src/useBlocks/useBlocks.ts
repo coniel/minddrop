@@ -12,5 +12,5 @@ export function useBlocks(ids: string[]): Block[] {
   const { blocks } = useBlocksStore();
 
   // Get matching blocks
-  return blocks.filter((block) => ids.includes(block.id));
+  return ids.map((id) => blocks[id]).filter(Boolean);
 }

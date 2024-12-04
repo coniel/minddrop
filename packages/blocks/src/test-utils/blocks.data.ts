@@ -77,3 +77,11 @@ export const block2 = fileBlock;
 export const block3 = bookmarkBlock;
 
 export const blocks = [textBlock, fileBlock, bookmarkBlock];
+
+export const blocksObject = blocks.reduce(
+  (docs, block) => ({
+    ...docs,
+    [block.id]: block,
+  }),
+  {},
+);

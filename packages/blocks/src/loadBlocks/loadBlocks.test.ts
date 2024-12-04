@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { describe, afterEach, it, expect } from 'vitest';
 import { Events } from '@minddrop/events';
-import { cleanup, blocks } from '../test-utils';
+import { cleanup, blocks, blocksObject } from '../test-utils';
 import { loadBlocks } from './loadBlocks';
 import { BlocksStore } from '../BlocksStore';
 
@@ -10,7 +10,7 @@ describe('loadBlocks', () => {
   it('loads blocks into the store', () => {
     loadBlocks(blocks);
 
-    expect(BlocksStore.getState().blocks).toEqual(blocks);
+    expect(BlocksStore.getState().blocks).toEqual(blocksObject);
   });
 
   it('dispatches a blocks load event', async () =>

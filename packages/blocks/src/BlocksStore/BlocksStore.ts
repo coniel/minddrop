@@ -5,7 +5,7 @@ export interface BlocksStore {
   /**
    * The user's blocks.
    */
-  blocks: Block[];
+  blocks: Record<string, Block>;
 
   /**
    * Load blocks into the store.
@@ -34,39 +34,49 @@ export interface BlocksStore {
 }
 
 export const BlocksStore = create<BlocksStore>()((set) => ({
-  blocks: [],
+  blocks: {},
 
-  load: (blocks) => set((state) => ({ blocks: [...state.blocks, ...blocks] })),
+  load: (blocks) =>
+    set((state) => ({
+      blocks: {
+        ...state.blocks,
+        ...blocks.reduce((blks, block) => ({ ...blks, [block.id]: block }), {}),
+      },
+    })),
 
   add: (block) =>
     set((state) => {
       return {
-        blocks: [...state.blocks, block],
+        blocks: { ...state.blocks, [block.id]: block },
       };
     }),
 
   update: (id, data) =>
     set((state) => {
-      const index = state.blocks.findIndex((block) => block.id === id);
-      const blocks = [...state.blocks];
+      const blocks = { ...state.blocks };
+      const block = state.blocks[id];
 
-      if (index === -1) {
+      if (!block) {
         return {};
       }
 
-      blocks[index] = { ...blocks[index], ...data };
+      blocks[id] = { ...block, ...data };
 
       return { blocks };
     }),
 
   remove: (id) =>
     set((state) => {
+      const blocks = { ...state.blocks };
+
+      delete blocks[id];
+
       return {
-        blocks: state.blocks.filter((block) => id !== block.id),
+        blocks,
       };
     }),
 
-  clear: () => set({ blocks: [] }),
+  clear: () => set({ blocks: {} }),
 }));
 
 export function clearBlocks() {

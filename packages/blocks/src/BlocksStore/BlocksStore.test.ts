@@ -1,5 +1,4 @@
 import { describe, afterEach, it, expect, beforeEach } from 'vitest';
-import { Block } from '../types';
 import { BlocksStore } from './BlocksStore';
 import { block1, block2, blocks } from '../test-utils';
 
@@ -20,7 +19,10 @@ describe('BlocksStore', () => {
       BlocksStore.getState().load([block2]);
 
       // Both blocks should be in the store
-      expect(BlocksStore.getState().blocks).toEqual([block1, block2]);
+      expect(BlocksStore.getState().blocks).toEqual({
+        [block1.id]: block1,
+        [block2.id]: block2,
+      });
     });
   });
 
@@ -33,7 +35,10 @@ describe('BlocksStore', () => {
       BlocksStore.getState().add(block2);
 
       // Both blocks should be in the store
-      expect(BlocksStore.getState().blocks).toEqual([block1, block2]);
+      expect(BlocksStore.getState().blocks).toEqual({
+        [block1.id]: block1,
+        [block2.id]: block2,
+      });
     });
   });
 
@@ -48,16 +53,14 @@ describe('BlocksStore', () => {
       BlocksStore.getState().update(block1.id, { title: 'New title' });
 
       // Get the block from the store
-      const block = BlocksStore.getState().blocks.find(
-        ({ id }) => id === block1.id,
-      ) as Block;
+      const block = BlocksStore.getState().blocks[block1.id];
 
       // Block title should be updated
       expect(block).toEqual({ ...block1, title: 'New title' });
     });
 
     it('does nothing if the block does not exist', () => {
-      const initialState = [...BlocksStore.getState().blocks];
+      const initialState = { ...BlocksStore.getState().blocks };
 
       // Update a missing block
       BlocksStore.getState().update('foo', {
@@ -80,9 +83,7 @@ describe('BlocksStore', () => {
       BlocksStore.getState().remove(block1.id);
 
       // block should no longer be in the store
-      expect(
-        BlocksStore.getState().blocks.find((block) => block.id === block1.id),
-      ).toBeUndefined();
+      expect(BlocksStore.getState().blocks[block1.id]).toBeUndefined();
     });
   });
 });

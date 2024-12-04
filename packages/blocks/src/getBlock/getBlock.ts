@@ -16,14 +16,13 @@ export function getBlock(id: string): Block | null;
 export function getBlock(id: string[]): Block[];
 export function getBlock(id: string | string[]): Block | Block[] | null {
   if (Array.isArray(id)) {
-    // Turn the arrau of IDs into a set to remove duplicates
-    // and improve performance.
-    const uniqueIds = new Set(id);
+    // Turn the array of IDs into a set to remove duplicates
+    const uniqueIds = Array.from(new Set(id));
 
-    return BlocksStore.getState().blocks.filter((block) =>
-      uniqueIds.has(block.id),
-    );
+    return uniqueIds
+      .map((id) => BlocksStore.getState().blocks[id])
+      .filter(Boolean);
   }
 
-  return BlocksStore.getState().blocks.find((block) => block.id === id) || null;
+  return BlocksStore.getState().blocks[id] || null;
 }

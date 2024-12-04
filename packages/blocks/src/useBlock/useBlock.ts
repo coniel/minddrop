@@ -8,5 +8,5 @@ import { BlocksStore as useBlocksStore } from '../BlocksStore';
  * @returns A block object or null.
  */
 export function useBlock(id: string): Block | null {
-  return useBlocksStore().blocks.find((block) => block.id === id) || null;
+  return useBlocksStore().blocks[id] || null;
 }
