@@ -39,7 +39,8 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
         blocks: blocks.map((block) => block.id),
       };
       // Add the new column to the section
-      const columns = [...section.columns].splice(index, 0, newColumn);
+      const columns = [...section.columns];
+      columns.splice(index, 0, newColumn);
 
       updateSection({ columns });
     },
