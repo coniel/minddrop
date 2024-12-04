@@ -28,6 +28,11 @@ export function addBlocksToDocument(
   if (!document) {
     throw new DocumentNotFoundError(documentId);
   }
+  //
+  // Add the blocks to the document
+  updateDocument(documentId, {
+    blocks: document.blocks.concat(blocks.map((b) => b.id)),
+  });
 
   // Get the IDs of views which are not the view that
   // received the data transfer.
@@ -41,10 +46,5 @@ export function addBlocksToDocument(
     if (config.onAddBlocks) {
       updateDocumentView(view.id, config.onAddBlocks(view, blocks));
     }
-  });
-
-  // Add the blocks to the document
-  updateDocument(documentId, {
-    blocks: document.blocks.concat(blocks.map((b) => b.id)),
   });
 }
