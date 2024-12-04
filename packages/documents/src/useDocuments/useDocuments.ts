@@ -12,7 +12,7 @@ export function useDocuments(ids: string[]): Document[] {
   const { documents } = useDocumentsStore();
 
   // Get documents and sort them by title in alphabetical order
-  return documents
+  return Object.values(documents)
     .filter((document) => ids.includes(document.id))
     .sort((a, b) => (a.title > b.title ? 1 : -1));
 }

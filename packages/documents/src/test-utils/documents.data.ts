@@ -368,6 +368,14 @@ export const documents = [
   grandChildDocument,
 ];
 
+export const documentsObject = documents.reduce(
+  (docs, document) => ({
+    ...docs,
+    [document.id]: document,
+  }),
+  {},
+);
+
 export const documentFiles = [
   {
     path: document1.path,

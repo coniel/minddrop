@@ -7,5 +7,5 @@ import { DocumentsStore as useDocumentsStore } from '../DocumentsStore';
  * @returns An array of document objects.
  */
 export function useAllDocuments(): Document[] {
-  return useDocumentsStore().documents;
+  return Object.values(useDocumentsStore().documents);
 }

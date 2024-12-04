@@ -5,7 +5,7 @@ export interface DocumentsStore {
   /**
    * The user's documents.
    */
-  documents: Document[];
+  documents: Record<string, Document>;
 
   /**
    * Load documents into the store.
@@ -34,7 +34,7 @@ export interface DocumentsStore {
 }
 
 export const DocumentsStore = create<DocumentsStore>()((set) => ({
-  documents: [],
+  documents: {},
 
   load: (documents) =>
     set((state) => {
@@ -50,7 +50,15 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
         });
       });
 
-      return { documents: [...state.documents, ...documents] };
+      return {
+        documents: {
+          ...state.documents,
+          ...documents.reduce(
+            (docs, document) => ({ ...docs, [document.id]: document }),
+            {},
+          ),
+        },
+      };
     }),
 
   add: (document) =>
@@ -66,20 +74,19 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
       });
 
       return {
-        documents: [...state.documents, document],
+        documents: { ...state.documents, [document.id]: document },
       };
     }),
 
   update: (id, data) =>
     set((state) => {
-      const index = state.documents.findIndex((document) => document.id === id);
-      const documents = [...state.documents];
+      const documents = { ...state.documents };
+      const oldDocument = documents[id];
 
-      if (index === -1) {
+      if (!oldDocument) {
         return {};
       }
 
-      const oldDocument = documents[index];
       const newDocument = { ...oldDocument, ...data };
 
       // Remove old block entries from the BlockDocumentMap
@@ -102,14 +109,15 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
         DocumentViewDocumentMap.set(viewId, id);
       });
 
-      documents[index] = newDocument;
+      documents[id] = newDocument;
 
       return { documents };
     }),
 
   remove: (id) =>
     set((state) => {
-      const document = state.documents.find((document) => document.id === id);
+      const documents = { ...state.documents };
+      const document = state.documents[id];
 
       if (document) {
         // Remove block entries from the BlockDocumentMap
@@ -123,9 +131,9 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
         });
       }
 
-      return {
-        documents: state.documents.filter((document) => id !== document.id),
-      };
+      delete documents[id];
+
+      return { documents };
     }),
 
   clear: () =>
@@ -133,7 +141,7 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
       BlockDocumentMap.clear();
       DocumentViewDocumentMap.clear();
 
-      return { documents: [] };
+      return { documents: {} };
     }),
 }));
 

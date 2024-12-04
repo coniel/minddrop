@@ -10,9 +10,5 @@ import { DocumentsStore } from '../DocumentsStore';
 export function getDocument<TDocument extends Document>(
   id: string,
 ): TDocument | null {
-  return (
-    (DocumentsStore.getState().documents.find(
-      (document) => document.id === id,
-    ) as TDocument) || null
-  );
+  return (DocumentsStore.getState().documents[id] as TDocument) || null;
 }

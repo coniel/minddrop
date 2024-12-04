@@ -11,7 +11,7 @@ export function getDocumentByPath<TDocument extends Document>(
   path: string,
 ): TDocument | null {
   return (
-    (DocumentsStore.getState().documents.find(
+    (Object.values(DocumentsStore.getState().documents).find(
       (document) => document.path === path,
     ) as TDocument) || null
   );

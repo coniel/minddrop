@@ -12,9 +12,16 @@ import { isDocumentFile, isWrapped } from '../../utils';
  */
 export function getChildDocuments(
   path: string,
-  documents?: Document[],
+  documents?: Record<string, Document> | Document[],
 ): Document[] {
-  const docs = documents || DocumentsStore.getState().documents;
+  let providedDocuments = documents as Document[];
+
+  if (documents && !Array.isArray(documents)) {
+    providedDocuments = Object.values(documents);
+  }
+
+  const docs =
+    providedDocuments || Object.values(DocumentsStore.getState().documents);
   let rootPathParts = path.split('/');
 
   if (isDocumentFile(path)) {

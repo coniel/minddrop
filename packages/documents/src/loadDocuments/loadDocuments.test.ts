@@ -13,7 +13,6 @@ import {
   documentViewsObject,
 } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
-import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
 import { DocumentViewsStore } from '../DocumentViewsStore';
 
@@ -44,17 +43,6 @@ describe('loadDocuments', () => {
     documents.forEach((document) => {
       expect(getDocument(document.id)).toEqual(document);
     });
-  });
-
-  it('does not load duplicates of documents already in the store', async () => {
-    // Load documents twice
-    await loadDocuments([workspaceDir]);
-    await loadDocuments([workspaceDir]);
-
-    // Store should not contain duplicates
-    expect(DocumentsStore.getState().documents.length).toEqual(
-      documents.length,
-    );
   });
 
   it('loads views itno the store', async () => {

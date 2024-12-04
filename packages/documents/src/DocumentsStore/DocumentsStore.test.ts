@@ -30,10 +30,10 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().load([wrappedDocument]);
 
       // Both documents should be in the store
-      expect(DocumentsStore.getState().documents).toEqual([
-        document1,
-        wrappedDocument,
-      ]);
+      expect(DocumentsStore.getState().documents).toEqual({
+        [document1.id]: document1,
+        [wrappedDocument.id]: wrappedDocument,
+      });
     });
 
     it('updates the BlockDocumentMap', () => {
@@ -68,10 +68,10 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().add(wrappedDocument);
 
       // Both documents should be in the store
-      expect(DocumentsStore.getState().documents).toEqual([
-        document1,
-        wrappedDocument,
-      ]);
+      expect(DocumentsStore.getState().documents).toEqual({
+        [document1.id]: document1,
+        [wrappedDocument.id]: wrappedDocument,
+      });
     });
 
     it('updates the BlockDocumentMap', () => {
@@ -108,16 +108,14 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().update(document1.id, { title: 'New title' });
 
       // Get the document from the store
-      const document = DocumentsStore.getState().documents.find(
-        ({ id }) => id === document1.id,
-      ) as Document;
+      const document = DocumentsStore.getState().documents[document1.id];
 
       // Document title should be updated
       expect(document).toEqual({ ...document1, title: 'New title' });
     });
 
     it('does nothing if the document does not exist', () => {
-      const initialState = [...DocumentsStore.getState().documents];
+      const initialState = { ...DocumentsStore.getState().documents };
 
       // Update a missing document
       DocumentsStore.getState().update('foo', {
@@ -168,11 +166,7 @@ describe('DocumentsStore', () => {
       DocumentsStore.getState().remove(document1.id);
 
       // document should no longer be in the store
-      expect(
-        DocumentsStore.getState().documents.find(
-          (document) => document.id === document1.id,
-        ),
-      ).toBeUndefined();
+      expect(DocumentsStore.getState().documents[document1.id]).toBeUndefined();
     });
 
     it('updates the BlockDocumentMap', () => {

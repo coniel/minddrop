@@ -8,7 +8,5 @@ import { DocumentsStore as useDocumentsStore } from '../DocumentsStore';
  * @returns A document object or null.
  */
 export function useDocument(id: string): Document | null {
-  return (
-    useDocumentsStore().documents.find((document) => document.id === id) || null
-  );
+  return useDocumentsStore().documents[id] || null;
 }
