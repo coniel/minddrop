@@ -6,24 +6,19 @@ import './TextBlockEditor.css';
 
 export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   block,
+  selected,
+  draggable: draggableProp,
   updateBlock,
-  deleteBlock,
+  toggleSelected,
+  onDragStart,
 }) => {
   const {
     Selection,
     Ui: { BlockContainer },
   } = useApi();
 
-  // Make the block selectable
-  const { selected, onClick } = Selection.useSelectable({
-    id: block.id,
-    getPlainTextContent: () => block.text || '',
-    onDelete: deleteBlock,
-  });
-  // Make the block draggable
-  const { onDragStart } = Selection.useDraggable({ id: block.id });
   // Used to disable dragging when editor is focused
-  const [draggable, setDraggable] = useState(true);
+  const [draggable, setDraggable] = useState(draggableProp);
 
   const initialContent = useMemo<BlockElement[]>(
     () => Ast.fromMarkdown(block.text || ''),
@@ -41,8 +36,8 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   );
 
   const enableDrag = useCallback(() => {
-    setDraggable(true);
-  }, []);
+    setDraggable(draggableProp);
+  }, [draggableProp]);
 
   const disableDrag = useCallback(() => {
     setDraggable(false);
@@ -63,7 +58,7 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
         onFocus={disableDrag}
         onBlur={enableDrag}
       />
-      <div className="drag-handle" onClick={onClick} />
+      <div className="drag-handle" onClick={toggleSelected} />
     </BlockContainer>
   );
 };

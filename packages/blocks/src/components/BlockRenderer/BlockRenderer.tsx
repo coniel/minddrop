@@ -1,3 +1,4 @@
+import { useDraggable, useSelectable } from '@minddrop/selection';
 import { Block } from '../../types';
 import { useBlockVariant } from '../../BlockVariantsStore';
 import { useCallback } from 'react';
@@ -14,7 +15,6 @@ interface BlockRendererProps {
 
 export const BlockRenderer: React.FC<BlockRendererProps> = ({ blockId }) => {
   const block = useBlock(blockId) || ({} as Block);
-
   const blockRenderer = useBlockVariant(block.type, block.variant);
 
   const updateBlockCallback = useCallback(
@@ -26,6 +26,16 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ blockId }) => {
     () => deleteBlock(block.id),
     [block.id],
   );
+
+  // Make the block selectable
+  const { selected, onClick } = useSelectable({
+    id: block.id,
+    getPlainTextContent: () => block.text || block.url || block.file || '',
+    onDelete: deleteBlockCallback,
+  });
+
+  // Make the block draggable
+  const { onDragStart } = useDraggable({ id: block.id });
 
   if (!block.id) {
     return <div>Block with ID &quot;{blockId}&quot; not found</div>;
@@ -51,9 +61,13 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ blockId }) => {
 
   return (
     <blockRenderer.component
+      draggable
       block={block}
+      selected={selected}
       updateBlock={updateBlockCallback}
       deleteBlock={deleteBlockCallback}
+      toggleSelected={onClick}
+      onDragStart={onDragStart}
     />
   );
 };

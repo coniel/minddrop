@@ -27,6 +27,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/icons": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "uuid": "^9.0.0"
   }

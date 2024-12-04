@@ -1,25 +1,18 @@
 import { useMemo, useCallback } from 'react';
 import { BlockVariantProps, useApi } from '@minddrop/extension';
-import './BookmarkCardHorizontal.css';
 import { LocalImage } from '../Image';
+import './BookmarkCardHorizontal.css';
 
 export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
   block,
-  deleteBlock,
+  selected,
+  toggleSelected,
+  onDragStart,
 }) => {
   const {
     Utils,
-    Selection,
     Ui: { BlockContainer },
   } = useApi();
-  // Make the node selectable
-  const { selected, onClick } = Selection.useSelectable({
-    id: block.id,
-    getUriList: () => (block.url ? [block.url] : []),
-    onDelete: deleteBlock,
-  });
-  // Make the node draggable
-  const { onDragStart } = Selection.useDraggable({ id: block.id });
 
   const domain = useMemo(() => {
     try {
@@ -79,7 +72,7 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
           </div>
         )}
       </a>
-      <div className="drag-handle" onClick={onClick} />
+      <div className="drag-handle" onClick={toggleSelected} />
     </BlockContainer>
   );
 };
