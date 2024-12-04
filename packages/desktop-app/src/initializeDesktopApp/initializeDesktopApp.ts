@@ -2,7 +2,7 @@ import { loadConfigs } from '@minddrop/core';
 import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
 import { initializeExtensions } from '@minddrop/extensions';
-import { Documents, initializeDocuments } from '@minddrop/documents';
+import { initializeDocuments } from '@minddrop/documents';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import DocumentBoardView from '@minddrop/board-view';
@@ -34,8 +34,10 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Initialize global selection keyboard shortcuts
   initializeSelection();
 
-  // Initialize documents package
-  initializeDocuments();
+  // Initialize documents package with workspace paths
+  // as source paths.
+  const workspacePaths = Workspaces.getAll().map((workspace) => workspace.path);
+  await initializeDocuments(workspacePaths);
 
   // Watch for app config file changes
   const cancelConfigsWatcher = await watchAppConfigFiles();
@@ -57,9 +59,6 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
     NodeTypeLinkExtension,
     NodeTypeTextExtension,
   ]);
-
-  // Load documents from all workspaces
-  await loadDocuments();
 
   return () => {
     // Remove config files watcher
@@ -86,14 +85,4 @@ function setThemeAppearanceClassOnBody({ data }: { data: ThemeAppearance }) {
     document.body.classList.remove('dark-theme');
     document.body.classList.add('light-theme');
   }
-}
-
-/**
- * Loads documents from all workspaces.
- */
-async function loadDocuments() {
-  const workspacePaths = Workspaces.getAll().map((workspace) => workspace.path);
-
-  // Load documents from all workspaces
-  await Documents.load(workspacePaths);
 }

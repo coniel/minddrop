@@ -72,22 +72,23 @@ export const document1View2: DocumentView = {
 
 export const document1Views = [document1View1, document1View2];
 
-export const document1Blocks: Block[] = [
-  {
-    id: 'block-1',
-    type: 'text',
-    created: new Date(),
-    lastModified: new Date(),
-    text: 'Document 1 block 1',
-  },
-  {
-    id: 'block-2',
-    type: 'text',
-    created: new Date(),
-    lastModified: new Date(),
-    text: 'Document 1 block 2',
-  },
-];
+export const document1Block1: Block = {
+  id: 'block-1',
+  type: 'text',
+  created: new Date(),
+  lastModified: new Date(),
+  text: 'Document 1 block 1',
+};
+
+export const document1Block2: Block = {
+  id: 'block-2',
+  type: 'text',
+  created: new Date(),
+  lastModified: new Date(),
+  text: 'Document 1 block 2',
+};
+
+export const document1Blocks: Block[] = [document1Block1, document1Block2];
 
 /**
  * A workspace level document with no children and two views.
