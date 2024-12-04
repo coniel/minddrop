@@ -60,7 +60,12 @@ describe('loadDocuments', () => {
     await loadDocuments([workspaceDir]);
 
     // Blocks should be in the store
-    expect(Blocks.getAll()).toEqual(documentBlocks);
+    expect(Blocks.getAll()).toEqual(
+      documentBlocks.reduce(
+        (acc, block) => ({ ...acc, [block.id]: block }),
+        {},
+      ),
+    );
   });
 
   it('dispatches a `documents:load` event', async () =>
