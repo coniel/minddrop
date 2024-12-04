@@ -11,9 +11,7 @@ import { DocumentView } from '../types';
  * @throws {DocumentViewNotFoundError} If the document view is not found.
  */
 export function getDocumentView(id: string): DocumentView {
-  const view = DocumentViewsStore.getState().documents.find(
-    (view) => view.id === id,
-  );
+  const view = DocumentViewsStore.getState().documents[id];
 
   if (!view) {
     throw new DocumentViewNotFoundError(id);

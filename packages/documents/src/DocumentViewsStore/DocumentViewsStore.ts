@@ -5,7 +5,7 @@ export interface DocumentViewsStore {
   /**
    * The user's documents.
    */
-  documents: DocumentView[];
+  documents: Record<string, DocumentView>;
 
   /**
    * Load documents into the store.
@@ -34,38 +34,50 @@ export interface DocumentViewsStore {
 }
 
 export const DocumentViewsStore = create<DocumentViewsStore>()((set) => ({
-  documents: [],
+  documents: {},
 
   load: (documents) =>
-    set((state) => ({ documents: [...state.documents, ...documents] })),
+    set((state) => ({
+      documents: {
+        ...state.documents,
+        ...documents.reduce(
+          (docs, document) => ({
+            ...docs,
+            [document.id]: document,
+          }),
+          {},
+        ),
+      },
+    })),
 
   add: (document) =>
     set((state) => {
       return {
-        documents: [...state.documents, document],
+        documents: { ...state.documents, [document.id]: document },
       };
     }),
 
   update: (id, data) =>
     set((state) => {
-      const index = state.documents.findIndex((document) => document.id === id);
-      const documents = [...state.documents];
+      const document = state.documents[id];
 
-      if (index === -1) {
+      if (!document) {
         return {};
       }
 
-      documents[index] = { ...documents[index], ...data };
-
-      return { documents };
+      return {
+        documents: { ...state.documents, [id]: { ...document, ...data } },
+      };
     }),
 
   remove: (id) =>
     set((state) => {
-      return {
-        documents: state.documents.filter((document) => id !== document.id),
-      };
+      const documents = { ...state.documents };
+
+      delete documents[id];
+
+      return { documents };
     }),
 
-  clear: () => set({ documents: [] }),
+  clear: () => set({ documents: {} }),
 }));

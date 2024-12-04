@@ -342,6 +342,14 @@ export const documentViews = [
   ...grandChildDocumentData.views,
 ];
 
+export const documentViewsObject = documentViews.reduce(
+  (views, view) => ({
+    ...views,
+    [view.id]: view,
+  }),
+  {},
+);
+
 export const documentBlocks = [
   ...document1Blocks,
   ...document2Data.blocks,

@@ -10,6 +10,7 @@ import {
   documents,
   documentViews,
   documentBlocks,
+  documentViewsObject,
 } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
 import { DocumentsStore } from '../DocumentsStore';
@@ -61,7 +62,9 @@ describe('loadDocuments', () => {
     await loadDocuments([workspaceDir]);
 
     // Views should be in the store
-    expect(DocumentViewsStore.getState().documents).toEqual(documentViews);
+    expect(DocumentViewsStore.getState().documents).toEqual(
+      documentViewsObject,
+    );
   });
 
   it('loads blocks into the store', async () => {

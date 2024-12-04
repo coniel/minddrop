@@ -20,10 +20,10 @@ describe('DocumentViewsStore', () => {
       DocumentViewsStore.getState().load([document1View2]);
 
       // Both documents should be in the store
-      expect(DocumentViewsStore.getState().documents).toEqual([
-        document1View1,
-        document1View2,
-      ]);
+      expect(DocumentViewsStore.getState().documents).toEqual({
+        [document1View1.id]: document1View1,
+        [document1View2.id]: document1View2,
+      });
     });
   });
 
@@ -36,10 +36,10 @@ describe('DocumentViewsStore', () => {
       DocumentViewsStore.getState().add(document1View2);
 
       // Both documents should be in the store
-      expect(DocumentViewsStore.getState().documents).toEqual([
-        document1View1,
-        document1View2,
-      ]);
+      expect(DocumentViewsStore.getState().documents).toEqual({
+        [document1View1.id]: document1View1,
+        [document1View2.id]: document1View2,
+      });
     });
   });
 
@@ -56,16 +56,16 @@ describe('DocumentViewsStore', () => {
       });
 
       // Get the view from the store
-      const view = DocumentViewsStore.getState().documents.find(
-        ({ id }) => id === document1View1.id,
-      ) as DocumentView;
+      const view = DocumentViewsStore.getState().documents[
+        document1View1.id
+      ] as DocumentView;
 
       // DocumentView title should be updated
       expect(view).toEqual({ ...document1View1, blocks: ['new-block'] });
     });
 
     it('does nothing if the view does not exist', () => {
-      const initialState = [...DocumentViewsStore.getState().documents];
+      const initialState = { ...DocumentViewsStore.getState().documents };
 
       // Update a missing document
       DocumentViewsStore.getState().update('foo', {
@@ -89,9 +89,7 @@ describe('DocumentViewsStore', () => {
 
       // view should no longer be in the store
       expect(
-        DocumentViewsStore.getState().documents.find(
-          (view) => view.id === document1View1.id,
-        ),
+        DocumentViewsStore.getState().documents[document1View1.id],
       ).toBeUndefined();
     });
   });

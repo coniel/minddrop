@@ -18,10 +18,7 @@ export const DocumentViewRenderer: React.FC<DocumentViewRendererProps> = ({
   viewId,
   document,
 }) => {
-  const view = DocumentViewsStore.getState().documents.find(
-    ({ id }) => id === viewId,
-  )!;
-
+  const view = DocumentViewsStore.getState().documents[viewId];
   const viewConfig = useDocumentViewTypeConfig(view.type)!;
 
   return (

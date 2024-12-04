@@ -9,10 +9,7 @@ import { DocumentView } from '../types';
  * @returns An array of document views.
  */
 export function getDocumentViews(ids: string[]): DocumentView[] {
-  // Turn the array of view IDs into a Set for faster lookups
-  const idSet = new Set(ids);
-
-  return DocumentViewsStore.getState().documents.filter((view) =>
-    idSet.has(view.id),
-  );
+  return ids
+    .map((id) => DocumentViewsStore.getState().documents[id])
+    .filter(Boolean) as DocumentView[];
 }
