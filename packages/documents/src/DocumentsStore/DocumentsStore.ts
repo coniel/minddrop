@@ -89,25 +89,28 @@ export const DocumentsStore = create<DocumentsStore>()((set) => ({
 
       const newDocument = { ...oldDocument, ...data };
 
-      // Remove old block entries from the BlockDocumentMap
-      oldDocument.blocks.forEach((blockId) => {
-        BlockDocumentMap.delete(blockId);
-      });
+      if (data.blocks) {
+        // Remove old block entries from the BlockDocumentMap
+        oldDocument.blocks.forEach((blockId) => {
+          BlockDocumentMap.delete(blockId);
+        });
+        // Add new block entries to the BlockDocumentMap
+        newDocument.blocks.forEach((blockId) => {
+          BlockDocumentMap.set(blockId, id);
+        });
+      }
 
-      // Add new block entries to the BlockDocumentMap
-      newDocument.blocks.forEach((blockId) => {
-        BlockDocumentMap.set(blockId, id);
-      });
+      if (data.views) {
+        // Remove old view entries from the DocumentViewDocumentMap
+        oldDocument.views.forEach((viewId) => {
+          DocumentViewDocumentMap.delete(viewId);
+        });
 
-      // Remove old view entries from the DocumentViewDocumentMap
-      oldDocument.views.forEach((viewId) => {
-        DocumentViewDocumentMap.delete(viewId);
-      });
-
-      // Add new view entries to the DocumentViewDocumentMap
-      newDocument.views.forEach((viewId) => {
-        DocumentViewDocumentMap.set(viewId, id);
-      });
+        // Add new view entries to the DocumentViewDocumentMap
+        newDocument.views.forEach((viewId) => {
+          DocumentViewDocumentMap.set(viewId, id);
+        });
+      }
 
       documents[id] = newDocument;
 
