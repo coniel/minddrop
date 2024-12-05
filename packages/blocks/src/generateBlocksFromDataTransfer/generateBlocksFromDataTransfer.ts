@@ -29,11 +29,18 @@ export async function generateBlocksFromDataTransfer(
       transfer.files?.filter((file) => !file.name.endsWith('.webloc')) || [];
 
     if (files.length) {
-      return await Promise.all(
+      const blocks = await Promise.all(
         transfer.files?.map(async (file) =>
           createBlockFromFile(file, parentPath),
         ) || [],
       );
+
+      // This timeout helps prvent dropped images from flickering in
+      // the UI as they are briefly unavailable after the file is
+      // written to disk.
+      await new Promise((resolve) => setTimeout(resolve, 1));
+
+      return blocks;
     }
   }
 
