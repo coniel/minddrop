@@ -1,11 +1,8 @@
-import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
 import { Document } from '../types';
 import { DocumentsStore } from '../DocumentsStore';
-import { writeDocument } from '../writeDocument';
-import { serializeDocumentToJsonString } from '../utils';
 
 /**
  * Updates a document with the given data via a shallow merge.
@@ -23,22 +20,17 @@ import { serializeDocumentToJsonString } from '../utils';
  *
  * @dispatches documents:document:update
  */
-export async function updateDocument(
+export function updateDocument(
   id: string,
   updateData: Partial<Document>,
   updateTimestamp = true,
-): Promise<Document> {
+): Document {
   // Get the document from the store
   const document = getDocument(id);
 
   // Ensure the document exists
   if (!document) {
     throw new DocumentNotFoundError(id);
-  }
-
-  // Ensure the document file exists
-  if (!(await Fs.exists(document.path))) {
-    throw new FileNotFoundError(document.path);
   }
 
   // Merge the new properties with the existing properties
@@ -50,12 +42,6 @@ export async function updateDocument(
 
   // Update the document in the store
   DocumentsStore.getState().update(document.id, updatedDocument);
-
-  // Write updated document to file
-  await writeDocument(
-    document.path,
-    serializeDocumentToJsonString(document.id),
-  );
 
   // Dispatch a document update event
   Events.dispatch('documents:document:update', updatedDocument);

@@ -4,10 +4,15 @@ import { Block } from '@minddrop/blocks';
 import { DocumentAssetsHandler } from '../DocumentAssetsHandler';
 import { getDocument } from '../getDocument';
 import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
+import { DocumentView, Document } from '../types';
+import { loadDocuments } from '../loadDocuments';
+import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { getDocumentView } from '../getDocumentView';
+import { updateDocumentView } from '../updateDocumentView';
+import { updateDocument } from '../updateDocument';
 import { writeDocument } from '../writeDocument';
 import { serializeDocumentToJsonString } from '../utils';
-import { DocumentView } from '../types';
-import { loadDocuments } from '../loadDocuments';
+import { Fs } from '@minddrop/file-system';
 
 export async function initializeDocuments(
   sourcePaths: string[],
@@ -27,7 +32,9 @@ export async function initializeDocuments(
       const documentId = BlockDocumentMap.get(block.id);
 
       if (documentId) {
-        writeUpdatedDocumentToFile(documentId);
+        // Update the document to trigger write with updated
+        // blocks and last modified timestamp.
+        updateDocument(documentId, {});
       }
     },
   );
@@ -40,7 +47,13 @@ export async function initializeDocuments(
       const documentId = DocumentViewDocumentMap.get(view.id);
 
       if (documentId) {
-        writeUpdatedDocumentToFile(documentId);
+        // Update the document to trigger write with updated
+        // views and last modified timestamp.
+        const document = getDocument(documentId);
+
+        if (document) {
+          updateDocument(documentId, { blocks: document.blocks });
+        }
       }
     },
   );
@@ -49,12 +62,37 @@ export async function initializeDocuments(
   Events.addListener<Block>(
     'blocks:block:delete',
     'update-document-on-block-change',
-    ({ data: block }) => {
+    async ({ data: block }) => {
       const documentId = BlockDocumentMap.get(block.id);
 
-      if (documentId) {
-        writeUpdatedDocumentToFile(documentId);
+      if (!documentId) {
+        return;
       }
+
+      const document = getDocument(documentId);
+
+      if (!document) {
+        return;
+      }
+
+      // Update the document to trigger write with updated
+      // block, views, and last modified timestamp.
+      updateDocument(documentId, {
+        blocks: document.blocks.filter((id) => id !== block.id),
+      });
+
+      document.views.forEach((viewId) => {
+        const view = getDocumentView(viewId);
+        const config = DocumentViewTypeConfigsStore.get(view.type);
+
+        if (!config) {
+          return;
+        }
+
+        const updatedView = config.onRemoveBlocks(view, [block]);
+
+        updateDocumentView(viewId, updatedView);
+      });
     },
   );
 
@@ -65,20 +103,61 @@ export async function initializeDocuments(
     ({ data: view }) => {
       const documentId = DocumentViewDocumentMap.get(view.id);
 
-      if (documentId) {
-        writeUpdatedDocumentToFile(documentId);
+      if (!documentId) {
+        return;
       }
+
+      const document = getDocument(documentId);
+
+      if (!document) {
+        return;
+      }
+
+      // Update the document to trigger write with updated
+      // views and last modified timestamp.
+      updateDocument(documentId, {
+        views: document.views.filter((id) => id !== view.id),
+      });
+    },
+  );
+
+  // Write updated document to file when a document is updated
+  Events.addListener<Document>(
+    'documents:document:update',
+    'debounce-update',
+    ({ data: document }) => {
+      debounceUpdateDocument(document.id);
     },
   );
 }
 
-function writeUpdatedDocumentToFile(documentId: string) {
-  const document = getDocument(documentId);
+const debounceMap = new Map();
 
-  if (!document) {
-    return;
+function debounceUpdateDocument(documentId: string) {
+  // Clear any existing timer for the given documentId
+  if (debounceMap.has(documentId)) {
+    clearTimeout(debounceMap.get(documentId));
   }
 
-  // Write updated document to file
-  writeDocument(document.path, serializeDocumentToJsonString(document.id));
+  // Set a new timer for the given documentId
+  const timer = setTimeout(async () => {
+    const document = getDocument(documentId);
+
+    if (!document) {
+      return;
+    }
+
+    // Ensure the document file exists
+    if (!(await Fs.exists(document.path))) {
+      return;
+    }
+
+    // Write updated document to file
+    writeDocument(document.path, serializeDocumentToJsonString(document.id));
+
+    // Clean up the timer
+    debounceMap.delete(documentId);
+  }, 200);
+
+  debounceMap.set(documentId, timer);
 }

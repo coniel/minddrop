@@ -5,17 +5,13 @@ import {
   cleanup,
   document1,
   documentFiles,
-  document1Data,
   documentViews,
   documentBlocks,
 } from '../test-utils';
 import { updateDocument } from './updateDocument';
 import { DocumentNotFoundError } from '../errors';
 import { DocumentsStore } from '../DocumentsStore';
-import {
-  FileNotFoundError,
-  initializeMockFileSystem,
-} from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { getDocument } from '../getDocument';
 import { DocumentViewsStore } from '../DocumentViewsStore';
 import { Blocks } from '@minddrop/blocks';
@@ -58,49 +54,33 @@ describe('updateDocument', () => {
     MockFs.reset();
   });
 
-  it('throws an error if the document does not exist', async () => {
-    expect(async () =>
-      updateDocument('does-not-exist', UPDATE_DATA),
-    ).rejects.toThrow(DocumentNotFoundError);
+  it('throws an error if the document does not exist', () => {
+    expect(() => updateDocument('does-not-exist', UPDATE_DATA)).toThrow(
+      DocumentNotFoundError,
+    );
   });
 
-  it('throws an error if the document file does not exist', async () => {
-    expect(async () =>
-      updateDocument(NO_FILE_DOCUMENT.id, UPDATE_DATA),
-    ).rejects.toThrow(FileNotFoundError);
-  });
-
-  it('updates the document in the store', async () => {
-    await updateDocument(document1.id, UPDATE_DATA);
+  it('updates the document in the store', () => {
+    updateDocument(document1.id, UPDATE_DATA);
 
     const updatedDocument = getDocument(document1.id);
 
     expect(updatedDocument).toEqual(UPDATED_DOCUMENT);
   });
 
-  it('writes the updated document to the file', async () => {
-    await updateDocument(document1.id, UPDATE_DATA, false);
-
-    const fileContent = MockFs.readTextFile(document1.path);
-
-    expect(fileContent).toEqual(
-      JSON.stringify({ ...document1Data, ...UPDATE_DATA }),
-    );
-  });
-
-  it('updates the document lastModified timestamp', async () => {
-    const updatedDocument = await updateDocument(document1.id, UPDATE_DATA);
+  it('updates the document lastModified timestamp', () => {
+    const updatedDocument = updateDocument(document1.id, UPDATE_DATA);
 
     expect(updatedDocument.lastModified > document1.lastModified).toBeTruthy();
   });
 
-  it('returns the updated document', async () => {
-    const updatedDocument = await updateDocument(document1.id, UPDATE_DATA);
+  it('returns the updated document', () => {
+    const updatedDocument = updateDocument(document1.id, UPDATE_DATA);
 
     expect(updatedDocument).toEqual(UPDATED_DOCUMENT);
   });
 
-  it('dispatches a `documents:document:update` event', async () =>
+  it('dispatches a `documents:document:update` event', () =>
     new Promise<void>((done) => {
       Events.addListener('documents:document:update', 'test', (payload) => {
         expect(payload.data).toEqual(UPDATED_DOCUMENT);
