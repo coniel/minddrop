@@ -45,6 +45,12 @@ export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
    * and Widnows/Linux respectively.
    */
   keyboardShortcut?: string[];
+
+  /**
+   * Class name applied to the tooltiop content
+   * container.
+   */
+  className?: string;
 }
 
 export const Tooltip: FC<TooltipProps> = ({
@@ -57,6 +63,7 @@ export const Tooltip: FC<TooltipProps> = ({
   title,
   description,
   keyboardShortcut,
+  className,
   ...other
 }) => {
   const { t } = useTranslation();
@@ -78,7 +85,7 @@ export const Tooltip: FC<TooltipProps> = ({
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
-            className="tooltip"
+            className={['tooltip', className].filter(Boolean).join(' ')}
             side="bottom"
             align="center"
             sideOffset={5}
