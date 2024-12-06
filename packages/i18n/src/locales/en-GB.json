@@ -52,6 +52,9 @@
   "contentPicker": {
     "filter": "Filter..."
   },
+  "labels": {
+    "untitled": "Untitled"
+  },
   "workspaces": {
     "label": "Workspaces",
     "definition": "A workspace is simply a folder inside which your documents are stored as plain text Markdown files.",

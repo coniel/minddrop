@@ -34,4 +34,30 @@ export function initializeI18n(debug = false) {
   });
 }
 
+export function isUntitled(title?: string): boolean {
+  // If there is no title, it's not an "Untitled" string
+  // rather a missing title.
+  if (!title) {
+    return false;
+  }
+
+  // Check if the string starts with "Untitled"
+  if (!title.startsWith(i18n.t('labels.untitled'))) {
+    return false;
+  }
+
+  // Extract the part after "Untitled"
+  const suffix = title.slice(8).trim();
+
+  // If there's no suffix, it's a valid "Untitled" string
+  if (suffix === '') {
+    return true;
+  }
+
+  // Check if the suffix is a positive integer
+  const number = Number(suffix);
+
+  return Number.isInteger(number) && number > 0;
+}
+
 export { i18n };
