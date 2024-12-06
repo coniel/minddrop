@@ -37,5 +37,3 @@ export * from './WorkspaceNavItem';
 export * from './constants';
 export * from './types';
 export * from './utils';
-export * from './DocumentContentToolbar';
-export * from './DocumentContentToolbarItem';
