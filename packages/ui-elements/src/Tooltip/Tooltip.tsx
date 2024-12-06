@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import './Tooltip.css';
+import { useTranslation } from '@minddrop/i18n';
 import { Text } from '../Text';
 import { KeyboardShortcut } from '../KeyboardShortcut';
-import { useTranslation } from '@minddrop/i18n';
+import './Tooltip.css';
 
 type TooltipBaseProps = Pick<
   TooltipPrimitive.TooltipProps,
@@ -73,49 +73,48 @@ export const Tooltip: FC<TooltipProps> = ({
     typeof description === 'string' ? t(description) : description;
 
   return (
-    <TooltipPrimitive.Provider
-      delayDuration={delayDuration}
-      skipDelayDuration={skipDelayDuration}
+    <TooltipPrimitive.Root
+      defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={onOpenChange}
     >
-      <TooltipPrimitive.Root
-        defaultOpen={defaultOpen}
-        open={open}
-        onOpenChange={onOpenChange}
-      >
-        <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-        <TooltipPrimitive.Portal>
-          <TooltipPrimitive.Content
-            className={['tooltip', className].filter(Boolean).join(' ')}
-            side="bottom"
-            align="center"
-            sideOffset={5}
-            {...other}
-          >
-            <Text as="div" color="contrast" size="small" weight="medium">
-              {translatedTitle}
+      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Content
+          className={['tooltip', className].filter(Boolean).join(' ')}
+          side="bottom"
+          align="center"
+          sideOffset={5}
+          {...other}
+        >
+          <Text as="div" color="contrast" size="small" weight="medium">
+            {translatedTitle}
+          </Text>
+          {description && (
+            <Text
+              as="div"
+              size="small"
+              color="contrast-light"
+              className="description"
+            >
+              {translatedDescription}
             </Text>
-            {description && (
-              <Text
-                as="div"
-                size="small"
-                color="contrast-light"
-                className="description"
-              >
-                {translatedDescription}
-              </Text>
-            )}
-            {keyboardShortcut && (
-              <KeyboardShortcut
-                as="div"
-                size="small"
-                color="contrast-light"
-                weight="medium"
-                keys={keyboardShortcut}
-              />
-            )}
-          </TooltipPrimitive.Content>
-        </TooltipPrimitive.Portal>
-      </TooltipPrimitive.Root>
-    </TooltipPrimitive.Provider>
+          )}
+          {keyboardShortcut && (
+            <KeyboardShortcut
+              as="div"
+              size="small"
+              color="contrast-light"
+              weight="medium"
+              keys={keyboardShortcut}
+            />
+          )}
+        </TooltipPrimitive.Content>
+      </TooltipPrimitive.Portal>
+    </TooltipPrimitive.Root>
   );
 };
+
+export const TooltipProvider = TooltipPrimitive.TooltipProvider;
+export const TooltipTrigger = TooltipPrimitive.Trigger;
+export const TooltipRoot = TooltipPrimitive.Root;
