@@ -17,3 +17,4 @@ export {
   registerDocumentViewTypeConfig as registerView,
   unregisterDocumentViewTypeConfig as unregisterView,
 } from './DocumentViewTypeConfigsStore';
+export { useDocument } from './useDocument';
