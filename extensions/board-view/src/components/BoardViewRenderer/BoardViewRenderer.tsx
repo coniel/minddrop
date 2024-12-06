@@ -16,6 +16,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
     Documents: { addBlocks },
     Blocks: { createFromDataTransfer },
     Utils: { useParentDir },
+    Ui: { DocumentTitleField },
   } = useApi();
   const parentDir = useParentDir();
 
@@ -59,6 +60,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
 
   return (
     <div className="board-view" onClick={Selection.clear}>
+      <div className="board-view-header">
+        <DocumentTitleField key={documentId} documentId={documentId} />
+      </div>
       {view.sections.map((section, index) => {
         switch (section.type) {
           case 'columns':

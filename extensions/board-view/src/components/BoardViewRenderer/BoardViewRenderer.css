@@ -2,3 +2,13 @@
   height: 100%;
   width: 100%;
 }
+
+.board-view .board-view-header {
+  display: flex;
+  padding: 36px 36px 0 36px;
+  align-items: center;
+}
+
+.board-view .board-view-header .document-title-field {
+  flex: 1;
+}
