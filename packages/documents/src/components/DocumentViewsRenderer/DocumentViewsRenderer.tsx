@@ -43,7 +43,6 @@ export const DocumentViewsRenderer: React.FC<DocumentViewsRendererProps> = ({
 
   return (
     <div>
-      <h1>{document.title}</h1>
       {!document.views.length && (
         <div style={{ paddingTop: 200 }}>
           <button onClick={() => createView('board')}>Create board view</button>

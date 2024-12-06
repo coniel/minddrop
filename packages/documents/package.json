@@ -13,12 +13,14 @@
     "@minddrop/assets": "workspace:*",
     "@minddrop/ast": "workspace:*",
     "@minddrop/blocks": "workspace:*",
-    "@minddrop/events": "workspace:*",
     "@minddrop/core": "workspace:*",
+    "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*",
+    "@minddrop/ui": "workspace:*",
     "yaml": "^2.3.4"
   },
   "peerDependencies": {
