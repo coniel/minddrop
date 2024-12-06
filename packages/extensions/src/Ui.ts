@@ -1,7 +1,9 @@
-import * as BaseUi from '@minddrop/ui-elements';
+import * as UiElements from '@minddrop/ui-elements';
 import { DocumentTitleField } from '@minddrop/documents';
+import * as UiDesktop from '@minddrop/ui-desktop';
 
 export const Ui = {
-  ...BaseUi,
+  ...UiElements,
+  ...UiDesktop,
   DocumentTitleField,
 };

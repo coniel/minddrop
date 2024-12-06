@@ -25,6 +25,7 @@
     "@minddrop/markdown": "workspace:*",
     "@minddrop/selection": "workspace:*",
     "@minddrop/theme": "workspace:*",
+    "@minddrop/ui-desktop": "workspace:*",
     "@minddrop/ui-elements": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
