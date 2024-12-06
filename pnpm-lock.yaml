@@ -704,6 +704,9 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
+      '@minddrop/ui-desktop':
+        specifier: workspace:*
+        version: link:../ui-desktop
       '@minddrop/ui-elements':
         specifier: workspace:*
         version: link:../ui-elements
@@ -1008,6 +1011,43 @@ importers:
         version: 5.2.2
 
   packages/tsconfig: {}
+
+  packages/ui-desktop:
+    dependencies:
+      '@minddrop/blocks':
+        specifier: workspace:*
+        version: link:../blocks
+      '@minddrop/documents':
+        specifier: workspace:*
+        version: link:../documents
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../selection
+      '@minddrop/ui-elements':
+        specifier: workspace:*
+        version: link:../ui-elements
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      eslint:
+        specifier: ^8.39.0
+        version: 8.51.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.0.4
+        version: 5.4.5
 
   packages/ui-elements:
     dependencies:
