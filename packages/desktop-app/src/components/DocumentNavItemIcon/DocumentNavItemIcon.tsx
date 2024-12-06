@@ -8,7 +8,7 @@ import {
   PopoverContent,
   PopoverPortal,
   PopoverTrigger,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import {
   clearDocumentIcon,
   setDocumentContentIcon,

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { getCurrent } from '@tauri-apps/api/window';
-import { ActionCard, Button } from '@minddrop/ui';
+import { ActionCard, Button } from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
 import { selectFolderAsWorkspace } from '../../../api/selectFolderAsWorkspace';
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getCurrent } from '@tauri-apps/api/window';
 import { getVersion } from '@tauri-apps/api/app';
 import { IconsProvider } from '@minddrop/icons';
-import { MindDropLogo, Text, Toolbar } from '@minddrop/ui';
+import { MindDropLogo, Text, Toolbar } from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
 import { useToggle } from '@minddrop/utils';
 import { OpenWorkspaceCard } from './OpenWorkspaceCard';

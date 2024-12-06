@@ -24,7 +24,7 @@
     "@minddrop/ast": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/ui": "workspace:*",
+    "@minddrop/ui-elements": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "is-hotkey": "^0.2.0",
     "slate": "^0.94.1",

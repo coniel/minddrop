@@ -1,5 +1,5 @@
 import { useTranslation } from '@minddrop/i18n';
-import { ActionCard, Button, ButtonProps } from '@minddrop/ui';
+import { ActionCard, Button, ButtonProps } from '@minddrop/ui-elements';
 
 interface CreateWorkspaceCardProps {
   onClick: ButtonProps['onClick'];

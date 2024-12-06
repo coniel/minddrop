@@ -2,7 +2,7 @@ import { PathConflictError } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { DOCUMENTS_TEST_DATA, Documents } from '@minddrop/documents';
 import { render, userEvent, waitFor } from '@minddrop/test-utils';
-import { Popover } from '@minddrop/ui';
+import { Popover } from '@minddrop/ui-elements';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup } from '../../test-utils';
 import { RenameDocumentPopover } from './RenameDocumentPopover';

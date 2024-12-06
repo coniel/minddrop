@@ -3,7 +3,7 @@ import {
   useChildDocuments,
   useDocument,
 } from '@minddrop/documents';
-import { ContentListItem, ContentListItemProps } from '@minddrop/ui';
+import { ContentListItem, ContentListItemProps } from '@minddrop/ui-elements';
 import { useCreateCallback } from '@minddrop/utils';
 import { NavItemIcon } from '../NavItemIcon';
 

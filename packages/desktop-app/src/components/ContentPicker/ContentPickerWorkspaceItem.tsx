@@ -1,5 +1,5 @@
 import { useChildDocuments } from '@minddrop/documents';
-import { ContentListItem, ContentListItemProps } from '@minddrop/ui';
+import { ContentListItem, ContentListItemProps } from '@minddrop/ui-elements';
 import { useCreateCallback } from '@minddrop/utils';
 import { DefaultWorkspaceIcon, useWorkspace } from '@minddrop/workspaces';
 import { NavItemIcon } from '../NavItemIcon';

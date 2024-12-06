@@ -13,7 +13,7 @@ import {
   PopoverAnchor,
   PopoverPortal,
   Tooltip,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { Document, Documents, useChildDocuments } from '@minddrop/documents';
 import { DocumentNavItemIcon } from '../DocumentNavItemIcon';
 import { useCreateCallback, useToggle } from '@minddrop/utils';

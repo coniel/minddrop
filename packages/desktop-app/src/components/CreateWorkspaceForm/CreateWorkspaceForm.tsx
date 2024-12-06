@@ -9,7 +9,7 @@ import {
   FieldLabel,
   HelperText,
   TextInput,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import './CreateWorkspaceForm.css';
 
 interface CreateWorkspaceFormProps {

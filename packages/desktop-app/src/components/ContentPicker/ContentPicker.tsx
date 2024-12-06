@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { NavGroup, PopoverContent, TextInput } from '@minddrop/ui';
+import { NavGroup, PopoverContent, TextInput } from '@minddrop/ui-elements';
 import { Workspace, useWorkspaces } from '@minddrop/workspaces';
 import { ContentPickerWorkspaceItem } from './ContentPickerWorkspaceItem';
 import { Document, useAllDocuments } from '@minddrop/documents';

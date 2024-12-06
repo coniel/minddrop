@@ -8,7 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm/CreateWorkspaceForm';
 import './AddWorkspaceMenu.css';
 import { selectFolderAsWorkspace } from '../../api/selectFolderAsWorkspace';

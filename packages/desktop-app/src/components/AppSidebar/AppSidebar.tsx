@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { Sidebar, NavGroup, Toolbar, SecondaryNavItem } from '@minddrop/ui';
+import { Sidebar, NavGroup, Toolbar, SecondaryNavItem } from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
 import { AppUiState, useSidebarWidth } from '../../AppUiState';
 import { useWorkspaces } from '@minddrop/workspaces';

@@ -20,7 +20,7 @@
     "@minddrop/icons": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/ui": "workspace:*",
+    "@minddrop/ui-elements": "workspace:*",
     "yaml": "^2.3.4"
   },
   "peerDependencies": {

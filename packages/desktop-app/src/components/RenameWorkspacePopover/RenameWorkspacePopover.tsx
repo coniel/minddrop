@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { InvisibleTextField, PopoverContent, Tooltip } from '@minddrop/ui';
+import { InvisibleTextField, PopoverContent, Tooltip } from '@minddrop/ui-elements';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { PathConflictError } from '@minddrop/file-system';
 import './RenameWorkspacePopover.css';

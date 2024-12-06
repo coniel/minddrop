@@ -4,7 +4,7 @@ import {
   Popover,
   PopoverAnchor,
   PopoverPortal,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
 import { RenameWorkspacePopover } from '../RenameWorkspacePopover';

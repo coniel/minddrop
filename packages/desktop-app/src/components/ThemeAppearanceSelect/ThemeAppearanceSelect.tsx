@@ -14,7 +14,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuLabel,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 
 export const ThemeAppearanceSelect: React.FC = () => {
   const { t } = useTranslation('theme.appearance');

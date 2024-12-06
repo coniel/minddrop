@@ -1,4 +1,4 @@
-import { MenuContents, MenuItemConfig } from '@minddrop/ui';
+import { MenuContents, MenuItemConfig } from '@minddrop/ui-elements';
 
 export interface DocumentOptionsMenu {
   /**

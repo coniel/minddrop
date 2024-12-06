@@ -4,7 +4,7 @@ import {
   ContentIconPicker,
   ContentColor,
   Button,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { ContentIconName, EmojiSkinTone, UserIconType } from '@minddrop/icons';
 import { AppUiState, useDefaultEmojiSkinTone } from '../../AppUiState';
 import './IconPicker.css';

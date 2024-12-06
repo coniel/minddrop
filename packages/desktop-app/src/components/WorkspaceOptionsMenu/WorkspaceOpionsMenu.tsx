@@ -6,7 +6,7 @@ import {
   DropdownMenuProps,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
 import './WorkspaceOptionsMenu.css';
 

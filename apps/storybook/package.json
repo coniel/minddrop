@@ -15,7 +15,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/theme": "workspace:*",
-    "@minddrop/ui": "workspace:*"
+    "@minddrop/ui-elements": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.24",

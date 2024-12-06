@@ -39,7 +39,7 @@
     "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/theme": "workspace:*",
-    "@minddrop/ui": "workspace:*",
+    "@minddrop/ui-elements": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }

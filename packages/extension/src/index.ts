@@ -13,7 +13,7 @@ export type * from '@minddrop/markdown';
 export type * from '../../blocks/src';
 export type * from '@minddrop/selection';
 export type * from '@minddrop/theme';
-export type * from '@minddrop/ui';
+export type * from '@minddrop/ui-elements';
 export type * from '@minddrop/workspaces';
 
 export * from '@minddrop/icons';

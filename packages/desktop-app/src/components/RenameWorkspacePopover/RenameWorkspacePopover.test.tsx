@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { i18n } from '@minddrop/i18n';
-import { Popover } from '@minddrop/ui';
+import { Popover } from '@minddrop/ui-elements';
 import { PathConflictError } from '@minddrop/file-system';
 import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { render, userEvent, waitFor } from '@minddrop/test-utils';

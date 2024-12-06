@@ -4,7 +4,7 @@ import {
   InvisibleTextField,
   InvisibleTextFieldProps,
   Tooltip,
-} from '@minddrop/ui';
+} from '@minddrop/ui-elements';
 import { useDocument } from '../../useDocument';
 import { renameDocument } from '../../renameDocument';
 import './DocumentTitleField.css';
