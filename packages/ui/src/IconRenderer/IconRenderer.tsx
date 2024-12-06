@@ -5,7 +5,7 @@ import './IconRenderer.css';
 
 export type IconProp = UiIconName | React.ReactElement;
 
-interface IconRendererProps extends Omit<IconProps, 'name'> {
+export interface IconRendererProps extends Omit<IconProps, 'name'> {
   /**
    * The icon to render.
    */
