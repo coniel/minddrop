@@ -10,8 +10,8 @@ import { Blocks } from '../../blocks/src';
 import { Selection } from '@minddrop/Selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
-import * as Ui from '@minddrop/ui';
 import { MindDropApi as Api } from './types';
+import { Ui } from './Ui';
 
 export const MindDropApi: Api = {
   Assets,

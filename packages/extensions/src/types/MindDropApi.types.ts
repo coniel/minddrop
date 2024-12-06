@@ -10,7 +10,7 @@ import { Blocks } from '@minddrop/blocks';
 import { Selection } from '@minddrop/selection';
 import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
-import * as Ui from '@minddrop/ui';
+import { Ui } from '../Ui';
 
 export interface MindDropApi {
   Assets: typeof Assets;
