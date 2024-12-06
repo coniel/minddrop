@@ -27,6 +27,10 @@
   color: var(--textContrastLight);
 }
 
+.invisible-text-field.color-danger {
+  color: var(--textDanger);
+}
+
 /* Weight */
 
 .invisible-text-field.weight-light {
