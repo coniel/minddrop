@@ -5,14 +5,17 @@ import {
   WorkspaceOptionsMenu,
   WorkspaceOptionsMenuProps,
 } from './WorkspaceOpionsMenu';
+import { TooltipProvider } from '@minddrop/ui-elements';
 
 const WORKSPACE_PATH = 'path/to/Workspace';
 
 const renderMenu = (props?: Partial<WorkspaceOptionsMenuProps>) => {
   return render(
-    <WorkspaceOptionsMenu open path={WORKSPACE_PATH} {...props}>
-      <div />
-    </WorkspaceOptionsMenu>,
+    <TooltipProvider>
+      <WorkspaceOptionsMenu open path={WORKSPACE_PATH} {...props}>
+        <div />
+      </WorkspaceOptionsMenu>
+    </TooltipProvider>,
     { translationKeyPrefix: 'workspaces.actions' },
   );
 };

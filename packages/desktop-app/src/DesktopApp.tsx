@@ -13,7 +13,7 @@ export const DesktopApp: React.FC = () => {
   const documentId = useCurrentDocumentId();
 
   return (
-    <TooltipProvider delayDuration={800} skipDelayDuration={500}>
+    <TooltipProvider delayDuration={1000} skipDelayDuration={500}>
       <IconsProvider>
         <MindDropApiProvider>
           <div className="app">

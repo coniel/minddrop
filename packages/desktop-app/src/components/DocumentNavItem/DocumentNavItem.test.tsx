@@ -4,6 +4,7 @@ import { DOCUMENTS_TEST_DATA } from '@minddrop/documents';
 import { DocumentNavItem } from './DocumentNavItem';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { AppUiState } from '../../AppUiState';
+import { TooltipProvider } from '@minddrop/ui-elements';
 
 const { document1 } = DOCUMENTS_TEST_DATA;
 
@@ -13,11 +14,19 @@ describe('<DocumentNavItem />', () => {
   afterEach(cleanup);
 
   it('renders', () => {
-    render(<DocumentNavItem document={document1} />);
+    render(
+      <TooltipProvider>
+        <DocumentNavItem document={document1} />
+      </TooltipProvider>,
+    );
   });
 
   it('sets the document as active when clicked', () => {
-    const { getByText } = render(<DocumentNavItem document={document1} />);
+    const { getByText } = render(
+      <TooltipProvider>
+        <DocumentNavItem document={document1} />
+      </TooltipProvider>,
+    );
 
     // Click the document nav item
     fireEvent.click(getByText(document1.title));
