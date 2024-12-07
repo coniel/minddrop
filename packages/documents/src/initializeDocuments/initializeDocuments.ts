@@ -1,6 +1,7 @@
 import { Assets } from '@minddrop/assets';
 import { Events } from '@minddrop/events';
 import { Block } from '@minddrop/blocks';
+import { Fs } from '@minddrop/file-system';
 import { DocumentAssetsHandler } from '../DocumentAssetsHandler';
 import { getDocument } from '../getDocument';
 import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
@@ -12,7 +13,6 @@ import { updateDocumentView } from '../updateDocumentView';
 import { updateDocument } from '../updateDocument';
 import { writeDocument } from '../writeDocument';
 import { serializeDocumentToJsonString } from '../utils';
-import { Fs } from '@minddrop/file-system';
 
 export async function initializeDocuments(
   sourcePaths: string[],
