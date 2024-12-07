@@ -58,6 +58,14 @@ export const createDataTransfer = (
     types: Object.keys(data),
     data,
     getData: (key: string) => dataTransfer.data[key],
+    setData: (key: string, value: string) => {
+      dataTransfer.data[key] = value;
+      dataTransfer.types = Object.keys(dataTransfer.data);
+    },
+    clearData: (key: string) => {
+      delete dataTransfer.data[key];
+      dataTransfer.types = Object.keys(dataTransfer.data);
+    },
     files: createFileList(files),
   };
 
