@@ -39,12 +39,11 @@ describe('addToSelection', () => {
     expect(useSelectionStore.getState().selectedItems).toEqual([selectedItem1]);
   });
 
-  it('dispatches a `selection:items:add` event', () =>
+  it('dispatches a selection item add event', () =>
     new Promise<void>((done) => {
       // Add an inital item
       addToSelection([selectedItem1]);
 
-      // Listen to 'selection:items:add' events
       Events.addListener('selection:items:add', 'test', (payload) => {
         // Payload data should be the added items, exluding
         // duplicates.

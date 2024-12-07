@@ -48,7 +48,6 @@ export interface SelectionUtils {
  * Returns utility functions for adding selection
  * functionality to resource UI components.
  *
- * @param core - A MindDrop core instance.
  * @param item - The selection item representing the resource.
  * @returns Selection utility functions.
  */

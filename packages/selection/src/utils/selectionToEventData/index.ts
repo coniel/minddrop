@@ -1,1 +1,1 @@
-export * from './selectionToEventData';
+export * from './serializeSelectionToDataTransfer';

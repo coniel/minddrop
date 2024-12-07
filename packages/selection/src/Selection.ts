@@ -1,6 +1,6 @@
+export { deleteSelection as delete } from './deleteSelection';
 export { getSelection as get } from './getSelection';
 export { getSelectionIds as getPaths } from './getSelectionPaths';
-export { fromDataInsert as fromDataInsert } from './fromDataInsert';
 export { isSelected } from './isSelected';
 export { selectionIsEmpty as isEmpty } from './selectionIsEmpty';
 export { addToSelection as add } from './addToSelection';
@@ -11,3 +11,7 @@ export { dragStart } from './dragStart';
 export { dragEnd } from './dragEnd';
 export { copySelection as copy } from './copySelection';
 export { cutSelection as cut } from './cutSelection';
+export {
+  registerSelectionItemType as registerSerializer,
+  unregisterSelectionItemType as unregisterSerializer,
+} from './SelectionItemTypeConfigsStore';

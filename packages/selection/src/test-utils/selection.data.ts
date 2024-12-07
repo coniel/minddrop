@@ -1,18 +1,28 @@
-import { SelectionItem } from '../types';
+import { SelectionItem, SelectionItemTypeConfig } from '../types';
 
-function genereateSelectionItem(id: string): Required<SelectionItem> {
+function genereateSelectionItem(id: string): SelectionItem {
   return {
+    type: 'test-type',
     id,
-    getPlainTextContent: () => `Item ${id}`,
-    getHtmlTextContent: () => `<p>Item ${id}</p>`,
-    getFiles: () => [{} as File],
-    getUriList: () => [`uri-${id}`],
     getData: () => ({ id }),
-    onDelete: () => {},
   };
 }
 
-export const selectedItem1 = genereateSelectionItem('1');
-export const selectedItem2 = genereateSelectionItem('2');
-export const selectedItem3 = genereateSelectionItem('3');
-export const selectedItemWithoutCallbacks = { id: 'no-callbacks' };
+export const selectionItemTypeConfig: SelectionItemTypeConfig = {
+  id: 'test-type',
+  setDataOnDataTransfer: (dataTransfer, selection) => {
+    dataTransfer.setData(
+      'application/json',
+      JSON.stringify(selection.map((item) => item.getData!())),
+    );
+  },
+  onDelete: () => {},
+};
+
+export const selectedItem1 = genereateSelectionItem('selection-item- 1');
+export const selectedItem2 = genereateSelectionItem('selection-item- 2');
+export const selectedItem3 = genereateSelectionItem('selection-item- 3');
+export const alternativeTypeItem: SelectionItem = {
+  type: 'alternative-type',
+  id: 'alternative-selection-item',
+};

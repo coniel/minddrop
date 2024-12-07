@@ -4,7 +4,6 @@ import { useSelectionStore } from '../useSelectionStore';
 
 /**
  * Clears the current selection and resets the dragging state.
- *
  */
 export function clearSelection(): void {
   // Get the current selection

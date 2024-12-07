@@ -1,26 +1,31 @@
 import React from 'react';
 import { Events } from '@minddrop/events';
-import { setClipboardData } from '../utils';
+import { setClipboardData } from '../setClipboardData';
 import { getSelection } from '../getSelection';
+import { deleteSelectionItems } from '../utils/deleteSelectionItems';
 
 /**
- * Sets the current selection as a clipboard event's data.
- * The data consists of stringified arrays of selection
- * items grouped by type, with each type being set
- * as `minddrop-selection/[type]`.
+ * Serializes the current selection as the clipboard event's data transfer data
+ * and deletes the selection.
  *
  * @param event - The clipboard event.
- * @dispatches 'selection:clipboard:cut'
+ * @dispatches selection:clipboard:cut
  */
 export function cutSelection(
   event: ClipboardEvent | React.ClipboardEvent,
 ): void {
+  // Ger the current selection
+  const selection = getSelection();
+
   // Set the clipboard event data
   setClipboardData(event, 'cut');
 
-  // Dispatch a 'selection:clipboard:cut' event
-  Events.dispatch('selection:clipboard:cut', {
+  // Delete the selection
+  deleteSelectionItems();
+
+  // Dispatch a selection cut event
+  Events.dispatch('selection:cut', {
     event,
-    selection: getSelection(),
+    selection,
   });
 }

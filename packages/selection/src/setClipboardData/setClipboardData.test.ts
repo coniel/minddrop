@@ -1,8 +1,15 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  selectedItem1,
+  selectedItem3,
+  selectionItemTypeConfig,
+} from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { setClipboardData } from './setClipboardData';
-import { ACTION_DATA_KEY, SELECTION_DATA_KEY } from '../constants';
+import { ACTION_DATA_KEY } from '../constants';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 
 describe('setClipboardData', () => {
   let data: Record<string, string> = {};
@@ -16,6 +23,9 @@ describe('setClipboardData', () => {
 
   beforeEach(() => {
     setup();
+
+    // Register a serializer
+    registerSelectionItemType(selectionItemTypeConfig);
 
     // Set some items as the current selection
     useSelectionStore
@@ -37,13 +47,13 @@ describe('setClipboardData', () => {
     expect(data[ACTION_DATA_KEY]).toBe('move');
   });
 
-  it('sets the selection data', () => {
+  it('serializes the selection to the event data transfer', () => {
     // Set clipboard data
     setClipboardData(clipboardEvent, 'move');
 
     // Should set the current selection items
-    expect(data[SELECTION_DATA_KEY]).toBe(
-      JSON.stringify([selectedItem1.getData(), selectedItem3.getData()]),
+    expect(data['application/json']).toBe(
+      JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
     );
   });
 });

@@ -1,16 +1,13 @@
 import React from 'react';
 import { Events } from '@minddrop/events';
-import { setClipboardData } from '../utils';
+import { setClipboardData } from '../setClipboardData';
 import { getSelection } from '../getSelection';
 
 /**
- * Sets the current selection as a clipboard event's data.
- * The data consists of stringified arrays of selection
- * items grouped by item type, with each resource being set
- * as `minddrop-selection/[type]`.
+ * Serializes the current selection as the clipboard event's data transfer data.
  *
  * @param event - The clipboard event.
- * @dispatches 'selection:clipboard:copy'
+ * @dispatches selection:clipboard:copy
  */
 export function copySelection(
   event: ClipboardEvent | React.ClipboardEvent,
@@ -18,8 +15,8 @@ export function copySelection(
   // Set the clipboard event data
   setClipboardData(event, 'copy');
 
-  // Dispatch a 'selection:clipboard:copy' event
-  Events.dispatch('selection:clipboard:copy', {
+  // Dispatch a selection copy event
+  Events.dispatch('selection:copy', {
     event,
     selection: getSelection(),
   });

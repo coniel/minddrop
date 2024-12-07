@@ -1,9 +1,17 @@
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  selectedItem1,
+  selectedItem3,
+  selectionItemTypeConfig,
+} from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { cutSelection } from './cutSelection';
-import { SELECTION_DATA_KEY } from '../constants';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
+
+const onDelete = vi.fn();
 
 describe('cutSelection', () => {
   let data: Record<string, string> = {};
@@ -20,6 +28,9 @@ describe('cutSelection', () => {
   beforeEach(() => {
     setup();
 
+    // Register a serializer
+    registerSelectionItemType({ ...selectionItemTypeConfig, onDelete });
+
     // Set some items as the current selection
     useSelectionStore
       .getState()
@@ -28,6 +39,7 @@ describe('cutSelection', () => {
 
   afterEach(() => {
     cleanup();
+    vi.clearAllMocks();
 
     data = {};
   });
@@ -37,15 +49,23 @@ describe('cutSelection', () => {
     cutSelection(clipboardEvent);
 
     // Should set the clipboard data
-    expect(data[SELECTION_DATA_KEY]).toEqual(
-      JSON.stringify([selectedItem1, selectedItem3]),
+    expect(data['application/json']).toEqual(
+      JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
     );
   });
 
-  it('dispatches a `selection:clipboard:cut` event', () =>
+  it('deletes the selection items', () => {
+    // Trigger a cut
+    cutSelection(clipboardEvent);
+
+    // Should delete the selection
+    expect(onDelete).toHaveBeenCalled();
+  });
+
+  it('dispatches a selection cut event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:clipboard:cut' events
-      Events.addListener('selection:clipboard:cut', 'test', (payload) => {
+      Events.addListener('selection:cut', 'test', (payload) => {
         // Payload data should contain the event
         expect(payload.data.event).toEqual(clipboardEvent);
         // Payload data should contain the selection

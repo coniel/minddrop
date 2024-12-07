@@ -1,9 +1,16 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
+import {
+  setup,
+  cleanup,
+  selectedItem1,
+  selectedItem3,
+  selectionItemTypeConfig,
+} from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { dragStart } from './dragStart';
-import { ACTION_DATA_KEY, SELECTION_DATA_KEY } from '../constants';
+import { ACTION_DATA_KEY } from '../constants';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 
 describe('dragStart', () => {
   let data: Record<string, string> = {};
@@ -17,6 +24,9 @@ describe('dragStart', () => {
 
   beforeEach(() => {
     setup();
+
+    // Register a serializer
+    registerSelectionItemType(selectionItemTypeConfig);
 
     // Set some items as the current selection
     useSelectionStore
@@ -44,8 +54,8 @@ describe('dragStart', () => {
     dragStart(dragEvent, 'move');
 
     // Should set the selection data
-    expect(data[SELECTION_DATA_KEY]).toEqual(
-      JSON.stringify([selectedItem1.getData(), selectedItem3.getData()]),
+    expect(data['application/json']).toEqual(
+      JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
     );
   });
 

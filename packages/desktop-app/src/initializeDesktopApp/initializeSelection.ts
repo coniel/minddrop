@@ -30,10 +30,6 @@ function handleKeyDown(event: KeyboardEvent) {
     event.preventDefault();
 
     // Delete all items in the current selection
-    const selected = Selection.get();
-
-    selected.forEach((item) => {
-      item.onDelete?.();
-    });
+    Selection.delete();
   }
 }

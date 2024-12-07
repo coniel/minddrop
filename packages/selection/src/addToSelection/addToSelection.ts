@@ -25,6 +25,6 @@ export function addToSelection(items: SelectionItem[]): void {
   // Add the items to the current selection
   useSelectionStore.getState().addSelectedItems(itemsToAdd);
 
-  // Dispatch a 'selection:items:add' event
+  // Dispatch a selection item add event
   Events.dispatch('selection:items:add', itemsToAdd);
 }
