@@ -12,6 +12,6 @@ export { dragEnd } from './dragEnd';
 export { copySelection as copy } from './copySelection';
 export { cutSelection as cut } from './cutSelection';
 export {
-  registerSelectionItemType as registerSerializer,
-  unregisterSelectionItemType as unregisterSerializer,
+  registerSelectionItemType as registerItemType,
+  unregisterSelectionItemType as unregisterItemType,
 } from './SelectionItemTypeConfigsStore';
