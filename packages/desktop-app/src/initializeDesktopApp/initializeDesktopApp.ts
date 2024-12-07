@@ -3,6 +3,7 @@ import { initializeI18n } from '@minddrop/i18n';
 import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeDocuments } from '@minddrop/documents';
+import { initializeBlocks } from '@minddrop/blocks';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import DocumentBoardView from '@minddrop/board-view';
@@ -33,6 +34,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
+
+  // Initialize blocks package
+  initializeBlocks();
 
   // Initialize documents package with workspace paths
   // as source paths.
