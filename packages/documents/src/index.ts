@@ -3,6 +3,7 @@ export * from './types';
 export * from './DocumentsStore';
 export * from './useChildDocuments';
 export * from './useAllDocuments';
+export * from './useSelectAllBlocks';
 export * from './useDocument';
 export * from './useDocuments';
 export * from './components';

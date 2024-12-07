@@ -18,3 +18,4 @@ export {
   unregisterDocumentViewTypeConfig as unregisterView,
 } from './DocumentViewTypeConfigsStore';
 export { useDocument } from './useDocument';
+export { useSelectAllBlocks } from './useSelectAllBlocks';

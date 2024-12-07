@@ -19,6 +19,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/markdown": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/ui-elements": "workspace:*",
     "yaml": "^2.3.4"
