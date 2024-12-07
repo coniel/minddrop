@@ -1,5 +1,5 @@
 import { FileNotFoundError, Fs } from '@minddrop/file-system';
-import { Block } from '@minddrop/blocks';
+import { Block, Blocks } from '@minddrop/blocks';
 import { parseDateOrNow } from '@minddrop/utils';
 import { Document, DeserializedDocumentData, DocumentView } from '../types';
 import { DocumentParseError } from '../errors';
@@ -54,11 +54,6 @@ export async function getDocumentFromPath(path: string): Promise<{
       blocks: parsedDocument.blocks.map((block) => block.id),
     },
     views: parsedDocument.views,
-    blocks: parsedDocument.blocks.map((block) => ({
-      ...block,
-      // Parse date strings into Date objects
-      created: parseDateOrNow(block.created),
-      lastModified: parseDateOrNow(block.lastModified),
-    })),
+    blocks: parsedDocument.blocks.map((block) => Blocks.parse(block)),
   };
 }

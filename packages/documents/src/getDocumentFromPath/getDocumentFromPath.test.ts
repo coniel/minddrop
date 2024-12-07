@@ -86,26 +86,17 @@ describe('getDocumentFromPath', () => {
         ...document1,
         created: 'invalid-date',
         lastModified: 'invalid-date',
-        blocks: document1Blocks.map((block) => ({
-          ...block,
-          created: 'invalid-date',
-          lastModified: 'invalid-date',
-        })),
+        blocks: document1Blocks,
       }),
     );
 
     // Get a document with invalid date strings
-    const { document, blocks } = await getDocumentFromPath(document1.path);
+    const { document } = await getDocumentFromPath(document1.path);
 
-    // Document and block dates should be valid
+    // Document dates should be valid
     expect(document.created).toBeInstanceOf(Date);
     expect(document.lastModified).toBeInstanceOf(Date);
-    expect(blocks[0].created).toBeInstanceOf(Date);
-    expect(blocks[0].lastModified).toBeInstanceOf(Date);
-
     expect(document.created.getTime()).not.toBeNaN();
     expect(document.lastModified.getTime()).not.toBeNaN();
-    expect(blocks[0].created.getTime()).not.toBeNaN();
-    expect(blocks[0].lastModified.getTime()).not.toBeNaN();
   });
 });
