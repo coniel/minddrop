@@ -81,6 +81,22 @@ export interface CoreBlockProperties {
   image?: string;
 
   /**
+   * A date associated with the block. Can be used for full day events, deadlines,
+   * publication date, etc.
+   */
+  date?: Date;
+
+  /**
+   * A start date associated with the block, e.g. for events.
+   */
+  startDate?: Date;
+
+  /**
+   * An end date associated with the block, e.g. for events.
+   */
+  endDate?: Date;
+
+  /**
    * IDs of blocks that are children of this block.
    */
   children?: string[];
@@ -99,8 +115,17 @@ export type BlockData<TCustomData extends CustomBlockData = {}> =
 export type Block<TCustomData extends CustomBlockData = {}> =
   CoreBlockProperties & TCustomData;
 
-export interface DeserializedBlockData
-  extends Omit<Block, 'created' | 'lastModified'> {
-  created: string;
-  lastModified: string;
-}
+export type DeserializedBlockData<TCustomData extends CustomBlockData = {}> =
+  Omit<Block, 'created' | 'lastModified' | 'date' | 'startDate' | 'endDate'> &
+    TCustomData & {
+      created: string;
+      lastModified: string;
+      date: string;
+      startDate: string;
+      endDate: string;
+    };
+
+export type BlockTemplate<TCustomData extends CustomBlockData = {}> = Omit<
+  Block<TCustomData>,
+  'id' | 'created' | 'lastModified'
+>;

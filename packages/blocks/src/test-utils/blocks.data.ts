@@ -1,5 +1,11 @@
 import { BlocksStore } from '../BlocksStore';
-import { Block, BlockType, BlockVariant, TextBlockClassifier } from '../types';
+import {
+  Block,
+  BlockTemplate,
+  BlockType,
+  BlockVariant,
+  TextBlockClassifier,
+} from '../types';
 
 export type TextTextBlockData = { foo?: string; bar?: string };
 export type TestTextBlock = Block & TextTextBlockData;
@@ -72,9 +78,22 @@ export const bookmarkBlock: Block = {
   image: 'website-image.jpg',
 };
 
+export const textBlockTemplate: BlockTemplate = {
+  type: 'text',
+  variant: 'editor',
+  text: '',
+};
+
+export const fileBlockTemplate: BlockTemplate = {
+  type: 'file',
+};
+
 export const block1 = textBlock;
 export const block2 = fileBlock;
 export const block3 = bookmarkBlock;
+
+export const blockTemplate1 = textBlockTemplate;
+export const blockTemplate2 = fileBlockTemplate;
 
 export const blocks = [textBlock, fileBlock, bookmarkBlock];
 

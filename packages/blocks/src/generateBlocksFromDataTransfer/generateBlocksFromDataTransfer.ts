@@ -5,7 +5,10 @@ import {
   generateTextBlock,
   generateLinkBlock,
   generateFileBlock,
+  generateBlock,
 } from '../generateBlock';
+import { BLOCK_TEMPLATES_DATA_KEY } from '../constants';
+import { getBlockTemplatesFromDataTransfer } from '../getBlockTemplatesFromDataTransfer';
 
 /**
  * Generates blocks from a data transfer object.
@@ -20,6 +23,15 @@ export async function generateBlocksFromDataTransfer(
   parentPath: string,
 ): Promise<Block[]> {
   const transfer = toMindDropDataTransfer(dataTransfer);
+  const blockTemplates = getBlockTemplatesFromDataTransfer(dataTransfer);
+
+  if (blockTemplates.length) {
+    return blockTemplates.map((template) => {
+      const { type, variant, ...data } = template;
+
+      return generateBlock(type, data, variant);
+    });
+  }
 
   // Generate file blocks if files are present.
   // Ignores .webloc files created by Safari when dragging a link.
