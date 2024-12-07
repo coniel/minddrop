@@ -1,5 +1,5 @@
 import { BLOCKS_DATA_KEY } from '../constants';
-import { BlockTemplate } from '../types';
+import { Block, BlockTemplate } from '../types';
 
 /**
  * Adds blocks to a DataTransfer object.
@@ -9,7 +9,7 @@ import { BlockTemplate } from '../types';
  */
 export function addBlocksToDataTransfer(
   dataTransfer: DataTransfer | null,
-  blocks: BlockTemplate[],
+  blocks: Block[],
 ): void {
   let existingBlocks = [];
 
