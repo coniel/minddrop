@@ -478,6 +478,9 @@ importers:
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../selection
       '@minddrop/ui-elements':
         specifier: workspace:*
         version: link:../ui-elements
