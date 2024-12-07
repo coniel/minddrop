@@ -57,8 +57,17 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
         onChangeDebounced={onEditorChange}
         onFocus={disableDrag}
         onBlur={enableDrag}
+        autoFocus={isDateInPastSecond(block.created)}
       />
       <div className="drag-handle" onClick={toggleSelected} />
     </BlockContainer>
   );
 };
+
+function isDateInPastSecond(date: Date): boolean {
+  const now = new Date();
+  const oneSecondAgo = new Date(now.getTime() - 1000);
+
+  // Check if the date is in the past second range
+  return date > oneSecondAgo && date <= now;
+}
