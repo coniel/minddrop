@@ -25,7 +25,11 @@ describe('<DocumentNavItem />', () => {
     const onExpandedChange = vi.fn();
 
     render(
-      <DocumentNavItem expanded label="document" onExpandedChange={onExpandedChange}>
+      <DocumentNavItem
+        expanded
+        label="document"
+        onExpandedChange={onExpandedChange}
+      >
         <DocumentNavItem label="subdocument" />
       </DocumentNavItem>,
     );

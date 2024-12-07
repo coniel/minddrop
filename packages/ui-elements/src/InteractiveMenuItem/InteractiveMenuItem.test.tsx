@@ -14,20 +14,22 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from '../DropdownMenu';
+import { TooltipProvider } from '../Tooltip';
 import { InteractiveMenuItem } from './InteractiveMenuItem';
-import { i18n } from '@minddrop/i18n';
 
 const DropdownMenuItem = DropdownMenuPrimitives.Item;
 
 const Container: React.FC<{
   children: React.ReactElement;
 }> = ({ children }) => (
-  <DropdownMenu defaultOpen>
-    <DropdownMenuTrigger>
-      <div data-testid="target" />
-    </DropdownMenuTrigger>
-    <DropdownMenuContent>{children}</DropdownMenuContent>
-  </DropdownMenu>
+  <TooltipProvider>
+    <DropdownMenu defaultOpen>
+      <DropdownMenuTrigger>
+        <div data-testid="target" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>{children}</DropdownMenuContent>
+    </DropdownMenu>
+  </TooltipProvider>
 );
 
 describe('<InteractiveMenuItem />', () => {

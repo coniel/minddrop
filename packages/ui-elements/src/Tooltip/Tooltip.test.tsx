@@ -6,7 +6,7 @@ import {
   screen,
   userEvent,
 } from '@minddrop/test-utils';
-import { Tooltip } from './Tooltip';
+import { Tooltip, TooltipProvider } from './Tooltip';
 
 class ResizeObserver {
   observe() {}
@@ -28,9 +28,11 @@ describe('<Tooltip />', () => {
 
   it('translates string title', async () => {
     const { getAllByTranslatedText } = render(
-      <Tooltip open title="test">
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip open title="test">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     getAllByTranslatedText('test');
@@ -38,9 +40,11 @@ describe('<Tooltip />', () => {
 
   it('renders non-string title as is', async () => {
     const { getAllByText } = render(
-      <Tooltip open title={<span>test</span>}>
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip open title={<span>test</span>}>
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     getAllByText('test');
@@ -48,9 +52,11 @@ describe('<Tooltip />', () => {
 
   it('translates string description', async () => {
     const { getAllByTranslatedText } = render(
-      <Tooltip open title={<span />} description="test">
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip open title={<span />} description="test">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     getAllByTranslatedText('test');
@@ -58,9 +64,11 @@ describe('<Tooltip />', () => {
 
   it('renders non-string description as is', async () => {
     const { getAllByText } = render(
-      <Tooltip open title={<span />} description={<span>test</span>}>
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip open title={<span />} description={<span>test</span>}>
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     getAllByText('test');
@@ -70,9 +78,11 @@ describe('<Tooltip />', () => {
     const user = userEvent.setup();
 
     render(
-      <Tooltip title="Tooltip title">
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip title="Tooltip title">
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     await user.hover(screen.getByRole('button'));
@@ -82,9 +92,11 @@ describe('<Tooltip />', () => {
 
   it('renders the keyboard shortcut', async () => {
     render(
-      <Tooltip open title="Tooltip title" keyboardShortcut={['Shift']}>
-        <button type="button">tooltip</button>
-      </Tooltip>,
+      <TooltipProvider>
+        <Tooltip open title="Tooltip title" keyboardShortcut={['Shift']}>
+          <button type="button">tooltip</button>
+        </Tooltip>
+      </TooltipProvider>,
     );
 
     screen.getAllByText('Shift');
