@@ -6,6 +6,18 @@ import { generateBlockElement } from '../utils';
 const blockElement = generateBlockElement('test');
 
 describe('parseBlockElementsFromMarkdown', () => {
+  it('returns an empty paragraph element if no elements were created', () => {
+    const elements = parseBlockElementsFromMarkdown([], '');
+
+    expect(elements).toEqual([
+      {
+        ...blockElement,
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ]);
+  });
+
   it('provides the current line on each itteration', () => {
     const markdown = 'Hello\nWorld';
     let parsedLines: string[] = [];

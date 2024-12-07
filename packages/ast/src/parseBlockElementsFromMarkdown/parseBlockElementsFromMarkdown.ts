@@ -117,5 +117,9 @@ export function parseBlockElementsFromMarkdown(
     }
   }
 
+  if (!elements.length) {
+    elements.push(generateBlockElement<ParagraphElement>('paragraph'));
+  }
+
   return elements;
 }
