@@ -32,4 +32,15 @@ function handleKeyDown(event: KeyboardEvent) {
     // Delete all items in the current selection
     Selection.delete();
   }
+
+  if (event.key === 'Escape') {
+    if (Selection.isEmpty()) {
+      return;
+    }
+
+    event.preventDefault();
+
+    // Clear the selection when the escape key is pressed
+    Selection.clear();
+  }
 }
