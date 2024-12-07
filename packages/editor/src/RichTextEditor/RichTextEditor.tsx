@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { Editable, Slate } from 'slate-react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Editable, ReactEditor, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { BlockElement } from '@minddrop/ast';
 import {
@@ -45,6 +45,11 @@ export interface EditorProps {
    * Callback fired when the editor is blured.
    */
   onBlur?: React.FocusEventHandler<HTMLDivElement>;
+
+  /**
+   * If true, the editor will be focused on mount.
+   */
+  autoFocus?: boolean;
 }
 
 export const RichTextEditor: React.FC<EditorProps> = ({
@@ -53,8 +58,10 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   onChangeDebounced,
   onFocus,
   onBlur,
+  autoFocus,
 }) => {
   const editor = useMemo(() => createEditor(), []);
+  const editorRef = useRef(editor);
   const handleDebouncedChange = useDebouncedCallback(
     (value: BlockElement[]) =>
       onChangeDebounced ? onChangeDebounced(value) : null,
@@ -104,6 +111,12 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editor],
   );
 
+  useEffect(() => {
+    if (autoFocus) {
+      ReactEditor.focus(editorRef.current);
+    }
+  }, []);
+
   return (
     <Slate
       editor={editorWithPlugins}
@@ -111,6 +124,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       onChange={handleChange}
     >
       <Editable
+        autoFocus={false}
         className="editor"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
