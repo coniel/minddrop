@@ -162,7 +162,7 @@ describe('generateMenu', () => {
     );
     expect(screen.getByTestId('item').textContent).toBe('label');
     // Sets submenuContentClass as submenu's MenuContent className
-    screen.getByText('submenu-content-class');
+    screen.getByText('menu submenu-content-class');
   });
 
   it('generates component based submenus', () => {

@@ -65,7 +65,7 @@ export function generateMenu(
           ...items,
           <Submenu key={index}>
             <SubmenuTriggerItem {...otherProps} />
-            <SubmenuContent className={submenuContentClass}>
+            <SubmenuContent className={`menu ${submenuContentClass}`}>
               {React.isValidElement(submenu)
                 ? submenu
                 : generateMenu(components, submenu as MenuContents)}
