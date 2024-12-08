@@ -53,7 +53,7 @@ export interface DocumentViewTypeConfig<
    * @param blocks - The blocks that were added to the document.
    * @returns The updated view.
    */
-  onAddBlocks?: (view: DocumentView, blocks: Block[]) => DocumentView;
+  onAddBlocks?: (view: TView, blocks: Block[]) => DocumentView;
 
   /**
    * Callback fired when creating a new instance of the view.
