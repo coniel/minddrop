@@ -20,6 +20,7 @@ export * from './throttle';
 export * from './toKebabCase';
 export * from './toMindDropDataTransfer';
 export * from './types';
+export * from './useDragImage';
 export * from './useToggle';
 export * from './useCreateCallback';
 export { v4 as uuid } from 'uuid';
