@@ -58,20 +58,6 @@ export const document1Icon: UserIcon = {
   color: 'cyan',
 };
 
-export const document1View1: DocumentView = {
-  id: 'document-1-view-1',
-  type: boardViewTypeConfig.id,
-  blocks: [],
-};
-
-export const document1View2: DocumentView = {
-  id: 'document-1-view-2',
-  type: 'page',
-  blocks: [],
-};
-
-export const document1Views = [document1View1, document1View2];
-
 export const document1Block1: Block = {
   id: 'block-1',
   type: 'text',
@@ -89,6 +75,21 @@ export const document1Block2: Block = {
 };
 
 export const document1Blocks: Block[] = [document1Block1, document1Block2];
+export const document1BlockIds = document1Blocks.map((block) => block.id);
+
+export const document1View1: DocumentView = {
+  id: 'document-1-view-1',
+  type: boardViewTypeConfig.id,
+  blocks: document1BlockIds,
+};
+
+export const document1View2: DocumentView = {
+  id: 'document-1-view-2',
+  type: 'page',
+  blocks: [],
+};
+
+export const document1Views = [document1View1, document1View2];
 
 /**
  * A workspace level document with no children and two views.
@@ -101,7 +102,7 @@ export const document1: Document = {
   title: 'Document 1',
   icon: Icons.stringify(document1Icon),
   wrapped: false,
-  blocks: document1Blocks.map((block) => block.id),
+  blocks: document1BlockIds,
   views: document1Views.map((view) => view.id),
 };
 

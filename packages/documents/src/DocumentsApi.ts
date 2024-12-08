@@ -8,6 +8,7 @@ export { getWrappedPath } from './getWrappedPath';
 export { isWrapped } from './utils';
 export { loadDocuments as load } from './loadDocuments';
 export { moveDocument as move } from './moveDocument';
+export { removeBlocksFromDocument as removeBlocks } from './removeBlocksFromDocument';
 export { removeChildDocuments } from './removeChildDocuments';
 export { renameDocument as rename } from './renameDocument';
 export { setDocumentIcon as setIcon } from './setDocumentIcon';

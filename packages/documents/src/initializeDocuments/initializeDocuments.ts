@@ -13,6 +13,7 @@ import { updateDocumentView } from '../updateDocumentView';
 import { updateDocument } from '../updateDocument';
 import { writeDocument } from '../writeDocument';
 import { serializeDocumentToJsonString } from '../utils';
+import { removeBlocksFromDocument } from '../removeBlocksFromDocument';
 
 export async function initializeDocuments(
   sourcePaths: string[],
@@ -69,30 +70,7 @@ export async function initializeDocuments(
         return;
       }
 
-      const document = getDocument(documentId);
-
-      if (!document) {
-        return;
-      }
-
-      // Update the document to trigger write with updated
-      // block, views, and last modified timestamp.
-      updateDocument(documentId, {
-        blocks: document.blocks.filter((id) => id !== block.id),
-      });
-
-      document.views.forEach((viewId) => {
-        const view = getDocumentView(viewId);
-        const config = DocumentViewTypeConfigsStore.get(view.type);
-
-        if (!config) {
-          return;
-        }
-
-        const updatedView = config.onRemoveBlocks(view, [block]);
-
-        updateDocumentView(viewId, updatedView);
-      });
+      removeBlocksFromDocument(documentId, [block.id]);
     },
   );
 
