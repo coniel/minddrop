@@ -35,7 +35,7 @@ export const Column: React.FC<ColumnProps> = ({
   createBlocksFromDataTransfer,
 }) => {
   const {
-    Blocks: { BlockRenderer },
+    Ui: { BlockRenderer },
   } = useApi();
 
   const onDrop = useCallback(

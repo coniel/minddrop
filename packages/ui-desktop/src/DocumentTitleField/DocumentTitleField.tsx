@@ -5,8 +5,7 @@ import {
   InvisibleTextFieldProps,
   Tooltip,
 } from '@minddrop/ui-elements';
-import { useDocument } from '../../useDocument';
-import { renameDocument } from '../../renameDocument';
+import { useDocument, Documents } from '@minddrop/documents';
 import './DocumentTitleField.css';
 
 export interface DocumentTitleFieldProps
@@ -44,7 +43,7 @@ export const DocumentTitleField = React.forwardRef<
     }
 
     try {
-      await renameDocument(documentId, title);
+      await Documents.rename(documentId, title);
       setOriginalTitle(title);
       setError('');
     } catch (error) {

@@ -9,15 +9,9 @@ export const ImageCard: React.FC<BlockVariantProps> = (props) => {
   return <div>No image file</div>;
 };
 
-const HasImageFile: React.FC<BlockVariantProps> = ({
-  block,
-  selected,
-  toggleSelected,
-  onDragStart,
-}) => {
+const HasImageFile: React.FC<BlockVariantProps> = ({ block }) => {
   const {
     Fs: { useImageSrc, concatPath },
-    Ui: { BlockContainer },
     Utils,
   } = useApi();
   const parentDir = Utils.useParentDir();
@@ -28,15 +22,6 @@ const HasImageFile: React.FC<BlockVariantProps> = ({
   }
 
   return (
-    <BlockContainer
-      draggable
-      className="image-block-renderer"
-      selected={selected}
-      onDragStart={onDragStart}
-      onClick={toggleSelected}
-    >
-      <img src={src} alt="" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-      <div className="drag-handle" />
-    </BlockContainer>
+    <img src={src} alt="" style={{ maxWidth: '100%', maxHeight: '100%' }} />
   );
 };

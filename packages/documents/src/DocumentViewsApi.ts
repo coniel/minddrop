@@ -5,6 +5,7 @@ import { DocumentView } from './types';
 export { createDocumentView as create } from './createDocumentView';
 export { deleteDocumentView as delete } from './deleteDocumentView';
 export { updateDocumentView as update } from './updateDocumentView';
+export { getDocumentViewTypeConfig as getTypeConfig } from './DocumentViewTypeConfigsStore';
 
 /**
  * Returns one or more document views with the given IDs.

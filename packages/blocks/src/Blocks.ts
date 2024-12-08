@@ -26,8 +26,9 @@ export {
 export {
   registerBlockType as register,
   unregisterBlockType as unregister,
+  useBlockTypes,
+  useBlockType,
 } from './BlockTypesStore';
-export * from './components';
 
 export function getAll() {
   return BlocksStore.getState().blocks;

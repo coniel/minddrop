@@ -414,6 +414,9 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
+      '@minddrop/ui-desktop':
+        specifier: workspace:*
+        version: link:../ui-desktop
       '@minddrop/ui-elements':
         specifier: workspace:*
         version: link:../ui-elements
@@ -1026,6 +1029,9 @@ importers:
       '@minddrop/documents':
         specifier: workspace:*
         version: link:../documents
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n

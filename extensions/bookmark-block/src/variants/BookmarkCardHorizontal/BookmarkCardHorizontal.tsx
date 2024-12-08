@@ -5,14 +5,8 @@ import './BookmarkCardHorizontal.css';
 
 export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
   block,
-  selected,
-  toggleSelected,
-  onDragStart,
 }) => {
-  const {
-    Utils,
-    Ui: { BlockContainer },
-  } = useApi();
+  const { Utils } = useApi();
 
   const domain = useMemo(() => {
     try {
@@ -34,12 +28,7 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
   );
 
   return (
-    <BlockContainer
-      draggable
-      className="link-node-renderer"
-      selected={selected}
-      onDragStart={onDragStart}
-    >
+    <>
       <a href={block.url} onClick={openLink}>
         <div
           className={Utils.mapPropsToClasses(
@@ -72,7 +61,6 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
           </div>
         )}
       </a>
-      <div className="drag-handle" onClick={toggleSelected} />
-    </BlockContainer>
+    </>
   );
 };

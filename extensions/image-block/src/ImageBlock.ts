@@ -10,8 +10,13 @@ export const extension: MindDropExtension = {
     Blocks.register({
       id: BLOCK_TYPE,
       defaultVariant: RENDERER_ID,
+      icon: 'image',
       description: {
         'en-US': {
+          name: 'Image',
+          details: 'Embed an image file.',
+        },
+        'en-GB': {
           name: 'Image',
           details: 'Embed an image file.',
         },
@@ -28,6 +33,7 @@ export const extension: MindDropExtension = {
       blockType: BLOCK_TYPE,
       id: RENDERER_ID,
       component: ImageCard,
+      className: 'image-block',
       description: {
         'en-US': {
           name: 'Image',

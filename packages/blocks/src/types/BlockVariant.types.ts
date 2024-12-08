@@ -22,6 +22,11 @@ export interface BlockVariant<TBlock extends Block = Block> {
    * a [language code]: { name: string } map.
    */
   description: Record<string, { name: string }>;
+
+  /**
+   * Class name to apply to the block container.
+   */
+  className?: string;
 }
 
 export interface BlockVariantProps<TBlock extends Block = Block> {
@@ -36,11 +41,6 @@ export interface BlockVariantProps<TBlock extends Block = Block> {
   selected: boolean;
 
   /**
-   * Whether or not the block should be draggable.
-   */
-  draggable: boolean;
-
-  /**
    * Callback to update the block.
    *
    * @param data - The data to update the block with.
@@ -51,22 +51,4 @@ export interface BlockVariantProps<TBlock extends Block = Block> {
    * Callback to delete the block.
    */
   deleteBlock: () => void;
-
-  /**
-   * Callback to select/deselect the block on click.
-   *
-   * Should be used as the `onClick` prop of the block container
-   * or a drag handle at the top of the block.
-   *
-   * Note that this callback will do nothing if the block should
-   * not be selectable.
-   */
-  toggleSelected: (event: React.MouseEvent) => void;
-
-  /**
-   * Callback to be fired when the block is dragged.
-   *
-   * Should be used as the `onDragStart` prop of the block container.
-   */
-  onDragStart: (event: DragEvent | React.DragEvent) => void;
 }

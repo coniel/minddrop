@@ -1,9 +1,9 @@
 import { ParentDirProvider, mapPropsToClasses } from '@minddrop/utils';
-import { useDocument } from '../../useDocument';
-import { DocumentViewsRenderer } from '../DocumentViewsRenderer';
+import { useDocument } from '@minddrop/documents';
 import { Fs } from '@minddrop/file-system';
+import { DocumentViewsRenderer } from '../DocumentViewsRenderer';
 
-interface DocumentRendererProps extends React.HTMLProps<HTMLDivElement> {
+export interface DocumentRendererProps extends React.HTMLProps<HTMLDivElement> {
   /**
    * The document ID.
    */

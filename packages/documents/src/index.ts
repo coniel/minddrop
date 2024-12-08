@@ -6,9 +6,10 @@ export * from './useAllDocuments';
 export * from './useSelectAllBlocks';
 export * from './useDocument';
 export * from './useDocuments';
-export * from './components';
 export * from './errors';
 export * from './initializeDocuments';
+export * from './useDocumentView';
+export * from './useDocumentViewTypeConfig';
 
 export * as Documents from './DocumentsApi';
 export * as DocumentViews from './DocumentViewsApi';

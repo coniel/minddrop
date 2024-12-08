@@ -1,25 +1,12 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Ast, BlockElement } from '@minddrop/ast';
 import { RichTextEditor } from '@minddrop/editor';
-import { BlockVariantProps, useApi } from '@minddrop/extension';
-import './TextBlockEditor.css';
+import { BlockVariantProps } from '@minddrop/extension';
 
 export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   block,
-  selected,
-  draggable: draggableProp,
   updateBlock,
-  toggleSelected,
-  onDragStart,
 }) => {
-  const {
-    Selection,
-    Ui: { BlockContainer },
-  } = useApi();
-
-  // Used to disable dragging when editor is focused
-  const [draggable, setDraggable] = useState(draggableProp);
-
   const initialContent = useMemo<BlockElement[]>(
     () => Ast.fromMarkdown(block.text || ''),
     [],
@@ -35,32 +22,13 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
     [updateBlock, block],
   );
 
-  const enableDrag = useCallback(() => {
-    setDraggable(draggableProp);
-  }, [draggableProp]);
-
-  const disableDrag = useCallback(() => {
-    setDraggable(false);
-    Selection.clear();
-  }, [Selection]);
-
   return (
-    <BlockContainer
-      className="text-block-editor"
-      draggable={draggable}
-      selected={selected}
-      onDragStart={onDragStart}
-    >
-      <RichTextEditor
-        key={block.id}
-        initialValue={initialContent}
-        onChangeDebounced={onEditorChange}
-        onFocus={disableDrag}
-        onBlur={enableDrag}
-        autoFocus={isDateInPastSecond(block.created)}
-      />
-      <div className="drag-handle" onClick={toggleSelected} />
-    </BlockContainer>
+    <RichTextEditor
+      key={block.id}
+      initialValue={initialContent}
+      onChangeDebounced={onEditorChange}
+      autoFocus={isDateInPastSecond(block.created)}
+    />
   );
 };
 

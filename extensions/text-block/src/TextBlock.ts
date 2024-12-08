@@ -11,6 +11,7 @@ export const extension: MindDropExtension = {
       id: BLOCK_TYPE,
       defaultVariant: EDITOR_VARIANT_ID,
       propertiesSchema: [{ type: 'text', name: 'text' }],
+      icon: 'text',
       description: {
         'en-US': {
           name: 'Text',

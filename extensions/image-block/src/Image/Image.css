@@ -1,22 +1,4 @@
-.image-block-renderer {
+.image-block {
   padding: 0;
   overflow: hidden;
-}
-
-.image-block-renderer .drag-handle {
-  height: 12px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  cursor: move;
-}
-
-.image-block-renderer .drag-handle {
-  height: 12px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  cursor: move;
 }

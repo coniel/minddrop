@@ -50,7 +50,7 @@ export async function generateBlocksFromDataTransfer(
       // This timeout helps prvent dropped images from flickering in
       // the UI as they are briefly unavailable after the file is
       // written to disk.
-      await new Promise((resolve) => setTimeout(resolve, 1));
+      await new Promise((resolve) => setTimeout(resolve, 20));
 
       return blocks;
     }

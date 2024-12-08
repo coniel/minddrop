@@ -9,6 +9,7 @@ export const BlockTypesStore = createArrayStore<BlockType>('id');
  * @param type - The block type to register.
  */
 export function registerBlockType(type: BlockType): void {
+  BlockTypesStore.remove(type.id);
   BlockTypesStore.add(type);
 }
 
@@ -41,4 +42,13 @@ export function getBlockType(id: string): BlockType | null {
  */
 export const useBlockType = (id: string): BlockType | null => {
   return BlockTypesStore.useAllItems().find((type) => type.id === id) || null;
+};
+
+/**
+ * Retrieves all BlockTypes.
+ *
+ * @returns And array of all registered BlockTypes.
+ */
+export const useBlockTypes = (): BlockType[] => {
+  return BlockTypesStore.useAllItems();
 };

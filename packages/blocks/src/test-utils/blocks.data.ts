@@ -13,6 +13,7 @@ export type TestTextBlock = Block & TextTextBlockData;
 export const textBlockConfig: BlockType<TextTextBlockData> = {
   id: 'text',
   defaultVariant: 'editor',
+  icon: 'text',
   description: {
     'en-US': {
       name: 'Text',

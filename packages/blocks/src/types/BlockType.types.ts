@@ -1,3 +1,4 @@
+import { ContentIconName } from '@minddrop/icons';
 import { Block, CustomBlockData } from './Block.types';
 import { BlockPropertiesSchema } from './BlockPropertiesSchema.types';
 
@@ -21,6 +22,11 @@ export interface BlockType<TData extends CustomBlockData = {}> {
    * [language code]: { name: string, details: string } map.
    */
   description: Record<string, BlockDescription>;
+
+  /**
+   * The icon used to represent the block type.
+   */
+  icon: ContentIconName;
 
   /**
    * The block's custom properties schema.

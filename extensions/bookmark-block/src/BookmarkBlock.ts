@@ -13,6 +13,7 @@ export const extension: MindDropExtension = {
     Blocks.register({
       id: BLOCK_TYPE,
       defaultVariant: VARIANT_HORIZONTAL_CARD_ID,
+      icon: 'bookmark',
       description: {
         'en-US': {
           name: 'Web Bookmark',
@@ -44,6 +45,7 @@ export const extension: MindDropExtension = {
       blockType: BLOCK_TYPE,
       id: VARIANT_HORIZONTAL_CARD_ID,
       component: BookmarkCardHorizontal,
+      className: 'bookmark-card-horizontal',
       description: {
         'en-US': {
           name: 'Horizontal Card',

@@ -34,7 +34,7 @@
 
 .board-view .spacer-drop-zone {
   height: 2px;
-  padding: 13px 0;
+  padding: 10px 0;
 }
 
 .board-view .spacer-drop-zone.active .drag-over-indicator {
