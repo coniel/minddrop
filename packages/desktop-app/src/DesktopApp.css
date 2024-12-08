@@ -39,3 +39,7 @@
     background-color: hsl(200 7% 8.8%);
   }
 }
+
+.color-selection-submenu {
+  min-width: 240px;
+}
