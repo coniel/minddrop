@@ -6,6 +6,7 @@ import { DocumentView } from './views';
 import { AppSidebar } from './components';
 import { useCurrentDocumentId, useCurrentView } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
+import { DragImageProvider } from '@minddrop/utils';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -16,16 +17,18 @@ export const DesktopApp: React.FC = () => {
     <TooltipProvider delayDuration={1000} skipDelayDuration={500}>
       <IconsProvider>
         <MindDropApiProvider>
-          <div className="app">
-            <AppSidebar />
-            <div className="app-content">
-              <div data-tauri-drag-region className="app-drag-handle" />
-              {view === 'document' && documentId && (
-                <DocumentView id={documentId} />
-              )}
+          <DragImageProvider>
+            <div className="app">
+              <AppSidebar />
+              <div className="app-content">
+                <div data-tauri-drag-region className="app-drag-handle" />
+                {view === 'document' && documentId && (
+                  <DocumentView id={documentId} />
+                )}
+              </div>
             </div>
-          </div>
-          <ShowWindowOnRendered />
+            <ShowWindowOnRendered />
+          </DragImageProvider>
         </MindDropApiProvider>
       </IconsProvider>
     </TooltipProvider>
