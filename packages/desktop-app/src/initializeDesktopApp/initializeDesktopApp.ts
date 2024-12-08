@@ -7,9 +7,9 @@ import { initializeBlocks } from '@minddrop/blocks';
 import { Workspaces } from '@minddrop/workspaces';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import DocumentBoardView from '@minddrop/board-view';
-import NodeTypeTextExtension from '@minddrop/text-block';
-import NodeTypeImageExtension from '@minddrop/image-block';
-import NodeTypeLinkExtension from '@minddrop/bookmark-block';
+import TextBlockExtension from '@minddrop/text-block';
+import ImageBlockExtension from '@minddrop/image-block';
+import BookmarkBlockExtension from '@minddrop/bookmark-block';
 import { Ast } from '@minddrop/ast';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
@@ -22,6 +22,7 @@ initializeI18n();
  * Initializes the desktop app.
  */
 export async function initializeDesktopApp(): Promise<VoidFunction> {
+  console.log('Initializing desktop app...');
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
@@ -59,9 +60,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Initialize extensions
   await initializeExtensions([
     DocumentBoardView,
-    NodeTypeImageExtension,
-    NodeTypeLinkExtension,
-    NodeTypeTextExtension,
+    TextBlockExtension,
+    BookmarkBlockExtension,
+    ImageBlockExtension,
   ]);
 
   return () => {
