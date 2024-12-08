@@ -1,5 +1,5 @@
 import { BLOCKS_DATA_KEY } from '../constants';
-import { Block, BlockTemplate } from '../types';
+import { Block } from '../types';
 
 /**
  * Adds blocks to a DataTransfer object.

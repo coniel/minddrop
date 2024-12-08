@@ -10,15 +10,12 @@ export interface SelectionItemTypeConfig {
 
   /**
    * Callback fired when the selection is copied, cut, or dragged.
-   * Should set the data onto the provided `dataTransfer` object.
+   * Should return the data to be set in the clipboard/data-transfer object.
    *
-   * @param dataTrasnfer - The data transfer object to which to set the data.
    * @param selection - The current selection items to serialize.
+   * @returns Serialized selection data.
    */
-  setDataOnDataTransfer(
-    dataTrasnfer: DataTransfer,
-    selection: SelectionItem[],
-  ): void;
+  serializeData(selection: SelectionItem[]): Record<string, string>;
 
   /**
    * Callback fired when the selection is deleted or cut.

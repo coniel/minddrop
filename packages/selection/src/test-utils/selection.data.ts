@@ -10,11 +10,12 @@ function genereateSelectionItem(id: string): SelectionItem {
 
 export const selectionItemTypeConfig: SelectionItemTypeConfig = {
   id: 'test-type',
-  setDataOnDataTransfer: (dataTransfer, selection) => {
-    dataTransfer.setData(
-      'application/json',
-      JSON.stringify(selection.map((item) => item.getData!())),
-    );
+  serializeData: (selection) => {
+    return {
+      'application/json': JSON.stringify(
+        selection.map((item) => item.getData!()),
+      ),
+    };
   },
   onDelete: () => {},
 };

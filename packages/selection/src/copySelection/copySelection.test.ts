@@ -33,6 +33,24 @@ describe('copySelection', () => {
     useSelectionStore
       .getState()
       .addSelectedItems([selectedItem1, selectedItem3]);
+
+    // Mock navigator.clipboard and its methods
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        write: vi.fn(),
+      },
+      writable: true,
+    });
+
+    class ClipboardItemMock {
+      constructor(items: Record<string, Blob>) {
+        this.items = items;
+      }
+      items: Record<string, Blob>;
+    }
+
+    // Assign mock ClipboardItem globally
+    (global as any).ClipboardItem = ClipboardItemMock;
   });
 
   afterEach(() => {
@@ -41,7 +59,7 @@ describe('copySelection', () => {
     data = {};
   });
 
-  it('sets the clipboard data', () => {
+  it('sets the clipboard data on an existing data transfer', () => {
     // Trigger a copy
     copySelection(clipboardEvent);
 
@@ -49,6 +67,17 @@ describe('copySelection', () => {
     expect(data['application/json']).toEqual(
       JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
     );
+  });
+
+  it('creates clipboard data if there is no existing data transfer', () => {
+    const writeSpy = vi.spyOn(navigator.clipboard, 'write');
+
+    // Trigger a copy
+    copySelection();
+
+    // Should set the clipboard data
+    expect(writeSpy).toHaveBeenCalledTimes(1);
+    expect(writeSpy).toHaveBeenCalledWith([expect.any(ClipboardItem)]);
   });
 
   it('dispatches a selection copy event', () =>
