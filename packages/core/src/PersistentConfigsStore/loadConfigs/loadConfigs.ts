@@ -2,9 +2,15 @@ import { Fs, ConfigsFile, ConfigsFileOptions } from '@minddrop/file-system';
 import { ConfigItem, PersistentConfigsStore } from '../PersistentConfigsStore';
 
 /**
- * Does something useful.
+ * Loads the app config files from the AppData directory.
+ * If the AppData directory does not exist, it will be created.
  */
 export async function loadConfigs(): Promise<void> {
+  // Ensure the configs directory exists
+  if (!(await Fs.exists(ConfigsFileOptions.baseDir!))) {
+    await Fs.createDir(ConfigsFileOptions.baseDir!);
+  }
+
   // Verify that the configs file exists
   const exists = await Fs.exists(ConfigsFile, ConfigsFileOptions);
 

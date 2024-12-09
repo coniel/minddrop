@@ -35,6 +35,17 @@ describe('loadConfigs', () => {
     PersistentConfigsStore.clear();
   });
 
+  it('creates AppData dir if it does not exist', async () => {
+    // Pretend AppData dir does not exist
+    MockFs.clear();
+
+    // Load the configs
+    await loadConfigs();
+
+    // Configs store should be empty
+    expect(MockFs.exists(ConfigsFileOptions.baseDir!)).toBeTruthy();
+  });
+
   it('does nothing if the configs.json file does not exist', async () => {
     // Pretend config file does not exist
     MockFs.clear();
