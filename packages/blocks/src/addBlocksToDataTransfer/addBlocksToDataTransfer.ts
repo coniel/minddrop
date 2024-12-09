@@ -1,5 +1,6 @@
 import { BLOCKS_DATA_KEY } from '../constants';
 import { Block } from '../types';
+import { serializeBlocksToDataTransferData } from '../utils';
 
 /**
  * Adds blocks to a DataTransfer object.
@@ -23,9 +24,11 @@ export function addBlocksToDataTransfer(
     existingBlocks = JSON.parse(dataTransfer.getData(BLOCKS_DATA_KEY));
   }
 
-  // Append the new blocks to the existing ones
-  dataTransfer.setData(
-    BLOCKS_DATA_KEY,
-    JSON.stringify(existingBlocks.concat(blocks)),
-  );
+  // Serialize all the blocks to data transfer data format
+  const data = serializeBlocksToDataTransferData(existingBlocks.concat(blocks));
+
+  // Update the data transfer data
+  Object.entries(data).forEach(([key, value]) => {
+    dataTransfer.setData(key, value);
+  });
 }

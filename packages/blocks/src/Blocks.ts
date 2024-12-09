@@ -2,6 +2,7 @@ import { BlocksStore } from './BlocksStore';
 
 export { addBlocksToDataTransfer as addToDataTransfer } from './addBlocksToDataTransfer';
 export { addBlockTemplatesToDataTransfer as addTemplatesToDataTransfer } from './addBlockTemplatesToDataTransfer';
+export { copyBlocksToClipboard as copyToClipboard } from './copyBlocksToClipboard';
 export { getBlock as get } from './getBlock';
 export { getBlocksFromDataTransfer as getFromDataTransfer } from './getBlocksFromDataTransfer';
 export { getBlockTemplatesFromDataTransfer as getTemplatesFromDataTransfer } from './getBlockTemplatesFromDataTransfer';
