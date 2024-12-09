@@ -59,14 +59,6 @@ export const createDocumentOptionsMenu = (
       };
 
   return [
-    favouriteOption,
-    {
-      type: 'menu-item',
-      label: 'documents.actions.revealInFileExplorer.macos',
-      icon: 'diagonal-arrow-right-up',
-      onSelect: callbacks.onSelectRevealInFileExplorer,
-    },
-    { type: 'menu-separator' },
     {
       type: 'menu-item',
       label: 'documents.actions.rename.action',
@@ -79,6 +71,7 @@ export const createDocumentOptionsMenu = (
       icon: 'star',
       onSelect: callbacks.onSelectChangeIcon,
     },
+    { type: 'menu-separator' },
     {
       type: 'menu-item',
       label: 'documents.actions.move.action',
@@ -90,6 +83,14 @@ export const createDocumentOptionsMenu = (
       label: 'documents.actions.delete.action',
       icon: 'trash',
       onSelect: callbacks.onSelectDelete,
+    },
+    { type: 'menu-separator' },
+    favouriteOption,
+    {
+      type: 'menu-item',
+      label: 'documents.actions.revealInFileExplorer.macos',
+      icon: 'folder',
+      onSelect: callbacks.onSelectRevealInFileExplorer,
     },
   ];
 };
