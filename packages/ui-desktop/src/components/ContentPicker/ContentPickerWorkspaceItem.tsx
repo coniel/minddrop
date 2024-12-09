@@ -24,7 +24,7 @@ export interface ContentPickerWorkspaceItemProps
   omitDocumentId?: string;
 
   /**
-   * The type of content that can be picked.
+   * Determines which type of content that can be picked.
    */
   pickable?: 'workspace' | 'document' | 'any';
 }

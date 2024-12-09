@@ -27,6 +27,7 @@ export const BoardDropZone: React.FC<BoardDropZoneProps> = ({
 }) => {
   const {
     Utils: { mapPropsToClasses },
+    Selection,
   } = useApi();
   const [dragOver, setDragOver] = useState(false);
 
@@ -65,6 +66,7 @@ export const BoardDropZone: React.FC<BoardDropZoneProps> = ({
         },
         className,
       )}
+      onClick={Selection.clear}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}

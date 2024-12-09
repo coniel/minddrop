@@ -100,10 +100,11 @@ const BoardColumnBlockEnd: React.FC<{
 }> = ({ enableDelete, onClickDelete, onDrop }) => {
   const {
     Ui: { Button },
+    Selection,
   } = useApi();
 
   return (
-    <div className="board-column-block-end">
+    <div className="board-column-block-end" onClick={Selection.clear}>
       <BoardDropZone
         className="bottom-drop-zone"
         dragIndicator={false}

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useApi, DocumentViewProps, Block } from '@minddrop/extension';
 import { BoardListSection, BoardSection, BoardView } from '../../types';
 import { ColumnsSection } from '../ColumnsSection';
@@ -13,12 +13,23 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
   const {
     Selection,
     DocumentViews: { update: updateView },
-    Documents: { addBlocks },
+    Documents: { addBlocks, useSelectAllBlocks },
     Blocks: { createFromDataTransfer },
     Utils: { useParentDir },
-    Ui: { DocumentTitleField },
+    Ui: {
+      DocumentTitleField,
+      DocumentContentToolbar,
+      DocumentContentToolbarItem,
+    },
   } = useApi();
+  useSelectAllBlocks(view.blocks);
   const parentDir = useParentDir();
+
+  const [layoutMode, setLayoutMode] = useState(false);
+
+  const toggleLayoutMode = useCallback(() => {
+    setLayoutMode((prev) => !prev);
+  }, []);
 
   const updateSection = useCallback(
     (index: number, data: Partial<BoardSection>) => {
@@ -59,8 +70,8 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
   );
 
   return (
-    <div className="board-view" onClick={Selection.clear}>
-      <div className="board-view-header">
+    <div className="board-view">
+      <div className="board-view-header" onClick={Selection.clear}>
         <DocumentTitleField key={documentId} documentId={documentId} />
       </div>
       {view.sections.map((section, index) => {
@@ -96,6 +107,36 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
             return null;
         }
       })}
+      <DocumentContentToolbar
+        className="content-toolbar"
+        mode={layoutMode ? 'custom' : 'default'}
+        customActions={[
+          <DocumentContentToolbarItem
+            key="toggle-layout-mode"
+            icon="pencil-ruler"
+            tooltip="Toggle layout mode"
+            onClick={toggleLayoutMode}
+            toggled={layoutMode}
+          />,
+        ]}
+        customModeActions={[
+          <DocumentContentToolbarItem
+            key="insert-columns-section"
+            icon="layout-dashboard"
+            tooltip="Drag to add a Columns section"
+          />,
+          <DocumentContentToolbarItem
+            key="insert-grid-section"
+            icon="layout-grid"
+            tooltip="Drag to add a Grid section"
+          />,
+          <DocumentContentToolbarItem
+            key="insert-list-section"
+            icon="layout-list"
+            tooltip="Drag to add a List section"
+          />,
+        ]}
+      ></DocumentContentToolbar>
     </div>
   );
 };
