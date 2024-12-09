@@ -152,7 +152,7 @@ export const DocumentNavItem = React.forwardRef<
               role="button"
               tabIndex={0}
               className="label-button"
-              onClick={onClick}
+              onMouseDown={onClick}
               aria-current={active ? 'true' : 'false'}
             >
               <Text

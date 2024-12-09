@@ -50,7 +50,7 @@ describe('<DocumentNavItem />', () => {
     render(<DocumentNavItem label="document" onClick={onClick} />);
 
     act(() => {
-      fireEvent.click(screen.getByText('document'));
+      fireEvent.mouseDown(screen.getByText('document'));
     });
 
     expect(onClick).toHaveBeenCalled();
