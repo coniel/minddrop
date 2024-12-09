@@ -45,14 +45,14 @@ const board: BoardView = {
 
 describe('removeBlocksFromBoard', () => {
   it('removes blocks from the view', () => {
-    const updated = removeBlocksFromBoard(board, [block1, block2]);
+    const updated = removeBlocksFromBoard(board, [block1.id, block2.id]);
 
     // Should remove the blocks from the view's list of blocks
     expect(updated.blocks).toEqual([block3.id]);
   });
 
   it('removes blocks from columns sections', () => {
-    const updated = removeBlocksFromBoard(board, [block1]);
+    const updated = removeBlocksFromBoard(board, [block1.id]);
 
     // Should remove the block from the columns section
     expect(
@@ -61,14 +61,14 @@ describe('removeBlocksFromBoard', () => {
   });
 
   it('removes blocks from list sections', () => {
-    const updated = removeBlocksFromBoard(board, [block2]);
+    const updated = removeBlocksFromBoard(board, [block2.id]);
 
     // Should remove the block from the list section
     expect((updated.sections[1] as BoardListSection).blocks).toEqual([]);
   });
 
   it('removes blocks from grid sections', () => {
-    const updated = removeBlocksFromBoard(board, [block3]);
+    const updated = removeBlocksFromBoard(board, [block3.id]);
 
     // Should remove the block from the grid section
     expect((updated.sections[2] as BoardGridSection).blocks).toEqual([]);

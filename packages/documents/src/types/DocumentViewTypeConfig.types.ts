@@ -37,11 +37,11 @@ export interface DocumentViewTypeConfig<
    * Must remove the blocks from the view and return the updated view.
    *
    * @param view - The view from which the blocks are being removed.
-   * @param blocks - The blocks that were removed from the document.
+   * @param blockIds - The IDs of the blocks to remove.
    * @param updateView - Callback to update the view.
    * @returns The updated view.
    */
-  onRemoveBlocks: (view: TView, blocks: Block[]) => DocumentView;
+  onRemoveBlocks: (view: TView, blockIds: string[]) => DocumentView;
 
   /**
    * Callback fired when blocks are added to the document

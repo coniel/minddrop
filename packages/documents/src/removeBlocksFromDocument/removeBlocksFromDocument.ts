@@ -19,7 +19,6 @@ export function removeBlocksFromDocument(
   blockIds: string[],
 ): void {
   const document = getDocument(documentId);
-  const blocks = Blocks.get(blockIds);
 
   if (!document) {
     throw new DocumentNotFoundError(documentId);
@@ -39,7 +38,7 @@ export function removeBlocksFromDocument(
       return;
     }
 
-    const updatedView = config.onRemoveBlocks(view, blocks);
+    const updatedView = config.onRemoveBlocks(view, blockIds);
 
     updateDocumentView(viewId, updatedView);
   });

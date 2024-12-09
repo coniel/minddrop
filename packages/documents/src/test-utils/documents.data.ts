@@ -22,7 +22,9 @@ export const boardViewTypeConfig: DocumentViewTypeConfig<TestDocumentView> = {
   component: () => null,
   onRemoveBlocks: (view, blocks) => ({
     ...view,
-    blocks: view.blocks.filter((id) => !blocks.find((b) => b.id === id)),
+    blocks: view.blocks.filter(
+      (id) => !blocks.find((blockId) => blockId === id),
+    ),
   }),
   onAddBlocks: (view, blocks) => ({
     ...view,

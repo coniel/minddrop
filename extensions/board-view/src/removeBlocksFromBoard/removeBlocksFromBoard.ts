@@ -1,4 +1,3 @@
-import { Block } from '@minddrop/extension';
 import { BoardView } from '../types';
 
 /**
@@ -10,10 +9,11 @@ import { BoardView } from '../types';
  */
 export function removeBlocksFromBoard(
   view: BoardView,
-  blocks: Block[],
+  removedBlockIds: string[],
 ): BoardView {
   const newBlocks = view.blocks.filter(
-    (blockId) => !blocks.some((block) => block.id === blockId),
+    (blockId) =>
+      !removedBlockIds.some((removedBlockId) => removedBlockId === blockId),
   );
 
   const newSections = view.sections.map((section) => {
@@ -24,7 +24,10 @@ export function removeBlocksFromBoard(
         columns: section.columns.map((column) => ({
           ...column,
           blocks: column.blocks.filter(
-            (blockId) => !blocks.some((block) => block.id === blockId),
+            (blockId) =>
+              !removedBlockIds.some(
+                (removedBlockId) => removedBlockId === blockId,
+              ),
           ),
         })),
       };
@@ -34,7 +37,8 @@ export function removeBlocksFromBoard(
     return {
       ...section,
       blocks: section.blocks.filter(
-        (blockId) => !blocks.some((block) => block.id === blockId),
+        (blockId) =>
+          !removedBlockIds.some((removedBlockId) => removedBlockId === blockId),
       ),
     };
   });
