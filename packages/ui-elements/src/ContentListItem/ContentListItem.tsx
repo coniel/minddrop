@@ -1,3 +1,4 @@
+import React, { ReactNode, ReactElement } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './ContentListItem.css';
 import { Text } from '../Text';
@@ -43,6 +44,15 @@ export interface ContentListItemProps extends React.HTMLProps<HTMLDivElement> {
    * clicked.
    */
   onClick?: (event: React.MouseEvent) => void;
+
+  /**
+   * If `true`, the item is selectable. If the item has children,
+   * an expand icon will be rendered.
+   *
+   * If not selectable, the item will not have an expand icon, rather
+   * the entire item will be used as a trigger for the collapsible content.
+   */
+  selectable?: boolean;
 }
 
 export const ContentListItem: React.FC<ContentListItemProps> = ({
@@ -53,9 +63,39 @@ export const ContentListItem: React.FC<ContentListItemProps> = ({
   hasChildren,
   level = 0,
   onClick,
+  selectable = true,
   ...other
 }) => {
   const { t } = useTranslation();
+
+  if (!selectable) {
+    return (
+      <Collapsible>
+        <div
+          className={mapPropsToClasses({ className }, 'content-list-item')}
+          {...other}
+        >
+          <CollapsibleTrigger>
+            <div className="list-item">
+              <div className="item-icon">{icon}</div>
+              <div role="button" tabIndex={0} className="label-button">
+                <Text
+                  as="div"
+                  color="light"
+                  weight="medium"
+                  className="label"
+                  size="regular"
+                >
+                  {label}
+                </Text>
+              </div>
+            </div>
+          </CollapsibleTrigger>
+          <CollapsibleContent>{reduceLevel(children)}</CollapsibleContent>
+        </div>
+      </Collapsible>
+    );
+  }
 
   return (
     <Collapsible>
@@ -110,3 +150,12 @@ export const ContentListItem: React.FC<ContentListItemProps> = ({
     </Collapsible>
   );
 };
+
+const reduceLevel = (children: ReactNode): ReactNode =>
+  React.Children.map(children, (child) =>
+    React.isValidElement(child) && typeof child.props.level === 'number'
+      ? React.cloneElement(child as ReactElement<{ level: number }>, {
+          level: child.props.level - 1,
+        })
+      : child,
+  );
