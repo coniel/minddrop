@@ -6,3 +6,4 @@ export * from './DocumentRenderer';
 export * from './DocumentTitleField';
 export * from './DocumentViewRenderer';
 export * from './DocumentViewsRenderer';
+export * from './DocumentContentToolbarBlockOptions';

@@ -22,11 +22,16 @@ export interface ContentPickerWorkspaceItemProps
    * Path of a document to omit from child documents.
    */
   omitDocumentId?: string;
+
+  /**
+   * The type of content that can be picked.
+   */
+  pickable?: 'workspace' | 'document' | 'any';
 }
 
 export const ContentPickerWorkspaceItem: React.FC<
   ContentPickerWorkspaceItemProps
-> = ({ path, onClick, omitDocumentId: omitDocument }) => {
+> = ({ path, onClick, omitDocumentId: omitDocument, pickable = 'any' }) => {
   const workspace = useWorkspace(path);
   const documents = useChildDocuments(path).filter(
     (document) => document.id !== omitDocument,
@@ -43,19 +48,21 @@ export const ContentPickerWorkspaceItem: React.FC<
       hasChildren={!!documents.length}
       label={workspace.name}
       onClick={handleClick}
+      selectable={pickable === 'workspace' || pickable === 'any'}
       icon={
         <NavItemIcon icon={workspace.icon} defaultIcon={DefaultWorkspaceIcon} />
       }
     >
-      {documents.map((document) => (
-        <ContentPickerDocumentItem
-          key={document.id}
-          level={1}
-          id={document.id}
-          omitSubdocument={omitDocument}
-          onClick={onClick}
-        />
-      ))}
+      {(pickable === 'document' || pickable === 'any') &&
+        documents.map((document) => (
+          <ContentPickerDocumentItem
+            key={document.id}
+            level={1}
+            id={document.id}
+            omitSubdocument={omitDocument}
+            onClick={onClick}
+          />
+        ))}
     </ContentListItem>
   );
 };

@@ -17,7 +17,7 @@ export interface ContentPickerDocumentItemProps
   /**
    * Callback fired when the document is selected.
    */
-  onClick(path: string): void;
+  onClick(id: string): void;
 
   /**
    * Path of a subdocument to omit from child documents.
@@ -35,7 +35,7 @@ export const ContentPickerDocumentItem: React.FC<
     (subdocument) => subdocument.path !== omitSubdocument,
   );
 
-  const handleClick = useCreateCallback(onClick, document?.path);
+  const handleClick = useCreateCallback(onClick, document?.id);
 
   if (!document) {
     return null;

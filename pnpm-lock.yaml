@@ -1047,6 +1047,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
     devDependencies:
       eslint:
         specifier: ^8.39.0

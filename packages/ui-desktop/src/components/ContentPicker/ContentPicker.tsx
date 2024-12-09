@@ -6,6 +6,7 @@ import { Document, useAllDocuments } from '@minddrop/documents';
 import { fuzzySearch } from '@minddrop/utils';
 import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
 import './ContentPicker.css';
+import { useTranslation } from '@minddrop/i18n';
 
 export interface ContentPickerProps {
   /**
@@ -22,12 +23,16 @@ export interface ContentPickerProps {
    * Workspace path or document ID to omit from the list.
    */
   omit?: string;
+
+  pickable?: 'workspace' | 'document' | 'any';
 }
 
 export const ContentPicker = React.forwardRef<
   HTMLDivElement,
   ContentPickerProps
->(({ omit, onClose, onSelect }, ref) => {
+>(({ omit, onClose, onSelect, pickable = 'any' }, ref) => {
+  const { t } = useTranslation('contentPicker');
+
   // Get all workspaces except for possible omitted one
   const allWorkspaces = useWorkspaces().filter(
     (workspace) => workspace.path !== omit,
@@ -100,34 +105,45 @@ export const ContentPicker = React.forwardRef<
             <ContentPickerWorkspaceItem
               key={workspace.path}
               path={workspace.path}
+              pickable={pickable}
               omitDocumentId={omit}
               onClick={onSelect}
             />
           ))}
         {query && (
           <>
-            <div className="search-group">
-              <NavGroup title="Workspaces" />
-              {filteredWorkspaces.map((workspace) => (
-                <ContentPickerWorkspaceItem
-                  key={workspace.path}
-                  path={workspace.path}
-                  omitDocumentId={omit}
-                  onClick={onSelect}
-                />
-              ))}
-            </div>
-            <div className="search-group">
-              <NavGroup title="Documents" />
-              {filteredDocuments.map((document) => (
-                <ContentPickerDocumentItem
-                  key={document.id}
-                  id={document.id}
-                  omitSubdocument={omit}
-                  onClick={onSelect}
-                />
-              ))}
-            </div>
+            {(pickable === 'workspace' || pickable === 'any') &&
+              filteredWorkspaces.length > 0 && (
+                <div className="search-group">
+                  <NavGroup title="Workspaces" />
+                  {filteredWorkspaces.map((workspace) => (
+                    <ContentPickerWorkspaceItem
+                      key={workspace.path}
+                      path={workspace.path}
+                      omitDocumentId={omit}
+                      onClick={onSelect}
+                    />
+                  ))}
+                </div>
+              )}
+            {(pickable === 'document' || pickable === 'any') &&
+              filteredDocuments.length > 0 && (
+                <div className="search-group">
+                  <NavGroup title="Documents" />
+                  {filteredDocuments.map((document) => (
+                    <ContentPickerDocumentItem
+                      key={document.id}
+                      id={document.id}
+                      omitSubdocument={omit}
+                      onClick={onSelect}
+                    />
+                  ))}
+                </div>
+              )}
+            {filteredWorkspaces.length === 0 &&
+              filteredDocuments.length === 0 && (
+                <NavGroup title={t('noResults')} />
+              )}
           </>
         )}
       </div>

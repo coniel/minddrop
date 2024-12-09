@@ -1,9 +1,13 @@
 import React from 'react';
-import { ContentIcon, IconButton, IconButtonProps } from '@minddrop/ui-elements';
+import {
+  ContentIcon,
+  IconButton,
+  IconButtonProps,
+} from '@minddrop/ui-elements';
 import { UserIcon, UserIconType, useIcon } from '@minddrop/icons';
-import './NavItemIcon.css';
 import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
+import './NavItemIcon.css';
 
 export interface NavItemIconProps
   extends Omit<IconButtonProps, 'icon' | 'label'> {

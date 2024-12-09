@@ -14,6 +14,7 @@ import {
   PopoverPortal,
   Tooltip,
 } from '@minddrop/ui-elements';
+import { ContentPicker } from '@minddrop/ui-desktop';
 import { Document, Documents, useChildDocuments } from '@minddrop/documents';
 import { DocumentNavItemIcon } from '../DocumentNavItemIcon';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
@@ -26,7 +27,6 @@ import {
 } from '../../api';
 import { createDocumentOptionsMenu } from '../../menus/createDocumentOptionsMenu';
 import { RenameDocumentPopover } from '../RenameDocumentPopover';
-import { ContentPicker } from '../ContentPicker';
 import { useCurrentDocumentId } from '../../AppUiState';
 
 export interface DocumentNavItemProps {

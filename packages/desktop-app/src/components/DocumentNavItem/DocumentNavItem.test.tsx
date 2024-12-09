@@ -29,7 +29,7 @@ describe('<DocumentNavItem />', () => {
     );
 
     // Click the document nav item
-    fireEvent.click(getByText(document1.title));
+    fireEvent.mouseDown(getByText(document1.title));
 
     // Should make the document active
     expect(AppUiState.get('activeDocumentId')).toBe(document1.id);

@@ -15,7 +15,8 @@
     "@minddrop/selection": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   },
   "devDependencies": {
     "eslint": "^8.39.0",

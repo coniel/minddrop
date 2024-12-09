@@ -83,7 +83,7 @@ export const WorkspaceOptionsMenu: React.FC<WorkspaceOptionsMenuProps> = ({
           />
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            icon="corner-down-right"
+            icon="corner-up-right"
             label={t('move.action')}
             tooltipTitle={t('move.tooltip.title')}
             tooltipDescription={t('move.tooltip.description')}

@@ -9,13 +9,13 @@ import {
   PopoverPortal,
   PopoverTrigger,
 } from '@minddrop/ui-elements';
+import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
   clearDocumentIcon,
   setDocumentContentIcon,
   setDocumentContentIconColor,
   setDocumentEmoji,
 } from '../../api';
-import { NavItemIcon } from '../NavItemIcon';
 import { IconPicker } from '../IconPicker';
 
 export interface DocumentNavItemIconProps
