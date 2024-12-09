@@ -50,7 +50,8 @@
     "change": "Change icon"
   },
   "contentPicker": {
-    "filter": "Filter..."
+    "filter": "Filter...",
+    "noResults": "No results"
   },
   "labels": {
     "untitled": "Untitled"
@@ -172,6 +173,40 @@
             }
           }
         }
+      }
+    }
+  },
+  "blocks": {
+    "actions": {
+      "color": {
+        "action": "Change color"
+      },
+      "copy": {
+        "action": "Copy to clipboard"
+      },
+      "move": {
+        "action": "Move to"
+      },
+      "delete": {
+        "action": "Delete"
+      }
+    },
+    "selection": {
+      "delete": {
+        "action": "Delete selected blocks"
+      },
+      "copy": {
+        "action": "Copy selected blocks",
+        "success": "Blocks copied to clipboard"
+      },
+      "move": {
+        "action": "Move selected blocks"
+      },
+      "color": {
+        "action": "Change color of selected blocks"
+      },
+      "clear": {
+        "action": "Clear selection"
       }
     }
   }
