@@ -6,9 +6,11 @@ import { ConfigItem, PersistentConfigsStore } from '../PersistentConfigsStore';
  * If the AppData directory does not exist, it will be created.
  */
 export async function loadConfigs(): Promise<void> {
+  const appDataDir = await Fs.getBaseDirPath(ConfigsFileOptions.baseDir!);
+
   // Ensure the configs directory exists
-  if (!(await Fs.exists(ConfigsFileOptions.baseDir!))) {
-    await Fs.createDir(ConfigsFileOptions.baseDir!);
+  if (!(await Fs.exists(appDataDir))) {
+    await Fs.createDir(appDataDir);
   }
 
   // Verify that the configs file exists

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { ActionCard, Button } from '@minddrop/ui-elements';
 import { Workspaces } from '@minddrop/workspaces';
 import { useTranslation } from '@minddrop/i18n';
@@ -23,7 +23,7 @@ export const QuickStartCard: React.FC = () => {
     }
 
     // Close this window
-    getCurrent().close();
+    getCurrentWindow().close();
   }, []);
 
   return (

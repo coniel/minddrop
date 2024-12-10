@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { ActionCard, Button } from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
 import { selectFolderAsWorkspace } from '../../../api/selectFolderAsWorkspace';
@@ -13,7 +13,7 @@ export const OpenWorkspaceCard: React.FC = () => {
 
     // Close this window if a workspace was added
     if (workspace) {
-      getCurrent().close();
+      getCurrentWindow().close();
     }
   }, []);
 

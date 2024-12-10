@@ -1,4 +1,4 @@
-import { getAll } from '@tauri-apps/api/window';
+import { getAllWindows } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { FileNotFoundError } from '@minddrop/file-system';
 import { JsonParseError } from '@minddrop/utils';
@@ -39,10 +39,14 @@ export async function initializeWorkspaces() {
   }
 }
 
-const openCreateFirstWorkspaceWindow = throttle(() => {
+const openCreateFirstWorkspaceWindow = throttle(async () => {
   AppUiState.set('view', null);
 
-  if (!getAll().find((window) => window.label === 'create-first-workspace')) {
+  if (
+    !(await getAllWindows()).find(
+      (window) => window.label === 'create-first-workspace',
+    )
+  ) {
     new WebviewWindow('create-first-workspace', {
       url: 'create-first-workspace.html',
       width: 800,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getCurrent } from '@tauri-apps/api/window';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { getVersion } from '@tauri-apps/api/app';
 import { IconsProvider } from '@minddrop/icons';
 import { MindDropLogo, Text, Toolbar } from '@minddrop/ui-elements';
@@ -14,7 +14,7 @@ import { CreateWorkspaceForm } from '../CreateWorkspaceForm';
 import './CreateFirstWorkspace.css';
 
 function closeWindow() {
-  getCurrent().close();
+  getCurrentWindow().close();
 }
 
 export const CreateFirstWorkspace: React.FC = () => {

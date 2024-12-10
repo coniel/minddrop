@@ -44,8 +44,7 @@
   "identifier": "MindDrop",
   "plugins": {
     "fs": {
-      "requireLiteralLeadingDot": false,
-      "require_literal_leading_dot": false
+      "requireLiteralLeadingDot": false
     }
   },
   "app": {
@@ -68,7 +67,6 @@
       "assetProtocol": {
         "scope": {
           "requireLiteralLeadingDot": false,
-          "require_literal_leading_dot": false,
           "allow": [
             "$APPDATA",
             "$APPDATA/**",
