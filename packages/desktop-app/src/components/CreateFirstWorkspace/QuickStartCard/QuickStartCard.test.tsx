@@ -14,7 +14,7 @@ const appWindow = {
 };
 
 vi.mock('@tauri-apps/api/window', () => ({
-  getCurrent: () => appWindow,
+  getCurrentWindow: () => appWindow,
 }));
 
 vi.mock('@tauri-apps/api/path', () => ({

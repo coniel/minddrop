@@ -12,7 +12,7 @@ const { workspace1, workspacesConfig, workspcesConfigFileDescriptor } =
   WORKSPACES_TEST_DATA;
 
 vi.mock('@tauri-apps/api/window', () => ({
-  getAll: () => [],
+  getAllWindows: async () => [],
   WebviewWindow: vi.fn(),
 }));
 
