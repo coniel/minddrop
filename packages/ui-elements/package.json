@@ -41,6 +41,6 @@
     "react": "^19.0.0",
     "react-dom": "19.0.0",
     "tsconfig": "workspace:*",
-    "typescript": "^5.0.4"
+    "typescript": "^5.7.2"
   }
 }

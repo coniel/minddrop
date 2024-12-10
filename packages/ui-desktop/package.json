@@ -8,13 +8,13 @@
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "dependencies": {
-    "@minddrop/ui-elements": "workspace:*",
     "@minddrop/blocks": "workspace:*",
     "@minddrop/documents": "workspace:*",
     "@minddrop/file-system": "workspace:*",
-    "@minddrop/selection": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
+    "@minddrop/selection": "workspace:*",
+    "@minddrop/ui-elements": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   },
@@ -22,6 +22,6 @@
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^5.0.4"
+    "typescript": "^5.7.2"
   }
 }

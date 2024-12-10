@@ -16,7 +16,7 @@
     "eslint": "^8.39.0",
     "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^5.0.4"
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "react": "^19.0.0"
