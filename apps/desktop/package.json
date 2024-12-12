@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "dependencies": {

@@ -9,7 +9,7 @@ import { PersistentConfigsStore } from '../PersistentConfigsStore';
  * @param key - The key of the value to clear. Supports dot notation for nested keys.
  * @param value - The value to set.
  */
-export function setConfigValue(id: string, key: string, value: any): void {
+export function setConfigValue(id: string, key: string, value: unknown): void {
   // Get the config
   const config = PersistentConfigsStore.get(id);
 
@@ -25,13 +25,18 @@ export function setConfigValue(id: string, key: string, value: any): void {
 
   // Go down into the nested objects until the parent
   // object of the value to set.
-  while (currentKey && path.length > 0) {
+  while (
+    typeof parent === 'object' &&
+    parent !== null &&
+    currentKey &&
+    path.length > 0
+  ) {
     if (!(currentKey in parent)) {
       // If the parent object does not exist, create it
       parent[currentKey] = {};
     }
 
-    parent = parent[currentKey];
+    parent = parent[currentKey] as Record<string, unknown>;
     currentKey = path.shift() || '';
   }
 

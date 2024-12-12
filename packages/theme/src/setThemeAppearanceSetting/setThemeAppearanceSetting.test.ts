@@ -14,7 +14,7 @@ describe('setThemeAppearanceSetting', () => {
   it('throws if the setting value is invalid', () => {
     // Attempt to set an invalid theme appearance value.
     // Should throw a `InvalidParameterError`.
-    // @ts-ignore
+    // @ts-expect-error Testing invalid input
     expect(() => setThemeAppearanceSetting('invalid')).toThrowError(
       InvalidParameterError,
     );

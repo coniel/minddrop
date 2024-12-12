@@ -31,32 +31,27 @@ export interface DocumentContentToolbarItemProps
 export const DocumentContentToolbarItem = forwardRef<
   HTMLDivElement,
   DocumentContentToolbarItemProps
->(
-  (
-    { children, className, icon, tooltip, tooltipOpen, toggled, ...other },
-    ref,
-  ) => {
-    return (
-      <Tooltip
-        open={tooltipOpen}
-        title={tooltip}
-        className="document-content-toolbar-item-tooltip"
-        side="top"
-        sideOffset={12}
+>(({ className, icon, tooltip, tooltipOpen, toggled, ...other }, ref) => {
+  return (
+    <Tooltip
+      open={tooltipOpen}
+      title={tooltip}
+      className="document-content-toolbar-item-tooltip"
+      side="top"
+      sideOffset={12}
+    >
+      <div
+        ref={ref}
+        className={mapPropsToClasses(
+          { className, toggled },
+          'document-content-toolbar-item',
+        )}
+        {...other}
       >
-        <div
-          ref={ref}
-          className={mapPropsToClasses(
-            { className, toggled },
-            'document-content-toolbar-item',
-          )}
-          {...other}
-        >
-          <ContentIcon name={icon} />
-        </div>
-      </Tooltip>
-    );
-  },
-);
+        <ContentIcon name={icon} />
+      </div>
+    </Tooltip>
+  );
+});
 
 DocumentContentToolbarItem.displayName = 'DocumentContentToolbarItem';

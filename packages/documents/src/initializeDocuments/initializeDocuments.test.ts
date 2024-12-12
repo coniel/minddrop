@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Blocks } from '@minddrop/blocks';
 import {
   cleanup,
@@ -43,93 +43,78 @@ describe('initializeDocuments', () => {
     expect(DocumentsStore.getState().documents).toEqual(documentsObject);
   });
 
-  it('should listen for block updates and write the updated document content to the file', () =>
-    new Promise<void>(async (done) => {
-      await initializeDocuments([workspaceDir]);
+  it('should listen for block updates and write the updated document content to the file', async () => {
+    await initializeDocuments([workspaceDir]);
 
-      // Update a document block
-      Blocks.update(document1Block1.id, { text: 'Updated content' });
+    // Update a document block
+    Blocks.update(document1Block1.id, { text: 'Updated content' });
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-      // Get the document file
-      const document = JSON.parse(MockFs.readTextFile(document1.path));
+    // Get the document file
+    const document = JSON.parse(MockFs.readTextFile(document1.path));
 
-      // The document content should be updated
-      expect(document.blocks[0].text).toEqual('Updated content');
+    // The document content should be updated
+    expect(document.blocks[0].text).toEqual('Updated content');
+  });
 
-      done();
-    }));
+  it('should listen for document view updates and write the updated document content to the file', async () => {
+    await initializeDocuments([workspaceDir]);
 
-  it('should listen for document view updates and write the updated document content to the file', async () =>
-    new Promise<void>(async (done) => {
-      await initializeDocuments([workspaceDir]);
+    // Update a document view
+    updateDocumentView(document1View1.id, { blocks: ['new-block-id'] });
 
-      // Update a document view
-      updateDocumentView(document1View1.id, { blocks: ['new-block-id'] });
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+    // Get the document file
+    const document = JSON.parse(MockFs.readTextFile(document1.path));
 
-      // Get the document file
-      const document = JSON.parse(MockFs.readTextFile(document1.path));
+    // The document content should be updated
+    expect(document.views[0].blocks).toEqual(['new-block-id']);
+  });
 
-      // The document content should be updated
-      expect(document.views[0].blocks).toEqual(['new-block-id']);
+  it('should litsen for block deletes and write the updated document content to the file', async () => {
+    await initializeDocuments([workspaceDir]);
 
-      done();
-    }));
+    // Delete a block
+    Blocks.delete(document1Block1.id);
 
-  it('should litsen for block deletes and write the updated document content to the file', async () =>
-    new Promise<void>(async (done) => {
-      await initializeDocuments([workspaceDir]);
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // Delete a block
-      Blocks.delete(document1Block1.id);
+    // Get the document file
+    const document = JSON.parse(MockFs.readTextFile(document1.path));
 
-      await new Promise((resolve) => setTimeout(resolve, 300));
+    // The block should be removed from the document
+    expect(document.blocks).toHaveLength(document1.blocks.length - 1);
+  });
 
-      // Get the document file
-      const document = JSON.parse(MockFs.readTextFile(document1.path));
+  it('should listen for document view deletes and write the updated document content to the file', async () => {
+    await initializeDocuments([workspaceDir]);
 
-      // The block should be removed from the document
-      expect(document.blocks).toHaveLength(document1.blocks.length - 1);
+    // Delete a document view
+    deleteDocumentView(document1View1.id);
 
-      done();
-    }));
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-  it('should listen for document view deletes and write the updated document content to the file', async () =>
-    new Promise<void>(async (done) => {
-      await initializeDocuments([workspaceDir]);
+    // Get the document file
+    const document = JSON.parse(MockFs.readTextFile(document1.path));
 
-      // Delete a document view
-      deleteDocumentView(document1View1.id);
+    // The view should be removed from the document
+    expect(document.views).toHaveLength(document1.views.length - 1);
+  });
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+  it('should listen for document updates and write the updated document content to the file', async () => {
+    await initializeDocuments([workspaceDir]);
 
-      // Get the document file
-      const document = JSON.parse(MockFs.readTextFile(document1.path));
+    // Update a document
+    updateDocument(document1.id, { title: 'Updated title' });
 
-      // The view should be removed from the document
-      expect(document.views).toHaveLength(document1.views.length - 1);
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-      done();
-    }));
+    // Get the document file
+    const document = JSON.parse(MockFs.readTextFile(document1.path));
 
-  it('should listen for document updates and write the updated document content to the file', async () =>
-    new Promise<void>(async (done) => {
-      await initializeDocuments([workspaceDir]);
-
-      // Update a document
-      updateDocument(document1.id, { title: 'Updated title' });
-
-      await new Promise((resolve) => setTimeout(resolve, 200));
-
-      // Get the document file
-      const document = JSON.parse(MockFs.readTextFile(document1.path));
-
-      // The document content should be updated
-      expect(document.title).toEqual('Updated title');
-
-      done();
-    }));
+    // The document content should be updated
+    expect(document.title).toEqual('Updated title');
+  });
 });

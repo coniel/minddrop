@@ -1,3 +1,3 @@
 interface ErrorConstructor {
-  captureStackTrace(error: Error, errorConstructor: Function);
+  captureStackTrace(error: Error, errorConstructor: (message: string) => void);
 }

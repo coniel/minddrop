@@ -2,6 +2,7 @@
   "name": "@minddrop/test-utils",
   "version": "0.5.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
     "lint": "eslint ./src/**.ts*",
@@ -21,8 +22,8 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.2.5",
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   }

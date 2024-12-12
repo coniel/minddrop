@@ -13,7 +13,6 @@ import { ElementConfigsStore } from '../ElementConfigsStore';
 export function withReturnBehaviour(editor: Editor): Editor {
   const { insertBreak } = editor;
 
-  // eslint-disable-next-line no-param-reassign
   editor.insertBreak = () => {
     // Get the block element in which the break was inserted
     const entry = getElementAbove(editor);

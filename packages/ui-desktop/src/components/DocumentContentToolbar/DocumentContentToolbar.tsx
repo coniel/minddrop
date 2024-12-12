@@ -30,7 +30,6 @@ export interface DocumentContentToolbarProps
 }
 
 export const DocumentContentToolbar: React.FC<DocumentContentToolbarProps> = ({
-  children,
   className,
   mode = 'default',
   customActions,

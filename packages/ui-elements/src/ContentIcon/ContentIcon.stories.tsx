@@ -20,7 +20,7 @@ export const IconSet: React.FC = () => (
           }}
         >
           {Object.keys(ContentIcons).map((name) => (
-            <ContentIcon name={name as ContentIconName} />
+            <ContentIcon key={name} name={name as ContentIconName} />
           ))}
         </div>
       )}

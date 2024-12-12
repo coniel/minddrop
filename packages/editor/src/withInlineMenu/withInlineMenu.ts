@@ -72,7 +72,6 @@ export function withInlineMenus(
       {},
     );
 
-  // eslint-disable-next-line no-param-reassign
   editor.insertText = (text) => {
     // Get the point at which the text was inserted
     const insertPoint = editor.selection?.focus;
@@ -104,7 +103,6 @@ export function withInlineMenus(
     runOnQueryChange(editor, triggerCharaterLocation, activeMenu.onQueryChange);
   };
 
-  // eslint-disable-next-line no-param-reassign
   editor.deleteBackward = (...args) => {
     // Delete backwards as normal
     deleteBackward(...args);

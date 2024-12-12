@@ -73,7 +73,7 @@ export function parseBlockElementsFromMarkdown(
 
     // Loop through each parser, attempting to match the current line
     // until one matches.
-    for (let parser of parsers) {
+    for (const parser of parsers) {
       // Previous parser may have read ahead, so we need to reset the
       // next line index before each parser.
       resetNextLineIndex();

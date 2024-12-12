@@ -8,8 +8,9 @@ import {
   selectionItemTypeConfig,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
-import { cutSelection } from './cutSelection';
 import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
+import { SelectionClipboardEventData } from '../types';
+import { cutSelection } from './cutSelection';
 
 const onDelete = vi.fn();
 
@@ -65,13 +66,20 @@ describe('cutSelection', () => {
   it('dispatches a selection cut event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:clipboard:cut' events
-      Events.addListener('selection:cut', 'test', (payload) => {
-        // Payload data should contain the event
-        expect(payload.data.event).toEqual(clipboardEvent);
-        // Payload data should contain the selection
-        expect(payload.data.selection).toEqual([selectedItem1, selectedItem3]);
-        done();
-      });
+      Events.addListener<SelectionClipboardEventData>(
+        'selection:cut',
+        'test',
+        (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(clipboardEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([
+            selectedItem1,
+            selectedItem3,
+          ]);
+          done();
+        },
+      );
 
       // Trigger a cut
       cutSelection(clipboardEvent);

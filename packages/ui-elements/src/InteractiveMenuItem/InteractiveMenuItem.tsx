@@ -32,7 +32,7 @@ export interface MenuItemComponentProps {
 }
 
 export interface RadioMenuItemComponentProps extends MenuItemComponentProps {
-  value: any;
+  value: unknown;
 }
 
 export interface InteractiveMenuItemProps
@@ -123,12 +123,12 @@ export const InteractiveMenuItem: FC<
   const { t } = useTranslation();
   const translatedLabel = useMemo(
     () => (typeof label === 'string' ? t(label) : label),
-    [label],
+    [label, t],
   );
   const translatedSecondaryLabel = useMemo(
     () =>
       typeof secondaryLabel === 'string' ? t(secondaryLabel) : secondaryLabel,
-    [secondaryLabel],
+    [secondaryLabel, t],
   );
   const [shiftKeyDown, setShiftKeyDown] = useState(false);
   const menuItemProps = shiftKeyDown
@@ -166,7 +166,7 @@ export const InteractiveMenuItem: FC<
         window.removeEventListener('keyup', onKeyUp);
       }
     };
-  }, []);
+  }, [secondaryOnSelect]);
 
   const Component = MenuItemComponent as FC<MenuItemComponentProps>;
 

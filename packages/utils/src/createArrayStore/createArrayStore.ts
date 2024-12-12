@@ -1,6 +1,6 @@
 import { create, UseBoundStore, StoreApi } from 'zustand';
 
-export interface ArrayStoreInteralApi<TItem extends Object> {
+export interface ArrayStoreInteralApi<TItem extends object> {
   /**
    * The items.
    */
@@ -38,7 +38,7 @@ export interface ArrayStoreInteralApi<TItem extends Object> {
  * @param identifierKey - The key to use as the identifier for the items.
  * @returns The array store.
  */
-export function createArrayStore<TItem extends Object>(
+export function createArrayStore<TItem extends object>(
   identifierKey: keyof TItem,
 ): ArrayItemStore<TItem> {
   const store = create<ArrayStoreInteralApi<TItem>>()((set) => ({
@@ -111,7 +111,7 @@ export function createArrayStore<TItem extends Object>(
   };
 }
 
-export interface ArrayItemStore<TItem extends Object> {
+export interface ArrayItemStore<TItem extends object> {
   useStore: UseBoundStore<StoreApi<ArrayStoreInteralApi<TItem>>>;
 
   /**

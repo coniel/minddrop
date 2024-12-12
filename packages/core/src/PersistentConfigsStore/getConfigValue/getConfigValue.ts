@@ -9,16 +9,16 @@ import { PersistentConfigsStore } from '../PersistentConfigsStore';
  * @param key - The key of the value to return. Supports dot notation for nested keys.
  * @returns The requested value or undefined.
  */
-export function getConfigValue<TValue = any>(
+export function getConfigValue<TValue = unknown>(
   id: string,
   key: string,
   defaultValue: TValue,
 ): TValue;
-export function getConfigValue<TValue = any>(
+export function getConfigValue<TValue = unknown>(
   id: string,
   key: string,
 ): TValue | undefined;
-export function getConfigValue<TValue = any>(
+export function getConfigValue<TValue = unknown>(
   id: string,
   key: string,
   defaultValue?: TValue,
@@ -34,15 +34,21 @@ export function getConfigValue<TValue = any>(
   // Turn dot notation key into list of keys
   const path = key.split('.');
   let currentKey = path.shift() || '';
-  let value = config.values;
+  let value: Record<string, unknown> = config.values;
 
   // Go down into the nested objects until the parent
   // object of the value to get.
-  while (currentKey in value && currentKey && path.length > 0) {
-    value = value[currentKey];
+  while (
+    typeof value === 'object' &&
+    value !== null &&
+    currentKey in value &&
+    currentKey &&
+    path.length > 0
+  ) {
+    value = value[currentKey as keyof typeof value] as Record<string, unknown>;
     currentKey = path.shift() || '';
   }
 
   // Return the value
-  return value[currentKey] || defaultValue;
+  return (value[currentKey] as TValue) || defaultValue;
 }

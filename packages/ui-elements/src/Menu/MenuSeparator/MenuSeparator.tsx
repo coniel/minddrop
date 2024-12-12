@@ -17,3 +17,5 @@ export const MenuSeparator = React.forwardRef<
     />
   </div>
 ));
+
+MenuSeparator.displayName = 'MenuSeparator';

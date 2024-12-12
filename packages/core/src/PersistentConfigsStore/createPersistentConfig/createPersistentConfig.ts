@@ -16,7 +16,7 @@ import { useConfigValue } from '../useConfigValue';
  */
 export function createPersistentConfig(
   id: string,
-  defaultValues: Record<string, any> = {},
+  defaultValues: Record<string, unknown> = {},
 ): Config {
   if (!PersistentConfigsStore.get(id)) {
     // If the config does not appear in the store, initialize

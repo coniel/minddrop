@@ -109,23 +109,26 @@ export type CoreBlockData = Omit<
 
 export type CustomBlockData = Record<string, unknown>;
 
-export type BlockData<TCustomData extends CustomBlockData = {}> =
+export type BlockData<TCustomData extends CustomBlockData = CustomBlockData> =
   CoreBlockData & TCustomData;
 
-export type Block<TCustomData extends CustomBlockData = {}> =
+export type Block<TCustomData extends CustomBlockData = CustomBlockData> =
   CoreBlockProperties & TCustomData;
 
-export type DeserializedBlockData<TCustomData extends CustomBlockData = {}> =
-  Omit<Block, 'created' | 'lastModified' | 'date' | 'startDate' | 'endDate'> &
-    TCustomData & {
-      created: string;
-      lastModified: string;
-      date: string;
-      startDate: string;
-      endDate: string;
-    };
+export type DeserializedBlockData<
+  TCustomData extends CustomBlockData = CustomBlockData,
+> = Omit<Block, 'created' | 'lastModified' | 'date' | 'startDate' | 'endDate'> &
+  TCustomData & {
+    created: string;
+    lastModified: string;
+    date: string;
+    startDate: string;
+    endDate: string;
+  };
 
-export type BlockTemplate<TCustomData extends CustomBlockData = {}> = Omit<
-  Block<TCustomData>,
-  'id' | 'created' | 'lastModified'
->;
+export type BlockTemplate<
+  TCustomData extends CustomBlockData = CustomBlockData,
+> = Omit<Block<TCustomData>, 'id' | 'created' | 'lastModified'> & {
+  type: CoreBlockProperties['type'];
+  variant?: CoreBlockProperties['variant'];
+};

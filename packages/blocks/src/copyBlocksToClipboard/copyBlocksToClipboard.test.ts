@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, beforeEach, it, expect, vi } from 'vitest';
 import { block1, block2 } from '../test-utils';
 import { copyBlocksToClipboard } from './copyBlocksToClipboard';

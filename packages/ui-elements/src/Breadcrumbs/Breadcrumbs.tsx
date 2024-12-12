@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { FC, Fragment } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { BreadcrumbProps } from './Breadcrumb';

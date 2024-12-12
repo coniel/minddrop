@@ -8,8 +8,8 @@ import { EventListenerMap } from '../types';
  * @param eventName - The name of the event on which to check.
  * @param listenerId - The ID of the listener to check for.
  */
-export function hasEventListener(
-  eventListeners: EventListenerMap,
+export function hasEventListener<TData = unknown>(
+  eventListeners: EventListenerMap<TData>,
   eventName: string,
   listenerId: string,
 ): boolean {

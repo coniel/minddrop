@@ -59,7 +59,7 @@ describe('backend-utils', () => {
     it('throws if the URL is invalid', () => {
       // Call with an invalid URL, should
       // throw a `ValidationError`.
-      // @ts-ignore
+      // @ts-expect-error Testing invalid input
       expect(() => getWebpageMetadata(1234)).rejects.toThrowError(
         InvalidParameterError,
       );

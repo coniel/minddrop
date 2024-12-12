@@ -19,8 +19,8 @@ describe('registerMarkConfig', () => {
     });
   });
 
-  it('dispatches a `editor:mark:register` event', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a `editor:mark:register` event', () =>
+    new Promise<void>((done) => {
       // Listen to 'editor:mark:register' events
       Events.addListener('editor:mark:register', 'test', (payload) => {
         // Payload data should be the registered config

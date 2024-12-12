@@ -115,7 +115,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     if (autoFocus) {
       ReactEditor.focus(editorRef.current);
     }
-  }, []);
+  }, [autoFocus]);
 
   return (
     <Slate

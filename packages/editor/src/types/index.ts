@@ -3,7 +3,6 @@ export * from './InlineShortcut.types';
 export * from './EditorBlockElementProps.types';
 export * from './EditorBlockElementConfig.types';
 export * from './EditorElement.types';
-export * from './EditorElementConfig.types';
 export * from './EditorInlineElementProps.types';
 export * from './EditorInlineElementConfig.types';
 export * from './InlineMenuConfig.types';

@@ -13,10 +13,9 @@ import { convertElement } from '../convertElement';
  * @param configs - The block element configurations to enable shortcuts for.
  * @returns The editor instance with the plugin behaviour.
  */
-export function withBlockShortcuts(
-  editor: Editor,
-  configs: EditorBlockElementConfig[],
-): Editor {
+export function withBlockShortcuts<
+  TElement extends BlockElement = BlockElement,
+>(editor: Editor, configs: EditorBlockElementConfig<TElement>[]): Editor {
   const { apply } = editor;
 
   // Create a `{ [shortcutString]: convertFn }` map of
@@ -40,7 +39,6 @@ export function withBlockShortcuts(
       );
     }, {});
 
-  // eslint-disable-next-line no-param-reassign
   editor.apply = (operation) => {
     // Apply the operation as normal
     apply(operation);

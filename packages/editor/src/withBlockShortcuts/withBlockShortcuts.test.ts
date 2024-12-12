@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Node, Editor } from 'slate';
-import { Ast, BlockElement, Element } from '@minddrop/ast';
+import { Ast, BlockElement, Element, HeadingElement } from '@minddrop/ast';
 import { EditorBlockElementConfig } from '../types';
 import {
   setup,
@@ -14,7 +14,7 @@ import {
 import { Transforms } from '../Transforms';
 import { withBlockShortcuts } from './withBlockShortcuts';
 
-const headingConfig: EditorBlockElementConfig<any> = {
+const headingConfig: EditorBlockElementConfig<HeadingElement> = {
   ...headingElementConfig,
   shortcuts: ['# '],
 };

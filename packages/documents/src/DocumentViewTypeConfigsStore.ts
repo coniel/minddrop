@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createItemStore } from '@minddrop/core';
 import { DocumentView, DocumentViewTypeConfig } from './types';
 import { DocumentViewTypeConfigNotRegisteredError } from './errors';

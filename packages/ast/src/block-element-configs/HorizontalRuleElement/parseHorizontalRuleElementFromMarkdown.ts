@@ -13,7 +13,7 @@ export const parseHorizontalRuleElementFromMarkdown: BlockElementParser<
   HorizontalRuleElement
 > = (line, consume) => {
   // Regex to match horizontal rules
-  const horizontalRulePattern = /^(\-|\*|\_){3,}$/;
+  const horizontalRulePattern = /^(-|\*|_){3,}$/;
 
   //  horizontal rules allow spaces around and between
   // the characters which can be ignored by removing them.

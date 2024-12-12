@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fileNameFromPath } from '../fileNameFromPath';
 import {
   BaseDirectory,

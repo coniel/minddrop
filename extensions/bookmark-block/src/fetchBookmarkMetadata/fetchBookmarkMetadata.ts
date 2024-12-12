@@ -38,43 +38,39 @@ export async function fetchBookmarkMetadata(
   // If the metadata contains an image URL, download the image
   // to assets and add it as the block image.
   if (image) {
-    assets.push(
-      new Promise(async (resolve) => {
-        const extension = Utils.getFileExtensionFromUrl(image);
-        const filename = `image.${extension}`;
+    const fetchImage = async () => {
+      const extension = Utils.getFileExtensionFromUrl(image);
+      const filename = `image.${extension}`;
 
-        try {
-          await Assets.download(block.id, filename, image);
+      try {
+        await Assets.download(block.id, filename, image);
 
-          updates.image = filename;
-        } catch (error) {
-          console.error(error);
-        }
+        updates.image = filename;
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-        resolve();
-      }),
-    );
+    assets.push(fetchImage());
   }
 
   // If the metadata contains an icon URL, download the icon
   // to assets and add it as the block icon.
   if (icon) {
-    assets.push(
-      new Promise(async (resolve) => {
-        const extension = Utils.getFileExtensionFromUrl(icon);
-        const filename = `icon.${extension}`;
+    const fetchIcon = async () => {
+      const extension = Utils.getFileExtensionFromUrl(icon);
+      const filename = `icon.${extension}`;
 
-        try {
-          await Assets.download(block.id, filename, icon);
+      try {
+        await Assets.download(block.id, filename, icon);
 
-          updates.icon = filename;
-        } catch (error) {
-          console.error(error);
-        }
+        updates.icon = filename;
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-        resolve();
-      }),
-    );
+    assets.push(fetchIcon());
   }
 
   // Wait for all asset downloads

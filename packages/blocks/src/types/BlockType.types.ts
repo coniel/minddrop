@@ -2,7 +2,7 @@ import { ContentIconName } from '@minddrop/icons';
 import { Block, CustomBlockData } from './Block.types';
 import { BlockPropertiesSchema } from './BlockPropertiesSchema.types';
 
-export interface BlockType<TData extends CustomBlockData = {}> {
+export interface BlockType<TData extends CustomBlockData = CustomBlockData> {
   /**
    * A unique identifier for the block type. Used as the block's
    * type property.

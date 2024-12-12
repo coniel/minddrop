@@ -25,7 +25,6 @@ export const textBlockConfig: BlockType<TextTextBlockData> = {
   },
   onCreate: async (block) => {
     setTimeout(() => {
-      // @ts-expect-error
       BlocksStore.getState().update(block.id, { bar: 'bar' });
     }, 1000);
   },

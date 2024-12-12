@@ -76,7 +76,6 @@ export function withInlineShortcuts(
     .filter(isStringShortcut)
     .sort(([a], [b]) => b.length - a.length);
 
-  // eslint-disable-next-line no-param-reassign
   editor.insertText = (insertedText) => {
     // Only trigger on single character input which matches
     // the final character of a shortcut/end string

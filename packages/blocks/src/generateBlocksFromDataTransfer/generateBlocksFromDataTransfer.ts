@@ -7,7 +7,6 @@ import {
   generateFileBlock,
   generateBlock,
 } from '../generateBlock';
-import { BLOCK_TEMPLATES_DATA_KEY } from '../constants';
 import { getBlockTemplatesFromDataTransfer } from '../getBlockTemplatesFromDataTransfer';
 
 /**

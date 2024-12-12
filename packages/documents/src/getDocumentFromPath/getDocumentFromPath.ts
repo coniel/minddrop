@@ -28,6 +28,7 @@ export async function getDocumentFromPath(path: string): Promise<{
   try {
     fileTextContent = await Fs.readTextFile(path);
   } catch (error) {
+    console.error(error);
     throw new FileNotFoundError(path);
   }
 
@@ -35,6 +36,7 @@ export async function getDocumentFromPath(path: string): Promise<{
   try {
     parsedDocument = JSON.parse(fileTextContent);
   } catch (error) {
+    console.error(error);
     throw new DocumentParseError(path);
   }
 
@@ -51,7 +53,7 @@ export async function getDocumentFromPath(path: string): Promise<{
       wrapped: isWrapped(path),
       // Replace the views and blocks with their IDs
       views: parsedDocument.views.map((view) => view.id),
-      blocks: parsedDocument.blocks.map((block) => block.id),
+      blocks: parsedDocument.blocks.map((block) => block.id) as string[],
     },
     views: parsedDocument.views,
     blocks: parsedDocument.blocks.map((block) => Blocks.parse(block)),

@@ -2,9 +2,10 @@
   "name": "@minddrop/ui-elements",
   "version": "0.4.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit --jsx react-jsx",
     "test": "vitest run --config ./vitest.config.ts",
     "test:watch": "vitest --config ./vitest.config.ts"
@@ -34,8 +35,8 @@
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.3",
     "@types/react-window": "^1.8.8",
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "happy-dom": "^9.10.9",
     "jsdom": "^22.0.0",
     "react": "^19.0.0",

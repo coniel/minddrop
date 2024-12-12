@@ -21,3 +21,5 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
     </div>
   ),
 );
+
+Menu.displayName = 'Menu';

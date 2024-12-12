@@ -1,5 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import React, { FC } from 'react';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Popover.css';
 

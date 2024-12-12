@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FsEntry } from './FileEntry.types';
 import { FileSystem } from './FileSystem.types';
 import {

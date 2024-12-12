@@ -3,19 +3,20 @@
   "version": "0.5.1",
   "source": "src/index.ts",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "pnpm run clean && pnpm run compile",
     "clean": "rimraf -rf ./dist",
     "compile": "rollup --config",
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit --jsx react-jsx",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
     "@minddrop/test-utils": "workspace:*",
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "rimraf": "~5.0.0",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"

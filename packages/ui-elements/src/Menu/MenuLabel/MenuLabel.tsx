@@ -26,3 +26,5 @@ export const MenuLabel = React.forwardRef<HTMLDivElement, MenuLabelProps>(
     </div>
   ),
 );
+
+MenuLabel.displayName = 'MenuLabel';

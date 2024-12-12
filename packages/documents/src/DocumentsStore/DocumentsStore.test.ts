@@ -5,7 +5,6 @@ import {
   documents,
   document1Blocks,
 } from '../test-utils';
-import { Document } from '../types';
 import {
   BlockDocumentMap,
   DocumentViewDocumentMap,

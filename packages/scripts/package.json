@@ -1,6 +1,7 @@
 {
   "name": "@minddrop/scripts",
   "version": "0.0.0",
+  "type": "module",
   "devDependencies": {
     "@types/svg-parser": "^2.0.6",
     "svg-parser": "^2.0.4"

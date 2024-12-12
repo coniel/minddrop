@@ -27,8 +27,8 @@ describe('unregisterElementConfig', () => {
     expect(BlockElementConfigsStore.get(elementConfig.type)).toBeUndefined();
   });
 
-  it('dispatches a `markdown:block-element:unregister` event', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a `markdown:block-element:unregister` event', () =>
+    new Promise<void>((done) => {
       // Listen to 'markdown:block-element:unregister' events
       Events.addListener(
         'markdown:block-element:unregister',

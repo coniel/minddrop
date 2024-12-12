@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it } from 'vitest';
 import { render } from '@minddrop/test-utils';
 import { EditorBlockElementConfig, BlockElementProps } from '../../types';

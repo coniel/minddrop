@@ -2,17 +2,18 @@
   "name": "@minddrop/icons",
   "version": "0.5.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts* --ignore-pattern *.min.*",
+    "lint": "eslint . --max-warnings 0 --no-warn-ignored",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/react": "^18.2.5",
-    "eslint": "^8.40.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

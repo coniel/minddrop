@@ -1,8 +1,8 @@
+import { RenderElementProps } from 'slate-react';
 import {
   EditorBlockElementConfig,
+  EditorInlineElementConfig,
   BlockElementProps,
-  EditorElementConfig,
-  ElementProps,
 } from '../../types';
 
 /**
@@ -16,10 +16,10 @@ import {
  * @returns A renderElement function.
  */
 export function createRenderElement(
-  configs: EditorElementConfig[],
-): (props: ElementProps) => React.ReactElement {
+  configs: (EditorInlineElementConfig | EditorBlockElementConfig)[],
+): (props: RenderElementProps) => React.ReactElement {
   // eslint-disable-next-line react/display-name
-  return (props: ElementProps) => {
+  return (props: RenderElementProps) => {
     // Get the config for the element type
     const config = configs.find(({ type }) => type === props.element.type);
 

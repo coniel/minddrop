@@ -13,7 +13,7 @@ import { EventListenerMap } from '../types';
 export async function dispatchEvent(
   eventListeners: EventListenerMap,
   eventName: string,
-  data?: any,
+  data?: unknown,
 ): Promise<void> {
   // If no listeners are registered for the event, stop here
   if (!eventListeners[eventName]) {
@@ -28,9 +28,11 @@ export async function dispatchEvent(
   }
 
   function skipPropagation(listenerId: string | string[]) {
-    Array.isArray(listenerId)
-      ? skipListeners.push(...listenerId)
-      : skipListeners.push(listenerId);
+    if (Array.isArray(listenerId)) {
+      skipListeners.push(...listenerId);
+    } else {
+      skipListeners.push(listenerId);
+    }
   }
 
   for (const listener of eventListeners[eventName].listeners) {

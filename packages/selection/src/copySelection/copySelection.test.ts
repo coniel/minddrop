@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
@@ -7,9 +8,10 @@ import {
   selectedItem3,
   selectionItemTypeConfig,
 } from '../test-utils';
+import { SelectionClipboardEventData } from '../types';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import { useSelectionStore } from '../useSelectionStore';
 import { copySelection } from './copySelection';
-import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 
 describe('copySelection', () => {
   let data: Record<string, string> = {};
@@ -82,13 +84,20 @@ describe('copySelection', () => {
 
   it('dispatches a selection copy event', () =>
     new Promise<void>((done) => {
-      Events.addListener('selection:copy', 'test', (payload) => {
-        // Payload data should contain the event
-        expect(payload.data.event).toEqual(clipboardEvent);
-        // Payload data should contain the selection
-        expect(payload.data.selection).toEqual([selectedItem1, selectedItem3]);
-        done();
-      });
+      Events.addListener<SelectionClipboardEventData>(
+        'selection:copy',
+        'test',
+        (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(clipboardEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([
+            selectedItem1,
+            selectedItem3,
+          ]);
+          done();
+        },
+      );
 
       // Trigger a copy
       copySelection(clipboardEvent);

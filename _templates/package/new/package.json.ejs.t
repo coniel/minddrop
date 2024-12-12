@@ -7,15 +7,15 @@ to: <%= module %>/<%= name %>/package.json
   "main": "src/index",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^5.0.4"
+    "typescript": "^5.7.2"
   }
 }

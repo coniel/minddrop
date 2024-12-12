@@ -65,7 +65,7 @@ export const Sidebar: FC<SidebarProps> = ({
     if (onResized && widthRef.current) {
       onResized(widthRef.current);
     }
-  }, [onResized]);
+  }, [onResized, handleMouseMove]);
 
   const handleMouseDown = useCallback(
     (event: React.MouseEvent) => {
@@ -74,7 +74,7 @@ export const Sidebar: FC<SidebarProps> = ({
       setIsDragging(true);
       dragOffest.current = event.clientX - width;
     },
-    [width],
+    [width, handleMouseMove, handleMouseUp],
   );
 
   return (

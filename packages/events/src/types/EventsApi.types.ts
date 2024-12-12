@@ -13,7 +13,7 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
-  addListener<TData = any>(
+  addListener<TData = unknown>(
     eventName: string,
     listenerId: string,
     callback: EventListenerCallback<TData>,
@@ -109,7 +109,7 @@ export interface EventsApi {
    * @param eventName - The name of the event.
    * @param data - The data associated with the event.
    */
-  dispatch(eventName: string, data?: any): Promise<void>;
+  dispatch(eventName: string, data?: unknown): Promise<void>;
 
   /**
    * Clears all event listeners.

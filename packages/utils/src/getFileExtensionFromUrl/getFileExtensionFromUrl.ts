@@ -26,6 +26,8 @@ export function getFileExtensionFromUrl(url: string): string | null {
     // No extension found
     return null;
   } catch (error) {
+    console.warn('Error parsing file extension from URL:', error);
+
     return null;
   }
 }

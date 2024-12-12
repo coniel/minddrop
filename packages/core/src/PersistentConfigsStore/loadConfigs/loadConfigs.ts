@@ -37,7 +37,9 @@ export async function loadConfigs(): Promise<void> {
 
     // Load the configs into the store
     PersistentConfigsStore.load(configs);
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
+
     return;
   }
 }

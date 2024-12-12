@@ -117,6 +117,7 @@ register({
       await readDir(path, options);
 
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return false;
     }

@@ -24,8 +24,8 @@ describe('registerBlockElementConfig', () => {
     );
   });
 
-  it('dispatches a `markdown:block-element:register` event', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a `markdown:block-element:register` event', () =>
+    new Promise<void>((done) => {
       // Listen to 'markdown:block-element:register' events
       Events.addListener(
         'markdown:block-element:register',

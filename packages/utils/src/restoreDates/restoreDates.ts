@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isSerializedDate } from '../isSerializedDate';
 
-export function restoreDates<T = any>(object: Object): T {
+export function restoreDates<T extends object = object>(object: object): T {
   return deserialize(object);
 }
 

@@ -7,10 +7,9 @@ import { AppUiState } from '../AppUiState';
 export async function watchAppConfigFiles() {
   // Get the app configs dir
   const dir = await appConfigDir();
-  const id = Math.random();
 
   // Watch the app configs directory
-  return watchImmediate(`${dir}`, (event) => handleWatcherEvent(id, event));
+  return watchImmediate(`${dir}`, (event) => handleWatcherEvent(event));
 }
 
 const handleWorkspacesConfigEventThrottled = throttle(
@@ -18,17 +17,17 @@ const handleWorkspacesConfigEventThrottled = throttle(
   100,
 );
 
-function handleWatcherEvent(id: number, event: WatchEvent) {
+function handleWatcherEvent(event: WatchEvent) {
   if (
     event.paths.some((eventPath) =>
       eventPath.includes(WorkspacesConfigFileName),
     )
   ) {
-    handleWorkspacesConfigEventThrottled(id);
+    handleWorkspacesConfigEventThrottled();
   }
 }
 
-async function handleWorkspacesConfigEvent(id: number) {
+async function handleWorkspacesConfigEvent() {
   await Workspaces.load();
 
   if (Workspaces.hasValidWorkspace() && !AppUiState.get('view')) {

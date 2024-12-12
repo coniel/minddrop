@@ -9,7 +9,7 @@ import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
  * @param config - The config to register.
  */
 export function registerElementConfig(
-  config: EditorBlockElementConfig<any> | EditorInlineElementConfig<any>,
+  config: EditorBlockElementConfig | EditorInlineElementConfig,
 ): void {
   // Add the config to the ElementConfigsStore,
   // using the type as its ID.

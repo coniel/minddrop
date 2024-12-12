@@ -26,7 +26,7 @@ export type FsReadDirOptions = FsDirOptions;
 export type FsCreateDirOptions = FsDirOptions;
 export type FsRemoveDirOptions = FsDirOptions;
 
-export interface FsFileOptions extends FsOptions {}
+export type FsFileOptions = FsOptions;
 
 export type FsCreateFileOptions = FsFileOptions;
 export type FsReadFileOptions = FsFileOptions;

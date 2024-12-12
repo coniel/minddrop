@@ -5,12 +5,12 @@ const createFileList = (files: File[]): FileList => {
   const fileList = {
     length: files.length,
     item(index: number): File {
-      // @ts-ignore
+      // @ts-expect-error Mocked for test
       return fileList[index];
     },
   };
   files.forEach((file, index) => {
-    // @ts-ignore
+    // @ts-expect-error Mocked for test
     fileList[index] = file;
   });
 

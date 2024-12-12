@@ -2,15 +2,16 @@
   "name": "@minddrop/i18n",
   "version": "0.4.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

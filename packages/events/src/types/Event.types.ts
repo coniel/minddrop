@@ -1,4 +1,4 @@
-export interface Event<TData = any> {
+export interface Event<TData = unknown> {
   /**
    * The event name.
    */

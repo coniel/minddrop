@@ -24,8 +24,8 @@ describe('unregisterMarkConfig', () => {
     expect(MarkConfigsStore.get(boldMarkConfig.key)).toBeUndefined();
   });
 
-  it('dispatches a `editor:mark:register` event', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a `editor:mark:register` event', () =>
+    new Promise<void>((done) => {
       // Listen to 'editor:mark:unregister' events
       Events.addListener('editor:mark:unregister', 'test', (payload) => {
         // Payload data should be the unregistered config key

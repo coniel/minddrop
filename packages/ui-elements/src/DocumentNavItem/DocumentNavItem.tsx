@@ -127,7 +127,7 @@ export const DocumentNavItem = React.forwardRef<
                 aria-hidden="true"
                 className="spacer-button"
                 tabIndex={-1}
-                onClick={onClick}
+                onMouseDown={onClick}
                 style={{ paddingLeft: level * 16, height: 24 }}
               />
             )}

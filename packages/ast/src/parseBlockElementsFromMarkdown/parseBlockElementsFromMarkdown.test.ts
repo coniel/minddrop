@@ -20,7 +20,7 @@ describe('parseBlockElementsFromMarkdown', () => {
 
   it('provides the current line on each itteration', () => {
     const markdown = 'Hello\nWorld';
-    let parsedLines: string[] = [];
+    const parsedLines: string[] = [];
 
     parseBlockElementsFromMarkdown(
       [
@@ -75,7 +75,7 @@ describe('parseBlockElementsFromMarkdown', () => {
 
   it('sequentially provides the next line', () => {
     const markdown = 'Line 1\nLine 2\nLine 3\nLine 4';
-    let nextLines: (string | null)[] = [];
+    const nextLines: (string | null)[] = [];
 
     parseBlockElementsFromMarkdown(
       [
@@ -97,7 +97,7 @@ describe('parseBlockElementsFromMarkdown', () => {
 
   it('reset the next line index', () => {
     const markdown = 'Line 1\nLine 2\nLine 3\nLine 4';
-    let nextLines: (string | null)[] = [];
+    const nextLines: (string | null)[] = [];
 
     parseBlockElementsFromMarkdown(
       [
@@ -183,7 +183,7 @@ alert(foo);
         },
         (line, consume, nextLine) => {
           if (line === '~~~') {
-            let code: string[] = [];
+            const code: string[] = [];
             let next = nextLine();
 
             while (next !== null && next !== '~~~') {
@@ -241,7 +241,7 @@ alert(foo);
     expect(() => {
       parseBlockElementsFromMarkdown(
         [
-          (line) => {
+          () => {
             return [blockElement];
           },
         ],

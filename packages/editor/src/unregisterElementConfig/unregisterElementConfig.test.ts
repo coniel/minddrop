@@ -26,8 +26,8 @@ describe('unregisterElementConfig', () => {
     ).toBeUndefined();
   });
 
-  it('dispatches a `editor:element:register` event', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a `editor:element:register` event', () =>
+    new Promise<void>((done) => {
       // Listen to 'editor:element:unregister' events
       Events.addListener('editor:element:unregister', 'test', (payload) => {
         // Payload data should be the unregistered config type

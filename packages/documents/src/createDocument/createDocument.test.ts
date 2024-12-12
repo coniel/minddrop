@@ -62,7 +62,7 @@ describe('createDocument', () => {
 
   it('serializes the document data to file', async () => {
     // Create a document
-    const document = (await createDocument(PARENT_DIR_PATH, TITLE)) as any;
+    const document = await createDocument(PARENT_DIR_PATH, TITLE);
 
     const serializedDocument: SerializableDocumentData = {
       id: document.id,

@@ -49,7 +49,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
 
   useEffect(() => {
     setPickerPopoverOpen(showIconSelection);
-  }, [showIconSelection]);
+  }, [showIconSelection, setPickerPopoverOpen]);
 
   const handleClear = useCreateCallback(clearDocumentIcon, document.id);
 
@@ -58,7 +58,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
       onShowIconSelectionChange(value);
       setPickerPopoverOpen(value);
     },
-    [onShowIconSelectionChange],
+    [onShowIconSelectionChange, setPickerPopoverOpen],
   );
 
   const handleSelectContentIcon = useCallback(

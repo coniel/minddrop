@@ -1,7 +1,7 @@
 import { EventListenerCallback } from './EventListenerCallback.types';
 
-export interface EventListener {
+export interface EventListener<TData = unknown> {
   id: string;
-  callback: EventListenerCallback;
+  callback: EventListenerCallback<TData>;
   once?: boolean;
 }

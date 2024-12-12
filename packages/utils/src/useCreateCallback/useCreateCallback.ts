@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback } from 'react';
 
 /**
@@ -13,7 +14,6 @@ export function useCreateCallback(
   callback: (...args: any) => any,
   ...args: Parameters<typeof callback>
 ) {
-  const [cb, ...rest] = arguments;
-
-  return useCallback(() => callback(...rest), [...rest]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useCallback(() => callback(...args), [...args]);
 }

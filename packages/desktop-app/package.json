@@ -2,9 +2,10 @@
   "name": "@minddrop/desktop-app",
   "version": "0.0.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit --jsx react-jsx",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -13,8 +14,8 @@
     "@testing-library/react": "^16.1.0",
     "@types/react": "^18.2.5",
     "@vitejs/plugin-react": "^4.1.0",
-    "eslint": "^8.39.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

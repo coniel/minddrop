@@ -17,7 +17,6 @@ const NEW_PARENT_PATH = wrappedDocument.path.replace(
   wrappedDocument.title,
   NEW_PARENT_NAME,
 );
-const NEW_WORKSPACE_NAME = 'New workspace';
 const NEW_WORKSPACE_PATH = workspaceDir
   .split('/')
   .slice(0, -1)

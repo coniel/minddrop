@@ -41,7 +41,7 @@ export const WorkspaceNavItemIcon: React.FC<{
 
   useEffect(() => {
     setPickerPopoverOpen(showIconSelection);
-  }, [showIconSelection]);
+  }, [setPickerPopoverOpen, showIconSelection]);
 
   const handleClear = useCreateCallback(clearWorkspaceIcon, workspace.path);
 
@@ -50,7 +50,7 @@ export const WorkspaceNavItemIcon: React.FC<{
       onShowIconSelectionChange(value);
       setPickerPopoverOpen(value);
     },
-    [onShowIconSelectionChange],
+    [onShowIconSelectionChange, setPickerPopoverOpen],
   );
 
   const handleSelectContentIcon = useCallback(

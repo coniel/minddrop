@@ -3,6 +3,7 @@ import React, { FC, ReactElement } from 'react';
 import {
   render,
   renderHook,
+  RenderResult,
   RenderOptions,
   RenderHookOptions,
 } from '@testing-library/react';
@@ -20,9 +21,8 @@ class ResizeObserver {
 }
 
 // Needed for popovers and tooltips
-// @ts-ignore
+// @ts-expect-error Mock doesn't need to be complete
 window.DOMRect = { fromRect: () => ({}) };
-// @ts-ignore
 window.ResizeObserver = ResizeObserver;
 // Needed for theme
 Object.defineProperty(window, 'matchMedia', {
@@ -44,7 +44,21 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   translationKeyPrefix?: string;
 }
 
-const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
+interface CustomRenderResult extends RenderResult {
+  getByTranslatedText: (key: string) => HTMLElement;
+  getByTranslatedAltText: (key: string) => HTMLElement;
+  getByTranslatedLabelText: (key: string) => HTMLElement;
+  getByTranslatedPlaceholderText: (key: string) => HTMLElement;
+  getAllByTranslatedText: (key: string) => HTMLElement[];
+  getAllByTranslatedAltText: (key: string) => HTMLElement[];
+  getAllByTranslatedLabelText: (key: string) => HTMLElement[];
+  getAllByTranslatedPlaceholderText: (key: string) => HTMLElement[];
+}
+
+const customRender = (
+  ui: ReactElement,
+  options?: CustomRenderOptions,
+): CustomRenderResult => {
   const {
     getByText,
     getByAltText,

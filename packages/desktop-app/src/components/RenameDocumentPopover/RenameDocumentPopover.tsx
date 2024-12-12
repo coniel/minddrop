@@ -1,7 +1,11 @@
 import { PathConflictError } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
 import { Document, Documents } from '@minddrop/documents';
-import { InvisibleTextField, PopoverContent, Tooltip } from '@minddrop/ui-elements';
+import {
+  InvisibleTextField,
+  PopoverContent,
+  Tooltip,
+} from '@minddrop/ui-elements';
 import React, { useCallback, useRef, useState } from 'react';
 import './RenameDocumentPopover.css';
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { createItemStore } from '@minddrop/core';
 import { EditorBlockElementConfig, EditorInlineElementConfig } from './types';
 

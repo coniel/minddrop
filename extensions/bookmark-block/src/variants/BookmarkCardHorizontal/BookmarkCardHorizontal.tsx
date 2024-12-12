@@ -12,6 +12,8 @@ export const BookmarkCardHorizontal: React.FC<BlockVariantProps> = ({
     try {
       return new URL(block.url || '').hostname.replace('www.', '');
     } catch (error) {
+      console.error(error);
+
       return '';
     }
   }, [block.url]);

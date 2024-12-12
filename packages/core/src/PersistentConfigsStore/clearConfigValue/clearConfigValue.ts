@@ -25,8 +25,14 @@ export function clearConfigValue(id: string, key: string): void {
 
   // Go down into the nested objects until the parent
   // object of the value to clear.
-  while (currentKey in value && currentKey && path.length > 0) {
-    value = value[currentKey];
+  while (
+    typeof value === 'object' &&
+    value !== null &&
+    currentKey in value &&
+    currentKey &&
+    path.length > 0
+  ) {
+    value = value[currentKey] as Record<string, unknown>;
     currentKey = path.shift() || '';
   }
 

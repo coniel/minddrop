@@ -1,4 +1,4 @@
-import { Block, DocumentViewProps } from '@minddrop/extension';
+import { Block } from '@minddrop/extension';
 import { BoardListSection } from '../../types';
 import './ListSection.css';
 
@@ -21,6 +21,6 @@ export interface ListSectionProps {
   ) => Promise<Block[]>;
 }
 
-export const ListSection: React.FC<ListSectionProps> = ({}) => {
+export const ListSection: React.FC<ListSectionProps> = () => {
   return <div>Not implemented</div>;
 };

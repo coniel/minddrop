@@ -20,9 +20,8 @@ describe('<Tooltip />', () => {
   afterEach(cleanup);
 
   beforeAll(() => {
-    // @ts-ignore
+    // @ts-expect-error Sufficient for test
     window.DOMRect = { fromRect: () => ({}) };
-    // @ts-ignore
     window.ResizeObserver = ResizeObserver;
   });
 

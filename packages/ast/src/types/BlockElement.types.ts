@@ -52,28 +52,28 @@ export interface BaseVoidBlockElement<TType extends string = string>
 /**
  * Type specific data cannot use same keys as base data.
  */
-export type BlockElementTypeData = Object & {
+export type BlockElementTypeData = object & {
   [K in keyof BaseVoidBlockElement]?: never;
 };
 
 export type TextBlockElement<
   TType extends string = string,
-  TTypeData extends BlockElementTypeData = {},
+  TTypeData extends BlockElementTypeData = object,
 > = BaseBlockElement<TType> & TTypeData;
 
 export type ContainerBlockElement<
   TType extends string = string,
-  TTypeData extends BlockElementTypeData = {},
+  TTypeData extends BlockElementTypeData = object,
 > = BaseContainerBlockElement<TType> & TTypeData;
 
 export type VoidBlockElement<
   TType extends string = string,
-  TTypeData extends BlockElementTypeData = {},
+  TTypeData extends BlockElementTypeData = object,
 > = BaseVoidBlockElement<TType> & TTypeData;
 
 export type BlockElement<
   TType extends string = string,
-  TTypeData extends BlockElementTypeData = {},
+  TTypeData extends BlockElementTypeData = object,
 > =
   | TextBlockElement<TType, TTypeData>
   | ContainerBlockElement<TType, TTypeData>

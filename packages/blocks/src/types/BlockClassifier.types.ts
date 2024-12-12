@@ -1,6 +1,6 @@
-import { Block, BlockData } from './Block.types';
+import { BlockData } from './Block.types';
 
-export interface BaseBlockClassifier<TData extends BlockData = {}> {
+export interface BaseBlockClassifier {
   /**
    * A unique identifier for the classifier. Used to unregister the classifier.
    */
@@ -12,8 +12,8 @@ export interface BaseBlockClassifier<TData extends BlockData = {}> {
   blockType: string;
 }
 
-export interface TextBlockClassifier<TData extends BlockData = {}>
-  extends BaseBlockClassifier<TData> {
+export interface TextBlockClassifier<TData extends BlockData = BlockData>
+  extends BaseBlockClassifier {
   /**
    * The classifier function. Receives the text to be classified and returns
    * true if the text matches the classifier.
@@ -33,8 +33,8 @@ export interface TextBlockClassifier<TData extends BlockData = {}>
   initializeData?: (text: string) => TData;
 }
 
-export interface FileBlockClassifier<TData extends BlockData = {}>
-  extends BaseBlockClassifier<TData> {
+export interface FileBlockClassifier<TData extends BlockData = BlockData>
+  extends BaseBlockClassifier {
   /**
    * The file extensions that the classifier will match.
    */
@@ -58,8 +58,8 @@ export interface FileBlockClassifier<TData extends BlockData = {}>
   initializeData?: (file: File) => TData;
 }
 
-export interface LinkBlockClassifier<TData extends BlockData = {}>
-  extends BaseBlockClassifier<TData> {
+export interface LinkBlockClassifier<TData extends BlockData = BlockData>
+  extends BaseBlockClassifier {
   /**
    * A URL containing one of these patterns will return a match.
    *

@@ -8,9 +8,10 @@ import {
   selectionItemTypeConfig,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
-import { dragStart } from './dragStart';
 import { ACTION_DATA_KEY } from '../constants';
 import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
+import { SelectionDragEventData } from '../types';
+import { dragStart } from './dragStart';
 
 describe('dragStart', () => {
   let data: Record<string, string> = {};
@@ -70,13 +71,20 @@ describe('dragStart', () => {
   it('dispatches a `selection:drag:start: event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:drag:start' events
-      Events.addListener('selection:drag:start', 'test', (payload) => {
-        // Payload data should contain the event
-        expect(payload.data.event).toEqual(dragEvent);
-        // Payload data should contain the selection
-        expect(payload.data.selection).toEqual([selectedItem1, selectedItem3]);
-        done();
-      });
+      Events.addListener<SelectionDragEventData>(
+        'selection:drag:start',
+        'test',
+        (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(dragEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([
+            selectedItem1,
+            selectedItem3,
+          ]);
+          done();
+        },
+      );
 
       // Initiate a drag
       dragStart(dragEvent, 'move');

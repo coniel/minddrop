@@ -31,19 +31,22 @@ export function unminifyContentIcon(
  * [category, ContentIcon[]] tuples.
  */
 export function groupByCategory(icons: UnminifiedContentIcon[]) {
-  return icons.reduce<[string, UnminifiedContentIcon[]][]>((groups, icon) => {
-    icon.categories.forEach((category) => {
-      const groupIndex = groups.findIndex((group) => group[0] === category);
+  return icons.reduce<[string, UnminifiedContentIcon[]][]>(
+    (groups, icon) => {
+      icon.categories.forEach((category) => {
+        const groupIndex = groups.findIndex((group) => group[0] === category);
 
-      if (groupIndex === -1) {
-        groups.push([category, [icon]]);
-      } else {
-        groups[groupIndex][1].push(icon);
-      }
-    });
+        if (groupIndex === -1) {
+          groups.push([category, [icon]]);
+        } else {
+          groups[groupIndex][1].push(icon);
+        }
+      });
 
-    return groups;
-  }, [] as [string, UnminifiedContentIcon[]][]);
+      return groups;
+    },
+    [] as [string, UnminifiedContentIcon[]][],
+  );
 }
 
 // Get all labels from all icons as an array

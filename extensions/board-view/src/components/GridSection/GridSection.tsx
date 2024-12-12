@@ -21,6 +21,6 @@ export interface GridSectionProps {
   ) => Promise<Block[]>;
 }
 
-export const GridSection: React.FC<GridSectionProps> = ({}) => {
+export const GridSection: React.FC<GridSectionProps> = () => {
   return <div>Not implemented</div>;
 };

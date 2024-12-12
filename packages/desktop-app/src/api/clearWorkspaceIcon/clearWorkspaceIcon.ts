@@ -1,4 +1,3 @@
-import { UserIconType } from '@minddrop/icons';
 import { DefaultWorkspaceIcon, Workspaces } from '@minddrop/workspaces';
 
 /**

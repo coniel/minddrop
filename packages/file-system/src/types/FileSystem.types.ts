@@ -1,3 +1,3 @@
 import { FileSystemAdapter } from './FileSystemAdapter.types';
 
-export interface FileSystem extends FileSystemAdapter {}
+export type FileSystem = FileSystemAdapter;

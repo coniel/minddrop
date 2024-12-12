@@ -18,17 +18,7 @@ import { Blocks } from '@minddrop/blocks';
 import { ContentPicker } from '../ContentPicker';
 import { Documents } from '@minddrop/documents';
 
-export interface DocumentContentToolbarBlockOptionsProps
-  extends React.HTMLProps<HTMLDivElement> {
-  /**
-   * The content of the DocumentContentToolbarBlockOptions.
-   */
-  children?: React.ReactNode;
-}
-
-export const DocumentContentToolbarBlockOptions: React.FC<
-  DocumentContentToolbarBlockOptionsProps
-> = ({ children, className, ...other }) => {
+export const DocumentContentToolbarBlockOptions: React.FC = () => {
   const { t } = useTranslation('blocks.selection');
   const [contentPickerOpen, setContentPickerOpen] = useState(false);
   const [moveTooltipOpen, setMoveTooltipOpen] = useState<boolean | undefined>();
@@ -85,7 +75,7 @@ export const DocumentContentToolbarBlockOptions: React.FC<
   };
 
   return (
-    <div className="section" {...other}>
+    <div className="section">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <DocumentContentToolbarItem

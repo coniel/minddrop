@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Block, DocumentViewProps } from '@minddrop/extension';
+import { Block } from '@minddrop/extension';
 import { BoardDropZone } from '../BoardDropZone';
 import { BoardColumn, BoardColumnsSection } from '../../types';
 import './ColumnsSection.css';

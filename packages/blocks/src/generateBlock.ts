@@ -49,7 +49,7 @@ export function generateBlock(
  * @returns A new block.
  */
 export function generateTextBlock(text = ''): Block {
-  let block = generateBlock('text', { text });
+  const block = generateBlock('text', { text });
 
   const properties = classifyTextBlock(text) || block;
 

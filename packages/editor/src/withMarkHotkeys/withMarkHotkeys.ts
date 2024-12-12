@@ -41,10 +41,9 @@ export function withMarkHotkeys(
   return (event: React.KeyboardEvent<HTMLDivElement>) => {
     const parsedMarkHotkeys: ParsedMarkHotkey[] = markConfigs
       .filter((markConfig) => !!markConfig.hotkeys)
-      .reduce<ParsedMarkHotkey[]>(
-        (hotkeys, markConfig) => [...hotkeys, ...parseMarkHotkeys(markConfig)],
-        [],
-      );
+      .reduce<
+        ParsedMarkHotkey[]
+      >((hotkeys, markConfig) => [...hotkeys, ...parseMarkHotkeys(markConfig)], []);
 
     // Attempt to match the keydown event to a mark hotkey
     return !parsedMarkHotkeys.every((parsedHotkey) => {

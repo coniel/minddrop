@@ -10,7 +10,7 @@ import { BlockParseError } from '../errors';
  *
  * @throws {BlockParseError} When the serialized block is invalid.
  */
-export function parseBlock<TData extends CustomBlockData = {}>(
+export function parseBlock<TData extends CustomBlockData = CustomBlockData>(
   blockData: string | DeserializedBlockData<TData>,
 ): Block<TData> {
   // If the block data is already deserialized, we can skip the parsing
@@ -26,6 +26,7 @@ export function parseBlock<TData extends CustomBlockData = {}>(
     // Restore the dates in the block data
     return restoreDates<Block<TData>>(deserializedBlockData);
   } catch (error) {
+    console.error(error);
     throw new BlockParseError(blockData);
   }
 }

@@ -1,4 +1,3 @@
-import { Blocks } from '@minddrop/blocks';
 import { getDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';

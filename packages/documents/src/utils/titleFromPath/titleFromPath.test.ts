@@ -1,4 +1,4 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { titleFromPath } from './titleFromPath';
 
 describe('titleFromPath', () => {

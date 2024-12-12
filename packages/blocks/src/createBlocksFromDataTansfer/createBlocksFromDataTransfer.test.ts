@@ -52,8 +52,8 @@ describe('createBlocksFromDataTransfer', () => {
     vi.useRealTimers();
   });
 
-  it('dispatches a block create event for each individual block', async () =>
-    new Promise<void>(async (done) => {
+  it('dispatches a block create event for each individual block', () =>
+    new Promise<void>((done) => {
       Events.addListener('blocks:block:create', 'test', (payload) => {
         // Payload data should be the new block
         expect(payload.data).toEqual({

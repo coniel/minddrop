@@ -59,11 +59,11 @@ export interface NumberValidator extends BaseValidator<'number', number> {
   max?: number;
 }
 
-export interface BooleanValidator extends BaseValidator<'boolean', boolean> {}
+export type BooleanValidator = BaseValidator<'boolean', boolean>;
 
-export interface DateValidator extends BaseValidator<'date', Date> {}
+export type DateValidator = BaseValidator<'date', Date>;
 
-export interface NullValidator extends BaseValidator<'null', null> {}
+export type NullValidator = BaseValidator<'null', null>;
 
 // The values allowed in an enum
 export type EnumValue = string | boolean | number | null;
@@ -175,8 +175,8 @@ export interface ValidatorValidator<TValidator extends Validator = Validator>
   optionsSchemas?: Record<string, ValidatorOptionsSchema>;
 }
 
-export interface FunctionValidator
-  extends BaseValidator<'function', Function> {}
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export type FunctionValidator = BaseValidator<'function', Function>;
 
 export interface SchemaValidator<
   TValidator extends FieldValidator = CoreFieldValidator,

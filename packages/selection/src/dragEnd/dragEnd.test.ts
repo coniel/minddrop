@@ -2,6 +2,7 @@ import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
+import { SelectionDragEventData } from '../types';
 import { dragEnd } from './dragEnd';
 
 describe('dragEnd', () => {
@@ -33,13 +34,20 @@ describe('dragEnd', () => {
   it('dispatches a `selection:drag:end: event', () =>
     new Promise<void>((done) => {
       // Listen to 'selection:drag:end' events
-      Events.addListener('selection:drag:end', 'test', (payload) => {
-        // Payload data should contain the event
-        expect(payload.data.event).toEqual(dragEvent);
-        // Payload data should contain the selection
-        expect(payload.data.selection).toEqual([selectedItem1, selectedItem3]);
-        done();
-      });
+      Events.addListener<SelectionDragEventData>(
+        'selection:drag:end',
+        'test',
+        (payload) => {
+          // Payload data should contain the event
+          expect(payload.data.event).toEqual(dragEvent);
+          // Payload data should contain the selection
+          expect(payload.data.selection).toEqual([
+            selectedItem1,
+            selectedItem3,
+          ]);
+          done();
+        },
+      );
 
       // End a drag
       dragEnd(dragEvent);

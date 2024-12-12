@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createArrayStore } from '@minddrop/utils';
 import { Block, BlockVariant } from './types';
 import { BlockTypesStore } from './BlockTypesStore';

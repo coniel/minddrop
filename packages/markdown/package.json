@@ -2,9 +2,10 @@
   "name": "@minddrop/markdown",
   "version": "0.0.0",
   "main": "src/index",
+  "type": "module",
   "types": "src/index",
   "scripts": {
-    "lint": "eslint ./**/*.ts*",
+    "lint": "eslint .  --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -12,8 +13,8 @@
   "devDependencies": {
     "@minddrop/test-utils": "workspace:*",
     "@types/mdast": "^4.0.0",
-    "eslint": "^8.40.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "^9.16.0",
+    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

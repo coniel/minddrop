@@ -51,7 +51,7 @@ export const ColorSelection: React.FC = () => (
   <div style={{ maxWidth: 240 }}>
     <Menu>
       {ContentColors.map((color) => (
-        <ColorSelectionMenuItem color={color.value} />
+        <ColorSelectionMenuItem key={color.value} color={color.value} />
       ))}
     </Menu>
   </div>

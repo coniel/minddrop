@@ -39,21 +39,21 @@ export interface BaseVoidInlineElement<TType extends string = string>
 /**
  * Type specific data cannot use same keys as base data.
  */
-export type InlineElementTypeData = Object & {
+export type InlineElementTypeData = object & {
   [K in keyof BaseVoidInlineElement]?: never;
 };
 
 export type TextInlineElement<
   TType extends string = string,
-  TTypeData extends InlineElementTypeData = {},
+  TTypeData extends InlineElementTypeData = object,
 > = BaseInlineElement<TType> & TTypeData;
 
 export type VoidInlineElement<
   TType extends string = string,
-  TTypeData extends InlineElementTypeData = {},
+  TTypeData extends InlineElementTypeData = object,
 > = BaseVoidInlineElement<TType> & TTypeData;
 
 export type InlineElement<
   TType extends string = string,
-  TTypeData extends InlineElementTypeData = {},
+  TTypeData extends InlineElementTypeData = object,
 > = TextInlineElement<TType, TTypeData> | VoidInlineElement<TType, TTypeData>;

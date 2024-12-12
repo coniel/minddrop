@@ -57,7 +57,6 @@ export function withMarks(
 ): [Editor, (props: RenderLeafProps) => JSX.Element] {
   const { apply } = editor;
 
-  // eslint-disable-next-line no-param-reassign
   editor.apply = (operation) => {
     apply(operation);
 

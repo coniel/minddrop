@@ -22,7 +22,7 @@ describe('parseDateOrNow', () => {
     const mockDate = new Date('2024-11-30T12:00:00Z');
     vi.setSystemTime(mockDate);
 
-    // @ts-expect-error
+    // @ts-expect-error - Testing undefined input
     const result = parseDateOrNow(undefined);
     expect(result.toISOString()).toBe(mockDate.toISOString());
 
@@ -33,7 +33,7 @@ describe('parseDateOrNow', () => {
     const mockDate = new Date('2024-11-30T12:00:00Z');
     vi.setSystemTime(mockDate);
 
-    // @ts-expect-error
+    // @ts-expect-error - Testing null
     const result = parseDateOrNow(null);
     expect(result.toISOString()).toBe(mockDate.toISOString());
 
