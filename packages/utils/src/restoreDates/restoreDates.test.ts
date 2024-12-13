@@ -25,7 +25,7 @@ describe('restoreDates', () => {
         ],
       },
     };
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result.nested.createdAt).toBeInstanceOf(Date);
     expect(result.nested.items[0].addedAt).toBeInstanceOf(Date);
@@ -37,7 +37,7 @@ describe('restoreDates', () => {
       name: 'John Doe',
       age: 30,
     };
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result.name).toBe('John Doe');
     expect(result.age).toBe(30);
@@ -48,7 +48,7 @@ describe('restoreDates', () => {
       createdAt: 'invalid-date',
       updatedAt: 'not-a-date',
     };
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result.createdAt).toBe('invalid-date');
     expect(result.updatedAt).toBe('not-a-date');
@@ -59,7 +59,7 @@ describe('restoreDates', () => {
       emptyObj: {},
       emptyArray: [],
     };
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result.emptyObj).toEqual({});
     expect(result.emptyArray).toEqual([]);
@@ -80,7 +80,7 @@ describe('restoreDates', () => {
         },
       },
     };
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result.user.createdAt).toBeInstanceOf(Date);
     expect(result.user.nested.info.lastLogin).toBeInstanceOf(Date);
@@ -97,7 +97,7 @@ describe('restoreDates', () => {
       { createdAt: '2024-12-06T15:00:00.000Z' },
       { createdAt: '2024-12-07T16:00:00.000Z' },
     ];
-    const result = restoreDates(input);
+    const result: typeof input = restoreDates(input);
 
     expect(result[0].createdAt).toBeInstanceOf(Date);
     expect(result[1].createdAt).toBeInstanceOf(Date);
