@@ -30,16 +30,21 @@ const defaultState: AppUiState = {
   defaultEmojiSkinTone: 0,
 };
 
-export const AppUiState = createPersistentConfig('app-ui', defaultState);
+export const AppUiState = createPersistentConfig<AppUiState>(
+  'app-ui',
+  defaultState,
+);
 
-export const useCurrentView = () =>
-  AppUiState.useValue('view') as string | null;
+export const useCurrentView = () => AppUiState.useValue('view', null);
 
 export const useCurrentDocumentId = () =>
-  AppUiState.useValue('activeDocumentId') as string | null;
+  AppUiState.useValue('activeDocumentId', null);
 
 export const useSidebarWidth = () =>
-  AppUiState.useValue('sidebarWidth') as number;
+  AppUiState.useValue('sidebarWidth', defaultState.sidebarWidth);
 
 export const useDefaultEmojiSkinTone = () =>
-  AppUiState.useValue('defaultEmojiSkinTone') as EmojiSkinTone;
+  AppUiState.useValue(
+    'defaultEmojiSkinTone',
+    defaultState.defaultEmojiSkinTone,
+  );
