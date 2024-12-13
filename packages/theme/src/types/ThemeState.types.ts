@@ -3,7 +3,7 @@ import {
   ThemeAppearanceSetting,
 } from './ThemeAppearance.types';
 
-export interface ThemeStore {
+export interface ThemeState {
   /**
    * The currently active theme appearance.
    */
