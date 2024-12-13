@@ -32,7 +32,7 @@ export interface MenuItemComponentProps {
 }
 
 export interface RadioMenuItemComponentProps extends MenuItemComponentProps {
-  value: unknown;
+  value: string;
 }
 
 export interface InteractiveMenuItemProps
