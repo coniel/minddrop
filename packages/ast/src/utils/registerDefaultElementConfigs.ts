@@ -6,7 +6,15 @@ import {
   HorizontalRuleElementConfig,
   ParagraphElementConfig,
   UnorderedListItemElementConfig,
+  parseBookmarkElementFromMarkdown,
+  parseFileElementFromMarkdown,
+  parseHeadingElementFromMarkdown,
+  parseHorizontalRuleElementFromMarkdown,
+  parseParagraphElementFromMarkdown,
+  parseToDoElementFromMarkdown,
+  parseUnorderedListItemElementFromMarkdown,
 } from '../element-configs';
+import { MarkdownLineParsersStore } from '../MarkdownLineParsersStore';
 import { registerElementTypeConfig } from '../registerElementTypeConfig';
 
 /**
@@ -24,8 +32,23 @@ export function registerDefaultElementConfigs() {
     ParagraphElementConfig,
   ];
 
+  const markdownLineParsers = [
+    parseHeadingElementFromMarkdown,
+    parseBookmarkElementFromMarkdown,
+    parseToDoElementFromMarkdown,
+    parseFileElementFromMarkdown,
+    parseHorizontalRuleElementFromMarkdown,
+    parseUnorderedListItemElementFromMarkdown,
+    parseParagraphElementFromMarkdown,
+  ];
+
   // Register all default element configs
   configs.forEach((config) => {
     registerElementTypeConfig(config);
+  });
+
+  // Register all default markdown line parsers
+  markdownLineParsers.forEach((parser) => {
+    MarkdownLineParsersStore.add(parser);
   });
 }
