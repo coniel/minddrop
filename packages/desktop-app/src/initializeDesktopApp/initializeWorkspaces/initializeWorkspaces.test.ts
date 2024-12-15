@@ -3,7 +3,7 @@ import {
   FILE_SYSTEM_TEST_DATA,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
+import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../../AppUiState';
 import { initializeWorkspaces } from './initializeWorkspaces';
 

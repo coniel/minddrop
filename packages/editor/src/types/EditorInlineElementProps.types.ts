@@ -1,5 +1,5 @@
-import { Element } from '@minddrop/ast';
 import { RenderElementProps } from 'slate-react';
+import { Element } from '@minddrop/ast';
 
 /**
  * Props passed to the component used to render a InlineElement

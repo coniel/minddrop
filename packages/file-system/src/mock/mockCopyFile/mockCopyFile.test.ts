@@ -1,8 +1,8 @@
-import { describe, beforeEach, it, expect } from 'vitest';
-import { mockCopyFile } from './mockCopyFile';
-import { FsEntry } from '../../types';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { createTestFsRoot, documentA1, workspaceA } from '../../test-utils';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
+import { mockCopyFile } from './mockCopyFile';
 
 const COPY_PATH = `${workspaceA.path}/Document 1 copy.md`;
 

@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
+import React, { FC } from 'react';
 import { MenuLabel } from '../Menu';
 
 export type ContextMenuLabelProps = ContextMenuPrimitives.ContextMenuLabelProps;

@@ -1,9 +1,9 @@
-import { describe, afterEach, it, expect, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   document1,
-  wrappedDocument,
-  documents,
   document1Blocks,
+  documents,
+  wrappedDocument,
 } from '../test-utils';
 import {
   BlockDocumentMap,

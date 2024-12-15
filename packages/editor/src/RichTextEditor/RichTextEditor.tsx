@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Descendant } from 'slate';
 import { Editable, ReactEditor, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Element } from '@minddrop/ast';
-import { createEditor, createRenderElement } from '../utils';
-import { withMarks } from '../withMarks';
-import { withMarkHotkeys } from '../withMarkHotkeys';
-import { defaultMarkConfigs } from '../default-mark-configs';
-import { MarkConfigsStore } from '../MarkConfigsStore';
-import { Descendant } from 'slate';
-import { withBlockShortcuts } from '../withBlockShortcuts';
-import { withBlockReset } from '../withBlockReset';
-import { withReturnBehaviour } from '../withReturnBehaviour';
-import './RichTextEditor.css';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
+import { MarkConfigsStore } from '../MarkConfigsStore';
+import { defaultMarkConfigs } from '../default-mark-configs';
+import { createEditor, createRenderElement } from '../utils';
+import { withBlockReset } from '../withBlockReset';
+import { withBlockShortcuts } from '../withBlockShortcuts';
+import { withMarkHotkeys } from '../withMarkHotkeys';
+import { withMarks } from '../withMarks';
+import { withReturnBehaviour } from '../withReturnBehaviour';
+import './RichTextEditor.css';
 
 export interface EditorProps {
   /**

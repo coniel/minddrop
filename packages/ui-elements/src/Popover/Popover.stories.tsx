@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../Button';
-import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import { InvisibleTextField } from '../InvisibleTextField';
+import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 
 export default {
   title: 'ui/Popover',

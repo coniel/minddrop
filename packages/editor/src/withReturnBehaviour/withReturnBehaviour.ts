@@ -1,7 +1,7 @@
 import { Transforms } from 'slate';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 
 /**
  * Handles the insertion of breaks into the editor based

@@ -1,18 +1,18 @@
 import React from 'react';
-import { describe, afterEach, expect, it, vi } from 'vitest';
-import { render, cleanup, screen } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen } from '@minddrop/test-utils';
+import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
+import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 import {
+  MenuColorSelectionItemConfig,
+  MenuColorSelectionItemProps,
   MenuItemConfig,
   MenuLabelConfig,
   MenuSeparatorConfig,
-  SubmenuTriggerItemProps,
   MenuTopicSelectionItemConfig,
-  MenuColorSelectionItemConfig,
-  MenuColorSelectionItemProps,
+  SubmenuTriggerItemProps,
 } from '../../types';
 import { generateMenu } from './generateMenu';
-import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
-import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
 
 const Item: React.FC<InteractiveMenuItemProps> = ({ label }) => (
   <div data-testid="item">{label}</div>

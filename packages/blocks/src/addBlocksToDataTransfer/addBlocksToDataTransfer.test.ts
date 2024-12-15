@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { addBlocksToDataTransfer } from './addBlocksToDataTransfer';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createDataTransfer } from '@minddrop/test-utils';
 import { block1, block2 } from '../test-utils';
+import { addBlocksToDataTransfer } from './addBlocksToDataTransfer';
 
 describe('addBlocksToDataTransfer', () => {
   let dataTransfer = createDataTransfer({});

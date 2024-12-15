@@ -1,16 +1,16 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { WorkspacesStore } from '../WorkspacesStore';
+import { getWorkspace } from '../getWorkspace';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
 import {
-  setup,
   cleanup,
+  setup,
   workspace1,
   workspcesConfigFileDescriptor,
 } from '../test-utils';
-import { getWorkspace } from '../getWorkspace';
-import { WorkspacesStore } from '../WorkspacesStore';
 import { removeWorkspace } from './removeWorkspace';
-import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
 initializeMockFileSystem([
   // Workspaces config file

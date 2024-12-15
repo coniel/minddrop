@@ -1,10 +1,10 @@
-import { FC } from 'react';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
+import { FC } from 'react';
+import { Icon } from '../Icon';
 import {
   InteractiveMenuItem,
   InteractiveRadioMenuItemProps,
 } from '../InteractiveMenuItem';
-import { Icon } from '../Icon';
 
 export type DropdownMenuRadioItemProps = Omit<
   InteractiveRadioMenuItemProps,

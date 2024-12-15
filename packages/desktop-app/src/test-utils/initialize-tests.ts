@@ -1,13 +1,13 @@
-import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { vi } from 'vitest';
-import { Events } from '@minddrop/events';
-import { Workspaces } from '@minddrop/workspaces';
 import { Ast } from '@minddrop/ast';
-import { initializeExtensions } from '@minddrop/extensions';
 import DocumentBoardView from '@minddrop/board-view';
-import NodeTypeTextExtension from '@minddrop/text-block';
-import NodeTypeImageExtension from '@minddrop/image-block';
 import NodeTypeLinkExtension from '@minddrop/bookmark-block';
+import { Events } from '@minddrop/events';
+import { initializeExtensions } from '@minddrop/extensions';
+import NodeTypeImageExtension from '@minddrop/image-block';
+import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import NodeTypeTextExtension from '@minddrop/text-block';
+import { Workspaces } from '@minddrop/workspaces';
 
 export function setup() {
   Ast.registerDefaultConfigs();

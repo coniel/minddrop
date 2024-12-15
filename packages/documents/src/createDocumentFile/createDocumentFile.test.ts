@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  initializeMockFileSystem,
   InvalidPathError,
   PathConflictError,
+  initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { setup, cleanup } from '../test-utils';
+import { cleanup, setup } from '../test-utils';
 import { createDocumentFile } from './createDocumentFile';
 
 const TITLE = 'Document';

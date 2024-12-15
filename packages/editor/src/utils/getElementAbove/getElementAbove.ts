@@ -1,12 +1,12 @@
-import { Element } from '@minddrop/ast';
 import {
   Editor,
-  Element as SlateElement,
   NodeEntry,
-  Range,
   Path,
   Point,
+  Range,
+  Element as SlateElement,
 } from 'slate';
+import { Element } from '@minddrop/ast';
 
 interface Options {
   at?: Range | Path | Point;

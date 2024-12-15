@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
-import { getDocument } from '../getDocument';
-import { setup, cleanup, document1, documentFiles } from '../test-utils';
-import { DocumentsStore } from '../DocumentsStore';
-import { setDocumentIcon } from './setDocumentIcon';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
+import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
+import { DocumentsStore } from '../DocumentsStore';
+import { getDocument } from '../getDocument';
+import { cleanup, document1, documentFiles, setup } from '../test-utils';
+import { setDocumentIcon } from './setDocumentIcon';
 
 const icon: UserIcon = {
   type: UserIconType.ContentIcon,

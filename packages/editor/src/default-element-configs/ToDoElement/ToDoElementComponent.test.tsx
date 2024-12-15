@@ -1,10 +1,10 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { act, fireEvent, render } from '@minddrop/test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Ast, ToDoElement } from '@minddrop/ast';
-import { cleanup } from '../../test-utils';
-import { RichTextEditor } from '../../RichTextEditor';
-import { ToDoElementConfig } from './ToDoElementConfig';
+import { act, fireEvent, render } from '@minddrop/test-utils';
 import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
+import { RichTextEditor } from '../../RichTextEditor';
+import { cleanup } from '../../test-utils';
+import { ToDoElementConfig } from './ToDoElementConfig';
 
 const toDoElement = Ast.generateElement<ToDoElement>('to-do', {
   checked: false,

@@ -1,24 +1,24 @@
-import React from 'react';
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import {
-  render,
-  renderHook,
-  cleanup,
-  screen,
-  act,
-  fireEvent,
-} from '@minddrop/test-utils';
-import { useTranslation } from '@minddrop/i18n';
-import {
-  TopicSelectionMenuItem as TopicSelectionMenuItemPrimitive,
-  TopicSelectionMenuItemProps,
-} from './TopicSelectionMenuItem';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
+import React from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { useTranslation } from '@minddrop/i18n';
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  renderHook,
+  screen,
+} from '@minddrop/test-utils';
+import {
+  TopicSelectionMenuItem as TopicSelectionMenuItemPrimitive,
+  TopicSelectionMenuItemProps,
+} from './TopicSelectionMenuItem';
 
 const TopicSelectionMenuItem: React.FC<
   Omit<TopicSelectionMenuItemProps, 'MenuItemComponent'>

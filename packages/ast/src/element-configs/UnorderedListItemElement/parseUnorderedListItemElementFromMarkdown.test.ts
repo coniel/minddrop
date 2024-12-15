@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { parseUnorderedListItemElementFromMarkdown } from './parseUnorderedListItemElementFromMarkdown';
-import { UnorderedListItemElement } from './UnorderedListItemElement.types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
+import { UnorderedListItemElement } from './UnorderedListItemElement.types';
+import { parseUnorderedListItemElementFromMarkdown } from './parseUnorderedListItemElementFromMarkdown';
 
 const consume = vi.fn();
 const getNextLine = vi.fn();

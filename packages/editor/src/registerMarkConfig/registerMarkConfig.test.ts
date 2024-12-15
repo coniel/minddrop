@@ -1,9 +1,9 @@
-import { describe, afterEach, it, expect } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
+import { MarkConfigsStore } from '../MarkConfigsStore';
+import { boldMarkConfig } from '../default-mark-configs';
 import { cleanup } from '../test-utils';
 import { registerMarkConfig } from './registerMarkConfig';
-import { boldMarkConfig } from '../default-mark-configs';
-import { MarkConfigsStore } from '../MarkConfigsStore';
-import { Events } from '@minddrop/events';
 
 describe('registerMarkConfig', () => {
   afterEach(cleanup);

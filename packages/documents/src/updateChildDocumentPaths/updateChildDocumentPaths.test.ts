@@ -5,8 +5,8 @@ import {
   cleanup,
   documents,
   grandChildDocument,
-  workspaceDir,
   setup,
+  workspaceDir,
   wrappedChildDocument,
   wrappedDocument,
 } from '../test-utils';

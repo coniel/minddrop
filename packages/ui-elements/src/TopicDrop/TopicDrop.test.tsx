@@ -1,7 +1,7 @@
-import { describe, afterEach, expect, it } from 'vitest';
-import { render, cleanup } from '@minddrop/test-utils';
-import { TopicDrop } from './TopicDrop';
+import { afterEach, describe, expect, it } from 'vitest';
 import { i18n } from '@minddrop/i18n';
+import { cleanup, render } from '@minddrop/test-utils';
+import { TopicDrop } from './TopicDrop';
 
 describe('<TopicDrop />', () => {
   afterEach(cleanup);

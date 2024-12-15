@@ -1,8 +1,8 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup } from '../test-utils';
-import { createBlock } from './createBlock';
 import { getBlock } from '../getBlock';
+import { cleanup, setup } from '../test-utils';
+import { createBlock } from './createBlock';
 
 describe('createBlock', () => {
   beforeEach(setup);

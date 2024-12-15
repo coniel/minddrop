@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { Icon } from '../Icon';
 import {
   Collapsible,
-  CollapsibleTrigger,
   CollapsibleContent,
+  CollapsibleTrigger,
 } from './Collapsible';
-import { Icon } from '../Icon';
 
 export default {
   title: 'ui/Collapsible',

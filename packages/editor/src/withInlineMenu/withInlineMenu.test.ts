@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { toKeyName } from 'is-hotkey';
 import { Node, Transforms } from 'slate';
-import { setup, cleanup, createTestEditor } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, createTestEditor, setup } from '../test-utils';
 import { Editor, InlineMenuConfig } from '../types';
 import { withInlineMenus } from './withInlineMenu';
 

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { parseParagraphElementFromMarkdown } from './parseParagraphElementFromMarkdown';
-import { ParagraphElement } from './ParagraphElement.types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
+import { ParagraphElement } from './ParagraphElement.types';
+import { parseParagraphElementFromMarkdown } from './parseParagraphElementFromMarkdown';
 
 const paragraphElement = generateElement<ParagraphElement>('paragraph', {
   children: [{ text: 'Paragraph' }],

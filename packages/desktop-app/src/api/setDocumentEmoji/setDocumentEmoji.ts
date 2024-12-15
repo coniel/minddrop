@@ -1,5 +1,5 @@
-import { EmojiSkinTone, UserIconType } from '@minddrop/icons';
 import { Documents } from '@minddrop/documents';
+import { EmojiSkinTone, UserIconType } from '@minddrop/icons';
 
 /**
  * Sets the provided emoji as a document's icon.

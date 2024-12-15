@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { parseElementsFromMarkdown } from './parseElementsFromMarkdown';
+import { describe, expect, it } from 'vitest';
 import { ParseError } from '../errors';
 import { generateElement } from '../utils';
+import { parseElementsFromMarkdown } from './parseElementsFromMarkdown';
 
 const blockElement = generateElement('test');
 

@@ -1,15 +1,15 @@
-import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { DefaultWorkspaceIcon, Workspace } from '@minddrop/workspaces';
 import { useCallback, useEffect } from 'react';
-import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { ContentColor } from '@minddrop/core';
+import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
+import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
   Popover,
   PopoverContent,
   PopoverPortal,
   PopoverTrigger,
 } from '@minddrop/ui-elements';
-import { NavItemIcon } from '@minddrop/ui-desktop';
+import { useCreateCallback, useToggle } from '@minddrop/utils';
+import { DefaultWorkspaceIcon, Workspace } from '@minddrop/workspaces';
 import {
   clearWorkspaceIcon,
   setWorkspaceContentIcon,

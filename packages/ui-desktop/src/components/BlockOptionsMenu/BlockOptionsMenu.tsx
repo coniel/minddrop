@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import { mapPropsToClasses, useToggle } from '@minddrop/utils';
+import { Documents } from '@minddrop/documents';
 import { i18n } from '@minddrop/i18n';
 import {
   DropdownMenu,
@@ -12,10 +12,10 @@ import {
   PopoverPortal,
   Toolbar,
 } from '@minddrop/ui-elements';
+import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { createBlockOptionsMenu } from '../../menus/createBlockOptionsMenu';
-import './BlockOptionsMenu.css';
 import { ContentPicker } from '../ContentPicker';
-import { Documents } from '@minddrop/documents';
+import './BlockOptionsMenu.css';
 
 export interface BlockOptionsMenuProps
   extends React.HTMLAttributes<HTMLDivElement> {

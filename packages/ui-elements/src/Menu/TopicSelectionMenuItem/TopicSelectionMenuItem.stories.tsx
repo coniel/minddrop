@@ -1,15 +1,15 @@
+import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 import React from 'react';
+import { Button } from '../../Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../../DropdownMenu';
-import { Button } from '../../Button';
 import {
   TopicSelectionMenuItem as TopicSelectionMenuItemPrimitive,
   TopicSelectionMenuItemProps,
 } from './TopicSelectionMenuItem';
-import { DropdownMenuItem } from '@radix-ui/react-dropdown-menu';
 
 const TopicSelectionMenuItem: React.FC<
   Omit<TopicSelectionMenuItemProps, 'MenuItemComponent'>

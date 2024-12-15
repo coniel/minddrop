@@ -1,12 +1,12 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   FileNotFoundError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
 import { JsonParseError } from '@minddrop/utils';
 import {
-  setup,
   cleanup,
+  setup,
   workspacesConfig,
   workspcesConfigFileDescriptor,
 } from '../test-utils';

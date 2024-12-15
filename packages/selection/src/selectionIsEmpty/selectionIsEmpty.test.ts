@@ -1,5 +1,5 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, selectedItem1 } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { cleanup, selectedItem1, setup } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { selectionIsEmpty } from './selectionIsEmpty';
 

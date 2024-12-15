@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { getEmojiIconSkinTone } from './getEmojiIconSkinTone';
+import { describe, expect, it } from 'vitest';
 import { stringifyIcon } from '../stringifyIcon';
 import { contentIcon, emojiIcon, emojiIcon0SkinTone } from '../test-utils';
+import { getEmojiIconSkinTone } from './getEmojiIconSkinTone';
 
 describe('getEmojiIconSkinTone', () => {
   it('returns the skin tone of an emoji icon', () => {

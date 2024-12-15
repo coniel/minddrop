@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { promptMoveWorkspace } from './promptMoveWorkspace';
+import { describe, expect, it, vi } from 'vitest';
 import { Workspaces } from '@minddrop/workspaces';
+import { promptMoveWorkspace } from './promptMoveWorkspace';
 
 const WORKSPACE_PATH = 'path/to/Workspace';
 

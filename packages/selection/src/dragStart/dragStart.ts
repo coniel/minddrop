@@ -1,10 +1,10 @@
 import React from 'react';
-import { Events } from '@minddrop/events';
 import { DataInsertAction } from '@minddrop/core';
-import { serializeSelectionToDataTransfer } from '../utils/selectionToEventData';
-import { useSelectionStore } from '../useSelectionStore';
-import { getSelection } from '../getSelection';
+import { Events } from '@minddrop/events';
 import { ACTION_DATA_KEY } from '../constants';
+import { getSelection } from '../getSelection';
+import { useSelectionStore } from '../useSelectionStore';
+import { serializeSelectionToDataTransfer } from '../utils/selectionToEventData';
 
 /**
  * Serializes the current selection to a drag event's data transfer data.

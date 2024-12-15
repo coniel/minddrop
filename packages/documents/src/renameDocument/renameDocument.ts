@@ -4,12 +4,12 @@ import {
   Fs,
   PathConflictError,
 } from '@minddrop/file-system';
+import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
 import { Document } from '../types';
-import { isWrapped } from '../utils';
 import { updateChildDocumentPaths } from '../updateChildDocumentPaths';
-import { DocumentsStore } from '../DocumentsStore';
+import { isWrapped } from '../utils';
 
 /**
  * Renames a document and its file.

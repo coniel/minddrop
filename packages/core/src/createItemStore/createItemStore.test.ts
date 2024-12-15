@@ -1,5 +1,5 @@
-import { describe, beforeEach, it, expect } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { ItemStore } from '../types';
 import { createItemStore } from './createItemStore';
 

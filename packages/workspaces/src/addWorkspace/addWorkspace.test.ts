@@ -1,18 +1,18 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  initializeMockFileSystem,
-  FileNotFoundError,
-} from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
-  setup,
+  FileNotFoundError,
+  initializeMockFileSystem,
+} from '@minddrop/file-system';
+import { WorkspacesStore } from '../WorkspacesStore';
+import { getWorkspacesConfig } from '../getWorkspacesConfig';
+import {
   cleanup,
   newWorkspace,
+  setup,
   workspcesConfigFileDescriptor,
 } from '../test-utils';
-import { WorkspacesStore } from '../WorkspacesStore';
 import { addWorkspace } from './addWorkspace';
-import { getWorkspacesConfig } from '../getWorkspacesConfig';
 
 const MockFs = initializeMockFileSystem([
   // Workspaces config file

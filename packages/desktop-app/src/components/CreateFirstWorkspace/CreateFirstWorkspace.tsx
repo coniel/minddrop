@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 import { getVersion } from '@tauri-apps/api/app';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { useEffect, useState } from 'react';
+import { useTranslation } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
 import { MindDropLogo, Text, Toolbar } from '@minddrop/ui-elements';
-import { useTranslation } from '@minddrop/i18n';
 import { useToggle } from '@minddrop/utils';
-import { OpenWorkspaceCard } from './OpenWorkspaceCard';
 import { ShowWindowOnRendered } from '../../utils';
-import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
-import { QuickStartCard } from './QuickStartCard';
-import { CreateWorkspaceCard } from './CreateWorkspaceCard';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm';
+import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
 import './CreateFirstWorkspace.css';
+import { CreateWorkspaceCard } from './CreateWorkspaceCard';
+import { OpenWorkspaceCard } from './OpenWorkspaceCard';
+import { QuickStartCard } from './QuickStartCard';
 
 function closeWindow() {
   getCurrentWindow().close();

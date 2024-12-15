@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { BlockVariantProps, useApi } from '@minddrop/extension';
 import { LocalImage } from '../Image';
 import './BookmarkCardHorizontal.css';

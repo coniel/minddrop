@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { getContentIconColor } from './getContentIconColor';
+import { describe, expect, it } from 'vitest';
 import { stringifyIcon } from '../stringifyIcon';
 import { contentIcon, emojiIcon } from '../test-utils';
+import { getContentIconColor } from './getContentIconColor';
 
 describe('getContentIconColor', () => {
   it('returns the color if the icon is a content icon', () => {

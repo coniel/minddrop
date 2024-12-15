@@ -1,4 +1,4 @@
-import { Editor as SlateEditor, Path, Text, Transforms, Range } from 'slate';
+import { Path, Range, Editor as SlateEditor, Text, Transforms } from 'slate';
 import { Element } from '@minddrop/ast';
 import {
   Editor,

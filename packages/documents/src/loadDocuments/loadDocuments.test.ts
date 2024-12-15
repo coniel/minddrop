@@ -1,20 +1,20 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
-import { Events } from '@minddrop/events';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Blocks } from '@minddrop/blocks';
+import { Events } from '@minddrop/events';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { getDocument } from '../getDocument';
 import {
-  setup,
   cleanup,
-  workspaceDir,
-  documentFiles,
-  documents,
-  documentViews,
   documentBlocks,
+  documentFiles,
+  documentViews,
   documentViewsObject,
+  documents,
+  setup,
+  workspaceDir,
 } from '../test-utils';
 import { loadDocuments } from './loadDocuments';
-import { getDocument } from '../getDocument';
-import { DocumentViewsStore } from '../DocumentViewsStore';
 
 initializeMockFileSystem([
   // Document files

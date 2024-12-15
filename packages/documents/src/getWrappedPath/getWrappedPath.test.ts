@@ -1,5 +1,5 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { cleanup, setup } from '../test-utils';
 import { getWrappedPath } from './getWrappedPath';
 
 describe('getWrappedPath', () => {

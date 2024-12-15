@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Sidebar } from './Sidebar';
-import { NavGroup } from '../NavGroup';
 import { DocumentNavItem } from '../DocumentNavItem';
+import { IconButton } from '../IconButton';
+import { NavGroup } from '../NavGroup';
 import { PrimaryNavItem } from '../PrimaryNavItem';
 import { SecondaryNavItem } from '../SecondaryNavItem';
 import { Toolbar } from '../Toolbar';
-import { IconButton } from '../IconButton';
+import { Sidebar } from './Sidebar';
 
 export default {
   title: 'ui/Sidebar',

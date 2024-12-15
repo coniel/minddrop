@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataInsertAction } from '@minddrop/core';
-import { serializeSelectionToDataTransfer } from '../utils/selectionToEventData';
 import { ACTION_DATA_KEY } from '../constants';
+import { serializeSelectionToDataTransfer } from '../utils/selectionToEventData';
 
 /**
  * Serializes the current selection to a clipboard event's data.

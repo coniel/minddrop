@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import * as SeparatorPrimitive from '@radix-ui/react-separator';
+import { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Separator.css';
 

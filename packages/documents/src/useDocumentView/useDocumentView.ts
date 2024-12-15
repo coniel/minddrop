@@ -1,5 +1,5 @@
-import { DocumentView } from '../types';
 import { DocumentViewsStore as useDocumentViewsStore } from '../DocumentViewsStore';
+import { DocumentView } from '../types';
 
 /**
  * Returns a document view from the given id or null if not found.

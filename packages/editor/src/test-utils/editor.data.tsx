@@ -1,11 +1,11 @@
 import {
   Ast,
   HeadingElement,
-  ToDoElement,
-  ParagraphElement,
+  LinkElement,
   MathBlockElement,
   MathInlineElement,
-  LinkElement,
+  ParagraphElement,
+  ToDoElement,
 } from '@minddrop/ast';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';

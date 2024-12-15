@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContentColors } from '../constants';
 import { Icon } from '../Icon';
+import { ContentColors } from '../constants';
 import { ColorSelectionMenuItem } from './ColorSelectionMenuItem';
 import { Menu } from './Menu';
 import { MenuItem } from './MenuItem';

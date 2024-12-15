@@ -1,13 +1,13 @@
 import React from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
-import { Icon } from '../Icon';
-import { Text } from '../Text';
+import { mapPropsToClasses } from '@minddrop/utils';
 import {
   Collapsible,
-  CollapsibleTrigger,
   CollapsibleContent,
+  CollapsibleTrigger,
 } from '../Collapsible';
+import { Icon } from '../Icon';
+import { Text } from '../Text';
 import './DocumentNavItem.css';
 
 export interface DocumentNavItemProps

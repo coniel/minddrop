@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconsProvider, IconsConsumer, UiIconName } from '@minddrop/icons';
+import { IconsConsumer, IconsProvider, UiIconName } from '@minddrop/icons';
 import { Tooltip } from '../Tooltip';
 import { Icon } from './Icon';
 

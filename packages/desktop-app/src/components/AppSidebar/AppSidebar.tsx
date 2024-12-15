@@ -1,15 +1,15 @@
 import { FC, useCallback } from 'react';
-import {
-  Sidebar,
-  NavGroup,
-  Toolbar,
-  SecondaryNavItem,
-} from '@minddrop/ui-elements';
 import { useTranslation } from '@minddrop/i18n';
-import { AppUiState, useSidebarWidth } from '../../AppUiState';
+import {
+  NavGroup,
+  SecondaryNavItem,
+  Sidebar,
+  Toolbar,
+} from '@minddrop/ui-elements';
 import { useWorkspaces } from '@minddrop/workspaces';
-import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
+import { AppUiState, useSidebarWidth } from '../../AppUiState';
 import { AddWorkspaceMenu } from '../AddWorkspaceMenu';
+import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
 import { WorkspaceNavItem } from '../WorkspaceNavItem';
 import './AppSidebar.css';
 

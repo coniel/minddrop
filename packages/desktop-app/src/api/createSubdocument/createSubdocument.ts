@@ -1,10 +1,10 @@
 import {
   Document,
-  Documents,
   DocumentNotFoundError,
+  Documents,
 } from '@minddrop/documents';
-import { createDocument } from '../createDocument';
 import { Fs } from '@minddrop/file-system';
+import { createDocument } from '../createDocument';
 
 /**
  * Creates a new "Untitled" document and its asscoitated file

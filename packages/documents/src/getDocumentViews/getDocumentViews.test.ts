@@ -1,13 +1,13 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DocumentViewsStore } from '../DocumentViewsStore';
 import {
-  setup,
   cleanup,
-  documentViews,
   document1View1,
   document1View2,
+  documentViews,
+  setup,
 } from '../test-utils';
 import { getDocumentViews } from './getDocumentViews';
-import { DocumentViewsStore } from '../DocumentViewsStore';
 
 describe('getDocumentViews', () => {
   beforeEach(() => {

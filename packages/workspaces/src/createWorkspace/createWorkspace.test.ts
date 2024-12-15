@@ -1,19 +1,19 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import {
   InvalidPathError,
   PathConflictError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { Events } from '@minddrop/events';
+import { getWorkspace } from '../getWorkspace';
 import {
-  setup,
   cleanup,
-  workspcesConfigFileDescriptor,
   newWorkspace,
+  setup,
+  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { Workspace } from '../types';
 import { createWorkspace } from './createWorkspace';
-import { getWorkspace } from '../getWorkspace';
 
 const WORKSPACE_LOCATION = 'Users/foo/Documents';
 const WORKSPACE_NAME = 'My Workspace';

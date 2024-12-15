@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
-import { IconRenderer, IconProp } from '../IconRenderer';
+import { mapPropsToClasses } from '@minddrop/utils';
+import { IconProp, IconRenderer } from '../IconRenderer';
 import './Button.css';
 
 export interface ButtonBaseProps {

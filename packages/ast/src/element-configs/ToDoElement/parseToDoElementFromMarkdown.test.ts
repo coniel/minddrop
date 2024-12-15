@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { parseToDoElementFromMarkdown } from './parseToDoElementFromMarkdown';
-import { ToDoElement } from './ToDoElement.types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
+import { ToDoElement } from './ToDoElement.types';
+import { parseToDoElementFromMarkdown } from './parseToDoElementFromMarkdown';
 
 const consume = vi.fn();
 const getNextLine = vi.fn();

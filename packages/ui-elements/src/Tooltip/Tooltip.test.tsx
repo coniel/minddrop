@@ -1,10 +1,10 @@
-import { describe, beforeAll, afterEach, it } from 'vitest';
+import { afterEach, beforeAll, describe, it } from 'vitest';
 import {
-  render,
-  waitFor,
   cleanup,
+  render,
   screen,
   userEvent,
+  waitFor,
 } from '@minddrop/test-utils';
 import { Tooltip, TooltipProvider } from './Tooltip';
 

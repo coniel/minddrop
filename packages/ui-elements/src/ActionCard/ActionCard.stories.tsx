@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActionCard } from './ActionCard';
 import { Button } from '../Button';
+import { ActionCard } from './ActionCard';
 
 export default {
   title: 'ui/ActionCard',

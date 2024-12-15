@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { registerFileSystemAdapter } from '../FileSystem';
+import { concatPath } from '../concatPath';
 import { fileNameFromPath } from '../fileNameFromPath';
+import { mockRenameFile } from '../mock/mockRenameFile';
 import {
   BaseDirectory,
-  FsEntry,
   FileSystem,
   FsDirOptions,
+  FsEntry,
   FsFileOptions,
   MockFileDescriptor,
   MockFileSystem,
 } from '../types';
-import { registerFileSystemAdapter } from '../FileSystem';
-import { mockRenameFile } from '../mock/mockRenameFile';
+import { mockAddFileEntry } from './mockAddFileEntry';
 import { mockCopyFile } from './mockCopyFile';
 import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
-import { mockAddFileEntry } from './mockAddFileEntry';
-import { concatPath } from '../concatPath';
 
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],

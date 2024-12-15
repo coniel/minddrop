@@ -1,9 +1,9 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DOCUMENTS_TEST_DATA } from '@minddrop/documents';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { setup, cleanup } from '../../test-utils';
-import { setActiveDocument } from './setActiveDocument';
 import { AppUiState } from '../../AppUiState';
+import { cleanup, setup } from '../../test-utils';
+import { setActiveDocument } from './setActiveDocument';
 
 const { document1 } = DOCUMENTS_TEST_DATA;
 

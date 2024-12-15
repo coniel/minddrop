@@ -1,18 +1,18 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  documentFiles,
-  documents,
-  document1,
-  workspaceDir,
-  wrappedDocument,
-  childDocument,
-} from '../test-utils';
-import { createDocumentAssetsDir } from './createDocumentAssetsDir';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
+import {
+  childDocument,
+  cleanup,
+  document1,
+  documentFiles,
+  documents,
+  setup,
+  workspaceDir,
+  wrappedDocument,
+} from '../test-utils';
+import { createDocumentAssetsDir } from './createDocumentAssetsDir';
 
 const MockFs = initializeMockFileSystem(documentFiles);
 

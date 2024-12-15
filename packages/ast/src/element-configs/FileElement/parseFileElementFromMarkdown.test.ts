@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
-import { parseFileElementFromMarkdown } from './parseFileElementFromMarkdown';
 import { FileElement } from './FileElement.types';
+import { parseFileElementFromMarkdown } from './parseFileElementFromMarkdown';
 
 const consume = vi.fn();
 const getNextLine = vi.fn();

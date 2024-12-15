@@ -1,6 +1,6 @@
 import { ElementTypeConfig } from '../../types';
-import { stringifyUnorderedListItemElementToMarkdown } from './stringifyUnorderedListItemElementToMarkdown';
 import { stringifyUnorderedListItemElementBatchToMarkdown } from './stringifyUnorderedListItemElementBatchToMarkdown';
+import { stringifyUnorderedListItemElementToMarkdown } from './stringifyUnorderedListItemElementToMarkdown';
 
 export const UnorderedListItemElementConfig: ElementTypeConfig = {
   type: 'unordered-list-item',

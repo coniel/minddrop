@@ -1,33 +1,33 @@
+import { useCallback, useMemo } from 'react';
+import { Document, Documents, useChildDocuments } from '@minddrop/documents';
+import { ContentPicker } from '@minddrop/ui-desktop';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuPortal,
   ContextMenuTrigger,
+  DocumentNavItem as DocumentNavItemPrimitive,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuTrigger,
   IconButton,
-  DocumentNavItem as DocumentNavItemPrimitive,
   Popover,
   PopoverAnchor,
   PopoverPortal,
   Tooltip,
 } from '@minddrop/ui-elements';
-import { ContentPicker } from '@minddrop/ui-desktop';
-import { Document, Documents, useChildDocuments } from '@minddrop/documents';
-import { DocumentNavItemIcon } from '../DocumentNavItemIcon';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { useCallback, useMemo } from 'react';
+import { useCurrentDocumentId } from '../../AppUiState';
 import {
   createSubdocument,
-  revealInFileExplorer,
   moveDocument,
+  revealInFileExplorer,
   setActiveDocument,
 } from '../../api';
 import { createDocumentOptionsMenu } from '../../menus/createDocumentOptionsMenu';
+import { DocumentNavItemIcon } from '../DocumentNavItemIcon';
 import { RenameDocumentPopover } from '../RenameDocumentPopover';
-import { useCurrentDocumentId } from '../../AppUiState';
 
 export interface DocumentNavItemProps {
   /**

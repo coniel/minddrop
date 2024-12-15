@@ -1,9 +1,9 @@
 import { createContext } from '@minddrop/utils';
+import { EvaIconSvg, EvaIconSvgProps } from '../EvaIconSvg';
+import { LucidIconSvgProps, LucideIconSvg } from '../LucideIconSvg';
+import { ContentIcons as ContentIconsChildren } from '../content-icons.min';
 import { ContentIconSet, UiIconSet } from '../icons.types';
 import { UiIcons as UiIconsChildren } from '../ui-icons.min';
-import { ContentIcons as ContentIconsChildren } from '../content-icons.min';
-import { EvaIconSvg, EvaIconSvgProps } from '../EvaIconSvg';
-import { LucideIconSvg, LucidIconSvgProps } from '../LucideIconSvg';
 
 export interface IconsProviderProps {
   children: React.ReactNode;

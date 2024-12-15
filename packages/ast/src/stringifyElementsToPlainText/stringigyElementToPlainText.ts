@@ -1,6 +1,6 @@
-import { Element } from '../types';
 import { ElementTypeConfigsStore } from '../ElementTypeConfigsStore';
 import { stringifyFragmentToPlainText } from '../stringifyFragmentToPlainText';
+import { Element } from '../types';
 import { hasBlockChildren } from '../utils';
 
 /**

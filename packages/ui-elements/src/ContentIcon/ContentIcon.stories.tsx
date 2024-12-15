@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconsProvider, IconsConsumer, ContentIconName } from '@minddrop/icons';
+import { ContentIconName, IconsConsumer, IconsProvider } from '@minddrop/icons';
 import { ContentIcon } from './ContentIcon';
 
 export default {

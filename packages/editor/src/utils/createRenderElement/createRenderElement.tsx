@@ -1,8 +1,8 @@
 import { RenderElementProps } from 'slate-react';
 import {
+  BlockElementProps,
   EditorBlockElementConfig,
   EditorInlineElementConfig,
-  BlockElementProps,
 } from '../../types';
 
 /**

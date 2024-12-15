@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, userEvent } from '@minddrop/test-utils';
 import { BaseDirectory, initializeMockFileSystem } from '@minddrop/file-system';
-import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
+import { render, userEvent } from '@minddrop/test-utils';
+import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
 import { cleanup, setup } from '../../../test-utils';
 import { QuickStartCard } from './QuickStartCard';
 

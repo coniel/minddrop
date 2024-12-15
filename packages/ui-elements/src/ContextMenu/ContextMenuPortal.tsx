@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
+import { FC } from 'react';
 
 export type ContextMenuPortalProps =
   ContextMenuPrimitives.ContextMenuPortalProps;

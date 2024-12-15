@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
-import { stringifyToDoElementBatchToMarkdown } from './stringifyToDoElementBatchToMarkdown';
 import { ToDoElement } from './ToDoElement.types';
+import { stringifyToDoElementBatchToMarkdown } from './stringifyToDoElementBatchToMarkdown';
 
 const toDoElements: ToDoElement[] = [
   generateElement<ToDoElement>('to-do', {

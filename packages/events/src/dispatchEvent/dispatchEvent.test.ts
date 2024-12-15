@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { dispatchEvent } from './dispatchEvent';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Event, EventListenerMap } from '../types';
+import { dispatchEvent } from './dispatchEvent';
 
 const asyncFunction = vi.fn();
 

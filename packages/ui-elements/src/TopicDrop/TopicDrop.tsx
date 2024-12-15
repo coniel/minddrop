@@ -1,6 +1,6 @@
 import React from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { mapPropsToClasses } from '@minddrop/utils';
 import './TopicDrop.css';
 
 export interface TopicDropProps extends React.HTMLAttributes<HTMLDivElement> {

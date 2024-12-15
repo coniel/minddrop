@@ -1,18 +1,18 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import React from 'react';
-import {
-  render,
-  cleanup,
-  screen,
-  fireEvent,
-  waitFor,
-  userEvent,
-} from '@minddrop/test-utils';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
+import React from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  userEvent,
+  waitFor,
+} from '@minddrop/test-utils';
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuTrigger,
 } from '../DropdownMenu';
 import { TooltipProvider } from '../Tooltip';
 import { InteractiveMenuItem } from './InteractiveMenuItem';

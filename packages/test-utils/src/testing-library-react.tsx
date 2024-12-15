@@ -1,16 +1,16 @@
-import { vi } from 'vitest';
-import React, { FC, ReactElement } from 'react';
+import type {} from '@testing-library/dom';
 import {
+  RenderHookOptions,
+  RenderOptions,
+  RenderResult,
   render,
   renderHook,
-  RenderResult,
-  RenderOptions,
-  RenderHookOptions,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React, { FC, ReactElement } from 'react';
+import { vi } from 'vitest';
 import { i18n, initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
-import userEvent from '@testing-library/user-event';
-import type {} from '@testing-library/dom';
 
 class ResizeObserver {
   observe() {}

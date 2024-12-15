@@ -1,7 +1,7 @@
-import { Element, MarkdownLineParser } from '../types';
-import { ParseError } from '../errors';
-import { generateElement } from '../utils';
 import { ParagraphElement } from '../element-configs/ParagraphElement';
+import { ParseError } from '../errors';
+import { Element, MarkdownLineParser } from '../types';
+import { generateElement } from '../utils';
 
 /**
  * Parses a markdown string into a list of elements.

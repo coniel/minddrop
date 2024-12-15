@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { render, cleanup, screen } from '@minddrop/test-utils';
-import { IconRenderer } from './IconRenderer';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen } from '@minddrop/test-utils';
 import { IconProps } from '../Icon';
+import { IconRenderer } from './IconRenderer';
 
 vi.mock('../Icon', () => ({
   Icon: (props: IconProps) => <svg data-testid="icon" {...props} />,

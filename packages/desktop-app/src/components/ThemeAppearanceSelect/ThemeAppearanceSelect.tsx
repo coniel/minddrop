@@ -7,13 +7,13 @@ import {
   useThemeAppearanceSetting,
 } from '@minddrop/theme';
 import {
-  IconButton,
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  IconButton,
 } from '@minddrop/ui-elements';
 
 export const ThemeAppearanceSelect: React.FC = () => {

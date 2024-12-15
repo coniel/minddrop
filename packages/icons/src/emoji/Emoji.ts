@@ -1,4 +1,5 @@
-import { MinifiedEmojiData, EmojiSkinTone } from './Emoji.types';
+import { EmojiSkinTone, MinifiedEmojiData } from './Emoji.types';
+import emojiJsonData from './emoji.min.json';
 import {
   getAllLabels,
   getSkinToneVariant,
@@ -6,7 +7,6 @@ import {
   searchEmoji,
   unminifyEmoji,
 } from './utils';
-import emojiJsonData from './emoji.min.json';
 
 const emojiData = emojiJsonData as unknown as MinifiedEmojiData;
 

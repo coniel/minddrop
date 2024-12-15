@@ -1,10 +1,10 @@
-import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DOCUMENTS_TEST_DATA,
   Documents,
   DocumentsStore,
 } from '@minddrop/documents';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { cleanup, setup } from '../../test-utils';
 import { moveDocument } from './moveDocument';
 

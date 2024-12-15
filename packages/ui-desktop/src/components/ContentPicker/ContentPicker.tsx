@@ -1,17 +1,17 @@
 import React, { useCallback, useState } from 'react';
+import { Document, useAllDocuments } from '@minddrop/documents';
+import { useTranslation } from '@minddrop/i18n';
 import {
   NavGroup,
   PopoverContent,
   PopoverContentProps,
   TextInput,
 } from '@minddrop/ui-elements';
-import { Workspace, useWorkspaces } from '@minddrop/workspaces';
-import { ContentPickerWorkspaceItem } from './ContentPickerWorkspaceItem';
-import { Document, useAllDocuments } from '@minddrop/documents';
 import { fuzzySearch } from '@minddrop/utils';
-import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
+import { Workspace, useWorkspaces } from '@minddrop/workspaces';
 import './ContentPicker.css';
-import { useTranslation } from '@minddrop/i18n';
+import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
+import { ContentPickerWorkspaceItem } from './ContentPickerWorkspaceItem';
 
 export interface ContentPickerProps {
   /**

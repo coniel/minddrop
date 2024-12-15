@@ -1,11 +1,11 @@
 import React from 'react';
+import { useTranslation } from '@minddrop/i18n';
+import { UserIcon, UserIconType, useIcon } from '@minddrop/icons';
 import {
   ContentIcon,
   IconButton,
   IconButtonProps,
 } from '@minddrop/ui-elements';
-import { UserIcon, UserIconType, useIcon } from '@minddrop/icons';
-import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './NavItemIcon.css';
 

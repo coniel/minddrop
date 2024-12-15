@@ -1,5 +1,5 @@
-import { describe, afterEach, it, vi } from 'vitest';
-import { render, cleanup } from '@minddrop/test-utils';
+import { afterEach, describe, it, vi } from 'vitest';
+import { cleanup, render } from '@minddrop/test-utils';
 import { FieldLabel } from './FieldLabel';
 
 const TRANSLATION = 'Le label';

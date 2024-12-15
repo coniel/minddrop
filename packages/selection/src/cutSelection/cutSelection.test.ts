@@ -1,15 +1,15 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import {
-  setup,
   cleanup,
   selectedItem1,
   selectedItem3,
   selectionItemTypeConfig,
+  setup,
 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
-import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import { SelectionClipboardEventData } from '../types';
+import { useSelectionStore } from '../useSelectionStore';
 import { cutSelection } from './cutSelection';
 
 const onDelete = vi.fn();

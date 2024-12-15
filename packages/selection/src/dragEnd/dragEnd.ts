@@ -1,7 +1,7 @@
 import React from 'react';
 import { Events } from '@minddrop/events';
-import { useSelectionStore } from '../useSelectionStore';
 import { getSelection } from '../getSelection';
+import { useSelectionStore } from '../useSelectionStore';
 
 /**
  * Toggles the dragging state to `false`. Dispatches a

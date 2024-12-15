@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { removeBlocksFromBoard } from './removeBlocksFromBoard';
+import { describe, expect, it } from 'vitest';
+import { Block } from '@minddrop/extension';
 import {
   BoardColumnsSection,
   BoardGridSection,
   BoardListSection,
   BoardView,
 } from '../types';
-import { Block } from '@minddrop/extension';
+import { removeBlocksFromBoard } from './removeBlocksFromBoard';
 
 const block1 = {
   id: 'block-1',

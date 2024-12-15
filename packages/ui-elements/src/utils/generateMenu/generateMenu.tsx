@@ -1,4 +1,6 @@
 import React from 'react';
+import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
+import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 import {
   MenuColorSelectionItemConfig,
   MenuColorSelectionItemProps,
@@ -6,8 +8,6 @@ import {
   MenuTopicSelectionItemConfig,
   SubmenuTriggerItemProps,
 } from '../../types';
-import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
-import { TopicSelectionMenuItemProps } from '../../Menu/TopicSelectionMenuItem';
 
 export interface MenuComponents {
   Item: React.ElementType<InteractiveMenuItemProps>;

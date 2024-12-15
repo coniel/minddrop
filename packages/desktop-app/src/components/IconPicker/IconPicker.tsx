@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
-import {
-  EmojiPicker,
-  ContentIconPicker,
-  ContentColor,
-  Button,
-} from '@minddrop/ui-elements';
 import { ContentIconName, EmojiSkinTone, UserIconType } from '@minddrop/icons';
+import {
+  Button,
+  ContentColor,
+  ContentIconPicker,
+  EmojiPicker,
+} from '@minddrop/ui-elements';
 import { AppUiState, useDefaultEmojiSkinTone } from '../../AppUiState';
 import './IconPicker.css';
 

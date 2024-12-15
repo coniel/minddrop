@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, block1, block2 } from '../../test-utils';
-import { serializeBlocksToDataTransferData } from './serializeBlocksToDataTransferData';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { BLOCKS_DATA_KEY } from '../../constants';
+import { block1, block2, cleanup, setup } from '../../test-utils';
+import { serializeBlocksToDataTransferData } from './serializeBlocksToDataTransferData';
 
 describe('serializeBlocksToDataTransferData', () => {
   beforeEach(setup);

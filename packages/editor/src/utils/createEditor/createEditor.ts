@@ -1,6 +1,6 @@
 import {
-  createEditor as createSlateEditor,
   Editor as SlateEditor,
+  createEditor as createSlateEditor,
 } from 'slate';
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';

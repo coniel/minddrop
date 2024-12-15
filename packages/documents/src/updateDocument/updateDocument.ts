@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
+import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
 import { Document } from '../types';
-import { DocumentsStore } from '../DocumentsStore';
 
 /**
  * Updates a document with the given data via a shallow merge.

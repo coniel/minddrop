@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it } from 'vitest';
 import { render } from '@minddrop/test-utils';
-import { EditorBlockElementConfig, BlockElementProps } from '../../types';
 import {
   headingElementConfig,
   paragraphElement1,
   paragraphElementConfig,
 } from '../../test-utils/editor.data';
+import { BlockElementProps, EditorBlockElementConfig } from '../../types';
 import { createRenderElement } from './createRenderElement';
 
 const headingConfig: EditorBlockElementConfig<any> = {

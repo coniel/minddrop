@@ -1,4 +1,4 @@
-import { UseBoundStore, StoreApi } from 'zustand';
+import { StoreApi, UseBoundStore } from 'zustand';
 
 export interface ItemStoreInternalApi<TItem extends { id: string }> {
   /**

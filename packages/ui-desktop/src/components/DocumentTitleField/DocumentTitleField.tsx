@@ -1,11 +1,11 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { Documents, useDocument } from '@minddrop/documents';
 import { isUntitled, useTranslation } from '@minddrop/i18n';
 import {
   InvisibleTextField,
   InvisibleTextFieldProps,
   Tooltip,
 } from '@minddrop/ui-elements';
-import { useDocument, Documents } from '@minddrop/documents';
 import './DocumentTitleField.css';
 
 export interface DocumentTitleFieldProps

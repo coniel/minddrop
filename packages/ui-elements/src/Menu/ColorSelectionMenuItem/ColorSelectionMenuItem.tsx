@@ -1,10 +1,10 @@
 import React from 'react';
+import { i18n } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
-import './ColorSelectionMenuItem.css';
+import { ContentColors } from '../../constants';
 import { ContentColor } from '../../types';
 import { MenuItem } from '../MenuItem';
-import { ContentColors } from '../../constants';
-import { i18n } from '@minddrop/i18n';
+import './ColorSelectionMenuItem.css';
 
 export interface ColorSelectionMenuItemProps
   extends React.HTMLAttributes<HTMLDivElement> {

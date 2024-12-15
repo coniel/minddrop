@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { setup, cleanup, workspcesConfigFileDescriptor } from '../test-utils';
+import { cleanup, setup, workspcesConfigFileDescriptor } from '../test-utils';
 import { hasWorkspacesConfig } from './hasWorkspacesConfig';
 
 const MockFs = initializeMockFileSystem([

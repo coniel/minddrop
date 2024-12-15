@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { getDirFilesRecursiveFlat } from './getDirFilesRecursiveFlat';
 

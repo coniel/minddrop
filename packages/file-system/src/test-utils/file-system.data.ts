@@ -1,5 +1,5 @@
-import { FsEntry, MockFileDescriptor } from '../types';
 import { ConfigsFile, ConfigsFileOptions } from '../constants';
+import { FsEntry, MockFileDescriptor } from '../types';
 
 export const configsFileDescriptor: MockFileDescriptor = {
   path: ConfigsFile,

@@ -1,12 +1,12 @@
-import { act } from '@minddrop/test-utils';
+import { Events } from '@minddrop/events';
 import {
+  FILE_SYSTEM_TEST_DATA,
   MockFileSystem,
   initializeMockFileSystem,
-  FILE_SYSTEM_TEST_DATA,
 } from '@minddrop/file-system';
+import { act } from '@minddrop/test-utils';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeLight, ThemeSystem } from '../constants';
-import { Events } from '@minddrop/events';
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
 

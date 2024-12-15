@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ContentIconPicker } from './ContentIconPicker';
-import { ContentIcon } from '../ContentIcon';
 import { ContentIconName } from '@minddrop/icons';
+import { ContentIcon } from '../ContentIcon';
 import { ContentColor } from '../types';
+import { ContentIconPicker } from './ContentIconPicker';
 
 export default {
   title: 'ui/ContentIconPicker',

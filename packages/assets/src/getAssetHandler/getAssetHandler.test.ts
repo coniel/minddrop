@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { getAssetHandler } from './getAssetHandler';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { registerAssetHandler } from '../AssetHandlersStore';
 import { AssetHandler } from '../types';
+import { getAssetHandler } from './getAssetHandler';
 
 const ASSETS_PATH = 'assets';
 const RESOURCE_ID = 'resource-id';

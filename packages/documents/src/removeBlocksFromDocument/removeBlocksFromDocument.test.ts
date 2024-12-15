@@ -1,22 +1,22 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Blocks } from '@minddrop/blocks';
+import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { DocumentsStore } from '../DocumentsStore';
+import { getDocument } from '../getDocument';
+import { getDocumentView } from '../getDocumentView';
 import {
-  setup,
   cleanup,
-  documentBlocks,
-  documents,
-  documentViews,
   document1,
   document1Block1,
-  viewTypeConfigs,
   document1View1,
+  documentBlocks,
+  documentViews,
+  documents,
+  setup,
+  viewTypeConfigs,
 } from '../test-utils';
 import { removeBlocksFromDocument } from './removeBlocksFromDocument';
-import { Blocks } from '@minddrop/blocks';
-import { DocumentsStore } from '../DocumentsStore';
-import { DocumentViewsStore } from '../DocumentViewsStore';
-import { getDocument } from '../getDocument';
-import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
-import { getDocumentView } from '../getDocumentView';
 
 describe('removeBlocksFromDocument', () => {
   beforeEach(() => {

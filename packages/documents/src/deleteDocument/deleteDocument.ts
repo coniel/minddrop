@@ -1,10 +1,10 @@
+import { Events } from '@minddrop/events';
 import { FileNotFoundError, Fs } from '@minddrop/file-system';
+import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
-import { DocumentsStore } from '../DocumentsStore';
-import { Events } from '@minddrop/events';
-import { isWrapped } from '../utils';
 import { removeChildDocuments } from '../removeChildDocuments';
+import { isWrapped } from '../utils';
 
 /**
  * Deletes a document and its children (recursively) from the

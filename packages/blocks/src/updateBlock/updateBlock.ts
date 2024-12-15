@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
-import { Block } from '../types';
 import { BlocksStore } from '../BlocksStore';
 import { BlockNotFoundError } from '../errors';
 import { getBlock } from '../getBlock';
+import { Block } from '../types';
 
 /**
  * Updates a block in the store. Returns the updated block.

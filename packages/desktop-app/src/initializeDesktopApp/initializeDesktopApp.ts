@@ -1,19 +1,19 @@
-import { loadConfigs } from '@minddrop/core';
-import { initializeI18n } from '@minddrop/i18n';
-import { onRun as onRunTheme, Theme, ThemeAppearance } from '@minddrop/theme';
-import { initializeExtensions } from '@minddrop/extensions';
-import { initializeDocuments } from '@minddrop/documents';
-import { initializeBlocks } from '@minddrop/blocks';
-import { Workspaces } from '@minddrop/workspaces';
-import { EditorElements, EditorMarks } from '@minddrop/editor';
-import DocumentBoardView from '@minddrop/board-view';
-import TextBlockExtension from '@minddrop/text-block';
-import ImageBlockExtension from '@minddrop/image-block';
-import BookmarkBlockExtension from '@minddrop/bookmark-block';
 import { Ast } from '@minddrop/ast';
+import { initializeBlocks } from '@minddrop/blocks';
+import DocumentBoardView from '@minddrop/board-view';
+import BookmarkBlockExtension from '@minddrop/bookmark-block';
+import { loadConfigs } from '@minddrop/core';
+import { initializeDocuments } from '@minddrop/documents';
+import { EditorElements, EditorMarks } from '@minddrop/editor';
+import { initializeExtensions } from '@minddrop/extensions';
+import { initializeI18n } from '@minddrop/i18n';
+import ImageBlockExtension from '@minddrop/image-block';
+import TextBlockExtension from '@minddrop/text-block';
+import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
+import { Workspaces } from '@minddrop/workspaces';
+import { initializeSelection } from './initializeSelection';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
-import { initializeSelection } from './initializeSelection';
 
 // Initialize internationalization
 initializeI18n();

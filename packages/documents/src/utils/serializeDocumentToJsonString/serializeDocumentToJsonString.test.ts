@@ -1,5 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { serializeDocumentToJsonString } from './serializeDocumentToJsonString';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Blocks } from '@minddrop/blocks';
+import { DocumentViewsStore } from '../../DocumentViewsStore';
+import { DocumentsStore } from '../../DocumentsStore';
+import { DocumentNotFoundError } from '../../errors';
 import {
   cleanup,
   document1,
@@ -7,10 +10,7 @@ import {
   document1Views,
   setup,
 } from '../../test-utils';
-import { DocumentNotFoundError } from '../../errors';
-import { DocumentsStore } from '../../DocumentsStore';
-import { DocumentViewsStore } from '../../DocumentViewsStore';
-import { Blocks } from '@minddrop/blocks';
+import { serializeDocumentToJsonString } from './serializeDocumentToJsonString';
 
 describe('serializeDocumentToJsonString', () => {
   beforeEach(() => {

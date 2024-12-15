@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
   FileNotFoundError,
@@ -6,20 +7,19 @@ import {
   PathConflictError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
 import {
   childDocument,
   cleanup,
-  grandChildDocument,
   document1,
+  documentFiles,
   documents,
+  grandChildDocument,
   setup,
   wrappedDocument,
-  documentFiles,
 } from '../test-utils';
-import { DocumentsStore } from '../DocumentsStore';
-import { getDocument } from '../getDocument';
 import { moveDocument } from './moveDocument';
 
 const TARGET_DIR = 'path/to/target';

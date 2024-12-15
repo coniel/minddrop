@@ -1,5 +1,5 @@
-import { Block } from '../types';
 import { BlocksStore as useBlocksStore } from '../BlocksStore';
+import { Block } from '../types';
 
 /**
  * Returns a block vy ID, or `null` if not found.

@@ -1,10 +1,11 @@
+import { MarkdownLineParsersStore } from '../MarkdownLineParsersStore';
 import {
   BookmarkElementConfig,
-  HeadingElementConfig,
-  ToDoElementConfig,
   FileElementConfig,
+  HeadingElementConfig,
   HorizontalRuleElementConfig,
   ParagraphElementConfig,
+  ToDoElementConfig,
   UnorderedListItemElementConfig,
   parseBookmarkElementFromMarkdown,
   parseFileElementFromMarkdown,
@@ -14,7 +15,6 @@ import {
   parseToDoElementFromMarkdown,
   parseUnorderedListItemElementFromMarkdown,
 } from '../element-configs';
-import { MarkdownLineParsersStore } from '../MarkdownLineParsersStore';
 import { registerElementTypeConfig } from '../registerElementTypeConfig';
 
 /**

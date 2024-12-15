@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { renderHook, act } from '@minddrop/test-utils';
-import { setup, cleanup, selectedItem1, selectedItem2 } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { act, renderHook } from '@minddrop/test-utils';
+import { cleanup, selectedItem1, selectedItem2, setup } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { useSelection } from './useSelection';
 

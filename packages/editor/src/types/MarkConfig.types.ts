@@ -1,5 +1,5 @@
-import { Element, Fragment } from '@minddrop/ast';
 import { RenderLeafProps } from 'slate-react';
+import { Element, Fragment } from '@minddrop/ast';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 
 export interface MarkHotkey {

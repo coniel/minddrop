@@ -1,5 +1,5 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { render, cleanup } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, render } from '@minddrop/test-utils';
 import { ColorSelectionMenuItem } from './ColorSelectionMenuItem';
 
 describe('<ColorSelectionMenuItem />', () => {

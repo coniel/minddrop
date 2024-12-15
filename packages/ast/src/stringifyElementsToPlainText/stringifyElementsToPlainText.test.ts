@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyElementsToPlainText } from './stringigyElementToPlainText';
+import { describe, expect, it } from 'vitest';
 import { generateElementTypeConfig } from '../test-utils';
 import { generateElement } from '../utils';
+import { stringifyElementsToPlainText } from './stringigyElementToPlainText';
 
 const elementConfigWithToPlainText = generateElementTypeConfig(
   'with-to-plain-text',

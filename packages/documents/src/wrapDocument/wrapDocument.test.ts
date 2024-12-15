@@ -1,16 +1,16 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Fs } from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import {
-  initializeMockFileSystem,
   FileNotFoundError,
   PathConflictError,
+  initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { setup, cleanup, document1, documentFiles } from '../test-utils';
-import { wrapDocument } from './wrapDocument';
-import { getDocument } from '../getDocument';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
+import { cleanup, document1, documentFiles, setup } from '../test-utils';
+import { wrapDocument } from './wrapDocument';
 
 const BASE_PATH = Fs.parentDirPath(document1.path);
 const DOCUMENT_FILENAME = Fs.fileNameFromPath(document1.path);

@@ -1,7 +1,7 @@
-import { watchImmediate, WatchEvent } from '@tauri-apps/plugin-fs';
 import { appConfigDir } from '@tauri-apps/api/path';
-import { Workspaces, WorkspacesConfigFileName } from '@minddrop/workspaces';
+import { WatchEvent, watchImmediate } from '@tauri-apps/plugin-fs';
 import { throttle } from '@minddrop/utils';
+import { Workspaces, WorkspacesConfigFileName } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 
 export async function watchAppConfigFiles() {

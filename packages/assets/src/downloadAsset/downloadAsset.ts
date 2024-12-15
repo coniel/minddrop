@@ -1,7 +1,7 @@
 import { Fs } from '@minddrop/file-system';
 import { AssetResourceNotMatchedError } from '../errors';
-import { AssetHandler } from '../types';
 import { getAssetHandler } from '../getAssetHandler';
+import { AssetHandler } from '../types';
 
 /**
  * Downloads an asset from a given URL and saves it to the appropriate assets directory.

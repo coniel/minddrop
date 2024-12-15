@@ -1,13 +1,13 @@
+import { Block } from '@minddrop/blocks';
 import { Fs } from '@minddrop/file-system';
 import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
 import { DefaultDocumentIconString } from '../constants';
 import {
   Document,
-  SerializableDocumentData,
   DocumentView,
   DocumentViewTypeConfig,
+  SerializableDocumentData,
 } from '../types';
-import { Block } from '@minddrop/blocks';
 
 export const workspaceDir = 'Users/foo/Documents/Workspace';
 export const parentWorkspaceId = 'workspace-1';

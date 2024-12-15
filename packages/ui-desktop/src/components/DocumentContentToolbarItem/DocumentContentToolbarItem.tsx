@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { ContentIconName } from '@minddrop/icons';
 import { ContentIcon, Tooltip } from '@minddrop/ui-elements';
+import { mapPropsToClasses } from '@minddrop/utils';
 import './DocumentContentToolbarItem.css';
 
 export interface DocumentContentToolbarItemProps

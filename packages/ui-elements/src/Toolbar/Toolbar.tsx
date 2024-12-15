@@ -1,6 +1,6 @@
+import * as RadixToolbar from '@radix-ui/react-toolbar';
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import * as RadixToolbar from '@radix-ui/react-toolbar';
 import { IconButton, IconButtonProps } from '../IconButton';
 import './Toolbar.css';
 

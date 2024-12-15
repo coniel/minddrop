@@ -1,11 +1,11 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { render, screen, act, fireEvent } from '@minddrop/test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   FILE_SYSTEM_TEST_DATA,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { setup, cleanup } from '../../test-utils';
+import { act, fireEvent, render, screen } from '@minddrop/test-utils';
 import { AppUiState } from '../../AppUiState';
+import { cleanup, setup } from '../../test-utils';
 import { AppSidebar } from './AppSidebar';
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;

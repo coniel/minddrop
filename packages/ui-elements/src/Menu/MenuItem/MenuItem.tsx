@@ -1,10 +1,10 @@
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { Text } from '../../Text';
-import { KeyboardShortcut } from '../../KeyboardShortcut';
-import { IconProp, IconRenderer } from '../../IconRenderer';
-import './MenuItem.css';
 import { Icon } from '../../Icon';
+import { IconProp, IconRenderer } from '../../IconRenderer';
+import { KeyboardShortcut } from '../../KeyboardShortcut';
+import { Text } from '../../Text';
+import './MenuItem.css';
 
 export interface MenuItemProps {
   /**

@@ -1,5 +1,5 @@
-import { EventListenerCallback } from '@minddrop/events';
 import React from 'react';
+import { EventListenerCallback } from '@minddrop/events';
 import { SelectionItem } from './SelectionItem.types';
 
 export type SelectionAddEvent = 'selection:items:add';

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { SelectionItem } from '../types';
-import { select } from '../select';
-import { isSelected } from '../isSelected';
-import { dragStart } from '../dragStart';
 import { addToSelection } from '../addToSelection';
 import { dragEnd } from '../dragEnd';
+import { dragStart } from '../dragStart';
+import { isSelected } from '../isSelected';
+import { select } from '../select';
+import { SelectionItem } from '../types';
 
 export interface DragUtils {
   /**

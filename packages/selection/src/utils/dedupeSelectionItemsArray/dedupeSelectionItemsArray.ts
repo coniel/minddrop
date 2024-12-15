@@ -1,5 +1,5 @@
-import { containsSelectionItem } from '../containsSelectionItem';
 import { SelectionItem } from '../../types';
+import { containsSelectionItem } from '../containsSelectionItem';
 
 /**
  * Removes duplicates from an array of selection items.

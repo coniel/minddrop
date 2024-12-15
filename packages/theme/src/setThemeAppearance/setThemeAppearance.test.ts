@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { InvalidParameterError } from '@minddrop/utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup } from '../test-utils';
+import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeConfig } from '../ThemeConfig';
-import { setThemeAppearance } from './setThemeAppearance';
 import { ThemeDark } from '../constants';
+import { cleanup, setup } from '../test-utils';
+import { setThemeAppearance } from './setThemeAppearance';
 
 describe('setThemeAppearance', () => {
   beforeEach(setup);

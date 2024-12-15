@@ -1,16 +1,16 @@
-import { describe, it, expect, afterEach, beforeAll, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { Events } from '@minddrop/events';
+import { createDataTransfer } from '@minddrop/test-utils';
+import { registerTextBlockClassifier } from '../BlockClassifiersStore';
+import { registerBlockType } from '../BlockTypesStore';
+import { getBlock } from '../getBlock';
 import {
   TestTextBlock,
   cleanup,
   textBlockClassifier,
   textBlockConfig,
 } from '../test-utils';
-import { createDataTransfer } from '@minddrop/test-utils';
 import { createBlocksFromDataTransfer } from './createBlocksFromDataTransfer';
-import { registerTextBlockClassifier } from '../BlockClassifiersStore';
-import { getBlock } from '../getBlock';
-import { registerBlockType } from '../BlockTypesStore';
-import { Events } from '@minddrop/events';
 
 const dataTransfer = createDataTransfer({ 'text/plain': 'Hello, World!' });
 

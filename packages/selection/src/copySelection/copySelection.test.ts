@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import {
-  setup,
   cleanup,
   selectedItem1,
   selectedItem3,
   selectionItemTypeConfig,
+  setup,
 } from '../test-utils';
 import { SelectionClipboardEventData } from '../types';
-import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import { useSelectionStore } from '../useSelectionStore';
 import { copySelection } from './copySelection';
 

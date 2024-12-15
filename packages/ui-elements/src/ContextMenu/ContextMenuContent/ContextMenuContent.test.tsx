@@ -1,16 +1,16 @@
-import { describe, afterEach, beforeAll, it, vi } from 'vitest';
+import { ContextMenuTrigger } from '@radix-ui/react-context-menu';
+import { afterEach, beforeAll, describe, it, vi } from 'vitest';
 import {
-  render,
-  cleanup,
-  screen,
   act,
+  cleanup,
   fireEvent,
+  render,
+  screen,
   waitFor,
 } from '@minddrop/test-utils';
+import { MenuContents } from '../../types';
 import { ContextMenu } from '../ContextMenu';
 import { ContextMenuContent } from './ContextMenuContent';
-import { MenuContents } from '../../types';
-import { ContextMenuTrigger } from '@radix-ui/react-context-menu';
 
 class ResizeObserver {
   observe() {}

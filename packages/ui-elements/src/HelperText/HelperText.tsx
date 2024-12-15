@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { mapPropsToClasses } from '@minddrop/utils';
 import { Text, TextProps } from '../Text';
 import './HelperText.css';
 

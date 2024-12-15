@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyParagraphElementToMarkdown } from './stringifyParagraphElementToMarkdown';
-import { ParagraphElement } from './ParagraphElement.types';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
+import { ParagraphElement } from './ParagraphElement.types';
+import { stringifyParagraphElementToMarkdown } from './stringifyParagraphElementToMarkdown';
 
 const paragraph = generateElement<ParagraphElement>('paragraph', {
   children: [{ text: 'Paragraph 1' }],

@@ -1,9 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
+import { NotFoundError } from '../../errors';
 import { Config } from '../../types/Config.types';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
-import { NotFoundError } from '../../errors';
 import { persistConfigs } from '../persistConfigs';
 import { createPersistentConfig } from './createPersistentConfig';
 

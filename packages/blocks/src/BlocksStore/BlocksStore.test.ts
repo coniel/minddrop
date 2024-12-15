@@ -1,6 +1,6 @@
-import { describe, afterEach, it, expect, beforeEach } from 'vitest';
-import { BlocksStore } from './BlocksStore';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { block1, block2, blocks } from '../test-utils';
+import { BlocksStore } from './BlocksStore';
 
 function loadBlocks() {
   BlocksStore.getState().load(blocks);

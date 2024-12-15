@@ -1,8 +1,8 @@
-import { InvalidParameterError } from '@minddrop/utils';
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeConfig } from '../ThemeConfig';
-import { ThemeAppearance } from '../types';
 import { ThemeDark, ThemeLight } from '../constants';
+import { ThemeAppearance } from '../types';
 
 /**
  * Sets the current theme appearance. Dispatches

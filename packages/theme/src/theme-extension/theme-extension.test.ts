@@ -1,19 +1,19 @@
 import {
-  describe,
+  afterEach,
   beforeAll,
   beforeEach,
-  afterEach,
-  it,
+  describe,
   expect,
+  it,
   vi,
 } from 'vitest';
 import { Theme } from '../Theme';
-import { setThemeAppearanceSetting } from '../setThemeAppearanceSetting';
-import { setup, cleanup } from '../test-utils';
 import { ThemeConfig } from '../ThemeConfig';
-import { onRun } from './theme-extension';
-import { ThemeAppearance } from '../types';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
+import { setThemeAppearanceSetting } from '../setThemeAppearanceSetting';
+import { cleanup, setup } from '../test-utils';
+import { ThemeAppearance } from '../types';
+import { onRun } from './theme-extension';
 
 describe('theme extension', () => {
   let matchMediaEventListeners: VoidFunction[] = [];

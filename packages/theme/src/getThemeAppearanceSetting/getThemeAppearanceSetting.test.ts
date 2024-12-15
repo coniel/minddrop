@@ -1,8 +1,8 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ThemeConfig } from '../ThemeConfig';
-import { getThemeAppearanceSetting } from './getThemeAppearanceSetting';
 import { ThemeDark } from '../constants';
+import { cleanup, setup } from '../test-utils';
+import { getThemeAppearanceSetting } from './getThemeAppearanceSetting';
 
 describe('getThemeAppearanceSetting', () => {
   beforeEach(setup);

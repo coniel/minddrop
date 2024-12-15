@@ -1,10 +1,10 @@
-import { FC } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
+import { FC } from 'react';
+import { Icon } from '../Icon';
 import {
   InteractiveMenuItem,
   InteractiveRadioMenuItemProps,
 } from '../InteractiveMenuItem';
-import { Icon } from '../Icon';
 
 export type ContextMenuRadioItemProps = Omit<
   InteractiveRadioMenuItemProps,

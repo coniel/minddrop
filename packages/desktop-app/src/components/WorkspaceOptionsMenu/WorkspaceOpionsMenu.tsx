@@ -1,3 +1,4 @@
+import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@minddrop/ui-elements';
-import { useTranslation } from '@minddrop/i18n';
 import './WorkspaceOptionsMenu.css';
 
 export interface WorkspaceOptionsMenuProps extends DropdownMenuProps {

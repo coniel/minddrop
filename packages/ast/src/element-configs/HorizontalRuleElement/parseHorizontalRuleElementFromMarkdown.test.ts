@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
-import { parseHorizontalRuleElementFromMarkdown } from './parseHorizontalRuleElementFromMarkdown';
 import { HorizontalRuleElement } from './HorizontalRuleElement.types';
+import { parseHorizontalRuleElementFromMarkdown } from './parseHorizontalRuleElementFromMarkdown';
 
 const consume = vi.fn();
 const getNextLine = vi.fn();

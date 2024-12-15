@@ -1,15 +1,15 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { Icons, UserIcon, UserIconType } from '@minddrop/icons';
+import { WorkspacesStore } from '../WorkspacesStore';
 import { getWorkspace } from '../getWorkspace';
 import { getWorkspaceConfig } from '../getWorkspaceConfig';
 import {
-  setup,
   cleanup,
+  setup,
   workspace1,
   workspace1ConfigPath,
 } from '../test-utils';
-import { WorkspacesStore } from '../WorkspacesStore';
 import { setWorkpaceIcon } from './setWorkpaceIcon';
 
 const icon: UserIcon = {

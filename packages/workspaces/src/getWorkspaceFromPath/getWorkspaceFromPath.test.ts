@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import {
-  setup,
   cleanup,
-  workspace1,
   missingWorkspace,
+  setup,
+  workspace1,
   workspace1Config,
   workspace1ConfigPath,
 } from '../test-utils';

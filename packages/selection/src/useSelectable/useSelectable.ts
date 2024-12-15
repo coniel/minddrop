@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
+import { addToSelection } from '../addToSelection';
+import { clearSelection } from '../clearSelection';
+import { isSelected } from '../isSelected';
+import { removeFromSelection } from '../removeFromSelection';
+import { select } from '../select';
 import { SelectionItem } from '../types';
 import { useSelection } from '../useSelection';
 import { containsSelectionItem } from '../utils';
-import { select } from '../select';
-import { isSelected } from '../isSelected';
-import { removeFromSelection } from '../removeFromSelection';
-import { addToSelection } from '../addToSelection';
-import { clearSelection } from '../clearSelection';
 
 export interface SelectionUtils {
   /**

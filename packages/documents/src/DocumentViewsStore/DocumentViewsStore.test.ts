@@ -1,4 +1,4 @@
-import { describe, afterEach, it, expect, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { document1View1, document1View2, documentViews } from '../test-utils';
 import { DocumentView } from '../types';
 import { DocumentViewsStore } from './DocumentViewsStore';

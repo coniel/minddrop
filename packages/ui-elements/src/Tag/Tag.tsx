@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import './Tag.css';
 import { ContentColor } from '../types';
+import './Tag.css';
 
 export interface TagProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

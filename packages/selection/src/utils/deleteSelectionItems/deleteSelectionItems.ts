@@ -1,6 +1,6 @@
+import { getSelectionItemTypeConfig } from '../../SelectionItemTypeConfigsStore';
 import { clearSelection } from '../../clearSelection';
 import { getSelection } from '../../getSelection';
-import { getSelectionItemTypeConfig } from '../../SelectionItemTypeConfigsStore';
 
 /**
  * Calls the selection items type config's delete function

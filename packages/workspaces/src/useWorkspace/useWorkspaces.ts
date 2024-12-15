@@ -1,5 +1,5 @@
-import { Workspace } from '../types';
 import { WorkspacesStore as useWorkspacesStore } from '../WorkspacesStore';
+import { Workspace } from '../types';
 
 /**
  * Returns a workspace from the given path, or `null` if there is

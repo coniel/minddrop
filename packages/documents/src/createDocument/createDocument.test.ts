@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup } from '../test-utils';
-import { createDocument } from './createDocument';
-import { Document, SerializableDocumentData } from '../types';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { getDocument } from '../getDocument';
+import { cleanup, setup } from '../test-utils';
+import { Document, SerializableDocumentData } from '../types';
+import { createDocument } from './createDocument';
 
 const TITLE = 'Document';
 const PARENT_DIR_PATH = 'path/to/Workspace';

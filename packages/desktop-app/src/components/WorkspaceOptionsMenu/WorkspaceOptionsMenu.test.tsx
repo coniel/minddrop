@@ -1,11 +1,11 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { cleanup } from '../../test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render, userEvent } from '@minddrop/test-utils';
+import { TooltipProvider } from '@minddrop/ui-elements';
+import { cleanup } from '../../test-utils';
 import {
   WorkspaceOptionsMenu,
   WorkspaceOptionsMenuProps,
 } from './WorkspaceOpionsMenu';
-import { TooltipProvider } from '@minddrop/ui-elements';
 
 const WORKSPACE_PATH = 'path/to/Workspace';
 

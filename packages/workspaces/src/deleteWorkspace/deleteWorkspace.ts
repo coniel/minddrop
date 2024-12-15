@@ -1,5 +1,5 @@
-import { Fs } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { getWorkspace } from '../getWorkspace';
 import { removeWorkspace } from '../removeWorkspace';
 

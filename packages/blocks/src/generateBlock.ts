@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid';
-import { Block, BlockData } from './types';
-import { classifyFileBlock } from './classifyFileBlock';
-import { classifyTextBlock } from './classifyTextBlock';
-import { classifyLinkBlock } from './classifyLinkBlock';
 import { BlockTypesStore } from './BlockTypesStore';
+import { classifyFileBlock } from './classifyFileBlock';
+import { classifyLinkBlock } from './classifyLinkBlock';
+import { classifyTextBlock } from './classifyTextBlock';
+import { Block, BlockData } from './types';
 
 export function generateBlock(
   type: string,

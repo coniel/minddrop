@@ -1,4 +1,4 @@
-import { Node, Point, Editor, Transforms } from 'slate';
+import { Editor, Node, Point, Transforms } from 'slate';
 
 // This fuction is based off of https://github.com/ianstormtaylor/slate/pull/4540#issuecomment-951903419
 

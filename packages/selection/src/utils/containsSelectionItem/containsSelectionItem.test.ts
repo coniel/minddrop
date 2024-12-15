@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { selectedItem1, selectedItem2 } from '../../test-utils';
 import { containsSelectionItem } from './containsSelectionItem';
 

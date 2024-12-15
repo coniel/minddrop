@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, document1View1, documentViews } from '../test-utils';
-import { updateDocumentView } from './updateDocumentView';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
+import { DocumentViewsStore } from '../DocumentViewsStore';
 import { DocumentViewNotFoundError } from '../errors';
 import { getDocumentView } from '../getDocumentView';
-import { DocumentViewsStore } from '../DocumentViewsStore';
-import { Events } from '@minddrop/events';
+import { cleanup, document1View1, documentViews, setup } from '../test-utils';
+import { updateDocumentView } from './updateDocumentView';
 
 const updatedView = {
   ...document1View1,

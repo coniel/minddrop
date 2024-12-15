@@ -1,6 +1,6 @@
+import { UiIconName, useIcons } from '@minddrop/icons';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { TextColor } from '../types';
-import { UiIconName, useIcons } from '@minddrop/icons';
 import './Icon.css';
 
 export interface IconProps extends React.HTMLProps<SVGSVGElement> {

@@ -1,7 +1,7 @@
-import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { getWorkspace } from '../getWorkspace';
+import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { getWorkspace } from '../getWorkspace';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**

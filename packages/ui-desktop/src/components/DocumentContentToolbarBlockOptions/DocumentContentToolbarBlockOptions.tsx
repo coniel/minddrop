@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { Blocks } from '@minddrop/blocks';
+import { Documents } from '@minddrop/documents';
 import { useTranslation } from '@minddrop/i18n';
 import { Selection } from '@minddrop/selection';
-import { DocumentContentToolbarItem } from '../DocumentContentToolbarItem';
-import './DocumentContentToolbarBlockOptions.css';
 import {
   ContentColor,
   ContentColors,
@@ -14,9 +14,9 @@ import {
   PopoverAnchor,
   PopoverPortal,
 } from '@minddrop/ui-elements';
-import { Blocks } from '@minddrop/blocks';
 import { ContentPicker } from '../ContentPicker';
-import { Documents } from '@minddrop/documents';
+import { DocumentContentToolbarItem } from '../DocumentContentToolbarItem';
+import './DocumentContentToolbarBlockOptions.css';
 
 export const DocumentContentToolbarBlockOptions: React.FC = () => {
   const { t } = useTranslation('blocks.selection');

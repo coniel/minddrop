@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
+import { WorkspacesStore } from '../WorkspacesStore';
 import { getWorkspaceFromPath } from '../getWorkspaceFromPath';
 import { getWorkspacesConfig } from '../getWorkspacesConfig';
 import { Workspace } from '../types';
-import { WorkspacesStore } from '../WorkspacesStore';
 
 /**
  * Loads the user's workspaces into the workspaces store.

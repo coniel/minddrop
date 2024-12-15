@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup } from '../test-utils';
-import { classifyTextBlock } from './classifyTextBlock';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { registerTextBlockClassifier } from '../BlockClassifiersStore';
+import { cleanup, setup } from '../test-utils';
+import { classifyTextBlock } from './classifyTextBlock';
 
 const mathText = '$$\n1 + 1 = 2\n$$';
 

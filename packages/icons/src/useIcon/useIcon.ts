@@ -1,10 +1,10 @@
+import { useMemo } from 'react';
 import { ContentColor } from '@minddrop/core';
-import { UserIcon, UserIconType } from '../icons.types';
 import { EmojiSkinTone } from '../emoji';
-import { parseIcon } from '../parseIcon';
 import { getContentIconColor } from '../getContentIconColor';
 import { getEmojiIconSkinTone } from '../getEmojiIconSkinTone';
-import { useMemo } from 'react';
+import { UserIcon, UserIconType } from '../icons.types';
+import { parseIcon } from '../parseIcon';
 
 interface IconData {
   // The parsed icon

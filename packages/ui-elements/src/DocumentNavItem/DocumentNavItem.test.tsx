@@ -1,5 +1,5 @@
-import { describe, afterEach, expect, it, vi } from 'vitest';
-import { render, cleanup, screen, act, fireEvent } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen } from '@minddrop/test-utils';
 import { DocumentNavItem } from './DocumentNavItem';
 
 describe('<DocumentNavItem />', () => {

@@ -1,5 +1,5 @@
-import { DocumentViewTypeConfig } from '../types';
 import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { DocumentViewTypeConfig } from '../types';
 
 /**
  * Returns the configuration object for a document view type,

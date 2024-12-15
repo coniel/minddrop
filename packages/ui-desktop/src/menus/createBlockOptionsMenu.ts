@@ -1,10 +1,10 @@
 import { Blocks } from '@minddrop/blocks';
+import { i18n } from '@minddrop/i18n';
 import {
   ContentColor,
   ContentColors,
   MenuContents,
 } from '@minddrop/ui-elements';
-import { i18n } from '@minddrop/i18n';
 
 interface BlockOptionsMenuCallbacks {
   /**

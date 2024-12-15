@@ -1,23 +1,23 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  documents,
-  document1,
-  documentFiles,
-  document1View1,
-  documentViews,
-  boardViewTypeConfig,
-  pageViewTypeConfig,
-} from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { BLOCKS_TEST_DATA } from '@minddrop/blocks';
-import { DocumentNotFoundError } from '../errors';
-import { DocumentsStore } from '../DocumentsStore';
-import { getDocument } from '../getDocument';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { getDocumentView } from '../getDocumentView';
-import { DocumentViewsStore } from '../DocumentViewsStore';
 import { registerDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { DocumentsStore } from '../DocumentsStore';
+import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
+import { getDocumentView } from '../getDocumentView';
+import {
+  boardViewTypeConfig,
+  cleanup,
+  document1,
+  document1View1,
+  documentFiles,
+  documentViews,
+  documents,
+  pageViewTypeConfig,
+  setup,
+} from '../test-utils';
 import { addBlocksToDocument } from './addBlocksToDocument';
 
 const MockFs = initializeMockFileSystem(documentFiles);

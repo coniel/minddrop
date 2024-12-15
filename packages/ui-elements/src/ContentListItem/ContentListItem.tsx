@@ -1,14 +1,14 @@
-import React, { ReactNode, ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
+import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
-import './ContentListItem.css';
-import { Text } from '../Text';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../Collapsible';
 import { Icon } from '../Icon';
-import { useTranslation } from '@minddrop/i18n';
+import { Text } from '../Text';
+import './ContentListItem.css';
 
 export interface ContentListItemProps extends React.HTMLProps<HTMLDivElement> {
   /**

@@ -1,8 +1,8 @@
-import { describe, afterEach, it, expect, vi, beforeAll } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { ICONS_TEST_DATA } from '@minddrop/icons';
-import { setWorkspaceContentIconColor } from './setWorkspaceContentIconColor';
 import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
 import { cleanup } from '../../test-utils';
+import { setWorkspaceContentIconColor } from './setWorkspaceContentIconColor';
 
 const { workspace1, workspace1Icon } = WORKSPACES_TEST_DATA;
 const { emojiIconString } = ICONS_TEST_DATA;

@@ -1,8 +1,8 @@
-import { UiIcons } from './ui-icons.min';
-import { ContentIcons } from './content-icons.min';
 import { HTMLProps } from 'react';
-import { EmojiSkinTone } from './emoji';
 import { ContentColor } from '@minddrop/core';
+import { ContentIcons } from './content-icons.min';
+import { EmojiSkinTone } from './emoji';
+import { UiIcons } from './ui-icons.min';
 
 export type UiIconName = keyof typeof UiIcons;
 export type ContentIconName = keyof typeof ContentIcons;

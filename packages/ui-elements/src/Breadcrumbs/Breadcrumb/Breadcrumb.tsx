@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import {
-  createKeydownClickHandler,
-  KeyboardAccessibleClickHandler,
-} from '../../utils';
 import { Text } from '../../Text';
+import {
+  KeyboardAccessibleClickHandler,
+  createKeydownClickHandler,
+} from '../../utils';
 import './Breadcrumb.css';
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLLIElement> {

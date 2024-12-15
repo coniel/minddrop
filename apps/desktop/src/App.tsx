@@ -1,12 +1,12 @@
-import '@minddrop/theme/src/reset.css';
-import '@minddrop/theme/src/light.css';
-import '@minddrop/theme/src/dark.css';
-import '@minddrop/theme/src/base.css';
-import '@minddrop/theme/src/animations.css';
 import { useEffect, useState } from 'react';
 import { initializeDesktopApp } from '@minddrop/desktop-app';
-import './registerFileSystemAdapter';
+import '@minddrop/theme/src/animations.css';
+import '@minddrop/theme/src/base.css';
+import '@minddrop/theme/src/dark.css';
+import '@minddrop/theme/src/light.css';
+import '@minddrop/theme/src/reset.css';
 import './registerBackEndUtilsAdapter';
+import './registerFileSystemAdapter';
 
 export const App: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [initializingApp, setInitializingApp] = useState(true);

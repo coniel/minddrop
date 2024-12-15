@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { convertElement } from './convertElement';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { cleanup } from '@minddrop/test-utils';
 import {
   paragraphElement1,
   paragraphElement1PlainText,
   setup,
 } from '../test-utils';
-import { cleanup } from '@minddrop/test-utils';
+import { convertElement } from './convertElement';
 
 describe('convertElement', () => {
   beforeEach(setup);

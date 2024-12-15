@@ -1,5 +1,4 @@
 import { useTranslation } from '@minddrop/i18n';
-import { useToggle } from '@minddrop/utils';
 import {
   Dialog,
   DialogContent,
@@ -9,9 +8,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@minddrop/ui-elements';
+import { useToggle } from '@minddrop/utils';
+import { selectFolderAsWorkspace } from '../../api/selectFolderAsWorkspace';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm/CreateWorkspaceForm';
 import './AddWorkspaceMenu.css';
-import { selectFolderAsWorkspace } from '../../api/selectFolderAsWorkspace';
 
 export interface AddWorkspaceMenuProps {
   /**

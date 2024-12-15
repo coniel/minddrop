@@ -1,5 +1,5 @@
-import React from 'react';
 import * as DialogPrimitives from '@radix-ui/react-dialog';
+import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 
 export type DialogDescriptionProps = DialogPrimitives.DialogDescriptionProps;

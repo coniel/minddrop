@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react';
-import { useSelectionItem } from '@minddrop/selection';
 import { Block, Blocks, useBlock, useBlockVariant } from '@minddrop/blocks';
-import { BlockOptionsMenu } from '../BlockOptionsMenu';
+import { useSelectionItem } from '@minddrop/selection';
 import { BlockContainer } from '@minddrop/ui-elements';
+import { BlockOptionsMenu } from '../BlockOptionsMenu';
 import './BlockRenderer.css';
 
 export interface BlockRendererProps {

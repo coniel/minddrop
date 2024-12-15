@@ -1,7 +1,7 @@
-import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { Events } from '@minddrop/events';
-import { Workspace } from '../types';
+import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { addWorkspace } from '../addWorkspace';
+import { Workspace } from '../types';
 
 /**
  * Creates a new workspace directory and adds it to the

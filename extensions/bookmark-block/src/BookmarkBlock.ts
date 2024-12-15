@@ -1,6 +1,6 @@
 import { MindDropExtension } from '@minddrop/extension';
-import { BookmarkCardHorizontal } from './variants';
 import { fetchBookmarkMetadata } from './fetchBookmarkMetadata';
+import { BookmarkCardHorizontal } from './variants';
 
 const CLASSIFIER_ID = 'minddrop-core-extension-link';
 const VARIANT_HORIZONTAL_CARD_ID = 'horizontal-card';

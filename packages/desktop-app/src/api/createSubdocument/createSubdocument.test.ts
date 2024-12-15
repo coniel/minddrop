@@ -1,13 +1,13 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   DOCUMENTS_TEST_DATA,
   Documents,
   DocumentsStore,
 } from '@minddrop/documents';
-import { setup, cleanup } from '../../test-utils';
-import { createSubdocument } from './createSubdocument';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
+import { cleanup, setup } from '../../test-utils';
+import { createSubdocument } from './createSubdocument';
 
 const { documentFiles, documents, document1, wrappedDocument } =
   DOCUMENTS_TEST_DATA;

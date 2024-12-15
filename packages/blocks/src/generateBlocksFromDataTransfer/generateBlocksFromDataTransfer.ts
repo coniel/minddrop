@@ -1,13 +1,13 @@
-import { toMindDropDataTransfer } from '@minddrop/utils';
 import { Fs } from '@minddrop/file-system';
-import { Block } from '../types';
+import { toMindDropDataTransfer } from '@minddrop/utils';
 import {
-  generateTextBlock,
-  generateLinkBlock,
-  generateFileBlock,
   generateBlock,
+  generateFileBlock,
+  generateLinkBlock,
+  generateTextBlock,
 } from '../generateBlock';
 import { getBlockTemplatesFromDataTransfer } from '../getBlockTemplatesFromDataTransfer';
+import { Block } from '../types';
 
 /**
  * Generates blocks from a data transfer object.

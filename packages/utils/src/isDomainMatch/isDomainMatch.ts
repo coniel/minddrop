@@ -1,5 +1,5 @@
 import isUrl from 'is-url';
-import { getDomainWithoutSuffix, getSubdomain, getPublicSuffix } from 'tldts';
+import { getDomainWithoutSuffix, getPublicSuffix, getSubdomain } from 'tldts';
 
 /**
  * Checks a string to determine if it is a URL and whether that URL matches

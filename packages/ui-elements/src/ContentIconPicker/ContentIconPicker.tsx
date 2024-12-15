@@ -1,20 +1,21 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
-import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
-import { ContentColor } from '../types';
+import { mapPropsToClasses, useToggle } from '@minddrop/utils';
+import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { NavGroup } from '../NavGroup';
+import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { TextInput } from '../TextInput';
 import { Toolbar } from '../Toolbar';
-import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
-import { ContentIcon } from '../ContentIcon';
+import { ContentColor } from '../types';
+import './ContentIconPicker.css';
 import {
-  UnminifiedContentIcon,
   MinifiedContentIcon,
+  UnminifiedContentIcon,
 } from './ContentIconPicker.types';
 import {
   getAllLabels,
@@ -22,7 +23,6 @@ import {
   searchContentIcons,
   unminifyContentIcon,
 } from './utils';
-import './ContentIconPicker.css';
 
 export interface ContentIconPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {

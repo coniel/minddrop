@@ -1,8 +1,8 @@
 import { Selection } from '@minddrop/selection';
+import { BLOCKS_DATA_KEY } from './constants';
 import { deleteBlock } from './deleteBlock';
 import { getBlock } from './getBlock';
 import { Block } from './types';
-import { BLOCKS_DATA_KEY } from './constants';
 
 export function initializeBlocks(): void {
   Selection.registerItemType({

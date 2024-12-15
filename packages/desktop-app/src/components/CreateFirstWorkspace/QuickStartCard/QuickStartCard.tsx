@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { useCallback } from 'react';
+import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { useTranslation } from '@minddrop/i18n';
 import { ActionCard, Button } from '@minddrop/ui-elements';
 import { Workspaces } from '@minddrop/workspaces';
-import { useTranslation } from '@minddrop/i18n';
-import { BaseDirectory, Fs } from '@minddrop/file-system';
 
 const WORKSPACE_NAME = 'MindDrop Workspace';
 

@@ -1,10 +1,10 @@
-import { describe, it, afterEach, beforeEach } from 'vitest';
-import { render } from '@minddrop/test-utils';
+import { afterEach, beforeEach, describe, it } from 'vitest';
 import { Ast, UnorderedListItemElement } from '@minddrop/ast';
-import { cleanup } from '../../test-utils';
-import { RichTextEditor } from '../../RichTextEditor';
-import { UnorderedListItemElementConfig } from './UnorderedListItemElementConfig';
+import { render } from '@minddrop/test-utils';
 import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
+import { RichTextEditor } from '../../RichTextEditor';
+import { cleanup } from '../../test-utils';
+import { UnorderedListItemElementConfig } from './UnorderedListItemElementConfig';
 
 const ulItemElement = Ast.generateElement<UnorderedListItemElement>(
   'unordered-list-item',

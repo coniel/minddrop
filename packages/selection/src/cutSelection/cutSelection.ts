@@ -1,7 +1,7 @@
 import React from 'react';
 import { Events } from '@minddrop/events';
-import { setClipboardData } from '../setClipboardData';
 import { getSelection } from '../getSelection';
+import { setClipboardData } from '../setClipboardData';
 import { deleteSelectionItems } from '../utils/deleteSelectionItems';
 
 /**

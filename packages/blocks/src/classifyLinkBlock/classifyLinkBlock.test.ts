@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup } from '../test-utils';
-import { classifyLinkBlock } from './classifyLinkBlock';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { registerLinkBlockClassifier } from '../BlockClassifiersStore';
+import { cleanup, setup } from '../test-utils';
+import { classifyLinkBlock } from './classifyLinkBlock';
 
 const url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 

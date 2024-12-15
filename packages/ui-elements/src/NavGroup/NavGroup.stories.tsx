@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { NavGroup } from './NavGroup';
 import { DocumentNavItem } from '../DocumentNavItem';
+import { NavGroup } from './NavGroup';
 
 export default {
   title: 'ui/NavGroup',

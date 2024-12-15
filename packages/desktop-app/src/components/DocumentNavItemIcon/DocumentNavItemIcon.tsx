@@ -1,15 +1,15 @@
-import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { DefaultDocumentIcon, Document } from '@minddrop/documents';
 import { useCallback, useEffect } from 'react';
-import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { ContentColor } from '@minddrop/core';
+import { DefaultDocumentIcon, Document } from '@minddrop/documents';
+import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
+import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
   Popover,
   PopoverContent,
   PopoverPortal,
   PopoverTrigger,
 } from '@minddrop/ui-elements';
-import { NavItemIcon } from '@minddrop/ui-desktop';
+import { useCreateCallback, useToggle } from '@minddrop/utils';
 import {
   clearDocumentIcon,
   setDocumentContentIcon,

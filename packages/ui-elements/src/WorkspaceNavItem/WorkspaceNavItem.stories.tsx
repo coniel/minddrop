@@ -1,7 +1,7 @@
 import React from 'react';
-import { WorkspaceNavItem } from './WorkspaceNavItem';
-import { Icon } from '../Icon';
 import { DocumentNavItem } from '../DocumentNavItem';
+import { Icon } from '../Icon';
+import { WorkspaceNavItem } from './WorkspaceNavItem';
 
 export default {
   title: 'ui/WorkspaceNavItem',

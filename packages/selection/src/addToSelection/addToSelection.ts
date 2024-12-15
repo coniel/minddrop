@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
-import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
 import { SelectionItem } from '../types';
 import { useSelectionStore } from '../useSelectionStore';
+import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
 
 /**
  * Adds the provided items to the current selection.

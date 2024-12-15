@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { render, cleanup, screen } from '@minddrop/test-utils';
-import { Breadcrumbs } from './Breadcrumbs';
+import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, render, screen } from '@minddrop/test-utils';
 import { Breadcrumb } from './Breadcrumb';
+import { Breadcrumbs } from './Breadcrumbs';
 
 describe('<Breadcrumbs />', () => {
   afterEach(cleanup);

@@ -1,5 +1,5 @@
-import { Fs } from '@minddrop/file-system';
 import { Documents } from '@minddrop/documents';
+import { Fs } from '@minddrop/file-system';
 
 /**
  * Moves a document to a new parent document or workspace.

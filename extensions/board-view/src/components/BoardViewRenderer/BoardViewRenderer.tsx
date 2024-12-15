@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useApi, DocumentViewProps, Block } from '@minddrop/extension';
+import { Block, DocumentViewProps, useApi } from '@minddrop/extension';
 import { BoardListSection, BoardSection, BoardView } from '../../types';
 import { ColumnsSection } from '../ColumnsSection';
-import { ListSection } from '../ListSection';
 import { GridSection } from '../GridSection';
+import { ListSection } from '../ListSection';
 import './BoardViewRenderer.css';
 
 export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({

@@ -1,12 +1,12 @@
-import { describe, afterEach, it, expect, beforeAll, afterAll } from 'vitest';
-import { downloadAsset } from './downloadAsset';
-import { AssetResourceNotMatchedError } from '../errors';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { AssetHandler } from '../types';
 import {
   registerAssetHandler,
   unregisterAssetHandler,
 } from '../AssetHandlersStore';
+import { AssetResourceNotMatchedError } from '../errors';
+import { AssetHandler } from '../types';
+import { downloadAsset } from './downloadAsset';
 
 const MockFs = initializeMockFileSystem(['assets']);
 

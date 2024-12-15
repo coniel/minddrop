@@ -1,22 +1,22 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Blocks } from '@minddrop/blocks';
+import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { BlockDocumentMap, DocumentsStore } from '../DocumentsStore';
+import { DocumentNotFoundError, ParentDocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
 import {
-  setup,
   cleanup,
-  documentBlocks,
-  documents,
-  documentViews,
   document1,
   document1Block1,
-  viewTypeConfigs,
   document2,
+  documentBlocks,
+  documentViews,
+  documents,
+  setup,
+  viewTypeConfigs,
 } from '../test-utils';
-import { Blocks } from '@minddrop/blocks';
-import { BlockDocumentMap, DocumentsStore } from '../DocumentsStore';
-import { DocumentViewsStore } from '../DocumentViewsStore';
-import { getDocument } from '../getDocument';
-import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
 import { moveBlocksToDocument } from './moveBlocksToDocument';
-import { DocumentNotFoundError, ParentDocumentNotFoundError } from '../errors';
 
 describe('moveBlocksToDocument', () => {
   beforeEach(() => {

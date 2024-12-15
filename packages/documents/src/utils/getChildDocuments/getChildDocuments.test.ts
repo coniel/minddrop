@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, document1 } from '../../test-utils';
-import { getChildDocuments } from './getChildDocuments';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { cleanup, document1, setup } from '../../test-utils';
 import { Document } from '../../types';
+import { getChildDocuments } from './getChildDocuments';
 
 const DOCUMENTS: Document[] = [
   { ...document1, path: `path/to/Document 1/Document 1.minddrop` },

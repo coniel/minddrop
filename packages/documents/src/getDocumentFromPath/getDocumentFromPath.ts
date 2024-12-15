@@ -1,8 +1,8 @@
-import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { Block, Blocks } from '@minddrop/blocks';
+import { FileNotFoundError, Fs } from '@minddrop/file-system';
 import { parseDateOrNow } from '@minddrop/utils';
-import { Document, DeserializedDocumentData, DocumentView } from '../types';
 import { DocumentParseError } from '../errors';
+import { DeserializedDocumentData, Document, DocumentView } from '../types';
 import { isWrapped } from '../utils';
 
 /**

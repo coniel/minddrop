@@ -1,9 +1,9 @@
+import { Events } from '@minddrop/events';
 import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
-import { Events } from '@minddrop/events';
+import { WorkspacesStore } from '../WorkspacesStore';
 import { getWorkspace } from '../getWorkspace';
 import { Workspace } from '../types';
-import { WorkspacesStore } from '../WorkspacesStore';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**

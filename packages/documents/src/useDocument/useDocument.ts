@@ -1,5 +1,5 @@
-import { Document } from '../types';
 import { DocumentsStore as useDocumentsStore } from '../DocumentsStore';
+import { Document } from '../types';
 
 /**
  * Returns a document from the given id or null if not found.

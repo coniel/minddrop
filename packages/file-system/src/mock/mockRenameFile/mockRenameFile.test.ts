@@ -1,14 +1,14 @@
-import { describe, beforeEach, it, expect } from 'vitest';
-import { mockRenameFile } from './mockRenameFile';
-import { FsEntry } from '../../types';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
   createTestFsRoot,
-  documents,
   documentA1,
+  documents,
   workspaceA,
 } from '../../test-utils';
+import { FsEntry } from '../../types';
 import { mockExists } from '../mockExists';
 import { mockGetFileEntry } from '../mockGetFileEntry';
+import { mockRenameFile } from './mockRenameFile';
 
 const NEW_PATH = `${workspaceA.path}/New name.md`;
 

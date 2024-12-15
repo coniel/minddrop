@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { Block } from '@minddrop/extension';
-import { BoardDropZone } from '../BoardDropZone';
 import { BoardColumn, BoardColumnsSection } from '../../types';
-import './ColumnsSection.css';
+import { BoardDropZone } from '../BoardDropZone';
 import { Column } from './Column/Column';
+import './ColumnsSection.css';
 
 export interface ColumnsSectionProps {
   /**

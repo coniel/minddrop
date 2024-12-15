@@ -1,23 +1,23 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import {
-  setup,
-  cleanup,
-  document1,
-  wrappedDocument,
-  childDocument,
-  wrappedChildDocument,
-  grandChildDocument,
-} from '../test-utils';
-import { deleteDocument } from './deleteDocument';
-import {
-  initializeMockFileSystem,
   FileNotFoundError,
   Fs,
+  initializeMockFileSystem,
 } from '@minddrop/file-system';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
-import { Events } from '@minddrop/events';
+import {
+  childDocument,
+  cleanup,
+  document1,
+  grandChildDocument,
+  setup,
+  wrappedChildDocument,
+  wrappedDocument,
+} from '../test-utils';
+import { deleteDocument } from './deleteDocument';
 
 const MockFs = initializeMockFileSystem([
   // The document files

@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyBookmarkElementToMarkdown } from './stringifyBookmarkElementToMarkdown';
-import { BookmarkElement } from './BookmarkElement.types';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
+import { BookmarkElement } from './BookmarkElement.types';
+import { stringifyBookmarkElementToMarkdown } from './stringifyBookmarkElementToMarkdown';
 
 const bookmark = generateElement<BookmarkElement>('bookmark', {
   title: 'Example Title',

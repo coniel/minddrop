@@ -1,6 +1,6 @@
 import { createContext } from '@minddrop/utils';
-import { MindDropApi } from './types/MindDropApi.types';
 import { MindDropApi as Api } from './MindDropApi';
+import { MindDropApi } from './types/MindDropApi.types';
 
 const [hook, Provider] = createContext<MindDropApi>();
 

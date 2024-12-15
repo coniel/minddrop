@@ -1,5 +1,5 @@
-import { describe, afterEach, expect, it } from 'vitest';
-import { render, cleanup } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, render } from '@minddrop/test-utils';
 import { BlockContainer } from './BlockContainer';
 
 describe('<BlockContainer />', () => {

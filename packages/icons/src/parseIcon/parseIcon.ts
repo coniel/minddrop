@@ -1,6 +1,6 @@
 import { ContentColor } from '@minddrop/core';
-import { ContentIconName, UserIcon, UserIconType } from '../icons.types';
 import { EmojiSkinTone } from '../emoji';
+import { ContentIconName, UserIcon, UserIconType } from '../icons.types';
 
 /**
  * Parses a UserIcon from its string representation.

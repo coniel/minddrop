@@ -1,9 +1,9 @@
-import { describe, afterEach, it, expect } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { AdapterNotRegisteredError, InvalidParameterError } from '../errors';
 import { BackendUtilsAdapter } from '../types';
 import {
-  registerBackendUtilsAdapter,
   getWebpageMetadata,
+  registerBackendUtilsAdapter,
   unregisterBackendUtilsAdapter,
 } from './back-end-utils';
 

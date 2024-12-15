@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton } from './IconButton';
 import { Text } from '../Text';
+import { IconButton } from './IconButton';
 
 export default {
   title: 'ui/IconButton',

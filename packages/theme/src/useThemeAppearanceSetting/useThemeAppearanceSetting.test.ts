@@ -1,9 +1,9 @@
-import { describe, it, beforeEach, afterEach, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { renderHook } from '@minddrop/test-utils';
-import { setup, cleanup } from '../test-utils';
 import { ThemeConfig } from '../ThemeConfig';
-import { useThemeAppearanceSetting } from './useThemeAppearanceSetting';
 import { ThemeDark } from '../constants';
+import { cleanup, setup } from '../test-utils';
+import { useThemeAppearanceSetting } from './useThemeAppearanceSetting';
 
 describe('useThemeAppearanceSetting', () => {
   beforeEach(setup);

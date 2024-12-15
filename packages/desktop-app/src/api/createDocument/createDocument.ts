@@ -1,6 +1,6 @@
-import { i18n } from '@minddrop/i18n';
 import { Document, Documents } from '@minddrop/documents';
 import { Fs } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
 
 /**
  * Creates a new "Untitled" document and its associated file

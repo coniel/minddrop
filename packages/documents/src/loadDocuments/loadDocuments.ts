@@ -1,12 +1,12 @@
-import { FsEntry, Fs } from '@minddrop/file-system';
-import { Events } from '@minddrop/events';
 import { Block, Blocks } from '@minddrop/blocks';
-import { getDirFilesRecursiveFlat, isDocumentFile } from '../utils';
-import { getDocumentFromPath } from '../getDocumentFromPath';
+import { Events } from '@minddrop/events';
+import { Fs, FsEntry } from '@minddrop/file-system';
+import { DocumentViewsStore } from '../DocumentViewsStore';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
+import { getDocumentFromPath } from '../getDocumentFromPath';
 import { Document, DocumentView } from '../types';
-import { DocumentViewsStore } from '../DocumentViewsStore';
+import { getDirFilesRecursiveFlat, isDocumentFile } from '../utils';
 
 /**
  * Loads documents from the specified directories into the documents

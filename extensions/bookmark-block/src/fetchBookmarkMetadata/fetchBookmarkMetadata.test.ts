@@ -1,6 +1,6 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { fetchBookmarkMetadata } from './fetchBookmarkMetadata';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Block, MindDropApi } from '@minddrop/extension';
+import { fetchBookmarkMetadata } from './fetchBookmarkMetadata';
 
 const blockId = 'block-id';
 const url = 'https://example.com';

@@ -1,12 +1,12 @@
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import { Text } from '../Text';
-import './WorkspaceNavItem.css';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../Collapsible';
+import { Text } from '../Text';
+import './WorkspaceNavItem.css';
 
 export interface WorkspaceNavItemProps
   extends React.HTMLAttributes<HTMLDivElement> {

@@ -1,6 +1,6 @@
-import { describe, beforeEach, it, expect, vi } from 'vitest';
-import { addEventListenerAfter } from './addEventListenerAfter';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EventListener, EventListenerMap } from '../types';
+import { addEventListenerAfter } from './addEventListenerAfter';
 
 describe('addEventListenerAfter', () => {
   let eventsListeners: EventListenerMap = {};

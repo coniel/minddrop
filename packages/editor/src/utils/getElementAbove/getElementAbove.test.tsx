@@ -1,14 +1,14 @@
-import { describe, beforeAll, afterAll, it, expect } from 'vitest';
 import { BaseEditor, NodeEntry } from 'slate';
+import { Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { Element, TextElement } from '@minddrop/ast';
 import { cleanup, createTestEditor, setup } from '../../test-utils';
-import { getElementAbove } from './getElementAbove';
-import { Transforms } from 'slate';
 import {
   inlineMathElement1,
   paragraphElement1,
 } from '../../test-utils/editor.data';
+import { getElementAbove } from './getElementAbove';
 
 declare module 'slate' {
   interface CustomTypes {

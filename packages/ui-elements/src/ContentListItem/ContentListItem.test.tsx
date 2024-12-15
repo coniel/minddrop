@@ -1,5 +1,5 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { render, cleanup, userEvent } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, userEvent } from '@minddrop/test-utils';
 import { ContentListItem, ContentListItemProps } from './ContentListItem';
 
 function renderTest(props?: Partial<ContentListItemProps>) {

@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
-import { setup, cleanup } from '../../test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
+import { cleanup, setup } from '../../test-utils';
 import { selectFolderAsWorkspace } from './selectFolderAsWorkspace';
 
 const { workspace1 } = WORKSPACES_TEST_DATA;

@@ -1,5 +1,5 @@
-import { FC } from 'react';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
+import { FC } from 'react';
 import { MenuItem } from '../Menu';
 import { SubmenuTriggerItemProps } from '../types';
 

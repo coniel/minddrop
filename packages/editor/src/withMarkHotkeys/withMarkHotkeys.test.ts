@@ -1,11 +1,11 @@
 import React from 'react';
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { boldMarkConfig } from '../default-mark-configs';
 import {
-  setup,
   cleanup,
   createTestEditor,
   paragraphElement1,
+  setup,
 } from '../test-utils';
 import { Editor, MarkConfig } from '../types';
 import { withMarkHotkeys } from './withMarkHotkeys';

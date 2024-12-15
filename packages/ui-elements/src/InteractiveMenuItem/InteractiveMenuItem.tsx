@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { Tooltip } from '../Tooltip';
-import { MenuItem, MenuItemProps } from '../Menu';
 import { useTranslation } from '@minddrop/i18n';
+import { MenuItem, MenuItemProps } from '../Menu';
+import { Tooltip } from '../Tooltip';
 
 export interface MenuItemComponentProps {
   /**

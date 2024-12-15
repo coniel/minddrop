@@ -1,8 +1,8 @@
 import openGraphScraper from 'open-graph-scraper-lite';
 import { AdapterNotRegisteredError, InvalidParameterError } from '../errors';
 import {
-  BackendUtilsApi,
   BackendUtilsAdapter,
+  BackendUtilsApi,
   WebpageMetadata,
 } from '../types';
 

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { i18n } from '@minddrop/i18n';
-import { Popover, TooltipProvider } from '@minddrop/ui-elements';
 import { PathConflictError } from '@minddrop/file-system';
-import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
+import { i18n } from '@minddrop/i18n';
 import { render, userEvent, waitFor } from '@minddrop/test-utils';
+import { Popover, TooltipProvider } from '@minddrop/ui-elements';
+import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
 import { cleanup } from '../../test-utils';
 import { RenameWorkspacePopover } from './RenameWorkspacePopover';
 

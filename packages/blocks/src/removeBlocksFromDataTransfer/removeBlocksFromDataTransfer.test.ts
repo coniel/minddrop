@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { removeBlocksFromDataTransfer } from './removeBlocksFromDataTransfer';
+import { describe, expect, it } from 'vitest';
 import { createDataTransfer } from '@minddrop/test-utils';
 import { BLOCKS_DATA_KEY } from '../constants';
 import { block1, block2 } from '../test-utils';
+import { removeBlocksFromDataTransfer } from './removeBlocksFromDataTransfer';
 
 describe('removeBlocksFromDataTransfer', () => {
   it('does nothing if the data transfer does not contain blocks', () => {

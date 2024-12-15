@@ -1,9 +1,9 @@
-import { Editor as SlateEditor, Path, Range, Text } from 'slate';
+import { Path, Range, Editor as SlateEditor, Text } from 'slate';
 import { Element } from '@minddrop/ast';
-import { Editor, EditorBlockElementConfig } from '../types';
-import { getElementAbove, isBlockElement } from '../utils';
 import { Transforms } from '../Transforms';
 import { convertElement } from '../convertElement';
+import { Editor, EditorBlockElementConfig } from '../types';
+import { getElementAbove, isBlockElement } from '../utils';
 
 /**
  * Adds support for block element shortcuts, enabling

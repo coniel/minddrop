@@ -1,12 +1,12 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { render } from '@minddrop/test-utils';
-import { Ast, Element } from '@minddrop/ast';
-import { Text } from '../types';
-import { setup, cleanup, createTestEditor } from '../test-utils';
-import { withMarks } from './withMarks';
-import { Editable, Slate } from 'slate-react';
-import { boldMarkConfig, paragraphElement1 } from '../test-utils/editor.data';
 import { Node } from 'slate';
+import { Editable, Slate } from 'slate-react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Ast, Element } from '@minddrop/ast';
+import { render } from '@minddrop/test-utils';
+import { cleanup, createTestEditor, setup } from '../test-utils';
+import { boldMarkConfig, paragraphElement1 } from '../test-utils/editor.data';
+import { Text } from '../types';
+import { withMarks } from './withMarks';
 
 const renderEditor = (children: Text[]) => {
   const content: Element[] = [

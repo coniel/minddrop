@@ -1,6 +1,6 @@
+import { NotFoundError } from '../../errors';
 import { Config } from '../../types/Config.types';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
-import { NotFoundError } from '../../errors';
 import { persistConfigs } from '../persistConfigs';
 
 /**

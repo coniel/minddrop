@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyIcon } from './stringifyIcon';
+import { describe, expect, it } from 'vitest';
 import {
   contentIcon,
   contentIconString,
   emojiIcon,
   emojiIconString,
 } from '../test-utils';
+import { stringifyIcon } from './stringifyIcon';
 
 describe('stringifyIcon', () => {
   it('stringifies an emoji icon', () => {

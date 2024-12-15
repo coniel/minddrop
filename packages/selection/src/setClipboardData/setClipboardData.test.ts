@@ -1,15 +1,15 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
+import { ACTION_DATA_KEY } from '../constants';
 import {
-  setup,
   cleanup,
   selectedItem1,
   selectedItem3,
   selectionItemTypeConfig,
+  setup,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { setClipboardData } from './setClipboardData';
-import { ACTION_DATA_KEY } from '../constants';
-import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 
 describe('setClipboardData', () => {
   let data: Record<string, string> = {};

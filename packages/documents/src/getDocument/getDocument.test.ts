@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, document1 } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DocumentsStore } from '../DocumentsStore';
+import { cleanup, document1, setup } from '../test-utils';
 import { getDocument } from './getDocument';
 
 describe('getDocument', () => {

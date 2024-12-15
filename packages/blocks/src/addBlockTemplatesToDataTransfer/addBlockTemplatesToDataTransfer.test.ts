@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { addBlockTemplatesToDataTransfer } from './addBlockTemplatesToDataTransfer';
+import { afterEach, describe, expect, it } from 'vitest';
 import { createDataTransfer } from '@minddrop/test-utils';
 import { blockTemplate1, blockTemplate2 } from '../test-utils';
+import { addBlockTemplatesToDataTransfer } from './addBlockTemplatesToDataTransfer';
 
 describe('addBlockTemplatesToDataTransfer', () => {
   let dataTransfer = createDataTransfer({});

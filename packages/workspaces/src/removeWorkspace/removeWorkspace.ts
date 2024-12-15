@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
-import { getWorkspace } from '../getWorkspace';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { getWorkspace } from '../getWorkspace';
 import { writeWorkspacesConfig } from '../writeWorkspacesConfig';
 
 /**

@@ -1,17 +1,17 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  documentViews,
-  documents,
-  document1View1,
-} from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { DocumentViewsStore } from '../DocumentViewsStore';
 import { DocumentsStore } from '../DocumentsStore';
-import { deleteDocumentView } from './deleteDocumentView';
 import { DocumentViewNotFoundError } from '../errors';
 import { getDocumentView } from '../getDocumentView';
-import { Events } from '@minddrop/events';
+import {
+  cleanup,
+  document1View1,
+  documentViews,
+  documents,
+  setup,
+} from '../test-utils';
+import { deleteDocumentView } from './deleteDocumentView';
 
 describe('deleteDocumentView', () => {
   beforeEach(() => {

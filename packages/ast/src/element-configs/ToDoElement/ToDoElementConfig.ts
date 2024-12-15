@@ -1,6 +1,6 @@
 import { ElementTypeConfig } from '../../types';
-import { stringifyToDoElementToMarkdown } from './stringifyToDoElementToMarkdown';
 import { stringifyToDoElementBatchToMarkdown } from './stringifyToDoElementBatchToMarkdown';
+import { stringifyToDoElementToMarkdown } from './stringifyToDoElementToMarkdown';
 
 export const ToDoElementConfig: ElementTypeConfig = {
   type: 'to-do',

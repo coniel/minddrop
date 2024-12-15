@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyHeadingElementToMarkdown } from './stringifyHeadingElementFromMarkdown';
-import { HeadingElement } from './HeadingElement.types';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
+import { HeadingElement } from './HeadingElement.types';
+import { stringifyHeadingElementToMarkdown } from './stringifyHeadingElementFromMarkdown';
 
 describe('stringifyHeadingElementToMarkdown', () => {
   it('stringifies heading elements to the appropriate level', () => {

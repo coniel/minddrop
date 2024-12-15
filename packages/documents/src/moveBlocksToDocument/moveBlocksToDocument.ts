@@ -1,9 +1,9 @@
 import { Blocks } from '@minddrop/blocks';
+import { BlockDocumentMap } from '../DocumentsStore';
 import { addBlocksToDocument } from '../addBlocksToDocument';
 import { DocumentNotFoundError, ParentDocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';
 import { removeBlocksFromDocument } from '../removeBlocksFromDocument';
-import { BlockDocumentMap } from '../DocumentsStore';
 
 /**
  * Moves blocks from one document to another, removing them from the

@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyFragmentToPlainText } from './stringifyFragmentToPlainText';
-import { Fragment } from '../types';
+import { describe, expect, it } from 'vitest';
 import { generateInlineElementTypeConfig } from '../test-utils';
+import { Fragment } from '../types';
+import { stringifyFragmentToPlainText } from './stringifyFragmentToPlainText';
 
 const elementConfigWithToPlainText = generateInlineElementTypeConfig(
   'with-to-plain-text',

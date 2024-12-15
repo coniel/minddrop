@@ -1,9 +1,9 @@
 import { vi } from 'vitest';
-import { Events } from '@minddrop/events';
 import { Blocks } from '@minddrop/blocks';
-import { DocumentsStore } from '../DocumentsStore';
-import { DocumentViewsStore } from '../DocumentViewsStore';
+import { Events } from '@minddrop/events';
 import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { DocumentsStore } from '../DocumentsStore';
 
 export function setup() {}
 

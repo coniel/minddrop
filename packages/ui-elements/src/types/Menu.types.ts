@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContentColor } from './Content.types';
 import { InteractiveMenuItemProps } from '../InteractiveMenuItem';
+import { ContentColor } from './Content.types';
 
 export interface MenuItemConfig
   extends Omit<InteractiveMenuItemProps, 'MenuItemComponent'> {

@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyFragmentToMarkdown } from './stringifyFragmentToMarkdown';
+import { describe, expect, it } from 'vitest';
 import { Fragment } from '../types';
+import { stringifyFragmentToMarkdown } from './stringifyFragmentToMarkdown';
 
 describe('stringifyFragmentToMarkdown', () => {
   it('stringifies Text nodes', () => {

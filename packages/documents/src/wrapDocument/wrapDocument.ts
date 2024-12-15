@@ -1,12 +1,12 @@
+import { Events } from '@minddrop/events';
 import {
-  Fs,
   FileNotFoundError,
+  Fs,
   PathConflictError,
 } from '@minddrop/file-system';
-import { Events } from '@minddrop/events';
 import { DocumentsStore } from '../DocumentsStore';
-import { getDocument } from '../getDocument';
 import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
 
 /**
  * Wraps a document in a directory of the same name.

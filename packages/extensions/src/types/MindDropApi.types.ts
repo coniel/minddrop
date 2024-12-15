@@ -1,15 +1,15 @@
 import { Assets } from '@minddrop/assets';
 import { Ast } from '@minddrop/ast';
-import { EditorMarks, EditorElements } from '@minddrop/editor';
+import { Blocks } from '@minddrop/blocks';
 import { DocumentViews, Documents } from '@minddrop/documents';
+import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { Icons } from '@minddrop/icons';
 import { Markdown } from '@minddrop/markdown';
-import { Blocks } from '@minddrop/blocks';
 import { Selection } from '@minddrop/selection';
-import { Workspaces } from '@minddrop/workspaces';
 import * as Utils from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { Ui } from '../Ui';
 
 export interface MindDropApi {

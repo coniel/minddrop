@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { cleanup, blocks, block1, block2 } from '../test-utils';
-import { getBlock } from './getBlock';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { BlocksStore } from '../BlocksStore';
+import { block1, block2, blocks, cleanup } from '../test-utils';
+import { getBlock } from './getBlock';
 
 describe('getBlock', () => {
   beforeEach(() => {

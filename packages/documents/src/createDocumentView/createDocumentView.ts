@@ -1,14 +1,14 @@
-import { uuid } from '@minddrop/utils';
 import { Events } from '@minddrop/events';
-import { DocumentView } from '../types';
+import { uuid } from '@minddrop/utils';
+import { getDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
 import { DocumentViewsStore } from '../DocumentViewsStore';
-import { updateDocument } from '../updateDocument';
-import { getDocument } from '../getDocument';
 import {
   DocumentViewNotFoundError,
   DocumentViewTypeConfigNotRegisteredError,
 } from '../errors';
-import { getDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
+import { getDocument } from '../getDocument';
+import { DocumentView } from '../types';
+import { updateDocument } from '../updateDocument';
 
 /**
  * Creates a new document view and adds it to the document.

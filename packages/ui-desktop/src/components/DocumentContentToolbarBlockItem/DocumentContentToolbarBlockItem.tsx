@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { useDragImage } from '@minddrop/utils';
-import { Blocks, BlockType } from '@minddrop/blocks';
+import { BlockType, Blocks } from '@minddrop/blocks';
 import { BlockContainer, ContentIcon } from '@minddrop/ui-elements';
+import { useDragImage } from '@minddrop/utils';
 import { DocumentContentToolbarItem } from '../DocumentContentToolbarItem';
 import './DocumentContentToolbarBlockItem.css';
 

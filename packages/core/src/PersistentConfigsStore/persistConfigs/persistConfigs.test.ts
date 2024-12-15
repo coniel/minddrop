@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
-  initializeMockFileSystem,
   ConfigsFile,
   ConfigsFileOptions,
+  initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { persistConfigs } from './persistConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
+import { persistConfigs } from './persistConfigs';
 
 const CONFIGS = [
   { id: 'test-config-1', values: { foo: 'bar' } },

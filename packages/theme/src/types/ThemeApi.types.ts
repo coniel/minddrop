@@ -1,13 +1,13 @@
 import {
+  ThemeAppearance,
+  ThemeAppearanceSetting,
+} from './ThemeAppearance.types';
+import {
   SetThemeAppearanceEvent,
   SetThemeAppearanceEventCallback,
   SetThemeAppearanceSettingEvent,
   SetThemeAppearanceSettingEventCallback,
 } from './ThemeEvents.types';
-import {
-  ThemeAppearance,
-  ThemeAppearanceSetting,
-} from './ThemeAppearance.types';
 
 export interface ThemeApi {
   /**

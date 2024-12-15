@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { AssetHandler } from '../types';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { registerAssetHandler } from '../AssetHandlersStore';
+import { AssetHandler } from '../types';
 import { getAssetPath } from './getAssetPath';
 
 const ASSETS_PATH = 'assets';

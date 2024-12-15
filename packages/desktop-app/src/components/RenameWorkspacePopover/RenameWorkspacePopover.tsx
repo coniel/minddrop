@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import { PathConflictError } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
 import {
   InvisibleTextField,
@@ -6,7 +7,6 @@ import {
   Tooltip,
 } from '@minddrop/ui-elements';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
-import { PathConflictError } from '@minddrop/file-system';
 import './RenameWorkspacePopover.css';
 
 export interface RenameWorkspacePopoverProps {

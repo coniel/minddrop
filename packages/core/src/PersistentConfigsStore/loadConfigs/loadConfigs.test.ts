@@ -1,11 +1,11 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   ConfigsFile,
   ConfigsFileOptions,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { loadConfigs } from './loadConfigs';
 import { PersistentConfigsStore } from '../PersistentConfigsStore';
+import { loadConfigs } from './loadConfigs';
 
 const testConfigs = {
   'test-config-1': {

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dialog } from './Dialog';
-import { DialogTrigger } from './DialogTrigger';
-import { DialogContent } from './DialogContent';
-import { DialogTitle } from './DialogTitle';
-import { DialogDescription } from './DialogDescription';
 import { Button } from '../Button';
+import { Dialog } from './Dialog';
+import { DialogContent } from './DialogContent';
+import { DialogDescription } from './DialogDescription';
+import { DialogTitle } from './DialogTitle';
+import { DialogTrigger } from './DialogTrigger';
 
 export default {
   title: 'ui/Dialog',

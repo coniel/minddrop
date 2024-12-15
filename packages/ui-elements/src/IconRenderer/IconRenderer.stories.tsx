@@ -1,7 +1,7 @@
 import React from 'react';
-import { IconRenderer } from './IconRenderer';
-import { Text } from '../Text';
 import { Icon } from '../Icon';
+import { Text } from '../Text';
+import { IconRenderer } from './IconRenderer';
 
 export default {
   title: 'ui/IconRenderer',

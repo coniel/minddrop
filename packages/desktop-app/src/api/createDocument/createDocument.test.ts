@@ -1,8 +1,8 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { initializeMockFileSystem, Fs } from '@minddrop/file-system';
-import { i18n } from '@minddrop/i18n';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Documents } from '@minddrop/documents';
-import { setup, cleanup } from '../../test-utils';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
+import { cleanup, setup } from '../../test-utils';
 import { createDocument } from './createDocument';
 
 const PARENT_DIR_PATH = 'path/to/Parent';

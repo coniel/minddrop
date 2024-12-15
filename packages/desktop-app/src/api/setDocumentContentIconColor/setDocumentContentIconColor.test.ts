@@ -1,8 +1,8 @@
-import { describe, afterEach, it, expect, vi, beforeAll } from 'vitest';
-import { setDocumentContentIconColor } from './setDocumentContentIconColor';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { DOCUMENTS_TEST_DATA, Documents } from '@minddrop/documents';
 import { Icons, UserIconType } from '@minddrop/icons';
 import { cleanup } from '../../test-utils';
+import { setDocumentContentIconColor } from './setDocumentContentIconColor';
 
 const { document1, document1Icon } = DOCUMENTS_TEST_DATA;
 

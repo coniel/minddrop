@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
-import { ActionCard, Button } from '@minddrop/ui-elements';
+import { useCallback } from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { ActionCard, Button } from '@minddrop/ui-elements';
 import { selectFolderAsWorkspace } from '../../../api/selectFolderAsWorkspace';
 
 export const OpenWorkspaceCard: React.FC = () => {

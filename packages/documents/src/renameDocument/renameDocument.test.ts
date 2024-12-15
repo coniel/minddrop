@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
   FileNotFoundError,
@@ -5,7 +6,6 @@ import {
   PathConflictError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DocumentsStore } from '../DocumentsStore';
 import { DocumentNotFoundError } from '../errors';
 import { getDocument } from '../getDocument';

@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+import { useChildDocuments } from '@minddrop/documents';
 import {
   WorkspaceNavItem as BaseWorkspaceNavItem,
   IconButton,
@@ -5,16 +7,14 @@ import {
   PopoverAnchor,
   PopoverPortal,
 } from '@minddrop/ui-elements';
-import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
-import { RenameWorkspacePopover } from '../RenameWorkspacePopover';
-import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import { promptMoveWorkspace, revealInFileExplorer } from '../../api';
-import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
-import { useChildDocuments } from '@minddrop/documents';
-import { DocumentNavItem } from '../DocumentNavItem';
-import { useCallback } from 'react';
 import { createDocument } from '../../api/createDocument';
+import { DocumentNavItem } from '../DocumentNavItem';
+import { RenameWorkspacePopover } from '../RenameWorkspacePopover';
+import { WorkspaceNavItemIcon } from '../WorkspaceNavItemIcon';
+import { WorkspaceOptionsMenu } from '../WorkspaceOptionsMenu';
 
 interface WorkspaceNavItemProps {
   /**

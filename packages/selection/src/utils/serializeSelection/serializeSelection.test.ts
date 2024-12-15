@@ -1,18 +1,18 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  selectedItem1,
-  selectedItem2,
-  selectionItemTypeConfig,
-  alternativeTypeItem,
-} from '../../test-utils';
-import { useSelectionStore } from '../../useSelectionStore';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   registerSelectionItemType,
   unregisterSelectionItemType,
 } from '../../SelectionItemTypeConfigsStore';
 import { SelectionItemTypeNotRegisteredError } from '../../errors';
+import {
+  alternativeTypeItem,
+  cleanup,
+  selectedItem1,
+  selectedItem2,
+  selectionItemTypeConfig,
+  setup,
+} from '../../test-utils';
+import { useSelectionStore } from '../../useSelectionStore';
 import { serializeSelection } from './serializeSelection';
 
 describe('serializeSelection', () => {

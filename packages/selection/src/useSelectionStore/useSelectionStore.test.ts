@@ -1,6 +1,6 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { useSelectionStore } from './useSelectionStore';
+import { afterEach, describe, expect, it } from 'vitest';
 import { selectedItem1, selectedItem2, selectedItem3 } from '../test-utils';
+import { useSelectionStore } from './useSelectionStore';
 
 describe('useSelectionStore', () => {
   afterEach(() => {

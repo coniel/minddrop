@@ -1,6 +1,6 @@
 import { ContentColor } from '@minddrop/core';
-import { Icons, UserIconType } from '@minddrop/icons';
 import { Document, Documents } from '@minddrop/documents';
+import { Icons, UserIconType } from '@minddrop/icons';
 
 /**
  * Sets the color of a document's content-icon if it

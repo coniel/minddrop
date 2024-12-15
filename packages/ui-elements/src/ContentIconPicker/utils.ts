@@ -1,7 +1,7 @@
 import { fuzzySearch } from '@minddrop/utils';
 import {
-  UnminifiedContentIcon,
   MinifiedContentIcon,
+  UnminifiedContentIcon,
 } from './ContentIconPicker.types';
 
 /**

@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
-import { blockElementConfigs, inlineElementConfigs } from './editor.data';
-import { defaultMarkConfigs } from '../default-mark-configs';
-import { registerMarkConfig } from '../registerMarkConfig';
-import { MarkConfigsStore } from '../MarkConfigsStore';
 import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
+import { MarkConfigsStore } from '../MarkConfigsStore';
+import { defaultMarkConfigs } from '../default-mark-configs';
+import { registerMarkConfig } from '../registerMarkConfig';
+import { blockElementConfigs, inlineElementConfigs } from './editor.data';
 
 export function setup() {
   act(() => {

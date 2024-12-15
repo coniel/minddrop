@@ -1,12 +1,12 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { render, userEvent } from '@minddrop/test-utils';
-import { i18n } from '@minddrop/i18n';
-import { Theme } from '@minddrop/theme';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   FILE_SYSTEM_TEST_DATA,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { setup, cleanup } from '../../test-utils';
+import { i18n } from '@minddrop/i18n';
+import { render, userEvent } from '@minddrop/test-utils';
+import { Theme } from '@minddrop/theme';
+import { cleanup, setup } from '../../test-utils';
 import { ThemeAppearanceSelect } from './ThemeAppearanceSelect';
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;

@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import React, { FC } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Text } from '../Text';
 import { KeyboardShortcut } from '../KeyboardShortcut';
+import { Text } from '../Text';
 import './Tooltip.css';
 
 type TooltipBaseProps = Pick<

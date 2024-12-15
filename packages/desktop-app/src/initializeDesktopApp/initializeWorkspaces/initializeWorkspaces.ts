@@ -1,10 +1,10 @@
-import { getAllWindows } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { getAllWindows } from '@tauri-apps/api/window';
 import { FileNotFoundError } from '@minddrop/file-system';
 import { JsonParseError } from '@minddrop/utils';
+import { throttle } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../../AppUiState';
-import { throttle } from '@minddrop/utils';
 
 /**
  * Initializes workspaces by loading them from the workspaces

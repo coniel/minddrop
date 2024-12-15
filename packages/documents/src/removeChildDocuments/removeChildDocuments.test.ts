@@ -1,14 +1,14 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import {
-  setup,
-  cleanup,
-  wrappedDocument,
-  childDocument,
-  wrappedChildDocument,
-  grandChildDocument,
-} from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DocumentsStore } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
+import {
+  childDocument,
+  cleanup,
+  grandChildDocument,
+  setup,
+  wrappedChildDocument,
+  wrappedDocument,
+} from '../test-utils';
 import { removeChildDocuments } from './removeChildDocuments';
 
 describe('removeChildDocuments', () => {

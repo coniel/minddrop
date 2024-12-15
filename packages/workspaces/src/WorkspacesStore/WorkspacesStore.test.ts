@@ -1,5 +1,5 @@
-import { describe, afterEach, it, expect, beforeEach } from 'vitest';
-import { workspace1, missingWorkspace, workspaces } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { missingWorkspace, workspace1, workspaces } from '../test-utils';
 import { Workspace } from '../types';
 import { WorkspacesStore } from './WorkspacesStore';
 

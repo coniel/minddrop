@@ -1,5 +1,5 @@
 import { fuzzySearch } from '@minddrop/utils';
-import { EmojiItem, MinifiedEmoji, EmojiSkinTone } from './Emoji.types';
+import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from './Emoji.types';
 
 /**
  * Converts minified emoji data into an emoji object.

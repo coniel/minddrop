@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
-import { renderHook, act } from '@minddrop/test-utils';
-import { setup, cleanup, selectedItem2, selectedItem1 } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, renderHook } from '@minddrop/test-utils';
+import { dragEnd } from '../dragEnd';
+import { dragStart } from '../dragStart';
+import { cleanup, selectedItem1, selectedItem2, setup } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { useDraggable } from './useDraggable';
-import { dragStart } from '../dragStart';
-import { dragEnd } from '../dragEnd';
 
 vi.mock('../dragStart', () => ({ dragStart: vi.fn() }));
 vi.mock('../dragEnd', () => ({ dragEnd: vi.fn() }));

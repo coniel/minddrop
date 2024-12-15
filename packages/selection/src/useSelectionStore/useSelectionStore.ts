@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { containsSelectionItem } from '../utils';
 import { SelectionItem } from '../types';
+import { containsSelectionItem } from '../utils';
 
 interface SelectionStore {
   /**

@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  setup,
   cleanup,
   selectedItem1,
   selectedItem2,
   selectedItem3,
+  setup,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { containsSelectionItem } from '../utils';

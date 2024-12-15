@@ -1,16 +1,16 @@
-import { describe, afterEach, beforeAll, it, vi } from 'vitest';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { afterEach, beforeAll, describe, it, vi } from 'vitest';
 import {
-  render,
-  cleanup,
-  screen,
   act,
+  cleanup,
   fireEvent,
+  render,
+  screen,
   waitFor,
 } from '@minddrop/test-utils';
+import { MenuContents } from '../../types';
 import { DropdownMenu } from '../DropdownMenu';
 import { DropdownMenuContent } from './DropdownMenuContent';
-import { MenuContents } from '../../types';
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 
 class ResizeObserver {
   observe() {}

@@ -1,9 +1,9 @@
 import { Editor as SlateEditor } from 'slate';
 import { Ast, Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
+import { convertElement } from '../convertElement';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
-import { convertElement } from '../convertElement';
 
 /**
  * Resets block elements to the default type when pressing Enter

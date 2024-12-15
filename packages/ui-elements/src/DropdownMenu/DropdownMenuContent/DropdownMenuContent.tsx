@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
+import React, { useMemo } from 'react';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
 import { generateMenu } from '../../utils';
+import { DropdownMenuColorSelectionItem } from '../DropdownMenuColorSelectionItem';
 import { DropdownMenuItem } from '../DropdownMenuItem';
-import { DropdownSubmenuTriggerItem } from '../DropdownSubmenuTriggerItem';
 import { DropdownMenuLabel } from '../DropdownMenuLabel';
 import { DropdownMenuSeparator } from '../DropdownMenuSeparator';
 import { DropdownMenuTopicSelectionItem } from '../DropdownMenuTopicSelectionItem';
-import { DropdownMenuColorSelectionItem } from '../DropdownMenuColorSelectionItem';
 import { DropdownSubmenu } from '../DropdownSubmenu';
 import { DropdownSubmenuContent } from '../DropdownSubmenuContent';
+import { DropdownSubmenuTriggerItem } from '../DropdownSubmenuTriggerItem';
 
 export interface DropdownMenuContentProps
   extends Omit<DropdownMenuPrimitives.DropdownMenuContentProps, 'content'> {

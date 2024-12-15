@@ -1,4 +1,4 @@
-import { create, UseBoundStore, StoreApi } from 'zustand';
+import { StoreApi, UseBoundStore, create } from 'zustand';
 
 export interface ArrayStoreInteralApi<TItem extends object> {
   /**

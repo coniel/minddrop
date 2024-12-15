@@ -1,6 +1,6 @@
 import * as Label from '@radix-ui/react-label';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { useTranslation } from '@minddrop/i18n';
+import { mapPropsToClasses } from '@minddrop/utils';
 import { Text } from '../Text';
 
 export interface FieldLabelProps extends Label.LabelProps {

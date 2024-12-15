@@ -1,19 +1,19 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Transforms } from 'slate';
-import { Element, Ast } from '@minddrop/ast';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Ast, Element } from '@minddrop/ast';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import {
-  setup,
   cleanup,
   createTestEditor,
-  toDoElementCompleted1,
-  toDoElementConfig,
   headingElement1,
   headingElementConfig,
   paragraphElement1,
   paragraphElementConfig,
+  setup,
+  toDoElementCompleted1,
+  toDoElementConfig,
 } from '../test-utils';
 import { Editor } from '../types';
-import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { withReturnBehaviour } from './withReturnBehaviour';
 
 const createEditor = (content: Element[]) =>

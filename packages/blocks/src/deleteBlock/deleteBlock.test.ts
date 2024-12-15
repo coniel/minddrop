@@ -1,10 +1,10 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { cleanup, blocks, block1 } from '../test-utils';
-import { deleteBlock } from './deleteBlock';
 import { BlocksStore } from '../BlocksStore';
-import { getBlock } from '../getBlock';
 import { BlockNotFoundError } from '../errors';
+import { getBlock } from '../getBlock';
+import { block1, blocks, cleanup } from '../test-utils';
+import { deleteBlock } from './deleteBlock';
 
 describe('deleteBlock', () => {
   beforeEach(() => {

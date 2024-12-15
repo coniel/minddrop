@@ -1,6 +1,6 @@
-import { ThemeAppearance } from '../types';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeLight } from '../constants';
+import { ThemeAppearance } from '../types';
 
 /**
  * Returns the current theme appearance.

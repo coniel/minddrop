@@ -1,8 +1,8 @@
 import { Events } from '@minddrop/events';
-import { BlocksStore } from '../BlocksStore';
-import { Block } from '../types';
-import { generateBlocksFromDataTransfer } from '../generateBlocksFromDataTransfer';
 import { getBlockType } from '../BlockTypesStore';
+import { BlocksStore } from '../BlocksStore';
+import { generateBlocksFromDataTransfer } from '../generateBlocksFromDataTransfer';
+import { Block } from '../types';
 
 /**
  * Create blocks from a data transfer object and isnerts them into

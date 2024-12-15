@@ -1,38 +1,37 @@
-import {
-  copyFile,
-  exists,
-  readFile,
-  readTextFile,
-  readDir,
-  writeFile,
-  writeTextFile,
-  rename,
-  remove,
-  mkdir,
-  DirEntry,
-  CopyFileOptions,
-  RenameOptions,
-} from '@tauri-apps/plugin-fs';
+import { convertFileSrc, invoke } from '@tauri-apps/api/core';
 import {
   BaseDirectory,
   appConfigDir,
   appDataDir,
   documentDir,
 } from '@tauri-apps/api/path';
-import { convertFileSrc, invoke } from '@tauri-apps/api/core';
+import {
+  CopyFileOptions,
+  DirEntry,
+  RenameOptions,
+  copyFile,
+  exists,
+  mkdir,
+  readDir,
+  readFile,
+  readTextFile,
+  remove,
+  rename,
+  writeFile,
+  writeTextFile,
+} from '@tauri-apps/plugin-fs';
+import { download } from '@tauri-apps/plugin-upload';
+import {
+  BaseDirectory as FsBaseDirectory,
+  FsEntry,
+  registerFileSystemAdapter as register,
+} from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspaceConfigDirName } from '@minddrop/workspaces';
 
 interface BaseDirOptions {
   baseDir?: BaseDirectory;
 }
-
-import {
-  registerFileSystemAdapter as register,
-  BaseDirectory as FsBaseDirectory,
-  FsEntry,
-} from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
-import { download } from '@tauri-apps/plugin-upload';
 
 function getBaseDirPath(dir: FsBaseDirectory): Promise<string> {
   switch (dir) {

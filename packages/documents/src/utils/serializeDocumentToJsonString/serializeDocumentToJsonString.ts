@@ -1,8 +1,8 @@
 import { Blocks } from '@minddrop/blocks';
 import { DocumentNotFoundError } from '../../errors';
 import { getDocument } from '../../getDocument';
-import { SerializableDocumentData } from '../../types';
 import { getDocumentViews } from '../../getDocumentViews';
+import { SerializableDocumentData } from '../../types';
 
 /**
  * Strips derived data from a document and returns the remaining

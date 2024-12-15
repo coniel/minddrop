@@ -1,6 +1,6 @@
 import { Fs } from '@minddrop/file-system';
-import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { WorkspacesConfigDir, WorkspacesConfigFileName } from '../constants';
 
 /**
  * Persists workspaces config by writing store values

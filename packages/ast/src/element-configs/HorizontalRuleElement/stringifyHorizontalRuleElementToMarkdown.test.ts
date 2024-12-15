@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
-import { stringifyHorizontalRuleElementToMarkdown } from './stringifyHorizontalRuleElementToMarkdown';
 import { HorizontalRuleElement } from './HorizontalRuleElement.types';
+import { stringifyHorizontalRuleElementToMarkdown } from './stringifyHorizontalRuleElementToMarkdown';
 
 const horizontalRuleElement = generateElement<HorizontalRuleElement>(
   'horizontal-rule',

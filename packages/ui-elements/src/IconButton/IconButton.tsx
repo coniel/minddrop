@@ -1,7 +1,7 @@
+import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/icons';
 import { mapPropsToClasses } from '@minddrop/utils';
-import React from 'react';
 import { Icon } from '../Icon';
 import './IconButton.css';
 

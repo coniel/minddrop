@@ -1,8 +1,8 @@
-import { describe, beforeEach, afterEach, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { setup, cleanup, selectedItem1, selectedItem3 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { cleanup, selectedItem1, selectedItem3, setup } from '../test-utils';
 import { SelectionDragEventData } from '../types';
+import { useSelectionStore } from '../useSelectionStore';
 import { dragEnd } from './dragEnd';
 
 describe('dragEnd', () => {

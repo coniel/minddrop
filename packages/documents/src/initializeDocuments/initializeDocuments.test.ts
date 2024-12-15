@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Blocks } from '@minddrop/blocks';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { registerDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
+import { DocumentsStore } from '../DocumentsStore';
+import { deleteDocumentView } from '../deleteDocumentView';
 import {
   cleanup,
   document1,
@@ -11,13 +15,9 @@ import {
   viewTypeConfigs,
   workspaceDir,
 } from '../test-utils';
-import { initializeMockFileSystem } from '@minddrop/file-system';
-import { DocumentsStore } from '../DocumentsStore';
-import { initializeDocuments } from './initializeDocuments';
-import { updateDocumentView } from '../updateDocumentView';
-import { deleteDocumentView } from '../deleteDocumentView';
-import { registerDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
 import { updateDocument } from '../updateDocument';
+import { updateDocumentView } from '../updateDocumentView';
+import { initializeDocuments } from './initializeDocuments';
 
 const MockFs = initializeMockFileSystem(documentFiles);
 

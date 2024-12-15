@@ -1,5 +1,4 @@
-import { describe, it, expect } from 'vitest';
-import { parseIcon } from './parseIcon';
+import { describe, expect, it } from 'vitest';
 import { UserIconContentIcon, UserIconEmoji } from '../icons.types';
 import {
   contentIcon,
@@ -7,6 +6,7 @@ import {
   emojiIcon,
   emojiIconString,
 } from '../test-utils';
+import { parseIcon } from './parseIcon';
 
 describe('parseIcon', () => {
   it('parses content icons', () => {

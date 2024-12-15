@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
-import { stringifyUnorderedListItemElementToMarkdown } from './stringifyUnorderedListItemElementToMarkdown';
 import { UnorderedListItemElement } from './UnorderedListItemElement.types';
+import { stringifyUnorderedListItemElementToMarkdown } from './stringifyUnorderedListItemElementToMarkdown';
 
 const toDoElement = generateElement<UnorderedListItemElement>(
   'unordered-list-item',

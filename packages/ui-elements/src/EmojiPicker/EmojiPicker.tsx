@@ -1,13 +1,13 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
-import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
+import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { IconButton } from '../IconButton';
 import { NavGroup } from '../NavGroup';
+import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { TextInput } from '../TextInput';
 import { Toolbar } from '../Toolbar';
-import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Tooltip } from '../Tooltip';
 import './EmojiPicker.css';
 

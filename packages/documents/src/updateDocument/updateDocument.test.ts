@@ -1,20 +1,20 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Blocks } from '@minddrop/blocks';
 import { Events } from '@minddrop/events';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { DocumentViewsStore } from '../DocumentViewsStore';
+import { DocumentsStore } from '../DocumentsStore';
+import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
 import {
-  setup,
   cleanup,
   document1,
+  documentBlocks,
   documentFiles,
   documentViews,
-  documentBlocks,
+  setup,
 } from '../test-utils';
 import { updateDocument } from './updateDocument';
-import { DocumentNotFoundError } from '../errors';
-import { DocumentsStore } from '../DocumentsStore';
-import { initializeMockFileSystem } from '@minddrop/file-system';
-import { getDocument } from '../getDocument';
-import { DocumentViewsStore } from '../DocumentViewsStore';
-import { Blocks } from '@minddrop/blocks';
 
 const UPDATE_DATA = {
   icon: 'new-icon',

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
-import { parseHeadingElementFromMarkdown } from './parseHeadingElementFromMarkdown';
 import { HeadingElement } from './HeadingElement.types';
+import { parseHeadingElementFromMarkdown } from './parseHeadingElementFromMarkdown';
 
 const headingElement = generateElement<HeadingElement>('heading', {
   level: 1,

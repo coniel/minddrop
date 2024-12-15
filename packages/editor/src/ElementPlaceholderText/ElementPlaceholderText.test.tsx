@@ -1,18 +1,18 @@
-import { describe, afterEach, it, expect } from 'vitest';
+import { Editor, Transforms } from 'slate';
 import { Editable, ReactEditor, RenderElementProps, Slate } from 'slate-react';
+import { afterEach, describe, expect, it } from 'vitest';
+import { Element } from '@minddrop/ast';
 import {
   render,
   waitFor,
   waitForElementToBeRemoved,
 } from '@minddrop/test-utils';
-import { Element } from '@minddrop/ast';
+import { cleanup, headingElement1 } from '../test-utils';
+import { createEditor } from '../utils';
 import {
   ElementPlaceholderText,
   ElementPlaceholderTextProps,
 } from './ElementPlaceholderText';
-import { cleanup, headingElement1 } from '../test-utils';
-import { createEditor } from '../utils';
-import { Editor, Transforms } from 'slate';
 
 const emptyElement = { ...headingElement1, children: [{ text: '' }] };
 const elementWithText = headingElement1;

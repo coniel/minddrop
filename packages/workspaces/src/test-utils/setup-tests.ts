@@ -1,5 +1,5 @@
-import { Events } from '@minddrop/events';
 import { vi } from 'vitest';
+import { Events } from '@minddrop/events';
 import { WorkspacesStore } from '../WorkspacesStore';
 
 export function setup() {}

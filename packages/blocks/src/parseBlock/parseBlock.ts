@@ -1,6 +1,6 @@
-import { Block, CustomBlockData, DeserializedBlockData } from '../types';
 import { restoreDates } from '@minddrop/utils';
 import { BlockParseError } from '../errors';
+import { Block, CustomBlockData, DeserializedBlockData } from '../types';
 
 /**
  * Parses a serialized block and returns a block object.

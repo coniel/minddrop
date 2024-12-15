@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { RenderResult, render, userEvent } from '@minddrop/test-utils';
-import { i18n } from '@minddrop/i18n';
-import { Workspaces, WORKSPACES_TEST_DATA } from '@minddrop/workspaces';
 import { PathConflictError } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
+import { RenderResult, render, userEvent } from '@minddrop/test-utils';
+import { WORKSPACES_TEST_DATA, Workspaces } from '@minddrop/workspaces';
 import { cleanup, setup } from '../../test-utils';
 import { CreateWorkspaceForm } from './CreateWorkspaceForm';
 

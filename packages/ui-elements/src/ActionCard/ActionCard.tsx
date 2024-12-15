@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { UiIconName } from '@minddrop/icons';
+import { mapPropsToClasses } from '@minddrop/utils';
 import { Icon } from '../Icon';
 import { Text } from '../Text';
 import './ActionCard.css';

@@ -1,14 +1,14 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Editor, Node } from 'slate';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Ast, Element } from '@minddrop/ast';
+import { Transforms } from '../Transforms';
 import {
-  setup,
   cleanup,
   createTestEditor,
   headingElement1,
   linkElement1,
+  setup,
 } from '../test-utils';
-import { Transforms } from '../Transforms';
 import { withBlockReset } from './withBlockReset';
 
 // An empty heading element

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from './Emoji.types';
 import {
   getAllLabels,
   getSkinToneVariant,
@@ -6,7 +7,6 @@ import {
   searchEmoji,
   unminifyEmoji,
 } from './utils';
-import { EmojiItem, MinifiedEmoji, EmojiSkinTone } from './Emoji.types';
 
 const groups = ['group 0', 'group 1', 'group 2'];
 const subgroups = ['subgroup 0', 'subgroup 1', 'subgroup 2', 'subgroup 3'];

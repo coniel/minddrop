@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { mapPropsToClasses, useCreateCallback } from '@minddrop/utils';
-import { Separator, Toolbar } from '@minddrop/ui-elements';
+import { useEffect, useState } from 'react';
 import { useBlockTypes } from '@minddrop/blocks';
-import { DocumentContentToolbarBlockItem } from '../DocumentContentToolbarBlockItem';
-import './DocumentContentToolbar.css';
+import { useTranslation } from '@minddrop/i18n';
 import { Selection, useSelection } from '@minddrop/selection';
+import { Separator, Toolbar } from '@minddrop/ui-elements';
+import { mapPropsToClasses, useCreateCallback } from '@minddrop/utils';
+import { DocumentContentToolbarBlockItem } from '../DocumentContentToolbarBlockItem';
 import { DocumentContentToolbarBlockOptions } from '../DocumentContentToolbarBlockOptions';
 import { DocumentContentToolbarItem } from '../DocumentContentToolbarItem';
-import { useTranslation } from '@minddrop/i18n';
+import './DocumentContentToolbar.css';
 
 export interface DocumentContentToolbarProps
   extends React.HTMLProps<HTMLDivElement> {

@@ -1,9 +1,9 @@
-import { describe, afterEach, it, expect, beforeEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { cleanup } from '../test-utils';
 import { ElementTypeConfigsStore } from '../ElementTypeConfigsStore';
-import { unregisterElementTypeConfig } from './unregisterElementTypeConfig';
+import { cleanup } from '../test-utils';
 import { ElementTypeConfig } from '../types';
+import { unregisterElementTypeConfig } from './unregisterElementTypeConfig';
 
 const elementConfig: ElementTypeConfig = {
   type: 'heading',

@@ -1,6 +1,6 @@
 import { ContentColor } from '@minddrop/core';
-import { ContentIconName, UserIconType } from '@minddrop/icons';
 import { Documents } from '@minddrop/documents';
+import { ContentIconName, UserIconType } from '@minddrop/icons';
 
 /**
  * Sets the provided content-icon as a document's icon.

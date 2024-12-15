@@ -1,5 +1,5 @@
-import { Selection } from '@minddrop/selection';
 import { useEffect } from 'react';
+import { Selection } from '@minddrop/selection';
 
 /**
  * Registers a keyboard event listener that selects all blocks when the user presses

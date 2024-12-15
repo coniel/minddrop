@@ -1,15 +1,15 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  Fs,
   InvalidPathError,
   initializeMockFileSystem,
-  Fs,
 } from '@minddrop/file-system';
 import {
   DefaultWorkspaceConfig,
   WorkspaceConfigDirName,
   WorkspaceConfigFileName,
 } from '../constants';
-import { setup, cleanup, workspace1, workspace1Config } from '../test-utils';
+import { cleanup, setup, workspace1, workspace1Config } from '../test-utils';
 import { getWorkspaceConfig } from './getWorkspaceConfig';
 
 const WORKSPACE_PATH = workspace1.path;

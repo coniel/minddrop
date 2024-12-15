@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
-import {
-  createKeydownClickHandler,
-  KeyboardAccessibleClickHandler,
-} from '../utils';
-import { Text } from '../Text';
 import { IconProp, IconRenderer } from '../IconRenderer';
+import { Text } from '../Text';
+import {
+  KeyboardAccessibleClickHandler,
+  createKeydownClickHandler,
+} from '../utils';
 import './SecondaryNavItem.css';
 
 export interface SecondaryNavItemProps

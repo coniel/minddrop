@@ -1,4 +1,4 @@
-import { FsEntry, Fs } from '@minddrop/file-system';
+import { Fs, FsEntry } from '@minddrop/file-system';
 
 /**
  * Recursively reads the contents of a directory and returns

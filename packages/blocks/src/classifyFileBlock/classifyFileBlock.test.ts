@@ -1,7 +1,7 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup } from '../test-utils';
-import { classifyFileBlock } from './classifyFileBlock';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { registerFileBlockClassifier } from '../BlockClassifiersStore';
+import { cleanup, setup } from '../test-utils';
+import { classifyFileBlock } from './classifyFileBlock';
 
 const file = { name: 'image.jpg' } as unknown as File;
 

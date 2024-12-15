@@ -1,10 +1,10 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { render, cleanup, fireEvent } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
 import { DOCUMENTS_TEST_DATA } from '@minddrop/documents';
-import { DocumentNavItem } from './DocumentNavItem';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { AppUiState } from '../../AppUiState';
+import { cleanup, fireEvent, render } from '@minddrop/test-utils';
 import { TooltipProvider } from '@minddrop/ui-elements';
+import { AppUiState } from '../../AppUiState';
+import { DocumentNavItem } from './DocumentNavItem';
 
 const { document1 } = DOCUMENTS_TEST_DATA;
 

@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { generateElement } from '../../utils';
-import { stringifyFileElementToMarkdown } from './stringifyFileElementToMarkdown';
 import { FileElement } from './FileElement.types';
+import { stringifyFileElementToMarkdown } from './stringifyFileElementToMarkdown';
 
 const fileElement = generateElement<FileElement>('file', {
   filename: 'Some file.pdf',

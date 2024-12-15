@@ -1,6 +1,6 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { setup, cleanup, workspace1, workspace2 } from '../test-utils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { WorkspacesStore } from '../WorkspacesStore';
+import { cleanup, setup, workspace1, workspace2 } from '../test-utils';
 import { getParentWorkspace } from './getParentWorkspace';
 
 describe('getParentWorkspace', () => {

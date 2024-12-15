@@ -1,17 +1,17 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Node, Editor } from 'slate';
+import { Editor, Node } from 'slate';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Ast, Element, HeadingElement } from '@minddrop/ast';
-import { EditorBlockElementConfig } from '../types';
+import { Transforms } from '../Transforms';
 import {
-  setup,
   cleanup,
   createTestEditor,
-  headingElementConfig,
   emptyParagraphElement,
-  paragraphElement1,
+  headingElementConfig,
   linkElement1,
+  paragraphElement1,
+  setup,
 } from '../test-utils';
-import { Transforms } from '../Transforms';
+import { EditorBlockElementConfig } from '../types';
 import { withBlockShortcuts } from './withBlockShortcuts';
 
 const headingConfig: EditorBlockElementConfig<HeadingElement> = {

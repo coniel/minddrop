@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { parseBlock } from './parseBlock';
+import { describe, expect, it } from 'vitest';
 import { BlockParseError } from '../errors';
 import { block1 } from '../test-utils';
+import { parseBlock } from './parseBlock';
 
 describe('parseBlock', () => {
   it('throws if the serialized block is invalid', () => {

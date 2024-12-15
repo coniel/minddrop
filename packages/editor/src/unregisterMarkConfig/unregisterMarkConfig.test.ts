@@ -1,9 +1,9 @@
-import { describe, afterEach, it, expect, beforeEach } from 'vitest';
-import { cleanup } from '../test-utils';
-import { unregisterMarkConfig } from './unregisterMarkConfig';
-import { boldMarkConfig } from '../test-utils/editor.data';
-import { MarkConfigsStore } from '../MarkConfigsStore';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { MarkConfigsStore } from '../MarkConfigsStore';
+import { cleanup } from '../test-utils';
+import { boldMarkConfig } from '../test-utils/editor.data';
+import { unregisterMarkConfig } from './unregisterMarkConfig';
 
 describe('unregisterMarkConfig', () => {
   beforeEach(() => {

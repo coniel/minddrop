@@ -1,9 +1,9 @@
+import * as Api from './FsApi';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
 } from './incrementalPath';
-import * as Api from './FsApi';
-import type { FileSystemAdapter, FileSystem } from './types';
+import type { FileSystem, FileSystemAdapter } from './types';
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 

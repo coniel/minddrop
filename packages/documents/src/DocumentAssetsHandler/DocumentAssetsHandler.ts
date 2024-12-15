@@ -1,7 +1,7 @@
-import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
-import { getDocumentAssetsDirPath } from '../getDocumentAssetsDirPath';
-import { createDocumentAssetsDir } from '../createDocumentAssetsDir';
 import { Fs } from '@minddrop/file-system';
+import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
+import { createDocumentAssetsDir } from '../createDocumentAssetsDir';
+import { getDocumentAssetsDirPath } from '../getDocumentAssetsDirPath';
 
 function getResourceParentDocumentId(resourceId: string): string | null {
   return (

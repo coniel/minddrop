@@ -1,8 +1,8 @@
 import React from 'react';
+import { HeadingElement } from '@minddrop/ast';
 import { ElementPlaceholderText } from '../../ElementPlaceholderText';
 import { BlockElementProps } from '../../types';
 import './HeadingElementComponent.css';
-import { HeadingElement } from '@minddrop/ast';
 
 export const HeadingOneElementComponent: React.FC<
   BlockElementProps<HeadingElement>

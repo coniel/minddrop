@@ -1,10 +1,10 @@
-import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Ast, Element } from '@minddrop/ast';
-import { setup, cleanup, createTestEditor } from '../test-utils';
-import { withInlineShortcuts } from './withInlineShortcuts';
-import { InlineShortcut } from '../types';
 import { Transforms } from 'slate';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Ast, Element } from '@minddrop/ast';
+import { cleanup, createTestEditor, setup } from '../test-utils';
 import { emptyParagraphElement, linkElement1 } from '../test-utils/editor.data';
+import { InlineShortcut } from '../types';
+import { withInlineShortcuts } from './withInlineShortcuts';
 
 const createEditor = (
   shortcuts: InlineShortcut[],

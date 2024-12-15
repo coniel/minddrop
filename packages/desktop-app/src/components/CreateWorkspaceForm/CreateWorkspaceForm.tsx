@@ -1,8 +1,7 @@
-import { useCallback, useState } from 'react';
 import { open } from '@tauri-apps/plugin-dialog';
-import { Workspace, Workspaces } from '@minddrop/workspaces';
-import { useTranslation } from '@minddrop/i18n';
+import { useCallback, useState } from 'react';
 import { PathConflictError } from '@minddrop/file-system';
+import { useTranslation } from '@minddrop/i18n';
 import {
   Button,
   ButtonProps,
@@ -10,6 +9,7 @@ import {
   HelperText,
   TextInput,
 } from '@minddrop/ui-elements';
+import { Workspace, Workspaces } from '@minddrop/workspaces';
 import './CreateWorkspaceForm.css';
 
 interface CreateWorkspaceFormProps {

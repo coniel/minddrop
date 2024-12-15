@@ -1,5 +1,5 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { render, cleanup, screen } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen } from '@minddrop/test-utils';
 import { KeyboardShortcut } from './KeyboardShortcut';
 
 describe('<KeyboardShortcut />', () => {

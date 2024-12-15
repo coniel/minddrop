@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { isContentIcon } from './isContentIcon';
+import { describe, expect, it } from 'vitest';
 import { contentIcon, emojiIcon } from '../test-utils';
+import { isContentIcon } from './isContentIcon';
 
 describe('isContentIcon', () => {
   it('retuns true if icon is a content icon', () => {

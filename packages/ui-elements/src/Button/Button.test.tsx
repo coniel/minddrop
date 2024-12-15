@@ -1,6 +1,6 @@
-import { describe, afterEach, it, expect } from 'vitest';
-import { render, cleanup, act, screen } from '@minddrop/test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
 import { i18n } from '@minddrop/i18n';
+import { act, cleanup, render, screen } from '@minddrop/test-utils';
 import { Button } from './Button';
 
 describe('Button', () => {

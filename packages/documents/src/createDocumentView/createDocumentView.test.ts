@@ -1,23 +1,23 @@
-import { describe, beforeEach, afterEach, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import {
-  setup,
-  cleanup,
-  document1,
-  documentFiles,
-  boardViewTypeConfig,
-  TestDocumentView,
-} from '../test-utils';
-import { createDocumentView } from './createDocumentView';
-import { getDocumentView } from '../getDocumentView';
-import { getDocument } from '../getDocument';
+import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
+import { DocumentsStore } from '../DocumentsStore';
 import {
   DocumentViewNotFoundError,
   DocumentViewTypeConfigNotRegisteredError,
 } from '../errors';
-import { DocumentsStore } from '../DocumentsStore';
-import { DocumentViewTypeConfigsStore } from '../DocumentViewTypeConfigsStore';
-import { Events } from '@minddrop/events';
+import { getDocument } from '../getDocument';
+import { getDocumentView } from '../getDocumentView';
+import {
+  TestDocumentView,
+  boardViewTypeConfig,
+  cleanup,
+  document1,
+  documentFiles,
+  setup,
+} from '../test-utils';
+import { createDocumentView } from './createDocumentView';
 
 const view: TestDocumentView = {
   id: expect.any(String),

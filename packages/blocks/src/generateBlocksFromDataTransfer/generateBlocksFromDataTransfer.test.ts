@@ -1,12 +1,11 @@
-import { describe, it, expect, afterEach, afterAll, beforeAll } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import {
+  cleanup,
+  createDataTransfer,
   textFile,
   weblocFile,
-  createDataTransfer,
-  cleanup,
 } from '@minddrop/test-utils';
-import { generateBlocksFromDataTransfer } from './generateBlocksFromDataTransfer';
-import { initializeMockFileSystem } from '@minddrop/file-system';
 import {
   registerFileBlockClassifier,
   registerLinkBlockClassifier,
@@ -14,6 +13,7 @@ import {
 } from '../BlockClassifiersStore';
 import { registerBlockType } from '../BlockTypesStore';
 import { BlockType } from '../types';
+import { generateBlocksFromDataTransfer } from './generateBlocksFromDataTransfer';
 
 const parentPath = 'path/to/parent';
 const textFileContent = 'Hello, World!';

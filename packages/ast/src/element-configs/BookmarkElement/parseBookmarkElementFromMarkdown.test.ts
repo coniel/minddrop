@@ -1,7 +1,7 @@
-import { describe, afterEach, it, expect, vi } from 'vitest';
-import { parseBookmarkElementFromMarkdown } from './parseBookmarkElementFromMarkdown';
-import { BookmarkElement } from './BookmarkElement.types';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateElement } from '../../utils';
+import { BookmarkElement } from './BookmarkElement.types';
+import { parseBookmarkElementFromMarkdown } from './parseBookmarkElementFromMarkdown';
 
 const consume = vi.fn();
 const getNextLine = vi.fn();

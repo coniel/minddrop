@@ -1,13 +1,13 @@
 import React from 'react';
-import { IconsProvider } from '@minddrop/icons';
 import { MindDropApiProvider } from '@minddrop/extensions';
+import { IconsProvider } from '@minddrop/icons';
 import { TooltipProvider } from '@minddrop/ui-elements';
-import { DocumentView } from './views';
-import { AppSidebar } from './components';
-import { useCurrentDocumentId, useCurrentView } from './AppUiState';
-import { ShowWindowOnRendered } from './utils';
 import { DragImageProvider } from '@minddrop/utils';
+import { useCurrentDocumentId, useCurrentView } from './AppUiState';
 import './DesktopApp.css';
+import { AppSidebar } from './components';
+import { ShowWindowOnRendered } from './utils';
+import { DocumentView } from './views';
 
 export const DesktopApp: React.FC = () => {
   const view = useCurrentView();

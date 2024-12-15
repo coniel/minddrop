@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
 import * as ContextMenuPrimitives from '@radix-ui/react-context-menu';
+import React, { useMemo } from 'react';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
 import { generateMenu } from '../../utils';
+import { ContextMenuColorSelectionItem } from '../ContextMenuColorSelectionItem';
 import { ContextMenuItem } from '../ContextMenuItem';
 import { ContextMenuLabel } from '../ContextMenuLabel';
 import { ContextMenuSeparator } from '../ContextMenuSeparator';
 import { ContextMenuTopicSelectionItem } from '../ContextMenuTopicSelectionItem';
-import { ContextMenuColorSelectionItem } from '../ContextMenuColorSelectionItem';
 import { ContextSubmenu } from '../ContextSubmenu';
-import { ContextSubmenuTriggerItem } from '../ContextSubmenuTriggerItem';
 import { ContextSubmenuContent } from '../ContextSubmenuContent';
+import { ContextSubmenuTriggerItem } from '../ContextSubmenuTriggerItem';
 
 export interface ContextMenuContentProps
   extends Omit<ContextMenuPrimitives.ContextMenuContentProps, 'content'> {

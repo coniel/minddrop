@@ -1,9 +1,9 @@
 import { Block } from '@minddrop/blocks';
-import { getDocument } from '../getDocument';
-import { DocumentNotFoundError } from '../errors';
-import { updateDocument } from '../updateDocument';
-import { getDocumentViews } from '../getDocumentViews';
 import { getDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
+import { DocumentNotFoundError } from '../errors';
+import { getDocument } from '../getDocument';
+import { getDocumentViews } from '../getDocumentViews';
+import { updateDocument } from '../updateDocument';
 import { updateDocumentView } from '../updateDocumentView';
 
 /**

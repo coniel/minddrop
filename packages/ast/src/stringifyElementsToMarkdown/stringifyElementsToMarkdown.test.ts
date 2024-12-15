@@ -1,5 +1,4 @@
-import { describe, it, expect } from 'vitest';
-import { stringifyElementsToMarkdown } from './stringifyElementsToMarkdown';
+import { describe, expect, it } from 'vitest';
 import {
   HeadingElement,
   HeadingElementConfig,
@@ -7,6 +6,7 @@ import {
   ToDoElementConfig,
 } from '../element-configs';
 import { generateElement } from '../utils';
+import { stringifyElementsToMarkdown } from './stringifyElementsToMarkdown';
 
 const blockElementConfigs = [HeadingElementConfig, ToDoElementConfig];
 const heading1Element = generateElement<HeadingElement>('heading', {
