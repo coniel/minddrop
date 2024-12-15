@@ -8,10 +8,10 @@ import { useToggle } from '@minddrop/utils';
 import { ShowWindowOnRendered } from '../../utils';
 import { CreateWorkspaceForm } from '../CreateWorkspaceForm';
 import { ThemeAppearanceSelect } from '../ThemeAppearanceSelect';
-import './CreateFirstWorkspace.css';
 import { CreateWorkspaceCard } from './CreateWorkspaceCard';
 import { OpenWorkspaceCard } from './OpenWorkspaceCard';
 import { QuickStartCard } from './QuickStartCard';
+import './CreateFirstWorkspace.css';
 
 function closeWindow() {
   getCurrentWindow().close();

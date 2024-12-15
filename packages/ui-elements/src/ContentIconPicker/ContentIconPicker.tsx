@@ -12,7 +12,6 @@ import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
 import { ContentColor } from '../types';
-import './ContentIconPicker.css';
 import {
   MinifiedContentIcon,
   UnminifiedContentIcon,
@@ -23,6 +22,7 @@ import {
   searchContentIcons,
   unminifyContentIcon,
 } from './utils';
+import './ContentIconPicker.css';
 
 export interface ContentIconPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {

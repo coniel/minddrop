@@ -9,9 +9,9 @@ import {
 } from '@minddrop/ui-elements';
 import { fuzzySearch } from '@minddrop/utils';
 import { Workspace, useWorkspaces } from '@minddrop/workspaces';
-import './ContentPicker.css';
 import { ContentPickerDocumentItem } from './ContentPickerDocumentItem';
 import { ContentPickerWorkspaceItem } from './ContentPickerWorkspaceItem';
+import './ContentPicker.css';
 
 export interface ContentPickerProps {
   /**

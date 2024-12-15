@@ -1,7 +1,7 @@
-import './animations.css';
-import './base.css';
 import './dark.css';
 import './light.css';
+import './base.css';
+import './animations.css';
 
 export * from './types';
 export * from './useThemeAppearance';

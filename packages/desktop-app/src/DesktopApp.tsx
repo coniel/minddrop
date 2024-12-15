@@ -4,10 +4,10 @@ import { IconsProvider } from '@minddrop/icons';
 import { TooltipProvider } from '@minddrop/ui-elements';
 import { DragImageProvider } from '@minddrop/utils';
 import { useCurrentDocumentId, useCurrentView } from './AppUiState';
-import './DesktopApp.css';
 import { AppSidebar } from './components';
 import { ShowWindowOnRendered } from './utils';
 import { DocumentView } from './views';
+import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
   const view = useCurrentView();
