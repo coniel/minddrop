@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { render } from '@minddrop/test-utils';
-import { Ast, BlockElement } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
 import { Text } from '../types';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { withMarks } from './withMarks';
@@ -9,8 +9,8 @@ import { boldMarkConfig, paragraphElement1 } from '../test-utils/editor.data';
 import { Node } from 'slate';
 
 const renderEditor = (children: Text[]) => {
-  const content: BlockElement[] = [
-    Ast.generateBlockElement(paragraphElement1.type, { children }),
+  const content: Element[] = [
+    Ast.generateElement(paragraphElement1.type, { children }),
   ];
 
   // Create an editor with a 'bold' mark config

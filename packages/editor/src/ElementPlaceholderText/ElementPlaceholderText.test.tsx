@@ -5,7 +5,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@minddrop/test-utils';
-import { BlockElement } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import {
   ElementPlaceholderText,
   ElementPlaceholderTextProps,
@@ -20,7 +20,7 @@ const elementWithText = headingElement1;
 let editor: Editor;
 
 function renderEditor(
-  content: BlockElement[],
+  content: Element[],
   options: Omit<ElementPlaceholderTextProps, 'element' | 'text'> = {},
 ) {
   editor = createEditor();

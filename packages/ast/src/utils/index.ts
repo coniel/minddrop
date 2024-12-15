@@ -1,4 +1,4 @@
 export * from './generate-element';
 export * from './getElementConfig';
-export * from './is-element';
+export * from './hasBlockChildren';
 export * from './registerDefaultElementConfigs';

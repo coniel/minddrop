@@ -3,10 +3,10 @@ import { act, fireEvent, render } from '@minddrop/test-utils';
 import { Ast, ToDoElement } from '@minddrop/ast';
 import { cleanup } from '../../test-utils';
 import { RichTextEditor } from '../../RichTextEditor';
-import { registerElementConfig } from '../../registerElementConfig';
 import { ToDoElementConfig } from './ToDoElementConfig';
+import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
 
-const toDoElement = Ast.generateBlockElement<ToDoElement>('to-do', {
+const toDoElement = Ast.generateElement<ToDoElement>('to-do', {
   checked: false,
   children: [{ text: 'children' }],
 });
@@ -16,7 +16,7 @@ const toDoElementchecked = { ...toDoElement, checked: true };
 describe('ToDoElementComponent', () => {
   beforeEach(() => {
     // Register the test data 'to-do' element type
-    registerElementConfig(ToDoElementConfig);
+    EditorBlockElementConfigsStore.add(ToDoElementConfig);
   });
 
   afterEach(cleanup);

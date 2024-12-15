@@ -1,5 +1,4 @@
-import { InlineElement } from '../types';
-import { TextElement } from '../types/TextElement.types';
+import { Fragment } from '../types';
 
 /**
  * Stringifies an array of text and inline elements
@@ -8,9 +7,7 @@ import { TextElement } from '../types/TextElement.types';
  * @param fragment - The fragment to stringify.
  * @returns The stringified markdown fragment.
  */
-export function stringifyFragmentToMarkdown(
-  fragment: (TextElement | InlineElement)[],
-): string {
+export function stringifyFragmentToMarkdown(fragment: Fragment): string {
   let result = '';
 
   for (const child of fragment) {

@@ -3,10 +3,10 @@ import { render } from '@minddrop/test-utils';
 import { Ast, UnorderedListItemElement } from '@minddrop/ast';
 import { cleanup } from '../../test-utils';
 import { RichTextEditor } from '../../RichTextEditor';
-import { registerElementConfig } from '../../registerElementConfig';
 import { UnorderedListItemElementConfig } from './UnorderedListItemElementConfig';
+import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
 
-const ulItemElement = Ast.generateBlockElement<UnorderedListItemElement>(
+const ulItemElement = Ast.generateElement<UnorderedListItemElement>(
   'unordered-list-item',
   {
     children: [{ text: 'children' }],
@@ -16,7 +16,7 @@ const ulItemElement = Ast.generateBlockElement<UnorderedListItemElement>(
 describe('UnorderedListItemElementComponent', () => {
   beforeEach(() => {
     // Register the test data 'unordered-list-item' element type
-    registerElementConfig(UnorderedListItemElementConfig);
+    EditorBlockElementConfigsStore.add(UnorderedListItemElementConfig);
   });
 
   afterEach(cleanup);

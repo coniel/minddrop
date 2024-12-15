@@ -31,7 +31,9 @@ export function createPersistentConfig<TValues extends object>(
         throw new NotFoundError('Config', id);
       }
 
-      return (config.values as TValues)[key] || defaultValue;
+      const value = (config.values as TValues)[key];
+
+      return typeof value !== 'undefined' ? value : defaultValue;
     },
     set<TKey extends keyof TValues>(key: TKey, value: TValues[TKey]) {
       const config = PersistentConfigsStore.get(id);

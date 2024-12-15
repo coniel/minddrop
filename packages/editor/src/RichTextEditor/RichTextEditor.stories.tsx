@@ -5,12 +5,12 @@ import {
   paragraphElement1,
   paragraphElement2,
 } from '../test-utils/editor.data';
-import { registerElementConfig } from '../registerElementConfig';
 import { HeadingOneElementConfig } from '../default-element-configs/HeadingElement';
 import { ParagraphElementConfig } from '../default-element-configs/ParagraphElement';
 import { ToDoElementConfig } from '../default-element-configs/ToDoElement';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { registerMarkConfig } from '../registerMarkConfig';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 
 export default {
   title: 'editor/Editor',
@@ -18,7 +18,7 @@ export default {
 };
 
 [HeadingOneElementConfig, ParagraphElementConfig, ToDoElementConfig].forEach(
-  (config) => registerElementConfig(config),
+  (config) => EditorBlockElementConfigsStore.add(config),
 );
 
 defaultMarkConfigs.forEach((config) => registerMarkConfig(config));

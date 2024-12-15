@@ -1,5 +1,5 @@
 import { Editor as SlateEditor } from 'slate';
-import { Ast, BlockElement } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
@@ -29,7 +29,7 @@ export function withBlockReset(
       return;
     }
 
-    const element = entry[0] as BlockElement;
+    const element = entry[0] as Element;
 
     if (
       // Is not an inline element
@@ -49,7 +49,7 @@ export function withBlockReset(
       );
 
       // Set the converted element data
-      Transforms.setNodes<BlockElement>(editor, converted);
+      Transforms.setNodes<Element>(editor, converted);
     } else {
       // Insert a break as normal
       insertBreak();
@@ -64,7 +64,7 @@ export function withBlockReset(
       return;
     }
 
-    const element = entry[0] as BlockElement;
+    const element = entry[0] as Element;
 
     if (
       unit === 'character' &&
@@ -82,7 +82,7 @@ export function withBlockReset(
       );
 
       // Set the converted element data
-      Transforms.setNodes<BlockElement>(editor, converted);
+      Transforms.setNodes<Element>(editor, converted);
     } else {
       deleteBackward(unit);
     }

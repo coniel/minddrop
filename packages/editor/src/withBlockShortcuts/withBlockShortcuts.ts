@@ -1,7 +1,7 @@
 import { Editor as SlateEditor, Path, Range, Text } from 'slate';
-import { Ast, BlockElement } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import { Editor, EditorBlockElementConfig } from '../types';
-import { getElementAbove } from '../utils';
+import { getElementAbove, isBlockElement } from '../utils';
 import { Transforms } from '../Transforms';
 import { convertElement } from '../convertElement';
 
@@ -13,14 +13,15 @@ import { convertElement } from '../convertElement';
  * @param configs - The block element configurations to enable shortcuts for.
  * @returns The editor instance with the plugin behaviour.
  */
-export function withBlockShortcuts<
-  TElement extends BlockElement = BlockElement,
->(editor: Editor, configs: EditorBlockElementConfig<TElement>[]): Editor {
+export function withBlockShortcuts<TElement extends Element = Element>(
+  editor: Editor,
+  configs: EditorBlockElementConfig<TElement>[],
+): Editor {
   const { apply } = editor;
 
   // Create a `{ [shortcutString]: convertFn }` map of
   // shortcuts and their action.
-  const shortcuts: Record<string, (element: BlockElement) => BlockElement> =
+  const shortcuts: Record<string, (element: Element) => Element> =
     configs.reduce((map, config) => {
       if (!config.shortcuts) {
         // If the config has no shortcuts, there is nothing to add
@@ -31,7 +32,7 @@ export function withBlockShortcuts<
       return config.shortcuts.reduce(
         (nextMap, shortcut) => ({
           // Shortcut converts the element into the config's element type
-          [shortcut]: (element: BlockElement) =>
+          [shortcut]: (element: Element) =>
             convertElement(element, config.type, shortcut),
           ...nextMap,
         }),
@@ -54,9 +55,9 @@ export function withBlockShortcuts<
         return;
       }
 
-      const element = entry[0] as BlockElement;
+      const element = entry[0] as Element;
 
-      if (!Ast.isBlock(element)) {
+      if (!isBlockElement(element.type)) {
         // If the element is not a block level element, stop here
         return;
       }
@@ -100,7 +101,7 @@ export function withBlockShortcuts<
           const data = shortcuts[match](element);
 
           // Apply the conversion data to the element to convert it
-          Transforms.setNodes<BlockElement>(editor, data, {
+          Transforms.setNodes<Element>(editor, data, {
             at: Path.parent(operation.path),
           });
         }

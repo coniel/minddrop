@@ -5,7 +5,6 @@ import { UnorderedListItemElementComponent } from './UnorderedListItemElementCom
 export const UnorderedListItemElementConfig: EditorBlockElementConfig<UnorderedListItemElement> =
   {
     type: 'unordered-list-item',
-    display: 'block',
     component: UnorderedListItemElementComponent,
     shortcuts: ['* ', '- '],
     returnBehaviour: 'same-type',

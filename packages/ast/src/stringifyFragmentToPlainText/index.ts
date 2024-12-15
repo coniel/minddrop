@@ -1,1 +1,1 @@
-export * from './stringifyFragmentToMarkdown';
+export * from './stringifyFragmentToPlainText';

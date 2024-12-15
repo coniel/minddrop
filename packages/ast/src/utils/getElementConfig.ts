@@ -1,21 +1,15 @@
-import { BlockElementConfig, InlineElementConfig } from '../types';
+import { ElementTypeConfig } from '../types';
 
 /**
- * Gets the configuration object for an element type, looking first in the block
- * element configurations and then in the inline element configurations.
+ * Gets the configuration object for an element type, or null if not found.
  *
  * @param type - The type of element to get the configuration for.
- * @param blockConfigs - The block element configurations.
- * @param inlineConfigs - The inline element configurations.
+ * @param configs - The element type configs from which to get the configuration.
  * @returns The configuration object or null if not found.
  */
 export function getElementConfig(
   type: string,
-  blockConfigs: BlockElementConfig[],
-  inlineConfigs: InlineElementConfig[],
-): BlockElementConfig | InlineElementConfig | null {
-  const blockConfig = blockConfigs.find((config) => config.type === type);
-  const inlineConfig = inlineConfigs.find((config) => config.type === type);
-
-  return blockConfig || inlineConfig || null;
+  configs: ElementTypeConfig[],
+): ElementTypeConfig | null {
+  return configs.find((config) => config.type === type) || null;
 }

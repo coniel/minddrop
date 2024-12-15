@@ -1,18 +1,11 @@
-import { InlineElement } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import { InlineElementProps } from './EditorInlineElementProps.types';
 
-export interface EditorInlineElementConfig<
-  TElement extends InlineElement = InlineElement,
-> {
+export interface EditorInlineElementConfig<TElement extends Element = Element> {
   /**
    * The AST block element type for which this config is used.
    */
   type: string;
-
-  /**
-   * Designates that the config is for an inline element.
-   */
-  display: 'inline';
 
   /**
    * The component used to render the element.
@@ -26,7 +19,7 @@ export interface EditorInlineElementConfig<
    *
    * @returns An InlineElement of this type.
    */
-  initialize?(): InlineElement;
+  initialize?(): Element;
 
   /**
    * Designates that the config is for a void element.

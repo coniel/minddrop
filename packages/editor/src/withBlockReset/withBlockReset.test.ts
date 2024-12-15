@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Editor, Node } from 'slate';
-import { Ast, BlockElement, Element } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
 import {
   setup,
   cleanup,
@@ -126,7 +126,7 @@ describe('withBlockReset', () => {
     editor.deleteBackward('character');
 
     // Get the element
-    const element = Node.get(editor, [0]) as BlockElement;
+    const element = Node.get(editor, [0]) as Element;
 
     // Element should remain a heading
     expect(element.type).toBe(headingElement1.type);

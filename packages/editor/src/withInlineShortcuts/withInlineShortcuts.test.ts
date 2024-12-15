@@ -1,5 +1,5 @@
 import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
-import { Ast, BlockElement } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
 import { setup, cleanup, createTestEditor } from '../test-utils';
 import { withInlineShortcuts } from './withInlineShortcuts';
 import { InlineShortcut } from '../types';
@@ -8,7 +8,7 @@ import { emptyParagraphElement, linkElement1 } from '../test-utils/editor.data';
 
 const createEditor = (
   shortcuts: InlineShortcut[],
-  content: BlockElement[] = [
+  content: Element[] = [
     { ...emptyParagraphElement, children: [{ text: 'Hello world ' }] },
   ],
 ) => withInlineShortcuts(createTestEditor(content), shortcuts);
@@ -475,7 +475,7 @@ describe('withInlineShortcuts', () => {
       // Should fire the action
       expect(shortcut.action).toHaveBeenCalledWith(editor);
       // Should remove start/end triggers
-      expect(Ast.toPlainText(editor.children as BlockElement[])).toBe(
+      expect(Ast.toPlainText(editor.children as Element[])).toBe(
         'Check out the cool MindDrop website right now!',
       );
       // Should select the wrapped nodes
@@ -520,7 +520,7 @@ describe('withInlineShortcuts', () => {
       // Should fire the action
       expect(shortcut.action).toHaveBeenCalledWith(editor);
       // Should remove start/end triggers
-      expect(Ast.toPlainText(editor.children as BlockElement[])).toBe(
+      expect(Ast.toPlainText(editor.children as Element[])).toBe(
         'Check out the MindDrop website today!',
       );
       // Should select the wrapped nodes

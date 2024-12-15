@@ -13,7 +13,6 @@ describe('stringifyFragmentToMarkdown', () => {
     const fragment: Fragment = [
       {
         type: 'foo',
-        display: 'inline',
         children: [{ text: 'Hello, world!' }],
       },
     ];

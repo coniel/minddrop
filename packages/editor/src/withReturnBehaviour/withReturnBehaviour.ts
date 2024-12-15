@@ -1,7 +1,7 @@
 import { Transforms } from 'slate';
 import { Editor } from '../types';
 import { getElementAbove } from '../utils';
-import { ElementConfigsStore } from '../ElementConfigsStore';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 
 /**
  * Handles the insertion of breaks into the editor based
@@ -24,13 +24,17 @@ export function withReturnBehaviour(editor: Editor): Editor {
     }
 
     // Get the element's type config
-    const config = ElementConfigsStore.get(element.type);
+    const config = EditorBlockElementConfigsStore.get(element.type);
+
+    if (!config) {
+      return;
+    }
 
     if (
-      config &&
       'returnBehaviour' in config &&
       config.returnBehaviour === 'line-break'
     ) {
+      console.log('line-break');
       // Insert a line break
       Transforms.insertText(editor, '\n');
 

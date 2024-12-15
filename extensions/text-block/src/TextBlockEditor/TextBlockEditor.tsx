@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { Ast, BlockElement } from '@minddrop/ast';
+import { Ast, Element } from '@minddrop/ast';
 import { RichTextEditor } from '@minddrop/editor';
 import { BlockVariantProps } from '@minddrop/extension';
 
@@ -7,9 +7,9 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   block,
   updateBlock,
 }) => {
-  const initialContentRef = useRef<BlockElement[] | null>(null);
+  const initialContentRef = useRef<Element[] | null>(null);
 
-  const initialContent = useMemo<BlockElement[]>(() => {
+  const initialContent = useMemo<Element[]>(() => {
     // Only parse the initial content once
     if (!initialContentRef.current) {
       initialContentRef.current = Ast.fromMarkdown(block.text || '');
@@ -19,7 +19,7 @@ export const TextBlockEditor: React.FC<BlockVariantProps> = ({
   }, [block.text]);
 
   const onEditorChange = useCallback(
-    (value: BlockElement[]) => {
+    (value: Element[]) => {
       updateBlock({
         ...block,
         text: Ast.toMarkdown(value),

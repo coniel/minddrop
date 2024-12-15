@@ -1,17 +1,21 @@
 import { vi } from 'vitest';
 import { act, cleanup as cleanupRender } from '@minddrop/test-utils';
-import { elementConfigs } from './editor.data';
-import { registerElementConfig } from '../registerElementConfig';
+import { blockElementConfigs, inlineElementConfigs } from './editor.data';
 import { defaultMarkConfigs } from '../default-mark-configs';
 import { registerMarkConfig } from '../registerMarkConfig';
 import { MarkConfigsStore } from '../MarkConfigsStore';
-import { ElementConfigsStore } from '../ElementConfigsStore';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
+import { EditorInlineElementConfigsStore } from '../InlineElementTypeConfigsStore';
 
 export function setup() {
   act(() => {
     // Register element types
-    elementConfigs.forEach((config) => {
-      registerElementConfig(config);
+    blockElementConfigs.forEach((config) => {
+      EditorBlockElementConfigsStore.add(config);
+    });
+
+    inlineElementConfigs.forEach((config) => {
+      EditorInlineElementConfigsStore.add(config);
     });
 
     // Register marks
@@ -28,7 +32,8 @@ export function cleanup() {
     vi.clearAllMocks();
 
     // Clear registered elements
-    ElementConfigsStore.clear();
+    EditorBlockElementConfigsStore.clear();
+    EditorInlineElementConfigsStore.clear();
 
     // Clear registered marks
     MarkConfigsStore.clear();

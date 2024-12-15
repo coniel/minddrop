@@ -1,19 +1,12 @@
 import { Editor } from 'slate';
-import { BlockElement } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import { BlockElementProps } from './EditorBlockElementProps.types';
 
-export interface EditorBlockElementConfig<
-  TElement extends BlockElement = BlockElement,
-> {
+export interface EditorBlockElementConfig<TElement extends Element = Element> {
   /**
    * The AST block element type for which this config is used.
    */
-  type: TElement['type'];
-
-  /**
-   * Designates that the config is for a block element.
-   */
-  display: 'block';
+  type: string;
 
   /**
    * The component used to render the element.
@@ -41,7 +34,7 @@ export interface EditorBlockElementConfig<
    * @param shortcut- The shortcut text which triggered the conversion of the element if applicable.
    * @returns The converted element.
    */
-  convert?(element: BlockElement, shortcut?: string): TElement;
+  convert?(element: Element, shortcut?: string): TElement;
 
   /**
    * Designates that the config is for a void element.
@@ -100,9 +93,7 @@ export interface EditorBlockElementConfig<
   hotkeys?: BlockHotkeyConfig<TElement>[];
 }
 
-export interface BlockHotkeyConfig<
-  TElement extends BlockElement = BlockElement,
-> {
+export interface BlockHotkeyConfig<TElement extends Element = Element> {
   /**
    * List of keys used to trigger the action.
    * Use 'Ctrl' for the Control/Command key.

@@ -1,23 +1,24 @@
-import { BlockElementConfig, InlineElementConfig } from '../types';
+import { ElementTypeConfig } from '../types';
 
-export function generateBlockElementConfig(
+export function generateElementTypeConfig(
   type: string,
-  config: Partial<BlockElementConfig> = {},
-): BlockElementConfig {
+  config: Partial<ElementTypeConfig> = {},
+): ElementTypeConfig {
   return {
     type,
-    fromMarkdown: () => null,
+    display: 'block',
     toMarkdown: () => '',
     ...config,
   };
 }
 
-export function generateInlineElementConfig(
+export function generateInlineElementTypeConfig(
   type: string,
-  config: Partial<InlineElementConfig> = {},
-): InlineElementConfig {
+  config: Partial<ElementTypeConfig> = {},
+): ElementTypeConfig {
   return {
     type,
+    display: 'inline',
     toMarkdown: () => '',
     ...config,
   };

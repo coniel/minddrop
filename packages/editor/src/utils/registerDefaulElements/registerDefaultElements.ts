@@ -1,12 +1,12 @@
+import { EditorBlockElementConfigsStore } from '../../BlockElementTypeConfigsStore';
 import {
   HeadingOneElementConfig,
   ParagraphElementConfig,
   ToDoElementConfig,
   UnorderedListItemElementConfig,
 } from '../../default-element-configs';
-import { registerElementConfig } from '../../registerElementConfig';
 
-const configs = [
+const blockElementConfigs = [
   HeadingOneElementConfig,
   ParagraphElementConfig,
   ToDoElementConfig,
@@ -17,7 +17,7 @@ const configs = [
  * Registers all default Element types.
  */
 export function registerDefaultElements(): void {
-  configs.forEach((config) => {
-    registerElementConfig(config);
+  blockElementConfigs.forEach((config) => {
+    EditorBlockElementConfigsStore.add(config);
   });
 }

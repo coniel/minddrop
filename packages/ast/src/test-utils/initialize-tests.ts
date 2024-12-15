@@ -1,6 +1,6 @@
-import { BlockElementConfigsStore } from '../BlockElementConfigsStore';
+import { ElementTypeConfigsStore } from '../ElementTypeConfigsStore';
 
 export function cleanup(): void {
-  // Clear the block element configs store
-  BlockElementConfigsStore.clear();
+  // Clear the element type configs store
+  ElementTypeConfigsStore.clear();
 }

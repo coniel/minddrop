@@ -47,7 +47,7 @@ describe('initializeWorkspaces', () => {
     // Initialize workspaces
     await initializeWorkspaces();
 
-    // Should set view to 'create-first-workspace'
+    // Should set view to null
     expect(AppUiState.get('view')).toBeNull();
   });
 
@@ -61,7 +61,7 @@ describe('initializeWorkspaces', () => {
     // Initialize workspaces
     await initializeWorkspaces();
 
-    // Should set view to 'create-first-workspace'
+    // Should set view to null
     expect(AppUiState.get('view')).toBeNull();
   });
 

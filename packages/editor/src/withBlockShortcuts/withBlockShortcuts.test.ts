@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Node, Editor } from 'slate';
-import { Ast, BlockElement, Element, HeadingElement } from '@minddrop/ast';
+import { Ast, Element, HeadingElement } from '@minddrop/ast';
 import { EditorBlockElementConfig } from '../types';
 import {
   setup,
@@ -71,7 +71,7 @@ describe('withBlockShortcuts', () => {
     Transforms.insertText(editor, '# ', { at: [0, 0] });
 
     // Get the element from the document
-    const element = Node.get(editor, [0]) as BlockElement;
+    const element = Node.get(editor, [0]) as Element;
 
     // Should remove the '# ' shortcut from the text
     expect(Ast.toPlainText([element])).toBe('');

@@ -1,13 +1,14 @@
-import { Ast, MathBlockElement } from '@minddrop/ast';
-import { defaultMarkConfigs } from '../default-mark-configs';
-import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
 import {
+  Ast,
   HeadingElement,
   ToDoElement,
   ParagraphElement,
+  MathBlockElement,
+  MathInlineElement,
   LinkElement,
-  MathElement,
 } from '@minddrop/ast';
+import { defaultMarkConfigs } from '../default-mark-configs';
+import { EditorBlockElementConfig, EditorInlineElementConfig } from '../types';
 
 export {
   boldMarkConfig,
@@ -27,7 +28,6 @@ export const EDITOR_TEST_DATA = {
 // Heading element
 export const headingElementConfig: EditorBlockElementConfig<HeadingElement> = {
   type: 'heading',
-  display: 'block',
   component: ({ children, attributes }) => (
     <div {...attributes}>{children}</div>
   ),
@@ -37,7 +37,6 @@ export const headingElementConfig: EditorBlockElementConfig<HeadingElement> = {
 export const paragraphElementConfig: EditorBlockElementConfig<ParagraphElement> =
   {
     type: 'paragraph',
-    display: 'block',
     component: ({ children, attributes }) => (
       <div {...attributes}>{children}</div>
     ),
@@ -45,9 +44,8 @@ export const paragraphElementConfig: EditorBlockElementConfig<ParagraphElement> 
 
 export const toDoElementConfig: EditorBlockElementConfig<ToDoElement> = {
   type: 'to-do',
-  display: 'block',
   initialize: () =>
-    Ast.generateBlockElement<ToDoElement>('to-do', {
+    Ast.generateElement<ToDoElement>('to-do', {
       checked: false,
     }),
   component: ({ attributes, children }) => (
@@ -58,14 +56,13 @@ export const toDoElementConfig: EditorBlockElementConfig<ToDoElement> = {
 export const blockMathElementConfig: EditorBlockElementConfig<MathBlockElement> =
   {
     type: 'math-block',
-    display: 'block',
     isVoid: true,
     initialize: () =>
-      Ast.generateBlockElement<MathBlockElement>('math-block', {
+      Ast.generateElement<MathBlockElement>('math-block', {
         expression: '',
       }),
     convert: (element) =>
-      Ast.generateBlockElement<MathBlockElement>('math-block', {
+      Ast.generateElement<MathBlockElement>('math-block', {
         expression: Ast.toPlainText(element),
       }),
     component: ({ attributes, children, element }) => (
@@ -82,9 +79,8 @@ export const blockMathElementConfig: EditorBlockElementConfig<MathBlockElement> 
 
 export const linkElementConfig: EditorInlineElementConfig<LinkElement> = {
   type: 'link',
-  display: 'inline',
   initialize: () =>
-    Ast.generateInlineElement<LinkElement>('link', {
+    Ast.generateElement<LinkElement>('link', {
       url: '',
     }),
   component: ({ attributes, children, element }) => (
@@ -94,21 +90,21 @@ export const linkElementConfig: EditorInlineElementConfig<LinkElement> = {
   ),
 };
 
-export const inlineMathElementConfig: EditorInlineElementConfig<MathElement> = {
-  type: 'math',
-  display: 'inline',
-  isVoid: true,
-  initialize: () =>
-    Ast.generateInlineElement<MathElement>('math', {
-      expression: '',
-    }),
-  component: ({ attributes, children, element }) => (
-    <span {...attributes}>
-      {element.expression}
-      {children}
-    </span>
-  ),
-};
+export const inlineMathElementConfig: EditorInlineElementConfig<MathInlineElement> =
+  {
+    type: 'math-inline',
+    isVoid: true,
+    initialize: () =>
+      Ast.generateElement<MathInlineElement>('math-inline', {
+        expression: '',
+      }),
+    component: ({ attributes, children, element }) => (
+      <span {...attributes}>
+        {element.expression}
+        {children}
+      </span>
+    ),
+  };
 
 /* ************** */
 /* Block elements */
@@ -119,34 +115,22 @@ export const headingElement1PlainText = 'Position and its derivatives';
 export const headingElement2PlainText = 'Classical mechanics';
 export const headingElement3PlainText = 'Law of inertia';
 export const headingElement4PlainText = 'Acceleration';
-export const headingElement1 = Ast.generateBlockElement<HeadingElement>(
-  'heading',
-  {
-    level: 1,
-    children: [{ text: headingElement1PlainText }],
-  },
-);
-export const headingElement2 = Ast.generateBlockElement<HeadingElement>(
-  'heading',
-  {
-    level: 2,
-    children: [{ text: headingElement2PlainText }],
-  },
-);
-export const headingElement3 = Ast.generateBlockElement<HeadingElement>(
-  'heading',
-  {
-    level: 3,
-    children: [{ text: headingElement3PlainText }],
-  },
-);
-export const headingElement4 = Ast.generateBlockElement<HeadingElement>(
-  'heading',
-  {
-    level: 4,
-    children: [{ text: headingElement4PlainText }],
-  },
-);
+export const headingElement1 = Ast.generateElement<HeadingElement>('heading', {
+  level: 1,
+  children: [{ text: headingElement1PlainText }],
+});
+export const headingElement2 = Ast.generateElement<HeadingElement>('heading', {
+  level: 2,
+  children: [{ text: headingElement2PlainText }],
+});
+export const headingElement3 = Ast.generateElement<HeadingElement>('heading', {
+  level: 3,
+  children: [{ text: headingElement3PlainText }],
+});
+export const headingElement4 = Ast.generateElement<HeadingElement>('heading', {
+  level: 4,
+  children: [{ text: headingElement4PlainText }],
+});
 
 // Paragraphs
 export const paragraphElement1PlainText =
@@ -158,35 +142,35 @@ export const paragraphElement3PlainText =
 export const paragraphElement4PlainText =
   'The acceleration, or rate of change of velocity, is the derivative of the velocity with respect to time.';
 export const blockMathElement1PlainText = 'e=mc^2';
-export const paragraphElement1 = Ast.generateBlockElement<ParagraphElement>(
+export const paragraphElement1 = Ast.generateElement<ParagraphElement>(
   'paragraph',
   {
     children: [{ text: paragraphElement1PlainText }],
   },
 );
-export const paragraphElement2 = Ast.generateBlockElement<ParagraphElement>(
+export const paragraphElement2 = Ast.generateElement<ParagraphElement>(
   'paragraph',
   {
     children: [{ text: paragraphElement2PlainText }],
   },
 );
-export const paragraphElement3 = Ast.generateBlockElement<ParagraphElement>(
+export const paragraphElement3 = Ast.generateElement<ParagraphElement>(
   'paragraph',
   {
     children: [{ text: paragraphElement3PlainText }],
   },
 );
-export const paragraphElement4 = Ast.generateBlockElement<ParagraphElement>(
+export const paragraphElement4 = Ast.generateElement<ParagraphElement>(
   'paragraph',
   {
     children: [{ text: paragraphElement4PlainText }],
   },
 );
 export const emptyParagraphElement =
-  Ast.generateBlockElement<ParagraphElement>('paragraph');
+  Ast.generateElement<ParagraphElement>('paragraph');
 
 // Math block
-export const blockMathElement1 = Ast.generateBlockElement<MathBlockElement>(
+export const blockMathElement1 = Ast.generateElement<MathBlockElement>(
   'math-block',
   {
     expression: blockMathElement1PlainText,
@@ -194,14 +178,11 @@ export const blockMathElement1 = Ast.generateBlockElement<MathBlockElement>(
 );
 
 // To-do
-export const toDoElementCompleted1 = Ast.generateBlockElement<ToDoElement>(
-  'to-do',
-  {
-    checked: true,
-  },
-);
+export const toDoElementCompleted1 = Ast.generateElement<ToDoElement>('to-do', {
+  checked: true,
+});
 
-export const toDoElementIncomplete1 = Ast.generateBlockElement<ToDoElement>(
+export const toDoElementIncomplete1 = Ast.generateElement<ToDoElement>(
   'to-do',
   {
     checked: false,
@@ -215,13 +196,13 @@ export const toDoElementIncomplete1 = Ast.generateBlockElement<ToDoElement>(
 export const inlineMathElement1PlainText = 'E=mc^2';
 
 // Link
-export const linkElement1 = Ast.generateInlineElement<LinkElement>('link', {
+export const linkElement1 = Ast.generateElement<LinkElement>('link', {
   url: 'https://minddrop.app',
   children: [{ text: 'MindDrop website' }],
 });
 
-export const inlineMathElement1 = Ast.generateInlineElement<MathElement>(
-  'math',
+export const inlineMathElement1 = Ast.generateElement<MathInlineElement>(
+  'math-inline',
   {
     expression: inlineMathElement1PlainText,
   },
@@ -231,12 +212,16 @@ export const inlineMathElement1 = Ast.generateInlineElement<MathElement>(
 /* Combined exports */
 /* **************** */
 
-// Element configs
-export const elementConfigs = [
+// Block element configs
+export const blockElementConfigs = [
   headingElementConfig,
   paragraphElementConfig,
   blockMathElementConfig,
   toDoElementConfig,
+];
+
+// Inline element configs
+export const inlineElementConfigs = [
   linkElementConfig,
   inlineMathElementConfig,
 ];

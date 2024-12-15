@@ -1,5 +1,5 @@
 import { Editor as SlateEditor, Path, Text, Transforms, Range } from 'slate';
-import { BlockElement, Element } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import {
   Editor,
   InlineShortcut,
@@ -93,7 +93,7 @@ export function withInlineShortcuts(
     const parentBlock = SlateEditor.above(editor, {
       match: (n) => SlateEditor.isBlock(editor, n as Element),
       at: focus.path,
-    }) as [BlockElement, Path];
+    }) as [Element, Path];
     // The parent block's path
     const parentBlockPath = parentBlock ? parentBlock[1] : [];
     // The start location of the parent block

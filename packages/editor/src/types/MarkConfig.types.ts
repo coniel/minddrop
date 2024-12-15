@@ -1,4 +1,4 @@
-import { BlockElement, Fragment } from '@minddrop/ast';
+import { Element, Fragment } from '@minddrop/ast';
 import { RenderLeafProps } from 'slate-react';
 import { InlineShortcutWrapTrigger } from './InlineShortcut.types';
 
@@ -85,5 +85,5 @@ export type HtmlMarkDeserializer<
 > = (
   element: THtmlElement,
   parent: HTMLElement | null,
-  children: Fragment | BlockElement[] | null,
+  children: Fragment | Element[] | null,
 ) => boolean | string | number | null;

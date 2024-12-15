@@ -1,6 +1,6 @@
 import { describe, beforeEach, afterEach, it, expect } from 'vitest';
 import { Transforms } from 'slate';
-import { BlockElement, Ast } from '@minddrop/ast';
+import { Element, Ast } from '@minddrop/ast';
 import {
   setup,
   cleanup,
@@ -13,10 +13,10 @@ import {
   paragraphElementConfig,
 } from '../test-utils';
 import { Editor } from '../types';
+import { EditorBlockElementConfigsStore } from '../BlockElementTypeConfigsStore';
 import { withReturnBehaviour } from './withReturnBehaviour';
-import { registerElementConfig } from '../registerElementConfig';
 
-const createEditor = (content: BlockElement[]) =>
+const createEditor = (content: Element[]) =>
   withReturnBehaviour(createTestEditor(content));
 
 const insertBreak = (editor: Editor) => {
@@ -38,7 +38,7 @@ describe('withReturnBehaviour', () => {
   it('defaults to "break-out" behaviour', () => {
     // Register a 'test-heading' element type with
     // unspecified return behaviour.
-    registerElementConfig({
+    EditorBlockElementConfigsStore.add({
       ...headingElementConfig,
       type: 'test-heading',
     });
@@ -62,7 +62,7 @@ describe('withReturnBehaviour', () => {
   it('handles "break-out" behaviour', () => {
     // Register a 'test-heading' element type with
     // a 'break-out' return behaviour.
-    registerElementConfig({
+    EditorBlockElementConfigsStore.add({
       ...headingElementConfig,
       type: 'test-heading',
       returnBehaviour: 'break-out',
@@ -87,7 +87,7 @@ describe('withReturnBehaviour', () => {
   it('handles "line-break" behaviour', () => {
     // Register a 'test-code' element type with
     // a 'soft-break' return behaviour.
-    registerElementConfig({
+    EditorBlockElementConfigsStore.add({
       ...paragraphElementConfig,
       type: 'test-code',
       returnBehaviour: 'line-break',
@@ -95,9 +95,10 @@ describe('withReturnBehaviour', () => {
 
     // Create an editor containing a 'test-code' element
     const editor = createEditor([
-      Ast.generateBlockElement('test-code', {
+      Ast.generateElement('test-code', {
         ...paragraphElement1,
         children: [{ text: 'Test' }],
+        type: 'test-code',
       }),
     ]);
 
@@ -115,7 +116,7 @@ describe('withReturnBehaviour', () => {
   it('handles "same-type" behaviour', () => {
     // Register a 'test-to-do' element type with
     // a 'same-type' return behaviour.
-    registerElementConfig({
+    EditorBlockElementConfigsStore.add({
       ...toDoElementConfig,
       type: 'test-to-do',
       returnBehaviour: 'same-type',
@@ -140,7 +141,7 @@ describe('withReturnBehaviour', () => {
   it('handles callback behaviour', () => {
     // Register a 'test-to-do' element type with
     // a return behaviour that sets `done` to false.
-    registerElementConfig({
+    EditorBlockElementConfigsStore.add({
       ...toDoElementConfig,
       type: 'test-to-do',
       returnBehaviour: () => ({ done: false }),

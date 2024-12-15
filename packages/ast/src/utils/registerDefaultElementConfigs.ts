@@ -6,14 +6,14 @@ import {
   HorizontalRuleElementConfig,
   ParagraphElementConfig,
   UnorderedListItemElementConfig,
-} from '../block-element-configs';
-import { registerBlockElementConfig } from '../registerBlockElementConfig';
+} from '../element-configs';
+import { registerElementTypeConfig } from '../registerElementTypeConfig';
 
 /**
  * Registers all default block and inline markdown element configs.
  */
 export function registerDefaultElementConfigs() {
-  const blockElementConfigs = [
+  const configs = [
     HeadingElementConfig,
     BookmarkElementConfig,
     ToDoElementConfig,
@@ -24,8 +24,8 @@ export function registerDefaultElementConfigs() {
     ParagraphElementConfig,
   ];
 
-  // Register all default markdown block element configs
-  blockElementConfigs.forEach((config) => {
-    registerBlockElementConfig(config);
+  // Register all default element configs
+  configs.forEach((config) => {
+    registerElementTypeConfig(config);
   });
 }

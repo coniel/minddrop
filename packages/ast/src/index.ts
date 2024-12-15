@@ -1,6 +1,5 @@
-export * from './block-element-configs';
-export * from './inline-element-configs';
+export * from './element-configs';
 export * from './types';
-export * from './BlockElements';
+export * from './Elements';
 export * from './errors';
-export * from './Ast';
+export * as Ast from './Ast';

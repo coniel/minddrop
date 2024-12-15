@@ -1,4 +1,4 @@
-import { BlockElement } from '@minddrop/ast';
+import { Element } from '@minddrop/ast';
 import { Transforms } from '../Transforms';
 import { createEditor } from '../utils';
 import { emptyParagraphElement } from './editor.data';
@@ -10,9 +10,7 @@ import { emptyParagraphElement } from './editor.data';
  * @param documentId The ID of the document being edited.
  * @returns A new editor.
  */
-export function createTestEditor(
-  content: BlockElement[] = [emptyParagraphElement],
-) {
+export function createTestEditor(content: Element[] = [emptyParagraphElement]) {
   // Create an editor
   const editor = createEditor();
 

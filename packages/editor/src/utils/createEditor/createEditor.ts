@@ -5,8 +5,8 @@ import {
 import { withHistory } from 'slate-history';
 import { withReact } from 'slate-react';
 import { Editor } from '../../types';
-import { ElementConfigsStore } from '../../ElementConfigsStore';
-import { Ast } from '@minddrop/ast';
+import { isInlineElement } from '../element-level';
+import { getElementTypeConfig } from '../getElementTypeConfig';
 
 /**
  * Creates a new editor configured with the React and History
@@ -22,16 +22,16 @@ export function createEditor(): Editor {
 
   // Checks if an element is an inline level element
   editor.isInline = (element) => {
-    return Ast.isInline(element);
+    return isInlineElement(element.type);
   };
 
   // Checks if an element is a void
   editor.isVoid = (element) => {
     // Get the element's configuration object
-    const config = ElementConfigsStore.get(element.type);
+    const config = getElementTypeConfig(element.type);
 
     // Return `true` if the element is configured as void
-    return config && config.isVoid === true;
+    return !!config && config.isVoid === true;
   };
 
   editor.toggleMark = (mark: string, value?: boolean | string | number) => {
