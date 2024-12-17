@@ -1,7 +1,7 @@
 import { MindDropExtension } from '@minddrop/extension';
 import { BoardViewRenderer } from './components';
-import { removeBlocksFromBoard } from './removeBlocksFromBoard';
 import { BoardColumn, BoardColumnsSection } from './types';
+import { removeBlocksFromBoard } from './utils';
 
 export const extension: MindDropExtension = {
   initialize: async ({ Documents, Utils }) => {

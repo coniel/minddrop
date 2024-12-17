@@ -5,7 +5,7 @@ import {
   BoardGridSection,
   BoardListSection,
   BoardView,
-} from '../types';
+} from '../../types';
 import { removeBlocksFromBoard } from './removeBlocksFromBoard';
 
 const block1 = {

@@ -26,6 +26,11 @@ export interface ColumnProps {
   createBlocksFromDataTransfer: (
     dataTransfer: DataTransfer,
   ) => Promise<Block[]>;
+
+  /**
+   * Callback to move blocks within the board's sections.
+   */
+  moveBlocksWithinBoard: (blockIds: string[], dropIndex: number) => void;
 }
 
 export const Column: React.FC<ColumnProps> = ({
@@ -33,20 +38,35 @@ export const Column: React.FC<ColumnProps> = ({
   deleteColumn,
   updateColumn,
   createBlocksFromDataTransfer,
+  moveBlocksWithinBoard,
 }) => {
   const {
+    Blocks: { getFromDataTransfer },
     Ui: { BlockRenderer },
   } = useApi();
 
   const onDrop = useCallback(
     async (event: React.DragEvent, index: number) => {
-      // Create blocks from the data insert
-      const blocks = await createBlocksFromDataTransfer(event.dataTransfer);
+      // Check if there are existing blocks in the data transfer,
+      // indicating that the blocks are being moved.
+      let blocks = getFromDataTransfer(event.dataTransfer);
 
+      if (blocks.length > 0) {
+        moveBlocksWithinBoard(
+          blocks.map((b) => b.id),
+          index,
+        );
+
+        return;
+      }
+
+      // Create blocks from the data insert
+      blocks = await createBlocksFromDataTransfer(event.dataTransfer);
+
+      // Insert the blocks into the column
       const newBlocks = [...column.blocks];
       newBlocks.splice(index, 0, ...blocks.map((block) => block.id));
 
-      // Insert the blocks into the column
       const columnUpdate = {
         blocks: newBlocks,
       };
@@ -54,7 +74,13 @@ export const Column: React.FC<ColumnProps> = ({
       // Update the column
       updateColumn(columnUpdate);
     },
-    [createBlocksFromDataTransfer, updateColumn, column.blocks],
+    [
+      getFromDataTransfer,
+      createBlocksFromDataTransfer,
+      moveBlocksWithinBoard,
+      updateColumn,
+      column.blocks,
+    ],
   );
 
   const onDropColumnEnd = useCallback(

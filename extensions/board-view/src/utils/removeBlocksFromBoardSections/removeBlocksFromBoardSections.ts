@@ -1,22 +1,17 @@
-import { BoardView } from '../types';
+import { BoardSection } from '../../types';
 
 /**
- * Removes the specified blocks from the board view.
+ * Removes the specified blocks from the board view's sections.
  *
- * @param view - The view from which to remove the blocks.
+ * @param sections - The view sections for which to update the sections.
  * @param blocks - The blocks to remove.
- * @param updateView - Callback to update the view.
+ * @returns The updated sections.
  */
-export function removeBlocksFromBoard(
-  view: BoardView,
+export function removeBlocksFromBoardSections(
+  sections: BoardSection[],
   removedBlockIds: string[],
-): BoardView {
-  const newBlocks = view.blocks.filter(
-    (blockId) =>
-      !removedBlockIds.some((removedBlockId) => removedBlockId === blockId),
-  );
-
-  const newSections = view.sections.map((section) => {
+): BoardSection[] {
+  const newSections = sections.map((section) => {
     // Remove the blocks from 'columns' section's columns
     if (section.type === 'columns') {
       return {
@@ -43,5 +38,5 @@ export function removeBlocksFromBoard(
     };
   });
 
-  return { ...view, blocks: newBlocks, sections: newSections };
+  return newSections;
 }

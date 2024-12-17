@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Block } from '@minddrop/extension';
 import { BoardColumn, BoardColumnsSection } from '../../types';
 import { BoardDropZone } from '../BoardDropZone';
-import { Column } from './Column/Column';
+import { Column } from './Column';
 import './ColumnsSection.css';
 
 export interface ColumnsSectionProps {
@@ -22,12 +22,22 @@ export interface ColumnsSectionProps {
   createBlocksFromDataTransfer: (
     dataTransfer: DataTransfer,
   ) => Promise<Block[]>;
+
+  /**
+   * Callback to move blocks within the board's sections.
+   */
+  moveBlocksWithinBoard: (
+    blockIds: string[],
+    dropIndex: number,
+    columnIndex?: number,
+  ) => void;
 }
 
 export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
   section,
   updateSection,
   createBlocksFromDataTransfer,
+  moveBlocksWithinBoard,
 }) => {
   const onDropVerticalZone = useCallback(
     async (event: React.DragEvent, index: number) => {
@@ -65,6 +75,13 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
     [updateSection, section.columns],
   );
 
+  const columnMoveBlocksWithinBoard = useCallback(
+    (columnIndex: number, blockIds: string[], dropIndex: number) => {
+      moveBlocksWithinBoard(blockIds, dropIndex, columnIndex);
+    },
+    [moveBlocksWithinBoard],
+  );
+
   return (
     <div className="board-columns-block">
       <div className="board-columns-block-content">
@@ -79,6 +96,9 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
               updateColumn={(data) => onUpdateColumn(index, data)}
               deleteColumn={() => onDeleteColumn(index)}
               createBlocksFromDataTransfer={createBlocksFromDataTransfer}
+              moveBlocksWithinBoard={(blocks, dropIndex) =>
+                columnMoveBlocksWithinBoard(index, blocks, dropIndex)
+              }
             />
           </div>
         ))}

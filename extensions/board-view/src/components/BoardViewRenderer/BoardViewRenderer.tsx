@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Block, DocumentViewProps, useApi } from '@minddrop/extension';
 import { BoardListSection, BoardSection, BoardView } from '../../types';
+import { moveBlocksWithinBoard } from '../../utils';
 import { ColumnsSection } from '../ColumnsSection';
 import { GridSection } from '../GridSection';
 import { ListSection } from '../ListSection';
@@ -11,7 +12,7 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
   documentId,
 }) => {
   const {
-    Selection,
+    Selection: { clear: clearSelection },
     DocumentViews: { update: updateView },
     Documents: { addBlocks, useSelectAllBlocks },
     Blocks: { createFromDataTransfer },
@@ -69,9 +70,30 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
     ],
   );
 
+  const moveBlocksInternally = useCallback(
+    (
+      sectionIndex: number,
+      blockIds: string[],
+      dropIndex: number,
+      columnIndex?: number,
+    ) => {
+      const sections = moveBlocksWithinBoard(
+        view.sections,
+        sectionIndex,
+        blockIds,
+        dropIndex,
+        columnIndex,
+      );
+
+      updateView<BoardView>(view.id, { sections });
+      clearSelection();
+    },
+    [view.id, view.sections, updateView, clearSelection],
+  );
+
   return (
     <div className="board-view">
-      <div className="board-view-header" onClick={Selection.clear}>
+      <div className="board-view-header" onClick={clearSelection}>
         <DocumentTitleField key={documentId} documentId={documentId} />
       </div>
       {view.sections.map((section, index) => {
@@ -82,6 +104,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
                 key={section.id}
                 section={section}
                 createBlocksFromDataTransfer={createBlocksFromDataTransfer}
+                moveBlocksWithinBoard={(blockIds, dropIndex, columnIndex) =>
+                  moveBlocksInternally(index, blockIds, dropIndex, columnIndex)
+                }
                 updateSection={(data) => updateSection(index, data)}
               />
             );
