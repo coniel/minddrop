@@ -27,7 +27,7 @@
   transition: opacity 0.3s ease-in;
 }
 
-.board-view .board-column-content:hover .delete-column-button {
+.board-view .board-column-end:hover .delete-column-button {
   opacity: 0.7;
 }
 
