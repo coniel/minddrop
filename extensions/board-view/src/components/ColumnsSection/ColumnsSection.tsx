@@ -6,6 +6,8 @@ import { Column } from './Column';
 import './ColumnsSection.css';
 
 export interface ColumnsSectionProps {
+  className?: string;
+
   /**
    * The board columns block.
    */
@@ -34,6 +36,7 @@ export interface ColumnsSectionProps {
 }
 
 export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
+  className,
   section,
   updateSection,
   createBlocksFromDataTransfer,
@@ -83,8 +86,8 @@ export const ColumnsSection: React.FC<ColumnsSectionProps> = ({
   );
 
   return (
-    <div className="board-columns-block">
-      <div className="board-columns-block-content">
+    <div className={`board-columns-section ${className}`}>
+      <div className="board-columns-section-content">
         {section.columns.map((column, index) => (
           <div key={column.id} className="board-column-block-container">
             <BoardDropZone

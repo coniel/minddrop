@@ -101,6 +101,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
           case 'columns':
             return (
               <ColumnsSection
+                className={
+                  view.sections.length === 1 ? 'full-height-section' : ''
+                }
                 key={section.id}
                 section={section}
                 createBlocksFromDataTransfer={createBlocksFromDataTransfer}
@@ -113,6 +116,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
           case 'list':
             return (
               <ListSection
+                className={
+                  view.sections.length === 1 ? 'full-height-section' : ''
+                }
                 key={section.id}
                 section={section}
                 createBlocksFromDataTransfer={createBlocksFromDataTransfer}
@@ -122,6 +128,9 @@ export const BoardViewRenderer: React.FC<DocumentViewProps<BoardView>> = ({
           case 'grid':
             return (
               <GridSection
+                className={
+                  view.sections.length === 1 ? 'full-height-section' : ''
+                }
                 key={section.id}
                 section={section}
                 createBlocksFromDataTransfer={createBlocksFromDataTransfer}

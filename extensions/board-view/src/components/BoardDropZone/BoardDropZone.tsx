@@ -73,7 +73,12 @@ export const BoardDropZone: React.FC<BoardDropZoneProps> = ({
       onDrop={handleDrop}
       {...other}
     >
-      {dragIndicator && <div className="drag-over-indicator" />}
+      {dragIndicator && (
+        <div
+          style={{ userSelect: 'none', pointerEvents: 'none' }}
+          className="drag-over-indicator"
+        />
+      )}
       {children}
     </div>
   );

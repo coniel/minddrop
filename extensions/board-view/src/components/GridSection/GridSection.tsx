@@ -3,6 +3,8 @@ import { BoardGridSection } from '../../types';
 import './GridSection.css';
 
 export interface GridSectionProps {
+  className?: string;
+
   /**
    * The grid section.
    */

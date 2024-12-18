@@ -3,6 +3,8 @@ import { BoardListSection } from '../../types';
 import './ListSection.css';
 
 export interface ListSectionProps {
+  className?: string;
+
   /**
    * The list section.
    */

@@ -91,7 +91,7 @@ export const Column: React.FC<ColumnProps> = ({
   );
 
   return (
-    <div className="board-column-block">
+    <div className="board-column">
       {column.blocks.map((blockId, blockIndex) => (
         <div key={blockId}>
           <SpacerDropZone blockIndex={blockIndex} onDrop={onDrop} />
@@ -130,12 +130,8 @@ const BoardColumnBlockEnd: React.FC<{
   } = useApi();
 
   return (
-    <div className="board-column-block-end" onClick={Selection.clear}>
-      <BoardDropZone
-        className="bottom-drop-zone"
-        dragIndicator={false}
-        onDrop={onDrop}
-      >
+    <div className="board-column-end" onClick={Selection.clear}>
+      <BoardDropZone className="bottom-drop-zone" onDrop={onDrop}>
         {enableDelete && (
           <Button
             variant="neutral"
