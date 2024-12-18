@@ -33,12 +33,10 @@ export const DocumentViewRenderer: React.FC<DocumentViewRendererProps> = ({
   }
 
   return (
-    <div>
-      <viewConfig.component
-        documentId={document.id}
-        documentPath={document.path}
-        view={view}
-      />
-    </div>
+    <viewConfig.component
+      documentId={document.id}
+      documentPath={document.path}
+      view={view}
+    />
   );
 };

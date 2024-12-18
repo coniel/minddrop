@@ -21,7 +21,7 @@ export const DocumentViewsRenderer: React.FC<DocumentViewsRendererProps> = ({
   );
 
   return (
-    <div>
+    <>
       {!document.views.length && (
         <div style={{ paddingTop: 200 }}>
           <button onClick={() => createView('board')}>Create board view</button>
@@ -30,6 +30,6 @@ export const DocumentViewsRenderer: React.FC<DocumentViewsRendererProps> = ({
       {document.views[0] && (
         <DocumentViewRenderer viewId={document.views[0]} document={document} />
       )}
-    </div>
+    </>
   );
 };
