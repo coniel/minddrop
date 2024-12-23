@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Blocks } from '@minddrop/blocks';
-import { initializeMockFileSystem } from '@minddrop/file-system';
+import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
 import { registerDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
 import { DocumentsStore } from '../DocumentsStore';
 import { deleteDocumentView } from '../deleteDocumentView';
+import { getDocument } from '../getDocument';
 import {
   cleanup,
   document1,
@@ -17,9 +18,14 @@ import {
 } from '../test-utils';
 import { updateDocument } from '../updateDocument';
 import { updateDocumentView } from '../updateDocumentView';
+import { isWrapped } from '../utils';
 import { initializeDocuments } from './initializeDocuments';
 
-const MockFs = initializeMockFileSystem(documentFiles);
+const BLOCK_1_FILE_NAME = 'block-1-file.txt';
+const BLOCK_1_FILE_PATH = `${Fs.parentDirPath(document1.path)}/${BLOCK_1_FILE_NAME}`;
+const BLOCK_1_WRAPPED_FILE_PATH = `${Fs.parentDirPath(document1.path)}/${document1.title}/${BLOCK_1_FILE_NAME}`;
+
+const MockFs = initializeMockFileSystem([...documentFiles, BLOCK_1_FILE_PATH]);
 
 describe('initializeDocuments', () => {
   beforeEach(() => {
@@ -116,5 +122,31 @@ describe('initializeDocuments', () => {
 
     // The document content should be updated
     expect(document.title).toEqual('Updated title');
+  });
+
+  it('should wrap the document if an update adds a file block', async () => {
+    await initializeDocuments([workspaceDir]);
+
+    // Update a document block with a file
+    Blocks.update(document1Block1.id, { file: BLOCK_1_FILE_NAME });
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const updatedDocument = getDocument(document1.id)!;
+
+    // The document should be wrapped
+    expect(isWrapped(updatedDocument.path)).toBe(true);
+  });
+
+  it('should move associated files when wrapping a document', async () => {
+    await initializeDocuments([workspaceDir]);
+
+    // Update a document block with a file
+    Blocks.update(document1Block1.id, { file: BLOCK_1_FILE_NAME });
+
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // The associated file should be moved to the wrapper dir
+    expect(MockFs.exists(BLOCK_1_FILE_PATH)).toBe(false);
+    expect(MockFs.exists(BLOCK_1_WRAPPED_FILE_PATH)).toBe(true);
   });
 });

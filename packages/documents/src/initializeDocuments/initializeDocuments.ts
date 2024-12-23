@@ -1,5 +1,5 @@
 import { Assets } from '@minddrop/assets';
-import { Block } from '@minddrop/blocks';
+import { Block, Blocks } from '@minddrop/blocks';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DocumentAssetsHandler } from '../DocumentAssetsHandler';
@@ -10,6 +10,7 @@ import { removeBlocksFromDocument } from '../removeBlocksFromDocument';
 import { Document, DocumentView } from '../types';
 import { updateDocument } from '../updateDocument';
 import { serializeDocumentToJsonString } from '../utils';
+import { wrapDocument } from '../wrapDocument';
 import { writeDocument } from '../writeDocument';
 
 export async function initializeDocuments(
@@ -129,6 +130,40 @@ function debounceUpdateDocument(documentId: string) {
 
     // Write updated document to file
     writeDocument(document.path, serializeDocumentToJsonString(document.id));
+
+    const updatedDocument = getDocument(documentId);
+
+    if (!updatedDocument || updatedDocument.wrapped) {
+      return;
+    }
+
+    // Check if the doucment contains blocks with files. If so, ensure
+    // that the document is wrapped and move any associated files into
+    // the wrapper dir.
+    const blocks = Blocks.get(updatedDocument.blocks);
+
+    const fileBlocks = blocks.filter((block) => block.file);
+
+    if (fileBlocks.length) {
+      // Wrap the document if it contains file blocks
+      const wrappedPath = await wrapDocument(documentId);
+
+      // Move associated files into the document wrapper dir
+      fileBlocks.forEach((block) => {
+        const filePath = Fs.concatPath(
+          Fs.parentDirPath(document.path),
+          block.file!,
+        );
+        const wrappedFilePath = Fs.concatPath(
+          Fs.parentDirPath(wrappedPath),
+          block.file!,
+        );
+
+        if (filePath !== wrappedFilePath) {
+          Fs.rename(filePath, wrappedFilePath);
+        }
+      });
+    }
 
     // Clean up the timer
     debounceMap.delete(documentId);
