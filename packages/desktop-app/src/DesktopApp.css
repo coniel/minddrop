@@ -9,18 +9,6 @@
   overflow: scroll;
 }
 
-.app .app-content .app-drag-handle {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-}
-
-.app-drag-handle {
-  height: 34px;
-  width: 100%;
-}
-
 .loading-view {
   position: absolute;
   top: 0;

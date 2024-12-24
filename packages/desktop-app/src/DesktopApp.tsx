@@ -21,7 +21,6 @@ export const DesktopApp: React.FC = () => {
             <div className="app">
               <AppSidebar />
               <div className="app-content">
-                <div data-tauri-drag-region className="app-drag-handle" />
                 {view === 'document' && documentId && (
                   <DocumentView id={documentId} />
                 )}
