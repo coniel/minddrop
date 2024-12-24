@@ -15,6 +15,7 @@ export { renameDocument as rename } from './renameDocument';
 export { setDocumentIcon as setIcon } from './setDocumentIcon';
 export { updateDocument as update } from './updateDocument';
 export { wrapDocument as wrap } from './wrapDocument';
+export { getParentDocument as getParent } from './getParentDocument';
 export {
   registerDocumentViewTypeConfig as registerView,
   unregisterDocumentViewTypeConfig as unregisterView,
