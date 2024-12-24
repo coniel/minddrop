@@ -1,12 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs } from '@minddrop/file-system';
 import {
   document1,
   document1Blocks,
   documents,
+  grandChildDocument,
+  wrappedChildDocument,
   wrappedDocument,
 } from '../test-utils';
 import {
   BlockDocumentMap,
+  DocumentParentMap,
   DocumentViewDocumentMap,
   DocumentsStore,
 } from './DocumentsStore';
@@ -19,6 +23,8 @@ describe('DocumentsStore', () => {
   afterEach(() => {
     DocumentsStore.getState().clear();
     BlockDocumentMap.clear();
+    DocumentViewDocumentMap.clear();
+    DocumentParentMap.clear();
   });
 
   describe('load', () => {
@@ -55,6 +61,21 @@ describe('DocumentsStore', () => {
       document1.views.forEach((viewId) => {
         expect(DocumentViewDocumentMap.get(viewId)).toBe(document1.id);
       });
+    });
+
+    it('updates the DocumentParentMap', () => {
+      // Load a document into the store
+      DocumentsStore.getState().load([wrappedDocument, wrappedChildDocument]);
+      // Load more child documents into the store
+      DocumentsStore.getState().load([grandChildDocument]);
+
+      // DocumentParentMap should contain entry for child documents
+      expect(DocumentParentMap.get(wrappedChildDocument.id)).toBe(
+        wrappedDocument.id,
+      );
+      expect(DocumentParentMap.get(grandChildDocument.id)).toBe(
+        wrappedChildDocument.id,
+      );
     });
   });
 
@@ -94,6 +115,20 @@ describe('DocumentsStore', () => {
         expect(DocumentViewDocumentMap.get(viewId)).toBe(document1.id);
       });
     });
+
+    it('updates the DocumentParentMap', () => {
+      // Load a document into the store
+      DocumentsStore.getState().load([wrappedDocument]);
+
+      // Add a child document to the store
+      DocumentsStore.getState().add(wrappedChildDocument);
+
+      // DocumentParentMap should contain an entry for the
+      // child document.
+      expect(DocumentParentMap.get(wrappedChildDocument.id)).toBe(
+        wrappedDocument.id,
+      );
+    });
   });
 
   describe('update', () => {
@@ -131,8 +166,8 @@ describe('DocumentsStore', () => {
         blocks: [document1Blocks[0].id, 'new-block'],
       });
 
-      // Should remove removed blocks from the map
-      expect(BlockDocumentMap.get(document1Blocks[1].id)).toBeUndefined();
+      // Should preserve removed blocks from the map
+      expect(BlockDocumentMap.get(document1Blocks[1].id)).toBe(document1.id);
       // Should add new blocks to the map
       expect(BlockDocumentMap.get(document1Blocks[0].id)).toBe(document1.id);
       expect(BlockDocumentMap.get('new-block')).toBe(document1.id);
@@ -144,13 +179,30 @@ describe('DocumentsStore', () => {
         views: [document1.views[0], 'new-view'],
       });
 
-      // Should remove removed views from the map
-      expect(DocumentViewDocumentMap.get(document1.views[1])).toBeUndefined();
+      // Should preserve removed views from the map
+      expect(DocumentViewDocumentMap.get(document1.views[1])).toBe(
+        document1.id,
+      );
       // Should add new views to the map
       expect(DocumentViewDocumentMap.get(document1.views[0])).toBe(
         document1.id,
       );
       expect(DocumentViewDocumentMap.get('new-view')).toBe(document1.id);
+    });
+
+    it('updates the DocumentParentMap if the path has changed', () => {
+      // Move grandChildDocument to a new parent
+      DocumentsStore.getState().update(grandChildDocument.id, {
+        path: Fs.concatPath(
+          Fs.parentDirPath(wrappedDocument.path),
+          Fs.fileNameFromPath(grandChildDocument.path),
+        ),
+      });
+
+      // Should update the parent of the moved document
+      expect(DocumentParentMap.get(grandChildDocument.id)).toBe(
+        wrappedDocument.id,
+      );
     });
   });
 
@@ -168,26 +220,37 @@ describe('DocumentsStore', () => {
       expect(DocumentsStore.getState().documents[document1.id]).toBeUndefined();
     });
 
-    it('updates the BlockDocumentMap', () => {
+    it('preserves block entries in BlockDocumentMap', () => {
       // Remove a document
       DocumentsStore.getState().remove(document1.id);
 
-      // BlockDocumentMap should no longer have entries
-      // for the removed document.
+      // BlockDocumentMap should still contain entries for the
+      // removed document's blocks.
       document1.blocks.forEach((blockId) => {
-        expect(BlockDocumentMap.get(blockId)).toBeUndefined();
+        expect(BlockDocumentMap.get(blockId)).toEqual(document1.id);
       });
     });
 
-    it('updates the DocumentViewDocumentMap', () => {
+    it('preserves view entries in DocumentViewDocumentMap', () => {
       // Remove a document
       DocumentsStore.getState().remove(document1.id);
 
-      // DocumentViewDocumentMap should no longer have entries
-      // for the removed document.
+      // DocumentViewDocumentMap should still contain entries
+      // for the removed document's views.
       document1.views.forEach((viewId) => {
-        expect(DocumentViewDocumentMap.get(viewId)).toBeUndefined();
+        expect(DocumentViewDocumentMap.get(viewId)).toBe(document1.id);
       });
+    });
+
+    it('preserves subdocument entries in DocumentParentMap', () => {
+      // Remove a subdocument
+      DocumentsStore.getState().remove(wrappedChildDocument.id);
+
+      // DocumentParentMap should still contain an entry
+      // for the removed subdocument.
+      expect(DocumentParentMap.get(wrappedChildDocument.id)).toBe(
+        wrappedDocument.id,
+      );
     });
   });
 });

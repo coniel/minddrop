@@ -21,7 +21,7 @@ export function moveBlocksToDocument(
   const sourceDocumentId = BlockDocumentMap.get(blockIds[0]);
 
   if (!sourceDocumentId) {
-    throw new ParentDocumentNotFoundError('block', blockIds[0]);
+    throw new ParentDocumentNotFoundError(blockIds[0]);
   }
 
   // Ensure the source document exists

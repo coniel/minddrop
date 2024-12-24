@@ -167,10 +167,18 @@ export const document2Serialized = JSON.stringify(document2Data);
 /****** Wrapped Document ******/
 /******************************/
 
+export const wrappedDocumentFileBlock: Block = {
+  id: 'file-block',
+  type: 'file',
+  created: new Date(),
+  lastModified: new Date(),
+  file: 'file-block.txt',
+};
+
 export const wrappedDocumentView: DocumentView = {
   id: 'wrtapped-document-view',
   type: boardViewTypeConfig.id,
-  blocks: [],
+  blocks: [wrappedDocumentFileBlock.id],
 };
 
 /**
@@ -188,7 +196,7 @@ export const wrappedDocument: Document = {
   title: 'Wrapped document',
   icon: DefaultDocumentIconString,
   wrapped: true,
-  blocks: [],
+  blocks: [wrappedDocumentFileBlock.id],
   views: [wrappedDocumentView.id],
 };
 
@@ -198,11 +206,16 @@ export const wrappedDocumentData: SerializableDocumentData = {
   lastModified: wrappedDocument.lastModified,
   title: wrappedDocument.title,
   icon: wrappedDocument.icon,
-  blocks: [],
+  blocks: [wrappedDocumentFileBlock],
   views: [wrappedDocumentView],
 };
 
 export const wrappedDocumentSerialized = JSON.stringify(wrappedDocumentData);
+
+export const wrappedDocumentFileBlockPath = Fs.concatPath(
+  Fs.parentDirPath(wrappedDocument.path),
+  wrappedDocumentFileBlock.file!,
+);
 
 /******************************/
 /******** Child Document ******/
@@ -404,6 +417,11 @@ export const documentFiles = [
   {
     path: grandChildDocument.path,
     textContent: grandChildDocumentSerialized,
+  },
+  // File block
+  {
+    path: wrappedDocumentFileBlockPath,
+    textContent: '',
   },
 ];
 

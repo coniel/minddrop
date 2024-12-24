@@ -5,6 +5,7 @@ import { Fs } from '@minddrop/file-system';
 import { DocumentAssetsHandler } from '../DocumentAssetsHandler';
 import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
 import { getDocument } from '../getDocument';
+import { getParentDocument } from '../getParentDocument';
 import { loadDocuments } from '../loadDocuments';
 import { removeBlocksFromDocument } from '../removeBlocksFromDocument';
 import { Document, DocumentView } from '../types';
@@ -103,6 +104,29 @@ export async function initializeDocuments(
     'debounce-update',
     ({ data: document }) => {
       debounceUpdateDocument(document.id);
+    },
+  );
+
+  // Move block file to trash when a file based block is deleted
+  Events.addListener<Block>(
+    'blocks:block:delete',
+    'move-block-file-to-trash',
+    async ({ data: block }) => {
+      if (block.file) {
+        const parentDocument = getParentDocument(block.id);
+
+        if (
+          !parentDocument ||
+          !Fs.exists(parentDocument.path) ||
+          !Fs.exists(block.file)
+        ) {
+          return;
+        }
+
+        Fs.trashFile(
+          Fs.concatPath(Fs.parentDirPath(parentDocument.path), block.file),
+        );
+      }
     },
   );
 }

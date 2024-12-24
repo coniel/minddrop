@@ -17,9 +17,9 @@ import { updateDocumentView } from '../updateDocumentView';
  * @param blocks - The blocks to add to the document.
  * @param viewId - The ID of the view which called this function, if applicable.
  */
-export function addBlocksToDocument(
+export function addBlocksToDocument<TBlock extends Block = Block>(
   documentId: string,
-  blocks: Block[],
+  blocks: TBlock[],
   viewId?: string,
 ): void {
   const document = getDocument(documentId);

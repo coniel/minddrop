@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Blocks } from '@minddrop/blocks';
 import { Fs, initializeMockFileSystem } from '@minddrop/file-system';
-import { registerDocumentViewTypeConfig } from '../DocumentViewTypeConfigsStore';
 import { DocumentsStore } from '../DocumentsStore';
 import { deleteDocumentView } from '../deleteDocumentView';
 import { getDocument } from '../getDocument';
@@ -13,8 +12,9 @@ import {
   documentFiles,
   documentsObject,
   setup,
-  viewTypeConfigs,
   workspaceDir,
+  wrappedDocumentFileBlock,
+  wrappedDocumentFileBlockPath,
 } from '../test-utils';
 import { updateDocument } from '../updateDocument';
 import { updateDocumentView } from '../updateDocumentView';
@@ -30,10 +30,6 @@ const MockFs = initializeMockFileSystem([...documentFiles, BLOCK_1_FILE_PATH]);
 describe('initializeDocuments', () => {
   beforeEach(() => {
     setup();
-
-    viewTypeConfigs.forEach((view) => {
-      registerDocumentViewTypeConfig(view);
-    });
   });
 
   afterEach(() => {
@@ -148,5 +144,19 @@ describe('initializeDocuments', () => {
     // The associated file should be moved to the wrapper dir
     expect(MockFs.exists(BLOCK_1_FILE_PATH)).toBe(false);
     expect(MockFs.exists(BLOCK_1_WRAPPED_FILE_PATH)).toBe(true);
+  });
+
+  it('moves block file to system trash when deleteing a file block', async () => {
+    await initializeDocuments([workspaceDir]);
+
+    // Delete the block
+    Blocks.delete(wrappedDocumentFileBlock.id);
+
+    // Wait for the event listener to process the delete block event
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // Block file should be moved to system trash
+    expect(MockFs.exists(wrappedDocumentFileBlockPath)).toBe(false);
+    expect(MockFs.existsInTrash(wrappedDocumentFileBlockPath)).toBe(true);
   });
 });
