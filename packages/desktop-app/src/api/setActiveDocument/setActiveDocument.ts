@@ -1,3 +1,4 @@
+import { Selection } from '@minddrop/selection';
 import { AppUiState } from '../../AppUiState';
 
 /**
@@ -8,4 +9,5 @@ import { AppUiState } from '../../AppUiState';
 export function setActiveDocument(id: string): void {
   AppUiState.set('view', 'document');
   AppUiState.set('activeDocumentId', id);
+  Selection.clear();
 }
