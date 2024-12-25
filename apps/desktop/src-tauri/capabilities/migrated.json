@@ -45,6 +45,7 @@
         "$APPCONFIG/**"
       ]
     },
+    "core:webview:allow-internal-toggle-devtools",
     "core:window:allow-create",
     "core:window:allow-show",
     "core:window:allow-close",
