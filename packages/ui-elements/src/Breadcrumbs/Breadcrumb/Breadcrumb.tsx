@@ -9,9 +9,14 @@ import './Breadcrumb.css';
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLLIElement> {
   /**
-   * The label of the breadcrumb.
+   * The breadcrumb label.
    */
   label: React.ReactNode;
+
+  /**
+   * The breadcrumb icon.
+   */
+  icon?: React.ReactNode;
 
   /**
    * Callback fired when the breadcrumb is clicked
@@ -22,6 +27,7 @@ export interface BreadcrumbProps extends React.HTMLAttributes<HTMLLIElement> {
 
 export const Breadcrumb: FC<BreadcrumbProps> = ({
   label,
+  icon,
   className,
   onClick,
   onKeyDown,
@@ -35,6 +41,9 @@ export const Breadcrumb: FC<BreadcrumbProps> = ({
     onKeyDown={createKeydownClickHandler(onClick, onKeyDown)}
     {...other}
   >
-    <Text color="light">{label}</Text>
+    {icon && <span className="breadcrumb-icon">{icon}</span>}
+    <Text color="light" weight="medium">
+      {label}
+    </Text>
   </li>
 );

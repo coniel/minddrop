@@ -5,6 +5,8 @@
   line-height: 1em;
   transition: background-color 150ms;
   outline: none;
+  display: flex;
+  align-items: center;
 }
 
 .breadcrumb:hover {
