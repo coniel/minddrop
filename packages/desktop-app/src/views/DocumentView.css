@@ -1,0 +1,9 @@
+.document-view {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .top-toolbar {
+    padding: 8px;
+  }
+}
