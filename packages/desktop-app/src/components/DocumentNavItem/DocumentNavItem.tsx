@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Document, Documents, useChildDocuments } from '@minddrop/documents';
-import { ContentPicker } from '@minddrop/ui-desktop';
+import { ContentPicker, RenameDocumentPopover } from '@minddrop/ui-desktop';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -27,7 +27,6 @@ import {
 } from '../../api';
 import { createDocumentOptionsMenu } from '../../menus/createDocumentOptionsMenu';
 import { DocumentNavItemIcon } from '../DocumentNavItemIcon';
-import { RenameDocumentPopover } from '../RenameDocumentPopover';
 
 export interface DocumentNavItemProps {
   /**

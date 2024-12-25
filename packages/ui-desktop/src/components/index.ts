@@ -9,3 +9,4 @@ export * from './DocumentViewRenderer';
 export * from './DocumentViewsRenderer';
 export * from './DocumentContentToolbarBlockOptions';
 export * from './NavItemIcon';
+export * from './RenameDocumentPopover';

@@ -1077,6 +1077,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       eslint:
         specifier: ^9.16.0
         version: 9.16.0

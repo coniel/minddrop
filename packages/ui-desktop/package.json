@@ -6,7 +6,9 @@
   "types": "src/index",
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
-    "typecheck": "tsc --noEmit --jsx react-jsx"
+    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@minddrop/blocks": "workspace:*",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   }
