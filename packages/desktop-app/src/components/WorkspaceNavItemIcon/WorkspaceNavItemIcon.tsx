@@ -4,9 +4,9 @@ import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
   PopoverPortal,
-  PopoverTrigger,
 } from '@minddrop/ui-elements';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
 import { DefaultWorkspaceIcon, Workspace } from '@minddrop/workspaces';
@@ -36,7 +36,7 @@ export const WorkspaceNavItemIcon: React.FC<{
     DefaultWorkspaceIcon,
   );
 
-  const [pickerPopoverOpen, _, setPickerPopoverOpen] =
+  const [pickerPopoverOpen, togglePickerPopoverOpen, setPickerPopoverOpen] =
     useToggle(showIconSelection);
 
   useEffect(() => {
@@ -45,13 +45,10 @@ export const WorkspaceNavItemIcon: React.FC<{
 
   const handleClear = useCreateCallback(clearWorkspaceIcon, workspace.path);
 
-  const handleShowIconSelectionChange = useCallback(
-    (value: boolean) => {
-      onShowIconSelectionChange(value);
-      setPickerPopoverOpen(value);
-    },
-    [onShowIconSelectionChange, setPickerPopoverOpen],
-  );
+  const handleCloseIconSelection = useCallback(() => {
+    onShowIconSelectionChange(false);
+    setPickerPopoverOpen(false);
+  }, [onShowIconSelectionChange, setPickerPopoverOpen]);
 
   const handleSelectContentIcon = useCallback(
     (icon: ContentIconName, color: ContentColor) =>
@@ -71,19 +68,22 @@ export const WorkspaceNavItemIcon: React.FC<{
   );
 
   return (
-    <Popover
-      open={pickerPopoverOpen}
-      onOpenChange={handleShowIconSelectionChange}
-    >
-      <PopoverTrigger asChild>
-        <NavItemIcon defaultIcon={DefaultWorkspaceIcon} icon={workspace.icon} />
-      </PopoverTrigger>
+    <Popover open={pickerPopoverOpen}>
+      <PopoverAnchor asChild>
+        <NavItemIcon
+          defaultIcon={DefaultWorkspaceIcon}
+          icon={workspace.icon}
+          onClick={togglePickerPopoverOpen}
+        />
+      </PopoverAnchor>
       <PopoverPortal>
         <PopoverContent
           style={{ borderRadius: 8 }}
           side="top"
           sideOffset={4}
           collisionPadding={{ left: 14 }}
+          onEscapeKeyDown={handleCloseIconSelection}
+          onPointerDownOutside={handleCloseIconSelection}
         >
           <IconPicker
             defaultPicker={icon.type}

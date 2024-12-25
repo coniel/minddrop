@@ -5,9 +5,9 @@ import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
   PopoverPortal,
-  PopoverTrigger,
 } from '@minddrop/ui-elements';
 import { useCreateCallback, useToggle } from '@minddrop/utils';
 import {
@@ -44,7 +44,7 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
 }) => {
   const { icon, color, skinTone } = useIcon(document.icon, DefaultDocumentIcon);
 
-  const [pickerPopoverOpen, _, setPickerPopoverOpen] =
+  const [pickerPopoverOpen, togglePickerPopoverOpen, setPickerPopoverOpen] =
     useToggle(showIconSelection);
 
   useEffect(() => {
@@ -53,13 +53,10 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
 
   const handleClear = useCreateCallback(clearDocumentIcon, document.id);
 
-  const handleShowIconSelectionChange = useCallback(
-    (value: boolean) => {
-      onShowIconSelectionChange(value);
-      setPickerPopoverOpen(value);
-    },
-    [onShowIconSelectionChange, setPickerPopoverOpen],
-  );
+  const handleCloseIconSelection = useCallback(() => {
+    onShowIconSelectionChange(false);
+    setPickerPopoverOpen(false);
+  }, [onShowIconSelectionChange, setPickerPopoverOpen]);
 
   const handleSelectContentIcon = useCallback(
     (icon: ContentIconName, color: ContentColor) =>
@@ -79,19 +76,18 @@ export const DocumentNavItemIcon: React.FC<DocumentNavItemIconProps> = ({
   );
 
   return (
-    <Popover
-      open={pickerPopoverOpen}
-      onOpenChange={handleShowIconSelectionChange}
-    >
-      <PopoverTrigger asChild>
+    <Popover open={pickerPopoverOpen}>
+      <PopoverAnchor onClick={togglePickerPopoverOpen} asChild>
         <NavItemIcon defaultIcon={DefaultDocumentIcon} icon={document.icon} />
-      </PopoverTrigger>
+      </PopoverAnchor>
       <PopoverPortal>
         <PopoverContent
           style={{ borderRadius: 8 }}
           side="top"
           sideOffset={4}
           collisionPadding={{ left: 14 }}
+          onEscapeKeyDown={handleCloseIconSelection}
+          onPointerDownOutside={handleCloseIconSelection}
         >
           <IconPicker
             defaultPicker={icon.type}
