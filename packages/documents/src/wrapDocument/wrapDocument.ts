@@ -54,6 +54,7 @@ export async function wrapDocument(id: string): Promise<string> {
   Events.dispatch('documents:document:wrap', {
     oldPath: path,
     newPath: wrappedPath,
+    document: getDocument(id),
   });
 
   // Return new document path

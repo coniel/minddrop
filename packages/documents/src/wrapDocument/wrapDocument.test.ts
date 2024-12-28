@@ -103,10 +103,12 @@ describe('wrapDocument', () => {
     new Promise<void>((done) => {
       // Listen to document wrapped events
       Events.addListener('documents:document:wrap', 'test', (payload) => {
-        // Payload data should be the old and new document paths
+        // Payload data should be the old and new document paths, and the
+        // updated document.
         expect(payload.data).toEqual({
           oldPath: document1.path,
           newPath: WRAPPED_DOCUMENT_PATH,
+          document: getDocument(document1.id),
         });
         done();
       });
