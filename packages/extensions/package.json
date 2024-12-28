@@ -22,6 +22,7 @@
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/selection": "workspace:*",

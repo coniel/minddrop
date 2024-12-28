@@ -7,6 +7,7 @@ const VARIANT_HORIZONTAL_CARD_ID = 'horizontal-card';
 const BLOCK_TYPE = 'web-bookmark';
 
 export const extension: MindDropExtension = {
+  id: 'core:bookmark-block',
   initialize: async (MindDropApi) => {
     const { Blocks } = MindDropApi;
 

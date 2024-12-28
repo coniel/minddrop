@@ -19,7 +19,7 @@ import { DocumentContentToolbarItem } from '../DocumentContentToolbarItem';
 import './DocumentContentToolbarBlockOptions.css';
 
 export const DocumentContentToolbarBlockOptions: React.FC = () => {
-  const { t } = useTranslation('blocks.selection');
+  const { t } = useTranslation({ keyPrefix: 'blocks.selection' });
   const [contentPickerOpen, setContentPickerOpen] = useState(false);
   const [moveTooltipOpen, setMoveTooltipOpen] = useState<boolean | undefined>();
   const [copyTooltip, setCopyTooltip] = useState('copy.action');

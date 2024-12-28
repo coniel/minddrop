@@ -1,9 +1,14 @@
 import { MindDropExtension } from '@minddrop/extension';
 import { BoardViewRenderer } from './components';
+import enGB from './locales/en-GB.json';
 import { BoardColumn, BoardColumnsSection } from './types';
 import { removeBlocksFromBoard } from './utils';
 
 export const extension: MindDropExtension = {
+  id: 'board-view',
+  locales: {
+    'en-GB': enGB,
+  },
   initialize: async ({ Documents, Utils }) => {
     Documents.registerView({
       id: 'board',
@@ -26,7 +31,7 @@ export const extension: MindDropExtension = {
       },
       component: BoardViewRenderer,
       description: {
-        'en-US': {
+        'en-GB': {
           name: 'Board',
           details: 'A board view for organizing content into sections.',
         },

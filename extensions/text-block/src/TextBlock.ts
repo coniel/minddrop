@@ -6,6 +6,7 @@ const CLASSIFIER_ID = 'minddrop-core-extension-text';
 const EDITOR_VARIANT_ID = 'editor';
 
 export const extension: MindDropExtension = {
+  id: 'core:text-block',
   initialize: async ({ Blocks }) => {
     Blocks.register({
       id: BLOCK_TYPE,

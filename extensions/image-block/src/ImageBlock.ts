@@ -6,6 +6,7 @@ const RENDERER_ID = 'image';
 const BLOCK_TYPE = 'image';
 
 export const extension: MindDropExtension = {
+  id: 'core:image-block',
   initialize: async ({ Blocks }) => {
     Blocks.register({
       id: BLOCK_TYPE,

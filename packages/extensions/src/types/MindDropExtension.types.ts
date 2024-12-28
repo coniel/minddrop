@@ -1,6 +1,12 @@
+import { Locales } from '../../../i18n/src';
 import { MindDropApi } from './MindDropApi.types';
 
 export interface MindDropExtension {
+  /**
+   * A unique identifier for the extension.
+   */
+  id: string;
+
   /**
    * Initializes the extension. Called on application startup.
    */
@@ -21,4 +27,28 @@ export interface MindDropExtension {
    * extension being removed.
    */
   onRemove?: (api: MindDropApi) => Promise<void>;
+
+  /**
+   * Optional translations for text appearing in the extension's UI.
+   *
+   * Translations will be namespaced under the extension's ID when
+   * loaded into the application. When using translations, add the
+   * extension's ID as a prefix to the translation key:
+   *
+   * `t('extensionId.key')`
+   *
+   * The translation object should be in the format:
+   *
+   * {
+   *   "en-GB": {
+   *     "key": "Translation",
+   *     "nested": {
+   *       "key": "Nested translation"
+   *     }
+   *   },
+   *   "en-US": ...
+   *   "fr-FR": ...
+   * }
+   */
+  locales?: Locales;
 }

@@ -8,7 +8,7 @@ interface CreateWorkspaceCardProps {
 export const CreateWorkspaceCard: React.FC<CreateWorkspaceCardProps> = ({
   onClick,
 }) => {
-  const { t } = useTranslation('workspaces.actions.create');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions.create' });
 
   return (
     <ActionCard

@@ -35,7 +35,7 @@ export const CreateWorkspaceForm: React.FC<CreateWorkspaceFormProps> = ({
   cancelButtonLabel,
 }) => {
   const { t: tRoot } = useTranslation();
-  const { t } = useTranslation('workspaces.actions.create.form');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions.create.form' });
   const [selectedDir, setSelectedDir] = useState('');
   const [workspaceName, setWorkspaceName] = useState('');
   const [workspaceNameError, setWorkspaceNameError] = useState(false);

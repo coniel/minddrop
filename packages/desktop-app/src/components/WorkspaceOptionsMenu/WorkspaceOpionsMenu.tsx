@@ -64,7 +64,7 @@ export const WorkspaceOptionsMenu: React.FC<WorkspaceOptionsMenuProps> = ({
   onSelectRevealInFileExplorer,
   ...other
 }) => {
-  const { t } = useTranslation('workspaces.actions');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions' });
 
   return (
     <DropdownMenu {...other}>

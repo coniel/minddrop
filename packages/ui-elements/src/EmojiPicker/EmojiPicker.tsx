@@ -49,7 +49,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   className,
   ...other
 }) => {
-  const { t } = useTranslation('emojiPicker');
+  const { t } = useTranslation({ keyPrefix: 'emojiPicker' });
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<EmojiItem[]>(Emoji.all);
   const [resultsByGroup, setResultsByGroup] = useState(Emoji.group(Emoji.all));
@@ -219,7 +219,7 @@ const SkinToneSelect: React.FC<{
   selectedSkinTone: EmojiSkinTone;
   onSelect: (value: EmojiSkinTone) => void;
 }> = ({ onSelect, selectedSkinTone }) => {
-  const { t } = useTranslation('emojiPicker.skinTone');
+  const { t } = useTranslation({ keyPrefix: 'emojiPicker.skinTone' });
   const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
 
   const createSelectHandler = useCallback(

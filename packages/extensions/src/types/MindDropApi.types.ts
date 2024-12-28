@@ -5,6 +5,7 @@ import { DocumentViews, Documents } from '@minddrop/documents';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { useTranslation } from '@minddrop/i18n';
 import { Icons } from '@minddrop/icons';
 import { Markdown } from '@minddrop/markdown';
 import { Selection } from '@minddrop/selection';
@@ -28,4 +29,13 @@ export interface MindDropApi {
   Workspaces: typeof Workspaces;
   Ui: typeof Ui;
   Utils: typeof Utils;
+  I18n: {
+    translate: (key: string, options: I18nOptions) => string;
+    useTranslation: (options: I18nOptions) => ReturnType<typeof useTranslation>;
+  };
+}
+
+interface I18nOptions {
+  namespace?: string;
+  keyPrefix?: string;
 }

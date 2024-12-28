@@ -135,7 +135,7 @@ const BoardColumnBlockEnd: React.FC<{
         {enableDelete && (
           <Button
             variant="neutral"
-            label="deleteColumn"
+            label="board-view:deleteColumn"
             className="delete-column-button"
             onClick={onClickDelete}
           />

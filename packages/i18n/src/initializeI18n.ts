@@ -18,6 +18,7 @@ export function initializeI18n(debug = false) {
     .use(intervalPlural)
     .use(initReactI18next)
     .init({
+      ns: ['core'],
       fallbackLng: 'en-GB',
       keySeparator: '.',
       debug,
@@ -30,7 +31,7 @@ export function initializeI18n(debug = false) {
     });
 
   languages.forEach((lang) => {
-    i18n.addResourceBundle(lang[0], 'translation', lang[1], true, true);
+    i18n.addResourceBundle(lang[0], 'core', lang[1], true, true);
   });
 }
 

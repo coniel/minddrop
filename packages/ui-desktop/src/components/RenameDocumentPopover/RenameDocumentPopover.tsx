@@ -27,7 +27,9 @@ export const RenameDocumentPopover = React.forwardRef<
 >(({ document, onClose }, ref) => {
   const form = useRef<HTMLFormElement | null>(null);
   const input = useRef<HTMLInputElement | null>(null);
-  const { t } = useTranslation('documents.actions.rename.form.name');
+  const { t } = useTranslation({
+    keyPrefix: 'documents.actions.rename.form.name',
+  });
   const [title, setTitle] = useState(document.title);
   const [error, setError] = useState('');
   const [errorValue, setErrorValue] = useState('');

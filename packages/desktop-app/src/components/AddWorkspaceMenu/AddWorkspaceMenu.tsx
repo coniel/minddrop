@@ -23,7 +23,7 @@ export interface AddWorkspaceMenuProps {
 export const AddWorkspaceMenu: React.FC<AddWorkspaceMenuProps> = ({
   children,
 }) => {
-  const { t } = useTranslation('workspaces.actions');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions' });
   const [createDialogOpen, toggleCreateDialog] = useToggle(false);
 
   return (

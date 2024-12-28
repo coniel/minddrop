@@ -17,7 +17,7 @@ import {
 } from '@minddrop/ui-elements';
 
 export const ThemeAppearanceSelect: React.FC = () => {
-  const { t } = useTranslation('theme.appearance');
+  const { t } = useTranslation({ keyPrefix: 'theme.appearance' });
   const themeAppearance = useThemeAppearance();
   const themeAppearanceSetting = useThemeAppearanceSetting();
 

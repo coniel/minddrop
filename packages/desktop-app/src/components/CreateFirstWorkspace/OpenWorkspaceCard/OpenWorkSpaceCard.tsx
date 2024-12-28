@@ -5,7 +5,7 @@ import { ActionCard, Button } from '@minddrop/ui-elements';
 import { selectFolderAsWorkspace } from '../../../api/selectFolderAsWorkspace';
 
 export const OpenWorkspaceCard: React.FC = () => {
-  const { t } = useTranslation('workspaces.actions.open');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions.open' });
 
   const openDirSelection = useCallback(async () => {
     // Add workspace from folder selection

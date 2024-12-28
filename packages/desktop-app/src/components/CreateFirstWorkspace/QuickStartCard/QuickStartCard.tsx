@@ -8,7 +8,7 @@ import { Workspaces } from '@minddrop/workspaces';
 const WORKSPACE_NAME = 'MindDrop Workspace';
 
 export const QuickStartCard: React.FC = () => {
-  const { t } = useTranslation('workspaces.actions.quickstart');
+  const { t } = useTranslation({ keyPrefix: 'workspaces.actions.quickstart' });
 
   const quickStart = useCallback(async () => {
     // Get path to Documents folder

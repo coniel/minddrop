@@ -60,7 +60,7 @@ export const ContentPicker = React.forwardRef<
     },
     ref,
   ) => {
-    const { t } = useTranslation('contentPicker');
+    const { t } = useTranslation({ keyPrefix: 'contentPicker' });
 
     // Get all workspaces except for possible omitted one
     const allWorkspaces = useWorkspaces().filter(

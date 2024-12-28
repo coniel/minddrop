@@ -71,7 +71,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   className,
   ...other
 }) => {
-  const { t } = useTranslation('iconPicker');
+  const { t } = useTranslation({ keyPrefix: 'iconPicker' });
   const [query, setQuery] = useState('');
   const [results, setResults] =
     useState<UnminifiedContentIcon[]>(unminifiedIcons);
@@ -229,7 +229,7 @@ const ColorSelectButton: React.FC<{
   color: ContentColor;
   onClick: (value: ContentColor) => void;
 }> = ({ color, onClick }) => {
-  const { t } = useTranslation('color');
+  const { t } = useTranslation({ keyPrefix: 'color' });
 
   const handleSelect = useCallback(() => {
     onClick(color);
@@ -250,7 +250,7 @@ const IconColorSelect: React.FC<{
   selectedColor: ContentColor;
   onSelect: (value: ContentColor) => void;
 }> = ({ onSelect, selectedColor }) => {
-  const { t } = useTranslation('iconPicker');
+  const { t } = useTranslation({ keyPrefix: 'iconPicker' });
   const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
 
   const handleOnClickColor = useCallback(

@@ -27,7 +27,9 @@ export const RenameWorkspacePopover = React.forwardRef<
 >(({ workspace, onClose }, ref) => {
   const form = useRef<HTMLFormElement | null>(null);
   const input = useRef<HTMLInputElement | null>(null);
-  const { t } = useTranslation('workspaces.actions.rename.form.name');
+  const { t } = useTranslation({
+    keyPrefix: 'workspaces.actions.rename.form.name',
+  });
   const [name, setName] = useState(workspace.name);
   const [error, setError] = useState('');
   const [errorValue, setErrorValue] = useState('');
