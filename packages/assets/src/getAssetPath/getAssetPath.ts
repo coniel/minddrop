@@ -1,28 +1,22 @@
-import { AssetHandlersStore } from '../AssetHandlersStore';
+import { getResourceAssetsPath } from '../getResourceAssetsPath';
 
 /**
- * Does something useful.
+ * Returns the path to an asset file for a given resource ID.
+ *
+ * @param resourceId - The ID of the resource to which the asset belongs.
+ * @param filename - The name of the asset file.
+ * @returns The path to the asset file or null if no path was found.
  */
 export function getAssetPath(
   resourceId: string,
   filename: string | null,
 ): string | null {
-  let assetsPath: string | null = null;
-
   if (!filename) {
     return null;
   }
 
-  // Loop through all asset handlers until one matches the resource
-  AssetHandlersStore.some((assetHandler) => {
-    const result = assetHandler.getResourceAssetsPath(resourceId);
-
-    if (result) {
-      assetsPath = `${result}`;
-    }
-
-    return false;
-  });
+  // Get the path to the assets directory for the given resource ID
+  const assetsPath = getResourceAssetsPath(resourceId);
 
   // Add the filename to the asset path or return null if no path was found
   return assetsPath ? `${assetsPath}/${filename}` : null;
