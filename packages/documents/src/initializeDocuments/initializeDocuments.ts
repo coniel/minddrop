@@ -134,54 +134,22 @@ export async function initializeDocuments(
   // Move assets when wrapping a document
   Events.addListener<{ oldPath: string; document: Document }>(
     'documents:document:wrap',
-    'move-assets',
-    async ({ data: { oldPath, document } }) => {
-      const resourceIds = [document.id, ...document.blocks, ...document.views];
-      const oldDocumentAssetsPath = Fs.concatPath(
-        Fs.parentDirPath(oldPath),
-        '.minddrop/assets',
-      );
-      let newDocumentAssetsPath = '';
-      const assetsToMove: string[] = [];
+    'move-assets-on-wrap',
+    async ({ data: { oldPath, document } }) =>
+      moveDocumentAssets(document, oldPath),
+  );
 
-      if (!(await Fs.exists(oldDocumentAssetsPath))) {
-        // No assets to move
-        return;
+  // Move assets when moving an unwrapped document
+  Events.addListener<{ from: string; document: Document }>(
+    'documents:document:move',
+    'move-assets-on-move',
+    async ({ data: { from, document } }) => {
+      console.log('moved');
+
+      if (!document.wrapped) {
+        console.log('not wrapped');
+        moveDocumentAssets(document, from);
       }
-
-      // Check if any blocks have associated assets
-      await Promise.all(
-        resourceIds.map(async (resourceId) => {
-          const oldResourceAssetsPath = Fs.concatPath(
-            oldDocumentAssetsPath,
-            resourceId,
-          );
-
-          if (await Fs.exists(oldResourceAssetsPath)) {
-            assetsToMove.push(resourceId);
-          }
-        }),
-      );
-
-      if (assetsToMove.length) {
-        // Ensure that the document assets path exists
-        newDocumentAssetsPath = await createDocumentAssetsDir(document.id);
-      }
-
-      // Move associated assets to the new document assets path
-      assetsToMove.forEach(async (resourceId) => {
-        const newResourceAssetsPath = Assets.getAssetsDirPath(resourceId);
-        const oldResourceAssetsPath = Fs.concatPath(
-          oldDocumentAssetsPath,
-          resourceId,
-        );
-
-        if (!newResourceAssetsPath) {
-          return;
-        }
-
-        Fs.rename(oldResourceAssetsPath, newResourceAssetsPath);
-      });
     },
   );
 }
@@ -249,4 +217,52 @@ function debounceUpdateDocument(documentId: string) {
   }, 200);
 
   debounceMap.set(documentId, timer);
+}
+
+async function moveDocumentAssets(document: Document, oldPath: string) {
+  const resourceIds = [document.id, ...document.blocks, ...document.views];
+  const oldDocumentAssetsPath = Fs.concatPath(
+    Fs.parentDirPath(oldPath),
+    '.minddrop/assets',
+  );
+  const assetsToMove: string[] = [];
+
+  if (!(await Fs.exists(oldDocumentAssetsPath))) {
+    // No assets to move
+    return;
+  }
+
+  // Check if any blocks have associated assets
+  await Promise.all(
+    resourceIds.map(async (resourceId) => {
+      const oldResourceAssetsPath = Fs.concatPath(
+        oldDocumentAssetsPath,
+        resourceId,
+      );
+
+      if (await Fs.exists(oldResourceAssetsPath)) {
+        assetsToMove.push(resourceId);
+      }
+    }),
+  );
+
+  if (assetsToMove.length) {
+    // Ensure that the document assets path exists
+    await createDocumentAssetsDir(document.id);
+  }
+
+  // Move associated assets to the new document assets path
+  assetsToMove.forEach(async (resourceId) => {
+    const newResourceAssetsPath = Assets.getAssetsDirPath(resourceId);
+    const oldResourceAssetsPath = Fs.concatPath(
+      oldDocumentAssetsPath,
+      resourceId,
+    );
+
+    if (!newResourceAssetsPath) {
+      return;
+    }
+
+    Fs.rename(oldResourceAssetsPath, newResourceAssetsPath);
+  });
 }
