@@ -1,18 +1,17 @@
 .heading-1-element {
-  font-size: var(--fsTitle);
+  font-size: 26px;
   font-weight: var(--fwSemibold);
   padding-top: 20px;
 }
 
 .heading-2-element {
-  font-size: 26px;
+  font-size: var(--fsContentTitle);
   font-weight: var(--fwSemibold);
   padding-top: 16px;
 }
 
 .heading-3-element {
-  font-size: var(--fsContentTitle);
-  font-weight: var(--fwSemibold);
+  font-weight: var(--fwBold);
   padding-top: 16px;
 }
 
