@@ -4,6 +4,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { DocumentAssetsHandler } from '../DocumentAssetsHandler';
 import { BlockDocumentMap, DocumentViewDocumentMap } from '../DocumentsStore';
+import { createDocumentAssetsDir } from '../createDocumentAssetsDir';
 import { getDocument } from '../getDocument';
 import { getParentDocument } from '../getParentDocument';
 import { loadDocuments } from '../loadDocuments';
@@ -127,6 +128,60 @@ export async function initializeDocuments(
           Fs.concatPath(Fs.parentDirPath(parentDocument.path), block.file),
         );
       }
+    },
+  );
+
+  // Move assets when wrapping a document
+  Events.addListener<{ oldPath: string; document: Document }>(
+    'documents:document:wrap',
+    'move-assets',
+    async ({ data: { oldPath, document } }) => {
+      const resourceIds = [document.id, ...document.blocks, ...document.views];
+      const oldDocumentAssetsPath = Fs.concatPath(
+        Fs.parentDirPath(oldPath),
+        '.minddrop/assets',
+      );
+      let newDocumentAssetsPath = '';
+      const assetsToMove: string[] = [];
+
+      if (!(await Fs.exists(oldDocumentAssetsPath))) {
+        // No assets to move
+        return;
+      }
+
+      // Check if any blocks have associated assets
+      await Promise.all(
+        resourceIds.map(async (resourceId) => {
+          const oldResourceAssetsPath = Fs.concatPath(
+            oldDocumentAssetsPath,
+            resourceId,
+          );
+
+          if (await Fs.exists(oldResourceAssetsPath)) {
+            assetsToMove.push(resourceId);
+          }
+        }),
+      );
+
+      if (assetsToMove.length) {
+        // Ensure that the document assets path exists
+        newDocumentAssetsPath = await createDocumentAssetsDir(document.id);
+      }
+
+      // Move associated assets to the new document assets path
+      assetsToMove.forEach(async (resourceId) => {
+        const newResourceAssetsPath = Assets.getAssetsDirPath(resourceId);
+        const oldResourceAssetsPath = Fs.concatPath(
+          oldDocumentAssetsPath,
+          resourceId,
+        );
+
+        if (!newResourceAssetsPath) {
+          return;
+        }
+
+        Fs.rename(oldResourceAssetsPath, newResourceAssetsPath);
+      });
     },
   );
 }
