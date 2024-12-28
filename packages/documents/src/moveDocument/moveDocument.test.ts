@@ -127,14 +127,15 @@ describe('moveDocument', () => {
     expect(getDocument(document1.id)?.path).toBe(MOVED_DOCUMENT_PATH);
   });
 
-  it("dispatches a 'documents:document:moved' event", async () =>
+  it("dispatches a 'documents:document:move' event", async () =>
     new Promise<void>((done) => {
-      // Listen to 'documents:document:moved' events
-      Events.addListener('documents:document:moved', 'test', (payload) => {
+      // Listen to 'documents:document:move' events
+      Events.addListener('documents:document:move', 'test', (payload) => {
         // Payload data should be the old and new document paths
         expect(payload.data).toEqual({
           from: document1.path,
           to: MOVED_DOCUMENT_PATH,
+          document: getDocument(document1.id),
         });
         done();
       });

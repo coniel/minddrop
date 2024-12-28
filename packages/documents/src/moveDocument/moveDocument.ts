@@ -83,8 +83,12 @@ export async function moveDocument(
     updateChildDocumentPaths(document.path, newPath);
   }
 
-  // Dispatch a 'documents:document:moved' event
-  Events.dispatch('documents:document:moved', { from: path, to: newPath });
+  // Dispatch a 'documents:document:move' event
+  Events.dispatch('documents:document:move', {
+    from: path,
+    to: newPath,
+    document: getDocument(id),
+  });
 
   return newPath;
 }
