@@ -1,3 +1,4 @@
+import { parseInlineMarkdown } from '../../parseInlineMarkdown';
 import { MarkdownLineParser } from '../../types';
 import { generateElement } from '../../utils';
 import { HeadingElement } from './HeadingElement.types';
@@ -50,7 +51,7 @@ export const parseHeadingElementFromMarkdown: MarkdownLineParser = (
     return generateElement<HeadingElement>('heading', {
       level,
       syntax: nextLine[0] as HeadingElement['syntax'],
-      children: [{ text: line }],
+      children: parseInlineMarkdown(line),
     });
   }
 

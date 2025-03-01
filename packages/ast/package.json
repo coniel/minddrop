@@ -11,12 +11,13 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.16.0",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@minddrop/events": "workspace:*"
+    "@minddrop/events": "workspace:*",
+    "marked": "^15.0.7"
   }
 }

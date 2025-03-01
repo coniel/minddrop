@@ -1,5 +1,4 @@
-export interface TextElement
-  extends Record<string, string | boolean | undefined> {
+export interface TextElement {
   /**
    * The actual text content.
    */
@@ -11,9 +10,19 @@ export interface TextElement
   bold?: boolean;
 
   /**
+   * The markdown syntax used to bold the text (e.g. '**').
+   */
+  boldSyntax?: string;
+
+  /**
    * Whether the text is italicized.
    */
   italic?: boolean;
+
+  /**
+   * The markdown syntax used to italicize the text (e.g. '_').
+   */
+  italicSyntax?: string;
 
   /**
    * Whether the text is struck through.
@@ -21,14 +30,29 @@ export interface TextElement
   strikethrough?: boolean;
 
   /**
+   * The markdown syntax used to strike through the text (e.g. '~~').
+   */
+  strikethroughSyntax?: string;
+
+  /**
    * Whether the text is underlined.
    */
   underline?: boolean;
 
   /**
+   * The markdown syntax used to underline the text (e.g. '<u>').
+   */
+  underlineSyntax?: string;
+
+  /**
    * Whether the text is code style.
    */
   code?: boolean;
+
+  /**
+   * The markdown syntax used to code style the text (e.g. '``').
+   */
+  codeSyntax?: string;
 
   /**
    * Text nodes should not have a type property.

@@ -1,3 +1,4 @@
+import { parseInlineMarkdown } from '../../parseInlineMarkdown';
 import { MarkdownLineParser } from '../../types';
 import { generateElement } from '../../utils';
 import { UnorderedListItemElement } from './UnorderedListItemElement.types';
@@ -32,7 +33,7 @@ export const parseUnorderedListItemElementFromMarkdown: MarkdownLineParser = (
 
     return generateElement<UnorderedListItemElement>('unordered-list-item', {
       depth,
-      children: [{ text }],
+      children: parseInlineMarkdown(text),
     });
   }
 

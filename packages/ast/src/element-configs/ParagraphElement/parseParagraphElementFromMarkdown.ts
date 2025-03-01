@@ -1,3 +1,4 @@
+import { parseInlineMarkdown } from '../../parseInlineMarkdown';
 import { MarkdownLineParser } from '../../types';
 import { generateElement } from '../../utils';
 import { ParagraphElement } from './ParagraphElement.types';
@@ -18,6 +19,6 @@ export const parseParagraphElementFromMarkdown: MarkdownLineParser = (
   consume(1);
 
   return generateElement<ParagraphElement>('paragraph', {
-    children: [{ text: line }],
+    children: parseInlineMarkdown(line),
   });
 };

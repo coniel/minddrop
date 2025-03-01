@@ -1,3 +1,4 @@
+import { parseInlineMarkdown } from '../../parseInlineMarkdown';
 import { MarkdownLineParser } from '../../types';
 import { generateElement } from '../../utils';
 import { ToDoElement } from './ToDoElement.types';
@@ -37,7 +38,7 @@ export const parseToDoElementFromMarkdown: MarkdownLineParser = (
     return generateElement<ToDoElement>('to-do', {
       depth,
       checked: done,
-      children: [{ text }],
+      children: parseInlineMarkdown(text),
     });
   }
 
