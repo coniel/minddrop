@@ -1,9 +1,10 @@
 import { Collection, CollectionType } from '../types';
 
+export const collectionsPath = 'path/to/collections';
+
 export const jsonCollection: Collection = {
   id: 'collection-1',
   type: CollectionType.JSON,
-  path: 'Books',
   created: new Date(),
   lastModified: new Date(),
   name: 'Books',
@@ -14,7 +15,6 @@ export const jsonCollection: Collection = {
 export const markdownCollection: Collection = {
   id: 'collection-2',
   type: CollectionType.Markdown,
-  path: 'Notes',
   created: new Date(),
   lastModified: new Date(),
   name: 'Notes',
@@ -24,7 +24,6 @@ export const markdownCollection: Collection = {
 export const fileCollection: Collection = {
   id: 'collection-3',
   type: CollectionType.File,
-  path: 'PDFs',
   created: new Date(),
   lastModified: new Date(),
   name: 'PDFs',
@@ -34,7 +33,6 @@ export const fileCollection: Collection = {
 export const weblinkCollection: Collection = {
   id: 'collection-4',
   type: CollectionType.Weblink,
-  path: 'Bookmarks',
   created: new Date(),
   lastModified: new Date(),
   name: 'Bookmarks',
@@ -47,3 +45,8 @@ export const collections = [
   fileCollection,
   weblinkCollection,
 ];
+
+export const collectionFiles = collections.map((collection) => ({
+  path: `${collectionsPath}/${collection.name}/.minddrop/collection.json`,
+  textContent: JSON.stringify(collection),
+}));
