@@ -2,6 +2,7 @@
 import { FsEntry } from './FileEntry.types';
 import { FileSystem } from './FileSystem.types';
 import {
+  FsCreateDirOptions,
   FsExistsOptions,
   FsFileOptions,
   FsReadFileOptions,
@@ -28,6 +29,7 @@ export interface MockFileSystem {
     textContent: string,
     options?: FsWriteFileOptions,
   ): void;
+  createDir(path: string, options?: FsCreateDirOptions): void;
   removeFile(path: string, options?: FsRemoveFileOptions): void;
   removeDir(path: string, options?: FsRemoveDirOptions): void;
   downloadFile(url: string, path: string, options?: FsFileOptions): void;

@@ -238,6 +238,17 @@ export function initializeMockFileSystem(
 
       textFileContents[fullPath] = textContent;
     },
+    createDir: (path, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+          children: [],
+        });
+      }
+    },
     removeFile: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeDir: (path, options) =>
