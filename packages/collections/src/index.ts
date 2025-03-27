@@ -1,1 +1,2 @@
 export * from './types';
+export * as Collections from './Collections';

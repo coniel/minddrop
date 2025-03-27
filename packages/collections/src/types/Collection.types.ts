@@ -15,12 +15,6 @@ export interface Collection {
   id: string;
 
   /**
-   * The relative path to the collection directory containing
-   * its items.
-   */
-  path: string;
-
-  /**
    * The type of items handled by the collection.
    */
   type: CollectionType;
@@ -49,11 +43,6 @@ export interface Collection {
    * Description of the collection.
    */
   description?: string;
-
-  /**
-   * Color used when displaying collection label and icon in the UI.
-   */
-  color?: ContentColor;
 
   /**
    * Icon used to represent the collection in the UI.

@@ -27,6 +27,7 @@
     "@minddrop/blocks": "workspace:*",
     "@minddrop/board-view": "workspace:*",
     "@minddrop/bookmark-block": "workspace:*",
+    "@minddrop/collections": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/documents": "workspace:*",
     "@minddrop/editor": "workspace:*",
