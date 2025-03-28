@@ -42,7 +42,7 @@ export const CollectionsStore = create<CollectionsStore>()((set) => ({
         collections: {
           ...state.collections,
           ...collections.reduce(
-            (docs, collection) => ({ ...docs, [collection.id]: collection }),
+            (docs, collection) => ({ ...docs, [collection.name]: collection }),
             {},
           ),
         },
@@ -52,7 +52,7 @@ export const CollectionsStore = create<CollectionsStore>()((set) => ({
   add: (collection) =>
     set((state) => {
       return {
-        collections: { ...state.collections, [collection.id]: collection },
+        collections: { ...state.collections, [collection.name]: collection },
       };
     }),
 

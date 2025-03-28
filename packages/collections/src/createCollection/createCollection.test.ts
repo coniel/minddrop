@@ -72,7 +72,6 @@ describe('createCollection', () => {
       type: CollectionType.JSON,
       name: 'Tasks',
       itemName: 'Task',
-      id: expect.any(String),
       created: expect.any(Date),
       lastModified: expect.any(Date),
       description: 'A collection of tasks',
@@ -110,7 +109,7 @@ describe('createCollection', () => {
       itemName: 'Task',
     });
 
-    expect(CollectionsStore.getState().collections[collection.id]).toEqual(
+    expect(CollectionsStore.getState().collections[collection.name]).toEqual(
       collection,
     );
   });
@@ -123,7 +122,6 @@ describe('createCollection', () => {
           type: CollectionType.JSON,
           name: 'Tasks',
           itemName: 'Task',
-          id: expect.any(String),
           created: expect.any(Date),
           lastModified: expect.any(Date),
         });

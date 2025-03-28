@@ -40,7 +40,6 @@ export async function createCollection(
 
   const collection: Collection = {
     ...options,
-    id: uuid(),
     created: new Date(),
     lastModified: new Date(),
   };

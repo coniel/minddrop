@@ -1,4 +1,3 @@
-import { ContentColor } from '@minddrop/core';
 import { UserIcon } from '@minddrop/icons';
 
 export enum CollectionType {
@@ -10,9 +9,15 @@ export enum CollectionType {
 
 export interface Collection {
   /**
-   * A unique identifier for the collection.
+   * The name of the collection, e.g. "Notes".
+   * Must be unique.
    */
-  id: string;
+  name: string;
+
+  /**
+   * The name of a single collection item, e.g. "Note".
+   */
+  itemName: string;
 
   /**
    * The type of items handled by the collection.
@@ -28,16 +33,6 @@ export interface Collection {
    * Date and time the collection medata was last modified.
    */
   lastModified: Date;
-
-  /**
-   * The name of the collection, e.g. "Notes".
-   */
-  name: string;
-
-  /**
-   * The name of a single collection item, e.g. "Note".
-   */
-  itemName: string;
 
   /**
    * Description of the collection.

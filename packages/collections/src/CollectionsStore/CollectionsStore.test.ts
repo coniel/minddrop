@@ -20,8 +20,8 @@ describe('CollectionsStore', () => {
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [jsonCollection.id]: jsonCollection,
-        [markdownCollection.id]: markdownCollection,
+        [jsonCollection.name]: jsonCollection,
+        [markdownCollection.name]: markdownCollection,
       });
     });
   });
@@ -36,8 +36,8 @@ describe('CollectionsStore', () => {
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [jsonCollection.id]: jsonCollection,
-        [markdownCollection.id]: markdownCollection,
+        [jsonCollection.name]: jsonCollection,
+        [markdownCollection.name]: markdownCollection,
       });
     });
   });
@@ -50,13 +50,13 @@ describe('CollectionsStore', () => {
 
     it('updates the specified collection in the store', () => {
       // Update a collection
-      CollectionsStore.getState().update(jsonCollection.id, {
+      CollectionsStore.getState().update(jsonCollection.name, {
         name: 'New name',
       });
 
       // Get the collection from the store
       const collection =
-        CollectionsStore.getState().collections[jsonCollection.id];
+        CollectionsStore.getState().collections[jsonCollection.name];
 
       // Collection title should be updated
       expect(collection).toEqual({ ...jsonCollection, name: 'New name' });
@@ -83,11 +83,11 @@ describe('CollectionsStore', () => {
 
     it('removes the collection from the store', () => {
       // Remove a collection
-      CollectionsStore.getState().remove(jsonCollection.id);
+      CollectionsStore.getState().remove(jsonCollection.name);
 
       // collection should no longer be in the store
       expect(
-        CollectionsStore.getState().collections[jsonCollection.id],
+        CollectionsStore.getState().collections[jsonCollection.name],
       ).toBeUndefined();
     });
   });

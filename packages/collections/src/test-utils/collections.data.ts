@@ -3,7 +3,6 @@ import { Collection, CollectionType } from '../types';
 export const collectionsPath = 'path/to/collections';
 
 export const jsonCollection: Collection = {
-  id: 'collection-1',
   type: CollectionType.JSON,
   created: new Date(),
   lastModified: new Date(),
@@ -13,7 +12,6 @@ export const jsonCollection: Collection = {
 };
 
 export const markdownCollection: Collection = {
-  id: 'collection-2',
   type: CollectionType.Markdown,
   created: new Date(),
   lastModified: new Date(),
@@ -22,7 +20,6 @@ export const markdownCollection: Collection = {
 };
 
 export const fileCollection: Collection = {
-  id: 'collection-3',
   type: CollectionType.File,
   created: new Date(),
   lastModified: new Date(),
@@ -31,7 +28,6 @@ export const fileCollection: Collection = {
 };
 
 export const weblinkCollection: Collection = {
-  id: 'collection-4',
   type: CollectionType.Weblink,
   created: new Date(),
   lastModified: new Date(),
