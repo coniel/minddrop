@@ -1,6 +1,5 @@
 import { Events } from '@minddrop/events';
 import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
-import { uuid } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { Collection } from '../types';
 

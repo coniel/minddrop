@@ -2,8 +2,8 @@ import { Collection, CollectionType } from '../types';
 
 export const collectionsPath = 'path/to/collections';
 
-export const jsonCollection: Collection = {
-  type: CollectionType.JSON,
+export const itemsCollection: Collection = {
+  type: CollectionType.Items,
   created: new Date(),
   lastModified: new Date(),
   name: 'Books',
@@ -12,7 +12,8 @@ export const jsonCollection: Collection = {
 };
 
 export const markdownCollection: Collection = {
-  type: CollectionType.Markdown,
+  type: CollectionType.Notes,
+
   created: new Date(),
   lastModified: new Date(),
   name: 'Notes',
@@ -20,7 +21,7 @@ export const markdownCollection: Collection = {
 };
 
 export const fileCollection: Collection = {
-  type: CollectionType.File,
+  type: CollectionType.Files,
   created: new Date(),
   lastModified: new Date(),
   name: 'PDFs',
@@ -28,7 +29,7 @@ export const fileCollection: Collection = {
 };
 
 export const weblinkCollection: Collection = {
-  type: CollectionType.Weblink,
+  type: CollectionType.Weblinks,
   created: new Date(),
   lastModified: new Date(),
   name: 'Bookmarks',
@@ -36,7 +37,7 @@ export const weblinkCollection: Collection = {
 };
 
 export const collections = [
-  jsonCollection,
+  itemsCollection,
   markdownCollection,
   fileCollection,
   weblinkCollection,

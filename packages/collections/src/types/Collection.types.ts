@@ -1,10 +1,12 @@
 import { UserIcon } from '@minddrop/icons';
 
 export enum CollectionType {
-  JSON = 'json',
-  Markdown = 'markdown',
-  File = 'file',
-  Weblink = 'weblink',
+  Notes = 'notes',
+  Items = 'items',
+  Files = 'files',
+  Weblinks = 'weblinks',
+  Pages = 'pages',
+  Spaces = 'spaces',
 }
 
 export interface Collection {
