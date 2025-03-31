@@ -29,6 +29,7 @@ export * from './PrimaryNavItem';
 export * from './SecondaryNavItem';
 export * from './Separator';
 export * from './Sidebar';
+export * from './Stack';
 export * from './Tag';
 export * from './Text';
 export * from './TextInput';
