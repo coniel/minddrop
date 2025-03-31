@@ -26,6 +26,7 @@ export * from './NavGroup';
 export * from './DocumentNavItem';
 export * from './Popover';
 export * from './PrimaryNavItem';
+export * from './RadioCard';
 export * from './SecondaryNavItem';
 export * from './Separator';
 export * from './Sidebar';
@@ -40,3 +41,5 @@ export * from './WorkspaceNavItem';
 export * from './constants';
 export * from './types';
 export * from './utils';
+export * from './RadioGroup';
+

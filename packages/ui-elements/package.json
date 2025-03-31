@@ -20,6 +20,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.2",
+    "@radix-ui/react-radio-group": "^1.2.3",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-toolbar": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
@@ -30,13 +31,13 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@testing-library/react": "^16.1.0",
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.3",
     "@types/react-window": "^1.8.8",
     "eslint": "^9.16.0",
-    "@minddrop/eslint-config": "workspace:*",
     "happy-dom": "^9.10.9",
     "jsdom": "^22.0.0",
     "react": "^19.0.0",
