@@ -1,4 +1,4 @@
 ---
-to: packages/ui/src/<%= name %>/index.ts
+to: packages/ui-elements/src/<%= name %>/index.ts
 ---
 export * from './<%= name %>';

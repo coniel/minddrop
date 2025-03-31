@@ -1,5 +1,5 @@
 ---
-to: packages/ui/src/<%= name %>/<%= name %>.test.tsx
+to: packages/ui-elements/src/<%= name %>/<%= name %>.test.tsx
 ---
 import { describe, afterEach, it, expect } from 'vitest';
 import { render, cleanup, screen } from '@minddrop/test-utils';

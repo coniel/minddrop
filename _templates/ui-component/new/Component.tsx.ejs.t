@@ -1,5 +1,5 @@
 ---
-to: packages/ui/src/<%= name %>/<%= name %>.tsx
+to: packages/ui-elements/src/<%= name %>/<%= name %>.tsx
 ---
 import { mapPropsToClasses } from '@minddrop/utils';
 import './<%= name %>.css';

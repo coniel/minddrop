@@ -1,5 +1,5 @@
 ---
-to: packages/ui/src/<%= name %>/<%= name %>.css
+to: packages/ui-elements/src/<%= name %>/<%= name %>.css
 ---
 .<%= h.toKebabCase(name) %> {
     background-color: var(--bgNeutral);
