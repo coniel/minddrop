@@ -2,6 +2,7 @@ import * as Label from '@radix-ui/react-label';
 import { useTranslation } from '@minddrop/i18n';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { Text } from '../Text';
+import { TextSize } from '../types';
 
 export interface FieldLabelProps extends Label.LabelProps {
   /**
@@ -14,12 +15,18 @@ export interface FieldLabelProps extends Label.LabelProps {
    * label text rendering.
    */
   children?: React.ReactNode;
+
+  /**
+   * The size of the text.
+   */
+  size?: TextSize;
 }
 
 export const FieldLabel: React.FC<FieldLabelProps> = ({
   label,
   children,
   className,
+  size = 'small',
   ...other
 }) => {
   const { t } = useTranslation();
@@ -29,7 +36,7 @@ export const FieldLabel: React.FC<FieldLabelProps> = ({
       className={mapPropsToClasses({ className }, 'field-label')}
       {...other}
     >
-      <Text size="small" weight="medium">
+      <Text size={size} weight="medium">
         {label ? t(label) : null}
         {children}
       </Text>
