@@ -1,26 +1,26 @@
 import { create } from 'zustand';
-import { Collection } from '../types';
+import { CollectionConfig } from '../types';
 
 export interface CollectionsStore {
   /**
    * The user's collections as an [id]: Collection map.
    */
-  collections: Record<string, Collection>;
+  collections: Record<string, CollectionConfig>;
 
   /**
    * Load collections into the store.
    */
-  load(collection: Collection[]): void;
+  load(collection: CollectionConfig[]): void;
 
   /**
    * Add a collection to the store.
    */
-  add(collection: Collection): void;
+  add(collection: CollectionConfig): void;
 
   /**
    * Updates a collection in the store by id.
    */
-  update(id: string, data: Partial<Collection>): void;
+  update(id: string, data: Partial<CollectionConfig>): void;
 
   /**
    * Remove a collection from the store by id.

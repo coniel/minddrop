@@ -28,7 +28,7 @@ describe('createCollection', () => {
   it('throws if the path is invalid', () => {
     expect(() =>
       createCollection('foo', {
-        type: CollectionType.JSON,
+        type: CollectionType.Items,
         name: 'Notes',
         itemName: 'Note',
       }),
@@ -38,7 +38,7 @@ describe('createCollection', () => {
   it('throws if the path already exists', () => {
     expect(() =>
       createCollection(BASE_PATH, {
-        type: CollectionType.JSON,
+        type: CollectionType.Items,
         name: 'Notes',
         itemName: 'Note',
       }),
@@ -47,7 +47,7 @@ describe('createCollection', () => {
 
   it('creates the collection directory', async () => {
     await createCollection(BASE_PATH, {
-      type: CollectionType.JSON,
+      type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -57,7 +57,7 @@ describe('createCollection', () => {
 
   it('returns the collection', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.JSON,
+      type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
       description: 'A collection of tasks',
@@ -69,7 +69,7 @@ describe('createCollection', () => {
     });
 
     expect(collection).toEqual({
-      type: CollectionType.JSON,
+      type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
       created: expect.any(Date),
@@ -85,7 +85,7 @@ describe('createCollection', () => {
 
   it('creates the collection metadata file', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.JSON,
+      type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -104,32 +104,34 @@ describe('createCollection', () => {
 
   it('adds the collection to the store', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.JSON,
+      type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
     });
 
-    expect(CollectionsStore.getState().collections[collection.name]).toEqual(
-      collection,
-    );
+    expect(CollectionsStore.getState().collections[collection.name]).toEqual({
+      ...collection,
+      path: Fs.concatPath(BASE_PATH, 'Tasks'),
+    });
   });
 
   it('dispatches a collections create event', async () =>
     new Promise<void>((done) => {
       Events.addListener('collections:collection:create', 'test', (payload) => {
-        // Payload data should be the collection
+        // Payload data should be the collection config
         expect(payload.data).toEqual({
-          type: CollectionType.JSON,
+          type: CollectionType.Items,
           name: 'Tasks',
           itemName: 'Task',
           created: expect.any(Date),
           lastModified: expect.any(Date),
+          path: Fs.concatPath(BASE_PATH, 'Tasks'),
         });
         done();
       });
 
       createCollection(BASE_PATH, {
-        type: CollectionType.JSON,
+        type: CollectionType.Items,
         name: 'Tasks',
         itemName: 'Task',
       });

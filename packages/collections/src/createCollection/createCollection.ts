@@ -55,10 +55,10 @@ export async function createCollection(
   );
 
   // Add the collection to the store
-  CollectionsStore.getState().add(collection);
+  CollectionsStore.getState().add({ ...collection, path });
 
   // Dispatch a collection create event
-  Events.dispatch('collections:collection:create', collection);
+  Events.dispatch('collections:collection:create', { ...collection, path });
 
   return collection;
 }

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  collections,
-  itemsCollection,
-  markdownCollection,
+  collectionConfigs,
+  itemsCollectionConfig,
+  markdownCollectionConfig,
 } from '../test-utils';
 import { CollectionsStore } from './CollectionsStore';
 
 function loadCollections() {
-  CollectionsStore.getState().load(collections);
+  CollectionsStore.getState().load(collectionConfigs);
 }
 
 describe('CollectionsStore', () => {
@@ -18,14 +18,14 @@ describe('CollectionsStore', () => {
   describe('load', () => {
     it('loads collections into the store, preserving existing ones', () => {
       // Load a collection into the store
-      CollectionsStore.getState().load([itemsCollection]);
+      CollectionsStore.getState().load([itemsCollectionConfig]);
       // Load a second collection into the store
-      CollectionsStore.getState().load([markdownCollection]);
+      CollectionsStore.getState().load([markdownCollectionConfig]);
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [itemsCollection.name]: itemsCollection,
-        [markdownCollection.name]: markdownCollection,
+        [itemsCollectionConfig.name]: itemsCollectionConfig,
+        [markdownCollectionConfig.name]: markdownCollectionConfig,
       });
     });
   });
@@ -33,15 +33,15 @@ describe('CollectionsStore', () => {
   describe('add', () => {
     it('adds a collection to the store', () => {
       // Load a collection into the store
-      CollectionsStore.getState().load([itemsCollection]);
+      CollectionsStore.getState().load([itemsCollectionConfig]);
 
       // Add a second collection to the store
-      CollectionsStore.getState().add(markdownCollection);
+      CollectionsStore.getState().add(markdownCollectionConfig);
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [itemsCollection.name]: itemsCollection,
-        [markdownCollection.name]: markdownCollection,
+        [itemsCollectionConfig.name]: itemsCollectionConfig,
+        [markdownCollectionConfig.name]: markdownCollectionConfig,
       });
     });
   });
@@ -54,16 +54,19 @@ describe('CollectionsStore', () => {
 
     it('updates the specified collection in the store', () => {
       // Update a collection
-      CollectionsStore.getState().update(itemsCollection.name, {
+      CollectionsStore.getState().update(itemsCollectionConfig.name, {
         name: 'New name',
       });
 
       // Get the collection from the store
       const collection =
-        CollectionsStore.getState().collections[itemsCollection.name];
+        CollectionsStore.getState().collections[itemsCollectionConfig.name];
 
       // Collection title should be updated
-      expect(collection).toEqual({ ...itemsCollection, name: 'New name' });
+      expect(collection).toEqual({
+        ...itemsCollectionConfig,
+        name: 'New name',
+      });
     });
 
     it('does nothing if the collection does not exist', () => {
@@ -87,11 +90,11 @@ describe('CollectionsStore', () => {
 
     it('removes the collection from the store', () => {
       // Remove a collection
-      CollectionsStore.getState().remove(itemsCollection.name);
+      CollectionsStore.getState().remove(itemsCollectionConfig.name);
 
       // collection should no longer be in the store
       expect(
-        CollectionsStore.getState().collections[itemsCollection.name],
+        CollectionsStore.getState().collections[itemsCollectionConfig.name],
       ).toBeUndefined();
     });
   });

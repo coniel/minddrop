@@ -1,6 +1,7 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { CollectionsConfigDir, CollectionsConfigFileName } from '../constants';
 import { Collection, CollectionType, CollectionsConfig } from '../types';
+import { CollectionConfig } from '../types/CollectionConfig.types';
 
 export const collectionsPath = 'path/to/collections';
 
@@ -43,11 +44,35 @@ export const markdownCollectionPath = `${collectionsPath}/${markdownCollection.n
 export const fileCollectionPath = `${collectionsPath}/${fileCollection.name}`;
 export const weblinkCollectionPath = `${collectionsPath}/${weblinkCollection.name}`;
 
+export const itemsCollectionConfig: CollectionConfig = {
+  ...itemsCollection,
+  path: itemsCollectionPath,
+};
+export const markdownCollectionConfig: CollectionConfig = {
+  ...markdownCollection,
+  path: markdownCollectionPath,
+};
+export const fileCollectionConfig: CollectionConfig = {
+  ...fileCollection,
+  path: fileCollectionPath,
+};
+export const weblinkCollectionConfig: CollectionConfig = {
+  ...weblinkCollection,
+  path: weblinkCollectionPath,
+};
+
 export const collections = [
   itemsCollection,
   markdownCollection,
   fileCollection,
   weblinkCollection,
+];
+
+export const collectionConfigs = [
+  itemsCollectionConfig,
+  markdownCollectionConfig,
+  fileCollectionConfig,
+  weblinkCollectionConfig,
 ];
 
 export const collectionFiles = collections.map((collection) => ({

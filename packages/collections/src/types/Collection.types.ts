@@ -1,18 +1,10 @@
 import { UserIcon } from '@minddrop/icons';
-
-export enum CollectionType {
-  Notes = 'notes',
-  Items = 'items',
-  Files = 'files',
-  Weblinks = 'weblinks',
-  Pages = 'pages',
-  Spaces = 'spaces',
-}
+import { CollectionType } from './CollectionType.types';
 
 export interface Collection {
   /**
    * The name of the collection, e.g. "Notes".
-   * Must be unique.
+   * Used as the collection directory name. Must be unique.
    */
   name: string;
 
