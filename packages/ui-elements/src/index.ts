@@ -12,6 +12,7 @@ export * from './Dialog';
 export * from './DropdownMenu';
 export * from './EmojiPicker';
 export * from './FieldLabel';
+export * from './Group';
 export * from './HelperText';
 export * from './Icon';
 export * from './IconButton';
