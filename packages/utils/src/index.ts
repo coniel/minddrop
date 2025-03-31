@@ -19,4 +19,5 @@ export * from './types';
 export * from './useDragImage';
 export * from './useToggle';
 export * from './useCreateCallback';
+export * from './useInputValue';
 export { v4 as uuid } from 'uuid';
