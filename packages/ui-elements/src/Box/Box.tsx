@@ -1,7 +1,7 @@
 import { mapPropsToClasses } from '@minddrop/utils';
-import './Box.css';
 import { StyleProps } from '../types';
 import { extractStyleProps } from '../utils';
+import './Box.css';
 
 export interface BoxProps extends StyleProps {
   /**
