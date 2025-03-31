@@ -1,11 +1,15 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { CollectionsConfigDir, CollectionsConfigFileName } from '../constants';
-import { Collection, CollectionType, CollectionsConfig } from '../types';
-import { CollectionConfig } from '../types/CollectionConfig.types';
+import {
+  Collection,
+  CollectionConfig,
+  CollectionType,
+  CollectionsConfig,
+} from '../types';
 
 export const collectionsPath = 'path/to/collections';
 
-export const itemsCollection: Collection = {
+export const itemsCollectionConfig: CollectionConfig = {
   type: CollectionType.Items,
   created: new Date(),
   lastModified: new Date(),
@@ -14,7 +18,7 @@ export const itemsCollection: Collection = {
   description: 'A collection of books',
 };
 
-export const markdownCollection: Collection = {
+export const markdownCollectionConfig: CollectionConfig = {
   type: CollectionType.Notes,
 
   created: new Date(),
@@ -23,7 +27,7 @@ export const markdownCollection: Collection = {
   itemName: 'Note',
 };
 
-export const fileCollection: Collection = {
+export const fileCollectionConfig: CollectionConfig = {
   type: CollectionType.Files,
   created: new Date(),
   lastModified: new Date(),
@@ -31,7 +35,7 @@ export const fileCollection: Collection = {
   itemName: 'PDF',
 };
 
-export const weblinkCollection: Collection = {
+export const weblinkCollectionConfig: CollectionConfig = {
   type: CollectionType.Weblinks,
   created: new Date(),
   lastModified: new Date(),
@@ -39,25 +43,25 @@ export const weblinkCollection: Collection = {
   itemName: 'Bookmark',
 };
 
-export const itemsCollectionPath = `${collectionsPath}/${itemsCollection.name}`;
-export const markdownCollectionPath = `${collectionsPath}/${markdownCollection.name}`;
-export const fileCollectionPath = `${collectionsPath}/${fileCollection.name}`;
-export const weblinkCollectionPath = `${collectionsPath}/${weblinkCollection.name}`;
+export const itemsCollectionPath = `${collectionsPath}/${itemsCollectionConfig.name}`;
+export const markdownCollectionPath = `${collectionsPath}/${markdownCollectionConfig.name}`;
+export const fileCollectionPath = `${collectionsPath}/${fileCollectionConfig.name}`;
+export const weblinkCollectionPath = `${collectionsPath}/${weblinkCollectionConfig.name}`;
 
-export const itemsCollectionConfig: CollectionConfig = {
-  ...itemsCollection,
+export const itemsCollection: Collection = {
+  ...itemsCollectionConfig,
   path: itemsCollectionPath,
 };
-export const markdownCollectionConfig: CollectionConfig = {
-  ...markdownCollection,
+export const markdownCollection: Collection = {
+  ...markdownCollectionConfig,
   path: markdownCollectionPath,
 };
-export const fileCollectionConfig: CollectionConfig = {
-  ...fileCollection,
+export const fileCollection: Collection = {
+  ...fileCollectionConfig,
   path: fileCollectionPath,
 };
-export const weblinkCollectionConfig: CollectionConfig = {
-  ...weblinkCollection,
+export const weblinkCollection: Collection = {
+  ...weblinkCollectionConfig,
   path: weblinkCollectionPath,
 };
 

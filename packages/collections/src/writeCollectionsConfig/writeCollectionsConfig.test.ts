@@ -5,7 +5,7 @@ import { getCollectionsConfig } from '../getCollectionsConfig';
 import {
   cleanup,
   collectionsConfig,
-  itemsCollectionConfig,
+  itemsCollection,
   setup,
   workspcesConfigFileDescriptor,
 } from '../test-utils';
@@ -24,7 +24,7 @@ describe('writeCollectionsConfig', () => {
     setup();
 
     // Load collections into the store
-    CollectionsStore.getState().load([itemsCollectionConfig]);
+    CollectionsStore.getState().load([itemsCollection]);
 
     // Reset mock file system
     MockFs.reset();
@@ -40,6 +40,6 @@ describe('writeCollectionsConfig', () => {
     const config = await getCollectionsConfig();
 
     // Should contain collection paths
-    expect(config.paths).toEqual([itemsCollectionConfig.path]);
+    expect(config.paths).toEqual([itemsCollection.path]);
   });
 });
