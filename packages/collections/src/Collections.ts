@@ -7,3 +7,4 @@ export { getCollectionFromPath as getFromPath } from './getCollectionFromPath';
 export { addCollectionFromPath as addFromPath } from './addCollectionFromPath';
 export { collectionExists as exists } from './collectionExists';
 export { getCollection as get } from './getCollection';
+export { updateCollection as update } from './updateCollection';
