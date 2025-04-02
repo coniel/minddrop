@@ -9,6 +9,7 @@ export { getCollectionFromPath as getFromPath } from './getCollectionFromPath';
 export { addCollectionFromPath as addFromPath } from './addCollectionFromPath';
 export { collectionExists as exists } from './collectionExists';
 export { getCollection as get } from './getCollection';
+export { getAllCollections as getAll } from './getAllCollections';
 export { updateCollection as update } from './updateCollection';
 export { initializeCollectionsConfig as initializeConfig } from './initializeCollectionsConfig';
 
