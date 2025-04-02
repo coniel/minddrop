@@ -13,10 +13,10 @@ import {
 import { getCollectionsConfig } from '../getCollectionsConfig';
 import {
   cleanup,
+  collectionsConfigFileDescriptor,
   collectionsPath,
   itemsCollectionConfig,
   setup,
-  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { Collection, CollectionConfig } from '../types';
 import { addCollectionFromPath } from './addCollectionFromPath';
@@ -33,7 +33,7 @@ const newCollection: Collection = {
 
 const MockFs = initializeMockFileSystem([
   // Collections config file
-  workspcesConfigFileDescriptor,
+  collectionsConfigFileDescriptor,
   // Collection to add
   {
     textContent: JSON.stringify(newCollectionConfig),

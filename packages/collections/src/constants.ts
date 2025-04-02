@@ -1,5 +1,6 @@
 import { BaseDirectory } from '@minddrop/file-system';
 import { UserIcon, UserIconContentIcon, UserIconType } from '@minddrop/icons';
+import { CollectionsConfig } from './types';
 
 export const CollectionsConfigDir = BaseDirectory.AppConfig;
 export const CollectionsConfigFileName = 'collections.json';
@@ -17,4 +18,8 @@ export const MissingCollectionIcon: UserIconContentIcon = {
   type: UserIconType.ContentIcon,
   icon: 'alert-circle',
   color: 'red',
+};
+
+export const InitialCollectionsConfig: CollectionsConfig = {
+  paths: [],
 };

@@ -7,15 +7,15 @@ import {
   cleanup,
   collectionFiles,
   collections,
+  collectionsConfigFileDescriptor,
   itemsCollection,
   setup,
-  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { loadCollections } from './loadCollections';
 
 const MockFs = initializeMockFileSystem([
   // Collections config file
-  workspcesConfigFileDescriptor,
+  collectionsConfigFileDescriptor,
   // Collection config files
   ...collectionFiles,
 ]);

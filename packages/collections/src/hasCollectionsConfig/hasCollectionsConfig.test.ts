@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
-import { cleanup, setup, workspcesConfigFileDescriptor } from '../test-utils';
+import { cleanup, collectionsConfigFileDescriptor, setup } from '../test-utils';
 import { hasCollectionsConfig } from './hasCollectionsConfig';
 
 const MockFs = initializeMockFileSystem([
   // Collections config file
-  workspcesConfigFileDescriptor,
+  collectionsConfigFileDescriptor,
 ]);
 
 describe('hasCollectionsConfig', () => {

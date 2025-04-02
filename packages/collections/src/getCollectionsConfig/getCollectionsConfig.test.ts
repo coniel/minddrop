@@ -7,14 +7,14 @@ import { JsonParseError } from '@minddrop/utils';
 import {
   cleanup,
   collectionsConfig,
+  collectionsConfigFileDescriptor,
   setup,
-  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { getCollectionsConfig } from './getCollectionsConfig';
 
 const MockFs = initializeMockFileSystem([
   // Collections cinfig file
-  workspcesConfigFileDescriptor,
+  collectionsConfigFileDescriptor,
 ]);
 
 describe('getCollectionsConfig', () => {
@@ -41,7 +41,7 @@ describe('getCollectionsConfig', () => {
     // Pretend collections config file contains invalid JSON
     MockFs.setFiles([
       {
-        ...workspcesConfigFileDescriptor,
+        ...collectionsConfigFileDescriptor,
         textContent: 'foo',
       },
     ]);

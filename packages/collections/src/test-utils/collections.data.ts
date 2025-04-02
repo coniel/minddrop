@@ -117,7 +117,7 @@ export const collectionsConfig: CollectionsConfig = {
   ],
 };
 
-export const workspcesConfigFileDescriptor: MockFileDescriptor = {
+export const collectionsConfigFileDescriptor: MockFileDescriptor = {
   path: CollectionsConfigFileName,
   textContent: JSON.stringify(collectionsConfig),
   options: { baseDir: CollectionsConfigDir },

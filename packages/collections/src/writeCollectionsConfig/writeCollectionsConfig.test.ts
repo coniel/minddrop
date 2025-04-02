@@ -5,16 +5,16 @@ import { getCollectionsConfig } from '../getCollectionsConfig';
 import {
   cleanup,
   collectionsConfig,
+  collectionsConfigFileDescriptor,
   itemsCollection,
   setup,
-  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { writeCollectionsConfig } from './writeCollectionsConfig';
 
 const MockFs = initializeMockFileSystem([
   // Collections config file
   {
-    ...workspcesConfigFileDescriptor,
+    ...collectionsConfigFileDescriptor,
     textContent: JSON.stringify({ ...collectionsConfig, paths: [] }),
   },
 ]);
