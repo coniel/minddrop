@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
 import { Collection, CollectionConfig } from '../types';
+import { writeCollectionsConfig } from '../writeCollectionsConfig';
 
 export type CreateCollectionOptions = Pick<
   Collection,
@@ -65,6 +66,9 @@ export async function createCollection(
 
   // Dispatch a collection create event
   Events.dispatch('collections:collection:create', { ...collection, path });
+
+  // Persist the new collection to the collections config file
+  writeCollectionsConfig();
 
   return collection;
 }

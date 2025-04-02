@@ -8,13 +8,18 @@ import {
 } from '@minddrop/file-system';
 import { UserIconType } from '@minddrop/icons';
 import { CollectionsStore } from '../CollectionsStore';
-import { cleanup, setup } from '../test-utils';
+import { getCollectionsConfig } from '../getCollectionsConfig';
+import { cleanup, collectionsConfigFileDescriptor, setup } from '../test-utils';
 import { CollectionType } from '../types';
 import { createCollection } from './createCollection';
 
 const BASE_PATH = 'path/to/collections';
 
-const MockFs = initializeMockFileSystem([BASE_PATH, `${BASE_PATH}/Notes`]);
+const MockFs = initializeMockFileSystem([
+  collectionsConfigFileDescriptor,
+  BASE_PATH,
+  `${BASE_PATH}/Notes`,
+]);
 
 describe('createCollection', () => {
   beforeEach(setup);
@@ -114,6 +119,20 @@ describe('createCollection', () => {
       ...collection,
       path: Fs.concatPath(BASE_PATH, 'Tasks'),
     });
+  });
+
+  it('persists collection to collections config file', async () => {
+    const collection = await createCollection(BASE_PATH, {
+      type: CollectionType.Items,
+      name: 'Tasks',
+      itemName: 'Task',
+    });
+
+    // Get the collections config
+    const config = await getCollectionsConfig();
+
+    // It should persist the new collection
+    expect(config.paths.includes(collection.path)).toBe(true);
   });
 
   it('dispatches a collections create event', async () =>
