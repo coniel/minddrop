@@ -4,6 +4,7 @@ export * from './Box';
 export * from './Breadcrumbs';
 export * from './Button';
 export * from './Collapsible';
+export * from './CollectionNavItem';
 export * from './ContentIcon';
 export * from './ContentIconPicker';
 export * from './ContentListItem';
@@ -42,4 +43,3 @@ export * from './constants';
 export * from './types';
 export * from './utils';
 export * from './RadioGroup';
-

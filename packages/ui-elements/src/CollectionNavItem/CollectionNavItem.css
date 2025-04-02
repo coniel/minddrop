@@ -1,0 +1,72 @@
+.collection-nav-item > .nav-item {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radiusMd);
+  cursor: pointer;
+  height: 28px;
+  padding: 0 4px 0 2px;
+}
+
+.collection-nav-item > .nav-item:hover,
+.collection-nav-item > .nav-item.hovering {
+  background-color: var(--bgNeutralHover);
+}
+
+.collection-nav-item > .nav-item:active {
+  background-color: var(--bgNeutralActive);
+}
+
+.collection-nav-item > .nav-item:hover .text,
+.collection-nav-item.active .nav-item .text,
+.collection-nav-item > .nav-item.hovering .text {
+  color: var(--textPrimary);
+}
+
+.collection-nav-item > .nav-item .icon-container {
+  height: 22px;
+  width: 22px;
+}
+
+.collection-nav-item > .nav-item .icon {
+  fill: var(--textNeutralLight);
+}
+
+.collection-nav-item.active .nav-item .icon {
+  fill: var(--textNeutral);
+}
+
+.collection-nav-item > .nav-item:hover .icon,
+.collection-nav-item > .nav-item.hovering .icon {
+  fill: var(--textNeutral);
+}
+
+.collection-nav-item .label {
+  padding: 0 4px;
+  flex: 1;
+  line-height: 28px;
+}
+
+.collection-nav-item.missing .nav-item .text {
+  color: var(--textDanger);
+}
+
+.collection-nav-item.missing .nav-item .icon {
+  fill: var(--textDanger);
+}
+
+.collection-nav-item > .nav-item .actions {
+  opacity: 0;
+}
+
+.collection-nav-item > .nav-item:hover .actions,
+.collection-nav-item > .nav-item.hovering .actions {
+  opacity: 1;
+}
+
+.collection-nav-item:hover .icon-button:hover {
+  background: var(--bgNeutralDarkHover);
+}
+
+.collection-nav-item:hover .icon-button:active {
+  background: var(--bgNeutralDarkActive);
+}
