@@ -1,74 +1,94 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import {
-  Fs,
-  InvalidPathError,
-  initializeMockFileSystem,
-} from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
+import { CollectionsConfigDir, CollectionsConfigFileName } from '../constants';
 import {
   cleanup,
   collectionFiles,
   collections,
-  collectionsPath,
+  itemsCollection,
   setup,
+  workspcesConfigFileDescriptor,
 } from '../test-utils';
 import { loadCollections } from './loadCollections';
 
-const MockFs = initializeMockFileSystem(collectionFiles);
+const MockFs = initializeMockFileSystem([
+  // Collections config file
+  workspcesConfigFileDescriptor,
+  // Collection config files
+  ...collectionFiles,
+]);
 
 describe('loadCollections', () => {
-  beforeEach(setup);
+  beforeEach(() => {
+    setup();
+
+    // Reset mock file system
+    MockFs.reset();
+  });
 
   afterEach(cleanup);
 
-  it('throws if the path does not exist', async () => {
-    await expect(loadCollections('non-existent-path')).rejects.toThrowError(
-      InvalidPathError,
-    );
+  it('throws if the collections config could not be read', () => {
+    // Pretend collections file does not exist
+    MockFs.removeFile(CollectionsConfigFileName, {
+      baseDir: CollectionsConfigDir,
+    });
+
+    // Should throw
+    expect(() => loadCollections()).rejects.toThrow();
   });
 
   it('loads collections into the store', async () => {
-    await loadCollections(collectionsPath);
+    // Load the collections
+    await loadCollections();
 
+    // Store should contain the collections
     expect(Object.values(CollectionsStore.getState().collections)).toEqual(
       collections,
     );
   });
 
-  it('ignores directories without a collection file', async () => {
-    MockFs.createDir(Fs.concatPath(collectionsPath, 'Foo'));
+  it('does not load collections already present in the store', async () => {
+    // Add a collection to the store
+    CollectionsStore.getState().add(itemsCollection);
 
-    await loadCollections(collectionsPath);
+    // Load the collections
+    await loadCollections();
 
+    // Store should contain the collections
     expect(Object.values(CollectionsStore.getState().collections)).toEqual(
       collections,
     );
   });
 
-  it('ignores invalid collection files', async () => {
-    MockFs.createDir(Fs.concatPath(collectionsPath, 'Foo'));
-    MockFs.createDir(Fs.concatPath(collectionsPath, 'Foo', '.minddrop'));
-    MockFs.writeTextFile(
-      Fs.concatPath(collectionsPath, 'Foo', '.minddrop', 'collection.json'),
-      'invalid JSON',
-    );
-
-    await loadCollections(collectionsPath);
-
-    expect(Object.values(CollectionsStore.getState().collections)).toEqual(
-      collections,
-    );
-  });
-
-  it('dispatches a collections load event', async () =>
+  it('dispatches a `collections:load` event', async () =>
     new Promise<void>((done) => {
+      // Listen to 'collections:load' events
       Events.addListener('collections:load', 'test', (payload) => {
-        // Payload data should be the loaded collections
+        // Payload data should be the collections
         expect(payload.data).toEqual(collections);
         done();
       });
 
-      loadCollections(collectionsPath);
+      // Load collections
+      loadCollections();
     }));
+
+  it('does not dispatch if no new collections were loaded', async () => {
+    const dispatch = vi.spyOn(Events, 'dispatch');
+
+    // Load collections
+    await loadCollections();
+
+    dispatch.mockClear();
+
+    // Load collections again, nothing new will
+    // be loaded.
+    await loadCollections();
+
+    // Should not dispatch
+    expect(dispatch).not.toHaveBeenCalled();
+  });
 });

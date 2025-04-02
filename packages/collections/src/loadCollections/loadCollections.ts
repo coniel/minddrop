@@ -1,59 +1,58 @@
 import { Events } from '@minddrop/events';
-import { Fs, InvalidPathError } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
+import { getCollectionFromPath } from '../getCollectionFromPath';
+import { getCollectionsConfig } from '../getCollectionsConfig';
 import { Collection } from '../types';
 
 /**
- * Scans the target directory for collections and loads them into the store.
+ * Loads the user's collections into the collections store.
  *
- * @param path - The target directory path.
+ * Dispatches a 'collections:load' event.
  *
- * @dispatches collections:load
+ * @returns The loaded collections.
  *
- * @throws {InvalidPathError} If the path does not exist.
+ * @throws {FileNotFoundError} - Collections config file not found.
+ * @throws {JsonParseError} - Failed to parse collections config file.
  */
-export async function loadCollections(path: string): Promise<void> {
-  // Ensure the path exists
-  if (!(await Fs.exists(path))) {
-    throw new InvalidPathError(path);
+export async function loadCollections(): Promise<Collection[]> {
+  // Get the user's collections config
+  const collectionsConfig = await getCollectionsConfig();
+
+  // If there are no paths, there is nothing to load
+  if (collectionsConfig.paths.length === 0) {
+    return [];
   }
 
-  // Fetch directories from the target path
-  const contents = await Fs.readDir(path);
-  const collections: Collection[] = [];
-
-  // Check each directory for a collection file. If it exists, parse
-  // the collection JSON file and add it to the collections array.
-  await Promise.all(
-    contents.map(async (dir) => {
-      const collectionPath = `${path}/${dir.name}/.minddrop/collection.json`;
-      const isCollection = await Fs.exists(collectionPath);
-
-      if (!isCollection) {
-        return null;
-      }
-
-      const collectionJson = await Fs.readTextFile(collectionPath);
-
-      try {
-        const collection = JSON.parse(collectionJson);
-
-        collections.push({
-          ...collection,
-          created: new Date(collection.created),
-          lastModified: new Date(collection.lastModified),
-        });
-
-        return collection;
-      } catch (err) {
-        return null;
-      }
-    }),
+  // Get collections listed in the config
+  const configCollections: Collection[] = await Promise.all(
+    collectionsConfig.paths.map(getCollectionFromPath),
   );
 
-  // Load collections into the store
-  CollectionsStore.getState().load(collections);
+  // Get the existing collections from the store
+  const existingCollections = Object.values(
+    CollectionsStore.getState().collections,
+  );
 
-  // Dispatch a collections load event
-  Events.dispatch('collections:load', collections);
+  // Filter out the existing collections from the config's
+  // collections. Note: we filter out existing collections only
+  // after fetching all of them because the existing collections
+  // may have changed in the time it takes to complete the
+  // async processes above.
+  const newCollections = configCollections.filter(
+    (collection) =>
+      !existingCollections.find(({ path }) => collection.path === path),
+  );
+
+  // If there are no new collections, there is nothing to load
+  if (newCollections.length === 0) {
+    return [];
+  }
+
+  // Load collection paths into store
+  CollectionsStore.getState().load(newCollections);
+
+  // Dispatch a 'collections:load' event
+  Events.dispatch('collections:load', newCollections);
+
+  return newCollections;
 }
