@@ -41,8 +41,8 @@ export const RadioCard: React.FC<RadioCardProps> = ({
     >
       <Group justify="space-between" wrap="nowrap" bd="subtle" br="lg" p="md">
         <Stack gap="xs" className="label-container">
-          <FieldLabel size="regular">{label}</FieldLabel>
-          <HelperText>{description}</HelperText>
+          <FieldLabel size="regular" label={label} />
+          {description && <HelperText text={description} />}
         </Stack>
         <Box className="indicator-container">
           <RadioGroupIndicator className="indicator" />
