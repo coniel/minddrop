@@ -1,6 +1,7 @@
 export * from './BlockOptionsMenu';
 export * from './BlockRenderer';
 export * from './ContentPicker';
+export * from './CreateCollectionForm';
 export * from './DocumentBreadcrumb';
 export * from './DocumentContentToolbar';
 export * from './DocumentContentToolbarBlockOptions';
