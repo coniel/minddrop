@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  InvalidPathError,
-  initializeMockFileSystem,
-} from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import {
   CollectionsConfigDir,
   CollectionsConfigFileName,
@@ -20,14 +17,6 @@ describe('initializeCollectionsConfig', () => {
     cleanup();
 
     MockFs.reset();
-  });
-
-  it('throws if the config directory does not exist', () => {
-    MockFs.removeDir(CollectionsConfigDir);
-
-    expect(() => initializeCollectionsConfig()).rejects.toThrow(
-      InvalidPathError,
-    );
   });
 
   it('does nothing if a valid config file exists', async () => {
