@@ -18,7 +18,7 @@ export const itemsCollectionConfig: CollectionConfig = {
   description: 'A collection of books',
 };
 
-export const markdownCollectionConfig: CollectionConfig = {
+export const notesCollectionConfig: CollectionConfig = {
   type: CollectionType.Notes,
 
   created: new Date(),
@@ -44,7 +44,7 @@ export const weblinkCollectionConfig: CollectionConfig = {
 };
 
 export const itemsCollectionPath = `${collectionsPath}/${itemsCollectionConfig.name}`;
-export const markdownCollectionPath = `${collectionsPath}/${markdownCollectionConfig.name}`;
+export const notesCollectionPath = `${collectionsPath}/${notesCollectionConfig.name}`;
 export const fileCollectionPath = `${collectionsPath}/${fileCollectionConfig.name}`;
 export const weblinkCollectionPath = `${collectionsPath}/${weblinkCollectionConfig.name}`;
 
@@ -52,9 +52,9 @@ export const itemsCollection: Collection = {
   ...itemsCollectionConfig,
   path: itemsCollectionPath,
 };
-export const markdownCollection: Collection = {
-  ...markdownCollectionConfig,
-  path: markdownCollectionPath,
+export const notesCollection: Collection = {
+  ...notesCollectionConfig,
+  path: notesCollectionPath,
 };
 export const fileCollection: Collection = {
   ...fileCollectionConfig,
@@ -65,29 +65,53 @@ export const weblinkCollection: Collection = {
   path: weblinkCollectionPath,
 };
 
+export const itemsCollectionConfigPath = `${itemsCollectionPath}/.minddrop/collection.json`;
+export const notesCollectionConfigPath = `${notesCollectionPath}/.minddrop/collection.json`;
+export const fileCollectionConfigPath = `${fileCollectionPath}/.minddrop/collection.json`;
+export const weblinkCollectionConfigPath = `${weblinkCollectionPath}/.minddrop/collection.json`;
+
+export const itemsCollectionFileDescriptor: MockFileDescriptor = {
+  path: itemsCollectionConfigPath,
+  textContent: JSON.stringify(itemsCollectionConfig),
+};
+export const notesCollectionFileDescriptor: MockFileDescriptor = {
+  path: notesCollectionConfigPath,
+  textContent: JSON.stringify(notesCollectionConfig),
+};
+export const fileCollectionFileDescriptor: MockFileDescriptor = {
+  path: fileCollectionConfigPath,
+  textContent: JSON.stringify(fileCollectionConfig),
+};
+export const weblinkCollectionFileDescriptor: MockFileDescriptor = {
+  path: weblinkCollectionConfigPath,
+  textContent: JSON.stringify(weblinkCollectionConfig),
+};
+
 export const collections = [
   itemsCollection,
-  markdownCollection,
+  notesCollection,
   fileCollection,
   weblinkCollection,
 ];
 
 export const collectionConfigs = [
   itemsCollectionConfig,
-  markdownCollectionConfig,
+  notesCollectionConfig,
   fileCollectionConfig,
   weblinkCollectionConfig,
 ];
 
-export const collectionFiles = collections.map((collection) => ({
-  path: `${collectionsPath}/${collection.name}/.minddrop/collection.json`,
-  textContent: JSON.stringify(collection),
-}));
+export const collectionFiles = [
+  itemsCollectionFileDescriptor,
+  notesCollectionFileDescriptor,
+  fileCollectionFileDescriptor,
+  weblinkCollectionFileDescriptor,
+];
 
 export const collectionsConfig: CollectionsConfig = {
   paths: [
     itemsCollectionPath,
-    markdownCollectionPath,
+    notesCollectionPath,
     fileCollectionPath,
     weblinkCollectionPath,
   ],

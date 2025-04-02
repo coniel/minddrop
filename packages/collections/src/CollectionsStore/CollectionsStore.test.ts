@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import {
-  collections,
-  itemsCollection,
-  markdownCollection,
-} from '../test-utils';
+import { collections, itemsCollection, notesCollection } from '../test-utils';
 import { CollectionsStore } from './CollectionsStore';
 
 function loadCollections() {
@@ -20,12 +16,12 @@ describe('CollectionsStore', () => {
       // Load a collection into the store
       CollectionsStore.getState().load([itemsCollection]);
       // Load a second collection into the store
-      CollectionsStore.getState().load([markdownCollection]);
+      CollectionsStore.getState().load([notesCollection]);
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
         [itemsCollection.name]: itemsCollection,
-        [markdownCollection.name]: markdownCollection,
+        [notesCollection.name]: notesCollection,
       });
     });
   });
@@ -36,12 +32,12 @@ describe('CollectionsStore', () => {
       CollectionsStore.getState().load([itemsCollection]);
 
       // Add a second collection to the store
-      CollectionsStore.getState().add(markdownCollection);
+      CollectionsStore.getState().add(notesCollection);
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
         [itemsCollection.name]: itemsCollection,
-        [markdownCollection.name]: markdownCollection,
+        [notesCollection.name]: notesCollection,
       });
     });
   });
