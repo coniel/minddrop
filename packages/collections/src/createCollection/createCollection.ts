@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs, InvalidPathError, PathConflictError } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
-import { Collection } from '../types';
+import { Collection, CollectionConfig } from '../types';
 
 export type CreateCollectionOptions = Pick<
   Collection,
@@ -32,15 +32,21 @@ export async function createCollection(
     throw new InvalidPathError(basePath);
   }
 
-  // Ensuse that the new collection path does not already exist
+  // Ensure that the new collection path does not already exist
   if (await Fs.exists(path)) {
     throw new PathConflictError(path);
   }
 
-  const collection: Collection = {
+  // Generate the collection config
+  const config: CollectionConfig = {
     ...options,
     created: new Date(),
     lastModified: new Date(),
+  };
+  // Generate the collection object
+  const collection: Collection = {
+    ...config,
+    path,
   };
 
   // Create the new collection directory
@@ -51,7 +57,7 @@ export async function createCollection(
   await Fs.createDir(Fs.concatPath(path, '.minddrop'));
   await Fs.writeTextFile(
     Fs.concatPath(path, '.minddrop', 'collection.json'),
-    JSON.stringify(collection),
+    JSON.stringify(config),
   );
 
   // Add the collection to the store

@@ -70,6 +70,7 @@ describe('createCollection', () => {
 
     expect(collection).toEqual({
       type: CollectionType.Items,
+      path: Fs.concatPath(BASE_PATH, 'Tasks'),
       name: 'Tasks',
       itemName: 'Task',
       created: expect.any(Date),
@@ -84,7 +85,7 @@ describe('createCollection', () => {
   });
 
   it('creates the collection metadata file', async () => {
-    const collection = await createCollection(BASE_PATH, {
+    const { path, ...config } = await createCollection(BASE_PATH, {
       type: CollectionType.Items,
       name: 'Tasks',
       itemName: 'Task',
@@ -99,7 +100,7 @@ describe('createCollection', () => {
       await Fs.readTextFile(
         Fs.concatPath(BASE_PATH, 'Tasks', '.minddrop', 'collection.json'),
       ),
-    ).toEqual(JSON.stringify(collection));
+    ).toEqual(JSON.stringify(config));
   });
 
   it('adds the collection to the store', async () => {
