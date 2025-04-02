@@ -10,6 +10,7 @@ export { addCollectionFromPath as addFromPath } from './addCollectionFromPath';
 export { collectionExists as exists } from './collectionExists';
 export { getCollection as get } from './getCollection';
 export { updateCollection as update } from './updateCollection';
+export { initializeCollectionsConfig as initializeConfig } from './initializeCollectionsConfig';
 
 /**
  * Clears the collections store.
