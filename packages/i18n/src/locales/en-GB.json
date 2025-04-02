@@ -8,6 +8,10 @@
     "cancel": "Cancel",
     "clear": "Clear"
   },
+  "error": {
+    "unknown": "An unknown error occurred.",
+    "dirPathConflict": "A directory with the same name already exists at this location."
+  },
   "color": {
     "default": "Default",
     "blue": "Blue",
@@ -55,6 +59,58 @@
   },
   "labels": {
     "untitled": "Untitled"
+  },
+  "collections": {
+    "label": "Collections",
+    "name": {
+      "label": "Collection name",
+      "placeholder": "e.g. Books",
+      "helperText": "The name of the collection."
+    },
+    "itemName": {
+      "label": "Item name",
+      "placeholder": "e.g. Book",
+      "helperText": "The name of individual items in the collection."
+    },
+    "actions": {
+      "create": "Create collection"
+    },
+    "location": {
+      "label": "Location",
+      "helperText": "Where would you like to put your new collection?",
+      "selectedHelperText": "Your new collection will be created in:",
+      "browse": "Browse",
+      "error": {
+        "missing": "Please select a location for your collection.",
+        "conflict": "A folder of the same name already exists at that location."
+      }
+    },
+    "type": {
+      "notes": {
+        "label": "Notes",
+        "description": "Write and organize your thoughts, ideas, and documents. Notes are stored as simple Markdown files."
+      },
+      "files": {
+        "label": "Files",
+        "description": "Store and organize any type of file with custom properties for additional context. Use this for documents, research papers, mood boards, or to simply organise your files."
+      },
+      "items": {
+        "label": "Items",
+        "description": "Flexible, property-based items. Ideal for tracking items like books, tasks, contacts, or any structured data you define."
+      },
+      "weblinks": {
+        "label": "Weblinks",
+        "description": "Save and organize links with automatically fetched metadata. Great for saving articles, videos, or any other web content."
+      },
+      "pages": {
+        "label": "Pages",
+        "description": "Create a collection of related pages. Pages can follow a strict template or simply share a common set of properties."
+      },
+      "spaces": {
+        "label": "Spaces",
+        "description": "Create a collection of spaces with a common set of properties. Great for quickly generating template based spaces for things like projects or complex topics."
+      }
+    }
   },
   "workspaces": {
     "label": "Workspaces",
