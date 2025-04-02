@@ -11,6 +11,7 @@ import ImageBlockExtension from '@minddrop/image-block';
 import TextBlockExtension from '@minddrop/text-block';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Workspaces } from '@minddrop/workspaces';
+import { initializeCollections } from './initializeCollections';
 import { initializeSelection } from './initializeSelection';
 import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
@@ -22,7 +23,6 @@ initializeI18n();
  * Initializes the desktop app.
  */
 export async function initializeDesktopApp(): Promise<VoidFunction> {
-  console.log('Initializing desktop app...');
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
@@ -32,6 +32,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   // Initialize workspaces
   await initializeWorkspaces();
+
+  // Load collections
+  await initializeCollections();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
