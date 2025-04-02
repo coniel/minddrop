@@ -110,7 +110,7 @@ describe('createCollection', () => {
       itemName: 'Task',
     });
 
-    expect(CollectionsStore.getState().collections[collection.name]).toEqual({
+    expect(CollectionsStore.getState().collections[collection.path]).toEqual({
       ...collection,
       path: Fs.concatPath(BASE_PATH, 'Tasks'),
     });

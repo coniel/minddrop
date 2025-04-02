@@ -20,8 +20,8 @@ describe('CollectionsStore', () => {
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [itemsCollection.name]: itemsCollection,
-        [notesCollection.name]: notesCollection,
+        [itemsCollection.path]: itemsCollection,
+        [notesCollection.path]: notesCollection,
       });
     });
   });
@@ -36,8 +36,8 @@ describe('CollectionsStore', () => {
 
       // Both collections should be in the store
       expect(CollectionsStore.getState().collections).toEqual({
-        [itemsCollection.name]: itemsCollection,
-        [notesCollection.name]: notesCollection,
+        [itemsCollection.path]: itemsCollection,
+        [notesCollection.path]: notesCollection,
       });
     });
   });
@@ -50,13 +50,13 @@ describe('CollectionsStore', () => {
 
     it('updates the specified collection in the store', () => {
       // Update a collection
-      CollectionsStore.getState().update(itemsCollection.name, {
+      CollectionsStore.getState().update(itemsCollection.path, {
         name: 'New name',
       });
 
       // Get the collection from the store
       const collection =
-        CollectionsStore.getState().collections[itemsCollection.name];
+        CollectionsStore.getState().collections[itemsCollection.path];
 
       // Collection title should be updated
       expect(collection).toEqual({
@@ -86,11 +86,11 @@ describe('CollectionsStore', () => {
 
     it('removes the collection from the store', () => {
       // Remove a collection
-      CollectionsStore.getState().remove(itemsCollection.name);
+      CollectionsStore.getState().remove(itemsCollection.path);
 
       // collection should no longer be in the store
       expect(
-        CollectionsStore.getState().collections[itemsCollection.name],
+        CollectionsStore.getState().collections[itemsCollection.path],
       ).toBeUndefined();
     });
   });

@@ -69,7 +69,7 @@ describe('addCollection', () => {
     await addCollectionFromPath(newCollection.path);
 
     // It should add the collection to the store
-    expect(CollectionsStore.getState().collections[newCollection.name]).toEqual(
+    expect(CollectionsStore.getState().collections[newCollection.path]).toEqual(
       newCollection,
     );
   });
