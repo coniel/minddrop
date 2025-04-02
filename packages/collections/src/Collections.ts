@@ -1,3 +1,5 @@
+import { CollectionsStore } from './CollectionsStore';
+
 export { createCollection as create } from './createCollection';
 export { loadCollections as load } from './loadCollections';
 export { hasCollectionsConfig as hasConfig } from './hasCollectionsConfig';
@@ -8,3 +10,12 @@ export { addCollectionFromPath as addFromPath } from './addCollectionFromPath';
 export { collectionExists as exists } from './collectionExists';
 export { getCollection as get } from './getCollection';
 export { updateCollection as update } from './updateCollection';
+
+/**
+ * Clears the collections store.
+ *
+ * **Note:** This is only intended for use in tests.
+ */
+export function _clear() {
+  CollectionsStore.getState().clear();
+}
