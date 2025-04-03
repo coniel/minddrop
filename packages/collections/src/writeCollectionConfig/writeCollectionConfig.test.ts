@@ -4,12 +4,12 @@ import {
   InvalidPathError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import {
   CollectionConfigDirName,
   CollectionConfigFileName,
 } from '../constants';
+import { CollectionNotFoundError } from '../errors';
 import {
   cleanup,
   itemsCollection,
@@ -48,10 +48,9 @@ describe('writeCollectionConfig', () => {
 
   it('throws if the collection does not exist', () => {
     // Attempt to write the config file of a missing collection.
-    // Should throw a InvalidParameterError.
     expect(() =>
       writeCollectionConfig('missing-collection'),
-    ).rejects.toThrowError(InvalidParameterError);
+    ).rejects.toThrowError(CollectionNotFoundError);
   });
 
   it('throws if the collection dir does not exist', () => {

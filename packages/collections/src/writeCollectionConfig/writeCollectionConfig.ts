@@ -1,9 +1,9 @@
 import { Fs, InvalidPathError } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
 import {
   CollectionConfigDirName,
   CollectionConfigFileName,
 } from '../constants';
+import { CollectionNotFoundError } from '../errors';
 import { getCollection } from '../getCollection';
 
 /**
@@ -21,7 +21,7 @@ export async function writeCollectionConfig(path: string): Promise<void> {
 
   // Ensure collection exists
   if (!collection) {
-    throw new InvalidParameterError(`Collection does not exist: ${path}`);
+    throw new CollectionNotFoundError(path);
   }
 
   // Ensure collection dir exists
