@@ -73,7 +73,45 @@
       "helperText": "The name of individual items in the collection."
     },
     "actions": {
-      "create": "Create collection"
+      "create": "Create collection",
+      "changeIcon": "Change icon",
+      "revealInFileExplorer": {
+        "macos": "Reveal in Finder",
+        "windows": "Show in File Explorer",
+        "linux": "Show in File Explorer"
+      },
+      "move": {
+        "action": "Move folder",
+        "tooltip": {
+          "title": "Move collection folder",
+          "description": "Move the collection folder to a different location on your computer."
+        }
+      },
+      "remove": {
+        "action": "Remove",
+        "tooltip": {
+          "title": "Remove from collections",
+          "description": "Remove from your collections but preserve the folder on your computer."
+        }
+      },
+      "delete": {
+        "action": "Delete",
+        "tooltip": {
+          "title": "Delete collection folder",
+          "description": "Delete the collection folder and all of its contents."
+        }
+      },
+      "rename": {
+        "action": "Rename",
+        "form": {
+          "name": {
+            "placeholder": "Collection name",
+            "error": {
+              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
+            }
+          }
+        }
+      }
     },
     "location": {
       "label": "Location",

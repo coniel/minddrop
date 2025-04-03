@@ -3,6 +3,7 @@ export * from './clearWorkspaceIcon';
 export * from './createDocument';
 export * from './createSubdocument';
 export * from './moveDocument';
+export * from './promptMoveCollection';
 export * from './promptMoveWorkspace';
 export * from './revealInFileExplorer';
 export * from './selectFolderAsWorkspace';
