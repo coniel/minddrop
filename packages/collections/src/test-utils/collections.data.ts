@@ -1,13 +1,28 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
-import { CollectionsConfigDir, CollectionsConfigFileName } from '../constants';
+import {
+  CollectionConfigDirName,
+  CollectionConfigFileName,
+  CollectionsConfigDir,
+  CollectionsConfigFileName,
+} from '../constants';
 import {
   Collection,
+  CollectionCheckboxPropertySchema,
   CollectionConfig,
+  CollectionCreatedPropertySchema,
+  CollectionDatePropertySchema,
+  CollectionLastModifiedPropertySchema,
+  CollectionMarkdownPropertySchema,
+  CollectionMultiSelectPropertySchema,
+  CollectionNumberPropertySchema,
+  CollectionPropertyType,
+  CollectionSelectPropertySchema,
+  CollectionTextPropertySchema,
   CollectionType,
   CollectionsConfig,
 } from '../types';
 
-export const collectionsPath = 'path/to/collections';
+export const collectionsPath = 'collections';
 
 export const itemsCollectionConfig: CollectionConfig = {
   type: CollectionType.Items,
@@ -69,10 +84,10 @@ export const weblinkCollection: Collection = {
   path: weblinkCollectionPath,
 };
 
-export const itemsCollectionConfigPath = `${itemsCollectionPath}/.minddrop/collection.json`;
-export const notesCollectionConfigPath = `${notesCollectionPath}/.minddrop/collection.json`;
-export const fileCollectionConfigPath = `${fileCollectionPath}/.minddrop/collection.json`;
-export const weblinkCollectionConfigPath = `${weblinkCollectionPath}/.minddrop/collection.json`;
+export const itemsCollectionConfigPath = `${itemsCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
+export const notesCollectionConfigPath = `${notesCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
+export const fileCollectionConfigPath = `${fileCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
+export const weblinkCollectionConfigPath = `${weblinkCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
 
 export const itemsCollectionFileDescriptor: MockFileDescriptor = {
   path: itemsCollectionConfigPath,
@@ -125,4 +140,65 @@ export const collectionsConfigFileDescriptor: MockFileDescriptor = {
   path: CollectionsConfigFileName,
   textContent: JSON.stringify(collectionsConfig),
   options: { baseDir: CollectionsConfigDir },
+};
+
+/*********************************************************/
+/***************** Collection Properties *****************/
+/*********************************************************/
+
+export const createdPropertySchema: CollectionCreatedPropertySchema = {
+  type: CollectionPropertyType.Created,
+};
+
+export const lastModifiedPropertySchema: CollectionLastModifiedPropertySchema =
+  {
+    type: CollectionPropertyType.LastModified,
+  };
+
+export const markdownPropertySchema: CollectionMarkdownPropertySchema = {
+  type: CollectionPropertyType.Markdown,
+};
+
+export const textPropertyScehma: CollectionTextPropertySchema = {
+  type: CollectionPropertyType.Text,
+};
+
+export const numberPropertySchema: CollectionNumberPropertySchema = {
+  type: CollectionPropertyType.Number,
+};
+
+export const datePropertySchema: CollectionDatePropertySchema = {
+  type: CollectionPropertyType.Date,
+};
+
+export const checkboxPropertySchema: CollectionCheckboxPropertySchema = {
+  type: CollectionPropertyType.Checkbox,
+};
+
+export const selectPropertySchema: CollectionSelectPropertySchema = {
+  type: CollectionPropertyType.Select,
+  options: [
+    {
+      value: 'Option 1',
+      color: 'blue',
+    },
+    {
+      value: 'Option 2',
+      color: 'red',
+    },
+  ],
+};
+
+export const multiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
+  type: CollectionPropertyType.MultiSelect,
+  options: [
+    {
+      value: 'Option 1',
+      color: 'blue',
+    },
+    {
+      value: 'Option 2',
+      color: 'red',
+    },
+  ],
 };
