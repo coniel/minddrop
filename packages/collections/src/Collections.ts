@@ -15,6 +15,7 @@ export { initializeCollectionsConfig as initializeConfig } from './initializeCol
 export { removeCollection as remove } from './removeCollection';
 export { deleteCollection as delete } from './deleteCollection';
 export { moveCollection as move } from './moveCollection';
+export { renameCollection as rename } from './renameCollection';
 
 /**
  * Clears the collections store.
