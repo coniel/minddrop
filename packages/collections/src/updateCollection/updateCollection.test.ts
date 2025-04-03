@@ -24,7 +24,11 @@ describe('updateCollection', () => {
     CollectionsStore.getState().load([itemsCollection]);
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+
+    MockFs.reset();
+  });
 
   it('throws if the collection does not exist', () => {
     expect(() => updateCollection('nonexistent', {})).rejects.toThrow(
