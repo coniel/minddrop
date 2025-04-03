@@ -1,3 +1,4 @@
+import { CollectionPropertiesSchema } from './CollectionPropertiesSchema.types';
 import { CollectionType } from './CollectionType.types';
 
 export interface CollectionConfig {
@@ -26,6 +27,11 @@ export interface CollectionConfig {
    * Date and time the collection medata was last modified.
    */
   lastModified: Date;
+
+  /**
+   * The collection's property schema.
+   */
+  properties: CollectionPropertiesSchema;
 
   /**
    * Description of the collection.

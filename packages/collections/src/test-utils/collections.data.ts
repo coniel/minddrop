@@ -16,6 +16,7 @@ export const itemsCollectionConfig: CollectionConfig = {
   name: 'Books',
   itemName: 'Book',
   description: 'A collection of books',
+  properties: {},
 };
 
 export const notesCollectionConfig: CollectionConfig = {
@@ -25,6 +26,7 @@ export const notesCollectionConfig: CollectionConfig = {
   lastModified: new Date(),
   name: 'Notes',
   itemName: 'Note',
+  properties: {},
 };
 
 export const fileCollectionConfig: CollectionConfig = {
@@ -33,6 +35,7 @@ export const fileCollectionConfig: CollectionConfig = {
   lastModified: new Date(),
   name: 'PDFs',
   itemName: 'PDF',
+  properties: {},
 };
 
 export const weblinkCollectionConfig: CollectionConfig = {
@@ -41,6 +44,7 @@ export const weblinkCollectionConfig: CollectionConfig = {
   lastModified: new Date(),
   name: 'Bookmarks',
   itemName: 'Bookmark',
+  properties: {},
 };
 
 export const itemsCollectionPath = `${collectionsPath}/${itemsCollectionConfig.name}`;
