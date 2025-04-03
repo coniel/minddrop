@@ -8,8 +8,8 @@ const properties = {
 };
 
 const markdown = `---
-  title: ${properties.title}
-  icon: ${properties.icon}
+title: ${properties.title}
+icon: ${properties.icon}
 ---
 
 # Title`;
