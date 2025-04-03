@@ -13,6 +13,7 @@ export { getAllCollections as getAll } from './getAllCollections';
 export { updateCollection as update } from './updateCollection';
 export { initializeCollectionsConfig as initializeConfig } from './initializeCollectionsConfig';
 export { removeCollection as remove } from './removeCollection';
+export { deleteCollection as delete } from './deleteCollection';
 
 /**
  * Clears the collections store.
