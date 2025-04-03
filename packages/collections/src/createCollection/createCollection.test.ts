@@ -6,12 +6,14 @@ import {
   PathConflictError,
   initializeMockFileSystem,
 } from '@minddrop/file-system';
-import { UserIconType } from '@minddrop/icons';
+import { ICONS_TEST_DATA } from '@minddrop/icons';
 import { CollectionsStore } from '../CollectionsStore';
 import { getCollectionsConfig } from '../getCollectionsConfig';
 import { cleanup, collectionsConfigFileDescriptor, setup } from '../test-utils';
 import { CollectionType } from '../types';
 import { createCollection } from './createCollection';
+
+const { contentIconString } = ICONS_TEST_DATA;
 
 const BASE_PATH = 'path/to/collections';
 
@@ -66,11 +68,7 @@ describe('createCollection', () => {
       name: 'Tasks',
       itemName: 'Task',
       description: 'A collection of tasks',
-      icon: {
-        type: UserIconType.ContentIcon,
-        icon: 'check',
-        color: 'blue',
-      },
+      icon: contentIconString,
     });
 
     expect(collection).toEqual({
@@ -81,11 +79,7 @@ describe('createCollection', () => {
       created: expect.any(Date),
       lastModified: expect.any(Date),
       description: 'A collection of tasks',
-      icon: {
-        type: UserIconType.ContentIcon,
-        icon: 'check',
-        color: 'blue',
-      },
+      icon: contentIconString,
     });
   });
 

@@ -1,4 +1,3 @@
-import { UserIcon } from '@minddrop/icons';
 import { CollectionType } from './CollectionType.types';
 
 export interface CollectionConfig {
@@ -34,7 +33,10 @@ export interface CollectionConfig {
   description?: string;
 
   /**
-   * Icon used to represent the collection in the UI.
+   * The collection icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
    */
-  icon?: UserIcon;
+  icon?: string;
 }
