@@ -18,6 +18,7 @@ export { moveCollection as move } from './moveCollection';
 export { renameCollection as rename } from './renameCollection';
 export { addPropertyToCollection as addProperty } from './addPropertyToCollection';
 export { updateCollectionProperty as updateProperty } from './updateCollectionProperty';
+export { deleteCollectionProperty as deleteProperty } from './deleteCollectionProperty';
 
 /**
  * Clears the collections store.
