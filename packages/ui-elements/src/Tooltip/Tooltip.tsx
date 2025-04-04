@@ -33,7 +33,7 @@ export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
   /**
    * The primary content of the tooltip, typically the name of the action.
    */
-  title: React.ReactNode;
+  title?: React.ReactNode;
 
   /**
    * Optional secondary content providing additional details.
@@ -87,9 +87,12 @@ export const Tooltip: FC<TooltipProps> = ({
           sideOffset={5}
           {...other}
         >
-          <Text as="div" color="contrast" size="small" weight="medium">
-            {translatedTitle}
-          </Text>
+          {title && (
+            <Text as="div" color="contrast" size="small" weight="medium">
+              {translatedTitle}
+            </Text>
+          )}
+          {title && description && <div className="spacer" />}
           {description && (
             <Text
               as="div"

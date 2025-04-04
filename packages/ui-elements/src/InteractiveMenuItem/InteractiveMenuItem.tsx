@@ -183,7 +183,7 @@ export const InteractiveMenuItem: FC<
     </Component>
   );
 
-  if (tooltipTitle) {
+  if (tooltipTitle || tooltipDescription) {
     return (
       <Tooltip
         side="right"
