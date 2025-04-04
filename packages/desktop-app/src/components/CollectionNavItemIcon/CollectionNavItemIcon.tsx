@@ -14,13 +14,13 @@ import {
 } from '@minddrop/icons';
 import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
+  IconPicker,
   Popover,
   PopoverAnchor,
   PopoverContent,
   PopoverPortal,
 } from '@minddrop/ui-elements';
 import { useToggle } from '@minddrop/utils';
-import { IconPicker } from '../IconPicker';
 
 export interface CollectionNavItemIconProps
   extends React.HTMLAttributes<HTMLDivElement> {

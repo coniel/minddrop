@@ -4,6 +4,7 @@ import { DefaultDocumentIcon, Document } from '@minddrop/documents';
 import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
+  IconPicker,
   Popover,
   PopoverAnchor,
   PopoverContent,
@@ -16,7 +17,6 @@ import {
   setDocumentContentIconColor,
   setDocumentEmoji,
 } from '../../api';
-import { IconPicker } from '../IconPicker';
 
 export interface DocumentNavItemIconProps
   extends React.HTMLProps<HTMLDivElement> {

@@ -3,6 +3,7 @@ import { ContentColor } from '@minddrop/core';
 import { ContentIconName, EmojiSkinTone, useIcon } from '@minddrop/icons';
 import { NavItemIcon } from '@minddrop/ui-desktop';
 import {
+  IconPicker,
   Popover,
   PopoverAnchor,
   PopoverContent,
@@ -16,7 +17,6 @@ import {
   setWorkspaceContentIconColor,
   setWorkspaceEmoji,
 } from '../../api';
-import { IconPicker } from '../IconPicker';
 
 export interface WorkspaceNavItemIconProps
   extends React.HTMLAttributes<HTMLDivElement> {
