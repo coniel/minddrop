@@ -12,3 +12,4 @@ export * from './DocumentViewRenderer';
 export * from './DocumentViewsRenderer';
 export * from './NavItemIcon';
 export * from './RenameDocumentPopover';
+export * from './ConfirmationDialog';
