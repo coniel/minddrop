@@ -1,5 +1,10 @@
 import { BaseDirectory } from '@minddrop/file-system';
-import { UserIcon, UserIconContentIcon, UserIconType } from '@minddrop/icons';
+import {
+  Icons,
+  UserIcon,
+  UserIconContentIcon,
+  UserIconType,
+} from '@minddrop/icons';
 import {
   CollectionCheckboxPropertySchema,
   CollectionCreatedPropertySchema,
@@ -38,42 +43,96 @@ export const InitialCollectionsConfig: CollectionsConfig = {
 };
 
 export const CreatedPropertySchema: CollectionCreatedPropertySchema = {
+  name: 'Created',
   type: CollectionPropertyType.Created,
+  icon: Icons.stringify({
+    icon: 'calendar-clock',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
 };
 
 export const LastModifiedPropertySchema: CollectionLastModifiedPropertySchema =
   {
+    name: 'Last Modified',
     type: CollectionPropertyType.Modified,
+    icon: Icons.stringify({
+      icon: 'calendar-clock',
+      color: 'default',
+      type: UserIconType.ContentIcon,
+    }),
   };
 
 export const MarkdownPropertySchema: CollectionMarkdownPropertySchema = {
+  name: 'Markdown',
   type: CollectionPropertyType.Markdown,
+  icon: Icons.stringify({
+    icon: 'align-left',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
 };
 
 export const TextPropertySchema: CollectionTextPropertySchema = {
+  name: 'Text',
   type: CollectionPropertyType.Text,
+  icon: Icons.stringify({
+    icon: 'type',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
 };
 
 export const NumberPropertySchema: CollectionNumberPropertySchema = {
+  name: 'Number',
   type: CollectionPropertyType.Number,
+  icon: Icons.stringify({
+    icon: 'hash',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
 };
 
 export const DatePropertySchema: CollectionDatePropertySchema = {
+  name: 'Date',
   type: CollectionPropertyType.Date,
+  icon: Icons.stringify({
+    icon: 'calendar',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
 };
 
 export const CheckboxPropertySchema: CollectionCheckboxPropertySchema = {
+  name: 'Checkbox',
   type: CollectionPropertyType.Checkbox,
+  icon: Icons.stringify({
+    icon: 'check-square',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
   defaultChecked: false,
 };
 
 export const SelectPropertySchema: CollectionSelectPropertySchema = {
+  name: 'Select',
   type: CollectionPropertyType.Select,
+  icon: Icons.stringify({
+    icon: 'chevron-down-circle',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
   options: [],
 };
 
 export const MultiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
+  name: 'Multi Select',
   type: CollectionPropertyType.MultiSelect,
+  icon: Icons.stringify({
+    icon: 'list',
+    color: 'default',
+    type: UserIconType.ContentIcon,
+  }),
   options: [],
 };
 

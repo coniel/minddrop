@@ -45,7 +45,10 @@ export async function addPropertyToCollection(
   await updateCollection(path, {
     properties: {
       ...collection.properties,
-      [key]: CollectionPropertySchemas[type],
+      [key]: {
+        ...CollectionPropertySchemas[type],
+        name: key,
+      },
     },
   });
 }

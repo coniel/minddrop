@@ -12,31 +12,59 @@ export enum CollectionPropertyType {
   MultiSelect = 'multiselect',
 }
 
-export interface CollectionCreatedPropertySchema {
+interface CollectionPropertySchemaBase {
+  /**
+   * The property name. Also used as the key in the collection
+   * properties object.
+   */
+  name: string;
+
+  /**
+   * The property icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
+   */
+  icon?: string;
+
+  /**
+   * Description of the property.
+   */
+  description?: string;
+}
+
+export interface CollectionCreatedPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Created;
 }
 
-export interface CollectionLastModifiedPropertySchema {
+export interface CollectionLastModifiedPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Modified;
 }
 
-export interface CollectionMarkdownPropertySchema {
+export interface CollectionMarkdownPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Markdown;
 }
 
-export interface CollectionTextPropertySchema {
+export interface CollectionTextPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Text;
 }
 
-export interface CollectionNumberPropertySchema {
+export interface CollectionNumberPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Number;
 }
 
-export interface CollectionDatePropertySchema {
+export interface CollectionDatePropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Date;
 }
 
-export interface CollectionCheckboxPropertySchema {
+export interface CollectionCheckboxPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Checkbox;
 
   /**
@@ -46,17 +74,20 @@ export interface CollectionCheckboxPropertySchema {
   defaultChecked: boolean;
 }
 
-export interface CollectionSelectPropertySchema {
+export interface CollectionSelectPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Select;
   options: CollectionSelectPropertyOption[];
 }
 
-export interface CollectionMultiSelectPropertySchema {
+export interface CollectionMultiSelectPropertySchema
+  extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.MultiSelect;
   options: CollectionSelectPropertyOption[];
 }
 
-export interface CollectionSelectPropertyOption {
+export interface CollectionSelectPropertyOption
+  extends CollectionPropertySchemaBase {
   value: string;
   color: ContentColor;
 }

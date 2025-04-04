@@ -42,7 +42,10 @@ describe('addPropertyToCollection', () => {
     );
 
     expect(getCollection(itemsCollection.path)?.properties).toEqual({
-      Foo: TextPropertySchema,
+      Foo: {
+        ...TextPropertySchema,
+        name: 'Foo',
+      },
     });
   });
 
@@ -59,8 +62,14 @@ describe('addPropertyToCollection', () => {
       CollectionPropertyType.Text,
     );
     expect(getCollection(itemsCollection.path)?.properties).toEqual({
-      Foo: TextPropertySchema,
-      'Foo 1': TextPropertySchema,
+      Foo: {
+        ...TextPropertySchema,
+        name: 'Foo',
+      },
+      'Foo 1': {
+        ...TextPropertySchema,
+        name: 'Foo 1',
+      },
     });
   });
 });
