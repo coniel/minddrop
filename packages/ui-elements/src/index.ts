@@ -38,10 +38,10 @@ export * from './TextInput';
 export * from './Toolbar';
 export * from './Tooltip';
 export * from './TopicDrop';
+export * from './UserIcon';
 export * from './WorkspaceNavItem';
 export * from './constants';
 export * from './types';
 export * from './utils';
 export * from './RadioGroup';
 export * from './CheckboxInput';
-

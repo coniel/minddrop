@@ -1,0 +1,18 @@
+.user-icon {
+  height: 22px;
+  width: 22px;
+}
+
+.user-icon.content-icon {
+  padding: 0;
+}
+
+.user-icon.content-icon .content-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.user-icon.emoji {
+  padding: 2;
+  font-size: 14px;
+}
