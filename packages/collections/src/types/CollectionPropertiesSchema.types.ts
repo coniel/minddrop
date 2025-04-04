@@ -2,7 +2,7 @@ import { ContentColor } from '@minddrop/core';
 
 export enum CollectionPropertyType {
   Created = 'created',
-  LastModified = 'last-modified',
+  Modified = 'modified',
   Markdown = 'markdown',
   Text = 'text',
   Number = 'number',
@@ -17,7 +17,7 @@ export interface CollectionCreatedPropertySchema {
 }
 
 export interface CollectionLastModifiedPropertySchema {
-  type: CollectionPropertyType.LastModified;
+  type: CollectionPropertyType.Modified;
 }
 
 export interface CollectionMarkdownPropertySchema {
@@ -38,6 +38,12 @@ export interface CollectionDatePropertySchema {
 
 export interface CollectionCheckboxPropertySchema {
   type: CollectionPropertyType.Checkbox;
+
+  /**
+   * Determines the default value of the checkbox property
+   * when creating a new entry.
+   */
+  defaultChecked: boolean;
 }
 
 export interface CollectionSelectPropertySchema {
@@ -58,7 +64,7 @@ export interface CollectionSelectPropertyOption {
 export type CollectionPropertySchema =
   | CollectionCreatedPropertySchema
   | CollectionLastModifiedPropertySchema
-  | CollectionLastModifiedPropertySchema
+  | CollectionMarkdownPropertySchema
   | CollectionTextPropertySchema
   | CollectionNumberPropertySchema
   | CollectionDatePropertySchema

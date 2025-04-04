@@ -152,7 +152,7 @@ export const createdPropertySchema: CollectionCreatedPropertySchema = {
 
 export const lastModifiedPropertySchema: CollectionLastModifiedPropertySchema =
   {
-    type: CollectionPropertyType.LastModified,
+    type: CollectionPropertyType.Modified,
   };
 
 export const markdownPropertySchema: CollectionMarkdownPropertySchema = {

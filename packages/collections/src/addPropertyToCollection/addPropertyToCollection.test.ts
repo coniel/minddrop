@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { InvalidParameterError } from '@minddrop/core';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { CollectionsStore } from '../CollectionsStore';
+import { TextPropertySchema } from '../constants';
 import { CollectionNotFoundError } from '../errors';
 import { getCollection } from '../getCollection';
 import {
@@ -9,8 +9,8 @@ import {
   itemsCollection,
   itemsCollectionFileDescriptor,
   setup,
-  textPropertyScehma,
 } from '../test-utils';
+import { CollectionPropertyType } from '../types';
 import { addPropertyToCollection } from './addPropertyToCollection';
 
 const MockFs = initializeMockFileSystem([itemsCollectionFileDescriptor]);
@@ -30,7 +30,7 @@ describe('addPropertyToCollection', () => {
 
   it('throws if the collection does not exist', async () => {
     expect(() =>
-      addPropertyToCollection('missing', 'Foo', textPropertyScehma),
+      addPropertyToCollection('missing', 'Foo', CollectionPropertyType.Text),
     ).rejects.toThrow(CollectionNotFoundError);
   });
 
@@ -38,24 +38,29 @@ describe('addPropertyToCollection', () => {
     await addPropertyToCollection(
       itemsCollection.path,
       'Foo',
-      textPropertyScehma,
+      CollectionPropertyType.Text,
     );
 
     expect(getCollection(itemsCollection.path)?.properties).toEqual({
-      Foo: textPropertyScehma,
+      Foo: TextPropertySchema,
     });
   });
 
-  it('throws if the property already exists', async () => {
+  it('increments name on conflict', async () => {
     // Add same property twice
     await addPropertyToCollection(
       itemsCollection.path,
       'Foo',
-      textPropertyScehma,
+      CollectionPropertyType.Text,
     );
-
-    expect(() =>
-      addPropertyToCollection(itemsCollection.path, 'Foo', textPropertyScehma),
-    ).rejects.toThrow(InvalidParameterError);
+    await addPropertyToCollection(
+      itemsCollection.path,
+      'Foo',
+      CollectionPropertyType.Text,
+    );
+    expect(getCollection(itemsCollection.path)?.properties).toEqual({
+      Foo: TextPropertySchema,
+      'Foo 1': TextPropertySchema,
+    });
   });
 });

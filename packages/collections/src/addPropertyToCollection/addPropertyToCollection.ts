@@ -1,7 +1,7 @@
-import { InvalidParameterError } from '@minddrop/core';
+import { CollectionPropertySchemas } from '../constants';
 import { CollectionNotFoundError } from '../errors';
 import { getCollection } from '../getCollection';
-import { CollectionPropertySchema } from '../types/CollectionPropertiesSchema.types';
+import { CollectionPropertyType } from '../types/CollectionPropertiesSchema.types';
 import { updateCollection } from '../updateCollection';
 
 /**
@@ -9,18 +9,19 @@ import { updateCollection } from '../updateCollection';
  *
  * @param path - The path of the collection to add the property to.
  * @param name - The name of the property to add.
- * @param property - The schema of the property to add.
+ * @param type - The type of the property to add.
  *
  * @dispatches collections:collection:update
  *
  * @throws {CollectionNotFoundError} - Thrown if the collection does not exist.
- * @throws {InvalidParameterError} - Thrown if the property already exists.
  */
 export async function addPropertyToCollection(
   path: string,
   name: string,
-  property: CollectionPropertySchema,
+  type: CollectionPropertyType,
 ): Promise<void> {
+  let key = name;
+
   // Get the collection
   const collection = getCollection(path);
 
@@ -29,13 +30,22 @@ export async function addPropertyToCollection(
     throw new CollectionNotFoundError(path);
   }
 
-  // Ensure the property doesn't already exist
+  // If the property already exists, increment the name
+  // to avoid overwriting it.
   if (collection.properties[name]) {
-    throw new InvalidParameterError(`The property "${name}" already exists.`);
+    let i = 1;
+
+    while (collection.properties[key]) {
+      key = `${name} ${i}`;
+      i++;
+    }
   }
 
   // Add the property to the collection's properties
   await updateCollection(path, {
-    properties: { ...collection.properties, [name]: property },
+    properties: {
+      ...collection.properties,
+      [key]: CollectionPropertySchemas[type],
+    },
   });
 }
