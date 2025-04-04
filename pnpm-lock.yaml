@@ -353,9 +353,6 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
-      yaml:
-        specifier: ^2.3.4
-        version: 2.7.0
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
