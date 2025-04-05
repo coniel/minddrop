@@ -1,15 +1,5 @@
-import { useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
-  Group,
-} from '@minddrop/ui-elements';
+import { AlertDialog, Button, Group } from '@minddrop/ui-elements';
 
 export interface ConfirmationDialogProps {
   /**
@@ -71,30 +61,19 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   translationPrefix = '',
 }) => {
   const { t } = useTranslation({ keyPrefix: translationPrefix });
-  const [open, setOpen] = useState(false);
-
-  const handleConfirm = () => {
-    onConfirm?.();
-    setOpen(false);
-  };
-
-  const handleCancel = () => {
-    onCancel?.();
-    setOpen(false);
-  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogPortal>
-        <DialogContent width="sm">
-          <DialogTitle>
-            {typeof title === 'string' ? t(title) : title}
-          </DialogTitle>
-          <DialogDescription>
-            {typeof description === 'string' ? t(description) : description}
-          </DialogDescription>
-          <Group justify="flex-end" mt="xl">
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
+      <AlertDialog.Content maxWidth="450px">
+        <AlertDialog.Title>
+          {typeof title === 'string' ? t(title) : title}
+        </AlertDialog.Title>
+        <AlertDialog.Description>
+          {typeof description === 'string' ? t(description) : description}
+        </AlertDialog.Description>
+        <Group justify="flex-end" mt="xl">
+          <AlertDialog.Cancel>
             <Button
               label={
                 typeof cancelLabel === 'string'
@@ -102,8 +81,10 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                   : 'actions.cancel'
               }
               variant="text"
-              onClick={handleCancel}
+              onClick={onCancel}
             />
+          </AlertDialog.Cancel>
+          <AlertDialog.Action>
             <Button
               label={
                 typeof confirmLabel === 'string'
@@ -111,11 +92,11 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                   : 'actions.confirm'
               }
               variant={danger ? 'danger' : 'contained'}
-              onClick={handleConfirm}
+              onClick={onConfirm}
             />
-          </Group>
-        </DialogContent>
-      </DialogPortal>
-    </Dialog>
+          </AlertDialog.Action>
+        </Group>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 };
