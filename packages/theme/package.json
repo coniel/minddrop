@@ -14,9 +14,9 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "eslint": "^9.16.0",
-    "@minddrop/eslint-config": "workspace:*",
     "rimraf": "~5.0.0",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
@@ -26,6 +26,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*",
+    "@radix-ui/themes": "^3.2.1",
     "zustand": "^4.3.8"
   },
   "peerDependencies": {
