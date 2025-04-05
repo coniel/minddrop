@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
+import { CollectionView } from '@minddrop/ui-desktop';
 import { TooltipProvider } from '@minddrop/ui-elements';
 import { DragImageProvider } from '@minddrop/utils';
 import {
@@ -37,6 +38,9 @@ export const DesktopApp: React.FC = () => {
             <div className="app">
               <AppSidebar />
               <div className="app-content">
+                {view === 'collection' && documentId && (
+                  <CollectionView path={documentId} />
+                )}
                 {view === 'document' && documentId && (
                   <DocumentView id={documentId} />
                 )}

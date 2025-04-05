@@ -58,7 +58,59 @@
     "noResults": "No results"
   },
   "labels": {
-    "untitled": "Untitled"
+    "untitled": "Untitled",
+    "optional": "Optional"
+  },
+  "properties": {
+    "actions": {
+      "delete": {
+        "label": "Delete property",
+        "description": "This will delete the property from the collection and remove it from all collection entries. This can't be undone."
+      },
+      "filter": "Filter...",
+      "add": "Add property"
+    },
+    "text": {
+      "label": "Text",
+      "description": "A simple text field."
+    },
+    "number": {
+      "label": "Number",
+      "description": "A number with various formatting options."
+    },
+    "date": {
+      "label": "Date",
+      "description": "A date and time field with various formatting options."
+    },
+    "checkbox": {
+      "label": "Checkbox",
+      "description": "A simple checkbox.",
+      "defaultValue": {
+        "label": "Default value",
+        "checked": "Checked",
+        "unchecked": "Unchecked"
+      }
+    },
+    "select": {
+      "label": "Select",
+      "description": "A dropdown list of options."
+    },
+    "multiselect": {
+      "label": "Multiselect",
+      "description": "A dropdown list of options with multiple selection."
+    },
+    "markdown": {
+      "label": "Markdown content",
+      "description": "Enables Markdown content on entries."
+    },
+    "created": {
+      "label": "Created",
+      "description": "Adds the date and time at which an entry was created to its properties."
+    },
+    "modified": {
+      "label": "Last modified",
+      "description": "Adds the date and time at which an entry was last modified to its properties."
+    }
   },
   "collections": {
     "label": "Collections",

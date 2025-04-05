@@ -1,0 +1,8 @@
+.collection-view-header {
+  padding: 32px;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+}

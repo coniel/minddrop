@@ -12,4 +12,8 @@ export * from './DocumentViewRenderer';
 export * from './DocumentViewsRenderer';
 export * from './NavItemIcon';
 export * from './RenameDocumentPopover';
+export * from './CollectionView';
+export * from './CollectionProperties';
+export * from './CollectionPropertyEditor';
 export * from './ConfirmationDialog';
+
