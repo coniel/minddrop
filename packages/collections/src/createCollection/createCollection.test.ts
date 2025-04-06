@@ -80,7 +80,7 @@ describe('createCollection', () => {
       lastModified: expect.any(Date),
       description: 'A collection of tasks',
       icon: contentIconString,
-      properties: {},
+      properties: [],
     });
   });
 
@@ -112,7 +112,7 @@ describe('createCollection', () => {
 
     expect(CollectionsStore.getState().collections[collection.path]).toEqual({
       ...collection,
-      properties: {},
+      properties: [],
       path: Fs.concatPath(BASE_PATH, 'Tasks'),
     });
   });
@@ -142,7 +142,7 @@ describe('createCollection', () => {
           created: expect.any(Date),
           lastModified: expect.any(Date),
           path: Fs.concatPath(BASE_PATH, 'Tasks'),
-          properties: {},
+          properties: [],
         });
         done();
       });

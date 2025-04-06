@@ -1,4 +1,4 @@
-import { CollectionPropertiesSchema } from './CollectionPropertiesSchema.types';
+import { CollectionPropertySchema } from './CollectionPropertiesSchema.types';
 import { CollectionType } from './CollectionType.types';
 
 export interface CollectionConfig {
@@ -29,9 +29,9 @@ export interface CollectionConfig {
   lastModified: Date;
 
   /**
-   * The collection's property schema.
+   * Schemas for the collection's properties.
    */
-  properties: CollectionPropertiesSchema;
+  properties: CollectionPropertySchema[];
 
   /**
    * Description of the collection.

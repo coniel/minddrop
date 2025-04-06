@@ -27,17 +27,26 @@ export async function updateCollectionProperty<
   }
 
   // Ensure the property exists
-  if (!collection.properties[property]) {
+  if (!collection.properties.find((p) => p.name === property)) {
     throw new InvalidParameterError(
       `The property "${property}" does not exist on the collection "${path}".`,
     );
   }
 
+  // Update the property schema
+  const updatedProperties = collection.properties.map((p) => {
+    if (p.name === property) {
+      return {
+        ...p,
+        ...schema,
+      };
+    }
+
+    return p;
+  });
+
   // Update the collection property
   await updateCollection(path, {
-    properties: {
-      ...collection.properties,
-      [property]: schema,
-    },
+    properties: updatedProperties,
   });
 }

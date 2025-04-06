@@ -32,10 +32,10 @@ export async function addPropertyToCollection(
 
   // If the property already exists, increment the name
   // to avoid overwriting it.
-  if (collection.properties[name]) {
+  if (collection.properties.find((p) => p.name === key)) {
     let i = 1;
 
-    while (collection.properties[key]) {
+    while (collection.properties.find((p) => p.name === key)) {
       key = `${name} ${i}`;
       i++;
     }
@@ -43,12 +43,12 @@ export async function addPropertyToCollection(
 
   // Add the property to the collection's properties
   await updateCollection(path, {
-    properties: {
+    properties: [
       ...collection.properties,
-      [key]: {
+      {
         ...CollectionPropertySchemas[type],
         name: key,
       },
-    },
+    ],
   });
 }

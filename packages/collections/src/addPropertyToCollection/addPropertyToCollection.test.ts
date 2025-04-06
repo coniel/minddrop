@@ -41,12 +41,12 @@ describe('addPropertyToCollection', () => {
       CollectionPropertyType.Text,
     );
 
-    expect(getCollection(itemsCollection.path)?.properties).toEqual({
-      Foo: {
+    expect(getCollection(itemsCollection.path)?.properties).toEqual([
+      {
         ...TextPropertySchema,
         name: 'Foo',
       },
-    });
+    ]);
   });
 
   it('increments name on conflict', async () => {
@@ -61,15 +61,15 @@ describe('addPropertyToCollection', () => {
       'Foo',
       CollectionPropertyType.Text,
     );
-    expect(getCollection(itemsCollection.path)?.properties).toEqual({
-      Foo: {
+    expect(getCollection(itemsCollection.path)?.properties).toEqual([
+      {
         ...TextPropertySchema,
         name: 'Foo',
       },
-      'Foo 1': {
+      {
         ...TextPropertySchema,
         name: 'Foo 1',
       },
-    });
+    ]);
   });
 });

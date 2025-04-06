@@ -86,8 +86,7 @@ export interface CollectionMultiSelectPropertySchema
   options: CollectionSelectPropertyOption[];
 }
 
-export interface CollectionSelectPropertyOption
-  extends CollectionPropertySchemaBase {
+export interface CollectionSelectPropertyOption {
   value: string;
   color: ContentColor;
 }
@@ -102,8 +101,3 @@ export type CollectionPropertySchema =
   | CollectionCheckboxPropertySchema
   | CollectionSelectPropertySchema
   | CollectionMultiSelectPropertySchema;
-
-export type CollectionPropertiesSchema = Record<
-  string,
-  CollectionPropertySchema
->;

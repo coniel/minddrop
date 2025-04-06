@@ -21,9 +21,7 @@ describe('deleteCollectionProperty', () => {
 
     CollectionsStore.getState().add({
       ...itemsCollection,
-      properties: {
-        Checkbox: CheckboxPropertySchema,
-      },
+      properties: [CheckboxPropertySchema],
     });
   });
 
@@ -50,6 +48,6 @@ describe('deleteCollectionProperty', () => {
 
     const collection = getCollection(itemsCollection.path);
 
-    expect(collection?.properties).toEqual({});
+    expect(collection?.properties).toEqual([]);
   });
 });

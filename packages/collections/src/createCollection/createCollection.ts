@@ -43,7 +43,7 @@ export async function createCollection(
     ...options,
     created: new Date(),
     lastModified: new Date(),
-    properties: {},
+    properties: [],
   };
   // Generate the collection object
   const collection: Collection = {

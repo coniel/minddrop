@@ -26,15 +26,16 @@ export async function deleteCollectionProperty(
   }
 
   // Ensure the property exists
-  if (!collection.properties[property]) {
+  if (!collection.properties.find((p) => p.name === property)) {
     throw new InvalidParameterError(
       `The property "${property}" does not exist on the collection "${path}".`,
     );
   }
 
   // Delete the collection property
-  const updatedProperties = { ...collection.properties };
-  delete updatedProperties[property];
+  const updatedProperties = collection.properties.filter(
+    (p) => p.name !== property,
+  );
 
   // Update the collection
   await updateCollection(path, {

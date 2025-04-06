@@ -21,9 +21,7 @@ describe('updateCollectionProperty', () => {
 
     CollectionsStore.getState().add({
       ...itemsCollection,
-      properties: {
-        Checkbox: CheckboxPropertySchema,
-      },
+      properties: [CheckboxPropertySchema],
     });
   });
 
@@ -59,11 +57,11 @@ describe('updateCollectionProperty', () => {
 
     const updatedCollection = getCollection(itemsCollection.path);
 
-    expect(updatedCollection?.properties).toEqual({
-      Checkbox: {
+    expect(updatedCollection?.properties).toEqual([
+      {
         ...CheckboxPropertySchema,
         defaultChecked: true,
       },
-    });
+    ]);
   });
 });
