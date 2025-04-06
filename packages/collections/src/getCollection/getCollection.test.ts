@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CollectionsStore } from '../CollectionsStore';
+import { CollectionNotFoundError } from '../errors';
 import { cleanup, itemsCollection, setup } from '../test-utils';
 import { getCollection } from './getCollection';
 
@@ -19,5 +20,10 @@ describe('getCollection', () => {
   it('returns null if the collection does not exist', () => {
     // Get a missing collection, should return null
     expect(getCollection('foo')).toBeNull();
+  });
+
+  it('throws if the collection does not exist and throwOnNotFound is true', () => {
+    // Get a missing collection, should throw
+    expect(() => getCollection('foo', true)).toThrow(CollectionNotFoundError);
   });
 });
