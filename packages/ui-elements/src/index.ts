@@ -3,13 +3,15 @@ export {
   Badge,
   Callout,
   Card,
-  Switch,
-  ThemePanel,
   Inset,
+  ScrollArea,
+  Select,
+  Switch,
   Table,
   Tabs,
   TextArea,
   TextField,
+  ThemePanel,
 } from '@radix-ui/themes';
 
 export * from './ActionCard';
