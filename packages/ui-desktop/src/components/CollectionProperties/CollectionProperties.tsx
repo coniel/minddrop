@@ -1,31 +1,27 @@
 import { useState } from 'react';
+import { Collection, Collections } from '@minddrop/collections';
 import {
-  Collection,
-  CollectionPropertySchemas,
-  Collections,
-} from '@minddrop/collections';
-import { CollectionPropertyType } from '@minddrop/collections/src/types/CollectionPropertiesSchema.types';
+  CollectionPropertySchema,
+  CollectionPropertyType,
+} from '@minddrop/collections/src/types/CollectionPropertiesSchema.types';
 import {
   Box,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Group,
   Icon,
-  IconButton,
-  MenuLabel,
   SecondaryNavItem,
   Stack,
   Text,
-  TextInput,
   UserIcon,
 } from '@minddrop/ui-elements';
 import './CollectionProperties.css';
 import { useTranslation } from '@minddrop/i18n';
-import { Icons, UiIconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/icons';
 import { CollectionPropertyEditor } from '../CollectionPropertyEditor';
 
 export interface CollectionPropertiesProps {
@@ -51,7 +47,7 @@ export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
   collection,
 }) => {
   const { t } = useTranslation();
-  const [selectedProperty, setSelectedProperty] = useState('');
+  const [selectedProperty, setSelectedProperty] = useState<number | null>(null);
 
   function addProperty(type: CollectionPropertyType) {
     return () => {
@@ -64,7 +60,7 @@ export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
   }
 
   function onDeleteProperty() {
-    setSelectedProperty('');
+    setSelectedProperty(null);
   }
 
   return (
@@ -85,30 +81,33 @@ export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
             Custom properties
           </Text>
           <Stack className="properties-list" gap="xs" justify="stretch">
-            {Object.entries(collection.properties || {}).map(
-              ([name, schema]) => (
-                <SecondaryNavItem
-                  key={name}
-                  label={name}
-                  icon={
-                    schema.icon ? (
-                      <UserIcon icon={schema.icon} />
-                    ) : (
-                      <Icon name={IconMap[schema.type]} />
-                    )
-                  }
-                  onClick={() => setSelectedProperty(name)}
-                />
-              ),
-            )}
+            {collection.properties.map((schema, index) => (
+              <SecondaryNavItem
+                key={schema.name}
+                label={schema.name}
+                icon={
+                  schema.icon ? (
+                    <UserIcon icon={schema.icon} />
+                  ) : (
+                    <Icon name={IconMap[schema.type]} />
+                  )
+                }
+                onClick={() => setSelectedProperty(index)}
+              />
+            ))}
           </Stack>
           <Group>
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <IconButton label="properties.actions.add" icon="plus" />
+                <Button
+                  size="small"
+                  label="properties.actions.add"
+                  variant="text"
+                  startIcon="plus"
+                />
               </DropdownMenuTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuContent align="end" minWidth={300}>
+                <DropdownMenuContent align="start" minWidth={300}>
                   <DropdownMenuItem
                     icon={IconMap[CollectionPropertyType.Text]}
                     label="properties.text.label"
@@ -145,40 +144,21 @@ export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
                     tooltipDescription="properties.multiselect.description"
                     onSelect={addProperty(CollectionPropertyType.MultiSelect)}
                   />
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    icon={IconMap[CollectionPropertyType.Created]}
-                    label="properties.created.label"
-                    tooltipDescription="properties.created.description"
-                    onSelect={addProperty(CollectionPropertyType.Created)}
-                  />
-                  <DropdownMenuItem
-                    icon={IconMap[CollectionPropertyType.Modified]}
-                    label="properties.modified.label"
-                    tooltipDescription="properties.modified.description"
-                    onSelect={addProperty(CollectionPropertyType.Modified)}
-                  />
-                  <DropdownMenuItem
-                    icon={IconMap[CollectionPropertyType.Markdown]}
-                    label="properties.markdown.label"
-                    tooltipDescription="properties.markdown.description"
-                    onSelect={addProperty(CollectionPropertyType.Markdown)}
-                  />
                 </DropdownMenuContent>
               </DropdownMenuPortal>
             </DropdownMenu>
           </Group>
         </Stack>
       </Stack>
-      <Box key={selectedProperty} flex={1} mt="xl" className="property-details">
-        {selectedProperty && (
+      {selectedProperty !== null && (
+        <Box pr="md" flex={1} className="property-details">
           <CollectionPropertyEditor
             collectionPath={collection.path}
             schema={collection.properties[selectedProperty]}
             onDelete={onDeleteProperty}
           />
-        )}
-      </Box>
+        </Box>
+      )}
     </Group>
   );
 };

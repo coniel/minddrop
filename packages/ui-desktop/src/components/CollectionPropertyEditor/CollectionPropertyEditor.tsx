@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   CollectionPropertySchema,
   CollectionPropertySchemas,
@@ -28,34 +29,43 @@ export const CollectionPropertyEditor: React.FC<PropertySchemaEditorProps> = ({
   schema,
   onDelete,
 }) => {
-  const [newName, setName] = useInputValue(schema.name);
+  const [id, setId] = useState(schema.name);
+  const [name, setName] = useInputValue(schema.name);
   const [description, setDescription] = useInputValue(schema.description || '');
   const { icon: defaultIcon } = useIcon(
     CollectionPropertySchemas[schema.type].icon,
   );
 
   function handleDelete() {
-    Collections.deleteProperty(collectionPath, schema.name);
+    Collections.deleteProperty(collectionPath, id);
     onDelete();
   }
 
   function handleIconChange(icon: string) {
-    Collections.updateProperty(collectionPath, schema.name, {
-      ...schema,
+    Collections.updateProperty(collectionPath, id, {
       icon,
     });
   }
 
+  async function handleBlurName() {
+    if (name === id) return;
+
+    await Collections.updateProperty(collectionPath, id, {
+      name,
+    });
+
+    setId(name);
+  }
+
   function handleBlurDescription() {
-    Collections.updateProperty(collectionPath, schema.name, {
-      ...schema,
+    Collections.updateProperty(collectionPath, id, {
       description,
     });
   }
 
   return (
     <Stack align="stretch">
-      <Group align="flex-start">
+      <Group gap="xl" align="flex-start">
         <Stack gap="xs">
           <FieldLabel label="Icon" />
           <UserIconPickerButton
@@ -70,7 +80,8 @@ export const CollectionPropertyEditor: React.FC<PropertySchemaEditorProps> = ({
             id="property-name"
             placeholder={`properties.${schema.type}.label`}
             onChange={setName}
-            value={newName}
+            value={name}
+            onBlur={handleBlurName}
           />
         </Stack>
       </Group>
@@ -88,7 +99,7 @@ export const CollectionPropertyEditor: React.FC<PropertySchemaEditorProps> = ({
         <CheckboxPropertyOptions
           collectionPath={collectionPath}
           schema={schema}
-          name={schema.name}
+          name={name}
         />
       )}
       <Box mt="xl">
