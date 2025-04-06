@@ -1,8 +1,6 @@
 import { useTranslation } from '@minddrop/i18n';
 import {
   Dialog,
-  DialogContent,
-  DialogTitle,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -49,15 +47,15 @@ export const AddWorkspaceMenu: React.FC<AddWorkspaceMenuProps> = ({
           />
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={createDialogOpen}>
-        <DialogContent width="sm" className="create-workspace-dialog">
-          <DialogTitle>{t('create.label')}</DialogTitle>
+      <Dialog.Root open={createDialogOpen}>
+        <Dialog.Content width="sm" className="create-workspace-dialog">
+          <Dialog.Title>{t('create.label')}</Dialog.Title>
           <CreateWorkspaceForm
             onSuccess={toggleCreateDialog}
             onClickCancel={toggleCreateDialog}
           />
-        </DialogContent>
-      </Dialog>
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   );
 };
