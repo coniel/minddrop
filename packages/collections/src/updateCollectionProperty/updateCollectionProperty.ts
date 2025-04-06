@@ -18,7 +18,7 @@ import { updateCollection } from '../updateCollection';
  */
 export async function updateCollectionProperty<
   TSchema extends CollectionPropertySchema = CollectionPropertySchema,
->(path: string, property: string, schema: TSchema): Promise<void> {
+>(path: string, property: string, schema: Partial<TSchema>): Promise<void> {
   const collection = getCollection(path);
 
   // Ensure the collection exists
