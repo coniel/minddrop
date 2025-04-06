@@ -14,7 +14,7 @@ const HasImageFile: React.FC<BlockVariantProps> = ({ block }) => {
   const {
     Fs: { useImageSrc, concatPath },
     Utils,
-    Ui: { Dialog, DialogPortal, DialogOverlay, DialogContent },
+    Ui: { Dialog },
   } = useApi();
   const parentDir = Utils.useParentDir();
   const src = useImageSrc(concatPath(parentDir, block.file!));
@@ -60,40 +60,37 @@ const HasImageFile: React.FC<BlockVariantProps> = ({ block }) => {
   return (
     <>
       <img src={src} alt="" onDoubleClick={toggleDialogOpen} />
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogPortal>
-          <DialogOverlay />
-          <DialogContent
-            className="image-dialog-content"
-            onClick={toggleDialogOpen}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-          >
-            <img
-              src={src}
-              ref={imageRef}
-              alt=""
-              onClick={(event) => event.stopPropagation()}
-              onDoubleClick={(event) => {
-                event.stopPropagation();
+      <Dialog.Root open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog.Content
+          className="image-dialog-content"
+          onClick={toggleDialogOpen}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
+          <img
+            src={src}
+            ref={imageRef}
+            alt=""
+            onClick={(event) => event.stopPropagation()}
+            onDoubleClick={(event) => {
+              event.stopPropagation();
 
-                if (!isDragging.current) {
-                  if (zoom !== 1) {
-                    setPosition({ x: 0, y: 0 });
-                  }
-                  setZoom((prev) => (prev === 1 ? 2 : 1));
+              if (!isDragging.current) {
+                if (zoom !== 1) {
+                  setPosition({ x: 0, y: 0 });
                 }
-              }}
-              style={{
-                cursor: 'grab',
-                transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
-              }}
-              onMouseDown={handleMouseDown}
-              draggable={false}
-            />
-          </DialogContent>
-        </DialogPortal>
-      </Dialog>
+                setZoom((prev) => (prev === 1 ? 2 : 1));
+              }
+            }}
+            style={{
+              cursor: 'grab',
+              transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+            }}
+            onMouseDown={handleMouseDown}
+            draggable={false}
+          />
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   );
 };
