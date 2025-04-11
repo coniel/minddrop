@@ -17,7 +17,7 @@
 }
 
 .app-sidebar .bottom-toolbar .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .theme-appearance-setting-menu {

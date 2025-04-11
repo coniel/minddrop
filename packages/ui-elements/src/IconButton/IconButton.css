@@ -15,7 +15,7 @@
 }
 
 .icon-button .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
   width: 20px;
   height: 20px;
 }
@@ -36,19 +36,19 @@
 /* Colors */
 
 .icon-button.color-light .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .icon-button.color-contrast .icon {
-  fill: var(--textContrast);
+  stroke: var(--textContrast);
 }
 
 .icon-button.color-contrast:hover .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .icon-button.color-contrast:active .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 /* Sizes */
@@ -70,5 +70,5 @@
 
 .icon-button:disabled .icon,
 .icon-button.color-light:disabled .icon {
-  fill: var(--textNeutralDisabled);
+  stroke: var(--textNeutralDisabled);
 }

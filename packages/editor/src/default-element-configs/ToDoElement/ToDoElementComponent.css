@@ -24,49 +24,49 @@
 }
 
 .to-do-element.checked .icon {
-  fill: var(--primary10);
+  stroke: var(--primary10);
 }
 
 .color-blue .to-do-element.checked .icon {
-  fill: var(--blue10);
+  stroke: var(--blue10);
 }
 
 .color-cyan .to-do-element.checked .icon {
-  fill: var(--cyan10);
+  stroke: var(--cyan10);
 }
 
 .color-red .to-do-element.checked .icon {
-  fill: var(--red10);
+  stroke: var(--red10);
 }
 
 .color-red .to-do-element.checked .icon {
-  fill: var(--red10);
+  stroke: var(--red10);
 }
 
 .color-pink .to-do-element.checked .icon {
-  fill: var(--pink10);
+  stroke: var(--pink10);
 }
 
 .color-purple .to-do-element.checked .icon {
-  fill: var(--purple10);
+  stroke: var(--purple10);
 }
 
 .color-green .to-do-element.checked .icon {
-  fill: var(--green10);
+  stroke: var(--green10);
 }
 
 .color-orange .to-do-element.checked .icon {
-  fill: var(--orange10);
+  stroke: var(--orange10);
 }
 
 .color-yellow .to-do-element.checked .icon {
-  fill: var(--yellow10);
+  stroke: var(--yellow10);
 }
 
 .color-brown .to-do-element.checked .icon {
-  fill: var(--brown10);
+  stroke: var(--brown10);
 }
 
 .color-gray .to-do-element.checked .icon {
-  fill: var(--gray10);
+  stroke: var(--gray10);
 }

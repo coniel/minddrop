@@ -27,7 +27,7 @@
 }
 
 .create-first-workspace .toolbar .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .create-first-workspace h1 {

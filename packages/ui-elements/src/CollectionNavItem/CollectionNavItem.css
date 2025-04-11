@@ -28,16 +28,16 @@
 }
 
 .collection-nav-item > .nav-item .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .collection-nav-item.active .nav-item .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .collection-nav-item > .nav-item:hover .icon,
 .collection-nav-item > .nav-item.hovering .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .collection-nav-item .label {
@@ -51,7 +51,7 @@
 }
 
 .collection-nav-item.missing .nav-item .icon {
-  fill: var(--textDanger);
+  stroke: var(--textDanger);
 }
 
 .collection-nav-item > .nav-item .actions {

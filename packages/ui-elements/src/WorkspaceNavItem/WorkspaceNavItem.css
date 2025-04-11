@@ -28,16 +28,16 @@
 }
 
 .workspace-nav-item > .nav-item .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .workspace-nav-item.active .nav-item .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .workspace-nav-item > .nav-item:hover .icon,
 .workspace-nav-item > .nav-item.hovering .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .workspace-nav-item .label {
@@ -51,7 +51,7 @@
 }
 
 .workspace-nav-item.missing .nav-item .icon {
-  fill: var(--textDanger);
+  stroke: var(--textDanger);
 }
 
 .workspace-nav-item > .nav-item .actions {

@@ -23,13 +23,13 @@ export const Icon: React.FC<IconProps> = ({
   color = 'current-color',
   ...other
 }) => {
-  const { UiIcons } = useIcons();
-  const IconComponent = UiIcons[name];
+  const { UiIcon } = useIcons();
 
   return (
-    <IconComponent
+    <UiIcon
       data-testid="icon"
       className={mapPropsToClasses({ className, color }, 'icon')}
+      name={name}
       {...other}
     />
   );

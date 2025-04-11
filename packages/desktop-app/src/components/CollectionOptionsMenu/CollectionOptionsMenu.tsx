@@ -90,7 +90,7 @@ export const CollectionOptionsMenu: React.FC<CollectionOptionsMenuProps> = ({
             onSelect={onSelectMove}
           />
           <DropdownMenuItem
-            icon="close-circle"
+            icon="circle-x"
             label={t('remove.action')}
             tooltipTitle={t('remove.tooltip.title')}
             tooltipDescription={t('remove.tooltip.description')}

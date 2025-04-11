@@ -90,7 +90,7 @@ export const WorkspaceOptionsMenu: React.FC<WorkspaceOptionsMenuProps> = ({
             onSelect={onSelectMove}
           />
           <DropdownMenuItem
-            icon="close-circle"
+            icon="circle-x"
             label={t('remove.action')}
             tooltipTitle={t('remove.tooltip.title')}
             tooltipDescription={t('remove.tooltip.description')}

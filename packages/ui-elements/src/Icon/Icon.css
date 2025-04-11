@@ -1,25 +1,25 @@
 /* Color */
 
 .icon.color-current-color {
-  fill: currentColor;
+  stroke: currentColor;
 }
 
 .icon.color-regular {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 .icon.color-white {
-  fill: var(--textWhite);
+  stroke: var(--textWhite);
 }
 
 .icon.color-light {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .icon.color-contrast {
-  fill: var(--textContrast);
+  stroke: var(--textContrast);
 }
 
 .icon.color-contrast-light {
-  fill: var(--textContrastLight);
+  stroke: var(--textContrastLight);
 }

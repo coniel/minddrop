@@ -1,10 +1,9 @@
+import { DynamicIcon } from 'lucide-react/dynamic';
 import { createContext } from '@minddrop/utils';
-import { EvaIconSvg, EvaIconSvgProps } from '../EvaIconSvg';
 import { LucidIconSvgProps, LucideIconSvg } from '../LucideIconSvg';
 import { ContentIcons as ContentIconsChildren } from '../content-icons.min';
 import { EmojiSkinTone } from '../emoji';
-import { ContentIconSet, UiIconSet } from '../icons.types';
-import { UiIcons as UiIconsChildren } from '../ui-icons.min';
+import { ContentIconSet } from '../icons.types';
 
 export interface IconsProviderProps {
   children: React.ReactNode;
@@ -13,21 +12,11 @@ export interface IconsProviderProps {
 }
 
 export interface IconsProviderContext {
-  UiIcons: UiIconSet;
+  UiIcon: typeof DynamicIcon;
   ContentIcons: ContentIconSet;
   defaultEmojiSkinTone: EmojiSkinTone;
   onDefaultEmojiSkinToneChange: (skinTone: EmojiSkinTone) => void;
 }
-
-const UiIcons = Object.entries(UiIconsChildren).reduce(
-  (map, [name, content]) => ({
-    ...map,
-    [name]: (props: EvaIconSvgProps) => (
-      <EvaIconSvg {...props}>{content}</EvaIconSvg>
-    ),
-  }),
-  {} as UiIconSet,
-);
 
 const ContentIcons = Object.entries(ContentIconsChildren).reduce(
   (map, [name, content]) => ({
@@ -48,7 +37,7 @@ export const IconsProvider: React.FC<IconsProviderProps> = ({
 }) => (
   <Provider
     value={{
-      UiIcons,
+      UiIcon: DynamicIcon,
       ContentIcons,
       defaultEmojiSkinTone,
       onDefaultEmojiSkinToneChange,

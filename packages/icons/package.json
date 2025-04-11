@@ -11,15 +11,16 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
     "@types/react": "^18.2.5",
     "eslint": "^9.16.0",
-    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/utils": "workspace:*",
+    "lucide-react": "^0.487.0",
     "react": "^19.0.0"
   }
 }

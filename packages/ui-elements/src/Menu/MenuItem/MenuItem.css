@@ -41,7 +41,7 @@
 
 .menu-item .item-icon {
   display: inline-block;
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
   width: 17px;
   height: 17px;
   margin-inline-end: 8px;
@@ -54,7 +54,7 @@
   height: 18px;
   width: 18px;
   margin-inline-end: 8px;
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 /* Item indicator */
@@ -63,7 +63,7 @@
   display: inline-block;
   height: 18px;
   width: 18px;
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 /* Description */

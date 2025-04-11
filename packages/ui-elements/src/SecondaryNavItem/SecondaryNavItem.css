@@ -45,5 +45,5 @@
 .secondary-nav-item .icon {
   height: 16px;
   width: 16px;
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }

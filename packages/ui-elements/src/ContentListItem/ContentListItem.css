@@ -31,7 +31,7 @@
 
 .content-list-item .toggle-button .icon {
   height: 24px;
-  fill: var(--neutral8);
+  stroke: var(--neutral8);
 }
 
 .content-list-item .toggle-button[data-state='open'] .toggle-icon {
@@ -39,7 +39,7 @@
 }
 
 .content-list-item .toggle-button .toggle-icon.has-children {
-  fill: var(--neutral9);
+  stroke: var(--neutral9);
 }
 
 /* Icon */
@@ -52,7 +52,7 @@
 .content-list-item > .list-item:hover > .item-icon .icon,
 .content-list-item .list-item.hovering > .item-icon .icon,
 .content-list-item.active .list-item > .item-icon .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 /* Label */

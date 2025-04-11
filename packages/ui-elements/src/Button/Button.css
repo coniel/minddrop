@@ -157,12 +157,12 @@ a.button {
 
 .button .start-icon {
   padding-inline-end: 4px;
-  fill: currentColor;
+  stroke: currentColor;
 }
 
 .button .end-icon {
   padding-inline-start: 4px;
-  fill: currentColor;
+  stroke: currentColor;
 }
 
 .button .start-icon,

@@ -31,7 +31,7 @@
 
 .document-nav-item .toggle-button .icon {
   height: 24px;
-  fill: var(--neutral8);
+  stroke: var(--neutral8);
 }
 
 .document-nav-item .toggle-button[data-state='open'] .toggle-icon {
@@ -39,19 +39,19 @@
 }
 
 .document-nav-item .toggle-button .toggle-icon.has-subdocuments {
-  fill: var(--neutral9);
+  stroke: var(--neutral9);
 }
 
 /* Icon */
 
 .document-nav-item > .nav-item .document-icon .icon {
-  fill: var(--textNeutralLight);
+  stroke: var(--textNeutralLight);
 }
 
 .document-nav-item > .nav-item:hover > .document-icon .icon,
 .document-nav-item .nav-item.hovering > .document-icon .icon,
 .document-nav-item.active .nav-item > .document-icon .icon {
-  fill: var(--textNeutral);
+  stroke: var(--textNeutral);
 }
 
 /* Label */
