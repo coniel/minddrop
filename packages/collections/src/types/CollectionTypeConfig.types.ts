@@ -38,12 +38,13 @@ export interface CollectionTypeConfig<
    * The function receives the `requiredDataType` as a parameter if the collection
    * requires data to create an entry.
    *
-   * @aparam data - The data used to create the entry.
+   * @param path - The path to the collection directory.
+   * @param data - The data used to create the entry.
    */
-  createEntry(): Promise<TEntry>;
-  createEntry(data: string): Promise<TEntry>;
-  createEntry(data: File): Promise<TEntry>;
-  createEntry(data?: string | File): Promise<TEntry>;
+  createEntry(path: string): Promise<TEntry>;
+  createEntry(path: string, data: string): Promise<TEntry>;
+  createEntry(path: string, data: File): Promise<TEntry>;
+  createEntry(path: string, data?: string | File): Promise<TEntry>;
 
   /**
    * Function called to retrieve an entry from the collection.

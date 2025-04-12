@@ -21,6 +21,7 @@ export { updateCollectionProperty as updateProperty } from './updateCollectionPr
 export { deleteCollectionProperty as deleteProperty } from './deleteCollectionProperty';
 export { getCollectionTypeConfig as getTypeConfig } from './getCollectionTypeConfig';
 export { loadCollectionEntries as loadEntries } from './loadCollectionEntries';
+export { createCollectionEntry as createEntry } from './createCollectionEntry';
 export {
   registerCollectionTypeConfig as registerType,
   unregisterCollectionTypeConfig as unregisterType,
