@@ -19,6 +19,13 @@ export { renameCollection as rename } from './renameCollection';
 export { addPropertyToCollection as addProperty } from './addPropertyToCollection';
 export { updateCollectionProperty as updateProperty } from './updateCollectionProperty';
 export { deleteCollectionProperty as deleteProperty } from './deleteCollectionProperty';
+export {
+  registerCollectionTypeConfig as registerType,
+  unregisterCollectionTypeConfig as unregisterType,
+  getCollectionTypeConfig as getTypeConfig,
+  useCollectionTypeConfigs as useTypeConfigs,
+  useCollectionTypeConfig as useTypeConfig,
+} from './CollectionTypeConfigsStore';
 
 /**
  * Clears the collections store.
