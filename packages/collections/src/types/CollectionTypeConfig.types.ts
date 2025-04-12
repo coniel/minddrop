@@ -58,9 +58,10 @@ export interface CollectionTypeConfig<
   /**
    * Function called to get all entries from the collection directory.
    *
+   * @param path - The path to the collection directory.
    * @returns An array containing all the entries in the collection.
    */
-  getAllEntries(): Promise<CollectionEntry[]>;
+  getAllEntries(path: string): Promise<CollectionEntry[]>;
 
   /**
    * Function called to set an entry's properties. Should overwrite the entry's

@@ -20,6 +20,7 @@ export { addPropertyToCollection as addProperty } from './addPropertyToCollectio
 export { updateCollectionProperty as updateProperty } from './updateCollectionProperty';
 export { deleteCollectionProperty as deleteProperty } from './deleteCollectionProperty';
 export { getCollectionTypeConfig as getTypeConfig } from './getCollectionTypeConfig';
+export { loadCollectionEntries as loadEntries } from './loadCollectionEntries';
 export {
   registerCollectionTypeConfig as registerType,
   unregisterCollectionTypeConfig as unregisterType,

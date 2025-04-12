@@ -225,14 +225,14 @@ export const markdownCollectionTypeConfig: CollectionTypeConfig = {
       details: 'A collection of items',
     },
   },
-  createEntry: async () => entry1,
-  getEntry: async () => entry1,
-  getAllEntries: async () => entries,
+  createEntry: async () => itemsEntry1,
+  getEntry: async () => itemsEntry1,
+  getAllEntries: async () => itemsEntries,
   deleteEntry: async () => {},
   archiveEntry: async () => {},
-  setEntryProperties: async () => entry1,
-  renameEntry: async () => entry1,
-  restoreEntry: async () => entry1,
+  setEntryProperties: async () => itemsEntry1,
+  renameEntry: async () => itemsEntry1,
+  restoreEntry: async () => itemsEntry1,
 };
 
 export const collectionTypeConfigs = [markdownCollectionTypeConfig];
@@ -241,25 +241,26 @@ export const collectionTypeConfigs = [markdownCollectionTypeConfig];
 /****************** Collection Entries ******************/
 /********************************************************/
 
-export const entry1: CollectionEntry = {
+export const itemsEntry1: CollectionEntry = {
   title: 'Entry 1',
   path: `${itemsCollectionPath}/Entry 1.md`,
   properties: {},
   metadata: {},
 };
 
-export const entry2: CollectionEntry = {
+export const itemsEntry2: CollectionEntry = {
   title: 'Entry 2',
   path: `${itemsCollectionPath}/Entry 2.md`,
   properties: {},
   metadata: {},
 };
 
-export const entry3: CollectionEntry = {
+export const itemsEntry3: CollectionEntry = {
   title: 'Entry 3',
   path: `${itemsCollectionPath}/Entry 3.md`,
   properties: {},
   metadata: {},
 };
 
-export const entries = [entry1, entry2, entry3];
+export const itemsEntries = [itemsEntry1, itemsEntry2, itemsEntry3];
+export const entries = [...itemsEntries];
