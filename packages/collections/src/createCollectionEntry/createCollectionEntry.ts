@@ -4,6 +4,7 @@ import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { getCollection } from '../getCollection';
 import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
 import { CollectionEntry } from '../types';
+import { generateDefaultCollectionEntryProperties } from '../utils';
 
 /**
  * Create a new entry in the collection.
@@ -41,7 +42,8 @@ export async function createCollectionEntry<
   }
 
   // Create the entry
-  const entry = await config.createEntry(path, data);
+  const properties = generateDefaultCollectionEntryProperties(collection);
+  const entry = await config.createEntry(path, properties, data);
 
   // Add the entry to the entries store
   CollectionEntriesStore.add(entry);

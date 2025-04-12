@@ -84,6 +84,12 @@ describe('createCollectionEntry', () => {
     expect(entry).toEqual(itemsEntry1);
   });
 
+  it('adds default properties to the entry', async () => {
+    const entry = await createCollectionEntry(itemsCollection.path);
+
+    expect(entry.properties).toEqual({ Genre: 'Non-Fiction' });
+  });
+
   it('dispatches a entries create event', async () =>
     new Promise<void>((done) => {
       Events.addListener('collections:entries:create', 'test', (payload) => {

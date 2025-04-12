@@ -20,7 +20,10 @@ describe('addPropertyToCollection', () => {
     setup();
 
     // Add a collection to the store
-    CollectionsStore.getState().add(itemsCollection);
+    CollectionsStore.getState().add({
+      ...itemsCollection,
+      properties: [],
+    });
   });
 
   afterEach(() => {
