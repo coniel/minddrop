@@ -217,7 +217,7 @@ export const multiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
 /**************** Collection Type Configs ****************/
 /*********************************************************/
 
-export const itemsCollectionTypeConfig: CollectionTypeConfig = {
+export const markdownCollectionTypeConfig: CollectionTypeConfig = {
   id: 'markdown',
   description: {
     en: {
@@ -235,7 +235,7 @@ export const itemsCollectionTypeConfig: CollectionTypeConfig = {
   restoreEntry: async () => entry1,
 };
 
-export const collectionTypeConfigs = [itemsCollectionTypeConfig];
+export const collectionTypeConfigs = [markdownCollectionTypeConfig];
 
 /********************************************************/
 /****************** Collection Entries ******************/
