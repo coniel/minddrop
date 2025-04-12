@@ -3,10 +3,10 @@ export interface CollectionEntry {
    * The entry title. Typically the file name of the primary file associated
    * with the entry.
    */
-  ttile: string;
+  title: string;
 
   /**
-   * The relative path to the entry's primary file within the collection directory.
+   * The path to the entry's primary file.
    */
   path: string;
 

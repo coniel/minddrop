@@ -11,6 +11,7 @@ import {
   CollectionConfig,
   CollectionCreatedPropertySchema,
   CollectionDatePropertySchema,
+  CollectionEntry,
   CollectionLastModifiedPropertySchema,
   CollectionMarkdownPropertySchema,
   CollectionMultiSelectPropertySchema,
@@ -19,6 +20,7 @@ import {
   CollectionSelectPropertySchema,
   CollectionTextPropertySchema,
   CollectionType,
+  CollectionTypeConfig,
   CollectionsConfig,
 } from '../types';
 
@@ -212,3 +214,54 @@ export const multiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
     },
   ],
 };
+
+/*********************************************************/
+/**************** Collection Type Configs ****************/
+/*********************************************************/
+
+export const itemsCollectionTypeConfig: CollectionTypeConfig = {
+  id: 'items',
+  description: {
+    en: {
+      name: 'Items',
+      details: 'A collection of items',
+    },
+  },
+  createEntry: async () => entry1,
+  getEntry: async () => entry1,
+  getAllEntries: async () => entries,
+  deleteEntry: async () => {},
+  archiveEntry: async () => {},
+  setEntryProperties: async () => entry1,
+  renameEntry: async () => entry1,
+  restoreEntry: async () => entry1,
+};
+
+export const collectionTypeConfigs = [itemsCollectionTypeConfig];
+
+/********************************************************/
+/****************** Collection Entries ******************/
+/********************************************************/
+
+export const entry1: CollectionEntry = {
+  title: 'Entry 1',
+  path: `${itemsCollectionPath}/Entry 1.md`,
+  properties: {},
+  metadata: {},
+};
+
+export const entry2: CollectionEntry = {
+  title: 'Entry 2',
+  path: `${itemsCollectionPath}/Entry 2.md`,
+  properties: {},
+  metadata: {},
+};
+
+export const entry3: CollectionEntry = {
+  title: 'Entry 3',
+  path: `${itemsCollectionPath}/Entry 3.md`,
+  properties: {},
+  metadata: {},
+};
+
+export const entries = [entry1, entry2, entry3];

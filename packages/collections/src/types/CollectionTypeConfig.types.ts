@@ -56,6 +56,13 @@ export interface CollectionTypeConfig<
   getEntry(path: string): Promise<TEntry>;
 
   /**
+   * Function called to get all entries from the collection directory.
+   *
+   * @returns An array containing all the entries in the collection.
+   */
+  getAllEntries(): Promise<CollectionEntry[]>;
+
+  /**
    * Function called to set an entry's properties. Should overwrite the entry's
    * existing properties with the new ones, including removing any properties
    * that are no longer present in the new properties.
@@ -103,15 +110,9 @@ export interface CollectionTypeConfig<
    *
    * @param archivePath - The path to the archive directory.
    * @param entryPath - The path to the entry to be restored relative to the archive directory.
+   * @returns The restored entry.
    */
-  restoreEntry(archivePath: string, entryPath: string): Promise<void>;
-
-  /**
-   * Function called to load all entries in the collection store.
-   *
-   * @returns An array containing all the entries in the collection.
-   */
-  loadEntries(): Promise<CollectionEntry[]>;
+  restoreEntry(archivePath: string, entryPath: string): Promise<TEntry>;
 }
 
 interface CollectionTypeDescription {
