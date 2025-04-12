@@ -19,7 +19,6 @@ import {
   CollectionPropertyType,
   CollectionSelectPropertySchema,
   CollectionTextPropertySchema,
-  CollectionType,
   CollectionTypeConfig,
   CollectionsConfig,
 } from '../types';
@@ -27,7 +26,7 @@ import {
 export const collectionsPath = 'collections';
 
 export const itemsCollectionConfig: CollectionConfig = {
-  type: CollectionType.Items,
+  type: 'markdown',
   created: new Date(),
   lastModified: new Date(),
   name: 'Books',
@@ -37,8 +36,7 @@ export const itemsCollectionConfig: CollectionConfig = {
 };
 
 export const notesCollectionConfig: CollectionConfig = {
-  type: CollectionType.Notes,
-
+  type: 'markdown',
   created: new Date(),
   lastModified: new Date(),
   name: 'Notes',
@@ -47,7 +45,7 @@ export const notesCollectionConfig: CollectionConfig = {
 };
 
 export const fileCollectionConfig: CollectionConfig = {
-  type: CollectionType.Files,
+  type: 'files',
   created: new Date(),
   lastModified: new Date(),
   name: 'PDFs',
@@ -56,7 +54,7 @@ export const fileCollectionConfig: CollectionConfig = {
 };
 
 export const weblinkCollectionConfig: CollectionConfig = {
-  type: CollectionType.Weblinks,
+  type: 'links',
   created: new Date(),
   lastModified: new Date(),
   name: 'Bookmarks',
@@ -220,7 +218,7 @@ export const multiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
 /*********************************************************/
 
 export const itemsCollectionTypeConfig: CollectionTypeConfig = {
-  id: 'items',
+  id: 'markdown',
   description: {
     en: {
       name: 'Items',

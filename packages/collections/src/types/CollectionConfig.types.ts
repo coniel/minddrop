@@ -1,7 +1,11 @@
 import { CollectionPropertySchema } from './CollectionPropertiesSchema.types';
-import { CollectionType } from './CollectionType.types';
 
 export interface CollectionConfig {
+  /**
+   * The collection type. Should be a registered collection type.
+   */
+  type: string;
+
   /**
    * The name of the collection, e.g. "Notes".
    * Used as the collection directory name. Must be unique.
@@ -12,11 +16,6 @@ export interface CollectionConfig {
    * The name of a single collection item, e.g. "Note".
    */
   itemName: string;
-
-  /**
-   * The type of items handled by the collection.
-   */
-  type: CollectionType;
 
   /**
    * Date and time the collection was created.
