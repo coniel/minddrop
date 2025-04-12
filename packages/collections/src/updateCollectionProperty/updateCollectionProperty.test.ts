@@ -34,7 +34,7 @@ describe('updateCollectionProperty', () => {
   it('throws if the collection does not exist', async () => {
     await expect(
       updateCollectionProperty('missing', 'Checkbox', {
-        defaultChecked: true,
+        defaultValue: true,
       }),
     ).rejects.toThrow(CollectionNotFoundError);
   });
@@ -42,14 +42,14 @@ describe('updateCollectionProperty', () => {
   it('throws if the property does not exist', async () => {
     await expect(
       updateCollectionProperty(itemsCollection.path, 'missing', {
-        defaultChecked: true,
+        defaultValue: true,
       }),
     ).rejects.toThrow(InvalidParameterError);
   });
 
   it('updates the property', async () => {
     await updateCollectionProperty(itemsCollection.path, 'Checkbox', {
-      defaultChecked: true,
+      defaultValue: true,
     });
 
     const updatedCollection = getCollection(itemsCollection.path);

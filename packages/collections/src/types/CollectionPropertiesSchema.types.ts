@@ -1,9 +1,6 @@
 import { ContentColor } from '@minddrop/core';
 
 export enum CollectionPropertyType {
-  Created = 'created',
-  Modified = 'modified',
-  Markdown = 'markdown',
   Text = 'text',
   Number = 'number',
   Date = 'date',

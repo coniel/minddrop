@@ -7,10 +7,7 @@ import {
 } from '@minddrop/icons';
 import {
   CollectionCheckboxPropertySchema,
-  CollectionCreatedPropertySchema,
   CollectionDatePropertySchema,
-  CollectionLastModifiedPropertySchema,
-  CollectionMarkdownPropertySchema,
   CollectionMultiSelectPropertySchema,
   CollectionNumberPropertySchema,
   CollectionPropertySchema,
@@ -42,37 +39,6 @@ export const InitialCollectionsConfig: CollectionsConfig = {
   paths: [],
 };
 
-export const CreatedPropertySchema: CollectionCreatedPropertySchema = {
-  name: 'Created',
-  type: CollectionPropertyType.Created,
-  icon: Icons.stringify({
-    icon: 'calendar-clock',
-    color: 'default',
-    type: UserIconType.ContentIcon,
-  }),
-};
-
-export const LastModifiedPropertySchema: CollectionLastModifiedPropertySchema =
-  {
-    name: 'Last Modified',
-    type: CollectionPropertyType.Modified,
-    icon: Icons.stringify({
-      icon: 'calendar-clock',
-      color: 'default',
-      type: UserIconType.ContentIcon,
-    }),
-  };
-
-export const MarkdownPropertySchema: CollectionMarkdownPropertySchema = {
-  name: 'Markdown',
-  type: CollectionPropertyType.Markdown,
-  icon: Icons.stringify({
-    icon: 'align-left',
-    color: 'default',
-    type: UserIconType.ContentIcon,
-  }),
-};
-
 export const TextPropertySchema: CollectionTextPropertySchema = {
   name: 'Text',
   type: CollectionPropertyType.Text,
@@ -96,6 +62,8 @@ export const NumberPropertySchema: CollectionNumberPropertySchema = {
 export const DatePropertySchema: CollectionDatePropertySchema = {
   name: 'Date',
   type: CollectionPropertyType.Date,
+  locale: 'en-GB',
+  format: { dateStyle: 'long', timeStyle: 'short' },
   icon: Icons.stringify({
     icon: 'calendar',
     color: 'default',
@@ -111,7 +79,7 @@ export const CheckboxPropertySchema: CollectionCheckboxPropertySchema = {
     color: 'default',
     type: UserIconType.ContentIcon,
   }),
-  defaultChecked: false,
+  defaultValue: false,
 };
 
 export const SelectPropertySchema: CollectionSelectPropertySchema = {
@@ -140,9 +108,6 @@ export const CollectionPropertySchemas: Record<
   CollectionPropertyType,
   CollectionPropertySchema
 > = {
-  [CollectionPropertyType.Created]: CreatedPropertySchema,
-  [CollectionPropertyType.Modified]: LastModifiedPropertySchema,
-  [CollectionPropertyType.Markdown]: MarkdownPropertySchema,
   [CollectionPropertyType.Text]: TextPropertySchema,
   [CollectionPropertyType.Number]: NumberPropertySchema,
   [CollectionPropertyType.Date]: DatePropertySchema,
