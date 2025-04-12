@@ -57,7 +57,7 @@ describe('updateCollectionProperty', () => {
     expect(updatedCollection?.properties).toEqual([
       {
         ...CheckboxPropertySchema,
-        defaultChecked: true,
+        defaultValue: true,
       },
     ]);
   });
