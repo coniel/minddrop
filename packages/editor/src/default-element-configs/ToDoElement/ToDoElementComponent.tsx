@@ -41,7 +41,7 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
         <Icon
           onClick={togglechecked}
           role="button"
-          name={element.checked ? 'checkmark-square-2' : 'square'}
+          name={element.checked ? 'check-square' : 'square'}
         />
       </div>
       <div className="content">
