@@ -1,0 +1,33 @@
+import {
+  Collection,
+  CollectionEntryProperties,
+  CollectionPropertyType,
+} from '../../types';
+
+/**
+ * Generates default properties for a collection entry based on the
+ * collection's properties.
+ *
+ * @param collection - The parent collection of the entry to generate the default properties for.
+ * @returns The default properties for the collection entry.
+ */
+export function generateDefaultCollectionEntryProperties(
+  collection: Collection,
+): CollectionEntryProperties {
+  return collection.properties.reduce((properties, property) => {
+    if (typeof property.defaultValue !== 'undefined') {
+      // If the property is a date, format the default value
+      if (property.type === CollectionPropertyType.Date) {
+        const format = Intl.DateTimeFormat(property.locale, property.format);
+
+        properties[property.name] = format.format(
+          property.defaultValue === 'now' ? new Date() : property.defaultValue,
+        );
+      } else {
+        properties[property.name] = property.defaultValue;
+      }
+    }
+
+    return properties;
+  }, {} as CollectionEntryProperties);
+}
