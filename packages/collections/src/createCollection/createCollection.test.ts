@@ -10,7 +10,6 @@ import { ICONS_TEST_DATA } from '@minddrop/icons';
 import { CollectionsStore } from '../CollectionsStore';
 import { getCollectionsConfig } from '../getCollectionsConfig';
 import { cleanup, collectionsConfigFileDescriptor, setup } from '../test-utils';
-import { CollectionType } from '../types';
 import { createCollection } from './createCollection';
 
 const { contentIconString } = ICONS_TEST_DATA;
@@ -35,7 +34,7 @@ describe('createCollection', () => {
   it('throws if the path is invalid', () => {
     expect(() =>
       createCollection('foo', {
-        type: CollectionType.Items,
+        type: 'markdown',
         name: 'Notes',
         itemName: 'Note',
       }),
@@ -45,7 +44,7 @@ describe('createCollection', () => {
   it('throws if the path already exists', () => {
     expect(() =>
       createCollection(BASE_PATH, {
-        type: CollectionType.Items,
+        type: 'markdown',
         name: 'Notes',
         itemName: 'Note',
       }),
@@ -54,7 +53,7 @@ describe('createCollection', () => {
 
   it('creates the collection directory', async () => {
     await createCollection(BASE_PATH, {
-      type: CollectionType.Items,
+      type: 'markdown',
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -64,7 +63,7 @@ describe('createCollection', () => {
 
   it('returns the collection', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.Items,
+      type: 'markdown',
       name: 'Tasks',
       itemName: 'Task',
       description: 'A collection of tasks',
@@ -72,7 +71,7 @@ describe('createCollection', () => {
     });
 
     expect(collection).toEqual({
-      type: CollectionType.Items,
+      type: 'markdown',
       path: Fs.concatPath(BASE_PATH, 'Tasks'),
       name: 'Tasks',
       itemName: 'Task',
@@ -86,7 +85,7 @@ describe('createCollection', () => {
 
   it('creates the collection metadata file', async () => {
     const { path, ...config } = await createCollection(BASE_PATH, {
-      type: CollectionType.Items,
+      type: 'markdown',
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -105,7 +104,7 @@ describe('createCollection', () => {
 
   it('adds the collection to the store', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.Items,
+      type: 'markdown',
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -119,7 +118,7 @@ describe('createCollection', () => {
 
   it('persists collection to collections config file', async () => {
     const collection = await createCollection(BASE_PATH, {
-      type: CollectionType.Items,
+      type: 'markdown',
       name: 'Tasks',
       itemName: 'Task',
     });
@@ -136,7 +135,7 @@ describe('createCollection', () => {
       Events.addListener('collections:collection:create', 'test', (payload) => {
         // Payload data should be the collection config
         expect(payload.data).toEqual({
-          type: CollectionType.Items,
+          type: 'markdown',
           name: 'Tasks',
           itemName: 'Task',
           created: expect.any(Date),
@@ -148,7 +147,7 @@ describe('createCollection', () => {
       });
 
       createCollection(BASE_PATH, {
-        type: CollectionType.Items,
+        type: 'markdown',
         name: 'Tasks',
         itemName: 'Task',
       });
