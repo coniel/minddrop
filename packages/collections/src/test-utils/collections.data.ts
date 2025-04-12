@@ -9,11 +9,8 @@ import {
   Collection,
   CollectionCheckboxPropertySchema,
   CollectionConfig,
-  CollectionCreatedPropertySchema,
   CollectionDatePropertySchema,
   CollectionEntry,
-  CollectionLastModifiedPropertySchema,
-  CollectionMarkdownPropertySchema,
   CollectionMultiSelectPropertySchema,
   CollectionNumberPropertySchema,
   CollectionPropertyType,
@@ -32,7 +29,23 @@ export const itemsCollectionConfig: CollectionConfig = {
   name: 'Books',
   itemName: 'Book',
   description: 'A collection of books',
-  properties: [],
+  properties: [
+    {
+      type: CollectionPropertyType.Select,
+      name: 'Genre',
+      defaultValue: 'Non-Fiction',
+      options: [
+        {
+          value: 'Fiction',
+          color: 'blue',
+        },
+        {
+          value: 'Non-Fiction',
+          color: 'red',
+        },
+      ],
+    },
+  ],
 };
 
 export const notesCollectionConfig: CollectionConfig = {
@@ -146,22 +159,6 @@ export const collectionsConfigFileDescriptor: MockFileDescriptor = {
 /***************** Collection Properties *****************/
 /*********************************************************/
 
-export const createdPropertySchema: CollectionCreatedPropertySchema = {
-  type: CollectionPropertyType.Created,
-  name: 'Created',
-};
-
-export const lastModifiedPropertySchema: CollectionLastModifiedPropertySchema =
-  {
-    type: CollectionPropertyType.Modified,
-    name: 'Last Modified',
-  };
-
-export const markdownPropertySchema: CollectionMarkdownPropertySchema = {
-  type: CollectionPropertyType.Markdown,
-  name: 'Markdown',
-};
-
 export const textPropertyScehma: CollectionTextPropertySchema = {
   type: CollectionPropertyType.Text,
   name: 'Text',
@@ -175,12 +172,17 @@ export const numberPropertySchema: CollectionNumberPropertySchema = {
 export const datePropertySchema: CollectionDatePropertySchema = {
   type: CollectionPropertyType.Date,
   name: 'Date',
+  locale: 'en-GB',
+  format: {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  },
 };
 
 export const checkboxPropertySchema: CollectionCheckboxPropertySchema = {
   type: CollectionPropertyType.Checkbox,
   name: 'Checkbox',
-  defaultChecked: false,
+  defaultValue: false,
 };
 
 export const selectPropertySchema: CollectionSelectPropertySchema = {
@@ -225,7 +227,10 @@ export const markdownCollectionTypeConfig: CollectionTypeConfig = {
       details: 'A collection of items',
     },
   },
-  createEntry: async () => itemsEntry1,
+  createEntry: async (_, defaultProperties) => ({
+    ...itemsEntry1,
+    properties: defaultProperties,
+  }),
   getEntry: async () => itemsEntry1,
   getAllEntries: async () => itemsEntries,
   deleteEntry: async () => {},
@@ -287,21 +292,27 @@ export const collectionTypeConfigs = [
 export const itemsEntry1: CollectionEntry = {
   title: 'Entry 1',
   path: `${itemsCollectionPath}/Entry 1.md`,
-  properties: {},
+  properties: {
+    Genre: 'Non-Fiction',
+  },
   metadata: {},
 };
 
 export const itemsEntry2: CollectionEntry = {
   title: 'Entry 2',
   path: `${itemsCollectionPath}/Entry 2.md`,
-  properties: {},
+  properties: {
+    Genre: 'Fiction',
+  },
   metadata: {},
 };
 
 export const itemsEntry3: CollectionEntry = {
   title: 'Entry 3',
   path: `${itemsCollectionPath}/Entry 3.md`,
-  properties: {},
+  properties: {
+    Genre: 'Fiction',
+  },
   metadata: {},
 };
 

@@ -24,6 +24,7 @@ export interface CollectionEntry {
 
 export type CollectionEntryPropertyValue =
   | string
+  | string[]
   | number
   | boolean
   | Date

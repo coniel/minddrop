@@ -33,57 +33,44 @@ interface CollectionPropertySchemaBase {
   description?: string;
 }
 
-export interface CollectionCreatedPropertySchema
-  extends CollectionPropertySchemaBase {
-  type: CollectionPropertyType.Created;
-}
-
-export interface CollectionLastModifiedPropertySchema
-  extends CollectionPropertySchemaBase {
-  type: CollectionPropertyType.Modified;
-}
-
-export interface CollectionMarkdownPropertySchema
-  extends CollectionPropertySchemaBase {
-  type: CollectionPropertyType.Markdown;
-}
-
 export interface CollectionTextPropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Text;
+  defaultValue?: string;
 }
 
 export interface CollectionNumberPropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Number;
+  defaultValue?: number;
 }
 
 export interface CollectionDatePropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Date;
+  format: Intl.DateTimeFormatOptions;
+  locale: Intl.LocalesArgument;
+  defaultValue?: Date | 'now';
 }
 
 export interface CollectionCheckboxPropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Checkbox;
-
-  /**
-   * Determines the default value of the checkbox property
-   * when creating a new entry.
-   */
-  defaultChecked: boolean;
+  defaultValue?: boolean;
 }
 
 export interface CollectionSelectPropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.Select;
   options: CollectionSelectPropertyOption[];
+  defaultValue?: string;
 }
 
 export interface CollectionMultiSelectPropertySchema
   extends CollectionPropertySchemaBase {
   type: CollectionPropertyType.MultiSelect;
   options: CollectionSelectPropertyOption[];
+  defaultValue?: string[];
 }
 
 export interface CollectionSelectPropertyOption {
@@ -92,9 +79,6 @@ export interface CollectionSelectPropertyOption {
 }
 
 export type CollectionPropertySchema =
-  | CollectionCreatedPropertySchema
-  | CollectionLastModifiedPropertySchema
-  | CollectionMarkdownPropertySchema
   | CollectionTextPropertySchema
   | CollectionNumberPropertySchema
   | CollectionDatePropertySchema

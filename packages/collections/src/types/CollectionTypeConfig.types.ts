@@ -39,12 +39,28 @@ export interface CollectionTypeConfig<
    * requires data to create an entry.
    *
    * @param path - The path to the collection directory.
+   * @param defaultPrperties - The default properties of the entry, based on the collection property configs.
    * @param data - The data used to create the entry.
    */
-  createEntry(path: string): Promise<TEntry>;
-  createEntry(path: string, data: string): Promise<TEntry>;
-  createEntry(path: string, data: File): Promise<TEntry>;
-  createEntry(path: string, data?: string | File): Promise<TEntry>;
+  createEntry(
+    path: string,
+    defaultPrperties: CollectionEntryProperties,
+  ): Promise<TEntry>;
+  createEntry(
+    path: string,
+    defaultPrperties: CollectionEntryProperties,
+    data: string,
+  ): Promise<TEntry>;
+  createEntry(
+    path: string,
+    defaultPrperties: CollectionEntryProperties,
+    data: File,
+  ): Promise<TEntry>;
+  createEntry(
+    path: string,
+    defaultPrperties: CollectionEntryProperties,
+    data?: string | File,
+  ): Promise<TEntry>;
 
   /**
    * Function called to retrieve an entry from the collection.
