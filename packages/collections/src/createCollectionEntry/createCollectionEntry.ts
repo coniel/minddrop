@@ -43,7 +43,8 @@ export async function createCollectionEntry<
 
   // Create the entry
   const properties = generateDefaultCollectionEntryProperties(collection);
-  const entry = await config.createEntry(path, properties, data);
+  const metadata = { created: new Date(), lastModified: new Date() };
+  const entry = await config.createEntry(path, properties, metadata, data);
 
   // Add the entry to the entries store
   CollectionEntriesStore.add(entry);

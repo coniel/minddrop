@@ -45,20 +45,24 @@ export interface CollectionTypeConfig<
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
+    metadata: CollectionEntryProperties,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
+    metadata: CollectionEntryProperties,
     data: string,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
+    metadata: CollectionEntryProperties,
     data: File,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
+    metadata: CollectionEntryProperties,
     data?: string | File,
   ): Promise<TEntry>;
 
