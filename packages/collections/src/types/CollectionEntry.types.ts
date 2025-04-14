@@ -6,7 +6,12 @@ export interface CollectionEntry {
   title: string;
 
   /**
-   * The path to the entry's primary file.
+   * The path to the collection that the entry belongs to.
+   */
+  collectionPath: string;
+
+  /**
+   * The path to the entry's primary file relative to the collection's path.
    */
   path: string;
 

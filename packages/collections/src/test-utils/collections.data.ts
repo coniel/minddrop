@@ -291,7 +291,8 @@ export const collectionTypeConfigs = [
 // Items Collection Entries
 export const itemsEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `${itemsCollectionPath}/Entry 1.md`,
+  path: `Entry 1.md`,
+  collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Non-Fiction',
   },
@@ -300,7 +301,8 @@ export const itemsEntry1: CollectionEntry = {
 
 export const itemsEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `${itemsCollectionPath}/Entry 2.md`,
+  path: `/Entry 2.md`,
+  collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Fiction',
   },
@@ -309,7 +311,8 @@ export const itemsEntry2: CollectionEntry = {
 
 export const itemsEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `${itemsCollectionPath}/Entry 3.md`,
+  path: `Entry 3.md`,
+  collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Fiction',
   },
@@ -319,21 +322,24 @@ export const itemsEntry3: CollectionEntry = {
 // Files Collection Entries
 export const filesEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `${filesCollectionPath}/Entry 1.md`,
+  path: `Entry 1.md`,
+  collectionPath: filesCollectionPath,
   properties: {},
   metadata: {},
 };
 
 export const filesEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `${filesCollectionPath}/Entry 2.md`,
+  path: `Entry 2.md`,
+  collectionPath: filesCollectionPath,
   properties: {},
   metadata: {},
 };
 
 export const filesEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `${filesCollectionPath}/Entry 3.md`,
+  path: `Entry 3.md`,
+  collectionPath: filesCollectionPath,
   properties: {},
   metadata: {},
 };
@@ -341,21 +347,24 @@ export const filesEntry3: CollectionEntry = {
 // Links Collection Entries
 export const linksEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `${linksCollectionPath}/Entry 1.md`,
+  path: `Entry 1.md`,
+  collectionPath: linksCollectionPath,
   properties: {},
   metadata: {},
 };
 
 export const linksEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `${linksCollectionPath}/Entry 2.md`,
+  path: `Entry 2.md`,
+  collectionPath: linksCollectionPath,
   properties: {},
   metadata: {},
 };
 
 export const linksEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `${linksCollectionPath}/Entry 3.md`,
+  path: `Entry 3.md`,
+  collectionPath: linksCollectionPath,
   properties: {},
   metadata: {},
 };

@@ -74,10 +74,15 @@ export const loadCollectionEntries = (entries: CollectionEntry[]): void =>
  * @param path - The collection entry's path.
  * @returns The collection entry or null if it doesn't exist.
  */
-export const useCollectionEntry = (path: string): CollectionEntry | null => {
+export const useCollectionEntry = (
+  collectionPath: string,
+  entryPath: string,
+): CollectionEntry | null => {
   return (
-    CollectionEntriesStore.useAllItems().find((type) => type.path === path) ||
-    null
+    CollectionEntriesStore.useAllItems().find(
+      (entry) =>
+        entry.collectionPath === collectionPath && entry.path === entryPath,
+    ) || null
   );
 };
 
@@ -90,7 +95,7 @@ export const useCollectionEntry = (path: string): CollectionEntry | null => {
 export const useCollectionEntries = (
   collectionPath: string,
 ): CollectionEntry[] => {
-  return CollectionEntriesStore.useAllItems().filter((entry) =>
-    entry.path.startsWith(collectionPath),
+  return CollectionEntriesStore.useAllItems().filter(
+    (entry) => entry.collectionPath === collectionPath,
   );
 };
