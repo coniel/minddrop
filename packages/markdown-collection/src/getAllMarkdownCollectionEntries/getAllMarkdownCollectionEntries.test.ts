@@ -24,7 +24,7 @@ const entry: CollectionEntry = {
   collectionPath,
   properties,
   metadata,
-  markdown: `# ${UNTITLED}\n`,
+  markdown: `# ${UNTITLED}`,
 };
 
 describe('getAllMarkdownCollectionEntries', () => {

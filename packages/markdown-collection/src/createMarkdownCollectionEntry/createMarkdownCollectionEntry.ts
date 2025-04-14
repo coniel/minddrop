@@ -38,7 +38,7 @@ export async function createMarkdownCollectionEntry(
   }
 
   // Use the file name as the markdown heading
-  let markdown = `# ${title}\n`;
+  let markdown = `# ${title}`;
 
   // Add default properties as frontmatter
   const fileContents = Markdown.setProperties(markdown, defaultProperties);
