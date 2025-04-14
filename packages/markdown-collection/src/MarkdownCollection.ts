@@ -1,5 +1,6 @@
 import { CollectionTypeConfig } from '@minddrop/collections';
 import { createMarkdownCollectionEntry } from './createMarkdownCollectionEntry';
+import { getAllMarkdownCollectionEntries } from './getAllMarkdownCollectionEntries';
 
 export const MarkdownCollection: CollectionTypeConfig = {
   id: 'markdown',
@@ -9,7 +10,7 @@ export const MarkdownCollection: CollectionTypeConfig = {
       details: 'Markdown file based collection.',
     },
   },
-  getAllEntries: async () => [],
+  getAllEntries: getAllMarkdownCollectionEntries,
   getEntry: async () => ({}) as any,
   createEntry: createMarkdownCollectionEntry,
   deleteEntry: async () => {},

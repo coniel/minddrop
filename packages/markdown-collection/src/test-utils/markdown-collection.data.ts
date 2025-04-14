@@ -1,12 +1,11 @@
 import { Collection, CollectionConfigDirName } from '@minddrop/collections';
 import { Fs } from '@minddrop/file-system';
-import { MarkdownCollectionMetadataDirName } from '../../constants';
+import { MarkdownCollectionMetadataDir } from '../../constants';
 
 export const collectionPath = 'Notes';
 export const collectionMetadataPath = Fs.concatPath(
   collectionPath,
-  CollectionConfigDirName,
-  MarkdownCollectionMetadataDirName,
+  MarkdownCollectionMetadataDir,
 );
 
 export const markdownCollection: Collection = {
