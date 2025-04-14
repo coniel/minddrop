@@ -445,6 +445,9 @@ importers:
       '@minddrop/image-block':
         specifier: workspace:*
         version: link:../../extensions/image-block
+      '@minddrop/markdown-collection':
+        specifier: workspace:*
+        version: link:../markdown-collection
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection

@@ -2,12 +2,14 @@ import { Ast } from '@minddrop/ast';
 import { initializeBlocks } from '@minddrop/blocks';
 import DocumentBoardView from '@minddrop/board-view';
 import BookmarkBlockExtension from '@minddrop/bookmark-block';
+import { Collections } from '@minddrop/collections';
 import { loadConfigs } from '@minddrop/core';
 import { initializeDocuments } from '@minddrop/documents';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
 import ImageBlockExtension from '@minddrop/image-block';
+import { MarkdownCollection } from '@minddrop/markdown-collection';
 import TextBlockExtension from '@minddrop/text-block';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Workspaces } from '@minddrop/workspaces';
@@ -26,6 +28,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
+  Collections.registerType(MarkdownCollection);
 
   // Load persisted config values
   await loadConfigs();
