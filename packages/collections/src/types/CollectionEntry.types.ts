@@ -25,6 +25,12 @@ export interface CollectionEntry {
    * char/word count, etc.
    */
   metadata: CollectionEntryProperties;
+
+  /**
+   * The entry's markdown content.
+   * Only present when the collection content type is 'markdown'.
+   */
+  markdown?: string;
 }
 
 export type CollectionEntryPropertyValue =
