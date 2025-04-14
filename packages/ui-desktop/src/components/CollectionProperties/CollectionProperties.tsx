@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Collection, Collections } from '@minddrop/collections';
-import {
-  CollectionPropertySchema,
-  CollectionPropertyType,
-} from '@minddrop/collections/src/types/CollectionPropertiesSchema.types';
+import { CollectionPropertyType } from '@minddrop/collections/src/types/CollectionPropertiesSchema.types';
 import {
   Box,
   Button,
@@ -35,12 +32,9 @@ const IconMap: Record<CollectionPropertyType, UiIconName> = {
   [CollectionPropertyType.Text]: 'text',
   [CollectionPropertyType.Number]: 'hash',
   [CollectionPropertyType.Date]: 'calendar',
-  [CollectionPropertyType.Checkbox]: 'checkmark-square',
-  [CollectionPropertyType.Select]: 'checkmark',
+  [CollectionPropertyType.Checkbox]: 'check-square',
+  [CollectionPropertyType.Select]: 'check-square',
   [CollectionPropertyType.MultiSelect]: 'list',
-  [CollectionPropertyType.Created]: 'calendar',
-  [CollectionPropertyType.Modified]: 'calendar',
-  [CollectionPropertyType.Markdown]: 'text',
 };
 
 export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
@@ -71,7 +65,7 @@ export const CollectionProperties: React.FC<CollectionPropertiesProps> = ({
             Basic properties
           </Text>
           <SecondaryNavItem label="Title" icon="text" />
-          <SecondaryNavItem label="Icon" icon="color-palette" />
+          <SecondaryNavItem label="Icon" icon="palette" />
           <SecondaryNavItem label="Created date" icon="calendar" />
           <SecondaryNavItem label="Last modified date" icon="calendar" />
           <SecondaryNavItem label="Markdown content" icon="menu" />
