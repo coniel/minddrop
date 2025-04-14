@@ -37,6 +37,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/image-block": "workspace:*",
+    "@minddrop/markdown-collection": "workspace:*",
     "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/text-block": "workspace:*",
