@@ -93,6 +93,7 @@ describe('createMarkdownCollectionEntry', () => {
       title: UNTITLED,
       properties,
       metadata,
+      markdown: `# ${UNTITLED}\n`,
     });
   });
 });

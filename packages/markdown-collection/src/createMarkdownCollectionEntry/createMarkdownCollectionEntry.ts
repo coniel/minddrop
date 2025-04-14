@@ -1,12 +1,11 @@
 import {
-  CollectionConfigDirName,
   CollectionEntry,
   CollectionEntryProperties,
 } from '@minddrop/collections';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { Markdown } from '@minddrop/markdown';
-import { MarkdownCollectionMetadataDirName } from '../../constants';
+import { MarkdownCollectionMetadataDir } from '../../constants';
 
 /**
  * Creates a new markdown collection entry.
@@ -39,20 +38,19 @@ export async function createMarkdownCollectionEntry(
   }
 
   // Use the file name as the markdown heading
-  let markdown = `# ${title}\n\n`;
+  let markdown = `# ${title}\n`;
 
   // Add default properties as frontmatter
-  markdown = Markdown.setProperties(markdown, defaultProperties);
+  const fileContents = Markdown.setProperties(markdown, defaultProperties);
 
   // Write the markdown file into the collection directory
-  await Fs.writeTextFile(path, markdown);
+  await Fs.writeTextFile(path, fileContents);
 
   // Write the metadata file into the collection metadata directory
   await Fs.writeTextFile(
     Fs.concatPath(
       collectionPath,
-      CollectionConfigDirName,
-      MarkdownCollectionMetadataDirName,
+      MarkdownCollectionMetadataDir,
       `${title}.json`,
     ),
     JSON.stringify(metadata),
@@ -65,5 +63,6 @@ export async function createMarkdownCollectionEntry(
     collectionPath,
     metadata,
     properties: defaultProperties,
+    markdown,
   };
 }
