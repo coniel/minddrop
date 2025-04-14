@@ -1,0 +1,1 @@
+export { MarkdownCollection } from './MarkdownCollection';

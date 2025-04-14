@@ -959,6 +959,34 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
+  packages/markdown-collection:
+    dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../collections
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/markdown':
+        specifier: workspace:*
+        version: link:../markdown
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
+
   packages/scripts:
     devDependencies:
       '@types/svg-parser':
