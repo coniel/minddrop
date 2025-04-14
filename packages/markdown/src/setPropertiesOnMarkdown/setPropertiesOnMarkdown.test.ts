@@ -31,4 +31,14 @@ foo: bar
       markdownWithProperties,
     );
   });
+
+  it('removes frontmatter if no properties are provided', () => {
+    const markdown = `---
+  foo: bar
+---
+
+# Title`;
+
+    expect(setPropertiesOnMarkdown(markdown, {})).toEqual('# Title');
+  });
 });
