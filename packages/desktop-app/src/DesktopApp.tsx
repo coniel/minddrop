@@ -3,7 +3,7 @@ import { MindDropApiProvider } from '@minddrop/extensions';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
 import { CollectionView } from '@minddrop/ui-desktop';
-import { ThemePanel, TooltipProvider } from '@minddrop/ui-elements';
+import { TooltipProvider } from '@minddrop/ui-elements';
 import { DragImageProvider } from '@minddrop/utils';
 import {
   AppUiState,
@@ -37,7 +37,6 @@ export const DesktopApp: React.FC = () => {
         >
           <MindDropApiProvider>
             <DragImageProvider>
-              <ThemePanel />
               <div className="app">
                 <AppSidebar />
                 <div className="app-content">
