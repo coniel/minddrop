@@ -1,4 +1,7 @@
-import { CollectionEntry } from '@minddrop/collections';
+import {
+  CollectionEntry,
+  CollectionEntryMetadata,
+} from '@minddrop/collections';
 import { Fs } from '@minddrop/file-system';
 import { Markdown } from '@minddrop/markdown';
 import { MarkdownCollectionMetadataDir } from '../../constants';
@@ -27,7 +30,10 @@ export async function getAllMarkdownCollectionEntries(
       try {
         const title = Fs.removeExtension(file.name);
         const content = await Fs.readTextFile(file.path);
-        let metadata = {};
+        let metadata: CollectionEntryMetadata = {
+          created: new Date(),
+          lastModified: new Date(),
+        };
 
         // Metdata files are expected to exist and therefor we don't check
         // for existence before attempting to read them. However, we don't
@@ -43,6 +49,9 @@ export async function getAllMarkdownCollectionEntries(
           );
 
           metadata = JSON.parse(metadataFileContent);
+          // Parse the created and lastModified dates
+          metadata.created = new Date(metadata.created);
+          metadata.lastModified = new Date(metadata.lastModified);
         } catch (e) {
           // Ignore errors reading metadata
         }
@@ -58,7 +67,7 @@ export async function getAllMarkdownCollectionEntries(
           collectionPath,
           properties,
           metadata,
-          markdown,
+          content: markdown,
         };
       } catch (e) {
         // Ignore errors reading files and return null to ignore the entry

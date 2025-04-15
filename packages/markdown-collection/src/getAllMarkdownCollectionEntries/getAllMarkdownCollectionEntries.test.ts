@@ -17,14 +17,14 @@ const UNTITLED = i18n.t('documents.untitled');
 const MockFs = initializeMockFileSystem(collectionFileDescriptors);
 
 const properties = { foo: 'bar' };
-const metadata = { bar: 'baz' };
+const metadata = { created: new Date(), lastModified: new Date() };
 const entry: CollectionEntry = {
   title: UNTITLED,
   path: `${UNTITLED}.md`,
   collectionPath,
   properties,
   metadata,
-  markdown: `# ${UNTITLED}`,
+  content: `# ${UNTITLED}`,
 };
 
 describe('getAllMarkdownCollectionEntries', () => {
@@ -63,7 +63,10 @@ describe('getAllMarkdownCollectionEntries', () => {
     expect(entries.length).toBe(2);
     expect(entries[0]).toEqual({
       ...entry,
-      metadata: {},
+      metadata: {
+        created: expect.any(Date),
+        lastModified: expect.any(Date),
+      },
     });
   });
 });

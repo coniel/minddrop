@@ -13,6 +13,11 @@ import { createMarkdownCollectionEntry } from './createMarkdownCollectionEntry';
 const UNTITLED = i18n.t('documents.untitled');
 const UNTITLED_MD = `${UNTITLED}.md`;
 
+const metadata = {
+  created: new Date(),
+  lastModified: new Date(),
+};
+
 const MockFs = initializeMockFileSystem(collectionFileDescriptors);
 
 describe('createMarkdownCollectionEntry', () => {
@@ -24,7 +29,7 @@ describe('createMarkdownCollectionEntry', () => {
   });
 
   it('writes the entry markdown file', async () => {
-    await createMarkdownCollectionEntry(markdownCollection.path, {}, {});
+    await createMarkdownCollectionEntry(markdownCollection.path, {}, metadata);
 
     expect(
       MockFs.exists(Fs.concatPath(markdownCollection.path, UNTITLED_MD)),
@@ -32,8 +37,8 @@ describe('createMarkdownCollectionEntry', () => {
   });
 
   it('increments the entry number if the file already exists', async () => {
-    await createMarkdownCollectionEntry(markdownCollection.path, {}, {});
-    await createMarkdownCollectionEntry(markdownCollection.path, {}, {});
+    await createMarkdownCollectionEntry(markdownCollection.path, {}, metadata);
+    await createMarkdownCollectionEntry(markdownCollection.path, {}, metadata);
 
     expect(
       MockFs.exists(Fs.concatPath(markdownCollection.path, `${UNTITLED} 1.md`)),
@@ -41,7 +46,7 @@ describe('createMarkdownCollectionEntry', () => {
   });
 
   it('writes the title as the markdown heading', async () => {
-    await createMarkdownCollectionEntry(markdownCollection.path, {}, {});
+    await createMarkdownCollectionEntry(markdownCollection.path, {}, metadata);
 
     const markdown = MockFs.readTextFile(
       Fs.concatPath(markdownCollection.path, UNTITLED_MD),
@@ -56,7 +61,7 @@ describe('createMarkdownCollectionEntry', () => {
     await createMarkdownCollectionEntry(
       markdownCollection.path,
       properties,
-      {},
+      metadata,
     );
 
     const markdown = MockFs.readTextFile(
@@ -67,8 +72,6 @@ describe('createMarkdownCollectionEntry', () => {
   });
 
   it('creates a metadata file', async () => {
-    const metadata = { foo: 'bar' };
-
     await createMarkdownCollectionEntry(markdownCollection.path, {}, metadata);
 
     const metadataFile = MockFs.readTextFile(
@@ -80,7 +83,6 @@ describe('createMarkdownCollectionEntry', () => {
 
   it('returns the entry', async () => {
     const properties = { foo: 'bar' };
-    const metadata = { bar: 'baz' };
     const entry = await createMarkdownCollectionEntry(
       markdownCollection.path,
       properties,
@@ -88,12 +90,12 @@ describe('createMarkdownCollectionEntry', () => {
     );
 
     expect(entry).toEqual({
-      path: UNTITLED_MD,
+      path: Fs.concatPath(markdownCollection.path, UNTITLED_MD),
       collectionPath: markdownCollection.path,
       title: UNTITLED,
       properties,
       metadata,
-      markdown: `# ${UNTITLED}`,
+      content: `# ${UNTITLED}`,
     });
   });
 });

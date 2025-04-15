@@ -1,5 +1,6 @@
 import {
   CollectionEntry,
+  CollectionEntryMetadata,
   CollectionEntryProperties,
 } from '@minddrop/collections';
 import { Fs } from '@minddrop/file-system';
@@ -18,14 +19,12 @@ import { MarkdownCollectionMetadataDir } from '../../constants';
 export async function createMarkdownCollectionEntry(
   collectionPath: string,
   defaultProperties: CollectionEntryProperties,
-  metadata: CollectionEntryProperties,
+  metadata: CollectionEntryMetadata,
 ): Promise<CollectionEntry> {
   // Use 'Untitled' as the default title
   let title = i18n.t('labels.untitled');
-  // Path of the markdown file within the collection directory
-  let relativePath = `${title}.md`;
   // Absolute path of the markdown file
-  let path = Fs.concatPath(collectionPath, relativePath);
+  let path = Fs.concatPath(collectionPath, `${title}.md`);
 
   // Ensure that the markdown file name does not conflict with existing files
   const { increment } = await Fs.incrementalPath(path);
@@ -33,8 +32,7 @@ export async function createMarkdownCollectionEntry(
   // Update the title and path if there is a conflict
   if (increment) {
     title = `${title} ${increment}`;
-    relativePath = `${title}.md`;
-    path = Fs.concatPath(collectionPath, relativePath);
+    path = Fs.concatPath(collectionPath, `${title}.md`);
   }
 
   // Use the file name as the markdown heading
@@ -59,10 +57,10 @@ export async function createMarkdownCollectionEntry(
   // Return the entry
   return {
     title,
-    path: relativePath,
+    path,
     collectionPath,
     metadata,
     properties: defaultProperties,
-    markdown,
+    content: markdown,
   };
 }
