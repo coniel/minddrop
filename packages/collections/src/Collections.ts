@@ -24,6 +24,7 @@ export { loadCollectionEntries as loadEntries } from './loadCollectionEntries';
 export { createCollectionEntry as createEntry } from './createCollectionEntry';
 export { getCollectionEntry as getEntry } from './getCollectionEntry';
 export { updateCollectionEntryProperties as updateEntryProperties } from './updateCollectionEntryProperties';
+export { updateCollectionEntryContent as updateEntryContent } from './updateCollectionEntryContent';
 export {
   registerCollectionTypeConfig as registerType,
   unregisterCollectionTypeConfig as unregisterType,
