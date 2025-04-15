@@ -23,6 +23,7 @@ export { getCollectionTypeConfig as getTypeConfig } from './getCollectionTypeCon
 export { loadCollectionEntries as loadEntries } from './loadCollectionEntries';
 export { createCollectionEntry as createEntry } from './createCollectionEntry';
 export { getCollectionEntry as getEntry } from './getCollectionEntry';
+export { updateCollectionEntryProperties as updateEntryProperties } from './updateCollectionEntryProperties';
 export {
   registerCollectionTypeConfig as registerType,
   unregisterCollectionTypeConfig as unregisterType,
