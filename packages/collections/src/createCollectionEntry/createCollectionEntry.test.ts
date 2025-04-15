@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
@@ -16,6 +16,14 @@ import {
   setup,
 } from '../test-utils';
 import { createCollectionEntry } from './createCollectionEntry';
+
+const newEntry = {
+  ...itemsEntry1,
+  metadata: {
+    created: expect.any(Date),
+    lastModified: expect.any(Date),
+  },
+};
 
 describe('createCollectionEntry', () => {
   beforeEach(() =>
@@ -75,13 +83,13 @@ describe('createCollectionEntry', () => {
   it('creates a new entry and adds it to the entries store', async () => {
     await createCollectionEntry(itemsCollection.path);
 
-    expect(CollectionEntriesStore.getAll()).toEqual([itemsEntry1]);
+    expect(CollectionEntriesStore.getAll()).toEqual([newEntry]);
   });
 
   it('returns the created entry', async () => {
     const entry = await createCollectionEntry(itemsCollection.path);
 
-    expect(entry).toEqual(itemsEntry1);
+    expect(entry).toEqual(newEntry);
   });
 
   it('adds default properties to the entry', async () => {
@@ -90,11 +98,23 @@ describe('createCollectionEntry', () => {
     expect(entry.properties).toEqual({ Genre: 'Non-Fiction' });
   });
 
+  it('adds default metadata to the entry', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2023-01-01T00:00:00Z'));
+
+    const entry = await createCollectionEntry(itemsCollection.path);
+
+    expect(entry.metadata).toEqual({
+      created: new Date('2023-01-01T00:00:00Z'),
+      lastModified: new Date('2023-01-01T00:00:00Z'),
+    });
+  });
+
   it('dispatches a entries create event', async () =>
     new Promise<void>((done) => {
       Events.addListener('collections:entries:create', 'test', (payload) => {
         // Payload data should be created entry
-        expect(payload.data).toEqual(itemsEntry1);
+        expect(payload.data).toEqual(newEntry);
         done();
       });
 

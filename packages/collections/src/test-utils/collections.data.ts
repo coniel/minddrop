@@ -227,17 +227,18 @@ export const markdownCollectionTypeConfig: CollectionTypeConfig = {
       details: 'A collection of items',
     },
   },
-  createEntry: async (_, defaultProperties) => ({
+  createEntry: async (_, defaultProperties, metadata) => ({
     ...itemsEntry1,
     properties: defaultProperties,
+    metadata,
   }),
   getEntry: async () => itemsEntry1,
   getAllEntries: async () => itemsEntries,
   deleteEntry: async () => {},
   archiveEntry: async () => {},
-  setEntryProperties: async () => itemsEntry1,
+  updateEntry: async (path, entry) => entry,
   renameEntry: async () => itemsEntry1,
-  restoreEntry: async () => itemsEntry1,
+  restoreEntry: async () => {},
 };
 
 export const fileCollectionTypeConfig: CollectionTypeConfig = {
@@ -249,14 +250,14 @@ export const fileCollectionTypeConfig: CollectionTypeConfig = {
       details: 'A collection of files',
     },
   },
-  createEntry: async () => itemsEntry1,
-  getEntry: async () => itemsEntry1,
-  getAllEntries: async () => itemsEntries,
+  createEntry: async () => filesEntry1,
+  getEntry: async () => filesEntry1,
+  getAllEntries: async () => filesEntries,
   deleteEntry: async () => {},
   archiveEntry: async () => {},
-  setEntryProperties: async () => itemsEntry1,
-  renameEntry: async () => itemsEntry1,
-  restoreEntry: async () => itemsEntry1,
+  updateEntry: async () => filesEntry1,
+  renameEntry: async () => filesEntry1,
+  restoreEntry: async () => {},
 };
 
 export const linkCollectionTypeConfig: CollectionTypeConfig = {
@@ -268,14 +269,14 @@ export const linkCollectionTypeConfig: CollectionTypeConfig = {
       details: 'A collection of links',
     },
   },
-  createEntry: async () => itemsEntry1,
-  getEntry: async () => itemsEntry1,
-  getAllEntries: async () => itemsEntries,
+  createEntry: async () => linksEntry1,
+  getEntry: async () => linksEntry1,
+  getAllEntries: async () => linksEntries,
   deleteEntry: async () => {},
   archiveEntry: async () => {},
-  setEntryProperties: async () => itemsEntry1,
-  renameEntry: async () => itemsEntry1,
-  restoreEntry: async () => itemsEntry1,
+  updateEntry: async () => linksEntry1,
+  renameEntry: async () => linksEntry1,
+  restoreEntry: async () => {},
 };
 
 export const collectionTypeConfigs = [
@@ -291,82 +292,109 @@ export const collectionTypeConfigs = [
 // Items Collection Entries
 export const itemsEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `Entry 1.md`,
+  path: `${itemsCollection.path}/Entry 1.md`,
   collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Non-Fiction',
   },
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const itemsEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `/Entry 2.md`,
+  path: `${itemsCollection.path}/Entry 2.md`,
   collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Fiction',
   },
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const itemsEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `Entry 3.md`,
+  path: `${itemsCollection.path}/Entry 3.md`,
   collectionPath: itemsCollectionPath,
   properties: {
     Genre: 'Fiction',
   },
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 // Files Collection Entries
 export const filesEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `Entry 1.md`,
+  path: `${filesCollection.path}/Entry 1.md`,
   collectionPath: filesCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const filesEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `Entry 2.md`,
+  path: `${filesCollection.path}/Entry 2.md`,
   collectionPath: filesCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const filesEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `Entry 3.md`,
+  path: `${filesCollection.path}/Entry 3.md`,
   collectionPath: filesCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 // Links Collection Entries
 export const linksEntry1: CollectionEntry = {
   title: 'Entry 1',
-  path: `Entry 1.md`,
+  path: `${linksCollection.path}/Entry 1.md`,
   collectionPath: linksCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const linksEntry2: CollectionEntry = {
   title: 'Entry 2',
-  path: `Entry 2.md`,
+  path: `${linksCollection.path}/Entry 2.md`,
   collectionPath: linksCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const linksEntry3: CollectionEntry = {
   title: 'Entry 3',
-  path: `Entry 3.md`,
+  path: `${linksCollection.path}/Entry 3.md`,
   collectionPath: linksCollectionPath,
   properties: {},
-  metadata: {},
+  metadata: {
+    created: new Date(),
+    lastModified: new Date(),
+  },
 };
 
 export const itemsEntries = [itemsEntry1, itemsEntry2, itemsEntry3];

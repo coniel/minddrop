@@ -11,7 +11,7 @@ export interface CollectionEntry {
   collectionPath: string;
 
   /**
-   * The path to the entry's primary file relative to the collection's path.
+   * Absolute path to the collection entry's primary file.
    */
   path: string;
 
@@ -24,13 +24,13 @@ export interface CollectionEntry {
    * Metadata associated with the entry. Such as file size and type, content
    * char/word count, etc.
    */
-  metadata: CollectionEntryProperties;
+  metadata: CollectionEntryMetadata;
 
   /**
-   * The entry's markdown content.
-   * Only present when the collection content type is 'markdown'.
+   * The entry's content, typically markdown content or stringified JSON.
+   * May not be present if the collection type does not support content.
    */
-  markdown?: string;
+  content?: string;
 }
 
 export type CollectionEntryPropertyValue =
@@ -45,3 +45,15 @@ export type CollectionEntryProperties = Record<
   string,
   CollectionEntryPropertyValue
 >;
+
+export interface CollectionEntryMetadata extends CollectionEntryProperties {
+  /**
+   * The date the entry was created.
+   */
+  created: Date;
+
+  /**
+   * The date the entry was last modified.
+   */
+  lastModified: Date;
+}

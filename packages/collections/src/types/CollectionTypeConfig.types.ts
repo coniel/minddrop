@@ -1,5 +1,6 @@
 import {
   CollectionEntry,
+  CollectionEntryMetadata,
   CollectionEntryProperties,
 } from './CollectionEntry.types';
 import { CollectionPropertySchema } from './CollectionPropertiesSchema.types';
@@ -45,24 +46,24 @@ export interface CollectionTypeConfig<
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
-    metadata: CollectionEntryProperties,
+    metadata: CollectionEntryMetadata,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
-    metadata: CollectionEntryProperties,
+    metadata: CollectionEntryMetadata,
     data: string,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
-    metadata: CollectionEntryProperties,
+    metadata: CollectionEntryMetadata,
     data: File,
   ): Promise<TEntry>;
   createEntry(
     path: string,
     defaultPrperties: CollectionEntryProperties,
-    metadata: CollectionEntryProperties,
+    metadata: CollectionEntryMetadata,
     data?: string | File,
   ): Promise<TEntry>;
 
@@ -85,19 +86,12 @@ export interface CollectionTypeConfig<
   getAllEntries(path: string): Promise<CollectionEntry[]>;
 
   /**
-   * Function called to set an entry's properties. Should overwrite the entry's
-   * existing properties with the new ones, including removing any properties
-   * that are no longer present in the new properties.
+   * Function called to update an entry.
    *
    * @param path - The path to the entry.
-   * @param properties - The new properties to set on the entry.
-   * @returns The updated entry.
-   *
+   * @param properties - The updated entry.
    */
-  setEntryProperties(
-    path: string,
-    properties: CollectionEntryProperties,
-  ): Promise<TEntry>;
+  updateEntry(path: string, entry: TEntry): Promise<TEntry>;
 
   /**
    * Function called to rename an entry. Should rename the entry's file(s)
@@ -105,7 +99,6 @@ export interface CollectionTypeConfig<
    *
    * @param path - The path to the entry.
    * @param newTitle - The new title of the entry.
-   * @returns The updated entry.
    */
   renameEntry(path: string, newTitle: string): Promise<TEntry>;
 
@@ -132,9 +125,8 @@ export interface CollectionTypeConfig<
    *
    * @param archivePath - The path to the archive directory.
    * @param entryPath - The path to the entry to be restored relative to the archive directory.
-   * @returns The restored entry.
    */
-  restoreEntry(archivePath: string, entryPath: string): Promise<TEntry>;
+  restoreEntry(archivePath: string, entryPath: string): Promise<void>;
 }
 
 interface CollectionTypeDescription {
