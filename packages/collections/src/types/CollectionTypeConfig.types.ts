@@ -86,12 +86,13 @@ export interface CollectionTypeConfig<
   getAllEntries(path: string): Promise<CollectionEntry[]>;
 
   /**
-   * Function called to update an entry.
+   * Function called to update an entry. Should update any associated
+   * files on the file system.
    *
-   * @param path - The path to the entry.
    * @param properties - The updated entry.
+   * @returns The updated entry.
    */
-  updateEntry(path: string, entry: TEntry): Promise<TEntry>;
+  updateEntry(entry: TEntry): Promise<TEntry>;
 
   /**
    * Function called to rename an entry. Should rename the entry's file(s)
@@ -99,6 +100,7 @@ export interface CollectionTypeConfig<
    *
    * @param path - The path to the entry.
    * @param newTitle - The new title of the entry.
+   * @returns The updated entry.
    */
   renameEntry(path: string, newTitle: string): Promise<TEntry>;
 
