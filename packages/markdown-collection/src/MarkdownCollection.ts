@@ -1,6 +1,7 @@
 import { CollectionTypeConfig } from '@minddrop/collections';
 import { createMarkdownCollectionEntry } from './createMarkdownCollectionEntry';
 import { getAllMarkdownCollectionEntries } from './getAllMarkdownCollectionEntries';
+import { updateMarkdownCollectionEntry } from './updateMarkdownCollectionEntry';
 
 export const MarkdownCollection: CollectionTypeConfig = {
   id: 'markdown',
@@ -11,10 +12,10 @@ export const MarkdownCollection: CollectionTypeConfig = {
     },
   },
   getAllEntries: getAllMarkdownCollectionEntries,
-  getEntry: async () => ({}) as any,
   createEntry: createMarkdownCollectionEntry,
+  updateEntry: updateMarkdownCollectionEntry,
+  getEntry: async () => ({}) as any,
   deleteEntry: async () => {},
-  setEntryProperties: async () => ({}) as any,
   archiveEntry: async () => ({}) as any,
   restoreEntry: async () => ({}) as any,
   renameEntry: async () => ({}) as any,
