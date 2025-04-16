@@ -236,7 +236,7 @@ export const markdownCollectionTypeConfig: CollectionTypeConfig = {
   getAllEntries: async () => itemsEntries,
   deleteEntry: async () => {},
   archiveEntry: async () => {},
-  updateEntry: async (path, entry) => entry,
+  updateEntry: async (entry) => entry,
   renameEntry: async () => itemsEntry1,
   restoreEntry: async () => {},
 };

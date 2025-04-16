@@ -18,7 +18,7 @@ import { updateCollectionEntry } from './updateCollectionEntry';
 
 const collectionTypeConfig: CollectionTypeConfig = {
   ...markdownCollectionTypeConfig,
-  updateEntry: async (_, entry) => ({
+  updateEntry: async (entry) => ({
     ...entry,
     metadata: {
       ...entry.metadata,

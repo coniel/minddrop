@@ -44,7 +44,7 @@ export async function updateCollectionEntry(
   // Update the entry files using the collection type config.
   // The config may further process the entry before saving it,
   // so we use the returned entry as the updated entry.
-  updatedEntry = await config.updateEntry(entry.path, updatedEntry);
+  updatedEntry = await config.updateEntry(updatedEntry);
 
   // Update the entry in the store
   updateInStore(entry.path, updatedEntry);
