@@ -5,6 +5,7 @@ import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
 import {
   CollectionEntryNotFoundError,
   CollectionNotFoundError,
+  CollectionTypeNotRegisteredError,
 } from '../errors';
 import {
   cleanup,
@@ -56,10 +57,13 @@ describe('updateCollectionEntry', () => {
     ).rejects.toThrow(CollectionNotFoundError);
   });
 
-  it('throws if the entry does not exist', () => {
+  it('throws if the collection type config is not registered', () => {
+    // Unregister the collection type config
+    CollectionTypeConfigsStore.clear();
+
     expect(() =>
-      updateCollectionEntry(itemsCollection.path, 'non-existent-entry', {}),
-    ).rejects.toThrow(CollectionEntryNotFoundError);
+      updateCollectionEntry(itemsCollection.path, itemsEntry1.path, {}),
+    ).rejects.toThrow(CollectionTypeNotRegisteredError);
   });
 
   it('throws if the entry is not found', async () => {

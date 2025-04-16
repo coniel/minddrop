@@ -1,6 +1,7 @@
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
 import { CollectionsStore } from '../CollectionsStore';
+import { CollectionTypeConfig } from '../types';
 import {
   collectionTypeConfigs,
   collections,
@@ -9,7 +10,7 @@ import {
 
 interface SetupOptions {
   loadCollections?: boolean;
-  loadCollectionTypeConfigs?: boolean;
+  loadCollectionTypeConfigs?: boolean | CollectionTypeConfig[];
   loadCollectionEntries?: boolean;
 }
 export function setup({
@@ -22,7 +23,11 @@ export function setup({
   }
 
   if (loadCollectionTypeConfigs) {
-    CollectionTypeConfigsStore.load(collectionTypeConfigs);
+    if (Array.isArray(loadCollectionTypeConfigs)) {
+      CollectionTypeConfigsStore.load(loadCollectionTypeConfigs);
+    } else {
+      CollectionTypeConfigsStore.load(collectionTypeConfigs);
+    }
   }
 
   if (loadCollectionEntries) {

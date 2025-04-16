@@ -100,9 +100,14 @@ export interface CollectionTypeConfig<
    *
    * @param path - The path to the entry.
    * @param newTitle - The new title of the entry.
+   * @param metadata - The updated entry metadata.
    * @returns The updated entry.
    */
-  renameEntry(path: string, newTitle: string): Promise<TEntry>;
+  renameEntry(
+    path: string,
+    newTitle: string,
+    metadata: CollectionEntryMetadata,
+  ): Promise<TEntry>;
 
   /**
    * Function called to permanently delete an entry. Should move the entry's file(s)
