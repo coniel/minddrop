@@ -20,7 +20,7 @@ const properties = { foo: 'bar' };
 const metadata = { created: new Date(), lastModified: new Date() };
 const entry: CollectionEntry = {
   title: UNTITLED,
-  path: `${UNTITLED}.md`,
+  path: `${collectionPath}/${UNTITLED}.md`,
   collectionPath,
   properties,
   metadata,

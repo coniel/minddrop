@@ -63,7 +63,7 @@ export async function getAllMarkdownCollectionEntries(
         // Return the collection entry
         return {
           title: title,
-          path: file.name,
+          path: Fs.concatPath(collectionPath, file.name),
           collectionPath,
           properties,
           metadata,
