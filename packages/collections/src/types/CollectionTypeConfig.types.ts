@@ -113,9 +113,9 @@ export interface CollectionTypeConfig<
    * Function called to permanently delete an entry. Should move the entry's file(s)
    * into the file system trash.
    *
-   * @param path - The path to the entry.
+   * @param entry - The entry to delete.
    */
-  deleteEntry(path: string): Promise<void>;
+  deleteEntry(entry: TEntry): Promise<void>;
 
   /**
    * Function called to archive an entry. Should move the entry's file(s) into the collection's

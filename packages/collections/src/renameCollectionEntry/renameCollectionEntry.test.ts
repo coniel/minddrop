@@ -24,7 +24,7 @@ const renamedEntry: CollectionEntry = {
 
 const config: CollectionTypeConfig = {
   ...markdownCollectionTypeConfig,
-  renameEntry: async (path, newTitle, metadata) => ({
+  renameEntry: async (entry, newTitle, metadata) => ({
     ...renamedEntry,
     title: newTitle,
     metadata,

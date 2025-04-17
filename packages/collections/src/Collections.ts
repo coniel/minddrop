@@ -26,6 +26,7 @@ export { getCollectionEntry as getEntry } from './getCollectionEntry';
 export { updateCollectionEntryProperties as updateEntryProperties } from './updateCollectionEntryProperties';
 export { updateCollectionEntryContent as updateEntryContent } from './updateCollectionEntryContent';
 export { renameCollectionEntry as renameEntry } from './renameCollectionEntry';
+export { deleteCollectionEntry as deleteEntry } from './deleteCollectionEntry';
 export {
   registerCollectionTypeConfig as registerType,
   unregisterCollectionTypeConfig as unregisterType,
