@@ -98,13 +98,13 @@ export interface CollectionTypeConfig<
    * Function called to rename an entry. Should rename the entry's file(s)
    * on the file system.
    *
-   * @param path - The path to the entry.
+   * @param entry - The entry to rename.
    * @param newTitle - The new title of the entry.
    * @param metadata - The updated entry metadata.
    * @returns The updated entry.
    */
   renameEntry(
-    path: string,
+    entry: TEntry,
     newTitle: string,
     metadata: CollectionEntryMetadata,
   ): Promise<TEntry>;

@@ -41,7 +41,7 @@ export async function renameCollectionEntry(
   // Call the renameEntry method from the collection type config.
   // This method should handle the renaming of the entry's file(s) on
   // the file system and return the updated entry including its new path.
-  const updatedEntry = await config.renameEntry(entry.path, newTitle, metadata);
+  const updatedEntry = await config.renameEntry(entry, newTitle, metadata);
 
   // Update the entry in the store
   CollectionEntriesStore.update(entryPath, updatedEntry);
