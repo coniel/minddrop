@@ -1,4 +1,5 @@
 export * from './types';
+export * from './errors';
 export * from './constants';
 export * as Collections from './Collections';
 export * from './useCollections';
