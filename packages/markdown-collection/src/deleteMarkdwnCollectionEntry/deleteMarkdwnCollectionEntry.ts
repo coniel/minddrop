@@ -13,13 +13,19 @@ export async function deleteMarkdwnCollectionEntry(
 ): Promise<void> {
   const metadataFilePath = getMarkdownEntryMetadataFilePath(entry);
 
-  // Move the entry markdown file to the system trash if it exists
-  if (await Fs.exists(entry.path)) {
-    await Fs.trashFile(entry.path);
-  }
+  return new Promise((resolve) => {
+    setTimeout(async () => {
+      // Move the entry markdown file to the system trash if it exists
+      if (await Fs.exists(entry.path)) {
+        Fs.trashFile(entry.path);
+      }
 
-  // Move the entry metadata file to the system trash if it exists
-  if (await Fs.exists(metadataFilePath)) {
-    await Fs.trashFile(metadataFilePath);
-  }
+      // Move the entry metadata file to the system trash if it exists
+      if (await Fs.exists(metadataFilePath)) {
+        Fs.trashFile(metadataFilePath);
+      }
+
+      resolve();
+    }, 300);
+  });
 }
