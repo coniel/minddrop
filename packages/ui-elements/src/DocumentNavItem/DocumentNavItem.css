@@ -27,6 +27,7 @@
 .document-nav-item .toggle-button {
   padding-left: 3px;
   margin-right: -3px;
+  height: 24px;
 }
 
 .document-nav-item .toggle-button .icon {
@@ -43,6 +44,11 @@
 }
 
 /* Icon */
+
+.document-icon {
+  display: flex;
+  align-items: center;
+}
 
 .document-nav-item > .nav-item .document-icon .icon {
   stroke: var(--textNeutralLight);
