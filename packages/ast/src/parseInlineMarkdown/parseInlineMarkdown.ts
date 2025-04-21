@@ -11,6 +11,10 @@ export function parseInlineMarkdown(text: string): (TextElement | Element)[] {
   const lexer = new marked.Lexer({ gfm: true });
   const tokens = lexer.inlineTokens(text);
 
+  if (text === '') {
+    return [{ text: '' }];
+  }
+
   return transformTokens(tokens);
 }
 

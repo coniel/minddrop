@@ -18,6 +18,12 @@ describe('parseInlineMarkdown', () => {
     ]);
   });
 
+  it('returns an empty text element for empty input', () => {
+    const result = parseInlineMarkdown('');
+
+    expect(result).toEqual([{ text: '' }]);
+  });
+
   it('parses links from text', () => {
     const result = parseInlineMarkdown(textWithLink);
 
