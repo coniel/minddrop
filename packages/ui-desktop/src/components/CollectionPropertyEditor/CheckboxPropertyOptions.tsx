@@ -28,7 +28,7 @@ export const CheckboxPropertyOptions: React.FC<
   function handleDefaultCheckedChange(checked: boolean) {
     Collections.updateProperty(collectionPath, name, {
       ...schema,
-      defaultChecked: checked,
+      defaultValue: checked,
     });
   }
 
@@ -42,8 +42,8 @@ export const CheckboxPropertyOptions: React.FC<
         <CheckboxInput
           name="default-checked"
           onCheckedChange={handleDefaultCheckedChange}
-          checked={schema.defaultChecked}
-          label={`properties.checkbox.defaultValue.${schema.defaultChecked ? 'checked' : 'unchecked'}`}
+          checked={schema.defaultValue}
+          label={`properties.checkbox.defaultValue.${schema.defaultValue ? 'checked' : 'unchecked'}`}
         />
       </Stack>
     </Stack>

@@ -71,7 +71,7 @@ export const CheckboxInput: React.FC<CheckboxInputProps> = ({
         <Icon
           onClick={togglechecked}
           role="button"
-          name={checked ? 'checkmark-square-2' : 'square'}
+          name={checked ? 'check-square-2' : 'square'}
         />
       </>
       <FieldLabel
