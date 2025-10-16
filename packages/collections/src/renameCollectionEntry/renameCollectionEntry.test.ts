@@ -13,7 +13,7 @@ import {
   markdownCollectionTypeConfig,
   setup,
 } from '../test-utils';
-import { CollectionEntry, CollectionTypeConfig } from '../types';
+import { BaseCollectionTypeConfig, CollectionEntry } from '../types';
 import { renameCollectionEntry } from './renameCollectionEntry';
 
 const renamedEntry: CollectionEntry = {
@@ -22,7 +22,7 @@ const renamedEntry: CollectionEntry = {
   path: `${itemsEntry1.collectionPath}/New Title.md`,
 };
 
-const config: CollectionTypeConfig = {
+const config: BaseCollectionTypeConfig = {
   ...markdownCollectionTypeConfig,
   renameEntry: async (entry, newTitle, metadata) => ({
     ...renamedEntry,

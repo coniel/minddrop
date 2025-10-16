@@ -14,10 +14,10 @@ import {
   markdownCollectionTypeConfig,
   setup,
 } from '../test-utils';
-import { CollectionTypeConfig } from '../types';
+import { BaseCollectionTypeConfig } from '../types';
 import { updateCollectionEntry } from './updateCollectionEntry';
 
-const collectionTypeConfig: CollectionTypeConfig = {
+const collectionTypeConfig: BaseCollectionTypeConfig = {
   ...markdownCollectionTypeConfig,
   updateEntry: async (entry) => ({
     ...entry,

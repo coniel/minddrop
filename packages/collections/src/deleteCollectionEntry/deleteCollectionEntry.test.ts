@@ -13,10 +13,10 @@ import {
   markdownCollectionTypeConfig,
   setup,
 } from '../test-utils';
-import { CollectionTypeConfig } from '../types';
+import { BaseCollectionTypeConfig } from '../types';
 import { deleteCollectionEntry } from './deleteCollectionEntry';
 
-const config: CollectionTypeConfig = {
+const config: BaseCollectionTypeConfig = {
   ...markdownCollectionTypeConfig,
   deleteEntry: vi.fn(),
 };

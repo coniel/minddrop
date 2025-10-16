@@ -6,18 +6,20 @@ import {
   CollectionsConfigFileName,
 } from '../constants';
 import {
+  BinaryCollectionTypeConfig,
   Collection,
   CollectionCheckboxPropertySchema,
   CollectionConfig,
   CollectionDatePropertySchema,
   CollectionEntry,
+  CollectionEntryProperties,
   CollectionMultiSelectPropertySchema,
   CollectionNumberPropertySchema,
   CollectionPropertyType,
   CollectionSelectPropertySchema,
   CollectionTextPropertySchema,
-  CollectionTypeConfig,
   CollectionsConfig,
+  TextCollectionTypeConfig,
 } from '../types';
 
 export const collectionsPath = 'collections';
@@ -219,64 +221,52 @@ export const multiSelectPropertySchema: CollectionMultiSelectPropertySchema = {
 /**************** Collection Type Configs ****************/
 /*********************************************************/
 
-export const markdownCollectionTypeConfig: CollectionTypeConfig = {
+export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
   id: 'markdown',
+  type: 'text',
+  fileExtension: 'md',
   description: {
     en: {
       name: 'Items',
       details: 'A collection of items',
     },
   },
-  createEntry: async (_, defaultProperties, metadata) => ({
-    ...itemsEntry1,
-    properties: defaultProperties,
-    metadata,
-  }),
-  getEntry: async () => itemsEntry1,
-  getAllEntries: async () => itemsEntries,
-  deleteEntry: async () => {},
-  archiveEntry: async () => {},
-  updateEntry: async (entry) => entry,
-  renameEntry: async () => itemsEntry1,
-  restoreEntry: async () => {},
+  parse(markdown: string) {
+    return { note: markdown };
+  },
+  serialize(properties: CollectionEntryProperties) {
+    const { title, note, ...otherProperties } = properties;
+    return [`# ${title}\n\n${note || ''}`, otherProperties];
+  },
 };
 
-export const fileCollectionTypeConfig: CollectionTypeConfig = {
+export const fileCollectionTypeConfig: BinaryCollectionTypeConfig = {
   id: 'files',
-  requiredDataType: 'file',
+  type: 'binary',
   description: {
     en: {
       name: 'Files',
       details: 'A collection of files',
     },
   },
-  createEntry: async () => filesEntry1,
-  getEntry: async () => filesEntry1,
-  getAllEntries: async () => filesEntries,
-  deleteEntry: async () => {},
-  archiveEntry: async () => {},
-  updateEntry: async () => filesEntry1,
-  renameEntry: async () => filesEntry1,
-  restoreEntry: async () => {},
 };
 
-export const linkCollectionTypeConfig: CollectionTypeConfig = {
+export const linkCollectionTypeConfig: TextCollectionTypeConfig = {
   id: 'links',
-  requiredDataType: 'url',
+  type: 'text',
+  fileExtension: 'json',
   description: {
     en: {
       name: 'Links',
       details: 'A collection of links',
     },
   },
-  createEntry: async () => linksEntry1,
-  getEntry: async () => linksEntry1,
-  getAllEntries: async () => linksEntries,
-  deleteEntry: async () => {},
-  archiveEntry: async () => {},
-  updateEntry: async () => linksEntry1,
-  renameEntry: async () => linksEntry1,
-  restoreEntry: async () => {},
+  parse(json: string) {
+    return JSON.parse(json);
+  },
+  serialize(properties: CollectionEntryProperties) {
+    return JSON.stringify(properties);
+  },
 };
 
 export const collectionTypeConfigs = [
@@ -289,115 +279,141 @@ export const collectionTypeConfigs = [
 /****************** Collection Entries ******************/
 /********************************************************/
 
+// Notes Collection Entries
+export const notesEntry1: CollectionEntry = {
+  path: `${notesCollection.path}/Note 1.md`,
+  collectionPath: notesCollectionPath,
+  properties: {
+    title: 'Note 1',
+    created: new Date(),
+    lastModified: new Date(),
+    note: 'This is note 1.',
+  },
+};
+
+export const notesEntry2: CollectionEntry = {
+  path: `${notesCollection.path}/Note 2.md`,
+  collectionPath: notesCollectionPath,
+  properties: {
+    title: 'Note 2',
+    created: new Date(),
+    lastModified: new Date(),
+    note: 'This is note 2.',
+  },
+};
+
 // Items Collection Entries
 export const itemsEntry1: CollectionEntry = {
-  title: 'Entry 1',
   path: `${itemsCollection.path}/Entry 1.md`,
   collectionPath: itemsCollectionPath,
   properties: {
-    Genre: 'Non-Fiction',
-  },
-  metadata: {
+    title: 'Entry 1',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
+    Genre: 'Non-Fiction',
   },
 };
 
 export const itemsEntry2: CollectionEntry = {
-  title: 'Entry 2',
   path: `${itemsCollection.path}/Entry 2.md`,
   collectionPath: itemsCollectionPath,
   properties: {
-    Genre: 'Fiction',
-  },
-  metadata: {
+    title: 'Entry 2',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
+    Genre: 'Fiction',
   },
 };
 
 export const itemsEntry3: CollectionEntry = {
-  title: 'Entry 3',
   path: `${itemsCollection.path}/Entry 3.md`,
   collectionPath: itemsCollectionPath,
   properties: {
-    Genre: 'Fiction',
-  },
-  metadata: {
+    title: 'Entry 3',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
+    Genre: 'Fiction',
   },
 };
 
 // Files Collection Entries
 export const filesEntry1: CollectionEntry = {
-  title: 'Entry 1',
   path: `${filesCollection.path}/Entry 1.md`,
   collectionPath: filesCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 1',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
 export const filesEntry2: CollectionEntry = {
-  title: 'Entry 2',
   path: `${filesCollection.path}/Entry 2.md`,
   collectionPath: filesCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 2',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
 export const filesEntry3: CollectionEntry = {
-  title: 'Entry 3',
   path: `${filesCollection.path}/Entry 3.md`,
   collectionPath: filesCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 3',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
 // Links Collection Entries
 export const linksEntry1: CollectionEntry = {
-  title: 'Entry 1',
-  path: `${linksCollection.path}/Entry 1.md`,
+  path: `${linksCollection.path}/Entry 1.json`,
   collectionPath: linksCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 1',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
 export const linksEntry2: CollectionEntry = {
-  title: 'Entry 2',
-  path: `${linksCollection.path}/Entry 2.md`,
+  path: `${linksCollection.path}/Entry 2.json`,
   collectionPath: linksCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 2',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
 export const linksEntry3: CollectionEntry = {
-  title: 'Entry 3',
-  path: `${linksCollection.path}/Entry 3.md`,
+  path: `${linksCollection.path}/Entry 3.json`,
   collectionPath: linksCollectionPath,
-  properties: {},
-  metadata: {
+  properties: {
+    title: 'Entry 3',
     created: new Date(),
     lastModified: new Date(),
+    note: null,
   },
 };
 
+export const notesEntries = [notesEntry1, notesEntry2];
 export const itemsEntries = [itemsEntry1, itemsEntry2, itemsEntry3];
 export const filesEntries = [filesEntry1, filesEntry2, filesEntry3];
 export const linksEntries = [linksEntry1, linksEntry2, linksEntry3];
-export const entries = [...itemsEntries, ...filesEntries, ...linksEntries];
+export const entries = [
+  ...notesEntries,
+  ...itemsEntries,
+  ...filesEntries,
+  ...linksEntries,
+];

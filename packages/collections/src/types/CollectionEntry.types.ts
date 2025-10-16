@@ -1,11 +1,5 @@
 export interface CollectionEntry {
   /**
-   * The entry title. Typically the file name of the primary file associated
-   * with the entry.
-   */
-  title: string;
-
-  /**
    * The path to the collection that the entry belongs to.
    */
   collectionPath: string;
@@ -19,18 +13,6 @@ export interface CollectionEntry {
    * The entry's properties.
    */
   properties: CollectionEntryProperties;
-
-  /**
-   * Metadata associated with the entry. Such as file size and type, content
-   * char/word count, etc.
-   */
-  metadata: CollectionEntryMetadata;
-
-  /**
-   * The entry's content, typically markdown content or stringified JSON.
-   * May not be present if the collection type does not support content.
-   */
-  content?: string;
 }
 
 export type CollectionEntryPropertyValue =
@@ -41,12 +23,16 @@ export type CollectionEntryPropertyValue =
   | Date
   | null;
 
-export type CollectionEntryProperties = Record<
-  string,
-  CollectionEntryPropertyValue
->;
+/**
+ * Core properties that every collection entry must have.
+ */
+export interface CollectionEntryCoreProperties {
+  /**
+   * The entry title. Typically the file name of the primary file associated
+   * with the entry.
+   */
+  title: string;
 
-export interface CollectionEntryMetadata extends CollectionEntryProperties {
   /**
    * The date the entry was created.
    */
@@ -56,4 +42,21 @@ export interface CollectionEntryMetadata extends CollectionEntryProperties {
    * The date the entry was last modified.
    */
   lastModified: Date;
+
+  /**
+   * The note content in markdown format. `null` if the entry does not have
+   * an associated note.
+   */
+  note: string | null;
 }
+
+/**
+ * Custom properties defined by the collection config or end user.
+ */
+export type CollectionEntryCustomProperties = Record<
+  string,
+  CollectionEntryPropertyValue
+>;
+
+export type CollectionEntryProperties = CollectionEntryCoreProperties &
+  CollectionEntryCustomProperties;
