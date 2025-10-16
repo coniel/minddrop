@@ -22,7 +22,7 @@ export const CollectionsConfigFileName = 'collections.json';
 export const CollectionConfigDirName = '.minddrop';
 export const CollectionConfigFileName = 'collection.json';
 export const CollectionHistoryDirName = 'History';
-export const CollectionAnnotationsDirName = 'Annotations';
+export const CollectionPropertiesDirName = 'properties';
 
 export const DefaultCollectionIcon: UserIcon = {
   type: UserIconType.ContentIcon,
