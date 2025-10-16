@@ -10,12 +10,14 @@ import { CollectionTypeConfig } from '../types';
  *
  * @throws {CollectionTypeNotRegisteredError} If the collection type is not registered.
  */
-export function getCollectionTypeConfig(type: string): CollectionTypeConfig {
+export function getCollectionTypeConfig<
+  TType extends CollectionTypeConfig = CollectionTypeConfig,
+>(type: string): TType {
   const config = CollectionTypeConfigsStore.get(type);
 
   if (!config) {
     throw new CollectionTypeNotRegisteredError(type);
   }
 
-  return config;
+  return config as TType;
 }

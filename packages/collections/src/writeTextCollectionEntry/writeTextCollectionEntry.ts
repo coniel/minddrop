@@ -28,24 +28,10 @@ export async function writeTextCollectionEntry(
   ) as TextCollectionTypeConfig;
   // The entry title
   let title = properties.title;
-  // Use the entry title as the file name
-  let fileName = `${title}.${config.fileExtension}`;
-  // Generate the entry path
-  let entryPath = Fs.concatPath(collectionPath, fileName);
 
   // Ensure that the collection is a text collection
   if (config.type !== 'text') {
     throw new InvalidCollectionTypeError(collection.path, 'text', config.type);
-  }
-
-  // Ensure that the entry file name does not conflict with an existing file
-  const { increment } = await Fs.incrementalPath(entryPath);
-
-  // Update entry path if there is a conflict
-  if (increment) {
-    title = `${properties.title} ${increment}`;
-    fileName = `${title}.${config.fileExtension}`;
-    entryPath = Fs.concatPath(collectionPath, fileName);
   }
 
   // Serialize the entry into the appropriate text format for the collection type
@@ -56,7 +42,7 @@ export async function writeTextCollectionEntry(
     typeof serialized === 'string' ? {} : serialized[1];
 
   // Write the main entry file to the file system
-  Fs.writeTextFile(entryPath, text);
+  Fs.writeTextFile(entry.path, text);
 
   // If additional properties were returned during serialization, write them
   // write them to a properties file.

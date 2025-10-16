@@ -2,10 +2,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
 import {
-  CollectionConfigDirName,
-  CollectionPropertiesDirName,
-} from '../constants';
-import {
   CollectionNotFoundError,
   CollectionTypeNotRegisteredError,
   InvalidCollectionTypeError,
@@ -16,14 +12,13 @@ import {
   itemsEntry1,
   linksCollection,
   linksEntry1,
+  linksPropertiesDir,
   notesCollection,
   notesEntry1,
+  notesPropertiesDir,
   setup,
 } from '../test-utils';
 import { writeTextCollectionEntry } from './writeTextCollectionEntry';
-
-const notesPropertiesDir = `${notesCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
-const linksPropertiesDir = `${linksCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
 
 const MockFs = initializeMockFileSystem([
   notesCollection.path,

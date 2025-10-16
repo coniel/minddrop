@@ -1,3 +1,4 @@
+import { initializeI18n } from '@minddrop/i18n';
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
 import { CollectionsStore } from '../CollectionsStore';
@@ -7,6 +8,8 @@ import {
   collections,
   entries,
 } from './collections.data';
+
+initializeI18n();
 
 interface SetupOptions {
   loadCollections?: boolean;

@@ -1,6 +1,6 @@
 import {
   Collection,
-  CollectionEntryProperties,
+  CollectionEntryCustomProperties,
   CollectionPropertyType,
 } from '../../types';
 
@@ -13,7 +13,7 @@ import {
  */
 export function generateDefaultCollectionEntryProperties(
   collection: Collection,
-): CollectionEntryProperties {
+): CollectionEntryCustomProperties {
   return collection.properties.reduce((properties, property) => {
     if (typeof property.defaultValue !== 'undefined') {
       // If the property is a date, format the default value
@@ -29,5 +29,5 @@ export function generateDefaultCollectionEntryProperties(
     }
 
     return properties;
-  }, {} as CollectionEntryProperties);
+  }, {} as CollectionEntryCustomProperties);
 }

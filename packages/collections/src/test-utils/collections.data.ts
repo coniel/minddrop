@@ -2,6 +2,7 @@ import { MockFileDescriptor } from '@minddrop/file-system';
 import {
   CollectionConfigDirName,
   CollectionConfigFileName,
+  CollectionPropertiesDirName,
   CollectionsConfigDir,
   CollectionsConfigFileName,
 } from '../constants';
@@ -103,6 +104,11 @@ export const itemsCollectionConfigPath = `${itemsCollectionPath}/${CollectionCon
 export const notesCollectionConfigPath = `${notesCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
 export const filesCollectionConfigPath = `${filesCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
 export const linksCollectionConfigPath = `${linksCollectionPath}/${CollectionConfigDirName}/${CollectionConfigFileName}`;
+
+export const itemsPropertiesDir = `${itemsCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
+export const notesPropertiesDir = `${notesCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
+export const filesPropertiesDir = `${filesCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
+export const linksPropertiesDir = `${linksCollection.path}/${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
 
 export const itemsCollectionFileDescriptor: MockFileDescriptor = {
   path: itemsCollectionConfigPath,
@@ -231,6 +237,7 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
       details: 'A collection of items',
     },
   },
+  requireNote: true,
   parse(markdown: string) {
     return { note: markdown };
   },
@@ -310,7 +317,7 @@ export const itemsEntry1: CollectionEntry = {
     title: 'Entry 1',
     created: new Date(),
     lastModified: new Date(),
-    note: null,
+    note: '',
     Genre: 'Non-Fiction',
   },
 };
@@ -322,7 +329,7 @@ export const itemsEntry2: CollectionEntry = {
     title: 'Entry 2',
     created: new Date(),
     lastModified: new Date(),
-    note: null,
+    note: '',
     Genre: 'Fiction',
   },
 };
@@ -334,7 +341,7 @@ export const itemsEntry3: CollectionEntry = {
     title: 'Entry 3',
     created: new Date(),
     lastModified: new Date(),
-    note: null,
+    note: '',
     Genre: 'Fiction',
   },
 };
