@@ -23,7 +23,7 @@ export interface BaseCollectionTypeConfig {
   /**
    * Default properties applied to all entries in the collection.
    */
-  coreProperties?: Record<string, CollectionPropertySchema>;
+  coreProperties?: CollectionPropertySchema[];
 }
 
 interface CollectionTypeDescription {

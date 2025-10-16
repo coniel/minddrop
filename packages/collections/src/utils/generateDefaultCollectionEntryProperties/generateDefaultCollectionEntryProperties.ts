@@ -1,4 +1,5 @@
 import {
+  BaseCollectionTypeConfig,
   Collection,
   CollectionEntryCustomProperties,
   CollectionPropertyType,
@@ -12,9 +13,15 @@ import {
  * @returns The default properties for the collection entry.
  */
 export function generateDefaultCollectionEntryProperties(
+  collectionTypeConfig: BaseCollectionTypeConfig,
   collection: Collection,
 ): CollectionEntryCustomProperties {
-  return collection.properties.reduce((properties, property) => {
+  const properties = [
+    ...(collectionTypeConfig.coreProperties || []),
+    ...collection.properties,
+  ];
+
+  return properties.reduce((properties, property) => {
     if (typeof property.defaultValue !== 'undefined') {
       // If the property is a date, format the default value
       if (property.type === CollectionPropertyType.Date) {

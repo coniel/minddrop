@@ -57,8 +57,8 @@ export async function createTextCollectionEntry<
   const properties: CollectionEntryProperties = {
     created: new Date(),
     lastModified: new Date(),
-    note: config.requireNote ? '' : null,
-    ...generateDefaultCollectionEntryProperties(collection),
+    note: null,
+    ...generateDefaultCollectionEntryProperties(config, collection),
     ...customProperties,
     title,
   };

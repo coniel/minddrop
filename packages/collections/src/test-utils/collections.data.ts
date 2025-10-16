@@ -237,7 +237,14 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
       details: 'A collection of items',
     },
   },
-  requireNote: true,
+  coreProperties: [
+    {
+      type: CollectionPropertyType.Text,
+      name: 'note',
+      description: 'The main content of the entry in markdown format.',
+      defaultValue: '',
+    },
+  ],
   parse(markdown: string) {
     return { note: markdown };
   },

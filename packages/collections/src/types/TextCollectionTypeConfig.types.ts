@@ -13,19 +13,6 @@ export interface TextCollectionTypeConfig extends BaseCollectionTypeConfig {
   fileExtension: string;
 
   /**
-   * Whether entries in this collection type require a note.
-   *
-   * If true, all entries in the collection will be given a `note` property
-   * containing an empty string by default.
-   *
-   * This forces the UI to display a text editor for the entry and is intended
-   * for note based collections where the note is the primary content of the entry.
-   *
-   * Defaults to false.
-   */
-  requireNote?: boolean;
-
-  /**
    * Callback to parse the content of a text file and return the entry properties
    * contained within it as a partial `CollectionEntryProperties` object.
    *
@@ -52,4 +39,17 @@ export interface TextCollectionTypeConfig extends BaseCollectionTypeConfig {
   serialize(
     properties: CollectionEntryProperties,
   ): string | [string, Partial<CollectionEntryProperties>];
+
+  /**
+   * Optional callback to determine if a given string matches the format
+   * used by this collection type.
+   *
+   * If provided, this is used to auto-detect the collection type when
+   * creating a new collection entry from a string.
+   *
+   * @param string - The string to test.
+   * @returns An object of entry properties if the string matches the format,
+   *   or null if it does not match.
+   */
+  match?(string: string): Partial<CollectionEntryProperties> | null;
 }

@@ -24,6 +24,7 @@ const newEntry = {
     ...itemsEntry1.properties,
     created: expect.any(Date),
     lastModified: expect.any(Date),
+    note: '',
   },
 };
 
@@ -37,7 +38,7 @@ const MockFs = initializeMockFileSystem([
   itemsPropertiesDir,
 ]);
 
-describe('createCollectionEntry', () => {
+describe('createTextCollectionEntry', () => {
   beforeEach(() =>
     setup({
       loadCollections: true,
@@ -94,24 +95,18 @@ describe('createCollectionEntry', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2023-01-01T00:00:00Z'));
 
-    const entry = await createTextCollectionEntry(itemsCollection.path);
+    const entry = await createTextCollectionEntry(linksCollection.path);
 
     expect(entry.properties).toEqual(
       expect.objectContaining({
         created: new Date('2023-01-01T00:00:00Z'),
         lastModified: new Date('2023-01-01T00:00:00Z'),
         title: i18n.t('labels.untitled'),
-        note: '',
+        note: null,
       }),
     );
 
     vi.useRealTimers();
-  });
-
-  it('sets the note property to `null` if the collection type does not require a note', async () => {
-    const entry = await createTextCollectionEntry(linksCollection.path);
-
-    expect(entry.properties.note).toBe(null);
   });
 
   it('increments the entry title to avoid file name conflicts', async () => {
