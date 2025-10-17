@@ -1,15 +1,18 @@
 import { Events } from '@minddrop/events';
+import { Fs, PathConflictError } from '@minddrop/file-system';
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { getCollection } from '../getCollection';
 import { getCollectionEntry } from '../getCollectionEntry';
 import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
 import { CollectionEntry } from '../types';
+import { getEntryPropertiesFilePath } from '../utils';
+import { writeCollectionEntryProperties } from '../writeCollectionEntryProperties';
+import { writeTextCollectionEntry } from '../writeTextCollectionEntry';
 
 /**
- * Renames a collection entry, returning the updated entry with the new title
- * and its new path.
+ * Renames a collection entry and associated files, returning the updated entry
+ * with the new title and its new path.
  *
- * @param collectionPath - The path to the collection.
  * @param entryPath - The path to the entry.
  * @param newTitle - The new title of the entry.
  * @returns The updated collection entry.
@@ -21,30 +24,65 @@ import { CollectionEntry } from '../types';
  * @dispatches collections:entry:rename
  */
 export async function renameCollectionEntry(
-  collectionPath: string,
   entryPath: string,
   newTitle: string,
 ): Promise<CollectionEntry> {
-  // Get the collection
-  const collection = getCollection(collectionPath, true);
-  // Get the collection type config
-  const config = getCollectionTypeConfig(collection.type);
   // Get the entry
   const entry = getCollectionEntry(entryPath, true);
+  // Get the collection
+  const collection = getCollection(entry.collectionPath, true);
+  // Get the collection type config
+  const config = getCollectionTypeConfig(collection.type);
+  // Get the file extension of the entry file
+  const entryFileExtension = entry.path.split('.').pop();
+  // Generate the new entry path
+  const newEntryPath = `${entry.collectionPath}/${newTitle}.${entryFileExtension}`;
 
-  // Update the lastModified timestamp in metadata
-  const metadata = {
-    ...entry.metadata,
-    lastModified: new Date(),
+  // Ensure no other file exists at the new path
+  if (await Fs.exists(newEntryPath)) {
+    throw new PathConflictError(newEntryPath);
+  }
+
+  // Update the path, title, and lastModified timestamp on the entry
+  const updatedEntry = {
+    ...entry,
+    path: newEntryPath,
+    properties: {
+      ...entry.properties,
+      title: newTitle,
+      lastModified: new Date(),
+    },
   };
-
-  // Call the renameEntry method from the collection type config.
-  // This method should handle the renaming of the entry's file(s) on
-  // the file system and return the updated entry including its new path.
-  const updatedEntry = await config.renameEntry(entry, newTitle, metadata);
 
   // Update the entry in the store
   CollectionEntriesStore.update(entryPath, updatedEntry);
+
+  // Rename the entry file
+  await Fs.rename(entry.path, updatedEntry.path);
+
+  // Rename the entry's properties file if it exists
+  const entryPropertiesFilePath = getEntryPropertiesFilePath(entry);
+
+  if (await Fs.exists(entryPropertiesFilePath)) {
+    const updatedEntryPropertiesFilePath =
+      getEntryPropertiesFilePath(updatedEntry);
+
+    await Fs.rename(entryPropertiesFilePath, updatedEntryPropertiesFilePath);
+  }
+
+  // If the collection is text based, rewrite the entry files
+  if (config.type === 'text') {
+    writeTextCollectionEntry(updatedEntry);
+  }
+
+  // If the collection is file based, update the entry properties file
+  if (config.type === 'file') {
+    writeCollectionEntryProperties(
+      collection.path,
+      newTitle,
+      updatedEntry.properties,
+    );
+  }
 
   // Dispatch a entry rename event
   Events.dispatch('collections:entry:rename', updatedEntry);
