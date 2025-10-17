@@ -267,6 +267,7 @@ export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
       details: 'A collection of files',
     },
   },
+  fileExtensions: ['pdf'],
 };
 
 export const linkCollectionTypeConfig: TextCollectionTypeConfig = {
@@ -359,7 +360,7 @@ export const itemsEntry3: CollectionEntry = {
 
 // Files Collection Entries
 export const filesEntry1: CollectionEntry = {
-  path: `${filesCollection.path}/Entry 1.md`,
+  path: `${filesCollection.path}/Entry 1.pdf`,
   collectionPath: filesCollectionPath,
   properties: {
     title: 'Entry 1',
@@ -370,7 +371,7 @@ export const filesEntry1: CollectionEntry = {
 };
 
 export const filesEntry2: CollectionEntry = {
-  path: `${filesCollection.path}/Entry 2.md`,
+  path: `${filesCollection.path}/Entry 2.pdf`,
   collectionPath: filesCollectionPath,
   properties: {
     title: 'Entry 2',
@@ -381,7 +382,7 @@ export const filesEntry2: CollectionEntry = {
 };
 
 export const filesEntry3: CollectionEntry = {
-  path: `${filesCollection.path}/Entry 3.md`,
+  path: `${filesCollection.path}/Entry 3.pdf`,
   collectionPath: filesCollectionPath,
   properties: {
     title: 'Entry 3',
@@ -494,4 +495,56 @@ export const linksEntriesFileDescriptors = [
   linksEntry1FileDescriptor,
   linksEntry2FileDescriptor,
   linksEntry3FileDescriptor,
+];
+
+// Files Collection Entry Files
+export const filesEntry1FileDescriptor: MockFileDescriptor = {
+  path: filesEntry1.path,
+};
+
+export const filesEntry1PropertiesFileDescriptor: MockFileDescriptor = {
+  path: `${filesCollectionPath}/${CollectionPropertiesDirPath}/${filesEntry1.properties.title}.json`,
+  textContent: JSON.stringify({
+    created: filesEntry1.properties.created,
+    lastModified: filesEntry1.properties.lastModified,
+    title: filesEntry1.properties.title,
+    note: null,
+  }),
+};
+
+export const filesEntry2FileDescriptor: MockFileDescriptor = {
+  path: filesEntry2.path,
+};
+
+export const filesEntry2PropertiesFileDescriptor: MockFileDescriptor = {
+  path: `${filesCollectionPath}/${CollectionPropertiesDirPath}/${filesEntry2.properties.title}.json`,
+  textContent: JSON.stringify({
+    created: filesEntry2.properties.created,
+    lastModified: filesEntry2.properties.lastModified,
+    title: filesEntry2.properties.title,
+    note: null,
+  }),
+};
+
+export const filesEntry3FileDescriptor: MockFileDescriptor = {
+  path: filesEntry3.path,
+};
+
+export const filesEntry3PropertiesFileDescriptor: MockFileDescriptor = {
+  path: `${filesCollectionPath}/${CollectionPropertiesDirPath}/${filesEntry3.properties.title}.json`,
+  textContent: JSON.stringify({
+    created: filesEntry3.properties.created,
+    lastModified: filesEntry3.properties.lastModified,
+    title: filesEntry3.properties.title,
+    note: null,
+  }),
+};
+
+export const filesEntriesFileDescriptors = [
+  filesEntry1FileDescriptor,
+  filesEntry2FileDescriptor,
+  filesEntry3FileDescriptor,
+  filesEntry1PropertiesFileDescriptor,
+  filesEntry2PropertiesFileDescriptor,
+  filesEntry3PropertiesFileDescriptor,
 ];
