@@ -10,9 +10,9 @@ export interface BaseCollectionTypeConfig {
    * The type of data the collection type manages.
    *
    * - `text`: The collection type manages text-based files (e.g. markdown).
-   * - `binary`: The collection type manages binary files (e.g. images).
+   * - `file`: The collection type manages files (e.g. images).
    */
-  type: 'text' | 'binary';
+  type: 'text' | 'file';
 
   /**
    * User friendly description of the collection type arranged as a

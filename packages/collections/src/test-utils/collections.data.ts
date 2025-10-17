@@ -256,7 +256,7 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
 
 export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
   id: 'files',
-  type: 'binary',
+  type: 'file',
   description: {
     en: {
       name: 'Files',

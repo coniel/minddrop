@@ -4,7 +4,7 @@ export interface FileCollectionTypeConfig extends BaseCollectionTypeConfig {
   /**
    * The data type of the collection.
    */
-  type: 'binary';
+  type: 'file';
 
   /**
    * The file extensions supported by the collection type.
