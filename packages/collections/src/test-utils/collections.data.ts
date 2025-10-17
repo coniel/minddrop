@@ -261,6 +261,13 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
 export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
   id: 'files',
   type: 'file',
+  coreProperties: [
+    {
+      type: CollectionPropertyType.Text,
+      name: 'foo',
+      description: 'A sample core property',
+    },
+  ],
   description: {
     en: {
       name: 'Files',

@@ -1,7 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
+import { CollectionsStore } from '../CollectionsStore';
 import {
   CollectionEntryNotFoundError,
   CollectionNotFoundError,
@@ -9,105 +12,134 @@ import {
 } from '../errors';
 import {
   cleanup,
-  itemsCollection,
-  itemsEntry1,
-  markdownCollectionTypeConfig,
+  filesCollection,
+  filesEntriesFileDescriptors,
+  filesEntry1,
+  notesCollection,
+  notesEntriesFileDescriptors,
+  notesEntry1,
   setup,
 } from '../test-utils';
-import { BaseCollectionTypeConfig } from '../types';
+import { getEntryPropertiesFilePath } from '../utils';
 import { updateCollectionEntry } from './updateCollectionEntry';
 
-const collectionTypeConfig: BaseCollectionTypeConfig = {
-  ...markdownCollectionTypeConfig,
-  updateEntry: async (entry) => ({
-    ...entry,
-    metadata: {
-      ...entry.metadata,
-      updated: true,
-    },
-  }),
+const update = {
+  note: 'Updated note content',
 };
+const mockDate = new Date('2024-01-01T00:00:00Z');
 
-const update = { properties: { foo: 'bar' } };
 const updatedEntry = {
-  ...itemsEntry1,
-  properties: update.properties,
-  metadata: {
-    ...itemsEntry1.metadata,
-    lastModified: expect.any(Date),
-    updated: true,
+  ...notesEntry1,
+  properties: {
+    ...notesEntry1.properties,
+    lastModified: mockDate,
+    note: update.note,
   },
 };
+
+const MockFs = initializeMockFileSystem([
+  notesCollection.path,
+  filesCollection.path,
+  ...notesEntriesFileDescriptors,
+  ...filesEntriesFileDescriptors,
+]);
 
 describe('updateCollectionEntry', () => {
   beforeEach(() => {
     setup({
       loadCollections: true,
+      loadCollectionTypeConfigs: true,
       loadCollectionEntries: true,
     });
 
-    CollectionTypeConfigsStore.add(collectionTypeConfig);
+    vi.useFakeTimers();
+    vi.setSystemTime(mockDate);
   });
 
-  afterEach(cleanup);
+  afterEach(() => {
+    vi.useRealTimers();
+    cleanup();
+    MockFs.reset();
+  });
 
   it('throws if the collection does not exist', () => {
-    expect(() =>
-      updateCollectionEntry('non-existent-collection', itemsEntry1.path, {}),
-    ).rejects.toThrow(CollectionNotFoundError);
+    CollectionsStore.getState().clear();
+
+    expect(() => updateCollectionEntry(notesEntry1.path, {})).rejects.toThrow(
+      CollectionNotFoundError,
+    );
   });
 
   it('throws if the collection type config is not registered', () => {
     // Unregister the collection type config
     CollectionTypeConfigsStore.clear();
 
-    expect(() =>
-      updateCollectionEntry(itemsCollection.path, itemsEntry1.path, {}),
-    ).rejects.toThrow(CollectionTypeNotRegisteredError);
+    expect(() => updateCollectionEntry(notesEntry1.path, {})).rejects.toThrow(
+      CollectionTypeNotRegisteredError,
+    );
   });
 
   it('throws if the entry is not found', async () => {
     await expect(
-      updateCollectionEntry(itemsCollection.path, 'non-existent-entry', update),
+      updateCollectionEntry('non-existent-entry', update),
     ).rejects.toThrow(CollectionEntryNotFoundError);
   });
 
+  it('throws if updates contains title property', async () => {
+    await expect(
+      updateCollectionEntry(notesEntry1.path, { title: 'New Title' }),
+    ).rejects.toThrow(InvalidParameterError);
+  });
+
   it('merges updates into the entry', async () => {
-    const updated = await updateCollectionEntry(
-      itemsCollection.path,
-      itemsEntry1.path,
-      update,
-    );
+    const updated = await updateCollectionEntry(notesEntry1.path, update);
 
     expect(updated).toEqual(updatedEntry);
   });
 
   it('returns the updated entry', async () => {
-    const updated = await updateCollectionEntry(
-      itemsCollection.path,
-      itemsEntry1.path,
-      update,
-    );
+    const updated = await updateCollectionEntry(notesEntry1.path, update);
 
     expect(updated).toEqual(updatedEntry);
   });
 
-  it('updates the lastModified timestamp in metadata', async () => {
-    const updated = await updateCollectionEntry(
-      itemsCollection.path,
-      itemsEntry1.path,
-      update,
-    );
+  it('updates the lastModified timestamp', async () => {
+    const updated = await updateCollectionEntry(notesEntry1.path, update);
 
-    expect(updated.metadata.lastModified).not.toEqual(
-      itemsEntry1.metadata.lastModified,
-    );
+    expect(updated.properties.lastModified).toEqual(new Date(mockDate));
   });
 
   it('updates the entry in the store', async () => {
-    await updateCollectionEntry(itemsCollection.path, itemsEntry1.path, update);
+    await updateCollectionEntry(notesEntry1.path, update);
 
-    expect(CollectionEntriesStore.get(itemsEntry1.path)).toEqual(updatedEntry);
+    expect(CollectionEntriesStore.get(notesEntry1.path)).toEqual(updatedEntry);
+  });
+
+  it('writes updated text entry to the file system', async () => {
+    await updateCollectionEntry(notesEntry1.path, update);
+
+    const fileContents = MockFs.readTextFile(notesEntry1.path);
+    const entryPropertyFileContents = MockFs.readTextFile(
+      getEntryPropertiesFilePath(notesEntry1),
+    );
+
+    // Entry file should contain updated note content
+    expect(fileContents).toContain(update.note);
+    // Entry properties file should contain updated lastModified timestamp
+    expect(entryPropertyFileContents).toContain(mockDate.toISOString());
+  });
+
+  it('writes updated file entry properties to the file system', async () => {
+    await updateCollectionEntry(filesEntry1.path, { foo: 'bar' });
+
+    const entryPropertyFileContents = MockFs.readTextFile(
+      getEntryPropertiesFilePath(filesEntry1),
+    );
+
+    // Entry properties file should contain updated property
+    expect(JSON.parse(entryPropertyFileContents).foo).toBe('bar');
+    // Entry properties file should contain updated lastModified timestamp
+    expect(entryPropertyFileContents).toContain(mockDate.toISOString());
   });
 
   it('dispatches a entry update event', async () =>
@@ -118,6 +150,6 @@ describe('updateCollectionEntry', () => {
         done();
       });
 
-      updateCollectionEntry(itemsCollection.path, itemsEntry1.path, update);
+      updateCollectionEntry(notesEntry1.path, update);
     }));
 });
