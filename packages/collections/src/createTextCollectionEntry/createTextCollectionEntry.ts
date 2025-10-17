@@ -23,6 +23,7 @@ import { writeTextCollectionEntry } from '../writeTextCollectionEntry';
  *
  * @throws {CollectionNotFoundError} If the collection does not exist.
  * @throws {CollectionTypeNotRegisteredError} If the collection type is not registered.
+ * @throws {InvalidCollectionTypeError} If the collection type is not a text type.
  */
 export async function createTextCollectionEntry<
   TEntry extends CollectionEntry = CollectionEntry,
