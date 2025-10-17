@@ -1,4 +1,6 @@
-export interface CollectionEntry {
+export interface CollectionEntry<
+  TProperties extends CollectionEntryProperties = CollectionEntryProperties,
+> {
   /**
    * The path to the collection that the entry belongs to.
    */
@@ -12,7 +14,7 @@ export interface CollectionEntry {
   /**
    * The entry's properties.
    */
-  properties: CollectionEntryProperties;
+  properties: TProperties;
 }
 
 export type CollectionEntryPropertyValue =
@@ -60,3 +62,15 @@ export type CollectionEntryCustomProperties = Record<
 
 export type CollectionEntryProperties = CollectionEntryCoreProperties &
   CollectionEntryCustomProperties;
+
+export interface FileCollectionEntryProperties
+  extends CollectionEntryProperties {
+  /**
+   * The file name of the primary file associated with the entry.
+   */
+  fileName: string;
+}
+
+export type TextCollectionEntry = CollectionEntry<CollectionEntryProperties>;
+export type FileCollectionEntry =
+  CollectionEntry<FileCollectionEntryProperties>;

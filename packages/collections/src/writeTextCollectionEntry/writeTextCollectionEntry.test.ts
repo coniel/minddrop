@@ -27,7 +27,7 @@ const MockFs = initializeMockFileSystem([
   linksPropertiesDir,
 ]);
 
-describe('createTextCollectionEntry', () => {
+describe('writeTextCollectionEntry', () => {
   beforeEach(() =>
     setup({
       loadCollections: true,
@@ -70,22 +70,6 @@ describe('createTextCollectionEntry', () => {
 
     expect(MockFs.exists(expectedPath)).toBe(true);
   });
-  //
-  // it('uses an incrementing number suffix to avoid file name conflicts', async () => {
-  //   // Create the first entry
-  //   await writeTextCollectionEntry(notesCollection.path, properties);
-  //   // Create the second entry with the same title
-  //   await writeTextCollectionEntry(notesCollection.path, properties);
-  //   // Create the third entry with the same title
-  //   await writeTextCollectionEntry(notesCollection.path, properties);
-  //
-  //   const expectedPath1 = `${notesCollection.path}/Untitled.md`;
-  //   const expectedPath2 = `${notesCollection.path}/Untitled 1.md`;
-  //   const expectedPath3 = `${notesCollection.path}/Untitled 2.md`;
-  //   expect(MockFs.exists(expectedPath1)).toBe(true);
-  //   expect(MockFs.exists(expectedPath2)).toBe(true);
-  //   expect(MockFs.exists(expectedPath3)).toBe(true);
-  // });
 
   it('writes the provided text content into the text file', async () => {
     await writeTextCollectionEntry(notesEntry1);
