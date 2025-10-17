@@ -2,6 +2,8 @@ import { Events } from '@minddrop/events';
 import { CollectionEntriesStore } from '../CollectionEntriesStore';
 import { getCollection } from '../getCollection';
 import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
+import { readAllFileCollectionEntries } from '../readAllFileCollectionEntries';
+import { readAllTextCollectionEntries } from '../readAllTextCollectionEntries';
 
 /**
  * Load collection entries from a given collection path.
@@ -18,7 +20,9 @@ export async function loadCollectionEntries(path: string): Promise<void> {
   const config = getCollectionTypeConfig(collection.type);
 
   // Retrieve the collection entries
-  const entries = await config.getAllEntries(collection.path);
+  const entries = await (config.type === 'text'
+    ? readAllTextCollectionEntries(path)
+    : readAllFileCollectionEntries(path));
 
   // Load the entries into the entries store
   CollectionEntriesStore.load(entries);
