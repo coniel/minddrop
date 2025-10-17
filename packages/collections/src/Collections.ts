@@ -21,7 +21,6 @@ export { updateCollectionProperty as updateProperty } from './updateCollectionPr
 export { deleteCollectionProperty as deleteProperty } from './deleteCollectionProperty';
 export { getCollectionTypeConfig as getTypeConfig } from './getCollectionTypeConfig';
 export { loadCollectionEntries as loadEntries } from './loadCollectionEntries';
-export { createCollectionEntry as createEntry } from './createCollectionEntry';
 export { getCollectionEntry as getEntry } from './getCollectionEntry';
 export { updateCollectionEntryProperties as updateEntryProperties } from './updateCollectionEntryProperties';
 export { updateCollectionEntryContent as updateEntryContent } from './updateCollectionEntryContent';
