@@ -23,6 +23,8 @@ export const CollectionConfigDirName = '.minddrop';
 export const CollectionConfigFileName = 'collection.json';
 export const CollectionHistoryDirName = 'History';
 export const CollectionPropertiesDirName = 'properties';
+// Relative path to the collection properties directory from the collection root
+export const CollectionPropertiesDirPath = `${CollectionConfigDirName}/${CollectionPropertiesDirName}`;
 
 export const DefaultCollectionIcon: UserIcon = {
   type: UserIconType.ContentIcon,

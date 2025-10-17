@@ -3,6 +3,7 @@ import {
   CollectionConfigDirName,
   CollectionConfigFileName,
   CollectionPropertiesDirName,
+  CollectionPropertiesDirPath,
   CollectionsConfigDir,
   CollectionsConfigFileName,
 } from '../constants';
@@ -246,7 +247,10 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
     },
   ],
   parse(markdown: string) {
-    return { note: markdown };
+    return {
+      note: markdown.replace(/^# .+\n\n/, ''),
+      title: markdown.match(/^# (.+)\n\n/)?.[1] || '',
+    };
   },
   serialize(properties: CollectionEntryProperties) {
     const { title, note, ...otherProperties } = properties;
@@ -430,4 +434,64 @@ export const entries = [
   ...itemsEntries,
   ...filesEntries,
   ...linksEntries,
+];
+
+/************************************************************/
+/****************** Collection Entry Files ******************/
+/************************************************************/
+
+// Notes Collection Entry Files
+export const notesEntry1FileDescriptor: MockFileDescriptor = {
+  path: notesEntry1.path,
+  textContent: `# ${notesEntry1.properties.title}\n\n${notesEntry1.properties.note}`,
+};
+
+export const notesEntry1PropertiesFileDescriptor: MockFileDescriptor = {
+  path: `${notesCollectionPath}/${CollectionPropertiesDirPath}/${notesEntry1.properties.title}.json`,
+  textContent: JSON.stringify({
+    created: notesEntry1.properties.created,
+    lastModified: notesEntry1.properties.lastModified,
+  }),
+};
+
+export const notesEntry2FileDescriptor: MockFileDescriptor = {
+  path: notesEntry2.path,
+  textContent: `# ${notesEntry2.properties.title}\n\n${notesEntry2.properties.note}`,
+};
+
+export const notesEntry2PropertiesFileDescriptor: MockFileDescriptor = {
+  path: `${notesCollectionPath}/${CollectionPropertiesDirPath}/${notesEntry2.properties.title}.json`,
+  textContent: JSON.stringify({
+    created: notesEntry2.properties.created,
+    lastModified: notesEntry2.properties.lastModified,
+  }),
+};
+
+export const notesEntriesFileDescriptors = [
+  notesEntry1FileDescriptor,
+  notesEntry1PropertiesFileDescriptor,
+  notesEntry2FileDescriptor,
+  notesEntry2PropertiesFileDescriptor,
+];
+
+// Links Collection Entry Files
+export const linksEntry1FileDescriptor: MockFileDescriptor = {
+  path: linksEntry1.path,
+  textContent: JSON.stringify(linksEntry1.properties),
+};
+
+export const linksEntry2FileDescriptor: MockFileDescriptor = {
+  path: linksEntry2.path,
+  textContent: JSON.stringify(linksEntry2.properties),
+};
+
+export const linksEntry3FileDescriptor: MockFileDescriptor = {
+  path: linksEntry3.path,
+  textContent: JSON.stringify(linksEntry3.properties),
+};
+
+export const linksEntriesFileDescriptors = [
+  linksEntry1FileDescriptor,
+  linksEntry2FileDescriptor,
+  linksEntry3FileDescriptor,
 ];
