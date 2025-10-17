@@ -1,6 +1,9 @@
 import { CollectionsStore } from './CollectionsStore';
 
 export { createCollection as create } from './createCollection';
+export { createCollectionEntriesFromDataTransfer as createEntriesFromDataTransfer } from './createCollectionEntriesFromDataTransfer';
+export { createCollectionEntryFromFile as createEntryFromFile } from './createCollectionEntryFromFile';
+export { createCollectionEntryFromString as createEntryFromString } from './createCollectionEntryFromString';
 export { loadCollections as load } from './loadCollections';
 export { hasCollectionsConfig as hasConfig } from './hasCollectionsConfig';
 export { getCollectionsConfig as getConfig } from './getCollectionsConfig';

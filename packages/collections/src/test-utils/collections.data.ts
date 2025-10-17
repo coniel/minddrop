@@ -232,6 +232,7 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
   id: 'markdown',
   type: 'text',
   fileExtension: 'md',
+  match: (string) => ({ note: string }),
   description: {
     en: {
       name: 'Items',
@@ -261,6 +262,7 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
 export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
   id: 'files',
   type: 'file',
+  fileExtensions: ['pdf'],
   coreProperties: [
     {
       type: CollectionPropertyType.Text,
@@ -274,13 +276,27 @@ export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
       details: 'A collection of files',
     },
   },
-  fileExtensions: ['pdf'],
 };
 
 export const linkCollectionTypeConfig: TextCollectionTypeConfig = {
   id: 'links',
   type: 'text',
   fileExtension: 'json',
+  match: (string) => {
+    try {
+      new URL(string);
+      return { url: string };
+    } catch {
+      return null;
+    }
+  },
+  coreProperties: [
+    {
+      type: CollectionPropertyType.Text,
+      name: 'url',
+      description: 'The URL of the link',
+    },
+  ],
   description: {
     en: {
       name: 'Links',
