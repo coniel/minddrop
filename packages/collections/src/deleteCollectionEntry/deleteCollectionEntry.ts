@@ -1,11 +1,11 @@
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import { removeCollectionEntry } from '../CollectionEntriesStore';
-import { getCollection } from '../getCollection';
 import { getCollectionEntry } from '../getCollectionEntry';
-import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
+import { getEntryPropertiesFilePath } from '../utils';
 
 /**
- * Deletes a collection entry.
+ * Deletes a collection entry and all of its associated files.
  *
  * @param collectionPath - The path to the collection.
  * @param entryPath - The path to the entry.
@@ -16,23 +16,22 @@ import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
  *
  * @dispatches collections:entry:delete
  */
-export async function deleteCollectionEntry(
-  collectionPath: string,
-  entryPath: string,
-): Promise<void> {
-  // Get the collection
-  const collection = getCollection(collectionPath, true);
-  // Get the collection type config
-  const config = getCollectionTypeConfig(collection.type);
+export async function deleteCollectionEntry(entryPath: string): Promise<void> {
   // Get the entry
   const entry = getCollectionEntry(entryPath, true);
 
   // Remove the entry from the store
   removeCollectionEntry(entryPath);
 
-  // Call the delete entry function from the collection type config.
-  // This method should handle the actual deletion of the entry from the file system.
-  config.deleteEntry(entry);
+  // Delete the entry file
+  await Fs.removeFile(entry.path);
+
+  // Delete the entry properties file if it exists
+  const propertiesFilePath = getEntryPropertiesFilePath(entry);
+
+  if (await Fs.exists(propertiesFilePath)) {
+    await Fs.removeFile(propertiesFilePath);
+  }
 
   // Dispatch the entry delete event
   Events.dispatch('collections:entry:delete', entry);

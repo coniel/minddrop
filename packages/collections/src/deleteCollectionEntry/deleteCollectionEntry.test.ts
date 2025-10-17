@@ -1,81 +1,80 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { CollectionTypeConfigsStore } from '../CollectionTypeConfigsStore';
-import {
-  CollectionEntryNotFoundError,
-  CollectionNotFoundError,
-  CollectionTypeNotRegisteredError,
-} from '../errors';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import { CollectionEntryNotFoundError } from '../errors';
 import { getCollectionEntry } from '../getCollectionEntry';
 import {
   cleanup,
-  itemsEntry1,
-  markdownCollectionTypeConfig,
+  linksCollection,
+  linksEntriesFileDescriptors,
+  linksEntry1,
+  notesCollection,
+  notesEntriesFileDescriptors,
+  notesEntry1,
+  notesEntry1PropertiesFileDescriptor,
   setup,
 } from '../test-utils';
-import { BaseCollectionTypeConfig } from '../types';
 import { deleteCollectionEntry } from './deleteCollectionEntry';
 
-const config: BaseCollectionTypeConfig = {
-  ...markdownCollectionTypeConfig,
-  deleteEntry: vi.fn(),
-};
+const MockFs = initializeMockFileSystem([
+  notesCollection.path,
+  linksCollection.path,
+  ...notesEntriesFileDescriptors,
+  ...linksEntriesFileDescriptors,
+]);
 
 describe('deleteCollectionEntry', () => {
   beforeEach(() =>
     setup({
       loadCollections: true,
-      loadCollectionTypeConfigs: [config],
+      loadCollectionTypeConfigs: true,
       loadCollectionEntries: true,
     }),
   );
 
-  afterEach(cleanup);
-
-  it('throws if the collection does not exist', async () => {
-    await expect(
-      deleteCollectionEntry('non-existent-collection-path', itemsEntry1.path),
-    ).rejects.toThrow(CollectionNotFoundError);
-  });
-
-  it('throws if the collection type config is not registered', async () => {
-    // Unregister the collection type config
-    CollectionTypeConfigsStore.clear();
-
-    await expect(
-      deleteCollectionEntry(itemsEntry1.collectionPath, itemsEntry1.path),
-    ).rejects.toThrow(CollectionTypeNotRegisteredError);
+  afterEach(() => {
+    cleanup();
+    MockFs.reset();
   });
 
   it('throws if the entry does not exist', async () => {
     await expect(
-      deleteCollectionEntry(
-        itemsEntry1.collectionPath,
-        'non-existent-entry-path',
-      ),
+      deleteCollectionEntry('non-existent-entry-path'),
     ).rejects.toThrow(CollectionEntryNotFoundError);
   });
 
   it('removes the entry from the store', async () => {
-    await deleteCollectionEntry(itemsEntry1.collectionPath, itemsEntry1.path);
+    await deleteCollectionEntry(notesEntry1.path);
 
-    expect(getCollectionEntry(itemsEntry1.path)).toBeNull();
+    expect(getCollectionEntry(notesEntry1.path)).toBeNull();
   });
 
-  it('calls the deleteEntry method of the collection type config', async () => {
-    await deleteCollectionEntry(itemsEntry1.collectionPath, itemsEntry1.path);
+  it('deletes the entry file', async () => {
+    await deleteCollectionEntry(notesEntry1.path);
 
-    expect(config.deleteEntry).toHaveBeenCalledWith(itemsEntry1);
+    expect(MockFs.exists(notesEntry1.path)).toBe(false);
+  });
+
+  it('deletes the entry properties file', async () => {
+    await deleteCollectionEntry(notesEntry1.path);
+
+    expect(MockFs.exists(notesEntry1PropertiesFileDescriptor.path)).toBe(false);
+  });
+
+  it('supports entries with no properties file', async () => {
+    await expect(
+      deleteCollectionEntry(linksEntry1.path),
+    ).resolves.not.toThrow();
   });
 
   it('dispatches a entry delete event', async () =>
     new Promise<void>((done) => {
       Events.addListener('collections:entry:delete', 'test', (payload) => {
         // Payload data should be the deleted entry
-        expect(payload.data).toEqual(itemsEntry1);
+        expect(payload.data).toEqual(notesEntry1);
         done();
       });
 
-      deleteCollectionEntry(itemsEntry1.collectionPath, itemsEntry1.path);
+      deleteCollectionEntry(notesEntry1.path);
     }));
 });
