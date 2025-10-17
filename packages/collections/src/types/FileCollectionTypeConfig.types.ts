@@ -1,6 +1,6 @@
 import { BaseCollectionTypeConfig } from './BaseCollectionTypeConfig.types';
 
-export interface BinaryCollectionTypeConfig extends BaseCollectionTypeConfig {
+export interface FileCollectionTypeConfig extends BaseCollectionTypeConfig {
   /**
    * The data type of the collection.
    */

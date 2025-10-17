@@ -7,7 +7,6 @@ import {
   CollectionsConfigFileName,
 } from '../constants';
 import {
-  BinaryCollectionTypeConfig,
   Collection,
   CollectionCheckboxPropertySchema,
   CollectionConfig,
@@ -20,6 +19,7 @@ import {
   CollectionSelectPropertySchema,
   CollectionTextPropertySchema,
   CollectionsConfig,
+  FileCollectionTypeConfig,
   TextCollectionTypeConfig,
 } from '../types';
 
@@ -254,7 +254,7 @@ export const markdownCollectionTypeConfig: TextCollectionTypeConfig = {
   },
 };
 
-export const fileCollectionTypeConfig: BinaryCollectionTypeConfig = {
+export const fileCollectionTypeConfig: FileCollectionTypeConfig = {
   id: 'files',
   type: 'binary',
   description: {

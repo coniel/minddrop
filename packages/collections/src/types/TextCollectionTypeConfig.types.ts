@@ -13,6 +13,29 @@ export interface TextCollectionTypeConfig extends BaseCollectionTypeConfig {
   fileExtension: string;
 
   /**
+   * Whether to allow new entries to be created by importing text files.
+   *
+   * If true, users can create new entries by selecting text files with the
+   * specified file extension. The `parse` method will be used to extract
+   * entry properties from the file content.
+   *
+   * @default false
+   */
+  enableImports?: boolean;
+
+  /**
+   * The fields to include in the "New Entry" form when creating a new entry
+   * from scratch (not from dropped/pasted text).
+   *
+   * This should be an array of entry property names that are relevant for
+   * creating a new entry. All specified properties will be considered required.
+   *
+   * If ommitted, a new entry will be created with all properties set to their
+   * default values (if any).
+   */
+  newEntryFields?: string[];
+
+  /**
    * Callback to parse the content of a text file and return the entry properties
    * contained within it as a partial `CollectionEntryProperties` object.
    *

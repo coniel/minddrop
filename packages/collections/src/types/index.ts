@@ -1,4 +1,4 @@
-export * from './BinaryCollectionTypeConfig.types';
+export * from './FileCollectionTypeConfig.types';
 export * from './Collection.types';
 export * from './CollectionConfig.types';
 export * from './CollectionEntry.types';
