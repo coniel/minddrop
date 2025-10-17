@@ -1,12 +1,9 @@
 import { Fs } from '@minddrop/file-system';
-import {
-  CollectionConfigDirName,
-  CollectionPropertiesDirName,
-} from '../constants';
 import { InvalidCollectionTypeError } from '../errors';
 import { getCollection } from '../getCollection';
 import { getCollectionTypeConfig } from '../getCollectionTypeConfig';
 import { CollectionEntry, TextCollectionTypeConfig } from '../types';
+import { writeCollectionEntryProperties } from '../writeCollectionEntryProperties';
 
 /**
  * Writes a text based collection entry to the file system.
@@ -47,14 +44,6 @@ export async function writeTextCollectionEntry(
   // If additional properties were returned during serialization, write them
   // write them to a properties file.
   if (Object.keys(serializedProperties).length > 0) {
-    Fs.writeTextFile(
-      Fs.concatPath(
-        collectionPath,
-        CollectionConfigDirName,
-        CollectionPropertiesDirName,
-        `${title}.json`,
-      ),
-      JSON.stringify(serializedProperties, null, 2),
-    );
+    writeCollectionEntryProperties(collectionPath, title, serializedProperties);
   }
 }
