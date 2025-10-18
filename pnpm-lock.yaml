@@ -892,6 +892,37 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
+  packages/items:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
+
   packages/markdown:
     dependencies:
       '@minddrop/editor':
@@ -979,6 +1010,25 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.3
+
+  packages/properties:
+    dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
