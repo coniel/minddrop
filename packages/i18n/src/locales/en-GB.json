@@ -355,5 +355,43 @@
         "action": "Clear selection"
       }
     }
+  },
+  "items": {
+    "data": {
+      "name": "Data",
+      "description": "Store formatted data related to things such as books, contacts, or tasks."
+    },
+    "text": {
+      "name": "Text",
+      "description": "Store text based items such as code snippets or quotes."
+    },
+    "markdown": {
+      "name": "Markdown",
+      "description": "Store rich text content using Markdown formatting."
+    },
+    "url": {
+      "name": "Weblink",
+      "description": "Store links to websites with automatically fetched metadata."
+    },
+    "file": {
+      "name": "File",
+      "description": "Store files of any type with custom properties for additional context."
+    },
+    "image": {
+      "name": "Image",
+      "description": "Store images with custom properties for additional context."
+    },
+    "audio": {
+      "name": "Audio",
+      "description": "Store audio files with custom properties for additional context."
+    },
+    "video": {
+      "name": "Video",
+      "description": "Store video files with custom properties for additional context."
+    },
+    "pdf": {
+      "name": "PDF",
+      "description": "Store PDF documents with custom properties for additional context."
+    }
   }
 }
