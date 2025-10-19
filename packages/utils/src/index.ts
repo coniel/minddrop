@@ -1,3 +1,5 @@
+import { parse, stringify } from 'yaml';
+
 export * from './ParentDirContext';
 export * from './back-end-utils';
 export * from './createArrayStore';
@@ -22,3 +24,8 @@ export * from './useDragImage';
 export * from './useInputValue';
 export * from './useToggle';
 export { v4 as uuid } from 'uuid';
+
+export const YAML = {
+  parse,
+  stringify,
+};
