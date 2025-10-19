@@ -4,7 +4,7 @@
  * @param value - The value to check.
  * @returns True if the value is a serialized Date object, false otherwise.
  */
-export function isSerializedDate(value: unknown): boolean {
+export function isSerializedDate(value: unknown): value is string {
   // Quick rejection for non-string values or strings with an unrealistic length
   if (typeof value !== 'string' || value.length < 10 || value.length > 30)
     return false;
