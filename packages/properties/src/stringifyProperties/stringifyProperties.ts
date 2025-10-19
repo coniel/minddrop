@@ -1,5 +1,5 @@
 import { YAML } from '@minddrop/utils';
-import { Properties, PropertiesSchema } from '../types';
+import { PropertiesSchema, PropertyMap } from '../types';
 
 /**
  * Stringifies the given properties according to the provided schema,
@@ -10,7 +10,7 @@ import { Properties, PropertiesSchema } from '../types';
  * @returns The stringified properties.
  */
 export function stringifyProperties(
-  properties: Properties,
+  properties: PropertyMap,
   schema: PropertiesSchema,
 ): string {
   // Add default values for missing properties

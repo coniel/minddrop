@@ -1,5 +1,5 @@
 import { YAML } from '@minddrop/utils';
-import { Properties, PropertySchema } from '../types';
+import { PropertyMap, PropertySchema } from '../types';
 
 /**
  * Parses a properties string according to the provided schema.
@@ -9,7 +9,7 @@ import { Properties, PropertySchema } from '../types';
  *
  * @returns The parsed properties.
  */
-export function parseProperties<TProperties extends Properties = Properties>(
+export function parseProperties<TProperties extends PropertyMap = PropertyMap>(
   string: string,
   schema: PropertySchema[],
 ): TProperties {
