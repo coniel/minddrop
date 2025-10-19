@@ -1,2 +1,2 @@
 export * from './PropertySchema.types';
-export * from './PropertyValue.types';
+export * from './Properties.types';

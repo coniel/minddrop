@@ -41,8 +41,8 @@ export interface NumberPropertySchema extends PropertySchemaBase {
 
 export interface DatePropertySchema extends PropertySchemaBase {
   type: PropertyType.Date;
-  format: Intl.DateTimeFormatOptions;
-  locale: Intl.LocalesArgument;
+  format?: Intl.DateTimeFormatOptions;
+  locale?: Intl.LocalesArgument;
   defaultValue?: Date | 'now';
 }
 
@@ -75,3 +75,5 @@ export type PropertySchema =
   | CheckboxPropertySchema
   | SelectPropertySchema
   | MultiSelectPropertySchema;
+
+export type PropertiesSchema = PropertySchema[];
