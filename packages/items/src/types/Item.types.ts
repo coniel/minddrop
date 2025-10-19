@@ -1,23 +1,13 @@
-import { PropertyValue } from '@minddrop/properties';
+import { PropertyMap } from '@minddrop/properties';
 
-export interface Item<TProperties extends ItemProperties = ItemProperties> {
+export interface Item<TProperties extends PropertyMap = PropertyMap> {
   /**
-   * The base data type of the item.
+   * The item's unique identifier.
    */
-  dataType:
-    | 'data'
-    | 'text'
-    | 'markdown'
-    | 'url'
-    | 'image'
-    | 'video'
-    | 'audio'
-    | 'pdf'
-    | 'file';
+  id: string;
 
   /**
-   * The item's type ID. Can be one of the core types, a type added by an extension,
-   * or a custom type defined by the end user.
+   * The ID of the item type instance the item belongs to.
    */
   type: string;
 
@@ -26,16 +16,6 @@ export interface Item<TProperties extends ItemProperties = ItemProperties> {
    */
   path: string;
 
-  /**
-   * The item's properties.
-   */
-  properties: TProperties;
-}
-
-/**
- * Core properties present on all items.
- */
-export interface ItemCoreProperties {
   /**
    * The item title. Also used as the file name of the primary file associated
    * with the item.
@@ -51,11 +31,9 @@ export interface ItemCoreProperties {
    * The date the item was last modified.
    */
   lastModified: Date;
+
+  /**
+   * The item's properties.
+   */
+  properties: TProperties;
 }
-
-/**
- * Custom properties defined by the config or end user.
- */
-export type ItemCustomProperties = Record<string, PropertyValue>;
-
-export type ItemProperties = ItemCoreProperties & ItemCustomProperties;

@@ -1,4 +1,4 @@
-import { ItemProperties } from './Item.types';
+import { PropertyMap } from '@minddrop/properties';
 
 interface BaseItemTypeConfig {
   /**
@@ -19,6 +19,16 @@ interface BaseItemTypeConfig {
    * A unique identifier for this item type.
    */
   type: string;
+
+  /**
+   * Name displayed in the UI.
+   */
+  name: string;
+
+  /**
+   * Short description displayed in the UI.
+   */
+  description: string;
 }
 
 export interface DataItemTypeConfig extends BaseItemTypeConfig {
@@ -27,6 +37,18 @@ export interface DataItemTypeConfig extends BaseItemTypeConfig {
 
 export interface TextItemTypeConfig extends BaseItemTypeConfig {
   dataType: 'text';
+
+  /**
+   * A function that matches text data to this item type.
+   * Returns an object containing properties to set on the item
+   * if the data matches, or null if it doesn't.
+   *
+   * Can also accept File objects for text files.
+   *
+   * @param data - The text data or File object to match.
+   * @return An object containing properties to set on the item, or null if no match.
+   */
+  match?(data: string | File): PropertyMap | null;
 }
 
 export interface MarkdownItemTypeConfig extends BaseItemTypeConfig {
@@ -35,17 +57,17 @@ export interface MarkdownItemTypeConfig extends BaseItemTypeConfig {
 
 export interface UrlItemTypeConfig extends BaseItemTypeConfig {
   dataType: 'url';
-}
-
-export interface ImageItemTypeConfig extends BaseItemTypeConfig {
-  dataType: 'image';
 
   /**
    * A function that matches URLs to this item type.
    * Returns an object containing properties to set on the item
    * if the URL matches, or null if it doesn't.
    */
-  match(url: string): Partial<ItemProperties> | null;
+  match?(url: string): PropertyMap | null;
+}
+
+export interface ImageItemTypeConfig extends BaseItemTypeConfig {
+  dataType: 'image';
 }
 
 export interface VideoItemTypeConfig extends BaseItemTypeConfig {

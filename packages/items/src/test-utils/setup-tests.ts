@@ -1,23 +1,31 @@
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
+import { ItemTypeInstancesStore } from '../ItemTypeInstancesStore';
 import { ItemsStore } from '../ItemsStore';
-import { ItemTypeConfig } from '../types';
-import { itemTypeConfigs, items } from './items.data';
+import { ItemTypeConfig, ItemTypeInstance } from '../types';
+import {
+  itemTypeConfigs,
+  itemTypeInstances,
+  itemTypeInstancesFileDescriptors,
+  items,
+  itemsFileDescriptors,
+} from './items.data';
 
 initializeI18n();
 
+export const MockFs = initializeMockFileSystem();
+
 interface SetupOptions {
-  loadItems?: boolean;
   loadItemTypeConfigs?: boolean | ItemTypeConfig[];
+  loadItemTypeInstances?: boolean | ItemTypeInstance[];
+  loadItems?: boolean;
 }
 export function setup({
-  loadItems = false,
   loadItemTypeConfigs = false,
+  loadItemTypeInstances = false,
+  loadItems = false,
 }: SetupOptions = {}) {
-  if (loadItems) {
-    ItemsStore.load(items);
-  }
-
   if (loadItemTypeConfigs) {
     if (Array.isArray(loadItemTypeConfigs)) {
       ItemTypeConfigsStore.load(loadItemTypeConfigs);
@@ -25,9 +33,26 @@ export function setup({
       ItemTypeConfigsStore.load(itemTypeConfigs);
     }
   }
+
+  if (loadItemTypeInstances) {
+    if (Array.isArray(loadItemTypeInstances)) {
+      ItemTypeInstancesStore.load(loadItemTypeInstances);
+    } else {
+      ItemTypeInstancesStore.load(itemTypeInstances);
+    }
+
+    MockFs.addFiles(itemTypeInstancesFileDescriptors);
+  }
+
+  if (loadItems) {
+    ItemsStore.load(items);
+
+    MockFs.addFiles(itemsFileDescriptors);
+  }
 }
 
 export function cleanup() {
   ItemsStore.clear();
   ItemTypeConfigsStore.clear();
+  MockFs.reset();
 }
