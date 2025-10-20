@@ -1,4 +1,4 @@
-import { PropertyMap } from '@minddrop/properties';
+import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 
 interface BaseItemTypeConfigCommon {
   /**
@@ -17,7 +17,7 @@ interface BaseItemTypeConfigCommon {
   /**
    * A unique identifier for this item type.
    */
-  id: string;
+  type: string;
 
   /**
    * Name displayed in the UI.
@@ -28,6 +28,11 @@ interface BaseItemTypeConfigCommon {
    * Short description displayed in the UI.
    */
   description: string;
+
+  /**
+   * The base item type's properties schema.
+   */
+  properties: PropertiesSchema;
 }
 
 export interface MarkdownBaseItemTypeConfig extends BaseItemTypeConfigCommon {
