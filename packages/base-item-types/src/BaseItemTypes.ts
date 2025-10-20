@@ -5,4 +5,4 @@ export {
   getAll,
   useBaseItemTypeConfig,
   useBaseItemTypeConfigs,
-} from './ItemTypeConfigsStore';
+} from './BaseItemTypeConfigsStore';
