@@ -33,8 +33,18 @@ interface BaseDirOptions {
   baseDir?: BaseDirectory;
 }
 
+let workspaceDirPath = '';
+
+function setWorkspaceDirPath(path: string) {
+  workspaceDirPath = path;
+}
+
 function getBaseDirPath(dir: FsBaseDirectory): Promise<string> {
   switch (dir) {
+    case FsBaseDirectory.Workspace:
+      return Promise.resolve(workspaceDirPath);
+    case FsBaseDirectory.WorkspaceConfig:
+      return Promise.resolve(`${workspaceDirPath}/.minddrop`);
     case FsBaseDirectory.AppData:
       return appDataDir();
     case FsBaseDirectory.AppConfig:
@@ -107,6 +117,7 @@ function isNonHiddenFileOrWorkspaceConfig(entry: DirEntry): boolean {
 }
 
 register({
+  setWorkspaceDirPath,
   getBaseDirPath,
   convertFileSrc: (path) => convertFileSrc(path),
   isDirectory: async (path, fsOptions = {}) => {
@@ -169,6 +180,13 @@ register({
 
     return readTextFile(path, options);
   },
+  readJsonFile: async (path, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
+
+    const content = await readTextFile(path, options);
+
+    return JSON.parse(content);
+  },
   removeDir: async (path, fsOptions) => {
     const options = translateBaseDir(fsOptions);
 
@@ -211,6 +229,13 @@ register({
   },
   writeTextFile: async (path, contents, fsOptions) => {
     const options = translateBaseDir(fsOptions);
+
+    return writeTextFile(path, contents, options);
+  },
+  writeJsonFile: async (path, json, pretty, fsOptions) => {
+    const options = translateBaseDir(fsOptions);
+
+    const contents = JSON.stringify(json, null, pretty ? 2 : 0);
 
     return writeTextFile(path, contents, options);
   },
