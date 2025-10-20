@@ -15,6 +15,14 @@ import {
 
 export interface FileSystemAdapter {
   /**
+   * Sets the workspace directory path. This path should be used when
+   * BaseDirectory.Workspace is specified as the base directory.
+   *
+   * @param path - The workspace directory path.
+   */
+  setWorkspaceDirPath(path: string): void;
+
+  /**
    * Returns the path of a BaseDirectory.
    *
    * @param dir - The directory for which to retrieve the path.
@@ -102,6 +110,18 @@ export interface FileSystemAdapter {
   readTextFile(path: string, options?: FsReadFileOptions): Promise<string>;
 
   /**
+   * Reads a JSON file and parses its contents.
+   *
+   * @param path - The file path.
+   * @param options - Read file options.
+   * @returns A promise resolving to the parsed JSON data.
+   */
+  readJsonFile<TData = object>(
+    path: string,
+    options?: FsReadFileOptions,
+  ): Promise<TData>;
+
+  /**
    * Removes a directory.
    *
    * @param path - The directory path.
@@ -170,6 +190,22 @@ export interface FileSystemAdapter {
   writeTextFile(
     path: string,
     contents: string,
+    options?: FsWriteFileOptions,
+  ): Promise<void>;
+
+  /**
+   * Writes a JSON file.
+   *
+   * @param path - The file path.
+   * @param jsonContent - The JSON content to write.
+   * @param pretty - Whether or not to pretty print the JSON, defaults to true.
+   * @param options - Write file options.
+   * @returns A promise indicating the success or failure of the operation.
+   */
+  writeJsonFile(
+    path: string,
+    jsonContent: object,
+    pretty?: boolean,
     options?: FsWriteFileOptions,
   ): Promise<void>;
 

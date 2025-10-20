@@ -9,6 +9,7 @@ import {
   FsDirOptions,
   FsEntry,
   FsFileOptions,
+  FsReadFileOptions,
   MockFileDescriptor,
   MockFileSystem,
 } from '../types';
@@ -22,6 +23,8 @@ export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
   const init = initializeMockFsRoot([
+    { path: BaseDirectory.Workspace },
+    { path: BaseDirectory.WorkspaceConfig },
     { path: BaseDirectory.AppData },
     { path: BaseDirectory.AppConfig },
     { path: BaseDirectory.Documents },
@@ -38,7 +41,8 @@ export function initializeMockFileSystem(
   let binaryFiles: Record<string, any> = init.binaryFiles;
 
   const MockFs: FileSystem = {
-    getBaseDirPath: async (dir) => dir,
+    setWorkspaceDirPath: async () => null,
+    getBaseDirPath: async (baseDir) => getBaseDirPath(baseDir),
     convertFileSrc: (path) => path,
     isDirectory: async (path, options) => {
       const fileEntry = mockGetFileEntry(root, getFullPath(path, options));
@@ -71,6 +75,14 @@ export function initializeMockFileSystem(
       mockGetFileEntry(root, fullPath);
 
       return textFileContents[fullPath] || '';
+    },
+    readJsonFile: async (path, options) => {
+      const fullPath = getFullPath(path, options);
+
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      return JSON.parse(textFileContents[fullPath]);
     },
     removeDir: async (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
@@ -118,6 +130,22 @@ export function initializeMockFileSystem(
       }
 
       textFileContents[fullPath] = textContent;
+    },
+    writeJsonFile: async (path, jsonContent, pretty, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+
+      textFileContents[fullPath] = JSON.stringify(
+        jsonContent,
+        null,
+        pretty ? 2 : 0,
+      );
     },
     createDir: async (path, options) => {
       const fullPath = getFullPath(path, options);
@@ -226,6 +254,17 @@ export function initializeMockFileSystem(
 
       return textFileContents[fullPath] || '';
     },
+    readJsonFile: <T = object>(
+      path: string,
+      options?: FsReadFileOptions,
+    ): T => {
+      const fullPath = getFullPath(path, options);
+
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      return JSON.parse(textFileContents[fullPath]);
+    },
     writeTextFile: (path, textContent, options) => {
       const fullPath = getFullPath(path, options);
 
@@ -237,6 +276,22 @@ export function initializeMockFileSystem(
       }
 
       textFileContents[fullPath] = textContent;
+    },
+    writeJsonFile: (path, textContent, pretty, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+
+      textFileContents[fullPath] = JSON.stringify(
+        textContent,
+        null,
+        pretty ? 2 : 0,
+      );
     },
     createDir: (path, options) => {
       const fullPath = getFullPath(path, options);
@@ -323,9 +378,20 @@ function addToFileTree(root: FsEntry, file: FsEntry) {
   }
 }
 
+function getBaseDirPath(dir: BaseDirectory): string {
+  switch (dir) {
+    case BaseDirectory.WorkspaceConfig:
+      return `${BaseDirectory.Workspace}/.minddrop`;
+    default:
+      return dir;
+  }
+}
+
 function getFullPath(
   path: string,
   options?: FsFileOptions | FsDirOptions,
 ): string {
-  return options?.baseDir ? concatPath(options.baseDir, path) : path;
+  return options?.baseDir
+    ? concatPath(getBaseDirPath(options.baseDir), path)
+    : path;
 }

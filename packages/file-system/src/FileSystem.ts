@@ -11,6 +11,7 @@ export const Fs: FileSystem &
   typeof Api & { incrementalPath: typeof incrementalPath } = {
   ...Api,
   incrementalPath,
+  setWorkspaceDirPath: (...args) => FsAdapter.setWorkspaceDirPath(...args),
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
@@ -28,6 +29,8 @@ export const Fs: FileSystem &
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
+  readJsonFile: (...args) => FsAdapter.readJsonFile(...args),
+  writeJsonFile: (...args) => FsAdapter.writeJsonFile(...args),
 };
 
 /**

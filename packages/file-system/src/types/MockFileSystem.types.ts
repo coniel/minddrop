@@ -24,9 +24,19 @@ export interface MockFileSystem {
   exists(path: string, options?: FsExistsOptions): boolean;
   existsInTrash(path: string, options?: FsExistsOptions): boolean;
   readTextFile(path: string, options?: FsReadFileOptions): string;
+  readJsonFile<TType = object>(
+    path: string,
+    options?: FsReadFileOptions,
+  ): TType;
   writeTextFile(
     path: string,
     textContent: string,
+    options?: FsWriteFileOptions,
+  ): void;
+  writeJsonFile(
+    path: string,
+    jsonContent: object,
+    pretty?: boolean,
     options?: FsWriteFileOptions,
   ): void;
   createDir(path: string, options?: FsCreateDirOptions): void;
