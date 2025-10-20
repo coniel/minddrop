@@ -1,4 +1,4 @@
-import { PropertyMap } from '@minddrop/properties';
+import { PropertiesSchema } from '@minddrop/properties';
 
 export interface ItemTypeConfig {
   /**
@@ -21,6 +21,8 @@ export interface ItemTypeConfig {
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
    * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
    * - `asset`: 'asset:[asset-file-name]'
+   *
+   * If not provided, the base type icon is used.
    */
   icon?: string;
 
@@ -32,5 +34,5 @@ export interface ItemTypeConfig {
   /**
    * The properties defined on items of this type.
    */
-  properties: PropertyMap;
+  properties: PropertiesSchema;
 }
