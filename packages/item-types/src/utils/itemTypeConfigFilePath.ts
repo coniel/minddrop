@@ -11,5 +11,5 @@ export function itemTypeConfigFilePath(itemType: Options | string): string {
   const namePlural =
     typeof itemType === 'string' ? itemType : itemType.namePlural;
 
-  return `${Paths.workspaceConfigsPath}/${ItemTypeConfigsDir}/${namePlural}.json`;
+  return `${Paths.workspaceConfigs}/${ItemTypeConfigsDir}/${namePlural}.json`;
 }

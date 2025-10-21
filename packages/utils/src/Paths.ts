@@ -5,14 +5,14 @@ export const Paths = {
   /**
    * Returns the root path of the currently active workspace.
    */
-  get workspacePath() {
+  get workspace() {
     return workspacePath;
   },
 
   /**
    * Sets the root path of the currently active workspace.
    */
-  set workspacePath(path: string) {
+  set workspace(path: string) {
     workspacePath = path;
   },
 
@@ -20,7 +20,7 @@ export const Paths = {
    * Returns the path where workspace configuration files are stored
    * for the currently active workspace.
    */
-  get workspaceConfigsPath() {
+  get workspaceConfigs() {
     return workspaceConfigsPath;
   },
 
@@ -28,7 +28,7 @@ export const Paths = {
    * Sets the path where workspace configuration files are stored
    * for the currently active workspace.
    */
-  set workspaceConfigsPath(path: string) {
+  set workspaceConfigs(path: string) {
     workspaceConfigsPath = path;
   },
 };

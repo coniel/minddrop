@@ -16,7 +16,7 @@ export async function loadItemTypes(): Promise<void> {
 
   // Read item type config files from the file system
   const configFiles = await Fs.readDir(
-    Fs.concatPath(Paths.workspaceConfigsPath, ItemTypeConfigsDir),
+    Fs.concatPath(Paths.workspaceConfigs, ItemTypeConfigsDir),
   );
 
   // For each config file

@@ -21,8 +21,8 @@ import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 
 // Set a mock workspace path
-Paths.workspacePath = 'workspace';
-Paths.workspaceConfigsPath = `${Paths.workspacePath}/.minddrop`;
+Paths.workspace = 'workspace';
+Paths.workspaceConfigs = `${Paths.workspace}/.minddrop`;
 
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
