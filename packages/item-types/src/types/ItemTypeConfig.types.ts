@@ -1,20 +1,28 @@
 import { PropertiesSchema } from '@minddrop/properties';
+import { ContentColor } from '@minddrop/utils';
 
 export interface ItemTypeConfig {
   /**
-   * The ID of the base item type of the item.
+   * The `type` of the base item type off which this item type is derived.
    */
   baseType: string;
 
   /**
-   * The unique ID of the item type. Used as the `type` property on items.
+   * Name displayed in the UI when referencing a single item.
+   * Also used as the `type` value for items.
    */
-  type: string;
+  nameSingular: string;
 
   /**
-   * Name dispLayed in the UI.
+   * Name displayed in the UI when referencing multiple items.
+   * Also used as the name for the directory where items of this type are stored.
    */
-  name: string;
+  namePlural: string;
+
+  /**
+   * The properties defined on items of this type.
+   */
+  properties: PropertiesSchema;
 
   /**
    * The item type icon. Value depends on the icon type:
@@ -27,12 +35,12 @@ export interface ItemTypeConfig {
   icon?: string;
 
   /**
+   * The item type color. Used to style the item type icon and badges in the UI.
+   */
+  color: ContentColor;
+
+  /**
    * Short description displayed in the UI.
    */
   description?: string;
-
-  /**
-   * The properties defined on items of this type.
-   */
-  properties: PropertiesSchema;
 }

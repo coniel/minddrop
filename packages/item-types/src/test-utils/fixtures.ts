@@ -1,8 +1,8 @@
 import { BaseItemTypesFixtures } from '@minddrop/base-item-types';
-import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
+import { MockFileDescriptor } from '@minddrop/file-system';
 import { PropertyType } from '@minddrop/properties';
-import { ItemTypeConfigsDir } from '../constants';
 import { ItemTypeConfig } from '../types';
+import { itemTypeConfigFilePath } from '../utils';
 
 export const markdownItemTypeConfig: ItemTypeConfig = {
   baseType: BaseItemTypesFixtures.markdownBaseItemType.type,
@@ -22,9 +22,8 @@ export const markdownItemTypeConfig: ItemTypeConfig = {
 export const itemTypeConfigs: ItemTypeConfig[] = [markdownItemTypeConfig];
 
 export const markdownItemTypeConfigFileDescriptior: MockFileDescriptor = {
-  path: `${ItemTypeConfigsDir}/${markdownItemTypeConfig.type}.json`,
+  path: itemTypeConfigFilePath(markdownItemTypeConfig),
   textContent: JSON.stringify(markdownItemTypeConfig, null, 2),
-  options: { baseDir: BaseDirectory.WorkspaceConfig },
 };
 
 export const itemTypeConfigFileDescriptors: MockFileDescriptor[] = [
