@@ -437,6 +437,9 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
+      '@minddrop/base-item-types':
+        specifier: workspace:*
+        version: link:../base-item-types
       '@minddrop/blocks':
         specifier: workspace:*
         version: link:../blocks
@@ -476,6 +479,9 @@ importers:
       '@minddrop/image-block':
         specifier: workspace:*
         version: link:../../extensions/image-block
+      '@minddrop/item-types':
+        specifier: workspace:*
+        version: link:../item-types
       '@minddrop/markdown-collection':
         specifier: workspace:*
         version: link:../markdown-collection
@@ -844,6 +850,9 @@ importers:
 
   packages/file-system:
     dependencies:
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1250,6 +1259,9 @@ importers:
 
   packages/ui-desktop:
     dependencies:
+      '@minddrop/base-item-types':
+        specifier: workspace:*
+        version: link:../base-item-types
       '@minddrop/blocks':
         specifier: workspace:*
         version: link:../blocks
@@ -1268,6 +1280,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
+      '@minddrop/item-types':
+        specifier: workspace:*
+        version: link:../item-types
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
