@@ -33,18 +33,8 @@ interface BaseDirOptions {
   baseDir?: BaseDirectory;
 }
 
-let workspaceDirPath = '';
-
-function setWorkspaceDirPath(path: string) {
-  workspaceDirPath = path;
-}
-
 function getBaseDirPath(dir: FsBaseDirectory): Promise<string> {
   switch (dir) {
-    case FsBaseDirectory.Workspace:
-      return Promise.resolve(workspaceDirPath);
-    case FsBaseDirectory.WorkspaceConfig:
-      return Promise.resolve(`${workspaceDirPath}/.minddrop`);
     case FsBaseDirectory.AppData:
       return appDataDir();
     case FsBaseDirectory.AppConfig:
@@ -117,7 +107,6 @@ function isNonHiddenFileOrWorkspaceConfig(entry: DirEntry): boolean {
 }
 
 register({
-  setWorkspaceDirPath,
   getBaseDirPath,
   convertFileSrc: (path) => convertFileSrc(path),
   isDirectory: async (path, fsOptions = {}) => {
