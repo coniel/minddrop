@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { BaseDirectory } from '@minddrop/file-system';
-import { ItemTypeConfigsDir } from '../constants';
 import { MockFs, cleanup, markdownItemTypeConfig, setup } from '../test-utils';
+import { itemTypeConfigFilePath } from '../utils';
 import { writeItemTypeConfig } from './writeItemTypeConfig';
 
 describe('writeConfig', () => {
@@ -10,17 +9,15 @@ describe('writeConfig', () => {
   afterEach(cleanup);
 
   it('should write the item type config to the file system', async () => {
-    const path = `${ItemTypeConfigsDir}/${markdownItemTypeConfig.type}.json`;
+    const path = itemTypeConfigFilePath(markdownItemTypeConfig);
 
     // Remove the existing config file from the mock file system
-    MockFs.removeFile(path, { baseDir: BaseDirectory.WorkspaceConfig });
+    MockFs.removeFile(path);
 
-    await writeItemTypeConfig(markdownItemTypeConfig.type);
+    await writeItemTypeConfig(markdownItemTypeConfig.namePlural);
 
-    expect(
-      JSON.parse(
-        MockFs.readTextFile(path, { baseDir: BaseDirectory.WorkspaceConfig }),
-      ),
-    ).toEqual(markdownItemTypeConfig);
+    expect(JSON.parse(MockFs.readTextFile(path))).toEqual(
+      markdownItemTypeConfig,
+    );
   });
 });

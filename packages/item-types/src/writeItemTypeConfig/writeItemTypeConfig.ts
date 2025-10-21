@@ -1,6 +1,6 @@
-import { BaseDirectory, Fs } from '@minddrop/file-system';
-import { ItemTypeConfigsDir } from '../constants';
+import { Fs } from '@minddrop/file-system';
 import { getItemTypeConfig } from '../getItemTypeConfig';
+import { itemTypeConfigFilePath } from '../utils';
 
 /**
  * Writes the item type config for the specified type to the file system.
@@ -12,7 +12,5 @@ export async function writeItemTypeConfig(type: string): Promise<void> {
   const config = getItemTypeConfig(type);
 
   // Write the config to the file system
-  Fs.writeJsonFile(`${ItemTypeConfigsDir}/${type}.json`, config, true, {
-    baseDir: BaseDirectory.WorkspaceConfig,
-  });
+  Fs.writeJsonFile(itemTypeConfigFilePath(type), config);
 }

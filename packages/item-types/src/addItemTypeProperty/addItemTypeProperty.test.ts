@@ -15,14 +15,14 @@ const updatedItemType: ItemTypeConfig = {
   properties: [...markdownItemTypeConfig.properties, newProperty],
 };
 
-describe('addPropertyToItemType', () => {
+describe('addItemTypeProperty', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('adds the property to the item type', async () => {
     const result = await addItemTypeProperty(
-      markdownItemTypeConfig.type,
+      markdownItemTypeConfig.namePlural,
       newProperty,
     );
 
@@ -30,9 +30,9 @@ describe('addPropertyToItemType', () => {
   });
 
   it('updates the item type', async () => {
-    await addItemTypeProperty(markdownItemTypeConfig.type, newProperty);
+    await addItemTypeProperty(markdownItemTypeConfig.namePlural, newProperty);
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.type)).toEqual(
+    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
       updatedItemType,
     );
   });

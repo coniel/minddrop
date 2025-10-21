@@ -12,7 +12,7 @@ describe('loadItemTypes', () => {
   it('loads item type configs from the file system into the store', async () => {
     await loadItemTypes();
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.type)).toEqual(
+    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
       markdownItemTypeConfig,
     );
   });

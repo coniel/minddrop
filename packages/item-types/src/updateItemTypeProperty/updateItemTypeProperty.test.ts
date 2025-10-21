@@ -22,7 +22,7 @@ describe('updateItemTypeProperty', () => {
 
   it('throws if the property name is changed', async () => {
     await expect(
-      updateItemTypeProperty(markdownItemTypeConfig.type, {
+      updateItemTypeProperty(markdownItemTypeConfig.namePlural, {
         ...markdownItemTypeConfig.properties[0],
         name: 'New Name',
       }),
@@ -32,7 +32,7 @@ describe('updateItemTypeProperty', () => {
   it('throws if the property type is changed', async () => {
     await expect(
       // @ts-expect-error Testing invalid parameter
-      updateItemTypeProperty(markdownItemTypeConfig.type, {
+      updateItemTypeProperty(markdownItemTypeConfig.namePlural, {
         ...markdownItemTypeConfig.properties[0],
         type: PropertyType.Number,
       }),
@@ -41,7 +41,7 @@ describe('updateItemTypeProperty', () => {
 
   it('updates the property in the item type', async () => {
     const result = await updateItemTypeProperty(
-      markdownItemTypeConfig.type,
+      markdownItemTypeConfig.namePlural,
       updatedProperty,
     );
 
@@ -49,9 +49,12 @@ describe('updateItemTypeProperty', () => {
   });
 
   it('updates the item type', async () => {
-    await updateItemTypeProperty(markdownItemTypeConfig.type, updatedProperty);
+    await updateItemTypeProperty(
+      markdownItemTypeConfig.namePlural,
+      updatedProperty,
+    );
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.type)).toEqual(
+    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
       updatedItemType,
     );
   });

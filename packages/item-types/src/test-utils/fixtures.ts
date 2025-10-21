@@ -6,8 +6,11 @@ import { ItemTypeConfig } from '../types';
 
 export const markdownItemTypeConfig: ItemTypeConfig = {
   baseType: BaseItemTypesFixtures.markdownBaseItemType.type,
-  type: 'Note',
-  name: 'Note',
+  nameSingular: 'Note',
+  namePlural: 'Notes',
+  icon: 'content-icon:markdown:blue',
+  color: 'blue',
+  description: 'A markdown note item type',
   properties: [
     {
       name: 'foo',

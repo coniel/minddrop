@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
-import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { Fs } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { ItemTypeConfigsDir } from '../constants';
 import { ItemTypeConfig } from '../types';
@@ -14,9 +15,9 @@ export async function loadItemTypes(): Promise<void> {
   let configs: Promise<ItemTypeConfig>[] = [];
 
   // Read item type config files from the file system
-  const configFiles = await Fs.readDir(ItemTypeConfigsDir, {
-    baseDir: BaseDirectory.WorkspaceConfig,
-  });
+  const configFiles = await Fs.readDir(
+    Fs.concatPath(Paths.workspaceConfigsPath, ItemTypeConfigsDir),
+  );
 
   // For each config file
   configFiles.forEach((file) => {

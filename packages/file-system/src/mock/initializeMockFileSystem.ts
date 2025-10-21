@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Paths } from '@minddrop/utils';
 import { registerFileSystemAdapter } from '../FileSystem';
 import { concatPath } from '../concatPath';
 import { fileNameFromPath } from '../fileNameFromPath';
@@ -19,12 +20,14 @@ import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
 
+// Set a mock workspace path
+Paths.workspacePath = 'workspace';
+Paths.workspaceConfigsPath = `${Paths.workspacePath}/.minddrop`;
+
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
   const init = initializeMockFsRoot([
-    { path: BaseDirectory.Workspace },
-    { path: BaseDirectory.WorkspaceConfig },
     { path: BaseDirectory.AppData },
     { path: BaseDirectory.AppConfig },
     { path: BaseDirectory.Documents },
@@ -41,8 +44,7 @@ export function initializeMockFileSystem(
   let binaryFiles: Record<string, any> = init.binaryFiles;
 
   const MockFs: FileSystem = {
-    setWorkspaceDirPath: async () => null,
-    getBaseDirPath: async (baseDir) => getBaseDirPath(baseDir),
+    getBaseDirPath: async (baseDir) => baseDir,
     convertFileSrc: (path) => path,
     isDirectory: async (path, options) => {
       const fileEntry = mockGetFileEntry(root, getFullPath(path, options));
@@ -378,20 +380,9 @@ function addToFileTree(root: FsEntry, file: FsEntry) {
   }
 }
 
-function getBaseDirPath(dir: BaseDirectory): string {
-  switch (dir) {
-    case BaseDirectory.WorkspaceConfig:
-      return `${BaseDirectory.Workspace}/.minddrop`;
-    default:
-      return dir;
-  }
-}
-
 function getFullPath(
   path: string,
   options?: FsFileOptions | FsDirOptions,
 ): string {
-  return options?.baseDir
-    ? concatPath(getBaseDirPath(options.baseDir), path)
-    : path;
+  return options?.baseDir ? concatPath(options.baseDir, path) : path;
 }

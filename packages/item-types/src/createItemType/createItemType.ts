@@ -30,7 +30,7 @@ export async function createItemType(
   ItemTypeConfigsStore.add(itemTypeConfig);
 
   // Write the item type config to the file system
-  await writeItemTypeConfig(options.type);
+  await writeItemTypeConfig(options.namePlural);
 
   // Dispatch item type created event
   Events.dispatch('item-types:item-type:create', itemTypeConfig);

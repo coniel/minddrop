@@ -4,6 +4,7 @@ import { BaseDirectory } from '@minddrop/file-system';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { ItemTypeConfigsDir } from '../constants';
 import { MockFs, cleanup, markdownItemTypeConfig, setup } from '../test-utils';
+import { itemTypeConfigFilePath } from '../utils';
 import { UpdateItemTypeData, updateItemType } from './updateItemType';
 
 const update: UpdateItemTypeData = {
@@ -21,28 +22,26 @@ describe('updateItemType', () => {
   afterEach(cleanup);
 
   it('should update an item type', async () => {
-    const result = await updateItemType(markdownItemTypeConfig.type, update);
+    const result = await updateItemType(
+      markdownItemTypeConfig.namePlural,
+      update,
+    );
 
     expect(result).toEqual(updatedConfig);
   });
 
   it('updates the item type config in the store', async () => {
-    await updateItemType(markdownItemTypeConfig.type, update);
+    await updateItemType(markdownItemTypeConfig.namePlural, update);
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.type)).toEqual(
+    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
       updatedConfig,
     );
   });
 
   it('writes the updated config to the file system', async () => {
-    await updateItemType(markdownItemTypeConfig.type, update);
+    await updateItemType(markdownItemTypeConfig.namePlural, update);
 
-    const result = MockFs.readJsonFile(
-      `${ItemTypeConfigsDir}/${markdownItemTypeConfig.type}.json`,
-      {
-        baseDir: BaseDirectory.WorkspaceConfig,
-      },
-    );
+    const result = MockFs.readJsonFile(itemTypeConfigFilePath(updatedConfig));
 
     expect(result).toEqual(updatedConfig);
   });
@@ -55,6 +54,6 @@ describe('updateItemType', () => {
         done();
       });
 
-      updateItemType(markdownItemTypeConfig.type, update);
+      updateItemType(markdownItemTypeConfig.namePlural, update);
     }));
 });

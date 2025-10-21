@@ -2,7 +2,7 @@ import {
   BaseItemTypes,
   BaseItemTypesFixtures,
 } from '@minddrop/base-item-types';
-import { BaseDirectory, initializeMockFileSystem } from '@minddrop/file-system';
+import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { itemTypeConfigFileDescriptors, itemTypeConfigs } from './fixtures';

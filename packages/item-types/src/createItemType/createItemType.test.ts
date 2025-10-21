@@ -1,20 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { BaseItemTypesFixtures } from '@minddrop/base-item-types';
 import { Events } from '@minddrop/events';
-import { BaseDirectory } from '@minddrop/file-system';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
-import { ItemTypeConfigsDir } from '../constants';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { ItemTypeConfig } from '../types';
+import { itemTypeConfigFilePath } from '../utils';
 import { CreateItemTypeOptions, createItemType } from './createItemType';
 
 const baseItemType = BaseItemTypesFixtures.urlBaseItemType;
 
 const options: CreateItemTypeOptions = {
-  name: 'Test Item Type',
+  nameSingular: 'Test',
+  namePlural: 'Tests',
   description: 'A test item type for unit testing',
   icon: 'test-icon',
-  type: 'test-type',
+  color: 'red',
   baseType: baseItemType.type,
 };
 
@@ -38,17 +38,15 @@ describe('createItemType', () => {
   it('adds the config to the item types store', async () => {
     const itemType = await createItemType(options);
 
-    expect(ItemTypeConfigsStore.get(itemType.type)).toEqual(itemType);
+    expect(ItemTypeConfigsStore.get(itemType.namePlural)).toEqual(itemType);
   });
 
   it('writes the config to the file system', async () => {
-    const path = `${ItemTypeConfigsDir}/${options.type}.json`;
+    const path = itemTypeConfigFilePath(options);
 
     const itemType = await createItemType(options);
 
-    expect(
-      MockFs.readJsonFile(path, { baseDir: BaseDirectory.WorkspaceConfig }),
-    ).toEqual(itemType);
+    expect(MockFs.readJsonFile(path)).toEqual(itemType);
   });
 
   it('dispatches a item type create event', async () =>

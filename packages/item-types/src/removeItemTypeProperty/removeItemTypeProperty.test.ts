@@ -10,14 +10,14 @@ const updatedItemType = {
   properties: markdownItemTypeConfig.properties.slice(1),
 };
 
-describe('removePropertyFromItemType', () => {
+describe('removeItemTypeProperty', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('removes the property from the item type', async () => {
     const result = await removeItemTypeProperty(
-      markdownItemTypeConfig.type,
+      markdownItemTypeConfig.namePlural,
       propertyNameToRemove,
     );
 
@@ -26,11 +26,11 @@ describe('removePropertyFromItemType', () => {
 
   it('updates the item type', async () => {
     await removeItemTypeProperty(
-      markdownItemTypeConfig.type,
+      markdownItemTypeConfig.namePlural,
       propertyNameToRemove,
     );
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.type)).toEqual(
+    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
       updatedItemType,
     );
   });

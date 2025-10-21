@@ -15,14 +15,6 @@ import {
 
 export interface FileSystemAdapter {
   /**
-   * Sets the workspace directory path. This path should be used when
-   * BaseDirectory.Workspace is specified as the base directory.
-   *
-   * @param path - The workspace directory path.
-   */
-  setWorkspaceDirPath(path: string): void;
-
-  /**
    * Returns the path of a BaseDirectory.
    *
    * @param dir - The directory for which to retrieve the path.

@@ -9,7 +9,7 @@ describe('get', () => {
   afterEach(cleanup);
 
   it('retrieves the item type config for the specified type', () => {
-    const result = getItemTypeConfig(markdownItemTypeConfig.type);
+    const result = getItemTypeConfig(markdownItemTypeConfig.namePlural);
 
     expect(result).toBe(markdownItemTypeConfig);
   });
