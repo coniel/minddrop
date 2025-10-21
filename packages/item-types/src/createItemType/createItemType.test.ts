@@ -1,10 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { BaseItemTypesFixtures } from '@minddrop/base-item-types';
+import {
+  BaseItemTypeNotFoundError,
+  BaseItemTypesFixtures,
+} from '@minddrop/base-item-types';
 import { Events } from '@minddrop/events';
+import { PathConflictError } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { ItemTypeConfig } from '../types';
-import { itemTypeConfigFilePath } from '../utils';
+import { itemTypeConfigFilePath, itemsDirPath } from '../utils';
 import { CreateItemTypeOptions, createItemType } from './createItemType';
 
 const baseItemType = BaseItemTypesFixtures.urlBaseItemType;
@@ -29,6 +34,35 @@ describe('createItemType', () => {
 
   afterEach(cleanup);
 
+  it('throws if the base item type does not exist', async () => {
+    const invalidOptions = {
+      ...options,
+      baseType: 'non-existent-base-type',
+    };
+
+    await expect(createItemType(invalidOptions)).rejects.toThrow(
+      BaseItemTypeNotFoundError,
+    );
+  });
+
+  it('throws if the item type already exists', async () => {
+    // First, create the item type
+    await createItemType(options);
+
+    // Then, try to create it again
+    await expect(createItemType(options)).rejects.toThrow(
+      InvalidParameterError,
+    );
+  });
+
+  it('throws if the item type directory already exists', async () => {
+    // First, create the item type directory
+    MockFs.createDir(itemsDirPath(options));
+
+    // Then, try to create an item with the same directory path
+    await expect(createItemType(options)).rejects.toThrow(PathConflictError);
+  });
+
   it('creates a new item type with the given options', async () => {
     const itemType = await createItemType(options);
 
@@ -47,6 +81,12 @@ describe('createItemType', () => {
     const itemType = await createItemType(options);
 
     expect(MockFs.readJsonFile(path)).toEqual(itemType);
+  });
+
+  it('creates the item type directory in the workspace', async () => {
+    await createItemType(options);
+
+    expect(MockFs.exists(itemsDirPath(options))).toBe(true);
   });
 
   it('dispatches a item type create event', async () =>
