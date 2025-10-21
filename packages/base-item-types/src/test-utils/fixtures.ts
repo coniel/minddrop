@@ -16,6 +16,7 @@ export const markdownBaseItemType: MarkdownBaseItemTypeConfig = {
   dataType: 'markdown',
   name: 'Markdown',
   description: 'A base item type for markdown based content.',
+  icon: 'content-icon:document:blue',
   properties: [],
 };
 
@@ -24,6 +25,7 @@ export const urlBaseItemType: UrlBaseItemTypeConfig = {
   dataType: 'url',
   name: 'URL',
   description: 'A base item type for URL based content.',
+  icon: 'content-icon:link:green',
   properties: [
     {
       name: 'url',
@@ -45,6 +47,7 @@ export const textBaseItemType: TextBaseItemTypeConfig = {
   dataType: 'text',
   name: 'Text',
   description: 'A base item type for text based content.',
+  icon: 'content-icon:text-document:orange',
   properties: [],
 };
 
@@ -53,6 +56,7 @@ export const imageBaseItemType: ImageBaseItemTypeConfig = {
   dataType: 'image',
   name: 'Image',
   description: 'A base item type for image file based content.',
+  icon: 'content-icon:image:purple',
   properties: [],
 };
 
@@ -61,6 +65,7 @@ export const audioBaseItemType: AudioBaseItemTypeConfig = {
   dataType: 'audio',
   name: 'Audio',
   description: 'A base item type for audio file based content.',
+  icon: 'content-icon:audio:teal',
   properties: [],
 };
 
@@ -69,6 +74,7 @@ export const videoBaseItemType: VideoBaseItemTypeConfig = {
   dataType: 'video',
   name: 'Video',
   description: 'A base item type for video file based content.',
+  icon: 'content-icon:video:red',
   properties: [],
 };
 
@@ -77,6 +83,7 @@ export const pdfBaseItemType: PdfBaseItemTypeConfig = {
   dataType: 'pdf',
   name: 'PDF',
   description: 'A base item type for PDF file based content.',
+  icon: 'content-icon:pdf:gray',
   properties: [],
 };
 
@@ -85,6 +92,7 @@ export const fileBaseItemType: FileBaseItemTypeConfig = {
   dataType: 'file',
   name: 'File',
   description: 'A base item type for generic file based content.',
+  icon: 'content-icon:file:dark-gray',
   properties: [],
 };
 

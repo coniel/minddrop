@@ -33,6 +33,14 @@ interface BaseItemTypeConfigCommon {
    * The base item type's properties schema.
    */
   properties: PropertiesSchema;
+
+  /**
+   * The item type icon, should be a content icon reference string:
+   * 'content-icon:[icon-name]:[color]'.
+   *
+   * Used as the default icon for items types based off of this base type.
+   */
+  icon: string;
 }
 
 export interface MarkdownBaseItemTypeConfig extends BaseItemTypeConfigCommon {
