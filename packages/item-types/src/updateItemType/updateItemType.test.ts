@@ -23,7 +23,7 @@ describe('updateItemType', () => {
 
   it('should update an item type', async () => {
     const result = await updateItemType(
-      markdownItemTypeConfig.namePlural,
+      markdownItemTypeConfig.nameSingular,
       update,
     );
 
@@ -31,15 +31,15 @@ describe('updateItemType', () => {
   });
 
   it('updates the item type config in the store', async () => {
-    await updateItemType(markdownItemTypeConfig.namePlural, update);
+    await updateItemType(markdownItemTypeConfig.nameSingular, update);
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
-      updatedConfig,
-    );
+    expect(
+      ItemTypeConfigsStore.get(markdownItemTypeConfig.nameSingular),
+    ).toEqual(updatedConfig);
   });
 
   it('writes the updated config to the file system', async () => {
-    await updateItemType(markdownItemTypeConfig.namePlural, update);
+    await updateItemType(markdownItemTypeConfig.nameSingular, update);
 
     const result = MockFs.readJsonFile(itemTypeConfigFilePath(updatedConfig));
 
@@ -54,6 +54,6 @@ describe('updateItemType', () => {
         done();
       });
 
-      updateItemType(markdownItemTypeConfig.namePlural, update);
+      updateItemType(markdownItemTypeConfig.nameSingular, update);
     }));
 });

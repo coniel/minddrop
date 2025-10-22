@@ -5,3 +5,4 @@ export { addItemTypeProperty as addProperty } from './addItemTypeProperty';
 export { removeItemTypeProperty as removeProperty } from './removeItemTypeProperty';
 export { updateItemTypeProperty as updateProperty } from './updateItemTypeProperty';
 export { loadItemTypes as load } from './loadItemTypes';
+export { isMarkdownItemType as isMarkdown } from './utils';

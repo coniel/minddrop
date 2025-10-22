@@ -12,9 +12,9 @@ describe('loadItemTypes', () => {
   it('loads item type configs from the file system into the store', async () => {
     await loadItemTypes();
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
-      markdownItemTypeConfig,
-    );
+    expect(
+      ItemTypeConfigsStore.get(markdownItemTypeConfig.nameSingular),
+    ).toEqual(markdownItemTypeConfig);
   });
 
   it('dispatches a item types load event', async () =>

@@ -17,7 +17,7 @@ describe('removeItemTypeProperty', () => {
 
   it('removes the property from the item type', async () => {
     const result = await removeItemTypeProperty(
-      markdownItemTypeConfig.namePlural,
+      markdownItemTypeConfig.nameSingular,
       propertyNameToRemove,
     );
 
@@ -26,12 +26,12 @@ describe('removeItemTypeProperty', () => {
 
   it('updates the item type', async () => {
     await removeItemTypeProperty(
-      markdownItemTypeConfig.namePlural,
+      markdownItemTypeConfig.nameSingular,
       propertyNameToRemove,
     );
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
-      updatedItemType,
-    );
+    expect(
+      ItemTypeConfigsStore.get(markdownItemTypeConfig.nameSingular),
+    ).toEqual(updatedItemType);
   });
 });

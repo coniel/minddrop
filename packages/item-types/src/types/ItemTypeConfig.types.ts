@@ -1,3 +1,4 @@
+import { ItemDataType } from '@minddrop/base-item-types';
 import { PropertiesSchema } from '@minddrop/properties';
 import { ContentColor } from '@minddrop/utils';
 
@@ -6,6 +7,11 @@ export interface ItemTypeConfig {
    * The `type` of the base item type off which this item type is derived.
    */
   baseType: string;
+
+  /**
+   * The data type of items of this type.
+   */
+  dataType: ItemDataType;
 
   /**
    * Name displayed in the UI when referencing a single item.

@@ -22,7 +22,7 @@ describe('addItemTypeProperty', () => {
 
   it('adds the property to the item type', async () => {
     const result = await addItemTypeProperty(
-      markdownItemTypeConfig.namePlural,
+      markdownItemTypeConfig.nameSingular,
       newProperty,
     );
 
@@ -30,10 +30,10 @@ describe('addItemTypeProperty', () => {
   });
 
   it('updates the item type', async () => {
-    await addItemTypeProperty(markdownItemTypeConfig.namePlural, newProperty);
+    await addItemTypeProperty(markdownItemTypeConfig.nameSingular, newProperty);
 
-    expect(ItemTypeConfigsStore.get(markdownItemTypeConfig.namePlural)).toEqual(
-      updatedItemType,
-    );
+    expect(
+      ItemTypeConfigsStore.get(markdownItemTypeConfig.nameSingular),
+    ).toEqual(updatedItemType);
   });
 });

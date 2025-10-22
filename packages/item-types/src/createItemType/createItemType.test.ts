@@ -16,7 +16,7 @@ const baseItemType = BaseItemTypesFixtures.urlBaseItemType;
 
 const options: CreateItemTypeOptions = {
   nameSingular: 'Test',
-  namePlural: 'Tests',
+  nameSingular: 'Tests',
   description: 'A test item type for unit testing',
   icon: 'test-icon',
   color: 'red',
@@ -72,7 +72,7 @@ describe('createItemType', () => {
   it('adds the config to the item types store', async () => {
     const itemType = await createItemType(options);
 
-    expect(ItemTypeConfigsStore.get(itemType.namePlural)).toEqual(itemType);
+    expect(ItemTypeConfigsStore.get(itemType.nameSingular)).toEqual(itemType);
   });
 
   it('writes the config to the file system', async () => {

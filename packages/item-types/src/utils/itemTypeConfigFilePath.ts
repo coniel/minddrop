@@ -2,14 +2,14 @@ import { Paths } from '@minddrop/utils';
 import { ItemTypeConfigsDir } from '../constants';
 
 interface Options {
-  namePlural: string;
+  nameSingular: string;
 }
 
 export function itemTypeConfigFilePath(itemType: Options): string;
 export function itemTypeConfigFilePath(itemType: string): string;
 export function itemTypeConfigFilePath(itemType: Options | string): string {
-  const namePlural =
-    typeof itemType === 'string' ? itemType : itemType.namePlural;
+  const nameSingular =
+    typeof itemType === 'string' ? itemType : itemType.nameSingular;
 
-  return `${Paths.workspaceConfigs}/${ItemTypeConfigsDir}/${namePlural}.json`;
+  return `${Paths.workspaceConfigs}/${ItemTypeConfigsDir}/${nameSingular}.json`;
 }

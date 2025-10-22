@@ -26,9 +26,9 @@ export async function createItemType(
   const basteItemTypeConfig = BaseItemTypes.get(options.baseType);
 
   // Ensure the item type does not already exist
-  if (ItemTypeConfigsStore.get(options.namePlural)) {
+  if (ItemTypeConfigsStore.get(options.nameSingular)) {
     throw new InvalidParameterError(
-      `An item type "${options.namePlural}" already exists.`,
+      `An item type "${options.nameSingular}" already exists.`,
     );
   }
 
@@ -47,7 +47,7 @@ export async function createItemType(
   ItemTypeConfigsStore.add(itemTypeConfig);
 
   // Write the item type config to the file system
-  await writeItemTypeConfig(options.namePlural);
+  await writeItemTypeConfig(options.nameSingular);
 
   // Create the item type directory in the workspace
   await Fs.createDir(itemsDirectoryPath);

@@ -2,7 +2,7 @@ import { createArrayStore } from '@minddrop/utils';
 import { ItemTypeConfig } from './types';
 
 export const ItemTypeConfigsStore =
-  createArrayStore<ItemTypeConfig>('namePlural');
+  createArrayStore<ItemTypeConfig>('nameSingular');
 
 /**
  * Retrieves a ItemTypeConfig by type or null if it doesn't exist.
@@ -13,7 +13,7 @@ export const ItemTypeConfigsStore =
 export const useItemTypeConfig = (type: string): ItemTypeConfig | null => {
   return (
     ItemTypeConfigsStore.useAllItems().find(
-      (config) => config.namePlural === type,
+      (config) => config.nameSingular === type,
     ) || null
   );
 };

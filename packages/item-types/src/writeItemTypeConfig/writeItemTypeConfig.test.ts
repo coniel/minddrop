@@ -14,7 +14,7 @@ describe('writeConfig', () => {
     // Remove the existing config file from the mock file system
     MockFs.removeFile(path);
 
-    await writeItemTypeConfig(markdownItemTypeConfig.namePlural);
+    await writeItemTypeConfig(markdownItemTypeConfig.nameSingular);
 
     expect(JSON.parse(MockFs.readTextFile(path))).toEqual(
       markdownItemTypeConfig,
