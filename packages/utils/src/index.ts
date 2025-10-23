@@ -17,6 +17,8 @@ export * from './mapPropsToClasses';
 export * from './parseDateOrNow';
 export * from './restoreDates';
 export * from './throttle';
+export * from './titleFromPath';
+export * from './titleFromUrl';
 export * from './toKebabCase';
 export * from './toMindDropDataTransfer';
 export * from './types';
