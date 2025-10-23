@@ -21,6 +21,7 @@ export interface MockFileSystem {
   getFiles(): FsEntry[];
   getTrash(): FsEntry[];
   printFiles(): void;
+  printTree(): void;
   exists(path: string, options?: FsExistsOptions): boolean;
   existsInTrash(path: string, options?: FsExistsOptions): boolean;
   readTextFile(path: string, options?: FsReadFileOptions): string;

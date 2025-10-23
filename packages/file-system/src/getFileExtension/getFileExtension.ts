@@ -5,5 +5,9 @@
  * @returns The file extension or an empty string if the path is not a file.
  */
 export function getFileExtension(path: string): string {
+  if (!path.includes('.')) {
+    return '';
+  }
+
   return path.split('.').pop() || '';
 }

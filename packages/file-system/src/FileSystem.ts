@@ -11,7 +11,6 @@ export const Fs: FileSystem &
   typeof Api & { incrementalPath: typeof incrementalPath } = {
   ...Api,
   incrementalPath,
-  setWorkspaceDirPath: (...args) => FsAdapter.setWorkspaceDirPath(...args),
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
@@ -47,8 +46,12 @@ export const registerFileSystemAdapter = (adapter: FileSystemAdapter) =>
  * path already exists.
  *
  * @param targetPath - The path to check.
+ * @param ignoreFileExtension - Whether to ignore the file extension when looking for existing files.
  * @returns The incremented path and increment number if incremeneted.
  */
-async function incrementalPath(targetPath: string): Promise<IncrementedPath> {
-  return incrementalPathFn(FsAdapter, targetPath);
+async function incrementalPath(
+  targetPath: string,
+  ignoreFileExtension = false,
+): Promise<IncrementedPath> {
+  return incrementalPathFn(FsAdapter, targetPath, ignoreFileExtension);
 }

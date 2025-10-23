@@ -1,4 +1,7 @@
 import { fileNameFromPath } from '../fileNameFromPath';
+import { getFileExtension } from '../getFileExtension';
+import { parentDirPath } from '../parentDirPath';
+import { removeFileExtension } from '../removeFileExtension';
 import { FileSystemAdapter } from '../types';
 
 export interface IncrementedPath {
@@ -13,59 +16,66 @@ export interface IncrementedPath {
  *
  * @param Fs - File system adapter.
  * @param targetPath - The path to check.
- * @param currentIncrement - The starting increment (used internally for recursive calls).
+ * @param ignoreFileExtension - Whether to ignore the file extension when looking for existing files.
  * @returns The incremented path and increment number if incremeneted.
  */
 export async function incrementalPath(
   Fs: FileSystemAdapter,
   targetPath: string,
-  currentIncrement?: number,
+  ignoreFileExtension = false,
 ): Promise<IncrementedPath> {
-  let incrementedPath: IncrementedPath = {
+  const parentDir = parentDirPath(targetPath);
+  const targetFileName = fileNameFromPath(targetPath);
+  const incrementedPath: IncrementedPath = {
     path: targetPath,
-    name: fileNameFromPath(targetPath),
-    increment: currentIncrement,
+    name: targetFileName,
   };
 
-  // Get the last segment of the path as the file name
-  const filename = targetPath.split('/').slice(-1)[0];
-  // Get file extension
-  const extension = filename.includes('.')
-    ? `.${filename.split('.').slice(-1)[0]}`
-    : '';
-  // Remove file extension from path
-  const pathWithoutExtension = targetPath.slice(
-    0,
-    targetPath.length - extension.length,
+  // Get the list of files in the parent directory
+  const filesInDir = await Fs.readDir(parentDir);
+
+  // Generate a list of file names in the directory,
+  // removing file extensions if specified.
+  const fileNamesInDir = filesInDir.map((fileEntry) =>
+    ignoreFileExtension
+      ? removeFileExtension(fileEntry.name || '')
+      : fileEntry.name,
   );
 
-  // Create the incremented file name
-  incrementedPath.path = currentIncrement
-    ? `${pathWithoutExtension} ${currentIncrement}${extension}`
-    : targetPath;
+  // While a conflicting file exists, increment the suffix
+  let conflictExists = true;
+  let increment = 0;
+  const fileNameWithoutExtension = removeFileExtension(targetFileName);
+  const fileExtension = getFileExtension(targetFileName);
+  let fileName = ignoreFileExtension
+    ? fileNameWithoutExtension
+    : targetFileName;
 
-  // Update file name
-  incrementedPath.name = fileNameFromPath(incrementedPath.path);
+  while (conflictExists) {
+    // Check if a conflicting file exists
+    conflictExists = fileNamesInDir.includes(fileName);
 
-  // Cap increment to 200 to prevent accidental infinite loops
-  if (currentIncrement && currentIncrement > 200) {
-    throw new Error(
-      `reached maximum file increment of 200: ${incrementedPath.path}`,
-    );
+    if (conflictExists) {
+      // Increment the suffix
+      increment += 1;
+      // Create the new file name
+      fileName =
+        !ignoreFileExtension && fileExtension
+          ? `${fileNameWithoutExtension} ${increment}.${fileExtension}`
+          : `${fileNameWithoutExtension} ${increment}`;
+    }
   }
 
-  // Check if the path exists
-  const exists = await Fs.exists(incrementedPath.path);
+  // Add the extension back if it was ignored
+  if (ignoreFileExtension && fileExtension) {
+    fileName = `${fileName}.${fileExtension}`;
+  }
 
-  // If the path exists, recursively increment the suffix
-  // until reaching a unique path.
-  if (exists) {
-    // Recursively get incremetal path until reaching a unique one
-    incrementedPath = await incrementalPath(
-      Fs,
-      targetPath,
-      currentIncrement ? currentIncrement + 1 : 1,
-    );
+  // Set the incremented path details
+  if (increment > 0) {
+    incrementedPath.path = `${parentDir}/${fileName}`;
+    incrementedPath.name = fileName;
+    incrementedPath.increment = increment;
   }
 
   return incrementedPath;

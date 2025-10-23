@@ -19,6 +19,7 @@ import { mockCopyFile } from './mockCopyFile';
 import { mockExists } from './mockExists';
 import { mockGetFileEntry } from './mockGetFileEntry';
 import { mockRemoveFileEntry } from './mockRemoveFileEntry';
+import { printFileTree } from './printFileTree';
 
 // Set a mock workspace path
 Paths.workspace = 'workspace';
@@ -66,9 +67,7 @@ export function initializeMockFileSystem(
       const dir = mockGetFileEntry(root, getFullPath(path, options));
       const children = dir.children as FsEntry[];
 
-      return options.recursive
-        ? children
-        : children.map((child) => ({ ...child, children: [] }));
+      return children;
     },
     readTextFile: async (path, options) => {
       const fullPath = getFullPath(path, options);
@@ -209,6 +208,9 @@ export function initializeMockFileSystem(
       console.log('----------- Binary files -------------');
       console.log(binaryFiles);
       console.log('--------------------------------------');
+    },
+    printTree: () => {
+      printFileTree(root.children as FsEntry[]);
     },
     reset: () => {
       const init = initializeMockFsRoot(filesToLoad);

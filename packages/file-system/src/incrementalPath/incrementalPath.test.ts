@@ -2,50 +2,72 @@ import { describe, expect, it } from 'vitest';
 import { initializeMockFileSystem } from '../mock';
 import { incrementalPath } from './incrementalPath';
 
-const { setFiles, MockFs } = initializeMockFileSystem();
+const { setFiles, MockFs } = initializeMockFileSystem(['Documents']);
 
 describe('incrementalFilename', () => {
   it('returns the path as is if the path does not alredy exist', async () => {
     // Get incremental path
-    const result = await incrementalPath(MockFs, '/foo');
+    const result = await incrementalPath(MockFs, 'Documents/foo');
 
     // Should return original target path
-    expect(result).toEqual({ path: '/foo', name: 'foo' });
+    expect(result).toEqual({ path: 'Documents/foo', name: 'foo' });
   });
 
   it('increments path if the path already exists', async () => {
     // Add a conflicting file
-    setFiles(['foo']);
+    setFiles(['Documents/foo']);
 
     // Get incremental path
-    const result = await incrementalPath(MockFs, 'foo');
+    const result = await incrementalPath(MockFs, 'Documents/foo');
 
     // Should increment path by 1
-    expect(result).toEqual({ path: 'foo 1', name: 'foo 1', increment: 1 });
+    expect(result).toEqual({
+      path: 'Documents/foo 1',
+      name: 'foo 1',
+      increment: 1,
+    });
   });
 
   it('recursively increments path if incremented path already exists', async () => {
     // Add multiple levels of conflicting files
-    setFiles(['foo', 'foo 1', 'foo 2']);
+    setFiles(['Documents/foo', 'Documents/foo 1', 'Documents/foo 2']);
 
     // Get incremental path
-    const result = await incrementalPath(MockFs, 'foo');
+    const result = await incrementalPath(MockFs, 'Documents/foo');
 
     // Should increment path by 3
-    expect(result).toEqual({ path: 'foo 3', name: 'foo 3', increment: 3 });
+    expect(result).toEqual({
+      path: 'Documents/foo 3',
+      name: 'foo 3',
+      increment: 3,
+    });
   });
 
   it('adds increment suffix before file extension', async () => {
     // Add a conflicting file with a file extension
-    setFiles(['foo.md']);
+    setFiles(['Documents/foo.md']);
 
     // Get incremental path
-    const result = await incrementalPath(MockFs, 'foo.md');
+    const result = await incrementalPath(MockFs, 'Documents/foo.md');
 
     expect(result).toEqual({
-      path: 'foo 1.md',
+      path: 'Documents/foo 1.md',
       name: 'foo 1.md',
       increment: 1,
+    });
+  });
+
+  it('ignores file extensions if requested', async () => {
+    // Add a conflicting file with a different file extension
+    setFiles(['Documents/foo.pdf', 'Documents/foo 1.md']);
+
+    // Get incremental path, ignoring file extension
+    const result = await incrementalPath(MockFs, 'Documents/foo.md', true);
+
+    expect(result).toEqual({
+      path: 'Documents/foo 2.md',
+      name: 'foo 2.md',
+      increment: 2,
     });
   });
 });
