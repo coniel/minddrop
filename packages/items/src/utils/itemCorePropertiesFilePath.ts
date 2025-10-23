@@ -1,13 +1,13 @@
 import { PropertiesDirPath } from '../constants';
 
 /**
- * Generates the file path for the properties file of an item.
+ * Generates the file path for an item's core properties file.
  *
  * @param path - The item's path.
  *
- * @returns The file path for the item's properties file.
+ * @returns The file path for the item's core properties file.
  */
-export function generateItemPropertiesFilePath(path: string): string {
+export function itemCorePropertiesFilePath(path: string): string {
   const entryFileNameWithoutExt = path
     .split('/')
     .pop()!

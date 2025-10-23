@@ -20,6 +20,8 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/item-types": "workspace:*",
+    "@minddrop/markdown": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

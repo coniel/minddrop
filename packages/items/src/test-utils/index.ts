@@ -1,2 +1,2 @@
-export * from './items.data';
+export * from './fixtures';
 export * from './setup-tests';

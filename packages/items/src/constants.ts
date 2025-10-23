@@ -2,9 +2,10 @@ import { i18n } from '@minddrop/i18n';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
 
 export const ConfigDirName = '.minddrop';
-export const InstanceConfigFileName = 'config.json';
-export const InstanceConfigFilePath = `${ConfigDirName}/${InstanceConfigFileName}`;
-export const PropertiesDirPath = `${ConfigDirName}/properties`;
+export const PropertiesDirName = 'properties';
+export const AssetsDirName = 'assets';
+export const PropertiesDirPath = `${ConfigDirName}/${PropertiesDirName}`;
+export const AssetsDirPath = `${ConfigDirName}/${AssetsDirName}`;
 
 export const ItemCorePropertiesSchema: PropertySchema[] = [
   {

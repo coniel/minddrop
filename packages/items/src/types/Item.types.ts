@@ -2,12 +2,7 @@ import { PropertyMap } from '@minddrop/properties';
 
 export interface Item<TProperties extends PropertyMap = PropertyMap> {
   /**
-   * The item's unique identifier.
-   */
-  id: string;
-
-  /**
-   * The ID of the item type instance the item belongs to.
+   * The item type.
    */
   type: string;
 
@@ -36,4 +31,32 @@ export interface Item<TProperties extends PropertyMap = PropertyMap> {
    * The item's properties.
    */
   properties: TProperties;
+
+  /**
+   * The item's note content in markdown format.
+   * An empty string if the item has no note.
+   */
+  markdown: string;
+
+  /**
+   * An optional image associated with the item. Can be used as a
+   * thumbnail, preview, or cover image.
+   *
+   * Should be the file name of an image asset file stored in the
+   * item's assets directory.
+   */
+  image?: string;
+
+  /**
+   * The item icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
+   */
+  icon?: string;
 }
+
+export type ItemCoreProperties = Pick<
+  Item,
+  'title' | 'created' | 'lastModified'
+>;
