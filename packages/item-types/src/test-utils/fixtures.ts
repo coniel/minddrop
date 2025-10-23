@@ -17,19 +17,63 @@ export const markdownItemTypeConfig: ItemTypeConfig = {
     {
       name: 'foo',
       type: PropertyType.Text,
+      defaultValue: 'bar',
     },
   ],
 };
 
-export const itemTypeConfigs: ItemTypeConfig[] = [markdownItemTypeConfig];
+export const pdfItemTypeConfig: ItemTypeConfig = {
+  baseType: BaseItemTypesFixtures.fileBaseItemType.type,
+  dataType: 'pdf',
+  nameSingular: 'PDF Document',
+  namePlural: 'PDF Documents',
+  icon: 'content-icon:file:green',
+  color: 'green',
+  description: 'A PDF document item type',
+  properties: [],
+};
+
+export const urlItemTypeConfig: ItemTypeConfig = {
+  baseType: BaseItemTypesFixtures.urlBaseItemType.type,
+  dataType: 'url',
+  nameSingular: 'Web Link',
+  namePlural: 'Web Links',
+  icon: 'content-icon:link:orange',
+  color: 'orange',
+  description: 'A web link item type',
+  properties: [
+    {
+      name: 'url',
+      type: PropertyType.Text,
+    },
+  ],
+};
+
+export const itemTypeConfigs: ItemTypeConfig[] = [
+  markdownItemTypeConfig,
+  pdfItemTypeConfig,
+  urlItemTypeConfig,
+];
 
 export const markdownItemTypeConfigFileDescriptior: MockFileDescriptor = {
   path: itemTypeConfigFilePath(markdownItemTypeConfig),
   textContent: JSON.stringify(markdownItemTypeConfig, null, 2),
 };
 
+export const pdfItemTypeConfigFileDescriptor: MockFileDescriptor = {
+  path: itemTypeConfigFilePath(pdfItemTypeConfig),
+  textContent: JSON.stringify(pdfItemTypeConfig, null, 2),
+};
+
+export const urlItemTypeConfigFileDescriptor: MockFileDescriptor = {
+  path: itemTypeConfigFilePath(urlItemTypeConfig),
+  textContent: JSON.stringify(urlItemTypeConfig, null, 2),
+};
+
 export const itemTypeConfigFileDescriptors: MockFileDescriptor[] = [
   markdownItemTypeConfigFileDescriptior,
+  pdfItemTypeConfigFileDescriptor,
+  urlItemTypeConfigFileDescriptor,
   {
     path: Fs.concatPath(
       Paths.workspace,

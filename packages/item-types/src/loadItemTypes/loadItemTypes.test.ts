@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
-import { cleanup, markdownItemTypeConfig, setup } from '../test-utils';
+import {
+  cleanup,
+  itemTypeConfigs,
+  markdownItemTypeConfig,
+  setup,
+} from '../test-utils';
 import { loadItemTypes } from './loadItemTypes';
 
 describe('loadItemTypes', () => {
@@ -21,7 +26,7 @@ describe('loadItemTypes', () => {
     new Promise<void>((done) => {
       Events.addListener('item-types:load', 'test', (payload) => {
         // Payload data should be the loaded item type configs
-        expect(payload.data).toEqual([markdownItemTypeConfig]);
+        expect(payload.data).toEqual(itemTypeConfigs);
         done();
       });
 
