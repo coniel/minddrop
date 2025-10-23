@@ -7,7 +7,6 @@ export enum PropertyType {
   Checkbox = 'checkbox',
   Select = 'select',
   MultiSelect = 'multiselect',
-  Markdown = 'markdown',
 }
 
 interface PropertySchemaBase {
@@ -69,18 +68,12 @@ export interface SelectPropertyOption {
   color: ContentColor;
 }
 
-export interface MarkdownPropertySchema extends PropertySchemaBase {
-  type: PropertyType.Markdown;
-  defaultValue?: string;
-}
-
 export type PropertySchema =
   | TextPropertySchema
   | NumberPropertySchema
   | DatePropertySchema
   | CheckboxPropertySchema
   | SelectPropertySchema
-  | MultiSelectPropertySchema
-  | MarkdownPropertySchema;
+  | MultiSelectPropertySchema;
 
 export type PropertiesSchema = PropertySchema[];
