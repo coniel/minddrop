@@ -24,7 +24,7 @@
     "husky": "^8.0.3",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
-    "vitest": "^0.31.4"
+    "vitest": "^4.0.1"
   },
   "engines": {
     "node": ">=14.0.0"
