@@ -1,5 +1,5 @@
 import { YAML } from '@minddrop/utils';
-import { PropertiesSchema, PropertyMap } from '../types';
+import { PropertyMap } from '../types';
 
 /**
  * Stringifies the given properties according to the provided schema,
@@ -9,25 +9,7 @@ import { PropertiesSchema, PropertyMap } from '../types';
  * @param schema - The schema defining the properties.
  * @returns The stringified properties.
  */
-export function stringifyProperties(
-  properties: PropertyMap,
-  schema: PropertiesSchema,
-): string {
-  // Add default values for missing properties
-  const completeProperties = { ...properties } as any;
-
-  schema.forEach((propertySchema) => {
-    const { name, defaultValue } = propertySchema;
-
-    if (
-      defaultValue !== undefined &&
-      (completeProperties[name] === undefined ||
-        completeProperties[name] === null)
-    ) {
-      completeProperties[name] = defaultValue;
-    }
-  });
-
+export function stringifyProperties(properties: PropertyMap): string {
   // Stringify properties
-  return YAML.stringify(completeProperties);
+  return YAML.stringify(properties);
 }

@@ -1,5 +1,5 @@
-import { YAML } from '@minddrop/utils';
-import { PropertyMap, PropertySchema } from '../types';
+import { YAML, isSerializedDate } from '@minddrop/utils';
+import { PropertyMap } from '../types';
 
 /**
  * Parses a properties string according to the provided schema.
@@ -11,25 +11,14 @@ import { PropertyMap, PropertySchema } from '../types';
  */
 export function parseProperties<TProperties extends PropertyMap = PropertyMap>(
   string: string,
-  schema: PropertySchema[],
 ): TProperties {
   // Parse the properties string
   const parsed = YAML.parse(string);
 
-  // Parse dates according to the schema
-  schema.forEach((propertySchema) => {
-    if (propertySchema.type === 'date' && parsed[propertySchema.name]) {
-      parsed[propertySchema.name] = new Date(parsed[propertySchema.name]);
-    }
-  });
-
-  // Add the default values for missing properties
-  schema.forEach((propertySchema) => {
-    if (
-      parsed[propertySchema.name] === undefined &&
-      propertySchema.defaultValue !== undefined
-    ) {
-      parsed[propertySchema.name] = propertySchema.defaultValue;
+  // Parse dates string into Date objects
+  Object.entries(parsed).forEach(([key, value]) => {
+    if (isSerializedDate(value)) {
+      parsed[key] = new Date(parsed[key] as string);
     }
   });
 
