@@ -1,6 +1,6 @@
 ---
 inject: true
-to: packages/ui-elements/src/index.ts
+to: ui/<%= location %>/src/index.ts
 append: true
 ---
 export * from './<%= name %>';
