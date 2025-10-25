@@ -40,12 +40,14 @@ export const DesktopApp: React.FC = () => {
               <div className="app">
                 <AppSidebar />
                 <div className="app-content">
-                  {view === 'collection' && documentId && (
-                    <CollectionView path={documentId} />
-                  )}
-                  {view === 'document' && documentId && (
-                    <DocumentView id={documentId} />
-                  )}
+                  <div className="main-content">
+                    {view === 'collection' && documentId && (
+                      <CollectionView path={documentId} />
+                    )}
+                    {view === 'document' && documentId && (
+                      <DocumentView id={documentId} />
+                    )}
+                  </div>
                 </div>
               </div>
               <ShowWindowOnRendered />

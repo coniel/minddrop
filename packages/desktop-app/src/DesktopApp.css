@@ -6,7 +6,17 @@
 .app .app-content {
   flex: 1;
   position: relative;
-  overflow: scroll;
+  padding: 8px;
+  overflow: visible;
+
+  .main-content {
+    overflow: scroll;
+    height: 100%;
+    border-radius: var(--radiusLg);
+    background-color: var(--gray1);
+    box-shadow: var(--el2ShadowBordered);
+    background-color: var(--appBackground);
+  }
 }
 
 .loading-view {
