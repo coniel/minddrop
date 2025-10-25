@@ -2,3 +2,4 @@ packages:
   - 'apps/*'
   - 'extensions/*'
   - 'packages/*'
+  - 'ui/*'
