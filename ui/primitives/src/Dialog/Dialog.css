@@ -1,0 +1,65 @@
+.dialog-backdrop {
+  position: fixed;
+  min-height: 100dvh;
+  inset: 0;
+  background-color: black;
+  opacity: 0.2;
+  transition: opacity 150ms cubic-bezier(0.45, 1.005, 0, 1.005);
+
+  /* iOS 26+: Ensure the backdrop covers the entire visible viewport. */
+  @supports (-webkit-touch-callout: none) {
+    position: absolute;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    opacity: 0.7;
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+  }
+}
+
+.dialog-popup {
+  box-sizing: border-box;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50rem;
+  max-width: calc(100vw - 3rem);
+  margin-top: -2rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  outline: 1px solid var(--gray2);
+  background-color: var(--appBackground);
+  color: var(--gray9);
+  transition: all 150ms;
+
+  @media (prefers-color-scheme: dark) {
+    outline: 1px solid var(--gray3);
+  }
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+.dialog-title {
+  margin-top: -0.375rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.0025em;
+  font-weight: 500;
+}
+
+.dialog-description {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--gray6);
+}

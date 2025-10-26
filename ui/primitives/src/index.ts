@@ -1,4 +1,6 @@
+export * from './Button';
 export * from './ContentIcon';
+export * from './Dialog';
 export * from './DropdownMenu';
 export * from './Icon';
 export * from './IconRenderer';
@@ -6,8 +8,10 @@ export * from './InteractiveMenuItem';
 export * from './InvisibleTextField';
 export * from './KeyboardShortcut';
 export * from './Menu';
+export * from './NavMenuItem';
 export * from './Separator';
 export * from './Text';
+export * from './TextField';
 export * from './Tooltip';
 export * from './constants';
 export * from './types';
