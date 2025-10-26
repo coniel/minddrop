@@ -10,9 +10,15 @@
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
-    "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "eslint": "^9.16.0",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@base-ui-components/react": "1.0.0-beta.4",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/icons": "workspace:*"
   }
 }
