@@ -26,7 +26,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: './index.html',
-        'create-first-workspace.html': './create-first-workspace.html',
       },
     },
   },

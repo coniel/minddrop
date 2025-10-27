@@ -15,10 +15,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@minddrop/assets": "workspace:*",
     "@minddrop/ast": "workspace:*",
-    "@minddrop/blocks": "workspace:*",
-    "@minddrop/documents": "workspace:*",
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
@@ -27,9 +24,7 @@
     "@minddrop/markdown": "workspace:*",
     "@minddrop/selection": "workspace:*",
     "@minddrop/theme": "workspace:*",
-    "@minddrop/ui-desktop": "workspace:*",
     "@minddrop/ui-elements": "workspace:*",
-    "@minddrop/utils": "workspace:*",
-    "@minddrop/workspaces": "workspace:*"
+    "@minddrop/utils": "workspace:*"
   }
 }

@@ -1,7 +1,0 @@
-.document-content-toolbar-block-item {
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-  }
-}

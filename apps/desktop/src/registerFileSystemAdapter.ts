@@ -27,7 +27,6 @@ import {
   registerFileSystemAdapter as register,
 } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
-import { WorkspaceConfigDirName } from '@minddrop/workspaces';
 
 interface BaseDirOptions {
   baseDir?: BaseDirectory;
@@ -103,7 +102,7 @@ async function dirEntryToFsEntry(
 }
 
 function isNonHiddenFileOrWorkspaceConfig(entry: DirEntry): boolean {
-  return !entry.name.startsWith('.') || entry.name === WorkspaceConfigDirName;
+  return !entry.name.startsWith('.') || entry.name === '.minddrop';
 }
 
 register({

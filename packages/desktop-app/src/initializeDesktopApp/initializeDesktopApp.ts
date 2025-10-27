@@ -1,21 +1,13 @@
 import { Ast } from '@minddrop/ast';
-import { initializeBlocks } from '@minddrop/blocks';
-import DocumentBoardView from '@minddrop/board-view';
-import BookmarkBlockExtension from '@minddrop/bookmark-block';
-import { Collections } from '@minddrop/collections';
+import { BaseItemTypes } from '@minddrop/base-item-types';
 import { loadConfigs } from '@minddrop/core';
-import { initializeDocuments } from '@minddrop/documents';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
-import ImageBlockExtension from '@minddrop/image-block';
-import { MarkdownCollection } from '@minddrop/markdown-collection';
-import TextBlockExtension from '@minddrop/text-block';
+import { ItemTypes } from '@minddrop/item-types';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
-import { Workspaces } from '@minddrop/workspaces';
-import { initializeCollections } from './initializeCollections';
+import { Paths } from '@minddrop/utils';
 import { initializeSelection } from './initializeSelection';
-import { initializeWorkspaces } from './initializeWorkspaces';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
 
 // Initialize internationalization
@@ -28,27 +20,20 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
-  Collections.registerType(MarkdownCollection);
 
   // Load persisted config values
   await loadConfigs();
+  Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
+  Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
 
-  // Initialize workspaces
-  await initializeWorkspaces();
+  // Initialize core base item types
+  BaseItemTypes.initialize();
 
-  // Load collections
-  await initializeCollections();
+  // Load item types
+  ItemTypes.load();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
-
-  // Initialize blocks package
-  initializeBlocks();
-
-  // Initialize documents package with workspace paths
-  // as source paths.
-  const workspacePaths = Workspaces.getAll().map((workspace) => workspace.path);
-  await initializeDocuments(workspacePaths);
 
   // Watch for app config file changes
   const cancelConfigsWatcher = await watchAppConfigFiles();
@@ -64,12 +49,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   onRunTheme();
 
   // Initialize extensions
-  await initializeExtensions([
-    DocumentBoardView,
-    TextBlockExtension,
-    BookmarkBlockExtension,
-    ImageBlockExtension,
-  ]);
+  await initializeExtensions([]);
 
   return () => {
     // Remove config files watcher

@@ -16,7 +16,6 @@
     "@minddrop/file-system": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/workspaces": "workspace:*",
     "@tauri-apps/api": "2.1.1",
     "@tauri-apps/plugin-dialog": "2.2.0",
     "@tauri-apps/plugin-fs": "2.2.0",

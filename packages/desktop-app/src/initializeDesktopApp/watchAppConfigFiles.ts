@@ -1,8 +1,5 @@
 import { appConfigDir } from '@tauri-apps/api/path';
 import { WatchEvent, watchImmediate } from '@tauri-apps/plugin-fs';
-import { throttle } from '@minddrop/utils';
-import { Workspaces, WorkspacesConfigFileName } from '@minddrop/workspaces';
-import { AppUiState } from '../AppUiState';
 
 export async function watchAppConfigFiles() {
   // Get the app configs dir
@@ -12,25 +9,4 @@ export async function watchAppConfigFiles() {
   return watchImmediate(`${dir}`, (event) => handleWatcherEvent(event));
 }
 
-const handleWorkspacesConfigEventThrottled = throttle(
-  handleWorkspacesConfigEvent,
-  100,
-);
-
-function handleWatcherEvent(event: WatchEvent) {
-  if (
-    event.paths.some((eventPath) =>
-      eventPath.includes(WorkspacesConfigFileName),
-    )
-  ) {
-    handleWorkspacesConfigEventThrottled();
-  }
-}
-
-async function handleWorkspacesConfigEvent() {
-  await Workspaces.load();
-
-  if (Workspaces.hasValidWorkspace() && !AppUiState.get('view')) {
-    AppUiState.set('view', 'home');
-  }
-}
+function handleWatcherEvent(event: WatchEvent) {}

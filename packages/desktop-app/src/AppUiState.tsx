@@ -13,11 +13,6 @@ export interface AppUiState {
   view: string | null;
 
   /**
-   * The ID of the currently open document.
-   */
-  activeDocumentId: string | null;
-
-  /**
    * The default skin tone to use in emoji pickers.
    */
   defaultEmojiSkinTone: EmojiSkinTone;
@@ -26,7 +21,6 @@ export interface AppUiState {
 const defaultState: AppUiState = {
   sidebarWidth: 300,
   view: null,
-  activeDocumentId: null,
   defaultEmojiSkinTone: 0,
 };
 
@@ -36,9 +30,6 @@ export const AppUiState = createPersistentConfig<AppUiState>(
 );
 
 export const useCurrentView = () => AppUiState.useValue('view', null);
-
-export const useCurrentDocumentId = () =>
-  AppUiState.useValue('activeDocumentId', null);
 
 export const useSidebarWidth = () =>
   AppUiState.useValue('sidebarWidth', defaultState.sidebarWidth);

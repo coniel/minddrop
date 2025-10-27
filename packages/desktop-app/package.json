@@ -24,27 +24,21 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
-    "@minddrop/blocks": "workspace:*",
-    "@minddrop/board-view": "workspace:*",
-    "@minddrop/bookmark-block": "workspace:*",
-    "@minddrop/collections": "workspace:*",
+    "@minddrop/base-item-types": "workspace:*",
     "@minddrop/core": "workspace:*",
-    "@minddrop/documents": "workspace:*",
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
+    "@minddrop/feature-item-type": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
-    "@minddrop/image-block": "workspace:*",
-    "@minddrop/markdown-collection": "workspace:*",
+    "@minddrop/item-types": "workspace:*",
+    "@minddrop/items": "workspace:*",
     "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
-    "@minddrop/text-block": "workspace:*",
     "@minddrop/theme": "workspace:*",
-    "@minddrop/ui-desktop": "workspace:*",
     "@minddrop/ui-elements": "workspace:*",
-    "@minddrop/utils": "workspace:*",
-    "@minddrop/workspaces": "workspace:*"
+    "@minddrop/utils": "workspace:*"
   }
 }
