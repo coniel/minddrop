@@ -10,7 +10,7 @@ export const ItemTypeConfigsStore =
  * @param type - The type of the item type config to retrieve.
  * @returns The item type config or null if it doesn't exist.
  */
-export const useItemTypeConfig = (type: string): ItemTypeConfig | null => {
+export const useItemType = (type: string): ItemTypeConfig | null => {
   return (
     ItemTypeConfigsStore.useAllItems().find(
       (config) => config.nameSingular === type,
@@ -23,6 +23,6 @@ export const useItemTypeConfig = (type: string): ItemTypeConfig | null => {
  *
  * @returns And array of all registered item type configs.
  */
-export const useItemTypeConfigs = (): ItemTypeConfig[] => {
+export const useItemTypes = (): ItemTypeConfig[] => {
   return ItemTypeConfigsStore.useAllItems();
 };
