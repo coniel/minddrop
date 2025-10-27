@@ -15,6 +15,7 @@
     "@types/react": "^18.2.5",
     "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
     "mockdate": "^3.0.5",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
