@@ -14,7 +14,7 @@ export interface KeyboardShortcutProps extends Omit<TextProps, 'children'> {
  * Replaces 'Ctrl' with ⌘ and 'Alt' with '⌥' on Macs.
  */
 export function printKeyboardShortcut(keys: string[]): string {
-  let shortcut = keys.join('+');
+  let shortcut = keys.join('');
 
   const isMac =
     typeof navigator !== 'undefined' &&
@@ -23,6 +23,8 @@ export function printKeyboardShortcut(keys: string[]): string {
   if (isMac) {
     shortcut = shortcut.replace('Ctrl', '⌘');
     shortcut = shortcut.replace('Alt', '⌥');
+    shortcut = shortcut.replace('Shift', '⇧');
+    shortcut = shortcut.replace('Enter', '⏎');
   }
 
   return shortcut;
