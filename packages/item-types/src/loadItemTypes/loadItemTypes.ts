@@ -31,8 +31,12 @@ export async function loadItemTypes(): Promise<void> {
   // Wait for all configs to be read
   const loadedConfigs = await Promise.all(configs);
 
-  // Load configs into the store
-  ItemTypeConfigsStore.load(loadedConfigs);
+  // Load configs into the store, filtering out existing ones
+  ItemTypeConfigsStore.load(
+    loadedConfigs.filter(
+      (config) => !ItemTypeConfigsStore.get(config.nameSingular),
+    ),
+  );
 
   // Dispatch item types load event
   Events.dispatch('item-types:load', loadedConfigs);

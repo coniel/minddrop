@@ -22,6 +22,15 @@ describe('loadItemTypes', () => {
     ).toEqual(markdownItemTypeConfig);
   });
 
+  it('does not load existing item type configs into the store', async () => {
+    // Pre-load the markdown item type config into the store
+    ItemTypeConfigsStore.load([markdownItemTypeConfig]);
+
+    await loadItemTypes();
+
+    expect(ItemTypeConfigsStore.getAll().length).toBe(itemTypeConfigs.length);
+  });
+
   it('dispatches a item types load event', async () =>
     new Promise<void>((done) => {
       Events.addListener('item-types:load', 'test', (payload) => {
