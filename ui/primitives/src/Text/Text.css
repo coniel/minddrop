@@ -1,79 +1,79 @@
 .text {
-  font-family: var(--defaultFontFamily);
-  color: var(--textNeutral);
-  /* line-height: 1em; */
-}
+  font-family: var(--font-family);
+  color: var(--text-color-regular);
+  font-weight: var(--weight-normal);
 
-/* Color */
+  /* Color */
 
-.text.color-white {
-  color: var(--textWhite);
-}
+  &.color-light {
+    color: var(--text-color-light);
+  }
 
-.text.color-light {
-  color: var(--textNeutralLight);
-}
+  &.color-muted {
+    color: var(--text-color-muted);
+  }
 
-.text.color-danger {
-  color: var(--textDanger);
-}
+  &.color-danger {
+    color: var(--text-color-danger);
+  }
 
-.text.color-danger-light {
-  color: var(--textDangerLight);
-}
+  &.color-danger-light {
+    color: var(--text-color-danger-light);
+  }
 
-.text.color-contrast {
-  color: var(--textContrast);
-}
+  &.color-contrast {
+    color: var(--text-color-contrast);
+  }
 
-.text.color-contrast-light {
-  color: var(--textContrastLight);
-}
+  &.color-contrast-light {
+    color: var(--text-color-contrast-light);
+  }
 
-/* Weight */
+  &.color-inherit {
+    color: inherit;
+  }
 
-.text.weight-light {
-  font-weight: var(--fwLight);
-}
+  /* Weight */
 
-.text.text.weight-regular {
-  font-weight: var(--fwRegular);
-}
+  &.weight-light {
+    font-weight: var(--weight-light);
+  }
 
-.text.weight-medium {
-  font-weight: var(--fwMedium);
-}
+  &.weight-regular {
+    font-weight: var(--weight-normal);
+  }
 
-.text.weight-semibold {
-  font-weight: var(--fwSemibold);
-}
+  &.weight-medium {
+    font-weight: var(--weight-medium);
+  }
 
-.text.weight-bold {
-  font-weight: var(--fwBold);
-}
+  &.weight-semibold {
+    font-weight: var(--fwSemibold);
+  }
 
-.text.weight-heavy {
-  font-weight: var(--fwHeavy);
-}
+  &.weight-bold {
+    font-weight: var(--weight-bold);
+  }
 
-/* Size */
+  &.weight-inherit {
+    font-weight: inherit;
+  }
 
-.text.size-tiny {
-  font-size: var(--fsTiny);
-}
+  /* Size */
 
-.text.size-small {
-  font-size: var(--fsSmall);
-}
+  &.size-tiny {
+    font-size: var(--text-xs);
+  }
 
-.text.size-regular {
-  font-size: var(--fsRegular);
-}
+  &.size-small {
+    font-size: var(--text-sm);
+  }
 
-.text.size-large {
-  font-size: var(--fsLarge);
-}
+  &.size-regular {
+    font-size: var(--text-base);
+  }
 
-.text.size-title {
-  font-size: var(--fsTitle);
+  &.size-large {
+    font-size: var(--text-lg);
+  }
 }
