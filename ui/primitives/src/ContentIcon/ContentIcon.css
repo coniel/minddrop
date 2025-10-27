@@ -1,64 +1,73 @@
 .content-icon {
   border-radius: var(--radiusXs);
-  padding: 2px;
-}
 
-/* Color */
+  /* Color */
 
-.content-icon.color-current-color {
-  stroke: currentColor;
-}
+  &.color-current-color {
+    stroke: currentColor;
+  }
 
-.content-icon.color-default {
-  color: var(--textNeutralLight);
-}
+  &.color-default {
+    color: var(--textNeutralLight);
+  }
 
-.content-icon.color-blue {
-  color: var(--blue10);
-  background-color: var(--blue4);
-}
+  &.color-blue {
+    color: var(--blue9);
+    background-color: var(--blue3);
+    box-shadow: 0 0 0 3px var(--blue2);
+  }
 
-.content-icon.color-cyan {
-  color: var(--cyan10);
-  background-color: var(--cyan4);
-}
+  &.color-cyan {
+    color: var(--cyan9);
+    background-color: var(--cyan3);
+    box-shadow: 0 0 0 3px var(--cyan2);
+  }
 
-.content-icon.color-red {
-  color: var(--red10);
-  background-color: var(--red4);
-}
+  &.color-red {
+    color: var(--red9);
+    background-color: var(--red3);
+    box-shadow: 0 0 0 3px var(--red2);
+  }
 
-.content-icon.color-pink {
-  color: var(--pink10);
-  background-color: var(--pink4);
-}
+  &.color-pink {
+    color: var(--pink9);
+    background-color: var(--pink3);
+    box-shadow: 0 0 0 3px var(--pink2);
+  }
 
-.content-icon.color-purple {
-  color: var(--purple10);
-  background-color: var(--purple4);
-}
+  &.color-purple {
+    color: var(--purple9);
+    background-color: var(--purple3);
+    box-shadow: 0 0 0 3px var(--purple2);
+  }
 
-.content-icon.color-green {
-  color: var(--green10);
-  background-color: var(--green4);
-}
+  &.color-green {
+    color: var(--green9);
+    background-color: var(--green3);
+    box-shadow: 0 0 0 3px var(--green2);
+  }
 
-.content-icon.color-orange {
-  color: var(--orange10);
-  background-color: var(--orange4);
-}
+  &.color-orange {
+    color: var(--orange9);
+    background-color: var(--orange3);
+    box-shadow: 0 0 0 3px var(--orange2);
+  }
 
-.content-icon.color-yellow {
-  color: var(--yellow10);
-  background-color: var(--yellow4);
-}
+  &.color-yellow {
+    color: var(--yellow9);
+    background-color: var(--yellow3);
+    box-shadow: 0 0 0 3px var(--yellow2);
+  }
 
-.content-icon.color-brown {
-  color: var(--brown10);
-  background-color: var(--brown4);
-}
+  &.color-brown {
+    color: var(--brown9);
+    background-color: var(--brown3);
+    box-shadow: 0 0 0 3px var(--brown2);
+  }
 
-.content-icon.color-gray {
-  color: var(--gray10);
-  background-color: var(--gray4);
+  &.color-gray {
+    color: var(--gray9);
+    background-color: var(--gray3);
+    box-shadow: 0 0 0 3px var(--gray2);
+  }
 }
