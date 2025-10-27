@@ -5,6 +5,7 @@ import { KeyboardShortcut } from '../../KeyboardShortcut';
 import { Text } from '../../Text';
 import { mapPropsToClasses } from '../../utils';
 import './MenuItem.css';
+import { ContentIcon } from '../../ContentIcon';
 
 export interface MenuItemProps {
   /**
@@ -13,17 +14,27 @@ export interface MenuItemProps {
   label: React.ReactNode;
 
   /**
-   * The item description.
-   */
-  description?: React.ReactNode;
-
-  /**
    * Icon for the item.
    */
   icon?: IconProp;
 
   /**
+   * Stringified content icon for the item.
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
+   */
+  contentIcon?: string;
+
+  /**
+   * If `true`, styles the item as active/selected.
+   * @default false
+   */
+  active?: boolean;
+
+  /**
    * If `true`, renders a submenu indicator at the end of the item.
+   * @default false
    */
   hasSubmenu?: boolean;
 
@@ -33,15 +44,33 @@ export interface MenuItemProps {
   keyboardShortcut?: string[];
 
   /**
-   * Renders at the end of the item. Used to indicate when a menu
-   * item is checked.
-   */
-  itemIndicator?: React.ReactNode;
-
-  /**
    * When `true`, prevents the user from interacting with the item.
+   * @default false
    */
   disabled?: boolean;
+
+  /**
+   * The size of the menu item.
+   * @default 'comfortable'
+   */
+  size?: 'compact' | 'comfortable';
+
+  /**
+   * When `true`, uses muted colors for the item.
+   * @default false
+   */
+  muted?: boolean;
+
+  /**
+   * When `true`, styles the item to indicate a dangerous action.
+   * @default false
+   */
+  danger?: boolean;
+
+  /**
+   * Additional actions to display on the right side of the item when hovered.
+   */
+  actions?: React.ReactNode;
 
   /**
    * Class name applied to the root element.
@@ -53,13 +82,17 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
   (
     {
       className,
+      active,
+      contentIcon,
+      size,
       disabled,
       hasSubmenu,
       label,
-      description,
       icon,
-      itemIndicator,
+      muted,
+      danger,
       keyboardShortcut,
+      actions,
       ...other
     },
     ref,
@@ -68,34 +101,28 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       ref={ref}
       role="menuitem"
       className={mapPropsToClasses(
-        { className, disabled, hasSubmenu },
+        { className, disabled, hasSubmenu, active, size, muted, danger },
         'menu-item',
       )}
       {...other}
     >
-      <div className="label-container">
-        <IconRenderer className="item-icon" icon={icon} />
-        <Text size="regular" className="label">
-          {label}
-        </Text>
-        {keyboardShortcut && (
-          <KeyboardShortcut
-            color="light"
-            size="tiny"
-            weight="medium"
-            keys={keyboardShortcut}
-          />
-        )}
-        {hasSubmenu && (
-          <Icon
-            name="chevron-right"
-            className="submenu-indicator"
-            data-testid="submenu-indicator"
-          />
-        )}
-        {itemIndicator}
-      </div>
-      {description && <div className="description">{description}</div>}
+      {icon && <IconRenderer className="item-icon" icon={icon} />}
+      {contentIcon && <ContentIcon className="item-icon" icon={contentIcon} />}
+      <Text size="small" color="inherit" weight="inherit" className="label">
+        {label}
+      </Text>
+      {keyboardShortcut && (
+        <KeyboardShortcut
+          color="muted"
+          size="tiny"
+          weight="medium"
+          keys={keyboardShortcut}
+        />
+      )}
+      {hasSubmenu && (
+        <Icon name="chevron-right" className="submenu-indicator" />
+      )}
+      {actions && <div className="actions">{actions}</div>}
     </div>
   ),
 );

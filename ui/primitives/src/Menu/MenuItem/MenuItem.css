@@ -1,75 +1,110 @@
 .menu-item {
-  width: 100%;
+  --compact-height: 1.75rem;
+  --regular-height: 2rem;
+  --padding-horizontal: 0.5rem;
+
   cursor: pointer;
   outline: none;
-}
-
-.menu-item .label-container {
+  user-select: none;
+  padding: 0 var(--padding-horizontal);
   display: flex;
   align-items: center;
-  width: 100%;
-  color: var(--textPrimary);
-  padding: 5px 14px;
-}
+  height: var(--regular-height);
+  border-radius: var(--radius-md);
+  column-gap: 0.5rem;
+  color: var(--text-color-regular);
+  font-weight: var(--weight-regular);
 
-.menu-item:focus {
-  background-color: var(--bgNeutralHover);
-}
+  &.size-compact {
+    height: 1.75rem;
+  }
 
-.menu-item:active {
-  background-color: var(--bgNeutralActive);
-}
+  &:hover {
+    background-color: var(--gray-3);
+  }
 
-.menu-item.has-submenu .label-container {
-  padding-right: 0;
-}
+  &:not(:has(button:hover)):active {
+    background-color: var(--gray-2);
+  }
 
-.menu-item[data-state='checked'] .label-container {
-  padding-right: 14px;
-}
+  /* Active prop applied */
+  &.active {
+    background-color: var(--gray-3);
 
-/* Label */
+    &:hover {
+      background-color: var(--gray-4);
+    }
 
-.menu-item .label {
-  line-height: var(--fsRegular);
-  display: inline-block;
-  flex: 1;
-  line-height: 18px;
-}
+    &:not(:has(button:hover)):active {
+      background-color: var(--gray-3);
+    }
+  }
 
-/* Icon */
+  &.muted {
+    color: var(--text-color-muted);
+    transition: background-color 0.1s ease-in-out;
+    font-weight: var(--weight-medium);
 
-.menu-item .item-icon {
-  display: inline-block;
-  stroke: var(--textNeutral);
-  width: 17px;
-  height: 17px;
-  margin-inline-end: 8px;
-}
+    &.active {
+      color: var(--text-color-regular);
+    }
+  }
 
-/* Submenu indicator */
+  &.danger {
+    &:hover {
+      color: var(--text-color-danger);
+    }
+  }
 
-.menu-item .submenu-indicator {
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  margin-inline-end: 8px;
-  stroke: var(--textNeutralLight);
-}
+  /* Label */
 
-/* Item indicator */
+  .label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.menu-item .item-indicator {
-  display: inline-block;
-  height: 18px;
-  width: 18px;
-  stroke: var(--textNeutralLight);
-}
+  /* Icon */
 
-/* Description */
+  .item-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    line-height: 1;
+  }
 
-.menu-item .description {
-  color: var(--textNeutralLight);
-  font-size: var(--fsSmall);
-  padding: 0px 14px 8px 14px;
+  /* Submenu indicator */
+
+  .submenu-indicator {
+    height: 1rem;
+    width: 1rem;
+    stroke: var(--textNeutralLight);
+  }
+
+  /* Actions */
+
+  .actions {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    display: flex;
+    transition: opacity 0.1s ease-in-out;
+
+    .icon {
+      color: var(--text-color-muted);
+    }
+
+    column-gap: 0.25rem;
+  }
+
+  &:hover .actions {
+    opacity: 1;
+    width: auto;
+    position: relative;
+  }
 }
