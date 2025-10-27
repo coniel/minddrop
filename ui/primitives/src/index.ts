@@ -8,6 +8,7 @@ export * from './IconRenderer';
 export * from './InteractiveMenuItem';
 export * from './InvisibleTextField';
 export * from './KeyboardShortcut';
+export * from './Menu/MenuLabel';
 export * from './Menu';
 export * from './NavMenuItem';
 export * from './Separator';
