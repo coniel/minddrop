@@ -17,4 +17,10 @@ describe('get', () => {
   it('throws an error if the item type config does not exist', () => {
     expect(() => getItemTypeConfig('missing')).toThrow(ItemTypeNotFoundError);
   });
+
+  it('does not throw if the item type config does not exist and throwOnNotFound is false', () => {
+    expect(() => getItemTypeConfig('missing', false)).not.toThrow(
+      ItemTypeNotFoundError,
+    );
+  });
 });
