@@ -3,6 +3,7 @@ export * from './ContentIcon';
 export * from './Dialog';
 export * from './DropdownMenu';
 export * from './Icon';
+export * from './IconButton';
 export * from './IconRenderer';
 export * from './InteractiveMenuItem';
 export * from './InvisibleTextField';

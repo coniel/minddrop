@@ -1,0 +1,78 @@
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  user-select: none;
+  border-radius: var(--radiusMd);
+  transition: var(--transitionShort);
+  transition-property: color, background-color, border-color;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 4px;
+  font-size: 20px;
+}
+
+.icon-button .icon {
+  stroke: currentColor;
+  width: 20px;
+  height: 20px;
+}
+
+.icon-button:hover {
+  background-color: var(--bgNeutralHover);
+  transition-duration: 0.1s;
+}
+
+.icon-button:active {
+  background-color: var(--bgNeutralActive);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--borderPrimary);
+}
+
+/* Colors */
+
+.icon-button.color-regular .icon {
+  stroke: var(--textNeutral);
+}
+
+.icon-button.color-light .icon {
+  stroke: var(--textNeutralLight);
+}
+
+.icon-button.color-contrast .icon {
+  stroke: var(--textContrast);
+}
+
+.icon-button.color-contrast:hover .icon {
+  stroke: var(--textNeutral);
+}
+
+.icon-button.color-contrast:active .icon {
+  stroke: var(--textNeutral);
+}
+
+/* Sizes */
+
+.icon-button.size-small {
+  padding: 2px;
+}
+
+.icon-button.size-small .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Disabled */
+
+.icon-button:disabled {
+  pointer-events: none;
+}
+
+.icon-button:disabled .icon,
+.icon-button.color-light:disabled .icon {
+  stroke: var(--textNeutralDisabled);
+}
