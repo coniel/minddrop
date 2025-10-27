@@ -2,6 +2,7 @@ import '@radix-ui/themes/styles.css';
 import './dark.css';
 import './light.css';
 import './base.css';
+import './variables.css';
 import './animations.css';
 
 export { Theme as ThemeProvider } from '@radix-ui/themes';

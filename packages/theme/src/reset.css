@@ -171,4 +171,5 @@ u {
 *::before,
 *::after {
   box-sizing: border-box;
+  -webkit-font-smoothing: auto;
 }
