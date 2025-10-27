@@ -1,6 +1,5 @@
 import { BaseItemTypesFixtures } from '@minddrop/base-item-types';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
-import { PropertyType } from '@minddrop/properties';
 import { Paths } from '@minddrop/utils';
 import { ItemTypeConfig } from '../types';
 import { itemTypeConfigFilePath } from '../utils';
@@ -16,7 +15,7 @@ export const markdownItemTypeConfig: ItemTypeConfig = {
   properties: [
     {
       name: 'foo',
-      type: PropertyType.Text,
+      type: 'text',
       defaultValue: 'bar',
     },
   ],
@@ -44,7 +43,7 @@ export const urlItemTypeConfig: ItemTypeConfig = {
   properties: [
     {
       name: 'url',
-      type: PropertyType.Text,
+      type: 'text',
     },
   ],
 };

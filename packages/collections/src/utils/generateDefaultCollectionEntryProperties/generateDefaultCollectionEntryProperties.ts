@@ -2,7 +2,6 @@ import {
   BaseCollectionTypeConfig,
   Collection,
   CollectionEntryCustomProperties,
-  CollectionPropertyType,
 } from '../../types';
 
 /**
@@ -24,7 +23,7 @@ export function generateDefaultCollectionEntryProperties(
   return properties.reduce((properties, property) => {
     if (typeof property.defaultValue !== 'undefined') {
       // If the property is a date, format the default value
-      if (property.type === CollectionPropertyType.Date) {
+      if (property.type === 'date') {
         const format = Intl.DateTimeFormat(property.locale, property.format);
 
         properties[property.name] = format.format(

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { PropertySchema, PropertyType } from '@minddrop/properties';
+import { PropertySchema } from '@minddrop/properties';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { cleanup, markdownItemTypeConfig, setup } from '../test-utils';
 import { ItemTypeConfig } from '../types';
@@ -7,7 +7,7 @@ import { addItemTypeProperty } from './addItemTypeProperty';
 
 const newProperty: PropertySchema = {
   name: 'New Property',
-  type: PropertyType.Text,
+  type: 'text',
 };
 
 const updatedItemType: ItemTypeConfig = {

@@ -1,21 +1,21 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { PropertySchema, PropertyType } from '../types';
+import { describe, expect, it, vi } from 'vitest';
+import { PropertySchema } from '../types';
 import { generateDefaultProperties } from './generateDefaultProperties';
 
 const schema: PropertySchema[] = [
-  { name: 'no-default', type: PropertyType.Text },
-  { name: 'text', type: PropertyType.Text, defaultValue: 'Sample string' },
-  { name: 'number', type: PropertyType.Number, defaultValue: 10 },
-  { name: 'checkbox', type: PropertyType.Checkbox, defaultValue: false },
+  { name: 'no-default', type: 'text' },
+  { name: 'text', type: 'text', defaultValue: 'Sample string' },
+  { name: 'number', type: 'number', defaultValue: 10 },
+  { name: 'checkbox', type: 'toggle', defaultValue: false },
   {
     name: 'date',
-    type: PropertyType.Date,
+    type: 'date',
     defaultValue: new Date('2024-01-01T00:00:00Z'),
   },
-  { name: 'date-now', type: PropertyType.Date, defaultValue: 'now' },
+  { name: 'date-now', type: 'date', defaultValue: 'now' },
   {
     name: 'select',
-    type: PropertyType.Select,
+    type: 'select',
     defaultValue: 'Option 1',
     options: [
       {
@@ -26,7 +26,7 @@ const schema: PropertySchema[] = [
   },
   {
     name: 'multi-select',
-    type: PropertyType.MultiSelect,
+    type: 'multiselect',
     defaultValue: ['Option 1', 'Option 2'],
     options: [
       {

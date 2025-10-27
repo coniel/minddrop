@@ -1,4 +1,3 @@
-import { PropertyType } from '@minddrop/properties';
 import {
   AudioBaseItemTypeConfig,
   BaseItemTypeConfig,
@@ -29,15 +28,15 @@ export const urlBaseItemType: UrlBaseItemTypeConfig = {
   properties: [
     {
       name: 'url',
-      type: PropertyType.Text,
+      type: 'text',
     },
     {
       name: 'domain',
-      type: PropertyType.Text,
+      type: 'text',
     },
     {
       name: 'description',
-      type: PropertyType.Text,
+      type: 'text',
     },
   ],
 };

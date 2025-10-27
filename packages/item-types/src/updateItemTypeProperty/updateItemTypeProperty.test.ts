@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { PropertySchema, PropertyType } from '@minddrop/properties';
+import { PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { cleanup, markdownItemTypeConfig, setup } from '../test-utils';
@@ -34,7 +34,7 @@ describe('updateItemTypeProperty', () => {
       // @ts-expect-error Testing invalid parameter
       updateItemTypeProperty(markdownItemTypeConfig.nameSingular, {
         ...markdownItemTypeConfig.properties[0],
-        type: PropertyType.Number,
+        type: 'number',
       }),
     ).rejects.toThrow(InvalidParameterError);
   });

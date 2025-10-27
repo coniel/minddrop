@@ -3,7 +3,6 @@ import { ItemTypesFixtures } from '@minddrop/item-types';
 import { Markdown } from '@minddrop/markdown';
 import {
   Properties,
-  PropertyType,
   PropertiesSchema as PropsSchema,
 } from '@minddrop/properties';
 import {
@@ -23,7 +22,7 @@ export const PropertiesSchema: PropsSchema = [
   ...ItemCorePropertiesSchema,
   {
     name: 'foo',
-    type: PropertyType.Text,
+    type: 'text',
   },
 ];
 

@@ -14,7 +14,10 @@ export function generateDefaultProperties<
   const defaultProperties: PropertyMap = {};
 
   schema.forEach((propertySchema) => {
-    if (propertySchema.defaultValue !== undefined) {
+    if (
+      'defaultValue' in propertySchema &&
+      propertySchema.defaultValue !== undefined
+    ) {
       // Date properties can have a default value of 'now'
       // which initializes the property with the current date.
       if (

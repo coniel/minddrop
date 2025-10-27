@@ -1,5 +1,5 @@
 import { i18n } from '@minddrop/i18n';
-import { PropertySchema, PropertyType } from '@minddrop/properties';
+import { PropertySchema } from '@minddrop/properties';
 
 export const ConfigDirName = '.minddrop';
 export const PropertiesDirName = 'properties';
@@ -10,25 +10,25 @@ export const AssetsDirPath = `${ConfigDirName}/${AssetsDirName}`;
 export const ItemCorePropertiesSchema: PropertySchema[] = [
   {
     name: 'id',
-    type: PropertyType.Text,
+    type: 'text',
   },
   {
     name: 'type',
-    type: PropertyType.Text,
+    type: 'text',
   },
   {
     name: 'title',
-    type: PropertyType.Text,
+    type: 'text',
     defaultValue: i18n.t('labels.untitled'),
   },
   {
     name: 'created',
-    type: PropertyType.Date,
+    type: 'date',
     defaultValue: 'now',
   },
   {
     name: 'lastModified',
-    type: PropertyType.Date,
+    type: 'date',
     defaultValue: 'now',
   },
 ];

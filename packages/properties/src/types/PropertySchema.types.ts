@@ -1,14 +1,5 @@
 import { ContentColor } from '@minddrop/core';
 
-export enum PropertyType {
-  Text = 'text',
-  Number = 'number',
-  Date = 'date',
-  Checkbox = 'checkbox',
-  Select = 'select',
-  MultiSelect = 'multiselect',
-}
-
 interface PropertySchemaBase {
   /**
    * The property name. Also used as the key in the properties object.
@@ -30,37 +21,56 @@ interface PropertySchemaBase {
 }
 
 export interface TextPropertySchema extends PropertySchemaBase {
-  type: PropertyType.Text;
+  type: 'text';
+  defaultValue?: string;
+}
+
+export interface UrlPropertySchema extends PropertySchemaBase {
+  type: 'url';
   defaultValue?: string;
 }
 
 export interface NumberPropertySchema extends PropertySchemaBase {
-  type: PropertyType.Number;
+  type: 'number';
   defaultValue?: number;
 }
 
+export interface MarkdownPropertySchema extends PropertySchemaBase {
+  type: 'markdown';
+  defaultValue?: string;
+}
+
 export interface DatePropertySchema extends PropertySchemaBase {
-  type: PropertyType.Date;
+  type: 'date';
   format?: Intl.DateTimeFormatOptions;
   locale?: Intl.LocalesArgument;
   defaultValue?: Date | 'now';
 }
 
-export interface CheckboxPropertySchema extends PropertySchemaBase {
-  type: PropertyType.Checkbox;
+export interface TogglePropertySchema extends PropertySchemaBase {
+  type: 'toggle';
   defaultValue?: boolean;
 }
 
 export interface SelectPropertySchema extends PropertySchemaBase {
-  type: PropertyType.Select;
+  type: 'select';
   options: SelectPropertyOption[];
   defaultValue?: string;
 }
 
 export interface MultiSelectPropertySchema extends PropertySchemaBase {
-  type: PropertyType.MultiSelect;
+  type: 'multiselect';
   options: SelectPropertyOption[];
   defaultValue?: string[];
+}
+
+export interface ImagePropertySchema extends PropertySchemaBase {
+  type: 'image';
+  stroage: 'asset' | 'attachment' | 'item';
+}
+
+export interface IconPropertySchema extends PropertySchemaBase {
+  type: 'icon';
 }
 
 export interface SelectPropertyOption {
@@ -70,10 +80,13 @@ export interface SelectPropertyOption {
 
 export type PropertySchema =
   | TextPropertySchema
+  | UrlPropertySchema
   | NumberPropertySchema
   | DatePropertySchema
-  | CheckboxPropertySchema
+  | TogglePropertySchema
   | SelectPropertySchema
-  | MultiSelectPropertySchema;
+  | MultiSelectPropertySchema
+  | ImagePropertySchema
+  | IconPropertySchema;
 
 export type PropertiesSchema = PropertySchema[];
