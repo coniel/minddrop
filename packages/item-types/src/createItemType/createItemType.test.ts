@@ -5,8 +5,8 @@ import {
 } from '@minddrop/base-item-types';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
+import { ItemTypeAlreadyExistsError } from '../errors';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { ItemTypeConfig } from '../types';
 import { itemTypeConfigFilePath, itemsDirPath } from '../utils';
@@ -16,7 +16,8 @@ const baseItemType = BaseItemTypesFixtures.urlBaseItemType;
 
 const options: CreateItemTypeOptions = {
   nameSingular: 'Test',
-  nameSingular: 'Tests',
+  namePlural: 'Tests',
+  dataType: 'markdown',
   description: 'A test item type for unit testing',
   icon: 'test-icon',
   color: 'red',
@@ -51,7 +52,7 @@ describe('createItemType', () => {
 
     // Then, try to create it again
     await expect(createItemType(options)).rejects.toThrow(
-      InvalidParameterError,
+      ItemTypeAlreadyExistsError,
     );
   });
 

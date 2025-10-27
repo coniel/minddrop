@@ -1,8 +1,8 @@
 import { BaseItemTypes } from '@minddrop/base-item-types';
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
 import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
+import { ItemTypeAlreadyExistsError } from '../errors';
 import { ItemTypeConfig } from '../types';
 import { itemsDirPath } from '../utils';
 import { writeItemTypeConfig } from '../writeItemTypeConfig';
@@ -27,9 +27,7 @@ export async function createItemType(
 
   // Ensure the item type does not already exist
   if (ItemTypeConfigsStore.get(options.nameSingular)) {
-    throw new InvalidParameterError(
-      `An item type "${options.nameSingular}" already exists.`,
-    );
+    throw new ItemTypeAlreadyExistsError(options.nameSingular);
   }
 
   // Ensure the item type directory does not already exist
