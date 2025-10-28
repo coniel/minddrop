@@ -1,4 +1,8 @@
-import type {} from '@testing-library/dom';
+import type {
+  Matcher,
+  MatcherOptions,
+  SelectorMatcherOptions,
+} from '@testing-library/dom';
 import {
   RenderHookOptions,
   RenderOptions,
@@ -37,7 +41,12 @@ Object.defineProperty(window, 'matchMedia', {
 initializeI18n();
 
 const WithProviders: FC<{ children: React.ReactNode }> = ({ children }) => (
-  <IconsProvider>{children}</IconsProvider>
+  <IconsProvider
+    defaultEmojiSkinTone={1}
+    onDefaultEmojiSkinToneChange={() => null}
+  >
+    {children}
+  </IconsProvider>
 );
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
@@ -79,6 +88,9 @@ const customRender = (
       ? i18n.t(`${options.translationKeyPrefix}.${key}`)
       : i18n.t(key);
 
+  const isI18nKey = (key: Matcher): key is string =>
+    typeof key === 'string' && i18n.exists(key);
+
   const getByTranslatedText = (key: string) => getByText(translate(key));
   const getByTranslatedAltText = (key: string) => getByAltText(translate(key));
   const getByTranslatedLabelText = (key: string) =>
@@ -94,14 +106,25 @@ const customRender = (
     getAllByPlaceholderText(translate(key));
 
   return {
-    getByText,
-    getByAltText,
-    getByLabelText,
-    getByPlaceholderText,
-    getAllByText,
-    getAllByAltText,
-    getAllByLabelText,
-    getAllByPlaceholderText,
+    getByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      getByText(isI18nKey(text) ? translate(text) : text, options),
+    getByAltText: (text: Matcher, options?: MatcherOptions) =>
+      getByAltText(isI18nKey(text) ? translate(text) : text, options),
+    getByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      getByLabelText(isI18nKey(text) ? translate(text) : text, options),
+    getByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+      getByPlaceholderText(isI18nKey(text) ? translate(text) : text, options),
+    getAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      getAllByText(isI18nKey(text) ? translate(text) : text, options),
+    getAllByAltText: (text: Matcher, options?: MatcherOptions) =>
+      getAllByAltText(isI18nKey(text) ? translate(text) : text, options),
+    getAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+      getAllByLabelText(isI18nKey(text) ? translate(text) : text, options),
+    getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+      getAllByPlaceholderText(
+        isI18nKey(text) ? translate(text) : text,
+        options,
+      ),
     getByTranslatedText,
     getByTranslatedAltText,
     getByTranslatedLabelText,
