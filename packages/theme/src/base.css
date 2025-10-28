@@ -14,9 +14,9 @@
 
   --fsTiny: 12px;
   --fsSmall: 13px;
-  --fsRegular: 14px;
-  --fsLarge: 18px;
-  --fsTitle: 36px;
+  --fsRegular: 1rem;
+  --fsLarge: 1.125rem;
+  --fsTitle: 1.5rem;
 
   --fsContentRegular: 16px;
   --fsContentTitle: 20px;
