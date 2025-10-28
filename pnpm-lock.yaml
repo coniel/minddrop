@@ -152,6 +152,37 @@ importers:
         specifier: ^3.0.0
         version: 3.0.3(react-dom@19.0.0)(react@19.0.0)
 
+  features/app-sidebar:
+    dependencies:
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/item-types':
+        specifier: workspace:*
+        version: link:../../packages/item-types
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
   features/item-type:
     dependencies:
       '@minddrop/base-item-types':
@@ -296,6 +327,9 @@ importers:
       '@minddrop/extensions':
         specifier: workspace:*
         version: link:../extensions
+      '@minddrop/feature-app-sidebar':
+        specifier: workspace:*
+        version: link:../../features/app-sidebar
       '@minddrop/feature-item-type':
         specifier: workspace:*
         version: link:../../features/item-type
@@ -326,6 +360,9 @@ importers:
       '@minddrop/ui-elements':
         specifier: workspace:*
         version: link:../ui-elements
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2851,7 +2888,7 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       '@eslint/object-schema': 2.1.6
-      debug: 4.4.0
+      debug: 4.4.3
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -2869,7 +2906,7 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.4.0
+      debug: 4.4.3
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.2
@@ -6750,7 +6787,7 @@ packages:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8240,12 +8277,12 @@ packages:
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.2
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.4.0
+      debug: 4.4.3
       escape-string-regexp: 4.0.0
       eslint-scope: 8.2.0
       eslint-visitor-keys: 4.2.0
