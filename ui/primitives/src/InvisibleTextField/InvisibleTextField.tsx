@@ -29,22 +29,48 @@ export interface InvisibleTextFieldProps
    * The weight of the text.
    */
   weight?: TextWeight;
+
+  /**
+   * Description to display below the field.
+   */
+  description?: React.ReactNode;
+
+  /**
+   * Error message to display below the field.
+   */
+  error?: React.ReactNode;
 }
 
 export const InvisibleTextField = React.forwardRef<
   HTMLInputElement,
   InvisibleTextFieldProps
->(({ children, className, label, size, color, weight, ...other }, ref) => (
-  <input
-    ref={ref}
-    type="text"
-    aria-label={label}
-    className={mapPropsToClasses(
-      { className, size, color, weight },
-      'invisible-text-field',
-    )}
-    {...other}
-  />
-));
+>(
+  (
+    {
+      children,
+      className,
+      label,
+      size,
+      color,
+      weight,
+      error,
+      description,
+      ...other
+    },
+    ref,
+  ) => (
+    <div className={mapPropsToClasses({ className }, 'invisible-text-field')}>
+      <input
+        ref={ref}
+        type="text"
+        aria-label={label}
+        className={mapPropsToClasses({ size, color, weight })}
+        {...other}
+      />
+      {description && <div className="description">{description}</div>}
+      {error && <div className="error">{error}</div>}
+    </div>
+  ),
+);
 
 InvisibleTextField.displayName = 'InvisibleTextField';

@@ -1,80 +1,99 @@
 .invisible-text-field {
-  font-family: var(--defaultFontFamily);
-  background-color: transparent;
-  border: none;
-  outline: none;
-  padding: 0;
-  font-size: var(--fsRegular);
-  color: var(--textNeutral);
-  line-height: 1em;
-}
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 
-.invisible-text-field::placeholder {
-  color: var(--textNeutralDisabled);
-}
+  input {
+    font-family: var(--defaultFontFamily);
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-size: var(--fsRegular);
+    color: var(--textNeutral);
+    line-height: 1em;
 
-/* Color */
+    &::placeholder {
+      color: var(--textNeutralDisabled);
+    }
+  }
 
-.invisible-text-field.color-light {
-  color: var(--textNeutralLight);
-}
+  .description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--gray10);
+  }
 
-.invisible-text-field.color-contrast {
-  color: var(--textContrast);
-}
+  .error {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--textDanger);
+  }
 
-.invisible-text-field.color-contrast-light {
-  color: var(--textContrastLight);
-}
+  /* Color */
 
-.invisible-text-field.color-danger {
-  color: var(--textDanger);
-}
+  .color-light {
+    color: var(--textNeutralLight);
+  }
 
-/* Weight */
+  .color-contrast {
+    color: var(--textContrast);
+  }
 
-.invisible-text-field.weight-light {
-  font-weight: var(--fwLight);
-}
+  .color-contrast-light {
+    color: var(--textContrastLight);
+  }
 
-.invisible-text-field.weight-regular {
-  font-weight: var(--fwRegular);
-}
+  .color-danger {
+    color: var(--textDanger);
+  }
 
-.invisible-text-field.weight-medium {
-  font-weight: var(--fwMedium);
-}
+  /* Weight */
 
-.invisible-text-field.weight-semibold {
-  font-weight: var(--fwSemibold);
-}
+  .weight-light {
+    font-weight: var(--fwLight);
+  }
 
-.invisible-text-field.weight-bold {
-  font-weight: var(--fwBold);
-}
+  .weight-regular {
+    font-weight: var(--fwRegular);
+  }
 
-.invisible-text-field.weight-heavy {
-  font-weight: var(--fwHeavy);
-}
+  .weight-medium {
+    font-weight: var(--fwMedium);
+  }
 
-/* Size */
+  .weight-semibold {
+    font-weight: var(--fwSemibold);
+  }
 
-.invisible-text-field.size-tiny {
-  font-size: var(--fsTiny);
-}
+  .weight-bold {
+    font-weight: var(--fwBold);
+  }
 
-.invisible-text-field.size-small {
-  font-size: var(--fsSmall);
-}
+  .weight-heavy {
+    font-weight: var(--fwHeavy);
+  }
 
-.invisible-text-field.size-regular {
-  font-size: var(--fsRegular);
-}
+  /* Size */
 
-.invisible-text-field.size-large {
-  font-size: var(--fsLarge);
-}
+  .size-tiny {
+    font-size: var(--fsTiny);
+  }
 
-.invisible-text-field.size-title {
-  font-size: var(--fsTitle);
+  .size-small {
+    font-size: var(--fsSmall);
+  }
+
+  .size-regular {
+    font-size: var(--fsRegular);
+  }
+
+  .size-large {
+    font-size: var(--fsLarge);
+  }
+
+  .size-title {
+    font-size: var(--fsTitle);
+  }
 }
