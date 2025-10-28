@@ -39,6 +39,8 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@minddrop/ui-elements": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/feature-app-sidebar": "workspace:*"
   }
 }

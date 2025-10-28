@@ -12,6 +12,7 @@ import {
 } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
+import { AppSidebar } from '@minddrop/feature-app-sidebar';
 
 export const DesktopApp: React.FC = () => {
   const view = useCurrentView();
@@ -34,6 +35,7 @@ export const DesktopApp: React.FC = () => {
           <MindDropApiProvider>
             <DragImageProvider>
               <div className="app">
+                <AppSidebar />
                 <div className="app-content">
                   <div className="main-content">
                     {view === 'item-type' && <ItemTypeView />}
