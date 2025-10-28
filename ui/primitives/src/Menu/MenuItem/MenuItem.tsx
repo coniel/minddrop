@@ -5,13 +5,19 @@ import { KeyboardShortcut } from '../../KeyboardShortcut';
 import { Text } from '../../Text';
 import { mapPropsToClasses } from '../../utils';
 import './MenuItem.css';
+import { i18n } from '@minddrop/i18n';
 import { ContentIcon } from '../../ContentIcon';
 
 export interface MenuItemProps {
   /**
-   * The item label.
+   * The i18n key for the label text. If not provided, children will be used.
    */
-  label: React.ReactNode;
+  label?: string;
+
+  /**
+   * The menu item label content. Used if `label` is not provided.
+   */
+  children?: React.ReactNode;
 
   /**
    * Icon for the item.
@@ -81,18 +87,19 @@ export interface MenuItemProps {
 export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
   (
     {
-      className,
+      actions,
       active,
+      children,
+      className,
       contentIcon,
-      size,
+      danger,
       disabled,
       hasSubmenu,
-      label,
       icon,
-      muted,
-      danger,
       keyboardShortcut,
-      actions,
+      label,
+      muted,
+      size,
       ...other
     },
     ref,
@@ -109,7 +116,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       {icon && <IconRenderer className="item-icon" icon={icon} />}
       {contentIcon && <ContentIcon className="item-icon" icon={contentIcon} />}
       <Text size="small" color="inherit" weight="inherit" className="label">
-        {label}
+        {label ? i18n.t(label) : children}
       </Text>
       {keyboardShortcut && (
         <KeyboardShortcut
