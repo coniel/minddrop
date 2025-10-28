@@ -9,7 +9,7 @@ export const markdownItemTypeConfig: ItemTypeConfig = {
   dataType: 'markdown',
   nameSingular: 'Note',
   namePlural: 'Notes',
-  icon: 'content-icon:markdown:blue',
+  icon: 'content-icon:book:blue',
   color: 'blue',
   description: 'A markdown note item type',
   properties: [
