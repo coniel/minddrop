@@ -9,3 +9,9 @@ export {
   isMarkdownItemType as isMarkdown,
   itemsDirPath as dirPath,
 } from './utils';
+
+export {
+  ItemTypeConfigsStore as Store,
+  useItemTypes as useAll,
+  useItemType as use,
+} from './ItemTypeConfigsStore';
