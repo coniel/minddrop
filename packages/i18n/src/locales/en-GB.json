@@ -356,7 +356,19 @@
       }
     }
   },
+  "itemTypes": {
+    "actions": {
+      "add": "Add type",
+      "create": "Create item type"
+    },
+    "labels": {
+      "baseItemTypes": "Make your own"
+    }
+  },
   "items": {
+    "labels": {
+      "items": "Items"
+    },
     "data": {
       "name": "Data",
       "description": "Store formatted data related to things such as books, contacts, or tasks."
