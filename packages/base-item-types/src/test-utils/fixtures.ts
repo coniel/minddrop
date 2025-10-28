@@ -1,16 +1,6 @@
-import {
-  AudioBaseItemTypeConfig,
-  BaseItemTypeConfig,
-  FileBaseItemTypeConfig,
-  ImageBaseItemTypeConfig,
-  MarkdownBaseItemTypeConfig,
-  PdfBaseItemTypeConfig,
-  TextBaseItemTypeConfig,
-  UrlBaseItemTypeConfig,
-  VideoBaseItemTypeConfig,
-} from '../types';
+import { BaseItemTypeConfig } from '../types';
 
-export const markdownBaseItemType: MarkdownBaseItemTypeConfig = {
+export const markdownBaseItemType: BaseItemTypeConfig = {
   type: 'markdown',
   dataType: 'markdown',
   name: 'Markdown',
@@ -19,7 +9,7 @@ export const markdownBaseItemType: MarkdownBaseItemTypeConfig = {
   properties: [],
 };
 
-export const urlBaseItemType: UrlBaseItemTypeConfig = {
+export const urlBaseItemType: BaseItemTypeConfig = {
   type: 'url',
   dataType: 'url',
   name: 'URL',
@@ -41,7 +31,7 @@ export const urlBaseItemType: UrlBaseItemTypeConfig = {
   ],
 };
 
-export const textBaseItemType: TextBaseItemTypeConfig = {
+export const textBaseItemType: BaseItemTypeConfig = {
   type: 'text',
   dataType: 'text',
   name: 'Text',
@@ -50,7 +40,7 @@ export const textBaseItemType: TextBaseItemTypeConfig = {
   properties: [],
 };
 
-export const imageBaseItemType: ImageBaseItemTypeConfig = {
+export const imageBaseItemType: BaseItemTypeConfig = {
   type: 'image',
   dataType: 'image',
   name: 'Image',
@@ -59,7 +49,7 @@ export const imageBaseItemType: ImageBaseItemTypeConfig = {
   properties: [],
 };
 
-export const audioBaseItemType: AudioBaseItemTypeConfig = {
+export const audioBaseItemType: BaseItemTypeConfig = {
   type: 'audio',
   dataType: 'audio',
   name: 'Audio',
@@ -68,7 +58,7 @@ export const audioBaseItemType: AudioBaseItemTypeConfig = {
   properties: [],
 };
 
-export const videoBaseItemType: VideoBaseItemTypeConfig = {
+export const videoBaseItemType: BaseItemTypeConfig = {
   type: 'video',
   dataType: 'video',
   name: 'Video',
@@ -77,7 +67,7 @@ export const videoBaseItemType: VideoBaseItemTypeConfig = {
   properties: [],
 };
 
-export const pdfBaseItemType: PdfBaseItemTypeConfig = {
+export const pdfBaseItemType: BaseItemTypeConfig = {
   type: 'pdf',
   dataType: 'pdf',
   name: 'PDF',
@@ -86,7 +76,7 @@ export const pdfBaseItemType: PdfBaseItemTypeConfig = {
   properties: [],
 };
 
-export const fileBaseItemType: FileBaseItemTypeConfig = {
+export const fileBaseItemType: BaseItemTypeConfig = {
   type: 'file',
   dataType: 'file',
   name: 'File',

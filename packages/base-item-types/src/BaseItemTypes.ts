@@ -6,3 +6,4 @@ export {
   useBaseItemTypeConfig,
   useBaseItemTypeConfigs,
 } from './BaseItemTypeConfigsStore';
+export { initializeBaseItemTypes as initialize } from './initializeBaseItemTypes';
