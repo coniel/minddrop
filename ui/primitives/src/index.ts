@@ -1,4 +1,5 @@
 export * from './Button';
+export * from './Collapsible';
 export * from './ContentIcon';
 export * from './Dialog';
 export * from './DropdownMenu';
