@@ -8,7 +8,9 @@ export type ItemDataType =
   | 'video'
   | 'audio'
   | 'pdf'
-  | 'file';
+  | 'file'
+  | 'page'
+  | 'space';
 
 export interface BaseItemTypeConfig {
   /**
