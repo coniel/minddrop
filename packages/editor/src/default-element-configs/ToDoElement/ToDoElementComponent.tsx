@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactEditor, useSlate } from 'slate-react';
 import { ToDoElement } from '@minddrop/ast';
-import { Icon } from '@minddrop/ui-elements';
+import { Icon } from '@minddrop/ui-primitives';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { ElementPlaceholderText } from '../../ElementPlaceholderText';
 import { Transforms } from '../../Transforms';

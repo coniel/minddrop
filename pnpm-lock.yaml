@@ -357,9 +357,6 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
-      '@minddrop/ui-elements':
-        specifier: workspace:*
-        version: link:../ui-elements
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -403,9 +400,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
-      '@minddrop/ui-elements':
+      '@minddrop/ui-primitives':
         specifier: workspace:*
-        version: link:../ui-elements
+        version: link:../../ui/primitives
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -548,9 +545,9 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
-      '@minddrop/ui-elements':
+      '@minddrop/ui-primitives':
         specifier: workspace:*
-        version: link:../ui-elements
+        version: link:../../ui/primitives
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -597,9 +594,9 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../theme
-      '@minddrop/ui-elements':
+      '@minddrop/ui-primitives':
         specifier: workspace:*
-        version: link:../ui-elements
+        version: link:../../ui/primitives
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
