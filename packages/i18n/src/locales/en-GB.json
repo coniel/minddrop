@@ -36,9 +36,8 @@
   },
   "emojiPicker": {
     "random": "Random",
-    "filter": "Filter...",
+    "filter": "Search emoji...",
     "skinTone": {
-      "action": "Select skin tone",
       "none": "None",
       "dark": "Dark skin tone",
       "mediumDark": "Medium dark skin tone",
@@ -48,9 +47,8 @@
     }
   },
   "iconPicker": {
-    "filter": "Filter...",
+    "filter": "Search icons...",
     "random": "Random",
-    "selectColor": "Select icon color",
     "change": "Change icon"
   },
   "contentPicker": {
