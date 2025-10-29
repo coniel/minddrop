@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { mapPropsToClasses } from '@minddrop/utils';
 import { IconProp, IconRenderer } from '../IconRenderer';
-import { mapPropsToClasses } from '../utils';
 import './Button.css';
 
 export interface ButtonBaseProps {
@@ -22,9 +22,10 @@ export interface ButtonBaseProps {
   endIcon?: IconProp;
 
   /**
-   * If `true`, the button will take up the full width of its container.
+   * If `true`, the button is rendered in an active state to act
+   * as a toggle button.
    */
-  fullWidth?: boolean;
+  active?: boolean;
 
   /**
    * The URL to link to when the button is clicked.
@@ -52,7 +53,7 @@ export interface ButtonBaseProps {
   /**
    * The variant to use based on the action type.
    */
-  variant?: 'neutral' | 'contained' | 'primary' | 'text' | 'danger';
+  variant?: 'text' | 'outlined' | 'contained' | 'primary' | 'danger';
 }
 
 export interface ButtonProps
@@ -72,7 +73,6 @@ export const Button = React.forwardRef<
   (
     {
       disabled = false,
-      fullWidth = false,
       size = 'medium',
       variant = 'neutral',
       label,
@@ -81,6 +81,7 @@ export const Button = React.forwardRef<
       endIcon,
       children,
       className,
+      active,
       ...other
     },
     ref,
@@ -96,18 +97,17 @@ export const Button = React.forwardRef<
       ),
       [startIcon, label, children, endIcon, t],
     );
-    const classes = useMemo(
-      () =>
-        mapPropsToClasses(
-          {
-            className,
-            fullWidth,
-            size,
-            variant,
-          },
-          'button',
-        ),
-      [className, fullWidth, size, variant],
+    const classes = mapPropsToClasses(
+      {
+        className,
+        size,
+        variant,
+        startIcon: Boolean(startIcon),
+        endIcon: Boolean(endIcon),
+        disabled,
+        active,
+      },
+      'button',
     );
 
     if (href) {
