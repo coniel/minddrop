@@ -19,6 +19,7 @@
   "dependencies": {
     "@base-ui-components/react": "1.0.0-beta.4",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/icons": "workspace:*"
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }

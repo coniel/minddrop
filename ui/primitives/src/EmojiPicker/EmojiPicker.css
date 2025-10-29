@@ -1,0 +1,50 @@
+.emoji-picker {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 440px;
+  border-radius: var(--radiusLg);
+  overflow: hidden;
+
+  .toolbar {
+    padding: 0 0.5rem;
+    align-items: center;
+    border-bottom: 1px solid var(--borderNeutralSubtle);
+
+    .invisible-text-field {
+      flex: 1;
+
+      input {
+        height: 2.5rem;
+      }
+    }
+
+    &.color-toolbar {
+      padding: 0.5rem;
+    }
+  }
+
+  .category-group {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+
+  .category-group-emoji {
+    padding-left: 0.25rem;
+  }
+
+  .nav-group .icon-button,
+  .small-subset .icon-button {
+    margin: 1px;
+  }
+
+  .options {
+    flex: 1;
+    overflow-y: scroll;
+  }
+
+  .emoji-button {
+    font-size: 24px;
+    padding: 2px;
+    width: 32px;
+  }
+}

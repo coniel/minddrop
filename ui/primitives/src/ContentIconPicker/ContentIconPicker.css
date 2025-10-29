@@ -1,0 +1,64 @@
+.content-icon-picker {
+  display: flex;
+  flex-direction: column;
+  height: 480px;
+  width: 440px;
+  border-radius: var(--radiusLg);
+  overflow: hidden;
+
+  .toolbar {
+    padding: 0 0.5rem;
+    align-items: center;
+    border-bottom: 1px solid var(--borderNeutralSubtle);
+
+    .invisible-text-field {
+      flex: 1;
+
+      input {
+        height: 2.5rem;
+      }
+    }
+
+    &.color-toolbar {
+      padding: 0.5rem;
+    }
+  }
+
+  .category-group {
+    display: block;
+    padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+
+  .category-group-icons {
+    padding-left: 0.25rem;
+  }
+
+  .catergory-group .icon-button,
+  .small-subset .icon-button {
+    margin: 1px;
+  }
+
+  .options {
+    flex: 1;
+    overflow-y: scroll;
+    z-index: 1;
+  }
+
+  .icon-selection-button {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .color-select-button {
+    padding: 0;
+    width: 28px;
+    height: 28px;
+  }
+
+  .color-select-popover {
+    padding: 2px;
+    width: 196px;
+    z-index: 99999;
+  }
+}

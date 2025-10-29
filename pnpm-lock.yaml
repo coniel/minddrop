@@ -1180,6 +1180,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
