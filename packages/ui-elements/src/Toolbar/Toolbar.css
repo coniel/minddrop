@@ -1,5 +1,0 @@
-.toolbar {
-  display: flex;
-  grid-auto-flow: column;
-  grid-column-gap: 8px;
-}
