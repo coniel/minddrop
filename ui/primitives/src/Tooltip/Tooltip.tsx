@@ -20,7 +20,7 @@ export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
   /**
    * The content of the Tooltip.
    */
-  children: React.ReactNode;
+  children: TooltipPrimitive.Trigger.Props['render'];
 
   /**
    * The primary content of the tooltip, typically the name of the action.
@@ -70,7 +70,7 @@ export const Tooltip: FC<TooltipProps> = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <TooltipPrimitive.Trigger>{children}</TooltipPrimitive.Trigger>
+      <TooltipPrimitive.Trigger render={children} />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner>
           <TooltipPrimitive.Popup
