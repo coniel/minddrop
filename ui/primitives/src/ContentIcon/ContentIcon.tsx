@@ -19,10 +19,17 @@ export interface ContentIconProps {
    * Additional class name(s) to apply to the icon.
    */
   className?: string;
+
+  /**
+   * The color of the icon. Used only if the icon does not
+   * specify a color itself.
+   */
+  color?: ContentColor | 'inherit';
 }
 
 export const ContentIcon: React.FC<ContentIconProps> = ({
   icon: iconString,
+  color = 'default',
   defaultIcon,
   className,
 }) => {
@@ -37,7 +44,11 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
   }
 
   return (
-    <IconSetIcon className={className} name={icon.icon} color={icon.color} />
+    <IconSetIcon
+      className={className}
+      name={icon.icon}
+      color={icon.color || color}
+    />
   );
 };
 
