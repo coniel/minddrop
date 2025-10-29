@@ -44,7 +44,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
             {itemTypes.map((itemType) => (
               <MenuItem
                 muted
-                contentIcon={itemType.icon || 'content-icon:shapes'}
+                contentIcon={itemType.icon || 'content-icon:shapes:inherit'}
                 key={itemType.nameSingular}
               >
                 {itemType.namePlural}
