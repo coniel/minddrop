@@ -18,6 +18,10 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
     Events.dispatch('item-types:new-item-type-dialog:open');
   }
 
+  function handleOpenItemTypesView(type: string) {
+    Events.dispatch('item-type:view:open', { type });
+  }
+
   return (
     <Sidebar {...other}>
       <div>
@@ -46,6 +50,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
                 muted
                 contentIcon={itemType.icon || 'content-icon:shapes:inherit'}
                 key={itemType.nameSingular}
+                onClick={() => handleOpenItemTypesView(itemType.nameSingular)}
               >
                 {itemType.namePlural}
               </MenuItem>
