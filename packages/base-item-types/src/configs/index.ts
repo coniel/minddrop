@@ -5,5 +5,5 @@ export * from './ImageBaseItemTypeConfig';
 export * from './PageBaseItemTypeConfig';
 export * from './PdfBaseItemTypeConfig';
 export * from './SpaceBaseItemTypeConfig';
-export * from './UrlItemTypeConfig';
+export * from './UrlBaseItemTypeConfig';
 export * from './VideoBaseItemTypeConfig';

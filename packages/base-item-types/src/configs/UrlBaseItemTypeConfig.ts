@@ -11,28 +11,33 @@ export const UrlBaseItemTypeConfig: BaseItemTypeConfig = {
       name: 'URL',
       type: 'url',
       description: 'The weblink URL.',
+      icon: 'content-icon:link',
     },
     {
       name: 'Title',
       type: 'text',
       description: "The webpage's title.",
+      icon: 'content-icon:type',
     },
     {
       name: 'Description',
       type: 'text',
       description: "The webpage's description.",
+      icon: 'content-icon:info',
     },
     {
       name: 'Image',
       type: 'image',
       stroage: 'asset',
       description: "The webpage's main or cover image.",
+      icon: 'content-icon:image',
     },
     {
       name: 'Icon',
       type: 'image',
       stroage: 'asset',
       description: 'The website icon.',
+      icon: 'content-icon:smile',
     },
   ],
 };
