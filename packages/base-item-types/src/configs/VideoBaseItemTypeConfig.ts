@@ -1,6 +1,6 @@
 import { BaseItemTypeConfig } from '../types';
 
-export const VideoItemTypeConfig: BaseItemTypeConfig = {
+export const VideoBaseItemTypeConfig: BaseItemTypeConfig = {
   type: 'video',
   dataType: 'video',
   name: 'Video',

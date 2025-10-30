@@ -1,6 +1,6 @@
 import { BaseItemTypeConfig } from '../types';
 
-export const BasicItemTypeConfig: BaseItemTypeConfig = {
+export const BasicBaseItemTypeConfig: BaseItemTypeConfig = {
   type: 'basic',
   name: 'Basic',
   description: 'A simple item type for general use.',

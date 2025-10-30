@@ -1,6 +1,6 @@
 import { BaseItemTypeConfig } from '../types';
 
-export const PdfItemTypeConfig: BaseItemTypeConfig = {
+export const PdfBaseItemTypeConfig: BaseItemTypeConfig = {
   type: 'pdf',
   name: 'PDF',
   description: 'A base item type for PDF file based content.',

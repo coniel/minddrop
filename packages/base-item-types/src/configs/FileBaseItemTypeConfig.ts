@@ -1,6 +1,6 @@
 import { BaseItemTypeConfig } from '../types';
 
-export const FileItemTypeConfig: BaseItemTypeConfig = {
+export const FileBaseItemTypeConfig: BaseItemTypeConfig = {
   type: 'file',
   dataType: 'file',
   name: 'File',

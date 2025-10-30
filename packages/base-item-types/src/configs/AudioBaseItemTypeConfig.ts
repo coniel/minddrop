@@ -1,6 +1,6 @@
 import { BaseItemTypeConfig } from '../types';
 
-export const AudioItemTypeConfig: BaseItemTypeConfig = {
+export const AudioBaseItemTypeConfig: BaseItemTypeConfig = {
   type: 'audio',
   dataType: 'audio',
   name: 'Audio',
