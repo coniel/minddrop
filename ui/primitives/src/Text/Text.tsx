@@ -2,12 +2,19 @@ import React, { FC } from 'react';
 import { TextColor, TextSize, TextWeight } from '../types';
 import { mapPropsToClasses } from '../utils';
 import './Text.css';
+import { i18n } from '@minddrop/i18n';
 
 export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
    * The content of the Text.
    */
   children?: React.ReactNode;
+
+  /**
+   * The i18n key for the text. If provided, this takes precedence
+   * over children.
+   */
+  text?: string;
 
   /**
    * The color of the text.
@@ -32,11 +39,12 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const Text: FC<TextProps> = ({
+  as,
   children,
   className,
-  as,
   color = 'regular',
   size = 'regular',
+  text,
   weight = 'regular',
   ...other
 }) => {
@@ -47,7 +55,7 @@ export const Text: FC<TextProps> = ({
       className={mapPropsToClasses({ className, color, size, weight }, 'text')}
       {...other}
     >
-      {children}
+      {text ? i18n.t(text) : children}
     </Component>
   );
 };
