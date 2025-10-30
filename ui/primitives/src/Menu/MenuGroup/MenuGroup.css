@@ -1,0 +1,33 @@
+.menu-group {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1px;
+
+  &.margin-top-small {
+    margin-top: 0.5rem;
+  }
+
+  &.margin-top-medium {
+    margin-top: 1rem;
+  }
+
+  &.margin-top-large {
+    margin-top: 2rem;
+  }
+
+  &.show-actions-on-hover {
+    .actions {
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+    }
+
+    &:hover .actions {
+      opacity: 1;
+    }
+  }
+
+  &.show-label-actions-on-hover:hover .menu-label .actions {
+    opacity: 1;
+    transition: opacity 0.15s ease-in-out;
+  }
+}
