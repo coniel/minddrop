@@ -74,6 +74,10 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
   const { ContentIcons } = useIcons();
   const IconComponent = ContentIcons[name];
 
+  if (!IconComponent) {
+    return null;
+  }
+
   return (
     <IconComponent
       name={name}
