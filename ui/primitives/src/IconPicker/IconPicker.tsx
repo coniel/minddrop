@@ -192,12 +192,12 @@ export const IconPicker: React.FC<IconPickerProps> = ({
             <div className="icon-picker">
               <div className="header">
                 <Button
-                  label="Icons"
+                  label="iconPicker.label"
                   onClick={() => setTab(UserIconType.ContentIcon)}
                   variant={tab !== UserIconType.Emoji ? 'contained' : 'text'}
                 />
                 <Button
-                  label="Emoji"
+                  label="emojiPicker.label"
                   onClick={() => setTab(UserIconType.Emoji)}
                   variant={tab === UserIconType.Emoji ? 'contained' : 'text'}
                 />
