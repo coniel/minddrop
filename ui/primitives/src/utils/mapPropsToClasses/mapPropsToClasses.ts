@@ -19,7 +19,7 @@ export function mapPropsToClasses(
   Object.entries(rest).forEach(([key, value]) => {
     if (value || value === 0) {
       if (typeof value === 'string' || typeof value === 'number') {
-        className = `${className} ${key}-${value}`;
+        className = `${className} ${toKebabCase(key)}-${value}`;
       } else {
         className = `${className} ${toKebabCase(key)}`;
       }
