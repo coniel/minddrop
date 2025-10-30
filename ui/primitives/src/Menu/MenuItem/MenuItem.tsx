@@ -82,6 +82,11 @@ export interface MenuItemProps {
    * Class name applied to the root element.
    */
   className?: string;
+
+  /**
+   * Click event handler.
+   */
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
