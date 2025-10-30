@@ -12,6 +12,9 @@
     "unknown": "An unknown error occurred.",
     "dirPathConflict": "A directory with the same name already exists at this location."
   },
+  "formErrors": {
+    "required": "Required"
+  },
   "color": {
     "default": "Default",
     "blue": "Blue",
@@ -35,6 +38,7 @@
     }
   },
   "emojiPicker": {
+    "label": "Emoji",
     "random": "Random",
     "filter": "Search emoji...",
     "skinTone": {
@@ -47,13 +51,10 @@
     }
   },
   "iconPicker": {
+    "label": "Icons",
     "filter": "Search icons...",
     "random": "Random",
     "change": "Change icon"
-  },
-  "contentPicker": {
-    "filter": "Filter...",
-    "noResults": "No results"
   },
   "labels": {
     "untitled": "Untitled",
@@ -110,250 +111,6 @@
       "description": "Adds the date and time at which an entry was last modified to its properties."
     }
   },
-  "collections": {
-    "label": "Collections",
-    "name": {
-      "label": "Collection name",
-      "placeholder": "e.g. Books",
-      "helperText": "The name of the collection."
-    },
-    "itemName": {
-      "label": "Item name",
-      "placeholder": "e.g. Book",
-      "helperText": "The name of individual items in the collection."
-    },
-    "actions": {
-      "create": "Create collection",
-      "changeIcon": "Change icon",
-      "revealInFileExplorer": {
-        "macos": "Reveal in Finder",
-        "windows": "Show in File Explorer",
-        "linux": "Show in File Explorer"
-      },
-      "move": {
-        "action": "Move folder",
-        "tooltip": {
-          "title": "Move collection folder",
-          "description": "Move the collection folder to a different location on your computer."
-        }
-      },
-      "remove": {
-        "action": "Remove",
-        "tooltip": {
-          "title": "Remove from collections",
-          "description": "Remove from your collections but preserve the folder on your computer."
-        }
-      },
-      "delete": {
-        "action": "Delete",
-        "tooltip": {
-          "title": "Delete collection folder",
-          "description": "Delete the collection folder and all of its contents."
-        }
-      },
-      "rename": {
-        "action": "Rename",
-        "form": {
-          "name": {
-            "placeholder": "Collection name",
-            "error": {
-              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
-            }
-          }
-        }
-      }
-    },
-    "location": {
-      "label": "Location",
-      "helperText": "Where would you like to put your new collection?",
-      "selectedHelperText": "Your new collection will be created in:",
-      "browse": "Browse",
-      "error": {
-        "missing": "Please select a location for your collection.",
-        "conflict": "A folder of the same name already exists at that location."
-      }
-    },
-    "type": {
-      "notes": {
-        "label": "Notes",
-        "description": "Write and organize your thoughts, ideas, and documents. Notes are stored as simple Markdown files."
-      },
-      "files": {
-        "label": "Files",
-        "description": "Store and organize any type of file with custom properties for additional context. Use this for documents, research papers, mood boards, or to simply organise your files."
-      },
-      "items": {
-        "label": "Items",
-        "description": "Flexible, property-based items. Ideal for tracking items like books, tasks, contacts, or any structured data you define."
-      },
-      "weblinks": {
-        "label": "Weblinks",
-        "description": "Save and organize links with automatically fetched metadata. Great for saving articles, videos, or any other web content."
-      },
-      "pages": {
-        "label": "Pages",
-        "description": "Create a collection of related pages. Pages can follow a strict template or simply share a common set of properties."
-      },
-      "spaces": {
-        "label": "Spaces",
-        "description": "Create a collection of spaces with a common set of properties. Great for quickly generating template based spaces for things like projects or complex topics."
-      }
-    }
-  },
-  "workspaces": {
-    "label": "Workspaces",
-    "definition": "A workspace is simply a folder inside which your documents are stored as plain text Markdown files.",
-    "actions": {
-      "add": "Add a workspace",
-      "changeIcon": "Change icon",
-      "revealInFileExplorer": {
-        "macos": "Reveal in Finder",
-        "windows": "Show in File Explorer",
-        "linux": "Show in File Explorer"
-      },
-      "move": {
-        "action": "Move folder",
-        "tooltip": {
-          "title": "Move workspace folder",
-          "description": "Move the workspace folder to a different location on your computer."
-        }
-      },
-      "remove": {
-        "action": "Remove",
-        "tooltip": {
-          "title": "Remove from workspaces",
-          "description": "Remove from your workspaces but preserve the folder on your computer."
-        }
-      },
-      "delete": {
-        "action": "Delete",
-        "tooltip": {
-          "title": "Delete workspace folder",
-          "description": "Delete the workspace folder and all of its contents."
-        }
-      },
-      "quickstart": {
-        "label": "Quickstart",
-        "description": "Create a new workspace in your Documents folder.",
-        "action": "Start"
-      },
-      "create": {
-        "label": "Create workspace",
-        "description": "Create a new workspace anywhere on your computer.",
-        "action": "Create",
-        "form": {
-          "submit": "Create",
-          "name": {
-            "label": "Workspace name",
-            "placeholder": "My Workspace",
-            "helperText": "This will be the name of the parent folder which contains the workspace contents.",
-            "error": {
-              "missing": "Please enter a name for your workspace."
-            }
-          },
-          "location": {
-            "label": "Location",
-            "helperText": "Where would you like to put your new workspace?",
-            "selectedHelperText": "Your new workspace will be created in:",
-            "browse": "Browse",
-            "error": {
-              "missing": "Please select a location for your workspace.",
-              "conflict": "A folder of the same name already exists at that location."
-            }
-          }
-        }
-      },
-      "open": {
-        "label": "Open workspace",
-        "description": "Open an existing folder of Markdown files to use as a workspace.",
-        "action": "Open"
-      },
-      "rename": {
-        "action": "Rename",
-        "form": {
-          "name": {
-            "placeholder": "Workspace name",
-            "error": {
-              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
-            }
-          }
-        }
-      }
-    }
-  },
-  "documents": {
-    "untitled": "Untitled",
-    "actions": {
-      "options": "Document options",
-      "add": "Add a document",
-      "addSubdocument": "Add a sub-document",
-      "changeIcon": "Change icon",
-      "favourite": {
-        "add": "Add to favourites",
-        "remove": "Remove from favourites"
-      },
-      "revealInFileExplorer": {
-        "macos": "Reveal in Finder",
-        "windows": "Show in File Explorer",
-        "linux": "Show in File Explorer"
-      },
-      "move": {
-        "action": "Move to"
-      },
-      "delete": {
-        "action": "Delete",
-        "tooltip": {
-          "title": "Delete document",
-          "description": "Delete the document and its related files."
-        }
-      },
-      "rename": {
-        "action": "Rename",
-        "form": {
-          "name": {
-            "placeholder": "Document name",
-            "error": {
-              "conflict": "The name \"{{name}}\" is already taken. Please chose a different name."
-            }
-          }
-        }
-      }
-    }
-  },
-  "blocks": {
-    "actions": {
-      "color": {
-        "action": "Change color"
-      },
-      "copy": {
-        "action": "Copy to clipboard"
-      },
-      "move": {
-        "action": "Move to"
-      },
-      "delete": {
-        "action": "Delete"
-      }
-    },
-    "selection": {
-      "delete": {
-        "action": "Delete selected blocks"
-      },
-      "copy": {
-        "action": "Copy selected blocks",
-        "success": "Blocks copied to clipboard"
-      },
-      "move": {
-        "action": "Move selected blocks"
-      },
-      "color": {
-        "action": "Change color of selected blocks"
-      },
-      "clear": {
-        "action": "Clear selection"
-      }
-    }
-  },
   "itemTypes": {
     "actions": {
       "add": "Add type",
@@ -361,47 +118,41 @@
     },
     "labels": {
       "baseItemTypes": "Make your own"
+    },
+    "form": {
+      "labels": {
+        "new": "New item type",
+        "nameSingular": "Item name",
+        "namePlural": "Type name",
+        "fileType": "File type",
+        "anyFileType": "Any",
+        "customFileType": "Custom"
+      },
+      "actions": {
+        "create": "Create item type"
+      },
+      "errors": {
+        "typeNameConflict": "An item type with this name already exists",
+        "itemNameConflict": "An item type with this name already exists",
+        "pathConflict": "A folder with this name already exists in the workspace"
+      }
+    },
+    "baseTypes": {
+      "file": {
+        "name": "File",
+        "description": "A file of a specific type.",
+        "generic": {
+          "name": "Any"
+        },
+        "custom": {
+          "name": "Custom"
+        }
+      }
     }
   },
   "items": {
     "labels": {
       "items": "Items"
-    },
-    "data": {
-      "name": "Data",
-      "description": "Store formatted data related to things such as books, contacts, or tasks."
-    },
-    "text": {
-      "name": "Text",
-      "description": "Store text based items such as code snippets or quotes."
-    },
-    "markdown": {
-      "name": "Markdown",
-      "description": "Store rich text content using Markdown formatting."
-    },
-    "url": {
-      "name": "Weblink",
-      "description": "Store links to websites with automatically fetched metadata."
-    },
-    "file": {
-      "name": "File",
-      "description": "Store files of any type with custom properties for additional context."
-    },
-    "image": {
-      "name": "Image",
-      "description": "Store images with custom properties for additional context."
-    },
-    "audio": {
-      "name": "Audio",
-      "description": "Store audio files with custom properties for additional context."
-    },
-    "video": {
-      "name": "Video",
-      "description": "Store video files with custom properties for additional context."
-    },
-    "pdf": {
-      "name": "PDF",
-      "description": "Store PDF documents with custom properties for additional context."
     }
   }
 }
