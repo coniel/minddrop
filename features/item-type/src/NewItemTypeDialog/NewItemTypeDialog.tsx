@@ -14,63 +14,69 @@ import {
 import './NewItemTypeDialog.css';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  AudioItemTypeConfig,
+  AudioBaseItemTypeConfig,
   BaseItemTypeConfig,
-  BasicItemTypeConfig,
-  FileItemTypeConfig,
+  BasicBaseItemTypeConfig,
+  FileBaseItemTypeConfig,
   ImageBaseItemTypeConfig,
   PageBaseItemTypeConfig,
-  PdfItemTypeConfig,
+  PdfBaseItemTypeConfig,
   SpaceBaseItemTypeConfig,
   UrlBaseItemTypeConfig,
-  VideoItemTypeConfig,
+  VideoBaseItemTypeConfig,
 } from '@minddrop/base-item-types';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { i18n } from '@minddrop/i18n';
 import { ItemTypes } from '@minddrop/item-types';
 import { Paths, useForm } from '@minddrop/utils';
-
-interface BaseTypeOption {
-  name: string;
-  type: string;
-  icon: string;
-}
+import { EventListenerId, OpenNewItemTypeDialogEvent } from '../events';
 
 const baseItemTypes: BaseItemTypeConfig[] = [
-  BasicItemTypeConfig,
+  BasicBaseItemTypeConfig,
   UrlBaseItemTypeConfig,
-  FileItemTypeConfig,
+  FileBaseItemTypeConfig,
   PageBaseItemTypeConfig,
   SpaceBaseItemTypeConfig,
 ];
 
 const fileItemTypes: BaseItemTypeConfig[] = [
   {
-    ...FileItemTypeConfig,
-    name: 'Any',
+    ...FileBaseItemTypeConfig,
+    name: i18n.t('itemTypes.baseTypes.file.generic.name'),
     icon: 'content-icon:file',
   },
-  PdfItemTypeConfig,
+  PdfBaseItemTypeConfig,
   ImageBaseItemTypeConfig,
-  VideoItemTypeConfig,
-  AudioItemTypeConfig,
+  VideoBaseItemTypeConfig,
+  AudioBaseItemTypeConfig,
   {
-    ...FileItemTypeConfig,
-    name: 'Custom',
+    ...FileBaseItemTypeConfig,
+    name: i18n.t('itemTypes.baseTypes.file.custom.name'),
     icon: 'content-icon:settings-2',
   },
 ];
 
 const defaultIcon = 'content-icon:box:default';
 
-export const NewItemTypeDialog: React.FC = () => {
-  const [dialogOpen, setDialogOpen] = useState(false);
+export interface NewItemTypeDialogProps {
+  /**
+   * Whether the dialog is open by default.
+   * @default false
+   */
+  defaultOpen?: boolean;
+}
+
+export const NewItemTypeDialog: React.FC<NewItemTypeDialogProps> = ({
+  defaultOpen = false,
+}) => {
+  const [dialogOpen, setDialogOpen] = useState(defaultOpen);
   const [icon, setIcon] = useState(defaultIcon);
   const [customIcon, setCustomIcon] = useState(false);
   const [selectedType, setSelectedType] = useState<BaseItemTypeConfig>(
     baseItemTypes[0],
   );
-  const [selectedFileType, setSelectedFileType] = useState<BaseTypeOption>(
+  const [selectedFileType, setSelectedFileType] = useState<BaseItemTypeConfig>(
     fileItemTypes[0],
   );
   const { fieldProps, validateAllAsync, values, reset } = useForm([
@@ -108,41 +114,34 @@ export const NewItemTypeDialog: React.FC = () => {
     }
   }, [dialogOpen, closeDialog]);
 
+  // Listen for open dialog events, and open the dialog when one is received
   useEffect(() => {
-    function openDialog() {
-      setDialogOpen(true);
-    }
-
     Events.addListener(
-      'item-types:new-item-type-dialog:open',
-      'new-item-type-dialog',
-      openDialog,
-    );
-
-    Events.addListener(
-      'item-types:new-item-type-dialog:close',
-      'new-item-type-dialog',
-      closeDialog,
+      OpenNewItemTypeDialogEvent,
+      EventListenerId,
+      toggleDialog,
     );
 
     return () => {
-      Events.removeListener(
-        'item-types:new-item-type-dialog:open',
-        'new-item-type-dialog',
-      );
-      Events.removeListener(
-        'item-types:new-item-type-dialog:close',
-        'new-item-type-dialog',
-      );
+      Events.removeListener(OpenNewItemTypeDialogEvent, EventListenerId);
     };
-  }, [closeDialog]);
+  }, [toggleDialog]);
 
   async function handleCreate() {
     if (await validateAllAsync()) {
+      let baseType = selectedType.type;
+      let dataType = selectedType.dataType;
+
+      // If the selected base type is File, use the selected file type
+      if (selectedType.type === FileBaseItemTypeConfig.type) {
+        baseType = selectedFileType.type;
+        dataType = selectedFileType.dataType;
+      }
+
       // Create the new item type
       await ItemTypes.create({
-        baseType: selectedType.type,
-        dataType: selectedType.dataType,
+        baseType,
+        dataType,
         nameSingular: values.nameSingular,
         namePlural: values.namePlural,
         icon,
@@ -152,6 +151,12 @@ export const NewItemTypeDialog: React.FC = () => {
       // Close the dialog
       closeDialog();
       reset();
+
+      // Go to the new item type view
+      Events.dispatch('item-type:view:open', {
+        type: values.nameSingular,
+        tab: 'properties',
+      });
     }
   }
 
@@ -177,7 +182,7 @@ export const NewItemTypeDialog: React.FC = () => {
   );
 
   const handleSelectFileType = useCallback(
-    (type: BaseTypeOption) => {
+    (type: BaseItemTypeConfig) => {
       setSelectedFileType(type);
 
       if (!customIcon) {
@@ -191,7 +196,7 @@ export const NewItemTypeDialog: React.FC = () => {
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-item-type-dialog">
         <div className="header">
-          <Text color="muted">New item type</Text>
+          <Text color="muted" text="itemTypes.form.labels.new" />
           <DialogClose
             render={
               <IconButton label="actions.cancel" icon="x" color="light" />
@@ -212,14 +217,14 @@ export const NewItemTypeDialog: React.FC = () => {
           <InvisibleTextField
             size="title"
             label="Type name"
-            placeholder="Type name (e.g. Books)"
+            placeholder="itemTypes.form.labels.namePlural"
             weight="medium"
             {...fieldProps.namePlural}
           />
           <InvisibleTextField
             size="large"
             label="Item name"
-            placeholder="Item name (e.g. Book)"
+            placeholder="itemTypes.form.labels.nameSingular"
             {...fieldProps.nameSingular}
           />
           <div className="base-type-buttons">
@@ -242,13 +247,13 @@ export const NewItemTypeDialog: React.FC = () => {
               </Button>
             ))}
           </div>
-          {selectedType.type === FileItemTypeConfig.type && (
+          {selectedType.type === FileBaseItemTypeConfig.type && (
             <div>
-              <MenuLabel>File type</MenuLabel>
+              <MenuLabel label="itemTypes.form.labels.fileType" />
               <div className="base-type-buttons">
                 {fileItemTypes.map((config) => (
                   <Button
-                    key={config.type}
+                    key={config.name}
                     active={selectedFileType.name === config.name}
                     variant="contained"
                     size="small"
@@ -269,12 +274,16 @@ export const NewItemTypeDialog: React.FC = () => {
           )}
         </div>
         <div className="footer">
-          <Button variant="contained" onClick={closeDialog}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleCreate}>
-            Create item type
-          </Button>
+          <Button
+            label="actions.cancel"
+            variant="contained"
+            onClick={closeDialog}
+          />
+          <Button
+            label="itemTypes.form.actions.create"
+            variant="primary"
+            onClick={handleCreate}
+          />
         </div>
       </Dialog>
     </DialogRoot>
@@ -282,15 +291,25 @@ export const NewItemTypeDialog: React.FC = () => {
 };
 
 function validateNameSingular(value: string) {
+  // Ensure no item type with the same name exists
   if (ItemTypes.get(value, false)) {
-    return 'An item type with this name already exists.';
+    return i18n.t('itemTypes.form.errors.itemNameConflict');
   }
 }
 
 async function validateNamePlural(value: string) {
+  const itemTypes = ItemTypes.getAll();
+  const nameConfict = itemTypes.find((type) => type.namePlural === value);
+
+  // Ensure no item type with the same plural name exists
+  if (nameConfict) {
+    return i18n.t('itemTypes.form.errors.typeNameConflict');
+  }
+
   const newDirPath = Fs.concatPath(Paths.workspace, value);
 
+  // Ensure no directory with the same name exists in the workspace
   if (await Fs.exists(newDirPath)) {
-    return 'A folder with this name already exists in the workspace.';
+    return i18n.t('itemTypes.form.errors.pathConflict');
   }
 }
