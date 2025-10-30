@@ -1,12 +1,16 @@
-import { BaseItemTypesFixtures } from '@minddrop/base-item-types';
+import {
+  BasicBaseItemTypeConfig,
+  PdfBaseItemTypeConfig,
+  UrlBaseItemTypeConfig,
+} from '@minddrop/base-item-types';
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { ItemTypeConfig } from '../types';
 import { itemTypeConfigFilePath } from '../utils';
 
 export const markdownItemTypeConfig: ItemTypeConfig = {
-  baseType: BaseItemTypesFixtures.markdownBaseItemType.type,
-  dataType: 'markdown',
+  baseType: BasicBaseItemTypeConfig.type,
+  dataType: BasicBaseItemTypeConfig.dataType,
   nameSingular: 'Note',
   namePlural: 'Notes',
   icon: 'content-icon:book:blue',
@@ -22,8 +26,8 @@ export const markdownItemTypeConfig: ItemTypeConfig = {
 };
 
 export const pdfItemTypeConfig: ItemTypeConfig = {
-  baseType: BaseItemTypesFixtures.fileBaseItemType.type,
-  dataType: 'pdf',
+  baseType: PdfBaseItemTypeConfig.type,
+  dataType: PdfBaseItemTypeConfig.dataType,
   nameSingular: 'PDF Document',
   namePlural: 'PDF Documents',
   icon: 'content-icon:file:green',
@@ -33,19 +37,14 @@ export const pdfItemTypeConfig: ItemTypeConfig = {
 };
 
 export const urlItemTypeConfig: ItemTypeConfig = {
-  baseType: BaseItemTypesFixtures.urlBaseItemType.type,
-  dataType: 'url',
+  baseType: UrlBaseItemTypeConfig.type,
+  dataType: UrlBaseItemTypeConfig.dataType,
   nameSingular: 'Web Link',
   namePlural: 'Web Links',
   icon: 'content-icon:link:orange',
   color: 'orange',
   description: 'A web link item type',
-  properties: [
-    {
-      name: 'url',
-      type: 'text',
-    },
-  ],
+  properties: UrlBaseItemTypeConfig.properties,
 };
 
 export const itemTypeConfigs: ItemTypeConfig[] = [
