@@ -1,4 +1,5 @@
 import React, { InputHTMLAttributes } from 'react';
+import { i18n } from '@minddrop/i18n';
 import { TextColor, TextSize, TextWeight } from '../types';
 import { mapPropsToClasses } from '../utils';
 import './InvisibleTextField.css';
@@ -55,6 +56,7 @@ export const InvisibleTextField = React.forwardRef<
       weight,
       error,
       description,
+      placeholder,
       ...other
     },
     ref,
@@ -65,6 +67,7 @@ export const InvisibleTextField = React.forwardRef<
         type="text"
         aria-label={label}
         className={mapPropsToClasses({ size, color, weight })}
+        placeholder={i18n.t(placeholder)}
         {...other}
       />
       {description && <div className="description">{description}</div>}
