@@ -28,10 +28,18 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
    * Actions to be displayed alongside the label.
    */
   actions?: React.ReactNode;
+
+  /**
+   * When true, the actions are always visible. By default, actions
+   * may be hidden until the label is hovered.
+   * @default false
+   */
+  actionsAlwaysVisible?: boolean;
 }
 
 export const MenuLabel: React.FC<MenuLabelProps> = ({
   actions,
+  actionsAlwaysVisible,
   children,
   className,
   label,
@@ -40,7 +48,10 @@ export const MenuLabel: React.FC<MenuLabelProps> = ({
 }) => {
   return (
     <div
-      className={mapPropsToClasses({ className }, 'menu-label')}
+      className={mapPropsToClasses(
+        { className, actionsAlwaysVisible },
+        'menu-label',
+      )}
       role={button ? 'button' : undefined}
       {...other}
     >

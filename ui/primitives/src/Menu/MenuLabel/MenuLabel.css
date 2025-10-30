@@ -33,6 +33,7 @@
     }
   }
 
+  &.actions-always-visible .actions,
   &:hover .actions {
     opacity: 1;
   }
