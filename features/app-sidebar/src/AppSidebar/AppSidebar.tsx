@@ -15,7 +15,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
 
   function handleAddItemType(event: React.MouseEvent) {
     event.stopPropagation();
-    Events.dispatch('item-types:new-item-type-dialog:open');
+    Events.dispatch('item-type:new-item-type-dialog:open');
   }
 
   function handleOpenItemTypesView(type: string) {
