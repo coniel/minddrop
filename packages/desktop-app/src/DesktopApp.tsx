@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Events } from '@minddrop/events';
+import {
+  Events,
+  OpenMainContentView,
+  OpenMainContentViewData,
+} from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { ItemTypeFeature } from '@minddrop/feature-item-type';
@@ -10,11 +14,6 @@ import { DragImageProvider } from '@minddrop/utils';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
-
-type ViewEventData<P = any> = {
-  component: React.ComponentType<P>;
-  props?: P;
-};
 
 export const DesktopApp: React.FC = () => {
   const defaultEmojiSkinTone = useDefaultEmojiSkinTone();
@@ -52,11 +51,11 @@ export const DesktopApp: React.FC = () => {
 };
 
 const MainContent: React.FC = () => {
-  const [view, setView] = useState<ViewEventData | null>(null);
+  const [view, setView] = useState<OpenMainContentViewData | null>(null);
 
   useEffect(() => {
-    Events.addListener<ViewEventData>(
-      'app:main-content:open',
+    Events.addListener<OpenMainContentViewData>(
+      OpenMainContentView,
       'desktop-app',
       ({ data }) => {
         setView(data);
@@ -64,7 +63,7 @@ const MainContent: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener('app:main-content:open', 'desktop-app');
+      Events.removeListener(OpenMainContentView, 'desktop-app');
     };
   }, []);
 
