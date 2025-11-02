@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  CloseRightPanel,
   Events,
   OpenMainContentView,
   OpenMainContentViewData,
+  OpenRightPanel,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { ItemTypeFeature } from '@minddrop/feature-item-type';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
-import { TooltipProvider } from '@minddrop/ui-primitives';
+import { Panel, TooltipProvider } from '@minddrop/ui-primitives';
 import { DragImageProvider } from '@minddrop/utils';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
@@ -35,9 +37,11 @@ export const DesktopApp: React.FC = () => {
           <MindDropApiProvider>
             <DragImageProvider>
               <div className="app">
-                <AppSidebar />
-                <div className="app-content">
+                <Panel className="toolbar-panel"></Panel>
+                <div className="content-panels">
+                  <AppSidebar />
                   <MainContent />
+                  <RightPanel />
                 </div>
               </div>
               <ItemTypeFeature />
@@ -73,6 +77,45 @@ const MainContent: React.FC = () => {
 
   return (
     <div className="main-content">
+      <ViewComponent {...props} />
+    </div>
+  );
+};
+
+const RightPanel: React.FC = () => {
+  const [view, setView] = useState<OpenMainContentViewData | null>(null);
+
+  useEffect(() => {
+    Events.addListener<OpenMainContentViewData>(
+      OpenRightPanel,
+      'desktop-app',
+      ({ data }) => {
+        setView(data);
+      },
+    );
+
+    Events.addListener<OpenMainContentViewData>(
+      CloseRightPanel,
+      'desktop-app',
+      () => {
+        setView(null);
+      },
+    );
+
+    return () => {
+      Events.removeListener(OpenRightPanel, 'desktop-app');
+      Events.removeListener(CloseRightPanel, 'desktop-app');
+    };
+  }, []);
+
+  console.log(view);
+
+  if (!view) return null;
+
+  const { component: ViewComponent, props } = view;
+
+  return (
+    <div className="right-panel">
       <ViewComponent {...props} />
     </div>
   );

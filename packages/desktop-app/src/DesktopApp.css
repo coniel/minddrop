@@ -1,22 +1,30 @@
 .app {
   height: 100vh;
   display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  background-color: var(--app-background-color);
 }
 
-.app .app-content {
-  flex: 1;
-  position: relative;
-  padding: 8px;
-  overflow: visible;
+.toolbar-panel {
+  height: 2.5rem;
+}
 
-  .main-content {
-    overflow: scroll;
-    height: 100%;
-    border-radius: var(--radiusLg);
-    background-color: var(--gray1);
-    box-shadow: var(--el2ShadowBordered);
-    background-color: var(--appBackground);
-  }
+.content-panels {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.right-panel {
+  width: 400px;
 }
 
 .loading-view {
