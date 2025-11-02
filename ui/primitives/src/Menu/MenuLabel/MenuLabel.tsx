@@ -55,7 +55,7 @@ export const MenuLabel: React.FC<MenuLabelProps> = ({
       role={button ? 'button' : undefined}
       {...other}
     >
-      <Text className="label" color="light" weight="medium" size="tiny">
+      <Text className="label" color="light" weight="semibold" size="tiny">
         {label ? i18n.t(label) : children}
       </Text>
       {actions && <div className="actions">{actions}</div>}
