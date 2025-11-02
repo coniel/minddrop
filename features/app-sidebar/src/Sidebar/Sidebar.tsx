@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
-import { mapPropsToClasses } from '@minddrop/ui-primitives';
+import { Panel, mapPropsToClasses } from '@minddrop/ui-primitives';
 import './Sidebar.css';
 
 const minWidth = 240;
@@ -69,7 +69,7 @@ export const Sidebar: FC<SidebarProps> = ({
   );
 
   return (
-    <div
+    <Panel
       ref={sidebar}
       className={mapPropsToClasses({ className, isDragging }, 'app-sidebar')}
       {...other}
@@ -84,6 +84,6 @@ export const Sidebar: FC<SidebarProps> = ({
       >
         <div className="resize-indicator" />
       </div>
-    </div>
+    </Panel>
   );
 };
