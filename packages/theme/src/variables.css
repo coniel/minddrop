@@ -23,7 +23,7 @@
 
   /* Font colors */
   --text-color-regular: var(--neutral12);
-  --text-color-muted: var(--neutral9);
+  --text-color-muted: var(--neutral11);
   --text-color-disabled: var(--neutral9);
   --text-color-placeholder: var(--neutral9);
   --text-color-light: var(--neutral11);
