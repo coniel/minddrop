@@ -58,7 +58,8 @@
   },
   "labels": {
     "untitled": "Untitled",
-    "optional": "Optional"
+    "optional": "Optional",
+    "properties": "Properties"
   },
   "properties": {
     "actions": {
@@ -70,44 +71,56 @@
       "add": "Add property"
     },
     "text": {
-      "label": "Text",
+      "name": "Text",
       "description": "A simple text field."
     },
     "number": {
-      "label": "Number",
+      "name": "Number",
       "description": "A number with various formatting options."
     },
     "date": {
-      "label": "Date",
+      "name": "Date",
       "description": "A date and time field with various formatting options."
     },
-    "checkbox": {
-      "label": "Checkbox",
-      "description": "A simple checkbox.",
+    "toggle": {
+      "name": "Toggle",
+      "description": "An on/off value which can be represented as a checkbox, switch, or icon.",
       "defaultValue": {
         "label": "Default value",
         "checked": "Checked",
         "unchecked": "Unchecked"
       }
     },
+    "url": {
+      "name": "URL",
+      "description": "A field for web addresses."
+    },
+    "image": {
+      "name": "Image",
+      "description": "An image file or reference to an image item type."
+    },
     "select": {
-      "label": "Select",
+      "name": "Select",
       "description": "A dropdown list of options."
     },
     "multiselect": {
-      "label": "Multiselect",
+      "name": "Multiselect",
       "description": "A dropdown list of options with multiple selection."
     },
+    "icon": {
+      "name": "Icon",
+      "description": "An icon picker for selecting an icon."
+    },
     "markdown": {
-      "label": "Markdown content",
-      "description": "Enables Markdown content on entries."
+      "name": "Formatted text",
+      "description": "Richly formatted text edited using a text editor."
     },
     "created": {
-      "label": "Created",
+      "name": "Created date",
       "description": "Adds the date and time at which an entry was created to its properties."
     },
-    "modified": {
-      "label": "Last modified",
+    "lastModified": {
+      "name": "Last modified date",
       "description": "Adds the date and time at which an entry was last modified to its properties."
     }
   },
