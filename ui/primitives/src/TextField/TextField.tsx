@@ -49,6 +49,13 @@ export interface TextFieldProps extends Omit<Field.Root.Props, 'onChange'> {
    * The input's autoComplete attribute.
    */
   autoComplete?: Input.Props['autoComplete'];
+
+  /**
+   * An icon picker component to render alongside the input.
+   * If provided, the icon picker should manage the selected icon state
+   * internally and render the selected icon.
+   */
+  iconPicker?: React.ReactNode;
 }
 
 export const TextField: React.FC<TextFieldProps> = ({
@@ -61,6 +68,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   onValueChange,
   placeholder,
   onChange,
+  iconPicker,
   ...other
 }) => {
   return (
@@ -69,13 +77,16 @@ export const TextField: React.FC<TextFieldProps> = ({
       {...other}
     >
       {label && <Field.Label className="label">{label}</Field.Label>}
-      <Input
-        className="input"
-        defaultValue={defaultValue}
-        onChange={onChange}
-        onValueChange={onValueChange}
-        placeholder={placeholder}
-      />
+      <div className="input-wrapper">
+        {iconPicker}
+        <Input
+          className="input"
+          defaultValue={defaultValue}
+          onChange={onChange}
+          onValueChange={onValueChange}
+          placeholder={placeholder}
+        />
+      </div>
       {description && (
         <Field.Description className="description">
           {description}
