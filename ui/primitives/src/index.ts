@@ -23,3 +23,4 @@ export * from './types';
 export * from './utils';
 export * from './Panel';
 
+export { useToggle } from '@minddrop/utils';
