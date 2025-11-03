@@ -8,6 +8,12 @@ export interface MenuGroupProps extends React.HTMLProps<HTMLDivElement> {
   marginTop?: 'small' | 'medium' | 'large';
 
   /**
+   * When true, adds horizontal padding to the group.
+   * @default false
+   */
+  padded?: boolean;
+
+  /**
    * The group's action elements, such as buttons.
    * Rendered at the bottom of the group.
    */
@@ -33,6 +39,7 @@ export const MenuGroup: React.FC<MenuGroupProps> = ({
   children,
   className,
   marginTop,
+  padded,
   showActionsOnHover,
   showLabelActionsOnHover,
   ...other
@@ -40,7 +47,13 @@ export const MenuGroup: React.FC<MenuGroupProps> = ({
   return (
     <div
       className={mapPropsToClasses(
-        { className, marginTop, showActionsOnHover, showLabelActionsOnHover },
+        {
+          className,
+          marginTop,
+          padded,
+          showActionsOnHover,
+          showLabelActionsOnHover,
+        },
         'menu-group',
       )}
       {...other}

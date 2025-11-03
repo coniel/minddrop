@@ -3,6 +3,10 @@
   flex-direction: column;
   row-gap: 1px;
 
+  &.padded {
+    padding: 0 0.5rem;
+  }
+
   &.margin-top-small {
     margin-top: 0.5rem;
   }
