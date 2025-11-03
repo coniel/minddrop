@@ -56,6 +56,10 @@ export const Tooltip: FC<TooltipProps> = ({
   description,
   keyboardShortcut,
   className,
+  side = 'bottom',
+  sideOffset = 5,
+  align = 'center',
+  alignOffset,
   ...other
 }) => {
   const { t } = useTranslation();
@@ -72,12 +76,14 @@ export const Tooltip: FC<TooltipProps> = ({
     >
       <TooltipPrimitive.Trigger render={children} />
       <TooltipPrimitive.Portal>
-        <TooltipPrimitive.Positioner>
+        <TooltipPrimitive.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+        >
           <TooltipPrimitive.Popup
             className={['tooltip', className].filter(Boolean).join(' ')}
-            side="bottom"
-            align="center"
-            sideOffset={5}
             {...other}
           >
             {title && (
