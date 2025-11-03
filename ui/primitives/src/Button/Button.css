@@ -87,6 +87,21 @@
         color: var(--neutral12);
       }
     }
+
+    &.danger-always,
+    &.danger-on-hover:hover {
+      color: var(--danger11);
+
+      &:hover {
+        background-color: var(--danger2);
+        color: var(--danger11);
+        transition: none;
+
+        .icon {
+          color: var(--danger11);
+        }
+      }
+    }
   }
 
   &.variant-outlined {
@@ -97,6 +112,17 @@
       color: var(--neutral12);
       background-color: var(--neutral3);
       transition: none;
+    }
+
+    &.danger-always,
+    &.danger-on-hover:hover {
+      color: var(--danger11);
+      border-color: var(--danger7);
+      &:hover {
+        color: var(--danger11);
+        background-color: var(--danger2);
+        transition: none;
+      }
     }
   }
 
@@ -116,6 +142,17 @@
       color: var(--neutral12);
       background-color: var(--neutral3);
     }
+
+    &.danger-always,
+    &.danger-on-hover:hover {
+      color: var(--danger11);
+      border-color: var(--danger7);
+      &:hover {
+        color: var(--danger11);
+        background-color: var(--danger2);
+        transition: none;
+      }
+    }
   }
 
   &.variant-primary {
@@ -127,16 +164,17 @@
       color: var(--primary1);
       transition: none;
     }
-  }
 
-  &.variant-danger {
-    background-color: var(--danger9);
-    color: var(--danger1);
-
-    &:hover {
-      background-color: var(--danger10);
+    &.danger-always,
+    &.danger-on-hover:hover {
+      background-color: var(--danger9);
       color: var(--danger1);
-      transition: none;
+
+      &:hover {
+        background-color: var(--danger10);
+        color: var(--danger1);
+        transition: none;
+      }
     }
   }
 }

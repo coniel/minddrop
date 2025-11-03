@@ -53,7 +53,15 @@ export interface ButtonBaseProps {
   /**
    * The variant to use based on the action type.
    */
-  variant?: 'text' | 'outlined' | 'contained' | 'primary' | 'danger';
+  variant?: 'text' | 'outlined' | 'contained' | 'primary';
+
+  /**
+   * The danger state of the button. Used to indicate potentially
+   * destructive actions.
+   * - `on-hover`: Applies danger styles when the button is hovered.
+   * - `always`: Always applies danger styles.
+   */
+  danger?: 'on-hover' | 'always';
 }
 
 export interface ButtonProps
@@ -75,6 +83,7 @@ export const Button = React.forwardRef<
       disabled = false,
       size = 'medium',
       variant = 'neutral',
+      danger,
       label,
       href,
       startIcon,
@@ -106,6 +115,7 @@ export const Button = React.forwardRef<
         endIcon: Boolean(endIcon),
         disabled,
         active,
+        danger,
       },
       'button',
     );
