@@ -1,6 +1,12 @@
 import { ContentColor } from '@minddrop/core';
+import { PropertyType } from './Properties.types';
 
 interface PropertySchemaBase {
+  /**
+   * The property type.
+   */
+  type: PropertyType;
+
   /**
    * The property name. Also used as the key in the properties object.
    */
@@ -56,12 +62,7 @@ export interface SelectPropertySchema extends PropertySchemaBase {
   type: 'select';
   options: SelectPropertyOption[];
   defaultValue?: string;
-}
-
-export interface MultiSelectPropertySchema extends PropertySchemaBase {
-  type: 'multiselect';
-  options: SelectPropertyOption[];
-  defaultValue?: string[];
+  multiselect?: boolean;
 }
 
 export interface ImagePropertySchema extends PropertySchemaBase {
@@ -85,7 +86,6 @@ export type PropertySchema =
   | DatePropertySchema
   | TogglePropertySchema
   | SelectPropertySchema
-  | MultiSelectPropertySchema
   | ImagePropertySchema
   | IconPropertySchema;
 
