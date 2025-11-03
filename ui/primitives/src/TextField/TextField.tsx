@@ -25,6 +25,13 @@ export interface TextFieldProps extends Omit<Field.Root.Props, 'onChange'> {
   description?: string;
 
   /**
+   * The variant of the text field.
+   * Determines the styling of the input.
+   * @default 'outlined'
+   */
+  variant?: 'outlined' | 'filled';
+
+  /**
    * The change event handler.
    */
   onChange?: Input.Props['onChange'];
@@ -65,6 +72,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   description,
   error,
   label,
+  variant,
   onValueChange,
   placeholder,
   onChange,
@@ -73,7 +81,7 @@ export const TextField: React.FC<TextFieldProps> = ({
 }) => {
   return (
     <Field.Root
-      className={mapPropsToClasses({ className }, 'text-field')}
+      className={mapPropsToClasses({ className, variant }, 'text-field')}
       {...other}
     >
       {label && <Field.Label className="label">{label}</Field.Label>}
