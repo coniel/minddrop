@@ -41,13 +41,22 @@ export interface IconButtonProps
   label: string;
 
   /**
-   * The size of the icon button.
+   * The size of the icon button. The large size is intended for use
+   * alongside TextField components, matching their height.
    */
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'large';
+
+  /**
+   * The variant of the icon button.
+   */
+  variant?: 'regular' | 'filled' | 'outlined';
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, children, color, as, className, label, size, ...other }, ref) => {
+  (
+    { icon, children, color, as, className, label, size, variant, ...other },
+    ref,
+  ) => {
     const { t } = useTranslation();
     const Component = as || 'button';
 
@@ -57,7 +66,10 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         ref={ref}
         tabIndex={0}
         aria-label={t(label)}
-        className={mapPropsToClasses({ className, color, size }, 'icon-button')}
+        className={mapPropsToClasses(
+          { className, color, size, variant },
+          'icon-button',
+        )}
         {...other}
       >
         {icon ? <Icon name={icon} /> : children}

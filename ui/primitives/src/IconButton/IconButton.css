@@ -12,67 +12,102 @@
   background-color: transparent;
   padding: 4px;
   font-size: 20px;
-}
 
-.icon-button .icon {
-  stroke: currentColor;
-  width: 20px;
-  height: 20px;
-}
+  .icon {
+    stroke: currentColor;
+    width: 20px;
+    height: 20px;
+  }
 
-.icon-button:hover {
-  background-color: var(--bgNeutralHover);
-  transition-duration: 0.1s;
-}
+  &:hover {
+    background-color: var(--bgNeutralHover);
+    transition-duration: 0.1s;
+  }
 
-.icon-button:active {
-  background-color: var(--bgNeutralActive);
-}
+  &:active {
+    background-color: var(--bgNeutralActive);
+  }
 
-.icon-button:focus-visible {
-  outline: 2px solid var(--borderPrimary);
-}
+  &:focus-visible {
+    outline: 2px solid var(--borderPrimary);
+  }
 
-/* Colors */
+  /* Colors */
 
-.icon-button.color-regular .icon {
-  stroke: var(--textNeutral);
-}
+  &.color-regular .icon {
+    stroke: var(--textNeutral);
+  }
 
-.icon-button.color-light .icon {
-  stroke: var(--textNeutralLight);
-}
+  &.color-light .icon {
+    stroke: var(--textNeutralLight);
+  }
 
-.icon-button.color-contrast .icon {
-  stroke: var(--textContrast);
-}
+  &.color-contrast .icon {
+    stroke: var(--textContrast);
+  }
 
-.icon-button.color-contrast:hover .icon {
-  stroke: var(--textNeutral);
-}
+  &.color-contrast:hover .icon {
+    stroke: var(--textNeutral);
+  }
 
-.icon-button.color-contrast:active .icon {
-  stroke: var(--textNeutral);
-}
+  &.color-contrast:active .icon {
+    stroke: var(--textNeutral);
+  }
 
-/* Sizes */
+  /* Sizes */
 
-.icon-button.size-small {
-  padding: 2px;
-}
+  &.size-small {
+    padding: 2px;
+  }
 
-.icon-button.size-small .icon {
-  width: 18px;
-  height: 18px;
-}
+  &.size-small .icon {
+    width: 18px;
+    height: 18px;
+  }
 
-/* Disabled */
+  &.size-large {
+    height: 2.125rem;
+    width: 2.125rem;
+    flex-shrink: 0;
+  }
 
-.icon-button:disabled {
-  pointer-events: none;
-}
+  &.size-large .icon,
+  &.size-large .content-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 
-.icon-button:disabled .icon,
-.icon-button.color-light:disabled .icon {
-  stroke: var(--textNeutralDisabled);
+  /* Vatiants */
+
+  &.variant-outlined {
+    border: 0.5px solid var(--borderNeutralSubtle);
+
+    &:hover {
+      border-color: var(--borderNeutralHover);
+    }
+
+    &:active {
+      border-color: var(--borderNeutral);
+    }
+  }
+
+  &.variant-filled {
+    background-color: var(--neutral3);
+
+    &:hover,
+    &.active {
+      background-color: var(--neutral7);
+    }
+  }
+
+  /* Disabled */
+
+  &:disabled {
+    pointer-events: none;
+  }
+
+  &:disabled .icon,
+  &.color-light:disabled .icon {
+    stroke: var(--textNeutralDisabled);
+  }
 }
