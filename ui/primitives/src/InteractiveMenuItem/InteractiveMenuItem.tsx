@@ -30,6 +30,12 @@ export interface MenuItemComponentProps {
    * closing when selecting that item.
    */
   onSelect?: MenuPrimitives.Item.Props['onSelect'];
+
+  /**
+   * Allows you to replace the component’s HTML element with a different tag,
+   * or compose it with another component.
+   */
+  render: MenuPrimitives.Item.Props['render'];
 }
 
 export interface RadioMenuItemComponentProps extends MenuItemComponentProps {
@@ -173,16 +179,13 @@ export const InteractiveMenuItem: FC<
 
   const item = (
     <Component
-      // TODO: Do we need this?
-      asChild
+      render={<MenuItem disabled={disabled} {...menuItemProps} />}
       disabled={disabled}
       onSelect={
         shiftKeyDown && secondaryOnSelect ? secondaryOnSelect : onSelect
       }
       {...other}
-    >
-      <MenuItem disabled={disabled} {...menuItemProps} />
-    </Component>
+    ></Component>
   );
 
   if (tooltipTitle || tooltipDescription) {
@@ -190,8 +193,8 @@ export const InteractiveMenuItem: FC<
       <Tooltip
         side="right"
         sideOffset={6}
-        skipDelayDuration={0}
-        delayDuration={800}
+        timeout={0}
+        delay={800}
         title={tooltipTitle}
         description={tooltipDescription}
       >
