@@ -2,7 +2,7 @@ import { Menu as DropdownMenuPrimitives } from '@base-ui-components/react/menu';
 import React, { useMemo } from 'react';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';
-import { generateMenu } from '../../utils';
+import { generateMenu, mapPropsToClasses } from '../../utils';
 import { DropdownMenuColorSelectionItem } from '../DropdownMenuColorSelectionItem';
 import { DropdownMenuItem } from '../DropdownMenuItem';
 import { DropdownMenuLabel } from '../DropdownMenuLabel';
@@ -23,12 +23,17 @@ export interface DropdownMenuContentProps
    * The minimum width (in pixels) of the menu content.
    */
   minWidth?: number;
+
+  /**
+   * Additional class name(s) to apply to the component.
+   */
+  className?: string;
 }
 
 export const DropdownMenuContent = React.forwardRef<
   HTMLDivElement,
   DropdownMenuContentProps
->(({ children, content = [], minWidth, ...other }, ref) => {
+>(({ children, className, content = [], minWidth, ...other }, ref) => {
   const items = useMemo(
     () =>
       generateMenu(
@@ -47,12 +52,15 @@ export const DropdownMenuContent = React.forwardRef<
   );
 
   return (
-    <DropdownMenuPrimitives.Popup ref={ref} {...other}>
-      <Menu style={{ minWidth }}>
-        {items}
-        {children}
-      </Menu>
-    </DropdownMenuPrimitives.Popup>
+    <DropdownMenuPrimitives.Popup
+      ref={ref}
+      render={
+        <Menu style={{ minWidth }} {...other}>
+          {items}
+          {children}
+        </Menu>
+      }
+    />
   );
 });
 

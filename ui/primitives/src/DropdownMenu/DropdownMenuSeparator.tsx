@@ -8,7 +8,5 @@ export const DropdownMenuSeparator: FC<DropdownMenuSeparatorProps> = ({
   children,
   ...other
 }) => (
-  <DropdownMenuPrimitives.Separator {...other}>
-    <MenuSeparator />
-  </DropdownMenuPrimitives.Separator>
+  <DropdownMenuPrimitives.Separator render={<MenuSeparator />} {...other} />
 );
