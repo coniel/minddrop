@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   CloseRightPanel,
   Events,
+  OpenConfirmationDialog,
+  OpenConfirmationDialogData,
   OpenMainContentView,
   OpenMainContentViewData,
   OpenRightPanel,
@@ -11,7 +13,11 @@ import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { ItemTypeFeature } from '@minddrop/feature-item-type';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
-import { Panel, TooltipProvider } from '@minddrop/ui-primitives';
+import {
+  ConfirmationDialog,
+  Panel,
+  TooltipProvider,
+} from '@minddrop/ui-primitives';
 import { DragImageProvider } from '@minddrop/utils';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
@@ -45,6 +51,7 @@ export const DesktopApp: React.FC = () => {
                 </div>
               </div>
               <ItemTypeFeature />
+              <ConfirmationDialogFeature />
               <ShowWindowOnRendered />
             </DragImageProvider>
           </MindDropApiProvider>
@@ -108,8 +115,6 @@ const RightPanel: React.FC = () => {
     };
   }, []);
 
-  console.log(view);
-
   if (!view) return null;
 
   const { component: ViewComponent, props } = view;
@@ -118,5 +123,34 @@ const RightPanel: React.FC = () => {
     <div className="right-panel">
       <ViewComponent {...props} />
     </div>
+  );
+};
+
+const ConfirmationDialogFeature: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [dialogProps, setDialogProps] = useState<OpenConfirmationDialogData>({
+    title: '',
+    message: '',
+    onConfirm: () => {},
+    confirmLabel: '',
+  });
+
+  useEffect(() => {
+    Events.addListener<OpenConfirmationDialogData>(
+      OpenConfirmationDialog,
+      'desktop-app',
+      ({ data }) => {
+        setDialogProps(data);
+        setOpen(true);
+      },
+    );
+
+    return () => {
+      Events.removeListener(OpenConfirmationDialog, 'desktop-app');
+    };
+  }, []);
+
+  return (
+    <ConfirmationDialog {...dialogProps} open={open} onOpenChange={setOpen} />
   );
 };
