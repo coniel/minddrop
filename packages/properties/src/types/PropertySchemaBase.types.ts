@@ -1,28 +1,28 @@
-import { UiIconName } from '@minddrop/icons';
 import { PropertyType } from './Properties.types';
 
-export interface PropertyTypeConfig {
+export interface PropertySchemaBase {
   /**
    * The property type.
    */
   type: PropertyType;
 
   /**
-   * The property type display name, also used as the default name when
-   * creating new properties of this type.
+   * The property name. Also used as the key in the properties object.
    */
   name: string;
 
   /**
-   * The property type icon, also used as the default icon when creating new
-   * properties of this type.
+   * The property icon. Value depends on the icon type:
+   * - `content-icon`: '[set-name]:[icon-name]:[color]'
+   * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'
+   * - `asset`: 'asset:[asset-file-name]'
    */
-  icon: UiIconName;
+  icon?: string;
 
   /**
-   * The property type description.
+   * Description of the property.
    */
-  description: string;
+  description?: string;
 
   /**
    * Indicates that this property is a meta data property, such as a created

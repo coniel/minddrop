@@ -4,13 +4,13 @@ export type PropertyMap = Record<string, PropertyValue>;
 
 export type PropertyType =
   | 'created'
-  | 'last-modified'
-  | 'text'
-  | 'number'
   | 'date'
-  | 'select'
-  | 'url'
-  | 'toggle'
-  | 'markdown'
+  | 'icon'
   | 'image'
-  | 'icon';
+  | 'last-modified'
+  | 'number'
+  | 'select'
+  | 'text'
+  | 'text-formated'
+  | 'toggle'
+  | 'url';
