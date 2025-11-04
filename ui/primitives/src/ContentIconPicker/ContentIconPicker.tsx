@@ -2,17 +2,9 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
-import { useToggle } from '@minddrop/utils';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';
-import {
-  Popover,
-  PopoverContent,
-  PopoverPositioner,
-  PopoverTrigger,
-} from '../Popover';
-import { TextField } from '../TextField';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
@@ -274,50 +266,5 @@ const ColorSelectButton: React.FC<{
         }}
       />
     </IconButton>
-  );
-};
-
-const IconColorSelect: React.FC<{
-  selectedColor: ContentColor;
-  onSelect: (value: ContentColor) => void;
-}> = ({ onSelect, selectedColor }) => {
-  const { t } = useTranslation({ keyPrefix: 'iconPicker' });
-  const [popoverOpen, togglePopover, setPopoverOpen] = useToggle(false);
-
-  const handleOnClickColor = useCallback(
-    (value: ContentColor) => {
-      togglePopover();
-      onSelect(value);
-    },
-    [onSelect, togglePopover],
-  );
-
-  return (
-    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <PopoverTrigger>
-        <div>
-          <Tooltip title={t('selectColor')}>
-            <IconButton
-              className="color-select-button"
-              label={t('selectedColor')}
-              onClick={togglePopover}
-            >
-              <ContentIcon icon="content-icon:palette" color={selectedColor} />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </PopoverTrigger>
-      <PopoverPositioner>
-        <PopoverContent className="color-select-popover">
-          {ContentColors.map((color) => (
-            <ColorSelectButton
-              key={color.value}
-              color={color.value}
-              onClick={handleOnClickColor}
-            />
-          ))}
-        </PopoverContent>
-      </PopoverPositioner>
-    </Popover>
   );
 };
