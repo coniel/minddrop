@@ -23,4 +23,6 @@ export * from './types';
 export * from './utils';
 export * from './Panel';
 
-export { useToggle } from '@minddrop/utils';
+export { useToggle, useForm } from '@minddrop/utils';
+export * from './ConfirmationDialog';
+
