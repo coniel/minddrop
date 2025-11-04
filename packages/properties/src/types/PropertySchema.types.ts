@@ -1,7 +1,7 @@
 import {
   CreatedPropertySchema,
   DatePropertySchema,
-  FormatedTextPropertySchema,
+  FormattedTextPropertySchema,
   IconPropertySchema,
   ImagePropertySchema,
   LastModifiedPropertySchema,
@@ -15,7 +15,7 @@ import {
 export type PropertySchema =
   | CreatedPropertySchema
   | DatePropertySchema
-  | FormatedTextPropertySchema
+  | FormattedTextPropertySchema
   | IconPropertySchema
   | ImagePropertySchema
   | LastModifiedPropertySchema

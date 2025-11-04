@@ -11,6 +11,6 @@ export type PropertyType =
   | 'number'
   | 'select'
   | 'text'
-  | 'text-formated'
+  | 'text-formatted'
   | 'toggle'
   | 'url';

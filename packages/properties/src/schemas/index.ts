@@ -1,7 +1,7 @@
 import { PropertySchema, PropertyType } from '../types';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
-import { FormatedTextPropertySchema } from './FormatedTextPropertySchema';
+import { FormattedTextPropertySchema } from './FormattedTextPropertySchema';
 import { IconPropertySchema } from './IconPropertySchema';
 import { ImagePropertySchema } from './ImagePropertySchema';
 import { LastModifiedPropertySchema } from './LastModifiedPropertySchema';
@@ -16,7 +16,7 @@ export * from './DatePropertySchema';
 export * from './IconPropertySchema';
 export * from './ImagePropertySchema';
 export * from './LastModifiedPropertySchema';
-export * from './FormatedTextPropertySchema';
+export * from './FormattedTextPropertySchema';
 export * from './NumberPropertySchema';
 export * from './SelectPropertySchema';
 export * from './TextPropertySchema';
@@ -25,7 +25,7 @@ export * from './UrlPropertySchema';
 
 export const PropertySchemas: Record<PropertyType, PropertySchema> = {
   text: TextPropertySchema,
-  'text-formated': FormatedTextPropertySchema,
+  'text-formatted': FormattedTextPropertySchema,
   number: NumberPropertySchema,
   date: DatePropertySchema,
   toggle: TogglePropertySchema,

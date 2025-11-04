@@ -1,13 +1,13 @@
 import { i18n } from '@minddrop/i18n';
 import { PropertySchemaBase } from '../types';
 
-export interface FormatedTextPropertySchema extends PropertySchemaBase {
-  type: 'text-formated';
+export interface FormattedTextPropertySchema extends PropertySchemaBase {
+  type: 'text-formatted';
   defaultValue?: string;
 }
 
-export const FormatedTextPropertySchema: FormatedTextPropertySchema = {
-  type: 'text-formated',
+export const FormattedTextPropertySchema: FormattedTextPropertySchema = {
+  type: 'text-formatted',
   icon: 'content-icon:text-quote:default',
   name: i18n.t('properties.markdown.name'),
   description: i18n.t('properties.markdown.description'),
