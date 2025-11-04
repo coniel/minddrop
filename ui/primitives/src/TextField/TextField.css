@@ -1,3 +1,8 @@
+.text-field-container {
+  position: relative;
+  width: 100%;
+}
+
 .text-field {
   display: flex;
   flex-direction: column;
@@ -57,4 +62,14 @@
     line-height: 1.25rem;
     color: var(--red9);
   }
+
+  .icon-picker-spacer {
+    width: 2.125rem;
+  }
+}
+
+.icon-picker-container {
+  position: absolute;
+  left: 0;
+  top: 1.5rem;
 }

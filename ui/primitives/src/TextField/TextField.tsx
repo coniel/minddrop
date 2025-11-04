@@ -2,6 +2,7 @@ import { Field } from '@base-ui-components/react/field';
 import { Input } from '@base-ui-components/react/input';
 import { mapPropsToClasses } from '../utils';
 import './TextField.css';
+import { useTranslation } from '@minddrop/i18n';
 
 export interface TextFieldProps extends Omit<Field.Root.Props, 'onChange'> {
   /**
@@ -43,6 +44,11 @@ export interface TextFieldProps extends Omit<Field.Root.Props, 'onChange'> {
   onValueChange?: Input.Props['onValueChange'];
 
   /**
+   * The input's value. Use this prop to create a controlled input.
+   */
+  value?: Input.Props['value'];
+
+  /**
    * The input's placeholder text.
    */
   placeholder?: Input.Props['placeholder'];
@@ -77,30 +83,37 @@ export const TextField: React.FC<TextFieldProps> = ({
   placeholder,
   onChange,
   iconPicker,
+  value,
   ...other
 }) => {
+  const { t } = useTranslation();
+
   return (
-    <Field.Root
-      className={mapPropsToClasses({ className, variant }, 'text-field')}
-      {...other}
-    >
-      {label && <Field.Label className="label">{label}</Field.Label>}
-      <div className="input-wrapper">
-        {iconPicker}
-        <Input
-          className="input"
-          defaultValue={defaultValue}
-          onChange={onChange}
-          onValueChange={onValueChange}
-          placeholder={placeholder}
-        />
-      </div>
-      {description && (
-        <Field.Description className="description">
-          {description}
-        </Field.Description>
-      )}
-      {error && <div className="error">{error}</div>}
-    </Field.Root>
+    <div className="text-field-container">
+      <Field.Root
+        className={mapPropsToClasses({ className, variant }, 'text-field')}
+        {...other}
+      >
+        {label && <Field.Label className="label">{t(label)}</Field.Label>}
+        <div className="input-wrapper">
+          {iconPicker && <div className="icon-picker-spacer" />}
+          <Input
+            className="input"
+            defaultValue={defaultValue}
+            onChange={onChange}
+            onValueChange={onValueChange}
+            placeholder={placeholder}
+            value={value}
+          />
+        </div>
+        {description && (
+          <Field.Description className="description">
+            {description}
+          </Field.Description>
+        )}
+        {error && <div className="error">{error}</div>}
+      </Field.Root>
+      {iconPicker && <div className="icon-picker-container">{iconPicker}</div>}
+    </div>
   );
 };
