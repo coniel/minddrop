@@ -9,12 +9,14 @@ import {
   RenderResult,
   render,
   renderHook,
+  screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { FC, ReactElement } from 'react';
 import { vi } from 'vitest';
 import { i18n, initializeI18n } from '@minddrop/i18n';
 import { IconsProvider } from '@minddrop/icons';
+import '@testing-library/jest-dom/vitest';
 
 class ResizeObserver {
   observe() {}
@@ -137,6 +139,50 @@ const customRender = (
   };
 };
 
+const customScreen = {
+  ...screen,
+  getByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.getByText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getByAltText: (text: Matcher, options?: MatcherOptions) =>
+    screen.getByAltText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.getByLabelText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+    screen.getByPlaceholderText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.getAllByText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getAllByAltText: (text: Matcher, options?: MatcherOptions) =>
+    screen.getAllByAltText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.getAllByLabelText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+    screen.getAllByPlaceholderText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+};
+
 const customRenderHook = <TProps, TResult>(
   hook: (props: TProps) => TResult,
   options?: RenderHookOptions<TProps>,
@@ -148,4 +194,5 @@ const customRenderHook = <TProps, TResult>(
 export * from '@testing-library/react';
 export { customRender as render };
 export { customRenderHook as renderHook };
+export { customScreen as screen };
 export { userEvent };

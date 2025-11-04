@@ -17,13 +17,14 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
     "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.1.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@testing-library/user-event": "^14.5.2",
     "@types/react": "^18.2.5",
     "eslint": "^9.16.0",
-    "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   }
