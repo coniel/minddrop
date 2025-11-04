@@ -29,7 +29,7 @@ export interface MenuItemComponentProps {
    * in this handler will prevent the context menu from
    * closing when selecting that item.
    */
-  onSelect?: MenuPrimitives.Item.Props['onSelect'];
+  onClick?: MenuPrimitives.Item.Props['onClick'];
 
   /**
    * Allows you to replace the component’s HTML element with a different tag,
@@ -43,8 +43,8 @@ export interface RadioMenuItemComponentProps extends MenuItemComponentProps {
 }
 
 export interface InteractiveMenuItemProps
-  extends MenuItemProps,
-    Pick<MenuItemComponentProps, 'disabled' | 'onSelect'> {
+  extends Omit<MenuItemProps, 'onClick'>,
+    Pick<MenuItemComponentProps, 'disabled' | 'onClick'> {
   /**
    * The menu item primitive component.
    */
@@ -67,7 +67,7 @@ export interface InteractiveMenuItemProps
    * prevent the context menu from closing when selecting
    * that item.
    */
-  secondaryOnSelect?: MenuPrimitives.Item.Props['onSelect'];
+  secondaryOnClick?: MenuPrimitives.Item.Props['onClick'];
 
   /**
    * The keyboard shortcut used to trigger the action.
@@ -118,8 +118,8 @@ export const InteractiveMenuItem: FC<
   secondaryLabel,
   icon,
   secondaryIcon,
-  onSelect,
-  secondaryOnSelect,
+  onClick,
+  secondaryOnClick,
   keyboardShortcut,
   secondaryKeyboardShortcut,
   tooltipTitle,
@@ -161,7 +161,7 @@ export const InteractiveMenuItem: FC<
       }
     };
 
-    if (secondaryOnSelect) {
+    if (secondaryOnClick) {
       hasEventListeners = true;
       window.addEventListener('keydown', onKeyDown);
       window.addEventListener('keyup', onKeyUp);
@@ -173,7 +173,7 @@ export const InteractiveMenuItem: FC<
         window.removeEventListener('keyup', onKeyUp);
       }
     };
-  }, [secondaryOnSelect]);
+  }, [secondaryOnClick]);
 
   const Component = MenuItemComponent as FC<MenuItemComponentProps>;
 
@@ -181,9 +181,7 @@ export const InteractiveMenuItem: FC<
     <Component
       render={<MenuItem disabled={disabled} {...menuItemProps} />}
       disabled={disabled}
-      onSelect={
-        shiftKeyDown && secondaryOnSelect ? secondaryOnSelect : onSelect
-      }
+      onClick={shiftKeyDown && secondaryOnClick ? secondaryOnClick : onClick}
       {...other}
     ></Component>
   );
