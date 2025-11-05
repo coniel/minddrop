@@ -6,7 +6,8 @@
   "actions": {
     "back": "Back",
     "cancel": "Cancel",
-    "clear": "Clear"
+    "clear": "Clear",
+    "save": "Save"
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -65,10 +66,33 @@
     "actions": {
       "delete": {
         "label": "Delete property",
-        "description": "This will delete the property from the collection and remove it from all collection entries. This can't be undone."
+        "confirmation": {
+          "title": "Delete property?",
+          "message": "This will remove it from all database items and can't be undone.",
+          "confirm": "Delete"
+        }
+      },
+      "rename": {
+        "confirmation": {
+          "title": "Rename property?",
+          "message": "This will update all database items containing this property.",
+          "confirm": "Rename"
+        }
       },
       "filter": "Filter...",
       "add": "Add property"
+    },
+    "form": {
+      "name": {
+        "label": "Property name",
+        "validation": {
+          "invalidCharacters": "Property names may only contain letters, numbers, spaces, hyphens, and underscores.",
+          "nameConflict": "A property with this name already exists."
+        }
+      },
+      "icon": {
+        "label": "Property icon"
+      }
     },
     "text": {
       "name": "Text",
@@ -111,7 +135,7 @@
       "name": "Icon",
       "description": "An icon picker for selecting an icon."
     },
-    "markdown": {
+    "textFormatted": {
       "name": "Formatted text",
       "description": "Richly formatted text edited using a text editor."
     },
