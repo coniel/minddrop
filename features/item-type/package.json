@@ -23,6 +23,8 @@
     "@minddrop/item-types": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/feature-properties": "workspace:*",
+    "@minddrop/properties": "workspace:*"
   }
 }

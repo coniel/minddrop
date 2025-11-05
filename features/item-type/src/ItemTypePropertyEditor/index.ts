@@ -1,2 +1,1 @@
-export * from './ItemTypeFeature';
 export * from './ItemTypePropertyEditor';
