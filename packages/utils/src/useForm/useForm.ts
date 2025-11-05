@@ -195,14 +195,15 @@ export function useForm(fieldDefinitions: FieldDefinition[]): UseFormReturn {
     (field: FieldDefinition, value: string): string | undefined => {
       let error: string | undefined;
 
+      // Run custom validation if provided
+      if (field.validate) {
+        error = field.validate(value);
+      }
+
       // Check required
-      if (field.required && !value.trim()) {
+      if (!error && field.required && !value.trim()) {
         // TODO: Use i18n for error message
         error = 'Required';
-      }
-      // Run custom validation if provided
-      else if (field.validate) {
-        error = field.validate(value);
       }
 
       return error;
