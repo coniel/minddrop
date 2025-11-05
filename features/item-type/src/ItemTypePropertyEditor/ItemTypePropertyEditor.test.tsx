@@ -68,7 +68,11 @@ describe('<ItemTypePropertyEditor />', () => {
       await updatePropertyIcon();
 
       // Editor should be closed
-      expect(screen.queryByText('properties.form.icon.label')).toBeNull();
+      await waitFor(() => {
+        expect(
+          screen.getByLabelText('properties.form.name.label'),
+        ).not.toBeVisible();
+      });
     });
 
     describe('renaming', () => {
@@ -126,13 +130,15 @@ describe('<ItemTypePropertyEditor />', () => {
           Events.addListener<ConfirmationDialogProps>(
             OpenConfirmationDialog,
             'test',
-            ({ data }) => {
+            async ({ data }) => {
               // Confirm the rename action
               data.onConfirm();
               // Form should be closed
-              expect(
-                screen.queryByText('properties.form.name.label'),
-              ).toBeNull();
+              await waitFor(() => {
+                expect(
+                  screen.queryByText('properties.form.name.label'),
+                ).not.toBeVisible();
+              });
 
               done();
             },
@@ -153,7 +159,7 @@ describe('<ItemTypePropertyEditor />', () => {
               // Form should be still open
               expect(
                 screen.getByText('properties.form.name.label'),
-              ).toBeInTheDocument();
+              ).toBeVisible();
 
               done();
             },
@@ -248,9 +254,7 @@ describe('<ItemTypePropertyEditor />', () => {
       );
 
       // Editor should be open
-      expect(
-        screen.getByText('properties.form.name.label'),
-      ).toBeInTheDocument();
+      expect(screen.getByText('properties.form.name.label')).toBeVisible();
     });
 
     it('adds the property on save', () =>
