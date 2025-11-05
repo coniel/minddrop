@@ -181,6 +181,46 @@ const customScreen = {
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
+  queryByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.queryByText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryByAltText: (text: Matcher, options?: MatcherOptions) =>
+    screen.queryByAltText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.queryByLabelText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+    screen.queryByPlaceholderText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.queryAllByText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryAllByAltText: (text: Matcher, options?: MatcherOptions) =>
+    screen.queryAllByAltText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
+    screen.queryAllByLabelText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
+  queryAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
+    screen.queryAllByPlaceholderText(
+      typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
+      options,
+    ),
 };
 
 const customRenderHook = <TProps, TResult>(
