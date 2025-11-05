@@ -40,4 +40,9 @@ export type OpenConfirmationDialogData = {
    * The callback invoked when the user confirms the action.
    */
   onConfirm: () => void;
+
+  /**
+   * The callback invoked when the user cancels the action.
+   */
+  onCancel?: () => void;
 };
