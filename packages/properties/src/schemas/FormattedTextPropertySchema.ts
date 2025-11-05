@@ -9,6 +9,6 @@ export interface FormattedTextPropertySchema extends PropertySchemaBase {
 export const FormattedTextPropertySchema: FormattedTextPropertySchema = {
   type: 'text-formatted',
   icon: 'content-icon:text-quote:default',
-  name: i18n.t('properties.markdown.name'),
-  description: i18n.t('properties.markdown.description'),
+  name: i18n.t('properties.textFormatted.name'),
+  description: i18n.t('properties.textFormatted.description'),
 };
