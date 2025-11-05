@@ -19,6 +19,7 @@ export * from './Popover';
 export * from './Separator';
 export * from './Text';
 export * from './TextField';
+export * from './Toolbar';
 export * from './Tooltip';
 export * from './constants';
 export * from './types';
