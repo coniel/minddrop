@@ -109,7 +109,7 @@ export interface EventsApi {
    * @param eventName - The name of the event.
    * @param data - The data associated with the event.
    */
-  dispatch(eventName: string, data?: unknown): Promise<void>;
+  dispatch<TData = unknown>(eventName: string, data?: TData): Promise<void>;
 
   /**
    * Clears all event listeners.
