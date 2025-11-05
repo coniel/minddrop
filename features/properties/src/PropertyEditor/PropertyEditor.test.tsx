@@ -172,7 +172,7 @@ describe('<PropertyEditor />', () => {
       // Should not render property form
       expect(
         screen.queryByLabelText('properties.form.name.label'),
-      ).not.toBeInTheDocument();
+      ).not.toBeVisible();
     });
   });
 
@@ -200,9 +200,7 @@ describe('<PropertyEditor />', () => {
       // Should not render property name
       expect(screen.queryByText(TextPropertySchema.name)).not.toBeVisible();
       // Should render property form
-      expect(
-        screen.getByLabelText('properties.form.name.label'),
-      ).toBeInTheDocument();
+      expect(screen.getByLabelText('properties.form.name.label')).toBeVisible();
     });
   });
 
