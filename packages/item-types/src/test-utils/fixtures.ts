@@ -47,10 +47,22 @@ export const urlItemTypeConfig: ItemTypeConfig = {
   properties: UrlBaseItemTypeConfig.properties,
 };
 
+export const noPropertiesItemTypeConfig: ItemTypeConfig = {
+  baseType: BasicBaseItemTypeConfig.type,
+  dataType: BasicBaseItemTypeConfig.dataType,
+  nameSingular: 'No property',
+  namePlural: 'No properties',
+  icon: 'content-icon:box:gray',
+  color: 'gray',
+  description: 'An item type with no properties',
+  properties: [],
+};
+
 export const itemTypeConfigs: ItemTypeConfig[] = [
   markdownItemTypeConfig,
   pdfItemTypeConfig,
   urlItemTypeConfig,
+  noPropertiesItemTypeConfig,
 ];
 
 export const markdownItemTypeConfigFileDescriptior: MockFileDescriptor = {
@@ -68,10 +80,16 @@ export const urlItemTypeConfigFileDescriptor: MockFileDescriptor = {
   textContent: JSON.stringify(urlItemTypeConfig, null, 2),
 };
 
+export const noPropertiesItemTypeConfigFileDescriptor: MockFileDescriptor = {
+  path: itemTypeConfigFilePath(noPropertiesItemTypeConfig),
+  textContent: JSON.stringify(noPropertiesItemTypeConfig, null, 2),
+};
+
 export const itemTypeConfigFileDescriptors: MockFileDescriptor[] = [
   markdownItemTypeConfigFileDescriptior,
   pdfItemTypeConfigFileDescriptor,
   urlItemTypeConfigFileDescriptor,
+  noPropertiesItemTypeConfigFileDescriptor,
   {
     path: Fs.concatPath(
       Paths.workspace,

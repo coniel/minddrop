@@ -152,6 +152,7 @@
   "itemTypes": {
     "actions": {
       "add": "Add type",
+      "addProperty": "Add property",
       "create": "Create item type"
     },
     "labels": {
