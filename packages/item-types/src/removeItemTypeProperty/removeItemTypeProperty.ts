@@ -1,6 +1,6 @@
-import { ItemTypeConfigsStore } from '../ItemTypeConfigsStore';
 import { getItemTypeConfig } from '../getItemTypeConfig';
 import { ItemTypeConfig } from '../types';
+import { updateItemType } from '../updateItemType';
 
 /**
  * Removes a property from an item type.
@@ -22,7 +22,7 @@ export async function removeItemTypeProperty(
   );
 
   // Update the item type
-  ItemTypeConfigsStore.update(type, { properties });
+  updateItemType(type, { properties });
 
   // Return the updated config
   return {
