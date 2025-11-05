@@ -1,5 +1,6 @@
 export * from './Button';
 export * from './Collapsible';
+export * from './ConfirmationDialog';
 export * from './ContentIcon';
 export * from './Dialog';
 export * from './DropdownMenu';
@@ -13,6 +14,7 @@ export * from './KeyboardShortcut';
 export * from './Menu';
 export * from './Menu/MenuLabel';
 export * from './NavMenuItem';
+export * from './Panel';
 export * from './Popover';
 export * from './Separator';
 export * from './Text';
@@ -21,8 +23,6 @@ export * from './Tooltip';
 export * from './constants';
 export * from './types';
 export * from './utils';
-export * from './Panel';
 
 export { useToggle, useForm } from '@minddrop/utils';
-export * from './ConfirmationDialog';
-
+export type { FieldDefinition } from '@minddrop/utils';

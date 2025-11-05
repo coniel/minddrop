@@ -35,11 +35,17 @@ export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
    * The callback invoked when the user confirms the action.
    */
   onConfirm: () => void;
+
+  /**
+   * The callback invoked when the user cancels the action.
+   */
+  onCancel?: () => void;
 }
 
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   confirmLabel: confirmationLabel,
   onConfirm,
+  onCancel,
   title,
   message: description,
   danger = false,
@@ -61,7 +67,13 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             </AlertDialog.Description>
             <div className="actions">
               <AlertDialog.Close
-                render={<Button variant="contained" label={cancelLabel} />}
+                render={
+                  <Button
+                    onClick={onCancel}
+                    variant="contained"
+                    label={cancelLabel}
+                  />
+                }
               />
               <AlertDialog.Close
                 render={
