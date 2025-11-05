@@ -86,6 +86,7 @@
       "name": {
         "label": "Property name",
         "validation": {
+          "required": "Property name is required.",
           "invalidCharacters": "Property names may only contain letters, numbers, spaces, hyphens, and underscores.",
           "nameConflict": "A property with this name already exists."
         }
