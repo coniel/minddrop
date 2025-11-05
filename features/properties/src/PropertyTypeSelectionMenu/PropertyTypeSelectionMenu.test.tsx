@@ -24,21 +24,23 @@ describe('<PropertyTypeSelectionMenu />', () => {
 
     await user.click(screen.getByText('Open'));
 
-    expect(screen.getByText(TextPropertySchema.name)).toBeInTheDocument();
+    expect(screen.getByText(TextPropertySchema.name)).toBeVisible();
   });
 
-  it('omits specified menu items', () => {
+  it('omits meta properties if in existing properties', () => {
     render(
       <PropertyTypeSelectionMenu
         defaultOpen
         onSelect={onSelect}
-        omitProperties={[TextPropertySchema.type, CreatedPropertySchema.type]}
+        existingProperties={[TextPropertySchema, CreatedPropertySchema]}
       >
         {(props) => <button {...props}>Open</button>}
       </PropertyTypeSelectionMenu>,
     );
 
-    expect(screen.queryByText(TextPropertySchema.name)).toBeNull();
+    // Should preserve non-meta properties
+    expect(screen.queryByText(TextPropertySchema.name)).not.toBeNull();
+    // Should omit meta properties
     expect(screen.queryByText(CreatedPropertySchema.name)).toBeNull();
   });
 

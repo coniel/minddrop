@@ -25,20 +25,24 @@ export interface PropertyTypeSelectionMenuProps
   onSelect: (property: PropertySchema) => void;
 
   /**
-   * An array of property types to omit from the menu.
+   * An array of existing property types against which to check
+   * for single instance properties to omit from the menu.
    */
-  omitProperties?: string[];
+  existingProperties?: PropertySchema[];
 }
 
 export const PropertyTypeSelectionMenu: React.FC<
   PropertyTypeSelectionMenuProps
-> = ({ children, onSelect, omitProperties = [], ...other }) => {
-  const basicProperties = Object.values(PropertySchemas)
-    .filter((property) => !property.meta)
-    .filter((schema) => !omitProperties.includes(schema.type));
+> = ({ children, onSelect, existingProperties = [], ...other }) => {
+  const existingMetaProperties = existingProperties
+    .filter((property) => PropertySchemas[property.type]?.meta)
+    .map((property) => property.type);
+  const basicProperties = Object.values(PropertySchemas).filter(
+    (property) => !property.meta,
+  );
   const metaProperties = Object.values(PropertySchemas)
     .filter((property) => property.meta)
-    .filter((schema) => !omitProperties.includes(schema.type));
+    .filter((schema) => !existingMetaProperties.includes(schema.type));
 
   return (
     <DropdownMenu {...other}>
