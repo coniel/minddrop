@@ -102,16 +102,16 @@ export const TextField: React.FC<TextFieldProps> = ({
             defaultValue={defaultValue}
             onChange={onChange}
             onValueChange={onValueChange}
-            placeholder={placeholder}
+            placeholder={t(placeholder || '')}
             value={value}
           />
         </div>
         {description && (
           <Field.Description className="description">
-            {description}
+            {t(description)}
           </Field.Description>
         )}
-        {error && <div className="error">{error}</div>}
+        {error && <div className="error">{t(error)}</div>}
       </Field.Root>
       {iconPicker && <div className="icon-picker-container">{iconPicker}</div>}
     </div>
