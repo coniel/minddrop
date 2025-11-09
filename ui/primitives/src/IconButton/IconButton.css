@@ -69,12 +69,18 @@
     height: 2.125rem;
     width: 2.125rem;
     flex-shrink: 0;
-  }
 
-  &.size-large .icon,
-  &.size-large .content-icon {
-    width: 1.125rem;
-    height: 1.125rem;
+    .icon,
+    .content-icon {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .emoji {
+      font-size: 0.9rem;
+      width: auto;
+      height: auto;
+    }
   }
 
   /* Vatiants */
