@@ -173,3 +173,8 @@ u {
   box-sizing: border-box;
   -webkit-font-smoothing: auto;
 }
+
+svg {
+  /* Fix misalignment in some browsers */
+  -webkit-transform: translate(0px, 0px);
+}
