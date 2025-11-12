@@ -31,4 +31,9 @@ export const Paths = {
   set workspaceConfigs(path: string) {
     workspaceConfigsPath = path;
   },
+
+  /**
+   * The name of the hidden directory where non-user facing files are stored.
+   */
+  hiddenDirName: '.minddrop',
 };
