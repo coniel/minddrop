@@ -34,4 +34,10 @@ export interface PropertySchemaBase {
    * The name and icon of meta properties are not customizable.
    */
   meta?: boolean;
+
+  /**
+   * Indicates that this property is protected, i.e., it cannot be deleted
+   * or modified by users.
+   */
+  protected?: boolean;
 }
