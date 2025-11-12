@@ -1,6 +1,7 @@
 import { Ast } from '@minddrop/ast';
 import { BaseItemTypes } from '@minddrop/base-item-types';
 import { loadConfigs } from '@minddrop/core';
+import { DataTypes, Databases } from '@minddrop/databases';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
@@ -25,6 +26,10 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   await loadConfigs();
   Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
+
+  // Initialize databases
+  DataTypes.initialize();
+  await Databases.initialize();
 
   // Initialize core base item types
   BaseItemTypes.initialize();
