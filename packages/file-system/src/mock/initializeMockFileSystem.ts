@@ -25,15 +25,16 @@ import { printFileTree } from './printFileTree';
 Paths.workspace = 'workspace';
 Paths.workspaceConfigs = `${Paths.workspace}/.minddrop`;
 
+const baseDirs = [
+  BaseDirectory.AppData,
+  BaseDirectory.AppConfig,
+  BaseDirectory.Documents,
+];
+
 export function initializeMockFileSystem(
   filesToLoad: (MockFileDescriptor | string)[] = [],
 ): MockFileSystem {
-  const init = initializeMockFsRoot([
-    { path: BaseDirectory.AppData },
-    { path: BaseDirectory.AppConfig },
-    { path: BaseDirectory.Documents },
-    ...filesToLoad,
-  ]);
+  const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
 
   // The mock file system root
   let root: FsEntry = init.root;
@@ -213,7 +214,7 @@ export function initializeMockFileSystem(
       printFileTree(root.children as FsEntry[]);
     },
     reset: () => {
-      const init = initializeMockFsRoot(filesToLoad);
+      const init = initializeMockFsRoot([...baseDirs, ...filesToLoad]);
       root = init.root;
       textFileContents = init.textFileContents;
       binaryFiles = init.binaryFiles;
