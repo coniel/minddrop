@@ -3,6 +3,20 @@
   color: var(--text-color-regular);
   font-weight: var(--weight-normal);
 
+  &.paragraph {
+    display: block;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+
+    &.size-small {
+      margin-bottom: 0.5rem;
+    }
+
+    &.size-tiny {
+      margin-bottom: 0.25rem;
+    }
+  }
+
   /* Color */
 
   &.color-light {

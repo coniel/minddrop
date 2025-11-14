@@ -22,6 +22,11 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   color?: TextColor;
 
   /**
+   * Whether the text is a paragraph. Applies paragraph styles.
+   */
+  paragraph?: boolean;
+
+  /**
    * The component used for the root node. Either a string to use a
    * HTML element or a component.
    */
@@ -44,6 +49,7 @@ export const Text: FC<TextProps> = ({
   className,
   color = 'regular',
   size = 'regular',
+  paragraph = false,
   text,
   weight = 'regular',
   ...other
@@ -52,7 +58,10 @@ export const Text: FC<TextProps> = ({
 
   return (
     <Component
-      className={mapPropsToClasses({ className, color, size, weight }, 'text')}
+      className={mapPropsToClasses(
+        { className, color, size, weight, paragraph },
+        'text',
+      )}
       {...other}
     >
       {text ? i18n.t(text) : children}
