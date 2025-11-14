@@ -89,11 +89,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="text-field-container">
-      <Field.Root
-        className={mapPropsToClasses({ className, variant }, 'text-field')}
-        {...other}
-      >
+    <div className={mapPropsToClasses({ className, variant }, 'text-field')}>
+      <Field.Root className="root" {...other}>
         {label && <Field.Label className="label">{t(label)}</Field.Label>}
         <div className="input-wrapper">
           {iconPicker && <div className="icon-picker-spacer" />}
