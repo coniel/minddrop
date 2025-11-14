@@ -3,8 +3,10 @@ import { FileDataType } from './FileDataType';
 import { ImageDataType } from './ImageDataType';
 import { ObjectDataType } from './ObjectDataType';
 import { PdfDataType } from './PdfDataType';
+import { SpaceDataType } from './SpaceDataType';
 import { UrlDataType } from './UrlDataType';
 import { VideoDataType } from './VideoDataType';
+import { ViewDataType } from './ViewDataType';
 
 export * from './AudioDataType';
 export * from './ObjectDataType';
@@ -13,13 +15,17 @@ export * from './ImageDataType';
 export * from './PdfDataType';
 export * from './UrlDataType';
 export * from './VideoDataType';
+export * from './ViewDataType';
+export * from './SpaceDataType';
 
 export const coreDataTypes = [
-  AudioDataType,
-  FileDataType,
+  ObjectDataType,
+  UrlDataType,
   ImageDataType,
   PdfDataType,
-  UrlDataType,
+  AudioDataType,
   VideoDataType,
-  ObjectDataType,
+  FileDataType,
+  ViewDataType,
+  SpaceDataType,
 ];
