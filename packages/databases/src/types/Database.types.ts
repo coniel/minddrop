@@ -42,7 +42,7 @@ export interface Database {
    *
    * If not provided, the base type icon is used.
    */
-  icon?: string;
+  icon: string;
 
   /**
    * The databse color. Used to style the item type icon and badges in the UI.
