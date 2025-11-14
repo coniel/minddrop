@@ -16,10 +16,10 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "@minddrop/feature-databases": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/item-types": "workspace:*",
     "@minddrop/events": "workspace:*"
   }
 }
