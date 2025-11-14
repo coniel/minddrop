@@ -13,7 +13,8 @@
   padding: 4px;
   font-size: 20px;
 
-  .icon {
+  .icon,
+  .content-icon {
     stroke: currentColor;
     width: 20px;
     height: 20px;
@@ -58,11 +59,29 @@
 
   &.size-small {
     padding: 2px;
+
+    .icon {
+      width: 18px;
+      height: 18px;
+    }
   }
 
-  &.size-small .icon {
-    width: 18px;
-    height: 18px;
+  &.size-medium {
+    height: 2rem;
+    width: 2rem;
+    flex-shrink: 0;
+
+    .icon,
+    .content-icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .emoji {
+      font-size: 0.875rem;
+      width: auto;
+      height: auto;
+    }
   }
 
   &.size-large {
