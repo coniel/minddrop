@@ -33,7 +33,7 @@
   padding: 1.5rem;
   border-radius: var(--radius-lg);
   outline: 1px solid var(--gray2);
-  background-color: var(--appBackground);
+  background-color: var(--panel-background-color);
   color: var(--gray9);
   transition: all 150ms;
 
