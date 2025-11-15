@@ -141,83 +141,131 @@ const customRender = (
 
 const customScreen = {
   ...screen,
-  getByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.getByText(
+  getByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.getByText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getByAltText: (text: Matcher, options?: MatcherOptions) =>
-    screen.getByAltText(
+  getByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.getByAltText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.getByLabelText(
+  getByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.getByLabelText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-    screen.getByPlaceholderText(
+  getByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.getByPlaceholderText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.getAllByText(
+  getAllByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.getAllByText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getAllByAltText: (text: Matcher, options?: MatcherOptions) =>
-    screen.getAllByAltText(
+  getAllByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.getAllByAltText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.getAllByLabelText(
+  getAllByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.getAllByLabelText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  getAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-    screen.getAllByPlaceholderText(
+  getAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.getAllByPlaceholderText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.queryByText(
+  queryByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.queryByText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryByAltText: (text: Matcher, options?: MatcherOptions) =>
-    screen.queryByAltText(
+  queryByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.queryByAltText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.queryByLabelText(
+  queryByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.queryByLabelText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-    screen.queryByPlaceholderText(
+  queryByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.queryByPlaceholderText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryAllByText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.queryAllByText(
+  queryAllByText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.queryAllByText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryAllByAltText: (text: Matcher, options?: MatcherOptions) =>
-    screen.queryAllByAltText(
+  queryAllByAltText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.queryAllByAltText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryAllByLabelText: (text: Matcher, options?: SelectorMatcherOptions) =>
-    screen.queryAllByLabelText(
+  queryAllByLabelText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: SelectorMatcherOptions,
+  ) =>
+    screen.queryAllByLabelText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
-  queryAllByPlaceholderText: (text: Matcher, options?: MatcherOptions) =>
-    screen.queryAllByPlaceholderText(
+  queryAllByPlaceholderText: <T extends HTMLElement = HTMLElement>(
+    text: Matcher,
+    options?: MatcherOptions,
+  ) =>
+    screen.queryAllByPlaceholderText<T>(
       typeof text === 'string' && i18n.exists(text) ? i18n.t(text) : text,
       options,
     ),
