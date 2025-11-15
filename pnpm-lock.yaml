@@ -38,6 +38,9 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../../packages/theme
@@ -157,12 +160,32 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-databases':
+        specifier: workspace:*
+        version: link:../databases
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/item-types':
+      '@minddrop/test-utils':
         specifier: workspace:*
-        version: link:../../packages/item-types
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
   features/databases:
     dependencies:
       '@minddrop/databases':

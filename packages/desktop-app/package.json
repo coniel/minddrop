@@ -30,7 +30,7 @@
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
-    "@minddrop/feature-item-type": "workspace:*",
+    "@minddrop/feature-databases": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",

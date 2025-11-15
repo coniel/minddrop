@@ -10,7 +10,7 @@ import {
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
-import { ItemTypeFeature } from '@minddrop/feature-item-type';
+import { DatabasesFeature } from '@minddrop/feature-databases';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
 import {
@@ -50,7 +50,7 @@ export const DesktopApp: React.FC = () => {
                   <RightPanel />
                 </div>
               </div>
-              <ItemTypeFeature />
+              <DatabasesFeature />
               <ConfirmationDialogFeature />
               <ShowWindowOnRendered />
             </DragImageProvider>
