@@ -1,4 +1,3 @@
-import { i18n } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/utils';
 import { PropertySchemaBase } from '../types';
 
@@ -17,7 +16,7 @@ export interface SelectPropertySchema extends PropertySchemaBase {
 export const SelectPropertySchema: SelectPropertySchema = {
   type: 'select',
   icon: 'content-icon:chevron-down-circle:default',
-  name: i18n.t('properties.select.name'),
-  description: i18n.t('properties.select.description'),
+  name: 'properties.select.name',
+  description: 'properties.select.description',
   options: [],
 };

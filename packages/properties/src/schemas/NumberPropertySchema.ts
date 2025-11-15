@@ -1,4 +1,3 @@
-import { i18n } from '@minddrop/i18n';
 import { PropertySchemaBase } from '../types';
 
 export interface NumberPropertySchema extends PropertySchemaBase {
@@ -9,6 +8,6 @@ export interface NumberPropertySchema extends PropertySchemaBase {
 export const NumberPropertySchema: NumberPropertySchema = {
   type: 'number',
   icon: 'content-icon:hash:default',
-  name: i18n.t('properties.number.name'),
-  description: i18n.t('properties.number.description'),
+  name: 'properties.number.name',
+  description: 'properties.number.description',
 };
