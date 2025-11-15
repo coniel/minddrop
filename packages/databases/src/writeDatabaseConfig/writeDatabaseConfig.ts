@@ -16,6 +16,7 @@ export async function writeDatabaseConfig(name: string): Promise<void> {
 
   // Remove the path before serialization
   const path = config.path;
+  // @ts-expect-error - Remove the path before serialization
   delete config.path;
 
   // Ensure the database's hidden .minddrop directory exists

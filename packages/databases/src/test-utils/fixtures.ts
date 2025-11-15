@@ -11,17 +11,17 @@ export const objectDatabase: Database = {
   entryName: 'Object',
   dataType: ObjectDataType.type,
   icon: 'content-icon:shapes:blue',
-  color: 'blue',
   path: `${parentDir}/Objects`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
-      type: 'text',
-      name: 'Title',
-    },
-    {
       type: 'text-formatted',
       name: 'Content',
+      defaultValue: 'Default Content',
+    },
+    {
+      type: 'icon',
+      name: 'Icon',
     },
   ],
 };

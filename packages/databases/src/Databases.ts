@@ -1,4 +1,10 @@
-export { createDatabase as create } from './createDatabase';
 export { DatabasesStore as Store } from './DatabasesStore';
+export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
+export { createDatabase as create } from './createDatabase';
+export { getDatabase as get } from './getDatabase';
 export { initializeDatabases as initialize } from './initializeDatabases';
+export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
+export { updateDatabase as update } from './updateDatabase';
+export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
+export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
