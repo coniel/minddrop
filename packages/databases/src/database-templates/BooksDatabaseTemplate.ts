@@ -1,4 +1,3 @@
-import { i18n } from '@minddrop/i18n';
 import { DatabaseTemplate } from '../types';
 
 export const BooksDatabaseTemplate: DatabaseTemplate = {
@@ -10,22 +9,22 @@ export const BooksDatabaseTemplate: DatabaseTemplate = {
   properties: [
     {
       type: 'text',
-      name: i18n.t('databaseTemplates.books.properties.title.name'),
+      name: 'databaseTemplates.books.properties.author.name',
       icon: 'content-icon:user:default',
     },
     {
       type: 'date',
-      name: i18n.t('databaseTemplates.books.properties.publicationDate.name'),
+      name: 'databaseTemplates.books.properties.publicationDate.name',
       icon: 'content-icon:calendar:default',
     },
     {
       type: 'text',
-      name: i18n.t('databaseTemplates.books.properties.author.name'),
+      name: 'databaseTemplates.books.properties.genre.name',
       icon: 'content-icon:tag:default',
     },
     {
       type: 'image',
-      name: i18n.t('databaseTemplates.books.properties.coverImage.name'),
+      name: 'databaseTemplates.books.properties.coverImage.name',
       icon: 'content-icon:image:default',
       storage: 'asset',
     },
