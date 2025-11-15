@@ -163,12 +163,32 @@ importers:
       '@minddrop/item-types':
         specifier: workspace:*
         version: link:../../packages/item-types
+  features/databases:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -398,9 +418,9 @@ importers:
       '@minddrop/feature-app-sidebar':
         specifier: workspace:*
         version: link:../../features/app-sidebar
-      '@minddrop/feature-item-type':
+      '@minddrop/feature-databases':
         specifier: workspace:*
-        version: link:../../features/item-type
+        version: link:../../features/databases
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system

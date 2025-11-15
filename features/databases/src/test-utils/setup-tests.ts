@@ -5,9 +5,11 @@ import {
   Databases,
   coreDataTypes,
 } from '@minddrop/databases';
+import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
+import { Paths } from '@minddrop/utils';
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -16,7 +18,10 @@ interface SetupOptions {
 
 initializeI18n();
 
-export const MockFs = initializeMockFileSystem(DatabaseFixtures.databaseFiles);
+export const MockFs = initializeMockFileSystem([
+  Paths.workspace,
+  ...DatabaseFixtures.databaseFiles,
+]);
 
 export function setup(
   options: SetupOptions = { loadDatabases: true, loadDataTypes: true },
@@ -35,9 +40,11 @@ export function setup(
 export function cleanup() {
   cleanupRender();
   vi.clearAllMocks();
+  Events._clearAll();
 
-  // Clear the DatabasesStore
+  // Clear stores
   Databases.Store.clear();
+  DataTypes.Store.clear();
   // Reset mock file system
   MockFs.reset();
 }

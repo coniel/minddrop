@@ -149,42 +149,172 @@
       "description": "Adds the date and time at which an entry was last modified to its properties."
     }
   },
-  "itemTypes": {
+  "databases": {
     "actions": {
-      "add": "Add type",
-      "addProperty": "Add property",
-      "create": "Create item type"
+      "new": "New",
+      "addProperty": "Add property"
     },
     "labels": {
-      "baseItemTypes": "Make your own"
+      "databases": "Databases"
     },
     "form": {
       "labels": {
-        "new": "New item type",
-        "nameSingular": "Item name",
-        "namePlural": "Type name",
         "fileType": "File type",
         "anyFileType": "Any",
-        "customFileType": "Custom"
+        "customFileType": "Custom",
+        "dataTypes": "Data types",
+        "templates": "Templates"
+      },
+      "properties": {
+        "title": "Properties",
+        "description": "You can customise properties after creating the database."
+      },
+      "getStarted": {
+        "title": "Choose a data type or template to get started",
+        "dataType": "Data types define the kind of entries your database will hold. Some are file-based (like images and PDFs), while others are purely property-based (like objects and weblinks).",
+        "template": "Templates are just regular databases with pre-configured properties, custom card and page designs, and in some cases automations. They’re fully editable, so you can customise everything to fit your workflow."
       },
       "actions": {
-        "create": "Create item type"
+        "create": "Create database"
+      },
+      "name": {
+        "label": "Database name",
+        "placeholder": "e.g. Books"
+      },
+      "icon": {
+        "label": "Database icon"
+      },
+      "entryName": {
+        "label": "Entry name",
+        "placeholder": "e.g. Book"
       },
       "errors": {
-        "typeNameConflict": "An item type with this name already exists",
-        "itemNameConflict": "An item type with this name already exists",
-        "pathConflict": "A folder with this name already exists in the workspace"
+        "nameConflict": "A database with this name already exists.",
+        "pathConflict": "A folder with this name already exists in the at the specified location."
+      }
+    }
+  },
+  "dataTypes": {
+    "audio": {
+      "name": "Audio",
+      "database": "Audio database",
+      "description": "For organising audio files such as music tracks, sound effects, interviews, or voice recordings. Each entry is created from an existing audio file.",
+      "dbNamePlaceholder": "e.g. Sound Effects",
+      "entryNamePlaceholder": "e.g. Sound Effect"
+    },
+    "file": {
+      "name": "File",
+      "database": "File database",
+      "description": "A flexible database for managing any type of file. Use this when you want to organise files of mixed or unspecified formats.",
+      "dbNamePlaceholder": "e.g. Project Files",
+      "entryNamePlaceholder": "e.g. Project File"
+    },
+    "image": {
+      "name": "Image",
+      "database": "Image database",
+      "description": "For storing image files such as photos, illustrations, screenshots, or graphics. Each entry begins with selecting an image file.",
+      "dbNamePlaceholder": "e.g. Illustrations",
+      "entryNamePlaceholder": "e.g. Illustration"
+    },
+    "object": {
+      "name": "Object",
+      "database": "Object database",
+      "description": "A versatile type for entries that represent things rather than files, such as tasks, recipes, places, or people. Ideal for structuring information with custom properties.",
+      "dbNamePlaceholder": "e.g. Books",
+      "entryNamePlaceholder": "e.g. Book"
+    },
+    "pdf": {
+      "name": "PDF",
+      "database": "PDF database",
+      "description": "For collecting and organising PDF documents. Each entry represents a single PDF file.",
+      "dbNamePlaceholder": "e.g. Research Papers",
+      "entryNamePlaceholder": "e.g. Research Paper"
+    },
+    "url": {
+      "name": "Weblink",
+      "database": "Weblink database",
+      "description": "For saving links such as webpages, articles, or bookmarks. When you add a link, the webpage's title, description, image, and icon are automatically added as properties.",
+      "dbNamePlaceholder": "e.g. Articles",
+      "entryNamePlaceholder": "e.g. Article",
+      "properties": {
+        "url": {
+          "name": "URL"
+        },
+        "title": {
+          "name": "Title"
+        },
+        "description": {
+          "name": "Description"
+        },
+        "image": {
+          "name": "Image"
+        },
+        "icon": {
+          "name": "Icon"
+        }
       }
     },
-    "baseTypes": {
-      "file": {
-        "name": "File",
-        "description": "A file of a specific type.",
-        "generic": {
-          "name": "Any"
+    "video": {
+      "name": "Video",
+      "database": "Video database",
+      "description": "For managing video files such as films, clips, screen recordings, or animations. Each entry is created from an existing video file.",
+      "dbNamePlaceholder": "e.g. Video Clips",
+      "entryNamePlaceholder": "e.g. Video Clip"
+    },
+    "view": {
+      "name": "View",
+      "database": "View database",
+      "description": "For storing views created from a common template. Great for organising frequently used views such as mood boards and task lists.",
+      "dbNamePlaceholder": "e.g. Mood Boards",
+      "entryNamePlaceholder": "e.g. Mood Board"
+    },
+    "space": {
+      "name": "Space",
+      "database": "Space database",
+      "description": "A database where each entry is a fully structured space based on a template. Great for creating reusable spaces for projects, assignments, and research.",
+      "dbNamePlaceholder": "e.g. Projects",
+      "entryNamePlaceholder": "e.g. Project"
+    }
+  },
+  "databaseTemplates": {
+    "notes": {
+      "name": "Notes",
+      "entryName": "Note",
+      "description": "A simple database for taking and organising notes with properties for tags, created date, and last modified date.",
+      "properties": {
+        "content": {
+          "name": "Content"
         },
-        "custom": {
-          "name": "Custom"
+        "tags": {
+          "name": "Tags"
+        },
+        "created": {
+          "name": "Created"
+        },
+        "lastModified": {
+          "name": "Last modified"
+        }
+      }
+    },
+    "books": {
+      "name": "Books",
+      "entryName": "Book",
+      "description": "A database for cataloguing books with properties for author, genre, publication date, rating, and cover image.",
+      "properties": {
+        "author": {
+          "name": "Author"
+        },
+        "genre": {
+          "name": "Genre"
+        },
+        "publicationDate": {
+          "name": "Publication date"
+        },
+        "rating": {
+          "name": "Rating"
+        },
+        "coverImage": {
+          "name": "Cover image"
         }
       }
     }
