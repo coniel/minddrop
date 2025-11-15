@@ -38,9 +38,6 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../../packages/theme
@@ -194,6 +191,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-properties':
+        specifier: workspace:*
+        version: link:../properties
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system

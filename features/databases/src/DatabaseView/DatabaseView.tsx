@@ -8,6 +8,7 @@ import {
   useToggle,
 } from '@minddrop/ui-primitives';
 import './DatabaseView.css';
+import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 
 export interface DatabaseViewProps {
   /**
@@ -25,20 +26,23 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ name }) => {
   }
 
   return (
-    <Panel className="database-view">
-      <div className="header">
-        <div className="title">
-          <ContentIcon icon={database.icon} />
-          <Heading noMargin>{database.name}</Heading>
+    <div className="database-view">
+      <Panel className="database">
+        <div className="header">
+          <div className="title">
+            <ContentIcon icon={database.icon} />
+            <Heading noMargin>{database.name}</Heading>
+          </div>
+          <Toolbar>
+            <Button
+              variant="outlined"
+              label="Configure"
+              onClick={togglePropertiesPanel}
+            />
+          </Toolbar>
         </div>
-        <Toolbar>
-          <Button
-            variant="outlined"
-            label="Configure"
-            onClick={togglePropertiesPanel}
-          />
-        </Toolbar>
-      </div>
-    </Panel>
+      </Panel>
+      {propertiesPanelOpen && <DatabasePropertiesEditor name={name} />}
+    </div>
   );
 };

@@ -1,28 +1,40 @@
 .database-view {
   height: 100%;
+  display: flex;
+  gap: 0.5rem;
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color);
+  .database {
+    height: 100%;
+    flex: 1;
 
-    .title {
+    .header {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
 
-      .content-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-        flex-shrink: 0;
-      }
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
 
-      .text {
-        font-size: 1.5rem;
-        font-weight: 600;
+        .content-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          flex-shrink: 0;
+        }
+
+        .text {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
       }
     }
+  }
+
+  .properties {
+    height: 100%;
+    width: 400px;
   }
 }
