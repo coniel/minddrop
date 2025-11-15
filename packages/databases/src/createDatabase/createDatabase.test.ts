@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { BaseDirectory, PathConflictError } from '@minddrop/file-system';
+import { PropertySchema } from '@minddrop/properties';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
 import { UrlDataType } from '../data-type-configs';
 import { DataTypeNotFoundError, DatabaseAlreadyExistsError } from '../errors';
+import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
-import { Database, DatabasesConfig } from '../types';
+import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
 
@@ -16,7 +18,6 @@ const options: CreateDatabaseOptions = {
   dataType: UrlDataType.type,
   description: 'A test database for unit testing',
   icon: 'test-icon',
-  color: 'red',
 };
 
 const newDatabase: Database = {
@@ -69,6 +70,20 @@ describe('createDatabase', () => {
     expect(database).toMatchObject(newDatabase);
   });
 
+  it('uses provided properties in place of default data type ones', async () => {
+    const customProperty: PropertySchema = {
+      type: 'text',
+      name: 'Custom Property',
+    };
+
+    const database = await createDatabase(parentDir, {
+      ...options,
+      properties: [customProperty],
+    });
+
+    expect(database.properties).toEqual([customProperty]);
+  });
+
   it('adds the config to the databases store', async () => {
     const database = await createDatabase(parentDir, options);
 
@@ -87,6 +102,7 @@ describe('createDatabase', () => {
     const database = await createDatabase(parentDir, options);
 
     // Path is not stored in the config file
+    // @ts-expect-error
     delete database.path;
 
     expect(MockFs.readJsonFile(configFilePath)).toEqual({
@@ -107,7 +123,7 @@ describe('createDatabase', () => {
 
     expect(
       databasesConfig.paths.find(
-        (db: Database) => db.name === newDatabase.name,
+        (db: DatabasePathsConfig) => db.name === newDatabase.name,
       ),
     ).toEqual({
       name: newDatabase.name,
@@ -115,9 +131,9 @@ describe('createDatabase', () => {
     });
   });
 
-  it('dispatches a database create event', async () =>
+  it('dispatches a database created event', async () =>
     new Promise<void>((done) => {
-      Events.addListener('databases:database:create', 'test', (payload) => {
+      Events.addListener(DatabaseCreatedEvent, 'test', (payload) => {
         // Payload data should be the database config
         expect(payload.data).toEqual(newDatabase);
         done();

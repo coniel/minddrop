@@ -6,7 +6,6 @@ export const NotesDatabaseTemplate: DatabaseTemplate = {
   entryName: 'databaseTemplates.notes.entryName',
   description: 'databaseTemplates.notes.description',
   icon: 'content-icon:pencil:default',
-  color: 'gray',
   properties: [
     {
       type: 'text-formatted',

@@ -1,5 +1,4 @@
 import { PropertiesSchema } from '@minddrop/properties';
-import { ContentColor } from '@minddrop/utils';
 
 export interface Database {
   /**
@@ -43,11 +42,6 @@ export interface Database {
    * If not provided, the base type icon is used.
    */
   icon: string;
-
-  /**
-   * The databse color. Used to style the item type icon and badges in the UI.
-   */
-  color: ContentColor;
 
   /**
    * Short description displayed in the UI.

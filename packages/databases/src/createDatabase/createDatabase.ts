@@ -2,15 +2,16 @@ import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseAlreadyExistsError } from '../errors';
+import { DatabaseCreatedEvent } from '../events';
 import { getDataType } from '../getDataType';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
 
-export type CreateDatabaseOptions = Omit<
-  Database,
-  'properties' | 'created' | 'path'
->;
+export interface CreateDatabaseOptions
+  extends Omit<Database, 'created' | 'path' | 'properties'> {
+  properties?: Database['properties'];
+}
 
 /**
  * Creates a new database with the specified options.
@@ -45,8 +46,8 @@ export async function createDatabase(
   const databaseConfig: Database = {
     ...options,
     path: dbPath,
+    properties: options.properties || dataType.properties,
     created: new Date(),
-    properties: dataType.properties,
   };
 
   // Add the database to the store
@@ -62,7 +63,7 @@ export async function createDatabase(
   await writeDatabasesConfig();
 
   // Dispatch database created event
-  Events.dispatch('databases:database:create', databaseConfig);
+  Events.dispatch(DatabaseCreatedEvent, databaseConfig);
 
   return databaseConfig;
 }

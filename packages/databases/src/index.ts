@@ -1,5 +1,6 @@
 export * from './types';
 export * from './errors';
+export * from './events';
 export * from './data-type-configs';
 export * from './database-templates';
 export * as DataTypes from './DataTypes';
