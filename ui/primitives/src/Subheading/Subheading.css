@@ -1,4 +1,8 @@
 .subheading {
   display: block;
   margin-bottom: 0.5rem;
+
+  &.no-margin {
+    margin-bottom: 0;
+  }
 }

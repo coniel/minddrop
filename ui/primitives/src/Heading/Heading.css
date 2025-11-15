@@ -1,4 +1,8 @@
 .heading {
   display: block;
   margin-bottom: 0.75rem;
+
+  &.no-margin {
+    margin-bottom: 0;
+  }
 }
