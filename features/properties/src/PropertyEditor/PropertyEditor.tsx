@@ -143,11 +143,13 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
         style={{ display: open ? 'none' : 'flex' }}
       >
         <ContentIcon icon={property.icon} />
-
-        <Text size="small" color="inherit" weight="inherit" className="label">
-          {property.name}
-        </Text>
-
+        <Text
+          size="small"
+          color="inherit"
+          weight="inherit"
+          className="label"
+          text={property.name}
+        />
         <Icon
           size={14}
           name="chevron-right"
