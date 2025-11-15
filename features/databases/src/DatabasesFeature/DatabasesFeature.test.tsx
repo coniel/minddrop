@@ -1,0 +1,36 @@
+import { afterEach, describe, expect, it } from 'vitest';
+import {
+  Events,
+  OpenMainContentView,
+  OpenMainContentViewData,
+} from '@minddrop/events';
+import { render } from '@minddrop/test-utils';
+import {
+  EventListenerId,
+  OpenDatabaseViewEvent,
+  OpenDatabaseViewEventData,
+} from '../events';
+import { cleanup } from '../test-utils';
+import { DatabasesFeature } from './DatabasesFeature';
+
+describe('DatabasesFeature', () => {
+  afterEach(cleanup);
+
+  it('opens database view on open database view event', () =>
+    new Promise<void>((resolve) => {
+      render(<DatabasesFeature />);
+
+      Events.addListener<OpenMainContentViewData<OpenDatabaseViewEventData>>(
+        OpenMainContentView,
+        EventListenerId,
+        ({ data }) => {
+          expect(data.props!.name).toBe('test-database');
+          resolve();
+        },
+      );
+
+      Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+        name: 'test-database',
+      });
+    }));
+});

@@ -1,0 +1,44 @@
+import { Databases } from '@minddrop/databases';
+import {
+  Button,
+  ContentIcon,
+  Heading,
+  Panel,
+  Toolbar,
+  useToggle,
+} from '@minddrop/ui-primitives';
+import './DatabaseView.css';
+
+export interface DatabaseViewProps {
+  /**
+   * The name of the database to display.
+   */
+  name: string;
+}
+
+export const DatabaseView: React.FC<DatabaseViewProps> = ({ name }) => {
+  const database = Databases.use(name);
+  const [propertiesPanelOpen, togglePropertiesPanel] = useToggle(false);
+
+  if (!database) {
+    return <div className="database-view">Database not found.</div>;
+  }
+
+  return (
+    <Panel className="database-view">
+      <div className="header">
+        <div className="title">
+          <ContentIcon icon={database.icon} />
+          <Heading noMargin>{database.name}</Heading>
+        </div>
+        <Toolbar>
+          <Button
+            variant="outlined"
+            label="Configure"
+            onClick={togglePropertiesPanel}
+          />
+        </Toolbar>
+      </div>
+    </Panel>
+  );
+};

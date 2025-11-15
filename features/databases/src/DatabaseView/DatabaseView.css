@@ -1,0 +1,28 @@
+.database-view {
+  height: 100%;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .content-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .text {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
