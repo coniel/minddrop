@@ -26,7 +26,17 @@ export const objectDatabase: Database = {
   ],
 };
 
-export const databases = [objectDatabase];
+export const noPropertiesDatabase: Database = {
+  name: 'No Properties',
+  entryName: 'No Properties',
+  dataType: ObjectDataType.type,
+  icon: 'content-icon:shapes:blue',
+  path: `${parentDir}/No Properties`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  properties: [],
+};
+
+export const databases = [objectDatabase, noPropertiesDatabase];
 
 // File descriptors
 
@@ -47,5 +57,9 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
   {
     path: databaseConfigFilePath(objectDatabase.path),
     textContent: JSON.stringify(objectDatabase, null, 2),
+  },
+  {
+    path: databaseConfigFilePath(noPropertiesDatabase.path),
+    textContent: JSON.stringify(noPropertiesDatabase, null, 2),
   },
 ];
