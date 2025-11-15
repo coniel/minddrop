@@ -3,6 +3,11 @@ import { screen, userEvent, waitFor } from '../testing-library-react';
 export const emojiIcon = '😀';
 export const emojiIconString = `emoji:${emojiIcon}:1`;
 
+/**
+ * Picks an emoji icon from an emoji icon picker.
+ *
+ * @param label - The label of the icon picker button.
+ */
 export async function pickEmojiIcon(label: string) {
   const user = userEvent.setup();
 
