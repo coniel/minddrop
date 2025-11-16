@@ -1,4 +1,8 @@
-import { stringify } from 'yaml';
+import {
+  Properties,
+  PropertiesSchema,
+  PropertyMap,
+} from '@minddrop/properties';
 import { getMarkdownContent } from '../getMarkdownContent';
 
 /**
@@ -8,15 +12,18 @@ import { getMarkdownContent } from '../getMarkdownContent';
  * If the properties object is empty, no frontmatter will be added, and any existing
  * frontmatter will be removed.
  *
- * @param markdown - The markdown content to which the properties will be added.
+ * @param schema - The properties schema.
  * @param properties - The properties to be added as frontmatter.
+ * @param markdown - The markdown content to which the properties will be added.
  * @returns The markdown content with the properties added as frontmatter.
  */
 export function setPropertiesOnMarkdown(
+  schema: PropertiesSchema,
+  properties: PropertyMap,
   markdown: string,
-  properties: Record<string, unknown>,
 ): string {
-  const frontmatter = stringify(properties);
+  // Convert the properties to YAML
+  const frontmatter = Properties.toYaml(schema, properties);
 
   // If the properties object is empty, remove the frontmatter
   // and return the markdown content.

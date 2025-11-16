@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import { PropertiesSchema } from '@minddrop/properties';
 import { setPropertiesOnMarkdown } from './setPropertiesOnMarkdown';
+
+const schema: PropertiesSchema = [
+  {
+    type: 'text',
+    name: 'Title',
+  },
+  {
+    type: 'icon',
+    name: 'Icon',
+  },
+];
 
 const properties = {
   title: 'Title',
@@ -15,7 +27,7 @@ icon: ${properties.icon}
 
 describe('setPropertiesOnMarkdown', () => {
   it('adds properties as frontmatter', () => {
-    expect(setPropertiesOnMarkdown('# Title', properties)).toEqual(
+    expect(setPropertiesOnMarkdown(schema, properties, '# Title')).toEqual(
       markdownWithProperties,
     );
   });
@@ -27,7 +39,7 @@ foo: bar
 
 # Title`;
 
-    expect(setPropertiesOnMarkdown(markdown, properties)).toEqual(
+    expect(setPropertiesOnMarkdown(schema, properties, markdown)).toEqual(
       markdownWithProperties,
     );
   });
@@ -39,6 +51,6 @@ foo: bar
 
 # Title`;
 
-    expect(setPropertiesOnMarkdown(markdown, {})).toEqual('# Title');
+    expect(setPropertiesOnMarkdown(schema, {}, markdown)).toEqual('# Title');
   });
 });

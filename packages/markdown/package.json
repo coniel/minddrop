@@ -21,6 +21,7 @@
   "dependencies": {
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/properties": "workspace:*",
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-math": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.0",

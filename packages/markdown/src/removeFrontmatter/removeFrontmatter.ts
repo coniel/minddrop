@@ -6,6 +6,11 @@
  * @returns The markdown content without frontmatter.
  */
 export function removeFrontmatter(content: string): string {
+  // If the content doesn't start with frontmatter, return it as is
+  if (!content.startsWith('---')) {
+    return content;
+  }
+
   // Remove frontmatter
   const markdown = content.replace(/---[\s\S]*?---/, '').replace(/\n/, '');
 

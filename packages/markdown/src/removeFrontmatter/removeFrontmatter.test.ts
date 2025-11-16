@@ -22,4 +22,8 @@ describe('removeFrontmatter', () => {
   it('removes frontmatter from markdown missing a second newline after ---', () => {
     expect(removeFrontmatter(markdownMissingNewline)).toBe('# Document');
   });
+
+  it('returns the markdown content as is if it does not start with ---', () => {
+    expect(removeFrontmatter('\n# Document')).toBe('\n# Document');
+  });
 });
