@@ -1,17 +1,17 @@
 import { YAML, isSerializedDate } from '@minddrop/utils';
-import { PropertyMap } from '../types';
+import { PropertiesSchema, PropertyMap } from '../types';
 
 /**
- * Parses a properties string according to the provided schema.
+ * Parses stringified properties from YAML.
  *
- * @param string - The properties string.
  * @param schema - The properties schema.
+ * @param string - The properties string.
  *
  * @returns The parsed properties.
  */
-export function parseProperties<TProperties extends PropertyMap = PropertyMap>(
-  string: string,
-): TProperties {
+export function parsePropertiesFromYaml<
+  TProperties extends PropertyMap = PropertyMap,
+>(schema: PropertiesSchema, string: string): TProperties {
   // Parse the properties string
   const parsed = YAML.parse(string);
 
