@@ -9,8 +9,12 @@ import { writeDatabaseConfig } from '../writeDatabaseConfig';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
 
 export interface CreateDatabaseOptions
-  extends Omit<Database, 'created' | 'path' | 'properties'> {
+  extends Omit<
+    Database,
+    'created' | 'path' | 'properties' | 'entrySerializer'
+  > {
   properties?: Database['properties'];
+  entrySerializer?: Database['entrySerializer'];
 }
 
 /**
@@ -47,6 +51,7 @@ export async function createDatabase(
     ...options,
     path: dbPath,
     properties: options.properties || dataType.properties,
+    entrySerializer: options.entrySerializer || 'markdown',
     created: new Date(),
   };
 

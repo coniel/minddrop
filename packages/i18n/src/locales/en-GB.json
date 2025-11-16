@@ -192,6 +192,20 @@
         "nameConflict": "A database with this name already exists.",
         "pathConflict": "A folder with this name already exists in the at the specified location."
       }
+    },
+    "entrySerializers": {
+      "markdown": {
+        "name": "Markdown",
+        "description": "Saves database entries as Markdown files."
+      },
+      "json": {
+        "name": "JSON",
+        "description": "Saves database entries as JSON files."
+      },
+      "yaml": {
+        "name": "YAML",
+        "description": "Saves database entries as YAML files."
+      }
     }
   },
   "dataTypes": {

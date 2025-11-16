@@ -66,14 +66,13 @@ export interface DataType<TData = unknown> {
    * @param properties - The entry's properties.
    * @param data - The entry's data.
    *
-   * @returns An object containing the serialized entry string and the file
-   * extension to use when saving the entry to the file system.
+   * @returns The serialized entry string.
    */
   serialize?: (
     database: Database,
     properties: PropertyMap,
     data?: TData,
-  ) => { serializedEntry: string; fileExtension: string };
+  ) => string;
 
   /**
    * A function to deserialize entry data when reading it from the file system.
@@ -90,4 +89,10 @@ export interface DataType<TData = unknown> {
     database: Database,
     serializedEntry: string,
   ) => { properties: PropertyMap; data?: TData };
+
+  /**
+   * The serialized entry file extension. Only applicable when `serialize` is
+   * defined.
+   */
+  fileExtension?: string;
 }

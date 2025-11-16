@@ -18,6 +18,7 @@
   "dependencies": {
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/markdown": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/utils": "workspace:*"

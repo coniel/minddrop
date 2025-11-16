@@ -1,13 +1,22 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { BaseDirectory } from '@minddrop/file-system';
+import { DatabaseEntrySerializerSerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
-import { MockFs, cleanup, databases, objectDatabase } from '../test-utils';
-import { DatabasesConfig } from '../types';
+import { coreEntrySerializers } from '../entry-serializers';
+import { MockFs, cleanup, databases } from '../test-utils';
 import { initializeDatabases } from './initializeDatabases';
 
 describe('initializeDatabases', () => {
   afterEach(cleanup);
+
+  it('loads entry serializers into the store', async () => {
+    await initializeDatabases();
+
+    expect(DatabaseEntrySerializerSerializersStore.getAll()).toEqual(
+      coreEntrySerializers,
+    );
+  });
 
   it('loads databases into the store', async () => {
     await initializeDatabases();

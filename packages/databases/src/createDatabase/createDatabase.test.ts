@@ -26,6 +26,7 @@ const newDatabase: Database = {
   properties: UrlDataType.properties,
   created: expect.any(Date),
   path: `${parentDir}/${options.name}`,
+  entrySerializer: 'markdown',
 };
 
 describe('createDatabase', () => {

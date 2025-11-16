@@ -395,6 +395,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/markdown':
+        specifier: workspace:*
+        version: link:../markdown
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../properties
@@ -888,6 +891,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
       mdast-util-gfm:
         specifier: ^3.0.0
         version: 3.1.0

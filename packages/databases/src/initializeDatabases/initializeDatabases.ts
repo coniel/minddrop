@@ -1,6 +1,8 @@
 import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { DatabaseEntrySerializerSerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
+import { coreEntrySerializers } from '../entry-serializers';
 import { Database, DatabasesConfig, SerializedDatabaseConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
@@ -15,6 +17,9 @@ export async function initializeDatabases() {
     appConfig,
     DatabasesConfigFileName,
   );
+
+  // Load database entry serializers into the store
+  DatabaseEntrySerializerSerializersStore.load(coreEntrySerializers);
 
   // Ensure databases config file exists
   if (!(await Fs.exists(databasesConfigFilePath))) {

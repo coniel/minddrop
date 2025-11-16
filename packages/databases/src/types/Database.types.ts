@@ -13,6 +13,15 @@ export interface Database {
   dataType: string;
 
   /**
+   * The entry serializer used to serialize entries in the database.
+   * Must be a registered entry serializer.
+   *
+   * A value of 'data-type' indicates that the database is using the entry serializer
+   * defined by its data type.
+   */
+  entrySerializer: 'data-type' | string;
+
+  /**
    * The name of the database. Also used as the name for the database directory
    * on the file system.
    */
