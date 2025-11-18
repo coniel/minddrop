@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
-import { titleFromPath } from '@minddrop/utils';
+import { titleFromPath, uuid } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryCreatedEvent } from '../events';
 import { getDataType } from '../getDataType';
@@ -61,6 +61,7 @@ export async function createDatabaseEntry<
 
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
+    id: uuid(),
     database: databaseId,
     title: titleFromPath(name),
     path,
@@ -73,7 +74,7 @@ export async function createDatabaseEntry<
   DatabaseEntriesStore.add(entry);
 
   // Werite the entry to the file system
-  await writeDatabaseEntry(entry.path);
+  await writeDatabaseEntry(entry.id);
 
   // Dispatch an entry created event
   Events.dispatch(DatabaseEntryCreatedEvent, entry);

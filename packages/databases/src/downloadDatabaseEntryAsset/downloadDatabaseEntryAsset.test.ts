@@ -31,13 +31,13 @@ describe('downloadDatabaseEntryAsset', () => {
   afterEach(cleanup);
 
   it('creates the assets directory if it does not exist', async () => {
-    await downloadDatabaseEntryAsset(objectEntry1.path, url, 'foo');
+    await downloadDatabaseEntryAsset(objectEntry1.id, url, 'foo');
 
     expect(MockFs.exists(entryTypeAssetsDirPath)).toBe(true);
   });
 
   it("creates the entry's assets directory if it does not exist", async () => {
-    await downloadDatabaseEntryAsset(objectEntry1.path, url, 'foo');
+    await downloadDatabaseEntryAsset(objectEntry1.id, url, 'foo');
 
     expect(MockFs.exists(entryAssetsDirPath)).toBe(true);
   });
@@ -45,7 +45,7 @@ describe('downloadDatabaseEntryAsset', () => {
   it('downloads the asset to the entry assets directory', async () => {
     const assetPath = Fs.concatPath(entryAssetsDirPath, fileName);
 
-    await downloadDatabaseEntryAsset(objectEntry1.path, url, 'foo');
+    await downloadDatabaseEntryAsset(objectEntry1.id, url, 'foo');
 
     expect(MockFs.exists(assetPath)).toBe(true);
   });
@@ -58,13 +58,13 @@ describe('downloadDatabaseEntryAsset', () => {
 
     // Shouldn't throw an error
     await expect(
-      downloadDatabaseEntryAsset(objectEntry1.path, url, 'foo'),
+      downloadDatabaseEntryAsset(objectEntry1.id, url, 'foo'),
     ).resolves.not.toThrow();
   });
 
   it('returns asset file name upon successful download', async () => {
     const result = await downloadDatabaseEntryAsset(
-      objectEntry1.path,
+      objectEntry1.id,
       url,
       'foo',
     );
@@ -78,7 +78,7 @@ describe('downloadDatabaseEntryAsset', () => {
     Fs.downloadFile = vi.fn().mockRejectedValue(new Error('Download failed'));
 
     const result = await downloadDatabaseEntryAsset(
-      objectEntry1.path,
+      objectEntry1.id,
       url,
       'foo',
     );

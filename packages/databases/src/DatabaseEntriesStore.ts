@@ -1,17 +1,17 @@
 import { createArrayStore } from '@minddrop/utils';
 import { DatabaseEntry } from './types';
 
-export const DatabaseEntriesStore = createArrayStore<DatabaseEntry>('path');
+export const DatabaseEntriesStore = createArrayStore<DatabaseEntry>('id');
 
 /**
- * Retrieves an entry by path or null if it doesn't exist.
+ * Retrieves an entry by ID or null if it doesn't exist.
  *
- * @param path - The path of the entry to retrieve.
+ * @param id - The ID of the entry to retrieve.
  * @returns The entry or null if it doesn't exist.
  */
-export const useDatabaseEntry = (path: string): DatabaseEntry | null => {
+export const useDatabaseEntry = (id: string): DatabaseEntry | null => {
   return (
-    DatabaseEntriesStore.useAllItems().find((config) => config.path === path) ||
+    DatabaseEntriesStore.useAllItems().find((config) => config.id === id) ||
     null
   );
 };

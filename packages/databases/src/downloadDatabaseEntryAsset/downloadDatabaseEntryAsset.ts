@@ -8,7 +8,7 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
  * Downloads an asset from a URL and saves it to the specified entry's assets
  * directory. Replaces any existing asset with the same name.
  *
- * @param path - The path of the entry to download the asset for.
+ * @param id - The ID of the entry to download the asset for.
  * @param url - The URL of the asset to download.
  * @param fileName - The name to save the downloaded asset as (without extension).
  *
@@ -16,12 +16,12 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
  *          if the download failed.
  */
 export async function downloadDatabaseEntryAsset(
-  path: string,
+  id: string,
   url: string,
   fileName: string,
 ): Promise<string | false> {
   // Get the entry
-  const entry = getDatabaseEntry(path);
+  const entry = getDatabaseEntry(id);
 
   const assetFileExtension = getFileExtensionFromUrl(url);
   const assetFileName = assetFileExtension
@@ -38,7 +38,7 @@ export async function downloadDatabaseEntryAsset(
   const assetPath = Fs.concatPath(entryAssetsDirPath, assetFileName);
 
   // Ensure the entry's assets directory exists
-  await ensureDatabaseEntryAssetsDirExists(path);
+  await ensureDatabaseEntryAssetsDirExists(id);
 
   // Delete existing asset if it exists
   if (await Fs.exists(assetPath)) {

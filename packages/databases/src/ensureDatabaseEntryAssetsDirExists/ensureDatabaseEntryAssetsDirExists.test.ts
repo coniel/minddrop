@@ -23,13 +23,13 @@ describe('ensureDatabaseEntryAssetsDirExists', () => {
   afterEach(cleanup);
 
   it('creates the entry type assets directory if it does not exist', async () => {
-    await ensureDatabaseEntryAssetsDirExists(objectEntry1.path);
+    await ensureDatabaseEntryAssetsDirExists(objectEntry1.id);
 
     expect(MockFs.exists(entryTypeAssetsDirPath)).toBe(true);
   });
 
   it("creates the entry's assets directory if it does not exist", async () => {
-    await ensureDatabaseEntryAssetsDirExists(objectEntry1.path);
+    await ensureDatabaseEntryAssetsDirExists(objectEntry1.id);
 
     const path = Fs.concatPath(entryTypeAssetsDirPath, objectEntry1.title);
 

@@ -28,6 +28,7 @@ import { createDatabaseEntry } from './createDatabaseEntry';
 const title = i18n.t('labels.untitled');
 const newEntry: DatabaseEntry = {
   ...objectEntry1,
+  id: expect.any(String),
   title: title,
   path: `${objectDatabase.path}/${title}.md`,
   properties: {
@@ -56,22 +57,20 @@ describe('createDatabaseEntry', () => {
   });
 
   it('adds the new entry to the store', async () => {
-    await createDatabaseEntry(objectDatabase.id);
+    const entry = await createDatabaseEntry(objectDatabase.id);
 
-    const entry = DatabaseEntriesStore.get(newEntry.path);
+    const storeEntry = DatabaseEntriesStore.get(entry.id);
 
-    expect(entry).toEqual(newEntry);
+    expect(storeEntry).toEqual(entry);
   });
 
   it('writes the entry files to the file system', async () => {
-    await createDatabaseEntry(objectDatabase.id);
+    const entry = await createDatabaseEntry(objectDatabase.id);
 
     // Main file should exist
-    expect(MockFs.exists(newEntry.path)).toBeTruthy();
+    expect(MockFs.exists(entry.path)).toBeTruthy();
     // Core properties YAML file should exist
-    expect(
-      MockFs.exists(entryCorePropertiesFilePath(newEntry.path)),
-    ).toBeTruthy();
+    expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
   });
 
   describe('file name incrementation', () => {

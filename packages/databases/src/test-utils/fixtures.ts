@@ -168,6 +168,7 @@ export const databases = [
 // Database entries
 
 export const objectEntry1: DatabaseEntry = {
+  id: 'ffc1e0a1-e014-49b2-a0cb-f86f9eef367c',
   title: 'Test Entry',
   database: objectDatabase.id,
   path: `${objectDatabase.path}/Test Entry.md`,
@@ -190,6 +191,7 @@ created: ${objectEntry1.created.toISOString()}
 lastModified: ${objectEntry1.lastModified.toISOString()}`;
 
 export const pdfEntry1: DatabaseEntry = {
+  id: '4f086791-3b00-419a-88f2-e671a10236ed',
   title: 'Test Entry',
   database: pdfDatabase.id,
   path: `${pdfDatabase.path}/Test Entry.pdf`,
@@ -210,6 +212,7 @@ created: ${pdfEntry1.created.toISOString()}
 lastModified: ${pdfEntry1.lastModified.toISOString()}`;
 
 export const yamlObjectEntry1: DatabaseEntry = {
+  id: '01733d4a-acb4-41be-bd99-219b5eb1efd6',
   title: 'Test Entry',
   database: yamlObjectDatabase.id,
   path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
@@ -222,6 +225,7 @@ export const yamlObjectEntry1: DatabaseEntry = {
 };
 
 export const urlEntry1: DatabaseEntry = {
+  id: 'fff02a8f-9678-4539-9da4-74dd876ec2e0',
   title: 'Test Entry',
   database: urlDatabase.id,
   path: `${urlDatabase.path}/Test Entry.md`,
@@ -256,6 +260,7 @@ created: ${yamlObjectEntry1.created.toISOString()}
 lastModified: ${yamlObjectEntry1.lastModified.toISOString()}`;
 
 export const dataTypeSerializerEntry1: DatabaseEntry = {
+  id: 'c1c5a4bb-1b89-4152-8a60-94aa3268271b',
   title: 'Test Entry',
   database: dataTypeSerializerDatabase.id,
   path: `${dataTypeSerializerDatabase.path}/Test Entry.json`,

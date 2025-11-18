@@ -12,16 +12,16 @@ import {
 /**
  * Writes an entry to the file system.
  *
- * @param path - The entry's path.
+ * @param id - The ID of the entry to write.
  *
  * @throws {DatabaseEntryNotFoundError} If the entry does not exist.
  * @throws {DatabaseNotFoundError} If the entry database does not exist.
  * @throws {DataTypeNotFoundError} If the data type is not registered.
  * @throws {DatabaseEntrySerializerNotRegisteredError} If the entry serializer is not registered.
  */
-export async function writeDatabaseEntry(path: string): Promise<void> {
+export async function writeDatabaseEntry(id: string): Promise<void> {
   // Get the entry
-  const entry = getDatabaseEntry(path);
+  const entry = getDatabaseEntry(id);
   // Get the the parent database
   const database = getDatabase(entry.database);
   // Get the database's data type
@@ -29,7 +29,7 @@ export async function writeDatabaseEntry(path: string): Promise<void> {
 
   // Write the entry's core properties
   Fs.writeTextFile(
-    entryCorePropertiesFilePath(path),
+    entryCorePropertiesFilePath(entry.path),
     Properties.toYaml(database.properties, {
       title: entry.title,
       created: entry.created,
@@ -47,14 +47,14 @@ export async function writeDatabaseEntry(path: string): Promise<void> {
     );
 
     Fs.writeTextFile(
-      fileEntryPropertiesFilePath(path, serializer.fileExtension),
+      fileEntryPropertiesFilePath(entry.path, serializer.fileExtension),
       serializedEntry,
     );
   } else {
     // If the entry serializer is data-type, serialize the entry  using the
     // data type's serialize function.
     if (database.entrySerializer === 'data-type') {
-      Fs.writeTextFile(path, dataType.serialize!(database, entry));
+      Fs.writeTextFile(entry.path, dataType.serialize!(database, entry));
     } else {
       // Otherwise, use the database's entry serializer's serialize function
       const serializer = getDatabaseEntrySerializer(database.entrySerializer);
@@ -63,7 +63,7 @@ export async function writeDatabaseEntry(path: string): Promise<void> {
         entry.properties,
       );
 
-      Fs.writeTextFile(path, serializedEntry);
+      Fs.writeTextFile(entry.path, serializedEntry);
     }
   }
 }

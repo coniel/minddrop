@@ -19,7 +19,7 @@ describe('updateDatabaseEntry', () => {
   afterEach(cleanup);
 
   it('should update the entry with the provided data', async () => {
-    const entry = await updateDatabaseEntry(objectEntry1.path, update);
+    const entry = await updateDatabaseEntry(objectEntry1.id, update);
 
     expect(entry.properties.Content).toBe(update.properties.Content);
   });
@@ -32,7 +32,7 @@ describe('updateDatabaseEntry', () => {
 
   it('throws if the update data contains a title', async () => {
     await expect(
-      updateDatabaseEntry(objectEntry1.path, {
+      updateDatabaseEntry(objectEntry1.id, {
         // @ts-expect-error Testing invalid data
         title: 'New Title',
       }),
@@ -40,7 +40,7 @@ describe('updateDatabaseEntry', () => {
   });
 
   it('updates the last modified date', async () => {
-    const entry = await updateDatabaseEntry(objectEntry1.path, update);
+    const entry = await updateDatabaseEntry(objectEntry1.id, update);
 
     expect(entry.lastModified.getTime()).toBeGreaterThan(
       objectEntry1.lastModified.getTime(),
@@ -48,9 +48,9 @@ describe('updateDatabaseEntry', () => {
   });
 
   it('updates the entry in the store', async () => {
-    const entry = await updateDatabaseEntry(objectEntry1.path, update);
+    const entry = await updateDatabaseEntry(objectEntry1.id, update);
 
-    const storeDatabaseEntry = DatabaseEntriesStore.get(objectEntry1.path);
+    const storeDatabaseEntry = DatabaseEntriesStore.get(objectEntry1.id);
 
     expect(storeDatabaseEntry).toEqual(entry);
   });
@@ -59,13 +59,13 @@ describe('updateDatabaseEntry', () => {
     // Delete the exisitng entry file
     MockFs.removeFile(objectEntry1.path);
 
-    await updateDatabaseEntry(objectEntry1.path, update);
+    await updateDatabaseEntry(objectEntry1.id, update);
 
     expect(MockFs.exists(objectEntry1.path)).toBeTruthy();
   });
 
   it('does nothing if no valid update data is provided', async () => {
-    const entry = await updateDatabaseEntry(objectEntry1.path, {});
+    const entry = await updateDatabaseEntry(objectEntry1.id, {});
 
     expect(entry).toEqual(objectEntry1);
   });
@@ -85,6 +85,6 @@ describe('updateDatabaseEntry', () => {
         done();
       });
 
-      updateDatabaseEntry(objectEntry1.path, update);
+      updateDatabaseEntry(objectEntry1.id, update);
     }));
 });

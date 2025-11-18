@@ -12,7 +12,7 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
  * Renames an entry, updating its title and the file names of its associated
  * files.
  *
- * @param path - The path of the entry to rename.
+ * @param id - The ID of the entry to rename.
  * @param newTitle - The new title for the entry.
  * @returns The renamed entry.
  *
@@ -21,15 +21,15 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
 export async function renameDatabaseEntry<
   TDatabaseEntry extends DatabaseEntry = DatabaseEntry,
 >(
-  path: string,
+  id: string,
   newTitle: string,
   incrementTitleIfConflict = false,
 ): Promise<TDatabaseEntry> {
   let finalNewTitle = newTitle;
-  const entry = getDatabaseEntry<TDatabaseEntry>(path);
-  const parentDir = Fs.parentDirPath(path);
-  const corePropertiesPath = entryCorePropertiesFilePath(path);
-  const fileExtension = Fs.getFileExtension(path);
+  const entry = getDatabaseEntry<TDatabaseEntry>(id);
+  const parentDir = Fs.parentDirPath(entry.path);
+  const corePropertiesPath = entryCorePropertiesFilePath(entry.path);
+  const fileExtension = Fs.getFileExtension(entry.path);
   const newFileName = `${newTitle}.${fileExtension}`;
   let newPath = Fs.concatPath(parentDir, newFileName);
 
@@ -47,12 +47,12 @@ export async function renameDatabaseEntry<
   }
 
   // Rename the primary entry file
-  Fs.rename(path, newPath);
+  Fs.rename(entry.path, newPath);
   // Rename the entry's core properties file
   Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
 
   // Rename the entry's assets directory if it exists
-  const assetsDirPath = entryAssetsDirPath(path);
+  const assetsDirPath = entryAssetsDirPath(entry.path);
 
   if (await Fs.exists(assetsDirPath)) {
     const newAssetsDirPath = entryAssetsDirPath(newPath);
@@ -67,13 +67,11 @@ export async function renameDatabaseEntry<
     lastModified: new Date(),
   };
 
-  // Update the entry in the store by adding the renamed entry
-  // and removing the old entry.
-  DatabaseEntriesStore.add(renamedDatabaseEntry);
-  DatabaseEntriesStore.remove(path);
+  // Update the entry in the store
+  DatabaseEntriesStore.update(id, renamedDatabaseEntry);
 
   // Write the updated core properties to the renamed core properties file
-  writeDatabaseEntry(newPath);
+  writeDatabaseEntry(id);
 
   // Dispatch an entry rename event
   Events.dispatch(DatabaseEntryRenamedEvent, renamedDatabaseEntry);

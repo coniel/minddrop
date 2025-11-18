@@ -5,7 +5,12 @@ export interface DatabaseEntry<
   TData extends object = {},
 > {
   /**
-   * The name of the database the entry belongs to.
+   * A unique identifier for the entry.
+   */
+  id: string;
+
+  /**
+   * The ID of the database the entry belongs to.
    */
   database: string;
 
@@ -44,5 +49,5 @@ export interface DatabaseEntry<
 
 export type DatabaseEntryCoreProperties = Pick<
   DatabaseEntry,
-  'title' | 'created' | 'lastModified'
+  'id' | 'title' | 'created' | 'lastModified'
 >;

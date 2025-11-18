@@ -25,12 +25,12 @@ describe('renameDatabaseEntry', () => {
 
   it('throws if the name conflicts with an existing entry', async () => {
     await expect(
-      renameDatabaseEntry(objectEntry1.path, objectEntry1.title),
+      renameDatabaseEntry(objectEntry1.id, objectEntry1.title),
     ).rejects.toThrow(PathConflictError);
   });
 
   it("renames the entry's primary file", async () => {
-    await renameDatabaseEntry(objectEntry1.path, 'Renamed DatabaseEntry');
+    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
     const newPath = `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`;
 
@@ -46,7 +46,7 @@ describe('renameDatabaseEntry', () => {
     MockFs.addFiles([`${Fs.parentDirPath(objectEntry1.path)}/${newName}.md`]);
 
     const renamedDatabaseEntry = await renameDatabaseEntry(
-      objectEntry1.path,
+      objectEntry1.id,
       newName,
       true,
     );
@@ -58,7 +58,7 @@ describe('renameDatabaseEntry', () => {
   });
 
   it("renames the entry's core properties file", async () => {
-    await renameDatabaseEntry(objectEntry1.path, 'Renamed DatabaseEntry');
+    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
     const oldPath = `${corePropertiesDirPath}/${objectEntry1.title}.yaml`;
     const newPath = `${corePropertiesDirPath}/Renamed DatabaseEntry.yaml`;
@@ -73,7 +73,7 @@ describe('renameDatabaseEntry', () => {
     // Add the entry's assets directory
     MockFs.addFiles([assetsDirPath]);
 
-    await renameDatabaseEntry(objectEntry1.path, 'Renamed DatabaseEntry');
+    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
     const newAssetsDirPath = entryAssetsDirPath(
       `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
@@ -85,7 +85,7 @@ describe('renameDatabaseEntry', () => {
 
   it('updates the entry title, path, and last modified date', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
-      objectEntry1.path,
+      objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
@@ -100,17 +100,17 @@ describe('renameDatabaseEntry', () => {
 
   it('updates the entry in the store', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
-      objectEntry1.path,
+      objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
-    expect(DatabaseEntriesStore.get(renamedDatabaseEntry.path)).toEqual(
+    expect(DatabaseEntriesStore.get(renamedDatabaseEntry.id)).toEqual(
       renamedDatabaseEntry,
     );
   });
 
   it('updates the entry core properties file', async () => {
-    await renameDatabaseEntry(objectEntry1.path, 'Renamed DatabaseEntry');
+    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
     const coreProperties = MockFs.readTextFile(
       `${corePropertiesDirPath}/Renamed DatabaseEntry.yaml`,
@@ -134,6 +134,6 @@ describe('renameDatabaseEntry', () => {
         done();
       });
 
-      renameDatabaseEntry(objectEntry1.path, 'Renamed DatabaseEntry');
+      renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
     }));
 });

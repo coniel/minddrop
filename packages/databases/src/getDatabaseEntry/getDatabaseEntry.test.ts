@@ -9,7 +9,7 @@ describe('getDatabaseEntry', () => {
   afterEach(cleanup);
 
   it('returns the entry if it exists', () => {
-    const entry = getDatabaseEntry(objectEntry1.path);
+    const entry = getDatabaseEntry(objectEntry1.id);
 
     expect(entry).toEqual(objectEntry1);
   });

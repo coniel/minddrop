@@ -46,7 +46,7 @@ describe('writeDatabaseEntry', () => {
       database: 'non-existent-db',
     });
 
-    await expect(writeDatabaseEntry(objectEntry1.path)).rejects.toThrow(
+    await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DatabaseNotFoundError,
     );
   });
@@ -65,7 +65,7 @@ describe('writeDatabaseEntry', () => {
       database: 'missing-data-type',
     });
 
-    await expect(writeDatabaseEntry(objectEntry1.path)).rejects.toThrow(
+    await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DataTypeNotFoundError,
     );
   });
@@ -84,7 +84,7 @@ describe('writeDatabaseEntry', () => {
       database: 'missing-entry-serializer',
     });
 
-    await expect(writeDatabaseEntry(objectEntry1.path)).rejects.toThrow(
+    await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DatabaseEntrySerializerNotRegisteredError,
     );
   });
@@ -95,7 +95,7 @@ describe('writeDatabaseEntry', () => {
     // Remove the file before writing to ensure it doesn't exist
     MockFs.removeFile(path);
 
-    await writeDatabaseEntry(objectEntry1.path);
+    await writeDatabaseEntry(objectEntry1.id);
 
     const properties = Properties.fromYaml(
       objectDatabase.properties,
@@ -112,7 +112,7 @@ describe('writeDatabaseEntry', () => {
       // Remove the file before writing to ensure it doesn't exist
       MockFs.removeFile(path);
 
-      await writeDatabaseEntry(pdfEntry1.path);
+      await writeDatabaseEntry(pdfEntry1.id);
 
       const properties = Markdown.getProperties(
         pdfDatabase.properties,
@@ -128,7 +128,7 @@ describe('writeDatabaseEntry', () => {
       // Remove the file before writing to ensure it doesn't exist
       MockFs.removeFile(yamlObjectEntry1.path);
 
-      await writeDatabaseEntry(yamlObjectEntry1.path);
+      await writeDatabaseEntry(yamlObjectEntry1.id);
 
       const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
 
@@ -141,7 +141,7 @@ describe('writeDatabaseEntry', () => {
       // Remove the file before writing to ensure it doesn't exist
       MockFs.removeFile(dataTypeSerializerEntry1.path);
 
-      await writeDatabaseEntry(dataTypeSerializerEntry1.path);
+      await writeDatabaseEntry(dataTypeSerializerEntry1.id);
 
       const entry = MockFs.readJsonFile(dataTypeSerializerEntry1.path);
 

@@ -17,7 +17,7 @@ export interface DatabaseEntryUpdateData {
 /**
  * Updates an existing database entry with the provided data.
  *
- * @param path - The path of the entry to update.
+ * @param id - The ID of the entry to update.
  * @param data - The data to update the entry with.
  *
  * @returns The updated entry.
@@ -27,12 +27,12 @@ export interface DatabaseEntryUpdateData {
  * @dispatches databases:entry:updated event.
  */
 export async function updateDatabaseEntry(
-  path: string,
+  id: string,
   data: DatabaseEntryUpdateData,
 ): Promise<DatabaseEntry> {
   let hasValidUpdateData = false;
   // Clone the existing entry
-  const entry = { ...getDatabaseEntry(path) };
+  const entry = { ...getDatabaseEntry(id) };
 
   // Ensure title is not being updated
   if ('title' in data) {
@@ -58,10 +58,10 @@ export async function updateDatabaseEntry(
   entry.lastModified = new Date();
 
   // Update the entry in the store
-  DatabaseEntriesStore.update(path, entry);
+  DatabaseEntriesStore.update(id, entry);
 
   // Write the updated entry files to the file system
-  await writeDatabaseEntry(path);
+  await writeDatabaseEntry(id);
 
   // Dispatch entry update event
   Events.dispatch(DatabaseEntryUpdatedEvent, entry);

@@ -7,15 +7,15 @@ import { getDatabaseEntry } from '../getDatabaseEntry';
  * Ensures the specified entry's assets directory exists. Creates the directory
  * if it does not, including the parent 'assets' directory if necessary.
  *
- * @param path - The path of the entry to ensure the assets directory for.
+ * @param id - The ID of the entry to ensure the assets directory for.
  *
  * @returns A promise that resolves when the operation is complete.
  */
 export async function ensureDatabaseEntryAssetsDirExists(
-  path: string,
+  id: string,
 ): Promise<void> {
   // Get the entry
-  const entry = getDatabaseEntry(path);
+  const entry = getDatabaseEntry(id);
 
   // The path to the assets directory inside the entry's parent directory
   const entryTypeAssetsDirPath = Fs.concatPath(
