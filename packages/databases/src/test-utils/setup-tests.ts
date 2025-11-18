@@ -10,6 +10,7 @@ import { coreEntrySerializers } from '../entry-serializers';
 import {
   dataTypes,
   databaseEntries,
+  databaseEntryFiles,
   databaseFiles,
   databases,
 } from './fixtures';
@@ -23,7 +24,10 @@ interface SetupOptions {
 
 initializeI18n();
 
-export const MockFs = initializeMockFileSystem(databaseFiles);
+export const MockFs = initializeMockFileSystem([
+  ...databaseFiles,
+  ...databaseEntryFiles,
+]);
 
 export function setup(
   options: SetupOptions = {
