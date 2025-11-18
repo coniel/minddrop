@@ -12,5 +12,6 @@ export type PropertyType =
   | 'select'
   | 'text'
   | 'text-formatted'
+  | 'title'
   | 'toggle'
   | 'url';
