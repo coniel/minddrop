@@ -59,12 +59,6 @@ export async function initializeDatabases() {
 
   const databaseConfigs = await Promise.all(databaseConfigPromises);
 
-  // In dev mode, initializeDatabases may be called multiple times.
-  // Prevent loading databases into the store more than once.
-  if (DatabasesStore.getAll().length > 0) {
-    return;
-  }
-
   // Load database configs into the store
   DatabasesStore.load(
     databaseConfigs.filter((config): config is Database => config !== null),
