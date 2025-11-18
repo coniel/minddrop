@@ -73,13 +73,16 @@ describe('updateDatabaseEntry', () => {
   it('dispatches a entry update event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryUpdatedEvent, 'test', (payload) => {
-        // Payload data should be the updated entry
+        // Payload data should cotain the original and updated entry
         expect(payload.data).toEqual({
-          ...objectEntry1,
-          lastModified: expect.any(Date),
-          properties: {
-            ...objectEntry1.properties,
-            ...update.properties,
+          original: objectEntry1,
+          updated: {
+            ...objectEntry1,
+            lastModified: expect.any(Date),
+            properties: {
+              ...objectEntry1.properties,
+              ...update.properties,
+            },
           },
         });
         done();

@@ -31,8 +31,9 @@ export async function updateDatabaseEntry(
   data: DatabaseEntryUpdateData,
 ): Promise<DatabaseEntry> {
   let hasValidUpdateData = false;
+  const originalEntry = getDatabaseEntry(id);
   // Clone the existing entry
-  const entry = { ...getDatabaseEntry(id) };
+  const updatedEntry = { ...originalEntry };
 
   // Ensure title is not being updated
   if ('title' in data) {
@@ -42,8 +43,8 @@ export async function updateDatabaseEntry(
   }
 
   if (data.properties !== undefined) {
-    entry.properties = {
-      ...entry.properties,
+    updatedEntry.properties = {
+      ...originalEntry.properties,
       ...data.properties,
     };
     hasValidUpdateData = true;
@@ -51,21 +52,24 @@ export async function updateDatabaseEntry(
 
   // If no valid update data was provided, return the entry as is
   if (!hasValidUpdateData) {
-    return entry;
+    return updatedEntry;
   }
 
   // Update the last modified date
-  entry.lastModified = new Date();
+  updatedEntry.lastModified = new Date();
 
   // Update the entry in the store
-  DatabaseEntriesStore.update(id, entry);
+  DatabaseEntriesStore.update(id, updatedEntry);
 
   // Write the updated entry files to the file system
   await writeDatabaseEntry(id);
 
   // Dispatch entry update event
-  Events.dispatch(DatabaseEntryUpdatedEvent, entry);
+  Events.dispatch(DatabaseEntryUpdatedEvent, {
+    original: originalEntry,
+    updated: updatedEntry,
+  });
 
   // Return the updated entry
-  return entry;
+  return updatedEntry;
 }
