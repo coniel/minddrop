@@ -1,14 +1,19 @@
+import { YAML } from '@minddrop/utils';
 import * as Api from './FsApi';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
 } from './incrementalPath';
-import type { FileSystem, FileSystemAdapter } from './types';
+import type { FileSystem, FileSystemAdapter, FsOptions } from './types';
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 
 export const Fs: FileSystem &
-  typeof Api & { incrementalPath: typeof incrementalPath } = {
+  typeof Api & {
+    incrementalPath: typeof incrementalPath;
+    readYamlFile: typeof readYamlFile;
+    writeYamlFile: typeof writeYamlFile;
+  } = {
   ...Api,
   incrementalPath,
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
@@ -30,6 +35,8 @@ export const Fs: FileSystem &
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
   readJsonFile: (...args) => FsAdapter.readJsonFile(...args),
   writeJsonFile: (...args) => FsAdapter.writeJsonFile(...args),
+  readYamlFile: (...args) => readYamlFile(...args),
+  writeYamlFile: (...args) => writeYamlFile(...args),
 };
 
 /**
@@ -54,4 +61,23 @@ async function incrementalPath(
   ignoreFileExtension = false,
 ): Promise<IncrementedPath> {
   return incrementalPathFn(FsAdapter, targetPath, ignoreFileExtension);
+}
+
+async function readYamlFile<TData extends object = object>(
+  path: string,
+  options?: FsOptions,
+): Promise<object> {
+  const test = await FsAdapter.readTextFile(path, options);
+
+  return YAML.parse(test) as TData;
+}
+
+async function writeYamlFile(
+  path: string,
+  values: Record<string, unknown>,
+  options?: FsOptions,
+): Promise<void> {
+  const text = YAML.stringify(values);
+
+  await FsAdapter.writeTextFile(path, text, options);
 }

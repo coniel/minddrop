@@ -29,6 +29,10 @@ export interface MockFileSystem {
     path: string,
     options?: FsReadFileOptions,
   ): TType;
+  readYamlFile<TData extends object = object>(
+    path: string,
+    options?: FsReadFileOptions,
+  ): Promise<TData>;
   writeTextFile(
     path: string,
     textContent: string,
@@ -40,6 +44,11 @@ export interface MockFileSystem {
     pretty?: boolean,
     options?: FsWriteFileOptions,
   ): void;
+  writeYamlFile(
+    path: string,
+    values: Record<string, unknown>,
+    options?: FsWriteFileOptions,
+  ): Promise<void>;
   createDir(path: string, options?: FsCreateDirOptions): void;
   removeFile(path: string, options?: FsRemoveFileOptions): void;
   removeDir(path: string, options?: FsRemoveDirOptions): void;

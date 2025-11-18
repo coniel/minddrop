@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Paths } from '@minddrop/utils';
+import { Paths, YAML } from '@minddrop/utils';
 import { registerFileSystemAdapter } from '../FileSystem';
 import { concatPath } from '../concatPath';
 import { fileNameFromPath } from '../fileNameFromPath';
@@ -270,6 +270,14 @@ export function initializeMockFileSystem(
 
       return JSON.parse(textFileContents[fullPath]);
     },
+    readYamlFile: async (path, options) => {
+      const fullPath = getFullPath(path, options);
+
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      return YAML.parse(textFileContents[fullPath]);
+    },
     writeTextFile: (path, textContent, options) => {
       const fullPath = getFullPath(path, options);
 
@@ -297,6 +305,18 @@ export function initializeMockFileSystem(
         null,
         pretty ? 2 : 0,
       );
+    },
+    writeYamlFile: async (path, values, options) => {
+      const fullPath = getFullPath(path, options);
+
+      if (!mockExists(root, fullPath)) {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          name: fileNameFromPath(fullPath),
+        });
+      }
+
+      textFileContents[fullPath] = YAML.stringify(values);
     },
     createDir: (path, options) => {
       const fullPath = getFullPath(path, options);
