@@ -4,4 +4,7 @@ import { NotesDatabaseTemplate } from './NotesDatabaseTemplate';
 export * from './NotesDatabaseTemplate';
 export * from './BooksDatabaseTemplate';
 
-export const databaseTemplates = [NotesDatabaseTemplate, BooksDatabaseTemplate];
+export const coreDatabaseTemplates = [
+  NotesDatabaseTemplate,
+  BooksDatabaseTemplate,
+];

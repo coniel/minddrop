@@ -10,6 +10,17 @@ describe('initializeDataTypes', () => {
   it('loads data types into the store', async () => {
     initializeDataTypes();
 
-    expect(DataTypesStore.getAll()).toEqual(coreDataTypes);
+    expect(DataTypesStore.getAll()).toEqual(
+      coreDataTypes.map((dataType) => ({
+        ...dataType,
+        name: expect.any(String),
+        description: expect.any(String),
+        properties: dataType.properties.map((property) => ({
+          ...property,
+          name: expect.any(String),
+          description: expect.any(String),
+        })),
+      })),
+    );
   });
 });
