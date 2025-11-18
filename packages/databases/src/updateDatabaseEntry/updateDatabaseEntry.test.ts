@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryNotFoundError } from '../errors';
 import { DatabaseEntryUpdatedEvent } from '../events';
@@ -28,15 +27,6 @@ describe('updateDatabaseEntry', () => {
     await expect(
       updateDatabaseEntry('non/existent/Entry.md', update),
     ).rejects.toThrowError(DatabaseEntryNotFoundError);
-  });
-
-  it('throws if the update data contains a title', async () => {
-    await expect(
-      updateDatabaseEntry(objectEntry1.id, {
-        // @ts-expect-error Testing invalid data
-        title: 'New Title',
-      }),
-    ).rejects.toThrowError(InvalidParameterError);
   });
 
   it('updates the last modified date', async () => {

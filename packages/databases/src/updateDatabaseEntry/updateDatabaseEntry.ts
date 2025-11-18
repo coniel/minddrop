@@ -1,6 +1,5 @@
 import { Events } from '@minddrop/events';
 import { PropertyMap } from '@minddrop/properties';
-import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryUpdatedEvent } from '../events';
 import { getDatabaseEntry } from '../getDatabaseEntry';
@@ -34,13 +33,6 @@ export async function updateDatabaseEntry(
   const originalEntry = getDatabaseEntry(id);
   // Clone the existing entry
   const updatedEntry = { ...originalEntry };
-
-  // Ensure title is not being updated
-  if ('title' in data) {
-    throw new InvalidParameterError(
-      'DatabaseEntry title cannot be updated via updateDatabaseEntry. Use renameDatabaseEntry instead.',
-    );
-  }
 
   if (data.properties !== undefined) {
     updatedEntry.properties = {
