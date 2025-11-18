@@ -1,3 +1,5 @@
 export * from './DataTypeNotFoundError';
-export * from './DatabaseNotFoundError';
 export * from './DatabaseAlreadyExistsError';
+export * from './DatabaseEntryNotFoundError';
+export * from './DatabaseEntrySerializerNotRegisteredError';
+export * from './DatabaseNotFoundError';
