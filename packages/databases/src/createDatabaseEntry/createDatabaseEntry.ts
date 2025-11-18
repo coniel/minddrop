@@ -14,7 +14,7 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
 /**
  * Creates a new database entry in the specified database.
  *
- * @param databaseName - The name of the database to create the entry in.
+ * @param databaseId - The ID of the database to create the entry in.
  * @param title - The entry title. Defaults to "Untitled".
  * @param properties - The entry properties.
  *
@@ -29,14 +29,14 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
 export async function createDatabaseEntry<
   TProperties extends PropertyMap = PropertyMap,
 >(
-  databaseName: string,
+  databaseId: string,
   title = i18n.t('labels.untitled'),
   properties: Partial<TProperties> = {},
 ): Promise<DatabaseEntry<TProperties>> {
   // The file extension for the entry's main file
   let fileExtension = '';
   // Get the database
-  const database = getDatabase(databaseName);
+  const database = getDatabase(databaseId);
   // Get the data type
   const dataType = getDataType(database.dataType);
   // Path to which to write the entry
@@ -61,7 +61,7 @@ export async function createDatabaseEntry<
 
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
-    database: database.name,
+    database: databaseId,
     title: titleFromPath(name),
     path,
     created: new Date(),

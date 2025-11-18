@@ -18,12 +18,12 @@ export const DatabasesFeature: React.FC = () => {
     Events.addListener<OpenDatabaseViewEventData>(
       OpenDatabaseViewEvent,
       EventListenerId,
-      ({ data: { name } }) => {
+      ({ data: { databaseId } }) => {
         Events.dispatch<OpenMainContentViewData<DatabaseViewProps>>(
           OpenMainContentView,
           {
             component: DatabaseView,
-            props: { name },
+            props: { databaseId },
           },
         );
       },

@@ -47,6 +47,7 @@ export const dataTypes = [dataTypeWithSerializer];
 // Databases
 
 export const objectDatabase: Database = {
+  id: '0e68221f-f0ec-47af-8850-912ff273a8d2',
   name: 'Objects',
   entryName: 'Object',
   dataType: ObjectDataType.type,
@@ -68,6 +69,7 @@ export const objectDatabase: Database = {
 };
 
 export const pdfDatabase: Database = {
+  id: 'b8b096fa-4663-4b5e-b8dc-02602a2473b4',
   name: 'PDF Documents',
   entryName: 'PDF',
   dataType: PdfDataType.type,
@@ -89,6 +91,7 @@ export const pdfDatabase: Database = {
 };
 
 export const urlDatabase: Database = {
+  id: 'f0a4b5b0-a1d0-4f6f-b8d2-e2f5a0c0b1b2',
   name: 'URL Database',
   entryName: 'URL',
   dataType: UrlDataType.type,
@@ -100,6 +103,7 @@ export const urlDatabase: Database = {
 };
 
 export const noPropertiesDatabase: Database = {
+  id: '533c8ba7-6205-4195-8367-63f0f7539c60',
   name: 'No Properties',
   entryName: 'No Properties',
   dataType: ObjectDataType.type,
@@ -111,6 +115,7 @@ export const noPropertiesDatabase: Database = {
 };
 
 export const yamlObjectDatabase: Database = {
+  id: '2012fd3a-d8c0-4028-8590-58fe175e04fc',
   name: 'YAML Database',
   entryName: 'YAML',
   dataType: ObjectDataType.type,
@@ -131,6 +136,7 @@ export const yamlObjectDatabase: Database = {
 };
 
 export const dataTypeSerializerDatabase: Database = {
+  id: '8c9870ee-48b7-4074-ada1-8b217eda3167',
   name: 'Data Type Serializer Database',
   entryName: 'Data Type Serializer',
   dataType: dataTypeWithSerializer.type,
@@ -163,7 +169,7 @@ export const databases = [
 
 export const objectEntry1: DatabaseEntry = {
   title: 'Test Entry',
-  database: objectDatabase.name,
+  database: objectDatabase.id,
   path: `${objectDatabase.path}/Test Entry.md`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
@@ -185,7 +191,7 @@ lastModified: ${objectEntry1.lastModified.toISOString()}`;
 
 export const pdfEntry1: DatabaseEntry = {
   title: 'Test Entry',
-  database: pdfDatabase.name,
+  database: pdfDatabase.id,
   path: `${pdfDatabase.path}/Test Entry.pdf`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
@@ -205,7 +211,7 @@ lastModified: ${pdfEntry1.lastModified.toISOString()}`;
 
 export const yamlObjectEntry1: DatabaseEntry = {
   title: 'Test Entry',
-  database: yamlObjectDatabase.name,
+  database: yamlObjectDatabase.id,
   path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
@@ -217,7 +223,7 @@ export const yamlObjectEntry1: DatabaseEntry = {
 
 export const urlEntry1: DatabaseEntry = {
   title: 'Test Entry',
-  database: urlDatabase.name,
+  database: urlDatabase.id,
   path: `${urlDatabase.path}/Test Entry.md`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
@@ -251,7 +257,7 @@ lastModified: ${yamlObjectEntry1.lastModified.toISOString()}`;
 
 export const dataTypeSerializerEntry1: DatabaseEntry = {
   title: 'Test Entry',
-  database: dataTypeSerializerDatabase.name,
+  database: dataTypeSerializerDatabase.id,
   path: `${dataTypeSerializerDatabase.path}/Test Entry.json`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
@@ -287,7 +293,7 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
     path: `${BaseDirectory.AppConfig}/${DatabasesConfigFileName}`,
     textContent: JSON.stringify(
       {
-        paths: databases.map((db) => ({ name: db.name, path: db.path })),
+        paths: databases.map((db) => ({ id: db.id, path: db.path })),
       },
       null,
       2,

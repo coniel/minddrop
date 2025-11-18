@@ -3,5 +3,5 @@ export const OpenNewDatabaseDialogEvent = 'databases:new-database-dialog:open';
 export const OpenDatabaseViewEvent = 'databases:view:open';
 
 export interface OpenDatabaseViewEventData {
-  name: string;
+  databaseId: string;
 }

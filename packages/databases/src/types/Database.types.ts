@@ -2,6 +2,11 @@ import { PropertiesSchema } from '@minddrop/properties';
 
 export interface Database {
   /**
+   * A unique identifier for the database.
+   */
+  id: string;
+
+  /**
    * Path to the database directory on the file system.
    */
   path: string;

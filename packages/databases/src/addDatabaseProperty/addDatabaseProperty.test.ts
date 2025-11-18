@@ -22,19 +22,19 @@ describe('addDatabaseProperty', () => {
   afterEach(cleanup);
 
   it('adds the property to the database', async () => {
-    const result = await addDatabaseProperty(objectDatabase.name, newProperty);
+    const result = await addDatabaseProperty(objectDatabase.id, newProperty);
 
     expect(result).toEqual(updatedDatabase);
   });
 
   it('updates the database', async () => {
-    await addDatabaseProperty(objectDatabase.name, newProperty);
+    await addDatabaseProperty(objectDatabase.id, newProperty);
 
-    expect(DatabasesStore.get(objectDatabase.name)).toEqual(updatedDatabase);
+    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedDatabase);
   });
 
   it('writes the updated config to the file system', async () => {
-    await addDatabaseProperty(objectDatabase.name, newProperty);
+    await addDatabaseProperty(objectDatabase.id, newProperty);
 
     const result = MockFs.readJsonFile<Database>(
       databaseConfigFilePath(updatedDatabase.path),

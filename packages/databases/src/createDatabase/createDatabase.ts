@@ -1,7 +1,7 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
+import { uuid } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseAlreadyExistsError } from '../errors';
 import { DatabaseCreatedEvent } from '../events';
 import { getDataType } from '../getDataType';
 import { Database } from '../types';
@@ -11,7 +11,7 @@ import { writeDatabasesConfig } from '../writeDatabasesConfig';
 export interface CreateDatabaseOptions
   extends Omit<
     Database,
-    'created' | 'path' | 'properties' | 'entrySerializer'
+    'id' | 'created' | 'path' | 'properties' | 'entrySerializer'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
@@ -36,11 +36,6 @@ export async function createDatabase(
   // The path to the database directory
   const dbPath = Fs.concatPath(parentDirPath, options.name);
 
-  // Ensure the database does not already exist
-  if (DatabasesStore.get(options.name)) {
-    throw new DatabaseAlreadyExistsError(options.name);
-  }
-
   // Ensure the database directory does not already exist
   if (await Fs.exists(dbPath)) {
     throw new PathConflictError(dbPath);
@@ -49,6 +44,7 @@ export async function createDatabase(
   // Generate the database config
   const databaseConfig: Database = {
     ...options,
+    id: uuid(),
     path: dbPath,
     properties: options.properties || dataType.properties,
     entrySerializer: options.entrySerializer || 'markdown',
@@ -62,7 +58,7 @@ export async function createDatabase(
   await Fs.createDir(dbPath);
 
   // Write the database config to the file system
-  await writeDatabaseConfig(options.name);
+  await writeDatabaseConfig(databaseConfig.id);
 
   // Add the database path to the user's databases config file
   await writeDatabasesConfig();

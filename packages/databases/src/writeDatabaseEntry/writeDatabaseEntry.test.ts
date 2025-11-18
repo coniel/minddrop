@@ -56,13 +56,13 @@ describe('writeDatabaseEntry', () => {
     // Add a database with a non-existent data type
     DatabasesStore.add({
       ...objectDatabase,
-      name: 'Missing Data Type',
+      id: 'missing-data-type',
       dataType: 'non-existent-data-type',
     });
     // Add an entry with a non-existent data type
     DatabaseEntriesStore.add({
       ...objectEntry1,
-      database: 'Missing Data Type',
+      database: 'missing-data-type',
     });
 
     await expect(writeDatabaseEntry(objectEntry1.path)).rejects.toThrow(
@@ -75,13 +75,13 @@ describe('writeDatabaseEntry', () => {
     // Add a database with a non-existent entry serializer
     DatabasesStore.add({
       ...objectDatabase,
-      name: 'Missing Entry Serializer',
+      id: 'missing-entry-serializer',
       entrySerializer: 'non-existent-entry-serializer',
     });
     // Add an entry with a non-existent entry serializer
     DatabaseEntriesStore.add({
       ...objectEntry1,
-      database: 'Missing Entry Serializer',
+      database: 'missing-entry-serializer',
     });
 
     await expect(writeDatabaseEntry(objectEntry1.path)).rejects.toThrow(

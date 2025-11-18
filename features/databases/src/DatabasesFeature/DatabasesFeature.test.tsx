@@ -24,13 +24,13 @@ describe('DatabasesFeature', () => {
         OpenMainContentView,
         EventListenerId,
         ({ data }) => {
-          expect(data.props!.name).toBe('test-database');
+          expect(data.props!.databaseId).toBe('test-database');
           resolve();
         },
       );
 
       Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
-        name: 'test-database',
+        databaseId: 'test-database',
       });
     }));
 });

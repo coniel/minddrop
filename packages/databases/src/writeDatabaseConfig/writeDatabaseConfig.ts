@@ -6,13 +6,13 @@ import { databaseConfigFilePath } from '../utils';
 /**
  * Writes the config of the specified database to the file system.
  *
- * @param name - The database name.
+ * @param id - The ID of the database to write the config for.
  *
  * @throws {DatabaseNotFoundError} Thrown if the database does not exist.
  */
-export async function writeDatabaseConfig(name: string): Promise<void> {
+export async function writeDatabaseConfig(id: string): Promise<void> {
   // Get the database config
-  const config = { ...getDatabase(name) };
+  const config = { ...getDatabase(id) };
 
   // Remove the path before serialization
   const path = config.path;

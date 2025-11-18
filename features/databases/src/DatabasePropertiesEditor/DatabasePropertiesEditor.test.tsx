@@ -17,7 +17,7 @@ describe('<DatabasePropertiesEditor />', () => {
 
   it('renders the database properties list', () => {
     const { getByText } = render(
-      <DatabasePropertiesEditor name={objectDatabase.name} />,
+      <DatabasePropertiesEditor databaseId={objectDatabase.id} />,
     );
 
     objectDatabase.properties.forEach((property) => {
@@ -29,7 +29,7 @@ describe('<DatabasePropertiesEditor />', () => {
     async function addDraftProperty() {
       const user = userEvent.setup();
 
-      render(<DatabasePropertiesEditor name={noPropertiesDatabase.name} />);
+      render(<DatabasePropertiesEditor databaseId={noPropertiesDatabase.id} />);
 
       // Open the property type selection menu
       await user.click(screen.getByLabelText('databases.actions.addProperty'));
@@ -88,11 +88,11 @@ describe('<DatabasePropertiesEditor />', () => {
 
       // Add the "Created" meta property to the database
       await Databases.addProperty(
-        noPropertiesDatabase.name,
+        noPropertiesDatabase.id,
         CreatedPropertySchema,
       );
 
-      render(<DatabasePropertiesEditor name={noPropertiesDatabase.name} />);
+      render(<DatabasePropertiesEditor databaseId={noPropertiesDatabase.id} />);
 
       // Open the property type selection menu
       await user.click(screen.getByLabelText('databases.actions.addProperty'));
@@ -114,7 +114,7 @@ describe('<DatabasePropertiesEditor />', () => {
 
     it('omits meta properties if present as a draft', async () => {
       const user = userEvent.setup();
-      render(<DatabasePropertiesEditor name={noPropertiesDatabase.name} />);
+      render(<DatabasePropertiesEditor databaseId={noPropertiesDatabase.id} />);
 
       // Open the property type selection menu
       await user.click(screen.getByLabelText('databases.actions.addProperty'));

@@ -27,7 +27,7 @@ describe('<DatabasesSidebarMenu />', () => {
         OpenDatabaseViewEvent,
         'test',
         ({ data }) => {
-          expect(data.name).toBe(DatabaseFixtures.objectDatabase.name);
+          expect(data.databaseId).toBe(DatabaseFixtures.objectDatabase.id);
           done();
         },
       );

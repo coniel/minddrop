@@ -10,18 +10,18 @@ export type UpdateDatabaseData = Partial<Omit<Database, 'type'>>;
 /**
  * Updates a database.
  *
- * @param name - The name of the database to update.
+ * @param id - The ID of the database to update.
  * @param data - The data to update the database with.
  * @returns The updated database config.
  *
  * @dispatches databases:database:update
  */
 export async function updateDatabase(
-  name: string,
+  id: string,
   data: UpdateDatabaseData,
 ): Promise<Database> {
   // Get the database config
-  const config = getDatabase(name);
+  const config = getDatabase(id);
 
   // Merge in the new data
   const updatedConfig = {
@@ -30,10 +30,10 @@ export async function updateDatabase(
   };
 
   // Update the database in the store
-  DatabasesStore.update(name, updatedConfig);
+  DatabasesStore.update(id, updatedConfig);
 
   // Write the updated config to the file system
-  await writeDatabaseConfig(name);
+  await writeDatabaseConfig(id);
 
   // Dispatch a database updated event
   Events.dispatch(DatabaseUpdatedEvent, updatedConfig);

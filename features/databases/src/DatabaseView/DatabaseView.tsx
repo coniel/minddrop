@@ -12,13 +12,13 @@ import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 
 export interface DatabaseViewProps {
   /**
-   * The name of the database to display.
+   * The ID of the database to display.
    */
-  name: string;
+  databaseId: string;
 }
 
-export const DatabaseView: React.FC<DatabaseViewProps> = ({ name }) => {
-  const database = Databases.use(name);
+export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
+  const database = Databases.use(databaseId);
   const [propertiesPanelOpen, togglePropertiesPanel] = useToggle(false);
 
   if (!database) {
@@ -42,7 +42,9 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ name }) => {
           </Toolbar>
         </div>
       </Panel>
-      {propertiesPanelOpen && <DatabasePropertiesEditor name={name} />}
+      {propertiesPanelOpen && (
+        <DatabasePropertiesEditor databaseId={databaseId} />
+      )}
     </div>
   );
 };

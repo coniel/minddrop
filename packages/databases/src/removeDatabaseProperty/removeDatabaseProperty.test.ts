@@ -19,7 +19,7 @@ describe('removeDatabaseProperty', () => {
 
   it('removes the property from the item type', async () => {
     const result = await removeDatabaseProperty(
-      objectDatabase.name,
+      objectDatabase.id,
       propertyNameToRemove,
     );
 
@@ -27,13 +27,13 @@ describe('removeDatabaseProperty', () => {
   });
 
   it('updates the item type', async () => {
-    await removeDatabaseProperty(objectDatabase.name, propertyNameToRemove);
+    await removeDatabaseProperty(objectDatabase.id, propertyNameToRemove);
 
-    expect(DatabasesStore.get(objectDatabase.name)).toEqual(updatedDatabase);
+    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedDatabase);
   });
 
   it('writes the updated config to the file system', async () => {
-    await removeDatabaseProperty(objectDatabase.name, propertyNameToRemove);
+    await removeDatabaseProperty(objectDatabase.id, propertyNameToRemove);
 
     const result = MockFs.readJsonFile<Database>(
       databaseConfigFilePath(updatedDatabase.path),

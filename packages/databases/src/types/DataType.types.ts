@@ -1,7 +1,12 @@
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { Database } from './Database.types';
+import { DatabaseAutomation } from './DatabaseAutomation.types';
+import { DatabaseEntry } from './DatabaseEntry.types';
 
-export interface DataType<TData = unknown> {
+export interface DataType<
+  TProperties extends PropertyMap = PropertyMap,
+  TData extends object = {},
+> {
   /**
    * The entry type.
    */
@@ -70,8 +75,7 @@ export interface DataType<TData = unknown> {
    */
   serialize?: (
     database: Database,
-    properties: PropertyMap,
-    data?: TData,
+    entry: DatabaseEntry<TProperties, TData>,
   ) => string;
 
   /**
@@ -95,4 +99,10 @@ export interface DataType<TData = unknown> {
    * defined.
    */
   fileExtension?: string;
+
+  /**
+   * Automations added to the database when creating a new database of this data
+   * type. The user will be able modify/remove these automations after creation.
+   */
+  automations?: DatabaseAutomation[];
 }

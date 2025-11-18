@@ -20,7 +20,7 @@ export async function writeDatabasesConfig(): Promise<void> {
     databasesConfigFilePath,
     {
       paths: DatabasesStore.getAll().map((database) => ({
-        name: database.name,
+        id: database.id,
         path: database.path,
       })),
     },

@@ -5,16 +5,16 @@ import { updateDatabase } from '../updateDatabase';
 /**
  * Removes a property from a database.
  *
- * @param name - The name of the database to remove the property from.
+ * @param databaseId - The ID of the database to remove the property from.
  * @param propertyName - The name of the property to remove.
  * @returns The updated database config.
  */
 export async function removeDatabaseProperty(
-  name: string,
+  databaseId: string,
   propertyName: string,
 ): Promise<Database> {
   // Get the database config
-  const config = getDatabase(name);
+  const config = getDatabase(databaseId);
 
   // Remove the property from the database's properties
   const properties = config.properties.filter(
@@ -22,7 +22,7 @@ export async function removeDatabaseProperty(
   );
 
   // Update the database
-  updateDatabase(name, { properties });
+  updateDatabase(databaseId, { properties });
 
   // Return the updated config
   return {

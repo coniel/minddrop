@@ -38,7 +38,7 @@ describe('writeDatabasesConfig', () => {
         baseDir: BaseDirectory.AppConfig,
       }),
     ).toEqual({
-      paths: databases.map((db) => ({ name: db.name, path: db.path })),
+      paths: databases.map((db) => ({ id: db.id, path: db.path })),
     });
   });
 });

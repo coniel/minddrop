@@ -24,7 +24,7 @@ describe('updateDatabaseProperty', () => {
 
   it('throws if the property name is changed', async () => {
     await expect(
-      updateDatabaseProperty(objectDatabase.name, {
+      updateDatabaseProperty(objectDatabase.id, {
         ...objectDatabase.properties[0],
         name: 'New Name',
       }),
@@ -34,7 +34,7 @@ describe('updateDatabaseProperty', () => {
   it('throws if the property type is changed', async () => {
     await expect(
       // @ts-expect-error Testing invalid parameter
-      updateDatabaseProperty(objectDatabase.name, {
+      updateDatabaseProperty(objectDatabase.id, {
         ...objectDatabase.properties[0],
         type: 'number',
       }),
@@ -43,7 +43,7 @@ describe('updateDatabaseProperty', () => {
 
   it('updates the property in the database', async () => {
     const result = await updateDatabaseProperty(
-      objectDatabase.name,
+      objectDatabase.id,
       updatedProperty,
     );
 
@@ -51,13 +51,13 @@ describe('updateDatabaseProperty', () => {
   });
 
   it('updates the database', async () => {
-    await updateDatabaseProperty(objectDatabase.name, updatedProperty);
+    await updateDatabaseProperty(objectDatabase.id, updatedProperty);
 
-    expect(DatabasesStore.get(objectDatabase.name)).toEqual(updatedDatabase);
+    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedDatabase);
   });
 
   it('writes the updated config to the file system', async () => {
-    await updateDatabaseProperty(objectDatabase.name, updatedProperty);
+    await updateDatabaseProperty(objectDatabase.id, updatedProperty);
 
     const result = MockFs.readJsonFile<Database>(
       databaseConfigFilePath(updatedDatabase.path),

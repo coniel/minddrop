@@ -36,7 +36,7 @@ describe('<DatabasePropertyEditor />', () => {
 
       render(
         <DatabasePropertyEditor
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={property}
         />,
       );
@@ -85,7 +85,7 @@ describe('<DatabasePropertyEditor />', () => {
 
         render(
           <DatabasePropertyEditor
-            database={DatabaseFixtures.objectDatabase.name}
+            databaseId={DatabaseFixtures.objectDatabase.id}
             property={property}
           />,
         );
@@ -179,7 +179,7 @@ describe('<DatabasePropertyEditor />', () => {
 
         render(
           <DatabasePropertyEditor
-            database={DatabaseFixtures.objectDatabase.name}
+            databaseId={DatabaseFixtures.objectDatabase.id}
             property={property}
           />,
         );
@@ -227,7 +227,7 @@ describe('<DatabasePropertyEditor />', () => {
       render(
         <DatabasePropertyEditor
           isDraft
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={{
             ...TextPropertySchema,
             name: 'New property',
@@ -252,7 +252,7 @@ describe('<DatabasePropertyEditor />', () => {
       render(
         <DatabasePropertyEditor
           isDraft
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={TextPropertySchema}
         />,
       );
@@ -305,7 +305,7 @@ describe('<DatabasePropertyEditor />', () => {
 
       render(
         <DatabasePropertyEditor
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={property}
         />,
       );
@@ -332,7 +332,7 @@ describe('<DatabasePropertyEditor />', () => {
 
       render(
         <DatabasePropertyEditor
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={property}
         />,
       );
@@ -359,7 +359,7 @@ describe('<DatabasePropertyEditor />', () => {
 
       render(
         <DatabasePropertyEditor
-          database={DatabaseFixtures.objectDatabase.name}
+          databaseId={DatabaseFixtures.objectDatabase.id}
           property={property}
         />,
       );

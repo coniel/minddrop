@@ -10,11 +10,7 @@ import {
 } from 'vitest';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
-import { Markdown } from '@minddrop/markdown';
-import { Properties } from '@minddrop/properties';
-import { InvalidParameterError } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { PropertiesDirName } from '../constants';
 import { DatabaseEntryCreatedEvent } from '../events';
 import {
   MockFs,
@@ -23,15 +19,10 @@ import {
   dataTypeWithSerializer,
   objectDatabase,
   objectEntry1,
-  pdfDatabase,
-  pdfEntry1,
   setup,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
-import {
-  entryCorePropertiesFilePath,
-  fileEntryPropertiesFilePath,
-} from '../utils';
+import { entryCorePropertiesFilePath } from '../utils';
 import { createDatabaseEntry } from './createDatabaseEntry';
 
 const title = i18n.t('labels.untitled');
@@ -65,7 +56,7 @@ describe('createDatabaseEntry', () => {
   });
 
   it('adds the new entry to the store', async () => {
-    await createDatabaseEntry(objectDatabase.name);
+    await createDatabaseEntry(objectDatabase.id);
 
     const entry = DatabaseEntriesStore.get(newEntry.path);
 
@@ -73,7 +64,7 @@ describe('createDatabaseEntry', () => {
   });
 
   it('writes the entry files to the file system', async () => {
-    await createDatabaseEntry(objectDatabase.name);
+    await createDatabaseEntry(objectDatabase.id);
 
     // Main file should exist
     expect(MockFs.exists(newEntry.path)).toBeTruthy();
@@ -86,8 +77,8 @@ describe('createDatabaseEntry', () => {
   describe('file name incrementation', () => {
     it('increments the entry title if an entry with the same name exists', async () => {
       // Create two entrys with the same name
-      await createDatabaseEntry(objectDatabase.name);
-      const secondEntry = await createDatabaseEntry(objectDatabase.name);
+      await createDatabaseEntry(objectDatabase.id);
+      const secondEntry = await createDatabaseEntry(objectDatabase.id);
 
       expect(secondEntry.title).toBe(`${title} 1`);
       expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
@@ -95,9 +86,9 @@ describe('createDatabaseEntry', () => {
 
     it('gets file extension from the data type', async () => {
       // Create two data type serializer entrys with the same name
-      await createDatabaseEntry(dataTypeSerializerDatabase.name);
+      await createDatabaseEntry(dataTypeSerializerDatabase.id);
       const secondEntry = await createDatabaseEntry(
-        dataTypeSerializerDatabase.name,
+        dataTypeSerializerDatabase.id,
       );
 
       expect(secondEntry.title).toBe(`${title} 1`);
@@ -110,7 +101,7 @@ describe('createDatabaseEntry', () => {
   it('allows specifying a custom title', async () => {
     const customTitle = 'Custom Title';
     const entryWithCustomTitle = await createDatabaseEntry(
-      objectDatabase.name,
+      objectDatabase.id,
       customTitle,
     );
 
@@ -125,7 +116,7 @@ describe('createDatabaseEntry', () => {
       Icon: 'content-icon:shapes:blue',
     };
     const entryWithCustomProperties = await createDatabaseEntry(
-      objectDatabase.name,
+      objectDatabase.id,
       title,
       customProperties,
     );
@@ -144,6 +135,6 @@ describe('createDatabaseEntry', () => {
         done();
       });
 
-      createDatabaseEntry(objectDatabase.name);
+      createDatabaseEntry(objectDatabase.id);
     }));
 });

@@ -26,7 +26,6 @@ const headings = ['Some heading', 'Some other heading'];
 
 describe('splitMarkdownByHeadings', () => {
   it('splits markdown by headings', () => {
-    console.log(getFormattedTextPropertiesFromMarkdown(markdown, headings));
     expect(getFormattedTextPropertiesFromMarkdown(markdown, headings)).toEqual({
       [someHeading]: someHeadingContent,
       [someOtherHeading]: someOtherHeadingContent,

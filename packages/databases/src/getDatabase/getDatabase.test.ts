@@ -9,7 +9,7 @@ describe('get', () => {
   afterEach(cleanup);
 
   it('retrieves a database by name', () => {
-    const result = getDatabase(objectDatabase.name);
+    const result = getDatabase(objectDatabase.id);
 
     expect(result).toBe(objectDatabase);
   });

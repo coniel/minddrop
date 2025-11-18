@@ -1,17 +1,17 @@
 import { createArrayStore } from '@minddrop/utils';
 import { Database } from './types';
 
-export const DatabasesStore = createArrayStore<Database>('name');
+export const DatabasesStore = createArrayStore<Database>('id');
 
 /**
- * Retrieves a Database by type or null if it doesn't exist.
+ * Retrieves a Database by ID or null if it doesn't exist.
  *
- * @param name - The name of the database to retrieve.
+ * @param id - The ID of the database to retrieve.
  * @returns The database or null if it doesn't exist.
  */
-export const useDatabase = (name: string): Database | null => {
+export const useDatabase = (id: string): Database | null => {
   return (
-    DatabasesStore.useAllItems().find((config) => config.name === name) || null
+    DatabasesStore.useAllItems().find((database) => database.id === id) || null
   );
 };
 

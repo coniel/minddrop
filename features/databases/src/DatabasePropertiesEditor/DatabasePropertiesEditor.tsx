@@ -10,9 +10,9 @@ import './DatabasePropertiesEditor.css';
 export interface DatabasePropertiesEditorProps
   extends React.HTMLProps<HTMLDivElement> {
   /**
-   * The database.
+   * The database ID.
    */
-  name: string;
+  databaseId: string;
 }
 
 type DraftProperty = PropertySchema & {
@@ -21,8 +21,8 @@ type DraftProperty = PropertySchema & {
 
 export const DatabasePropertiesEditor: React.FC<
   DatabasePropertiesEditorProps
-> = ({ name: database }) => {
-  const databaseConfig = Databases.use(database);
+> = ({ databaseId }) => {
+  const databaseConfig = Databases.use(databaseId);
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
 
   function handleAddProperty(propertySchema: PropertySchema) {
@@ -69,7 +69,7 @@ export const DatabasePropertiesEditor: React.FC<
           <DatabasePropertyEditor
             isDraft
             key={property.name}
-            database={database}
+            databaseId={databaseId}
             property={property}
             onSaveDraft={() => removeDraftProperty(property.id)}
             onCancelDraft={() => removeDraftProperty(property.id)}
@@ -78,7 +78,7 @@ export const DatabasePropertiesEditor: React.FC<
         {databaseConfig.properties.toReversed().map((property) => (
           <DatabasePropertyEditor
             key={property.name}
-            database={database}
+            databaseId={databaseId}
             property={property}
           />
         ))}

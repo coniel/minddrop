@@ -9,9 +9,9 @@ import { PropertySchema } from '@minddrop/properties';
 
 export interface DatabasePropertyEditorProps {
   /**
-   * The database to which the property belongs.
+   * The ID of the database to which the property belongs.
    */
-  database: string;
+  databaseId: string;
 
   /**
    * The property to edit.
@@ -37,7 +37,7 @@ export interface DatabasePropertyEditorProps {
 }
 
 export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
-  database,
+  databaseId,
   property,
   isDraft = false,
   onSaveDraft,
@@ -57,7 +57,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
     }
 
     // Check for name conflicts
-    const databaseConfig = Databases.get(database);
+    const databaseConfig = Databases.get(databaseId);
     const existingProperty = databaseConfig?.properties.find(
       (property) => property.name === name,
     );
@@ -73,7 +73,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   }
 
   function handleSaveDraft(newProperty: PropertySchema) {
-    Databases.addProperty(database, newProperty);
+    Databases.addProperty(databaseId, newProperty);
 
     if (onSaveDraft) {
       onSaveDraft();
@@ -97,7 +97,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
             //   property.name,
             //   updatedProperty.name,
             // );
-            Databases.updateProperty(database, {
+            Databases.updateProperty(databaseId, {
               ...updatedProperty,
               name: property.name,
             });
@@ -108,7 +108,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
           },
         });
       } else {
-        Databases.updateProperty(database, updatedProperty);
+        Databases.updateProperty(databaseId, updatedProperty);
         resolve(true);
       }
     });
@@ -131,7 +131,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
       confirmLabel: `${i18nRoot}.confirm`,
       danger: true,
       onConfirm: () => {
-        Databases.removeProperty(database, propertyToDelete.name);
+        Databases.removeProperty(databaseId, propertyToDelete.name);
       },
     });
   }

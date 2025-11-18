@@ -5,7 +5,7 @@ import { PropertySchema } from '@minddrop/properties';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
 import { UrlDataType } from '../data-type-configs';
-import { DataTypeNotFoundError, DatabaseAlreadyExistsError } from '../errors';
+import { DataTypeNotFoundError } from '../errors';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
@@ -22,6 +22,7 @@ const options: CreateDatabaseOptions = {
 
 const newDatabase: Database = {
   ...options,
+  id: expect.any(String),
   // Should inherit properties from the base database
   properties: UrlDataType.properties,
   created: expect.any(Date),
@@ -42,16 +43,6 @@ describe('createDatabase', () => {
 
     await expect(createDatabase(parentDir, invalidOptions)).rejects.toThrow(
       DataTypeNotFoundError,
-    );
-  });
-
-  it('throws if the database already exists', async () => {
-    // First, create the database
-    await createDatabase(parentDir, options);
-
-    // Then, try to create it again
-    await expect(createDatabase(parentDir, options)).rejects.toThrow(
-      DatabaseAlreadyExistsError,
     );
   });
 
@@ -88,7 +79,7 @@ describe('createDatabase', () => {
   it('adds the config to the databases store', async () => {
     const database = await createDatabase(parentDir, options);
 
-    expect(DatabasesStore.get(database.name)).toEqual(database);
+    expect(DatabasesStore.get(database.id)).toEqual(database);
   });
 
   it('creates the database directory', async () => {
@@ -113,7 +104,7 @@ describe('createDatabase', () => {
   });
 
   it('adds the database to the databases config file', async () => {
-    await createDatabase(parentDir, options);
+    const database = await createDatabase(parentDir, options);
 
     const databasesConfig = MockFs.readJsonFile<DatabasesConfig>(
       DatabasesConfigFileName,
@@ -124,11 +115,11 @@ describe('createDatabase', () => {
 
     expect(
       databasesConfig.paths.find(
-        (db: DatabasePathsConfig) => db.name === newDatabase.name,
+        (db: DatabasePathsConfig) => db.id === database.id,
       ),
     ).toEqual({
-      name: newDatabase.name,
-      path: newDatabase.path,
+      id: database.id,
+      path: database.path,
     });
   });
 

@@ -15,7 +15,7 @@ describe('writeConfig', () => {
     // Remove the existing config file from the mock file system
     MockFs.removeFile(path);
 
-    await writeDatabaseConfig(objectDatabase.name);
+    await writeDatabaseConfig(objectDatabase.id);
 
     const config = {
       ...objectDatabase,
@@ -23,6 +23,7 @@ describe('writeConfig', () => {
     };
 
     // Should remove the path before serialization
+    // @ts-expect-error
     delete config.path;
 
     expect(MockFs.readJsonFile(path)).toEqual(config);
@@ -34,7 +35,7 @@ describe('writeConfig', () => {
       Fs.parentDirPath(databaseConfigFilePath(objectDatabase.path)),
     );
 
-    await writeDatabaseConfig(objectDatabase.name);
+    await writeDatabaseConfig(objectDatabase.id);
 
     expect(MockFs.exists(databaseConfigFilePath(objectDatabase.path))).toBe(
       true,

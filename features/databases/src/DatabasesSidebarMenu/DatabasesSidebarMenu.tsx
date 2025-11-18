@@ -23,8 +23,10 @@ export const DatabasesSidebarMenu: React.FC = () => {
     Events.dispatch(OpenNewDatabaseDialogEvent);
   }
 
-  function handleOpenDatabaseView(name: string) {
-    Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, { name });
+  function handleOpenDatabaseView(databaseId: string) {
+    Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
+      databaseId,
+    });
   }
 
   return (
@@ -54,8 +56,8 @@ export const DatabasesSidebarMenu: React.FC = () => {
               <MenuItem
                 muted
                 contentIcon={database.icon || 'content-icon:shapes:inherit'}
-                key={database.name}
-                onClick={() => handleOpenDatabaseView(database.name)}
+                key={database.id}
+                onClick={() => handleOpenDatabaseView(database.id)}
               >
                 {database.name}
               </MenuItem>

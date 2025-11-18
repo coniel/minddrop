@@ -1,5 +1,6 @@
 export * from './DataType.types';
 export * from './Database.types';
+export * from './DatabaseAutomation.types';
 export * from './DatabaseEntry.types';
 export * from './DatabaseEntrySerializer.types';
 export * from './DatabaseTemplate.types';

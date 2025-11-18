@@ -22,19 +22,19 @@ describe('updateDatabase', () => {
   afterEach(cleanup);
 
   it('should update an database', async () => {
-    const result = await updateDatabase(objectDatabase.name, update);
+    const result = await updateDatabase(objectDatabase.id, update);
 
     expect(result).toEqual(updatedConfig);
   });
 
   it('updates the database config in the store', async () => {
-    await updateDatabase(objectDatabase.name, update);
+    await updateDatabase(objectDatabase.id, update);
 
-    expect(DatabasesStore.get(objectDatabase.name)).toEqual(updatedConfig);
+    expect(DatabasesStore.get(objectDatabase.id)).toEqual(updatedConfig);
   });
 
   it('writes the updated config to the file system', async () => {
-    await updateDatabase(objectDatabase.name, update);
+    await updateDatabase(objectDatabase.id, update);
 
     const result = MockFs.readJsonFile<Database>(
       databaseConfigFilePath(updatedConfig.path),
@@ -51,6 +51,6 @@ describe('updateDatabase', () => {
         done();
       });
 
-      updateDatabase(objectDatabase.name, update);
+      updateDatabase(objectDatabase.id, update);
     }));
 });

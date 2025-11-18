@@ -7,9 +7,9 @@ export interface DatabasesConfig {
 
 export interface DatabasePathsConfig {
   /**
-   * The name of the database.
+   * The database ID.
    */
-  name: string;
+  id: string;
 
   /**
    * The path to the database directory.
