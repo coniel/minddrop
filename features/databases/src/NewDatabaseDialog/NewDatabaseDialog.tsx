@@ -3,8 +3,8 @@ import {
   DataType,
   DataTypes,
   DatabaseTemplate,
+  DatabaseTemplates,
   Databases,
-  databaseTemplates,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
@@ -44,6 +44,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   defaultOpen = false,
 }) => {
   const dataTypes = DataTypes.useAll();
+  const databaseTemplates = DatabaseTemplates.useAll();
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
   const [icon, setIcon] = useState(defaultIcon);
   const [customIcon, setCustomIcon] = useState(false);
