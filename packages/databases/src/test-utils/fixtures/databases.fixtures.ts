@@ -8,6 +8,7 @@ import {
 import { Database } from '../../types';
 import { databaseConfigFilePath } from '../../utils';
 import { dataTypeWithSerializer } from './data-types.fixtures';
+import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 export const parentDir = 'path/to/databases';
 
@@ -64,7 +65,8 @@ export const urlDatabase: Database = {
   icon: 'content-icon:link:default',
   path: `${parentDir}/URL Database`,
   created: new Date('2024-01-01T00:00:00.000Z'),
-  properties: [],
+  properties: UrlDataType.properties,
+  automations: [fetchWebpageMetadataAutomation],
 };
 
 export const noPropertiesDatabase: Database = {

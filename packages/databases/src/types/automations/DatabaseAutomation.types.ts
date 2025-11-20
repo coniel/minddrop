@@ -34,11 +34,6 @@ export interface DatabaseAutomation {
   type: DatabaseAutomationTrigger;
 
   /**
-   * The ID of the database which triggers the automation.
-   */
-  database: string;
-
-  /**
    * The property which triggers the automation. Only applicable to property
    * based triggers.
    */
@@ -50,7 +45,4 @@ export interface DatabaseAutomation {
   actions: DatabaseAutomationAction[];
 }
 
-export type DatabaseAutomationTemplate = Omit<
-  DatabaseAutomation,
-  'id' | 'database'
->;
+export type DatabaseAutomationTemplate = Omit<DatabaseAutomation, 'id'>;

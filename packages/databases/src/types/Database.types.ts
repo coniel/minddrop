@@ -1,4 +1,5 @@
 import { PropertiesSchema } from '@minddrop/properties';
+import { DatabaseAutomation } from './automations';
 
 export interface Database {
   /**
@@ -61,4 +62,9 @@ export interface Database {
    * Short description displayed in the UI.
    */
   description?: string;
+
+  /**
+   * The database's automations if it has any.
+   */
+  automations?: DatabaseAutomation[];
 }
