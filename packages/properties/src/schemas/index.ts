@@ -8,6 +8,7 @@ import { LastModifiedPropertySchema } from './LastModifiedPropertySchema';
 import { NumberPropertySchema } from './NumberPropertySchema';
 import { SelectPropertySchema } from './SelectPropertySchema';
 import { TextPropertySchema } from './TextPropertySchema';
+import { TitlePropertySchema } from './TitlePropertySchema';
 import { TogglePropertySchema } from './TogglePropertySchema';
 import { UrlPropertySchema } from './UrlPropertySchema';
 
@@ -20,10 +21,12 @@ export * from './FormattedTextPropertySchema';
 export * from './NumberPropertySchema';
 export * from './SelectPropertySchema';
 export * from './TextPropertySchema';
+export * from './TitlePropertySchema';
 export * from './TogglePropertySchema';
 export * from './UrlPropertySchema';
 
 export const PropertySchemas: Record<PropertyType, PropertySchema> = {
+  title: TitlePropertySchema,
   text: TextPropertySchema,
   'text-formatted': FormattedTextPropertySchema,
   number: NumberPropertySchema,

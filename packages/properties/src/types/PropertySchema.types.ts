@@ -8,6 +8,7 @@ import {
   NumberPropertySchema,
   SelectPropertySchema,
   TextPropertySchema,
+  TitlePropertySchema,
   TogglePropertySchema,
   UrlPropertySchema,
 } from '../schemas';
@@ -22,6 +23,7 @@ export type PropertySchema =
   | NumberPropertySchema
   | SelectPropertySchema
   | TextPropertySchema
+  | TitlePropertySchema
   | TogglePropertySchema
   | UrlPropertySchema;
 
