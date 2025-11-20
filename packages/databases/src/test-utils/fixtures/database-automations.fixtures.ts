@@ -6,13 +6,8 @@ export const getWebpageMetadataAutomation: DatabaseAutomation = {
   name: 'Get Webpage Metadata',
   description: 'Gets the metadata of a webpage.',
   database: urlDatabase.id,
-  triggers: [
-    {
-      type: 'update-property',
-      property: 'URL',
-      database: urlDatabase.id,
-    },
-  ],
+  type: 'update-property',
+  property: 'URL',
   actions: [
     {
       type: 'fetch-webpage-metadata',
