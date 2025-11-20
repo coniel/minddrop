@@ -1,7 +1,7 @@
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { Database } from './Database.types';
-import { DatabaseAutomation } from './DatabaseAutomation.types';
 import { DatabaseEntry } from './DatabaseEntry.types';
+import { DatabaseAutomationTemplate } from './automations/DatabaseAutomation.types';
 
 export interface DataType<
   TProperties extends PropertyMap = PropertyMap,
@@ -101,8 +101,9 @@ export interface DataType<
   fileExtension?: string;
 
   /**
-   * Automations added to the database when creating a new database of this data
-   * type. The user will be able modify/remove these automations after creation.
+   * Templates for automations added to the database when creating a new database
+   * of this data type. The user will be able modify/remove these automations after
+   * creation.
    */
-  automations?: DatabaseAutomation[];
+  automations?: DatabaseAutomationTemplate[];
 }
