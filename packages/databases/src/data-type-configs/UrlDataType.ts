@@ -15,17 +15,17 @@ export const UrlDataType: DataType = {
   icon: 'content-icon:link:default',
   properties: [
     {
+      type: 'title',
+      name: propertyNames.title,
+      description: 'dataTypes.url.properties.title.description',
+      icon: 'content-icon:type',
+    },
+    {
       type: 'url',
       name: propertyNames.url,
       description: 'dataTypes.url.properties.url.description',
       icon: 'content-icon:link',
       protected: true,
-    },
-    {
-      type: 'text',
-      name: propertyNames.title,
-      description: 'dataTypes.url.properties.title.description',
-      icon: 'content-icon:type',
     },
     {
       type: 'text',
@@ -52,12 +52,8 @@ export const UrlDataType: DataType = {
     {
       name: 'dataTypes.url.automations.fetchWebpageMetadata.name',
       description: 'dataTypes.url.automations.fetchWebpageMetadata.description',
-      triggers: [
-        {
-          type: 'update-property',
-          property: propertyNames.url,
-        },
-      ],
+      type: 'update-property',
+      property: propertyNames.url,
       actions: [
         {
           type: 'fetch-webpage-metadata',
