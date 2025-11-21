@@ -1,5 +1,5 @@
 import { PropertiesSchema } from '@minddrop/properties';
-import { DatabaseAutomation } from './automations';
+import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export interface Database {
   /**

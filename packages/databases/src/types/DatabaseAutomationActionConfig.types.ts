@@ -1,14 +1,12 @@
 import { PropertyType, PropertyValue } from '@minddrop/properties';
-import { DatabaseEntry } from '../DatabaseEntry.types';
 import {
   DatabaseAutomationTrigger,
   PropertySetterConfig,
 } from './DatabaseAutomation.types';
 import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
+import { DatabaseEntry } from './DatabaseEntry.types';
 
-export interface DatabaseAutomationActionConfig<
-  TAction extends DatabaseAutomationAction = DatabaseAutomationAction,
-> {
+export interface DatabaseAutomationActionConfig {
   /**
    * A unique identifier for the action.
    */
@@ -29,7 +27,10 @@ export interface DatabaseAutomationActionConfig<
    *
    * @param entry - The entry the action was triggered on.
    */
-  run: (action: TAction, entry: DatabaseEntry) => void | Promise<void>;
+  run: (
+    action: DatabaseAutomationAction,
+    entry: DatabaseEntry,
+  ) => void | Promise<void>;
 
   /**
    * The types of triggers supported by the action.
@@ -52,12 +53,8 @@ export interface DatabaseAutomationActionConfig<
 /**
  * Defines a database automation action.
  */
-export interface DatabaseAutomationUpdatePropertyActionConfig<
-  TAction extends DatabaseAutomationAction = DatabaseAutomationAction,
-> extends Omit<
-    DatabaseAutomationActionConfig<TAction>,
-    'supportedTriggers' | 'run'
-  > {
+export interface DatabaseAutomationUpdatePropertyActionConfig
+  extends Omit<DatabaseAutomationActionConfig, 'supportedTriggers' | 'run'> {
   /**
    * The types of triggers supported by the action.
    */
@@ -71,7 +68,7 @@ export interface DatabaseAutomationUpdatePropertyActionConfig<
    * @param updatedPropertyValue - The updated value of the updated property.
    */
   run: (
-    action: TAction,
+    action: DatabaseAutomationAction,
     entry: DatabaseEntry,
     updatedPropertyValue: PropertyValue,
     originalPropertyValue: PropertyValue,

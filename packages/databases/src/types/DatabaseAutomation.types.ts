@@ -1,5 +1,5 @@
 import { PropertyType } from '@minddrop/properties';
-import { DatabaseAutomationAction } from './actions';
+import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
 
 export type DatabaseAutomationTrigger =
   | 'create-entry'

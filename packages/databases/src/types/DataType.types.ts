@@ -1,7 +1,7 @@
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { Database } from './Database.types';
+import { DatabaseAutomationTemplate } from './DatabaseAutomation.types';
 import { DatabaseEntry } from './DatabaseEntry.types';
-import { DatabaseAutomationTemplate } from './automations/DatabaseAutomation.types';
 
 export interface DataType<
   TProperties extends PropertyMap = PropertyMap,

@@ -2,19 +2,25 @@ import { PropertyValue } from '@minddrop/properties';
 import { getWebpageMetadata } from '@minddrop/utils';
 import { downloadDatabaseEntryAsset } from '../downloadDatabaseEntryAsset';
 import { ensureDatabaseEntryAssetsDirExists } from '../ensureDatabaseEntryAssetsDirExists';
-import { getDatabase } from '../getDatabase';
 import {
+  DatabaseAutomationAction,
   DatabaseAutomationUpdatePropertyActionConfig,
   DatabaseEntry,
 } from '../types';
-import { FetchWebpageMetadataAction } from '../types';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
+
+interface MetadataPropertyMapping {
+  title?: string;
+  description?: string;
+  icon?: string;
+  image?: string;
+}
 
 // Translation key roots
 const fetchWebpageMetadata = 'automations.fetchWebpageMetadata';
 const propertySetters = `${fetchWebpageMetadata}.propertySetters`;
 
-export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyActionConfig<FetchWebpageMetadataAction> =
+export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyActionConfig =
   {
     type: 'fetch-webpage-metadata',
 
@@ -55,20 +61,20 @@ export const FetchWebpageMetadataActionConfig: DatabaseAutomationUpdatePropertyA
   };
 
 async function updateDatabaseEntryWithMetadata(
-  action: FetchWebpageMetadataAction,
+  action: DatabaseAutomationAction,
   entry: DatabaseEntry,
   updatedPropertyValue: PropertyValue,
 ): Promise<void> {
-  // Ensure the updated property value is a string
-  if (typeof updatedPropertyValue !== 'string') {
+  const propertyMapping = action.propertyMapping as MetadataPropertyMapping;
+
+  // Ensure the updated property value is a string and the action has a property mapping
+  if (typeof updatedPropertyValue !== 'string' || !propertyMapping) {
     return;
   }
 
-  const { propertyMapping } = action;
   let updatedDatabaseEntry = entry;
   // Fetch webpage metadata
   const metadata = await getWebpageMetadata(updatedPropertyValue);
-  const database = getDatabase(entry.database);
 
   // Update the entry's properties with the fetched metadata.
   // If an icon or image is provided in the metadata, download them.
