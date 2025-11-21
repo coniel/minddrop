@@ -20,6 +20,18 @@ describe('initializeDataTypes', () => {
           name: expect.any(String),
           description: expect.any(String),
         })),
+        automations: dataType.automations
+          ? dataType.automations.map((automation) => ({
+              ...automation,
+              name: expect.any(String),
+              description: expect.any(String),
+              property: expect.any(String),
+              actions: automation.actions.map((action) => ({
+                ...action,
+                propertyMapping: expect.any(Object),
+              })),
+            }))
+          : undefined,
       })),
     );
   });
