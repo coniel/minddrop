@@ -1,7 +1,12 @@
 import { Ast } from '@minddrop/ast';
 import { BaseItemTypes } from '@minddrop/base-item-types';
 import { loadConfigs } from '@minddrop/core';
-import { DataTypes, DatabaseTemplates, Databases } from '@minddrop/databases';
+import {
+  DataTypes,
+  DatabaseAutomations,
+  DatabaseTemplates,
+  Databases,
+} from '@minddrop/databases';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
@@ -30,6 +35,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Initialize databases
   DataTypes.initialize();
   DatabaseTemplates.initialize();
+  DatabaseAutomations.initialize();
   await Databases.initialize();
 
   // Initialize core base item types
