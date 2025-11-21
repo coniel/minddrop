@@ -4,17 +4,18 @@ import { uuid } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { getDataType } from '../getDataType';
-import { Database } from '../types';
+import { Database, DatabaseAutomationTemplate } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
 
 export interface CreateDatabaseOptions
   extends Omit<
     Database,
-    'id' | 'created' | 'path' | 'properties' | 'entrySerializer'
+    'id' | 'created' | 'path' | 'properties' | 'entrySerializer' | 'automations'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
+  automations?: DatabaseAutomationTemplate[];
 }
 
 /**
@@ -41,6 +42,16 @@ export async function createDatabase(
     throw new PathConflictError(dbPath);
   }
 
+  // Create automation instances from the data type's automation
+  // templates and the provided automation templates.
+  const automations = [
+    ...(dataType.automations || []),
+    ...(options.automations || []),
+  ].map((automation) => ({
+    ...automation,
+    id: uuid(),
+  }));
+
   // Generate the database config
   const databaseConfig: Database = {
     ...options,
@@ -49,7 +60,13 @@ export async function createDatabase(
     properties: options.properties || dataType.properties,
     entrySerializer: options.entrySerializer || 'markdown',
     created: new Date(),
+    automations,
   };
+
+  // If the database has no automations, remove the automations property
+  if (!databaseConfig.automations?.length) {
+    delete databaseConfig.automations;
+  }
 
   // Add the database to the store
   DatabasesStore.add(databaseConfig);

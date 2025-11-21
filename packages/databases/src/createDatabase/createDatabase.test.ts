@@ -4,7 +4,7 @@ import { BaseDirectory, PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
-import { UrlDataType } from '../data-type-configs';
+import { ObjectDataType, UrlDataType } from '../data-type-configs';
 import { DataTypeNotFoundError } from '../errors';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
@@ -12,7 +12,7 @@ import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
 
-const options: CreateDatabaseOptions = {
+const options: Omit<CreateDatabaseOptions, 'automations'> = {
   name: 'Tests',
   entryName: 'Test',
   dataType: UrlDataType.type,
@@ -28,6 +28,12 @@ const newDatabase: Database = {
   created: expect.any(Date),
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
+  automations: [
+    {
+      ...UrlDataType.automations![0],
+      id: expect.any(String),
+    },
+  ],
 };
 
 describe('createDatabase', () => {
@@ -74,6 +80,43 @@ describe('createDatabase', () => {
     });
 
     expect(database.properties).toEqual([customProperty]);
+  });
+
+  describe('automations', () => {
+    it('adds data type automations', () => {
+      expect(newDatabase.automations).toEqual([
+        {
+          ...UrlDataType.automations![0],
+          // Should add an id
+          id: expect.any(String),
+        },
+      ]);
+    });
+
+    it('adds provided automations', async () => {
+      const database = await createDatabase(parentDir, {
+        ...options,
+        dataType: ObjectDataType.type,
+        automations: [UrlDataType.automations![0]],
+      });
+
+      expect(database.automations).toEqual([
+        {
+          ...UrlDataType.automations![0],
+          // Should add an id
+          id: expect.any(String),
+        },
+      ]);
+    });
+
+    it('does not add automations property if there are no automations', async () => {
+      const database = await createDatabase(parentDir, {
+        ...options,
+        dataType: ObjectDataType.type,
+      });
+
+      expect(database.automations).toBeUndefined();
+    });
   });
 
   it('adds the config to the databases store', async () => {
