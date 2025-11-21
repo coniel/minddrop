@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { DataTypesStore } from '../DataTypesStore';
@@ -67,4 +68,6 @@ export function cleanup() {
   DatabaseEntrySerializerSerializersStore.clear();
   // Reset mock file system
   MockFs.reset();
+  // Clear all event listeners
+  Events._clearAll();
 }
