@@ -4,10 +4,10 @@ import {
   DatabaseAutomationTrigger,
   PropertySetterConfig,
 } from './DatabaseAutomation.types';
-import { DatabaseAutomationAction } from './actions';
+import { DatabaseAutomationAction } from './DatabaseAutomationAction.types';
 
 export interface DatabaseAutomationActionConfig<
-  TAction extends DatabaseAutomationAction,
+  TAction extends DatabaseAutomationAction = DatabaseAutomationAction,
 > {
   /**
    * A unique identifier for the action.
@@ -29,7 +29,7 @@ export interface DatabaseAutomationActionConfig<
    *
    * @param entry - The entry the action was triggered on.
    */
-  callback: (action: TAction, entry: DatabaseEntry) => void | Promise<void>;
+  run: (action: TAction, entry: DatabaseEntry) => void | Promise<void>;
 
   /**
    * The types of triggers supported by the action.
@@ -54,10 +54,9 @@ export interface DatabaseAutomationActionConfig<
  */
 export interface DatabaseAutomationUpdatePropertyActionConfig<
   TAction extends DatabaseAutomationAction = DatabaseAutomationAction,
-  TPropertyValue extends PropertyValue = PropertyValue,
 > extends Omit<
     DatabaseAutomationActionConfig<TAction>,
-    'supportedTriggers' | 'callback'
+    'supportedTriggers' | 'run'
   > {
   /**
    * The types of triggers supported by the action.
@@ -71,10 +70,10 @@ export interface DatabaseAutomationUpdatePropertyActionConfig<
    * @param originalPropertyValue - The original value of the updated property.
    * @param updatedPropertyValue - The updated value of the updated property.
    */
-  callback: (
+  run: (
     action: TAction,
     entry: DatabaseEntry,
-    updatedPropertyValue: TPropertyValue,
-    originalPropertyValue: TPropertyValue,
+    updatedPropertyValue: PropertyValue,
+    originalPropertyValue: PropertyValue,
   ) => void | Promise<void>;
 }
