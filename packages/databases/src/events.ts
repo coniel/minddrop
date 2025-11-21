@@ -1,3 +1,5 @@
+import { DatabaseEntry } from './types';
+
 // Database events
 export const DatabaseCreatedEvent = 'databases:database:created';
 export const DatabaseUpdatedEvent = 'databases:database:updated';
@@ -8,3 +10,10 @@ export const DatabaseEntryCreatedEvent = 'databases:entry:created';
 export const DatabaseEntryUpdatedEvent = 'databases:entry:updated';
 export const DatabaseEntryDeletedEvent = 'databases:entry:deleted';
 export const DatabaseEntryRenamedEvent = 'databases:entry:renamed';
+
+export type DatabaseEntryCreatedEventData = DatabaseEntry;
+
+export interface DatabaseEntryUpdatedEventData {
+  original: DatabaseEntry;
+  updated: DatabaseEntry;
+}

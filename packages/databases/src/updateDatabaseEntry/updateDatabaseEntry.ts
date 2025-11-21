@@ -1,7 +1,10 @@
 import { Events } from '@minddrop/events';
 import { PropertyMap } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryUpdatedEvent } from '../events';
+import {
+  DatabaseEntryUpdatedEvent,
+  DatabaseEntryUpdatedEventData,
+} from '../events';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
@@ -57,7 +60,7 @@ export async function updateDatabaseEntry(
   await writeDatabaseEntry(id);
 
   // Dispatch entry update event
-  Events.dispatch(DatabaseEntryUpdatedEvent, {
+  Events.dispatch<DatabaseEntryUpdatedEventData>(DatabaseEntryUpdatedEvent, {
     original: originalEntry,
     updated: updatedEntry,
   });

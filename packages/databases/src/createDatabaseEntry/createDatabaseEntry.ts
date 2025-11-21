@@ -4,7 +4,10 @@ import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
 import { titleFromPath, uuid } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryCreatedEvent } from '../events';
+import {
+  DatabaseEntryCreatedEvent,
+  DatabaseEntryCreatedEventData,
+} from '../events';
 import { getDataType } from '../getDataType';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
@@ -77,7 +80,10 @@ export async function createDatabaseEntry<
   await writeDatabaseEntry(entry.id);
 
   // Dispatch an entry created event
-  Events.dispatch(DatabaseEntryCreatedEvent, entry);
+  Events.dispatch<DatabaseEntryCreatedEventData>(
+    DatabaseEntryCreatedEvent,
+    entry,
+  );
 
   return entry;
 }
