@@ -95,6 +95,10 @@
         "label": "Property icon"
       }
     },
+    "title": {
+      "name": "Title",
+      "description": "The title of the entry."
+    },
     "text": {
       "name": "Text",
       "description": "A simple text field."
