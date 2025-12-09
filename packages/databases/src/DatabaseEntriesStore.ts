@@ -17,10 +17,12 @@ export const useDatabaseEntry = (id: string): DatabaseEntry | null => {
 };
 
 /**
- * Retrieves all entries.
+ * Retrieves all entries for a given database.
  *
  * @returns And array of all entries.
  */
-export const useDatabaseEntries = (): DatabaseEntry[] => {
-  return DatabaseEntriesStore.useAllItems();
+export const useDatabaseEntries = (databaseId: string): DatabaseEntry[] => {
+  return DatabaseEntriesStore.useAllItems().filter(
+    (entry) => entry.database === databaseId,
+  );
 };
