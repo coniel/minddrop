@@ -27,6 +27,15 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   // Get the database's data type
   const dataType = getDataType(database.dataType);
 
+  // Ensure the core properties directory exists
+  const corePropertiesDirPath = Fs.parentDirPath(
+    entryCorePropertiesFilePath(entry.path),
+  );
+
+  if (!(await Fs.exists(corePropertiesDirPath))) {
+    await Fs.createDir(corePropertiesDirPath);
+  }
+
   // Write the entry's core properties
   Fs.writeTextFile(
     entryCorePropertiesFilePath(entry.path),

@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs } from '@minddrop/file-system';
 import { Markdown } from '@minddrop/markdown';
 import { Properties } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -87,6 +88,19 @@ describe('writeDatabaseEntry', () => {
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DatabaseEntrySerializerNotRegisteredError,
     );
+  });
+
+  it('ensures that the core properties subdirectory exists', async () => {
+    const path = Fs.parentDirPath(
+      entryCorePropertiesFilePath(objectEntry1.path),
+    );
+
+    // Remove the properties directory before writing to ensure it doesn't exist
+    MockFs.removeFile(path);
+
+    await writeDatabaseEntry(objectEntry1.id);
+
+    expect(MockFs.exists(Fs.parentDirPath(path))).toBe(true);
   });
 
   it('writes the core properties to the properties subdirectory', async () => {
