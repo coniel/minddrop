@@ -4,8 +4,8 @@ import { Events } from '@minddrop/events';
 import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import {
   cleanup,
-  selectedItem1,
-  selectedItem3,
+  selectionItem1,
+  selectionItem3,
   selectionItemTypeConfig,
   setup,
 } from '../test-utils';
@@ -34,7 +34,7 @@ describe('copySelection', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem3]);
+      .addSelectedItems([selectionItem1, selectionItem3]);
 
     // Mock navigator.clipboard and its methods
     Object.defineProperty(navigator, 'clipboard', {
@@ -67,7 +67,7 @@ describe('copySelection', () => {
 
     // Should set the clipboard data
     expect(data['application/json']).toEqual(
-      JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
+      JSON.stringify([selectionItem1.getData!(), selectionItem3.getData!()]),
     );
   });
 
@@ -92,8 +92,8 @@ describe('copySelection', () => {
           expect(payload.data.event).toEqual(clipboardEvent);
           // Payload data should contain the selection
           expect(payload.data.selection).toEqual([
-            selectedItem1,
-            selectedItem3,
+            selectionItem1,
+            selectionItem3,
           ]);
           done();
         },

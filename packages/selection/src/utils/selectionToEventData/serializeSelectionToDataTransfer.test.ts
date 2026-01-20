@@ -8,8 +8,8 @@ import { SelectionItemTypeNotRegisteredError } from '../../errors';
 import {
   alternativeTypeItem,
   cleanup,
-  selectedItem1,
-  selectedItem2,
+  selectionItem1,
+  selectionItem2,
   selectionItemTypeConfig,
   setup,
 } from '../../test-utils';
@@ -26,7 +26,7 @@ describe('serializeSelectionToDataTransfer', () => {
     // Add items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem2]);
+      .addSelectedItems([selectionItem1, selectionItem2]);
   });
 
   afterEach(cleanup);
@@ -37,7 +37,7 @@ describe('serializeSelectionToDataTransfer', () => {
     serializeSelectionToDataTransfer(dataTransfer);
 
     expect(dataTransfer.getData('application/json')).toBe(
-      JSON.stringify([selectedItem1.getData!(), selectedItem2.getData!()]),
+      JSON.stringify([selectionItem1.getData!(), selectionItem2.getData!()]),
     );
   });
 
@@ -50,7 +50,7 @@ describe('serializeSelectionToDataTransfer', () => {
     serializeSelectionToDataTransfer(dataTransfer);
 
     expect(dataTransfer.getData('application/json')).toBe(
-      JSON.stringify([selectedItem1.getData!(), selectedItem2.getData!()]),
+      JSON.stringify([selectionItem1.getData!(), selectionItem2.getData!()]),
     );
   });
 

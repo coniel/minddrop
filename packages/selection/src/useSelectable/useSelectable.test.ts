@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@minddrop/test-utils';
-import { cleanup, selectedItem1, selectedItem2, setup } from '../test-utils';
+import { cleanup, selectionItem1, selectionItem2, setup } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
 import { useSelectable } from './useSelectable';
 
@@ -14,7 +14,7 @@ describe('useSelectable', () => {
   });
 
   function init() {
-    return renderHook(() => useSelectable(selectedItem1));
+    return renderHook(() => useSelectable(selectionItem1));
   }
 
   describe('selected', () => {
@@ -26,7 +26,7 @@ describe('useSelectable', () => {
 
       act(() => {
         // At the item to the current selection
-        useSelectionStore.getState().addSelectedItems([selectedItem1]);
+        useSelectionStore.getState().addSelectedItems([selectionItem1]);
       });
 
       // Item is selected, should return `true`
@@ -46,7 +46,7 @@ describe('useSelectable', () => {
     describe('regular click', () => {
       it('exclusively selects the item', () => {
         // Add an initial selection
-        useSelectionStore.getState().addSelectedItems([selectedItem2]);
+        useSelectionStore.getState().addSelectedItems([selectionItem2]);
 
         const { result } = init();
 
@@ -57,7 +57,7 @@ describe('useSelectable', () => {
 
         // Selection should only contain the item
         expect(useSelectionStore.getState().selectedItems).toEqual([
-          selectedItem1,
+          selectionItem1,
         ]);
       });
 
@@ -66,7 +66,7 @@ describe('useSelectable', () => {
         // as well as a second one.
         useSelectionStore
           .getState()
-          .addSelectedItems([selectedItem1, selectedItem2]);
+          .addSelectedItems([selectionItem1, selectionItem2]);
 
         const { result } = init();
 
@@ -77,7 +77,7 @@ describe('useSelectable', () => {
 
         // Selection should only contain the item
         expect(useSelectionStore.getState().selectedItems).toEqual([
-          selectedItem1,
+          selectionItem1,
         ]);
       });
     });
@@ -85,7 +85,7 @@ describe('useSelectable', () => {
     describe('shift click', () => {
       it('adds the item to the selection if not selected', () => {
         // Add an initial selection
-        useSelectionStore.getState().addSelectedItems([selectedItem2]);
+        useSelectionStore.getState().addSelectedItems([selectionItem2]);
 
         const { result } = init();
 
@@ -98,8 +98,8 @@ describe('useSelectable', () => {
         // Selection should contain the item as well as the
         // initial item.
         expect(useSelectionStore.getState().selectedItems).toEqual([
-          selectedItem2,
-          selectedItem1,
+          selectionItem2,
+          selectionItem1,
         ]);
       });
 
@@ -108,7 +108,7 @@ describe('useSelectable', () => {
         // as well as a second one.
         useSelectionStore
           .getState()
-          .addSelectedItems([selectedItem1, selectedItem2]);
+          .addSelectedItems([selectionItem1, selectionItem2]);
 
         const { result } = init();
 
@@ -121,7 +121,7 @@ describe('useSelectable', () => {
         // Selection should no longer contain the item but should
         // still contain the other initial item.
         expect(useSelectionStore.getState().selectedItems).toEqual([
-          selectedItem2,
+          selectionItem2,
         ]);
       });
     });
@@ -130,7 +130,7 @@ describe('useSelectable', () => {
   describe('addToSelection', () => {
     it('adds the item to the selection', () => {
       // Add an initial selection
-      useSelectionStore.getState().addSelectedItems([selectedItem2]);
+      useSelectionStore.getState().addSelectedItems([selectionItem2]);
 
       const { result } = init();
 
@@ -142,8 +142,8 @@ describe('useSelectable', () => {
       // Selection should contain the item as well as the
       // initial item.
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem2,
-        selectedItem1,
+        selectionItem2,
+        selectionItem1,
       ]);
     });
   });
@@ -154,7 +154,7 @@ describe('useSelectable', () => {
       // as well as a second one.
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       const { result } = init();
 
@@ -166,7 +166,7 @@ describe('useSelectable', () => {
       // Selection should no longer contain the item but should
       // still contain the other initial item.
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem2,
+        selectionItem2,
       ]);
     });
   });
@@ -174,7 +174,7 @@ describe('useSelectable', () => {
   describe('select', () => {
     it('exclusively selects the item', () => {
       // Add an initial selection
-      useSelectionStore.getState().addSelectedItems([selectedItem2]);
+      useSelectionStore.getState().addSelectedItems([selectionItem2]);
 
       const { result } = init();
 
@@ -185,7 +185,7 @@ describe('useSelectable', () => {
 
       // Selection should only contain the item
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem1,
+        selectionItem1,
       ]);
     });
 
@@ -194,7 +194,7 @@ describe('useSelectable', () => {
       // as well as a second one.
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       const { result } = init();
 
@@ -205,7 +205,7 @@ describe('useSelectable', () => {
 
       // Selection should only contain the item
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem1,
+        selectionItem1,
       ]);
     });
   });
@@ -215,7 +215,7 @@ describe('useSelectable', () => {
       // Add selected items
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       const { result } = init();
 

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
-  selectedItem1,
-  selectedItem2,
-  selectedItem3,
+  selectionItem1,
+  selectionItem2,
+  selectionItem3,
   setup,
 } from '../test-utils';
 import { useSelectionStore } from '../useSelectionStore';
@@ -19,32 +19,32 @@ describe('select', () => {
     // Add a couple of items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem2]);
+      .addSelectedItems([selectionItem1, selectionItem2]);
 
     // Select an item
-    select([selectedItem3]);
+    select([selectionItem3]);
 
     // Get the current selection
     const selection = useSelectionStore.getState().selectedItems;
 
     // Previously selected items should no
     // longer be in the selection.
-    expect(containsSelectionItem(selection, selectedItem1)).toBeFalsy();
-    expect(containsSelectionItem(selection, selectedItem2)).toBeFalsy();
+    expect(containsSelectionItem(selection, selectionItem1)).toBeFalsy();
+    expect(containsSelectionItem(selection, selectionItem2)).toBeFalsy();
   });
 
   it('clears the current selection', () => {
     // Add an of item to the selection
-    useSelectionStore.getState().addSelectedItems([selectedItem1]);
+    useSelectionStore.getState().addSelectedItems([selectionItem1]);
 
     // Select a couple of items
-    select([selectedItem3, selectedItem1]);
+    select([selectionItem3, selectionItem1]);
 
     // Get the current selection
     const selection = useSelectionStore.getState().selectedItems;
 
     // Items should be in the selection
-    expect(containsSelectionItem(selection, selectedItem3)).toBeTruthy();
-    expect(containsSelectionItem(selection, selectedItem1)).toBeTruthy();
+    expect(containsSelectionItem(selection, selectionItem3)).toBeTruthy();
+    expect(containsSelectionItem(selection, selectionItem1)).toBeTruthy();
   });
 });

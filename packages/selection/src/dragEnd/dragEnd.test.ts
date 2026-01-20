@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { cleanup, selectedItem1, selectedItem3, setup } from '../test-utils';
+import { cleanup, selectionItem1, selectionItem3, setup } from '../test-utils';
 import { SelectionDragEventData } from '../types';
 import { useSelectionStore } from '../useSelectionStore';
 import { dragEnd } from './dragEnd';
@@ -18,7 +18,7 @@ describe('dragEnd', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem3]);
+      .addSelectedItems([selectionItem1, selectionItem3]);
   });
 
   afterEach(cleanup);
@@ -42,8 +42,8 @@ describe('dragEnd', () => {
           expect(payload.data.event).toEqual(dragEvent);
           // Payload data should contain the selection
           expect(payload.data.selection).toEqual([
-            selectedItem1,
-            selectedItem3,
+            selectionItem1,
+            selectionItem3,
           ]);
           done();
         },

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { selectedItem1, selectedItem2, selectedItem3 } from '../test-utils';
+import { selectionItem1, selectionItem2, selectionItem3 } from '../test-utils';
 import { useSelectionStore } from './useSelectionStore';
 
 describe('useSelectionStore', () => {
@@ -12,16 +12,16 @@ describe('useSelectionStore', () => {
       // Add two items to selection
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       // Add a third item to selection
-      useSelectionStore.getState().addSelectedItems([selectedItem3]);
+      useSelectionStore.getState().addSelectedItems([selectionItem3]);
 
       // All three items should be in the selected items list
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem1,
-        selectedItem2,
-        selectedItem3,
+        selectionItem1,
+        selectionItem2,
+        selectionItem3,
       ]);
     });
   });
@@ -31,14 +31,14 @@ describe('useSelectionStore', () => {
       // Add two items to selection
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       // Remove an item from the selection
-      useSelectionStore.getState().removeSelectedItems([selectedItem1]);
+      useSelectionStore.getState().removeSelectedItems([selectionItem1]);
 
       // Should remove the item from the selected items list
       expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectedItem2,
+        selectionItem2,
       ]);
     });
   });
@@ -48,7 +48,7 @@ describe('useSelectionStore', () => {
       // Add two items to selection
       useSelectionStore
         .getState()
-        .addSelectedItems([selectedItem1, selectedItem2]);
+        .addSelectedItems([selectionItem1, selectionItem2]);
 
       // Clear the selected items list
       useSelectionStore.getState().clearSelectedItems();
@@ -71,7 +71,7 @@ describe('useSelectionStore', () => {
   describe('clear', () => {
     it('sets the `isDragging` value', () => {
       // Set state values
-      useSelectionStore.getState().addSelectedItems([selectedItem1]);
+      useSelectionStore.getState().addSelectedItems([selectionItem1]);
       useSelectionStore.getState().setIsDragging(true);
 
       // Clear the state

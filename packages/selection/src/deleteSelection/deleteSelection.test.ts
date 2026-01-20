@@ -3,8 +3,8 @@ import { Events } from '@minddrop/events';
 import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import {
   cleanup,
-  selectedItem1,
-  selectedItem3,
+  selectionItem1,
+  selectionItem3,
   selectionItemTypeConfig,
   setup,
 } from '../test-utils';
@@ -23,7 +23,7 @@ describe('deleteSelection', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem3]);
+      .addSelectedItems([selectionItem1, selectionItem3]);
   });
 
   afterEach(() => {
@@ -43,7 +43,7 @@ describe('deleteSelection', () => {
     new Promise<void>((done) => {
       Events.addListener('selection:delete', 'test', (payload) => {
         // Payload data should be the selection
-        expect(payload.data).toEqual([selectedItem1, selectedItem3]);
+        expect(payload.data).toEqual([selectionItem1, selectionItem3]);
         done();
       });
 

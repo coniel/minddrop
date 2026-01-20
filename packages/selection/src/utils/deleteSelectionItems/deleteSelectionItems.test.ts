@@ -7,8 +7,8 @@ import { SelectionItemTypeNotRegisteredError } from '../../errors';
 import {
   alternativeTypeItem,
   cleanup,
-  selectedItem1,
-  selectedItem2,
+  selectionItem1,
+  selectionItem2,
   selectionItemTypeConfig,
   setup,
 } from '../../test-utils';
@@ -27,7 +27,7 @@ describe('deleteSelectionItems', () => {
     // Add items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem2]);
+      .addSelectedItems([selectionItem1, selectionItem2]);
   });
 
   afterEach(() => {
@@ -39,7 +39,7 @@ describe('deleteSelectionItems', () => {
   it('calls the appropriate selection delete callback', () => {
     deleteSelectionItems();
 
-    expect(onDelete).toHaveBeenCalledWith([selectedItem1, selectedItem2]);
+    expect(onDelete).toHaveBeenCalledWith([selectionItem1, selectionItem2]);
   });
 
   it('uses the first selection item to decide the type of the selection', () => {
@@ -48,7 +48,7 @@ describe('deleteSelectionItems', () => {
 
     deleteSelectionItems();
 
-    expect(onDelete).toHaveBeenCalledWith([selectedItem1, selectedItem2]);
+    expect(onDelete).toHaveBeenCalledWith([selectionItem1, selectionItem2]);
   });
 
   it('clears the selection', () => {

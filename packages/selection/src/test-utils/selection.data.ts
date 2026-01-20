@@ -1,28 +1,39 @@
 import { SelectionItem, SelectionItemTypeConfig } from '../types';
+import { toMimeType } from '../utils';
 
-function genereateSelectionItem(id: string): SelectionItem {
+export const selectionItemType1 = 'type-1';
+export const seletionItemType2 = 'type-2';
+
+export const mimeType1 = toMimeType(selectionItemType1);
+export const mimeType2 = toMimeType(seletionItemType2);
+
+function genereateSelectionItem(type: string, id: string): SelectionItem {
   return {
-    type: 'test-type',
+    type,
     id,
-    getData: () => ({ id }),
+    data: {
+      id,
+      foo: 'bar',
+    },
   };
 }
 
 export const selectionItemTypeConfig: SelectionItemTypeConfig = {
   id: 'test-type',
-  serializeData: (selection) => {
-    return {
-      'application/json': JSON.stringify(
-        selection.map((item) => item.getData!()),
-      ),
-    };
-  },
-  onDelete: () => {},
 };
 
-export const selectedItem1 = genereateSelectionItem('selection-item- 1');
-export const selectedItem2 = genereateSelectionItem('selection-item- 2');
-export const selectedItem3 = genereateSelectionItem('selection-item- 3');
+export const selectionItem1 = genereateSelectionItem(
+  selectionItemType1,
+  'selection-item-1',
+);
+export const selectionItem2 = genereateSelectionItem(
+  selectionItemType1,
+  'selection-item-2',
+);
+export const selectionItem3 = genereateSelectionItem(
+  seletionItemType2,
+  'selection-item-3',
+);
 export const alternativeTypeItem: SelectionItem = {
   type: 'alternative-type',
   id: 'alternative-selection-item',

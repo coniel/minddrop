@@ -3,8 +3,8 @@ import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
 import { ACTION_DATA_KEY } from '../constants';
 import {
   cleanup,
-  selectedItem1,
-  selectedItem3,
+  selectionItem1,
+  selectionItem3,
   selectionItemTypeConfig,
   setup,
 } from '../test-utils';
@@ -30,7 +30,7 @@ describe('setClipboardData', () => {
     // Set some items as the current selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem3]);
+      .addSelectedItems([selectionItem1, selectionItem3]);
   });
 
   afterEach(() => {
@@ -53,7 +53,7 @@ describe('setClipboardData', () => {
 
     // Should set the current selection items
     expect(data['application/json']).toBe(
-      JSON.stringify([selectedItem1.getData!(), selectedItem3.getData!()]),
+      JSON.stringify([selectionItem1.getData!(), selectionItem3.getData!()]),
     );
   });
 });
