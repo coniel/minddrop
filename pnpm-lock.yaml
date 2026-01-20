@@ -1217,9 +1217,6 @@ importers:
       '@leeoniya/ufuzzy':
         specifier: 1.0.14
         version: 1.0.14
-      is-url:
-        specifier: ^1.2.4
-        version: 1.2.4
       open-graph-scraper-lite:
         specifier: ^2.1.0
         version: 2.1.0
@@ -7856,7 +7853,7 @@ packages:
     hasBin: true
     dependencies:
       address: 1.2.2
-      debug: 4.4.0
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
     dev: true

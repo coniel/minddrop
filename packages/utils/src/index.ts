@@ -8,6 +8,7 @@ export * from './errors';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
 export * from './isDomainMatch';
+export * from './isUrl';
 export * from './isImageUrl';
 export * from './isSerializedDate';
 export * from './isValidUrl';

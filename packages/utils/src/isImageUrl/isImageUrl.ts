@@ -1,3 +1,5 @@
+import { isUrl } from '../isUrl';
+
 /**
  * Checks whether a URL end in an image file extension.
  * Removes any query or hash parameters before checking.
@@ -6,6 +8,10 @@
  * @returns Boolean indicating whether the URL is that of an image.
  */
 export function isImageUrl(url: string) {
+  if (!isUrl(url)) {
+    return false;
+  }
+
   // Remove any query parameters from the URL
   let cleaned = url.split('?')[0];
 
