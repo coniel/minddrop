@@ -19,7 +19,6 @@ export * from './throttle';
 export * from './titleFromPath';
 export * from './titleFromUrl';
 export * from './toKebabCase';
-export * from './toMindDropDataTransfer';
 export * from './types';
 export * from './useCreateCallback';
 export * from './useDragImage';
