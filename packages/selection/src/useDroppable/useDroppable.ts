@@ -52,7 +52,6 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
   const getDropPosition = useCallback(
     (e: React.DragEvent): DropPosition => {
       if (!ref.current) return 'inside';
-      console.log('e', e);
 
       const rect = ref.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
