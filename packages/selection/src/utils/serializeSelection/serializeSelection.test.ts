@@ -1,14 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { registerSelectionItemType } from '../../SelectionItemTypeConfigsStore';
 import {
-  registerSelectionItemType,
-  unregisterSelectionItemType,
-} from '../../SelectionItemTypeConfigsStore';
-import { SelectionItemTypeNotRegisteredError } from '../../errors';
-import {
-  alternativeTypeItem,
   cleanup,
-  selectedItem1,
-  selectedItem2,
+  mimeType1,
+  mimeType2,
+  selectionItem1,
+  selectionItem2,
+  selectionItem3,
   selectionItemTypeConfig,
   setup,
 } from '../../test-utils';
@@ -25,36 +23,17 @@ describe('serializeSelection', () => {
     // Add items to the selection
     useSelectionStore
       .getState()
-      .addSelectedItems([selectedItem1, selectedItem2]);
+      .addSelectedItems([selectionItem1, selectionItem2, selectionItem3]);
   });
 
   afterEach(cleanup);
 
-  it('calls the appropriate selection serializer', () => {
-    const result = serializeSelection();
+  it('serializes the selection items by type', () => {
+    const serialized = serializeSelection();
 
-    expect(result['application/json']).toBe(
-      JSON.stringify([selectedItem1.getData!(), selectedItem2.getData!()]),
-    );
-  });
-
-  it('uses the first selection item to decide the type of the selection', () => {
-    // Add an item of a new type to the selection
-    useSelectionStore.getState().addSelectedItems([alternativeTypeItem]);
-
-    const result = serializeSelection();
-
-    expect(result['application/json']).toBe(
-      JSON.stringify([selectedItem1.getData!(), selectedItem2.getData!()]),
-    );
-  });
-
-  it('throws if no matching serializer is found', () => {
-    // Remove the registered serializer
-    unregisterSelectionItemType(selectionItemTypeConfig.id);
-
-    expect(() => serializeSelection()).toThrow(
-      SelectionItemTypeNotRegisteredError,
-    );
+    expect(serialized).toEqual({
+      [mimeType1]: JSON.stringify([selectionItem1.data, selectionItem2.data]),
+      [mimeType2]: JSON.stringify([selectionItem3.data]),
+    });
   });
 });

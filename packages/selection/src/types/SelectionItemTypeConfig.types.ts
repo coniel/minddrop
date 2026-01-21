@@ -1,6 +1,6 @@
 import { SelectionItem } from './SelectionItem.types';
 
-export interface SelectionItemTypeConfig {
+export interface SelectionItemTypeConfig<TData extends object = object> {
   /**
    * The ID of the serializer. This should be unique to the serializer.
    * It is used to identify the serializer that should be used to
@@ -12,15 +12,10 @@ export interface SelectionItemTypeConfig {
    * Callback fired when the selection is copied, cut, or dragged.
    * Should return the data to be set in the clipboard/data-transfer object.
    *
-   * @param selection - The current selection items to serialize.
-   * @returns Serialized selection data.
-   */
-  serializeData(selection: SelectionItem[]): Record<string, string>;
-
-  /**
-   * Callback fired when the selection is deleted or cut.
+   * If not provided, the selection items themselves will be used as the data.
    *
-   * @param items - The selection items to delete.
+   * @param items - The current selection items of this type to serialize.
+   * @returns The data to be set in the clipboard/data-transfer object.
    */
-  onDelete: (items: SelectionItem[]) => void;
+  getData?(items: SelectionItem[]): TData[];
 }

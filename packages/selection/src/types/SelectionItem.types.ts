@@ -1,4 +1,4 @@
-export interface SelectionItem<TData = unknown> {
+export interface SelectionItem<TData extends object = object> {
   /**
    * A unique identifier for the item, usful for checking if the item is
    * in the current selection.
@@ -6,14 +6,12 @@ export interface SelectionItem<TData = unknown> {
   id: string;
 
   /**
-   * The ID of the SelectionSerializer that should be used to serialize
-   * the item when it is copied, cut, or dragged.
+   * The type of item this is.
    */
   type: string;
 
   /**
-   * Callback used by the SelectionSerializer to get the item's data.
-   * Only required if the specified serializer depends upon it.
+   * The data associated with the item.
    */
-  getData?(): Record<string, TData>;
+  data?: TData;
 }

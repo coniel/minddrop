@@ -1,5 +1,6 @@
-import { getSelectionItemTypeConfig } from '../../SelectionItemTypeConfigsStore';
 import { getSelection } from '../../getSelection';
+import { SelectionItem } from '../../types';
+import { toMimeType } from '../toMimeType';
 
 /**
  * Serializes the current selection into a format compatible with the clipboard
@@ -15,18 +16,29 @@ export function serializeSelection(): Record<string, string> {
     return {};
   }
 
-  // Use the first selection item to decide the type of the selection.
-  // If the selection contains multiple types, the rest will be ignored.
-  const selectionType = selection[0].type;
+  // Group the selection items by type
+  const selectionItemsByType = selection.reduce<
+    Record<string, (SelectionItem['data'] | SelectionItem)[]>
+  >((acc, item) => {
+    // If the item has no data, use the item itself as the data
+    const data = item.data ?? item;
 
-  // Filter out any items that don't match the selection type
-  const filteredSelection = selection.filter(
-    (item) => item.type === selectionType,
+    if (!acc[item.type]) {
+      acc[item.type] = [data];
+    } else {
+      acc[item.type].push(data);
+    }
+
+    return acc;
+  }, {});
+
+  // Serialize the selection items by type
+  return Object.entries(selectionItemsByType).reduce<Record<string, string>>(
+    (acc, [type, items]) => {
+      acc[toMimeType(type)] = JSON.stringify(items);
+
+      return acc;
+    },
+    {},
   );
-
-  // Get the config for the selection items type
-  const config = getSelectionItemTypeConfig(selectionType);
-
-  // Serialize the selection items
-  return config.serializeData(filteredSelection);
 }
