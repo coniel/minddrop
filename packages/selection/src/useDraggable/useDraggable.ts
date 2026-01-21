@@ -47,7 +47,7 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
       }
 
       // Initialize the dragging state
-      dragStart(event, 'sort');
+      dragStart(event);
     },
     [selectionItem],
   );

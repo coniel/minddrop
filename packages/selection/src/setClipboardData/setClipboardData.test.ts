@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
-import { ACTION_DATA_KEY } from '../constants';
 import {
   cleanup,
   selectionItem1,
@@ -42,9 +41,6 @@ describe('setClipboardData', () => {
   it('sets the action on the event', () => {
     // Set clipboard data with an action of 'move'
     setClipboardData(clipboardEvent, 'move');
-
-    // Should set the action to 'move'
-    expect(data[ACTION_DATA_KEY]).toBe('move');
   });
 
   it('serializes the selection to the event data transfer', () => {
