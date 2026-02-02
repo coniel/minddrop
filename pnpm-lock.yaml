@@ -418,6 +418,21 @@ importers:
         specifier: ^5.7.2
         version: 5.8.3
 
+  packages/designs:
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
   packages/desktop-app:
     dependencies:
       '@minddrop/ast':
