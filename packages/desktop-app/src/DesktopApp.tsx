@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  CloseAppSidebar,
   CloseRightPanel,
   Events,
+  OpenAppSidebar,
   OpenConfirmationDialog,
   OpenConfirmationDialogData,
   OpenMainContentView,
@@ -11,6 +13,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { DatabasesFeature } from '@minddrop/feature-databases';
+import { DesignStudioFeature } from '@minddrop/feature-design-studio';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
 import {
@@ -25,6 +28,22 @@ import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
   const defaultEmojiSkinTone = useDefaultEmojiSkinTone();
+  const [showSidebar, setShowSidebar] = useState(true);
+
+  useEffect(() => {
+    Events.addListener(CloseAppSidebar, 'desktop-app', () => {
+      setShowSidebar(false);
+    });
+
+    Events.addListener(OpenAppSidebar, 'desktop-app', () => {
+      setShowSidebar(true);
+    });
+
+    return () => {
+      Events.removeListener(CloseAppSidebar, 'desktop-app');
+      Events.removeListener(OpenAppSidebar, 'desktop-app');
+    };
+  }, []);
 
   const handleChangeDefaultEmojiSkinTone = useCallback(
     (skinTone: EmojiSkinTone) => {
@@ -45,7 +64,7 @@ export const DesktopApp: React.FC = () => {
               <div className="app">
                 <Panel className="toolbar-panel"></Panel>
                 <div className="content-panels">
-                  <AppSidebar />
+                  {showSidebar && <AppSidebar />}
                   <MainContent />
                   <RightPanel />
                 </div>
@@ -53,6 +72,7 @@ export const DesktopApp: React.FC = () => {
               <DatabasesFeature />
               <ConfirmationDialogFeature />
               <ShowWindowOnRendered />
+              <DesignStudioFeature />
             </DragImageProvider>
           </MindDropApiProvider>
         </IconsProvider>

@@ -31,6 +31,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
+    "@minddrop/feature-design-studio": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
