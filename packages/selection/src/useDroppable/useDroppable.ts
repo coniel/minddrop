@@ -126,8 +126,8 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
           event: e,
           data: getEventData(e),
           position: dropPosition,
-          type,
-          id,
+          targetType: type,
+          targetId: id,
           index,
         });
       }

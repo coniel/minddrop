@@ -11,6 +11,7 @@ export { dragStart } from './dragStart';
 export { dragEnd } from './dragEnd';
 export { copySelection as copy } from './copySelection';
 export { cutSelection as cut } from './cutSelection';
+export { getEventData } from './utils';
 export {
   registerSelectionItemType as registerItemType,
   unregisterSelectionItemType as unregisterItemType,
