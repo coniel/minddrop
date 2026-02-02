@@ -1,0 +1,20 @@
+.design-studio-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bgSubtle);
+  max-width: 300px;
+  width: 100%;
+  margin: 4rem auto;
+  min-height: 30px;
+
+  .placeholder {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color-muted);
+    height: 200px;
+  }
+}

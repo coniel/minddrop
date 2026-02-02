@@ -1,0 +1,29 @@
+{
+  "name": "@minddrop/feature-design-studio",
+  "version": "0.0.0",
+  "main": "src/index",
+  "types": "src/index",
+  "scripts": {
+    "lint": "eslint .  --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --jsx react-jsx"
+  },
+  "devDependencies": {
+    "@minddrop/eslint-config": "workspace:*",
+    "eslint": "^9.16.0",
+    "tsconfig": "workspace:*",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/designs": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/properties": "workspace:*",
+    "@minddrop/selection": "workspace:*",
+    "@minddrop/test-utils": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*"
+  }
+}
