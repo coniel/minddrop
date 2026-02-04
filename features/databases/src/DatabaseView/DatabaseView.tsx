@@ -1,8 +1,8 @@
-import { Databases } from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import {
-  Button,
   ContentIcon,
   Heading,
+  IconButton,
   Panel,
   Toolbar,
   useToggle,
@@ -19,7 +19,12 @@ export interface DatabaseViewProps {
 
 export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
   const database = Databases.use(databaseId);
+  const entries = DatabaseEntries.useAll(databaseId);
   const [propertiesPanelOpen, togglePropertiesPanel] = useToggle(false);
+
+  function handleClickNewEntry() {
+    DatabaseEntries.create(databaseId);
+  }
 
   if (!database) {
     return <div className="database-view">Database not found.</div>;
@@ -34,12 +39,26 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
             <Heading noMargin>{database.name}</Heading>
           </div>
           <Toolbar>
-            <Button
-              variant="outlined"
-              label="Configure"
+            <IconButton
+              icon="plus"
+              label="New"
+              color="light"
+              onClick={handleClickNewEntry}
+            />
+            <IconButton
+              icon={
+                propertiesPanelOpen ? 'panel-right-close' : 'panel-right-open'
+              }
+              label="Properties"
+              color="light"
               onClick={togglePropertiesPanel}
             />
           </Toolbar>
+        </div>
+        <div>
+          {entries.map((entry) => (
+            <div key={entry.id}>{entry.title}</div>
+          ))}
         </div>
       </Panel>
       {propertiesPanelOpen && (
