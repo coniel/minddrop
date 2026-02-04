@@ -49,6 +49,11 @@ export interface Database {
   created: Date;
 
   /**
+   * The date at which the database configuration was last modified.
+   */
+  lastModified: Date;
+
+  /**
    * The database icon. Value depends on the icon type:
    * - `content-icon`: '[set-name]:[icon-name]:[color]'
    * - `emoji`: 'emoji:[emoji-character]:[skin-tone]'

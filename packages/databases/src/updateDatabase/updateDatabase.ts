@@ -27,6 +27,7 @@ export async function updateDatabase(
   const updatedConfig = {
     ...config,
     ...data,
+    lastModified: new Date(),
   };
 
   // Update the database in the store

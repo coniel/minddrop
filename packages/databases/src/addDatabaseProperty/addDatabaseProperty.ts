@@ -21,8 +21,5 @@ export async function addDatabaseProperty(
   const properties = [...config.properties, property];
 
   // Update the database
-  const updatedConfig = await updateDatabase(id, { properties });
-
-  // Return the updated config
-  return updatedConfig;
+  return updateDatabase(id, { properties });
 }

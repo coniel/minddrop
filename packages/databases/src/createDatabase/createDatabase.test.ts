@@ -26,6 +26,7 @@ const newDatabase: Database = {
   // Should inherit properties from the base database
   properties: UrlDataType.properties,
   created: expect.any(Date),
+  lastModified: expect.any(Date),
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
   automations: [
@@ -143,6 +144,7 @@ describe('createDatabase', () => {
     expect(MockFs.readJsonFile(configFilePath)).toEqual({
       ...database,
       created: database.created.toISOString(),
+      lastModified: database.lastModified.toISOString(),
     });
   });
 

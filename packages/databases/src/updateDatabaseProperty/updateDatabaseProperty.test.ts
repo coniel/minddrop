@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PropertySchema } from '@minddrop/properties';
 import { InvalidParameterError } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  mockDate,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { Database } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { updateDatabaseProperty } from './updateDatabaseProperty';
@@ -15,6 +21,7 @@ const updatedProperty = {
 const updatedDatabase = {
   ...objectDatabase,
   properties: [updatedProperty, ...objectDatabase.properties.slice(1)],
+  lastModified: mockDate,
 };
 
 describe('updateDatabaseProperty', () => {

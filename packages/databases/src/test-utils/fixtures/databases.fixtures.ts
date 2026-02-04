@@ -10,6 +10,7 @@ import { databaseConfigFilePath } from '../../utils';
 import { dataTypeWithSerializer } from './data-types.fixtures';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
+
 export const parentDir = 'path/to/databases';
 
 export const objectDatabase: Database = {
@@ -21,6 +22,7 @@ export const objectDatabase: Database = {
   icon: 'content-icon:shapes:blue',
   path: `${parentDir}/Objects`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'text-formatted',
@@ -43,6 +45,7 @@ export const pdfDatabase: Database = {
   icon: 'content-icon:file:default',
   path: `${parentDir}/PDF Documents`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'icon',
@@ -65,6 +68,7 @@ export const urlDatabase: Database = {
   icon: 'content-icon:link:default',
   path: `${parentDir}/URL Database`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: UrlDataType.properties,
   automations: [fetchWebpageMetadataAutomation],
 };
@@ -78,6 +82,7 @@ export const noPropertiesDatabase: Database = {
   icon: 'content-icon:shapes:blue',
   path: `${parentDir}/No Properties`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [],
 };
 
@@ -90,6 +95,7 @@ export const yamlObjectDatabase: Database = {
   icon: 'content-icon:shapes:blue',
   path: `${parentDir}/YAML Database`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'text',
@@ -111,6 +117,7 @@ export const dataTypeSerializerDatabase: Database = {
   icon: 'content-icon:shapes:blue',
   path: `${parentDir}/Data Type Serializer Database`,
   created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'text',

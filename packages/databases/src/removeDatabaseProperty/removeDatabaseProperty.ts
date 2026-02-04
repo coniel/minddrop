@@ -22,11 +22,5 @@ export async function removeDatabaseProperty(
   );
 
   // Update the database
-  updateDatabase(databaseId, { properties });
-
-  // Return the updated config
-  return {
-    ...config,
-    properties,
-  };
+  return updateDatabase(databaseId, { properties });
 }

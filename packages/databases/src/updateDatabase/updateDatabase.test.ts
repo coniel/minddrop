@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseUpdatedEvent } from '../events';
-import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  mockDate,
+  objectDatabase,
+  setup,
+} from '../test-utils';
 import { Database } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { UpdateDatabaseData, updateDatabase } from './updateDatabase';
@@ -14,6 +20,7 @@ const update: UpdateDatabaseData = {
 const updatedConfig = {
   ...objectDatabase,
   ...update,
+  lastModified: mockDate,
 };
 
 describe('updateDatabase', () => {

@@ -42,11 +42,5 @@ export async function updateDatabaseProperty(
   );
 
   // Update the database
-  updateDatabase(name, { properties });
-
-  // Return the updated config
-  return {
-    ...config,
-    properties,
-  };
+  return updateDatabase(name, { properties });
 }

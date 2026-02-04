@@ -30,6 +30,8 @@ export const MockFs = initializeMockFileSystem([
   ...databaseEntryFiles,
 ]);
 
+export const mockDate = new Date('2026-01-01T00:00:00.000Z');
+
 export function setup(
   options: SetupOptions = {
     loadDatabases: true,
@@ -57,6 +59,10 @@ export function setup(
     // Load database entry serializers into the store
     DatabaseEntrySerializerSerializersStore.load(coreEntrySerializers);
   }
+
+  // Mock the current date
+  vi.useFakeTimers();
+  vi.setSystemTime(mockDate);
 }
 
 export function cleanup() {
@@ -70,4 +76,7 @@ export function cleanup() {
   MockFs.reset();
   // Clear all event listeners
   Events._clearAll();
+
+  // Reset the current date
+  vi.useRealTimers();
 }

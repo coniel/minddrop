@@ -46,6 +46,7 @@ export async function initializeDatabases() {
       return {
         ...dbConfig,
         created: new Date(dbConfig.created),
+        lastModified: new Date(dbConfig.lastModified),
         path,
       };
     } catch (error) {

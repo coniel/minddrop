@@ -20,6 +20,7 @@ describe('writeConfig', () => {
     const config = {
       ...objectDatabase,
       created: objectDatabase.created.toISOString(),
+      lastModified: objectDatabase.lastModified.toISOString(),
     };
 
     // Should remove the path before serialization

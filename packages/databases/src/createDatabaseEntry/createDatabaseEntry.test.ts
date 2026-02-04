@@ -1,13 +1,4 @@
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
@@ -37,24 +28,17 @@ const newEntry: DatabaseEntry = {
 };
 
 describe('createDatabaseEntry', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    setup({ loadDatabaseEntries: false });
     // Mock the Date to return a consistent value
     vi.useFakeTimers();
     vi.setSystemTime(objectEntry1.created);
-  });
 
-  beforeEach(() => {
-    setup({ loadDatabaseEntries: false });
     MockFs.removeFile(objectEntry1.path);
     MockFs.removeFile(entryCorePropertiesFilePath(objectEntry1.path));
   });
 
   afterEach(cleanup);
-
-  afterAll(() => {
-    // Restore the original Date implementation
-    vi.useRealTimers();
-  });
 
   it('adds the new entry to the store', async () => {
     const entry = await createDatabaseEntry(objectDatabase.id);
