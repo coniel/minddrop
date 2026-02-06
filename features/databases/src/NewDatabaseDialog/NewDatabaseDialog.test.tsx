@@ -265,7 +265,10 @@ describe('<NewDatabaseDialog />', () => {
             expect(database.icon).toBe(BooksDatabaseTemplate.icon);
             expect(database.dataType).toBe(BooksDatabaseTemplate.dataType);
             expect(database.properties).toEqual(
-              BooksDatabaseTemplate.properties,
+              BooksDatabaseTemplate.properties.map((property) => ({
+                ...property,
+                name: i18n.t(property.name),
+              })),
             );
             resolve();
           },

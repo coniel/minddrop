@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import {
   DataTypes,
   DatabaseFixtures,
+  DatabaseTemplates,
   Databases,
   coreDataTypes,
 } from '@minddrop/databases';
@@ -14,6 +15,7 @@ import { Paths } from '@minddrop/utils';
 interface SetupOptions {
   loadDatabases?: boolean;
   loadDataTypes?: boolean;
+  loadDatabaseTemplates?: boolean;
 }
 
 initializeI18n();
@@ -24,7 +26,11 @@ export const MockFs = initializeMockFileSystem([
 ]);
 
 export function setup(
-  options: SetupOptions = { loadDatabases: true, loadDataTypes: true },
+  options: SetupOptions = {
+    loadDatabases: true,
+    loadDataTypes: true,
+    loadDatabaseTemplates: true,
+  },
 ) {
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
@@ -34,6 +40,11 @@ export function setup(
   if (options.loadDataTypes !== false) {
     // Load data types into the store
     DataTypes.Store.load(coreDataTypes);
+  }
+
+  if (options.loadDatabaseTemplates !== false) {
+    // Load database templates into the store
+    DatabaseTemplates.initialize();
   }
 }
 
@@ -45,6 +56,7 @@ export function cleanup() {
   // Clear stores
   Databases.Store.clear();
   DataTypes.Store.clear();
+  DatabaseTemplates.Store.clear();
   // Reset mock file system
   MockFs.reset();
 }
