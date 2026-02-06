@@ -188,6 +188,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
@@ -469,6 +472,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
       eslint:
         specifier: ^9.16.0
         version: 9.21.0
