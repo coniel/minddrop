@@ -1,3 +1,4 @@
+import { Design } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { uuid } from '@minddrop/utils';
@@ -18,10 +19,12 @@ export interface CreateDatabaseOptions
     | 'properties'
     | 'entrySerializer'
     | 'automations'
+    | 'designs'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
   automations?: DatabaseAutomationTemplate[];
+  designs?: Design[];
 }
 
 /**
@@ -68,6 +71,7 @@ export async function createDatabase(
     created: new Date(),
     lastModified: new Date(),
     automations,
+    designs: options.designs || [],
   };
 
   // If the database has no automations, remove the automations property

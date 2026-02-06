@@ -429,6 +429,9 @@ importers:
 
   packages/databases:
     dependencies:
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events

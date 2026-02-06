@@ -1,3 +1,4 @@
+import { Design } from '@minddrop/designs';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { Database } from './Database.types';
 import { DatabaseAutomationTemplate } from './DatabaseAutomation.types';
@@ -106,4 +107,10 @@ export interface DataType<
    * creation.
    */
   automations?: DatabaseAutomationTemplate[];
+
+  /**
+   * Designs added to the database when creating a new database of this data type.
+   * The user will be able modify/remove these designs after creation.
+   */
+  designs?: Design[];
 }

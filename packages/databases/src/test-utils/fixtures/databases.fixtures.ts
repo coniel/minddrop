@@ -1,3 +1,4 @@
+import { DESIGN_FIXTURES } from '@minddrop/designs';
 import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
 import { DatabasesConfigFileName } from '../../constants';
 import {
@@ -10,6 +11,7 @@ import { databaseConfigFilePath } from '../../utils';
 import { dataTypeWithSerializer } from './data-types.fixtures';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
+const { design1 } = DESIGN_FIXTURES;
 
 export const parentDir = 'path/to/databases';
 
@@ -34,6 +36,7 @@ export const objectDatabase: Database = {
       name: 'Icon',
     },
   ],
+  designs: [design1],
 };
 
 export const pdfDatabase: Database = {
@@ -57,6 +60,7 @@ export const pdfDatabase: Database = {
       defaultValue: 'Bar',
     },
   ],
+  designs: [design1],
 };
 
 export const urlDatabase: Database = {
@@ -71,6 +75,7 @@ export const urlDatabase: Database = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: UrlDataType.properties,
   automations: [fetchWebpageMetadataAutomation],
+  designs: [design1],
 };
 
 export const noPropertiesDatabase: Database = {
@@ -84,6 +89,7 @@ export const noPropertiesDatabase: Database = {
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [],
+  designs: [design1],
 };
 
 export const yamlObjectDatabase: Database = {
@@ -106,6 +112,7 @@ export const yamlObjectDatabase: Database = {
       name: 'Icon',
     },
   ],
+  designs: [design1],
 };
 
 export const dataTypeSerializerDatabase: Database = {
@@ -128,6 +135,7 @@ export const dataTypeSerializerDatabase: Database = {
       name: 'Icon',
     },
   ],
+  designs: [design1],
 };
 
 export const databases = [

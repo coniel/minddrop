@@ -35,6 +35,7 @@ const newDatabase: Database = {
       id: expect.any(String),
     },
   ],
+  designs: [],
 };
 
 describe('createDatabase', () => {

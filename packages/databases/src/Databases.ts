@@ -8,3 +8,6 @@ export { updateDatabase as update } from './updateDatabase';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
+export { addDatabaseDesign as addDesign } from './addDatabaseDesign';
+export { removeDatabaseDesign as removeDesign } from './removeDatabaseDesign';
+export { updateDatabaseDesign as updateDesign } from './updateDatabaseDesign';

@@ -1,3 +1,4 @@
+import { Design } from '@minddrop/designs';
 import { PropertiesSchema } from '@minddrop/properties';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
@@ -67,6 +68,15 @@ export interface Database {
    * Short description displayed in the UI.
    */
   description?: string;
+
+  /**
+   * Designs associated with the database.
+   * Databases can contain the following types designs:
+   * - `page`: used display entries as a page.
+   * - `card`: used display entries in card based views.
+   * - `list-item`: used display entries in list based views.
+   */
+  designs: Design[];
 
   /**
    * The database's automations if it has any.
