@@ -134,7 +134,11 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       {hasSubmenu && (
         <Icon name="chevron-right" className="submenu-indicator" />
       )}
-      {actions && <div className="actions">{actions}</div>}
+      {actions && (
+        <div className="actions" onClick={(e) => e.stopPropagation()}>
+          {actions}
+        </div>
+      )}
     </div>
   ),
 );
