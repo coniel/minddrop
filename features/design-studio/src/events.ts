@@ -3,5 +3,5 @@ export const OpenDesignStudioEvent = 'design-studio:open';
 
 export interface OpenDesignStudioEventData {
   databaseId: string;
-  designId?: string;
+  designId: string;
 }
