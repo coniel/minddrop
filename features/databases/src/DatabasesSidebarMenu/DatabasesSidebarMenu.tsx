@@ -18,7 +18,7 @@ import {
 export const DatabasesSidebarMenu: React.FC = () => {
   const databases = Databases.useAll();
 
-  function handleAddItemType(event: React.MouseEvent) {
+  function handleAddDatabase(event: React.MouseEvent) {
     event.stopPropagation();
     Events.dispatch(OpenNewDatabaseDialogEvent);
   }
@@ -45,7 +45,7 @@ export const DatabasesSidebarMenu: React.FC = () => {
                     label="databases.actions.new"
                     variant="text"
                     startIcon="plus"
-                    onClick={handleAddItemType}
+                    onClick={handleAddDatabase}
                   />
                 }
               />

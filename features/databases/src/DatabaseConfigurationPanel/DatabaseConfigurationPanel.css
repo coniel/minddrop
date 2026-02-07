@@ -1,4 +1,7 @@
-.properties {
+.database-configuration-panel {
+  height: 100%;
+  width: 400px;
+
   display: flex;
   flex-direction: column;
   height: 100%;

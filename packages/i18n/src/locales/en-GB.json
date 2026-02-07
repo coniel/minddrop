@@ -7,7 +7,11 @@
     "back": "Back",
     "cancel": "Cancel",
     "clear": "Clear",
-    "save": "Save"
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "manage": "Manage"
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -59,8 +63,10 @@
   },
   "labels": {
     "untitled": "Untitled",
+    "copy": "copy",
     "optional": "Optional",
-    "properties": "Properties"
+    "properties": "Properties",
+    "designs": "Designs"
   },
   "properties": {
     "actions": {
@@ -156,7 +162,8 @@
   "databases": {
     "actions": {
       "new": "New",
-      "addProperty": "Add property"
+      "addProperty": "Add property",
+      "addDesign": "Add design"
     },
     "labels": {
       "databases": "Databases"
@@ -340,6 +347,27 @@
   "items": {
     "labels": {
       "items": "Items"
+    }
+  },
+  "designs": {
+    "actions": {
+      "deleteConfirmation": {
+        "title": "Delete design?",
+        "message": "This will remove the design from the database and can't be undone. Any views using this design will switch to the default design.",
+        "confirm": "Delete design"
+      }
+    },
+    "page": {
+      "name": "Page",
+      "description": "The design of an element when displayed as a page."
+    },
+    "card": {
+      "name": "Card",
+      "description": "The design of an element when displayed as a card."
+    },
+    "list-item": {
+      "name": "List item",
+      "description": "The design of an element when displayed in a list."
     }
   }
 }

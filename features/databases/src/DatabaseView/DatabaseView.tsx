@@ -7,8 +7,8 @@ import {
   Toolbar,
   useToggle,
 } from '@minddrop/ui-primitives';
+import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
-import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
 
 export interface DatabaseViewProps {
   /**
@@ -20,7 +20,7 @@ export interface DatabaseViewProps {
 export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
   const database = Databases.use(databaseId);
   const entries = DatabaseEntries.useAll(databaseId);
-  const [propertiesPanelOpen, togglePropertiesPanel] = useToggle(false);
+  const [configurationPanelOpen, toggleConfigurationPanel] = useToggle(false);
 
   function handleClickNewEntry() {
     DatabaseEntries.create(databaseId);
@@ -47,11 +47,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
             />
             <IconButton
               icon={
-                propertiesPanelOpen ? 'panel-right-close' : 'panel-right-open'
+                configurationPanelOpen
+                  ? 'panel-right-close'
+                  : 'panel-right-open'
               }
               label="Properties"
               color="light"
-              onClick={togglePropertiesPanel}
+              onClick={toggleConfigurationPanel}
             />
           </Toolbar>
         </div>
@@ -61,8 +63,8 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
           ))}
         </div>
       </Panel>
-      {propertiesPanelOpen && (
-        <DatabasePropertiesEditor databaseId={databaseId} />
+      {configurationPanelOpen && (
+        <DatabaseConfigurationPanel databaseId={databaseId} />
       )}
     </div>
   );

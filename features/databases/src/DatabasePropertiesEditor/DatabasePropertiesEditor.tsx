@@ -3,9 +3,8 @@ import { Databases } from '@minddrop/databases';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
-import { IconButton, MenuLabel, Panel } from '@minddrop/ui-primitives';
+import { IconButton, MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
 import { DatabasePropertyEditor } from '../DatabasePropertyEditor';
-import './DatabasePropertiesEditor.css';
 
 export interface DatabasePropertiesEditorProps
   extends React.HTMLProps<HTMLDivElement> {
@@ -44,45 +43,43 @@ export const DatabasePropertiesEditor: React.FC<
   }
 
   return (
-    <Panel className="properties">
-      <div className="property-list">
-        <MenuLabel
-          actionsAlwaysVisible
-          label="labels.properties"
-          actions={
-            <PropertyTypeSelectionMenu
-              existingProperties={[
-                ...databaseConfig.properties,
-                ...draftProperties,
-              ]}
-              onSelect={handleAddProperty}
-            >
-              <IconButton
-                size="small"
-                label="databases.actions.addProperty"
-                icon="plus"
-              />
-            </PropertyTypeSelectionMenu>
-          }
+    <MenuGroup className="property-list">
+      <MenuLabel
+        actionsAlwaysVisible
+        label="labels.properties"
+        actions={
+          <PropertyTypeSelectionMenu
+            existingProperties={[
+              ...databaseConfig.properties,
+              ...draftProperties,
+            ]}
+            onSelect={handleAddProperty}
+          >
+            <IconButton
+              size="small"
+              label="databases.actions.addProperty"
+              icon="plus"
+            />
+          </PropertyTypeSelectionMenu>
+        }
+      />
+      {draftProperties.map((property) => (
+        <DatabasePropertyEditor
+          isDraft
+          key={property.name}
+          databaseId={databaseId}
+          property={property}
+          onSaveDraft={() => removeDraftProperty(property.id)}
+          onCancelDraft={() => removeDraftProperty(property.id)}
         />
-        {draftProperties.map((property) => (
-          <DatabasePropertyEditor
-            isDraft
-            key={property.name}
-            databaseId={databaseId}
-            property={property}
-            onSaveDraft={() => removeDraftProperty(property.id)}
-            onCancelDraft={() => removeDraftProperty(property.id)}
-          />
-        ))}
-        {databaseConfig.properties.toReversed().map((property) => (
-          <DatabasePropertyEditor
-            key={property.name}
-            databaseId={databaseId}
-            property={property}
-          />
-        ))}
-      </div>
-    </Panel>
+      ))}
+      {databaseConfig.properties.toReversed().map((property) => (
+        <DatabasePropertyEditor
+          key={property.name}
+          databaseId={databaseId}
+          property={property}
+        />
+      ))}
+    </MenuGroup>
   );
 };
