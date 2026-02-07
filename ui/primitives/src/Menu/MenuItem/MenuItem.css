@@ -19,7 +19,8 @@
     height: 1.75rem;
   }
 
-  &:hover {
+  &:hover,
+  &.force-actions-visible {
     background-color: var(--gray-3);
   }
 
@@ -31,7 +32,8 @@
   &.active {
     background-color: var(--gray-3);
 
-    &:hover {
+    &:hover,
+    &.force-actions-visible {
       background-color: var(--gray-4);
     }
 
@@ -51,7 +53,8 @@
   }
 
   &.danger {
-    &:hover {
+    &:hover,
+    &.force-actions-visible {
       color: var(--text-color-danger);
     }
   }
@@ -102,7 +105,8 @@
     column-gap: 0.25rem;
   }
 
-  &:hover .actions {
+  &:hover .actions,
+  &.force-actions-visible .actions {
     opacity: 1;
     width: auto;
     position: relative;

@@ -13,7 +13,6 @@ export * from './InteractiveMenuItem';
 export * from './InvisibleTextField';
 export * from './KeyboardShortcut';
 export * from './Menu';
-export * from './Menu/MenuLabel';
 export * from './NavMenuItem';
 export * from './Panel';
 export * from './Popover';

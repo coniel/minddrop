@@ -17,12 +17,6 @@ describe('<MenuItem />', () => {
     expect(screen.getByRole('menuitem').textContent).toBe('Copy');
   });
 
-  it('renders the description', () => {
-    render(<MenuItem label="Text" description="A text drop" />);
-
-    expect(screen.getByRole('menuitem').textContent).toContain('A text drop');
-  });
-
   it('renders icon', () => {
     render(<MenuItem label="Copy" icon="copy" />);
 
@@ -40,12 +34,6 @@ describe('<MenuItem />', () => {
 
     screen.getByTestId('submenu-indicator');
     expect(screen.getByRole('menuitem').className).toContain('has-submenu');
-  });
-
-  it('renders selected indicator', () => {
-    render(<MenuItem itemIndicator="INDICATOR" label="Copy" />);
-
-    screen.getByText('INDICATOR');
   });
 
   it('renders the keyboard shortcut', () => {

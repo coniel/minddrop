@@ -11,7 +11,6 @@ import {
 } from '@minddrop/feature-design-studio';
 import { i18n } from '@minddrop/i18n';
 import {
-  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuPositioner,
@@ -19,6 +18,7 @@ import {
   IconButton,
   MenuGroup,
   MenuItem,
+  MenuItemDropdownMenu,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
 
@@ -85,7 +85,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
       label={design.name}
       onClick={handleClick}
       actions={
-        <DropdownMenu>
+        <MenuItemDropdownMenu>
           <DropdownMenuTrigger>
             <IconButton
               size="small"
@@ -119,7 +119,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
               </DropdownMenuContent>
             </DropdownMenuPositioner>
           </DropdownMenuPortal>
-        </DropdownMenu>
+        </MenuItemDropdownMenu>
       }
     />
   );
