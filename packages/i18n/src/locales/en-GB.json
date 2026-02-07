@@ -359,14 +359,17 @@
     },
     "page": {
       "name": "Page",
+      "new": "New page design",
       "description": "The design of an element when displayed as a page."
     },
     "card": {
       "name": "Card",
+      "new": "New card design",
       "description": "The design of an element when displayed as a card."
     },
     "list-item": {
       "name": "List item",
+      "new": "New list design",
       "description": "The design of an element when displayed in a list."
     }
   }
