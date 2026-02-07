@@ -13,14 +13,12 @@ export function generateDesign(type: string, name: string): Design {
     id: uuid(),
     type,
     name,
-    elements: [
-      {
-        id: 'root',
-        type: 'container',
-        direction: 'column',
-        style: {},
-        children: [],
-      },
-    ],
+    elements: {
+      id: 'root',
+      type: 'container',
+      direction: 'column',
+      style: {},
+      children: [],
+    },
   };
 }

@@ -60,13 +60,14 @@ export interface ContainerElementSchema extends ElementSchemaBase {
   children: string[];
 }
 
-export type ElementSchema =
-  | ContainerElementSchema
+export type LeafElementSchema =
   | StaticTextElementSchema
   | TitleElementSchema
   | TextElementSchema
   | UrlElementSchema
   | ImageElementSchema;
+
+export type ElementSchema = LeafElementSchema | ContainerElementSchema;
 
 export type ContainerElementSchemaTemplate = Omit<ContainerElementSchema, 'id'>;
 export type TitleElementSchemaTemplate = Omit<TextElementSchema, 'id'>;

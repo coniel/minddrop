@@ -1,4 +1,4 @@
-import { ElementSchema } from './ElementSchema.types';
+import { ElementTree } from './ElementTree.types';
 
 export interface Design {
   /**
@@ -19,5 +19,5 @@ export interface Design {
   /**
    * The elements composing this design.
    */
-  elements: ElementSchema[];
+  elements: ElementTree;
 }
