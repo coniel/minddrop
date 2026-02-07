@@ -1,4 +1,4 @@
-import { ContainerElementSchema, StaticTextElement } from '@minddrop/designs';
+import { ContainerElementSchema } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { mapPropsToClasses } from '@minddrop/ui-primitives';
 import { useDesignStudio } from '../DesignStudioProvider';

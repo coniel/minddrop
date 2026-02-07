@@ -1,7 +1,12 @@
-import { useState } from 'react';
-import { ContainerElementSchema, ElementSchema } from '@minddrop/designs';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ContainerElementSchema,
+  ElementSchema,
+  ElementTree,
+  LeafElementSchema,
+} from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
-import { createContext, uuid } from '@minddrop/utils';
+import { createContext } from '@minddrop/utils';
 
 export interface DesignStudioDropEventData {
   'unused-database-properties'?: ElementSchema[];
@@ -22,25 +27,33 @@ export const useDesignStudio = hook;
 
 export const DesignStudioProvider: React.FC<{
   children: React.ReactNode;
-}> = ({ children }) => {
-  const [elements, setElements] = useState<Record<string, ElementSchema>>({
-    root: {
-      type: 'container',
-      direction: 'column',
-      style: {},
-      children: [],
-      id: uuid(),
-    },
-  });
+  elementTree: ElementTree;
+  onChange: (rootElement: ElementTree) => void;
+}> = ({ children, onChange, elementTree }) => {
+  const [elements, setElements] = useState<Record<string, ElementSchema>>(
+    parseElementTree(elementTree),
+  );
+  const [elementsVersion, setElementsVersion] = useState(0);
   const [childParentMap, setChildParentMap] = useState<Record<string, string>>(
     {},
   );
+
+  useEffect(() => {
+    if (elementsVersion === 0) {
+      return;
+    }
+
+    onChange(buildElementTree(elements));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elementsVersion, onChange]);
 
   function addElement(element: ElementSchema) {
     setElements((prevElements) => ({
       ...prevElements,
       [element.id]: element,
     }));
+    setElementsVersion((prevVersion) => prevVersion + 1);
   }
 
   function removeElement(id: string) {
@@ -49,6 +62,7 @@ export const DesignStudioProvider: React.FC<{
 
       return rest;
     });
+    setElementsVersion((prevVersion) => prevVersion + 1);
   }
 
   function updateElement(id: string, element: ElementSchema) {
@@ -56,11 +70,11 @@ export const DesignStudioProvider: React.FC<{
       ...prevElements,
       [id]: element,
     }));
+    setElementsVersion((prevVersion) => prevVersion + 1);
   }
 
   function addChildToParent(id: string, parentId: string, index: number) {
     if (!elements[parentId] || !('children' in elements[parentId])) {
-      console.log('Parent not found', elements, parentId);
       return;
     }
 
@@ -84,6 +98,7 @@ export const DesignStudioProvider: React.FC<{
         },
       };
     });
+    setElementsVersion((prevVersion) => prevVersion + 1);
   }
 
   function removeChildFromParent(id: string, parentId: string) {
@@ -104,6 +119,7 @@ export const DesignStudioProvider: React.FC<{
         },
       };
     });
+    setElementsVersion((prevVersion) => prevVersion + 1);
 
     setChildParentMap((prevChildParentMap) => {
       const { [id]: _, ...rest } = prevChildParentMap;
@@ -114,13 +130,11 @@ export const DesignStudioProvider: React.FC<{
 
   function reorderChild(id: string, parentId: string, index: number) {
     if (!elements[parentId] || !('children' in elements[parentId])) {
-      console.log('Parent not found', elements, parentId);
       return;
     }
 
     // Do nothing if the child is already at the correct index
     if (elements[parentId].children[index] === id) {
-      console.log('Child already at correct index');
       return;
     }
 
@@ -141,14 +155,13 @@ export const DesignStudioProvider: React.FC<{
         },
       };
     });
+    setElementsVersion((prevVersion) => prevVersion + 1);
   }
 
   function handleDrop(dropEvent: DropEventData<DesignStudioDropEventData>) {
     const { targetType, targetId, data } = dropEvent;
     let parentId: string | undefined;
     let index = dropEvent.index ?? 0;
-
-    console.log(dropEvent);
 
     if (!targetType || !targetId) {
       return;
@@ -171,7 +184,6 @@ export const DesignStudioProvider: React.FC<{
     }
 
     if (data['unused-database-properties']?.length) {
-      console.log('Adding unused database properties');
       const element = data['unused-database-properties'][0];
       addElement(element);
       addChildToParent(element.id, parentId, index);
@@ -181,22 +193,17 @@ export const DesignStudioProvider: React.FC<{
       const element = data['design-element'][0];
 
       if (targetId === element.id) {
-        console.log('Dropped on self');
         return;
       }
 
       if (parentId !== childParentMap[element.id]) {
-        console.log('Moving child');
         removeChildFromParent(element.id, parentId);
         addChildToParent(element.id, parentId, index);
       } else {
-        console.log('Reordering child');
         reorderChild(element.id, parentId, index);
       }
     }
   }
-
-  console.log(elements);
 
   return (
     <Provider
@@ -231,4 +238,54 @@ function reorderStringToIndex(
   result.splice(clampedIndex, 0, removed);
 
   return result;
+}
+
+function parseElementTree(
+  elementTree: ElementTree,
+): Record<string, ElementSchema> {
+  const elements: Record<string, ElementSchema> = {};
+
+  function addElement(element: LeafElementSchema | ElementTree) {
+    if ('children' in element) {
+      elements[element.id] = {
+        ...element,
+        children: element.children.map((child) => child.id),
+      };
+      element.children.forEach((child) => addElement(child));
+    } else {
+      elements[element.id] = element;
+    }
+  }
+
+  addElement(elementTree);
+
+  return elements;
+}
+
+function buildElementTree(
+  elements: Record<string, ElementSchema>,
+): ElementTree {
+  const rootElement = elements['root'] as ContainerElementSchema;
+
+  if (!rootElement) {
+    throw new Error('Root element not found');
+  }
+
+  return addElementChildren(rootElement, elements) as ElementTree;
+}
+
+function addElementChildren(
+  element: ElementSchema,
+  elements: Record<string, ElementSchema>,
+): ElementTree | LeafElementSchema {
+  if ('children' in element) {
+    return {
+      ...element,
+      children: element.children.map((childId) =>
+        addElementChildren(elements[childId], elements),
+      ),
+    };
+  }
+
+  return element;
 }

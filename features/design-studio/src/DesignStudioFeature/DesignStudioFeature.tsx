@@ -12,10 +12,10 @@ export const DesignStudioFeature: React.FC = () => {
     Events.addListener<OpenDesignStudioEventData>(
       OpenDesignStudioEvent,
       EventListenerId,
-      ({ data: { databaseId } }) => {
+      ({ data }) => {
         Events.dispatch(OpenMainContentView, {
           component: DesignStudio,
-          props: { databaseId },
+          props: data,
         });
       },
     );
