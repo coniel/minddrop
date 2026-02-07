@@ -17,7 +17,7 @@ export interface PropertyTypeSelectionMenuProps
   /**
    * The content of the PropertyTypeSelectionMenu.
    */
-  children?: DropdownMenuTriggerProps['render'];
+  children?: DropdownMenuTriggerProps['children'];
 
   /**
    * Callback fired when a property type is selected.
@@ -46,7 +46,7 @@ export const PropertyTypeSelectionMenu: React.FC<
 
   return (
     <DropdownMenu {...other}>
-      <DropdownMenuTrigger render={children} />
+      <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuPositioner side="bottom" align="start">
           <DropdownMenuContent
