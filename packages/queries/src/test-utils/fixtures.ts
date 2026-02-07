@@ -7,8 +7,8 @@ export const queriesBasePath = `${Paths.workspace}/${QueriesDirectory}`;
 
 export const query1: Query = {
   id: 'query-1',
-  name: 'Query Query 1',
-  path: `${queriesBasePath}/Query 1.query`,
+  name: 'My Query',
+  path: `${queriesBasePath}/My Query.query`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   filters: [
