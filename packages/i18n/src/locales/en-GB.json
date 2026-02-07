@@ -372,5 +372,10 @@
       "new": "New list design",
       "description": "The design of an element when displayed in a list."
     }
+  },
+  "queries": {
+    "labels": {
+      "query": "Query"
+    }
   }
 }
