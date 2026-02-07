@@ -9,7 +9,7 @@ describe('loadQueries', () => {
   afterEach(cleanup);
 
   it('loads the query configs into the store', async () => {
-    await loadQueries();
+    await loadQueries(queries.map((query) => query.path));
 
     expect(QueriesStore.getAll()).toEqual(queries);
   });
