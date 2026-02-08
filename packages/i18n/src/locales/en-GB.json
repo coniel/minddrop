@@ -377,5 +377,10 @@
     "labels": {
       "query": "Query"
     }
+  },
+  "views": {
+    "labels": {
+      "view": "View"
+    }
   }
 }
