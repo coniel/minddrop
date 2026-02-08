@@ -1,7 +1,9 @@
+import { MockFileDescriptor } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
-import { MockFileDescriptor } from '../../../file-system/src';
 import { ViewsDirectory } from '../constants';
 import { View } from '../types';
+
+Paths.workspace = 'workspace';
 
 export const viewsBasePath = `${Paths.workspace}/${ViewsDirectory}`;
 
