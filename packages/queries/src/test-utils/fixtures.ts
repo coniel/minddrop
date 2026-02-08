@@ -3,6 +3,8 @@ import { MockFileDescriptor } from '../../../file-system/src';
 import { QueriesDirectory } from '../constants';
 import { Query } from '../types';
 
+Paths.workspace = 'workspace';
+
 export const queriesBasePath = `${Paths.workspace}/${QueriesDirectory}`;
 
 export const query1: Query = {
