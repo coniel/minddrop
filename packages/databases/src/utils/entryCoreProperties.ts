@@ -11,6 +11,7 @@ export function entryCoreProperties(
   entry: DatabaseEntry,
 ): DatabaseEntryCoreProperties {
   return {
+    id: entry.id,
     title: entry.title,
     created: entry.created,
     lastModified: entry.lastModified,

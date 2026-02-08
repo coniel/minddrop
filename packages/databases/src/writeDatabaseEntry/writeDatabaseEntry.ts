@@ -40,6 +40,7 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   Fs.writeTextFile(
     entryCorePropertiesFilePath(entry.path),
     Properties.toYaml(database.properties, {
+      id: entry.id,
       title: entry.title,
       created: entry.created,
       lastModified: entry.lastModified,
