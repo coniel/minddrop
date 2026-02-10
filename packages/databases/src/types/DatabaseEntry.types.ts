@@ -15,7 +15,7 @@ export interface DatabaseEntry<
   database: string;
 
   /**
-   * Absolute path to the item's primary file.
+   * Absolute path to the entry's primary file.
    */
   path: string;
 

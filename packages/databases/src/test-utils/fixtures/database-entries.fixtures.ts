@@ -30,12 +30,13 @@ export const objectEntry1: DatabaseEntry = {
 };
 
 export const objectEntry1FileContents = `---
-Icon: content-icon:shapes:blue
+Icon: ${objectEntry1.properties.Icon}
 ---
 
-Default Content`;
+${objectEntry1.properties.Content}`;
 
-export const objectEntry1CorePropertiesFileContents = `title: ${objectEntry1.title}
+export const objectEntry1CorePropertiesFileContents = `id: ${objectEntry1.id}
+title: ${objectEntry1.title}
 created: ${objectEntry1.created.toISOString()}
 lastModified: ${objectEntry1.lastModified.toISOString()}`;
 
@@ -57,10 +58,10 @@ export const pdfEntry1: DatabaseEntry = {
 
 export const pdfEntry1FileContents = `---
 Icon: content-icon:shapes:blue
-Foo: Bar
 ---`;
 
-export const pdfEntry1CorePropertiesFileContents = `title: ${pdfEntry1.title}
+export const pdfEntry1CorePropertiesFileContents = `id: ${pdfEntry1.id}
+title: ${pdfEntry1.title}
 created: ${pdfEntry1.created.toISOString()}
 lastModified: ${pdfEntry1.lastModified.toISOString()}`;
 
@@ -81,10 +82,11 @@ export const yamlObjectEntry1: DatabaseEntry = {
   },
 };
 
-export const yamlObjectEntry1FileContents = `title: Test Entry
-icon: content-icon:shapes:blue`;
+export const yamlObjectEntry1FileContents = `Title: Test Entry
+Icon: content-icon:shapes:blue`;
 
-export const yamlObjectEntry1CorePropertiesFileContents = `title: ${yamlObjectEntry1.title}
+export const yamlObjectEntry1CorePropertiesFileContents = `id: ${yamlObjectEntry1.id}
+title: ${yamlObjectEntry1.title}
 created: ${yamlObjectEntry1.created.toISOString()}
 lastModified: ${yamlObjectEntry1.lastModified.toISOString()}`;
 
@@ -116,7 +118,8 @@ Image: image.png
 Icon: icon.png
 ---`;
 
-export const urlEntry1CorePropertiesFileContents = `title: ${urlEntry1.title}
+export const urlEntry1CorePropertiesFileContents = `id: ${urlEntry1.id}
+title: ${urlEntry1.title}
 created: ${urlEntry1.created.toISOString()}
 lastModified: ${urlEntry1.lastModified.toISOString()}`;
 
@@ -142,7 +145,8 @@ export const dataTypeSerializerEntry1: DatabaseEntry = {
 
 export const dataTypeSerializerEntry1FileContents = `{"properties":{"Title":"Test Entry","Icon":"content-icon:shapes:blue"},"data":{"foo":"bar"}}`;
 
-export const dataTypeSerializerEntry1CorePropertiesFileContents = `title: ${dataTypeSerializerEntry1.title}
+export const dataTypeSerializerEntry1CorePropertiesFileContents = `id: ${dataTypeSerializerEntry1.id}
+title: ${dataTypeSerializerEntry1.title}
 created: ${dataTypeSerializerEntry1.created.toISOString()}
 lastModified: ${dataTypeSerializerEntry1.lastModified.toISOString()}`;
 

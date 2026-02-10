@@ -90,10 +90,7 @@ export interface DataType<
    * @returns An object containing the entry's properties and data (if
    * applicable).
    */
-  deserialize?: (
-    database: Database,
-    serializedEntry: string,
-  ) => { properties: PropertyMap; data?: TData };
+  deserialize?: DataTypeDeserializer<TData>;
 
   /**
    * The serialized entry file extension. Only applicable when `serialize` is
@@ -114,3 +111,8 @@ export interface DataType<
    */
   designs?: Design[];
 }
+
+export type DataTypeDeserializer<TData extends object = {}> = (
+  database: Database,
+  serializedEntry: string,
+) => { properties: PropertyMap; data?: TData };

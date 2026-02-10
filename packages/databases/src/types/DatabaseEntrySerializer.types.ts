@@ -42,7 +42,7 @@ export interface DatabaseEntrySerializer<TOptions extends object = {}> {
    * @returns The deserialized entry properties.
    */
   deserialize: (
-    schema: PropertiesSchema,
+    database: PropertiesSchema,
     serializedEntry: string,
     options?: TOptions,
   ) => PropertyMap;

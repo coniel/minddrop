@@ -5,6 +5,8 @@ export { getDatabaseEntry as get } from './getDatabaseEntry';
 export { renameDatabaseEntry as rename } from './renameDatabaseEntry';
 export { updateDatabaseEntry as update } from './updateDatabaseEntry';
 export { writeDatabaseEntry as write } from './writeDatabaseEntry';
+export { initializeDatabaseEntries as initialize } from './initializeDatabaseEntries';
+export { readDatabaseEntry as read } from './readDatabaseEntry';
 export {
   DatabaseEntriesStore as Store,
   useDatabaseEntry as use,
