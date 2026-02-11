@@ -53,6 +53,7 @@ export interface MockFileSystem {
   removeFile(path: string, options?: FsRemoveFileOptions): void;
   removeDir(path: string, options?: FsRemoveDirOptions): void;
   downloadFile(url: string, path: string, options?: FsFileOptions): void;
+  setFilePickerResult(result: string | string[] | null): void;
 }
 
 export type MockFsRoot = Record<string, FsEntry>;

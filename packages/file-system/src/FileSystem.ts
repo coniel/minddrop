@@ -4,7 +4,12 @@ import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
 } from './incrementalPath';
-import type { FileSystem, FileSystemAdapter, FsOptions } from './types';
+import type {
+  FileSystem,
+  FileSystemAdapter,
+  FsOptions,
+  OpenFilePickerOptions,
+} from './types';
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 
@@ -37,7 +42,20 @@ export const Fs: FileSystem &
   writeJsonFile: (...args) => FsAdapter.writeJsonFile(...args),
   readYamlFile: (...args) => readYamlFile(...args),
   writeYamlFile: (...args) => writeYamlFile(...args),
+  openFilePicker,
 };
+
+function openFilePicker(
+  options: OpenFilePickerOptions & { multiple: true },
+): Promise<string[] | null>;
+function openFilePicker(
+  options?: OpenFilePickerOptions & { multiple?: false },
+): Promise<string | null>;
+function openFilePicker(
+  options?: OpenFilePickerOptions,
+): Promise<string | string[] | null> {
+  return FsAdapter.openFilePicker(options);
+}
 
 /**
  * Registers a file system adapter responsible for handling

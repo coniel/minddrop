@@ -45,3 +45,20 @@ export interface CopyFileOptions {
    */
   toPathBaseDir?: BaseDirectory;
 }
+
+export interface OpenFilePickerOptions {
+  /**
+   * Whether to allow selecting a directory.
+   */
+  directory?: boolean;
+
+  /**
+   * Whether to allow selecting multiple files.
+   */
+  multiple?: boolean;
+
+  /**
+   * Files types to allow selecting.
+   */
+  accept?: string[];
+}

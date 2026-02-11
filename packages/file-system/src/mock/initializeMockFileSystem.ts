@@ -44,10 +44,15 @@ export function initializeMockFileSystem(
   let textFileContents: Record<string, string> = init.textFileContents;
   // A { path: File } map of binary files
   let binaryFiles: Record<string, any> = init.binaryFiles;
+  // Result of the file picker
+  let filePickerResult: string | string[] | null = null;
 
   const MockFs: FileSystem = {
     getBaseDirPath: async (baseDir) => baseDir,
     convertFileSrc: (path) => path,
+    openFilePicker: async () => {
+      return filePickerResult as any;
+    },
     isDirectory: async (path, options) => {
       const fileEntry = mockGetFileEntry(root, getFullPath(path, options));
 
@@ -342,6 +347,9 @@ export function initializeMockFileSystem(
           name: fileNameFromPath(fullPath),
         });
       }
+    },
+    setFilePickerResult: (result) => {
+      filePickerResult = result;
     },
   };
 }

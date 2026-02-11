@@ -11,6 +11,7 @@ import {
   FsRemoveFileOptions,
   FsRenameOptions,
   FsWriteFileOptions,
+  OpenFilePickerOptions,
 } from './FsOptions.types';
 
 export interface FileSystemAdapter {
@@ -214,4 +215,21 @@ export interface FileSystemAdapter {
     path: string,
     options?: DownlodFileOptions,
   ): Promise<void>;
+
+  /**
+   * Opens a file picker.
+   *
+   * @param options - Open file picker options.
+   * @returns A promise resolving to an array of selected file paths.
+   */
+  openFilePicker(
+    options: OpenFilePickerOptions & { multiple: true },
+  ): Promise<string[] | null>;
+
+  openFilePicker(
+    options?: OpenFilePickerOptions & { multiple?: false },
+  ): Promise<string | null>;
+  openFilePicker(
+    options?: OpenFilePickerOptions,
+  ): Promise<string | string[] | null>;
 }
