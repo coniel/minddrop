@@ -44,7 +44,7 @@ export function createArrayStore<TItem extends object>(
   const store = create<ArrayStoreInteralApi<TItem>>()((set) => ({
     items: [],
 
-    load: (items) => set(() => ({ items })),
+    load: (items) => set((state) => ({ items: [...state.items, ...items] })),
 
     add: (item) =>
       set((state) => {
