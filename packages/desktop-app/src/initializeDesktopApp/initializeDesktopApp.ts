@@ -17,6 +17,12 @@ import { Paths } from '@minddrop/utils';
 import { initializeSelection } from './initializeSelection';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
 
+// In development mode, React will run useEffect hooks twice
+// when the app is first loaded. This is a workaround to prevent
+// the app from being initialized twice.
+let cleanupFn: VoidFunction = () => {};
+let initialized = false;
+
 // Initialize internationalization
 initializeI18n();
 
@@ -24,6 +30,12 @@ initializeI18n();
  * Initializes the desktop app.
  */
 export async function initializeDesktopApp(): Promise<VoidFunction> {
+  if (initialized) {
+    return cleanupFn;
+  }
+
+  initialized = true;
+
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
@@ -65,7 +77,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Initialize extensions
   await initializeExtensions([]);
 
-  return () => {
+  cleanupFn = () => {
     // Remove config files watcher
     cancelConfigsWatcher();
 
@@ -76,6 +88,8 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
       setThemeAppearanceClassOnBody,
     );
   };
+
+  return cleanupFn;
 }
 
 /**
