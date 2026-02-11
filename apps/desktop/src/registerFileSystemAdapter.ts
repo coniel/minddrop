@@ -5,6 +5,7 @@ import {
   appDataDir,
   documentDir,
 } from '@tauri-apps/api/path';
+import { open } from '@tauri-apps/plugin-dialog';
 import {
   CopyFileOptions,
   DirEntry,
@@ -233,5 +234,21 @@ register({
       : path;
 
     download(url, fullPath);
+  },
+  openFilePicker: async (options = {}) => {
+    const result = await open({
+      multiple: options?.multiple,
+      directory: options?.directory,
+      filters: options.accept
+        ? [
+            {
+              name: 'Files',
+              extensions: options?.accept,
+            },
+          ]
+        : undefined,
+    });
+
+    return result;
   },
 });
