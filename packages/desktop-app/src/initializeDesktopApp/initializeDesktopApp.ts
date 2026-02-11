@@ -4,6 +4,7 @@ import { loadConfigs } from '@minddrop/core';
 import {
   DataTypes,
   DatabaseAutomations,
+  DatabaseEntries,
   DatabaseTemplates,
   Databases,
 } from '@minddrop/databases';
@@ -37,6 +38,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   DatabaseTemplates.initialize();
   DatabaseAutomations.initialize();
   await Databases.initialize();
+  await DatabaseEntries.initialize();
 
   // Initialize core base item types
   BaseItemTypes.initialize();
