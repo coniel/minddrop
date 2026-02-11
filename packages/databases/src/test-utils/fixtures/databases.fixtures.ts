@@ -2,6 +2,7 @@ import { DESIGN_FIXTURES } from '@minddrop/designs';
 import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
 import { DatabasesConfigFileName } from '../../constants';
 import {
+  FileDataType,
   ObjectDataType,
   PdfDataType,
   UrlDataType,
@@ -31,6 +32,25 @@ export const objectDatabase: Database = {
       name: 'Content',
       defaultValue: 'Default Content',
     },
+    {
+      type: 'icon',
+      name: 'Icon',
+    },
+  ],
+  designs: [design1],
+};
+
+export const fileDatabase: Database = {
+  id: '3b8fbdcc-a756-49fa-904d-63e1af9f1257',
+  name: 'Files',
+  entryName: 'File',
+  dataType: FileDataType.type,
+  entrySerializer: 'markdown',
+  icon: 'content-icon:file:default',
+  path: `${parentDir}/Files`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: [
     {
       type: 'icon',
       name: 'Icon',
@@ -140,6 +160,7 @@ export const dataTypeSerializerDatabase: Database = {
 
 export const databases = [
   objectDatabase,
+  fileDatabase,
   pdfDatabase,
   urlDatabase,
   noPropertiesDatabase,
@@ -168,6 +189,10 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
   {
     path: databaseConfigFilePath(noPropertiesDatabase.path),
     textContent: JSON.stringify(noPropertiesDatabase, null, 2),
+  },
+  {
+    path: databaseConfigFilePath(fileDatabase.path),
+    textContent: JSON.stringify(fileDatabase, null, 2),
   },
   {
     path: databaseConfigFilePath(pdfDatabase.path),
