@@ -10,6 +10,8 @@ import {
   dataTypeWithSerializer,
   objectDatabase,
   objectEntry1,
+  pdfDatabase,
+  pdfEntry1,
   setup,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
@@ -107,6 +109,22 @@ describe('createDatabaseEntry', () => {
     expect(entryWithCustomProperties.properties).toEqual({
       ...newEntry.properties,
       ...customProperties,
+    });
+  });
+
+  describe('file based entry', () => {
+    it('allows creating a file based entry', async () => {
+      const result = await createDatabaseEntry(
+        pdfDatabase.id,
+        pdfEntry1.title,
+        pdfEntry1.properties,
+        pdfEntry1.path,
+      );
+
+      expect(result).toEqual({
+        ...pdfEntry1,
+        id: expect.any(String),
+      });
     });
   });
 

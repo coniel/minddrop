@@ -53,11 +53,13 @@ export const pdfEntry1: DatabaseEntry = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {
     Icon: 'content-icon:shapes:blue',
+    Foo: 'Bar',
   },
 };
 
 export const pdfEntry1FileContents = `---
 Icon: content-icon:shapes:blue
+Foo: Bar
 ---`;
 
 export const pdfEntry1CorePropertiesFileContents = `id: ${pdfEntry1.id}

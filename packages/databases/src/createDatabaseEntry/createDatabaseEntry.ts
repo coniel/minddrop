@@ -20,6 +20,8 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
  * @param databaseId - The ID of the database to create the entry in.
  * @param title - The entry title. Defaults to "Untitled".
  * @param properties - The entry properties.
+ * @param filePath - The path to the entry's associated file. Only applicable
+ * to file based entries.
  *
  * @returns The newly created entry.
  *
@@ -35,6 +37,7 @@ export async function createDatabaseEntry<
   databaseId: string,
   title = i18n.t('labels.untitled'),
   properties: Partial<TProperties> = {},
+  filePath?: string,
 ): Promise<DatabaseEntry<TProperties>> {
   // The file extension for the entry's main file
   let fileExtension = '';
@@ -53,20 +56,23 @@ export async function createDatabaseEntry<
     fileExtension = serializer.fileExtension;
   }
 
-  // The main entry file path
-  let targetPath = Fs.concatPath(parentDirPath, `${title}.${fileExtension}`);
+  // Path to the entry's primary file
+  let path =
+    filePath || Fs.concatPath(parentDirPath, `${title}.${fileExtension}`);
 
-  // Increment the file name if an entry with the same name exists.
-  // Ignore the file extension to match existing entries regardless of
-  // their file type (for file based entries).
-  const { name, path } = await Fs.incrementalPath(targetPath, true);
-  targetPath = path;
+  if (!filePath) {
+    // Increment the file name if an entry with the same name exists.
+    // Ignore the file extension to match existing entries regardless of
+    // their file type (for file based entries).
+    const incrementalPath = await Fs.incrementalPath(path, true);
+    path = incrementalPath.path;
+  }
 
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {
     id: uuid(),
     database: databaseId,
-    title: titleFromPath(name),
+    title: titleFromPath(path),
     path,
     created: new Date(),
     lastModified: new Date(),
