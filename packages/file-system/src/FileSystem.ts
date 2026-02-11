@@ -66,7 +66,7 @@ async function incrementalPath(
 async function readYamlFile<TData extends object = object>(
   path: string,
   options?: FsOptions,
-): Promise<object> {
+): Promise<TData> {
   const test = await FsAdapter.readTextFile(path, options);
 
   return YAML.parse(test) as TData;
