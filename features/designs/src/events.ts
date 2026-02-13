@@ -1,4 +1,4 @@
-export const EventListenerId = 'design-studio-feature';
+export const EventListenerId = 'designs-feature';
 export const OpenDesignStudioEvent = 'design-studio:open';
 
 export interface OpenDesignStudioEventData {

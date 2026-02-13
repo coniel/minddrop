@@ -194,9 +194,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-design-studio':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../design-studio
+        version: link:../designs
       '@minddrop/feature-properties':
         specifier: workspace:*
         version: link:../properties
@@ -235,7 +235,7 @@ importers:
         specifier: ^5.7.2
         version: 5.8.3
 
-  features/design-studio:
+  features/designs:
     dependencies:
       '@minddrop/databases':
         specifier: workspace:*
@@ -579,9 +579,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
-      '@minddrop/feature-design-studio':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../../features/design-studio
+        version: link:../../features/designs
       '@minddrop/feature-wall-view':
         specifier: workspace:*
         version: link:../../features/wall-view

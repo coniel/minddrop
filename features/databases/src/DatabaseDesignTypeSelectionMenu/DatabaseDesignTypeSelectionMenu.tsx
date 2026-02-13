@@ -4,7 +4,7 @@ import { Events } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-design-studio';
+} from '@minddrop/feature-designs';
 import { i18n } from '@minddrop/i18n';
 import {
   DropdownMenu,

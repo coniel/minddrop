@@ -19,7 +19,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/feature-design-studio": "workspace:*",
+    "@minddrop/feature-designs": "workspace:*",
     "@minddrop/feature-properties": "workspace:*",
     "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
