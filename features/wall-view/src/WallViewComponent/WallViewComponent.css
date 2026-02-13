@@ -1,0 +1,11 @@
+.wall-view {
+  columns: 300px var(--max-columns);
+  column-gap: 1rem;
+
+  .element {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    display: inline-block;
+    width: 100%;
+  }
+}
