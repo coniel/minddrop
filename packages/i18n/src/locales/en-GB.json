@@ -380,7 +380,12 @@
   },
   "views": {
     "labels": {
-      "view": "View"
+      "view": "View",
+      "new": "New View"
+    },
+    "wall": {
+      "name": "Wall",
+      "description": "A wall view."
     }
   }
 }
