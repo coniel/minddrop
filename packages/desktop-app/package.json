@@ -32,6 +32,7 @@
     "@minddrop/extensions": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
     "@minddrop/feature-design-studio": "workspace:*",
+    "@minddrop/feature-wall-view": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
@@ -42,6 +43,7 @@
     "@minddrop/theme": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/feature-app-sidebar": "workspace:*"
+    "@minddrop/feature-app-sidebar": "workspace:*",
+    "@minddrop/views": "workspace:*"
   }
 }

@@ -15,6 +15,7 @@ import { ItemTypes } from '@minddrop/item-types';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
 import { initializeSelection } from './initializeSelection';
+import { initializeViewTypes } from './initializeViewTypes';
 import { watchAppConfigFiles } from './watchAppConfigFiles';
 
 // In development mode, React will run useEffect hooks twice
@@ -39,6 +40,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
+  initializeViewTypes();
 
   // Load persisted config values
   await loadConfigs();
