@@ -200,6 +200,9 @@ importers:
       '@minddrop/feature-properties':
         specifier: workspace:*
         version: link:../properties
+      '@minddrop/feature-views':
+        specifier: workspace:*
+        version: link:../views
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -335,6 +338,62 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
+  features/views:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
+  features/wall-view:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -523,6 +582,9 @@ importers:
       '@minddrop/feature-design-studio':
         specifier: workspace:*
         version: link:../../features/design-studio
+      '@minddrop/feature-wall-view':
+        specifier: workspace:*
+        version: link:../../features/wall-view
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -553,6 +615,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../views
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1370,6 +1435,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
