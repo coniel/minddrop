@@ -1,6 +1,6 @@
 import { View } from './View.types';
 
-export interface ViewType {
+export interface ViewType<TViewOptions extends object = {}> {
   /**
    * A unique identifier for the view type. Used to reference the view type
    * in view instances.
@@ -20,14 +20,19 @@ export interface ViewType {
   /**
    * The component used to render the view.
    */
-  component: React.ElementType<ViewTypeComponentProps>;
+  component: React.ElementType<ViewTypeComponentProps<TViewOptions>>;
+
+  /**
+   * The default options for the view type.
+   */
+  defaultOptions?: TViewOptions;
 }
 
-export interface ViewTypeComponentProps {
+export interface ViewTypeComponentProps<TViewOptions extends object = {}> {
   /**
    * The view instance.
    */
-  view: View;
+  view: View<TViewOptions>;
 
   /**
    * IDs of the elements to render within the view.
