@@ -21,6 +21,7 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/feature-design-studio": "workspace:*",
     "@minddrop/feature-properties": "workspace:*",
+    "@minddrop/feature-views": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",

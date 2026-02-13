@@ -9,6 +9,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
+import { ViewRenderer } from '@minddrop/feature-views';
 
 export interface DatabaseViewProps {
   /**
@@ -57,10 +58,11 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
             />
           </Toolbar>
         </div>
-        <div>
-          {entries.map((entry) => (
-            <div key={entry.id}>{entry.title}</div>
-          ))}
+        <div className="view">
+          <ViewRenderer
+            view={database.views[0]}
+            elements={entries.map((entry) => entry.id)}
+          />
         </div>
       </Panel>
       {configurationPanelOpen && (
