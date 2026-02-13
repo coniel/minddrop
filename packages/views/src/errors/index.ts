@@ -1,1 +1,1 @@
-export * from './ViewNotFoundError';
+export * from './ViewTypeNotRegisteredError';

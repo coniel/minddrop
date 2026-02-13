@@ -1,14 +1,7 @@
-import { View } from './types';
+import { ViewType } from './types';
 
-export const ViewCreatedEvent = 'views:view:created';
-export const ViewUpdatedEvent = 'views:view:updated';
-export const ViewDeletedEvent = 'views:view:deleted';
+export const ViewTypeRegisteredEvent = 'views:view-type:registered';
+export const ViewTypeUnregisteredEvent = 'views:view-type:unregistered';
 
-export type ViewCreatedEventData = View;
-
-export type ViewUpdatedEventData = {
-  original: View;
-  updated: View;
-};
-
-export type ViewDeletedEventData = View;
+export type ViewTypeRegisteredEventData = ViewType;
+export type ViewTypeUnregisteredEventData = ViewType;

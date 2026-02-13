@@ -5,39 +5,17 @@ export interface View {
   id: string;
 
   /**
-   * The path to the view file.
-   */
-  path: string;
-
-  /**
    * A user defined name for the view.
    */
   name: string;
 
   /**
-   * The type of view.
+   * The type of view. Must be a registered view type.
    */
   type: string;
 
   /**
-   * The view's content type:
-   * - `entry`: The content stores a list of entry IDs.
-   * - `query`: The content stores a list of query IDs used to fetch entries.
+   * The ID of the query used to populate the view if it is a query view.
    */
-  contentType: 'entry' | 'query';
-
-  /**
-   * The content of the view.
-   */
-  content: string[];
-
-  /**
-   * The date the view was created.
-   */
-  created: Date;
-
-  /**
-   * The date the view was last modified.
-   */
-  lastModified: Date;
+  query?: string;
 }
