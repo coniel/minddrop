@@ -456,6 +456,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -471,23 +474,13 @@ importers:
         version: 5.8.3
 
   packages/designs:
-    dependencies:
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
       eslint:
         specifier: ^9.16.0
         version: 9.21.0
@@ -1374,9 +1367,6 @@ importers:
 
   packages/views:
     dependencies:
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../databases
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
