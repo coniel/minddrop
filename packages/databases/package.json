@@ -22,6 +22,7 @@
     "@minddrop/markdown": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "@minddrop/views": "workspace:*"
   }
 }

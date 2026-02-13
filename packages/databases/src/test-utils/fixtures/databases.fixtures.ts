@@ -1,5 +1,6 @@
 import { DESIGN_FIXTURES } from '@minddrop/designs';
 import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
+import { ViewFixtures } from '@minddrop/views';
 import { DatabasesConfigFileName } from '../../constants';
 import {
   FileDataType,
@@ -13,6 +14,7 @@ import { dataTypeWithSerializer } from './data-types.fixtures';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
 const { design1 } = DESIGN_FIXTURES;
+const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
 
@@ -38,6 +40,7 @@ export const objectDatabase: Database = {
     },
   ],
   designs: [design1],
+  views: [view1],
 };
 
 export const fileDatabase: Database = {
@@ -57,6 +60,7 @@ export const fileDatabase: Database = {
     },
   ],
   designs: [design1],
+  views: [view1],
 };
 
 export const pdfDatabase: Database = {
@@ -81,6 +85,7 @@ export const pdfDatabase: Database = {
     },
   ],
   designs: [design1],
+  views: [view1],
 };
 
 export const urlDatabase: Database = {
@@ -96,6 +101,7 @@ export const urlDatabase: Database = {
   properties: UrlDataType.properties,
   automations: [fetchWebpageMetadataAutomation],
   designs: [design1],
+  views: [view1],
 };
 
 export const noPropertiesDatabase: Database = {
@@ -110,6 +116,7 @@ export const noPropertiesDatabase: Database = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [],
   designs: [design1],
+  views: [view1],
 };
 
 export const yamlObjectDatabase: Database = {
@@ -133,6 +140,7 @@ export const yamlObjectDatabase: Database = {
     },
   ],
   designs: [design1],
+  views: [view1],
 };
 
 export const dataTypeSerializerDatabase: Database = {
@@ -156,6 +164,7 @@ export const dataTypeSerializerDatabase: Database = {
     },
   ],
   designs: [design1],
+  views: [view1],
 };
 
 export const databases = [

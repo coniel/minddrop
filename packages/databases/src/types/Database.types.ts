@@ -1,5 +1,6 @@
 import { Design } from '@minddrop/designs';
 import { PropertiesSchema } from '@minddrop/properties';
+import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export interface Database {
@@ -77,6 +78,11 @@ export interface Database {
    * - `list-item`: used display entries in list based views.
    */
   designs: Design[];
+
+  /**
+   * The database's views.
+   */
+  views: View[];
 
   /**
    * The database's automations if it has any.

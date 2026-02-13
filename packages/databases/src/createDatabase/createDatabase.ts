@@ -2,6 +2,7 @@ import { Design } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { uuid } from '@minddrop/utils';
+import { View, Views } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { getDataType } from '../getDataType';
@@ -20,11 +21,13 @@ export interface CreateDatabaseOptions
     | 'entrySerializer'
     | 'automations'
     | 'designs'
+    | 'views'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
   automations?: DatabaseAutomationTemplate[];
   designs?: Design[];
+  views?: View[];
 }
 
 /**
@@ -72,6 +75,7 @@ export async function createDatabase(
     lastModified: new Date(),
     automations,
     designs: options.designs || [],
+    views: options.views || [Views.generate('wall')],
   };
 
   // If the database has no automations, remove the automations property
