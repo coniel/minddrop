@@ -7,6 +7,7 @@ import {
 } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { createContext } from '@minddrop/utils';
+import { DesignProvider } from './DesignProvider';
 
 export interface DesignStudioDropEventData {
   'unused-database-properties'?: ElementSchema[];
@@ -206,17 +207,23 @@ export const DesignStudioProvider: React.FC<{
   }
 
   return (
-    <Provider
-      value={{
-        elements,
-        childParentMap,
-        removeElement,
-        updateElement,
-        onDrop: handleDrop,
-      }}
+    <DesignProvider
+      elementTree={buildElementTree(elements)}
+      properties={[]}
+      propertyValues={{}}
     >
-      {children}
-    </Provider>
+      <Provider
+        value={{
+          elements,
+          childParentMap,
+          removeElement,
+          updateElement,
+          onDrop: handleDrop,
+        }}
+      >
+        {children}
+      </Provider>
+    </DesignProvider>
   );
 };
 

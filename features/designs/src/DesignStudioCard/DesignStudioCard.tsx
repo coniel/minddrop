@@ -1,8 +1,8 @@
 import { ContainerElementSchema } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { mapPropsToClasses } from '@minddrop/ui-primitives';
+import { DesignStudioElement } from '../DesignStudioElement';
 import { useDesignStudio } from '../DesignStudioProvider';
-import { Element } from '../Element';
 import { FlexDropContainer } from '../FlexDropContainer';
 import './DesignStudioCard.css';
 
@@ -37,7 +37,7 @@ export const DesignStudioCard: React.FC<DesignStudioCardProps> = ({
       onDropInGap={handleDropInGap}
     >
       {rootElement.children.map((id) => (
-        <Element key={id} element={elements[id]} />
+        <DesignStudioElement key={id} element={elements[id]} />
       ))}
     </FlexDropContainer>
   );
