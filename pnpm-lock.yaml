@@ -659,6 +659,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
+      '@minddrop/feature-design-studio':
+        specifier: workspace:*
+        version: link:../../features/design-studio
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../../features/designs

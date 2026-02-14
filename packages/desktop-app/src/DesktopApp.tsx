@@ -13,7 +13,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { DatabasesFeature } from '@minddrop/feature-databases';
-import { DesignStudioFeature } from '@minddrop/feature-designs';
+import { DesignStudioFeature } from '@minddrop/feature-design-studio';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import { ThemeProvider } from '@minddrop/theme';
 import {
