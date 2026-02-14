@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DESIGN_FIXTURES } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { addDatabaseDesign } from './addDatabaseDesign';
 
-const { design2 } = DESIGN_FIXTURES;
+const { pageDesign1: design2 } = DesignFixtures;
 
 describe('addDatabaseDesign', () => {
   beforeEach(setup);

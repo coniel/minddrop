@@ -1,5 +1,7 @@
 import { ElementTree } from './ElementTree.types';
 
+export type DesignType = 'page' | 'card' | 'list';
+
 export interface Design {
   /**
    * A unique identifier for this design.
@@ -9,7 +11,7 @@ export interface Design {
   /**
    * The type of element this design is for.
    */
-  type: string;
+  type: DesignType;
 
   /**
    * User specified name for this design.

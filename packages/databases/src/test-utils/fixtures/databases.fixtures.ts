@@ -1,4 +1,4 @@
-import { DESIGN_FIXTURES } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs';
 import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
 import { ViewFixtures } from '@minddrop/views';
 import { DatabasesConfigFileName } from '../../constants';
@@ -13,7 +13,7 @@ import { databaseConfigFilePath } from '../../utils';
 import { dataTypeWithSerializer } from './data-types.fixtures';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
-const { design1 } = DESIGN_FIXTURES;
+const { cardDesign1, cardDesign2, listDesign1, pageDesign1 } = DesignFixtures;
 const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
@@ -39,11 +39,11 @@ export const objectDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -64,11 +64,11 @@ export const fileDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -94,11 +94,11 @@ export const pdfDatabase: Database = {
       defaultValue: 'Bar',
     },
   ],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -115,11 +115,11 @@ export const urlDatabase: Database = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: UrlDataType.properties,
   automations: [fetchWebpageMetadataAutomation],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -135,11 +135,11 @@ export const noPropertiesDatabase: Database = {
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -164,11 +164,11 @@ export const yamlObjectDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };
@@ -193,11 +193,11 @@ export const dataTypeSerializerDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [design1],
+  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
   defaultDesigns: {
-    card: design1.id,
-    page: design1.id,
-    list: design1.id,
+    card: cardDesign1.id,
+    page: pageDesign1.id,
+    list: listDesign1.id,
   },
   views: [view1],
 };

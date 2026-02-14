@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DESIGN_FIXTURES } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs';
 import { InvalidParameterError } from '@minddrop/utils';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { updateDatabaseDesign } from './updateDatabaseDesign';
 
-const { design1 } = DESIGN_FIXTURES;
+const { design1 } = DesignFixtures;
 
 const updatedDesign = {
   ...design1,

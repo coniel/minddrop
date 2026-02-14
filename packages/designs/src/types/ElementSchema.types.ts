@@ -60,6 +60,21 @@ export interface ContainerElementSchema extends ElementSchemaBase {
   children: string[];
 }
 
+export interface CardElementSchema
+  extends Omit<ContainerElementSchema, 'type'> {
+  type: 'card';
+}
+
+export interface ListElementSchema
+  extends Omit<ContainerElementSchema, 'type'> {
+  type: 'list';
+}
+
+export interface PageElementSchema
+  extends Omit<ContainerElementSchema, 'type'> {
+  type: 'page';
+}
+
 export type LeafElementSchema =
   | StaticTextElementSchema
   | TitleElementSchema
@@ -67,9 +82,13 @@ export type LeafElementSchema =
   | UrlElementSchema
   | ImageElementSchema;
 
+export type RootElementSchema =
+  | CardElementSchema
+  | PageElementSchema
+  | ListElementSchema;
+
 export type ElementSchema = LeafElementSchema | ContainerElementSchema;
 
-export type ContainerElementSchemaTemplate = Omit<ContainerElementSchema, 'id'>;
 export type TitleElementSchemaTemplate = Omit<TextElementSchema, 'id'>;
 export type TextElementSchemaTemplate = Omit<TextElementSchema, 'id'>;
 export type UrlElementSchemaTemplate = Omit<UrlElementSchema, 'id'>;
@@ -78,11 +97,18 @@ export type StaticTextElementSchemaTemplate = Omit<
   StaticTextElementSchema,
   'id'
 >;
+export type ContainerElementSchemaTemplate = Omit<ContainerElementSchema, 'id'>;
+export type CardElementSchemaTemplate = Omit<CardElementSchema, 'id'>;
+export type ListElementSchemaTemplate = Omit<ListElementSchema, 'id'>;
+export type PageElementSchemaTemplate = Omit<PageElementSchema, 'id'>;
 
 export type ElementSchemaTemplate =
   | StaticTextElementSchemaTemplate
-  | ContainerElementSchemaTemplate
   | TitleElementSchemaTemplate
   | TextElementSchemaTemplate
   | UrlElementSchemaTemplate
-  | ImageElementSchemaTemplate;
+  | ImageElementSchemaTemplate
+  | ContainerElementSchemaTemplate
+  | CardElementSchemaTemplate
+  | ListElementSchemaTemplate
+  | PageElementSchemaTemplate;
