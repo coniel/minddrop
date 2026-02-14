@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ContainerElementSchema,
   ElementSchema,
-  ElementTree,
   LeafElementSchema,
+  RootElementTree,
 } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { createContext } from '@minddrop/utils';
@@ -28,8 +28,8 @@ export const useDesignStudio = hook;
 
 export const DesignStudioProvider: React.FC<{
   children: React.ReactNode;
-  elementTree: ElementTree;
-  onChange: (rootElement: ElementTree) => void;
+  elementTree: RootElementTree;
+  onChange: (rootElement: RootElementTree) => void;
 }> = ({ children, onChange, elementTree }) => {
   const [elements, setElements] = useState<Record<string, ElementSchema>>(
     parseElementTree(elementTree),
@@ -248,11 +248,11 @@ function reorderStringToIndex(
 }
 
 function parseElementTree(
-  elementTree: ElementTree,
+  elementTree: RootElementTree,
 ): Record<string, ElementSchema> {
   const elements: Record<string, ElementSchema> = {};
 
-  function addElement(element: LeafElementSchema | ElementTree) {
+  function addElement(element: LeafElementSchema | RootElementTree) {
     if ('children' in element) {
       elements[element.id] = {
         ...element,
@@ -271,20 +271,20 @@ function parseElementTree(
 
 function buildElementTree(
   elements: Record<string, ElementSchema>,
-): ElementTree {
+): RootElementTree {
   const rootElement = elements['root'] as ContainerElementSchema;
 
   if (!rootElement) {
     throw new Error('Root element not found');
   }
 
-  return addElementChildren(rootElement, elements) as ElementTree;
+  return addElementChildren(rootElement, elements) as RootElementTree;
 }
 
 function addElementChildren(
   element: ElementSchema,
   elements: Record<string, ElementSchema>,
-): ElementTree | LeafElementSchema {
+): RootElementTree | LeafElementSchema {
   if ('children' in element) {
     return {
       ...element,

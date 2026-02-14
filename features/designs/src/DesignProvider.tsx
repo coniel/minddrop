@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import {
   ElementSchema,
-  ElementTree,
   LeafElementSchema,
+  RootElementTree,
 } from '@minddrop/designs';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 import { createContext } from '@minddrop/utils';
@@ -15,7 +15,7 @@ interface DesignProviderData {
 
 export interface DesignProviderProps {
   children: React.ReactNode;
-  elementTree: ElementTree;
+  elementTree: RootElementTree;
   properties: PropertiesSchema;
   propertyValues: PropertyMap;
 }
@@ -47,11 +47,11 @@ export const DesignProvider: React.FC<DesignProviderProps> = ({
 };
 
 function parseElementTree(
-  elementTree: ElementTree,
+  elementTree: RootElementTree,
 ): Record<string, ElementSchema> {
   const elements: Record<string, ElementSchema> = {};
 
-  function addElement(element: LeafElementSchema | ElementTree) {
+  function addElement(element: LeafElementSchema | RootElementTree) {
     if ('children' in element) {
       elements[element.id] = {
         ...element,

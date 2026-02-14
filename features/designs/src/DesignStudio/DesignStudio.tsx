@@ -4,9 +4,9 @@ import {
   Design,
   DesignElementScehmaTemplates,
   ElementSchema,
-  ElementTree,
   LeafElementSchema,
   PropertyElementSchema,
+  RootElementTree,
 } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
@@ -48,7 +48,7 @@ export const DesignStudio: React.FC<DesignStudioProps> = ({
   >(getUnusedProperties(databaseId, designId));
 
   const updateDesign = useCallback(
-    (rootElement: ElementTree) => {
+    (rootElement: RootElementTree) => {
       const database = Databases.get(databaseId);
       const design = database.designs.find((d) => d.id === designId);
 
@@ -149,10 +149,10 @@ function getUnusedProperties(
   return propertiesToElements(unusedProperties);
 }
 
-function getUsedProperties(rootElement: ElementTree): string[] {
+function getUsedProperties(rootElement: RootElementTree): string[] {
   const usedProperties: string[] = [];
 
-  function addUsedProperties(element: ElementTree | LeafElementSchema) {
+  function addUsedProperties(element: RootElementTree | LeafElementSchema) {
     if ('property' in element) {
       usedProperties.push(element.property);
     }
