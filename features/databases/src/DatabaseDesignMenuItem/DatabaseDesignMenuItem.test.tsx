@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DatabaseFixtures, Databases } from '@minddrop/databases';
-import { DESIGN_FIXTURES } from '@minddrop/designs';
+import { DesignFixtures } from '@minddrop/designs';
 import {
   Events,
   OpenConfirmationDialog,
@@ -14,7 +14,7 @@ import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignMenuItem } from './DatabaseDesignMenuItem';
 
-const { design1 } = DESIGN_FIXTURES;
+const { design1 } = DesignFixtures;
 const { objectDatabase } = DatabaseFixtures;
 
 describe('<DatabaseDesignMenuItem />', () => {
