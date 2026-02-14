@@ -1,7 +1,7 @@
 import {
   Events,
-  OpenConfirmationDialog,
-  OpenConfirmationDialogData,
+  OpenConfirmationDialogEvent,
+  OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import { PropertyEditor } from '@minddrop/feature-properties';
 import { ItemTypes } from '@minddrop/item-types';
@@ -86,27 +86,30 @@ export const ItemTypePropertyEditor: React.FC<ItemTypePropertyEditorProps> = ({
     return new Promise<boolean>((resolve) => {
       if (updatedProperty.name !== property.name) {
         const i18nRoot = 'properties.actions.rename.confirmation';
-        Events.dispatch<OpenConfirmationDialogData>(OpenConfirmationDialog, {
-          title: `${i18nRoot}.title`,
-          message: `${i18nRoot}.message`,
-          confirmLabel: `${i18nRoot}.confirm`,
-          onConfirm: () => {
-            // TODO: Implement renameProperty method
-            // ItemTypes.renameProperty(
-            //   itemType,
-            //   property.name,
-            //   updatedProperty.name,
-            // );
-            ItemTypes.updateProperty(itemType, {
-              ...updatedProperty,
-              name: property.name,
-            });
-            resolve(true);
+        Events.dispatch<OpenConfirmationDialogEventData>(
+          OpenConfirmationDialogEvent,
+          {
+            title: `${i18nRoot}.title`,
+            message: `${i18nRoot}.message`,
+            confirmLabel: `${i18nRoot}.confirm`,
+            onConfirm: () => {
+              // TODO: Implement renameProperty method
+              // ItemTypes.renameProperty(
+              //   itemType,
+              //   property.name,
+              //   updatedProperty.name,
+              // );
+              ItemTypes.updateProperty(itemType, {
+                ...updatedProperty,
+                name: property.name,
+              });
+              resolve(true);
+            },
+            onCancel: () => {
+              resolve(false);
+            },
           },
-          onCancel: () => {
-            resolve(false);
-          },
-        });
+        );
       } else {
         ItemTypes.updateProperty(itemType, updatedProperty);
         resolve(true);
@@ -125,7 +128,7 @@ export const ItemTypePropertyEditor: React.FC<ItemTypePropertyEditorProps> = ({
   function handleDelete(propertyToDelete: PropertySchema) {
     const i18nRoot = 'properties.actions.delete.confirmation';
 
-    Events.dispatch(OpenConfirmationDialog, {
+    Events.dispatch(OpenConfirmationDialogEvent, {
       title: `${i18nRoot}.title`,
       message: `${i18nRoot}.message`,
       confirmLabel: `${i18nRoot}.confirm`,

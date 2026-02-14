@@ -8,7 +8,11 @@ import {
   LeafElementSchema,
   PropertyElementSchema,
 } from '@minddrop/designs';
-import { CloseAppSidebar, Events, OpenAppSidebar } from '@minddrop/events';
+import {
+  CloseAppSidebarEvent,
+  Events,
+  OpenAppSidebarEvent,
+} from '@minddrop/events';
 import { useDraggable } from '@minddrop/selection';
 import { MenuLabel } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';

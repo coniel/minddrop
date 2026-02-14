@@ -2,8 +2,8 @@ import { Databases } from '@minddrop/databases';
 import { Design } from '@minddrop/designs';
 import {
   Events,
-  OpenConfirmationDialog,
-  OpenConfirmationDialogData,
+  OpenConfirmationDialogEvent,
+  OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
@@ -67,15 +67,18 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
   function handleDelete() {
     const i18nRoot = 'designs.actions.deleteConfirmation';
 
-    Events.dispatch<OpenConfirmationDialogData>(OpenConfirmationDialog, {
-      title: `${i18nRoot}.title`,
-      message: `${i18nRoot}.message`,
-      confirmLabel: `${i18nRoot}.confirm`,
-      danger: true,
-      onConfirm: () => {
-        Databases.removeDesign(databaseId, design.id);
+    Events.dispatch<OpenConfirmationDialogEventData>(
+      OpenConfirmationDialogEvent,
+      {
+        title: `${i18nRoot}.title`,
+        message: `${i18nRoot}.message`,
+        confirmLabel: `${i18nRoot}.confirm`,
+        danger: true,
+        onConfirm: () => {
+          Databases.removeDesign(databaseId, design.id);
+        },
       },
-    });
+    );
   }
 
   return (
@@ -130,7 +133,7 @@ function icon(design: Design) {
     return 'layout';
   } else if (design.type === 'card') {
     return 'layout-grid';
-  } else if (design.type === 'list-item') {
+  } else if (design.type === 'list') {
     return 'layout-list';
   }
 }

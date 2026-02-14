@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Events, OpenConfirmationDialog } from '@minddrop/events';
+import { Events, OpenConfirmationDialogEvent } from '@minddrop/events';
 import { ItemTypeConfig, ItemTypesFixtures } from '@minddrop/item-types';
 import { TextPropertySchema } from '@minddrop/properties';
 import {
@@ -100,7 +100,7 @@ describe('<ItemTypePropertyEditor />', () => {
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
           Events.addListener<ConfirmationDialogProps>(
-            OpenConfirmationDialog,
+            OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
               // Confirm the rename action
@@ -128,7 +128,7 @@ describe('<ItemTypePropertyEditor />', () => {
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
           Events.addListener<ConfirmationDialogProps>(
-            OpenConfirmationDialog,
+            OpenConfirmationDialogEvent,
             'test',
             async ({ data }) => {
               // Confirm the rename action
@@ -151,7 +151,7 @@ describe('<ItemTypePropertyEditor />', () => {
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
           Events.addListener<ConfirmationDialogProps>(
-            OpenConfirmationDialog,
+            OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
               // Cancel the rename action
@@ -191,7 +191,7 @@ describe('<ItemTypePropertyEditor />', () => {
         new Promise<void>((done) => {
           // Listen for the confirmation dialog event
           Events.addListener<ConfirmationDialogProps>(
-            OpenConfirmationDialog,
+            OpenConfirmationDialogEvent,
             'test',
             ({ data }) => {
               // Confirm the delete action

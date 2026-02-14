@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   Events,
-  OpenMainContentView,
-  OpenMainContentViewData,
+  OpenMainContentViewEvent,
+  OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { render } from '@minddrop/test-utils';
 import {
@@ -20,14 +20,12 @@ describe('DatabasesFeature', () => {
     new Promise<void>((resolve) => {
       render(<DatabasesFeature />);
 
-      Events.addListener<OpenMainContentViewData<OpenDatabaseViewEventData>>(
-        OpenMainContentView,
-        EventListenerId,
-        ({ data }) => {
-          expect(data.props!.databaseId).toBe('test-database');
-          resolve();
-        },
-      );
+      Events.addListener<
+        OpenMainContentViewEventData<OpenDatabaseViewEventData>
+      >(OpenMainContentViewEvent, EventListenerId, ({ data }) => {
+        expect(data.props!.databaseId).toBe('test-database');
+        resolve();
+      });
 
       Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
         databaseId: 'test-database',

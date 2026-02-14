@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import {
   Events,
-  OpenMainContentView,
-  OpenMainContentViewData,
+  OpenMainContentViewEvent,
+  OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
@@ -19,8 +19,8 @@ export const DatabasesFeature: React.FC = () => {
       OpenDatabaseViewEvent,
       EventListenerId,
       ({ data: { databaseId } }) => {
-        Events.dispatch<OpenMainContentViewData<DatabaseViewProps>>(
-          OpenMainContentView,
+        Events.dispatch<OpenMainContentViewEventData<DatabaseViewProps>>(
+          OpenMainContentViewEvent,
           {
             component: DatabaseView,
             props: { databaseId },

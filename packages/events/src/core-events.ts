@@ -1,16 +1,16 @@
-export const OpenMainContentView = 'app:main-content:open';
-export const OpenRightPanel = 'app:right-panel:open';
-export const CloseRightPanel = 'app:right-panel:close';
-export const OpenConfirmationDialog = 'app:confirmation-dialog:open';
-export const OpenAppSidebar = 'app:sidebar:open';
-export const CloseAppSidebar = 'app:sidebar:close';
+export const OpenMainContentViewEvent = 'app:main-content:open';
+export const OpenRightPanelEvent = 'app:right-panel:open';
+export const CloseRightPanelEvent = 'app:right-panel:close';
+export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
+export const OpenAppSidebarEvent = 'app:sidebar:open';
+export const CloseAppSidebarEvent = 'app:sidebar:close';
 
-export type OpenMainContentViewData<P = any> = {
+export type OpenMainContentViewEventData<P = any> = {
   component: React.ComponentType<P>;
   props?: P;
 };
 
-export type OpenConfirmationDialogData = {
+export type OpenConfirmationDialogEventData = {
   /**
    * The label for the confirmation button.
    */

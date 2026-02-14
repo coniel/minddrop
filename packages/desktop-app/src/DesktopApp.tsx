@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  CloseAppSidebar,
-  CloseRightPanel,
+  CloseAppSidebarEvent,
+  CloseRightPanelEvent,
   Events,
-  OpenAppSidebar,
-  OpenConfirmationDialog,
-  OpenConfirmationDialogData,
-  OpenMainContentView,
-  OpenMainContentViewData,
-  OpenRightPanel,
+  OpenAppSidebarEvent,
+  OpenConfirmationDialogEvent,
+  OpenConfirmationDialogEventData,
+  OpenMainContentViewEvent,
+  OpenMainContentViewEventData,
+  OpenRightPanelEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
@@ -31,17 +31,17 @@ export const DesktopApp: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
-    Events.addListener(CloseAppSidebar, 'desktop-app', () => {
+    Events.addListener(CloseAppSidebarEvent, 'desktop-app', () => {
       setShowSidebar(false);
     });
 
-    Events.addListener(OpenAppSidebar, 'desktop-app', () => {
+    Events.addListener(OpenAppSidebarEvent, 'desktop-app', () => {
       setShowSidebar(true);
     });
 
     return () => {
-      Events.removeListener(CloseAppSidebar, 'desktop-app');
-      Events.removeListener(OpenAppSidebar, 'desktop-app');
+      Events.removeListener(CloseAppSidebarEvent, 'desktop-app');
+      Events.removeListener(OpenAppSidebarEvent, 'desktop-app');
     };
   }, []);
 
@@ -82,11 +82,11 @@ export const DesktopApp: React.FC = () => {
 };
 
 const MainContent: React.FC = () => {
-  const [view, setView] = useState<OpenMainContentViewData | null>(null);
+  const [view, setView] = useState<OpenMainContentViewEventData | null>(null);
 
   useEffect(() => {
-    Events.addListener<OpenMainContentViewData>(
-      OpenMainContentView,
+    Events.addListener<OpenMainContentViewEventData>(
+      OpenMainContentViewEvent,
       'desktop-app',
       ({ data }) => {
         setView(data);
@@ -94,7 +94,7 @@ const MainContent: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener(OpenMainContentView, 'desktop-app');
+      Events.removeListener(OpenMainContentViewEvent, 'desktop-app');
     };
   }, []);
 
@@ -110,19 +110,19 @@ const MainContent: React.FC = () => {
 };
 
 const RightPanel: React.FC = () => {
-  const [view, setView] = useState<OpenMainContentViewData | null>(null);
+  const [view, setView] = useState<OpenMainContentViewEventData | null>(null);
 
   useEffect(() => {
-    Events.addListener<OpenMainContentViewData>(
-      OpenRightPanel,
+    Events.addListener<OpenMainContentViewEventData>(
+      OpenRightPanelEvent,
       'desktop-app',
       ({ data }) => {
         setView(data);
       },
     );
 
-    Events.addListener<OpenMainContentViewData>(
-      CloseRightPanel,
+    Events.addListener<OpenMainContentViewEventData>(
+      CloseRightPanelEvent,
       'desktop-app',
       () => {
         setView(null);
@@ -130,8 +130,8 @@ const RightPanel: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener(OpenRightPanel, 'desktop-app');
-      Events.removeListener(CloseRightPanel, 'desktop-app');
+      Events.removeListener(OpenRightPanelEvent, 'desktop-app');
+      Events.removeListener(CloseRightPanelEvent, 'desktop-app');
     };
   }, []);
 
@@ -148,16 +148,17 @@ const RightPanel: React.FC = () => {
 
 const ConfirmationDialogFeature: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [dialogProps, setDialogProps] = useState<OpenConfirmationDialogData>({
-    title: '',
-    message: '',
-    onConfirm: () => {},
-    confirmLabel: '',
-  });
+  const [dialogProps, setDialogProps] =
+    useState<OpenConfirmationDialogEventData>({
+      title: '',
+      message: '',
+      onConfirm: () => {},
+      confirmLabel: '',
+    });
 
   useEffect(() => {
-    Events.addListener<OpenConfirmationDialogData>(
-      OpenConfirmationDialog,
+    Events.addListener<OpenConfirmationDialogEventData>(
+      OpenConfirmationDialogEvent,
       'desktop-app',
       ({ data }) => {
         setDialogProps(data);
@@ -166,7 +167,7 @@ const ConfirmationDialogFeature: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener(OpenConfirmationDialog, 'desktop-app');
+      Events.removeListener(OpenConfirmationDialogEvent, 'desktop-app');
     };
   }, []);
 

@@ -271,15 +271,33 @@ importers:
 
   features/design-studio:
     dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

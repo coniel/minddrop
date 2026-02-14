@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Events, OpenMainContentView } from '@minddrop/events';
+import { Events, OpenMainContentViewEvent } from '@minddrop/events';
 import { ItemTypeView } from '../ItemTypeView';
 import { NewItemTypeDialog } from '../NewItemTypeDialog';
 import { EventListenerId, OpenItemTypeViewEvent } from '../events';
@@ -12,7 +12,7 @@ export const ItemTypeFeature: React.FC = () => {
       EventListenerId,
       ({ data }) => {
         // Open the item type view in the main content area
-        Events.dispatch(OpenMainContentView, {
+        Events.dispatch(OpenMainContentViewEvent, {
           component: ItemTypeView,
           props: data,
         });

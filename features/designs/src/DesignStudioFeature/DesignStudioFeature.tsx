@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Events, OpenMainContentView } from '@minddrop/events';
+import { Events, OpenMainContentViewEvent } from '@minddrop/events';
 import { DesignStudio } from '../DesignStudio';
 import {
   EventListenerId,
@@ -13,7 +13,7 @@ export const DesignStudioFeature: React.FC = () => {
       OpenDesignStudioEvent,
       EventListenerId,
       ({ data }) => {
-        Events.dispatch(OpenMainContentView, {
+        Events.dispatch(OpenMainContentViewEvent, {
           component: DesignStudio,
           props: data,
         });

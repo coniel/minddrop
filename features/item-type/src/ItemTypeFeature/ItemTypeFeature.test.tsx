@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { Events, OpenMainContentView } from '@minddrop/events';
+import { Events, OpenMainContentViewEvent } from '@minddrop/events';
 import { cleanup, render } from '@minddrop/test-utils';
 import { OpenItemTypeViewEvent } from '../events';
 import { ItemTypeFeature } from './ItemTypeFeature';
@@ -11,9 +11,9 @@ describe('<ItemTypeFeature />', () => {
     new Promise<void>((resolve) => {
       render(<ItemTypeFeature />);
 
-      Events.addListener<any>(OpenMainContentView, 'test', ({ data }) => {
+      Events.addListener<any>(OpenMainContentViewEvent, 'test', ({ data }) => {
         expect(data.props).toEqual({ type: 'example-type', tab: 'properties' });
-        Events.removeListener(OpenMainContentView, 'test');
+        Events.removeListener(OpenMainContentViewEvent, 'test');
         resolve();
       });
 

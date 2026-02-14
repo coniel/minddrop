@@ -1,8 +1,8 @@
 import { Databases } from '@minddrop/databases';
 import {
   Events,
-  OpenConfirmationDialog,
-  OpenConfirmationDialogData,
+  OpenConfirmationDialogEvent,
+  OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import { PropertyEditor } from '@minddrop/feature-properties';
 import { PropertySchema } from '@minddrop/properties';
@@ -86,27 +86,30 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
     return new Promise<boolean>((resolve) => {
       if (updatedProperty.name !== property.name) {
         const i18nRoot = 'properties.actions.rename.confirmation';
-        Events.dispatch<OpenConfirmationDialogData>(OpenConfirmationDialog, {
-          title: `${i18nRoot}.title`,
-          message: `${i18nRoot}.message`,
-          confirmLabel: `${i18nRoot}.confirm`,
-          onConfirm: () => {
-            // TODO: Implement renameProperty method
-            // Databases.renameProperty(
-            //   database,
-            //   property.name,
-            //   updatedProperty.name,
-            // );
-            Databases.updateProperty(databaseId, {
-              ...updatedProperty,
-              name: property.name,
-            });
-            resolve(true);
+        Events.dispatch<OpenConfirmationDialogEventData>(
+          OpenConfirmationDialogEvent,
+          {
+            title: `${i18nRoot}.title`,
+            message: `${i18nRoot}.message`,
+            confirmLabel: `${i18nRoot}.confirm`,
+            onConfirm: () => {
+              // TODO: Implement renameProperty method
+              // Databases.renameProperty(
+              //   database,
+              //   property.name,
+              //   updatedProperty.name,
+              // );
+              Databases.updateProperty(databaseId, {
+                ...updatedProperty,
+                name: property.name,
+              });
+              resolve(true);
+            },
+            onCancel: () => {
+              resolve(false);
+            },
           },
-          onCancel: () => {
-            resolve(false);
-          },
-        });
+        );
       } else {
         Databases.updateProperty(databaseId, updatedProperty);
         resolve(true);
@@ -125,7 +128,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   function handleDelete(propertyToDelete: PropertySchema) {
     const i18nRoot = 'properties.actions.delete.confirmation';
 
-    Events.dispatch(OpenConfirmationDialog, {
+    Events.dispatch(OpenConfirmationDialogEvent, {
       title: `${i18nRoot}.title`,
       message: `${i18nRoot}.message`,
       confirmLabel: `${i18nRoot}.confirm`,
