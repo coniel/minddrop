@@ -367,8 +367,8 @@
       "new": "New card design",
       "description": "The design of an element when displayed as a card."
     },
-    "list-item": {
-      "name": "List item",
+    "list": {
+      "name": "List",
       "new": "New list design",
       "description": "The design of an element when displayed in a list."
     }
