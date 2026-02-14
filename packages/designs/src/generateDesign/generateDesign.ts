@@ -1,5 +1,5 @@
 import { uuid } from '@minddrop/utils';
-import { Design } from '../types';
+import { Design, DesignType } from '../types';
 
 /**
  * Generates a design with the specified type and name.
@@ -8,14 +8,14 @@ import { Design } from '../types';
  * @param name - The design name.
  * @returns The generated design.
  */
-export function generateDesign(type: string, name: string): Design {
+export function generateDesign(type: DesignType, name: string): Design {
   return {
     id: uuid(),
     type,
     name,
     elements: {
       id: 'root',
-      type: 'container',
+      type,
       direction: 'column',
       style: {},
       children: [],
