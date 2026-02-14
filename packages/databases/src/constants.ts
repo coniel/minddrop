@@ -12,10 +12,17 @@ export const defaultCardDesign: Design = {
   name: 'designs.card.name',
   elements: {
     id: 'root',
-    type: 'container',
+    type: 'card',
     direction: 'column',
     style: {},
-    children: [],
+    children: [
+      {
+        id: 'title',
+        type: 'title',
+        property: 'Title',
+        style: {},
+      },
+    ],
   },
 };
 
@@ -25,7 +32,7 @@ export const defaultListDesign: Design = {
   name: 'designs.list.name',
   elements: {
     id: 'root',
-    type: 'container',
+    type: 'list',
     direction: 'row',
     style: {},
     children: [],
@@ -38,7 +45,7 @@ export const defaultPageDesign: Design = {
   name: 'designs.page.name',
   elements: {
     id: 'root',
-    type: 'container',
+    type: 'page',
     direction: 'column',
     style: {},
     children: [],
