@@ -1,17 +1,15 @@
 import { TitleElementSchema } from '@minddrop/designs';
-import { TitlePropertySchema } from '@minddrop/properties';
+import { useDesign } from '../DesignProvider';
 import './TitleElement.css';
 
 export interface TitleElementProps {
   element: TitleElementSchema;
-  property?: TitlePropertySchema;
-  propertyValue?: string;
 }
 
-export const TitleElement: React.FC<TitleElementProps> = ({
-  element,
-  property,
-  propertyValue,
-}) => {
-  return <div className="title-element">Title element</div>;
+export const TitleElement: React.FC<TitleElementProps> = ({ element }) => {
+  const { propertyValues } = useDesign();
+
+  const propertyValue = propertyValues[element.property] as string;
+
+  return <div className="title-element">{propertyValue}</div>;
 };
