@@ -3,6 +3,8 @@ import { PropertiesSchema } from '@minddrop/properties';
 import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
+export type DatabaseDesignType = 'page' | 'card' | 'list';
+
 export interface Database {
   /**
    * A unique identifier for the database.
@@ -75,9 +77,16 @@ export interface Database {
    * Databases can contain the following types designs:
    * - `page`: used display entries as a page.
    * - `card`: used display entries in card based views.
-   * - `list-item`: used display entries in list based views.
+   * - `list`: used display entries in list based views.
    */
   designs: Design[];
+
+  /**
+   * The IDs of the designs to use as the default for each design type.
+   * If a default design is not provided for a type, the global default
+   * design will be used.
+   */
+  defaultDesigns: Partial<Record<DatabaseDesignType, string>>;
 
   /**
    * The database's views.

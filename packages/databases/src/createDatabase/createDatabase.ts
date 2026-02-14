@@ -21,12 +21,18 @@ export interface CreateDatabaseOptions
     | 'entrySerializer'
     | 'automations'
     | 'designs'
+    | 'defaultDesigns'
     | 'views'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
   automations?: DatabaseAutomationTemplate[];
   designs?: Design[];
+  defaultDesigns?: {
+    page?: string;
+    card?: string;
+    list?: string;
+  };
   views?: View[];
 }
 
@@ -75,6 +81,7 @@ export async function createDatabase(
     lastModified: new Date(),
     automations,
     designs: options.designs || [],
+    defaultDesigns: options.defaultDesigns || {},
     views: options.views || [Views.generate('wall')],
   };
 

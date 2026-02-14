@@ -40,6 +40,11 @@ export const objectDatabase: Database = {
     },
   ],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -60,6 +65,11 @@ export const fileDatabase: Database = {
     },
   ],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -85,6 +95,11 @@ export const pdfDatabase: Database = {
     },
   ],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -101,6 +116,11 @@ export const urlDatabase: Database = {
   properties: UrlDataType.properties,
   automations: [fetchWebpageMetadataAutomation],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -116,6 +136,11 @@ export const noPropertiesDatabase: Database = {
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -140,6 +165,11 @@ export const yamlObjectDatabase: Database = {
     },
   ],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 
@@ -164,6 +194,11 @@ export const dataTypeSerializerDatabase: Database = {
     },
   ],
   designs: [design1],
+  defaultDesigns: {
+    card: design1.id,
+    page: design1.id,
+    list: design1.id,
+  },
   views: [view1],
 };
 

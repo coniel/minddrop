@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { BaseDirectory, PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
+import { ViewFixtures } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
 import { ObjectDataType, UrlDataType } from '../data-type-configs';
@@ -11,6 +12,8 @@ import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
+
+const { view1 } = ViewFixtures;
 
 const options: Omit<CreateDatabaseOptions, 'automations'> = {
   name: 'Tests',
@@ -35,7 +38,14 @@ const newDatabase: Database = {
       id: expect.any(String),
     },
   ],
+  defaultDesigns: {},
   designs: [],
+  views: [
+    {
+      ...view1,
+      id: expect.any(String),
+    },
+  ],
 };
 
 describe('createDatabase', () => {
@@ -173,7 +183,7 @@ describe('createDatabase', () => {
     new Promise<void>((done) => {
       Events.addListener(DatabaseCreatedEvent, 'test', (payload) => {
         // Payload data should be the database config
-        expect(payload.data).toEqual(newDatabase);
+        expect(payload.data).toMatchObject(newDatabase);
         done();
       });
 

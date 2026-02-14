@@ -2,6 +2,7 @@ import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
+import { ViewFixtures, ViewTypes } from '@minddrop/views';
 import { DataTypesStore } from '../DataTypesStore';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntrySerializerSerializersStore } from '../DatabaseEntrySerializersStore';
@@ -15,6 +16,8 @@ import {
   databaseFiles,
   databases,
 } from './fixtures';
+
+const { viewType1 } = ViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -40,6 +43,9 @@ export function setup(
     loadDatabaseEntrySerializers: true,
   },
 ) {
+  // Regiaster a test view type
+  ViewTypes.register(viewType1);
+
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
     DatabasesStore.load(databases);
@@ -72,6 +78,7 @@ export function cleanup() {
   DataTypesStore.clear();
   DatabaseEntriesStore.clear();
   DatabaseEntrySerializerSerializersStore.clear();
+  ViewTypes.Store.clear();
   // Reset mock file system
   MockFs.reset();
   // Clear all event listeners
