@@ -6,9 +6,9 @@ import {
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import {
-  OpenDesignStudioEvent,
-  OpenDesignStudioEventData,
-} from '@minddrop/feature-designs';
+  OpenDatabaseDesignStudioEvent,
+  OpenDatabaseDesignStudioEventData,
+} from '@minddrop/feature-design-studio';
 import { i18n } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
@@ -40,10 +40,13 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
 }) => {
   function handleClick() {
     // Open the design studio
-    Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
-      databaseId,
-      designId: design.id,
-    });
+    Events.dispatch<OpenDatabaseDesignStudioEventData>(
+      OpenDatabaseDesignStudioEvent,
+      {
+        databaseId,
+        designId: design.id,
+      },
+    );
   }
 
   async function handleDuplicate() {
@@ -58,10 +61,13 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
     await Databases.addDesign(databaseId, duplatedDesign);
 
     // Open the design studio
-    Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
-      databaseId,
-      designId: duplatedDesign.id,
-    });
+    Events.dispatch<OpenDatabaseDesignStudioEventData>(
+      OpenDatabaseDesignStudioEvent,
+      {
+        databaseId,
+        designId: duplatedDesign.id,
+      },
+    );
   }
 
   function handleDelete() {

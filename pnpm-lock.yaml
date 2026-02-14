@@ -228,6 +228,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-design-studio':
+        specifier: workspace:*
+        version: link:../design-studio
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
