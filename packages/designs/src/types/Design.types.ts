@@ -1,4 +1,4 @@
-import { ElementTree } from './ElementTree.types';
+import { RootElementTree } from './ElementTree.types';
 
 export type DesignType = 'page' | 'card' | 'list';
 
@@ -21,5 +21,5 @@ export interface Design {
   /**
    * The elements composing this design.
    */
-  elements: ElementTree;
+  elements: RootElementTree;
 }

@@ -1,5 +1,14 @@
-import { LeafElementSchema, RootElementSchema } from './ElementSchema.types';
+import {
+  ContainerElementSchema,
+  LeafElementSchema,
+  RootElementSchema,
+} from './ElementSchema.types';
 
-export interface ElementTree extends Omit<RootElementSchema, 'children'> {
-  children: (LeafElementSchema | ElementTree)[];
+export interface ContainerElementTree
+  extends Omit<ContainerElementSchema, 'children'> {
+  children: (LeafElementSchema | ContainerElementTree)[];
+}
+
+export interface RootElementTree extends Omit<RootElementSchema, 'children'> {
+  children: (LeafElementSchema | ContainerElementTree)[];
 }

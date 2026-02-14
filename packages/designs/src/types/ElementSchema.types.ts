@@ -87,7 +87,10 @@ export type RootElementSchema =
   | PageElementSchema
   | ListElementSchema;
 
-export type ElementSchema = LeafElementSchema | ContainerElementSchema;
+export type ElementSchema =
+  | LeafElementSchema
+  | ContainerElementSchema
+  | RootElementSchema;
 
 export type TitleElementSchemaTemplate = Omit<TextElementSchema, 'id'>;
 export type TextElementSchemaTemplate = Omit<TextElementSchema, 'id'>;
