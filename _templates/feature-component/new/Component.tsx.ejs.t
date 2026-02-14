@@ -1,20 +1,16 @@
 ---
 to: features/<%= location %>/src/<%= name %>/<%= name %>.tsx
 ---
-import { mapPropsToClasses } from '@minddrop/ui-primitives';
 import './<%= name %>.css';
 
-export interface <%= name %>Props extends React.HTMLProps<HTMLDivElement> {
-  /**
-   * The content of the <%= name %>.
-   */
-  children?: React.ReactNode;
+export interface <%= name %>Props {
+  foo?: string;
 }
 
-export const <%= name %>: React.FC<<%= name %>Props> = ({ children, className, ...other }) => {
+export const <%= name %>: React.FC<<%= name %>Props> = ({ foo }) => {
   return (
-    <div className={mapPropsToClasses({ className }, '<%= h.toKebabCase(name) %>')} {...other}>
-      {children}
+    <div className="<%= h.toKebabCase(name) %>">
+      {foo}
     </div>
   );
 };
