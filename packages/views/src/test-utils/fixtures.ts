@@ -5,8 +5,8 @@ import { View, ViewType } from '../types';
  *****************************/
 
 export const viewType1: ViewType = {
-  type: 'type-1',
-  name: 'Type 1',
+  type: 'wall',
+  name: 'Wall',
   description: 'Description 1',
   component: () => null,
   defaultOptions: {
@@ -28,14 +28,14 @@ export const viewTypes = [viewType1, viewType2];
  *****************************/
 
 export const view1: View = {
-  id: 'view-1',
-  name: 'View 1',
-  type: 'type-1',
+  id: '725b3e17-877f-4041-aed0-d6dfa0f8fc95',
+  name: 'Wall',
+  type: 'wall',
 };
 
 export const queryView1: View = {
-  id: 'view-1',
-  name: 'View 1',
-  type: 'type-1',
+  id: '725b3e17-877f-4041-aed0-d6dfa0f8fc95',
+  name: 'View 2',
+  type: 'type-2',
   query: 'query-1',
 };
