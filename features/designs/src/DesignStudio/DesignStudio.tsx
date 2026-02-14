@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Database, Databases } from '@minddrop/databases';
 import {
   Design,
-  DesignElementScehmaTemplates,
+  ElementScehmaTemplates,
   ElementSchema,
   LeafElementSchema,
   PropertyElementSchema,
@@ -124,7 +124,7 @@ function propertiesToElements(
   return properties.map((property) => ({
     type: property.type || 'text',
     style: {},
-    ...(DesignElementScehmaTemplates[property.type] ?? {}),
+    ...(ElementScehmaTemplates[property.type] ?? {}),
     property: property.name,
     id: uuid(),
   }));
