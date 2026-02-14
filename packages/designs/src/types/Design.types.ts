@@ -1,6 +1,6 @@
-import { RootElementTree } from './ElementTree.types';
+import { RootDesignElement, RootElementType } from './DesignElement.types';
 
-export type DesignType = 'page' | 'card' | 'list';
+export type DesignType = RootElementType;
 
 export interface Design {
   /**
@@ -9,7 +9,7 @@ export interface Design {
   id: string;
 
   /**
-   * The type of element this design is for.
+   * The type of the design's root element. Determines the type of design.
    */
   type: DesignType;
 
@@ -21,5 +21,5 @@ export interface Design {
   /**
    * The elements composing this design.
    */
-  elements: RootElementTree;
+  tree: RootDesignElement;
 }

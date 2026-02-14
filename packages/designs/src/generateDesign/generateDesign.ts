@@ -1,4 +1,5 @@
 import { uuid } from '@minddrop/utils';
+import { RootElementTemplates } from '../design-element-templates';
 import { Design, DesignType } from '../types';
 
 /**
@@ -9,16 +10,15 @@ import { Design, DesignType } from '../types';
  * @returns The generated design.
  */
 export function generateDesign(type: DesignType, name: string): Design {
+  const template = RootElementTemplates[type];
+
   return {
     id: uuid(),
     type,
     name,
-    elements: {
+    tree: {
       id: 'root',
-      type,
-      direction: 'column',
-      style: {},
-      children: [],
+      ...template,
     },
   };
 }
