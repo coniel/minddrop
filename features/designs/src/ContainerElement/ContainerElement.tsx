@@ -1,5 +1,5 @@
 import { ContainerElementSchema } from '@minddrop/designs';
-import { useDesignStudio } from '../DesignStudioProvider';
+import { useDesign } from '../DesignProvider';
 import { Element } from '../Element';
 import { FlexDropContainer } from '../FlexDropContainer';
 
@@ -10,7 +10,7 @@ export interface ContainerElementProps {
 export const ContainerElement: React.FC<ContainerElementProps> = ({
   element,
 }) => {
-  const { elements } = useDesignStudio();
+  const { elements } = useDesign();
 
   return (
     <FlexDropContainer id={element.id} gap={8} direction="column">
