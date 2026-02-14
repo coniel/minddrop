@@ -1,0 +1,6 @@
+.available-database-properties {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0.5rem;
+}

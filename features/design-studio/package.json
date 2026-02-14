@@ -12,6 +12,7 @@
   "devDependencies": {
     "eslint": "^9.16.0",
     "@minddrop/eslint-config": "workspace:*",
+    "@minddrop/file-system": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"
   },

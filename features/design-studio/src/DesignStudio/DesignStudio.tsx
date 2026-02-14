@@ -5,6 +5,7 @@ import {
   OpenAppSidebarEvent,
 } from '@minddrop/events';
 import { Panel } from '@minddrop/ui-primitives';
+import { AvailableDatabaseProperties } from '../AvailableDatabaseProperties';
 import { DatabaseDesignStudioProvider } from '../DatabaseDesignStudioProvider';
 import { OpenDesignStudioEventData } from '../events';
 import './DesignStudio.css';
@@ -26,7 +27,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   if (variant === 'database' && databaseId && designId) {
     return (
       <DatabaseDesignStudioProvider databaseId={databaseId} designId={designId}>
-        <Studio />
+        <Studio leftPanelContent={<AvailableDatabaseProperties />} />
       </DatabaseDesignStudioProvider>
     );
   }
@@ -34,10 +35,14 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   return null;
 };
 
-const Studio: React.FC = () => {
+interface StudioProps {
+  leftPanelContent?: React.ReactNode;
+}
+
+const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
   return (
     <div className="design-studio">
-      <Panel className="left-panel"></Panel>
+      <Panel className="left-panel">{leftPanelContent}</Panel>
       <div className="workspace"></div>
       <Panel className="right-panel"></Panel>
     </div>

@@ -305,6 +305,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       eslint:
         specifier: ^9.16.0
         version: 9.21.0
