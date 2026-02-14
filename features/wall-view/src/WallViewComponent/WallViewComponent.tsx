@@ -1,3 +1,4 @@
+import { DatabaseEntryRenderer } from '@minddrop/feature-database-entries';
 import { ViewTypeComponentProps } from '@minddrop/views';
 import { defaultWallViewOptions } from '../constants';
 import { WallViewOptions } from '../types';
@@ -16,9 +17,11 @@ export const WallViewComponent: React.FC<
       }}
     >
       {elements.map((element) => (
-        <div key={element} className="element">
-          {element}
-        </div>
+        <DatabaseEntryRenderer
+          key={element}
+          entryId={element}
+          designType="card"
+        />
       ))}
     </div>
   );

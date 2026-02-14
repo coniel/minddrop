@@ -2,7 +2,7 @@
   columns: 300px var(--max-columns);
   column-gap: 1rem;
 
-  .element {
+  .database-element {
     break-inside: avoid;
     margin-bottom: 1rem;
     display: inline-block;
