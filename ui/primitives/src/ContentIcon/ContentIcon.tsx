@@ -37,7 +37,10 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
 
   if (icon.type === 'emoji') {
     return (
-      <span className={mapPropsToClasses({ className }, 'content-icon emoji')}>
+      <span
+        className={mapPropsToClasses({ className }, 'content-icon emoji')}
+        data-testid="content-icon"
+      >
         {icon.icon}
       </span>
     );
@@ -80,6 +83,7 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
 
   return (
     <IconComponent
+      data-testid="content-icon"
       name={name}
       className={mapPropsToClasses(
         { className, color },
