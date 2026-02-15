@@ -47,6 +47,20 @@
     color: inherit;
   }
 
+  /* Font */
+
+  &.font-sans {
+    font-family: var(--font-family-sans);
+  }
+
+  &.font-serif {
+    font-family: var(--font-family-serif);
+  }
+
+  &.font-mono {
+    font-family: var(--font-family-mono);
+  }
+
   /* Weight */
 
   &.weight-light {

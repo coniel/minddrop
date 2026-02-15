@@ -40,8 +40,20 @@
   --radius-lg: 0.5rem; /* 8px */
   --radius-full: 9999px;
 
+  /* Fonts */
   --font-family:
     ui-sans-serif, -apple-system, BlinkMacSystemFont,
     'Segoe UI Variable Display', 'Segoe UI', Helvetica, 'Apple Color Emoji',
     Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --font-family-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco',
+    'Liberation Mono', 'Courier New', monospace;
+
+  --font-family-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+
+  --font-family-serif:
+    ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 }

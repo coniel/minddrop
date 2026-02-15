@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
+import { i18n } from '@minddrop/i18n';
 import { TextColor, TextSize, TextWeight } from '../types';
 import { mapPropsToClasses } from '../utils';
 import './Text.css';
-import { i18n } from '@minddrop/i18n';
 
 export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   /**
@@ -33,6 +33,11 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
   as?: React.ElementType;
 
   /**
+   * The font family.
+   */
+  font?: 'sans' | 'serif' | 'mono';
+
+  /**
    * The font size, regular is for standard UI text.
    */
   size?: TextSize;
@@ -49,6 +54,7 @@ export const Text: FC<TextProps> = ({
   className,
   color = 'regular',
   size = 'regular',
+  font,
   paragraph = false,
   text,
   weight = 'regular',
@@ -59,7 +65,7 @@ export const Text: FC<TextProps> = ({
   return (
     <Component
       className={mapPropsToClasses(
-        { className, color, size, weight, paragraph },
+        { className, color, size, weight, paragraph, font },
         'text',
       )}
       {...other}
