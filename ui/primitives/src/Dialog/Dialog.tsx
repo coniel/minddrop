@@ -1,4 +1,4 @@
-import { Dialog as DialogPrimitives } from '@base-ui-components/react/dialog';
+import { Dialog as DialogPrimitives } from '@base-ui/react/dialog';
 import { mapPropsToClasses } from '../utils';
 import './Dialog.css';
 

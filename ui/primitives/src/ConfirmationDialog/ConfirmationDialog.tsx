@@ -1,4 +1,4 @@
-import { AlertDialog } from '@base-ui-components/react/alert-dialog';
+import { AlertDialog } from '@base-ui/react/alert-dialog';
 import { useTranslation } from '@minddrop/i18n';
 import { Button } from '../Button';
 import './ConfirmationDialog.css';

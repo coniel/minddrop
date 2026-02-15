@@ -1,4 +1,4 @@
-import { Toolbar as ToolbarPrimitives } from '@base-ui-components/react/toolbar';
+import { Toolbar as ToolbarPrimitives } from '@base-ui/react/toolbar';
 import React, { FC } from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import { IconButton, IconButtonProps } from '../IconButton';

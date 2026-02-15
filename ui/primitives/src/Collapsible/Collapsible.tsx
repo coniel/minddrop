@@ -1,4 +1,4 @@
-import { Collapsible as CollapsiblePrimitives } from '@base-ui-components/react/collapsible';
+import { Collapsible as CollapsiblePrimitives } from '@base-ui/react/collapsible';
 import React from 'react';
 
 export type CollapsibleProps = CollapsiblePrimitives.Root.Props;

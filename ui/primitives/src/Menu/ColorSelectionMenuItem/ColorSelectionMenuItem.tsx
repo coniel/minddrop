@@ -1,4 +1,4 @@
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { i18n } from '@minddrop/i18n';
 import { ContentColors } from '../../constants';

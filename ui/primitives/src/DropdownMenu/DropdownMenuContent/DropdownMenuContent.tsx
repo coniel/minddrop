@@ -1,4 +1,4 @@
-import { Menu as DropdownMenuPrimitives } from '@base-ui-components/react/menu';
+import { Menu as DropdownMenuPrimitives } from '@base-ui/react/menu';
 import React, { useMemo } from 'react';
 import { Menu } from '../../Menu';
 import { MenuContents } from '../../types';

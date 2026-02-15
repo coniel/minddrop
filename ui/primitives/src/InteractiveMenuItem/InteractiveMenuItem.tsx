@@ -1,4 +1,4 @@
-import { Menu as MenuPrimitives } from '@base-ui-components/react/menu';
+import { Menu as MenuPrimitives } from '@base-ui/react/menu';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { MenuItem, MenuItemProps } from '../Menu';

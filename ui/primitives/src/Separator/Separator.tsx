@@ -1,4 +1,4 @@
-import { Separator as SeparatorPrimitive } from '@base-ui-components/react';
+import { Separator as SeparatorPrimitive } from '@base-ui/react';
 import { FC } from 'react';
 import { mapPropsToClasses } from '../utils';
 import './Separator.css';

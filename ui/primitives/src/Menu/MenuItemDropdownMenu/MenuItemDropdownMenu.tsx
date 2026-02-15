@@ -1,4 +1,4 @@
-import { MenuRoot } from '@base-ui-components/react/menu/root/MenuRoot';
+import { MenuRoot } from '@base-ui/react/menu/root/MenuRoot';
 import { DropdownMenu, DropdownMenuProps } from '../../DropdownMenu';
 import { useMenuItemContext } from '../MenuItem';
 

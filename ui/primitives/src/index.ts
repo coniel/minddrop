@@ -20,6 +20,7 @@ export * from './Separator';
 export * from './Subheading';
 export * from './Text';
 export * from './TextField';
+export * from './ToggleGroup';
 export * from './Toolbar';
 export * from './Tooltip';
 export * from './constants';

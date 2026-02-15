@@ -1,4 +1,4 @@
-import { Menu as DropdownMenuPrimitives } from '@base-ui-components/react/menu';
+import { Menu as DropdownMenuPrimitives } from '@base-ui/react/menu';
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {

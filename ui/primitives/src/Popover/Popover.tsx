@@ -1,4 +1,4 @@
-import { Popover as PopoverPrimitives } from '@base-ui-components/react/popover';
+import { Popover as PopoverPrimitives } from '@base-ui/react/popover';
 import React from 'react';
 import { mapPropsToClasses } from '@minddrop/utils';
 import './Popover.css';
