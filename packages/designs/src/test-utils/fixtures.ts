@@ -1,4 +1,11 @@
-import { Design } from '../types';
+import { Design, TextElement } from '../types';
+
+export const textElement1: TextElement = {
+  id: 'text-element-1',
+  type: 'text',
+  value: 'Text Element 1',
+  style: {},
+};
 
 export const cardDesign1: Design = {
   id: 'card-design-1',
