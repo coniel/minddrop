@@ -20,6 +20,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/icons": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/selection": "workspace:*",

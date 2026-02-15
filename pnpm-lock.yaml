@@ -286,6 +286,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
