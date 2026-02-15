@@ -1,0 +1,23 @@
+.toggle-group-button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  flex-grow: 1;
+  background-color: transparent;
+  border-radius: var(--radius-sm);
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--text-color-muted);
+  }
+
+  &[data-pressed] {
+    background-color: var(--bgNeutralActive);
+
+    .icon {
+      color: var(--text-color-regular);
+    }
+  }
+}
