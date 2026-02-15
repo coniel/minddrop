@@ -1,10 +1,17 @@
-import { Design, TextElement } from '../types';
+import { ContainerElement, Design, TextElement } from '../types';
 
 export const textElement1: TextElement = {
   id: 'text-element-1',
   type: 'text',
   value: 'Text Element 1',
   style: {},
+};
+
+export const containerElement1: ContainerElement = {
+  id: 'container-element-1',
+  type: 'container',
+  style: {},
+  children: [textElement1],
 };
 
 export const cardDesign1: Design = {
