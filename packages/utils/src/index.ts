@@ -5,6 +5,7 @@ export * from './back-end-utils';
 export * from './createArrayStore';
 export * from './createContext';
 export * from './createStore';
+export * from './deepMerge';
 export * from './errors';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
