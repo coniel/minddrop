@@ -26,12 +26,16 @@ export interface PropertyDesignElementBase extends DesignElementBase {
   property: string;
 }
 
+export interface TitlePropertyElement extends PropertyDesignElementBase {
+  type: 'title-property';
+}
+
 export interface TextPropertyElement extends PropertyDesignElementBase {
   type: 'text-property';
 }
 
-export interface TitlePropertyElement extends PropertyDesignElementBase {
-  type: 'title-property';
+export interface NumberPropertyElement extends PropertyDesignElementBase {
+  type: 'number-property';
 }
 
 export interface UrlPropertyElement extends PropertyDesignElementBase {
@@ -43,8 +47,9 @@ export interface ImagePropertyElement extends PropertyDesignElementBase {
 }
 
 export type PropertyDesignElement =
-  | TextPropertyElement
   | TitlePropertyElement
+  | TextPropertyElement
+  | NumberPropertyElement
   | UrlPropertyElement
   | ImagePropertyElement;
 
