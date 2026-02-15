@@ -33,6 +33,7 @@ export const objectDatabase: Database = {
       type: 'text-formatted',
       name: 'Content',
       defaultValue: 'Default Content',
+      icon: 'content-icon:shapes:blue',
     },
     {
       type: 'icon',
