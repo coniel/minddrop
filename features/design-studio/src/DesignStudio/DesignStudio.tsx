@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   CloseAppSidebarEvent,
   Events,
@@ -8,9 +8,12 @@ import { Panel } from '@minddrop/ui-primitives';
 import { AvailableDatabaseProperties } from '../AvailableDatabaseProperties';
 import { DatabaseDesignStudioProvider } from '../DatabaseDesignStudioProvider';
 import { useDesignStudio } from '../DesignStudioProvider';
+import { ElementsTree } from '../ElementsTree';
 import { DesignStudioElement } from '../design-elements';
 import { OpenDesignStudioEventData } from '../events';
 import './DesignStudio.css';
+import { DesignElement } from '@minddrop/designs';
+import { ElementStyleEditor } from '../ElementStyleEditor';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   variant,
@@ -43,6 +46,9 @@ interface StudioProps {
 
 const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
   const { tree } = useDesignStudio();
+  const [editingElement, setEditingElement] = useState<DesignElement | null>(
+    null,
+  );
 
   return (
     <div className="design-studio">
@@ -50,7 +56,16 @@ const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
       <div className="workspace">
         <DesignStudioElement element={tree} />
       </div>
-      <Panel className="right-panel"></Panel>
+      <Panel className="right-panel">
+        {editingElement ? (
+          <ElementStyleEditor
+            element={editingElement}
+            onClose={() => setEditingElement(null)}
+          />
+        ) : (
+          <ElementsTree onClickElement={setEditingElement} />
+        )}
+      </Panel>
     </div>
   );
 };

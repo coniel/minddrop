@@ -1,0 +1,47 @@
+.design-elements-tree {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .tree-element {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    background-color: var(--bgNeutral);
+    border-radius: var(--radius-md);
+
+    &:hover {
+      background-color: var(--bgNeutralHover);
+
+      .chevron-icon {
+        color: var(--text-color-regular);
+      }
+    }
+
+    .icon,
+    .content-icon {
+      width: 1rem;
+      height: 1rem;
+      color: var(--text-color-regular);
+    }
+
+    .text {
+      flex-grow: 1;
+    }
+
+    .chevron-icon {
+      color: var(--text-color-muted);
+    }
+  }
+
+  .tree-element-children {
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
