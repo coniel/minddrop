@@ -4,10 +4,10 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { updateDatabaseDesign } from './updateDatabaseDesign';
 
-const { design1 } = DesignFixtures;
+const { cardDesign1 } = DesignFixtures;
 
 const updatedDesign = {
-  ...design1,
+  ...cardDesign1,
   name: 'Updated Design',
 };
 
@@ -29,7 +29,7 @@ describe('updateDatabaseDesign', () => {
     await expect(
       updateDatabaseDesign(objectDatabase.id, {
         ...updatedDesign,
-        type: 'new-type',
+        type: 'list',
       }),
     ).rejects.toThrow(InvalidParameterError);
   });
@@ -38,6 +38,8 @@ describe('updateDatabaseDesign', () => {
     // Database contains design1, udpate it
     const result = await updateDatabaseDesign(objectDatabase.id, updatedDesign);
 
-    expect(result.designs).toEqual([updatedDesign]);
+    expect(result.designs.find((d) => d.id === cardDesign1.id)).toEqual(
+      updatedDesign,
+    );
   });
 });

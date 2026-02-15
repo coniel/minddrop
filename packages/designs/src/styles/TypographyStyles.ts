@@ -1,6 +1,7 @@
 import { ContentColor } from '@minddrop/utils';
 
 export type FontFamily = 'sans' | 'serif' | 'mono';
+export type TextAlign = 'left' | 'center' | 'right';
 
 export interface TypographyStyles {
   'font-family': FontFamily;
@@ -13,7 +14,7 @@ export interface TypographyStyles {
   align: 'left' | 'center' | 'right';
   color: ContentColor | string;
   'text-transform': 'none' | 'uppercase' | 'lowercase' | 'capitalize';
-  'text-align': 'left' | 'center' | 'right';
+  'text-align': TextAlign;
   // The maximum number of lines to display
   truncate: number;
 }

@@ -10,17 +10,14 @@ export const defaultCardDesign: Design = {
   id: 'default-card-design',
   type: 'card',
   name: 'designs.card.name',
-  elements: {
+  tree: {
     id: 'root',
     type: 'card',
-    direction: 'column',
-    style: {},
     children: [
       {
         id: 'title',
-        type: 'title',
+        type: 'title-property',
         property: 'Title',
-        style: {},
       },
     ],
   },
@@ -30,11 +27,9 @@ export const defaultListDesign: Design = {
   id: 'default-list-design',
   type: 'list',
   name: 'designs.list.name',
-  elements: {
+  tree: {
     id: 'root',
     type: 'list',
-    direction: 'row',
-    style: {},
     children: [],
   },
 };
@@ -43,11 +38,9 @@ export const defaultPageDesign: Design = {
   id: 'default-page-design',
   type: 'page',
   name: 'designs.page.name',
-  elements: {
+  tree: {
     id: 'root',
     type: 'page',
-    direction: 'column',
-    style: {},
     children: [],
   },
 };

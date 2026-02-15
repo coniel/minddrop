@@ -1,3 +1,5 @@
+import { TypographyStyles } from '../styles';
+
 export interface DesignElementBase {
   /**
    * A unique identifier for the element.
@@ -10,9 +12,9 @@ export interface DesignElementBase {
   type: string;
 
   /**
-   * A CSS style map.
+   * The element style customizations.
    */
-  style: Record<string, string>;
+  style?: Partial<TypographyStyles>;
 }
 
 /******************************************************************************

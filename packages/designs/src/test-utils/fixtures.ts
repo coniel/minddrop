@@ -4,13 +4,11 @@ export const textElement1: TextElement = {
   id: 'text-element-1',
   type: 'text',
   value: 'Text Element 1',
-  style: {},
 };
 
 export const containerElement1: ContainerElement = {
   id: 'container-element-1',
   type: 'container',
-  style: {},
   children: [textElement1],
 };
 
@@ -21,12 +19,10 @@ export const cardDesign1: Design = {
   tree: {
     id: 'root',
     type: 'card',
-    style: {},
     children: [
       {
         id: 'child-1',
         type: 'text',
-        style: {},
         value: 'card-design-1',
       },
     ],
@@ -40,12 +36,10 @@ export const cardDesign2: Design = {
   tree: {
     id: 'root',
     type: 'card',
-    style: {},
     children: [
       {
         id: 'child-1',
         type: 'text',
-        style: {},
         value: 'card-design-2',
       },
     ],
@@ -59,12 +53,10 @@ export const listDesign1: Design = {
   tree: {
     id: 'root',
     type: 'list',
-    style: {},
     children: [
       {
         id: 'child-1',
         type: 'text',
-        style: {},
         value: 'list-design-1',
       },
     ],
@@ -78,12 +70,10 @@ export const pageDesign1: Design = {
   tree: {
     id: 'root',
     type: 'page',
-    style: {},
     children: [
       {
         id: 'child-1',
         type: 'text',
-        style: {},
         value: 'page-design-1',
       },
     ],
