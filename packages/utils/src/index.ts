@@ -4,6 +4,7 @@ export * from './Paths';
 export * from './back-end-utils';
 export * from './createArrayStore';
 export * from './createContext';
+export * from './createStore';
 export * from './errors';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
