@@ -372,6 +372,25 @@
       "name": "List",
       "new": "New list design",
       "description": "The design of an element when displayed in a list."
+    },
+    "typography": {
+      "label": "Typography",
+      "font-family": {
+        "sans": "Sans",
+        "serif": "Serif",
+        "mono": "Mono"
+      },
+      "font-weight": {
+        "100": "Thin",
+        "200": "Extra-light",
+        "300": "Light",
+        "400": "Regular",
+        "500": "Medium",
+        "600": "Semi-bold",
+        "700": "Bold",
+        "800": "Extra-bold",
+        "900": "Black"
+      }
     }
   },
   "queries": {
