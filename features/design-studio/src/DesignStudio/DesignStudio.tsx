@@ -7,6 +7,8 @@ import {
 import { Panel } from '@minddrop/ui-primitives';
 import { AvailableDatabaseProperties } from '../AvailableDatabaseProperties';
 import { DatabaseDesignStudioProvider } from '../DatabaseDesignStudioProvider';
+import { useDesignStudio } from '../DesignStudioProvider';
+import { DesignStudioElement } from '../design-elements';
 import { OpenDesignStudioEventData } from '../events';
 import './DesignStudio.css';
 
@@ -40,10 +42,14 @@ interface StudioProps {
 }
 
 const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
+  const { tree } = useDesignStudio();
+
   return (
     <div className="design-studio">
       <Panel className="left-panel">{leftPanelContent}</Panel>
-      <div className="workspace"></div>
+      <div className="workspace">
+        <DesignStudioElement element={tree} />
+      </div>
       <Panel className="right-panel"></Panel>
     </div>
   );
