@@ -1,14 +1,20 @@
-import { DesignElement } from '@minddrop/designs';
+import { useElement } from '../DesignStudioStore';
 import { DesignStudioCardElement } from './DesignStudioCardElement';
 import { DesignStudioTextPropertyElement } from './DesignStudioTextPropertyElement';
 
 export interface DesignStudioElementProps {
-  element: DesignElement;
+  elementId: string;
 }
 
 export const DesignStudioElement: React.FC<DesignStudioElementProps> = ({
-  element,
+  elementId,
 }) => {
+  const element = useElement(elementId);
+
+  if (!element) {
+    return null;
+  }
+
   switch (element.type) {
     case 'text-property':
       return <DesignStudioTextPropertyElement element={element} />;

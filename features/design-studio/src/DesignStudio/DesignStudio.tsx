@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Databases } from '@minddrop/databases';
 import {
   CloseAppSidebarEvent,
   Events,
@@ -6,20 +7,21 @@ import {
 } from '@minddrop/events';
 import { Panel } from '@minddrop/ui-primitives';
 import { AvailableDatabaseProperties } from '../AvailableDatabaseProperties';
-import { DatabaseDesignStudioProvider } from '../DatabaseDesignStudioProvider';
-import { useDesignStudio } from '../DesignStudioProvider';
+import { useDesignStudioStore } from '../DesignStudioStore';
+import { ElementStyleEditor } from '../ElementStyleEditor';
 import { ElementsTree } from '../ElementsTree';
 import { DesignStudioElement } from '../design-elements';
 import { OpenDesignStudioEventData } from '../events';
 import './DesignStudio.css';
-import { DesignElement } from '@minddrop/designs';
-import { ElementStyleEditor } from '../ElementStyleEditor';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   variant,
   databaseId,
   designId,
 }) => {
+  const initialize = useDesignStudioStore((state) => state.initialize);
+  const storeInitialized = useDesignStudioStore((state) => state.initialized);
+
   // Close the app sidebar when the design studio is opened
   useEffect(() => {
     Events.dispatch(CloseAppSidebarEvent);
@@ -29,15 +31,28 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     };
   }, []);
 
-  if (variant === 'database' && databaseId && designId) {
-    return (
-      <DatabaseDesignStudioProvider databaseId={databaseId} designId={designId}>
-        <Studio leftPanelContent={<AvailableDatabaseProperties />} />
-      </DatabaseDesignStudioProvider>
-    );
+  useEffect(() => {
+    if (variant === 'database' && databaseId && designId) {
+      const database = Databases.get(databaseId);
+      const design = Databases.getDesign(databaseId, designId);
+
+      if (!design) {
+        return;
+      }
+
+      initialize(design.tree, database.properties);
+    }
+  }, [variant, databaseId, designId, initialize]);
+
+  if (!storeInitialized) {
+    return null;
   }
 
-  return null;
+  if (variant === 'database') {
+    return <Studio leftPanelContent={<AvailableDatabaseProperties />} />;
+  }
+
+  return <Studio />;
 };
 
 interface StudioProps {
@@ -45,27 +60,34 @@ interface StudioProps {
 }
 
 const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
-  const { tree } = useDesignStudio();
-  const [editingElement, setEditingElement] = useState<DesignElement | null>(
-    null,
-  );
-
   return (
     <div className="design-studio">
       <Panel className="left-panel">{leftPanelContent}</Panel>
       <div className="workspace">
-        <DesignStudioElement element={tree} />
+        <Workspace />
       </div>
-      <Panel className="right-panel">
-        {editingElement ? (
-          <ElementStyleEditor
-            element={editingElement}
-            onClose={() => setEditingElement(null)}
-          />
-        ) : (
-          <ElementsTree onClickElement={setEditingElement} />
-        )}
-      </Panel>
+      <RightPanel />
     </div>
+  );
+};
+
+const Workspace = () => {
+  return <DesignStudioElement elementId="root" />;
+};
+
+const RightPanel = () => {
+  const [editingElement, setEditingElement] = useState<string | null>(null);
+
+  return (
+    <Panel className="right-panel">
+      {editingElement ? (
+        <ElementStyleEditor
+          elementId={editingElement}
+          onClose={() => setEditingElement(null)}
+        />
+      ) : (
+        <ElementsTree onClickElement={setEditingElement} />
+      )}
+    </Panel>
   );
 };

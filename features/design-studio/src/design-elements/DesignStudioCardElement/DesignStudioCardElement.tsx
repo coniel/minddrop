@@ -1,9 +1,9 @@
-import { CardElement } from '@minddrop/designs';
+import { FlatCardDesignElement } from '../../types';
 import { DesignStudioElement } from '../DesignStudioElement';
 import './DesignStudioCardElement.css';
 
 export interface DesignStudioCardElementProps {
-  element: CardElement;
+  element: FlatCardDesignElement;
 }
 
 export const DesignStudioCardElement: React.FC<
@@ -11,8 +11,8 @@ export const DesignStudioCardElement: React.FC<
 > = ({ element }) => {
   return (
     <div className="design-studio-card-element">
-      {element.children.map((child) => (
-        <DesignStudioElement key={child.id} element={child} />
+      {element.children.map((childId) => (
+        <DesignStudioElement key={childId} elementId={childId} />
       ))}
     </div>
   );

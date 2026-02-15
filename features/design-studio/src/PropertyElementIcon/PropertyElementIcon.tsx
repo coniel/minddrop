@@ -1,6 +1,6 @@
 import { PropertyDesignElement } from '@minddrop/designs';
 import { ContentIcon, ContentIconProps } from '@minddrop/ui-primitives';
-import { useDatabaseProperty } from '../DatabaseDesignStudioProvider';
+import { useProperty } from '../DesignStudioStore';
 
 export interface PropertyElementIconProps extends ContentIconProps {
   element: PropertyDesignElement;
@@ -9,7 +9,7 @@ export interface PropertyElementIconProps extends ContentIconProps {
 export const PropertyElementIcon: React.FC<PropertyElementIconProps> = ({
   element,
 }) => {
-  const property = useDatabaseProperty(element.property);
+  const property = useProperty(element.property);
 
   if (!property) {
     return null;

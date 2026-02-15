@@ -1,25 +1,27 @@
-import { DesignElement } from '@minddrop/designs';
 import { ContentIconName } from '@minddrop/icons';
 import { Icon } from '@minddrop/ui-primitives';
+import { useElement } from '../DesignStudioStore';
 import { ElementIcon } from '../ElementIcon';
 import { ElementLabel } from '../ElementLabel';
 
 export interface ElementsTreeElementProps {
-  element: DesignElement;
+  elementId: string;
   contentIcon?: ContentIconName;
-  onClick: (element: DesignElement) => void;
+  onClick: (elementId: string) => void;
 }
 
 export const ElementsTreeElement: React.FC<ElementsTreeElementProps> = ({
-  element,
+  elementId,
   onClick,
 }) => {
+  const element = useElement(elementId);
+
   return (
     <div draggable>
       <div
         role="button"
         className="tree-element"
-        onClick={() => onClick(element)}
+        onClick={() => onClick(elementId)}
       >
         <ElementIcon element={element} />
         <ElementLabel color="inherit" weight="medium" element={element} />
@@ -27,11 +29,11 @@ export const ElementsTreeElement: React.FC<ElementsTreeElementProps> = ({
       </div>
       {'children' in element && (
         <div className="tree-element-children">
-          {element.children.map((child) => (
+          {element.children.map((childId) => (
             <ElementsTreeElement
-              key={child.id}
-              element={child}
-              onClick={() => onClick(child)}
+              key={childId}
+              elementId={childId}
+              onClick={onClick}
             />
           ))}
         </div>

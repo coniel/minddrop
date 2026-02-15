@@ -1,17 +1,19 @@
-import { DesignElement } from '@minddrop/designs';
 import { IconButton } from '@minddrop/ui-primitives';
+import { useElement } from '../DesignStudioStore';
 import { ElementLabel } from '../ElementLabel';
 import './ElementStyleEditor.css';
 
 export interface ElementStyleEditorProps {
-  element: DesignElement;
+  elementId: string;
   onClose: () => void;
 }
 
 export const ElementStyleEditor: React.FC<ElementStyleEditorProps> = ({
-  element,
+  elementId,
   onClose,
 }) => {
+  const element = useElement(elementId);
+
   return (
     <div className="element-style-editor">
       <div className="header">

@@ -1,9 +1,9 @@
-import { DesignElement } from '@minddrop/designs';
 import { Text, TextProps } from '@minddrop/ui-primitives';
 import { PropertyElementLabel } from '../PropertyElementLabel';
+import { FlatDesignElement } from '../types';
 
 export interface ElementLabelProps extends TextProps {
-  element: DesignElement;
+  element: FlatDesignElement;
 }
 
 export const ElementLabel: React.FC<ElementLabelProps> = ({

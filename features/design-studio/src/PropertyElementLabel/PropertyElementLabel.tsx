@@ -1,6 +1,6 @@
 import { PropertyDesignElement } from '@minddrop/designs';
 import { Text, TextProps } from '@minddrop/ui-primitives';
-import { useDatabaseProperty } from '../DatabaseDesignStudioProvider';
+import { useProperty } from '../DesignStudioStore';
 
 export interface PropertyElementLabelProps extends TextProps {
   element: PropertyDesignElement;
@@ -10,7 +10,7 @@ export const PropertyElementLabel: React.FC<PropertyElementLabelProps> = ({
   element,
   ...other
 }) => {
-  const property = useDatabaseProperty(element.property);
+  const property = useProperty(element.property);
 
   if (!property) {
     return null;

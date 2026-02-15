@@ -1,11 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@minddrop/test-utils';
-import {
-  MockDatabaseDesignStudioProvider,
-  cleanup,
-  setup,
-  usedPropertyDesignElement,
-} from '../test-utils';
+import { cleanup, setup, usedPropertyDesignElement } from '../test-utils';
 import { PropertyElementIcon } from './PropertyElementIcon';
 
 describe('<PropertyElementIcon />', () => {
@@ -14,11 +9,7 @@ describe('<PropertyElementIcon />', () => {
   afterEach(cleanup);
 
   it('renders the property icon', () => {
-    render(
-      <MockDatabaseDesignStudioProvider>
-        <PropertyElementIcon element={usedPropertyDesignElement} />
-      </MockDatabaseDesignStudioProvider>,
-    );
+    render(<PropertyElementIcon element={usedPropertyDesignElement} />);
 
     expect(screen.getByTestId('content-icon')).toHaveAttribute(
       'name',

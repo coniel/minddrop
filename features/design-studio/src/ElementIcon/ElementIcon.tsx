@@ -2,9 +2,10 @@ import { DesignElement } from '@minddrop/designs';
 import { UiIconName } from '@minddrop/icons';
 import { Icon } from '@minddrop/ui-primitives';
 import { PropertyElementIcon } from '../PropertyElementIcon';
+import { FlatDesignElement } from '../types';
 
 export interface ElementIconProps {
-  element: DesignElement;
+  element: FlatDesignElement;
 }
 
 const icons: Record<DesignElement['type'], UiIconName> = {
@@ -17,6 +18,7 @@ const icons: Record<DesignElement['type'], UiIconName> = {
   page: 'layout',
   card: 'layout-grid',
   list: 'layout-list',
+  'number-property': 'hash',
 };
 
 export const ElementIcon: React.FC<ElementIconProps> = ({ element }) => {

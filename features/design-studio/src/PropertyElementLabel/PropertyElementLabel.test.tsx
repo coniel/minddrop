@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, it } from 'vitest';
 import { render, screen } from '@minddrop/test-utils';
 import {
-  MockDatabaseDesignStudioProvider,
   cleanup,
   setup,
   usedProperty,
@@ -15,11 +14,7 @@ describe('<PropertyElementLabel />', () => {
   afterEach(cleanup);
 
   it('renders the property name as the label', () => {
-    render(
-      <MockDatabaseDesignStudioProvider>
-        <PropertyElementLabel element={usedPropertyDesignElement} />
-      </MockDatabaseDesignStudioProvider>,
-    );
+    render(<PropertyElementLabel element={usedPropertyDesignElement} />);
 
     screen.getByText(usedProperty.name);
   });

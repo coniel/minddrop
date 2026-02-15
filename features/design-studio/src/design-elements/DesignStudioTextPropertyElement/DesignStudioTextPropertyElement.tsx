@@ -1,4 +1,8 @@
-import { TextPropertyElement } from '@minddrop/designs';
+import {
+  DefaultTypographyStyles,
+  TextPropertyElement,
+} from '@minddrop/designs';
+import { mapPropsToClasses } from '@minddrop/ui-primitives';
 import './DesignStudioTextPropertyElement.css';
 
 export interface DesignStudioTextPropertyElementProps {
@@ -8,8 +12,19 @@ export interface DesignStudioTextPropertyElementProps {
 export const DesignStudioTextPropertyElement: React.FC<
   DesignStudioTextPropertyElementProps
 > = ({ element }) => {
+  const style = { ...DefaultTypographyStyles, ...element.style };
+  const font = style['font-family'];
+
   return (
-    <div className="design-studio-text-property-element">
+    <div
+      className={mapPropsToClasses(
+        { font },
+        'design-studio-text-property-element',
+      )}
+      style={{
+        textAlign: style['text-align'],
+      }}
+    >
       {element.property}
     </div>
   );

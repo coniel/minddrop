@@ -1,19 +1,16 @@
-import { useMemo } from 'react';
-import { DesignElement, RootDesignElement } from '@minddrop/designs';
 import { PropertiesSchema } from '@minddrop/properties';
 import { MenuLabel } from '@minddrop/ui-primitives';
+import { useShallow } from '@minddrop/utils';
 import { AvailablePropertyElement } from '../AvailablePropertyElement';
-import { useDatabaseDesignStudio } from '../DatabaseDesignStudioProvider';
-import { useDesignStudio } from '../DesignStudioProvider';
+import { useDesignStudioStore } from '../DesignStudioStore';
+import { FlatDesignElement } from '../types';
 import './AvailableDatabaseProperties.css';
 
 export const AvailableDatabaseProperties: React.FC = () => {
-  const { tree } = useDesignStudio();
-  const { properties } = useDatabaseDesignStudio();
-
-  const unusedProperties = useMemo(
-    () => getUnusedProperties(tree, properties),
-    [tree, properties],
+  const unusedProperties = useDesignStudioStore(
+    useShallow((state) =>
+      getUnusedProperties(state.elements, state.properties),
+    ),
   );
 
   return (
@@ -28,22 +25,22 @@ export const AvailableDatabaseProperties: React.FC = () => {
 
 // Helper to get database properties that are not yet used in the design
 function getUnusedProperties(
-  rootElement: RootDesignElement,
+  elements: Record<string, FlatDesignElement>,
   properties: PropertiesSchema,
 ): PropertiesSchema {
   const usedProperties: string[] = [];
 
-  function addUsedProperties(element: DesignElement) {
+  function addUsedProperties(element: FlatDesignElement) {
     if ('property' in element) {
       usedProperties.push(element.property);
     }
 
     if ('children' in element) {
-      element.children.forEach((child) => addUsedProperties(child));
+      element.children.forEach((child) => addUsedProperties(elements[child]));
     }
   }
 
-  addUsedProperties(rootElement);
+  addUsedProperties(elements.root);
 
   return properties.filter(
     (property) => !usedProperties.includes(property.name),
