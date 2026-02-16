@@ -376,6 +376,7 @@
     "typography": {
       "label": "Typography",
       "font-family": {
+        "inherit": "Inherit",
         "sans": "Sans",
         "serif": "Serif",
         "mono": "Mono"

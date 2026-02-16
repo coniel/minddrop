@@ -1,6 +1,8 @@
 import { ContentColor } from '@minddrop/utils';
 
-export type FontFamily = 'sans' | 'serif' | 'mono';
+const i18nKey = (key: string) => `designs.typography.${key}`;
+
+export type FontFamily = 'inherit' | 'sans' | 'serif' | 'mono';
 export type TextAlign = 'left' | 'center' | 'right';
 
 export interface TypographyStyles {
@@ -19,49 +21,23 @@ export interface TypographyStyles {
   truncate: number;
 }
 
-export const fonts: FontFamily[] = ['sans', 'serif', 'mono'];
+const fontValues: FontFamily[] = ['inherit', 'sans', 'serif', 'mono'];
+const weightValues = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
-export const fontWeights = [
-  {
-    name: 'designs.typography.font-weight.100',
-    value: 100,
-  },
-  {
-    name: 'designs.typography.font-weight.200',
-    value: 200,
-  },
-  {
-    name: 'designs.typography.font-weight.300',
-    value: 300,
-  },
-  {
-    name: 'designs.typography.font-weight.400',
-    value: 400,
-  },
-  {
-    name: 'designs.typography.font-weight.500',
-    value: 500,
-  },
-  {
-    name: 'designs.typography.font-weight.600',
-    value: 600,
-  },
-  {
-    name: 'designs.typography.font-weight.700',
-    value: 700,
-  },
-  {
-    name: 'designs.typography.font-weight.800',
-    value: 800,
-  },
-  {
-    name: 'designs.typography.font-weight.900',
-    value: 900,
-  },
-];
+export const fonts: { label: string; value: FontFamily }[] = fontValues.map(
+  (font) => ({
+    label: i18nKey(`font-family.${font}`),
+    value: font,
+  }),
+);
+
+export const fontWeights = weightValues.map((weight) => ({
+  label: i18nKey(`font-weight.${weight}`),
+  value: weight,
+}));
 
 export const DefaultTypographyStyles: TypographyStyles = {
-  'font-family': fonts[0],
+  'font-family': fonts[0].value,
   'font-weight': fontWeights[3].value,
   'font-size': 1,
   'line-height': 1.5,
