@@ -10,12 +10,13 @@ export * from './errors';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
 export * from './isDomainMatch';
-export * from './isUrl';
 export * from './isImageUrl';
 export * from './isSerializedDate';
+export * from './isUrl';
 export * from './isValidUrl';
 export * from './mapPropsToClasses';
 export * from './parseDateOrNow';
+export * from './reorderArray';
 export * from './restoreDates';
 export * from './throttle';
 export * from './titleFromPath';
@@ -24,9 +25,9 @@ export * from './toKebabCase';
 export * from './types';
 export * from './useCreateCallback';
 export * from './useDragImage';
+export * from './useForm';
 export * from './useInputValue';
 export * from './useToggle';
-export * from './useForm';
 export { v4 as uuid } from 'uuid';
 
 export const YAML = {
