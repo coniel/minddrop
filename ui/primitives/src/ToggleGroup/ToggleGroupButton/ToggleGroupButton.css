@@ -2,8 +2,11 @@
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 0.25rem;
   flex-grow: 1;
+  height: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: transparent;
   border-radius: var(--radius-sm);
 
