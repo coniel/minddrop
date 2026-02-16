@@ -35,3 +35,5 @@ export * from './utils';
 
 export { useToggle, useForm } from '@minddrop/utils';
 export type { FieldDefinition } from '@minddrop/utils';
+export * from './Toggle';
+

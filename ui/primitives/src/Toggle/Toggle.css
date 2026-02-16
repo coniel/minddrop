@@ -1,0 +1,17 @@
+.toggle {
+  &.icon-button {
+    background-color: var(--bgSubtle);
+
+    .icon {
+      color: var(--text-color-muted);
+    }
+
+    &.checked {
+      background-color: var(--bgNeutralActive);
+
+      .icon {
+        color: var(--text-color-regular);
+      }
+    }
+  }
+}
