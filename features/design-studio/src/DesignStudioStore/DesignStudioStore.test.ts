@@ -48,7 +48,7 @@ describe('DesignStudioStore', () => {
       ...flatTree[textElement1.id],
       style: {
         'font-family': 'mono',
-        'font-weight': 'bold',
+        'font-weight': 900,
       },
     });
   });
