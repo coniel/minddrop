@@ -3,17 +3,21 @@ const path = require('path');
 
 const packagesPath = path.resolve(__dirname, '../../../packages');
 const extensionsPath = path.resolve(__dirname, '../../../extensions');
+const featuresPath = path.resolve(__dirname, '../../../features');
 const packagesContent = fs.readdirSync(packagesPath);
 const packages = packagesContent.filter((file) =>
   fs.statSync(path.resolve(packagesPath, file)).isDirectory(),
 );
 const extensions = fs.readdirSync(extensionsPath);
+const features = fs.readdirSync(featuresPath);
+const featuresChoices = features.map((feature) => (`features/${feature}`));
+const extensionsChoices = extensions.map((extension) => (`extensions/${extension}`));
 const choices = [
-  ...packages.filter(
-    (package) => !['app-desktop', 'docs', 'storybook'].includes(package),
-  ),
-  ...extensions,
+  ...packages,
+  ...featuresChoices,
+  ...extensionsChoices,
 ];
+
 
 module.exports = {
   prompt: ({ prompter }) =>
@@ -25,11 +29,18 @@ module.exports = {
         choices: choices,
       })
       .then(({ package }) => {
-        const isExtension = fs.existsSync(`${extensionsPath}/${package}`);
+        let location = 'packages';
+        const packageName = package.split('/').pop();
+
+        if (package.startsWith('features/')) {
+          location = 'features';
+        } else if (package.startsWith('extensions/')) {
+          location = 'extensions';
+        }
 
         return Promise.resolve({
-          package,
-          location: isExtension ? 'extensions' : 'packages',
+          package: packageName,
+          location,
         });
       }),
 };
