@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/icons';
 import { Icon } from '../Icon';
+import { Tooltip } from '../Tooltip';
 import { mapPropsToClasses } from '../utils';
 import './IconButton.css';
 
@@ -50,17 +51,41 @@ export interface IconButtonProps
    * The variant of the icon button.
    */
   variant?: 'regular' | 'filled' | 'outlined';
+
+  /**
+   * If set, a tooltip will be added to the button
+   * using this property as its title.
+   */
+  tooltipTitle?: React.ReactNode;
+
+  /**
+   * If set, a tooltip will be added to the button
+   * using this property as its description.
+   */
+  tooltipDescription?: React.ReactNode;
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   (
-    { icon, children, color, as, className, label, size, variant, ...other },
+    {
+      icon,
+      children,
+      color,
+      as,
+      className,
+      label,
+      size,
+      variant,
+      tooltipTitle,
+      tooltipDescription,
+      ...other
+    },
     ref,
   ) => {
     const { t } = useTranslation();
     const Component = as || 'button';
 
-    return (
+    const Button = (
       <Component
         type="button"
         ref={ref}
@@ -75,6 +100,16 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {icon ? <Icon name={icon} /> : children}
       </Component>
     );
+
+    if (tooltipTitle || tooltipDescription) {
+      return (
+        <Tooltip title={tooltipTitle} description={tooltipDescription}>
+          {Button}
+        </Tooltip>
+      );
+    }
+
+    return Button;
   },
 );
 
