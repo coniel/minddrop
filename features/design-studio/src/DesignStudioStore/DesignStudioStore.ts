@@ -90,3 +90,10 @@ export const useProperty = (name: string): PropertySchema | null => {
 
   return property || null;
 };
+
+export const updateElementStyle = (
+  id: string,
+  updates: DesignElement['style'],
+) => {
+  useDesignStudioStore.getState().updateElement(id, { style: updates });
+};
