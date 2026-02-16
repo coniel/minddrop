@@ -4,7 +4,7 @@ import {
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
 } from '@minddrop/events';
-import { DesignStudio } from './DesignStudio';
+import { DesignStudio } from './components/DesignStudio';
 import {
   EventListenerId,
   OpenDatabaseDesignStudioEvent,

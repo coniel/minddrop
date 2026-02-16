@@ -40,7 +40,7 @@ describe('DesignStudioStore', () => {
     // Update the element again
     DesignStudioStore.getState().updateElement(textElement1.id, {
       style: {
-        'font-weight': 'bold',
+        'font-weight': 900,
       },
     });
 
