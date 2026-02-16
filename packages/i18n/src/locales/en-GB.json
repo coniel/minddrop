@@ -375,6 +375,8 @@
     },
     "typography": {
       "label": "Typography",
+      "italic": "Italic",
+      "underline": "Underline",
       "font-family": {
         "inherit": "Inherit",
         "sans": "Sans",
@@ -382,6 +384,7 @@
         "mono": "Mono"
       },
       "font-weight": {
+        "label": "Weight",
         "100": "Thin",
         "200": "Extra-light",
         "300": "Light",
@@ -391,6 +394,20 @@
         "700": "Bold",
         "800": "Extra-bold",
         "900": "Black"
+      },
+      "text-transform": {
+        "label": "Case",
+        "none": "As typed",
+        "uppercase": "Uppercase",
+        "lowercase": "Lowercase",
+        "capitalize": "Capitalize"
+      },
+      "text-align": {
+        "label": "Alignment",
+        "left": "Left",
+        "center": "Center",
+        "right": "Right",
+        "justify": "Justify"
       }
     }
   },

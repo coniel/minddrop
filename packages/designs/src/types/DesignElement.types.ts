@@ -1,4 +1,4 @@
-import { TypographyStyles } from '../styles';
+import { DesignElementStyle } from '../styles';
 
 export interface DesignElementBase {
   /**
@@ -14,7 +14,7 @@ export interface DesignElementBase {
   /**
    * The element style customizations.
    */
-  style?: Partial<TypographyStyles>;
+  style?: Partial<DesignElementStyle>;
 }
 
 /******************************************************************************

@@ -4,6 +4,9 @@ export const textElement1: TextElement = {
   id: 'text-element-1',
   type: 'text',
   value: 'Text Element 1',
+  style: {
+    'font-family': 'sans',
+  },
 };
 
 export const containerElement1: ContainerElement = {
