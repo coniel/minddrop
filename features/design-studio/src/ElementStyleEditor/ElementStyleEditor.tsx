@@ -1,6 +1,7 @@
 import { IconButton } from '@minddrop/ui-primitives';
 import { useElement } from '../DesignStudioStore';
 import { ElementLabel } from '../ElementLabel';
+import { Typography } from '../style-editors';
 import './ElementStyleEditor.css';
 
 export interface ElementStyleEditorProps {
@@ -36,6 +37,7 @@ export const ElementStyleEditor: React.FC<ElementStyleEditorProps> = ({
           size="small"
         />
       </div>
+      <Typography elementId={element.id} />
     </div>
   );
 };

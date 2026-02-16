@@ -1,13 +1,9 @@
 .design-studio-text-property-element {
-  &.font-sans {
-    font-family: var(--font-family-sans);
+  &.underline {
+    text-decoration: underline;
   }
 
-  &.font-serif {
-    font-family: var(--font-family-serif);
-  }
-
-  &.font-mono {
-    font-family: var(--font-family-mono);
+  &.italic {
+    font-style: italic;
   }
 }

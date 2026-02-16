@@ -20,7 +20,11 @@ export const testDesign = {
   ...cardDesign1,
   tree: {
     ...cardDesign1.tree,
-    children: [...cardDesign1.tree.children, usedPropertyDesignElement],
+    children: [
+      ...cardDesign1.tree.children,
+      usedPropertyDesignElement,
+      textElement1,
+    ],
   },
 };
 

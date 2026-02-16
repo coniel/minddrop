@@ -1,8 +1,12 @@
-import { DesignElement, RootDesignElement } from '@minddrop/designs';
+import {
+  DesignElement,
+  DesignElementStyle,
+  RootDesignElement,
+} from '@minddrop/designs';
 import { PropertiesSchema, PropertySchema } from '@minddrop/properties';
 import { createStore, deepMerge, useShallow } from '@minddrop/utils';
 import { FlatDesignElement } from '../types';
-import { flattenTree } from '../utils';
+import { flattenTree, getElementStyleValue } from '../utils';
 
 export interface DesignStudioStore {
   /**
@@ -81,6 +85,15 @@ export const useElement = (id: string): FlatDesignElement => {
   return element;
 };
 
+export const useElementStyle = <K extends keyof DesignElementStyle>(
+  id: string,
+  key: K,
+): DesignElementStyle[K] => {
+  const element = useElement(id);
+
+  return getElementStyleValue(element, key);
+};
+
 export const useProperty = (name: string): PropertySchema | null => {
   const property = useDesignStudioStore(
     useShallow((state) =>
@@ -91,9 +104,12 @@ export const useProperty = (name: string): PropertySchema | null => {
   return property || null;
 };
 
-export const updateElementStyle = (
+export const updateElementStyle = <K extends keyof DesignElementStyle>(
   id: string,
-  updates: DesignElement['style'],
+  key: K,
+  value: DesignElementStyle[K],
 ) => {
-  useDesignStudioStore.getState().updateElement(id, { style: updates });
+  useDesignStudioStore
+    .getState()
+    .updateElement(id, { style: { [key]: value } });
 };
