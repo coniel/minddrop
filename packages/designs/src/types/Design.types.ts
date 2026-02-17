@@ -1,8 +1,14 @@
-import { RootDesignElement, RootElementType } from './DesignElement.types';
+import {
+  CardElement,
+  ListElement,
+  PageElement,
+  RootDesignElement,
+  RootElementType,
+} from './DesignElement.types';
 
 export type DesignType = RootElementType;
 
-export interface Design {
+export interface BaseDesign {
   /**
    * A unique identifier for this design.
    */
@@ -23,3 +29,20 @@ export interface Design {
    */
   tree: RootDesignElement;
 }
+
+export interface CardDesign extends BaseDesign {
+  type: 'card';
+  tree: CardElement;
+}
+
+export interface ListDesign extends BaseDesign {
+  type: 'list';
+  tree: ListElement;
+}
+
+export interface PageDesign extends BaseDesign {
+  type: 'page';
+  tree: PageElement;
+}
+
+export type Design = CardDesign | ListDesign | PageDesign;

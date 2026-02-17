@@ -1,4 +1,10 @@
-import { ContainerElement, Design, TextElement } from '../types';
+import {
+  CardDesign,
+  ContainerElement,
+  ListDesign,
+  PageDesign,
+  TextElement,
+} from '../types';
 
 export const textElement1: TextElement = {
   id: 'text-element-1',
@@ -24,7 +30,7 @@ export const containerElement1: ContainerElement = {
   children: [textElement1],
 };
 
-export const cardDesign1: Design = {
+export const cardDesign1: CardDesign = {
   id: 'card-design-1',
   type: 'card',
   name: 'Card Design 1',
@@ -41,7 +47,7 @@ export const cardDesign1: Design = {
   },
 };
 
-export const cardDesign2: Design = {
+export const cardDesign2: CardDesign = {
   id: 'card-design-2',
   type: 'card',
   name: 'Card Design 2',
@@ -58,10 +64,10 @@ export const cardDesign2: Design = {
   },
 };
 
-export const listDesign1: Design = {
+export const listDesign1: ListDesign = {
   id: 'list-design-1',
-  type: 'list',
   name: 'List Design 1',
+  type: 'list',
   tree: {
     id: 'root',
     type: 'list',
@@ -75,7 +81,7 @@ export const listDesign1: Design = {
   },
 };
 
-export const pageDesign1: Design = {
+export const pageDesign1: PageDesign = {
   id: 'page-design-1',
   type: 'page',
   name: 'Page Design 1',
