@@ -50,8 +50,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     return null;
   }
 
-  console.log('RENDERING MAIN');
-
   return (
     <div className="design-studio">
       <Panel className="left-panel">
@@ -76,7 +74,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
 };
 
 const Workspace = () => {
-  console.log('RENDERING');
   return <DesignStudioElement index={0} elementId="root" />;
 };
 
