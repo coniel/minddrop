@@ -1,0 +1,81 @@
+.drop-indicator {
+  --circle-size: 8px;
+
+  position: absolute;
+  pointer-events: none;
+  z-index: 999;
+
+  &.horizontal {
+    width: 100%;
+    height: var(--circle-size);
+
+    &.position-inside {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &.position-start {
+      top: 0;
+      transform: translateY(-50%);
+    }
+
+    &.position-end {
+      bottom: 0;
+      transform: translateY(50%);
+    }
+
+    &.position-after {
+      bottom: 0;
+      transform: translateY(calc(var(--gap) / 2 + var(--circle-size) / 2));
+    }
+
+    &.position-before {
+      top: 0;
+      transform: translateY(calc((var(--gap) / -2 - var(--circle-size) / 2)));
+    }
+  }
+
+  &.vertical {
+    height: 100%;
+    width: var(--circle-size);
+  }
+
+  .line {
+    position: absolute;
+    background-color: var(--blue10);
+
+    &.horizontal {
+      width: calc(100% - 5px);
+      height: 2px;
+      left: 5px;
+      top: 0;
+      transform: translateY(3px);
+    }
+
+    &.vertical {
+      height: calc(100% - 5px);
+      width: 2px;
+      top: 5px;
+      transform: translateX(-50%);
+    }
+  }
+
+  .circle {
+    position: absolute;
+    width: var(--circle-size);
+    height: var(--circle-size);
+    border-radius: 50%;
+    border: 2px solid var(--blue10);
+
+    &.horizontal {
+      left: -1px;
+      top: 0;
+    }
+
+    &.vertical {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}

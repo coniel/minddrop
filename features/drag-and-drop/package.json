@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*"
   }

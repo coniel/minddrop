@@ -1,2 +1,1 @@
-export * from './DropIndicator';
 export * from './FlexDropContainer';

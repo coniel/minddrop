@@ -283,6 +283,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -369,6 +372,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
