@@ -3,6 +3,7 @@ import { CardElementTemplate } from './CardElementTemplate';
 import { ContainerElementTemplate } from './ContainerElementTemplate';
 import { ImagePropertyElementTemplate } from './ImagePropertyElementTemplate';
 import { ListElementTemplate } from './ListElementTemplate';
+import { NumberPropertyElementTemplate } from './NumberPropertyElementTemplate';
 import { PageElementTemplate } from './PageElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
 import { TextPropertyElementTemplate } from './TextPropertyElementTemplate';
@@ -18,13 +19,14 @@ export * from './TextElementTemplate';
 export * from './TextPropertyElementTemplate';
 export * from './UrlPropertyElementTemplate';
 
-export type ElementTemplate =
+export type DesignElementTemplate =
   | ContainerElementTemplate
   | TextElementTemplate
   | TitlePropertyElementTemplate
   | TextPropertyElementTemplate
   | UrlPropertyElementTemplate
-  | ImagePropertyElementTemplate;
+  | ImagePropertyElementTemplate
+  | NumberPropertyElementTemplate;
 
 export type RootElementTemplate =
   | CardElementTemplate
@@ -32,8 +34,8 @@ export type RootElementTemplate =
   | PageElementTemplate;
 
 export const ElementTemplates: Record<
-  ElementTemplate['type'],
-  ElementTemplate
+  DesignElementTemplate['type'],
+  DesignElementTemplate
 > = {
   container: ContainerElementTemplate,
   text: TextElementTemplate,
@@ -41,6 +43,7 @@ export const ElementTemplates: Record<
   'text-property': TextPropertyElementTemplate,
   'url-property': UrlPropertyElementTemplate,
   'image-property': ImagePropertyElementTemplate,
+  'number-property': NumberPropertyElementTemplate,
 };
 
 export const RootElementTemplates: Record<
