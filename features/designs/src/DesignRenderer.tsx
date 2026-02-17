@@ -1,7 +1,5 @@
-import { Design, RootElementSchema } from '@minddrop/designs';
+import { Design } from '@minddrop/designs';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
-import { DesignProvider, DesignProviderConsumer } from './DesignProvider';
-import { RootElement } from './RootElement';
 
 export interface DesignRendererProps {
   /**
@@ -25,21 +23,5 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   properties,
   propertyValues,
 }) => {
-  return (
-    <DesignProvider
-      elementTree={design.elements}
-      properties={properties}
-      propertyValues={propertyValues}
-    >
-      <DesignProviderConsumer>
-        {({ elements }) =>
-          elements['root'] ? (
-            <RootElement
-              element={elements['root'] as unknown as RootElementSchema}
-            />
-          ) : null
-        }
-      </DesignProviderConsumer>
-    </DesignProvider>
-  );
+  return <div className="design-renderer"></div>;
 };

@@ -106,10 +106,10 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
           </Toolbar>
         </div>
         <div className="view">
-          <ViewRenderer
-            view={database.views[0]}
-            elements={entries.map((entry) => entry.id)}
-          />
+          {/* <ViewRenderer */}
+          {/*   view={database.views[0]} */}
+          {/*   elements={entries.map((entry) => entry.id)} */}
+          {/* /> */}
         </div>
       </Panel>
       {configurationPanelOpen && (
