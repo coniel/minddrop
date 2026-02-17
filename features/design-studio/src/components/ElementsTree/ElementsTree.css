@@ -2,7 +2,6 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 
   .tree-element {
     display: flex;
@@ -39,9 +38,8 @@
 
   .tree-element-children {
     padding-left: 1rem;
-    padding-top: 0.5rem;
+    padding-top: 0.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
   }
 }

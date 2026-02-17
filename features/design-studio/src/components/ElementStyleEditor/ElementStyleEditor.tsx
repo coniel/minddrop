@@ -32,7 +32,7 @@ export const ElementStyleEditor: React.FC<ElementStyleEditorProps> = ({
         />
         <IconButton
           label="actions.remove"
-          icon="trash"
+          icon="more-vertical"
           color="light"
           size="small"
         />

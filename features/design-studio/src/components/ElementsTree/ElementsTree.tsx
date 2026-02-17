@@ -13,7 +13,12 @@ export const ElementsTree: React.FC<ElementsTreeProps> = ({
 }) => {
   return (
     <div className="design-elements-tree">
-      <ElementsTreeElement elementId="root" onClick={onClickElement} />
+      <ElementsTreeElement
+        disableDragAndDrop
+        index={0}
+        elementId="root"
+        onClick={onClickElement}
+      />
     </div>
   );
 };

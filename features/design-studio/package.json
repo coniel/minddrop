@@ -19,6 +19,7 @@
   "dependencies": {
     "@minddrop/databases": "workspace:*",
     "@minddrop/designs": "workspace:*",
+    "@minddrop/feature-drag-and-drop": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/i18n": "workspace:*",

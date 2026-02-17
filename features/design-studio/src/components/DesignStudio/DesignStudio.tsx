@@ -72,7 +72,7 @@ const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
 };
 
 const Workspace = () => {
-  return <DesignStudioElement elementId="root" />;
+  return <DesignStudioElement index={0} elementId="root" />;
 };
 
 const RightPanel = () => {

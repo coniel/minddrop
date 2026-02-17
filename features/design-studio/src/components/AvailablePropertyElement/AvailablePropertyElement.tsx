@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
+import { ElementTemplates } from '@minddrop/designs';
 import { PropertySchema } from '@minddrop/properties';
+import { useDraggable } from '@minddrop/selection';
 import { ContentIcon, Text } from '@minddrop/ui-primitives';
+import { DesignElementTemplatesDataKey } from '../../constants';
 import './AvailablePropertyElement.css';
 
 export interface AvailablePropertyElementProps {
@@ -9,8 +13,21 @@ export interface AvailablePropertyElementProps {
 export const AvailablePropertyElement: React.FC<
   AvailablePropertyElementProps
 > = ({ property }) => {
+  const template = useMemo(() => {
+    return {
+      ...ElementTemplates[`${property.type}-property`],
+      property: property.name,
+    };
+  }, [property.type, property.name]);
+
+  const { draggableProps } = useDraggable({
+    id: property.name,
+    type: DesignElementTemplatesDataKey,
+    data: template,
+  });
+
   return (
-    <div className="available-property-element">
+    <div className="available-property-element" {...draggableProps}>
       <ContentIcon icon={property.icon} />
       <Text size="small" weight="medium" text={property.name} />
     </div>

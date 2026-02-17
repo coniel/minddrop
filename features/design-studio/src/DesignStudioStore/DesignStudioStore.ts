@@ -1,11 +1,22 @@
 import {
   DesignElement,
   DesignElementStyle,
+  DesignElementTemplate,
   RootDesignElement,
 } from '@minddrop/designs';
 import { PropertiesSchema, PropertySchema } from '@minddrop/properties';
-import { createStore, deepMerge, useShallow } from '@minddrop/utils';
-import { FlatDesignElement } from '../types';
+import {
+  createStore,
+  deepMerge,
+  reorderArray,
+  useShallow,
+  uuid,
+} from '@minddrop/utils';
+import {
+  FlatChildDesignElement,
+  FlatDesignElement,
+  FlatParentDesignElement,
+} from '../types';
 import { flattenTree, getElementStyleValue } from '../utils';
 
 export interface DesignStudioStore {
@@ -32,11 +43,47 @@ export interface DesignStudioStore {
   initialize: (tree: RootDesignElement, properties?: PropertiesSchema) => void;
 
   /**
+   * Adds an element to the store.
+   * @param element - The element to add.
+   * @param parentId - The ID of the parent element.
+   * @param index - The index to add the element at.
+   */
+  addElement: (
+    element: FlatDesignElement,
+    parentId: string,
+    index: number,
+  ) => void;
+
+  /**
    * Updates the properties of an element.
    * @param id - The ID of the element to update.
    * @param updates - The updates to apply to the element.
    */
-  updateElement: (id: string, updates: Partial<DesignElement>) => void;
+  updateElement: (
+    id: string,
+    updates: Partial<Omit<DesignElement, 'children'>>,
+  ) => void;
+
+  /**
+   * Moves an element to a new parent.
+   * @param id - The ID of the element to move.
+   * @param newParentId - The ID of the new parent element.
+   * @param index - The index to move the element to.
+   */
+  moveElement: (id: string, newParentId: string, index: number) => void;
+
+  /**
+   * Sorts an element to a new index within its parent.
+   * @param elementId - The ID of the element to sort.
+   * @param targetIndex - The index to sort the element to.
+   */
+  sortElement: (elementId: string, targetIndex: number) => void;
+
+  /**
+   * Removes an element from the store.
+   * @param id - The ID of the element to remove.
+   */
+  removeElement: (id: string) => void;
 
   /**
    * Resets the store to its initial state.
@@ -49,7 +96,7 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   elements: {},
   properties: [],
 
-  initialize: (tree: RootDesignElement, properties: PropertiesSchema = []) => {
+  initialize: (tree, properties = []) => {
     set({
       elements: flattenTree(tree),
       properties: properties,
@@ -57,10 +104,29 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
-  updateElement: (
-    id: string,
-    updates: Partial<Omit<DesignElement, 'children'>>,
-  ) => {
+  addElement: (element, parentId, index) => {
+    set((state) => {
+      const parent = { ...state.elements[parentId] };
+
+      if (!('children' in parent)) {
+        throw new Error(
+          `Parent element with ID ${parentId} is not a container.`,
+        );
+      }
+
+      parent.children.splice(index, 0, element.id);
+
+      return {
+        elements: {
+          ...state.elements,
+          [parentId]: parent,
+          [element.id]: element,
+        },
+      };
+    });
+  },
+
+  updateElement: (id, updates) => {
     set((state) => {
       const element = { ...state.elements[id] };
 
@@ -72,17 +138,140 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
+  moveElement: (id, newParentId, index) => {
+    set((state) => {
+      const element = { ...state.elements[id] };
+
+      if (!('parent' in element)) {
+        throw new Error(`Cannot move root element.`);
+      }
+
+      const oldParent = { ...state.elements[element.parent] };
+      const newParent = { ...state.elements[newParentId] };
+
+      if (!('children' in oldParent)) {
+        throw new Error(
+          `Old parent element with ID ${element.parent} is not a container.`,
+        );
+      }
+
+      if (!('children' in newParent)) {
+        throw new Error(
+          `New parent element with ID ${newParentId} is not a container.`,
+        );
+      }
+
+      oldParent.children.splice(oldParent.children.indexOf(id), 1);
+      newParent.children.splice(index, 0, id);
+
+      return {
+        elements: {
+          ...state.elements,
+          [element.parent]: oldParent,
+          [newParentId]: newParent,
+          [id]: element,
+        },
+      };
+    });
+  },
+
+  sortElement: (elementId, targetIndex) => {
+    set((state) => {
+      const element = state.elements[elementId] as FlatChildDesignElement;
+      const parentElement = state.elements[
+        element.parent
+      ] as FlatParentDesignElement;
+
+      const reorderedChildren = reorderArray(
+        parentElement.children,
+        parentElement.children.indexOf(elementId),
+        targetIndex,
+      );
+
+      return {
+        elements: {
+          ...state.elements,
+          [parentElement.id]: {
+            ...parentElement,
+            children: reorderedChildren,
+          },
+        },
+      };
+    });
+  },
+
+  removeElement: (id) => {
+    set((state) => {
+      const { [id]: element, ...rest } = state.elements;
+
+      if (!('parent' in element)) {
+        throw new Error(`Cannot remove root element.`);
+      }
+
+      const parent = { ...state.elements[element.parent] };
+
+      if ('children' in parent) {
+        const index = parent.children.indexOf(id);
+        parent.children.splice(index, 1);
+      }
+
+      return { elements: { ...rest, [element.parent]: parent } };
+    });
+  },
+
   clear: () => set({ elements: {}, properties: [], initialized: false }),
 }));
 
 export const useDesignStudioStore = DesignStudioStore;
 
-export const useElement = (id: string): FlatDesignElement => {
-  const element = useDesignStudioStore(
-    useShallow((state) => state.elements[id]),
-  );
+export const getDesignElement = <
+  TType extends
+    | FlatDesignElement
+    | FlatChildDesignElement
+    | FlatParentDesignElement = FlatDesignElement,
+>(
+  id: string,
+): TType => DesignStudioStore.getState().elements[id] as TType;
 
-  return element;
+export const updateDesignElement = (
+  id: string,
+  updates: Partial<FlatDesignElement>,
+) => DesignStudioStore.getState().updateElement(id, updates);
+
+export const moveDesignElement = (
+  id: string,
+  newParentId: string,
+  index: number,
+) => DesignStudioStore.getState().moveElement(id, newParentId, index);
+
+export const sortDesignElement = (elementId: string, targetIndex: number) =>
+  DesignStudioStore.getState().sortElement(elementId, targetIndex);
+
+export const addDeisgnElementFromTemplate = (
+  template: DesignElementTemplate,
+  parentId: string,
+  index: number,
+) => {
+  const element = {
+    ...template,
+    id: uuid(),
+    parent: parentId,
+  } as FlatDesignElement;
+
+  DesignStudioStore.getState().addElement(element, parentId, index);
+};
+
+export const useElement = <
+  TType extends
+    | FlatDesignElement
+    | FlatChildDesignElement
+    | FlatParentDesignElement = FlatDesignElement,
+>(
+  id: string,
+): TType => {
+  const element = useDesignStudioStore((state) => state.elements[id]);
+
+  return element as TType;
 };
 
 export const useElementStyle = <K extends keyof DesignElementStyle>(

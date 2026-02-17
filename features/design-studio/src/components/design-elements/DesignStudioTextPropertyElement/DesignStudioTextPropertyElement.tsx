@@ -1,12 +1,10 @@
-import {
-  DefaultTypographyStyles,
-  TextPropertyElement,
-} from '@minddrop/designs';
+import { DefaultTypographyStyles } from '@minddrop/designs';
 import { mapPropsToClasses } from '@minddrop/ui-primitives';
+import { FlatTextPropertyElement } from '../../../types';
 import './DesignStudioTextPropertyElement.css';
 
 export interface DesignStudioTextPropertyElementProps {
-  element: TextPropertyElement;
+  element: FlatTextPropertyElement;
 }
 
 export const DesignStudioTextPropertyElement: React.FC<

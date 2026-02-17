@@ -1,7 +1,7 @@
 .design-studio-card-element {
   margin: 4rem auto 0 auto;
   max-width: 300px;
-  min-height: 100px;
+  min-height: 400px;
   border: 1px solid var(--divider);
   border-radius: var(--radius-md);
 }

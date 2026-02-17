@@ -1,8 +1,14 @@
 import { DatabaseFixtures } from '@minddrop/databases';
 import { DesignFixtures } from '@minddrop/designs';
-import { FlatPropertyDesignElement, FlatStaticDesignElement } from '../types';
+import {
+  FlatLayoutDesignElement,
+  FlatPropertyDesignElement,
+  FlatRootDesignElement,
+  FlatStaticDesignElement,
+} from '../types';
 
-export const { cardDesign1, textElement1, containerElement1 } = DesignFixtures;
+export const { cardDesign1, textElement1, textElement2, containerElement1 } =
+  DesignFixtures;
 const { objectDatabase } = DatabaseFixtures;
 
 export const usedProperty = objectDatabase.properties[0];
@@ -20,18 +26,40 @@ export const testDesign = {
   ...cardDesign1,
   tree: {
     ...cardDesign1.tree,
-    children: [
-      ...cardDesign1.tree.children,
-      usedPropertyDesignElement,
-      textElement1,
-    ],
+    children: [usedPropertyDesignElement, containerElement1, textElement2],
   },
+};
+
+export const flatCardElement: FlatRootDesignElement = {
+  ...cardDesign1.tree,
+  id: 'root',
+  children: [
+    usedPropertyDesignElement.id,
+    containerElement1.id,
+    textElement2.id,
+  ],
 };
 
 export const flatTextElement1: FlatStaticDesignElement = {
   ...textElement1,
+  parent: containerElement1.id,
+};
+
+export const flatContainerElement1: FlatLayoutDesignElement = {
+  ...containerElement1,
+  children: [flatTextElement1.id],
   parent: 'root',
 };
+
+export const flatTextElement2: FlatStaticDesignElement = {
+  ...textElement2,
+  parent: 'root',
+};
+
+export const elementIndex_0 = usedPropertyDesignElement;
+export const elementIndex_1 = flatContainerElement1;
+export const elementIndex_1_0 = flatTextElement1;
+export const elementIndex_2 = flatTextElement2;
 
 export const tree = {
   ...cardDesign1.tree,
