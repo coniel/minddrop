@@ -4,4 +4,5 @@ export const OpenDatabaseViewEvent = 'databases:view:open';
 
 export interface OpenDatabaseViewEventData {
   databaseId: string;
+  configurationPanelOpen?: boolean;
 }

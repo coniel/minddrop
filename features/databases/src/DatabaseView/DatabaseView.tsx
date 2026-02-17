@@ -17,12 +17,23 @@ export interface DatabaseViewProps {
    * The ID of the database to display.
    */
   databaseId: string;
+
+  /**
+   * Whether the properties panel is open by default.
+   *
+   * @default false
+   */
+  configurationPanelOpen?: boolean;
 }
 
-export const DatabaseView: React.FC<DatabaseViewProps> = ({ databaseId }) => {
+export const DatabaseView: React.FC<DatabaseViewProps> = ({
+  databaseId,
+  configurationPanelOpen: configPanelOpen = false,
+}) => {
   const database = Databases.use(databaseId);
   const entries = DatabaseEntries.useAll(databaseId);
-  const [configurationPanelOpen, toggleConfigurationPanel] = useToggle(false);
+  const [configurationPanelOpen, toggleConfigurationPanel] =
+    useToggle(configPanelOpen);
 
   async function handleClickNewEntry() {
     if (!database) {
