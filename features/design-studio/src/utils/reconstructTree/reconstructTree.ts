@@ -1,4 +1,8 @@
-import { ContainerElement, DesignElement } from '@minddrop/designs';
+import {
+  ContainerElement,
+  DesignElement,
+  RootDesignElement,
+} from '@minddrop/designs';
 import { FlatDesignElement } from '../../types';
 
 /**
@@ -9,9 +13,13 @@ import { FlatDesignElement } from '../../types';
  */
 export function reconstructTree(
   elements: Record<string, FlatDesignElement>,
-): DesignElement {
+): RootDesignElement {
+  const clonedElements: Record<string, FlatDesignElement> = JSON.parse(
+    JSON.stringify(elements),
+  );
+
   function buildNode(id: string): DesignElement {
-    const element = elements[id] as DesignElement;
+    const element = clonedElements[id] as DesignElement;
 
     // Remove the parent property from the element
     if ('parent' in element) {
@@ -20,8 +28,8 @@ export function reconstructTree(
 
     // If the element has children, recursively replace the IDs with
     // the actual elements.
-    if ('children' in elements[id]) {
-      (element as ContainerElement).children = elements[id].children.map(
+    if ('children' in clonedElements[id]) {
+      (element as ContainerElement).children = clonedElements[id].children.map(
         (child) => buildNode(child),
       );
     }
@@ -29,5 +37,5 @@ export function reconstructTree(
     return element as DesignElement;
   }
 
-  return buildNode('root');
+  return buildNode('root') as RootDesignElement;
 }

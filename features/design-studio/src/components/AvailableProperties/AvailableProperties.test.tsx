@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@minddrop/test-utils';
 import { cleanup, setup, unusedProperty, usedProperty } from '../../test-utils';
-import { AvailableDatabaseProperties } from './AvailableDatabaseProperties';
+import { AvailableProperties } from './AvailableProperties';
 
-describe('<AvailableDatabaseProperties />', () => {
+describe('<AvailableProperties />', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
   it('renders unused properties', () => {
-    render(<AvailableDatabaseProperties />);
+    render(<AvailableProperties />);
 
     // Render the unused properties
     screen.getByText(unusedProperty.name);

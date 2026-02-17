@@ -1,31 +1,42 @@
+import { Design } from '@minddrop/designs';
+import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
+
 export const EventListenerId = 'designs-feature';
 export const OpenDatabaseDesignStudioEvent = 'design-studio:open:database';
 
 export interface OpenDesignStudioEventData {
   /**
-   * The variant of the design studio to open.
+   * The design to edit.
    */
-  variant: 'database';
+  design: Design;
 
   /**
-   * The ID of the database to which the design belongs.
+   * Callback fired when design changes are saved.
    */
-  databaseId?: string;
+  onSave: (design: Design) => void;
 
   /**
-   * The ID of the design to edit.
+   * The label to display on the back button.
    */
-  designId?: string;
-}
-
-export interface OpenDatabaseDesignStudioEventData {
-  /**
-   * The ID of the database to which the design belongs.
-   */
-  databaseId: string;
+  backButtonLabel?: string;
 
   /**
-   * The ID of the design to edit.
+   * The event to dispatch when the back button is pressed.
    */
-  designId: string;
+  backEvent?: string;
+
+  /**
+   * The label to display on the save button.
+   */
+  backEventData?: any;
+
+  /**
+   * The shcemas of the properties related to the design.
+   */
+  properties?: PropertiesSchema;
+
+  /**
+   * The values of the properties related to the design.
+   */
+  propertyValues?: PropertyMap;
 }

@@ -8,7 +8,6 @@ import { DesignStudio } from './components/DesignStudio';
 import {
   EventListenerId,
   OpenDatabaseDesignStudioEvent,
-  OpenDatabaseDesignStudioEventData,
   OpenDesignStudioEventData,
 } from './events';
 
@@ -16,7 +15,7 @@ export const DesignStudioFeature: React.FC = () => {
   useEffect(() => {
     // Listen for database studio open events and open the database
     // design studio when one is received.
-    Events.addListener<OpenDatabaseDesignStudioEventData>(
+    Events.addListener<OpenDesignStudioEventData>(
       OpenDatabaseDesignStudioEvent,
       EventListenerId,
       ({ data }) => {
@@ -24,10 +23,7 @@ export const DesignStudioFeature: React.FC = () => {
           OpenMainContentViewEventData<OpenDesignStudioEventData>
         >(OpenMainContentViewEvent, {
           component: DesignStudio,
-          props: {
-            ...data,
-            variant: 'database',
-          },
+          props: data,
         });
       },
     );

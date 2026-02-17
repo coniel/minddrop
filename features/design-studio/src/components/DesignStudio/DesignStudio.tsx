@@ -1,23 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Databases } from '@minddrop/databases';
+import { useCallback, useEffect, useState } from 'react';
 import {
   CloseAppSidebarEvent,
   Events,
   OpenAppSidebarEvent,
 } from '@minddrop/events';
-import { Panel } from '@minddrop/ui-primitives';
+import { Button, Panel, Toolbar } from '@minddrop/ui-primitives';
 import { useDesignStudioStore } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
-import { AvailableDatabaseProperties } from '../AvailableDatabaseProperties';
+import { AvailableProperties } from '../AvailableProperties';
 import { ElementStyleEditor } from '../ElementStyleEditor';
 import { ElementsTree } from '../ElementsTree';
 import { DesignStudioElement } from '../design-elements';
 import './DesignStudio.css';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
-  variant,
-  databaseId,
-  designId,
+  backEvent,
+  backEventData,
+  backButtonLabel,
+  properties,
+  propertyValues,
+  design,
+  onSave,
 }) => {
   const initialize = useDesignStudioStore((state) => state.initialize);
   const storeInitialized = useDesignStudioStore((state) => state.initialized);
@@ -32,38 +35,39 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   }, []);
 
   useEffect(() => {
-    if (variant === 'database' && databaseId && designId) {
-      const database = Databases.get(databaseId);
-      const design = Databases.getDesign(databaseId, designId);
+    initialize(design, onSave, properties, propertyValues);
+  }, [properties, propertyValues, initialize, design, onSave]);
 
-      if (!design) {
-        return;
-      }
-
-      initialize(design.tree, database.properties);
+  const handleClickBack = useCallback(() => {
+    if (!backEvent) {
+      return;
     }
-  }, [variant, databaseId, designId, initialize]);
+
+    Events.dispatch(backEvent, backEventData);
+  }, [backEvent, backEventData]);
 
   if (!storeInitialized) {
     return null;
   }
 
-  if (variant === 'database') {
-    return <Studio leftPanelContent={<AvailableDatabaseProperties />} />;
-  }
+  console.log('RENDERING MAIN');
 
-  return <Studio />;
-};
-
-interface StudioProps {
-  leftPanelContent?: React.ReactNode;
-}
-
-const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
   return (
     <div className="design-studio">
-      <Panel className="left-panel">{leftPanelContent}</Panel>
+      <Panel className="left-panel">
+        {properties && <AvailableProperties />}
+      </Panel>
       <div className="workspace">
+        <Toolbar>
+          {backEvent && (
+            <Button
+              variant="text"
+              startIcon="chevron-left"
+              label={backButtonLabel || 'actions.back'}
+              onClick={handleClickBack}
+            />
+          )}
+        </Toolbar>
         <Workspace />
       </div>
       <RightPanel />
@@ -72,6 +76,7 @@ const Studio: React.FC<StudioProps> = ({ leftPanelContent }) => {
 };
 
 const Workspace = () => {
+  console.log('RENDERING');
   return <DesignStudioElement index={0} elementId="root" />;
 };
 

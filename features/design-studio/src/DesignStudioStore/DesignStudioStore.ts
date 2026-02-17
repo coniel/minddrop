@@ -1,10 +1,14 @@
 import {
+  Design,
   DesignElement,
   DesignElementStyle,
   DesignElementTemplate,
-  RootDesignElement,
 } from '@minddrop/designs';
-import { PropertiesSchema, PropertySchema } from '@minddrop/properties';
+import {
+  PropertiesSchema,
+  PropertyMap,
+  PropertySchema,
+} from '@minddrop/properties';
 import {
   createStore,
   deepMerge,
@@ -17,13 +21,23 @@ import {
   FlatDesignElement,
   FlatParentDesignElement,
 } from '../types';
-import { flattenTree, getElementStyleValue } from '../utils';
+import { flattenTree, getElementStyleValue, reconstructTree } from '../utils';
 
 export interface DesignStudioStore {
   /**
    * Whether the store has been initialized.
    */
   initialized: boolean;
+
+  /**
+   * Callback fired when the design is saved.
+   */
+  onSave: (design: Design) => void;
+
+  /**
+   * The design being edited.
+   */
+  design: Design | null;
 
   /**
    * An [id]: FlatDesignElement map of the elements which are part of the current design.
@@ -36,11 +50,22 @@ export interface DesignStudioStore {
   properties: PropertiesSchema;
 
   /**
+   * The values of the properties.
+   */
+  propertyValues: PropertyMap;
+
+  /**
    * Sets the initial elements state and initializes the store.
    * @param elements - The design element tree.
    * @param properties - The parent's properties.
+   * @param propertyValues - The parent's property values.
    */
-  initialize: (tree: RootDesignElement, properties?: PropertiesSchema) => void;
+  initialize: (
+    design: Design,
+    onSave: (design: Design) => void,
+    properties?: PropertiesSchema,
+    propertyValues?: PropertyMap,
+  ) => void;
 
   /**
    * Adds an element to the store.
@@ -93,13 +118,19 @@ export interface DesignStudioStore {
 
 export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   initialized: false,
+  design: null,
   elements: {},
   properties: [],
+  propertyValues: {},
+  onSave: () => {},
 
-  initialize: (tree, properties = []) => {
+  initialize: (design, onSave, properties = [], propertyValues = {}) => {
     set({
-      elements: flattenTree(tree),
-      properties: properties,
+      design,
+      elements: flattenTree(design.tree),
+      onSave,
+      properties,
+      propertyValues,
       initialized: true,
     });
   },
@@ -224,6 +255,20 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
 
 export const useDesignStudioStore = DesignStudioStore;
 
+export const saveDesign = () => {
+  const design = DesignStudioStore.getState().design;
+  const tree = reconstructTree(DesignStudioStore.getState().elements);
+
+  if (!design) {
+    return;
+  }
+
+  DesignStudioStore.getState().onSave({
+    ...design,
+    tree,
+  } as Design);
+};
+
 export const getDesignElement = <
   TType extends
     | FlatDesignElement
@@ -236,16 +281,24 @@ export const getDesignElement = <
 export const updateDesignElement = (
   id: string,
   updates: Partial<FlatDesignElement>,
-) => DesignStudioStore.getState().updateElement(id, updates);
+) => {
+  DesignStudioStore.getState().updateElement(id, updates);
+  saveDesign();
+};
 
 export const moveDesignElement = (
   id: string,
   newParentId: string,
   index: number,
-) => DesignStudioStore.getState().moveElement(id, newParentId, index);
+) => {
+  DesignStudioStore.getState().moveElement(id, newParentId, index);
+  saveDesign();
+};
 
-export const sortDesignElement = (elementId: string, targetIndex: number) =>
+export const sortDesignElement = (elementId: string, targetIndex: number) => {
   DesignStudioStore.getState().sortElement(elementId, targetIndex);
+  saveDesign();
+};
 
 export const addDeisgnElementFromTemplate = (
   template: DesignElementTemplate,
@@ -259,6 +312,7 @@ export const addDeisgnElementFromTemplate = (
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index);
+  saveDesign();
 };
 
 export const useElement = <

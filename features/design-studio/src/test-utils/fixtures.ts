@@ -1,5 +1,5 @@
 import { DatabaseFixtures } from '@minddrop/databases';
-import { DesignFixtures } from '@minddrop/designs';
+import { DesignFixtures, PropertyDesignElement } from '@minddrop/designs';
 import {
   FlatLayoutDesignElement,
   FlatPropertyDesignElement,
@@ -14,11 +14,10 @@ const { objectDatabase } = DatabaseFixtures;
 export const usedProperty = objectDatabase.properties[0];
 export const unusedProperty = objectDatabase.properties[1];
 export const testDatabase = objectDatabase;
-export const usedPropertyDesignElement: FlatPropertyDesignElement = {
+export const usedPropertyDesignElement: PropertyDesignElement = {
   id: 'child-1',
   type: 'text-property',
   property: usedProperty.name,
-  parent: 'root',
   style: {},
 };
 
@@ -40,6 +39,11 @@ export const flatCardElement: FlatRootDesignElement = {
   ],
 };
 
+export const flatUsedPropertyElement: FlatPropertyDesignElement = {
+  ...usedPropertyDesignElement,
+  parent: 'root',
+};
+
 export const flatTextElement1: FlatStaticDesignElement = {
   ...textElement1,
   parent: containerElement1.id,
@@ -56,36 +60,36 @@ export const flatTextElement2: FlatStaticDesignElement = {
   parent: 'root',
 };
 
-export const elementIndex_0 = usedPropertyDesignElement;
+export const elementIndex_0 = flatUsedPropertyElement;
 export const elementIndex_1 = flatContainerElement1;
 export const elementIndex_1_0 = flatTextElement1;
 export const elementIndex_2 = flatTextElement2;
-
-export const tree = {
-  ...cardDesign1.tree,
-  children: [
-    {
-      ...containerElement1,
-      children: [textElement1],
-    },
-  ],
-};
 
 export const flatTree = {
   root: {
     ...cardDesign1.tree,
     id: 'root',
-    children: [containerElement1.id],
+    children: testDesign.tree.children.map((child) => child.id),
+  },
+  [usedPropertyDesignElement.id]: {
+    ...usedPropertyDesignElement,
+    id: usedPropertyDesignElement.id,
+    parent: 'root',
   },
   [containerElement1.id]: {
     ...containerElement1,
     id: containerElement1.id,
     parent: 'root',
-    children: [textElement1.id],
+    children: containerElement1.children.map((child) => child.id),
   },
   [textElement1.id]: {
     ...textElement1,
     parent: containerElement1.id,
     id: textElement1.id,
+  },
+  [textElement2.id]: {
+    ...textElement2,
+    parent: 'root',
+    id: textElement2.id,
   },
 };

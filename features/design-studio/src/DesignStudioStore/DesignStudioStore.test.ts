@@ -1,6 +1,13 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { flatTree, testDatabase, textElement1, tree } from '../test-utils';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  flatTree,
+  testDatabase,
+  testDesign,
+  textElement1,
+} from '../test-utils';
 import { DesignStudioStore } from './DesignStudioStore';
+
+const onSave = vi.fn();
 
 describe('DesignStudioStore', () => {
   afterEach(() => {
@@ -8,7 +15,11 @@ describe('DesignStudioStore', () => {
   });
 
   it('initializes the store', () => {
-    DesignStudioStore.getState().initialize(tree, testDatabase.properties);
+    DesignStudioStore.getState().initialize(
+      testDesign,
+      onSave,
+      testDatabase.properties,
+    );
 
     // Sets initialized to true
     expect(DesignStudioStore.getState().initialized).toBe(true);
@@ -21,7 +32,11 @@ describe('DesignStudioStore', () => {
   });
 
   it('updates the elements by deeply merging the updates with the existing element', () => {
-    DesignStudioStore.getState().initialize(tree);
+    DesignStudioStore.getState().initialize(
+      testDesign,
+      onSave,
+      testDatabase.properties,
+    );
 
     // Update an element
     DesignStudioStore.getState().updateElement(textElement1.id, {

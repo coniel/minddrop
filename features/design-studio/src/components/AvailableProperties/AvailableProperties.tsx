@@ -4,9 +4,9 @@ import { useShallow } from '@minddrop/utils';
 import { useDesignStudioStore } from '../../DesignStudioStore';
 import { FlatDesignElement } from '../../types';
 import { AvailablePropertyElement } from '../AvailablePropertyElement';
-import './AvailableDatabaseProperties.css';
+import './AvailableProperties.css';
 
-export const AvailableDatabaseProperties: React.FC = () => {
+export const AvailableProperties: React.FC = () => {
   const unusedProperties = useDesignStudioStore(
     useShallow((state) =>
       getUnusedProperties(state.elements, state.properties),
@@ -23,7 +23,7 @@ export const AvailableDatabaseProperties: React.FC = () => {
   );
 };
 
-// Helper to get database properties that are not yet used in the design
+// Helper to get properties that are not yet used in the design
 function getUnusedProperties(
   elements: Record<string, FlatDesignElement>,
   properties: PropertiesSchema,

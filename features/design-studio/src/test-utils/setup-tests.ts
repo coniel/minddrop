@@ -19,6 +19,8 @@ export const MockFs = initializeMockFileSystem([
   ...DatabaseFixtures.databaseFiles,
 ]);
 
+export const onSave = vi.fn();
+
 export function setup(setupOptions: SetupOptions = { initializeStore: true }) {
   // Load item type configs into the store
   Databases.Store.load(DatabaseFixtures.databases);
@@ -32,7 +34,7 @@ export function setup(setupOptions: SetupOptions = { initializeStore: true }) {
   if (setupOptions.initializeStore !== false) {
     useDesignStudioStore
       .getState()
-      .initialize(testDesign.tree, testDatabase.properties);
+      .initialize(testDesign, onSave, testDatabase.properties);
   }
 }
 
