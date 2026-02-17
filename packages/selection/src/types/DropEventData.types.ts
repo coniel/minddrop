@@ -29,7 +29,7 @@ export interface DropEventData<TData = unknown> {
   /**
    * The ID of the element which received the drop.
    */
-  targetId?: string;
+  targetId: string;
 
   /**
    * The index of the element which received the drop, if the target is

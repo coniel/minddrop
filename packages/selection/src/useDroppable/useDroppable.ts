@@ -6,26 +6,113 @@ type Axis = 'horizontal' | 'vertical' | 'container';
 type DropIndicatorPosition = 'before' | 'after' | 'inside' | null;
 
 interface UseDroppableOptions {
+  /**
+   * The type of the element which should accept drops.
+   */
   type: string;
-  id?: string;
+
+  /**
+   * The ID of the element which should accept drops.
+   */
+  id: string;
+
+  /**
+   * The index of the element which should accept drops, if the target
+   * is an item of a list.
+   */
   index?: number;
+
+  /**
+   * Callback fired when the user drops an element over the droppable
+   * element.
+   */
   onDrop?: (data: DropEventData) => void;
+
+  /**
+   * The axis on which to calculate before/after drop positions.
+   * Can be one of:
+   * - 'horizontal': elements can be dropped above/below the element
+   * - 'vertical': elements can be dropped to the left/right of the element
+   * - 'container': elements can only be dropped inside the element
+   *
+   * @default 'container'
+   */
   axis?: Axis;
-  threshold?: number;
+
+  /**
+   * Whether to accept drops inside the element. If false, dropping inside
+   * the element will always result in a drop before/after the element based
+   * on an edge threshold of 0.5.
+   *
+   * Only applicable if `axis` is other than 'container'.
+   *
+   * @default false
+   */
   enableInside?: boolean;
+
+  /**
+   * How far from the edge of the element should be considered as before/after
+   * the element. E.g. if the value is 0.25, the drop will be considered to be
+   * before/after the element if the drop is within 25% of the element's edge.
+   *
+   * Only applicable if `enableInside` is true.
+   *
+   * @default 0.25
+   */
   edgeThreshold?: number;
 }
 
 interface UseDroppableReturn {
-  ref: React.RefObject<HTMLElement> | null;
-  dragHandlers: {
+  /**
+   * Ref to apply to the element which should accept drops.
+   */
+  ref: React.RefObject<HTMLDivElement>;
+
+  /**
+   * Callback fired when the user starts dragging an element over the
+   * droppable element.
+   */
+  onDragOver: (e: React.DragEvent) => void;
+
+  /**
+   * Callback fired when the user drops an element over the droppable
+   * element.
+   */
+  onDrop: (e: React.DragEvent) => void;
+
+  /**
+   * Callback fired when the user starts dragging an element over the
+   * droppable element.
+   */
+  onDragEnter: (e: React.DragEvent) => void;
+
+  /**
+   * Callback fired when the user stops dragging an element over the
+   * droppable element.
+   */
+  onDragLeave: (e: React.DragEvent) => void;
+
+  /**
+   * The position of the drop indicator, relative to the droppable element.
+   */
+  dropIndicator: DropIndicatorPosition;
+
+  /**
+   * Whether the droppable element is currently being dragged over.
+   */
+  isDraggingOver: boolean;
+
+  /**
+   * Combined props for the drop functionality.
+   * Useful for speading the props onto a component.
+   */
+  droppableProps: {
+    ref: React.RefObject<HTMLDivElement>;
     onDragOver: (e: React.DragEvent) => void;
     onDrop: (e: React.DragEvent) => void;
     onDragEnter: (e: React.DragEvent) => void;
     onDragLeave: (e: React.DragEvent) => void;
   };
-  dropIndicator: DropIndicatorPosition;
-  isDraggingOver: boolean;
 }
 
 export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
@@ -35,12 +122,11 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     index,
     onDrop,
     axis = 'container',
-    threshold = 0.5,
     enableInside = false,
     edgeThreshold = 0.25,
   } = options;
 
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<{
     isDraggingOver: boolean;
     dropIndicator: DropIndicatorPosition;
@@ -79,12 +165,12 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
           position = 'inside';
         }
       } else {
-        position = relativePosition < threshold ? 'before' : 'after';
+        position = relativePosition < 0.5 ? 'before' : 'after';
       }
 
       return position;
     },
-    [axis, threshold, enableInside, edgeThreshold],
+    [axis, enableInside, edgeThreshold],
   );
 
   const handleDragOver = useCallback(
@@ -157,7 +243,12 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
 
   return {
     ref,
-    dragHandlers: {
+    onDragOver: handleDragOver,
+    onDrop: handleDrop,
+    onDragEnter: handleDragEnter,
+    onDragLeave: handleDragLeave,
+    droppableProps: {
+      ref,
       onDragOver: handleDragOver,
       onDrop: handleDrop,
       onDragEnter: handleDragEnter,

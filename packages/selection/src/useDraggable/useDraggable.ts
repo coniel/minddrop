@@ -20,6 +20,16 @@ export interface DragUtils {
    * onDragEnd prop. Handles reseting the dragging state.
    */
   onDragEnd(event: DragEvent | React.DragEvent): void;
+
+  /**
+   * Combined event handlers for the drag functionality.
+   * Useful for speading the handlers onto a component.
+   */
+  draggableProps: {
+    draggable: boolean;
+    onDragStart: (event: DragEvent | React.DragEvent) => void;
+    onDragEnd: (event: DragEvent | React.DragEvent) => void;
+  };
 }
 
 /**
@@ -60,5 +70,10 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
   return {
     onDragStart,
     onDragEnd,
+    draggableProps: {
+      draggable: true,
+      onDragStart,
+      onDragEnd,
+    },
   };
 }
