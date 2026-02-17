@@ -1,9 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
-import { DropEventData, DropPosition } from '../types';
+import { DropEventData, DropIndicatorPosition, DropPosition } from '../types';
 import { getEventData } from '../utils';
 
 type Axis = 'horizontal' | 'vertical' | 'container';
-type DropIndicatorPosition = 'before' | 'after' | 'inside' | null;
 
 interface UseDroppableOptions {
   /**
@@ -60,6 +59,15 @@ interface UseDroppableOptions {
    * @default 0.25
    */
   edgeThreshold?: number;
+
+  /**
+   * Whether the element is the last child of its parent.
+   * If true, the drop indicator position will be adjusted to
+   * be 'end' rather than 'after'.
+   *
+   * @default false
+   */
+  isLastChild?: boolean;
 }
 
 interface UseDroppableReturn {
@@ -95,7 +103,7 @@ interface UseDroppableReturn {
   /**
    * The position of the drop indicator, relative to the droppable element.
    */
-  dropIndicator: DropIndicatorPosition;
+  dropIndicatorPosition: DropIndicatorPosition;
 
   /**
    * Whether the droppable element is currently being dragged over.
@@ -124,15 +132,16 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     axis = 'container',
     enableInside = false,
     edgeThreshold = 0.25,
+    isLastChild = false,
   } = options;
 
   const ref = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<{
     isDraggingOver: boolean;
-    dropIndicator: DropIndicatorPosition;
+    dropIndicatorPosition: DropIndicatorPosition;
   }>({
     isDraggingOver: false,
-    dropIndicator: null,
+    dropIndicatorPosition: null,
   });
 
   const getDropPosition = useCallback(
@@ -170,7 +179,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
 
       return position;
     },
-    [axis, enableInside, edgeThreshold],
+    [axis, enableInside, edgeThreshold, index],
   );
 
   const handleDragOver = useCallback(
@@ -181,11 +190,24 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
 
       if (dropPosition) {
         setDragState((prev) => {
+          let dropIndicatorPosition: DropIndicatorPosition = dropPosition;
+
+          // Adjust the drop indicator position if the element is the first or last child
+          // of its parent.
+          if (dropPosition === 'before' && index === 0) {
+            dropIndicatorPosition = 'start';
+          } else if (dropPosition === 'after' && isLastChild) {
+            dropIndicatorPosition = 'end';
+          }
+
           // Only update if the position actually changed
-          if (prev.dropIndicator !== dropPosition || !prev.isDraggingOver) {
+          if (
+            prev.dropIndicatorPosition !== dropPosition ||
+            !prev.isDraggingOver
+          ) {
             return {
               isDraggingOver: true,
-              dropIndicator: dropPosition,
+              dropIndicatorPosition: dropIndicatorPosition,
             };
           }
 
@@ -193,7 +215,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
         });
       }
     },
-    [getDropPosition],
+    [getDropPosition, index, isLastChild],
   );
 
   const handleDrop = useCallback(
@@ -204,7 +226,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
 
       setDragState({
         isDraggingOver: false,
-        dropIndicator: null,
+        dropIndicatorPosition: null,
       });
 
       if (onDrop && dropPosition) {
@@ -236,7 +258,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
     ) {
       setDragState({
         isDraggingOver: false,
-        dropIndicator: null,
+        dropIndicatorPosition: null,
       });
     }
   }, []);
@@ -254,7 +276,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
       onDragEnter: handleDragEnter,
       onDragLeave: handleDragLeave,
     },
-    dropIndicator: dragState.dropIndicator,
+    dropIndicatorPosition: dragState.dropIndicatorPosition,
     isDraggingOver: dragState.isDraggingOver,
   };
 }
