@@ -1,6 +1,6 @@
 export interface SelectionItem<TData extends object = object> {
   /**
-   * A unique identifier for the item, usful for checking if the item is
+   * A unique identifier for the item, useful for checking if the item is
    * in the current selection.
    */
   id: string;
@@ -13,5 +13,5 @@ export interface SelectionItem<TData extends object = object> {
   /**
    * The data associated with the item.
    */
-  data?: TData;
+  data: TData;
 }

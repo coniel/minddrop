@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { selectionItem1, selectionItem2 } from '../../test-utils';
+import { selectionItem_A_1, selectionItem_A_2 } from '../../test-utils';
 import { dedupeSelectionItemsArray } from './dedupeSelectionItemsArray';
 
 describe('dedupeSelectionItemsArray', () => {
@@ -7,10 +7,10 @@ describe('dedupeSelectionItemsArray', () => {
     // Should removed duplicate selection items
     expect(
       dedupeSelectionItemsArray([
-        selectionItem1,
-        selectionItem2,
-        selectionItem1,
+        selectionItem_A_1,
+        selectionItem_A_2,
+        selectionItem_A_1,
       ]),
-    ).toEqual([selectionItem1, selectionItem2]);
+    ).toEqual([selectionItem_A_1, selectionItem_A_2]);
   });
 });

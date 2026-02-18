@@ -1,16 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { registerSelectionItemType } from '../SelectionItemTypeConfigsStore';
-import {
-  cleanup,
-  selectionItem1,
-  selectionItem3,
-  selectionItemTypeConfig,
-  setup,
-} from '../test-utils';
-import { SelectionClipboardEventData } from '../types';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionCopiedEvent, SelectionCopiedEventData } from '../events';
+import { cleanup, selection, serialzedSelection, setup } from '../test-utils';
 import { copySelection } from './copySelection';
 
 describe('copySelection', () => {
@@ -26,15 +17,7 @@ describe('copySelection', () => {
   } as unknown as React.ClipboardEvent;
 
   beforeEach(() => {
-    setup();
-
-    // Register a serializer
-    registerSelectionItemType(selectionItemTypeConfig);
-
-    // Set some items as the current selection
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem3]);
+    setup({ loadSelection: true });
 
     // Mock navigator.clipboard and its methods
     Object.defineProperty(navigator, 'clipboard', {
@@ -52,6 +35,7 @@ describe('copySelection', () => {
     }
 
     // Assign mock ClipboardItem globally
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).ClipboardItem = ClipboardItemMock;
   });
 
@@ -61,14 +45,12 @@ describe('copySelection', () => {
     data = {};
   });
 
-  it('sets the clipboard data on an existing data transfer', () => {
+  it('serializes the selection items to the clipboard event data transfer', () => {
     // Trigger a copy
     copySelection(clipboardEvent);
 
     // Should set the clipboard data
-    expect(data['application/json']).toEqual(
-      JSON.stringify([selectionItem1.getData!(), selectionItem3.getData!()]),
-    );
+    expect(data).toEqual(serialzedSelection);
   });
 
   it('creates clipboard data if there is no existing data transfer', () => {
@@ -84,17 +66,14 @@ describe('copySelection', () => {
 
   it('dispatches a selection copy event', () =>
     new Promise<void>((done) => {
-      Events.addListener<SelectionClipboardEventData>(
-        'selection:copy',
+      Events.addListener<SelectionCopiedEventData>(
+        SelectionCopiedEvent,
         'test',
         (payload) => {
           // Payload data should contain the event
           expect(payload.data.event).toEqual(clipboardEvent);
           // Payload data should contain the selection
-          expect(payload.data.selection).toEqual([
-            selectionItem1,
-            selectionItem3,
-          ]);
+          expect(payload.data.selection).toEqual(selection);
           done();
         },
       );

@@ -1,24 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Events } from '@minddrop/events';
+import { SelectionClearedEvent } from '../events';
 import {
   cleanup,
-  selectionItem1,
-  selectionItem2,
-  selectionItem3,
+  selectionItem_A_1,
+  selectionItem_A_2,
+  selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { clearSelection } from './clearSelection';
+
+const selection = [selectionItem_A_1, selectionItem_A_2, selectionItem_B_1];
 
 describe('clearSelection', () => {
   beforeEach(() => {
     setup();
 
     // Add some items to the selection
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem2, selectionItem3]);
+    SelectionStore.getState().addSelectedItems(selection);
     // Set `isDragging` to true
-    useSelectionStore.getState().setIsDragging(true);
+    SelectionStore.getState().setIsDragging(true);
   });
 
   afterEach(cleanup);
@@ -28,7 +30,7 @@ describe('clearSelection', () => {
     clearSelection();
 
     // Selection should be empty
-    expect(useSelectionStore.getState().selectedItems).toEqual([]);
+    expect(SelectionStore.getState().selectedItems).toEqual([]);
   });
 
   it('resets the dragging state', () => {
@@ -36,6 +38,18 @@ describe('clearSelection', () => {
     clearSelection();
 
     // Should set `isDragging` to false
-    expect(useSelectionStore.getState().isDragging).toBe(false);
+    expect(SelectionStore.getState().isDragging).toBe(false);
   });
+
+  it('dispatches selection cleared event', () =>
+    new Promise<void>((done) => {
+      Events.addListener(SelectionClearedEvent, 'test', (payload) => {
+        // Payload data should be the items cleared from the selection
+        expect(payload.data).toEqual(selection);
+        done();
+      });
+
+      // Clear selection
+      clearSelection();
+    }));
 });

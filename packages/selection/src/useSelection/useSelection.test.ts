@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { act, renderHook } from '@minddrop/test-utils';
-import { cleanup, selectionItem1, selectionItem2, setup } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import {
+  cleanup,
+  selectionItem_A_1,
+  selectionItem_A_2,
+  setup,
+} from '../test-utils';
+import { SelectionStore } from '../useSelectionStore';
 import { useSelection } from './useSelection';
 
 describe('useSelection', () => {
@@ -9,7 +14,7 @@ describe('useSelection', () => {
     setup();
 
     // Add an item to the selection
-    useSelectionStore.getState().addSelectedItems([selectionItem1]);
+    SelectionStore.getState().addSelectedItems([selectionItem_A_1]);
   });
 
   afterEach(() => {
@@ -24,10 +29,10 @@ describe('useSelection', () => {
 
     act(() => {
       // Add an item to the selection
-      useSelectionStore.getState().addSelectedItems([selectionItem2]);
+      SelectionStore.getState().addSelectedItems([selectionItem_A_2]);
     });
 
     // Should return the current selection
-    expect(result.current).toEqual([selectionItem1, selectionItem2]);
+    expect(result.current).toEqual([selectionItem_A_1, selectionItem_A_2]);
   });
 });

@@ -41,7 +41,7 @@ interface SelectionStore {
   clear(): void;
 }
 
-export const useSelectionStore = create<SelectionStore>()((set) => ({
+export const SelectionStore = create<SelectionStore>()((set) => ({
   selectedItems: [],
   isDragging: false,
 

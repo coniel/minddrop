@@ -1,2 +1,2 @@
-export * from './initialize-tests';
-export * from './selection.data';
+export * from './setup-tests';
+export * from './fixtures';

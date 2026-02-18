@@ -1,27 +1,32 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { selectionItem1, selectionItem2, selectionItem3 } from '../test-utils';
-import { useSelectionStore } from './useSelectionStore';
+import {
+  selectionItem_A_1,
+  selectionItem_A_2,
+  selectionItem_B_1,
+} from '../test-utils';
+import { SelectionStore } from './useSelectionStore';
 
 describe('useSelectionStore', () => {
   afterEach(() => {
-    useSelectionStore.getState().clear();
+    SelectionStore.getState().clear();
   });
 
   describe('addSelectedItems', () => {
     it('adds items to the selected items list', () => {
       // Add two items to selection
-      useSelectionStore
-        .getState()
-        .addSelectedItems([selectionItem1, selectionItem2]);
+      SelectionStore.getState().addSelectedItems([
+        selectionItem_A_1,
+        selectionItem_A_2,
+      ]);
 
       // Add a third item to selection
-      useSelectionStore.getState().addSelectedItems([selectionItem3]);
+      SelectionStore.getState().addSelectedItems([selectionItem_B_1]);
 
       // All three items should be in the selected items list
-      expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectionItem1,
-        selectionItem2,
-        selectionItem3,
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        selectionItem_A_1,
+        selectionItem_A_2,
+        selectionItem_B_1,
       ]);
     });
   });
@@ -29,16 +34,17 @@ describe('useSelectionStore', () => {
   describe('removeSelectedItems', () => {
     it('removes items from the selected items list', () => {
       // Add two items to selection
-      useSelectionStore
-        .getState()
-        .addSelectedItems([selectionItem1, selectionItem2]);
+      SelectionStore.getState().addSelectedItems([
+        selectionItem_A_1,
+        selectionItem_A_2,
+      ]);
 
       // Remove an item from the selection
-      useSelectionStore.getState().removeSelectedItems([selectionItem1]);
+      SelectionStore.getState().removeSelectedItems([selectionItem_A_1]);
 
       // Should remove the item from the selected items list
-      expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectionItem2,
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        selectionItem_A_2,
       ]);
     });
   });
@@ -46,40 +52,41 @@ describe('useSelectionStore', () => {
   describe('clearSelectedItems', () => {
     it('clears all items from the selected items list', () => {
       // Add two items to selection
-      useSelectionStore
-        .getState()
-        .addSelectedItems([selectionItem1, selectionItem2]);
+      SelectionStore.getState().addSelectedItems([
+        selectionItem_A_1,
+        selectionItem_A_2,
+      ]);
 
       // Clear the selected items list
-      useSelectionStore.getState().clearSelectedItems();
+      SelectionStore.getState().clearSelectedItems();
 
       // Selected items list should be cleared
-      expect(useSelectionStore.getState().selectedItems).toEqual([]);
+      expect(SelectionStore.getState().selectedItems).toEqual([]);
     });
   });
 
   describe('setIsDragging', () => {
     it('sets the `isDragging` value', () => {
       // Set `isDragging` to `true`
-      useSelectionStore.getState().setIsDragging(true);
+      SelectionStore.getState().setIsDragging(true);
 
       // `isDragging` should be `true`
-      expect(useSelectionStore.getState().isDragging).toBe(true);
+      expect(SelectionStore.getState().isDragging).toBe(true);
     });
   });
 
   describe('clear', () => {
     it('sets the `isDragging` value', () => {
       // Set state values
-      useSelectionStore.getState().addSelectedItems([selectionItem1]);
-      useSelectionStore.getState().setIsDragging(true);
+      SelectionStore.getState().addSelectedItems([selectionItem_A_1]);
+      SelectionStore.getState().setIsDragging(true);
 
       // Clear the state
-      useSelectionStore.getState().clear();
+      SelectionStore.getState().clear();
 
       // State should contain initial values
-      expect(useSelectionStore.getState().selectedItems).toEqual([]);
-      expect(useSelectionStore.getState().isDragging).toBe(false);
+      expect(SelectionStore.getState().selectedItems).toEqual([]);
+      expect(SelectionStore.getState().isDragging).toBe(false);
     });
   });
 });

@@ -2,23 +2,15 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createDataTransfer } from '@minddrop/test-utils';
 import {
   cleanup,
-  mimeType1,
-  selectionItem1,
-  selectionItem2,
+  mimeType_A,
+  mimeType_B,
+  serialzedSelection,
   setup,
 } from '../../test-utils';
-import { useSelectionStore } from '../../useSelectionStore';
 import { serializeSelectionToDataTransfer } from './serializeSelectionToDataTransfer';
 
 describe('serializeSelectionToDataTransfer', () => {
-  beforeEach(() => {
-    setup();
-
-    // Add items to the selection
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem2]);
-  });
+  beforeEach(() => setup({ loadSelection: true }));
 
   afterEach(cleanup);
 
@@ -27,8 +19,17 @@ describe('serializeSelectionToDataTransfer', () => {
 
     serializeSelectionToDataTransfer(dataTransfer);
 
-    expect(dataTransfer.getData(mimeType1)).toEqual(
-      JSON.stringify([selectionItem1.data, selectionItem2.data]),
+    expect(dataTransfer.getData(mimeType_A)).toEqual(
+      serialzedSelection[mimeType_A],
+    );
+    expect(dataTransfer.getData(mimeType_B)).toEqual(
+      serialzedSelection[mimeType_B],
+    );
+    expect(dataTransfer.getData('text/plain')).toEqual(
+      serialzedSelection['text/plain'],
+    );
+    expect(dataTransfer.getData('text/html')).toEqual(
+      serialzedSelection['text/html'],
     );
   });
 });

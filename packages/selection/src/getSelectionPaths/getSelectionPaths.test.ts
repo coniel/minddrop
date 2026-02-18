@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
-  selectionItem1,
-  selectionItem2,
-  selectionItem3,
+  selectionItem_A_1,
+  selectionItem_A_2,
+  selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { getSelectionIds } from './getSelectionPaths';
 
 describe('getSelectionPaths', () => {
@@ -14,9 +14,11 @@ describe('getSelectionPaths', () => {
     setup();
 
     // Add items to the selection
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem2, selectionItem3]);
+    SelectionStore.getState().addSelectedItems([
+      selectionItem_A_1,
+      selectionItem_A_2,
+      selectionItem_B_1,
+    ]);
   });
 
   afterEach(cleanup);
@@ -24,9 +26,9 @@ describe('getSelectionPaths', () => {
   it('returns the paths of the entire selection', () => {
     // Should return the paths of the entire selection
     expect(getSelectionIds()).toEqual([
-      selectionItem1.id,
-      selectionItem2.id,
-      selectionItem3.id,
+      selectionItem_A_1.id,
+      selectionItem_A_2.id,
+      selectionItem_B_1.id,
     ]);
   });
 });

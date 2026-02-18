@@ -19,7 +19,6 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "react": "^19.0.0",

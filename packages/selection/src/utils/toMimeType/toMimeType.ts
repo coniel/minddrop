@@ -1,4 +1,4 @@
-import { MINDDROP_DATA_KEY } from '../../constants';
+import { MindDropDataKey } from '../../constants';
 
 /**
  * Returns a MindDrop MIME type for a given data type.
@@ -8,5 +8,5 @@ import { MINDDROP_DATA_KEY } from '../../constants';
  * @returns The MindDrop MIME type.
  */
 export function toMimeType(type: string, isJson = true): string {
-  return `${MINDDROP_DATA_KEY}.${type}${isJson ? '+json' : ''}`;
+  return `${MindDropDataKey}.${type}${isJson ? '+json' : ''}`;
 }

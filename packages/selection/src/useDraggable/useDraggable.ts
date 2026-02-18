@@ -1,10 +1,18 @@
 import React, { useCallback } from 'react';
+import { Events } from '@minddrop/events';
 import { addToSelection } from '../addToSelection';
-import { dragEnd } from '../dragEnd';
-import { dragStart } from '../dragStart';
+import {
+  SelectionDragEndedEvent,
+  SelectionDragEndedEventData,
+  SelectionDragStartedEvent,
+  SelectionDragStartedEventData,
+} from '../events';
+import { getSelection } from '../getSelection';
 import { isSelected } from '../isSelected';
 import { select } from '../select';
 import { SelectionItem } from '../types';
+import { SelectionStore } from '../useSelectionStore';
+import { serializeSelectionToDataTransfer } from '../utils';
 
 export interface DragUtils {
   /**
@@ -56,15 +64,38 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
         }
       }
 
-      // Initialize the dragging state
-      dragStart(event);
+      // Ensure event has a data transfer object
+      if (!event.dataTransfer) {
+        return;
+      }
+
+      // Serialize the selection to the event's data transfer object
+      serializeSelectionToDataTransfer(event.dataTransfer);
+
+      // Set the dragging state to `true`
+      SelectionStore.getState().setIsDragging(true);
+
+      // Dispatch a 'selection:drag:start' event
+      Events.dispatch<SelectionDragStartedEventData>(
+        SelectionDragStartedEvent,
+        {
+          event,
+          selection: getSelection(),
+        },
+      );
     },
     [selectionItem],
   );
 
   const onDragEnd = useCallback((event: DragEvent | React.DragEvent) => {
-    // End the drag
-    dragEnd(event);
+    // Set the dragging state to `false`
+    SelectionStore.getState().setIsDragging(false);
+
+    // Dispatch a drag ended event
+    Events.dispatch<SelectionDragEndedEventData>(SelectionDragEndedEvent, {
+      event,
+      selection: getSelection(),
+    });
   }, []);
 
   return {

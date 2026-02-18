@@ -1,6 +1,10 @@
 import { Events } from '@minddrop/events';
+import {
+  SelectionItemsAddedEvent,
+  SelectionItemsAddedEventData,
+} from '../events';
 import { SelectionItem } from '../types';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
 
 /**
@@ -11,7 +15,7 @@ import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
  */
 export function addToSelection(items: SelectionItem[]): void {
   // Get the current selection
-  const selection = useSelectionStore.getState().selectedItems;
+  const selection = SelectionStore.getState().selectedItems;
 
   // Remove potential duplicates from the list of items to add
   const deduped = dedupeSelectionItemsArray(items);
@@ -23,8 +27,11 @@ export function addToSelection(items: SelectionItem[]): void {
   );
 
   // Add the items to the current selection
-  useSelectionStore.getState().addSelectedItems(itemsToAdd);
+  SelectionStore.getState().addSelectedItems(itemsToAdd);
 
-  // Dispatch a selection item add event
-  Events.dispatch('selection:items:add', itemsToAdd);
+  // Dispatch selection items added event
+  Events.dispatch<SelectionItemsAddedEventData>(
+    SelectionItemsAddedEvent,
+    itemsToAdd,
+  );
 }

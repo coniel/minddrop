@@ -1,3 +1,4 @@
+import { SelectionItemSerializersStore } from '../../SelectionItemSerializersStore';
 import { getSelection } from '../../getSelection';
 import { SelectionItem } from '../../types';
 import { toMimeType } from '../toMimeType';
@@ -18,27 +19,54 @@ export function serializeSelection(): Record<string, string> {
 
   // Group the selection items by type
   const selectionItemsByType = selection.reduce<
-    Record<string, (SelectionItem['data'] | SelectionItem)[]>
+    Record<string, SelectionItem[]>
   >((acc, item) => {
-    // If the item has no data, use the item itself as the data
-    const data = item.data ?? item;
-
     if (!acc[item.type]) {
-      acc[item.type] = [data];
+      acc[item.type] = [item];
     } else {
-      acc[item.type].push(data);
+      acc[item.type].push(item);
     }
 
     return acc;
   }, {});
 
-  // Serialize the selection items by type
-  return Object.entries(selectionItemsByType).reduce<Record<string, string>>(
-    (acc, [type, items]) => {
-      acc[toMimeType(type)] = JSON.stringify(items);
+  const data: Record<string, string> = {
+    'text/plain': '',
+    'text/html': '',
+  };
 
-      return acc;
-    },
-    {},
-  );
+  // Serialize the selection items by type
+  Object.entries(selectionItemsByType).forEach(([type, items]) => {
+    // Get the serializer for the type
+    const serializer = SelectionItemSerializersStore.get(type);
+
+    // Serialize items to their MindDrop JSON representation
+    data[toMimeType(type)] =
+      serializer?.toJsonString?.(items) ??
+      JSON.stringify(items.map((item) => item.data));
+
+    // Serialize items to plain text
+    if (serializer?.toPlainText) {
+      // Add a newline if there is already text in the plain text data
+      if (data['text/plain']) {
+        data['text/plain'] += '\n';
+      }
+
+      // Serialize items to plain text
+      data['text/plain'] += serializer.toPlainText(items);
+    }
+
+    // Serialize items to HTML
+    if (serializer?.toHtml) {
+      // Add a newline if there is already text in the HTML data
+      if (data['text/html']) {
+        data['text/html'] += '\n';
+      }
+
+      // Serialize items to HTML
+      data['text/html'] += serializer.toHtml(items);
+    }
+  });
+
+  return data;
 }

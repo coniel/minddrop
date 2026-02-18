@@ -1,5 +1,5 @@
 import { isUrl } from '@minddrop/utils';
-import { MINDDROP_DATA_KEY } from '../../constants';
+import { MindDropDataKey } from '../../constants';
 
 interface StandardDataTypes {
   'text/plain'?: string;
@@ -35,8 +35,8 @@ export function getEventData<TCustom = {}>(
     let key = type;
 
     // Check if the data key is using the MindDrop mime type format
-    if (key.includes(MINDDROP_DATA_KEY)) {
-      key = key.split(`${MINDDROP_DATA_KEY}.`)[1];
+    if (key.includes(MindDropDataKey)) {
+      key = key.split(`${MindDropDataKey}.`)[1];
     }
 
     // Check if the data is JSON

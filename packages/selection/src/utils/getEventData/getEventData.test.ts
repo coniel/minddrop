@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { MINDDROP_DATA_KEY } from '../../constants';
+import { MindDropDataKey } from '../../constants';
 import { getEventData } from './getEventData';
 
 // Helper to create mock DataTransfer
@@ -115,19 +115,19 @@ describe('getEventData', () => {
   describe('MindDrop mime type handling', () => {
     it('should remove MindDrop data key prefix', () => {
       const event = createMockDragEvent({
-        [`${MINDDROP_DATA_KEY}.custom`]: 'custom data',
+        [`${MindDropDataKey}.custom`]: 'custom data',
       });
 
       const result = getEventData<Record<string, unknown>>(event);
 
       expect(result['custom']).toBe('custom data');
-      expect(result[`${MINDDROP_DATA_KEY}.custom`]).toBeUndefined();
+      expect(result[`${MindDropDataKey}.custom`]).toBeUndefined();
     });
 
     it('should handle multiple MindDrop prefixed keys', () => {
       const event = createMockDragEvent({
-        [`${MINDDROP_DATA_KEY}.type1`]: 'data1',
-        [`${MINDDROP_DATA_KEY}.type2`]: 'data2',
+        [`${MindDropDataKey}.type1`]: 'data1',
+        [`${MindDropDataKey}.type2`]: 'data2',
       });
 
       const result = getEventData<Record<string, unknown>>(event);
@@ -152,7 +152,7 @@ describe('getEventData', () => {
     it('should parse MindDrop JSON data', () => {
       const jsonData = { id: '123', name: 'test' };
       const event = createMockDragEvent({
-        [`${MINDDROP_DATA_KEY}.custom+json`]: JSON.stringify(jsonData),
+        [`${MindDropDataKey}.custom+json`]: JSON.stringify(jsonData),
       });
 
       const result = getEventData<Record<string, unknown>>(event);
@@ -401,7 +401,7 @@ describe('getEventData', () => {
       const file = new File(['content'], 'file.txt', { type: 'text/plain' });
       const event = createMockDragEvent(
         {
-          [`${MINDDROP_DATA_KEY}.custom+json`]: JSON.stringify(jsonData),
+          [`${MindDropDataKey}.custom+json`]: JSON.stringify(jsonData),
           'text/uri-list': 'https://example.com',
         },
         [file],

@@ -1,5 +1,5 @@
 import { SelectionItem } from '../types';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 
 /**
  * Returns the current selection as an array of `SelectionItems`.
@@ -8,7 +8,7 @@ import { useSelectionStore } from '../useSelectionStore';
  */
 export function useSelection(): SelectionItem[] {
   // Get the current selection
-  const { selectedItems } = useSelectionStore();
+  const { selectedItems } = SelectionStore();
 
   return selectedItems;
 }

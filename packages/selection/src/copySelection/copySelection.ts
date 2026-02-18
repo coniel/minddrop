@@ -1,8 +1,9 @@
 import React from 'react';
 import { Events } from '@minddrop/events';
+import { SelectionCopiedEvent, SelectionCopiedEventData } from '../events';
 import { getSelection } from '../getSelection';
-import { setClipboardData } from '../setClipboardData';
-import { serializeSelection } from '../utils/serializeSelection';
+import { serializeSelectionToDataTransfer } from '../utils';
+import { serializeSelection } from '../utils';
 
 /**
  * Serializes the current selection as the clipboard event's data transfer data.
@@ -14,8 +15,13 @@ export function copySelection(
   event?: ClipboardEvent | React.ClipboardEvent,
 ): void {
   if (event) {
+    // Ensure the clipboard event has a data transfer object
+    if (!event.clipboardData) {
+      return;
+    }
+
     // Set the clipboard event data
-    setClipboardData(event, 'copy');
+    serializeSelectionToDataTransfer(event.clipboardData);
   } else {
     const data = serializeSelection();
 
@@ -26,7 +32,7 @@ export function copySelection(
   }
 
   // Dispatch a selection copy event
-  Events.dispatch('selection:copy', {
+  Events.dispatch<SelectionCopiedEventData>(SelectionCopiedEvent, {
     event,
     selection: getSelection(),
   });

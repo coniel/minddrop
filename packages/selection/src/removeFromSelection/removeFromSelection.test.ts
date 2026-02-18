@@ -2,12 +2,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
   cleanup,
-  selectionItem1,
-  selectionItem2,
-  selectionItem3,
+  selectionItem_A_1,
+  selectionItem_A_2,
+  selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { removeFromSelection } from './removeFromSelection';
 
 describe('removeFromSelection', () => {
@@ -15,20 +15,22 @@ describe('removeFromSelection', () => {
     setup();
 
     // Add some selected items
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem2, selectionItem3]);
+    SelectionStore.getState().addSelectedItems([
+      selectionItem_A_1,
+      selectionItem_A_2,
+      selectionItem_B_1,
+    ]);
   });
 
   afterEach(cleanup);
 
   it('removes the items from the current selection', () => {
     // Remove a couple of selected items
-    removeFromSelection([selectionItem1, selectionItem3]);
+    removeFromSelection([selectionItem_A_1, selectionItem_B_1]);
 
     // Items should no longer be in the selected items list
-    expect(useSelectionStore.getState().selectedItems).toEqual([
-      selectionItem2,
+    expect(SelectionStore.getState().selectedItems).toEqual([
+      selectionItem_A_2,
     ]);
   });
 
@@ -36,11 +38,11 @@ describe('removeFromSelection', () => {
     new Promise<void>((done) => {
       Events.addListener('selection:items:remove', 'test', (payload) => {
         // Payload data should be the removed items without duplicates
-        expect(payload.data).toEqual([selectionItem1]);
+        expect(payload.data).toEqual([selectionItem_A_1]);
         done();
       });
 
       // Remove the same item from the selection twice
-      removeFromSelection([selectionItem1, selectionItem1]);
+      removeFromSelection([selectionItem_A_1, selectionItem_A_1]);
     }));
 });

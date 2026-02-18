@@ -1,9 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Events } from '@minddrop/events';
 import { act, renderHook } from '@minddrop/test-utils';
-import { dragEnd } from '../dragEnd';
-import { dragStart } from '../dragStart';
-import { cleanup, selectionItem1, selectionItem2, setup } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import {
+  SelectionDragEndedEvent,
+  SelectionDragEndedEventData,
+  SelectionDragStartedEvent,
+  SelectionDragStartedEventData,
+} from '../events';
+import {
+  cleanup,
+  selectionItem_A_1 as draggedItem,
+  selectionItem_A_2,
+  serializedSelectionItem_A_1,
+  setup,
+} from '../test-utils';
+import { SelectionStore } from '../useSelectionStore';
 import { useDraggable } from './useDraggable';
 
 vi.mock('../dragStart', () => ({ dragStart: vi.fn() }));
@@ -23,24 +34,20 @@ describe('useDraggable', () => {
   beforeEach(setup);
 
   afterEach(() => {
-    act(() => {
-      cleanup();
-    });
+    cleanup();
 
     // Reset the drag event data
     selectionEventData = {};
-    // Clear mocks
-    vi.clearAllMocks();
   });
 
   function init() {
-    return renderHook(() => useDraggable(selectionItem1));
+    return renderHook(() => useDraggable(draggedItem));
   }
 
   describe('onDragStart', () => {
     it('exclusively selects the item if not already selected', () => {
       // Set an item as the current selection
-      useSelectionStore.getState().addSelectedItems([selectionItem2]);
+      SelectionStore.getState().addSelectedItems([selectionItem_A_2]);
 
       const { result } = init();
 
@@ -50,14 +57,12 @@ describe('useDraggable', () => {
       });
 
       // Selection should only contain the target item
-      expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectionItem1,
-      ]);
+      expect(SelectionStore.getState().selectedItems).toEqual([draggedItem]);
     });
 
     it('preserves current selection if the item is not already selected and Shift key is pressed', () => {
       // Set an item as the current selection
-      useSelectionStore.getState().addSelectedItems([selectionItem2]);
+      SelectionStore.getState().addSelectedItems([selectionItem_A_2]);
 
       const { result } = init();
 
@@ -71,18 +76,19 @@ describe('useDraggable', () => {
       });
 
       // Selection should contain the original selection
-      expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectionItem2,
-        selectionItem1,
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        selectionItem_A_2,
+        draggedItem,
       ]);
     });
 
     it('preserves current selection if the item is already selected', () => {
       // Set a couple of items as the current selection,
       // including the target item.
-      useSelectionStore
-        .getState()
-        .addSelectedItems([selectionItem1, selectionItem2]);
+      SelectionStore.getState().addSelectedItems([
+        draggedItem,
+        selectionItem_A_2,
+      ]);
 
       const { result } = init();
 
@@ -92,36 +98,87 @@ describe('useDraggable', () => {
       });
 
       // Selection should contain the original selection
-      expect(useSelectionStore.getState().selectedItems).toEqual([
-        selectionItem1,
-        selectionItem2,
+      expect(SelectionStore.getState().selectedItems).toEqual([
+        draggedItem,
+        selectionItem_A_2,
       ]);
     });
 
-    it('initializes the drag', () => {
+    it('sets the selected items data on the data transfer object', () => {
       const { result } = init();
 
-      act(() => {
-        // Fire the 'onDragStart' callback
-        result.current.onDragStart(dragEvent);
-      });
+      // Initiate a drag
+      result.current.onDragStart(dragEvent);
 
-      // Should initialize the drag with `dragStart`
-      expect(dragStart).toHaveBeenCalledWith(dragEvent, 'sort');
+      expect(selectionEventData).toEqual(serializedSelectionItem_A_1);
     });
+
+    it('sets dragging state to true', () => {
+      const { result } = init();
+
+      // Initiate a drag
+      result.current.onDragStart(dragEvent);
+
+      // Should set `isDragging` to `true`
+      expect(SelectionStore.getState().isDragging).toBe(true);
+    });
+
+    it('dispatches a drag started event', () =>
+      new Promise<void>((done) => {
+        // Listen to 'selection:drag:start' events
+        Events.addListener<SelectionDragStartedEventData>(
+          SelectionDragStartedEvent,
+          'test',
+          (payload) => {
+            // Payload data should contain the event
+            expect(payload.data.event).toEqual(dragEvent);
+            // Payload data should contain the selection
+            expect(payload.data.selection).toEqual([draggedItem]);
+            done();
+          },
+        );
+
+        const { result } = init();
+
+        // Initiate a drag
+        result.current.onDragStart(dragEvent);
+      }));
   });
 
   describe('onDragEnd', () => {
-    it('ends the drag', () => {
+    it('sets the dragging state to false', () => {
       const { result } = init();
 
-      act(() => {
-        // Fire the 'onDragEnd' callback
-        result.current.onDragEnd(dragEvent);
-      });
+      // Initiate a drag
+      result.current.onDragStart(dragEvent);
+      // End the drag
+      result.current.onDragEnd(dragEvent);
 
-      // Should end the drag with `dragEnd`
-      expect(dragEnd).toHaveBeenCalledWith(dragEvent);
+      // Should set `isDragging` to `false`
+      expect(SelectionStore.getState().isDragging).toBe(false);
     });
+
+    it('dispatches a drag ended event', () =>
+      new Promise<void>((done) => {
+        // Listen to 'selection:drag:end' events
+        Events.addListener<SelectionDragEndedEventData>(
+          SelectionDragEndedEvent,
+          'test',
+          (payload) => {
+            // Payload data should contain the event
+            expect(payload.data.event).toEqual(dragEvent);
+            // Payload data should contain the selection
+            expect(payload.data.selection).toEqual([draggedItem]);
+            done();
+          },
+        );
+
+        const { result } = init();
+
+        // Initiate a drag
+        result.current.onDragStart(dragEvent);
+        // End the drag
+        result.current.onDragEnd(dragEvent);
+      }));
   });
 });

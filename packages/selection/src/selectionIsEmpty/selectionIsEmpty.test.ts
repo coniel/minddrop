@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cleanup, selectionItem1, setup } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { cleanup, selectionItem_A_1, setup } from '../test-utils';
+import { SelectionStore } from '../useSelectionStore';
 import { selectionIsEmpty } from './selectionIsEmpty';
 
 describe('selectionIsEmpty', () => {
@@ -15,7 +15,7 @@ describe('selectionIsEmpty', () => {
 
   it('returns `false` if the current selection is not empty', () => {
     // Add a selected item
-    useSelectionStore.getState().addSelectedItems([selectionItem1]);
+    SelectionStore.getState().addSelectedItems([selectionItem_A_1]);
 
     // Should return `false`
     expect(selectionIsEmpty()).toBe(false);

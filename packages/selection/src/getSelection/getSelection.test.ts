@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   cleanup,
-  selectionItem1,
-  selectionItem2,
-  selectionItem3,
+  selectionItem_A_1,
+  selectionItem_A_2,
+  selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { getSelection } from './getSelection';
 
 describe('getSelection', () => {
@@ -14,9 +14,11 @@ describe('getSelection', () => {
     setup();
 
     // Selected drops and topics
-    useSelectionStore
-      .getState()
-      .addSelectedItems([selectionItem1, selectionItem2, selectionItem3]);
+    SelectionStore.getState().addSelectedItems([
+      selectionItem_A_1,
+      selectionItem_A_2,
+      selectionItem_B_1,
+    ]);
   });
 
   afterEach(cleanup);
@@ -24,9 +26,9 @@ describe('getSelection', () => {
   it('returns the selection', () => {
     // Should return the entire selection
     expect(getSelection()).toEqual([
-      selectionItem1,
-      selectionItem2,
-      selectionItem3,
+      selectionItem_A_1,
+      selectionItem_A_2,
+      selectionItem_B_1,
     ]);
   });
 });

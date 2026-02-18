@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { SelectionItem } from '../types';
-import { useSelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../useSelectionStore';
 import { dedupeSelectionItemsArray } from '../utils';
 
 /**
@@ -14,7 +14,7 @@ export function removeFromSelection(items: SelectionItem[]): void {
   const itemsToRemove = dedupeSelectionItemsArray(items);
 
   // Remove the items from the current selection
-  useSelectionStore.getState().removeSelectedItems(itemsToRemove);
+  SelectionStore.getState().removeSelectedItems(itemsToRemove);
 
   // Dispatch a 'selection:items:remove' event
   Events.dispatch('selection:items:remove', itemsToRemove);
