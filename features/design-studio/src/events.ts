@@ -1,8 +1,8 @@
 import { Design } from '@minddrop/designs';
 import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
 
-export const EventListenerId = 'designs-feature';
-export const OpenDatabaseDesignStudioEvent = 'design-studio:open:database';
+export const EventListenerId = 'feature-design-studio';
+export const OpenDesignStudioEvent = 'design-studio:open';
 
 export interface OpenDesignStudioEventData {
   /**

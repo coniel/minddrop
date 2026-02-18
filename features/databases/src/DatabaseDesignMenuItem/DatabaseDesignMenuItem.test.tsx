@@ -9,7 +9,7 @@ import {
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-designs';
+} from '@minddrop/feature-design-studio';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignMenuItem } from './DatabaseDesignMenuItem';
@@ -28,8 +28,7 @@ describe('<DatabaseDesignMenuItem />', () => {
         OpenDesignStudioEvent,
         'test',
         (payload) => {
-          expect(payload.data.databaseId).toBe(objectDatabase.id);
-          expect(payload.data.designId).toBe(cardDesign1.id);
+          expect(payload.data.design).toBe(cardDesign1);
           done();
         },
       );
@@ -50,8 +49,7 @@ describe('<DatabaseDesignMenuItem />', () => {
         OpenDesignStudioEvent,
         'test',
         (payload) => {
-          expect(payload.data.databaseId).toBe(objectDatabase.id);
-          expect(payload.data.designId).toBe(cardDesign1.id);
+          expect(payload.data.design).toBe(cardDesign1);
           done();
         },
       );
@@ -83,15 +81,13 @@ describe('<DatabaseDesignMenuItem />', () => {
         OpenDesignStudioEvent,
         'test',
         (payload) => {
-          expect(payload.data.databaseId).toBe(objectDatabase.id);
           // Should be a new ID
-          expect(typeof payload.data.designId).toBe('string');
-          expect(payload.data.designId).not.toBe(cardDesign1.id);
+          expect(payload.data.design.id).not.toBe(cardDesign1.id);
 
           // Should add the new design to the database
           expect(
             Databases.get(objectDatabase.id).designs.find(
-              (d) => d.id === payload.data.designId,
+              (d) => d.id === payload.data.design.id,
             ),
           ).toBeDefined();
           done();

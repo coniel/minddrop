@@ -5,10 +5,6 @@ import {
   OpenConfirmationDialogEvent,
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
-import {
-  OpenDatabaseDesignStudioEvent,
-  OpenDesignStudioEventData,
-} from '@minddrop/feature-design-studio';
 import { i18n } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
@@ -21,7 +17,7 @@ import {
   MenuItemDropdownMenu,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
-import { OpenDatabaseViewEvent } from '../events';
+import { openDesignStudio } from '../navigation';
 
 export interface DatabaseDesignMenuItemProps {
   /**
@@ -39,20 +35,8 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
   design,
   databaseId,
 }) => {
-  function openDesignStudio(openDesign?: Design) {
-    const database = Databases.get(databaseId);
-
-    // Open the design studio
-    Events.dispatch<OpenDesignStudioEventData>(OpenDatabaseDesignStudioEvent, {
-      design: openDesign ?? design,
-      backEvent: OpenDatabaseViewEvent,
-      backEventData: { databaseId, configurationPanelOpen: true },
-      properties: database.properties,
-      onSave: (design) => {
-        // Update the design in the database
-        Databases.updateDesign(databaseId, design);
-      },
-    });
+  function handleOpenDesignStudio() {
+    openDesignStudio(databaseId, design.id);
   }
 
   async function handleDuplicate() {
@@ -67,7 +51,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
     await Databases.addDesign(databaseId, duplatedDesign);
 
     // Open the design studio
-    openDesignStudio(duplatedDesign);
+    openDesignStudio(databaseId, duplatedDesign.id);
   }
 
   function handleDelete() {
@@ -92,7 +76,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
       muted
       icon={icon(design)}
       label={design.name}
-      onClick={() => openDesignStudio()}
+      onClick={handleOpenDesignStudio}
       actions={
         <MenuItemDropdownMenu>
           <DropdownMenuTrigger>
@@ -112,7 +96,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
                   <MenuItem
                     icon="edit"
                     label="actions.edit"
-                    onClick={() => openDesignStudio()}
+                    onClick={handleOpenDesignStudio}
                   />
                   <MenuItem
                     icon="copy"

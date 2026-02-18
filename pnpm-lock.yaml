@@ -258,6 +258,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

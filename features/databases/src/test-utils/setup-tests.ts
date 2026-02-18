@@ -11,6 +11,9 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
+import { ViewFixtures, ViewTypes } from '@minddrop/views';
+
+const { wallViewType } = ViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -46,6 +49,9 @@ export function setup(
     // Load database templates into the store
     DatabaseTemplates.initialize();
   }
+
+  // Load view types into the store
+  ViewTypes.register(wallViewType);
 }
 
 export function cleanup() {
@@ -57,6 +63,7 @@ export function cleanup() {
   Databases.Store.clear();
   DataTypes.Store.clear();
   DatabaseTemplates.Store.clear();
+  ViewTypes.Store.clear();
   // Reset mock file system
   MockFs.reset();
 }

@@ -22,6 +22,7 @@ export const viewType2: ViewType = {
 };
 
 export const viewTypes = [viewType1, viewType2];
+export const wallViewType = viewType1;
 
 /*****************************
  * Views

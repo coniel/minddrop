@@ -1,4 +1,5 @@
 import { DesignElementStyle } from '../styles';
+import { DesignType } from './Design.types';
 
 export interface DesignElementBase {
   /**
@@ -89,10 +90,8 @@ export type LayoutDesignElement = ContainerElement;
  * Root Elements
  *****************************************************************************/
 
-export type RootElementType = 'card' | 'list' | 'page';
-
 interface RootElementBase extends DesignElementBase {
-  type: RootElementType;
+  type: DesignType;
 
   /**
    * The child elements contained within this root element.

@@ -7,7 +7,7 @@ import {
 import { DesignStudio } from './components/DesignStudio';
 import {
   EventListenerId,
-  OpenDatabaseDesignStudioEvent,
+  OpenDesignStudioEvent,
   OpenDesignStudioEventData,
 } from './events';
 
@@ -16,7 +16,7 @@ export const DesignStudioFeature: React.FC = () => {
     // Listen for database studio open events and open the database
     // design studio when one is received.
     Events.addListener<OpenDesignStudioEventData>(
-      OpenDatabaseDesignStudioEvent,
+      OpenDesignStudioEvent,
       EventListenerId,
       ({ data }) => {
         Events.dispatch<
@@ -29,7 +29,7 @@ export const DesignStudioFeature: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener(OpenDatabaseDesignStudioEvent, EventListenerId);
+      Events.removeListener(OpenDesignStudioEvent, EventListenerId);
     };
   }, []);
 

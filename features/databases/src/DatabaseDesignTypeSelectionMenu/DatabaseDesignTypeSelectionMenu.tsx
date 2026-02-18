@@ -1,11 +1,5 @@
-import { DatabaseDesignType, Databases } from '@minddrop/databases';
-import { Designs } from '@minddrop/designs';
-import { Events } from '@minddrop/events';
-import {
-  OpenDatabaseDesignStudioEvent,
-  OpenDatabaseDesignStudioEventData,
-} from '@minddrop/feature-design-studio';
-import { i18n } from '@minddrop/i18n';
+import { Databases } from '@minddrop/databases';
+import { DesignType, Designs } from '@minddrop/designs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +10,7 @@ import {
   IconButton,
   MenuGroup,
 } from '@minddrop/ui-primitives';
+import { openDesignStudio } from '../navigation';
 
 export interface DatabaseDesignTypeSelectionMenuProps {
   /**
@@ -27,21 +22,15 @@ export interface DatabaseDesignTypeSelectionMenuProps {
 export const DatabaseDesignTypeSelectionMenu: React.FC<
   DatabaseDesignTypeSelectionMenuProps
 > = ({ databaseId }) => {
-  async function handleSelect(type: DatabaseDesignType) {
+  async function handleSelect(type: DesignType) {
     // Generate a new design of the specified type
-    const design = Designs.generate(type, i18n.t(`designs.${type}.name`));
+    const design = Designs.generate(type);
 
     // Add the design to the database
     await Databases.addDesign(databaseId, design);
 
     // Open the design studio
-    Events.dispatch<OpenDatabaseDesignStudioEventData>(
-      OpenDatabaseDesignStudioEvent,
-      {
-        databaseId,
-        designId: design.id,
-      },
-    );
+    openDesignStudio(databaseId, design.id);
   }
 
   return (
@@ -77,8 +66,8 @@ export const DatabaseDesignTypeSelectionMenu: React.FC<
               <DropdownMenuItem
                 muted
                 icon="layout-list"
-                label="designs.list-item.new"
-                tooltipDescription="designs.list-item.description"
+                label="designs.list.new"
+                tooltipDescription="designs.list.description"
                 onClick={() => handleSelect('list')}
               />
             </MenuGroup>

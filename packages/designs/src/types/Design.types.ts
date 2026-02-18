@@ -3,10 +3,9 @@ import {
   ListElement,
   PageElement,
   RootDesignElement,
-  RootElementType,
 } from './DesignElement.types';
 
-export type DesignType = RootElementType;
+export type DesignType = 'card' | 'list' | 'page';
 
 export interface BaseDesign {
   /**
@@ -46,3 +45,11 @@ export interface PageDesign extends BaseDesign {
 }
 
 export type Design = CardDesign | ListDesign | PageDesign;
+
+export type DesignForType<T extends DesignType> = T extends 'card'
+  ? CardDesign
+  : T extends 'list'
+    ? ListDesign
+    : T extends 'page'
+      ? PageDesign
+      : never;

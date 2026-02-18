@@ -4,7 +4,7 @@ import { Events } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-designs';
+} from '@minddrop/feature-design-studio';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignTypeSelectionMenu } from './DatabaseDesignTypeSelectionMenu';
@@ -16,7 +16,7 @@ describe('<DatabaseDesignTypeSelectionMenu />', () => {
 
   afterEach(cleanup);
 
-  it.each(['card', 'page', 'list-item'])(
+  it.each(['card', 'page', 'list'])(
     'creates a new %s design and opens the design studio',
     (type) =>
       new Promise<void>((done) => {
@@ -27,12 +27,11 @@ describe('<DatabaseDesignTypeSelectionMenu />', () => {
           listenerKey,
           (payload) => {
             Events.removeListener(OpenDesignStudioEvent, listenerKey);
-            expect(payload.data.databaseId).toBe(objectDatabase.id);
-            expect(typeof payload.data.designId).toBe('string');
+            expect(payload.data.design).toBeDefined();
 
             const database = Databases.get(objectDatabase.id);
             const design = database.designs.find(
-              (d) => d.id === payload.data.designId,
+              (d) => d.id === payload.data.design.id,
             );
 
             expect(design).toBeDefined();
