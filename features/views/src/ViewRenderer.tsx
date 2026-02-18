@@ -2,7 +2,7 @@ import { ViewTypeComponentProps, ViewTypes } from '@minddrop/views';
 
 export const ViewRenderer: React.FC<ViewTypeComponentProps> = ({
   view,
-  elements,
+  entries,
 }) => {
   const viewType = ViewTypes.use(view.type);
 
@@ -10,5 +10,5 @@ export const ViewRenderer: React.FC<ViewTypeComponentProps> = ({
     return null;
   }
 
-  return <viewType.component view={view} elements={elements || []} />;
+  return <viewType.component view={view} entries={entries || []} />;
 };
