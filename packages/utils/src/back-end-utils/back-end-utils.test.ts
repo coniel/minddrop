@@ -41,26 +41,26 @@ describe('backend-utils', () => {
 
       // Call the getWebpageMetadata function, should
       // throw a `AdapterNotRegisteredError`.
-      expect(() =>
+      await expect(() =>
         getWebpageMetadata('https://ibguides.com'),
       ).rejects.toThrowError(AdapterNotRegisteredError);
     });
   });
 
   describe('getWebpageMedata', () => {
-    it('throws if there is no registered adapter', () => {
+    it('throws if there is no registered adapter', async () => {
       // Call without a registered adapter, should
       // throw a `AdapterNotRegisteredError`.
-      expect(() =>
+      await expect(() =>
         getWebpageMetadata('https://ibguides.com'),
       ).rejects.toThrowError(AdapterNotRegisteredError);
     });
 
-    it('throws if the URL is invalid', () => {
+    it('throws if the URL is invalid', async () => {
       // Call with an invalid URL, should
       // throw a `ValidationError`.
       // @ts-expect-error Testing invalid input
-      expect(() => getWebpageMetadata(1234)).rejects.toThrowError(
+      await expect(() => getWebpageMetadata(1234)).rejects.toThrowError(
         InvalidParameterError,
       );
     });

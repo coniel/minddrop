@@ -24,7 +24,6 @@ export * from './titleFromUrl';
 export * from './toKebabCase';
 export * from './types';
 export * from './useCreateCallback';
-export * from './useDragImage';
 export * from './useForm';
 export * from './useInputValue';
 export * from './useToggle';

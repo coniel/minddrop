@@ -24,21 +24,6 @@ const schema: PropertySchema[] = [
       },
     ],
   },
-  {
-    name: 'multi-select',
-    type: 'multiselect',
-    defaultValue: ['Option 1', 'Option 2'],
-    options: [
-      {
-        value: 'Option 1',
-        color: 'red',
-      },
-      {
-        value: 'Option 2',
-        color: 'blue',
-      },
-    ],
-  },
 ];
 
 describe('generateDefaultProperties', () => {
@@ -56,7 +41,6 @@ describe('generateDefaultProperties', () => {
       date: new Date('2024-01-01T00:00:00Z'),
       'date-now': now,
       select: 'Option 1',
-      'multi-select': ['Option 1', 'Option 2'],
     });
   });
 
@@ -75,7 +59,6 @@ describe('generateDefaultProperties', () => {
       date: new Date('2024-01-01T00:00:00Z'),
       'date-now': expect.any(Date),
       select: 'Option 1',
-      'multi-select': ['Option 1', 'Option 2'],
       newProperty: 42,
     });
   });

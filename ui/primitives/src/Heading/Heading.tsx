@@ -2,7 +2,7 @@ import { Text, TextProps } from '../Text';
 import { mapPropsToClasses } from '../utils';
 import './Heading.css';
 
-interface HeadingProps extends TextProps {
+export interface HeadingProps extends TextProps {
   /**
    * Whether to remove the default margin.
    * @default false

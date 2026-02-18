@@ -3,9 +3,9 @@ import { render, screen } from '@minddrop/test-utils';
 import {
   cleanup,
   flatTextElement1,
+  flatUsedPropertyElement,
   setup,
   usedProperty,
-  usedPropertyDesignElement,
 } from '../../test-utils';
 import { ElementLabel } from './ElementLabel';
 
@@ -15,7 +15,7 @@ describe('<ElementLabel />', () => {
   afterEach(cleanup);
 
   it('renders property name for property elements', () => {
-    render(<ElementLabel element={usedPropertyDesignElement} />);
+    render(<ElementLabel element={flatUsedPropertyElement} />);
 
     screen.getByText(usedProperty.name);
   });

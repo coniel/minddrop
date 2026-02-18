@@ -21,7 +21,6 @@ import {
   Panel,
   TooltipProvider,
 } from '@minddrop/ui-primitives';
-import { DragImageProvider } from '@minddrop/utils';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
@@ -60,20 +59,18 @@ export const DesktopApp: React.FC = () => {
           onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
         >
           <MindDropApiProvider>
-            <DragImageProvider>
-              <div className="app">
-                <Panel className="toolbar-panel"></Panel>
-                <div className="content-panels">
-                  {showSidebar && <AppSidebar />}
-                  <MainContent />
-                  <RightPanel />
-                </div>
+            <div className="app">
+              <Panel className="toolbar-panel"></Panel>
+              <div className="content-panels">
+                {showSidebar && <AppSidebar />}
+                <MainContent />
+                <RightPanel />
               </div>
-              <DatabasesFeature />
-              <ConfirmationDialogFeature />
-              <ShowWindowOnRendered />
-              <DesignStudioFeature />
-            </DragImageProvider>
+            </div>
+            <DatabasesFeature />
+            <ConfirmationDialogFeature />
+            <ShowWindowOnRendered />
+            <DesignStudioFeature />
           </MindDropApiProvider>
         </IconsProvider>
       </TooltipProvider>

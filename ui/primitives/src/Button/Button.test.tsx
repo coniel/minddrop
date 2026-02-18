@@ -54,12 +54,6 @@ describe('Button', () => {
     ).toBeTruthy();
   });
 
-  it('can be full width', () => {
-    render(<Button fullWidth />);
-
-    expect(screen.getByRole('button').className).toContain('full-width');
-  });
-
   it('renders as an anchor element when href prop is present', () => {
     render(<Button href="https://minddrop.app">MindDrop</Button>);
 

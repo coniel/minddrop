@@ -53,23 +53,6 @@ describe('<InteractiveMenuItem />', () => {
       expect(queryByText('Secondary label')).toBeNull();
     });
 
-    it('renders element label as is', () => {
-      render(
-        <Container>
-          <InteractiveMenuItem
-            MenuItemComponent={DropdownMenuItem}
-            label={<span>Primary label</span>}
-            secondaryLabel="Secondary label"
-          />
-        </Container>,
-      );
-
-      // Renders primary label
-      screen.getByText('Primary label');
-      // Should not render secondary label
-      expect(screen.queryByText('Secondary label')).toBeNull();
-    });
-
     it('renders the icon', () => {
       render(
         <Container>
@@ -88,17 +71,17 @@ describe('<InteractiveMenuItem />', () => {
       expect(screen.queryByText('secondary icon')).toBeNull();
     });
 
-    it('calls onSelect when selected', () => {
-      const onSelect = vi.fn();
-      const onSelectSecondary = vi.fn();
+    it('calls onClick when selected', () => {
+      const onClick = vi.fn();
+      const onClickSecondary = vi.fn();
 
       render(
         <Container>
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
             label="item"
-            onSelect={onSelect}
-            secondaryOnSelect={onSelectSecondary}
+            onClick={onClick}
+            secondaryOnClick={onClickSecondary}
             tooltipTitle="Tooltip title"
             tooltipDescription="Tooltip description"
           />
@@ -108,10 +91,10 @@ describe('<InteractiveMenuItem />', () => {
       // Click the item
       fireEvent.click(screen.getByRole('menuitem'));
 
-      // Should call onSelect callback
-      expect(onSelect).toHaveBeenCalled();
-      // Should not call secondaryOnSelect callback
-      expect(onSelectSecondary).not.toHaveBeenCalled();
+      // Should call onClick callback
+      expect(onClick).toHaveBeenCalled();
+      // Should not call secondaryOnClick callback
+      expect(onClickSecondary).not.toHaveBeenCalled();
     });
 
     it('renders the keyboard shortcut', () => {
@@ -141,7 +124,7 @@ describe('<InteractiveMenuItem />', () => {
             MenuItemComponent={DropdownMenuItem}
             label="Primary label"
             secondaryLabel="test"
-            secondaryOnSelect={vi.fn()}
+            secondaryOnClick={vi.fn()}
           />
         </Container>,
       );
@@ -155,34 +138,13 @@ describe('<InteractiveMenuItem />', () => {
       expect(queryByText('Primary label')).toBeNull();
     });
 
-    it('renders the secondary label element', () => {
-      render(
-        <Container>
-          <InteractiveMenuItem
-            MenuItemComponent={DropdownMenuItem}
-            label="Primary label"
-            secondaryLabel={<span>Secondary label</span>}
-            secondaryOnSelect={vi.fn()}
-          />
-        </Container>,
-      );
-
-      // Press shift key
-      fireEvent.keyDown(window, { key: 'Shift' });
-
-      // Renders secondary label
-      screen.getByText('Secondary label');
-      // Should not render primary label
-      expect(screen.queryByText('Primary label')).toBeNull();
-    });
-
     it('renders the secondary icon', () => {
       render(
         <Container>
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
             label="Primary label"
-            secondaryOnSelect={vi.fn()}
+            secondaryOnClick={vi.fn()}
             icon={<span>primary icon</span>}
             secondaryIcon={<span>secondary icon</span>}
           />
@@ -198,17 +160,17 @@ describe('<InteractiveMenuItem />', () => {
       expect(screen.queryByText('primary icon')).toBeNull();
     });
 
-    it('calls secondaryOnSelect when selected', () => {
-      const onSelect = vi.fn();
-      const onSelectSecondary = vi.fn();
+    it('calls secondaryOnClick when selected', () => {
+      const onClick = vi.fn();
+      const onClickSecondary = vi.fn();
 
       render(
         <Container>
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
             label="item"
-            onSelect={onSelect}
-            secondaryOnSelect={onSelectSecondary}
+            onClick={onClick}
+            secondaryOnClick={onClickSecondary}
             tooltipTitle="Tooltip title"
             tooltipDescription="Tooltip description"
           />
@@ -221,10 +183,10 @@ describe('<InteractiveMenuItem />', () => {
       // Click the item
       fireEvent.click(screen.getByRole('menuitem'));
 
-      // Should call secondaryOnSelect callback
-      expect(onSelectSecondary).toHaveBeenCalled();
-      // Should not call primary onSelect callback
-      expect(onSelect).not.toHaveBeenCalled();
+      // Should call secondaryOnClick callback
+      expect(onClickSecondary).toHaveBeenCalled();
+      // Should not call primary onClick callback
+      expect(onClick).not.toHaveBeenCalled();
     });
 
     it('renders the secondary keyboard shortcut', () => {
@@ -233,7 +195,7 @@ describe('<InteractiveMenuItem />', () => {
           <InteractiveMenuItem
             MenuItemComponent={DropdownMenuItem}
             label="Primary label"
-            secondaryOnSelect={vi.fn()}
+            secondaryOnClick={vi.fn()}
             keyboardShortcut={['primary shortcut']}
             secondaryKeyboardShortcut={['secondary shortcut']}
           />

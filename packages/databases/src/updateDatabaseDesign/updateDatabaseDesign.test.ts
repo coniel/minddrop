@@ -27,6 +27,7 @@ describe('updateDatabaseDesign', () => {
 
   it('throws if the design type is changed', async () => {
     await expect(
+      // @ts-expect-error - Test invalid type change
       updateDatabaseDesign(objectDatabase.id, {
         ...updatedDesign,
         type: 'list',

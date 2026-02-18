@@ -62,7 +62,7 @@ const item: MenuItemConfig = {
   type: 'menu-item',
   label: 'label',
   icon: 'settings',
-  onSelect: vi.fn(),
+  onClick: vi.fn(),
   keyboardShortcut: ['A', 'B'],
 };
 

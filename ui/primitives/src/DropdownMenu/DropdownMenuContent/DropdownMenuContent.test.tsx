@@ -47,7 +47,7 @@ describe('<DropdownMenuContent />', () => {
       {
         type: 'menu-item',
         label: 'item 1',
-        onSelect: vi.fn(),
+        onClick: vi.fn(),
       },
       {
         type: 'menu-label',
@@ -56,12 +56,12 @@ describe('<DropdownMenuContent />', () => {
       {
         type: 'menu-item',
         label: 'item 2',
-        onSelect: vi.fn(),
+        onClick: vi.fn(),
         submenu: [
           {
             type: 'menu-item',
             label: 'sub item 1',
-            onSelect: vi.fn(),
+            onClick: vi.fn(),
           },
         ],
       },

@@ -17,7 +17,7 @@
     "strict": true,
     "resolveJsonModule": true,
     "target": "es2015",
-    "lib": ["ES2015", "esnext"]
+    "lib": ["ES2015", "esnext", "dom"]
   },
   "exclude": ["node_modules"]
 }

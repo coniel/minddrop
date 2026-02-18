@@ -17,7 +17,7 @@ describe('<PropertyTypeSelectionMenu />', () => {
   it('opens the menu when triggered', async () => {
     render(
       <PropertyTypeSelectionMenu onSelect={onSelect}>
-        {(props) => <button {...props}>Open</button>}
+        <button>Open</button>
       </PropertyTypeSelectionMenu>,
     );
     const user = userEvent.setup();
@@ -34,7 +34,7 @@ describe('<PropertyTypeSelectionMenu />', () => {
         onSelect={onSelect}
         existingProperties={[TextPropertySchema, CreatedPropertySchema]}
       >
-        {(props) => <button {...props}>Open</button>}
+        <button>Open</button>
       </PropertyTypeSelectionMenu>,
     );
 
@@ -47,7 +47,7 @@ describe('<PropertyTypeSelectionMenu />', () => {
   it('calls onSelect when a property type is selected', async () => {
     render(
       <PropertyTypeSelectionMenu defaultOpen onSelect={onSelect}>
-        {(props) => <button {...props}>Open</button>}
+        <button>Open</button>
       </PropertyTypeSelectionMenu>,
     );
     const user = userEvent.setup();

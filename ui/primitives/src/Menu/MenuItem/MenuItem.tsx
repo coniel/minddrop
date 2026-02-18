@@ -9,7 +9,7 @@ import { Text } from '../../Text';
 import { mapPropsToClasses } from '../../utils';
 import './MenuItem.css';
 
-interface MenuItemContext {
+export interface MenuItemContext {
   /**
    * Allows programatic control of the visibility of the actions menu.
    *
