@@ -37,5 +37,5 @@ export interface ViewTypeComponentProps<TViewOptions extends object = {}> {
   /**
    * IDs of the elements to render within the view.
    */
-  elements: string[];
+  entries: string[];
 }
