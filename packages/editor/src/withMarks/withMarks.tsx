@@ -100,7 +100,7 @@ export function withMarks(
     // Loop through the mark configs, checking if any of
     // the keys are applied to the leaf.
     Object.keys(configs).forEach((key) => {
-      if (props.leaf[key]) {
+      if (props.leaf[key as keyof typeof props.leaf]) {
         // Get the matched config's component
         const Component = configs[key].component;
 

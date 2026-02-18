@@ -36,7 +36,9 @@ export function createEditor(): Editor {
 
   editor.toggleMark = (mark: string, value?: boolean | string | number) => {
     // Check if the selection is already marked
-    if ((SlateEditor.marks(editor) || {})[mark]) {
+    if (
+      (SlateEditor.marks(editor) || {})[mark as keyof typeof SlateEditor.marks]
+    ) {
       // Remove the mark
       editor.removeMark(mark);
     } else {
