@@ -4,6 +4,7 @@ import './light.css';
 import './base.css';
 import './variables.css';
 import './animations.css';
+import './typography.css';
 
 export { Theme as ThemeProvider } from '@radix-ui/themes';
 export * from './types';
