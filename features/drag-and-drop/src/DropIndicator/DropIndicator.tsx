@@ -37,6 +37,7 @@ export const DropIndicator: React.FC<DropIndicatorProps> = ({
         'drop-indicator',
       )}
       style={{
+        // @ts-expect-error - Gap is a CSS custom property
         '--gap': `${gap}px`,
       }}
     >
