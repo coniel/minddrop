@@ -60,7 +60,8 @@
         "title": "MindDrop",
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
-        "visible": true
+        "visible": true,
+        "backgroundColor": "#0b0b0b"
       }
     ],
     "security": {
