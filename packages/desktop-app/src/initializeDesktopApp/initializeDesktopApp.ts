@@ -1,8 +1,6 @@
 import { Ast } from '@minddrop/ast';
-import { BaseItemTypes } from '@minddrop/base-item-types';
 import { loadConfigs } from '@minddrop/core';
 import {
-  DataTypes,
   DatabaseAutomations,
   DatabaseEntries,
   DatabaseTemplates,
@@ -11,7 +9,6 @@ import {
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
-import { ItemTypes } from '@minddrop/item-types';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
 import { initializeSelection } from './initializeSelection';
@@ -48,17 +45,10 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
 
   // Initialize databases
-  DataTypes.initialize();
   DatabaseTemplates.initialize();
   DatabaseAutomations.initialize();
   await Databases.initialize();
   await DatabaseEntries.initialize();
-
-  // Initialize core base item types
-  BaseItemTypes.initialize();
-
-  // Load item types
-  ItemTypes.load();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();

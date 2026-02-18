@@ -174,7 +174,6 @@
         "fileType": "File type",
         "anyFileType": "Any",
         "customFileType": "Custom",
-        "dataTypes": "Data types",
         "templates": "Templates"
       },
       "properties": {
@@ -182,8 +181,7 @@
         "description": "You can customise properties after creating the database."
       },
       "getStarted": {
-        "title": "Choose a data type or template to start",
-        "dataType": "Data types define what your database holds. Some are based around an existing file (Images, PDFs), while others are purely property-based (Objects, Weblinks).",
+        "title": "Choose a template or start from scratch",
         "template": "Templates are just regular databases with pre-configured properties, designs, and sometimes automations. You can fully edit them to suit your workflow."
       },
       "actions": {
@@ -218,88 +216,6 @@
         "name": "YAML",
         "description": "Saves database entries as YAML files."
       }
-    }
-  },
-  "dataTypes": {
-    "audio": {
-      "name": "Audio",
-      "database": "Audio database",
-      "description": "For organising audio files such as music tracks, sound effects, interviews, or voice recordings. Each entry is created from an existing audio file.",
-      "dbNamePlaceholder": "e.g. Sound Effects",
-      "entryNamePlaceholder": "e.g. Sound Effect"
-    },
-    "file": {
-      "name": "File",
-      "database": "File database",
-      "description": "A flexible database for managing any type of file. Use this when you want to organise files of mixed or unspecified formats.",
-      "dbNamePlaceholder": "e.g. Project Files",
-      "entryNamePlaceholder": "e.g. Project File"
-    },
-    "image": {
-      "name": "Image",
-      "database": "Image database",
-      "description": "For storing image files such as photos, illustrations, screenshots, or graphics. Each entry begins with selecting an image file.",
-      "dbNamePlaceholder": "e.g. Illustrations",
-      "entryNamePlaceholder": "e.g. Illustration"
-    },
-    "object": {
-      "name": "Object",
-      "database": "Object database",
-      "description": "A versatile type for entries that represent things rather than files, such as tasks, recipes, places, or people. Ideal for structuring information with custom properties.",
-      "dbNamePlaceholder": "e.g. Books",
-      "entryNamePlaceholder": "e.g. Book"
-    },
-    "pdf": {
-      "name": "PDF",
-      "database": "PDF database",
-      "description": "For collecting and organising PDF documents. Each entry represents a single PDF file.",
-      "dbNamePlaceholder": "e.g. Research Papers",
-      "entryNamePlaceholder": "e.g. Research Paper"
-    },
-    "url": {
-      "name": "Weblink",
-      "database": "Weblink database",
-      "description": "For saving links such as webpages, articles, or bookmarks. When you add a link, the webpage's title, description, image, and icon are automatically added as properties.",
-      "dbNamePlaceholder": "e.g. Articles",
-      "entryNamePlaceholder": "e.g. Article",
-      "properties": {
-        "url": {
-          "name": "URL"
-        },
-        "title": {
-          "name": "Title"
-        },
-        "description": {
-          "name": "Description"
-        },
-        "image": {
-          "name": "Image"
-        },
-        "icon": {
-          "name": "Icon"
-        }
-      }
-    },
-    "video": {
-      "name": "Video",
-      "database": "Video database",
-      "description": "For managing video files such as films, clips, screen recordings, or animations. Each entry is created from an existing video file.",
-      "dbNamePlaceholder": "e.g. Video Clips",
-      "entryNamePlaceholder": "e.g. Video Clip"
-    },
-    "view": {
-      "name": "View",
-      "database": "View database",
-      "description": "For storing views created from a common template. Great for organising frequently used views such as mood boards and task lists.",
-      "dbNamePlaceholder": "e.g. Mood Boards",
-      "entryNamePlaceholder": "e.g. Mood Board"
-    },
-    "space": {
-      "name": "Space",
-      "database": "Space database",
-      "description": "A database where each entry is a fully structured space based on a template. Great for creating reusable spaces for projects, assignments, and research.",
-      "dbNamePlaceholder": "e.g. Projects",
-      "entryNamePlaceholder": "e.g. Project"
     }
   },
   "databaseTemplates": {

@@ -1,10 +1,8 @@
 import { vi } from 'vitest';
 import {
-  DataTypes,
   DatabaseFixtures,
   DatabaseTemplates,
   Databases,
-  coreDataTypes,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
@@ -17,7 +15,6 @@ const { wallViewType } = ViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
-  loadDataTypes?: boolean;
   loadDatabaseTemplates?: boolean;
 }
 
@@ -31,18 +28,12 @@ export const MockFs = initializeMockFileSystem([
 export function setup(
   options: SetupOptions = {
     loadDatabases: true,
-    loadDataTypes: true,
     loadDatabaseTemplates: true,
   },
 ) {
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
     Databases.Store.load(DatabaseFixtures.databases);
-  }
-
-  if (options.loadDataTypes !== false) {
-    // Load data types into the store
-    DataTypes.Store.load(coreDataTypes);
   }
 
   if (options.loadDatabaseTemplates !== false) {
@@ -61,7 +52,6 @@ export function cleanup() {
 
   // Clear stores
   Databases.Store.clear();
-  DataTypes.Store.clear();
   DatabaseTemplates.Store.clear();
   ViewTypes.Store.clear();
   // Reset mock file system

@@ -1,4 +1,3 @@
-export * from './DataType.types';
 export * from './Database.types';
 export * from './DatabaseAutomation.types';
 export * from './DatabaseAutomationAction.types';

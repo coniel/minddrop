@@ -1,7 +1,8 @@
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
-import { getDataType } from '../../getDataType';
 import { getDatabase } from '../../getDatabase';
+
+// TODO: Refactor to use file properties
 
 /**
  * Filters a list of files to only include files that are valid for the given database.
@@ -18,33 +19,31 @@ export function filterValidDatabaseFiles(
 ): { validFiles: File[]; invalidFiles: File[] } {
   // Get the database
   const database = getDatabase(databaseId);
-  // Get the data type
-  const dataType = getDataType(database.dataType);
 
-  // Ensure the database is a file based database
-  if (!dataType.file) {
-    throw new InvalidParameterError(
-      `Database ${databaseId} is not a file based database.`,
-    );
-  }
+  // // Ensure the database is a file based database
+  // if (!dataType.file) {
+  //   throw new InvalidParameterError(
+  //     `Database ${databaseId} is not a file based database.`,
+  //   );
+  // }
 
-  // If the data type does not enforce file types, return all files
-  // as valid.
-  if (!dataType.fileExtensions) {
-    return { validFiles: files, invalidFiles: [] };
-  }
+  // // If the data type does not enforce file types, return all files
+  // // as valid.
+  // if (!dataType.fileExtensions) {
+  //   return { validFiles: files, invalidFiles: [] };
+  // }
+  //
+  // // Filter files by validity
+  // const validFiles: File[] = [];
+  // const invalidFiles: File[] = [];
+  //
+  // files.forEach((file) => {
+  //   if (dataType.fileExtensions?.includes(Fs.getFileExtension(file.name))) {
+  //     validFiles.push(file);
+  //   } else {
+  //     invalidFiles.push(file);
+  //   }
+  // });
 
-  // Filter files by validity
-  const validFiles: File[] = [];
-  const invalidFiles: File[] = [];
-
-  files.forEach((file) => {
-    if (dataType.fileExtensions?.includes(Fs.getFileExtension(file.name))) {
-      validFiles.push(file);
-    } else {
-      invalidFiles.push(file);
-    }
-  });
-
-  return { validFiles, invalidFiles };
+  return { validFiles: [], invalidFiles: [] };
 }

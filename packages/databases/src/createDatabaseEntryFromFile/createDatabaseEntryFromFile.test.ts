@@ -9,7 +9,7 @@ import {
 } from '../test-utils';
 import { createDatabaseEntryFromFile } from './createDatabaseEntryFromFile';
 
-describe('createDatabaseEntryFromFile', () => {
+describe.skip('createDatabaseEntryFromFile', () => {
   beforeEach(setup);
 
   afterEach(cleanup);

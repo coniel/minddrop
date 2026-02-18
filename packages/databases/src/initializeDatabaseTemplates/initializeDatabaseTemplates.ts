@@ -6,7 +6,6 @@ import { coreDatabaseTemplates } from '../database-templates';
  * Loads all core database templates into the store.
  */
 export function initializeDatabaseTemplates() {
-  // Register core data types
   DatabaseTemplatesStore.load(
     coreDatabaseTemplates.map((databaseTemplate) =>
       // Translate template and property names and descriptions

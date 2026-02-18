@@ -5,10 +5,9 @@ import { PropertySchema } from '@minddrop/properties';
 import { ViewFixtures } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
-import { ObjectDataType, UrlDataType } from '../data-type-configs';
-import { DataTypeNotFoundError } from '../errors';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
+import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
 import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
@@ -18,7 +17,6 @@ const { view1 } = ViewFixtures;
 const options: Omit<CreateDatabaseOptions, 'automations'> = {
   name: 'Tests',
   entryName: 'Test',
-  dataType: UrlDataType.type,
   description: 'A test database for unit testing',
   icon: 'test-icon',
 };
@@ -26,18 +24,11 @@ const options: Omit<CreateDatabaseOptions, 'automations'> = {
 const newDatabase: Database = {
   ...options,
   id: expect.any(String),
-  // Should inherit properties from the base database
-  properties: UrlDataType.properties,
   created: expect.any(Date),
   lastModified: expect.any(Date),
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
-  automations: [
-    {
-      ...UrlDataType.automations![0],
-      id: expect.any(String),
-    },
-  ],
+  properties: [],
   defaultDesigns: {},
   designs: [],
   views: [
@@ -52,17 +43,6 @@ describe('createDatabase', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
-
-  it('throws if the data type does not exist', async () => {
-    const invalidOptions = {
-      ...options,
-      dataType: 'non-existent-base-type',
-    };
-
-    await expect(createDatabase(parentDir, invalidOptions)).rejects.toThrow(
-      DataTypeNotFoundError,
-    );
-  });
 
   it('throws if the database directory already exists', async () => {
     // First, create the database directory
@@ -80,7 +60,7 @@ describe('createDatabase', () => {
     expect(database).toMatchObject(newDatabase);
   });
 
-  it('uses provided properties in place of default data type ones', async () => {
+  it('adds provided properties', async () => {
     const customProperty: PropertySchema = {
       type: 'text',
       name: 'Custom Property',
@@ -95,26 +75,15 @@ describe('createDatabase', () => {
   });
 
   describe('automations', () => {
-    it('adds data type automations', () => {
-      expect(newDatabase.automations).toEqual([
-        {
-          ...UrlDataType.automations![0],
-          // Should add an id
-          id: expect.any(String),
-        },
-      ]);
-    });
-
     it('adds provided automations', async () => {
       const database = await createDatabase(parentDir, {
         ...options,
-        dataType: ObjectDataType.type,
-        automations: [UrlDataType.automations![0]],
+        automations: [fetchWebpageMetadataAutomation],
       });
 
       expect(database.automations).toEqual([
         {
-          ...UrlDataType.automations![0],
+          ...fetchWebpageMetadataAutomation,
           // Should add an id
           id: expect.any(String),
         },
@@ -124,7 +93,6 @@ describe('createDatabase', () => {
     it('does not add automations property if there are no automations', async () => {
       const database = await createDatabase(parentDir, {
         ...options,
-        dataType: ObjectDataType.type,
       });
 
       expect(database.automations).toBeUndefined();

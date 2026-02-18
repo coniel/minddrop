@@ -1,9 +1,6 @@
 import { PropertyMap } from '@minddrop/properties';
 
-export interface DatabaseEntry<
-  TProperties extends PropertyMap = PropertyMap,
-  TData extends object = {},
-> {
+export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   /**
    * A unique identifier for the entry.
    */
@@ -39,12 +36,6 @@ export interface DatabaseEntry<
    * The item's properties.
    */
   properties: TProperties;
-
-  /**
-   * The item's data. Only applicable to entry types belonging to data types
-   * that define a custom serializer.
-   */
-  data?: TData;
 }
 
 export type DatabaseEntryCoreProperties = Pick<

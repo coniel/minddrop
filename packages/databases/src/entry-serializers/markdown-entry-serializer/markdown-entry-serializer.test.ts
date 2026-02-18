@@ -11,6 +11,7 @@ const schema1: PropertiesSchema = [
 ];
 
 const entry1: DatabaseEntry = {
+  id: 'test-entry-1',
   title: 'Test Entry',
   database: 'test-database',
   path: 'test-database/test-entry',

@@ -17,19 +17,10 @@ export interface Database {
   path: string;
 
   /**
-   * Determines what type of entries are stored in the database. Must be a registered
-   * data type.
-   */
-  dataType: string;
-
-  /**
    * The entry serializer used to serialize entries in the database.
    * Must be a registered entry serializer.
-   *
-   * A value of 'data-type' indicates that the database is using the entry serializer
-   * defined by its data type.
    */
-  entrySerializer: 'data-type' | string;
+  entrySerializer: string;
 
   /**
    * The name of the database. Also used as the name for the database directory
@@ -83,8 +74,9 @@ export interface Database {
 
   /**
    * The IDs of the designs to use as the default for each design type.
-   * If a default design is not provided for a type, the global default
-   * design will be used.
+   * If a default design is not provided for a type, the first design
+   * of that type will be used. If no design of that type exists, the
+   * global default design will be used.
    */
   defaultDesigns: Partial<Record<DatabaseDesignType, string>>;
 

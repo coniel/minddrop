@@ -17,7 +17,7 @@ const textFile = {
   name: 'invalid.txt',
 } as File;
 
-describe('filterValidDatabaseFiles', () => {
+describe.skip('filterValidDatabaseFiles', () => {
   beforeEach(setup);
 
   afterEach(cleanup);

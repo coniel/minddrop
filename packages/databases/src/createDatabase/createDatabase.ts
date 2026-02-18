@@ -5,7 +5,6 @@ import { uuid } from '@minddrop/utils';
 import { View, Views } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
-import { getDataType } from '../getDataType';
 import { Database, DatabaseAutomationTemplate } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
@@ -49,9 +48,6 @@ export async function createDatabase(
   parentDirPath: string,
   options: CreateDatabaseOptions,
 ): Promise<Database> {
-  // Get the data type config. This will throw an error if the data type does not exist.
-  const dataType = getDataType(options.dataType);
-
   // The path to the database directory
   const dbPath = Fs.concatPath(parentDirPath, options.name);
 
@@ -60,12 +56,8 @@ export async function createDatabase(
     throw new PathConflictError(dbPath);
   }
 
-  // Create automation instances from the data type's automation
-  // templates and the provided automation templates.
-  const automations = [
-    ...(dataType.automations || []),
-    ...(options.automations || []),
-  ].map((automation) => ({
+  // Create automation instances from the provided automation templates
+  const automations = [...(options.automations || [])].map((automation) => ({
     ...automation,
     id: uuid(),
   }));
@@ -75,7 +67,7 @@ export async function createDatabase(
     ...options,
     id: uuid(),
     path: dbPath,
-    properties: options.properties || dataType.properties,
+    properties: options.properties || [],
     entrySerializer: options.entrySerializer || 'markdown',
     created: new Date(),
     lastModified: new Date(),

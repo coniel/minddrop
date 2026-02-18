@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
-import { Markdown } from '@minddrop/markdown';
 import { Properties } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import {
-  DataTypeNotFoundError,
   DatabaseEntryNotFoundError,
   DatabaseEntrySerializerNotRegisteredError,
   DatabaseNotFoundError,
@@ -13,19 +11,12 @@ import {
 import {
   MockFs,
   cleanup,
-  dataTypeSerializerEntry1,
   objectDatabase,
   objectEntry1,
-  pdfDatabase,
-  pdfEntry1,
   setup,
   yamlObjectEntry1,
 } from '../test-utils';
-import {
-  entryCoreProperties,
-  entryCorePropertiesFilePath,
-  fileEntryPropertiesFilePath,
-} from '../utils';
+import { entryCoreProperties, entryCorePropertiesFilePath } from '../utils';
 import { writeDatabaseEntry } from './writeDatabaseEntry';
 
 describe('writeDatabaseEntry', () => {
@@ -49,25 +40,6 @@ describe('writeDatabaseEntry', () => {
 
     await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
       DatabaseNotFoundError,
-    );
-  });
-
-  it('throws if the data type is not registered', async () => {
-    DatabaseEntriesStore.clear();
-    // Add a database with a non-existent data type
-    DatabasesStore.add({
-      ...objectDatabase,
-      id: 'missing-data-type',
-      dataType: 'non-existent-data-type',
-    });
-    // Add an entry with a non-existent data type
-    DatabaseEntriesStore.add({
-      ...objectEntry1,
-      database: 'missing-data-type',
-    });
-
-    await expect(writeDatabaseEntry(objectEntry1.id)).rejects.toThrow(
-      DataTypeNotFoundError,
     );
   });
 
@@ -119,24 +91,6 @@ describe('writeDatabaseEntry', () => {
     expect(properties).toEqual(entryCoreProperties(objectEntry1));
   });
 
-  describe('file based entry', () => {
-    it('writes the entry properties to the properties subdirectory', async () => {
-      const path = fileEntryPropertiesFilePath(pdfEntry1.path, 'md');
-
-      // Remove the file before writing to ensure it doesn't exist
-      MockFs.removeFile(path);
-
-      await writeDatabaseEntry(pdfEntry1.id);
-
-      const properties = Markdown.getProperties(
-        pdfDatabase.properties,
-        MockFs.readTextFile(path),
-      );
-
-      expect(properties).toEqual(pdfEntry1.properties);
-    });
-  });
-
   describe('non-file based entry', () => {
     it('writes the entry properties to the main entry file', async () => {
       // Remove the file before writing to ensure it doesn't exist
@@ -147,22 +101,6 @@ describe('writeDatabaseEntry', () => {
       const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
 
       expect(properties).toEqual(yamlObjectEntry1.properties);
-    });
-  });
-
-  describe('dtata type serializer', () => {
-    it('writes the entry properties to the main entry file', async () => {
-      // Remove the file before writing to ensure it doesn't exist
-      MockFs.removeFile(dataTypeSerializerEntry1.path);
-
-      await writeDatabaseEntry(dataTypeSerializerEntry1.id);
-
-      const entry = MockFs.readJsonFile(dataTypeSerializerEntry1.path);
-
-      expect(entry).toEqual({
-        properties: dataTypeSerializerEntry1.properties,
-        data: dataTypeSerializerEntry1.data,
-      });
     });
   });
 });

@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  DataType,
-  DataTypes,
   DatabaseTemplate,
   DatabaseTemplates,
   Databases,
@@ -43,14 +41,10 @@ export interface NewDatabaseDialogProps {
 export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   defaultOpen = false,
 }) => {
-  const dataTypes = DataTypes.useAll();
   const databaseTemplates = DatabaseTemplates.useAll();
   const [dialogOpen, setDialogOpen] = useState(defaultOpen);
   const [icon, setIcon] = useState(defaultIcon);
   const [customIcon, setCustomIcon] = useState(false);
-  const [selectedDataType, setSelectedDataType] = useState<DataType | null>(
-    null,
-  );
   const [selectedTemplate, setSelectedTemplate] =
     useState<DatabaseTemplate | null>(null);
   const { fieldProps, validateAllAsync, values, reset, setFieldValue } =
@@ -73,7 +67,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     // the dialog close animation to complete.
     setTimeout(() => {
       reset();
-      setSelectedDataType(null);
       setSelectedTemplate(null);
       setIcon(defaultIcon);
       setCustomIcon(false);
@@ -102,14 +95,11 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   }, [toggleDialog]);
 
   async function handleCreate() {
-    if (!selectedDataType && !setSelectedTemplate) return;
+    if (!setSelectedTemplate) return;
 
     if (await validateAllAsync()) {
       // Create the new item type
       await Databases.create(Paths.workspace, {
-        dataType: selectedDataType
-          ? selectedDataType.type
-          : selectedTemplate!.dataType,
         name: values.name,
         entryName: values.entryName,
         properties: selectedTemplate ? selectedTemplate.properties : undefined,
@@ -133,26 +123,10 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     setCustomIcon(false);
   }
 
-  function hndleSelectIcon(selectedIcon: string) {
+  function handleSelectIcon(selectedIcon: string) {
     setCustomIcon(true);
     setIcon(selectedIcon);
   }
-
-  const handleSelectType = useCallback(
-    (type: DataType) => {
-      if (selectedTemplate) {
-        reset();
-      }
-
-      setSelectedDataType(type);
-      setSelectedTemplate(null);
-
-      if (!customIcon) {
-        setIcon(type.icon);
-      }
-    },
-    [customIcon, selectedTemplate, reset],
-  );
 
   const handleSelectTemplate = useCallback(
     (template: DatabaseTemplate) => {
@@ -160,7 +134,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
       setIcon(template.icon);
       setFieldValue('name', i18n.t(template.name));
       setFieldValue('entryName', i18n.t(template.entryName));
-      setSelectedDataType(null);
     },
     [setFieldValue],
   );
@@ -171,40 +144,18 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
   let entryNamePlaceholder = '';
   let properties: PropertiesSchema = [];
 
-  if (selectedDataType) {
-    databaseTypeName = `dataTypes.${selectedDataType.type}.database`;
-    databaseDescription = selectedDataType.description;
-    databasenamePlaceholder = `dataTypes.${selectedDataType.type}.dbNamePlaceholder`;
-    entryNamePlaceholder = `dataTypes.${selectedDataType.type}.entryNamePlaceholder`;
-    properties = selectedDataType.properties;
-  }
-
   if (selectedTemplate) {
     databaseTypeName = selectedTemplate.name;
     databaseDescription = selectedTemplate.description || '';
     databasenamePlaceholder = selectedTemplate.name;
     entryNamePlaceholder = selectedTemplate.entryName;
-    properties = selectedTemplate.properties;
+    properties = selectedTemplate.properties || [];
   }
 
   return (
     <DialogRoot open={dialogOpen} onOpenChange={toggleDialog}>
       <Dialog className="new-database-dialog">
         <div className="left-column">
-          <MenuGroup>
-            <MenuLabel label="databases.form.labels.dataTypes" />
-            {dataTypes.map((type) => (
-              <MenuItem
-                key={type.type}
-                onClick={() => handleSelectType(type)}
-                active={
-                  !!selectedDataType && selectedDataType.type === type.type
-                }
-                contentIcon={type.icon}
-                label={type.name}
-              />
-            ))}
-          </MenuGroup>
           <MenuGroup>
             <MenuLabel label="databases.form.labels.templates" />
             {databaseTemplates.map((template) => (
@@ -228,14 +179,9 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
               }
             />
           </div>
-          {!selectedDataType && !selectedTemplate && (
+          {!selectedTemplate && (
             <div className="get-started">
               <Heading text="databases.form.getStarted.title" />
-              <Text
-                paragraph
-                color="muted"
-                text="databases.form.getStarted.dataType"
-              />
               <Text
                 paragraph
                 color="muted"
@@ -243,7 +189,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
               />
             </div>
           )}
-          {(selectedDataType || selectedTemplate) && (
+          {selectedTemplate && (
             <div className="content">
               <div className="description">
                 <Heading text={databaseTypeName} />
@@ -257,7 +203,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                   iconPicker={
                     <IconPicker
                       closeOnSelect
-                      onSelect={hndleSelectIcon}
+                      onSelect={handleSelectIcon}
                       onClear={handleClearIcon}
                       currentIcon={icon}
                     >

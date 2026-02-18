@@ -8,7 +8,6 @@ import {
   DatabaseEntryCreatedEvent,
   DatabaseEntryCreatedEventData,
 } from '../events';
-import { getDataType } from '../getDataType';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntrySerializer } from '../getDatabaseEntrySerializer';
 import { DatabaseEntry } from '../types';
@@ -26,7 +25,6 @@ import { writeDatabaseEntry } from '../writeDatabaseEntry';
  * @returns The newly created entry.
  *
  * @throws {DatabaseNotFoundError} If the database does not exist.
- * @throws {DataTypeNotFoundError} If the data type is not registered.
  * @throws {DatabaseEntrySerializerNotRegisteredError} If the entry serializer is not registered.
  *
  * @dispatches databases:entry:created
@@ -43,18 +41,12 @@ export async function createDatabaseEntry<
   let fileExtension = '';
   // Get the database
   const database = getDatabase(databaseId);
-  // Get the data type
-  const dataType = getDataType(database.dataType);
   // Path to which to write the entry
   let parentDirPath = database.path;
 
   // Get the file extension for the entry file
-  if (database.entrySerializer === 'data-type') {
-    fileExtension = dataType.fileExtension!;
-  } else {
-    const serializer = getDatabaseEntrySerializer(database.entrySerializer);
-    fileExtension = serializer.fileExtension;
-  }
+  const serializer = getDatabaseEntrySerializer(database.entrySerializer);
+  fileExtension = serializer.fileExtension;
 
   // Path to the entry's primary file
   let path =

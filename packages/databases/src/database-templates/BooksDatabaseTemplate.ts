@@ -1,7 +1,6 @@
 import { DatabaseTemplate } from '../types';
 
 export const BooksDatabaseTemplate: DatabaseTemplate = {
-  dataType: 'object',
   entrySerializer: 'markdown',
   name: 'databaseTemplates.books.name',
   entryName: 'databaseTemplates.books.entryName',

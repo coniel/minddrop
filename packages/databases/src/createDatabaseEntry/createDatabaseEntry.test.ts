@@ -6,12 +6,8 @@ import { DatabaseEntryCreatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
-  dataTypeSerializerDatabase,
-  dataTypeWithSerializer,
   objectDatabase,
   objectEntry1,
-  pdfDatabase,
-  pdfEntry1,
   setup,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
@@ -68,19 +64,6 @@ describe('createDatabaseEntry', () => {
       expect(secondEntry.title).toBe(`${title} 1`);
       expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
     });
-
-    it('gets file extension from the data type', async () => {
-      // Create two data type serializer entrys with the same name
-      await createDatabaseEntry(dataTypeSerializerDatabase.id);
-      const secondEntry = await createDatabaseEntry(
-        dataTypeSerializerDatabase.id,
-      );
-
-      expect(secondEntry.title).toBe(`${title} 1`);
-      expect(secondEntry.path).toBe(
-        `${dataTypeSerializerDatabase.path}/${title} 1.${dataTypeWithSerializer.fileExtension}`,
-      );
-    });
   });
 
   it('allows specifying a custom title', async () => {
@@ -109,22 +92,6 @@ describe('createDatabaseEntry', () => {
     expect(entryWithCustomProperties.properties).toEqual({
       ...newEntry.properties,
       ...customProperties,
-    });
-  });
-
-  describe('file based entry', () => {
-    it('allows creating a file based entry', async () => {
-      const result = await createDatabaseEntry(
-        pdfDatabase.id,
-        pdfEntry1.title,
-        pdfEntry1.properties,
-        pdfEntry1.path,
-      );
-
-      expect(result).toEqual({
-        ...pdfEntry1,
-        id: expect.any(String),
-      });
     });
   });
 

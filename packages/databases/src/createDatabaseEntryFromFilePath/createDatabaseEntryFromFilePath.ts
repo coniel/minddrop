@@ -1,9 +1,10 @@
 import { Fs } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 import { createDatabaseEntry } from '../createDatabaseEntry';
-import { getDataType } from '../getDataType';
 import { getDatabase } from '../getDatabase';
 import { DatabaseEntry } from '../types';
+
+// TODO: Refactor to use file property
 
 /**
  * Creates a database entry from a file path.
@@ -22,22 +23,20 @@ export async function createDatabaseEntryFromFilePath(
 ): Promise<DatabaseEntry> {
   // Get the database
   const database = getDatabase(databaseId);
-  // Get the data type
-  const dataType = getDataType(database.dataType);
 
-  // Ensure the database is a file based database
-  if (!dataType.file) {
-    throw new InvalidParameterError(
-      `Database ${databaseId} is not a file based database.`,
-    );
-  }
-
-  // Ensure the file is a valid file type for the database
-  if (!dataType.fileExtensions?.includes(Fs.getFileExtension(filePath))) {
-    throw new InvalidParameterError(
-      `File ${filePath} is not a valid file type for database ${databaseId}.`,
-    );
-  }
+  // // Ensure the database is a file based database
+  // if (!dataType.file) {
+  //   throw new InvalidParameterError(
+  //     `Database ${databaseId} is not a file based database.`,
+  //   );
+  // }
+  //
+  // // Ensure the file is a valid file type for the database
+  // if (!dataType.fileExtensions?.includes(Fs.getFileExtension(filePath))) {
+  //   throw new InvalidParameterError(
+  //     `File ${filePath} is not a valid file type for database ${databaseId}.`,
+  //   );
+  // }
 
   // Path to the file in the database
   const databaseFilePath = Fs.concatPath(

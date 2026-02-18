@@ -15,7 +15,7 @@ describe('initializeDatabaseTemplates', () => {
         ...databaseTemplate,
         name: expect.any(String),
         description: expect.any(String),
-        properties: databaseTemplate.properties.map((property) => ({
+        properties: (databaseTemplate.properties || []).map((property) => ({
           ...property,
           name: expect.any(String),
         })),

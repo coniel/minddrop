@@ -1,5 +1,4 @@
-import { DataTypes, DatabaseEntries, Databases } from '@minddrop/databases';
-import { Fs } from '@minddrop/file-system';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import {
   ContentIcon,
   Heading,
@@ -40,22 +39,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       return;
     }
 
-    const dataType = DataTypes.get(database.dataType);
-
-    if (dataType.file) {
-      const result = await Fs.openFilePicker({
-        accept: dataType.fileExtensions,
-        multiple: true,
-      });
-
-      if (result) {
-        result.forEach(async (filePath) => {
-          DatabaseEntries.createFromFilePath(database.id, filePath);
-        });
-      }
-    } else {
-      DatabaseEntries.create(database.id);
-    }
+    DatabaseEntries.create(database.id);
   }
 
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
