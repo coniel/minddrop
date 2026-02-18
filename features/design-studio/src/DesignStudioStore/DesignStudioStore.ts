@@ -315,6 +315,18 @@ export const addDeisgnElementFromTemplate = (
   saveDesign();
 };
 
+export const updateElementStyle = <K extends keyof DesignElementStyle>(
+  id: string,
+  key: K,
+  value: DesignElementStyle[K],
+) => {
+  useDesignStudioStore
+    .getState()
+    .updateElement(id, { style: { [key]: value } });
+
+  saveDesign();
+};
+
 export const useElement = <
   TType extends
     | FlatDesignElement
@@ -345,14 +357,4 @@ export const useProperty = (name: string): PropertySchema | null => {
   );
 
   return property || null;
-};
-
-export const updateElementStyle = <K extends keyof DesignElementStyle>(
-  id: string,
-  key: K,
-  value: DesignElementStyle[K],
-) => {
-  useDesignStudioStore
-    .getState()
-    .updateElement(id, { style: { [key]: value } });
 };
