@@ -8,7 +8,7 @@ import {
 
 export interface DropdownMenuColorSelectionItemProps
   extends Omit<ColorSelectionMenuItemProps, 'onSelect'> {
-  onSelect?: InteractiveMenuItemProps['onSelect'];
+  onClick?: InteractiveMenuItemProps['onClick'];
   disabled?: InteractiveMenuItemProps['disabled'];
 }
 

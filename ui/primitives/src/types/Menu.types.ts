@@ -58,7 +58,7 @@ export interface MenuColorSelectionItemConfig {
    *
    * @param event The event.
    */
-  onSelect?: InteractiveMenuItemProps['onSelect'];
+  onSelect?: InteractiveMenuItemProps['onClick'];
 }
 
 export type MenuColorSelectionItemProps = Omit<
