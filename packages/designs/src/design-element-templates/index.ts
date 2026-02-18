@@ -1,20 +1,16 @@
-import { RootElementType } from '../types';
-import { CardElementTemplate } from './CardElementTemplate';
 import { ContainerElementTemplate } from './ContainerElementTemplate';
 import { ImagePropertyElementTemplate } from './ImagePropertyElementTemplate';
-import { ListElementTemplate } from './ListElementTemplate';
 import { NumberPropertyElementTemplate } from './NumberPropertyElementTemplate';
-import { PageElementTemplate } from './PageElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
 import { TextPropertyElementTemplate } from './TextPropertyElementTemplate';
 import { TitlePropertyElementTemplate } from './TitlePropertyElementTemplate';
 import { UrlPropertyElementTemplate } from './UrlPropertyElementTemplate';
 
-export * from './CardElementTemplate';
+export * from '../design-templates/CardDesignTemplate';
 export * from './ContainerElementTemplate';
 export * from './ImagePropertyElementTemplate';
-export * from './ListElementTemplate';
-export * from './PageElementTemplate';
+export * from '../design-templates/ListDesignTemplate';
+export * from '../design-templates/PageDesignTemplate';
 export * from './TextElementTemplate';
 export * from './TextPropertyElementTemplate';
 export * from './UrlPropertyElementTemplate';
@@ -28,11 +24,6 @@ export type DesignElementTemplate =
   | ImagePropertyElementTemplate
   | NumberPropertyElementTemplate;
 
-export type RootElementTemplate =
-  | CardElementTemplate
-  | ListElementTemplate
-  | PageElementTemplate;
-
 export const ElementTemplates: Record<
   DesignElementTemplate['type'],
   DesignElementTemplate
@@ -44,13 +35,4 @@ export const ElementTemplates: Record<
   'url-property': UrlPropertyElementTemplate,
   'image-property': ImagePropertyElementTemplate,
   'number-property': NumberPropertyElementTemplate,
-};
-
-export const RootElementTemplates: Record<
-  RootElementType,
-  RootElementTemplate
-> = {
-  card: CardElementTemplate,
-  list: ListElementTemplate,
-  page: PageElementTemplate,
 };

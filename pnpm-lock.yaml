@@ -657,6 +657,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
