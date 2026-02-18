@@ -182,9 +182,9 @@
         "description": "You can customise properties after creating the database."
       },
       "getStarted": {
-        "title": "Choose a data type or template to get started",
-        "dataType": "Data types define the kind of entries your database will hold. Some are file-based (like images and PDFs), while others are purely property-based (like objects and weblinks).",
-        "template": "Templates are just regular databases with pre-configured properties, custom card and page designs, and in some cases automations. They’re fully editable, so you can customise everything to fit your workflow."
+        "title": "Choose a data type or template to start",
+        "dataType": "Data types define what your database holds. Some are based around an existing file (Images, PDFs), while others are purely property-based (Objects, Weblinks).",
+        "template": "Templates are just regular databases with pre-configured properties, designs, and sometimes automations. You can fully edit them to suit your workflow."
       },
       "actions": {
         "create": "Create database"
