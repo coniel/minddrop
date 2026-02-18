@@ -223,13 +223,6 @@ export interface FileSystemAdapter {
    * @returns A promise resolving to an array of selected file paths.
    */
   openFilePicker(
-    options: OpenFilePickerOptions & { multiple: true },
-  ): Promise<string[] | null>;
-
-  openFilePicker(
-    options?: OpenFilePickerOptions & { multiple?: false },
-  ): Promise<string | null>;
-  openFilePicker(
     options?: OpenFilePickerOptions,
   ): Promise<string | string[] | null>;
 }

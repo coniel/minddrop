@@ -13,8 +13,10 @@ describe('copyFile', () => {
     root = createTestFsRoot();
   });
 
-  it('throws if file entry does not exist', () => {
-    expect(async () => mockCopyFile(root, 'foo', COPY_PATH)).rejects.toThrow();
+  it('throws if file entry does not exist', async () => {
+    await expect(async () =>
+      mockCopyFile(root, 'foo', COPY_PATH),
+    ).rejects.toThrow();
   });
 
   it('copies the file to a new path', () => {

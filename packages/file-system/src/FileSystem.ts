@@ -13,11 +13,12 @@ import type {
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 
-export const Fs: FileSystem &
+export const Fs: Omit<FileSystem, 'openFilePicker'> &
   typeof Api & {
     incrementalPath: typeof incrementalPath;
     readYamlFile: typeof readYamlFile;
     writeYamlFile: typeof writeYamlFile;
+    openFilePicker: typeof openFilePicker;
   } = {
   ...Api,
   incrementalPath,

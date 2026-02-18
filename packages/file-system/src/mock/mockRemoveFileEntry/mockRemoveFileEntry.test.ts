@@ -11,8 +11,8 @@ describe('mockRemoveFileEntry', () => {
     root = createTestFsRoot();
   });
 
-  it('throws if the file netry does not exist', () => {
-    expect(async () =>
+  it('throws if the file netry does not exist', async () => {
+    await expect(async () =>
       mockRemoveFileEntry(root, `${root.path}/foo`),
     ).rejects.toThrow();
   });

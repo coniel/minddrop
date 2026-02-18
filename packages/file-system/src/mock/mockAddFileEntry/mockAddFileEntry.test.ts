@@ -11,14 +11,16 @@ describe('mockAddFileEntry', () => {
     root = createTestFsRoot();
   });
 
-  it('throws if the parent file entry does not exist', () => {
-    expect(async () =>
+  it('throws if the parent file entry does not exist', async () => {
+    await expect(async () =>
       mockAddFileEntry(root, { path: 'foo/bar' }),
     ).rejects.toThrow();
   });
 
-  it('throws if the file entry already exists', () => {
-    expect(async () => mockAddFileEntry(root, documentA1)).rejects.toThrow();
+  it('throws if the file entry already exists', async () => {
+    await expect(async () =>
+      mockAddFileEntry(root, documentA1),
+    ).rejects.toThrow();
   });
 
   it('adds the file entry', () => {
