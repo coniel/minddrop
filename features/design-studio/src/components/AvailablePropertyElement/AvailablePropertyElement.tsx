@@ -15,6 +15,8 @@ export const AvailablePropertyElement: React.FC<
 > = ({ property }) => {
   const template = useMemo(() => {
     return {
+      // TODO: Remove this ignore
+      // @ts-expect-error - Will be fixed when all templates have been created
       ...ElementTemplates[`${property.type}-property`],
       property: property.name,
     };
