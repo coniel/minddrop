@@ -1,5 +1,6 @@
 import { WallViewOptions } from './types';
 
 export const defaultWallViewOptions: WallViewOptions = {
-  maxColumns: 3,
+  maxColumns: 5,
+  minColumnWidth: 300,
 };
