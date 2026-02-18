@@ -20,7 +20,7 @@ export function parseInlineMarkdown(text: string): (TextElement | Element)[] {
 
 function transformTokens(
   tokens: Token[],
-  marks: Partial<Text> = {},
+  marks: Partial<TextElement> = {},
 ): (TextElement | Element)[] {
   const slateNodes: (TextElement | Element)[] = [];
 
