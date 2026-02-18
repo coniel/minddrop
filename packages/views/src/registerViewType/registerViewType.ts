@@ -10,7 +10,7 @@ import { ViewType } from '../types';
  *
  * @dispatches 'views:view-type:registered' event
  */
-export function registerViewType(viewType: ViewType): void {
+export function registerViewType(viewType: ViewType<any>) {
   // Add the view type to the store
   ViewTypesStore.add(viewType);
 
