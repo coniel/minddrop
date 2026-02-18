@@ -197,6 +197,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
@@ -338,6 +341,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -384,52 +390,6 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.8.3
-
-  features/item-type:
-    dependencies:
-      '@minddrop/base-item-types':
-        specifier: workspace:*
-        version: link:../../packages/base-item-types
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/feature-properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../../packages/file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/item-types':
-        specifier: workspace:*
-        version: link:../../packages/item-types
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -553,37 +513,6 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
-  packages/base-item-types:
-    dependencies:
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
   packages/core:
     dependencies:
       '@minddrop/file-system':
@@ -684,9 +613,6 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
-      '@minddrop/base-item-types':
-        specifier: workspace:*
-        version: link:../base-item-types
       '@minddrop/core':
         specifier: workspace:*
         version: link:../core
@@ -726,12 +652,6 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../icons
-      '@minddrop/item-types':
-        specifier: workspace:*
-        version: link:../item-types
-      '@minddrop/items':
-        specifier: workspace:*
-        version: link:../items
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
@@ -1085,77 +1005,6 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
-  packages/item-types:
-    dependencies:
-      '@minddrop/base-item-types':
-        specifier: workspace:*
-        version: link:../base-item-types
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
-  packages/items:
-    dependencies:
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@minddrop/item-types':
-        specifier: workspace:*
-        version: link:../item-types
-      '@minddrop/markdown':
-        specifier: workspace:*
-        version: link:../markdown
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../properties
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
-
   packages/markdown:
     dependencies:
       '@minddrop/editor':
@@ -1296,9 +1145,6 @@ importers:
 
   packages/selection:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
@@ -1586,34 +1432,6 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.8.3
-
-  ui/items-list:
-    dependencies:
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../packages/icons
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../primitives
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
 
   ui/primitives:
     dependencies:
