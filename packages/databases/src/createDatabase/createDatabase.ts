@@ -22,10 +22,12 @@ export interface CreateDatabaseOptions
     | 'designs'
     | 'defaultDesigns'
     | 'views'
+    | 'propertyFileStorage'
   > {
   properties?: Database['properties'];
   entrySerializer?: Database['entrySerializer'];
   automations?: DatabaseAutomationTemplate[];
+  propertyFileStorage?: Database['propertyFileStorage'];
   designs?: Design[];
   defaultDesigns?: {
     page?: string;
@@ -72,6 +74,7 @@ export async function createDatabase(
     created: new Date(),
     lastModified: new Date(),
     automations,
+    propertyFileStorage: options.propertyFileStorage || 'property',
     designs: options.designs || [],
     defaultDesigns: options.defaultDesigns || {},
     views: options.views || [Views.generate('wall')],
