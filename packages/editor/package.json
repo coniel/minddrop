@@ -34,7 +34,6 @@
     "slate-hyperscript": "^0.100.0",
     "slate-react": "^0.111.0",
     "use-debounce": "^9.0.4",
-    "uuid": "^9.0.0",
     "zustand": "^4.3.8"
   }
 }
