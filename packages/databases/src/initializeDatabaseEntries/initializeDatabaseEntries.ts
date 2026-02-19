@@ -14,8 +14,29 @@ export async function initializeDatabaseEntries(): Promise<void> {
 
   const databaseEntries = await Promise.all(
     databases.map(async (database) => {
+      const hasEntrySubdirs = database.propertyFileStorage === 'entry';
+
       // Read the database's entry files
-      let files = await Fs.readDir(database.path);
+      let files = await Fs.readDir(database.path, {
+        recursive: hasEntrySubdirs,
+      });
+
+      // If the database uses entry based storage, read the files
+      // from the entry subdirectories.
+      if (hasEntrySubdirs) {
+        const entrySubdirectories = files.filter(
+          (file) =>
+            'children' in file &&
+            file.children?.length &&
+            !file.name?.startsWith('.'),
+        );
+
+        files = entrySubdirectories.reduce(
+          (acc, entrySubdirectory) =>
+            acc.concat(entrySubdirectory.children || []),
+          files,
+        );
+      }
 
       // Get the database's entry serializer
       const serializer = getDatabaseEntrySerializer(database.entrySerializer);

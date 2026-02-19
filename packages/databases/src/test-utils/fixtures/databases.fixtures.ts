@@ -34,7 +34,7 @@ function generateDatabase(
 }
 
 export const objectDatabase = generateDatabase({
-  id: '0e68221f-f0ec-47af-8850-912ff273a8d2',
+  id: 'object-database',
   name: 'Objects',
   entryName: 'Object',
   properties: [
@@ -52,20 +52,20 @@ export const objectDatabase = generateDatabase({
 });
 
 export const urlDatabase = generateDatabase({
-  id: 'f0a4b5b0-a1d0-4f6f-b8d2-e2f5a0c0b1b2',
+  id: 'url-database',
   name: 'URL Database',
   entryName: 'URL',
   automations: [fetchWebpageMetadataAutomation],
 });
 
 export const noPropertiesDatabase = generateDatabase({
-  id: '533c8ba7-6205-4195-8367-63f0f7539c60',
+  id: 'no-properties-database',
   name: 'No Properties',
   entryName: 'No Properties',
 });
 
 export const yamlObjectDatabase = generateDatabase({
-  id: '2012fd3a-d8c0-4028-8590-58fe175e04fc',
+  id: 'yaml-database',
   name: 'YAML Database',
   entryName: 'YAML',
   entrySerializer: 'yaml',
@@ -81,11 +81,72 @@ export const yamlObjectDatabase = generateDatabase({
   ],
 });
 
+export const rootStorageDatabase = generateDatabase({
+  id: 'root-storage-database',
+  entrySerializer: 'markdown',
+  name: 'Root Storage Database',
+  entryName: 'Root Storage',
+  propertyFileStorage: 'root',
+  properties: [
+    {
+      type: 'image',
+      name: 'Image',
+    },
+  ],
+});
+
+export const commonStorageDatabase = generateDatabase({
+  id: 'common-storage-database',
+  entrySerializer: 'markdown',
+  name: 'Common Storage Database',
+  entryName: 'Common Storage',
+  propertyFileStorage: 'common',
+  propertyFilesDir: 'Media',
+  properties: [
+    {
+      type: 'image',
+      name: 'Image',
+    },
+  ],
+});
+
+export const propertyStorageDatabase = generateDatabase({
+  id: 'property-storage-database',
+  entrySerializer: 'markdown',
+  name: 'Property Storage Database',
+  entryName: 'Property Storage',
+  propertyFileStorage: 'property',
+  properties: [
+    {
+      type: 'image',
+      name: 'Image',
+    },
+  ],
+});
+
+export const entryStorageDatabase = generateDatabase({
+  id: 'entry-storage-database',
+  entrySerializer: 'markdown',
+  name: 'Entry Storage Database',
+  entryName: 'Entry Storage',
+  propertyFileStorage: 'entry',
+  properties: [
+    {
+      type: 'image',
+      name: 'Image',
+    },
+  ],
+});
+
 export const databases = [
   objectDatabase,
   urlDatabase,
   noPropertiesDatabase,
   yamlObjectDatabase,
+  rootStorageDatabase,
+  commonStorageDatabase,
+  propertyStorageDatabase,
+  entryStorageDatabase,
 ];
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [

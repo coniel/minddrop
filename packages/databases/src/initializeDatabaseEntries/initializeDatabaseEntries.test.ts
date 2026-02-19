@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { cleanup, databaseEntries, setup } from '../test-utils';
+import { MockFs, cleanup, databaseEntries, setup } from '../test-utils';
 import { initializeDatabaseEntries } from './initializeDatabaseEntries';
 
 describe.only('initializeDatabaseEntries', () => {

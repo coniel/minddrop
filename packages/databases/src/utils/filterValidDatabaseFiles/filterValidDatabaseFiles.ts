@@ -1,15 +1,16 @@
 import { Fs } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
+import {
+  FilePropertySupportedFileExtensions,
+  Properties,
+} from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
-
-// TODO: Refactor to use file properties
 
 /**
  * Filters a list of files to only include files that are valid for the given database.
  *
  * @param databaseId - The ID of the database to filter the files for.
  * @param files - The list of files to filter.
- * @returns The filtered list of files.
+ * @returns A map of valid and invalid files.
  *
  * @throws {InvalidParameterError} If the database is not a file based database.
  */
@@ -20,30 +21,44 @@ export function filterValidDatabaseFiles(
   // Get the database
   const database = getDatabase(databaseId);
 
-  // // Ensure the database is a file based database
-  // if (!dataType.file) {
-  //   throw new InvalidParameterError(
-  //     `Database ${databaseId} is not a file based database.`,
-  //   );
-  // }
+  // Get a list of file based property types used by the database
+  const filePropertyTypes = [
+    ...new Set(
+      database.properties
+        .filter(Properties.isFileBased)
+        .map((property) => property.type),
+    ),
+  ];
 
-  // // If the data type does not enforce file types, return all files
-  // // as valid.
-  // if (!dataType.fileExtensions) {
-  //   return { validFiles: files, invalidFiles: [] };
-  // }
-  //
-  // // Filter files by validity
-  // const validFiles: File[] = [];
-  // const invalidFiles: File[] = [];
-  //
-  // files.forEach((file) => {
-  //   if (dataType.fileExtensions?.includes(Fs.getFileExtension(file.name))) {
-  //     validFiles.push(file);
-  //   } else {
-  //     invalidFiles.push(file);
-  //   }
-  // });
+  // If the database does not have any file based properties, all files
+  // are invalid.
+  if (filePropertyTypes.length === 0) {
+    return { validFiles: [], invalidFiles: files };
+  }
 
-  return { validFiles: [], invalidFiles: [] };
+  // If the database contains a generic file property, all files are valid
+  if (filePropertyTypes.includes('file')) {
+    return { validFiles: files, invalidFiles: [] };
+  }
+
+  // Create a list of all supported file extensions
+  const supportedFileExtensions = new Set(
+    filePropertyTypes.flatMap(
+      (type) => FilePropertySupportedFileExtensions[type],
+    ),
+  );
+
+  // Sort files into valid and invalid groups
+  const validFiles: File[] = [];
+  const invalidFiles: File[] = [];
+
+  files.forEach((file) => {
+    if (supportedFileExtensions.has(Fs.getFileExtension(file.name))) {
+      validFiles.push(file);
+    } else {
+      invalidFiles.push(file);
+    }
+  });
+
+  return { validFiles, invalidFiles };
 }

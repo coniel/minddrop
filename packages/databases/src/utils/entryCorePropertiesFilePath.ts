@@ -13,7 +13,13 @@ export function entryCorePropertiesFilePath(path: string): string {
   // Get the entry file name without the extension
   const entryFileNameWithoutExt = Fs.removeExtension(Fs.fileNameFromPath(path));
   // Path to the entry's parent directory
-  const entryParentPath = Fs.parentDirPath(path);
+  let entryParentPath = Fs.parentDirPath(path);
+
+  // If the entry's parent directory is the same as the entry file name,
+  // the entry is stored in an entry subdirectory which we need to remove.
+  if (entryParentPath.endsWith(entryFileNameWithoutExt)) {
+    entryParentPath = Fs.parentDirPath(entryParentPath);
+  }
 
   return `${entryParentPath}/${Paths.hiddenDirName}/${PropertiesDirName}/${entryFileNameWithoutExt}.yaml`;
 }

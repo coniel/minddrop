@@ -2,7 +2,11 @@ import { MockFileDescriptor } from '@minddrop/file-system';
 import { DatabaseEntry } from '../../types';
 import { entryCorePropertiesFilePath } from '../../utils';
 import {
+  commonStorageDatabase,
+  entryStorageDatabase,
   objectDatabase,
+  propertyStorageDatabase,
+  rootStorageDatabase,
   urlDatabase,
   yamlObjectDatabase,
 } from './databases.fixtures';
@@ -94,10 +98,137 @@ created: ${urlEntry1.created.toISOString()}
 lastModified: ${urlEntry1.lastModified.toISOString()}`;
 
 /******************************************************************************
+ * Root storage database entries
+ *****************************************************************************/
+
+export const rootStorageEntry1: DatabaseEntry = {
+  id: 'root-storage-entry-1',
+  title: 'Root Storage Entry 1',
+  database: rootStorageDatabase.id,
+  path: `${rootStorageDatabase.path}/Root Storage Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Image: 'image.png',
+  },
+};
+
+export const rootStorageEntry1FileContents = `---
+Image: image.png
+---`;
+
+export const rootStorageEntry1CorePropertiesFileContents = `id: ${rootStorageEntry1.id}
+title: ${rootStorageEntry1.title}
+created: ${rootStorageEntry1.created.toISOString()}
+lastModified: ${rootStorageEntry1.lastModified.toISOString()}`;
+
+export const rootStorageEntry_empty_value: DatabaseEntry = {
+  id: 'root-storage-entry-empty-value',
+  title: 'Root Storage Entry Empty Value',
+  database: rootStorageDatabase.id,
+  path: `${rootStorageDatabase.path}/Root Storage Entry Empty Value.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {},
+};
+
+export const rootStorageEntry_empty_valueFileContents = `---
+---`;
+
+export const rootStorageEntry_empty_valueCorePropertiesFileContents = `id: ${rootStorageEntry_empty_value.id}
+title: ${rootStorageEntry_empty_value.title}
+created: ${rootStorageEntry_empty_value.created.toISOString()}
+lastModified: ${rootStorageEntry_empty_value.lastModified.toISOString()}`;
+
+/******************************************************************************
+ * Common storage database entries
+ *****************************************************************************/
+
+export const commonStorageEntry1: DatabaseEntry = {
+  id: 'common-storage-entry-1',
+  title: 'Common Storage Entry 1',
+  database: commonStorageDatabase.id,
+  path: `${commonStorageDatabase.path}/Common Storage Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Image: 'image.png',
+  },
+};
+
+export const commonStorageEntry1FileContents = `---
+Image: image.png
+---`;
+
+export const commonStorageEntry1CorePropertiesFileContents = `id: ${commonStorageEntry1.id}
+title: ${commonStorageEntry1.title}
+created: ${commonStorageEntry1.created.toISOString()}
+lastModified: ${commonStorageEntry1.lastModified.toISOString()}`;
+
+/******************************************************************************
+ * Property storage database entries
+ *****************************************************************************/
+
+export const propertyStorageEntry1: DatabaseEntry = {
+  id: 'property-storage-entry-1',
+  title: 'Property Storage Entry 1',
+  database: propertyStorageDatabase.id,
+  path: `${propertyStorageDatabase.path}/Property Storage Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Image: 'image.png',
+  },
+};
+
+export const propertyStorageEntry1FileContents = `---
+Image: image.png
+---`;
+
+export const propertyStorageEntry1CorePropertiesFileContents = `id: ${propertyStorageEntry1.id}
+title: ${propertyStorageEntry1.title}
+created: ${propertyStorageEntry1.created.toISOString()}
+lastModified: ${propertyStorageEntry1.lastModified.toISOString()}`;
+
+/******************************************************************************
+ * Entry storage database entries
+ *****************************************************************************/
+
+export const entryStorageEntry1: DatabaseEntry = {
+  id: 'entry-storage-entry-1',
+  title: 'Entry Storage Entry 1',
+  database: entryStorageDatabase.id,
+  path: `${entryStorageDatabase.path}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Image: 'image.png',
+  },
+};
+
+export const entryStorageEntry1FileContents = `---
+Image: image.png
+---`;
+
+export const entryStorageEntry1CorePropertiesFileContents = `id: ${entryStorageEntry1.id}
+title: ${entryStorageEntry1.title}
+created: ${entryStorageEntry1.created.toISOString()}
+lastModified: ${entryStorageEntry1.lastModified.toISOString()}`;
+
+/******************************************************************************
  * Exports
  *****************************************************************************/
 
-export const databaseEntries = [objectEntry1, urlEntry1, yamlObjectEntry1];
+export const databaseEntries = [
+  objectEntry1,
+  urlEntry1,
+  yamlObjectEntry1,
+  rootStorageEntry1,
+  rootStorageEntry_empty_value,
+  commonStorageEntry1,
+  propertyStorageEntry1,
+  entryStorageEntry1,
+];
 
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
   {
@@ -124,4 +255,55 @@ export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
     path: entryCorePropertiesFilePath(yamlObjectEntry1.path),
     textContent: yamlObjectEntry1CorePropertiesFileContents,
   },
+  {
+    path: rootStorageEntry1.path,
+    textContent: rootStorageEntry1FileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(rootStorageEntry1.path),
+    textContent: rootStorageEntry1CorePropertiesFileContents,
+  },
+  {
+    path: rootStorageEntry_empty_value.path,
+    textContent: rootStorageEntry_empty_valueFileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(rootStorageEntry_empty_value.path),
+    textContent: rootStorageEntry_empty_valueCorePropertiesFileContents,
+  },
+  {
+    path: commonStorageEntry1.path,
+    textContent: commonStorageEntry1FileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(commonStorageEntry1.path),
+    textContent: commonStorageEntry1CorePropertiesFileContents,
+  },
+  {
+    path: propertyStorageEntry1.path,
+    textContent: propertyStorageEntry1FileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(propertyStorageEntry1.path),
+    textContent: propertyStorageEntry1CorePropertiesFileContents,
+  },
+  {
+    path: entryStorageEntry1.path,
+    textContent: entryStorageEntry1FileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(entryStorageEntry1.path),
+    textContent: entryStorageEntry1CorePropertiesFileContents,
+  },
+];
+
+export const databaseEntryPropertyFiles: (MockFileDescriptor | string)[] = [
+  // Root storage
+  `${rootStorageDatabase.path}/image.png`,
+  // Common storage
+  `${commonStorageDatabase.path}/${commonStorageDatabase.propertyFilesDir}/image.png`,
+  // Property storage
+  `${propertyStorageDatabase.path}/Image/image.png`,
+  // Entry storage
+  `${entryStorageDatabase.path}/${entryStorageEntry1.title}/image.png`,
 ];
