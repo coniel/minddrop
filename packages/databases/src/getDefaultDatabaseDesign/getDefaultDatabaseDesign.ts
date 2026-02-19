@@ -18,15 +18,23 @@ export function getDefaultDatabaseDesign(
   // Get the database
   const database = getDatabase(databaseId);
 
+  // Check if the database has a default design for the specified type
   if (database.defaultDesigns[type]) {
-    // Get the design
     const design = database.designs.find(
       (design) => design.id === database.defaultDesigns[type],
     );
 
-    if (design) {
+    // Ensure the design is of the specified type
+    if (design && design.type === type) {
       return design;
     }
+  }
+
+  // Chck if the database has a design for the specified type
+  const design = database.designs.find((design) => design.type === type);
+
+  if (design) {
+    return design;
   }
 
   // If the database does not specify a default design for the type,
