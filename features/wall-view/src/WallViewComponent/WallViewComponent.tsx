@@ -56,8 +56,6 @@ export const WallViewComponent: React.FC<
 
 const Column = React.memo(
   ({ id, entries }: Column) => {
-    console.log('RENDERING COLUMN', id);
-
     return (
       <div className="column" key={id}>
         {entries.map((entry) => (
