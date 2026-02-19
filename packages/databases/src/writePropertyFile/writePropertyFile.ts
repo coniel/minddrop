@@ -4,7 +4,6 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { PropertyFilesDirNameKey } from '../constants';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
-import { updateDatabaseEntry } from '../updateDatabaseEntry';
 import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import { getIncrmentalPropertyFilePath } from '../utils';
 
