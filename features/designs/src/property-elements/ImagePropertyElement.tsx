@@ -39,8 +39,7 @@ export const ImagePropertyElement = React.memo(
 
 const Image = React.memo(
   ({ path }: { path: string }) => {
-    const src = Fs.convertFileSrc(path);
-    console.log('rendering image');
+    const src = useImageSrc(path);
 
     if (!src) {
       return null;
@@ -52,3 +51,6 @@ const Image = React.memo(
   },
   (prev, next) => prev.path === next.path,
 );
+
+Image.displayName = 'Image';
+ImagePropertyElement.displayName = 'ImagePropertyElement';
