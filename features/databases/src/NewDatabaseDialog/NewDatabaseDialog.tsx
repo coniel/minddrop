@@ -100,9 +100,9 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     if (await validateAllAsync()) {
       // Create the new item type
       await Databases.create(Paths.workspace, {
+        ...selectedTemplate,
         name: values.name,
         entryName: values.entryName,
-        properties: selectedTemplate ? selectedTemplate.properties : undefined,
         icon,
       });
 
