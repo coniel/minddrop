@@ -43,21 +43,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   }
 
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
-    event.stopPropagation();
-    event.preventDefault();
-
-    if (!database) {
-      return;
-    }
-
-    const { validFiles } = Databases.filterFiles(
-      database.id,
-      Array.from(event.dataTransfer.files),
-    );
-
-    validFiles.forEach((file) => {
-      DatabaseEntries.createFromFile(database.id, file);
-    });
+    Databases.handleDrop(databaseId, event);
   }
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
