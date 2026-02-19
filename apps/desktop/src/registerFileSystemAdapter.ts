@@ -233,7 +233,23 @@ register({
       ? `${await getBaseDirPath(options.baseDir)}/${path}`
       : path;
 
-    download(url, fullPath);
+    return new Promise((resolve, reject) => {
+      download(
+        url,
+        fullPath,
+        ({ progressTotal, total }) => {
+          if (progressTotal === total) {
+            resolve();
+          }
+        },
+        {
+          // @ts-expect-error - Not sure why this is an error, works fine
+          'User-Agent': 'MindDrop/1.0',
+        },
+      ).catch((reason) => {
+        reject(reason);
+      });
+    });
   },
   openFilePicker: async (options = {}) => {
     const result = await open({
