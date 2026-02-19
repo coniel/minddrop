@@ -6,6 +6,7 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { DesignRenderer } from '@minddrop/feature-designs';
+import { PropertyValue } from '@minddrop/properties';
 
 export interface DatabaseEntryRendererProps {
   /**
@@ -59,10 +60,27 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
     return null;
   }
 
+  const propertyValues: Record<string, PropertyValue> = {
+    Title: entry.title,
+    ...entry.properties,
+  };
+
+  database.properties.forEach((property) => {
+    const value = propertyValues[property.name];
+
+    if (property.type === 'image' && typeof value === 'string') {
+      propertyValues[property.name] = DatabaseEntries.propertyFilePath(
+        entry.id,
+        property.name,
+        value,
+      );
+    }
+  });
+
   return (
     <DesignRenderer
       design={design}
-      propertyValues={{ Title: entry.title, ...entry.properties }}
+      propertyValues={propertyValues}
       properties={database.properties}
     />
   );
