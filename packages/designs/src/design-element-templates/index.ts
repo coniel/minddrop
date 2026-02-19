@@ -1,4 +1,5 @@
 import { ContainerElementTemplate } from './ContainerElementTemplate';
+import { FormattedTextPropertyElementTemplate } from './FormattedTextPropertyElementTemplate';
 import { ImagePropertyElementTemplate } from './ImagePropertyElementTemplate';
 import { NumberPropertyElementTemplate } from './NumberPropertyElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
@@ -13,6 +14,7 @@ export * from '../design-templates/ListDesignTemplate';
 export * from '../design-templates/PageDesignTemplate';
 export * from './TextElementTemplate';
 export * from './TextPropertyElementTemplate';
+export * from './FormattedTextPropertyElementTemplate';
 export * from './UrlPropertyElementTemplate';
 
 export type DesignElementTemplate =
@@ -20,6 +22,7 @@ export type DesignElementTemplate =
   | TextElementTemplate
   | TitlePropertyElementTemplate
   | TextPropertyElementTemplate
+  | FormattedTextPropertyElementTemplate
   | UrlPropertyElementTemplate
   | ImagePropertyElementTemplate
   | NumberPropertyElementTemplate;
@@ -32,6 +35,7 @@ export const ElementTemplates: Record<
   text: TextElementTemplate,
   'title-property': TitlePropertyElementTemplate,
   'text-property': TextPropertyElementTemplate,
+  'text-formatted-property': FormattedTextPropertyElementTemplate,
   'url-property': UrlPropertyElementTemplate,
   'image-property': ImagePropertyElementTemplate,
   'number-property': NumberPropertyElementTemplate,

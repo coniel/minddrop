@@ -1,0 +1,12 @@
+import { FormattedTextPropertyElement } from '../types';
+
+export type FormattedTextPropertyElementTemplate = Omit<
+  FormattedTextPropertyElement,
+  'id'
+>;
+
+export const FormattedTextPropertyElementTemplate: FormattedTextPropertyElementTemplate =
+  {
+    type: 'text-formatted-property',
+    property: '',
+  };

@@ -37,6 +37,11 @@ export interface TextPropertyElement extends PropertyDesignElementBase {
   type: 'text-property';
 }
 
+export interface FormattedTextPropertyElement
+  extends PropertyDesignElementBase {
+  type: 'text-formatted-property';
+}
+
 export interface NumberPropertyElement extends PropertyDesignElementBase {
   type: 'number-property';
 }
@@ -52,6 +57,7 @@ export interface ImagePropertyElement extends PropertyDesignElementBase {
 export type PropertyDesignElement =
   | TitlePropertyElement
   | TextPropertyElement
+  | FormattedTextPropertyElement
   | NumberPropertyElement
   | UrlPropertyElement
   | ImagePropertyElement;
