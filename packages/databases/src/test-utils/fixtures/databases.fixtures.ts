@@ -11,15 +11,32 @@ const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
 
-export const objectDatabase: Database = {
+function generateDatabase(
+  data: Pick<Database, 'id' | 'name' | 'entryName'> & Partial<Database>,
+): Database {
+  return {
+    properties: [],
+    entrySerializer: 'markdown',
+    icon: 'content-icon:shapes:blue',
+    propertyFileStorage: 'property',
+    created: new Date('2024-01-01T00:00:00.000Z'),
+    lastModified: new Date('2024-01-01T00:00:00.000Z'),
+    designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
+    defaultDesigns: {
+      card: cardDesign1.id,
+      page: pageDesign1.id,
+      list: listDesign1.id,
+    },
+    views: [view1],
+    path: `${parentDir}/${data.name}`,
+    ...data,
+  };
+}
+
+export const objectDatabase = generateDatabase({
   id: '0e68221f-f0ec-47af-8850-912ff273a8d2',
   name: 'Objects',
   entryName: 'Object',
-  entrySerializer: 'markdown',
-  icon: 'content-icon:shapes:blue',
-  path: `${parentDir}/Objects`,
-  created: new Date('2024-01-01T00:00:00.000Z'),
-  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'text-formatted',
@@ -32,63 +49,26 @@ export const objectDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
-  defaultDesigns: {
-    card: cardDesign1.id,
-    page: pageDesign1.id,
-    list: listDesign1.id,
-  },
-  views: [view1],
-};
+});
 
-export const urlDatabase: Database = {
+export const urlDatabase = generateDatabase({
   id: 'f0a4b5b0-a1d0-4f6f-b8d2-e2f5a0c0b1b2',
   name: 'URL Database',
   entryName: 'URL',
-  entrySerializer: 'markdown',
-  icon: 'content-icon:link:default',
-  path: `${parentDir}/URL Database`,
-  created: new Date('2024-01-01T00:00:00.000Z'),
-  lastModified: new Date('2024-01-01T00:00:00.000Z'),
-  properties: [],
   automations: [fetchWebpageMetadataAutomation],
-  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
-  defaultDesigns: {
-    card: cardDesign1.id,
-    page: pageDesign1.id,
-    list: listDesign1.id,
-  },
-  views: [view1],
-};
+});
 
-export const noPropertiesDatabase: Database = {
+export const noPropertiesDatabase = generateDatabase({
   id: '533c8ba7-6205-4195-8367-63f0f7539c60',
   name: 'No Properties',
   entryName: 'No Properties',
-  entrySerializer: 'markdown',
-  icon: 'content-icon:shapes:blue',
-  path: `${parentDir}/No Properties`,
-  created: new Date('2024-01-01T00:00:00.000Z'),
-  lastModified: new Date('2024-01-01T00:00:00.000Z'),
-  properties: [],
-  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
-  defaultDesigns: {
-    card: cardDesign1.id,
-    page: pageDesign1.id,
-    list: listDesign1.id,
-  },
-  views: [view1],
-};
+});
 
-export const yamlObjectDatabase: Database = {
+export const yamlObjectDatabase = generateDatabase({
   id: '2012fd3a-d8c0-4028-8590-58fe175e04fc',
   name: 'YAML Database',
   entryName: 'YAML',
   entrySerializer: 'yaml',
-  icon: 'content-icon:shapes:blue',
-  path: `${parentDir}/YAML Database`,
-  created: new Date('2024-01-01T00:00:00.000Z'),
-  lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: [
     {
       type: 'text',
@@ -99,14 +79,7 @@ export const yamlObjectDatabase: Database = {
       name: 'Icon',
     },
   ],
-  designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
-  defaultDesigns: {
-    card: cardDesign1.id,
-    page: pageDesign1.id,
-    list: listDesign1.id,
-  },
-  views: [view1],
-};
+});
 
 export const databases = [
   objectDatabase,
@@ -129,20 +102,8 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
     ),
   },
   // Individual database config files
-  {
-    path: databaseConfigFilePath(objectDatabase.path),
-    textContent: JSON.stringify(objectDatabase, null, 2),
-  },
-  {
-    path: databaseConfigFilePath(noPropertiesDatabase.path),
-    textContent: JSON.stringify(noPropertiesDatabase, null, 2),
-  },
-  {
-    path: databaseConfigFilePath(urlDatabase.path),
-    textContent: JSON.stringify(urlDatabase, null, 2),
-  },
-  {
-    path: databaseConfigFilePath(yamlObjectDatabase.path),
-    textContent: JSON.stringify(yamlObjectDatabase, null, 2),
-  },
+  ...databases.map((db) => ({
+    path: databaseConfigFilePath(db.path),
+    textContent: JSON.stringify(db, null, 2),
+  })),
 ];

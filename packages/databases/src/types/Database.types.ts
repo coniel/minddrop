@@ -64,6 +64,21 @@ export interface Database {
   description?: string;
 
   /**
+   * Determines how property files are stored.
+   * - `root`: Stored in the root directory of the database.
+   * - `common`: All property files are stored in a common subdirectory.
+   * - `property`: Stored in a subdirectory named after the property.
+   * - `entry`: Stored in a subdirectory named after the entry.
+   */
+  propertyFileStorage: 'root' | 'common' | 'property' | 'entry';
+
+  /**
+   * The directory to store property files in if `propertyFileStorage` is
+   * set to `common`.
+   */
+  propertyFilesDir?: string;
+
+  /**
    * Designs associated with the database.
    * Databases can contain the following types designs:
    * - `page`: used display entries as a page.
