@@ -1,5 +1,6 @@
 import { DesignFixtures } from '@minddrop/designs';
-import { BaseDirectory, MockFileDescriptor } from '@minddrop/file-system';
+import { BaseDirectory, Fs, MockFileDescriptor } from '@minddrop/file-system';
+import { FilePropertySchema, ImagePropertySchema } from '@minddrop/properties';
 import { ViewFixtures } from '@minddrop/views';
 import { DatabasesConfigFileName } from '../../constants';
 import { Database } from '../../types';
@@ -10,6 +11,10 @@ const { cardDesign1, cardDesign2, listDesign1, pageDesign1 } = DesignFixtures;
 const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
+export const genericFilePropertyName = 'File';
+export const imagePropertyName = 'Image';
+export const validImagePropertyFile = new File([], 'valid-image.png');
+export const invalidImagePropertyFile = new File([], 'note.txt');
 
 function generateDatabase(
   data: Pick<Database, 'id' | 'name' | 'entryName'> & Partial<Database>,
@@ -87,10 +92,19 @@ export const rootStorageDatabase = generateDatabase({
   name: 'Root Storage Database',
   entryName: 'Root Storage',
   propertyFileStorage: 'root',
+  propertyFilesDir: 'Media',
+  defaultProperties: {
+    [FilePropertySchema.type]: genericFilePropertyName,
+    [ImagePropertySchema.type]: imagePropertyName,
+  },
   properties: [
     {
       type: 'image',
-      name: 'Image',
+      name: imagePropertyName,
+    },
+    {
+      type: 'file',
+      name: genericFilePropertyName,
     },
   ],
 });
@@ -102,10 +116,18 @@ export const commonStorageDatabase = generateDatabase({
   entryName: 'Common Storage',
   propertyFileStorage: 'common',
   propertyFilesDir: 'Media',
+  defaultProperties: {
+    [FilePropertySchema.type]: genericFilePropertyName,
+    [ImagePropertySchema.type]: imagePropertyName,
+  },
   properties: [
     {
       type: 'image',
-      name: 'Image',
+      name: imagePropertyName,
+    },
+    {
+      type: 'file',
+      name: genericFilePropertyName,
     },
   ],
 });
@@ -116,10 +138,18 @@ export const propertyStorageDatabase = generateDatabase({
   name: 'Property Storage Database',
   entryName: 'Property Storage',
   propertyFileStorage: 'property',
+  defaultProperties: {
+    [FilePropertySchema.type]: genericFilePropertyName,
+    [ImagePropertySchema.type]: imagePropertyName,
+  },
   properties: [
     {
       type: 'image',
-      name: 'Image',
+      name: imagePropertyName,
+    },
+    {
+      type: 'file',
+      name: genericFilePropertyName,
     },
   ],
 });
@@ -130,10 +160,18 @@ export const entryStorageDatabase = generateDatabase({
   name: 'Entry Storage Database',
   entryName: 'Entry Storage',
   propertyFileStorage: 'entry',
+  defaultProperties: {
+    [FilePropertySchema.type]: genericFilePropertyName,
+    [ImagePropertySchema.type]: imagePropertyName,
+  },
   properties: [
     {
       type: 'image',
       name: 'Image',
+    },
+    {
+      type: 'file',
+      name: genericFilePropertyName,
     },
   ],
 });
@@ -167,4 +205,10 @@ export const databaseFiles: (MockFileDescriptor | string)[] = [
     path: databaseConfigFilePath(db.path),
     textContent: JSON.stringify(db, null, 2),
   })),
+  // Property file directories
+  Fs.concatPath(
+    commonStorageDatabase.path,
+    commonStorageDatabase.propertyFilesDir!,
+  ),
+  Fs.concatPath(propertyStorageDatabase.path, imagePropertyName),
 ];

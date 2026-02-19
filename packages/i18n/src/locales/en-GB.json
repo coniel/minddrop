@@ -161,6 +161,7 @@
     }
   },
   "databases": {
+    "propertyFilesDirName": "Media",
     "actions": {
       "new": "New",
       "addProperty": "Add property",

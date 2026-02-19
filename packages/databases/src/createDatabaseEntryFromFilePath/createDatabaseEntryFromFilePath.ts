@@ -1,56 +1,58 @@
 import { Fs } from '@minddrop/file-system';
-import { InvalidParameterError } from '@minddrop/utils';
+import { InvalidParameterError, titleFromPath } from '@minddrop/utils';
 import { createDatabaseEntry } from '../createDatabaseEntry';
 import { getDatabase } from '../getDatabase';
 import { DatabaseEntry } from '../types';
-
-// TODO: Refactor to use file property
+import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import {
+  getDefaultFileProperty,
+  getIncrmentalPropertyFilePath,
+} from '../utils';
 
 /**
- * Creates a database entry from a file path.
+ * Creates a database entry from a file path, setting the file as the value
+ * of the default mathcing file based property.
  *
  * @param databaseId - The ID of the database to create the entry in.
  * @param filePath - The path to the file to create the entry from.
  *
  * @returns The newly created entry.
  *
- * @throws {InvalidParameterError} If the database is not a file based database.
  * @throws {InvalidParameterError} If the file is not a valid file type for the database.
  */
 export async function createDatabaseEntryFromFilePath(
   databaseId: string,
   filePath: string,
 ): Promise<DatabaseEntry> {
+  // Get the default property for the file type
+  const property = getDefaultFileProperty(databaseId, filePath);
   // Get the database
   const database = getDatabase(databaseId);
 
-  // // Ensure the database is a file based database
-  // if (!dataType.file) {
-  //   throw new InvalidParameterError(
-  //     `Database ${databaseId} is not a file based database.`,
-  //   );
-  // }
-  //
-  // // Ensure the file is a valid file type for the database
-  // if (!dataType.fileExtensions?.includes(Fs.getFileExtension(filePath))) {
-  //   throw new InvalidParameterError(
-  //     `File ${filePath} is not a valid file type for database ${databaseId}.`,
-  //   );
-  // }
+  // Ensure that a supported property exists
+  if (!property) {
+    throw new InvalidParameterError(
+      `Database ${databaseId} does not support file type ${Fs.getFileExtension(filePath)}.`,
+    );
+  }
 
-  // Path to the file in the database
-  const databaseFilePath = Fs.concatPath(
-    database.path,
+  // Create the database entry, using the file name as its title
+  const entry = await createDatabaseEntry(database.id, titleFromPath(filePath));
+
+  // Get the path to the property file
+  const { path, name } = await getIncrmentalPropertyFilePath(
+    entry.id,
+    property.name,
     Fs.fileNameFromPath(filePath),
   );
 
-  // Get a unique file name for the file in case a file with the same name
-  // already exists within the database.
-  const { path, name } = await Fs.incrementalPath(databaseFilePath, true);
-
-  // Copy the file to the database
+  // Copy the file to the target path
   await Fs.copyFile(filePath, path);
 
-  // Create the database entry
-  return createDatabaseEntry(database.id, Fs.removeExtension(name), {}, path);
+  // Update the property value on the entry and return the updated entry
+  return updateDatabaseEntry(entry.id, {
+    properties: {
+      [property.name]: name,
+    },
+  });
 }

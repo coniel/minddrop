@@ -23,13 +23,13 @@ describe('renameDatabaseEntry', () => {
 
   afterEach(cleanup);
 
-  it.only('throws if the name conflicts with an existing entry', async () => {
+  it('throws if the name conflicts with an existing entry', async () => {
     await expect(
       renameDatabaseEntry(objectEntry1.id, objectEntry1.title),
     ).rejects.toThrow(PathConflictError);
   });
 
-  it.only("renames the entry's primary file", async () => {
+  it("renames the entry's primary file", async () => {
     await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
     const newPath = `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`;

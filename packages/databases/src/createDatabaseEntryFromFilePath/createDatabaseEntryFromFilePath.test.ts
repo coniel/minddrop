@@ -1,64 +1,91 @@
-// import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-// import {
-//   MockFs,
-//   cleanup,
-//   objectDatabase,
-//   pdfDatabase,
-//   setup,
-// } from '../test-utils';
-// import { createDatabaseEntryFromFilePath } from './createDatabaseEntryFromFilePath';
-//
-// const textFilePath = 'path/to/test.txt';
-// const pdfFilePath = 'path/to/test.pdf';
-//
-// describe.skip('createDatabaseEntryFromFilePath', () => {
-//   beforeEach(() => {
-//     setup();
-//
-//     MockFs.addFiles([textFilePath, pdfFilePath]);
-//   });
-//
-//   afterEach(cleanup);
-//
-//   it('throws if the database is not a file based database', async () => {
-//     await expect(() =>
-//       createDatabaseEntryFromFilePath(objectDatabase.id, textFilePath),
-//     ).rejects.toThrowError();
-//   });
-//
-//   it('throws if the file is not a valid file type for the database', async () => {
-//     await expect(() =>
-//       createDatabaseEntryFromFilePath(pdfDatabase.id, textFilePath),
-//     ).rejects.toThrowError();
-//   });
-//
-//   it('copies the file to the database directory', async () => {
-//     const path = `${pdfDatabase.path}/test.pdf`;
-//
-//     await createDatabaseEntryFromFilePath(pdfDatabase.id, pdfFilePath);
-//
-//     expect(MockFs.exists(path)).toBeTruthy();
-//   });
-//
-//   it('creates a database entry', async () => {
-//     const entry = await createDatabaseEntryFromFilePath(
-//       pdfDatabase.id,
-//       pdfFilePath,
-//     );
-//
-//     expect(entry.title).toBe('test');
-//     expect(entry.path).toBe(`${pdfDatabase.path}/test.pdf`);
-//   });
-//
-//   it('increments the file name if a file with the same name already exists', async () => {
-//     // Create two entries from the same file
-//     await createDatabaseEntryFromFilePath(pdfDatabase.id, pdfFilePath);
-//     const entry1 = await createDatabaseEntryFromFilePath(
-//       pdfDatabase.id,
-//       pdfFilePath,
-//     );
-//
-//     expect(entry1.title).toBe('test 1');
-//     expect(entry1.path).toBe(`${pdfDatabase.path}/test 1.pdf`);
-//   });
-// });
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { Fs } from '@minddrop/file-system';
+import { titleFromPath } from '@minddrop/utils';
+import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabasesStore } from '../DatabasesStore';
+import {
+  MockFs,
+  cleanup,
+  imagePropertyName,
+  invalidImagePropertyFile,
+  rootStorageDatabase,
+  setup,
+  validImagePropertyFile,
+} from '../test-utils';
+import { createDatabaseEntryFromFilePath } from './createDatabaseEntryFromFilePath';
+
+const invalidFilePath = Fs.concatPath('path/to', invalidImagePropertyFile.name);
+const validFilePath = Fs.concatPath('path/to', validImagePropertyFile.name);
+
+describe('createDatabaseEntryFromFilePath', () => {
+  beforeEach(() => {
+    setup();
+
+    MockFs.addFiles([invalidFilePath, validFilePath]);
+  });
+
+  afterEach(cleanup);
+
+  it('throws if the database does not support the file type', async () => {
+    // Remove file based properties from the database
+    DatabasesStore.update(rootStorageDatabase.id, {
+      properties: [],
+    });
+
+    await expect(() =>
+      createDatabaseEntryFromFilePath(rootStorageDatabase.id, invalidFilePath),
+    ).rejects.toThrowError();
+  });
+
+  it('creates a database entry from a file path', async () => {
+    const entry = await createDatabaseEntryFromFilePath(
+      rootStorageDatabase.id,
+      validFilePath,
+    );
+
+    expect(entry.title).toBe(titleFromPath(validFilePath));
+    expect(DatabaseEntriesStore.get(entry.id)).toBeDefined();
+  });
+
+  it('copies the file to the property file path', async () => {
+    await createDatabaseEntryFromFilePath(
+      rootStorageDatabase.id,
+      validFilePath,
+    );
+
+    expect(
+      MockFs.exists(
+        Fs.concatPath(rootStorageDatabase.path, validImagePropertyFile.name),
+      ),
+    ).toBe(true);
+  });
+
+  it('updates the property value', async () => {
+    const entry = await createDatabaseEntryFromFilePath(
+      rootStorageDatabase.id,
+      validFilePath,
+    );
+
+    expect(entry.properties[imagePropertyName]).toBe(
+      validImagePropertyFile.name,
+    );
+  });
+
+  it('handles file name conflicts', async () => {
+    // Create an entry from the file path
+    await createDatabaseEntryFromFilePath(
+      rootStorageDatabase.id,
+      validFilePath,
+    );
+
+    // Create a second entry from the same file path
+    const entry = await createDatabaseEntryFromFilePath(
+      rootStorageDatabase.id,
+      validFilePath,
+    );
+
+    expect(entry.properties[imagePropertyName]).toBe(
+      Fs.setPathIncrement(validImagePropertyFile.name, 1),
+    );
+  });
+});

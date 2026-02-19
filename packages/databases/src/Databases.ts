@@ -11,6 +11,6 @@ export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
 export { addDatabaseDesign as addDesign } from './addDatabaseDesign';
 export { removeDatabaseDesign as removeDesign } from './removeDatabaseDesign';
 export { updateDatabaseDesign as updateDesign } from './updateDatabaseDesign';
-export { filterValidDatabaseFiles as filterFiles } from './utils/filterValidDatabaseFiles';
+export { filterValidDatabaseFiles as filterFiles } from './utils';
 export { getDatabaseDesign as getDesign } from './getDatabaseDesign';
 export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';

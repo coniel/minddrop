@@ -14,3 +14,4 @@ export {
   useDatabaseEntry as use,
   useDatabaseEntries as useAll,
 } from './DatabaseEntriesStore';
+export { getPropertyFilePath as propertyFilePath } from './utils';
