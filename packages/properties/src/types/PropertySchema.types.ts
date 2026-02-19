@@ -30,5 +30,3 @@ export type PropertySchema =
   | FilePropertySchema;
 
 export type PropertiesSchema = PropertySchema[];
-
-export type FileBasedPropertySchema = FilePropertySchema | ImagePropertySchema;
