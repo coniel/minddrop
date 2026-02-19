@@ -1,6 +1,10 @@
 import { DesignFixtures } from '@minddrop/designs';
 import { BaseDirectory, Fs, MockFileDescriptor } from '@minddrop/file-system';
-import { FilePropertySchema, ImagePropertySchema } from '@minddrop/properties';
+import {
+  FilePropertySchema,
+  ImagePropertySchema,
+  UrlPropertySchema,
+} from '@minddrop/properties';
 import { ViewFixtures } from '@minddrop/views';
 import { DatabasesConfigFileName } from '../../constants';
 import { Database } from '../../types';
@@ -60,6 +64,15 @@ export const urlDatabase = generateDatabase({
   id: 'url-database',
   name: 'URL Database',
   entryName: 'URL',
+  defaultProperties: {
+    [UrlPropertySchema.type]: 'URL',
+  },
+  properties: [
+    {
+      type: 'url',
+      name: 'URL',
+    },
+  ],
   automations: [fetchWebpageMetadataAutomation],
 });
 

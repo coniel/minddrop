@@ -2,6 +2,7 @@ import { Fs } from '@minddrop/file-system';
 import {
   FileExtensionToPropertyType,
   FilePropertySchema,
+  Properties,
   PropertySchema,
 } from '@minddrop/properties';
 import { getDatabase } from '../../getDatabase';
@@ -70,6 +71,11 @@ export function getDefaultFileProperty(
         (property) => property.type === FilePropertySchema.type,
       );
     }
+  }
+
+  // Ensure the property is a file property
+  if (!property || !Properties.isFileBased(property)) {
+    return null;
   }
 
   return property || null;

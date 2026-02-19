@@ -1,7 +1,6 @@
 import { PropertyValue } from '@minddrop/properties';
 import { getWebpageMetadata } from '@minddrop/utils';
-import { downloadDatabaseEntryAsset } from '../downloadDatabaseEntryAsset';
-import { ensureDatabaseEntryAssetsDirExists } from '../ensureDatabaseEntryAssetsDirExists';
+import { downloadPropertyFile } from '../downloadPropertyFile';
 import {
   DatabaseAutomationAction,
   DatabaseAutomationUpdatePropertyActionConfig,
@@ -92,28 +91,21 @@ async function updateDatabaseEntryWithMetadata(
     properties[propertyMapping.description] = metadata.description;
   }
 
-  // Ensure the entry's assets directory exists. This is done internally by
-  // downloadDatabaseEntryAsset, but because we may be downloading multiple assets
-  // concurrently, the internal calls may conflict with each other.
-  await ensureDatabaseEntryAssetsDirExists(updatedDatabaseEntry.id);
-
-  if (metadata.icon) {
-    // TODO: Check property type and save image to appropriate location
-    iconPromise = downloadDatabaseEntryAsset(
+  if (metadata.icon && propertyMapping.icon) {
+    iconPromise = downloadPropertyFile(
       updatedDatabaseEntry.id,
+      propertyMapping.icon,
       metadata.icon,
-      'icon',
     );
 
     downloads.push(iconPromise);
   }
 
-  if (metadata.image) {
-    // TODO: Check property type and save image to appropriate location
-    imageAsset = downloadDatabaseEntryAsset(
+  if (metadata.image && propertyMapping.image) {
+    imageAsset = downloadPropertyFile(
       updatedDatabaseEntry.id,
+      propertyMapping.image,
       metadata.image,
-      'image',
     );
 
     downloads.push(imageAsset);
@@ -122,13 +114,19 @@ async function updateDatabaseEntryWithMetadata(
   await Promise.all(downloads);
 
   if (iconPromise && propertyMapping.icon) {
-    const iconName = await iconPromise;
-    properties[propertyMapping.icon] = `asset:${iconName}`;
+    const iconFileName = await iconPromise;
+
+    if (iconFileName) {
+      properties[propertyMapping.icon] = iconFileName;
+    }
   }
 
   if (imageAsset && propertyMapping.image) {
-    const imageName = await imageAsset;
-    properties[propertyMapping.image] = imageName || '';
+    const imageFileName = await imageAsset;
+
+    if (imageFileName) {
+      properties[propertyMapping.image] = imageFileName;
+    }
   }
 
   await updateDatabaseEntry(updatedDatabaseEntry.id, {
