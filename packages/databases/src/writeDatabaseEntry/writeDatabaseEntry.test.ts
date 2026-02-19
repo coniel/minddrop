@@ -91,16 +91,14 @@ describe('writeDatabaseEntry', () => {
     expect(properties).toEqual(entryCoreProperties(objectEntry1));
   });
 
-  describe('non-file based entry', () => {
-    it('writes the entry properties to the main entry file', async () => {
-      // Remove the file before writing to ensure it doesn't exist
-      MockFs.removeFile(yamlObjectEntry1.path);
+  it('writes the user properties to the entry file', async () => {
+    // Remove the file before writing to ensure it doesn't exist
+    MockFs.removeFile(yamlObjectEntry1.path);
 
-      await writeDatabaseEntry(yamlObjectEntry1.id);
+    await writeDatabaseEntry(yamlObjectEntry1.id);
 
-      const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
+    const properties = await MockFs.readYamlFile(yamlObjectEntry1.path);
 
-      expect(properties).toEqual(yamlObjectEntry1.properties);
-    });
+    expect(properties).toEqual(yamlObjectEntry1.properties);
   });
 });
