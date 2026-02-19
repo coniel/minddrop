@@ -1,6 +1,5 @@
 export * from './types';
 export * from './events';
-export * from './constants';
 export * from './useDraggable';
 export * from './useDroppable';
 export * from './useSelectable';

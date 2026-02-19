@@ -2,6 +2,7 @@ import { parse, stringify } from 'yaml';
 
 export * from './Paths';
 export * from './back-end-utils';
+export * from './constants';
 export * from './createArrayStore';
 export * from './createContext';
 export * from './createStore';
@@ -9,6 +10,7 @@ export * from './deepMerge';
 export * from './errors';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
+export * from './getTransferData';
 export * from './isDomainMatch';
 export * from './isImageUrl';
 export * from './isSerializedDate';

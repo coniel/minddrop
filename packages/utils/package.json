@@ -15,6 +15,7 @@
     "@types/is-url": "^1.2.30",
     "@types/react": "^18.2.5",
     "eslint": "^9.16.0",
+    "happy-dom": "^20.6.3",
     "mockdate": "^3.0.5",
     "tsconfig": "workspace:*",
     "typescript": "^5.7.2"

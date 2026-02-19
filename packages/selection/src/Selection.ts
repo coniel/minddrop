@@ -8,4 +8,3 @@ export { removeFromSelection as remove } from './removeFromSelection';
 export { select } from './select';
 export { clearSelection as clear } from './clearSelection';
 export { copySelection as copy } from './copySelection';
-export { getEventData } from './utils';

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { MindDropDataKey } from '../../constants';
-import { getEventData } from './getEventData';
+import { MindDropDataKey } from '../constants';
+import { getTransferData } from './getTransferData';
 
 // Helper to create mock DataTransfer
 function createMockDataTransfer(
@@ -40,14 +40,14 @@ function createMockClipboardEvent(
   } as unknown as React.ClipboardEvent;
 }
 
-describe('getEventData', () => {
+describe('getTransferData', () => {
   describe('basic data extraction', () => {
     it('should extract text/plain data', () => {
       const event = createMockDragEvent({
         'text/plain': 'Hello world',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBe('Hello world');
     });
@@ -57,7 +57,7 @@ describe('getEventData', () => {
         'text/html': '<p>Hello world</p>',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/html']).toBe('<p>Hello world</p>');
     });
@@ -68,7 +68,7 @@ describe('getEventData', () => {
         'text/html': '<p>Hello</p>',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBe('Hello');
       expect(result['text/html']).toBe('<p>Hello</p>');
@@ -79,7 +79,7 @@ describe('getEventData', () => {
         'text/plain': 'Clipboard text',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBe('Clipboard text');
     });
@@ -90,7 +90,7 @@ describe('getEventData', () => {
         'text/html': '<p>Content</p>',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBeUndefined();
       expect(result['text/html']).toBe('<p>Content</p>');
@@ -104,7 +104,7 @@ describe('getEventData', () => {
       // @ts-expect-error Mocked for test
       event.dataTransfer.types.push('Files');
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBe('Hello');
       // @ts-expect-error Should be undefined
@@ -118,7 +118,7 @@ describe('getEventData', () => {
         [`${MindDropDataKey}.custom`]: 'custom data',
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['custom']).toBe('custom data');
       expect(result[`${MindDropDataKey}.custom`]).toBeUndefined();
@@ -130,7 +130,7 @@ describe('getEventData', () => {
         [`${MindDropDataKey}.type2`]: 'data2',
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['type1']).toBe('data1');
       expect(result['type2']).toBe('data2');
@@ -144,7 +144,7 @@ describe('getEventData', () => {
         'custom+json': JSON.stringify(jsonData),
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['custom']).toEqual(jsonData);
     });
@@ -155,7 +155,7 @@ describe('getEventData', () => {
         [`${MindDropDataKey}.custom+json`]: JSON.stringify(jsonData),
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['custom']).toEqual(jsonData);
     });
@@ -168,7 +168,7 @@ describe('getEventData', () => {
         'custom+json': '{invalid json}',
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['custom']).toBe('{invalid json}');
       expect(consoleWarnSpy).toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe('getEventData', () => {
         'data+json': JSON.stringify(null),
       });
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['data']).toBeNull();
     });
@@ -193,7 +193,7 @@ describe('getEventData', () => {
       const file2 = new File(['content2'], 'file2.txt', { type: 'text/plain' });
       const event = createMockDragEvent({}, [file1, file2]);
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.files).toHaveLength(2);
       expect(result.files?.[0]).toBe(file1);
@@ -205,7 +205,7 @@ describe('getEventData', () => {
         'text/plain': 'text',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.files).toBeUndefined();
     });
@@ -214,7 +214,7 @@ describe('getEventData', () => {
       const file = new File(['content'], 'file.txt', { type: 'text/plain' });
       const event = createMockClipboardEvent({}, [file]);
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.files).toHaveLength(1);
       expect(result.files?.[0]).toBe(file);
@@ -227,7 +227,7 @@ describe('getEventData', () => {
         'text/uri-list': 'https://example.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com']);
     });
@@ -238,7 +238,7 @@ describe('getEventData', () => {
           'https://example.com\nhttps://test.com\nhttps://demo.org',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual([
         'https://example.com',
@@ -252,7 +252,7 @@ describe('getEventData', () => {
         'text/uri-list': 'https://example.com\r\nhttps://test.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com', 'https://test.com']);
     });
@@ -263,7 +263,7 @@ describe('getEventData', () => {
           '# This is a comment\nhttps://example.com\n# Another comment\nhttps://test.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com', 'https://test.com']);
     });
@@ -273,7 +273,7 @@ describe('getEventData', () => {
         'text/uri-list': 'https://example.com\n\n\nhttps://test.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com', 'https://test.com']);
     });
@@ -283,7 +283,7 @@ describe('getEventData', () => {
         'text/uri-list': '  https://example.com  \n  https://test.com  ',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com', 'https://test.com']);
     });
@@ -293,7 +293,7 @@ describe('getEventData', () => {
         'text/uri-list': 'https://example.com\nnot-a-url\nhttps://test.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com', 'https://test.com']);
     });
@@ -303,7 +303,7 @@ describe('getEventData', () => {
         'text/uri-list': '# Just comments\n# More comments',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toBeUndefined();
     });
@@ -315,7 +315,7 @@ describe('getEventData', () => {
         'text/plain': 'https://example.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com']);
       expect(result['text/plain']).toBe('https://example.com');
@@ -326,7 +326,7 @@ describe('getEventData', () => {
         'text/plain': '  https://example.com  ',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com']);
     });
@@ -336,7 +336,7 @@ describe('getEventData', () => {
         'text/plain': 'Just some text',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toBeUndefined();
       expect(result['text/plain']).toBe('Just some text');
@@ -348,7 +348,7 @@ describe('getEventData', () => {
         'text/plain': 'https://from-plain.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://from-uri-list.com']);
     });
@@ -359,7 +359,7 @@ describe('getEventData', () => {
         'text/plain': 'https://example.com',
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toEqual(['https://example.com']);
     });
@@ -369,7 +369,7 @@ describe('getEventData', () => {
         'text/plain+json': JSON.stringify({ url: 'https://example.com' }),
       });
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result.urls).toBeUndefined();
     });
@@ -386,7 +386,7 @@ describe('getEventData', () => {
         [file],
       );
 
-      const result = getEventData(event);
+      const result = getTransferData(event);
 
       expect(result['text/plain']).toBe('https://example.com');
       expect(result['text/html']).toBe(
@@ -407,7 +407,7 @@ describe('getEventData', () => {
         [file],
       );
 
-      const result = getEventData<Record<string, unknown>>(event);
+      const result = getTransferData<Record<string, unknown>>(event);
 
       expect(result['custom']).toEqual(jsonData);
       expect(result.urls).toEqual(['https://example.com']);
@@ -427,7 +427,7 @@ describe('getEventData', () => {
         customField: 'custom',
       });
 
-      const result = getEventData<CustomData>(event);
+      const result = getTransferData<CustomData>(event);
 
       expect(result['text/plain']).toBe('text');
       expect(result.customField).toBe('custom');

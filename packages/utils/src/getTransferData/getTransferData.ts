@@ -1,5 +1,5 @@
-import { isUrl } from '@minddrop/utils';
-import { MindDropDataKey } from '../../constants';
+import { MindDropDataKey } from '../constants';
+import { isUrl } from '../isUrl';
 
 interface StandardDataTypes {
   'text/plain'?: string;
@@ -8,7 +8,7 @@ interface StandardDataTypes {
   files?: File[];
 }
 
-type DataTypes<TCustom = {}> = StandardDataTypes & TCustom;
+type DataTypes<TCustom = object> = StandardDataTypes & TCustom;
 
 /**
  * Returns the data from a drag event or clipboard event, removing the
@@ -17,13 +17,17 @@ type DataTypes<TCustom = {}> = StandardDataTypes & TCustom;
  * @param event - The drag event or clipboard event.
  * @returns The data from the event.
  */
-export function getEventData<TCustom = {}>(
-  event: React.DragEvent | React.ClipboardEvent,
+export function getTransferData<TCustom = object>(
+  event: React.DragEvent | DragEvent | React.ClipboardEvent | ClipboardEvent,
 ): DataTypes<TCustom> {
   const dataTransfer =
     'dataTransfer' in event ? event.dataTransfer : event.clipboardData;
 
   const data: Record<string, unknown> = {};
+
+  if (!dataTransfer) {
+    return data as DataTypes<TCustom>;
+  }
 
   for (const type of dataTransfer.types) {
     // Skip Files type as it's handled separately below

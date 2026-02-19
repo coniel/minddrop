@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
+import { getTransferData } from '@minddrop/utils';
 import { DropEventData, DropIndicatorPosition, DropPosition } from '../types';
-import { getEventData } from '../utils';
 
 type Axis = 'horizontal' | 'vertical' | 'container';
 
@@ -232,7 +232,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
       if (onDrop && dropPosition) {
         onDrop({
           event: e,
-          data: getEventData(e),
+          data: getTransferData(e),
           position: dropPosition,
           targetType: type,
           targetId: id,

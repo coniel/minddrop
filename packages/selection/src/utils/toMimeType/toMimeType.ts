@@ -1,4 +1,4 @@
-import { MindDropDataKey } from '../../constants';
+import { MindDropDataKey } from '@minddrop/utils';
 
 /**
  * Returns a MindDrop MIME type for a given data type.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MindDropDataKey } from '../../constants';
+import { MindDropDataKey } from '@minddrop/utils';
 import { toMimeType } from './toMimeType';
 
 describe('toMimeType', () => {
