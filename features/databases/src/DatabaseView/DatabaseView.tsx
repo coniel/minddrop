@@ -1,4 +1,5 @@
 import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { ViewRenderer } from '@minddrop/feature-views';
 import {
   ContentIcon,
   Heading,
@@ -9,7 +10,6 @@ import {
 } from '@minddrop/ui-primitives';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
-import { ViewRenderer } from '@minddrop/feature-views';
 
 export interface DatabaseViewProps {
   /**
@@ -55,7 +55,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       Array.from(event.dataTransfer.files),
     );
 
-    validFiles.forEach(async (file) => {
+    validFiles.forEach((file) => {
       DatabaseEntries.createFromFile(database.id, file);
     });
   }
@@ -100,12 +100,10 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
             />
           </Toolbar>
         </div>
-        <div className="view">
-          <ViewRenderer
-            view={database.views[0]}
-            entries={entries.map((entry) => entry.id)}
-          />
-        </div>
+        <ViewRenderer
+          view={database.views[0]}
+          entries={entries.map((entry) => entry.id)}
+        />
       </Panel>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />
