@@ -17,6 +17,8 @@ export function entryCorePropertiesFilePath(path: string): string {
 
   // If the entry's parent directory is the same as the entry file name,
   // the entry is stored in an entry subdirectory which we need to remove.
+  // TODO: Improve this logic, as it will break if the entry title is the same
+  // as the database name.
   if (entryParentPath.endsWith(entryFileNameWithoutExt)) {
     entryParentPath = Fs.parentDirPath(entryParentPath);
   }

@@ -11,6 +11,7 @@ import {
 import {
   MockFs,
   cleanup,
+  entryStorageEntry1,
   objectDatabase,
   objectEntry1,
   setup,
@@ -73,6 +74,17 @@ describe('writeDatabaseEntry', () => {
     await writeDatabaseEntry(objectEntry1.id);
 
     expect(MockFs.exists(Fs.parentDirPath(path))).toBe(true);
+  });
+
+  it('ensures the entry subdirectory exists if the database uses entry based storage', async () => {
+    const path = Fs.parentDirPath(entryStorageEntry1.path);
+
+    // Remove the entry subdirectory before writing to ensure it doesn't exist
+    MockFs.removeFile(path);
+
+    await writeDatabaseEntry(entryStorageEntry1.id);
+
+    expect(MockFs.exists(path)).toBe(true);
   });
 
   it('writes the core properties to the properties subdirectory', async () => {

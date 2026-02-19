@@ -48,9 +48,21 @@ export async function createDatabaseEntry<
   // Path to the entry's primary file
   let path = Fs.concatPath(parentDirPath, `${title}.${fileExtension}`);
 
+  // If the database uses entry based storage, we want to increment based
+  // on entry subdirectory conflits, not file conflicts.
+  if (database.propertyFileStorage === 'entry') {
+    path = Fs.removeExtension(path);
+  }
+
   // Increment the file name if an entry with the same name exists.
   const incrementalPath = await Fs.incrementalPath(path);
   path = incrementalPath.path;
+
+  // If the database uses entry based storage, add the entry file name back
+  // into the path.
+  if (database.propertyFileStorage === 'entry') {
+    path = Fs.concatPath(path, `${incrementalPath.name}.${fileExtension}`);
+  }
 
   // Create the new entry
   const entry: DatabaseEntry<TProperties> = {

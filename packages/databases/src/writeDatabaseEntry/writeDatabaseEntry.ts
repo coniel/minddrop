@@ -19,14 +19,22 @@ export async function writeDatabaseEntry(id: string): Promise<void> {
   const entry = getDatabaseEntry(id);
   // Get the the parent database
   const database = getDatabase(entry.database);
-
-  // Ensure the core properties directory exists
+  // Path to the database's core properties directory
   const corePropertiesDirPath = Fs.parentDirPath(
     entryCorePropertiesFilePath(entry.path),
   );
 
+  // Ensure the core properties directory exists
   if (!(await Fs.exists(corePropertiesDirPath))) {
     await Fs.createDir(corePropertiesDirPath);
+  }
+
+  // If the database uses entry based storage, ensure the entry
+  // subdirectory exists.
+  if (database.propertyFileStorage === 'entry') {
+    if (!(await Fs.exists(Fs.parentDirPath(entry.path)))) {
+      await Fs.createDir(Fs.parentDirPath(entry.path));
+    }
   }
 
   // Write the entry's core properties

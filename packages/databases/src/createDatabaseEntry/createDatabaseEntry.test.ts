@@ -6,6 +6,7 @@ import { DatabaseEntryCreatedEvent } from '../events';
 import {
   MockFs,
   cleanup,
+  entryStorageDatabase,
   objectDatabase,
   objectEntry1,
   setup,
@@ -55,15 +56,36 @@ describe('createDatabaseEntry', () => {
     expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
   });
 
-  describe('file name incrementation', () => {
-    it('increments the entry title if an entry with the same name exists', async () => {
-      // Create two entrys with the same name
-      await createDatabaseEntry(objectDatabase.id);
-      const secondEntry = await createDatabaseEntry(objectDatabase.id);
+  it('writes the entry file to a subdirectory if the database uses entry based storage', async () => {
+    const entry = await createDatabaseEntry(entryStorageDatabase.id);
 
-      expect(secondEntry.title).toBe(`${title} 1`);
-      expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
-    });
+    // Main file should be written to entry subdirectory
+    expect(entry.path).toBe(
+      `${entryStorageDatabase.path}/${title}/${title}.md`,
+    );
+    expect(MockFs.exists(entry.path)).toBeTruthy();
+    // Core properties should be written to the database's config directory
+    expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
+  });
+
+  it('increments the entry title if an entry with the same name exists', async () => {
+    // Create two entrys with the same name
+    await createDatabaseEntry(objectDatabase.id);
+    const secondEntry = await createDatabaseEntry(objectDatabase.id);
+
+    expect(secondEntry.title).toBe(`${title} 1`);
+    expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
+  });
+
+  it('increments the entry title if an entry with the same name exists in an entry storage database', async () => {
+    // Create two entrys with the same name
+    await createDatabaseEntry(entryStorageDatabase.id);
+    const secondEntry = await createDatabaseEntry(entryStorageDatabase.id);
+
+    expect(secondEntry.title).toBe(`${title} 1`);
+    expect(secondEntry.path).toBe(
+      `${entryStorageDatabase.path}/${title} 1/${title} 1.md`,
+    );
   });
 
   it('allows specifying a custom title', async () => {
