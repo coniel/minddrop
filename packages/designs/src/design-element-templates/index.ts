@@ -35,7 +35,7 @@ export const ElementTemplates: Record<
   text: TextElementTemplate,
   'title-property': TitlePropertyElementTemplate,
   'text-property': TextPropertyElementTemplate,
-  'text-formatted-property': FormattedTextPropertyElementTemplate,
+  'formatted-text-property': FormattedTextPropertyElementTemplate,
   'url-property': UrlPropertyElementTemplate,
   'image-property': ImagePropertyElementTemplate,
   'number-property': NumberPropertyElementTemplate,

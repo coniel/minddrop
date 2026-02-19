@@ -39,7 +39,7 @@ export interface TextPropertyElement extends PropertyDesignElementBase {
 
 export interface FormattedTextPropertyElement
   extends PropertyDesignElementBase {
-  type: 'text-formatted-property';
+  type: 'formatted-text-property';
 }
 
 export interface NumberPropertyElement extends PropertyDesignElementBase {

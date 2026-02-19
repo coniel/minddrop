@@ -9,7 +9,7 @@ export const NotesDatabaseTemplate: DatabaseTemplate = {
   icon: 'content-icon:pencil:default',
   properties: [
     {
-      type: 'text-formatted',
+      type: 'formatted-text',
       name: propertyName('content'),
       icon: 'content-icon:text-quote:default',
     },

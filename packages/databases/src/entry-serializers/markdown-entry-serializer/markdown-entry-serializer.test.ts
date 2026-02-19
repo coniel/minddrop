@@ -5,7 +5,7 @@ import { markdownEntrySerializer } from './markdown-entry-serializer';
 
 const schema1: PropertiesSchema = [
   {
-    type: 'text-formatted',
+    type: 'formatted-text',
     name: 'Content',
   },
 ];
@@ -24,7 +24,7 @@ const entry1: DatabaseEntry = {
 const schema2: PropertiesSchema = [
   ...schema1,
   {
-    type: 'text-formatted',
+    type: 'formatted-text',
     name: 'Content 2',
   },
 ];

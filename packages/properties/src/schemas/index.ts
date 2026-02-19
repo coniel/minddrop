@@ -30,7 +30,7 @@ export * from './UrlPropertySchema';
 export const PropertySchemas: Record<PropertyType, PropertySchema> = {
   title: TitlePropertySchema,
   text: TextPropertySchema,
-  'text-formatted': FormattedTextPropertySchema,
+  'formatted-text': FormattedTextPropertySchema,
   number: NumberPropertySchema,
   date: DatePropertySchema,
   toggle: TogglePropertySchema,

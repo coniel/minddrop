@@ -48,7 +48,7 @@ export const objectDatabase = generateDatabase({
   entryName: 'Object',
   properties: [
     {
-      type: 'text-formatted',
+      type: 'formatted-text',
       name: 'Content',
       defaultValue: 'Default Content',
       icon: 'content-icon:shapes:blue',
