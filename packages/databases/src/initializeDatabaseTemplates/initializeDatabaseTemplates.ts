@@ -24,6 +24,34 @@ export function initializeDatabaseTemplates() {
               : undefined,
           };
         }),
+        automations: template.automations
+          ? template.automations.map((automation) => {
+              return {
+                ...automation,
+                name: i18n.t(automation.name),
+                description: automation.description
+                  ? i18n.t(automation.description)
+                  : undefined,
+                property: automation.property
+                  ? i18n.t(automation.property)
+                  : undefined,
+                actions: automation.actions.map((action) => {
+                  return {
+                    ...action,
+                    propertyMapping: action.propertyMapping
+                      ? Object.fromEntries(
+                          Object.entries(action.propertyMapping).map(
+                            ([key, value]) => {
+                              return [key, i18n.t(value)];
+                            },
+                          ),
+                        )
+                      : undefined,
+                  };
+                }),
+              };
+            })
+          : undefined,
       }),
     ),
   );
