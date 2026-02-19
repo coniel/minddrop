@@ -1,60 +1,43 @@
 import { DatabaseTemplate } from '../types';
+import { createI18n } from './database-template-utils';
 
-const i18nKey = (key: string) => `databaseTemplates.weblinks.${key}`;
-const propertyName = (property: string) =>
-  `${i18nKey('properties')}.${property}.name`;
-const propertyDescription = (property: string) =>
-  `${i18nKey('properties')}.${property}.description`;
-const automationName = (automation: string) =>
-  `${i18nKey('automations')}.${automation}.name`;
-const automationDescription = (automation: string) =>
-  `${i18nKey('automations')}.${automation}.description`;
+const { naming, property, propertyName, automation } = createI18n('weblinks');
 
 export const WeblinksDatabaseTemplate: DatabaseTemplate = {
   entrySerializer: 'markdown',
-  name: i18nKey('name'),
-  entryName: i18nKey('entryName'),
-  description: i18nKey('description'),
-  icon: 'content-icon:pencil:default',
+  ...naming,
+  icon: 'content-icon:link:default',
+  propertyFileStorage: 'entry',
   properties: [
     {
       type: 'title',
-      name: propertyName('title'),
-      description: propertyDescription('title'),
       icon: 'content-icon:type',
+      ...property('title'),
     },
     {
       type: 'url',
-      name: propertyName('url'),
-      description: propertyDescription('url'),
       icon: 'content-icon:link',
-      protected: true,
+      ...property('url'),
     },
     {
       type: 'text',
-      name: propertyName('description'),
-      description: propertyDescription('description'),
       icon: 'content-icon:info',
+      ...property('description'),
     },
     {
       type: 'image',
-      storage: 'asset',
-      name: propertyName('image'),
-      description: propertyDescription('image'),
       icon: 'content-icon:image',
+      ...property('image'),
     },
     {
       type: 'image',
-      storage: 'asset',
-      name: propertyName('icon'),
-      description: propertyDescription('icon'),
       icon: 'content-icon:smile',
+      ...property('icon'),
     },
   ],
   automations: [
     {
-      name: automationName('fetchWebpageMetadata'),
-      description: automationDescription('fetchWebpageMetadata'),
+      ...automation('fetchWebpageMetadata'),
       type: 'update-property',
       property: propertyName('url'),
       actions: [

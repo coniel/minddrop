@@ -7,15 +7,15 @@ import { coreDatabaseTemplates } from '../database-templates';
  */
 export function initializeDatabaseTemplates() {
   DatabaseTemplatesStore.load(
-    coreDatabaseTemplates.map((databaseTemplate) =>
+    coreDatabaseTemplates.map((template) =>
       // Translate template and property names and descriptions
       ({
-        ...databaseTemplate,
-        name: i18n.t(databaseTemplate.name),
-        description: databaseTemplate.description
-          ? i18n.t(databaseTemplate.description)
+        ...template,
+        name: i18n.t(template.name),
+        description: template.description
+          ? i18n.t(template.description)
           : undefined,
-        properties: databaseTemplate.properties.map((property) => {
+        properties: template.properties.map((property) => {
           return {
             ...property,
             name: i18n.t(property.name),

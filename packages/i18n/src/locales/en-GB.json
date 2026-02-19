@@ -217,47 +217,75 @@
         "name": "YAML",
         "description": "Saves database entries as YAML files."
       }
-    }
-  },
-  "databaseTemplates": {
-    "notes": {
-      "name": "Notes",
-      "entryName": "Note",
-      "description": "A simple database for taking and organising notes with properties for tags, created date, and last modified date.",
-      "properties": {
-        "content": {
-          "name": "Content"
-        },
-        "tags": {
-          "name": "Tags"
-        },
-        "created": {
-          "name": "Created"
-        },
-        "lastModified": {
-          "name": "Last modified"
-        }
-      }
     },
-    "books": {
-      "name": "Books",
-      "entryName": "Book",
-      "description": "A database for cataloguing books with properties for author, genre, publication date, rating, and cover image.",
-      "properties": {
-        "author": {
-          "name": "Author"
+    "templates": {
+      "notes": {
+        "name": "Notes",
+        "entryName": "Note",
+        "description": "A simple database for taking and organising notes with properties for tags, created date, and last modified date.",
+        "properties": {
+          "content": {
+            "name": "Content"
+          },
+          "tags": {
+            "name": "Tags"
+          },
+          "created": {
+            "name": "Created"
+          },
+          "lastModified": {
+            "name": "Last modified"
+          }
+        }
+      },
+      "books": {
+        "name": "Books",
+        "entryName": "Book",
+        "description": "A database for cataloguing books with properties for author, genre, publication date, rating, and cover image.",
+        "properties": {
+          "author": {
+            "name": "Author"
+          },
+          "genre": {
+            "name": "Genre"
+          },
+          "publicationDate": {
+            "name": "Publication date"
+          },
+          "rating": {
+            "name": "Rating"
+          },
+          "coverImage": {
+            "name": "Cover image"
+          }
+        }
+      },
+      "weblinks": {
+        "name": "Weblinks",
+        "entryName": "Weblink",
+        "description": "A collection of weblinks",
+        "properties": {
+          "title": {
+            "name": "Title"
+          },
+          "url": {
+            "name": "URL"
+          },
+          "description": {
+            "name": "Description"
+          },
+          "image": {
+            "name": "Image"
+          },
+          "icon": {
+            "name": "Icon"
+          }
         },
-        "genre": {
-          "name": "Genre"
-        },
-        "publicationDate": {
-          "name": "Publication date"
-        },
-        "rating": {
-          "name": "Rating"
-        },
-        "coverImage": {
-          "name": "Cover image"
+        "automations": {
+          "fetchWebpageMetadata": {
+            "name": "Fetch webpage metadata",
+            "description": "Fetches the title, description, icon, and image of a webpage."
+          }
         }
       }
     }
