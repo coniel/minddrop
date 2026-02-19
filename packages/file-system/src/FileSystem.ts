@@ -3,6 +3,7 @@ import * as Api from './FsApi';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
+  setPathIncrement,
 } from './incrementalPath';
 import type {
   FileSystem,
@@ -10,6 +11,8 @@ import type {
   FsOptions,
   OpenFilePickerOptions,
 } from './types';
+
+export type { IncrementedPath } from './incrementalPath';
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 
@@ -19,9 +22,12 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     readYamlFile: typeof readYamlFile;
     writeYamlFile: typeof writeYamlFile;
     openFilePicker: typeof openFilePicker;
+    setPathIncrement: typeof setPathIncrement;
   } = {
   ...Api,
   incrementalPath,
+  setPathIncrement,
+  openFilePicker,
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
@@ -43,7 +49,6 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeJsonFile: (...args) => FsAdapter.writeJsonFile(...args),
   readYamlFile: (...args) => readYamlFile(...args),
   writeYamlFile: (...args) => writeYamlFile(...args),
-  openFilePicker,
 };
 
 function openFilePicker(

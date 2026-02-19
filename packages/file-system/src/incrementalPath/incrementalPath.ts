@@ -59,10 +59,11 @@ export async function incrementalPath(
       // Increment the suffix
       increment += 1;
       // Create the new file name
-      fileName =
-        !ignoreFileExtension && fileExtension
-          ? `${fileNameWithoutExtension} ${increment}.${fileExtension}`
-          : `${fileNameWithoutExtension} ${increment}`;
+      fileName = setPathIncrement(
+        targetFileName,
+        increment,
+        ignoreFileExtension,
+      );
     }
   }
 
@@ -79,4 +80,17 @@ export async function incrementalPath(
   }
 
   return incrementedPath;
+}
+
+export function setPathIncrement(
+  path: string,
+  increment: number,
+  removeExtension = false,
+): string {
+  const fileNameWithoutExtension = removeFileExtension(path);
+  const fileExtension = getFileExtension(path);
+
+  return removeExtension || !fileExtension
+    ? `${fileNameWithoutExtension} ${increment}`
+    : `${fileNameWithoutExtension} ${increment}.${fileExtension}`;
 }
