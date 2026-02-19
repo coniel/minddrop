@@ -1,5 +1,5 @@
 import { Design } from '@minddrop/designs';
-import { PropertiesSchema } from '@minddrop/properties';
+import { FileBasedPropertyType, PropertiesSchema } from '@minddrop/properties';
 import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
@@ -77,6 +77,15 @@ export interface Database {
    * set to `common`.
    */
   propertyFilesDir?: string;
+
+  /**
+   * The names of the database's file based properties which will be filled
+   * when creating a new entry from a file supported by that property type.
+   *
+   * If not provided, the first file based property supporting the file type
+   * will be used.
+   */
+  defaultFileProperties?: FileBasedPropertyType[];
 
   /**
    * Designs associated with the database.
