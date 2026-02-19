@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import {
-  DropEventData,
-  DropIndicatorPosition,
-  Selection,
-} from '@minddrop/selection';
+import { DropEventData, DropIndicatorPosition } from '@minddrop/selection';
+import { getTransferData } from '@minddrop/utils';
 import { DropIndicator } from '../DropIndicator';
 
 interface FlexDropContainerGapProps {
@@ -84,7 +81,7 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
 
     if (onDrop) {
       onDrop({
-        data: Selection.getEventData(e),
+        data: getTransferData(e),
         index,
         targetId: containerId,
         targetType: 'flex-drop-container',
