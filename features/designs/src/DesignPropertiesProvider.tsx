@@ -9,6 +9,7 @@ import { createContext } from '@minddrop/utils';
 interface DesignPropertiesProviderData {
   properties: PropertiesSchema;
   propertyValues: PropertyMap;
+  onUpdatePropertyValue?: (name: string, value: PropertyValue) => void;
 }
 
 export interface DesignPropertiesProviderProps
@@ -22,18 +23,31 @@ export const useDesignProperties = hook;
 export const DesignPropertiesProvider = ({
   properties,
   propertyValues,
+  onUpdatePropertyValue,
   children,
 }: DesignPropertiesProviderProps) => {
-  return <Provider value={{ properties, propertyValues }}>{children}</Provider>;
+  return (
+    <Provider value={{ properties, propertyValues, onUpdatePropertyValue }}>
+      {children}
+    </Provider>
+  );
 };
 
 export const useProperty = (
   name: string,
-): { schema: PropertySchema; value?: PropertyValue } | null => {
+): {
+  schema: PropertySchema;
+  value?: PropertyValue;
+  updateValue: (value: PropertyValue) => void;
+} | null => {
+  const onUpdatePropertyValue = useDesignProperties().onUpdatePropertyValue;
   const value = useDesignProperties().propertyValues[name];
   const schema = useDesignProperties().properties.find(
     (property) => property.name === name,
   );
+
+  const updateValue = (newValue: PropertyValue) =>
+    onUpdatePropertyValue?.(name, newValue);
 
   if (!schema) {
     return null;
@@ -42,5 +56,6 @@ export const useProperty = (
   return {
     schema,
     value,
+    updateValue,
   };
 };

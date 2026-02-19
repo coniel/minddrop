@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   DatabaseDesignType,
   DatabaseEntries,
@@ -55,6 +55,12 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
       Databases.getDefaultDesign(entry.database, designType),
     [specificedDesign, entry.database, designType],
   );
+  const onUpdatePropertyValue = useCallback(
+    (name: string, value: PropertyValue) => {
+      DatabaseEntries.updateProperty(entry.id, name, value);
+    },
+    [entry.id],
+  );
 
   if (!database) {
     return null;
@@ -82,6 +88,7 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
       design={design}
       propertyValues={propertyValues}
       properties={database.properties}
+      onUpdatePropertyValue={onUpdatePropertyValue}
     />
   );
 };

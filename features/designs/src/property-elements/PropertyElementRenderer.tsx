@@ -2,6 +2,7 @@ import { PropertyDesignElement } from '@minddrop/designs';
 import { useProperty } from '../DesignPropertiesProvider';
 import { DesignText } from '../DesignText';
 import { createStyleObject } from '../utils';
+import { DesignFormattedTextPropertyElement } from './FormattedTextPropertyElement';
 import { ImagePropertyElement } from './ImagePropertyElement';
 import { DesignTextPropertyElement } from './TextPropertyElement';
 
@@ -45,6 +46,18 @@ export const PropertyDesignElementRenderer: React.FC<
         element={element}
         propertyValue={value}
         propertySchema={schema}
+      />
+    );
+  } else if (
+    schema.type === 'formatted-text' &&
+    element.type === 'formatted-text-property'
+  ) {
+    return (
+      <DesignFormattedTextPropertyElement
+        element={element}
+        propertySchema={schema}
+        propertyValue={typeof value !== 'undefined' ? `${value}` : ''}
+        onValueChange={property.updateValue}
       />
     );
   }

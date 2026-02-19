@@ -280,6 +280,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system

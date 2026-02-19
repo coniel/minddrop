@@ -1,29 +1,26 @@
 import { Design } from '@minddrop/designs';
-import { PropertiesSchema, PropertyMap } from '@minddrop/properties';
-import { DesignPropertiesProvider } from './DesignPropertiesProvider';
+import {
+  DesignPropertiesProvider,
+  DesignPropertiesProviderProps,
+} from './DesignPropertiesProvider';
 import { DesignCardElement } from './root-elements';
 
-export interface DesignRendererProps {
+export interface DesignRendererProps
+  extends Pick<
+    DesignPropertiesProviderProps,
+    'onUpdatePropertyValue' | 'properties' | 'propertyValues'
+  > {
   /**
    * The design to render.
    */
   design: Design;
-
-  /**
-   * The schema of the properties to render.
-   */
-  properties?: PropertiesSchema;
-
-  /**
-   * The values of the properties to render.
-   */
-  propertyValues?: PropertyMap;
 }
 
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
   properties = [],
   propertyValues = {},
+  onUpdatePropertyValue,
 }) => {
   let component: React.ReactElement | null = null;
 
@@ -39,6 +36,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
     <DesignPropertiesProvider
       properties={properties}
       propertyValues={propertyValues}
+      onUpdatePropertyValue={onUpdatePropertyValue}
     >
       {component}
     </DesignPropertiesProvider>
