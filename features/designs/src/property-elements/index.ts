@@ -1,1 +1,1 @@
-export * from './TextPropertyElement';
+export * from './PropertyElementRenderer';

@@ -1,6 +1,6 @@
 import { DesignElement } from '@minddrop/designs';
 import { DesignText } from './DesignText';
-import { PropertyDesignElementRenderer } from './property-elements/PropertyElementRenderer';
+import { PropertyDesignElementRenderer } from './property-elements';
 import { createStyleObject, isPropertyElement } from './utils';
 
 export interface DesignElementRendererProps {
