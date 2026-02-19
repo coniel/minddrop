@@ -3,7 +3,7 @@ import { InvalidParameterError, titleFromPath } from '@minddrop/utils';
 import { createDatabaseEntry } from '../createDatabaseEntry';
 import { getDatabase } from '../getDatabase';
 import { DatabaseEntry } from '../types';
-import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import {
   getDefaultFileProperty,
   getIncrmentalPropertyFilePath,
@@ -50,9 +50,5 @@ export async function createDatabaseEntryFromFilePath(
   await Fs.copyFile(filePath, path);
 
   // Update the property value on the entry and return the updated entry
-  return updateDatabaseEntry(entry.id, {
-    properties: {
-      [property.name]: name,
-    },
-  });
+  return updateDatabaseEntryProperty(entry.id, property.name, name);
 }

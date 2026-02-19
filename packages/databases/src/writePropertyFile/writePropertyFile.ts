@@ -5,6 +5,7 @@ import { PropertyFilesDirNameKey } from '../constants';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { updateDatabaseEntry } from '../updateDatabaseEntry';
+import { updateDatabaseEntryProperty } from '../updateDatabaseEntryProperty';
 import { getIncrmentalPropertyFilePath } from '../utils';
 
 /**
@@ -76,11 +77,7 @@ export async function writePropertyFile(
 
   if (updateEntry) {
     // Update the entry's property value
-    await updateDatabaseEntry(entry.id, {
-      properties: {
-        [propertyName]: name,
-      },
-    });
+    await updateDatabaseEntryProperty(entry.id, propertyName, name);
   }
 
   return path;
