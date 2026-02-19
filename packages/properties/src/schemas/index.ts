@@ -1,6 +1,7 @@
 import { PropertySchema, PropertyType } from '../types';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
+import { FilePropertySchema } from './FilePropertySchema';
 import { FormattedTextPropertySchema } from './FormattedTextPropertySchema';
 import { IconPropertySchema } from './IconPropertySchema';
 import { ImagePropertySchema } from './ImagePropertySchema';
@@ -14,10 +15,11 @@ import { UrlPropertySchema } from './UrlPropertySchema';
 
 export * from './CreatedPropertySchema';
 export * from './DatePropertySchema';
+export * from './FilePropertySchema';
+export * from './FormattedTextPropertySchema';
 export * from './IconPropertySchema';
 export * from './ImagePropertySchema';
 export * from './LastModifiedPropertySchema';
-export * from './FormattedTextPropertySchema';
 export * from './NumberPropertySchema';
 export * from './SelectPropertySchema';
 export * from './TextPropertySchema';
@@ -38,4 +40,5 @@ export const PropertySchemas: Record<PropertyType, PropertySchema> = {
   url: UrlPropertySchema,
   created: CreatedPropertySchema,
   'last-modified': LastModifiedPropertySchema,
+  file: FilePropertySchema,
 };

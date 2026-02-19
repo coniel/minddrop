@@ -1,6 +1,7 @@
 import {
   CreatedPropertySchema,
   DatePropertySchema,
+  FilePropertySchema,
   FormattedTextPropertySchema,
   IconPropertySchema,
   ImagePropertySchema,
@@ -25,6 +26,9 @@ export type PropertySchema =
   | TextPropertySchema
   | TitlePropertySchema
   | TogglePropertySchema
-  | UrlPropertySchema;
+  | UrlPropertySchema
+  | FilePropertySchema;
 
 export type PropertiesSchema = PropertySchema[];
+
+export type FileBasedPropertySchema = FilePropertySchema | ImagePropertySchema;

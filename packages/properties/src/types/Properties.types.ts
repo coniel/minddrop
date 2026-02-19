@@ -14,4 +14,5 @@ export type PropertyType =
   | 'text-formatted'
   | 'title'
   | 'toggle'
-  | 'url';
+  | 'url'
+  | 'file';
