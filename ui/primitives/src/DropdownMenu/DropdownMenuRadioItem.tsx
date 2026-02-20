@@ -11,10 +11,13 @@ export type DropdownMenuRadioItemProps = Omit<
   'MenuItemComponent'
 >;
 
+// TODO: Fix the type of the MenuItemComponent prop
+
 export const DropdownMenuRadioItem: FC<DropdownMenuRadioItemProps> = (
   props,
 ) => (
   <InteractiveMenuItem
+    // @ts-ignore
     MenuItemComponent={DropdownMenuPrimitives.RadioItem}
     itemIndicator={
       <DropdownMenuPrimitives.RadioItemIndicator>
