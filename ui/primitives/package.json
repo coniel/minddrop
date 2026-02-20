@@ -20,6 +20,7 @@
     "@base-ui/react": "1.2.0",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
-    "@minddrop/utils": "workspace:*"
+    "@minddrop/utils": "workspace:*",
+    "react-window": "^2.2.7"
   }
 }

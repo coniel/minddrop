@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { VariableSizeList as List } from 'react-window';
+import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
 import { ContentIcon } from '../ContentIcon';
@@ -205,13 +205,13 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           // list to be re-rendered when category count/heights change.
           <div key={results.length}>
             <List
-              height={423}
-              itemCount={resultsByCategory.length}
-              itemSize={getCategoryItemSize}
-              width={440}
-            >
-              {Category}
-            </List>
+              rowCount={resultsByCategory.length}
+              rowHeight={getCategoryItemSize}
+              rowComponent={Category}
+              // @ts-ignore - TODO: react-window types are incorrect, remove
+              // when they are fixed.
+              rowProps={{}}
+            />
           </div>
         )}
       </div>

@@ -1,16 +1,15 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { VariableSizeList as List } from 'react-window';
+import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
 import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { IconButton } from '../IconButton';
+import { InvisibleTextField } from '../InvisibleTextField';
 import { MenuLabel } from '../Menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
-import { TextField } from '../TextField';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import './EmojiPicker.css';
-import { InvisibleTextField } from '../InvisibleTextField';
 
 export interface EmojiPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
@@ -110,7 +109,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     style,
   }: {
     index: number;
-    style: React.HTMLAttributes<HTMLDivElement>['style'];
+    style: React.CSSProperties;
   }) => {
     const [category, categoryIcons] = resultsByGroup[index];
 
@@ -171,13 +170,13 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           // list to be re-rendered when category count/heights change.
           <div key={results.length}>
             <List
-              height={423}
-              itemCount={resultsByGroup.length}
-              itemSize={getCategoryItemSize}
-              width={440}
-            >
-              {Category}
-            </List>
+              rowCount={resultsByGroup.length}
+              rowHeight={getCategoryItemSize}
+              rowComponent={Category}
+              // @ts-ignore - TODO: react-window types are incorrect, remove
+              // when they are fixed.
+              rowProps={{}}
+            />
           </div>
         )}
         {results.length <= 60 && (

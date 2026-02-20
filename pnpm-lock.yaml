@@ -1335,6 +1335,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      react-window:
+        specifier: ^2.2.7
+        version: 2.2.7(react-dom@19.0.0)(react@19.0.0)
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -7180,6 +7183,16 @@ packages:
       get-nonce: 1.0.1
       react: 19.0.0
       tslib: 2.8.1
+    dev: false
+
+  /react-window@2.2.7(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-SH5nvfUQwGHYyriDUAOt7wfPsfG9Qxd6OdzQxl5oQ4dsSsUicqQvjV7dR+NqZ4coY0fUn3w1jnC5PwzIUWEg5w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
     dev: false
 
   /react@19.0.0:
