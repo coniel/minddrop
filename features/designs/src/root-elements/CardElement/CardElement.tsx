@@ -1,6 +1,6 @@
 import { CardElement } from '@minddrop/designs';
 import { DesignElementRenderer } from '../../DesignElementRenderer';
-import { createStyleObject } from '../../utils';
+import { createContainerStyleObject } from '../../utils';
 import './CardElement.css';
 
 export interface DesignCardElementProps {
@@ -13,15 +13,10 @@ export interface DesignCardElementProps {
 export const DesignCardElement: React.FC<DesignCardElementProps> = ({
   element,
 }) => {
-  const style = createStyleObject(element.style);
+  const style = createContainerStyleObject(element.style);
 
   return (
-    <div
-      className="card-element"
-      style={{
-        gap: style.gap,
-      }}
-    >
+    <div className="card-element" style={style}>
       {element.children.map((child) => (
         <DesignElementRenderer key={child.id} element={child} />
       ))}
