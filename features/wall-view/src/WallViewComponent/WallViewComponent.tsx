@@ -87,7 +87,7 @@ function calculateColumnCount(
 
 function splitIntoColumns(entries: string[], columnCount: number): Column[] {
   const columns: Column[] = Array.from({ length: columnCount }, (_, i) => ({
-    id: `col-${columnCount}-${i}`,
+    id: `col-${entries[0]}-${entries[entries.length - 1]}-${i}`,
     entries: [],
   }));
 
