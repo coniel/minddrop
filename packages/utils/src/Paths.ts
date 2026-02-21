@@ -1,5 +1,6 @@
 let workspacePath = '';
 let workspaceConfigsPath = '';
+let httpServerHost = '';
 
 export const Paths = {
   /**
@@ -30,6 +31,20 @@ export const Paths = {
    */
   set workspaceConfigs(path: string) {
     workspaceConfigsPath = path;
+  },
+
+  /**
+   * Returns the host of the HTTP server.
+   */
+  get httpServerHost() {
+    return httpServerHost;
+  },
+
+  /**
+   * Sets the host of the HTTP server.
+   */
+  set httpServerHost(host: string) {
+    httpServerHost = host;
   },
 
   /**
