@@ -296,27 +296,15 @@
     }
   },
   "designs": {
+    "labels": {
+      "new": "New design"
+    },
     "actions": {
       "deleteConfirmation": {
         "title": "Delete design?",
         "message": "This will remove the design from the database and can't be undone. Any views using this design will switch to the default design.",
         "confirm": "Delete design"
       }
-    },
-    "page": {
-      "name": "Page",
-      "new": "New page design",
-      "description": "The design of an element when displayed as a page."
-    },
-    "card": {
-      "name": "Card",
-      "new": "New card design",
-      "description": "The design of an element when displayed as a card."
-    },
-    "list": {
-      "name": "List",
-      "new": "New list design",
-      "description": "The design of an element when displayed in a list."
     },
     "typography": {
       "label": "Typography",

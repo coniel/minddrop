@@ -7,11 +7,8 @@ import { TextPropertyElementTemplate } from './TextPropertyElementTemplate';
 import { TitlePropertyElementTemplate } from './TitlePropertyElementTemplate';
 import { UrlPropertyElementTemplate } from './UrlPropertyElementTemplate';
 
-export * from '../design-templates/CardDesignTemplate';
 export * from './ContainerElementTemplate';
 export * from './ImagePropertyElementTemplate';
-export * from '../design-templates/ListDesignTemplate';
-export * from '../design-templates/PageDesignTemplate';
 export * from './TextElementTemplate';
 export * from './TextPropertyElementTemplate';
 export * from './FormattedTextPropertyElementTemplate';

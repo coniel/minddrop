@@ -78,8 +78,17 @@ export interface TextElement extends DesignElementBase {
 export type StaticDesignElement = TextElement;
 
 /******************************************************************************
- * Layout Elements
+ * Container Elements
  *****************************************************************************/
+
+export interface RootElement extends DesignElementBase {
+  type: 'root';
+
+  /**
+   * The child elements contained within this container.
+   */
+  children: DesignElement[];
+}
 
 export interface ContainerElement extends DesignElementBase {
   type: 'container';
@@ -90,35 +99,6 @@ export interface ContainerElement extends DesignElementBase {
   children: DesignElement[];
 }
 
-export type LayoutDesignElement = ContainerElement;
-
-/******************************************************************************
- * Root Elements
- *****************************************************************************/
-
-interface RootElementBase extends DesignElementBase {
-  type: DesignType;
-
-  /**
-   * The child elements contained within this root element.
-   */
-  children: DesignElement[];
-}
-
-export interface CardElement extends RootElementBase {
-  type: 'card';
-}
-
-export interface ListElement extends RootElementBase {
-  type: 'list';
-}
-
-export interface PageElement extends RootElementBase {
-  type: 'page';
-}
-
-export type RootDesignElement = CardElement | ListElement | PageElement;
-
 /******************************************************************************
  * Composite Types
  *****************************************************************************/
@@ -126,5 +106,5 @@ export type RootDesignElement = CardElement | ListElement | PageElement;
 export type DesignElement =
   | PropertyDesignElement
   | StaticDesignElement
-  | LayoutDesignElement
-  | RootDesignElement;
+  | ContainerElement
+  | RootElement;

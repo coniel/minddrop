@@ -1,22 +1,21 @@
 import { i18n } from '@minddrop/i18n';
 import { uuid } from '@minddrop/utils';
-import { DesignTemplates } from '../design-templates';
-import { DesignForType, DesignType } from '../types';
+import { Design } from '../types';
 
 /**
- * Generates a design with the specified type and name.
+ * Generates a design.
  *
- * @param type - The design type.
  * @param name - The design name.
  * @returns The generated design.
  */
-export function generateDesign<T extends DesignType>(
-  type: T,
-  name?: string,
-): DesignForType<T> {
+export function generateDesign(name?: string): Design {
   return {
-    ...DesignTemplates[type],
-    name: name || i18n.t(`designs.${type}.name`),
+    rootElement: {
+      id: 'root',
+      type: 'root',
+      children: [],
+    },
+    name: name || i18n.t(`designs.labels.new`),
     id: uuid(),
-  } as DesignForType<T>;
+  };
 }
