@@ -1,9 +1,7 @@
 import React from 'react';
 import { ImagePropertyElement as ImageElement } from '@minddrop/designs';
-import { Fs } from '@minddrop/file-system';
 import { useImageSrc } from '@minddrop/file-system/src/useImageSrc';
 import { ImagePropertySchema } from '@minddrop/properties';
-import { createStyleObject } from '../utils';
 
 export interface DesignImagePropertyElementProps {
   /**
@@ -23,11 +21,7 @@ export interface DesignImagePropertyElementProps {
 }
 
 export const ImagePropertyElement = React.memo(
-  ({
-    element,
-    propertySchema,
-    propertyValue,
-  }: DesignImagePropertyElementProps) => {
+  ({ propertyValue }: DesignImagePropertyElementProps) => {
     if (!propertyValue) {
       return null;
     }
