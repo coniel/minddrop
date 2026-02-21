@@ -66,9 +66,6 @@ export function initializeMockFileSystem(
       ),
     exists: async (path, options) =>
       mockExists(root, getFullPath(path, options)),
-    readBinaryFile: () => {
-      throw new Error('readBinaryFile mock not implemented');
-    },
     readDir: async (path, options = {}) => {
       const dir = mockGetFileEntry(root, getFullPath(path, options));
       const children = dir.children as FsEntry[];
@@ -82,14 +79,6 @@ export function initializeMockFileSystem(
       mockGetFileEntry(root, fullPath);
 
       return textFileContents[fullPath] || '';
-    },
-    readJsonFile: async (path, options) => {
-      const fullPath = getFullPath(path, options);
-
-      // Ensure file entry exists
-      mockGetFileEntry(root, fullPath);
-
-      return JSON.parse(textFileContents[fullPath]);
     },
     removeDir: async (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
@@ -137,22 +126,6 @@ export function initializeMockFileSystem(
       }
 
       textFileContents[fullPath] = textContent;
-    },
-    writeJsonFile: async (path, jsonContent, pretty, options) => {
-      const fullPath = getFullPath(path, options);
-
-      if (!mockExists(root, fullPath)) {
-        mockAddFileEntry(root, {
-          path: fullPath,
-          name: fileNameFromPath(fullPath),
-        });
-      }
-
-      textFileContents[fullPath] = JSON.stringify(
-        jsonContent,
-        null,
-        pretty ? 2 : 0,
-      );
     },
     createDir: async (path, options) => {
       const fullPath = getFullPath(path, options);

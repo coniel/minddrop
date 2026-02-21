@@ -116,7 +116,7 @@ async function readJsonFile<TData extends object = object>(
 async function writeJsonFile(
   path: string,
   jsonContent: object,
-  pretty: boolean,
+  pretty?: boolean,
   options?: FsOptions,
 ): Promise<void> {
   const contents = JSON.stringify(jsonContent, null, pretty ? 2 : 0);
