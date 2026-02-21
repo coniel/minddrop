@@ -44,6 +44,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   await loadConfigs();
   Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
+  Paths.httpServerHost = 'http://localhost:14567';
 
   // Initialize databases
   DatabaseTemplates.initialize();
