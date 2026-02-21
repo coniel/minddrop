@@ -28,6 +28,7 @@ const newDatabase: Database = {
   lastModified: expect.any(Date),
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
+  propertyFileStorage: 'property',
   properties: [],
   defaultDesigns: {},
   designs: [],

@@ -3,7 +3,7 @@ import { DesignFixtures } from '@minddrop/designs';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { addDatabaseDesign } from './addDatabaseDesign';
 
-const { pageDesign1: design2 } = DesignFixtures;
+const { design_list_1 } = DesignFixtures;
 
 describe('addDatabaseDesign', () => {
   beforeEach(setup);
@@ -11,8 +11,8 @@ describe('addDatabaseDesign', () => {
   afterEach(cleanup);
 
   it('should add the design to the database', async () => {
-    const result = await addDatabaseDesign(objectDatabase.id, design2);
+    const result = await addDatabaseDesign(objectDatabase.id, design_list_1);
 
-    expect(result.designs).toEqual([...objectDatabase.designs, design2]);
+    expect(result.designs).toEqual([...objectDatabase.designs, design_list_1]);
   });
 });

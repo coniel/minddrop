@@ -5,13 +5,15 @@ import {
   OpenAppSidebarEvent,
 } from '@minddrop/events';
 import { Button, Panel, Toolbar } from '@minddrop/ui-primitives';
-import { useDesignStudioStore } from '../../DesignStudioStore';
+import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
 import { AvailableProperties } from '../AvailableProperties';
 import { ElementStyleEditor } from '../ElementStyleEditor';
 import { ElementsTree } from '../ElementsTree';
 import { DesignStudioElement } from '../design-elements';
 import './DesignStudio.css';
+import { FlatRootDesignElement } from '../../types';
+import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
@@ -74,7 +76,13 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
 };
 
 const Workspace = () => {
-  return <DesignStudioElement index={0} elementId="root" />;
+  const element = useElement<FlatRootDesignElement>('root');
+
+  if (!element) {
+    return null;
+  }
+
+  return <DesignStudioRootElement element={element} />;
 };
 
 const RightPanel = () => {

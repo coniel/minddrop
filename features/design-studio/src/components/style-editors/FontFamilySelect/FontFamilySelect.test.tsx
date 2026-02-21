@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, userEvent } from '@minddrop/test-utils';
 import { DesignStudioStore } from '../../../DesignStudioStore';
-import { cleanup, setup, textElement1 } from '../../../test-utils';
+import { cleanup, element_text_1, setup } from '../../../test-utils';
 import { FontFamilySelect } from './FontFamilySelect';
 
 describe('<FontFamilySelect />', () => {
@@ -10,7 +10,7 @@ describe('<FontFamilySelect />', () => {
   afterEach(cleanup);
 
   it('updates the element font family', async () => {
-    render(<FontFamilySelect elementId={textElement1.id} />);
+    render(<FontFamilySelect elementId={element_text_1.id} />);
 
     await userEvent.click(screen.getByRole('combobox'));
 
@@ -19,7 +19,7 @@ describe('<FontFamilySelect />', () => {
     );
 
     expect(
-      DesignStudioStore.getState().elements[textElement1.id].style,
+      DesignStudioStore.getState().elements[element_text_1.id].style,
     ).toMatchObject({
       'font-family': 'serif',
     });

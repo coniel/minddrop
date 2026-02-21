@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { cardDesign1 } from '@minddrop/designs/src/test-utils/fixtures';
+import { design_card_1 } from '@minddrop/designs/src/test-utils/fixtures';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { removeDatabaseDesign } from './removeDatabaseDesign';
 
@@ -15,6 +15,8 @@ describe('removeDatabaseDesign', () => {
       objectDatabase.designs[0].id,
     );
 
-    expect(result.designs.find((d) => d.id === cardDesign1.id)).toBeUndefined();
+    expect(
+      result.designs.find((d) => d.id === design_card_1.id),
+    ).toBeUndefined();
   });
 });

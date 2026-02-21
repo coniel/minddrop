@@ -37,7 +37,7 @@ const baseEvent = {
   },
   index: 0,
   position: 'after',
-  targetId: testDesign.tree.children[0].id,
+  targetId: testDesign.rootElement.children[0].id,
   targetType: 'design-element',
   event: new Event('drop'),
 } as unknown as DropEventData<DesignStudioDropEventData>;
@@ -75,7 +75,7 @@ describe('handleDropOnDesignElement', () => {
         ...baseEvent,
         position: 'before',
         index: 1,
-        targetId: testDesign.tree.children[1].id,
+        targetId: testDesign.rootElement.children[1].id,
         data: { [DesignElementTemplatesDataKey]: [TextElementTemplate] },
       };
 

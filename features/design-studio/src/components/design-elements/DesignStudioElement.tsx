@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react';
 import { useElement } from '../../DesignStudioStore';
 import { FlatDesignElement } from '../../types';
 import { DesignElementDragDropHandler } from '../DesignElementDragDropHandler';
-import { DesignStudioCardElement } from './DesignStudioCardElement';
 import { DesignStudioImagePropertyElement } from './DesignStudioImagePropertyElement';
 import { DesignStudioTextPropertyElement } from './DesignStudioTextPropertyElement';
 
@@ -72,10 +71,5 @@ export const DesignStudioElement: React.FC<DesignStudioElementProps> = ({
     );
   }
 
-  switch (element.type) {
-    case 'card':
-      return <DesignStudioCardElement element={element} />;
-    default:
-      return null;
-  }
+  return null;
 };

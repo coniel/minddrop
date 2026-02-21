@@ -1,21 +1,23 @@
 import { i18n } from '@minddrop/i18n';
 import { uuid } from '@minddrop/utils';
-import { Design } from '../types';
+import { Design, DesignType } from '../types';
 
 /**
- * Generates a design.
+ * Generates a new empty design.
  *
- * @param name - The design name.
+ * @param type - The design type.
+ * @param name - The design name, defaults to the design type name.
  * @returns The generated design.
  */
-export function generateDesign(name?: string): Design {
+export function generateDesign(type: DesignType, name?: string): Design {
   return {
+    type,
+    id: uuid(),
+    name: name || i18n.t(`designs.${type}.name`),
     rootElement: {
       id: 'root',
       type: 'root',
       children: [],
     },
-    name: name || i18n.t(`designs.labels.new`),
-    id: uuid(),
   };
 }

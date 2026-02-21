@@ -1,7 +1,7 @@
 import {
   ContainerElement,
   DesignElement,
-  RootDesignElement,
+  RootElement,
 } from '@minddrop/designs';
 import { FlatDesignElement } from '../../types';
 
@@ -13,7 +13,7 @@ import { FlatDesignElement } from '../../types';
  */
 export function reconstructTree(
   elements: Record<string, FlatDesignElement>,
-): RootDesignElement {
+): RootElement {
   const clonedElements: Record<string, FlatDesignElement> = JSON.parse(
     JSON.stringify(elements),
   );
@@ -37,5 +37,5 @@ export function reconstructTree(
     return element as DesignElement;
   }
 
-  return buildNode('root') as RootDesignElement;
+  return buildNode('root') as RootElement;
 }

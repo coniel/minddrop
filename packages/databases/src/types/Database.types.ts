@@ -89,20 +89,14 @@ export interface Database {
 
   /**
    * Designs associated with the database.
-   * Databases can contain the following types designs:
-   * - `page`: used display entries as a page.
-   * - `card`: used display entries in card based views.
-   * - `list`: used display entries in list based views.
    */
   designs: Design[];
 
   /**
-   * The IDs of the designs to use as the default for each design type.
-   * If a default design is not provided for a type, the first design
-   * of that type will be used. If no design of that type exists, the
-   * global default design will be used.
+   * A [layout]: [design ID] map of the default design to use when
+   * rendering entries.
    */
-  defaultDesigns: Partial<Record<DatabaseDesignType, string>>;
+  defaultDesigns: Record<string, string>;
 
   /**
    * The database's views.

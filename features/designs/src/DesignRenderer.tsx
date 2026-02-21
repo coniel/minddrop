@@ -1,9 +1,10 @@
 import { Design } from '@minddrop/designs';
+import { DesignElementRenderer } from './DesignElementRenderer';
 import {
   DesignPropertiesProvider,
   DesignPropertiesProviderProps,
 } from './DesignPropertiesProvider';
-import { DesignCardElement } from './root-elements';
+import { createContainerStyleObject } from './utils';
 
 export interface DesignRendererProps
   extends Pick<
@@ -22,15 +23,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   propertyValues = {},
   onUpdatePropertyValue,
 }) => {
-  let component: React.ReactElement | null = null;
-
-  switch (design.type) {
-    case 'card':
-      component = <DesignCardElement element={design.tree} />;
-      break;
-    default:
-      return null;
-  }
+  const style = createContainerStyleObject(design.rootElement.style);
 
   return (
     <DesignPropertiesProvider
@@ -38,7 +31,11 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       propertyValues={propertyValues}
       onUpdatePropertyValue={onUpdatePropertyValue}
     >
-      {component}
+      <div className="card-element" style={style}>
+        {design.rootElement.children.map((child) => (
+          <DesignElementRenderer key={child.id} element={child} />
+        ))}
+      </div>
     </DesignPropertiesProvider>
   );
 };

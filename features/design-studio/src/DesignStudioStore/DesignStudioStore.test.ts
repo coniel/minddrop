@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
+  element_text_1,
   flatTree,
   testDatabase,
   testDesign,
-  textElement1,
 } from '../test-utils';
 import { DesignStudioStore } from './DesignStudioStore';
 
@@ -39,28 +39,28 @@ describe('DesignStudioStore', () => {
     );
 
     // Update an element
-    DesignStudioStore.getState().updateElement(textElement1.id, {
+    DesignStudioStore.getState().updateElement(element_text_1.id, {
       style: {
         'font-family': 'mono',
       },
     });
 
-    expect(DesignStudioStore.getState().elements[textElement1.id]).toEqual({
-      ...flatTree[textElement1.id],
+    expect(DesignStudioStore.getState().elements[element_text_1.id]).toEqual({
+      ...flatTree[element_text_1.id],
       style: {
         'font-family': 'mono',
       },
     });
 
     // Update the element again
-    DesignStudioStore.getState().updateElement(textElement1.id, {
+    DesignStudioStore.getState().updateElement(element_text_1.id, {
       style: {
         'font-weight': 900,
       },
     });
 
-    expect(DesignStudioStore.getState().elements[textElement1.id]).toEqual({
-      ...flatTree[textElement1.id],
+    expect(DesignStudioStore.getState().elements[element_text_1.id]).toEqual({
+      ...flatTree[element_text_1.id],
       style: {
         'font-family': 'mono',
         'font-weight': 900,

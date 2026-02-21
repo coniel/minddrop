@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render, screen, userEvent } from '@minddrop/test-utils';
 import { DesignStudioStore } from '../../../DesignStudioStore';
-import { cleanup, setup, textElement1 } from '../../../test-utils';
+import { cleanup, element_text_1, setup } from '../../../test-utils';
 import { UnderlineToggle } from './UnderlineToggle';
 
 describe('<UnderlineToggle />', () => {
@@ -10,12 +10,12 @@ describe('<UnderlineToggle />', () => {
   afterEach(cleanup);
 
   it('updates the element underline style', async () => {
-    render(<UnderlineToggle elementId={textElement1.id} />);
+    render(<UnderlineToggle elementId={element_text_1.id} />);
 
     await userEvent.click(screen.getByRole('button'));
 
     expect(
-      DesignStudioStore.getState().elements[textElement1.id].style,
+      DesignStudioStore.getState().elements[element_text_1.id].style,
     ).toMatchObject({
       underline: true,
     });

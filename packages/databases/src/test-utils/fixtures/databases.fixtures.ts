@@ -11,7 +11,7 @@ import { Database } from '../../types';
 import { databaseConfigFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
-const { cardDesign1, cardDesign2, listDesign1, pageDesign1 } = DesignFixtures;
+const { design_card_1 } = DesignFixtures;
 const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
@@ -30,12 +30,8 @@ function generateDatabase(
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    designs: [cardDesign1, cardDesign2, listDesign1, pageDesign1],
-    defaultDesigns: {
-      card: cardDesign1.id,
-      page: pageDesign1.id,
-      list: listDesign1.id,
-    },
+    designs: [design_card_1],
+    defaultDesigns: { card: design_card_1.id },
     views: [view1],
     path: `${parentDir}/${data.name}`,
     ...data,

@@ -1,16 +1,16 @@
 import { FlexDropContainer } from '@minddrop/feature-drag-and-drop';
 import { handleDropOnGap } from '../../../handleDropOnGap';
-import { FlatCardDesignElement } from '../../../types';
+import { FlatRootDesignElement } from '../../../types';
 import { getContainerGapValue } from '../../../utils/getContainerGapValue';
 import { DesignStudioElement } from '../DesignStudioElement';
-import './DesignStudioCardElement.css';
+import './DesignStudioRootElement.css';
 
-export interface DesignStudioCardElementProps {
-  element: FlatCardDesignElement;
+export interface DesignStudioRootElementProps {
+  element: FlatRootDesignElement;
 }
 
-export const DesignStudioCardElement: React.FC<
-  DesignStudioCardElementProps
+export const DesignStudioRootElement: React.FC<
+  DesignStudioRootElementProps
 > = ({ element }) => {
   const gap = getContainerGapValue(element);
 
@@ -20,7 +20,7 @@ export const DesignStudioCardElement: React.FC<
       gap={gap}
       direction="column"
       justify="start"
-      className="design-studio-card-element"
+      className="design-studio-root-element"
       onDrop={handleDropOnGap}
     >
       {element.children.map((childId, index) => (

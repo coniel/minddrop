@@ -1,7 +1,7 @@
-import { DesignElement, RootDesignElement } from '@minddrop/designs';
+import { DesignElement, RootElement } from '@minddrop/designs';
 import {
+  FlatContainerDesignElement,
   FlatDesignElement,
-  FlatLayoutDesignElement,
   FlatStaticDesignElement,
 } from '../../types';
 
@@ -12,7 +12,7 @@ import {
  * @returns The flattened element map.
  */
 export function flattenTree(
-  tree: RootDesignElement,
+  tree: RootElement,
 ): Record<string, FlatDesignElement> {
   const elements: Record<string, FlatDesignElement> = {};
 
@@ -24,7 +24,7 @@ export function flattenTree(
     }
 
     if ('children' in node) {
-      (elements[node.id] as FlatLayoutDesignElement).children =
+      (elements[node.id] as FlatContainerDesignElement).children =
         node.children.map((child) => child.id);
 
       node.children.forEach((child) => traverse(child, node.id));

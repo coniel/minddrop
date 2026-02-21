@@ -1,5 +1,4 @@
 import { Design } from '@minddrop/designs';
-import { DatabaseDesignType } from './types';
 
 export const DatabaseConfigFileName = 'database.json';
 export const DatabasesConfigFileName = 'databases.json';
@@ -11,9 +10,9 @@ export const defaultCardDesign: Design = {
   id: 'default-card-design',
   type: 'card',
   name: 'designs.card.name',
-  tree: {
+  rootElement: {
     id: 'root',
-    type: 'card',
+    type: 'root',
     children: [
       {
         id: 'title',
@@ -28,9 +27,9 @@ export const defaultListDesign: Design = {
   id: 'default-list-design',
   type: 'list',
   name: 'designs.list.name',
-  tree: {
+  rootElement: {
     id: 'root',
-    type: 'list',
+    type: 'root',
     children: [],
   },
 };
@@ -39,14 +38,15 @@ export const defaultPageDesign: Design = {
   id: 'default-page-design',
   type: 'page',
   name: 'designs.page.name',
-  tree: {
+  rootElement: {
     id: 'root',
-    type: 'page',
+    type: 'root',
     children: [],
   },
 };
 
-export const defaultDatabaseDesigns: Record<DatabaseDesignType, Design> = {
+export const defaultDatabaseDesigns: Record<string, Design> = {
+  global: defaultCardDesign,
   page: defaultPageDesign,
   card: defaultCardDesign,
   list: defaultListDesign,

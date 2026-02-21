@@ -9,15 +9,14 @@ export interface ElementIconProps {
 }
 
 const icons: Record<DesignElement['type'], UiIconName> = {
+  root: 'layout',
   text: 'text',
   container: 'layout',
   'text-property': 'text',
+  'formatted-text-property': 'text',
   'title-property': 'text',
   'url-property': 'link',
   'image-property': 'image',
-  page: 'layout',
-  card: 'layout-grid',
-  list: 'layout-list',
   'number-property': 'hash',
 };
 

@@ -29,11 +29,6 @@ export async function updateDatabaseDesign(
     );
   }
 
-  // Prevent changing design type
-  if (design.type !== updatedDesign.type) {
-    throw new InvalidParameterError('Cannot update design type.');
-  }
-
   // Update the design in the database's designs
   const designs = config.designs.map((design) =>
     design.id === updatedDesign.id ? updatedDesign : design,

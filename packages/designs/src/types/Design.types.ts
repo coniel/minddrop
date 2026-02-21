@@ -14,6 +14,11 @@ export interface Design {
   name: string;
 
   /**
+   * The type of design.
+   */
+  type: DesignType;
+
+  /**
    * The root design element.
    */
   rootElement: RootElement;

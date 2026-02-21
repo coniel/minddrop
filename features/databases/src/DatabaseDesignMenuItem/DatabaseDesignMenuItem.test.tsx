@@ -14,7 +14,7 @@ import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignMenuItem } from './DatabaseDesignMenuItem';
 
-const { cardDesign1 } = DesignFixtures;
+const { design_card_1 } = DesignFixtures;
 const { objectDatabase } = DatabaseFixtures;
 
 describe('<DatabaseDesignMenuItem />', () => {
@@ -28,19 +28,19 @@ describe('<DatabaseDesignMenuItem />', () => {
         OpenDesignStudioEvent,
         'test',
         (payload) => {
-          expect(payload.data.design).toBe(cardDesign1);
+          expect(payload.data.design).toBe(design_card_1);
           done();
         },
       );
 
       render(
         <DatabaseDesignMenuItem
-          design={cardDesign1}
+          design={design_card_1}
           databaseId={objectDatabase.id}
         />,
       );
 
-      userEvent.click(screen.getByText(cardDesign1.name));
+      userEvent.click(screen.getByText(design_card_1.name));
     }));
 
   it('opens the design studio when edit action is clicked', () =>
@@ -49,20 +49,20 @@ describe('<DatabaseDesignMenuItem />', () => {
         OpenDesignStudioEvent,
         'test',
         (payload) => {
-          expect(payload.data.design).toBe(cardDesign1);
+          expect(payload.data.design).toBe(design_card_1);
           done();
         },
       );
 
       render(
         <DatabaseDesignMenuItem
-          design={cardDesign1}
+          design={design_card_1}
           databaseId={objectDatabase.id}
         />,
       );
 
       async function runTest() {
-        await userEvent.hover(screen.getByText(cardDesign1.name));
+        await userEvent.hover(screen.getByText(design_card_1.name));
         await userEvent.click(screen.getByLabelText('actions.manage'));
 
         await waitFor(() => {
@@ -82,7 +82,7 @@ describe('<DatabaseDesignMenuItem />', () => {
         'test',
         (payload) => {
           // Should be a new ID
-          expect(payload.data.design.id).not.toBe(cardDesign1.id);
+          expect(payload.data.design.id).not.toBe(design_card_1.id);
 
           // Should add the new design to the database
           expect(
@@ -95,13 +95,13 @@ describe('<DatabaseDesignMenuItem />', () => {
       );
       render(
         <DatabaseDesignMenuItem
-          design={cardDesign1}
+          design={design_card_1}
           databaseId={objectDatabase.id}
         />,
       );
 
       async function runTest() {
-        await userEvent.hover(screen.getByText(cardDesign1.name));
+        await userEvent.hover(screen.getByText(design_card_1.name));
         await userEvent.click(screen.getByLabelText('actions.manage'));
 
         await waitFor(() => {
@@ -141,7 +141,7 @@ describe('<DatabaseDesignMenuItem />', () => {
       );
 
       async function runTest() {
-        await userEvent.hover(screen.getByText(cardDesign1.name));
+        await userEvent.hover(screen.getByText(design_card_1.name));
         await userEvent.click(screen.getByLabelText('actions.manage'));
 
         await waitFor(() => {

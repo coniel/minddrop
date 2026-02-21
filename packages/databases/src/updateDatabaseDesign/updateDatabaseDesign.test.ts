@@ -4,10 +4,10 @@ import { InvalidParameterError } from '@minddrop/utils';
 import { cleanup, objectDatabase, setup } from '../test-utils';
 import { updateDatabaseDesign } from './updateDatabaseDesign';
 
-const { cardDesign1 } = DesignFixtures;
+const { design_card_1 } = DesignFixtures;
 
 const updatedDesign = {
-  ...cardDesign1,
+  ...design_card_1,
   name: 'Updated Design',
 };
 
@@ -25,21 +25,11 @@ describe('updateDatabaseDesign', () => {
     ).rejects.toThrow(InvalidParameterError);
   });
 
-  it('throws if the design type is changed', async () => {
-    await expect(
-      // @ts-expect-error - Test invalid type change
-      updateDatabaseDesign(objectDatabase.id, {
-        ...updatedDesign,
-        type: 'list',
-      }),
-    ).rejects.toThrow(InvalidParameterError);
-  });
-
   it('should update the design in the database', async () => {
     // Database contains design1, udpate it
     const result = await updateDatabaseDesign(objectDatabase.id, updatedDesign);
 
-    expect(result.designs.find((d) => d.id === cardDesign1.id)).toEqual(
+    expect(result.designs.find((d) => d.id === design_card_1.id)).toEqual(
       updatedDesign,
     );
   });
