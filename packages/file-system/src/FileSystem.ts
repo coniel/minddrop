@@ -19,6 +19,8 @@ let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 export const Fs: Omit<FileSystem, 'openFilePicker'> &
   typeof Api & {
     incrementalPath: typeof incrementalPath;
+    readJsonFile: typeof readJsonFile;
+    writeJsonFile: typeof writeJsonFile;
     readYamlFile: typeof readYamlFile;
     writeYamlFile: typeof writeYamlFile;
     openFilePicker: typeof openFilePicker;
@@ -28,13 +30,16 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   incrementalPath,
   setPathIncrement,
   openFilePicker,
+  readJsonFile,
+  writeJsonFile,
+  readYamlFile,
+  writeYamlFile,
   getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
   copyFile: (...args) => FsAdapter.copyFile(...args),
   createDir: (...args) => FsAdapter.createDir(...args),
   exists: (...args) => FsAdapter.exists(...args),
-  readBinaryFile: (...args) => FsAdapter.readBinaryFile(...args),
   readDir: (...args) => FsAdapter.readDir(...args),
   readTextFile: (...args) => FsAdapter.readTextFile(...args),
   removeDir: (...args) => FsAdapter.removeDir(...args),
@@ -45,10 +50,6 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
-  readJsonFile: (...args) => FsAdapter.readJsonFile(...args),
-  writeJsonFile: (...args) => FsAdapter.writeJsonFile(...args),
-  readYamlFile: (...args) => readYamlFile(...args),
-  writeYamlFile: (...args) => writeYamlFile(...args),
 };
 
 function openFilePicker(
@@ -85,6 +86,42 @@ async function incrementalPath(
   ignoreFileExtension = false,
 ): Promise<IncrementedPath> {
   return incrementalPathFn(FsAdapter, targetPath, ignoreFileExtension);
+}
+
+/**
+ * Reads a JSON file and parses its contents.
+ *
+ * @param path - The file path.
+ * @param options - Read file options.
+ * @returns A promise resolving to the parsed JSON data.
+ */
+async function readJsonFile<TData extends object = object>(
+  path: string,
+  options?: FsOptions,
+): Promise<TData> {
+  const test = await FsAdapter.readTextFile(path, options);
+
+  return JSON.parse(test) as TData;
+}
+
+/**
+ * Writes a JSON file.
+ *
+ * @param path - The file path.
+ * @param jsonContent - The JSON content to write.
+ * @param pretty - Whether or not to pretty print the JSON, defaults to true.
+ * @param options - Write file options.
+ * @returns A promise indicating the success or failure of the operation.
+ */
+async function writeJsonFile(
+  path: string,
+  jsonContent: object,
+  pretty: boolean,
+  options?: FsOptions,
+): Promise<void> {
+  const contents = JSON.stringify(jsonContent, null, pretty ? 2 : 0);
+
+  await FsAdapter.writeTextFile(path, contents, options);
 }
 
 async function readYamlFile<TData extends object = object>(

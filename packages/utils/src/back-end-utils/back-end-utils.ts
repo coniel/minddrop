@@ -10,7 +10,13 @@ const placeholderApi: BackendUtilsAdapter = {
   getWebpageHtml: () => {
     throw new AdapterNotRegisteredError('backend utils');
   },
-  open: () => {
+  openFile: () => {
+    throw new AdapterNotRegisteredError('backend utils');
+  },
+  openUrl: () => {
+    throw new AdapterNotRegisteredError('backend utils');
+  },
+  showItemInFolder: () => {
     throw new AdapterNotRegisteredError('backend utils');
   },
 };
@@ -42,8 +48,16 @@ export function unregisterBackendUtilsAdapter() {
   adapterRegistered = false;
 }
 
-export async function open(path: string, openWith?: string): Promise<void> {
-  return backEndUtilsAdapter.open(path, openWith);
+export async function openFile(path: string): Promise<void> {
+  return backEndUtilsAdapter.openFile(path);
+}
+
+export async function openUrl(url: string): Promise<void> {
+  return backEndUtilsAdapter.openUrl(url);
+}
+
+export async function showItemInFolder(path: string): Promise<void> {
+  return backEndUtilsAdapter.showItemInFolder(path);
 }
 
 export const getWebpageMetadata: BackendUtilsApi['getWebpageMedata'] = async (

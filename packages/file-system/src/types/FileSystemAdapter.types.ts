@@ -73,18 +73,6 @@ export interface FileSystemAdapter {
   exists(path: string, options?: FsExistsOptions): Promise<boolean>;
 
   /**
-   * Reads a file as byte array.
-   *
-   * @param path - The file path.
-   * @param options - Read file options.
-   * @returns A promise resolving to the file contents.
-   */
-  readBinaryFile(
-    path: string,
-    options?: FsReadFileOptions,
-  ): Promise<Uint8Array>;
-
-  /**
    * List directory files.
    *
    * @param path - The directory path to read.
@@ -101,18 +89,6 @@ export interface FileSystemAdapter {
    * @returns A promise resolving to the contents of the file.
    */
   readTextFile(path: string, options?: FsReadFileOptions): Promise<string>;
-
-  /**
-   * Reads a JSON file and parses its contents.
-   *
-   * @param path - The file path.
-   * @param options - Read file options.
-   * @returns A promise resolving to the parsed JSON data.
-   */
-  readJsonFile<TData = object>(
-    path: string,
-    options?: FsReadFileOptions,
-  ): Promise<TData>;
 
   /**
    * Removes a directory.
@@ -183,22 +159,6 @@ export interface FileSystemAdapter {
   writeTextFile(
     path: string,
     contents: string,
-    options?: FsWriteFileOptions,
-  ): Promise<void>;
-
-  /**
-   * Writes a JSON file.
-   *
-   * @param path - The file path.
-   * @param jsonContent - The JSON content to write.
-   * @param pretty - Whether or not to pretty print the JSON, defaults to true.
-   * @param options - Write file options.
-   * @returns A promise indicating the success or failure of the operation.
-   */
-  writeJsonFile(
-    path: string,
-    jsonContent: object,
-    pretty?: boolean,
     options?: FsWriteFileOptions,
   ): Promise<void>;
 

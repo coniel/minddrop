@@ -1,0 +1,12 @@
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+import { DesktopApp } from '@minddrop/desktop-app';
+import { App } from './App';
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <StrictMode>
+    <App>
+      <DesktopApp />
+    </App>
+  </StrictMode>,
+);

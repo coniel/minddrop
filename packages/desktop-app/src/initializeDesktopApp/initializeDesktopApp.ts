@@ -13,7 +13,8 @@ import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
-import { watchAppConfigFiles } from './watchAppConfigFiles';
+
+// import { watchAppConfigFiles } from './watchAppConfigFiles';
 
 // In development mode, React will run useEffect hooks twice
 // when the app is first loaded. This is a workaround to prevent
@@ -54,7 +55,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   initializeSelection();
 
   // Watch for app config file changes
-  const cancelConfigsWatcher = await watchAppConfigFiles();
+  // const cancelConfigsWatcher = await watchAppConfigFiles();
 
   // Watch for theme appearance changes
   Theme.addEventListener(
@@ -71,7 +72,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   cleanupFn = () => {
     // Remove config files watcher
-    cancelConfigsWatcher();
+    // cancelConfigsWatcher();
 
     // Remove theme appearance listener
     Theme.removeEventListener(
