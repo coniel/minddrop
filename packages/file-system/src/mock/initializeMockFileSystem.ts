@@ -316,15 +316,7 @@ export function initializeMockFileSystem(
       textFileContents[fullPath] = YAML.stringify(values);
     },
     createDir: (path, options) => {
-      const fullPath = getFullPath(path, options);
-
-      if (!mockExists(root, fullPath)) {
-        mockAddFileEntry(root, {
-          path: fullPath,
-          name: fileNameFromPath(fullPath),
-          children: [],
-        });
-      }
+      MockFs.createDir(path, options);
     },
     removeFile: (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
