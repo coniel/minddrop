@@ -9,6 +9,11 @@ export interface Design {
   id: string;
 
   /**
+   * Path to the design file.
+   */
+  path: string;
+
+  /**
    * User specified name for this design.
    */
   name: string;
@@ -19,7 +24,17 @@ export interface Design {
   type: DesignType;
 
   /**
-   * The root design element.
+   * The design tree. Always a root element with children.
    */
-  rootElement: RootElement;
+  tree: RootElement;
+
+  /**
+   * The date the design was created.
+   */
+  created: Date;
+
+  /**
+   * The date the design was last modified.
+   */
+  lastModified: Date;
 }

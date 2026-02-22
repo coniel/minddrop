@@ -91,7 +91,7 @@ importers:
         specifier: ^4.3.5
         version: 4.5.9(@types/node@20.17.19)
 
-  apps/desktop-2:
+  apps/desktop-electrobun:
     dependencies:
       '@minddrop/desktop-app':
         specifier: workspace:*
@@ -614,6 +614,9 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n

@@ -306,6 +306,21 @@
         "confirm": "Delete design"
       }
     },
+    "page": {
+      "name": "Page",
+      "new": "New page design",
+      "description": "The design of an entry when displayed as a page."
+    },
+    "card": {
+      "name": "Card",
+      "new": "New card design",
+      "description": "The design of an entry when displayed as a card."
+    },
+    "list": {
+      "name": "List",
+      "new": "New list design",
+      "description": "The design of an entry when displayed in a list."
+    },
     "typography": {
       "label": "Typography",
       "italic": "Italic",

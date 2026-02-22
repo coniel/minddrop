@@ -14,7 +14,7 @@ export function generateDesign(type: DesignType, name?: string): Design {
     type,
     id: uuid(),
     name: name || i18n.t(`designs.${type}.name`),
-    rootElement: {
+    tree: {
       id: 'root',
       type: 'root',
       children: [],
