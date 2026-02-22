@@ -3,60 +3,33 @@ import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
-import { ViewTypes, setupViewFixtures } from '@minddrop/views';
-import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntrySerializerSerializersStore } from '../DatabaseEntrySerializersStore';
-import { DatabasesStore } from '../DatabasesStore';
-import { coreEntrySerializers } from '../entry-serializers';
+import { cleanupViewFixtures, setupViewFixtures } from '@minddrop/views';
 import {
-  databaseEntries,
-  databaseEntryFiles,
-  databaseEntryPropertyFiles,
-  databaseFiles,
-  databases,
-} from './fixtures';
-
-interface SetupOptions {
-  loadDatabases?: boolean;
-  loadDatabaseEntries?: boolean;
-  loadDatabaseEntrySerializers?: boolean;
-}
+  cleanupWorkspaceFixtures,
+  setupWorkspaceFixtures,
+} from '@minddrop/workspaces';
+import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
+import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
+import { DatabasesStore } from '../DatabasesStore';
+import {
+  SetupDatabaseFixturesOptions,
+  cleanupDatabaseFixtures,
+  setupDatabaseFixtures,
+} from './setup-fixtures';
 
 initializeI18n();
 
-export const MockFs = initializeMockFileSystem([
-  ...databaseFiles,
-  ...databaseEntryFiles,
-  ...databaseEntryPropertyFiles,
-]);
+export const MockFs = initializeMockFileSystem();
 
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
-export function setup(
-  options: SetupOptions = {
-    loadDatabases: true,
-    loadDatabaseEntries: true,
-    loadDatabaseEntrySerializers: true,
-  },
-) {
+export function setup(options: SetupDatabaseFixturesOptions) {
+  // Setup database fixtures
+  setupDatabaseFixtures(MockFs, options);
   // Setup external fixtures
   setupViewFixtures(MockFs);
   setupDesignFixtures(MockFs);
-
-  if (options.loadDatabases !== false) {
-    // Load item type configs into the store
-    DatabasesStore.load(databases);
-  }
-
-  if (options.loadDatabaseEntries !== false) {
-    // Load database entries into the store
-    DatabaseEntriesStore.load(databaseEntries);
-  }
-
-  if (options.loadDatabaseEntrySerializers !== false) {
-    // Load database entry serializers into the store
-    DatabaseEntrySerializerSerializersStore.load(coreEntrySerializers);
-  }
+  setupWorkspaceFixtures(MockFs);
 
   // Mock the current date
   vi.useFakeTimers();
@@ -64,18 +37,25 @@ export function setup(
 }
 
 export function cleanup() {
+  // Clear database fixtures
+  cleanupDatabaseFixtures();
+  // Clear external fixtures
   cleanupDesignFixtures();
-  vi.clearAllMocks();
+  cleanupViewFixtures();
+  cleanupWorkspaceFixtures();
+
   // Clear stores
   DatabasesStore.clear();
   DatabaseEntriesStore.clear();
-  DatabaseEntrySerializerSerializersStore.clear();
-  ViewTypes.Store.clear();
+  DatabaseEntrySerializersStore.clear();
+
   // Reset mock file system
   MockFs.reset();
+
   // Clear all event listeners
   Events._clearAll();
 
-  // Reset the current date
+  // Vi reset
   vi.useRealTimers();
+  vi.clearAllMocks();
 }

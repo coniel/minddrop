@@ -1,19 +1,20 @@
 import { DesignFixtures } from '@minddrop/designs';
-import { BaseDirectory, Fs, MockFileDescriptor } from '@minddrop/file-system';
+import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import {
   FilePropertySchema,
   ImagePropertySchema,
   UrlPropertySchema,
 } from '@minddrop/properties';
-import { DatabasesConfigFileName } from '../../constants';
+import { WorkspaceFixtures } from '@minddrop/workspaces';
 import { Database } from '../../types';
 import { databaseConfigFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
+const { workspace_1 } = WorkspaceFixtures;
 const { design_card_1, design_card_2, design_card_3, design_list_1 } =
   DesignFixtures;
 
-export const parentDir = 'path/to/databases';
+export const parentDir = workspace_1.path;
 export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
 export const validImagePropertyFile = new File([], 'valid-image.png');
@@ -211,17 +212,6 @@ export const databases = [
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
-  // User's databases config file
-  {
-    path: `${BaseDirectory.AppConfig}/${DatabasesConfigFileName}`,
-    textContent: JSON.stringify(
-      {
-        paths: databases.map((db) => ({ id: db.id, path: db.path })),
-      },
-      null,
-      2,
-    ),
-  },
   // Individual database config files
   ...databases.map((db) => ({
     path: databaseConfigFilePath(db.path),

@@ -5,7 +5,6 @@ import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
-import { writeDatabasesConfig } from '../writeDatabasesConfig';
 
 export type CreateDatabaseOptions = Partial<
   Omit<Database, 'id' | 'created' | 'lastModified' | 'path'>
@@ -70,9 +69,6 @@ export async function createDatabase(
 
   // Write the database config to the file system
   await writeDatabaseConfig(databaseConfig.id);
-
-  // Add the database path to the user's databases config file
-  await writeDatabasesConfig();
 
   // Dispatch database created event
   Events.dispatch(DatabaseCreatedEvent, databaseConfig);

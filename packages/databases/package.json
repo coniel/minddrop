@@ -23,6 +23,7 @@
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/views": "workspace:*"
+    "@minddrop/views": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   }
 }

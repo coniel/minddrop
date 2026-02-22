@@ -4,7 +4,6 @@ import { BaseDirectory, PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
 import { omitPath } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabasesConfigFileName } from '../constants';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
 import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-automations.fixtures';
@@ -110,26 +109,6 @@ describe('createDatabase', () => {
     const database = await createDatabase(parentDir, options);
 
     expect(MockFs.readJsonFile(configFilePath)).toEqual(omitPath(database));
-  });
-
-  it('adds the database to the databases config file', async () => {
-    const database = await createDatabase(parentDir, options);
-
-    const databasesConfig = MockFs.readJsonFile<DatabasesConfig>(
-      DatabasesConfigFileName,
-      {
-        baseDir: BaseDirectory.AppConfig,
-      },
-    );
-
-    expect(
-      databasesConfig.paths.find(
-        (db: DatabasePathsConfig) => db.id === database.id,
-      ),
-    ).toEqual({
-      id: database.id,
-      path: database.path,
-    });
   });
 
   it('dispatches a database created event', async () =>

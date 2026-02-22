@@ -1,4 +1,4 @@
-import { DatabaseEntrySerializerSerializersStore } from '../DatabaseEntrySerializersStore';
+import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore';
 import { DatabaseEntrySerializerNotRegisteredError } from '../errors';
 import { DatabaseEntrySerializer } from '../types';
 
@@ -14,7 +14,7 @@ export function getDatabaseEntrySerializer(
   id: string,
 ): DatabaseEntrySerializer {
   // Get the serializer from the store
-  const serializer = DatabaseEntrySerializerSerializersStore.get(id);
+  const serializer = DatabaseEntrySerializersStore.get(id);
 
   // Ensure the serializer exists
   if (!serializer) {

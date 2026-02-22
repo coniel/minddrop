@@ -7,3 +7,4 @@ export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntries from './DatabaseEntries';
 export * as DatabaseTemplates from './DatabaseTemplates';
 export * as DatabaseFixtures from './test-utils/fixtures';
+export * from './test-utils/setup-fixtures';

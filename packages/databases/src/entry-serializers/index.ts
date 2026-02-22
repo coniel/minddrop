@@ -8,6 +8,6 @@ export * from './yaml-entry-serializer';
 
 export const coreEntrySerializers = [
   jsonEntrySerializer,
-  markdownEntrySerializer,
   yamlEntrySerializer,
+  markdownEntrySerializer,
 ];
