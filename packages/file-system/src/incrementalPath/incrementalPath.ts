@@ -5,8 +5,27 @@ import { removeFileExtension } from '../removeFileExtension';
 import { FileSystemAdapter } from '../types';
 
 export interface IncrementedPath {
+  /**
+   * The path with the incremented suffix if any conflicting files exist,
+   * otherwise the original path.
+   */
   path: string;
+
+  /**
+   * The name of the file with the incremented suffix if any conflicting files exist,
+   * otherwise the original name.
+   */
   name: string;
+
+  /**
+   * The file name without the extension.
+   */
+  title: string;
+
+  /**
+   * The incremented suffix if any conflicting files exist,
+   * otherwise undefined.
+   */
   increment?: number;
 }
 
@@ -29,6 +48,7 @@ export async function incrementalPath(
   const incrementedPath: IncrementedPath = {
     path: targetPath,
     name: targetFileName,
+    title: removeFileExtension(targetFileName),
   };
 
   // Get the list of files in the parent directory
@@ -76,6 +96,7 @@ export async function incrementalPath(
   if (increment > 0) {
     incrementedPath.path = `${parentDir}/${fileName}`;
     incrementedPath.name = fileName;
+    incrementedPath.title = removeFileExtension(fileName);
     incrementedPath.increment = increment;
   }
 

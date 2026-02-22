@@ -10,7 +10,11 @@ describe('incrementalFilename', () => {
     const result = await incrementalPath(MockFs, 'Documents/foo');
 
     // Should return original target path
-    expect(result).toEqual({ path: 'Documents/foo', name: 'foo' });
+    expect(result).toEqual({
+      path: 'Documents/foo',
+      name: 'foo',
+      title: 'foo',
+    });
   });
 
   it('increments path if the path already exists', async () => {
@@ -24,6 +28,7 @@ describe('incrementalFilename', () => {
     expect(result).toEqual({
       path: 'Documents/foo 1',
       name: 'foo 1',
+      title: 'foo 1',
       increment: 1,
     });
   });
@@ -39,6 +44,7 @@ describe('incrementalFilename', () => {
     expect(result).toEqual({
       path: 'Documents/foo 3',
       name: 'foo 3',
+      title: 'foo 3',
       increment: 3,
     });
   });
@@ -53,6 +59,7 @@ describe('incrementalFilename', () => {
     expect(result).toEqual({
       path: 'Documents/foo 1.md',
       name: 'foo 1.md',
+      title: 'foo 1',
       increment: 1,
     });
   });
@@ -67,6 +74,7 @@ describe('incrementalFilename', () => {
     expect(result).toEqual({
       path: 'Documents/foo 2.md',
       name: 'foo 2.md',
+      title: 'foo 2',
       increment: 2,
     });
   });
