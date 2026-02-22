@@ -1,11 +1,11 @@
 import { View } from '@minddrop/views';
 
-export interface WallView extends View {
+export interface GalleryView extends View {
   type: 'wall-view';
-  options: Partial<WallViewOptions>;
+  options: Partial<GalleryViewOptions>;
 }
 
-export interface WallViewOptions {
+export interface GalleryViewOptions {
   /**
    * The maximum number of columns to display.
    */

@@ -2,24 +2,25 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { DatabaseEntryRenderer } from '@minddrop/feature-database-entries';
 import { ViewTypeComponentProps } from '@minddrop/views';
-import { defaultWallViewOptions } from '../constants';
-import { WallViewOptions } from '../types';
-import './WallViewComponent.css';
+import { defaultGalleryViewOptions } from '../constants';
+import { GalleryViewOptions } from '../types';
+import './GalleryView.css';
 
 interface Column {
   id: string;
   entries: string[];
 }
 
-export const WallViewComponent: React.FC<
-  ViewTypeComponentProps<WallViewOptions>
+export const GalleryViewComponent: React.FC<
+  ViewTypeComponentProps<GalleryViewOptions>
 > = ({ view, entries }) => {
   const maxColumns = useMemo(
-    () => view.options?.maxColumns || defaultWallViewOptions.maxColumns,
+    () => view.options?.maxColumns || defaultGalleryViewOptions.maxColumns,
     [view.options],
   );
   const minColumnWidth = useMemo(
-    () => view.options?.minColumnWidth || defaultWallViewOptions.minColumnWidth,
+    () =>
+      view.options?.minColumnWidth || defaultGalleryViewOptions.minColumnWidth,
     [view.options],
   );
   const ref = useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ export const WallViewComponent: React.FC<
   }, []);
 
   return (
-    <div ref={ref} className="wall-view">
+    <div ref={ref} className="gallery-view">
       {columns.map((column) => (
         <Column key={column.id} id={column.id} entries={column.entries} />
       ))}
