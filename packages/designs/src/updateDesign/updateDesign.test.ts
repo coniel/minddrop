@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { InvalidParameterError, omitPath } from '@minddrop/utils';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DefaultCardDesign } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
@@ -12,21 +12,24 @@ import {
   setup,
 } from '../test-utils';
 import { Design } from '../types';
+import { getDesignFilePath } from '../utils';
 import { updateDesign } from './updateDesign';
 
 const lastModified = new Date('2000-01-01T00:00:00.000Z');
-const updatedTree = {
-  ...design_card_1.tree,
-  children: [
-    {
-      ...element_text_1,
-      value: 'New text',
-    },
-  ],
+const update = {
+  tree: {
+    ...design_card_1.tree,
+    children: [
+      {
+        ...element_text_1,
+        value: 'New text',
+      },
+    ],
+  },
 };
 const updatedDesign: Design = {
   ...design_card_1,
-  tree: updatedTree,
+  ...update,
   lastModified,
 };
 
@@ -41,28 +44,28 @@ describe('updateDesign', () => {
 
   it('prevents updating default designs', async () => {
     await expect(() =>
-      updateDesign(DefaultCardDesign.id, updatedTree),
+      updateDesign(DefaultCardDesign.id, update),
     ).rejects.toThrow(InvalidParameterError);
   });
 
   it('returns the updated design', async () => {
-    const result = await updateDesign(design_card_1.id, updatedTree);
+    const result = await updateDesign(design_card_1.id, update);
 
     expect(result).toEqual(updatedDesign);
   });
 
   it('updates the design in the store', async () => {
-    const result = await updateDesign(design_card_1.id, updatedTree);
+    const result = await updateDesign(design_card_1.id, update);
 
     expect(DesignsStore.get(result.id)).toEqual(updatedDesign);
   });
 
   it('writes the updated design to the file system', async () => {
-    await updateDesign(design_card_1.id, updatedTree);
+    await updateDesign(design_card_1.id, update);
 
-    expect(MockFs.readJsonFile<Design>(design_card_1.path)).toEqual(
-      omitPath(updatedDesign),
-    );
+    expect(
+      MockFs.readJsonFile<Design>(getDesignFilePath(design_card_1.id)),
+    ).toEqual(updatedDesign);
   });
 
   it('dispatches a design updated event', async () =>
@@ -77,6 +80,6 @@ describe('updateDesign', () => {
         },
       );
 
-      updateDesign(design_card_1.id, updatedTree);
+      updateDesign(design_card_1.id, update);
     }));
 });

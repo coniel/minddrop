@@ -5,6 +5,7 @@ import { DesignsStore } from '../DesignsStore';
 import { DefaultCardDesign } from '../default-designs';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { MockFs, cleanup, design_card_1, setup } from '../test-utils';
+import { getDesignFilePath } from '../utils';
 import { deleteDesign } from './deleteDesign';
 
 describe('deleteDesign', () => {
@@ -21,7 +22,7 @@ describe('deleteDesign', () => {
   it('deletes the design file', async () => {
     await deleteDesign(design_card_1.id);
 
-    expect(MockFs.exists(design_card_1.path)).toBe(false);
+    expect(MockFs.exists(getDesignFilePath(design_card_1.id))).toBe(false);
   });
 
   it('removes the design from the store', async () => {

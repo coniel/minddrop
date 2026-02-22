@@ -1,6 +1,5 @@
 let workspacePath = '';
 let workspaceConfigsPath = '';
-let designsPath = '';
 let httpServerHost = '';
 
 export const Paths = {
@@ -32,20 +31,6 @@ export const Paths = {
    */
   set workspaceConfigs(path: string) {
     workspaceConfigsPath = path;
-  },
-
-  /**
-   * Returns the path where design files are stored for the currently active workspace.
-   */
-  get designs() {
-    return designsPath;
-  },
-
-  /**
-   * Sets the path where design files are stored for the currently active workspace.
-   */
-  set designs(path: string) {
-    designsPath = path;
   },
 
   /**

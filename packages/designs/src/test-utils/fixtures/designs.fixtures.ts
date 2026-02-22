@@ -1,7 +1,6 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
-import { omitPath } from '@minddrop/utils';
-import { DesignFileExtension } from '../../constants';
 import { Design, DesignType } from '../../types';
+import { getDesignFilePath } from '../../utils';
 import {
   element_container_1,
   element_text_2,
@@ -14,7 +13,6 @@ function generateDesignFixture(type: DesignType, version: number): Design {
     type,
     id: `${type}-${version}`,
     name: `${type} ${version}`,
-    path: `${designsRootPath}/${type} ${version}.${DesignFileExtension}`,
     created: new Date(),
     lastModified: new Date(),
     tree: {
@@ -56,6 +54,6 @@ export const designs = [
 ];
 
 export const designFiles: MockFileDescriptor[] = designs.map((design) => ({
-  path: design.path,
-  textContent: JSON.stringify(omitPath(design)),
+  path: getDesignFilePath(design.id),
+  textContent: JSON.stringify(design),
 }));

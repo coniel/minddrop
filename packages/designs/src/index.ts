@@ -4,6 +4,6 @@ export * from './styles';
 export * from './errors';
 export * from './events';
 export * from './constants';
-export * from './test-utils/setup-design-fixtures';
+export * from './test-utils/setup-fixtures';
 export * as DesignFixtures from './test-utils/fixtures';
 export * as Designs from './Designs';

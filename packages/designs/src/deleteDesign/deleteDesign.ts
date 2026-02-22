@@ -5,6 +5,7 @@ import { DesignsStore } from '../DesignsStore';
 import { defaultDesignIds } from '../default-designs';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { getDesign } from '../getDesign';
+import { getDesignFilePath } from '../utils';
 
 /**
  * Deletes a design.
@@ -23,7 +24,7 @@ export async function deleteDesign(id: string): Promise<void> {
   }
 
   // Delete the design file
-  await Fs.removeFile(design.path);
+  await Fs.removeFile(getDesignFilePath(id));
 
   // Remove the design from the store
   DesignsStore.remove(id);

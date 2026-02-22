@@ -6,7 +6,7 @@ import {
   SetupDesignFixturesOptions,
   cleanupDesignFixtures,
   setupDesignFixtures,
-} from './setup-design-fixtures';
+} from './setup-fixtures';
 
 initializeI18n();
 

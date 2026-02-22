@@ -1,8 +1,8 @@
 import { MockFileSystem } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { defaultDesigns } from '../default-designs';
-import { designFiles, designs, designsRootPath } from './fixtures';
+import { getDesignsDirPath } from '../utils';
+import { designFiles, designs } from './fixtures';
 
 export interface SetupDesignFixturesOptions {
   loadDesigns?: boolean;
@@ -16,11 +16,8 @@ export function setupDesignFixtures(
     loadDesignFiles: true,
   },
 ) {
-  // Set the designs root path
-  Paths.designs = designsRootPath;
-
-  // Add the designs root path to the mock file system
-  MockFs.createDir(designsRootPath, { recursive: true });
+  // Create the deisgns directory
+  MockFs.createDir(getDesignsDirPath(), { recursive: true });
 
   if (options.loadDesigns !== false) {
     // Load default designs into the store

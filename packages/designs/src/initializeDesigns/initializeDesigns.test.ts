@@ -1,14 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignsStore } from '../DesignsStore';
-import { DesignFileExtension } from '../constants';
 import { DefaultCardDesign } from '../default-designs';
-import {
-  MockFs,
-  cleanup,
-  design_card_1,
-  designsRootPath,
-  setup,
-} from '../test-utils';
+import { MockFs, cleanup, design_card_1, setup } from '../test-utils';
+import { getDesignFilePath } from '../utils';
 import { initializeDesigns } from './initializeDesigns';
 
 describe('initializeDesigns', () => {
@@ -32,10 +26,7 @@ describe('initializeDesigns', () => {
 
   it('handles failed design reads', async () => {
     // Add an invalid design file
-    MockFs.writeTextFile(
-      `${designsRootPath}/Some design.${DesignFileExtension}`,
-      'invalid json',
-    );
+    MockFs.writeTextFile(getDesignFilePath('invalid-design'), 'invalid json');
 
     await initializeDesigns();
 

@@ -1,7 +1,8 @@
 import { Fs } from '@minddrop/file-system';
-import { InvalidParameterError, omitPath } from '@minddrop/utils';
+import { InvalidParameterError } from '@minddrop/utils';
 import { defaultDesignIds } from '../default-designs';
 import { getDesign } from '../getDesign';
+import { getDesignFilePath } from '../utils';
 
 /**
  * Writes a design to the file system.
@@ -17,6 +18,6 @@ export async function writeDesign(designId: string): Promise<void> {
     throw new InvalidParameterError(`Cannot write default design ${design.id}`);
   }
 
-  // Write the design to the file system, omitting the path
-  await Fs.writeJsonFile(design.path, omitPath(design));
+  // Write the design to the file system
+  await Fs.writeJsonFile(getDesignFilePath(design.id), design);
 }

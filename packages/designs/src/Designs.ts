@@ -4,6 +4,5 @@ export { deleteDesign as delete } from './deleteDesign';
 export { getDesign as get } from './getDesign';
 export { initializeDesigns as initialize } from './initializeDesigns';
 export { readDesign as read } from './readDesign';
-export { renameDesign as rename } from './renameDesign';
 export { updateDesign as update } from './updateDesign';
 export { writeDesign as write } from './writeDesign';

@@ -9,11 +9,6 @@ export interface Design {
   id: string;
 
   /**
-   * Path to the design file.
-   */
-  path: string;
-
-  /**
    * User specified name for this design.
    */
   name: string;
