@@ -42,6 +42,7 @@
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/feature-app-sidebar": "workspace:*",
-    "@minddrop/views": "workspace:*"
+    "@minddrop/views": "workspace:*",
+    "@minddrop/workspaces": "workspace:*"
   }
 }

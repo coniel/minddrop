@@ -11,6 +11,7 @@ import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
 import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
+import { Workspaces } from '@minddrop/workspaces';
 import { Designs } from '../../../designs/src';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
@@ -48,6 +49,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   Paths.httpServerHost = 'http://localhost:14567';
   Paths.designs = '/Users/oscar/Documents/MindDrop 2/Designs';
 
+  await Workspaces.initialize();
   // Initialize databases
   DatabaseTemplates.initialize();
   DatabaseAutomations.initialize();

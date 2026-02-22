@@ -698,6 +698,9 @@ importers:
       '@minddrop/views':
         specifier: workspace:*
         version: link:../views
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
       react:
         specifier: ^19.0.0
         version: 19.0.0
