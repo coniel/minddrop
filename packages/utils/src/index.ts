@@ -29,6 +29,7 @@ export * from './useCreateCallback';
 export * from './useForm';
 export * from './useInputValue';
 export * from './useToggle';
+export * from './omitPath';
 export * from './test-utils';
 export { v4 as uuid } from 'uuid';
 
