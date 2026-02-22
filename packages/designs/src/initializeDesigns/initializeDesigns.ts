@@ -12,6 +12,11 @@ export async function initializeDesigns(): Promise<void> {
   // Load default designs into the store
   DesignsStore.load(defaultDesigns);
 
+  // Ensure the designs directory exists before attempting to read it
+  if (!(await Fs.exists(Paths.designs))) {
+    return;
+  }
+
   // Read designs from the file system
   const designPaths = await Fs.readDir(Paths.designs);
   const designs = await Promise.all(
