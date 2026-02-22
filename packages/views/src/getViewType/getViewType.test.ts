@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ViewTypeNotRegisteredError } from '../errors';
-import { cleanup, setup, viewType1 } from '../test-utils';
+import { cleanup, setup, viewType_gallery } from '../test-utils';
 import { getViewType } from './getViewType';
 
 describe('getViewType', () => {
@@ -19,7 +19,7 @@ describe('getViewType', () => {
   });
 
   it('returns the view type', () => {
-    const viewType = getViewType(viewType1.type);
-    expect(viewType).toEqual(viewType1);
+    const viewType = getViewType(viewType_gallery.type);
+    expect(viewType).toEqual(viewType_gallery);
   });
 });

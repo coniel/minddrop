@@ -1,5 +1,5 @@
 import { BaseDirectory, Fs, MockFileDescriptor } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
+import { Paths, omitPath } from '@minddrop/utils';
 import { WorkspacesConfigFileName } from '../constants';
 import { Workspace } from '../types';
 
@@ -25,7 +25,7 @@ export const workspaces = [workspace_1, workspace_2, workspace_3];
 export const workspaceFiles: MockFileDescriptor[] = workspaces.map(
   (workspace) => ({
     path: `${workspace.path}/${Paths.hiddenDirName}/workspace.json`,
-    textContent: JSON.stringify(workspace),
+    textContent: JSON.stringify(omitPath(workspace)),
   }),
 );
 

@@ -34,5 +34,11 @@ export async function readWorkspaceConfig(
   }
 
   // Read and parse the workspace config
-  return Fs.readJsonFile<Workspace>(configPath);
+  const workspace = await Fs.readJsonFile<Workspace>(configPath);
+
+  // Restore the path
+  return {
+    ...workspace,
+    path,
+  };
 }

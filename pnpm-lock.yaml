@@ -1356,6 +1356,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n

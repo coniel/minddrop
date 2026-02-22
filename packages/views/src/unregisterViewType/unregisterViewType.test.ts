@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import { ViewTypesStore } from '../ViewTypesStore';
 import { ViewTypeNotRegisteredError } from '../errors';
 import { ViewTypeUnregisteredEvent } from '../events';
-import { cleanup, setup, viewType1 } from '../test-utils';
+import { cleanup, setup, viewType_gallery } from '../test-utils';
 import { unregisterViewType } from './unregisterViewType';
 
 describe('unregisterViewType', () => {
@@ -18,18 +18,18 @@ describe('unregisterViewType', () => {
   });
 
   it('removes the view type from the store', () => {
-    unregisterViewType(viewType1.type);
+    unregisterViewType(viewType_gallery.type);
 
-    expect(ViewTypesStore.get(viewType1.type)).toBe(null);
+    expect(ViewTypesStore.get(viewType_gallery.type)).toBe(null);
   });
 
   it('dispatches the view type unregistered event', () =>
     new Promise<void>((done) => {
       Events.addListener(ViewTypeUnregisteredEvent, 'test', (payload) => {
-        expect(payload.data).toEqual(viewType1.type);
+        expect(payload.data).toEqual(viewType_gallery.type);
         done();
       });
 
-      unregisterViewType(viewType1.type);
+      unregisterViewType(viewType_gallery.type);
     }));
 });

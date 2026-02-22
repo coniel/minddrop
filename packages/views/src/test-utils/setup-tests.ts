@@ -1,27 +1,24 @@
 import { vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { ViewTypesStore } from '../ViewTypesStore';
-import { viewTypes } from './fixtures';
+import { initializeMockFileSystem } from '@minddrop/file-system';
+import {
+  SetupViewFixturesOptions,
+  cleanupViewFixtures,
+  setupViewFixtures,
+} from './setup-fixtures';
 
-interface SetupOptions {
-  loadViewTypes?: boolean;
-}
+export const MockFs = initializeMockFileSystem();
+export const mockDate = new Date('2000-01-01T00:00:00.000Z');
 
-export function setup(
-  options: SetupOptions = {
-    loadViewTypes: true,
-  },
-) {
-  if (options.loadViewTypes !== false) {
-    // Load view types into the store
-    ViewTypesStore.load(viewTypes);
-  }
+export function setup(options: SetupViewFixturesOptions) {
+  setupViewFixtures(MockFs, options);
+  vi.useFakeTimers({ now: mockDate });
 }
 
 export function cleanup() {
   vi.clearAllMocks();
-  // Clear stores
-  ViewTypesStore.clear();
-  // Clear all event listeners
   Events._clearAll();
+  vi.useRealTimers();
+  cleanupViewFixtures();
+  MockFs.reset();
 }

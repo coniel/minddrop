@@ -1,1 +1,2 @@
-export * from './generateView';
+export * from './getViewFilePath';
+export * from './getViewsDirPath';

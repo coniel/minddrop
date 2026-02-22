@@ -15,30 +15,67 @@ export interface View<TViewOptions extends object = {}> {
   type: string;
 
   /**
-   * Additional options for the view.
+   * The data source for the view.
+   */
+  dataSource: ViewDataSource;
+
+  /**
+   * The last time the view was created.
+   */
+  created: Date;
+
+  /**
+   * The last time the view was modified.
+   */
+  lastModified: Date;
+
+  /**
+   * View type specific options.
    */
   options?: TViewOptions;
 
   /**
-   * The ID of the query used to populate the view if it is a query view.
+   * A [database id]: [design id] map. Used to specify which design to use when rendering
+   * entries from that database.
+   *
+   * If not provided, the database's default design will be used.
    */
-  query?: string;
+  databaseDesignMap?: Record<string, string>;
 
   /**
-   * A [database id]:[design id] mapping of the designs to use for elements
-   * from the specified database.
-   *
-   * If not provided, the default designs will be used.
-   *
-   * Only applies to views that display elements using database designs.
+   * A [entry id]: [design id] map. Used to override the design used to render a specific entry.
    */
-  designs?: Record<string, string>;
-
-  /**
-   * A [element id]:[design id] mapping of the design to use for the specified
-   * element. Overrides the designs property for the specified element.
-   *
-   * Only applies to views that display elements using database designs.
-   */
-  designOverrides?: Record<string, string>;
+  entryDesignMap?: Record<string, string>;
 }
+
+export interface DatabaseViewDataSource {
+  type: 'database';
+
+  /**
+   * The ID of the source database.
+   */
+  id: string;
+}
+
+export interface QueryViewDataSource {
+  type: 'query';
+
+  /**
+   * The ID of the source query.
+   */
+  id: string;
+}
+
+export interface CollectionViewDataSource {
+  type: 'collection';
+
+  /**
+   * The ID of the source collection.
+   */
+  id: string;
+}
+
+export type ViewDataSource =
+  | DatabaseViewDataSource
+  | QueryViewDataSource
+  | CollectionViewDataSource;
