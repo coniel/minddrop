@@ -1373,6 +1373,30 @@ importers:
         specifier: ^5.7.2
         version: 5.8.3
 
+  packages/workspaces:
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../utils
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+
   ui/primitives:
     dependencies:
       '@base-ui/react':
