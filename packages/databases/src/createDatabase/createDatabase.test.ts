@@ -31,7 +31,7 @@ const newDatabase: Database = {
   propertyFileStorage: 'property',
   properties: [],
   defaultDesigns: {},
-  designs: [],
+  designPropertyMaps: {},
   views: [
     {
       ...view1,

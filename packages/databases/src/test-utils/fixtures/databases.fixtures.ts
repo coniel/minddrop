@@ -11,7 +11,8 @@ import { Database } from '../../types';
 import { databaseConfigFilePath } from '../../utils';
 import { fetchWebpageMetadataAutomation } from './database-automations.fixtures';
 
-const { design_card_1 } = DesignFixtures;
+const { design_card_1, design_card_2, design_card_3, design_list_1 } =
+  DesignFixtures;
 const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
@@ -19,6 +20,8 @@ export const genericFilePropertyName = 'File';
 export const imagePropertyName = 'Image';
 export const validImagePropertyFile = new File([], 'valid-image.png');
 export const invalidImagePropertyFile = new File([], 'note.txt');
+export const defaultCardDesign = design_card_2;
+export const firstCardDesign = design_card_1;
 
 function generateDatabase(
   data: Pick<Database, 'id' | 'name' | 'entryName'> & Partial<Database>,
@@ -30,8 +33,21 @@ function generateDatabase(
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
-    designs: [design_card_1],
-    defaultDesigns: { card: design_card_1.id },
+    designPropertyMaps: {
+      [design_card_1.id]: {
+        title: 'Title',
+      },
+      [design_list_1.id]: {
+        title: 'Title',
+      },
+      [design_card_2.id]: {
+        title: 'Title',
+      },
+      [design_card_3.id]: {
+        title: 'Title',
+      },
+    },
+    defaultDesigns: { card: design_card_2.id },
     views: [view1],
     path: `${parentDir}/${data.name}`,
     ...data,

@@ -1,9 +1,13 @@
-import { Design } from '@minddrop/designs';
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
 import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseDesignType = 'page' | 'card' | 'list';
+
+/**
+ * A [design element ID]: [database property name] map.
+ */
+export type DesignPropertyMap = Record<string, string>;
 
 export interface Database {
   /**
@@ -88,12 +92,13 @@ export interface Database {
   defaultProperties?: Partial<Record<PropertyType, string>>;
 
   /**
-   * Designs associated with the database.
+   * A [design ID]: [design property map] mapping database properties to design
+   * elements.
    */
-  designs: Design[];
+  designPropertyMaps: Record<string, DesignPropertyMap>;
 
   /**
-   * A [layout]: [design ID] map of the default design to use when
+   * A [design type]: [design ID] map of the default design to use when
    * rendering entries.
    */
   defaultDesigns: Record<string, string>;

@@ -1,41 +1,20 @@
-import { Design } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { uuid } from '@minddrop/utils';
-import { View, Views } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
-import { Database, DatabaseAutomationTemplate } from '../types';
+import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 import { writeDatabasesConfig } from '../writeDatabasesConfig';
 
-export interface CreateDatabaseOptions
-  extends Omit<
-    Database,
-    | 'id'
-    | 'created'
-    | 'lastModified'
-    | 'path'
-    | 'properties'
-    | 'entrySerializer'
-    | 'automations'
-    | 'designs'
-    | 'defaultDesigns'
-    | 'views'
-    | 'propertyFileStorage'
-  > {
-  properties?: Database['properties'];
-  entrySerializer?: Database['entrySerializer'];
-  automations?: DatabaseAutomationTemplate[];
-  propertyFileStorage?: Database['propertyFileStorage'];
-  designs?: Design[];
-  defaultDesigns?: {
-    page?: string;
-    card?: string;
-    list?: string;
-  };
-  views?: View[];
-}
+export type CreateDatabaseOptions = Partial<
+  Omit<Database, 'id' | 'created' | 'lastModified' | 'path'>
+> & {
+  name: string;
+  entryName: string;
+  icon: string;
+};
 
 /**
  * Creates a new database with the specified options.
@@ -66,17 +45,17 @@ export async function createDatabase(
 
   // Generate the database config
   const databaseConfig: Database = {
+    entrySerializer: 'markdown',
+    propertyFileStorage: 'property',
+    properties: [],
+    defaultDesigns: {},
+    designPropertyMaps: {},
     ...options,
     id: uuid(),
     path: dbPath,
-    properties: options.properties || [],
-    entrySerializer: options.entrySerializer || 'markdown',
     created: new Date(),
     lastModified: new Date(),
     automations,
-    propertyFileStorage: options.propertyFileStorage || 'property',
-    designs: options.designs || [],
-    defaultDesigns: options.defaultDesigns || {},
     views: options.views || [Views.generate('wall')],
   };
 

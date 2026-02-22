@@ -1,5 +1,4 @@
-import { Design } from '@minddrop/designs';
-import { defaultDatabaseDesigns } from '../constants';
+import { Design, Designs } from '@minddrop/designs';
 import { getDatabase } from '../getDatabase';
 
 /**
@@ -15,12 +14,11 @@ export function getDefaultDatabaseDesign(
 ): Design {
   // Get the database
   const database = getDatabase(databaseId);
+  let design: Design | null = null;
 
-  // Check if the database has a default design for the specified layout
+  // Check if the database has a default design for the specified type
   if (database.defaultDesigns[type]) {
-    const design = database.designs.find(
-      (design) => design.id === database.defaultDesigns[type],
-    );
+    design = Designs.get(database.defaultDesigns[type], false);
 
     // Ensure the design is of the specified type
     if (design && design.type === type) {
@@ -28,23 +26,22 @@ export function getDefaultDatabaseDesign(
     }
   }
 
-  // If no default design is specified, return the first design
-  // which is of the specified type.
-  const design = database.designs.find((design) => design.type === type);
+  // If no default design is specified, check if the database has a design
+  // property map for the specified design type and use the first match.
+  for (const designId of Object.keys(database.designPropertyMaps)) {
+    const mappedDesign = Designs.get(designId, false);
+
+    if (mappedDesign && mappedDesign.type === type) {
+      design = mappedDesign;
+      break;
+    }
+  }
 
   if (design) {
     return design;
   }
 
-  // If the database has no designs, use the default design for the
-  // specified layout.
-  const defaultDesign = defaultDatabaseDesigns[type];
-
-  if (defaultDesign) {
-    return defaultDesign;
-  }
-
-  // If no default design for the specified layout is found, return
-  // the global default design.
-  return defaultDatabaseDesigns.global;
+  // If the database has no configured design of the specified type,
+  // return the default design for that type.
+  return Designs.get(type);
 }

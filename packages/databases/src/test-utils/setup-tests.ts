@@ -1,4 +1,6 @@
 import { vi } from 'vitest';
+import { DesignFixtures, Designs } from '@minddrop/designs';
+import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
@@ -42,6 +44,7 @@ export function setup(
 ) {
   // Regiaster a test view type
   ViewTypes.register(viewType1);
+  setupDesignFixtures(MockFs);
 
   if (options.loadDatabases !== false) {
     // Load item type configs into the store
@@ -64,6 +67,7 @@ export function setup(
 }
 
 export function cleanup() {
+  cleanupDesignFixtures();
   vi.clearAllMocks();
   // Clear stores
   DatabasesStore.clear();
