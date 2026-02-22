@@ -12,6 +12,10 @@ describe('getDesign', () => {
     expect(() => getDesign('non-existent-design')).toThrow(DesignNotFoundError);
   });
 
+  it('returns null if the design does not exist and throwOnNotFound is false', () => {
+    expect(getDesign('non-existent-design', false)).toBeNull();
+  });
+
   it('returns the design if it exists', () => {
     expect(getDesign(design_card_1.id)).toEqual(design_card_1);
   });
