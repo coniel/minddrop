@@ -130,11 +130,30 @@ export function initializeMockFileSystem(
     createDir: async (path, options) => {
       const fullPath = getFullPath(path, options);
 
-      mockAddFileEntry(root, {
-        path: fullPath,
-        children: [],
-        name: fileNameFromPath(fullPath),
-      });
+      if (options?.recursive) {
+        const dirs = path.split('/');
+        let currentPath = '';
+
+        dirs.forEach((dir) => {
+          currentPath = `${currentPath}${dir}`;
+
+          if (!mockExists(root, currentPath)) {
+            mockAddFileEntry(root, {
+              path: currentPath,
+              children: [],
+              name: dir,
+            });
+          }
+
+          currentPath = `${currentPath}/`;
+        });
+      } else {
+        mockAddFileEntry(root, {
+          path: fullPath,
+          children: [],
+          name: fileNameFromPath(fullPath),
+        });
+      }
     },
     trashDir: async (path) => {
       const fullPath = getFullPath(path);

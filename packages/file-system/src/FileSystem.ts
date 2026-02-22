@@ -19,6 +19,7 @@ let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
 export const Fs: Omit<FileSystem, 'openFilePicker'> &
   typeof Api & {
     incrementalPath: typeof incrementalPath;
+    ensureDir: typeof ensureDir;
     readJsonFile: typeof readJsonFile;
     writeJsonFile: typeof writeJsonFile;
     readYamlFile: typeof readYamlFile;
@@ -28,6 +29,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   } = {
   ...Api,
   incrementalPath,
+  ensureDir,
   setPathIncrement,
   openFilePicker,
   readJsonFile,
@@ -86,6 +88,19 @@ async function incrementalPath(
   ignoreFileExtension = false,
 ): Promise<IncrementedPath> {
   return incrementalPathFn(FsAdapter, targetPath, ignoreFileExtension);
+}
+
+/**
+ * Ensures that a directory exists at the given path.
+ * If the directory does not exist, it will be created
+ * recursively.
+ *
+ * @param path - The directory path.
+ */
+async function ensureDir(path: string): Promise<void> {
+  if (!(await Fs.exists(path))) {
+    await Fs.createDir(path, { recursive: true });
+  }
 }
 
 /**
