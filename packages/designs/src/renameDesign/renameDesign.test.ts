@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
-import { InvalidParameterError, omitPath, restoreDates } from '@minddrop/utils';
+import { InvalidParameterError, omitPath } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignFileExtension } from '../constants';
 import { DefaultCardDesign } from '../default-designs';
@@ -64,9 +64,7 @@ describe('renameDesign', () => {
   it('writes the updated design to the file system', async () => {
     await renameDesign(design_card_1.id, newName);
 
-    expect(restoreDates(MockFs.readJsonFile(newPath))).toEqual(
-      omitPath(updatedDesign),
-    );
+    expect(MockFs.readJsonFile(newPath)).toEqual(omitPath(updatedDesign));
   });
 
   it('updates the design design in the store', async () => {

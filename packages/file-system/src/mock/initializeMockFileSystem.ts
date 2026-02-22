@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Paths, YAML } from '@minddrop/utils';
+import { Paths, YAML, restoreDates } from '@minddrop/utils';
 import { registerFileSystemAdapter } from '../FileSystem';
 import { concatPath } from '../concatPath';
 import { fileNameFromPath } from '../fileNameFromPath';
 import { mockRenameFile } from '../mock/mockRenameFile';
 import {
   BaseDirectory,
-  FileSystem,
+  FileSystemAdapter,
   FsDirOptions,
   FsEntry,
   FsFileOptions,
@@ -47,7 +47,7 @@ export function initializeMockFileSystem(
   // Result of the file picker
   let filePickerResult: string | string[] | null = null;
 
-  const MockFs: FileSystem = {
+  const MockFs: FileSystemAdapter = {
     getBaseDirPath: async (baseDir) => baseDir,
     convertFileSrc: (path) => path,
     openFilePicker: async () => {
@@ -258,22 +258,37 @@ export function initializeMockFileSystem(
     },
     readJsonFile: <T = object>(
       path: string,
-      options?: FsReadFileOptions,
+      options?: FsReadFileOptions & { restoreDates?: boolean },
     ): T => {
       const fullPath = getFullPath(path, options);
 
       // Ensure file entry exists
       mockGetFileEntry(root, fullPath);
 
-      return JSON.parse(textFileContents[fullPath]);
+      let data = JSON.parse(textFileContents[fullPath]);
+
+      if (options?.restoreDates !== false) {
+        data = restoreDates(data);
+      }
+
+      return data;
     },
-    readYamlFile: async (path, options) => {
+    readYamlFile: async (
+      path,
+      options: FsReadFileOptions & { restoreDates?: boolean },
+    ) => {
       const fullPath = getFullPath(path, options);
 
       // Ensure file entry exists
       mockGetFileEntry(root, fullPath);
 
-      return YAML.parse(textFileContents[fullPath]);
+      let data = YAML.parse(textFileContents[fullPath]);
+
+      if (options?.restoreDates !== false) {
+        data = restoreDates(data);
+      }
+
+      return data;
     },
     writeTextFile: (path, textContent, options) => {
       const fullPath = getFullPath(path, options);

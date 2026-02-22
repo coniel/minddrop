@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { InvalidPathError } from '@minddrop/file-system';
-import { restoreDates } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
 import { QueryNotFoundError } from '../errors';
 import { MockFs, cleanup, query1, setup } from '../test-utils';
@@ -35,6 +34,6 @@ describe('writeQueryConfig', () => {
     // Get the written query config from the file system
     const query = MockFs.readJsonFile(query1.path);
 
-    expect(restoreDates(query)).toEqual(queryWithoutPath);
+    expect(query).toEqual(queryWithoutPath);
   });
 });

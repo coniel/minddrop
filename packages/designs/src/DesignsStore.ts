@@ -10,7 +10,7 @@ export const DesignsStore = createArrayStore<Design>('id');
  * @returns The design or null if it doesn't exist.
  */
 export const useDesign = (id: string): Design | null => {
-  return DesignsStore.useAllItems().find((view) => view.type === id) || null;
+  return DesignsStore.useAllItems().find((design) => design.id === id) || null;
 };
 
 /**

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FsEntry } from './FileEntry.types';
-import { FileSystem } from './FileSystem.types';
+import { FileSystemAdapter } from './FileSystemAdapter.types';
 import {
   FsCreateDirOptions,
   FsExistsOptions,
@@ -12,7 +12,7 @@ import {
 } from './FsOptions.types';
 
 export interface MockFileSystem {
-  MockFs: FileSystem;
+  MockFs: FileSystemAdapter;
   clear(): void;
   reset(): void;
   clearTrash(): void;

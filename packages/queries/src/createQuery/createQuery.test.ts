@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
-import { Paths, restoreDates } from '@minddrop/utils';
+import { Paths } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
 import { QueriesDirectory } from '../constants';
 import { QueryCreatedEvent } from '../events';
@@ -46,9 +46,7 @@ describe('createQuery', () => {
 
     const { path, ...queryWithoutPath } = createdQuery;
 
-    expect(restoreDates(MockFs.readJsonFile(qurtyFilePath))).toEqual(
-      queryWithoutPath,
-    );
+    expect(MockFs.readJsonFile(qurtyFilePath)).toEqual(queryWithoutPath);
   });
 
   it('increments the query name if necessary', async () => {

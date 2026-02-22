@@ -1,5 +1,4 @@
 import { FileNotFoundError, Fs } from '@minddrop/file-system';
-import { restoreDates } from '@minddrop/utils';
 import { Query } from '../types';
 
 /**
@@ -19,5 +18,5 @@ export async function readQueryConfig(path: string): Promise<Query> {
   const query = await Fs.readJsonFile<Query>(path);
 
   // Add the path to the query
-  return { ...restoreDates(query), path };
+  return { ...query, path };
 }

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { InvalidParameterError, omitPath, restoreDates } from '@minddrop/utils';
+import { InvalidParameterError, omitPath } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DefaultCardDesign } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
@@ -60,9 +60,9 @@ describe('updateDesign', () => {
   it('writes the updated design to the file system', async () => {
     await updateDesign(design_card_1.id, updatedTree);
 
-    expect(
-      restoreDates(MockFs.readJsonFile<Design>(design_card_1.path)),
-    ).toEqual(omitPath(updatedDesign));
+    expect(MockFs.readJsonFile<Design>(design_card_1.path)).toEqual(
+      omitPath(updatedDesign),
+    );
   });
 
   it('dispatches a design updated event', async () =>

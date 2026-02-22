@@ -1,11 +1,12 @@
-import { YAML } from '@minddrop/utils';
+import { YAML, restoreDates } from '@minddrop/utils';
 import * as Api from './FsApi';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
   setPathIncrement,
 } from './incrementalPath';
-import type {
+import {
+  BaseDirectory,
   FileSystem,
   FileSystemAdapter,
   FsOptions,
@@ -15,6 +16,11 @@ import type {
 export type { IncrementedPath } from './incrementalPath';
 
 let FsAdapter: FileSystemAdapter = {} as FileSystemAdapter;
+const BaseDirPaths: Record<BaseDirectory, string> = {
+  [BaseDirectory.AppData]: '',
+  [BaseDirectory.AppConfig]: '',
+  [BaseDirectory.Documents]: '',
+};
 
 export const Fs: Omit<FileSystem, 'openFilePicker'> &
   typeof Api & {
@@ -36,7 +42,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeJsonFile,
   readYamlFile,
   writeYamlFile,
-  getBaseDirPath: (...args) => FsAdapter.getBaseDirPath(...args),
+  getBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),
   copyFile: (...args) => FsAdapter.copyFile(...args),
@@ -54,6 +60,33 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
 };
 
+async function setBaseDirPaths(): Promise<void> {
+  [
+    BaseDirectory.AppData,
+    BaseDirectory.AppConfig,
+    BaseDirectory.Documents,
+  ].forEach(async (dir) => {
+    BaseDirPaths[dir] = await FsAdapter.getBaseDirPath(dir);
+  });
+}
+
+/**
+ * Registers a file system adapter responsible for handling
+ * file system operations on the OS file system.
+ *
+ * @param adapter - The file sytsem adapter.
+ */
+export const registerFileSystemAdapter = (adapter: FileSystemAdapter) => {
+  FsAdapter = adapter;
+  setBaseDirPaths();
+};
+
+/**
+ * Opens the syetem file picker.
+ *
+ * @param options - Open file picker options.
+ * @returns A promise resolving to file path(s) or null if nothing was selected.
+ */
 function openFilePicker(
   options: OpenFilePickerOptions & { multiple: true },
 ): Promise<string[] | null>;
@@ -65,15 +98,6 @@ function openFilePicker(
 ): Promise<string | string[] | null> {
   return FsAdapter.openFilePicker(options);
 }
-
-/**
- * Registers a file system adapter responsible for handling
- * file system operations on the OS file system.
- *
- * @param adapter - The file sytsem adapter.
- */
-export const registerFileSystemAdapter = (adapter: FileSystemAdapter) =>
-  (FsAdapter = adapter);
 
 /**
  * Adds a numerix suffix to the given file path if the file
@@ -107,16 +131,22 @@ async function ensureDir(path: string): Promise<void> {
  * Reads a JSON file and parses its contents.
  *
  * @param path - The file path.
- * @param options - Read file options.
+ * @param options - Read file options and a boolean indicating whether to restore dates which default to true.
  * @returns A promise resolving to the parsed JSON data.
  */
 async function readJsonFile<TData extends object = object>(
   path: string,
-  options?: FsOptions,
+  options?: FsOptions & { restoreDates?: boolean },
 ): Promise<TData> {
-  const test = await FsAdapter.readTextFile(path, options);
+  const content = await FsAdapter.readTextFile(path, options);
 
-  return JSON.parse(test) as TData;
+  let data = JSON.parse(content) as TData;
+
+  if (options?.restoreDates !== false) {
+    data = restoreDates(data);
+  }
+
+  return data;
 }
 
 /**
@@ -139,15 +169,36 @@ async function writeJsonFile(
   await FsAdapter.writeTextFile(path, contents, options);
 }
 
+/**
+ * Reads a YAML file and parses its contents.
+ *
+ * @param path - The file path.
+ * @param options - Read file options and a boolean indicating whether to restore dates which default to true.
+ * @returns A promise resolving to the parsed YAML data.
+ */
 async function readYamlFile<TData extends object = object>(
   path: string,
-  options?: FsOptions,
+  options?: FsOptions & { restoreDates?: boolean },
 ): Promise<TData> {
-  const test = await FsAdapter.readTextFile(path, options);
+  const content = await FsAdapter.readTextFile(path, options);
 
-  return YAML.parse(test) as TData;
+  let data = YAML.parse(content) as TData;
+
+  if (options?.restoreDates !== false) {
+    data = restoreDates(data);
+  }
+
+  return data;
 }
 
+/**
+ * Writes a YAML file.
+ *
+ * @param path - The file path.
+ * @param values - The data to serialize to YAML.
+ * @param options - Write file options.
+ * @returns A promise indicating the success or failure of the operation.
+ */
 async function writeYamlFile(
   path: string,
   values: Record<string, unknown>,

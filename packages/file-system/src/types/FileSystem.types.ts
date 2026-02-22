@@ -1,3 +1,6 @@
+import { BaseDirectory } from './BaseDirectory.types';
 import { FileSystemAdapter } from './FileSystemAdapter.types';
 
-export type FileSystem = FileSystemAdapter;
+export interface FileSystem extends Omit<FileSystemAdapter, 'getBaseDirPath'> {
+  getBaseDirPath(dir: BaseDirectory): string;
+}
