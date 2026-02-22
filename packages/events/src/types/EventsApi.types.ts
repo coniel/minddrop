@@ -13,6 +13,12 @@ export interface EventsApi {
    * @param callback - The  callback function.
    * @param once - When `true`, the listener is removed when triggered.
    */
+  on<TData = unknown>(
+    eventName: string,
+    listenerId: string,
+    callback: EventListenerCallback<TData>,
+    once?: boolean,
+  ): void;
   addListener<TData = unknown>(
     eventName: string,
     listenerId: string,

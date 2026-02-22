@@ -11,6 +11,7 @@ let eventListeners: EventListenerMap = {};
 
 export const Events: EventsApi = {
   addListener: (...args) => addEventListener(eventListeners, ...args),
+  on: (...args) => addEventListener(eventListeners, ...args),
   prependListener: (...args) => prependEventListener(eventListeners, ...args),
   dispatch: (...args) => dispatchEvent(eventListeners, ...args),
   addListenerBefore: (...args) =>
