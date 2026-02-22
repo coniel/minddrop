@@ -34,19 +34,31 @@ describe('createView', () => {
   afterEach(cleanup);
 
   it('returns the new view', async () => {
-    const result = await createView(viewType_gallery.type, newView.dataSource);
+    const result = await createView(
+      viewType_gallery.type,
+      newView.dataSource,
+      newView.name,
+    );
 
     expect(result).toEqual(newView);
   });
 
   it('adds the view to the store', async () => {
-    const result = await createView(viewType_gallery.type, newView.dataSource);
+    const result = await createView(
+      viewType_gallery.type,
+      newView.dataSource,
+      newView.name,
+    );
 
     expect(ViewsStore.get(result.id)).toEqual(newView);
   });
 
   it('writes the view to the file system', async () => {
-    const view = await createView(viewType_gallery.type, newView.dataSource);
+    const view = await createView(
+      viewType_gallery.type,
+      newView.dataSource,
+      newView.name,
+    );
 
     expect(MockFs.readJsonFile(getViewFilePath(view.id))).toMatchObject(
       newView,
@@ -60,6 +72,6 @@ describe('createView', () => {
         done();
       });
 
-      createView(viewType_gallery.type, newView.dataSource);
+      createView(viewType_gallery.type, newView.dataSource, newView.name);
     }));
 });

@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { i18n } from '@minddrop/i18n';
 import { uuid } from '@minddrop/utils';
 import { ViewsStore } from '../ViewsStore';
 import { ViewCreatedEvent, ViewCreatedEventData } from '../events';
@@ -31,7 +32,7 @@ export async function createView(
     id: uuid(),
     dataSource,
     type: type,
-    name: name || viewType.name,
+    name: name || i18n.t(viewType.name),
     created: new Date(),
     lastModified: new Date(),
   };
