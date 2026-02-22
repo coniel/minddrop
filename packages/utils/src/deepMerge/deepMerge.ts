@@ -5,6 +5,14 @@
  * @param source - The source object to merge from.
  * @returns The merged object.
  */
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== 'object' || value === null) return false;
+  const proto = Object.getPrototypeOf(value);
+
+  return proto === Object.prototype || proto === null;
+}
+
 export function deepMerge<T>(target: T, source: Partial<T>): T {
   const result = { ...target };
 
@@ -16,15 +24,13 @@ export function deepMerge<T>(target: T, source: Partial<T>): T {
 
       if (
         sourceValue !== undefined &&
-        targetValue !== undefined &&
-        typeof sourceValue === 'object' &&
-        typeof targetValue === 'object' &&
-        !Array.isArray(sourceValue) &&
-        !Array.isArray(targetValue) &&
-        sourceValue !== null &&
-        targetValue !== null
+        isPlainObject(sourceValue) &&
+        isPlainObject(targetValue)
       ) {
-        result[k] = deepMerge(targetValue, sourceValue) as T[keyof T];
+        result[k] = deepMerge(
+          targetValue,
+          sourceValue as unknown as Partial<typeof targetValue>,
+        ) as T[keyof T];
       } else if (sourceValue !== undefined) {
         result[k] = sourceValue as T[keyof T];
       }
