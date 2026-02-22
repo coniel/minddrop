@@ -1,17 +1,18 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { uuid } from '@minddrop/utils';
+import { Paths, uuid } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
-import { Database } from '../types';
+import { Database, DatabaseAutomationTemplate } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
 
 export type CreateDatabaseOptions = Partial<
-  Omit<Database, 'id' | 'created' | 'lastModified' | 'path'>
+  Omit<Database, 'id' | 'created' | 'lastModified' | 'path' | 'automations'>
 > & {
   name: string;
   entryName: string;
   icon: string;
+  automations?: DatabaseAutomationTemplate[];
 };
 
 /**
@@ -24,11 +25,10 @@ export type CreateDatabaseOptions = Partial<
  * @dispatches databases:database:create
  */
 export async function createDatabase(
-  parentDirPath: string,
   options: CreateDatabaseOptions,
 ): Promise<Database> {
   // The path to the database directory
-  const dbPath = Fs.concatPath(parentDirPath, options.name);
+  const dbPath = Fs.concatPath(Paths.workspace, options.name);
 
   // Ensure the database directory does not already exist
   if (await Fs.exists(dbPath)) {
