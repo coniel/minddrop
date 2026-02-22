@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
+import { Workspaces } from '@minddrop/workspaces';
 import { ViewsStore } from '../ViewsStore';
 import { ViewFileExtension } from '../constants';
 import { ViewsLoadedEvent, ViewsLoadedEventData } from '../events';
@@ -12,11 +13,25 @@ import { getViewsDirPath } from '../utils/getViewsDirPath';
  * @dispatches views:loaded
  */
 export async function initializeViews(): Promise<void> {
-  // Read the views directory
-  const viewFileEntries = await Fs.readDir(getViewsDirPath());
+  // Get all workspaces
+  const workspaces = Workspaces.getAll();
+
+  // Get views paths from workspaces
+  const viewFileEntries = (
+    await Promise.all(
+      workspaces.map(async (workspace) => {
+        const viewDirPath = getViewsDirPath(workspace.path);
+
+        if (await Fs.exists(viewDirPath)) {
+          return Fs.readDir(viewDirPath);
+        }
+      }),
+    )
+  ).flat();
 
   // Get the view file paths, filtering out any non-view files
   const viewPaths = viewFileEntries
+    .filter((entry) => !!entry)
     .filter((entry) => entry.path.endsWith(ViewFileExtension))
     .map((entry) => entry.path);
 

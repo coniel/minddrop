@@ -1,9 +1,16 @@
 import { Fs, MockFileDescriptor } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
+import { WorkspaceFixtures } from '@minddrop/workspaces';
 import { ViewFileExtension, ViewsDirName } from '../../constants';
 import { View, ViewDataSource } from '../../types';
 
-export const viewsRootPath = `workspace/${Paths.hiddenDirName}/${ViewsDirName}`;
+const { workspace_1 } = WorkspaceFixtures;
+
+export const viewsRootPath = Fs.concatPath(
+  workspace_1.path,
+  Paths.hiddenDirName,
+  ViewsDirName,
+);
 
 function generateViewFixture(
   type: string,

@@ -564,6 +564,9 @@ importers:
       '@minddrop/views':
         specifier: workspace:*
         version: link:../views
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -639,7 +642,7 @@ importers:
         version: link:../../features/designs
       '@minddrop/feature-wall-view':
         specifier: workspace:*
-        version: link:../../views/wall-view
+        version: link:../../views/gallery-view
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -1334,6 +1337,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../workspaces
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -1406,7 +1412,7 @@ importers:
         specifier: ^5.7.2
         version: 5.7.3
 
-  views/wall-view:
+  views/gallery-view:
     dependencies:
       '@minddrop/feature-database-entries':
         specifier: workspace:*

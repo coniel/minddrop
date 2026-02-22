@@ -1,8 +1,10 @@
 import { MockFileSystem } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import {
   workspaceConfigFile,
   workspaceFiles,
+  workspace_1,
   workspaces,
 } from './workspaces.fixtures';
 
@@ -19,6 +21,9 @@ export function setupWorkspaceFixtures(
     loadWorkspaceFiles: true,
   },
 ) {
+  // Set workspace_1 as the current workspace
+  Paths.workspace = workspace_1.path;
+
   if (options.loadWorkspaces !== false) {
     // Load workspaces into the store
     WorkspacesStore.load(workspaces);
