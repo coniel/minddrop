@@ -1,5 +1,6 @@
 import { YAML, restoreDates } from '@minddrop/utils';
 import * as Api from './FsApi';
+import { addFileExtension } from './addFileExtension';
 import {
   IncrementedPath,
   incrementalPath as incrementalPathFn,
@@ -32,6 +33,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
     writeYamlFile: typeof writeYamlFile;
     openFilePicker: typeof openFilePicker;
     setPathIncrement: typeof setPathIncrement;
+    addFileExtension: typeof addFileExtension;
   } = {
   ...Api,
   incrementalPath,
@@ -42,6 +44,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeJsonFile,
   readYamlFile,
   writeYamlFile,
+  addFileExtension,
   getBaseDirPath: (baseDir) => BaseDirPaths[baseDir],
   convertFileSrc: (...args) => FsAdapter.convertFileSrc(...args),
   isDirectory: (...args) => FsAdapter.isDirectory(...args),

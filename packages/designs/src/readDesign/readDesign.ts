@@ -1,5 +1,4 @@
 import { Fs } from '@minddrop/file-system';
-import { restoreDates } from '@minddrop/utils';
 import { Design } from '../types';
 
 /**
@@ -13,8 +12,7 @@ export async function readDesign(path: string): Promise<Design | null> {
     // Read the design from the file system
     const design = await Fs.readJsonFile<Design>(path);
 
-    // Restore the path property
-    return restoreDates<Design>({ ...design, path });
+    return design;
   } catch {
     // In case of an error, return null
     return null;
