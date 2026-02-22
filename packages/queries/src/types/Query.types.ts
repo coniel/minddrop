@@ -5,11 +5,6 @@ export interface Query {
   id: string;
 
   /**
-   * Path to the query file.
-   */
-  path: string;
-
-  /**
    * The user defined name of the query.
    */
   name: string;

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { QueryNotFoundError } from '../errors';
-import { cleanup, query1, setup } from '../test-utils';
+import { cleanup, query_1, setup } from '../test-utils';
 import { getQuery } from './getQuery';
 
 describe('get', () => {
@@ -9,9 +9,9 @@ describe('get', () => {
   afterEach(cleanup);
 
   it('retrieves a query by name', () => {
-    const result = getQuery(query1.id);
+    const result = getQuery(query_1.id);
 
-    expect(result).toBe(query1);
+    expect(result).toBe(query_1);
   });
 
   it('throws an error if the query does not exist', () => {

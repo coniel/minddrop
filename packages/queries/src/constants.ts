@@ -1,1 +1,2 @@
-export const QueriesDirectory = 'Queries';
+export const QueriesDirName = 'queries';
+export const QueryFileExtension = 'query';

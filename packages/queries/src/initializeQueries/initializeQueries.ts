@@ -1,7 +1,10 @@
+import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { Paths } from '@minddrop/utils';
-import { QueriesDirectory } from '../constants';
-import { loadQueries } from '../loadQueries';
+import { QueriesStore } from '../QueriesStore';
+import { QueryFileExtension } from '../constants';
+import { QueriesLoadedEvent, QueriesLoadedEventData } from '../events';
+import { readQuery } from '../readQuery';
+import { getQueriesDirPath } from '../utils';
 
 /**
  * Initializes queries by loading query configs from the queries directory.
@@ -9,22 +12,30 @@ import { loadQueries } from '../loadQueries';
  * If the queries directory does not exist, it will be created.
  */
 export async function initializeQueries(): Promise<void> {
-  const queriesDirPath = Fs.concatPath(Paths.workspace, QueriesDirectory);
+  const queriesDirPath = getQueriesDirPath();
 
   // Ensure that the queries directory exists
-  if (!(await Fs.exists(queriesDirPath))) {
-    // Create the queries directory if it doesn't exist
-    Fs.createDir(queriesDirPath);
-  } else {
-    // Load queries from the queries directory
-    const files = await Fs.readDir(queriesDirPath);
+  await Fs.ensureDir(queriesDirPath);
 
-    // Filter out files that are not query configs
-    const queryFiles = files
-      .filter((file) => file.path.endsWith('.query'))
-      .map((file) => file.path);
+  // Load queries from the queries directory
+  const files = await Fs.readDir(queriesDirPath);
 
-    // Load the queries
-    await loadQueries(queryFiles);
-  }
+  // Filter out files that are not query configs
+  const queryFilePaths = files
+    .filter((file) => file.path.endsWith(QueryFileExtension))
+    .map((file) => file.path);
+
+  // Read the query files
+  const queryPromises = await Promise.all(
+    queryFilePaths.map((path) => readQuery(path)),
+  );
+
+  // Filter out null queries
+  const queries = queryPromises.filter((query) => query !== null);
+
+  // Load the queries into the store
+  QueriesStore.load(queries);
+
+  // Dispatch a queries loaded event
+  Events.dispatch<QueriesLoadedEventData>(QueriesLoadedEvent, queries);
 }

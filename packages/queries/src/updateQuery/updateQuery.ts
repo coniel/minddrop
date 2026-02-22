@@ -3,7 +3,7 @@ import { QueriesStore } from '../QueriesStore';
 import { QueryUpdatedEvent } from '../events';
 import { getQuery } from '../getQuery';
 import { Query } from '../types';
-import { writeQueryConfig } from '../writeQueryConfig';
+import { writeQuery } from '../writeQuery';
 
 export type UpdateQueryData = Partial<Pick<Query, 'name' | 'filters' | 'sort'>>;
 /**
@@ -26,13 +26,14 @@ export async function updateQuery(
   const updatedQuery: Query = {
     ...query,
     ...data,
+    lastModified: new Date(),
   };
 
   // Update the query in the store
   QueriesStore.update(queryId, updatedQuery);
 
   // Write the query config to the file system
-  await writeQueryConfig(queryId);
+  await writeQuery(queryId);
 
   // Dispatch the query updated event
   Events.dispatch(QueryUpdatedEvent, {

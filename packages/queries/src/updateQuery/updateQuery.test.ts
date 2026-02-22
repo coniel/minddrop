@@ -2,45 +2,43 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { QueriesStore } from '../QueriesStore';
 import { QueryUpdatedEvent, QueryUpdatedEventData } from '../events';
-import { MockFs, cleanup, query1, setup } from '../test-utils';
+import { MockFs, cleanup, mockDate, query_1, setup } from '../test-utils';
 import { Query } from '../types';
+import { getQueryFilePath } from '../utils';
 import { updateQuery } from './updateQuery';
+
+const update = {
+  name: 'Updated Query Query 1',
+};
+const updatedQuery: Query = {
+  ...query_1,
+  ...update,
+  lastModified: mockDate,
+};
 
 describe('updateQuery', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
 
-  it('updates a query', async () => {
-    const query = await updateQuery('query-1', {
-      name: 'Updated Query Query 1',
-    });
-
-    expect(query).toEqual({
-      ...query1,
-      name: 'Updated Query Query 1',
-    });
-  });
-
   it('updates the query in the store', async () => {
-    await updateQuery('query-1', {
-      name: 'Updated Query Query 1',
-    });
+    await updateQuery(query_1.id, update);
 
-    expect(QueriesStore.get('query-1')).toEqual({
-      ...query1,
-      name: 'Updated Query Query 1',
-    });
+    expect(QueriesStore.get(query_1.id)).toEqual(updatedQuery);
   });
 
   it('writes the query config to the file system', async () => {
-    await updateQuery('query-1', {
-      name: 'Updated Query Query 1',
-    });
+    await updateQuery(query_1.id, update);
 
-    expect(MockFs.readJsonFile<Query>(query1.path).name).toBe(
-      'Updated Query Query 1',
+    expect(MockFs.readJsonFile(getQueryFilePath(query_1.id))).toEqual(
+      updatedQuery,
     );
+  });
+
+  it('returns the updated query', async () => {
+    const query = await updateQuery(query_1.id, update);
+
+    expect(query).toEqual(updatedQuery);
   });
 
   it('dispatches the query updated event', async () =>
@@ -49,17 +47,12 @@ describe('updateQuery', () => {
         QueryUpdatedEvent,
         'test-query-updated',
         (payload) => {
-          expect(payload.data.original).toEqual(query1);
-          expect(payload.data.updated).toEqual({
-            ...query1,
-            name: 'Updated Query Query 1',
-          });
+          expect(payload.data.original).toEqual(query_1);
+          expect(payload.data.updated).toEqual(updatedQuery);
           done();
         },
       );
 
-      updateQuery('query-1', {
-        name: 'Updated Query Query 1',
-      });
+      updateQuery(query_1.id, update);
     }));
 });

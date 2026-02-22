@@ -1,36 +1,27 @@
 import { Events } from '@minddrop/events';
-import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
-import { Paths, uuid } from '@minddrop/utils';
+import { uuid } from '@minddrop/utils';
 import { QueriesStore } from '../QueriesStore';
-import { QueriesDirectory } from '../constants';
-import { QueryCreatedEvent } from '../events';
+import { QueryCreatedEvent, QueryCreatedEventData } from '../events';
 import { Query } from '../types';
-import { writeQueryConfig } from '../writeQueryConfig';
+import { writeQuery } from '../writeQuery';
 
 /**
  * Creates a new query, adding it to the store and writing it to the file system.
  *
+ * @param name - The name of the query, defaults to the query type name.
+ *
  * @returns The created query.
  *
- * @dispatches 'queries:query:created' event
+ * @dispatches queries:query:created
  */
-export async function createQuery(): Promise<Query> {
-  // Use 'Query' as the default query name
-  let queryName = i18n.t('queries.labels.query');
-
-  // Generate the query path and name, incrementing the name if necessary
-  const { path, increment } = await Fs.incrementalPath(
-    Fs.concatPath(Paths.workspace, QueriesDirectory, `${queryName}.query`),
-  );
-
+export async function createQuery(name?: string): Promise<Query> {
   // Generate the query object
   const query: Query = {
     id: uuid(),
     created: new Date(),
     lastModified: new Date(),
-    path,
-    name: increment ? `${queryName} ${increment}` : queryName,
+    name: name || i18n.t('queries.labels.query'),
     filters: [],
     sort: [],
   };
@@ -39,10 +30,10 @@ export async function createQuery(): Promise<Query> {
   QueriesStore.add(query);
 
   // Write the query config to the file system
-  await writeQueryConfig(query.id);
+  await writeQuery(query.id);
 
   // Dispatch the query created event
-  Events.dispatch(QueryCreatedEvent, query);
+  Events.dispatch<QueryCreatedEventData>(QueryCreatedEvent, query);
 
   return query;
 }
