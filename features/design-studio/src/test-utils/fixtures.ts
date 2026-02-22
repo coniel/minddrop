@@ -27,14 +27,14 @@ export const usedPropertyDesignElement: PropertyDesignElement = {
 
 export const testDesign = {
   ...design_card_1,
-  rootElement: {
-    ...design_card_1.rootElement,
+  tree: {
+    ...design_card_1.tree,
     children: [usedPropertyDesignElement, element_container_1, element_text_2],
   },
 };
 
 export const flatCardElement: FlatRootDesignElement = {
-  ...design_card_1.rootElement,
+  ...design_card_1.tree,
   id: 'root',
   children: [
     usedPropertyDesignElement.id,
@@ -71,9 +71,9 @@ export const elementIndex_2 = flatTextElement2;
 
 export const flatTree = {
   root: {
-    ...design_card_1.rootElement,
+    ...design_card_1.tree,
     id: 'root',
-    children: testDesign.rootElement.children.map((child) => child.id),
+    children: testDesign.tree.children.map((child) => child.id),
   },
   [usedPropertyDesignElement.id]: {
     ...usedPropertyDesignElement,

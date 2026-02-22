@@ -10,7 +10,7 @@ export const defaultCardDesign: Design = {
   id: 'default-card-design',
   type: 'card',
   name: 'designs.card.name',
-  rootElement: {
+  tree: {
     id: 'root',
     type: 'root',
     children: [
@@ -27,7 +27,7 @@ export const defaultListDesign: Design = {
   id: 'default-list-design',
   type: 'list',
   name: 'designs.list.name',
-  rootElement: {
+  tree: {
     id: 'root',
     type: 'root',
     children: [],
@@ -38,7 +38,7 @@ export const defaultPageDesign: Design = {
   id: 'default-page-design',
   type: 'page',
   name: 'designs.page.name',
-  rootElement: {
+  tree: {
     id: 'root',
     type: 'root',
     children: [],

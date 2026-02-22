@@ -6,6 +6,6 @@ describe('reconstructTree', () => {
   it('reconstructs an element map into a design element tree', () => {
     const parsedElementTree = reconstructTree(flatTree);
 
-    expect(parsedElementTree).toEqual(testDesign.rootElement);
+    expect(parsedElementTree).toEqual(testDesign.tree);
   });
 });

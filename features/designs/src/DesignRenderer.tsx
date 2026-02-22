@@ -23,7 +23,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   propertyValues = {},
   onUpdatePropertyValue,
 }) => {
-  const style = createContainerStyleObject(design.rootElement.style);
+  const style = createContainerStyleObject(design.tree.style);
 
   return (
     <DesignPropertiesProvider
@@ -32,7 +32,7 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
       onUpdatePropertyValue={onUpdatePropertyValue}
     >
       <div className="card-element" style={style}>
-        {design.rootElement.children.map((child) => (
+        {design.tree.children.map((child) => (
           <DesignElementRenderer key={child.id} element={child} />
         ))}
       </div>

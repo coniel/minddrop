@@ -127,7 +127,7 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   initialize: (design, onSave, properties = [], propertyValues = {}) => {
     set({
       design,
-      elements: flattenTree(design.rootElement),
+      elements: flattenTree(design.tree),
       onSave,
       properties,
       propertyValues,
