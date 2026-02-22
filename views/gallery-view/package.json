@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/feature-wall-view",
+  "name": "@minddrop/view-gallery",
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",

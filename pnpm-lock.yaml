@@ -640,9 +640,6 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../../features/designs
-      '@minddrop/feature-wall-view':
-        specifier: workspace:*
-        version: link:../../views/gallery-view
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -667,6 +664,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
+      '@minddrop/view-gallery':
+        specifier: workspace:*
+        version: link:../../views/gallery-view
       '@minddrop/views':
         specifier: workspace:*
         version: link:../views

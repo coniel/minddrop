@@ -369,9 +369,9 @@
       "view": "View",
       "new": "New View"
     },
-    "wall": {
-      "name": "Wall",
-      "description": "A wall view."
+    "gallery": {
+      "name": "Gallery",
+      "description": "A gallery view."
     }
   }
 }
