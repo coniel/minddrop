@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
+import { omitPath } from '@minddrop/utils';
 import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
 import { databaseConfigFilePath } from '../utils';
 import { writeDatabaseConfig } from './writeDatabaseConfig';
@@ -9,7 +10,7 @@ describe('writeConfig', () => {
 
   afterEach(cleanup);
 
-  it('should write the database config to the file system', async () => {
+  it('writes the database config to the file system', async () => {
     const path = databaseConfigFilePath(objectDatabase.path);
 
     // Remove the existing config file from the mock file system
@@ -17,17 +18,7 @@ describe('writeConfig', () => {
 
     await writeDatabaseConfig(objectDatabase.id);
 
-    const config = {
-      ...objectDatabase,
-      created: objectDatabase.created.toISOString(),
-      lastModified: objectDatabase.lastModified.toISOString(),
-    };
-
-    // Should remove the path before serialization
-    // @ts-expect-error
-    delete config.path;
-
-    expect(MockFs.readJsonFile(path)).toEqual(config);
+    expect(MockFs.readJsonFile(path)).toEqual(omitPath(objectDatabase));
   });
 
   it('creates the hidden directory if it does not exist', async () => {

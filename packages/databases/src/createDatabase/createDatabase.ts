@@ -1,7 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { uuid } from '@minddrop/utils';
-import { Views } from '@minddrop/views';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { Database } from '../types';
@@ -56,7 +55,6 @@ export async function createDatabase(
     created: new Date(),
     lastModified: new Date(),
     automations,
-    views: options.views || [Views.generate('wall')],
   };
 
   // If the database has no automations, remove the automations property

@@ -1,5 +1,4 @@
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
-import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseDesignType = 'page' | 'card' | 'list';
@@ -102,11 +101,6 @@ export interface Database {
    * rendering entries.
    */
   defaultDesigns: Record<string, string>;
-
-  /**
-   * The database's views.
-   */
-  views: View[];
 
   /**
    * The database's automations if it has any.

@@ -5,7 +5,6 @@ import {
   ImagePropertySchema,
   UrlPropertySchema,
 } from '@minddrop/properties';
-import { ViewFixtures } from '@minddrop/views';
 import { DatabasesConfigFileName } from '../../constants';
 import { Database } from '../../types';
 import { databaseConfigFilePath } from '../../utils';
@@ -13,7 +12,6 @@ import { fetchWebpageMetadataAutomation } from './database-automations.fixtures'
 
 const { design_card_1, design_card_2, design_card_3, design_list_1 } =
   DesignFixtures;
-const { view1 } = ViewFixtures;
 
 export const parentDir = 'path/to/databases';
 export const genericFilePropertyName = 'File';
@@ -48,7 +46,6 @@ function generateDatabase(
       },
     },
     defaultDesigns: { card: design_card_2.id },
-    views: [view1],
     path: `${parentDir}/${data.name}`,
     ...data,
   };

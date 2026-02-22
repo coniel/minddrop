@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { BaseDirectory, PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
-import { ViewFixtures } from '@minddrop/views';
+import { omitPath } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabasesConfigFileName } from '../constants';
 import { DatabaseCreatedEvent } from '../events';
@@ -11,8 +11,6 @@ import { fetchWebpageMetadataAutomation } from '../test-utils/fixtures/database-
 import { Database, DatabasePathsConfig, DatabasesConfig } from '../types';
 import { databaseConfigFilePath } from '../utils';
 import { CreateDatabaseOptions, createDatabase } from './createDatabase';
-
-const { view1 } = ViewFixtures;
 
 const options: Omit<CreateDatabaseOptions, 'automations'> = {
   name: 'Tests',
@@ -32,12 +30,6 @@ const newDatabase: Database = {
   properties: [],
   defaultDesigns: {},
   designPropertyMaps: {},
-  views: [
-    {
-      ...view1,
-      id: expect.any(String),
-    },
-  ],
 };
 
 describe('createDatabase', () => {
@@ -117,15 +109,7 @@ describe('createDatabase', () => {
 
     const database = await createDatabase(parentDir, options);
 
-    // Path is not stored in the config file
-    // @ts-expect-error
-    delete database.path;
-
-    expect(MockFs.readJsonFile(configFilePath)).toEqual({
-      ...database,
-      created: database.created.toISOString(),
-      lastModified: database.lastModified.toISOString(),
-    });
+    expect(MockFs.readJsonFile(configFilePath)).toEqual(omitPath(database));
   });
 
   it('adds the database to the databases config file', async () => {

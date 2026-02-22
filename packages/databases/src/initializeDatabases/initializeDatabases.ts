@@ -11,7 +11,7 @@ import { writeDatabasesConfig } from '../writeDatabasesConfig';
  * Loads the user's databases into the store.
  */
 export async function initializeDatabases() {
-  const appConfig = await Fs.getBaseDirPath(BaseDirectory.AppConfig);
+  const appConfig = Fs.getBaseDirPath(BaseDirectory.AppConfig);
   // Path to databases config file stored in app config directory
   const databasesConfigFilePath = Fs.concatPath(
     appConfig,
