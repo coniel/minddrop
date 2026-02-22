@@ -485,37 +485,6 @@ importers:
         specifier: ^5.7.2
         version: 5.8.3
 
-  features/wall-view:
-    dependencies:
-      '@minddrop/feature-database-entries':
-        specifier: workspace:*
-        version: link:../database-entries
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/views':
-        specifier: workspace:*
-        version: link:../../packages/views
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.16.0
-        version: 9.21.0
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.7.2
-        version: 5.8.3
-
   packages/ast:
     dependencies:
       '@minddrop/events':
@@ -670,7 +639,7 @@ importers:
         version: link:../../features/designs
       '@minddrop/feature-wall-view':
         specifier: workspace:*
-        version: link:../../features/wall-view
+        version: link:../../views/wall-view
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
@@ -1436,6 +1405,37 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.7.3
+
+  views/wall-view:
+    dependencies:
+      '@minddrop/feature-database-entries':
+        specifier: workspace:*
+        version: link:../../features/database-entries
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.16.0
+        version: 9.21.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
 
 packages:
 
