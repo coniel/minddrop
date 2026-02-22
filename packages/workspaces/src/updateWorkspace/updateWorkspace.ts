@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspaceUpdatedEvent, WorkspaceUpdatedEventData } from '../events';
+import { getWorkspace } from '../getWorkspace';
 import { Workspace } from '../types';
 import { writeWorkspaceConfig } from '../writeWorkspaceConfig';
 
@@ -18,7 +19,7 @@ export async function updateWorkspace(
   data: UpdateWorkspaceData,
 ): Promise<Workspace> {
   // Get the workspace
-  const workspace = WorkspacesStore.get(id);
+  const workspace = getWorkspace(id);
 
   // Prevent updating the workspace name
   if ('name' in data) {
@@ -37,7 +38,7 @@ export async function updateWorkspace(
   await writeWorkspaceConfig(id);
 
   // Get the updated workspace
-  const updatedWorkspace = WorkspacesStore.get(id);
+  const updatedWorkspace = getWorkspace(id);
 
   // Dispatch a workspace updated event
   Events.dispatch<WorkspaceUpdatedEventData>(WorkspaceUpdatedEvent, {

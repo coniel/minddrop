@@ -1,3 +1,5 @@
+import { WorkspacesStore } from './WorkspacesStore';
+
 export { addWorkspace as add } from './addWorkspace';
 export { createWorkspace as create } from './createWorkspace';
 export { deleteWorkspace as delete } from './deleteWorkspace';
@@ -13,3 +15,5 @@ export {
 } from './WorkspacesStore';
 export { writeWorkspaceConfig as writeConfig } from './writeWorkspaceConfig';
 export { WorkspacesStore as Store } from './WorkspacesStore';
+
+export const getAll = WorkspacesStore.getAll;
