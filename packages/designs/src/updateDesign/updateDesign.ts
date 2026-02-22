@@ -1,5 +1,7 @@
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
+import { defaultDesignIds } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
 import { getDesign } from '../getDesign';
 import { Design, RootElement } from '../types';
@@ -18,6 +20,13 @@ export async function updateDesign(
 ): Promise<Design> {
   // Get the design
   const design = getDesign(id);
+
+  // Prevent updating default designs
+  if (defaultDesignIds.includes(design.id)) {
+    throw new InvalidParameterError(
+      `Cannot update default design ${design.id}`,
+    );
+  }
 
   // Update the design tree and last modified date
   DesignsStore.update(design.id, { tree, lastModified: new Date() });

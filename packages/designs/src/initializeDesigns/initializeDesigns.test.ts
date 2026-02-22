@@ -1,10 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DesignsStore } from '../DesignsStore';
 import { DesignFileExtension } from '../constants';
+import { DefaultCardDesign } from '../default-designs';
 import {
   MockFs,
   cleanup,
-  designs,
+  design_card_1,
   designsRootPath,
   setup,
 } from '../test-utils';
@@ -15,10 +16,18 @@ describe('initializeDesigns', () => {
 
   afterEach(cleanup);
 
+  it('loads default designs into the store', async () => {
+    await initializeDesigns();
+
+    expect(
+      DesignsStore.getAll().find((design) => design.id === 'card'),
+    ).toEqual(DefaultCardDesign);
+  });
+
   it('loads designs from the file system and loads them into the store', async () => {
     await initializeDesigns();
 
-    expect(DesignsStore.getAll()).toEqual(designs);
+    expect(DesignsStore.get(design_card_1.id)).toEqual(design_card_1);
   });
 
   it('handles failed design reads', async () => {
@@ -30,6 +39,8 @@ describe('initializeDesigns', () => {
 
     await initializeDesigns();
 
-    expect(DesignsStore.getAll()).toEqual(designs);
+    expect(
+      DesignsStore.getAll().find((design) => !Boolean(design)),
+    ).toBeUndefined();
   });
 });

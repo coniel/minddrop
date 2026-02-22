@@ -1,7 +1,9 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignFileExtension } from '../constants';
+import { defaultDesignIds } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
 import { getDesign } from '../getDesign';
 import { Design } from '../types';
@@ -31,6 +33,13 @@ export async function renameDesign(
   // If the name is unchanged, return the design as is
   if (newName === design.name) {
     return design;
+  }
+
+  // Prevent renaming default designs
+  if (defaultDesignIds.includes(design.id)) {
+    throw new InvalidParameterError(
+      `Cannot rename default design ${design.id}`,
+    );
   }
 
   // Ensure the new path is unique

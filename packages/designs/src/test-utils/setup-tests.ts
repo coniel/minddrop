@@ -4,6 +4,7 @@ import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
 import { Paths } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
+import { defaultDesigns } from '../default-designs';
 import { designFiles, designs, designsRootPath } from './fixtures';
 
 interface SetupOptions {
@@ -29,7 +30,9 @@ export function setup(
   vi.useFakeTimers({ now: mockDate });
 
   if (options.loadDesigns !== false) {
-    // Load view types into the store
+    // Load default designs into the store
+    DesignsStore.load(defaultDesigns);
+    // Load designs into the store
     DesignsStore.load(designs);
   }
 

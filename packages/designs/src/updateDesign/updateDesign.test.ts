@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
-import { omitPath, restoreDates } from '@minddrop/utils';
+import { InvalidParameterError, omitPath, restoreDates } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
+import { DefaultCardDesign } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
 import {
   MockFs,
@@ -37,6 +38,12 @@ describe('updateDesign', () => {
   });
 
   afterEach(cleanup);
+
+  it('prevents updating default designs', async () => {
+    await expect(() =>
+      updateDesign(DefaultCardDesign.id, updatedTree),
+    ).rejects.toThrow(InvalidParameterError);
+  });
 
   it('returns the updated design', async () => {
     const result = await updateDesign(design_card_1.id, updatedTree);

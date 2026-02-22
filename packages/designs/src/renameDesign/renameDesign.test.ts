@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
-import { omitPath, restoreDates } from '@minddrop/utils';
+import { InvalidParameterError, omitPath, restoreDates } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignFileExtension } from '../constants';
+import { DefaultCardDesign } from '../default-designs';
 import { DesignUpdatedEvent, DesignUpdatedEventData } from '../events';
 import {
   MockFs,
@@ -34,6 +35,12 @@ describe('renameDesign', () => {
   });
 
   afterEach(cleanup);
+
+  it('prevents renaming default designs', async () => {
+    await expect(() =>
+      renameDesign(DefaultCardDesign.id, 'New name'),
+    ).rejects.toThrow(InvalidParameterError);
+  });
 
   it('returns the design as is if the new name is the same', async () => {
     const result = await renameDesign(design_card_1.id, design_card_1.name);

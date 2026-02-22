@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
+import { DefaultCardDesign } from '../default-designs';
 import { DesignDeletedEvent, DesignDeletedEventData } from '../events';
 import { MockFs, cleanup, design_card_1, setup } from '../test-utils';
 import { deleteDesign } from './deleteDesign';
@@ -9,6 +11,12 @@ describe('deleteDesign', () => {
   beforeEach(setup);
 
   afterEach(cleanup);
+
+  it('prevents deleting default designs', async () => {
+    await expect(() => deleteDesign(DefaultCardDesign.id)).rejects.toThrow(
+      InvalidParameterError,
+    );
+  });
 
   it('deletes the design file', async () => {
     await deleteDesign(design_card_1.id);
