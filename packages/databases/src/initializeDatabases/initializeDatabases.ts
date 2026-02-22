@@ -1,3 +1,4 @@
+import { Events } from '@minddrop/events';
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
 import { Workspace, Workspaces } from '@minddrop/workspaces';
@@ -5,6 +6,8 @@ import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore'
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseConfigFileName } from '../constants';
 import { coreEntrySerializers } from '../entry-serializers';
+import { onCreateDatabase } from '../event-handlers';
+import { DatabaseCreatedEvent, DatabaseCreatedEventData } from '../events';
 import { Database } from '../types';
 
 /**
@@ -29,6 +32,9 @@ export async function initializeDatabases() {
 
   // Load database configs into the store
   DatabasesStore.load(databaseConfigs);
+
+  // Initialize event handlers
+  initializeEventHandlers();
 }
 
 /**
@@ -70,4 +76,14 @@ async function readDatabaseConfig(path: string): Promise<Database | null> {
   } catch {
     return null;
   }
+}
+
+function initializeEventHandlers() {
+  Events.on<DatabaseCreatedEventData>(
+    DatabaseCreatedEvent,
+    'databases',
+    ({ data }) => {
+      onCreateDatabase(data);
+    },
+  );
 }
