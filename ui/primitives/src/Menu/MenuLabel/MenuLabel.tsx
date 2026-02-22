@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { i18n } from '@minddrop/i18n';
 import { Text } from '../../Text';
 import { mapPropsToClasses } from '../../utils';
@@ -37,28 +38,36 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
   actionsAlwaysVisible?: boolean;
 }
 
-export const MenuLabel: React.FC<MenuLabelProps> = ({
-  actions,
-  actionsAlwaysVisible,
-  children,
-  className,
-  label,
-  button,
-  ...other
-}) => {
-  return (
-    <div
-      className={mapPropsToClasses(
-        { className, actionsAlwaysVisible },
-        'menu-label',
-      )}
-      role={button ? 'button' : undefined}
-      {...other}
-    >
-      <Text className="label" color="light" weight="semibold" size="tiny">
-        {label ? i18n.t(label) : children}
-      </Text>
-      {actions && <div className="actions">{actions}</div>}
-    </div>
-  );
-};
+export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
+  (
+    {
+      actions,
+      actionsAlwaysVisible,
+      children,
+      className,
+      label,
+      button,
+      ...other
+    },
+    ref,
+  ) => {
+    return (
+      <div
+        ref={ref}
+        className={mapPropsToClasses(
+          { className, actionsAlwaysVisible },
+          'menu-label',
+        )}
+        role={button ? 'button' : undefined}
+        {...other}
+      >
+        <Text className="label" color="light" weight="semibold" size="tiny">
+          {label ? i18n.t(label) : children}
+        </Text>
+        {actions && <div className="actions">{actions}</div>}
+      </div>
+    );
+  },
+);
+
+MenuLabel.displayName = 'MenuLabel';
