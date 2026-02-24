@@ -1,6 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { IconButton, Text } from '@minddrop/ui-primitives';
-import { LogEntry } from '../types';
+import { LogEntry, LogLevel } from '../types';
 import { formatArg } from '../utils';
 import { ForceSignal, JsonTree } from './JsonTree';
 import './LogsPanel.css';
@@ -10,6 +16,8 @@ export interface LogsPanelProps {
   onClear: () => void;
   onSave: (entry: LogEntry) => void;
 }
+
+const LOG_LEVELS: LogLevel[] = ['log', 'info', 'warn', 'error'];
 
 function isComplex(arg: unknown): arg is object {
   return arg !== null && typeof arg === 'object' && !(arg instanceof Error);
@@ -26,10 +34,16 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
     new Map(),
   );
   const [savedEntryIds, setSavedEntryIds] = useState<Set<number>>(new Set());
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const [activeFilter, setActiveFilter] = useState<LogLevel | null>(null);
 
+  // Auto-scroll to bottom only in oldest-first mode.
+  // In newest-first mode new entries appear at the top, visible without scrolling.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
+    if (sortOrder === 'oldest') {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [logs, sortOrder]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -49,6 +63,17 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const toggleFilter = useCallback((level: LogLevel) => {
+    setActiveFilter((prev) => (prev === level ? null : level));
+  }, []);
+
+  const displayedLogs = useMemo(() => {
+    const filtered = activeFilter
+      ? logs.filter((e) => e.level === activeFilter)
+      : logs;
+    return sortOrder === 'newest' ? [...filtered].reverse() : filtered;
+  }, [logs, activeFilter, sortOrder]);
+
   const handleEntryContextMenu = useCallback(
     (e: React.MouseEvent, entryId: number) => {
       e.preventDefault();
@@ -62,8 +87,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
   );
 
   const handleCopy = useCallback((entry: LogEntry) => {
-    const text = entry.args.map(formatArg).join(' ');
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(entry.args.map(formatArg).join(' '));
   }, []);
 
   const handleSave = useCallback(
@@ -97,17 +121,46 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
           Clear
         </Text>
       </div>
+
+      <div className={`dev-tools-logs-filter-bar${activeFilter ? ' has-filter' : ''}`}>
+        <IconButton
+          icon={sortOrder === 'newest' ? 'arrow-down' : 'arrow-up'}
+          label="Toggle sort order"
+          tooltipTitle={sortOrder === 'newest' ? 'Newest first' : 'Oldest first'}
+          size="sm"
+          onClick={() =>
+            setSortOrder((o) => (o === 'newest' ? 'oldest' : 'newest'))
+          }
+        />
+        <div className="dev-tools-filter-divider" />
+        <button
+          className={`dev-tools-level-btn dev-tools-level-btn-all${!activeFilter ? ' is-active' : ''}`}
+          onClick={() => setActiveFilter(null)}
+        >
+          all
+        </button>
+        {LOG_LEVELS.map((level) => (
+          <button
+            key={level}
+            className={`dev-tools-level-btn dev-tools-level-btn-${level}${activeFilter === level ? ' is-active' : ''}`}
+            onClick={() => toggleFilter(level)}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+
       <div className="dev-tools-logs-list">
-        {logs.length === 0 && (
+        {displayedLogs.length === 0 && (
           <Text
             size="sm"
             color="subtle"
             style={{ padding: 'var(--space-4)' }}
           >
-            No logs yet.
+            {logs.length === 0 ? 'No logs yet.' : 'No logs match the current filter.'}
           </Text>
         )}
-        {logs.map((entry) => {
+        {displayedLogs.map((entry) => {
           const hasComplex = entry.args.some(isComplex);
           const force = getEffectiveForce(entry.id);
           const saved = savedEntryIds.has(entry.id);

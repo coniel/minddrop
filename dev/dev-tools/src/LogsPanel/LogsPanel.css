@@ -13,6 +13,46 @@
   flex-shrink: 0;
 }
 
+.dev-tools-logs-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.dev-tools-filter-divider {
+  width: 1px;
+  height: 1rem;
+  background-color: var(--border-subtle);
+  margin: 0 var(--space-1);
+  flex-shrink: 0;
+}
+
+.dev-tools-level-btn {
+  all: unset;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.1s;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+/* Dim non-active buttons when a specific level filter is active */
+.dev-tools-logs-filter-bar.has-filter .dev-tools-level-btn:not(.is-active) { opacity: 0.3; }
+
+.dev-tools-level-btn-all   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
+.dev-tools-level-btn-log   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
+.dev-tools-level-btn-info  { color: var(--text-info);     background: var(--surface-info, color-mix(in lch, var(--text-info) 12%, transparent)); }
+.dev-tools-level-btn-warn  { color: var(--text-warning);  background: var(--surface-warning); }
+.dev-tools-level-btn-error { color: var(--text-danger);   background: var(--surface-danger); }
+
 .dev-tools-logs-list {
   flex: 1;
   overflow-y: auto;
