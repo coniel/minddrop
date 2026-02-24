@@ -37,7 +37,7 @@ export const DatabaseDesignTypeSelectionMenu: React.FC<
     <DropdownMenu>
       <DropdownMenuTrigger>
         <IconButton
-          size="small"
+          size="sm"
           label="databases.actions.addDesign"
           icon="plus"
         />

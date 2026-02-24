@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { ViewRenderer } from '@minddrop/feature-views';
 import {
@@ -8,6 +9,7 @@ import {
   Toolbar,
   useToggle,
 } from '@minddrop/ui-primitives';
+import { View, Views } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
 
@@ -31,6 +33,8 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 }) => {
   const database = Databases.use(databaseId);
   const entries = DatabaseEntries.useAll(databaseId);
+  const databaseViews = Views.useDataSourceViews('database', databaseId);
+  const [view, setView] = useState<View | null>(databaseViews[0] || null);
   const [configurationPanelOpen, toggleConfigurationPanel] =
     useToggle(configPanelOpen);
 
@@ -86,10 +90,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
             />
           </Toolbar>
         </div>
-        <ViewRenderer
-          view={database.views[0]}
-          entries={entries.map((entry) => entry.id)}
-        />
       </Panel>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />

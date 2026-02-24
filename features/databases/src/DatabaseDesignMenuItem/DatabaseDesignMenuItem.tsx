@@ -81,7 +81,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
         <MenuItemDropdownMenu>
           <DropdownMenuTrigger>
             <IconButton
-              size="small"
+              size="sm"
               icon="more-vertical"
               label="actions.manage"
             />

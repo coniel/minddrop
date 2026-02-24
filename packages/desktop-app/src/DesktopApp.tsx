@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { DevTools } from '@minddrop/dev-tools';
 import {
   CloseAppSidebarEvent,
   CloseRightPanelEvent,
@@ -23,7 +24,6 @@ import {
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
-import { DevTools } from './DevTools';
 
 export const DesktopApp: React.FC = () => {
   const defaultEmojiSkinTone = useDefaultEmojiSkinTone();

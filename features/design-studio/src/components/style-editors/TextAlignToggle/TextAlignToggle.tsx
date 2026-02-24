@@ -21,7 +21,7 @@ export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
   return (
     <RadioToggleGroup size="md" value={textAlign} onValueChange={handleSelect}>
       {textAligns.map((align) => (
-        <Toggle key={align.value} tooltipDescription={align.label} {...align} />
+        <Toggle key={align.value} {...align} />
       ))}
     </RadioToggleGroup>
   );

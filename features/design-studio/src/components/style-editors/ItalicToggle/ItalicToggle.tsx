@@ -21,8 +21,8 @@ export const ItalicToggle = ({ elementId }: ItalicToggleProps) => {
     <Toggle
       label="designs.typography.italic"
       icon="italic"
-      checked={italic}
-      onCheckedChange={handleToggle}
+      pressed={italic}
+      onPressedChange={handleToggle}
     />
   );
 };

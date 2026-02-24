@@ -16,7 +16,9 @@ interface FlexDropContainerProps {
   /**
    * The children of the container.
    */
-  children: React.ReactNode;
+  children:
+    | React.ReactElement<{ index?: number }>
+    | React.ReactElement<{ index?: number }>[];
 
   /**
    * The direction of the container's main axis.
@@ -67,7 +69,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 }) => {
   const childArray = Children.toArray(children).filter((child) =>
     React.isValidElement(child),
-  ) as ReactElement[];
+  ) as ReactElement<{ index?: number }>[];
 
   const handleDropInGap = useCallback(
     (data: DropEventData, index: number) => {

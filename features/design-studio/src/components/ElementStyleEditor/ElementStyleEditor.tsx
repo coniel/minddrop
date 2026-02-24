@@ -22,10 +22,10 @@ export const ElementStyleEditor: React.FC<ElementStyleEditorProps> = ({
           label="actions.back"
           icon="chevron-left"
           onClick={onClose}
-          color="light"
+          color="neutral"
         />
         <ElementLabel
-          size="large"
+          size="lg"
           color="inherit"
           weight="medium"
           element={element}
@@ -33,8 +33,8 @@ export const ElementStyleEditor: React.FC<ElementStyleEditorProps> = ({
         <IconButton
           label="actions.remove"
           icon="more-vertical"
-          color="light"
-          size="small"
+          color="neutral"
+          size="lg"
         />
       </div>
       <Typography elementId={element.id} />

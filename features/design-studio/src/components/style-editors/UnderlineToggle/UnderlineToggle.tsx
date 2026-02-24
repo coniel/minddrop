@@ -21,8 +21,8 @@ export const UnderlineToggle = ({ elementId }: UnderlineToggleProps) => {
     <Toggle
       label="designs.typography.underline"
       icon="underline"
-      checked={underline}
-      onCheckedChange={handleToggle}
+      pressed={underline}
+      onPressedChange={handleToggle}
     />
   );
 };

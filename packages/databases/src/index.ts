@@ -1,3 +1,9 @@
+import * as Fixtures from './test-utils/fixtures';
+import {
+  cleanupDatabaseFixtures,
+  setupDatabaseFixtures,
+} from './test-utils/setup-fixtures';
+
 export * from './types';
 export * from './errors';
 export * from './events';
@@ -6,5 +12,9 @@ export * as Databases from './Databases';
 export * as DatabaseAutomations from './DatabaseAutomations';
 export * as DatabaseEntries from './DatabaseEntries';
 export * as DatabaseTemplates from './DatabaseTemplates';
-export * as DatabaseFixtures from './test-utils/fixtures';
-export * from './test-utils/setup-fixtures';
+
+export const DatabaseFixtures = {
+  ...Fixtures,
+  setup: setupDatabaseFixtures,
+  cleanup: cleanupDatabaseFixtures,
+};

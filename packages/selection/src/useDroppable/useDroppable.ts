@@ -74,7 +74,7 @@ interface UseDroppableReturn {
   /**
    * Ref to apply to the element which should accept drops.
    */
-  ref: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement | null>;
 
   /**
    * Callback fired when the user starts dragging an element over the
@@ -115,7 +115,7 @@ interface UseDroppableReturn {
    * Useful for speading the props onto a component.
    */
   droppableProps: {
-    ref: React.RefObject<HTMLDivElement>;
+    ref: React.RefObject<HTMLDivElement | null>;
     onDragOver: (e: React.DragEvent) => void;
     onDrop: (e: React.DragEvent) => void;
     onDragEnter: (e: React.DragEvent) => void;

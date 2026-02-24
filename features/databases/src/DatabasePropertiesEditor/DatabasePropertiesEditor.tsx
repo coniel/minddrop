@@ -56,7 +56,7 @@ export const DatabasePropertiesEditor: React.FC<
             onSelect={handleAddProperty}
           >
             <IconButton
-              size="small"
+              size="sm"
               label="databases.actions.addProperty"
               icon="plus"
             />

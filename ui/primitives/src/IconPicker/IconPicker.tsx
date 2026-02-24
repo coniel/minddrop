@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import {
   ContentIconName,
   EmojiSkinTone,
@@ -17,7 +17,6 @@ import {
   PopoverPositioner,
   PopoverPositionerProps,
   PopoverTrigger,
-  PopoverTriggerProps,
 } from '../Popover';
 
 export interface IconPickerProps {
@@ -30,7 +29,7 @@ export interface IconPickerProps {
   /**
    * The popover trigger element.
    */
-  children: PopoverTriggerProps['children'];
+  children: ReactElement;
 
   /**
    * The current icon string. Used to set the default

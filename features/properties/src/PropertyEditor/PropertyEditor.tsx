@@ -2,6 +2,7 @@ import {
   Button,
   ContentIcon,
   FieldDefinition,
+  Group,
   Icon,
   IconButton,
   IconPicker,
@@ -144,9 +145,8 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
       >
         <ContentIcon icon={property.icon} />
         <Text
-          size="small"
+          size="sm"
           color="inherit"
-          weight="inherit"
           className="label"
           text={property.name}
         />
@@ -157,33 +157,33 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
         />
       </div>
       <div className="editor" style={{ display: open ? 'flex' : 'none' }}>
-        <TextField
-          label="properties.form.name.label"
-          variant="filled"
-          defaultValue={property.name}
-          iconPicker={
-            <IconPicker
-              closeOnSelect
-              onSelect={handlePickIcon}
-              currentIcon={icon}
+        <Group gap={2}>
+          <IconPicker
+            closeOnSelect
+            onSelect={handlePickIcon}
+            currentIcon={icon}
+          >
+            <IconButton
+              size="lg"
+              variant="filled"
+              label="properties.form.icon.label"
             >
-              <IconButton
-                size="large"
-                variant="filled"
-                label="properties.form.icon.label"
-              >
-                <ContentIcon color="inherit" icon={icon} />
-              </IconButton>
-            </IconPicker>
-          }
-          {...fieldProps.name}
-        />
+              <ContentIcon color="inherit" icon={icon} />
+            </IconButton>
+          </IconPicker>
+          <TextField
+            label="properties.form.name.label"
+            variant="filled"
+            defaultValue={property.name}
+            {...fieldProps.name}
+          />
+        </Group>
         <div className="footer">
           {deletable && (
             <Button
               label="properties.actions.delete.label"
-              size="small"
-              variant="text"
+              size="sm"
+              variant="ghost"
               danger="on-hover"
               onClick={handleClickDelete}
             />
@@ -191,14 +191,14 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
           <div className="primary-actions">
             <Button
               label="actions.cancel"
-              size="small"
-              variant="text"
+              size="sm"
+              variant="ghost"
               onClick={handleClickCancel}
             />
             <Button
               label="actions.save"
-              size="small"
-              variant="primary"
+              size="sm"
+              variant="filled"
               onClick={handleClickSave}
             />
           </div>

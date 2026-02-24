@@ -31,7 +31,7 @@ export const AvailablePropertyElement: React.FC<
   return (
     <div className="available-property-element" {...draggableProps}>
       <ContentIcon icon={property.icon} />
-      <Text size="small" weight="medium" text={property.name} />
+      <Text size="sm" weight="medium" text={property.name} />
     </div>
   );
 };

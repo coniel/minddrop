@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogClose,
   DialogRoot,
+  Group,
   Heading,
   IconButton,
   IconPicker,
@@ -198,28 +199,28 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                 <Text paragraph color="muted" text={databaseDescription} />
               </div>
               <div className="fields">
-                <TextField
-                  variant="filled"
-                  label="databases.form.name.label"
-                  placeholder={databasenamePlaceholder}
-                  iconPicker={
-                    <IconPicker
-                      closeOnSelect
-                      onSelect={handleSelectIcon}
-                      onClear={handleClearIcon}
-                      currentIcon={icon}
+                <Group gap={2} align="end">
+                  <IconPicker
+                    closeOnSelect
+                    onSelect={handleSelectIcon}
+                    onClear={handleClearIcon}
+                    currentIcon={icon}
+                  >
+                    <IconButton
+                      label="databases.form.icon.label"
+                      size="lg"
+                      variant="filled"
                     >
-                      <IconButton
-                        label="databases.form.icon.label"
-                        size="lg"
-                        variant="filled"
-                      >
-                        <ContentIcon icon={icon} />
-                      </IconButton>
-                    </IconPicker>
-                  }
-                  {...fieldProps.name}
-                />
+                      <ContentIcon icon={icon} />
+                    </IconButton>
+                  </IconPicker>
+                  <TextField
+                    variant="filled"
+                    label="databases.form.name.label"
+                    placeholder={databasenamePlaceholder}
+                    {...fieldProps.name}
+                  />
+                </Group>
                 <TextField
                   variant="filled"
                   label="databases.form.entryName.label"

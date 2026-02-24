@@ -23,7 +23,7 @@ export const MockFs = initializeMockFileSystem();
 
 export const mockDate = new Date('2026-01-01T00:00:00.000Z');
 
-export function setup(options: SetupDatabaseFixturesOptions) {
+export function setup(options?: SetupDatabaseFixturesOptions) {
   // Setup database fixtures
   setupDatabaseFixtures(MockFs, options);
   // Setup external fixtures

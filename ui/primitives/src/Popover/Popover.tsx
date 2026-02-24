@@ -30,7 +30,15 @@ export const Popover = PopoverPrimitive.Root;
  * Trigger — the element that opens the popover.
  * Accepts any renderable element via the render prop.
  */
-export const PopoverTrigger = PopoverPrimitive.Trigger;
+export const PopoverTrigger = ({
+  children,
+  render,
+  ...other
+}: Omit<PopoverTriggerProps, 'children'> & {
+  children?: React.ReactElement;
+}) => <PopoverPrimitive.Trigger render={children || render} {...other} />;
+
+PopoverTrigger.displayName = 'PopoverTrigger';
 
 /*
  * Positioner — positions the popup relative to the trigger.

@@ -4,21 +4,21 @@ import { propsToClass } from '../utils';
 import { ToggleSize } from '../Toggle';
 import './ToggleGroup.css';
 
-export interface ToggleGroupProps {
+export interface ToggleGroupProps<Value extends string = string> {
   /*
    * Currently pressed values (controlled).
    */
-  value?: string[];
+  value?: Value[];
 
   /*
    * Default pressed values for uncontrolled usage.
    */
-  defaultValue?: string[];
+  defaultValue?: Value[];
 
   /*
    * Callback fired when the selection changes.
    */
-  onValueChange?: (value: string[]) => void;
+  onValueChange?: (value: Value[]) => void;
 
   /*
    * Size of the group container. Child Toggles are sized down
@@ -41,21 +41,24 @@ export interface ToggleGroupProps {
    * Toggle children.
    */
   children: React.ReactNode;
+
+  /*
+   * Ref forwarded to the root element.
+   */
+  ref?: React.Ref<HTMLDivElement>;
 }
 
-export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
-  (
-    {
-      value,
-      defaultValue,
-      onValueChange,
-      size = 'md',
-      disabled,
-      className,
-      children,
-    },
-    ref,
-  ) => (
+export function ToggleGroup<Value extends string>({
+  ref,
+  value,
+  defaultValue,
+  onValueChange,
+  size = 'md',
+  disabled,
+  className,
+  children,
+}: ToggleGroupProps<Value>) {
+  return (
     <ToggleGroupPrimitive
       ref={ref}
       value={value}
@@ -66,7 +69,7 @@ export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
     >
       {children}
     </ToggleGroupPrimitive>
-  ),
-);
+  );
+}
 
 ToggleGroup.displayName = 'ToggleGroup';
