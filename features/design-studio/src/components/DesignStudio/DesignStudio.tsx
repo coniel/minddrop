@@ -7,13 +7,12 @@ import {
 import { Button, Panel, Toolbar } from '@minddrop/ui-primitives';
 import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
+import { FlatRootDesignElement } from '../../types';
 import { AvailableProperties } from '../AvailableProperties';
 import { ElementStyleEditor } from '../ElementStyleEditor';
 import { ElementsTree } from '../ElementsTree';
-import { DesignStudioElement } from '../design-elements';
-import './DesignStudio.css';
-import { FlatRootDesignElement } from '../../types';
 import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
+import './DesignStudio.css';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
@@ -61,7 +60,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         <Toolbar>
           {backEvent && (
             <Button
-              variant="text"
+              variant="ghost"
               startIcon="chevron-left"
               label={backButtonLabel || 'actions.back'}
               onClick={handleClickBack}

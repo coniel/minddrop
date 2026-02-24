@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { TextTransform, textTransforms } from '@minddrop/designs';
-import { ToggleGroup, ToggleGroupButton } from '@minddrop/ui-primitives';
+import { RadioToggleGroup, Toggle, ToggleGroup } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
   useElementStyle,
@@ -22,14 +22,14 @@ export const TextTransformToggle = ({
   );
 
   return (
-    <ToggleGroup value={textTransform} onValueChange={handleSelect}>
+    <RadioToggleGroup value={textTransform} onValueChange={handleSelect}>
       {textTransforms.map((transform) => (
-        <ToggleGroupButton
+        <Toggle
           key={transform.value}
           tooltipDescription={transform.label}
           {...transform}
         />
       ))}
-    </ToggleGroup>
+    </RadioToggleGroup>
   );
 };

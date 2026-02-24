@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { TextAlign, textAligns } from '@minddrop/designs';
-import { ToggleGroup, ToggleGroupButton } from '@minddrop/ui-primitives';
+import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
   useElementStyle,
@@ -19,14 +19,10 @@ export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
   );
 
   return (
-    <ToggleGroup value={textAlign} onValueChange={handleSelect}>
+    <RadioToggleGroup size="md" value={textAlign} onValueChange={handleSelect}>
       {textAligns.map((align) => (
-        <ToggleGroupButton
-          key={align.value}
-          tooltipDescription={align.label}
-          {...align}
-        />
+        <Toggle key={align.value} tooltipDescription={align.label} {...align} />
       ))}
-    </ToggleGroup>
+    </RadioToggleGroup>
   );
 };

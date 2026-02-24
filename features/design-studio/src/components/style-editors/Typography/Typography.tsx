@@ -1,6 +1,6 @@
 import {
-  Box,
   FieldLabel,
+  FlexItem,
   Group,
   MenuLabel,
   Stack,
@@ -20,27 +20,29 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
   return (
     <div className="typography">
       <MenuLabel label="designs.typography.label" />
-      <Stack gap="sm" px="sm">
-        <FontFamilySelect elementId={elementId} />
-        <Group gap="xs">
-          <Box flex={1}>
-            <FontWeightSelect elementId={elementId} />
-          </Box>
-          <ItalicToggle elementId={elementId} />
-          <UnderlineToggle elementId={elementId} />
-        </Group>
-        <Stack gap="xs">
+      <Stack gap={3}>
+        <Stack gap={1}>
+          <FontFamilySelect elementId={elementId} />
+          <Group gap={1}>
+            <FlexItem grow={1}>
+              <FontWeightSelect elementId={elementId} />
+            </FlexItem>
+            <ItalicToggle elementId={elementId} />
+            <UnderlineToggle elementId={elementId} />
+          </Group>
+        </Stack>
+        <Stack gap={1}>
           <FieldLabel
             label="designs.typography.text-align.label"
-            size="tiny"
+            size="xs"
             color="muted"
           />
           <TextAlignToggle elementId={elementId} />
         </Stack>
-        <Stack gap="xs">
+        <Stack gap={1}>
           <FieldLabel
             label="designs.typography.text-transform.label"
-            size="tiny"
+            size="xs"
             color="muted"
           />
           <TextTransformToggle elementId={elementId} />

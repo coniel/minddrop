@@ -27,6 +27,7 @@ export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
 
   return (
     <Select
+      variant="subtle"
       value={fontFamily}
       onValueChange={handleChange}
       options={fonts.map((font) => ({
@@ -37,7 +38,7 @@ export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
       {fonts.map((font) => (
         <SelectItem
           key={font.value}
-          className={font.value}
+          className={`font-family-${font.value}`}
           label={font.label}
           value={font.value}
         />

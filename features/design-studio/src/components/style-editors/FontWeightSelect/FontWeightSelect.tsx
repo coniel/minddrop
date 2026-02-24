@@ -28,6 +28,7 @@ export const FontWeightSelect = ({ elementId }: FontWeightSelectProps) => {
 
   return (
     <Select
+      variant="subtle"
       value={fontWeight}
       onValueChange={handleChange}
       options={fontWeights.map((font) => ({
