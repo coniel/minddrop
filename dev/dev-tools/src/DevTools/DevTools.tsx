@@ -1,18 +1,22 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
   IconButton,
   MenuGroup,
   MenuItem,
   MenuLabel,
+  Separator,
   Text,
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
 import { DevToolsPlaceholder } from '../DevToolsPlaceholder';
-import { LogsPanel } from '../LogsPanel';
-import { ActiveSection, ActiveStory } from '../types';
+import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
+import { ActiveSection, ActiveStory, LogEntry, SavedLog } from '../types';
 import {
+  clearSavedLogsByFile,
   installConsoleInterceptors,
+  loadSavedLogs,
   logsReducer,
+  persistSavedLog,
   setLogListener,
 } from '../utils';
 import './DevTools.css';
@@ -25,6 +29,9 @@ export const DevTools: React.FC = () => {
     itemIndex: 0,
   });
   const [logs, dispatch] = useReducer(logsReducer, []);
+  const [savedLogs, setSavedLogs] = useState<SavedLog[]>(() => loadSavedLogs());
+  // 'live' shows the console; any other string is a filename showing saved logs.
+  const [logsView, setLogsView] = useState<string>('live');
 
   // Install console interceptors on first render
   useEffect(() => {
@@ -67,10 +74,31 @@ export const DevTools: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [visible]);
 
+  const onSave = useCallback((entry: LogEntry) => {
+    const log: SavedLog = {
+      id: Date.now(),
+      args: entry.args,
+      file: entry.source?.file ?? 'unknown',
+      line: entry.source?.line ?? 0,
+      timestamp: entry.timestamp,
+    };
+    persistSavedLog(log);
+    setSavedLogs(loadSavedLogs());
+  }, []);
+
+  const handleClearFile = useCallback((file: string) => {
+    clearSavedLogsByFile(file);
+    setSavedLogs((prev) => prev.filter((l) => l.file !== file));
+    setLogsView((v) => (v === file ? 'live' : v));
+  }, []);
+
   if (!visible) return null;
 
   const group = stories[activeStory.groupIndex];
   const ActiveStoryComponent = group?.items[activeStory.itemIndex]?.component;
+
+  const savedFiles = [...new Set(savedLogs.map((l) => l.file))];
+  const savedLogsForView = savedLogs.filter((l) => l.file === logsView);
 
   return (
     <div className="dev-tools-overlay">
@@ -118,6 +146,46 @@ export const DevTools: React.FC = () => {
           </div>
 
           <nav className="dev-tools-nav">
+            {activeSection === 'logs' && (
+              <>
+                <MenuGroup padded>
+                  <MenuItem
+                    label="Console"
+                    icon="terminal"
+                    size="compact"
+                    active={logsView === 'live'}
+                    onClick={() => setLogsView('live')}
+                  />
+                </MenuGroup>
+
+                {savedFiles.length > 0 && (
+                  <>
+                    <Separator margin="small" />
+                    <MenuGroup padded>
+                      <MenuLabel label="Saved" />
+                      {savedFiles.map((file) => (
+                        <MenuItem
+                          key={file}
+                          label={file}
+                          size="compact"
+                          active={logsView === file}
+                          onClick={() => setLogsView(file)}
+                          actions={
+                            <IconButton
+                              icon="x"
+                              label={`Clear ${file}`}
+                              size="sm"
+                              onClick={() => handleClearFile(file)}
+                            />
+                          }
+                        />
+                      ))}
+                    </MenuGroup>
+                  </>
+                )}
+              </>
+            )}
+
             {activeSection === 'stories' && (
               <>
                 {stories.map((group, groupIndex) => (
@@ -168,11 +236,16 @@ export const DevTools: React.FC = () => {
             />
           )}
 
-          {activeSection === 'logs' && (
+          {activeSection === 'logs' && logsView === 'live' && (
             <LogsPanel
               logs={logs}
               onClear={() => dispatch({ type: 'clear' })}
+              onSave={onSave}
             />
+          )}
+
+          {activeSection === 'logs' && logsView !== 'live' && (
+            <SavedLogsPanel logs={savedLogsForView} />
           )}
         </main>
       </div>

@@ -1,0 +1,14 @@
+.dev-tools-saved-logs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dev-tools-saved-log-meta {
+  flex-shrink: 0;
+  width: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 1px;
+}

@@ -8,6 +8,14 @@ export interface LogEntry {
   source?: { file: string; line: number };
 }
 
+export interface SavedLog {
+  id: number;
+  args: unknown[];
+  file: string;
+  line: number;
+  timestamp: number;
+}
+
 export type ActiveSection = 'stories' | 'state' | 'events' | 'logs';
 
 export interface ActiveStory {

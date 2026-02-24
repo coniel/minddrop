@@ -51,10 +51,43 @@
   word-break: break-all;
 }
 
-.dev-tools-log-source {
+.dev-tools-log-end {
   flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
   padding-top: 2px;
+  min-width: 5rem;
+}
+
+.dev-tools-log-source {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
   opacity: 0.6;
+  white-space: nowrap;
+}
+
+.dev-tools-log-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 2px;
+  background-color: inherit;
+  border-radius: var(--radius-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.dev-tools-log-entry:hover .dev-tools-log-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dev-tools-log-save-btn.icon-button-active .icon {
+  color: lch(75 80 75);
 }
 
 /* Log level colors */

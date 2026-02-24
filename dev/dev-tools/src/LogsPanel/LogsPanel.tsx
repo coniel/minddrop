@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Text } from '@minddrop/ui-primitives';
+import { IconButton, Text } from '@minddrop/ui-primitives';
 import { LogEntry } from '../types';
 import { formatArg } from '../utils';
 import { ForceSignal, JsonTree } from './JsonTree';
@@ -8,24 +8,29 @@ import './LogsPanel.css';
 export interface LogsPanelProps {
   logs: LogEntry[];
   onClear: () => void;
+  onSave: (entry: LogEntry) => void;
 }
 
 function isComplex(arg: unknown): arg is object {
   return arg !== null && typeof arg === 'object' && !(arg instanceof Error);
 }
 
-export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
+export const LogsPanel: React.FC<LogsPanelProps> = ({
+  logs,
+  onClear,
+  onSave,
+}) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [globalCollapse, setGlobalCollapse] = useState<ForceSignal | null>(null);
   const [entryForces, setEntryForces] = useState<Map<number, ForceSignal>>(
     new Map(),
   );
+  const [savedEntryIds, setSavedEntryIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [logs]);
 
-  // 'r' collapses all trees. Only active while this panel is mounted (logs section).
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -49,7 +54,6 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
       e.preventDefault();
       setEntryForces((prev) => {
         const current = prev.get(entryId);
-        // Toggle: expand if not currently forced open, otherwise collapse.
         const newOpen = !(current?.open ?? false);
         return new Map(prev).set(entryId, { open: newOpen, id: Date.now() });
       });
@@ -57,12 +61,24 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
     [],
   );
 
+  const handleCopy = useCallback((entry: LogEntry) => {
+    const text = entry.args.map(formatArg).join(' ');
+    navigator.clipboard.writeText(text);
+  }, []);
+
+  const handleSave = useCallback(
+    (entry: LogEntry) => {
+      onSave(entry);
+      setSavedEntryIds((prev) => new Set(prev).add(entry.id));
+    },
+    [onSave],
+  );
+
   function getEffectiveForce(entryId: number): ForceSignal | null {
     const entryForce = entryForces.get(entryId) ?? null;
     if (!globalCollapse && !entryForce) return null;
-    if (globalCollapse && (!entryForce || globalCollapse.id > entryForce.id)) {
+    if (globalCollapse && (!entryForce || globalCollapse.id > entryForce.id))
       return globalCollapse;
-    }
     return entryForce;
   }
 
@@ -94,6 +110,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
         {logs.map((entry) => {
           const hasComplex = entry.args.some(isComplex);
           const force = getEffectiveForce(entry.id);
+          const saved = savedEntryIds.has(entry.id);
 
           return (
             <div
@@ -128,11 +145,29 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({ logs, onClear }) => {
                 )}
               </div>
 
-              {entry.source && (
-                <Text mono size="xs" color="subtle" className="dev-tools-log-source">
-                  {entry.source.file}:{entry.source.line}
-                </Text>
-              )}
+              <div className="dev-tools-log-end">
+                {entry.source && (
+                  <span className="dev-tools-log-source">
+                    {entry.source.file}:{entry.source.line}
+                  </span>
+                )}
+                <div className="dev-tools-log-actions">
+                  <IconButton
+                    icon="copy"
+                    label="Copy log"
+                    size="sm"
+                    onClick={() => handleCopy(entry)}
+                  />
+                  <IconButton
+                    icon="bookmark"
+                    label={saved ? 'Saved' : 'Save log'}
+                    size="sm"
+                    active={saved}
+                    className="dev-tools-log-save-btn"
+                    onClick={() => handleSave(entry)}
+                  />
+                </div>
+              </div>
             </div>
           );
         })}
