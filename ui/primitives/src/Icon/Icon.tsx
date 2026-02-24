@@ -1,5 +1,5 @@
 import { UiIconName, useIcons } from '@minddrop/icons';
-import { TextColor } from '../types';
+import { TextColor } from '../Text';
 import { mapPropsToClasses } from '../utils';
 import './Icon.css';
 

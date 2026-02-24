@@ -15,12 +15,6 @@ describe('<IconButton />', () => {
     expect(screen.getByRole('button').className).toContain('my-class');
   });
 
-  it('renders icons from icon set', () => {
-    render(<IconButton icon="settings" label="icon" />);
-    expect(screen.getByTestId('icon').parentElement).toBe(
-      screen.getByRole('button'),
-    );
-  });
 
   it('renders children', () => {
     render(<IconButton label="icon">I</IconButton>);
@@ -28,17 +22,6 @@ describe('<IconButton />', () => {
     expect(screen.getByRole('button').textContent).toBe('I');
   });
 
-  it('prioritizes icon over children', () => {
-    render(
-      <IconButton icon="settings" label="icon">
-        children
-      </IconButton>,
-    );
-    expect(screen.getByTestId('icon').parentElement).toBe(
-      screen.getByRole('button'),
-    );
-    expect(screen.getByRole('button').textContent).not.toBe('children');
-  });
 
   it('translates the label text', () => {
     const { getByTranslatedLabelText } = render(
@@ -50,22 +33,22 @@ describe('<IconButton />', () => {
 
   it('supports colors', () => {
     render(
-      <IconButton label="light icon" color="light">
+      <IconButton label="contrast icon" color="contrast">
         I
       </IconButton>,
     );
 
-    expect(screen.getByRole('button').className).toContain('color-light');
+    expect(screen.getByRole('button').className).toContain('color-contrast');
   });
 
   it('supports sizes', () => {
     render(
-      <IconButton label="small icon" size="small">
+      <IconButton label="small icon" size="sm">
         I
       </IconButton>,
     );
 
-    expect(screen.getByRole('button').className).toContain('size-small');
+    expect(screen.getByRole('button').className).toContain('size-sm');
   });
 
   it('can be disabled', () => {

@@ -277,7 +277,7 @@ export const TextFieldStories = () => (
               variant="ghost"
               placeholder="Untitled"
               defaultValue="My Document"
-              textSize="2xl"
+              textSize="xl"
               weight="bold"
             />
           </div>

@@ -1,9 +1,8 @@
 import React from 'react';
-import { InteractiveMenuItemProps } from '../InteractiveMenuItem';
+import { MenuItemRendererProps } from '../MenuItemRenderer';
 import { ContentColor } from './ContentColor.types';
 
-export interface MenuItemConfig
-  extends Omit<InteractiveMenuItemProps, 'MenuItemComponent'> {
+export interface MenuItemConfig extends MenuItemRendererProps {
   type: 'menu-item';
 }
 
@@ -22,7 +21,7 @@ export interface MenuSeparatorConfig {
 
 export interface SubmenuTriggerItemProps
   extends Pick<
-    InteractiveMenuItemProps,
+    MenuItemRendererProps,
     'label' | 'icon' | 'disabled' | 'textValue'
   > {
   /**
@@ -58,7 +57,7 @@ export interface MenuColorSelectionItemConfig {
    *
    * @param event The event.
    */
-  onSelect?: InteractiveMenuItemProps['onClick'];
+  onSelect?: MenuItemRendererProps['onClick'];
 }
 
 export type MenuColorSelectionItemProps = Omit<

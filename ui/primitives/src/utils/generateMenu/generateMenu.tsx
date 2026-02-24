@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
+import { MenuItemRendererProps } from '../../MenuItemRenderer';
 import {
   MenuColorSelectionItemConfig,
   MenuColorSelectionItemProps,
@@ -8,7 +8,7 @@ import {
 } from '../../types';
 
 export interface MenuComponents {
-  Item: React.ElementType<InteractiveMenuItemProps>;
+  Item: React.ElementType<MenuItemRendererProps>;
   Label: React.ElementType;
   Separator: React.ElementType;
   Submenu: React.ElementType;
@@ -69,7 +69,7 @@ export function generateMenu(
 
       return [
         ...items,
-        <Item key={index} {...(props as InteractiveMenuItemProps)} />,
+        <Item key={index} {...(props as MenuItemRendererProps)} />,
       ];
     }
 

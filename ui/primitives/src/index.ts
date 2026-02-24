@@ -11,8 +11,6 @@ export * from './Icon';
 export * from './IconButton';
 export * from './IconPicker';
 export * from './IconRenderer';
-export * from './InteractiveMenuItem';
-export * from './InvisibleTextField';
 export * from './KeyboardShortcut';
 export * from './Layout';
 export * from './Menu';

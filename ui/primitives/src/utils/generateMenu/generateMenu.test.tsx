@@ -1,7 +1,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@minddrop/test-utils';
-import { InteractiveMenuItemProps } from '../../InteractiveMenuItem';
+import { MenuItemRendererProps } from '../../MenuItemRenderer';
 import {
   MenuColorSelectionItemConfig,
   MenuColorSelectionItemProps,
@@ -12,7 +12,7 @@ import {
 } from '../../types';
 import { generateMenu } from './generateMenu';
 
-const Item: React.FC<InteractiveMenuItemProps> = ({ label }) => (
+const Item: React.FC<MenuItemRendererProps> = ({ label }) => (
   <div data-testid="item">{label}</div>
 );
 

@@ -1,4 +1,4 @@
-import { MenuRoot } from '@base-ui/react/menu/root/MenuRoot';
+import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { DropdownMenu, DropdownMenuProps } from '../DropdownMenu';
 import { useMenuItemContext } from './MenuItem';
@@ -8,7 +8,7 @@ export const MenuItemDropdownMenu: React.FC<DropdownMenuProps> = (props) => {
 
   function handleOpenChange(
     open: boolean,
-    eventDetails: MenuRoot.ChangeEventDetails,
+    eventDetails: Menu.Root.ChangeEventDetails,
   ) {
     if (props.onOpenChange) {
       props.onOpenChange(open, eventDetails);

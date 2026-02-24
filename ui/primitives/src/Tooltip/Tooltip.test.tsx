@@ -38,15 +38,15 @@ describe('<Tooltip />', () => {
   });
 
   it('renders non-string title as is', async () => {
-    const { getAllByText } = render(
+    render(
       <TooltipProvider>
-        <Tooltip open title={<span>test</span>}>
+        <Tooltip open title={<span>custom-title-content</span>}>
           <button type="button">tooltip</button>
         </Tooltip>
       </TooltipProvider>,
     );
 
-    getAllByText('test');
+    screen.getAllByText('custom-title-content');
   });
 
   it('translates string description', async () => {
@@ -62,15 +62,19 @@ describe('<Tooltip />', () => {
   });
 
   it('renders non-string description as is', async () => {
-    const { getAllByText } = render(
+    render(
       <TooltipProvider>
-        <Tooltip open title={<span />} description={<span>test</span>}>
+        <Tooltip
+          open
+          title={<span />}
+          description={<span>custom-desc-content</span>}
+        >
           <button type="button">tooltip</button>
         </Tooltip>
       </TooltipProvider>,
     );
 
-    getAllByText('test');
+    screen.getAllByText('custom-desc-content');
   });
 
   it('opens on hover', async () => {

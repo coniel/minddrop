@@ -44,10 +44,10 @@ export const FieldLabel: React.FC<FieldLabelProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className={propsToClass('field-label', { className })} {...other}>
+    <Field.Label className={propsToClass('field-label', { className })} {...other}>
       <Text size={size} color={color} weight="medium">
         {label ? t(label) : children}
       </Text>
-    </div>
+    </Field.Label>
   );
 };

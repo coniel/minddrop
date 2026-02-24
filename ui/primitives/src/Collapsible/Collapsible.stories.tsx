@@ -180,13 +180,13 @@ export const CollapsibleStories = () => {
                 />
                 <CollapsibleContent>
                   <Stack gap={1} style={{ paddingTop: 'var(--space-1)' }}>
-                    <Button variant="ghost" justify="start" size="md">
+                    <Button variant="ghost"size="md">
                       Alpha
                     </Button>
-                    <Button variant="subtle" justify="start" size="md">
+                    <Button variant="subtle"size="md">
                       Beta
                     </Button>
-                    <Button variant="ghost" justify="start" size="md">
+                    <Button variant="ghost"size="md">
                       Gamma
                     </Button>
                   </Stack>

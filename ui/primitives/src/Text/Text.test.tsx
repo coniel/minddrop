@@ -18,21 +18,21 @@ describe('<Text />', () => {
   });
 
   it('supports colors', () => {
-    render(<Text color="light">content</Text>);
+    render(<Text color="muted">content</Text>);
 
-    expect(screen.getByText('content').className).toContain('color-light');
+    expect(screen.getByText('content').className).toContain('color-muted');
   });
 
   it('supports sizes', () => {
-    render(<Text size="large">content</Text>);
+    render(<Text size="lg">content</Text>);
 
-    expect(screen.getByText('content').className).toContain('size-large');
+    expect(screen.getByText('content').className).toContain('size-lg');
   });
 
   it('supports weights', () => {
-    render(<Text weight="light">content</Text>);
+    render(<Text weight="bold">content</Text>);
 
-    expect(screen.getByText('content').className).toContain('weight-light');
+    expect(screen.getByText('content').className).toContain('weight-bold');
   });
 
   it('supports custom components', () => {

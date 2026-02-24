@@ -2,7 +2,7 @@ import { Field } from '@base-ui/react/field';
 import { Input } from '@base-ui/react/input';
 import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { TextColor, TextSize, TextWeight } from '../../types';
+import { TextColor, TextSize, TextWeight } from '../../Text';
 import { propsToClass } from '../../utils';
 import './TextField.css';
 

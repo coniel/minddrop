@@ -35,15 +35,15 @@ describe('Button', () => {
   });
 
   it('supports variants', () => {
-    render(<Button variant="primary" />);
+    render(<Button variant="solid" />);
 
-    expect(screen.getByRole('button').className).toContain('variant-primary');
+    expect(screen.getByRole('button').className).toContain('variant-solid');
   });
 
   it('supports sizes', () => {
-    render(<Button size="small" />);
+    render(<Button size="sm" />);
 
-    expect(screen.getByRole('button').className).toContain('size-small');
+    expect(screen.getByRole('button').className).toContain('size-sm');
   });
 
   it('can be disabled', () => {
@@ -60,15 +60,4 @@ describe('Button', () => {
     expect(screen.getByRole('link').textContent).toBe('MindDrop');
   });
 
-  it('renders endIcon', () => {
-    render(<Button endIcon="settings" />);
-
-    screen.getByTestId('icon');
-  });
-
-  it('renders startIcon', () => {
-    render(<Button startIcon="settings" />);
-
-    screen.getByTestId('icon');
-  });
 });

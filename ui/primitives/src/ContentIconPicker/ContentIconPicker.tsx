@@ -21,7 +21,7 @@ import {
   unminifyContentIcon,
 } from './utils';
 import './ContentIconPicker.css';
-import { InvisibleTextField } from '../InvisibleTextField';
+import { TextField } from '../fields/TextField';
 
 export interface ContentIconPickerProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
@@ -170,19 +170,17 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         ))}
       </Toolbar>
       <Toolbar>
-        <InvisibleTextField
-          autoFocus
-          label={t('filter')}
+        <TextField
+          variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
-          autoCorrect="off"
-          onChange={(event) => setQuery(event.currentTarget.value)}
+          onValueChange={(value) => setQuery(value)}
         />
         <Tooltip title={t('random')}>
           <IconButton
             icon="shuffle"
             label="random"
-            color="light"
+            color="contrast"
             onClick={handleClickRandom}
           />
         </Tooltip>

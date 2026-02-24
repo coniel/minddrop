@@ -4,7 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
 import { mapPropsToClasses, useToggle } from '@minddrop/utils';
 import { IconButton } from '../IconButton';
-import { InvisibleTextField } from '../InvisibleTextField';
+import { TextField } from '../fields/TextField';
 import { MenuLabel } from '../Menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { Toolbar } from '../Toolbar';
@@ -147,19 +147,17 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         ))}
       </Toolbar>
       <Toolbar>
-        <InvisibleTextField
-          autoFocus
-          label={t('filter')}
+        <TextField
+          variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
-          autoCorrect="off"
-          onChange={(event) => setQuery(event.currentTarget.value)}
+          onValueChange={(value) => setQuery(value)}
         />
         <Tooltip title={t('random')}>
           <IconButton
             icon="shuffle"
             label="random"
-            color="light"
+            color="contrast"
             onClick={handleClickRandom}
           />
         </Tooltip>

@@ -34,7 +34,7 @@ const COUNTRIES = {
 
 export const ComboboxStories = () => {
   const [value, setValue] = useState<string[]>([]);
-  const [singleValue, setSingleValue] = useState<string[]>([]);
+  const [singleValue, setSingleValue] = useState<string | null>(null);
 
   return (
     <Story title="Combobox">
@@ -246,7 +246,7 @@ export const ComboboxStories = () => {
         description="Manage value externally via value and onValueChange."
       >
         <StoryRow>
-          <StoryItem label={`value: ${singleValue[0] ?? 'none'}`}>
+          <StoryItem label={`value: ${singleValue ?? 'none'}`}>
             <div style={{ width: 240 }}>
               <Combobox
                 value={singleValue}
