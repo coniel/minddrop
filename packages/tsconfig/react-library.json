@@ -6,6 +6,7 @@
     "jsx": "react-jsx",
     "lib": ["ES2015", "esnext", "dom"],
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "target": "es6"
   }
 }
