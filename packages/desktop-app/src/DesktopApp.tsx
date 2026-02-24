@@ -15,7 +15,6 @@ import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignStudioFeature } from '@minddrop/feature-design-studio';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
-import { ThemeProvider } from '@minddrop/theme';
 import {
   ConfirmationDialog,
   Panel,
@@ -24,6 +23,7 @@ import {
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
+import { DevTools } from './DevTools';
 
 export const DesktopApp: React.FC = () => {
   const defaultEmojiSkinTone = useDefaultEmojiSkinTone();
@@ -52,29 +52,28 @@ export const DesktopApp: React.FC = () => {
   );
 
   return (
-    <ThemeProvider>
-      <TooltipProvider delay={1000} timeout={500}>
-        <IconsProvider
-          defaultEmojiSkinTone={defaultEmojiSkinTone}
-          onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
-        >
-          <MindDropApiProvider>
-            <div className="app">
-              <Panel className="toolbar-panel"></Panel>
-              <div className="content-panels">
-                {showSidebar && <AppSidebar />}
-                <MainContent />
-                <RightPanel />
-              </div>
+    <TooltipProvider delay={1000} timeout={500}>
+      <IconsProvider
+        defaultEmojiSkinTone={defaultEmojiSkinTone}
+        onDefaultEmojiSkinToneChange={handleChangeDefaultEmojiSkinTone}
+      >
+        <MindDropApiProvider>
+          <div className="app">
+            <Panel className="toolbar-panel"></Panel>
+            <div className="content-panels">
+              {showSidebar && <AppSidebar />}
+              <MainContent />
+              <RightPanel />
             </div>
-            <DatabasesFeature />
-            <ConfirmationDialogFeature />
-            <ShowWindowOnRendered />
-            <DesignStudioFeature />
-          </MindDropApiProvider>
-        </IconsProvider>
-      </TooltipProvider>
-    </ThemeProvider>
+          </div>
+          <DatabasesFeature />
+          <ConfirmationDialogFeature />
+          <ShowWindowOnRendered />
+          <DesignStudioFeature />
+          <DevTools />
+        </MindDropApiProvider>
+      </IconsProvider>
+    </TooltipProvider>
   );
 };
 

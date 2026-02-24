@@ -7,9 +7,10 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
+import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
-import { Theme, ThemeAppearance, onRun as onRunTheme } from '@minddrop/theme';
+import { Theme, ThemeAppearance } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { Designs } from '../../../designs/src';
@@ -63,14 +64,14 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // const cancelConfigsWatcher = await watchAppConfigFiles();
 
   // Watch for theme appearance changes
-  Theme.addEventListener(
-    'theme:appearance:set-value',
+  Events.addListener(
+    Theme.events.SetAppearance,
     'app:set-body-theme-appearance-class',
     setThemeAppearanceClassOnBody,
   );
 
-  // Run core extensions
-  onRunTheme();
+  // Initialize theme
+  Theme.initialize();
 
   // Initialize extensions
   await initializeExtensions([]);
@@ -79,11 +80,11 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
     // Remove config files watcher
     // cancelConfigsWatcher();
 
+    console.log('cleanupFn');
     // Remove theme appearance listener
-    Theme.removeEventListener(
-      'theme:appearance:set-value',
+    Events.removeListener(
+      Theme.events.SetAppearance,
       'app:set-body-theme-appearance-class',
-      setThemeAppearanceClassOnBody,
     );
   };
 
@@ -95,6 +96,8 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
  * whenever the theme appearance value is changes.
  */
 function setThemeAppearanceClassOnBody({ data }: { data: ThemeAppearance }) {
+  console.log('setThemeAppearanceClassOnBody', data);
+
   if (data === 'dark') {
     document.body.classList.remove('light-theme');
     document.body.classList.add('dark-theme');
