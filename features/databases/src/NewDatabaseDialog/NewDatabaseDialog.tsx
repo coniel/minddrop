@@ -160,6 +160,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
             <MenuLabel label="databases.form.labels.templates" />
             {databaseTemplates.map((template) => (
               <MenuItem
+                danger
                 key={template.name}
                 onClick={() => handleSelectTemplate(template)}
                 active={
@@ -175,7 +176,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
           <div className="header">
             <DialogClose
               render={
-                <IconButton label="actions.cancel" icon="x" color="light" />
+                <IconButton label="actions.cancel" icon="x" color="muted" />
               }
             />
           </div>
@@ -183,6 +184,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
             <div className="get-started">
               <Heading text="databases.form.getStarted.title" />
               <Text
+                size="base"
                 paragraph
                 color="muted"
                 text="databases.form.getStarted.template"
@@ -209,7 +211,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                     >
                       <IconButton
                         label="databases.form.icon.label"
-                        size="large"
+                        size="lg"
                         variant="filled"
                       >
                         <ContentIcon icon={icon} />
@@ -230,7 +232,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                   <Subheading text="databases.form.properties.title" />
                   <Text
                     paragraph
-                    size="small"
+                    size="sm"
                     color="muted"
                     text="databases.form.properties.description"
                   />
@@ -248,12 +250,13 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
           <div className="footer">
             <Button
               label="actions.cancel"
-              variant="contained"
+              variant="ghost"
               onClick={closeDialog}
             />
             <Button
               label="databases.form.actions.create"
-              variant="primary"
+              variant="solid"
+              color="primary"
               onClick={handleCreate}
             />
           </div>

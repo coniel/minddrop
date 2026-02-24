@@ -41,9 +41,9 @@ export const DatabasesSidebarMenu: React.FC = () => {
                 label="databases.labels.databases"
                 actions={
                   <Button
-                    size="small"
+                    size="sm"
                     label="databases.actions.new"
-                    variant="text"
+                    variant="subtle"
                     startIcon="plus"
                     onClick={handleAddDatabase}
                   />
