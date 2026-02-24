@@ -38,7 +38,9 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
   if (icon.type === 'emoji') {
     return (
       <span
-        className={['content-icon', 'emoji', className].filter(Boolean).join(' ')}
+        className={['icon content-icon', 'emoji', className]
+          .filter(Boolean)
+          .join(' ')}
         data-testid="content-icon"
       >
         {icon.icon}
@@ -85,7 +87,7 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
     <IconComponent
       data-testid="content-icon"
       name={name}
-      className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
+      className={`icon icon-set-icon ${propsToClass('content-icon', { className, color })}`}
       {...other}
     />
   );

@@ -161,7 +161,6 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
             <MenuLabel label="databases.form.labels.templates" />
             {databaseTemplates.map((template) => (
               <MenuItem
-                danger
                 key={template.name}
                 onClick={() => handleSelectTemplate(template)}
                 active={

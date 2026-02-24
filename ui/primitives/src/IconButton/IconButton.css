@@ -25,10 +25,11 @@
     width: 1rem;
     height: 1rem;
     flex-shrink: 0;
+    color: var(--text-muted);
   }
 
   &:disabled,
-  &[aria-disabled="true"] {
+  &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.45;
   }
@@ -39,7 +40,6 @@
   }
 }
 
-
 /* ------------------------------------------------------------
    SIZES
    ------------------------------------------------------------ */
@@ -48,32 +48,45 @@
   width: 1.5rem;
   height: 1.5rem;
 
-  .icon { width: 0.875rem; height: 0.875rem; }
+  .icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
 }
 
 .icon-button-size-md {
   width: 1.75rem;
   height: 1.75rem;
 
-  .icon { width: 1rem; height: 1rem; }
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
 .icon-button-size-lg {
   width: 2.25rem;
   height: 2.25rem;
 
-  .icon { width: 1.125rem; height: 1.125rem; }
+  .icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 }
-
 
 /* ------------------------------------------------------------
    COLORS
    ------------------------------------------------------------ */
 
-.icon-button-color-neutral .icon { color: var(--text-muted); }
-.icon-button-color-muted .icon   { color: var(--text-subtle); }
-.icon-button-color-contrast .icon { color: var(--text-on-solid); }
-
+.icon-button-color-neutral .icon {
+  color: var(--text-muted);
+}
+.icon-button-color-muted .icon {
+  color: var(--text-subtle);
+}
+.icon-button-color-contrast .icon {
+  color: var(--text-on-solid);
+}
 
 /* ------------------------------------------------------------
    VARIANT: GHOST
@@ -84,17 +97,22 @@
     background-color: var(--surface-neutral-hover);
     transition: none;
 
-    .icon { color: var(--text-regular); }
+    .icon {
+      color: var(--text-regular);
+    }
   }
 
-  &:active { background-color: var(--surface-neutral-active); }
+  &:active {
+    background-color: var(--surface-neutral-active);
+  }
 
   &.icon-button-color-contrast {
     &:hover .icon,
-    &:active .icon { color: var(--text-regular); }
+    &:active .icon {
+      color: var(--text-regular);
+    }
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: SUBTLE
@@ -107,17 +125,20 @@
     background-color: var(--surface-neutral);
     transition: none;
 
-    .icon { color: var(--text-regular); }
+    .icon {
+      color: var(--text-regular);
+    }
   }
 
   &:active,
   &.icon-button-active {
     background-color: var(--surface-neutral-active);
 
-    .icon { color: var(--text-regular); }
+    .icon {
+      color: var(--text-regular);
+    }
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: OUTLINE
@@ -131,12 +152,15 @@
     border-color: var(--border-strong);
     transition: none;
 
-    .icon { color: var(--text-regular); }
+    .icon {
+      color: var(--text-regular);
+    }
   }
 
-  &:active { background-color: var(--surface-neutral-hover); }
+  &:active {
+    background-color: var(--surface-neutral-hover);
+  }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: FILLED
@@ -152,7 +176,9 @@
     border-color: var(--border-strong);
     transition: none;
 
-    .icon { color: var(--text-regular); }
+    .icon {
+      color: var(--text-regular);
+    }
   }
 
   &:active,
