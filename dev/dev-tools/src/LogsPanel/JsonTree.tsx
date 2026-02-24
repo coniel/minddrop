@@ -1,23 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './JsonTree.css';
+
+export interface ForceSignal {
+  open: boolean;
+  id: number;
+}
 
 interface JsonNodeProps {
   value: unknown;
   keyName?: string;
   depth: number;
   isLast: boolean;
+  externalForce?: ForceSignal | null;
 }
 
-const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) => {
+const JsonNode: React.FC<JsonNodeProps> = ({
+  value,
+  keyName,
+  depth,
+  isLast,
+  externalForce,
+}) => {
   const [open, setOpen] = useState(depth === 0);
+  const [childForce, setChildForce] = useState<ForceSignal | null>(null);
+  const lastAppliedId = useRef<number>(-1);
+
+  // Apply external force (from parent right-click or global collapse) and
+  // cascade to all children via childForce.
+  useEffect(() => {
+    if (!externalForce || externalForce.id === lastAppliedId.current) return;
+    lastAppliedId.current = externalForce.id;
+    setOpen(externalForce.open);
+    setChildForce(externalForce);
+  }, [externalForce]);
 
   const comma = !isLast ? <span className="json-comma">,</span> : null;
 
   if (Array.isArray(value)) {
     const toggle = () => setOpen((o) => !o);
+    const handleContextMenu = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const newOpen = !open;
+      setOpen(newOpen);
+      setChildForce({ open: newOpen, id: Date.now() });
+    };
+
     return (
       <div className="json-node">
-        <div className="json-row">
+        <div className="json-row" onContextMenu={handleContextMenu}>
           <button className="json-toggle" onClick={toggle}>
             {open ? '▾' : '▸'}
           </button>
@@ -30,7 +61,9 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
             <span className="json-bracket">[</span>
           ) : (
             <>
-              <span className="json-preview">Array({value.length})</span>
+              <span className="json-preview json-preview-toggle" onClick={toggle}>
+                Array({value.length})
+              </span>
               {comma}
             </>
           )}
@@ -44,6 +77,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
                   value={item}
                   depth={depth + 1}
                   isLast={i === value.length - 1}
+                  externalForce={childForce}
                 />
               ))}
             </div>
@@ -72,9 +106,17 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
   if (value !== null && typeof value === 'object') {
     const entries = Object.entries(value as Record<string, unknown>);
     const toggle = () => setOpen((o) => !o);
+    const handleContextMenu = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const newOpen = !open;
+      setOpen(newOpen);
+      setChildForce({ open: newOpen, id: Date.now() });
+    };
+
     return (
       <div className="json-node">
-        <div className="json-row">
+        <div className="json-row" onContextMenu={handleContextMenu}>
           <button className="json-toggle" onClick={toggle}>
             {open ? '▾' : '▸'}
           </button>
@@ -87,7 +129,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
             <span className="json-bracket">{'{'}</span>
           ) : (
             <>
-              <span className="json-preview">
+              <span className="json-preview json-preview-toggle" onClick={toggle}>
                 {'{'}
                 {entries.length} {entries.length === 1 ? 'key' : 'keys'}
                 {'}'}
@@ -106,6 +148,7 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
                   keyName={k}
                   depth={depth + 1}
                   isLast={i === entries.length - 1}
+                  externalForce={childForce}
                 />
               ))}
             </div>
@@ -147,8 +190,16 @@ const JsonNode: React.FC<JsonNodeProps> = ({ value, keyName, depth, isLast }) =>
   );
 };
 
-export const JsonTree: React.FC<{ value: unknown }> = ({ value }) => (
+export const JsonTree: React.FC<{
+  value: unknown;
+  externalForce?: ForceSignal | null;
+}> = ({ value, externalForce }) => (
   <div className="json-tree">
-    <JsonNode value={value} depth={0} isLast={true} />
+    <JsonNode
+      value={value}
+      depth={0}
+      isLast={true}
+      externalForce={externalForce}
+    />
   </div>
 );

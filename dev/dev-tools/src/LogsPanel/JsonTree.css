@@ -32,8 +32,9 @@
 
 /* --- Value type colors --- */
 
-.json-key         { color: var(--text-regular); }
-.json-key-toggle  { cursor: pointer; &:hover { text-decoration: underline; } }
+.json-key            { color: var(--text-regular); }
+.json-key-toggle     { cursor: pointer; &:hover { text-decoration: underline; } }
+.json-preview-toggle { cursor: pointer; &:hover { color: var(--text-muted); } }
 .json-string    { color: var(--text-info); }
 .json-number    { color: var(--text-warning); }
 .json-bool-true { color: var(--text-success); }

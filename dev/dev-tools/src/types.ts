@@ -5,6 +5,7 @@ export interface LogEntry {
   level: LogLevel;
   args: unknown[];
   timestamp: number;
+  source?: { file: string; line: number };
 }
 
 export type ActiveSection = 'stories' | 'state' | 'events' | 'logs';
