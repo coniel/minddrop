@@ -1,5 +1,6 @@
 packages:
   - 'apps/*'
+  - 'dev/*'
   - 'extensions/*'
   - 'features/*'
   - 'packages/*'
