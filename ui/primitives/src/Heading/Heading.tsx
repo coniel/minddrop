@@ -17,7 +17,7 @@ export const Heading: React.FC<HeadingProps> = ({
 }) => {
   return (
     <Text
-      size="large"
+      size="lg"
       weight="bold"
       className={mapPropsToClasses({ className, noMargin }, 'heading')}
       {...other}

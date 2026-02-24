@@ -1,0 +1,282 @@
+/* ============================================================
+   TEXT FIELD
+   Built on Base UI Field and Input primitives.
+   Variants and sizes match Button/Select for seamless composition.
+   Variants: ghost | subtle | outline | filled
+   Sizes:    sm | md | lg (default)
+   ============================================================ */
+
+
+/* --- Field root --- */
+
+.text-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+
+/* --- Label --- */
+
+.text-field-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+
+/* --- Input wrapper --- */
+
+.text-field-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  transition: var(--transition-colors);
+
+  &:focus-within {
+    outline: 2px solid var(--border-primary);
+    outline-offset: -1px;
+    transition: none;
+  }
+}
+
+
+/* --- Input --- */
+
+.text-field-input {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-regular);
+  line-height: 1;
+
+  &::placeholder {
+    color: var(--text-placeholder);
+    font-weight: var(--weight-normal);
+  }
+}
+
+.text-field[data-disabled] {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+
+/* --- Leading / trailing slots --- */
+
+.text-field-leading,
+.text-field-trailing {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-subtle);
+}
+
+.text-field-leading { margin-left: var(--space-1); }
+.text-field-trailing { margin-right: var(--space-1); }
+
+.text-field-trailing-interactive {
+  pointer-events: auto;
+  cursor: default;
+}
+
+
+/* --- Description --- */
+
+.text-field-description {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
+
+/* --- Error --- */
+
+.text-field-error {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-danger);
+  line-height: var(--leading-normal);
+}
+
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.text-field-size-sm .text-field-input-wrapper {
+  height: 1.5rem;
+  padding: 0 var(--space-2);
+
+  .text-field-input { font-size: var(--text-xs); }
+}
+
+.text-field-size-md .text-field-input-wrapper {
+  height: 1.75rem;
+  padding: 0 var(--space-3);
+}
+
+/* lg is default — applied both explicitly and as fallback */
+.text-field-size-lg .text-field-input-wrapper,
+.text-field:not(.text-field-size-sm):not(.text-field-size-md) .text-field-input-wrapper {
+  height: 2.25rem;
+  padding: 0 var(--space-4);
+
+  .text-field-input { font-size: var(--text-base); }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: GHOST
+   Invisible until focused. Inherits surrounding typographic
+   context via size/weight/color props.
+   ------------------------------------------------------------ */
+
+.text-field-variant-ghost {
+  .text-field-input-wrapper {
+    padding: 0;
+    border: none;
+    background: none;
+    height: auto;
+
+    &:focus-within {
+      outline: none;
+    }
+  }
+
+  .text-field-input {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    line-height: inherit;
+  }
+}
+
+/* Ghost size passthrough */
+.text-field-variant-ghost.text-field-size-xs   .text-field-input { font-size: var(--text-xs); }
+.text-field-variant-ghost.text-field-size-sm   .text-field-input { font-size: var(--text-sm); }
+.text-field-variant-ghost.text-field-size-base .text-field-input { font-size: var(--text-base); }
+.text-field-variant-ghost.text-field-size-md   .text-field-input { font-size: var(--text-md); }
+.text-field-variant-ghost.text-field-size-lg   .text-field-input { font-size: var(--text-lg); }
+.text-field-variant-ghost.text-field-size-xl   .text-field-input { font-size: var(--text-xl); }
+.text-field-variant-ghost.text-field-size-2xl  .text-field-input { font-size: var(--text-2xl); }
+
+/* Ghost weight passthrough */
+.text-field-variant-ghost.text-field-weight-normal   .text-field-input { font-weight: var(--weight-normal); }
+.text-field-variant-ghost.text-field-weight-medium   .text-field-input { font-weight: var(--weight-medium); }
+.text-field-variant-ghost.text-field-weight-semibold .text-field-input { font-weight: var(--weight-semibold); }
+.text-field-variant-ghost.text-field-weight-bold     .text-field-input { font-weight: var(--weight-bold); }
+
+/* Ghost color passthrough */
+.text-field-variant-ghost.text-field-color-regular  .text-field-input { color: var(--text-regular); }
+.text-field-variant-ghost.text-field-color-muted    .text-field-input { color: var(--text-muted); }
+.text-field-variant-ghost.text-field-color-subtle   .text-field-input { color: var(--text-subtle); }
+.text-field-variant-ghost.text-field-color-primary  .text-field-input { color: var(--text-primary); }
+.text-field-variant-ghost.text-field-color-danger   .text-field-input { color: var(--text-danger); }
+
+
+/* ------------------------------------------------------------
+   VARIANT: SUBTLE
+   ------------------------------------------------------------ */
+
+.text-field-variant-subtle .text-field-input-wrapper {
+  background-color: var(--surface-subtle);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    transition: none;
+  }
+
+  &:focus-within {
+    background-color: var(--surface-neutral);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: OUTLINE
+   ------------------------------------------------------------ */
+
+.text-field-variant-outline .text-field-input-wrapper {
+  border-color: var(--border-default);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+  }
+
+  &:focus-within {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: FILLED
+   ------------------------------------------------------------ */
+
+.text-field-variant-filled .text-field-input-wrapper {
+  background-color: var(--surface-paper);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-raised);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+  }
+
+  &:focus-within {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    box-shadow: none;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   INVALID STATE
+   ------------------------------------------------------------ */
+
+.text-field-invalid {
+  &.text-field-variant-outline .text-field-input-wrapper,
+  &.text-field-variant-filled .text-field-input-wrapper {
+    border-color: var(--border-danger);
+
+    &:focus-within {
+      outline-color: var(--border-danger-hover);
+      border-color: var(--border-danger-hover);
+    }
+  }
+
+  &.text-field-variant-subtle .text-field-input-wrapper {
+    background-color: var(--surface-danger);
+
+    &:focus-within {
+      outline-color: var(--border-danger-hover);
+    }
+  }
+}

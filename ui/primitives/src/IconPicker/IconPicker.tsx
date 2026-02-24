@@ -194,16 +194,16 @@ export const IconPicker: React.FC<IconPickerProps> = ({
                 <Button
                   label="iconPicker.label"
                   onClick={() => setTab(UserIconType.ContentIcon)}
-                  variant={tab !== UserIconType.Emoji ? 'contained' : 'text'}
+                  variant={tab !== UserIconType.Emoji ? 'filled' : 'ghost'}
                 />
                 <Button
                   label="emojiPicker.label"
                   onClick={() => setTab(UserIconType.Emoji)}
-                  variant={tab === UserIconType.Emoji ? 'contained' : 'text'}
+                  variant={tab === UserIconType.Emoji ? 'filled' : 'ghost'}
                 />
                 <div style={{ flex: 1 }} />
                 <Button
-                  variant="text"
+                  variant="ghost"
                   label="actions.clear"
                   onClick={handleClear}
                 />

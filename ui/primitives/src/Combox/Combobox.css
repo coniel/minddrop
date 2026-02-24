@@ -1,0 +1,48 @@
+/* ============================================================
+   COMBOBOX
+   Input uses TextField outline/md classes directly.
+   Popup reuses Menu panel styles.
+   ============================================================ */
+
+.combobox-positioner {
+  z-index: var(--level-popover);
+}
+
+.combobox-input {
+  /* Input itself needs no extra styles —
+     text-field-input handles everything */
+}
+
+/* --- List --- */
+
+.combobox-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1) 0;
+  overflow-y: auto;
+  max-height: var(--available-height, 320px);
+  scroll-padding-block: var(--space-2);
+  min-width: 12rem;
+}
+
+/* --- Item indicator --- */
+
+.combobox-item-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary-muted);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* --- Empty state --- */
+
+.combobox-empty {
+  padding: var(--space-3) var(--space-3);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+  text-align: center;
+}

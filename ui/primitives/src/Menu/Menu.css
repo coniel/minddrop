@@ -1,22 +1,352 @@
+/* ============================================================
+   MENU
+   Styles for Menu, MenuGroup, MenuLabel, MenuSeparator,
+   MenuItem (already defined in MenuItem.css),
+   and ColorSelectionMenuItem.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   MENU
+   The popup container. Used as a standalone content wrapper
+   or rendered by DropdownMenu/ContextMenu primitives.
+   ------------------------------------------------------------ */
+
 .menu {
-  border: 1px solid var(--panel-border-color);
-  background-color: var(--el2Background);
-  box-shadow: var(--popup-box-shadow);
-  border-radius: 6px;
-  padding: 0.5rem 0;
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+  padding: var(--space-1) 0;
+  outline: none;
 
-  animation-name: fadeIn;
-  animation-duration: var(--adFade);
-  animation-timing-function: var(--atfFade);
   transform-origin: var(--transform-origin);
-
   transition:
-    transform 150ms,
-    opacity 150ms;
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
 
   &[data-starting-style],
   &[data-ending-style] {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
+}
+
+/* ------------------------------------------------------------
+   MENU GROUP
+   Groups related menu items with optional padding and spacing.
+   ------------------------------------------------------------ */
+
+.menu-group {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1px;
+
+  /* --- Padding --- */
+
+  &.menu-group-padded {
+    padding: 0 var(--space-1);
+  }
+
+  /* --- Top margin --- */
+
+  &.menu-group-margin-top-small {
+    margin-top: var(--space-2);
+  }
+  &.menu-group-margin-top-medium {
+    margin-top: var(--space-4);
+  }
+  &.menu-group-margin-top-large {
+    margin-top: var(--space-6);
+  }
+
+  /* --- Show actions on hover --- */
+
+  &.menu-group-show-actions-on-hover {
+    .actions {
+      opacity: 0;
+      transition: opacity var(--duration-fast) var(--ease-out);
+    }
+
+    &:hover .actions {
+      opacity: 1;
+    }
+  }
+
+  /* --- Show label actions on hover --- */
+
+  &.menu-group-show-label-actions-on-hover:hover .menu-label .actions {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------
+   MENU LABEL
+   Section heading within a menu, optionally interactive.
+   ------------------------------------------------------------ */
+
+.menu-label {
+  display: flex;
+  align-items: center;
+  height: 1.75rem;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  /* Button variant — interactive label */
+
+  &[role='button'] {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--surface-neutral);
+      transition: none;
+    }
+
+    &:not(:has(button:hover)):active {
+      background-color: var(--surface-neutral-hover);
+    }
+  }
+
+  .menu-label-text {
+    flex: 1;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out);
+
+    .icon {
+      color: var(--text-muted);
+    }
+  }
+
+  &.menu-label-actions-always-visible .actions,
+  &:hover .actions {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   MENU ITEM
+   Used in sidebar menus, dropdown menus, context menus.
+   ============================================================ */
+
+.menu-item {
+  position: relative;
+  cursor: default;
+  outline: none;
+  user-select: none;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  height: 2rem;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+
+  color: var(--text-regular);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-normal);
+  line-height: 1;
+
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  /* --- Size --- */
+
+  &.menu-item-size-compact {
+    height: 1.75rem;
+  }
+
+  /* --- Hover / force-visible --- */
+
+  &:hover,
+  &[data-highlighted],
+  &.menu-item-force-actions-visible {
+    background-color: var(--surface-neutral);
+    transition: none;
+  }
+
+  &:not(:has(button:hover)):active {
+    background-color: var(--surface-neutral-hover);
+  }
+
+  /* --- Active/selected --- */
+
+  &.menu-item-active {
+    background-color: var(--surface-neutral);
+
+    &:hover,
+    &[data-highlighted],
+    &.menu-item-force-actions-visible {
+      background-color: var(--surface-neutral-hover);
+    }
+
+    &:not(:has(button:hover)):active {
+      background-color: var(--surface-neutral-active);
+    }
+  }
+
+  /* --- Muted --- */
+
+  &.menu-item-muted {
+    color: var(--text-muted);
+    font-weight: var(--weight-medium);
+
+    &.menu-item-active {
+      color: var(--text-regular);
+    }
+  }
+
+  /* --- Danger --- */
+
+  &.menu-item-danger {
+    &:hover,
+    &[data-highlighted],
+    &.menu-item-force-actions-visible {
+      color: var(--text-danger);
+      background-color: var(--surface-danger-hover);
+    }
+  }
+
+  /* --- Disabled --- */
+
+  &.menu-item-disabled {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+
+  /* --- Label --- */
+
+  .label {
+    flex: 1;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  /* --- Icon --- */
+
+  .item-icon {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    line-height: 1;
+    color: var(--text-muted);
+  }
+
+  /* --- Submenu indicator --- */
+
+  .submenu-indicator {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    color: var(--text-subtle);
+  }
+
+  /* --- Actions --- */
+
+  .actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    position: absolute;
+    transition: opacity var(--duration-fast) var(--ease-out);
+
+    .icon {
+      color: var(--text-muted);
+    }
+  }
+
+  &:hover .actions,
+  &[data-highlighted],
+  &.menu-item-force-actions-visible .actions {
+    opacity: 1;
+    width: auto;
+    position: relative;
+  }
+}
+
+/* ------------------------------------------------------------
+   COLOR SELECTION MENU ITEM
+   Menu item representing a user-selectable content color.
+   The color swatch is a small circle using content color scales.
+   ------------------------------------------------------------ */
+
+.color-selection-menu-item .color-swatch {
+  width: 1.0625rem;
+  height: 1.0625rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+/* default — no color, uses border only */
+.color-selection-menu-item .color-swatch-default {
+  border-color: var(--border-default);
+}
+
+.color-selection-menu-item .color-swatch-blue {
+  background-color: var(--blue-600);
+  border-color: var(--blue-700);
+}
+
+.color-selection-menu-item .color-swatch-cyan {
+  background-color: var(--cyan-600);
+  border-color: var(--cyan-700);
+}
+
+.color-selection-menu-item .color-swatch-red {
+  background-color: var(--red-600);
+  border-color: var(--red-700);
+}
+
+.color-selection-menu-item .color-swatch-pink {
+  background-color: var(--pink-600);
+  border-color: var(--pink-700);
+}
+
+.color-selection-menu-item .color-swatch-purple {
+  background-color: var(--purple-600);
+  border-color: var(--purple-700);
+}
+
+.color-selection-menu-item .color-swatch-green {
+  background-color: var(--green-600);
+  border-color: var(--green-700);
+}
+
+.color-selection-menu-item .color-swatch-orange {
+  background-color: var(--orange-600);
+  border-color: var(--orange-700);
+}
+
+.color-selection-menu-item .color-swatch-yellow {
+  background-color: var(--yellow-600);
+  border-color: var(--yellow-700);
+}
+
+.color-selection-menu-item .color-swatch-brown {
+  background-color: var(--brown-600);
+  border-color: var(--brown-700);
+}
+
+.color-selection-menu-item .color-swatch-gray {
+  background-color: var(--gray-600);
+  border-color: var(--gray-700);
 }

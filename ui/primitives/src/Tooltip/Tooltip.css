@@ -1,21 +1,42 @@
+/* ============================================================
+   TOOLTIP
+   Dark tooltip on both light and dark themes.
+   ============================================================ */
+
 .tooltip {
-  background-color: var(--bgContrast);
-  transform-origin: var(--radix-tooltip-content-transform-origin);
-  border-radius: var(--radiusXs);
-  color: var(--textContrast);
-  padding: 8px;
-  animation-name: scaleIn;
-  animation-duration: var(--adScale);
-  animation-timing-function: var(--atfScale);
-  box-shadow: var(--el2Shadow);
-  max-width: 200px;
-}
+  /* Dark surface regardless of theme */
+  background-color: hsl(220 13% 12%);
+  border: 1px solid hsl(220 13% 20%);
+  color: hsl(220 10% 92%);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--level-tooltip);
 
-.tooltip .keyboard-shortcut,
-.tooltip .spacer {
-  margin-top: 6px;
-}
+  border-radius: var(--radius-xs);
+  padding: var(--space-2) var(--space-3);
+  max-width: 220px;
 
-.tooltip .description {
-  line-height: 130%;
+  /* Animation */
+  transform-origin: var(--transform-origin);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  /* Description text */
+  .tooltip-description {
+    color: hsl(220 10% 65%);
+    line-height: var(--leading-snug);
+    margin-top: var(--space-1);
+  }
+
+  /* Keyboard shortcut */
+  .keyboard-shortcut {
+    margin-top: var(--space-1);
+    color: hsl(220 10% 55%);
+  }
 }

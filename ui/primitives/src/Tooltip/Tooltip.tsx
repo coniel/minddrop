@@ -9,7 +9,7 @@ type TooltipBaseProps = Pick<
   TooltipPrimitive.Root.Props,
   'defaultOpen' | 'open' | 'onOpenChange'
 > &
-  Pick<TooltipPrimitive.Provider.Props, 'timeout' | 'delay'>;
+  Pick<TooltipPrimitive.Provider.Props, 'delay'>;
 
 type TooltipContentProps = Pick<
   TooltipPrimitive.Positioner.Props,
@@ -17,30 +17,31 @@ type TooltipContentProps = Pick<
 >;
 
 export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
-  /**
-   * The content of the Tooltip.
+  /*
+   * The element that triggers the tooltip.
    */
   children: TooltipPrimitive.Trigger.Props['render'];
 
-  /**
-   * The primary content of the tooltip, typically the name of the action.
+  /*
+   * Primary content — typically the name of the action or element.
+   * Can be an i18n key.
    */
   title?: React.ReactNode;
 
-  /**
-   * Optional secondary content providing additional details.
+  /*
+   * Optional secondary content providing additional context.
+   * Can be an i18n key.
    */
   description?: React.ReactNode;
 
-  /**
-   * An array of key name strings. Use 'Mod' to render '⌘' or 'Ctrl' on Mac
-   * and Widnows/Linux respectively.
+  /*
+   * Keyboard shortcut displayed below the title/description.
+   * Use 'Mod' to render '⌘' on Mac and 'Ctrl' on Windows/Linux.
    */
   keyboardShortcut?: string[];
 
-  /**
-   * Class name applied to the tooltiop content
-   * container.
+  /*
+   * Class name applied to the tooltip popup element.
    */
   className?: string;
 }
@@ -51,13 +52,12 @@ export const Tooltip: FC<TooltipProps> = ({
   open,
   onOpenChange,
   delay,
-  timeout,
   title,
   description,
   keyboardShortcut,
   className,
   side = 'bottom',
-  sideOffset = 5,
+  sideOffset = 6,
   align = 'center',
   alignOffset,
   ...other
@@ -74,7 +74,7 @@ export const Tooltip: FC<TooltipProps> = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      <TooltipPrimitive.Trigger render={children} />
+      <TooltipPrimitive.Trigger delay={delay} render={children} />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner
           side={side}
@@ -87,26 +87,19 @@ export const Tooltip: FC<TooltipProps> = ({
             {...other}
           >
             {title && (
-              <Text as="div" color="contrast" size="small" weight="medium">
+              <Text as="div" size="sm" weight="medium">
                 {translatedTitle}
               </Text>
             )}
-            {title && description && <div className="spacer" />}
             {description && (
-              <Text
-                as="div"
-                size="small"
-                color="contrast-light"
-                className="description"
-              >
+              <Text as="div" size="sm" className="tooltip-description">
                 {translatedDescription}
               </Text>
             )}
             {keyboardShortcut && (
               <KeyboardShortcut
                 as="div"
-                size="small"
-                color="contrast-light"
+                size="xs"
                 weight="medium"
                 keys={keyboardShortcut}
               />

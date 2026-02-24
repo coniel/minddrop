@@ -1,46 +1,78 @@
-import { Popover as PopoverPrimitives } from '@base-ui/react/popover';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import React from 'react';
-import { mapPropsToClasses } from '@minddrop/utils';
+import { propsToClass } from '../utils';
 import './Popover.css';
 
-export type PopoverProps = PopoverPrimitives.Root.Props;
-export type PopoverTriggerProps = PopoverPrimitives.Trigger.Props & {
-  children: PopoverPrimitives.Trigger.Props['render'];
-};
-export type PopoverPositionerProps = PopoverPrimitives.Positioner.Props;
-export type PopoverCloseProps = PopoverPrimitives.Close.Props;
-export type PopoverContentProps = PopoverPrimitives.Popup.Props;
+export type PopoverProps = PopoverPrimitive.Root.Props;
+export type PopoverTriggerProps = PopoverPrimitive.Trigger.Props;
+export type PopoverPositionerProps = PopoverPrimitive.Positioner.Props;
+export type PopoverCloseProps = PopoverPrimitive.Close.Props;
+export type PopoverPortalProps = PopoverPrimitive.Portal.Props;
 
-export const Popover = PopoverPrimitives.Root;
-export const PopoverPositioner = PopoverPrimitives.Positioner;
-export const PopoverClose = PopoverPrimitives.Close;
-export const PopoverPortal = PopoverPrimitives.Portal;
+export interface PopoverContentProps extends PopoverPrimitive.Popup.Props {
+  /*
+   * Minimum width of the popover.
+   */
+  minWidth?: number | string;
 
-export const PopoverTrigger = React.forwardRef<
-  HTMLButtonElement,
-  PopoverTriggerProps
->(({ children, ...other }, ref) => (
-  <PopoverPrimitives.Trigger ref={ref} render={children} {...other} />
-));
+  /*
+   * Class name applied to the popup element.
+   */
+  className?: string;
+}
 
-PopoverTrigger.displayName = 'PopoverTrigger';
+/*
+ * Root — manages open/close state.
+ */
+export const Popover = PopoverPrimitive.Root;
 
-export const PopoverContent = React.forwardRef<
+/*
+ * Trigger — the element that opens the popover.
+ * Accepts any renderable element via the render prop.
+ */
+export const PopoverTrigger = PopoverPrimitive.Trigger;
+
+/*
+ * Positioner — positions the popup relative to the trigger.
+ */
+export const PopoverPositioner = React.forwardRef<
   HTMLDivElement,
-  PopoverContentProps & { minWidth?: number; className?: string }
->(({ children, className, minWidth, ...other }, ref) => (
-  <PopoverPrimitives.Popup
+  PopoverPositionerProps
+>((props, ref) => (
+  <PopoverPrimitive.Positioner
     ref={ref}
-    render={
-      <div
-        className={mapPropsToClasses({ className }, 'popover')}
-        style={{ minWidth }}
-      >
-        {children}
-      </div>
-    }
-    {...other}
+    className="popover-positioner"
+    {...props}
   />
 ));
 
+PopoverPositioner.displayName = 'PopoverPositioner';
+
+/*
+ * Content — the popup panel itself.
+ */
+export const PopoverContent = React.forwardRef<
+  HTMLDivElement,
+  PopoverContentProps
+>(({ children, className, minWidth, style, ...other }, ref) => (
+  <PopoverPrimitive.Popup
+    ref={ref}
+    className={propsToClass('popover', { className })}
+    style={{ minWidth, ...style }}
+    {...other}
+  >
+    {children}
+  </PopoverPrimitive.Popup>
+));
+
 PopoverContent.displayName = 'PopoverContent';
+
+/*
+ * Close — a button that closes the popover.
+ */
+export const PopoverClose = PopoverPrimitive.Close;
+
+/*
+ * Portal — renders the popover outside the DOM hierarchy.
+ */
+export const PopoverPortal = PopoverPrimitive.Portal;

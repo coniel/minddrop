@@ -1,9 +1,9 @@
 import React from 'react';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Menu.css';
 
 export interface MenuProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
+  /*
    * The content of the Menu.
    */
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
     <div
       ref={ref}
       role="menu"
-      className={mapPropsToClasses({ className }, 'menu')}
+      className={propsToClass('menu', { className })}
       {...other}
     >
       {children}

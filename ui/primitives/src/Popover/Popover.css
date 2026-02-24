@@ -1,9 +1,30 @@
+/* ============================================================
+   POPOVER
+   Built on Base UI Popover primitive.
+   ============================================================ */
+
+.popover-positioner {
+  outline: none;
+  z-index: var(--level-popover);
+}
+
 .popover {
-  transform-origin: var(--radix-popover-content-transform-origin);
-  border-radius: var(--radiusXs);
-  animation-name: popIn;
-  animation-duration: var(--adPop);
-  animation-timing-function: var(--atfPop);
-  box-shadow: var(--el2ShadowBordered);
-  background-color: var(--el2Background);
+  box-sizing: border-box;
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+  background-clip: padding-box;
+  outline: none;
+
+  transform-origin: var(--transform-origin);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }

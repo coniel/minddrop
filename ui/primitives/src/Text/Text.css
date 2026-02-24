@@ -1,107 +1,71 @@
+/* ============================================================
+   TEXT
+   UI text component. Not for user content.
+   ============================================================ */
+
 .text {
-  font-family: var(--font-family);
-  color: var(--text-color-regular);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
   font-weight: var(--weight-normal);
+  line-height: var(--leading-snug);
+  color: var(--text-regular);
 
-  &.paragraph {
+  /* --- Size --- */
+
+  &.text-size-xs   { font-size: var(--text-xs); }
+  &.text-size-sm   { font-size: var(--text-sm); }
+  &.text-size-base { font-size: var(--text-base); }
+  &.text-size-lg   { font-size: var(--text-lg); }
+  &.text-size-xl   { font-size: var(--text-xl); }
+
+  /* --- Weight --- */
+
+  &.text-weight-normal   { font-weight: var(--weight-normal); }
+  &.text-weight-medium   { font-weight: var(--weight-medium); }
+  &.text-weight-semibold { font-weight: var(--weight-semibold); }
+  &.text-weight-bold     { font-weight: var(--weight-bold); }
+
+  /* --- Color --- */
+
+  &.text-color-regular      { color: var(--text-regular); }
+  &.text-color-muted        { color: var(--text-muted); }
+  &.text-color-subtle       { color: var(--text-subtle); }
+  &.text-color-disabled     { color: var(--text-disabled); }
+  &.text-color-primary      { color: var(--text-primary); }
+  &.text-color-danger       { color: var(--text-danger); }
+  &.text-color-danger-muted { color: var(--text-danger-muted); }
+  &.text-color-warning      { color: var(--text-warning); }
+  &.text-color-info         { color: var(--text-info); }
+  &.text-color-inherit      { color: inherit; }
+
+  /* --- Font --- */
+
+  &.text-mono { font-family: var(--font-mono); }
+
+  /* --- Block --- */
+
+  &.text-block {
     display: block;
-    line-height: 1.4;
-    margin-bottom: 1rem;
-
-    &.size-small {
-      margin-bottom: 0.5rem;
-    }
-
-    &.size-tiny {
-      margin-bottom: 0.25rem;
-    }
   }
 
-  /* Color */
+  /* --- Paragraph --- */
 
-  &.color-light {
-    color: var(--text-color-light);
+  &.text-paragraph {
+    display: block;
+    line-height: var(--leading-normal);
+
+    &:not(:last-child) { margin-bottom: var(--space-3); }
+
+    &.text-size-xs:not(:last-child) { margin-bottom: var(--space-1); }
+    &.text-size-sm:not(:last-child) { margin-bottom: var(--space-2); }
   }
 
-  &.color-muted {
-    color: var(--text-color-muted);
-  }
+  /* --- Truncate --- */
 
-  &.color-danger {
-    color: var(--text-color-danger);
-  }
-
-  &.color-danger-light {
-    color: var(--text-color-danger-light);
-  }
-
-  &.color-contrast {
-    color: var(--text-color-contrast);
-  }
-
-  &.color-contrast-light {
-    color: var(--text-color-contrast-light);
-  }
-
-  &.color-inherit {
-    color: inherit;
-  }
-
-  /* Font */
-
-  &.font-sans {
-    font-family: var(--font-family-sans);
-  }
-
-  &.font-serif {
-    font-family: var(--font-family-serif);
-  }
-
-  &.font-mono {
-    font-family: var(--font-family-mono);
-  }
-
-  /* Weight */
-
-  &.weight-light {
-    font-weight: var(--weight-light);
-  }
-
-  &.weight-regular {
-    font-weight: var(--weight-normal);
-  }
-
-  &.weight-medium {
-    font-weight: var(--weight-medium);
-  }
-
-  &.weight-semibold {
-    font-weight: var(--fwSemibold);
-  }
-
-  &.weight-bold {
-    font-weight: var(--weight-bold);
-  }
-
-  &.weight-inherit {
-    font-weight: inherit;
-  }
-
-  /* Size */
-
-  &.size-tiny {
-    font-size: var(--text-xs);
-  }
-
-  &.size-small {
-    font-size: var(--text-sm);
-  }
-
-  &.size-regular {
-    font-size: var(--text-base);
-  }
-
-  &.size-large {
-    font-size: var(--text-lg);
+  &.text-truncate {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

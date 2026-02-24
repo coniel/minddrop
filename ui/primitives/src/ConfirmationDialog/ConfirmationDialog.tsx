@@ -4,52 +4,52 @@ import { Button } from '../Button';
 import './ConfirmationDialog.css';
 
 export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
-  /**
-   * The label for the confirmation button.
+  /*
+   * Label for the confirm button. Can be an i18n key.
    */
   confirmLabel: string;
 
-  /**
-   * The label for the cancel button.
+  /*
+   * Label for the cancel button. Can be an i18n key.
    * @default 'actions.cancel'
    */
   cancelLabel?: string;
 
-  /**
-   * The dialog title.
+  /*
+   * Dialog title. Accepts a string (i18n key) or a React node.
    */
-  title: React.ReactNode | string;
+  title: React.ReactNode;
 
-  /**
-   * The dialog message.
+  /*
+   * Dialog message body. Accepts a string (i18n key) or a React node.
    */
-  message: React.ReactNode | string;
+  message: React.ReactNode;
 
-  /**
-   * When `true`, styles the confirmation button to indicate a dangerous action.
-   * @default true
+  /*
+   * When true, styles the confirm button as a destructive action.
+   * @default false
    */
   danger?: boolean;
 
-  /**
-   * The callback invoked when the user confirms the action.
+  /*
+   * Callback fired when the user confirms.
    */
   onConfirm: () => void;
 
-  /**
-   * The callback invoked when the user cancels the action.
+  /*
+   * Callback fired when the user cancels.
    */
   onCancel?: () => void;
 }
 
 export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-  confirmLabel: confirmationLabel,
+  confirmLabel,
+  cancelLabel = 'actions.cancel',
+  title,
+  message,
+  danger = false,
   onConfirm,
   onCancel,
-  title,
-  message: description,
-  danger = false,
-  cancelLabel = 'actions.cancel',
   ...other
 }) => {
   const { t } = useTranslation();
@@ -57,37 +57,39 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   return (
     <AlertDialog.Root {...other}>
       <AlertDialog.Portal>
-        <AlertDialog.Backdrop className="confirmation-dialog-backdrop">
-          <AlertDialog.Popup className="panel confirmation-dialog">
-            <AlertDialog.Title className="title">
-              {typeof title === 'string' ? t(title) : title}
-            </AlertDialog.Title>
-            <AlertDialog.Description className="message">
-              {typeof description === 'string' ? t(description) : description}
-            </AlertDialog.Description>
-            <div className="actions">
-              <AlertDialog.Close
-                render={
-                  <Button
-                    onClick={onCancel}
-                    variant="contained"
-                    label={cancelLabel}
-                  />
-                }
-              />
-              <AlertDialog.Close
-                render={
-                  <Button
-                    variant="primary"
-                    danger={danger ? 'always' : undefined}
-                    label={confirmationLabel}
-                    onClick={onConfirm}
-                  />
-                }
-              />
-            </div>
-          </AlertDialog.Popup>
-        </AlertDialog.Backdrop>
+        <AlertDialog.Backdrop className="confirmation-dialog-backdrop" />
+        <AlertDialog.Popup className="confirmation-dialog">
+          <AlertDialog.Title className="confirmation-dialog-title">
+            {typeof title === 'string' ? t(title) : title}
+          </AlertDialog.Title>
+          <AlertDialog.Description className="confirmation-dialog-message">
+            {typeof message === 'string' ? t(message) : message}
+          </AlertDialog.Description>
+          <div className="confirmation-dialog-actions">
+            <AlertDialog.Close
+              render={
+                <Button
+                  variant="filled"
+                  onClick={onCancel}
+                >
+                  {t(cancelLabel)}
+                </Button>
+              }
+            />
+            <AlertDialog.Close
+              render={
+                <Button
+                  variant="solid"
+                  color="primary"
+                  danger={danger ? 'always' : undefined}
+                  onClick={onConfirm}
+                >
+                  {t(confirmLabel)}
+                </Button>
+              }
+            />
+          </div>
+        </AlertDialog.Popup>
       </AlertDialog.Portal>
     </AlertDialog.Root>
   );

@@ -1,138 +1,163 @@
+/* ============================================================
+   ICON BUTTON
+   Square button containing a single icon.
+   Variants: ghost (default) | subtle | outline | filled
+   Colors:   neutral (default) | muted | contrast
+   Sizes:    sm | md (default) | lg
+   ============================================================ */
+
 .icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  flex-shrink: 0;
+
+  border: 1px solid transparent;
+  background: none;
   outline: none;
   user-select: none;
-  border-radius: var(--radiusMd);
-  transition: var(--transitionShort);
-  transition-property: color, background-color, border-color;
-  cursor: pointer;
-  background-color: transparent;
-  padding: 4px;
-  font-size: 20px;
+  cursor: default;
 
-  .icon,
-  .content-icon {
-    stroke: currentColor;
-    width: 20px;
-    height: 20px;
+  border-radius: var(--radius-md);
+  transition: var(--transition-colors);
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
   }
 
-  &:hover {
-    background-color: var(--bgNeutralHover);
-    transition-duration: 0.1s;
-  }
-
-  &:active {
-    background-color: var(--bgNeutralActive);
+  &:disabled,
+  &[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.45;
   }
 
   &:focus-visible {
-    outline: 2px solid var(--borderPrimary);
+    outline: 2px solid var(--border-primary);
+    outline-offset: 2px;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.icon-button-size-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+
+  .icon { width: 0.875rem; height: 0.875rem; }
+}
+
+.icon-button-size-md {
+  width: 1.75rem;
+  height: 1.75rem;
+
+  .icon { width: 1rem; height: 1rem; }
+}
+
+.icon-button-size-lg {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  .icon { width: 1.125rem; height: 1.125rem; }
+}
+
+
+/* ------------------------------------------------------------
+   COLORS
+   ------------------------------------------------------------ */
+
+.icon-button-color-neutral .icon { color: var(--text-muted); }
+.icon-button-color-muted .icon   { color: var(--text-subtle); }
+.icon-button-color-contrast .icon { color: var(--text-on-solid); }
+
+
+/* ------------------------------------------------------------
+   VARIANT: GHOST
+   ------------------------------------------------------------ */
+
+.icon-button-variant-ghost {
+  &:hover {
+    background-color: var(--surface-neutral-hover);
+    transition: none;
+
+    .icon { color: var(--text-regular); }
   }
 
-  /* Colors */
+  &:active { background-color: var(--surface-neutral-active); }
 
-  &.color-regular .icon {
-    stroke: var(--textNeutral);
+  &.icon-button-color-contrast {
+    &:hover .icon,
+    &:active .icon { color: var(--text-regular); }
+  }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: SUBTLE
+   ------------------------------------------------------------ */
+
+.icon-button-variant-subtle {
+  background-color: var(--surface-subtle);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    transition: none;
+
+    .icon { color: var(--text-regular); }
   }
 
-  &.color-light .icon {
-    stroke: var(--textNeutralLight);
+  &:active,
+  &.icon-button-active {
+    background-color: var(--surface-neutral-active);
+
+    .icon { color: var(--text-regular); }
+  }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: OUTLINE
+   ------------------------------------------------------------ */
+
+.icon-button-variant-outline {
+  border-color: var(--border-default);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+
+    .icon { color: var(--text-regular); }
   }
 
-  &.color-contrast .icon {
-    stroke: var(--textContrast);
+  &:active { background-color: var(--surface-neutral-hover); }
+}
+
+
+/* ------------------------------------------------------------
+   VARIANT: FILLED
+   ------------------------------------------------------------ */
+
+.icon-button-variant-filled {
+  background-color: var(--surface-paper);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-raised);
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+
+    .icon { color: var(--text-regular); }
   }
 
-  &.color-contrast:hover .icon {
-    stroke: var(--textNeutral);
-  }
-
-  &.color-contrast:active .icon {
-    stroke: var(--textNeutral);
-  }
-
-  /* Sizes */
-
-  &.size-small {
-    padding: 2px;
-
-    .icon {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
-  &.size-medium {
-    height: 2rem;
-    width: 2rem;
-    flex-shrink: 0;
-
-    .icon,
-    .content-icon {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .emoji {
-      font-size: 0.875rem;
-      width: auto;
-      height: auto;
-    }
-  }
-
-  &.size-large {
-    height: 2.125rem;
-    width: 2.125rem;
-    flex-shrink: 0;
-
-    .icon,
-    .content-icon {
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    .emoji {
-      font-size: 0.9rem;
-      width: auto;
-      height: auto;
-    }
-  }
-
-  /* Vatiants */
-
-  &.variant-outlined {
-    border: 0.5px solid var(--borderNeutralSubtle);
-
-    &:hover {
-      border-color: var(--borderNeutralHover);
-    }
-
-    &:active {
-      border-color: var(--borderNeutral);
-    }
-  }
-
-  &.variant-filled {
-    background-color: var(--neutral3);
-
-    &:hover,
-    &.active {
-      background-color: var(--neutral7);
-    }
-  }
-
-  /* Disabled */
-
-  &:disabled {
-    pointer-events: none;
-  }
-
-  &:disabled .icon,
-  &.color-light:disabled .icon {
-    stroke: var(--textNeutralDisabled);
+  &:active,
+  &.icon-button-active {
+    background-color: var(--surface-neutral-hover);
+    box-shadow: none;
   }
 }

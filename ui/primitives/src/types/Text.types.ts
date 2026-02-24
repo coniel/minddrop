@@ -1,4 +1,4 @@
-export type TextSize = 'tiny' | 'small' | 'regular' | 'large' | 'title';
+export type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type TextColor =
   | 'regular'
   | 'light'

@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 import { UiIconName } from '@minddrop/icons';
 import { Icon, IconProps } from '../Icon';
-import './IconRenderer.css';
 
 export type IconProp = UiIconName | React.ReactElement;
 

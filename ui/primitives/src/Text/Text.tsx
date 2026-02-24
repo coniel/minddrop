@@ -1,51 +1,75 @@
 import React, { FC } from 'react';
 import { i18n } from '@minddrop/i18n';
-import { TextColor, TextSize, TextWeight } from '../types';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Text.css';
 
-export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
-  /**
-   * The content of the Text.
+export type TextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
+export type TextColor =
+  | 'regular'
+  | 'muted'
+  | 'subtle'
+  | 'disabled'
+  | 'primary'
+  | 'danger'
+  | 'danger-muted'
+  | 'warning'
+  | 'info'
+  | 'inherit';
+
+export interface TextProps extends React.HTMLAttributes<HTMLElement> {
+  /*
+   * Text content. Use `text` for i18n keys.
    */
   children?: React.ReactNode;
 
-  /**
-   * The i18n key for the text. If provided, this takes precedence
-   * over children.
+  /*
+   * i18n key. Takes precedence over children.
    */
   text?: string;
 
-  /**
-   * The color of the text.
-   */
-  color?: TextColor;
-
-  /**
-   * Whether the text is a paragraph. Applies paragraph styles.
-   */
-  paragraph?: boolean;
-
-  /**
-   * The component used for the root node. Either a string to use a
-   * HTML element or a component.
+  /*
+   * The rendered element. Defaults to 'span', or 'p' when paragraph is true.
    */
   as?: React.ElementType;
 
-  /**
-   * The font family.
-   */
-  font?: 'sans' | 'serif' | 'mono';
-
-  /**
-   * The font size, regular is for standard UI text.
+  /*
+   * Font size. @default 'base'
    */
   size?: TextSize;
 
-  /**
-   * The font weight.
+  /*
+   * Font weight. @default 'normal'
    */
   weight?: TextWeight;
+
+  /*
+   * Text color. @default 'regular'
+   */
+  color?: TextColor;
+
+  /*
+   * Monospace font. Useful for code, version numbers, IDs.
+   */
+  mono?: boolean;
+
+  /*
+   * Renders as a block element with paragraph spacing.
+   * Margin is only applied when not the last child.
+   * Automatically renders as a 'p' element.
+   */
+  paragraph?: boolean;
+
+  /*
+   * Renders as a block element without paragraph spacing.
+   */
+  block?: boolean;
+
+  /*
+   * Truncates overflowing text with an ellipsis.
+   * Requires a width-constrained parent.
+   */
+  truncate?: boolean;
 }
 
 export const Text: FC<TextProps> = ({
@@ -53,23 +77,30 @@ export const Text: FC<TextProps> = ({
   children,
   className,
   color = 'regular',
-  size = 'regular',
-  font,
+  size = 'base',
+  weight = 'normal',
+  mono = false,
   paragraph = false,
+  block = false,
+  truncate = false,
   text,
-  weight = 'regular',
   ...other
 }) => {
-  const Component = as || 'span';
+  const Component = as || (paragraph ? 'p' : 'span');
+
+  const classes = propsToClass('text', {
+    size,
+    color,
+    weight: weight !== 'normal' ? weight : undefined,
+    mono: mono || undefined,
+    paragraph: paragraph || undefined,
+    block: block || undefined,
+    truncate: truncate || undefined,
+    className,
+  });
 
   return (
-    <Component
-      className={mapPropsToClasses(
-        { className, color, size, weight, paragraph, font },
-        'text',
-      )}
-      {...other}
-    >
+    <Component className={classes} {...other}>
       {text ? i18n.t(text) : children}
     </Component>
   );

@@ -191,7 +191,6 @@ export const InteractiveMenuItem: FC<
       <Tooltip
         side="right"
         sideOffset={6}
-        timeout={0}
         delay={800}
         title={tooltipTitle}
         description={tooltipDescription}

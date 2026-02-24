@@ -1,5 +1,11 @@
+/* ============================================================
+   SEPARATOR
+   Horizontal or vertical dividing line.
+   ============================================================ */
+
 .separator {
-  background-color: var(--borderNeutralSubtle);
+  background-color: var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .separator[data-orientation='horizontal'] {
@@ -12,34 +18,35 @@
   width: 1px;
 }
 
-/* Margin */
 
-.separator.margin-small[data-orientation='vertical'] {
-  margin-left: 6px;
-  margin-right: 6px;
+/* --- Margin --- */
+
+.separator-margin-small[data-orientation='horizontal'] {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-2);
 }
 
-.separator.margin-medium[data-orientation='vertical'] {
-  margin-left: 8px;
-  margin-right: 8px;
+.separator-margin-medium[data-orientation='horizontal'] {
+  margin-top: var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
-.separator.margin-large[data-orientation='vertical'] {
-  margin-left: 16px;
-  margin-right: 16px;
+.separator-margin-large[data-orientation='horizontal'] {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
 }
 
-.separator.margin-small[data-orientation='horizontal'] {
-  margin-top: 6px;
-  margin-bottom: 6px;
+.separator-margin-small[data-orientation='vertical'] {
+  margin-left: var(--space-2);
+  margin-right: var(--space-2);
 }
 
-.separator.margin-medium[data-orientation='horizontal'] {
-  margin-top: 8px;
-  margin-bottom: 8px;
+.separator-margin-medium[data-orientation='vertical'] {
+  margin-left: var(--space-3);
+  margin-right: var(--space-3);
 }
 
-.separator.margin-large[data-orientation='horizontal'] {
-  margin-top: 16px;
-  margin-bottom: 16px;
+.separator-margin-large[data-orientation='vertical'] {
+  margin-left: var(--space-5);
+  margin-right: var(--space-5);
 }

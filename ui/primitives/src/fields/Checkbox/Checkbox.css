@@ -1,0 +1,128 @@
+/* ============================================================
+   CHECKBOX
+   Built on Base UI Checkbox primitive.
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   CHECKBOX FIELD
+   Checkbox indicator + label wired together.
+   ------------------------------------------------------------ */
+
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  cursor: default;
+
+  &[data-disabled] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+}
+
+/* --- Indicator (the visible checkbox box) --- */
+
+.checkbox-indicator {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.125rem; /* optical alignment with label text */
+
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--contrast-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+
+  /* Checked */
+  &[data-checked] {
+    background-color: var(--surface-solid-primary);
+    border-color: var(--surface-solid-primary);
+  }
+
+  /* Indeterminate */
+  &[data-indeterminate] {
+    background-color: var(--surface-solid-primary);
+    border-color: var(--surface-solid-primary);
+  }
+
+  /* Hover */
+  .checkbox-field:hover & {
+    border-color: var(--border-primary);
+  }
+
+  .checkbox-field:hover &[data-checked],
+  .checkbox-field:hover &[data-indeterminate] {
+    background-color: var(--surface-solid-primary-hover);
+    border-color: var(--surface-solid-primary-hover);
+  }
+}
+
+/* Checkmark icon */
+.checkbox-icon {
+  width: 0.625rem;
+  height: 0.625rem;
+  display: none;
+
+  [data-checked] & { display: block; }
+}
+
+/* Indeterminate dash */
+.checkbox-indeterminate-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+  display: none;
+
+  [data-indeterminate] & { display: block; }
+}
+
+/* --- Label area --- */
+
+.checkbox-field-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.checkbox-field-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-regular);
+  line-height: var(--leading-normal);
+  cursor: default;
+}
+
+.checkbox-field-description {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+
+/* ------------------------------------------------------------
+   CHECKBOX GROUP
+   ------------------------------------------------------------ */
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.checkbox-group-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}

@@ -1,9 +1,9 @@
-import { Collapsible as CollapsiblePrimitives } from '@base-ui/react/collapsible';
+import { Collapsible as CollapsiblePrimitive } from '@base-ui/react/collapsible';
 
-export type CollapsibleProps = CollapsiblePrimitives.Root.Props;
-export type CollapsibleTriggerProps = CollapsiblePrimitives.Trigger.Props;
-export type CollapsibleContentProps = CollapsiblePrimitives.Panel.Props;
+export type CollapsibleProps = CollapsiblePrimitive.Root.Props;
+export type CollapsibleTriggerProps = CollapsiblePrimitive.Trigger.Props;
+export type CollapsibleContentProps = CollapsiblePrimitive.Panel.Props;
 
-export const Collapsible = CollapsiblePrimitives.Root;
-export const CollapsibleContent = CollapsiblePrimitives.Panel;
-export const CollapsibleTrigger = CollapsiblePrimitives.Trigger;
+export const Collapsible = CollapsiblePrimitive.Root;
+export const CollapsibleTrigger = CollapsiblePrimitive.Trigger;
+export const CollapsibleContent = CollapsiblePrimitive.Panel;

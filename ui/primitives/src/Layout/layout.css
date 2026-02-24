@@ -1,0 +1,185 @@
+/* ============================================================
+   FLEX / GROUP / STACK
+   Layout primitives for composing UI elements.
+   ============================================================ */
+
+
+/* --- Gap scale --- */
+
+.flex-gap-1 { gap: var(--space-1); }
+.flex-gap-2 { gap: var(--space-2); }
+.flex-gap-3 { gap: var(--space-3); }
+.flex-gap-4 { gap: var(--space-4); }
+.flex-gap-5 { gap: var(--space-5); }
+.flex-gap-6 { gap: var(--space-6); }
+.flex-gap-7 { gap: var(--space-7); }
+
+
+/* --- Align (align-items) --- */
+
+.flex-align-start    { align-items: flex-start; }
+.flex-align-center   { align-items: center; }
+.flex-align-end      { align-items: flex-end; }
+.flex-align-stretch  { align-items: stretch; }
+.flex-align-baseline { align-items: baseline; }
+
+
+/* --- Justify (justify-content) --- */
+
+.flex-justify-start   { justify-content: flex-start; }
+.flex-justify-center  { justify-content: center; }
+.flex-justify-end     { justify-content: flex-end; }
+.flex-justify-between { justify-content: space-between; }
+.flex-justify-around  { justify-content: space-around; }
+.flex-justify-evenly  { justify-content: space-evenly; }
+
+
+/* --- Wrap --- */
+
+.flex-wrap-wrap         { flex-wrap: wrap; }
+.flex-wrap-nowrap       { flex-wrap: nowrap; }
+.flex-wrap-wrap-reverse { flex-wrap: wrap-reverse; }
+
+
+/* ------------------------------------------------------------
+   FLEX
+   ------------------------------------------------------------ */
+
+.flex {
+  display: flex;
+
+  &.flex-inline    { display: inline-flex; }
+  &.flex-direction-row    { flex-direction: row; }
+  &.flex-direction-column { flex-direction: column; }
+}
+
+
+/* ------------------------------------------------------------
+   GROUP
+   Horizontal row. align defaults to center.
+   ------------------------------------------------------------ */
+
+.group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &.group-inline { display: inline-flex; }
+  &.group-wrap   { flex-wrap: wrap; }
+  &.group-grow > * { flex: 1; }
+}
+
+
+/* --- Gap (overrides default) --- */
+
+.group-gap-1 { gap: var(--space-1); }
+.group-gap-2 { gap: var(--space-2); }
+.group-gap-3 { gap: var(--space-3); }
+.group-gap-4 { gap: var(--space-4); }
+.group-gap-5 { gap: var(--space-5); }
+.group-gap-6 { gap: var(--space-6); }
+.group-gap-7 { gap: var(--space-7); }
+
+
+/* --- Align --- */
+
+.group-align-start    { align-items: flex-start; }
+.group-align-center   { align-items: center; }
+.group-align-end      { align-items: flex-end; }
+.group-align-stretch  { align-items: stretch; }
+.group-align-baseline { align-items: baseline; }
+
+
+/* --- Justify --- */
+
+.group-justify-start   { justify-content: flex-start; }
+.group-justify-center  { justify-content: center; }
+.group-justify-end     { justify-content: flex-end; }
+.group-justify-between { justify-content: space-between; }
+.group-justify-around  { justify-content: space-around; }
+.group-justify-evenly  { justify-content: space-evenly; }
+
+
+/* ------------------------------------------------------------
+   STACK
+   Vertical column. align defaults to stretch.
+   ------------------------------------------------------------ */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  &.stack-inline { display: inline-flex; }
+}
+
+
+/* --- Gap --- */
+
+.stack-gap-1 { gap: var(--space-1); }
+.stack-gap-2 { gap: var(--space-2); }
+.stack-gap-3 { gap: var(--space-3); }
+.stack-gap-4 { gap: var(--space-4); }
+.stack-gap-5 { gap: var(--space-5); }
+.stack-gap-6 { gap: var(--space-6); }
+.stack-gap-7 { gap: var(--space-7); }
+
+
+/* --- Align --- */
+
+.stack-align-start    { align-items: flex-start; }
+.stack-align-center   { align-items: center; }
+.stack-align-end      { align-items: flex-end; }
+.stack-align-stretch  { align-items: stretch; }
+.stack-align-baseline { align-items: baseline; }
+
+
+/* --- Justify --- */
+
+.stack-justify-start   { justify-content: flex-start; }
+.stack-justify-center  { justify-content: center; }
+.stack-justify-end     { justify-content: flex-end; }
+.stack-justify-between { justify-content: space-between; }
+.stack-justify-around  { justify-content: space-around; }
+/* --- Justify self (via auto margins) --- */
+
+.stack-justify-evenly  { justify-content: space-evenly; }
+
+
+/* ------------------------------------------------------------
+   FLEX ITEM
+   Child wrapper for overriding flex behaviour on a single item.
+   ------------------------------------------------------------ */
+
+/* --- Grow --- */
+
+.flex-item-grow-1 { flex-grow: 1; }
+.flex-item-grow-2 { flex-grow: 2; }
+.flex-item-grow-3 { flex-grow: 3; }
+
+
+/* --- Shrink --- */
+
+.flex-item-shrink-0 { flex-shrink: 0; }
+.flex-item-shrink-1 { flex-shrink: 1; }
+.flex-item-shrink-2 { flex-shrink: 2; }
+.flex-item-shrink-3 { flex-shrink: 3; }
+
+
+/* --- Align self --- */
+
+.flex-item-align-self-start    { align-self: flex-start; }
+.flex-item-align-self-center   { align-self: center; }
+.flex-item-align-self-end      { align-self: flex-end; }
+.flex-item-align-self-stretch  { align-self: stretch; }
+.flex-item-align-self-baseline { align-self: baseline; }
+
+
+/* --- Margin auto --- */
+
+.flex-item-margin-auto-left   { margin-left: auto; }
+.flex-item-margin-auto-right  { margin-right: auto; }
+.flex-item-margin-auto-top    { margin-top: auto; }
+.flex-item-margin-auto-bottom { margin-bottom: auto; }
+.flex-item-margin-auto-x      { margin-left: auto; margin-right: auto; }
+.flex-item-margin-auto-y      { margin-top: auto; margin-bottom: auto; }

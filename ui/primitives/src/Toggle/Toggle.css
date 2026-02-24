@@ -1,17 +1,233 @@
+/* ============================================================
+   TOGGLE
+   Built on Base UI Toggle primitive.
+   Mirrors IconButton variants and sizes exactly.
+   Pressed state = IconButton active state.
+   Variants: ghost (default) | subtle | outline | filled
+   Sizes:    sm | md (default) | lg
+   ============================================================ */
+
 .toggle {
-  &.icon-button {
-    background-color: var(--bgSubtle);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border: 1px solid transparent;
+  background: none;
+  outline: none;
+  user-select: none;
+  cursor: default;
+
+  border-radius: var(--radius-md);
+  transition: var(--transition-colors);
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.toggle-size-sm {
+  width: 1.5rem;
+  height: 1.5rem;
+
+  .icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.toggle-size-md {
+  width: 1.75rem;
+  height: 1.75rem;
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.toggle-size-lg {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  .icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+/* ------------------------------------------------------------
+   VARIANT: GHOST
+   ------------------------------------------------------------ */
+
+.toggle-variant-ghost {
+  color: var(--text-muted);
+
+  .icon {
+    color: var(--text-subtle);
+  }
+
+  &:hover {
+    background-color: var(--surface-neutral-hover);
+    transition: none;
 
     .icon {
-      color: var(--text-color-muted);
+      color: var(--text-regular);
+    }
+  }
+
+  &:active,
+  &[data-pressed] {
+    background-color: var(--surface-neutral-active);
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+}
+
+/* ------------------------------------------------------------
+   VARIANT: SUBTLE
+   ------------------------------------------------------------ */
+
+.toggle-variant-subtle {
+  background-color: var(--surface-subtle);
+
+  .icon {
+    color: var(--text-subtle);
+  }
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    transition: none;
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+
+  &:active,
+  &[data-pressed] {
+    background-color: var(--surface-neutral-active);
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+}
+
+/* ------------------------------------------------------------
+   VARIANT: OUTLINE
+   ------------------------------------------------------------ */
+
+.toggle-variant-outline {
+  border-color: var(--border-default);
+
+  .icon {
+    color: var(--text-subtle);
+  }
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+
+  &:active,
+  &[data-pressed] {
+    background-color: var(--surface-neutral-hover);
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+}
+
+/* ------------------------------------------------------------
+   VARIANT: FILLED
+   ------------------------------------------------------------ */
+
+.toggle-variant-filled {
+  background-color: var(--surface-paper);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-raised);
+
+  .icon {
+    color: var(--text-subtle);
+  }
+
+  &:hover {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+    transition: none;
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+
+  &:active,
+  &[data-pressed] {
+    background-color: var(--surface-neutral-hover);
+    box-shadow: none;
+
+    .icon {
+      color: var(--text-regular);
+    }
+  }
+}
+
+/* ------------------------------------------------------------
+   COLOR: PRIMARY
+   ------------------------------------------------------------ */
+
+.toggle-color-primary {
+  &.toggle-variant-ghost,
+  &.toggle-variant-subtle {
+    .icon {
+      color: var(--text-primary-muted);
     }
 
-    &.checked {
-      background-color: var(--bgNeutralActive);
+    &:hover .icon {
+      color: var(--text-primary);
+    }
+
+    &[data-pressed] {
+      background-color: var(--surface-primary-active);
 
       .icon {
-        color: var(--text-color-regular);
+        color: var(--text-primary);
       }
+    }
+  }
+
+  &.toggle-variant-subtle {
+    background-color: var(--surface-primary);
+
+    &:hover {
+      background-color: var(--surface-primary-hover);
     }
   }
 }

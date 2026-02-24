@@ -1,62 +1,72 @@
-import {
-  ToggleGroup as ToggleGroupPrimitive,
-  ToggleGroupProps as ToggleGroupPrimitiveProps,
-} from '@base-ui/react/toggle-group';
-import { useCallback } from 'react';
-import { mapPropsToClasses } from '../utils';
+import React from 'react';
+import { ToggleGroup as ToggleGroupPrimitive } from '@base-ui/react/toggle-group';
+import { propsToClass } from '../utils';
+import { ToggleSize } from '../Toggle';
 import './ToggleGroup.css';
 
-export interface ToggleGroupProps<TValue extends string>
-  extends Omit<
-    ToggleGroupPrimitiveProps<TValue>,
-    'onValueChange' | 'value' | 'defaultValue'
-  > {
-  /**
+export interface ToggleGroupProps {
+  /*
+   * Currently pressed values (controlled).
+   */
+  value?: string[];
+
+  /*
+   * Default pressed values for uncontrolled usage.
+   */
+  defaultValue?: string[];
+
+  /*
+   * Callback fired when the selection changes.
+   */
+  onValueChange?: (value: string[]) => void;
+
+  /*
+   * Size of the group container. Child Toggles are sized down
+   * slightly to leave breathing room within the container.
+   * @default 'md'
+   */
+  size?: ToggleSize;
+
+  /*
+   * Prevents interaction on all child Toggles.
+   */
+  disabled?: boolean;
+
+  /*
    * Class name applied to the root element.
    */
   className?: string;
 
-  /**
-   * The value of the toggle group.
+  /*
+   * Toggle children.
    */
-  value?: TValue;
-
-  /**
-   * Callback fired when the value of the toggle group changes.
-   */
-  onValueChange?: (value: TValue) => void;
+  children: React.ReactNode;
 }
 
-export const ToggleGroup = <TValue extends string>({
-  children,
-  className,
-  onValueChange,
-  value,
-  ...other
-}: ToggleGroupProps<TValue>) => {
-  // The primitive uses an array for the value, but we only want to
-  // support a single value. This callback ensures that the value
-  // is always a single value.
-  const handleValueChange = useCallback(
-    (newValue: TValue[]) => {
-      // Prevent empty value when clicking on the already selected value
-      if (!newValue.length) {
-        return;
-      }
-
-      onValueChange?.(newValue[0]);
+export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
+  (
+    {
+      value,
+      defaultValue,
+      onValueChange,
+      size = 'md',
+      disabled,
+      className,
+      children,
     },
-    [onValueChange],
-  );
-
-  return (
+    ref,
+  ) => (
     <ToggleGroupPrimitive
-      className={mapPropsToClasses({ className }, 'toggle-group')}
-      onValueChange={handleValueChange}
-      value={value ? [value] : []}
-      {...other}
+      ref={ref}
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={onValueChange}
+      disabled={disabled}
+      className={propsToClass('toggle-group', { size, className })}
     >
       {children}
     </ToggleGroupPrimitive>
-  );
-};
+  ),
+);
+
+ToggleGroup.displayName = 'ToggleGroup';

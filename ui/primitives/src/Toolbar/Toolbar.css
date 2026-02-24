@@ -1,5 +1,34 @@
+/* ============================================================
+   TOOLBAR
+   Built on Base UI Toolbar primitive.
+   ============================================================ */
+
 .toolbar {
   display: flex;
-  grid-auto-flow: column;
-  grid-column-gap: 0.5rem;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.toolbar[aria-orientation='vertical'] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+
+/* --- Separator --- */
+
+/* Vertical (default — inside horizontal toolbar) */
+.toolbar-separator {
+  width: 1px;
+  height: 1rem;
+  margin: 0 var(--space-1);
+  background-color: var(--border-default);
+  flex-shrink: 0;
+}
+
+/* Horizontal — inside vertical toolbar */
+.toolbar[aria-orientation='vertical'] .toolbar-separator {
+  width: 100%;
+  height: 1px;
+  margin: var(--space-1) 0;
 }

@@ -1,76 +1,86 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { mapPropsToClasses } from '@minddrop/utils';
 import { IconProp, IconRenderer } from '../IconRenderer';
+import { propsToClass } from '../utils';
 import './Button.css';
 
+export type ButtonVariant = 'ghost' | 'subtle' | 'outline' | 'filled' | 'solid';
+export type ButtonColor = 'neutral' | 'primary' | 'danger';
+export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonDanger = 'on-hover' | 'always';
+
 export interface ButtonBaseProps {
-  /**
-   * The content of the button. If using an i18n label, use the
-   * `label` prop instead.
+  /*
+   * Button content. Use `label` for i18n keys.
    */
   children?: React.ReactNode;
 
-  /**
-   * If `true`, the component is disabled.
-   */
-  disabled?: boolean;
-
-  /**
-   * Icon placed after the children.
-   */
-  endIcon?: IconProp;
-
-  /**
-   * If `true`, the button is rendered in an active state to act
-   * as a toggle button.
-   */
-  active?: boolean;
-
-  /**
-   * The URL to link to when the button is clicked.
-   * If defined, an `a` element will be used as the root node.
-   */
-  href?: string;
-
-  /**
-   * The i18n key for the label.
-   * If not using an i18n label, pass in the label as a child instead.
+  /*
+   * i18n key for the button label.
    */
   label?: string;
 
-  /**
-   * The size of the button.
-   * `large` is intended for call to action buttons.
+  /*
+   * Visual style of the button.
+   * - `ghost`   — no background or border, appears on hover
+   * - `subtle`  — muted persistent background, no border; for dense panel UIs
+   * - `outline` — bordered, background appears on hover
+   * - `filled`  — bordered + background + shadow; default for most actions
+   * - `solid`   — high contrast filled; for primary call-to-action
+   * @default 'ghost'
    */
-  size?: 'small' | 'medium' | 'large';
+  variant?: ButtonVariant;
 
-  /**
-   * Icon placed before the children.
+  /*
+   * Color role.
+   * @default 'neutral'
+   */
+  color?: ButtonColor;
+
+  /*
+   * Size. Matches Select and IconButton for seamless toolbar composition.
+   * @default 'md'
+   */
+  size?: ButtonSize;
+
+  /*
+   * Icon placed before the label.
    */
   startIcon?: IconProp;
 
-  /**
-   * The variant to use based on the action type.
+  /*
+   * Icon placed after the label.
    */
-  variant?: 'text' | 'outlined' | 'contained' | 'primary';
+  endIcon?: IconProp;
 
-  /**
-   * The danger state of the button. Used to indicate potentially
-   * destructive actions.
-   * - `on-hover`: Applies danger styles when the button is hovered.
-   * - `always`: Always applies danger styles.
+  /*
+   * Renders the button in an active/toggled state.
    */
-  danger?: 'on-hover' | 'always';
+  active?: boolean;
+
+  /*
+   * Applies danger styling — shown on hover or always.
+   */
+  danger?: ButtonDanger;
+
+  /*
+   * Disables the button.
+   */
+  disabled?: boolean;
+
+  /*
+   * Renders as an anchor tag when provided.
+   */
+  href?: string;
 }
 
 export interface ButtonProps
   extends ButtonBaseProps,
-    React.ButtonHTMLAttributes<HTMLButtonElement> {}
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'color'> {}
 
 export interface LinkButtonProps
   extends ButtonBaseProps,
-    React.AnchorHTMLAttributes<HTMLAnchorElement> {
+    Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'color'> {
   href: string;
 }
 
@@ -80,44 +90,45 @@ export const Button = React.forwardRef<
 >(
   (
     {
-      disabled = false,
-      size = 'medium',
-      variant = 'neutral',
+      variant = 'ghost',
+      color = 'neutral',
+      size = 'md',
       danger,
+      active,
+      disabled = false,
       label,
       href,
       startIcon,
       endIcon,
       children,
       className,
-      active,
       ...other
     },
     ref,
   ) => {
     const { t } = useTranslation();
+
+    const classes = propsToClass('button', {
+      variant,
+      size,
+      color: color !== 'neutral' ? color : undefined,
+      danger,
+      active,
+      disabled,
+      startIcon: Boolean(startIcon) || undefined,
+      endIcon: Boolean(endIcon) || undefined,
+      className,
+    });
+
     const content = useMemo(
       () => (
         <>
-          <IconRenderer icon={startIcon} className="start-icon" />
+          <IconRenderer icon={startIcon} className="icon" />
           {label ? t(label) : children}
-          <IconRenderer icon={endIcon} className="end-icon" />
+          <IconRenderer icon={endIcon} className="icon" />
         </>
       ),
       [startIcon, label, children, endIcon, t],
-    );
-    const classes = mapPropsToClasses(
-      {
-        className,
-        size,
-        variant,
-        startIcon: Boolean(startIcon),
-        endIcon: Boolean(endIcon),
-        disabled,
-        active,
-        danger,
-      },
-      'button',
     );
 
     if (href) {
@@ -126,6 +137,7 @@ export const Button = React.forwardRef<
           ref={ref as React.MutableRefObject<HTMLAnchorElement>}
           href={href}
           className={classes}
+          aria-disabled={disabled}
           {...(other as Partial<LinkButtonProps>)}
         >
           {content}
@@ -139,6 +151,7 @@ export const Button = React.forwardRef<
         ref={ref as React.MutableRefObject<HTMLButtonElement>}
         disabled={disabled}
         className={classes}
+        data-active={active || undefined}
         {...(other as ButtonProps)}
       >
         {content}

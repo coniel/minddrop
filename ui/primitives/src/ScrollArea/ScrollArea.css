@@ -1,0 +1,160 @@
+/* ============================================================
+   SCROLL AREA
+   Built on Base UI ScrollArea primitive.
+   macOS-style overlay scrollbars — thin by default,
+   expand on hover, fade in/out on scroll.
+   ============================================================ */
+
+/* --- Root --- */
+
+.scroll-area {
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* --- Viewport --- */
+
+.scroll-area-viewport {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+}
+
+
+/* --- Scrollbar (track container) --- */
+
+.scroll-area-scrollbar {
+  position: absolute;
+  display: flex;
+  border-radius: var(--radius-full);
+  z-index: 10;
+  /* Invisible hit area — always full size for grabbing */
+  background: transparent;
+
+  /* Fade transition for visibility modes */
+  opacity: 1;
+  transition: opacity 400ms var(--ease-out);
+
+  &[data-orientation='vertical'] {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    flex-direction: column;
+    padding: 3px 4px;
+  }
+
+  &[data-orientation='horizontal'] {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 16px;
+    flex-direction: row;
+    padding: 4px 3px;
+  }
+}
+
+
+/* --- Scrollbar visibility modes --- */
+
+/* hover — only visible when root is hovered */
+.scroll-area-visibility-hover .scroll-area-scrollbar {
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out);
+}
+
+.scroll-area-visibility-hover:hover .scroll-area-scrollbar {
+  opacity: 1;
+  transition: opacity 150ms var(--ease-out);
+}
+
+/* scroll — hidden until scrolling, fades out after ~1.5s idle */
+.scroll-area-visibility-scroll .scroll-area-scrollbar {
+  opacity: 0;
+  transition: opacity 1000ms var(--ease-out);
+  pointer-events: none;
+}
+
+.scroll-area-visibility-scroll.is-scrolling .scroll-area-scrollbar,
+.scroll-area-visibility-scroll .scroll-area-scrollbar:hover {
+  opacity: 1;
+  transition: opacity 150ms var(--ease-out);
+  pointer-events: auto;
+}
+
+/* always — always visible */
+.scroll-area-visibility-always .scroll-area-scrollbar {
+  opacity: 1;
+}
+
+
+/* --- Thumb --- */
+
+.scroll-area-thumb {
+  position: relative;
+  border-radius: var(--radius-full);
+
+  /* Narrow visual pill, centered in the hit area */
+  background-color: lch(0 0 0 / 0.35);
+
+  transition:
+    width var(--duration-fast) var(--ease-out),
+    height var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+
+  /* Vertical: thin strip, centered horizontally */
+  .scroll-area-scrollbar[data-orientation='vertical'] & {
+    width: 4px;
+    margin: 0 auto;
+  }
+
+  /* Horizontal: thin strip, centered vertically */
+  .scroll-area-scrollbar[data-orientation='horizontal'] & {
+    height: 4px;
+    margin: auto 0;
+  }
+
+  /* Expand to fill hit area on track hover */
+  .scroll-area-scrollbar[data-orientation='vertical']:hover & {
+    width: 8px;
+  }
+
+  .scroll-area-scrollbar[data-orientation='horizontal']:hover & {
+    height: 8px;
+  }
+
+  /* Darken on thumb hover/drag */
+  &:hover,
+  &[data-dragging] {
+    background-color: lch(0 0 0 / 0.5);
+  }
+}
+
+/* Dark theme thumb */
+.dark-theme {
+  .scroll-area-thumb {
+    background-color: lch(100 0 0 / 0.35);
+
+    &:hover,
+    &[data-dragging] {
+      background-color: lch(100 0 0 / 0.55);
+    }
+  }
+}
+
+
+/* --- Corner (shown when both scrollbars are visible) --- */
+
+.scroll-area-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+}

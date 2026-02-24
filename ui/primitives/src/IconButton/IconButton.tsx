@@ -3,64 +3,75 @@ import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/icons';
 import { Icon } from '../Icon';
 import { Tooltip } from '../Tooltip';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './IconButton.css';
 
+export type IconButtonVariant = 'ghost' | 'subtle' | 'outline' | 'filled';
+export type IconButtonColor = 'neutral' | 'muted' | 'contrast';
+export type IconButtonSize = 'sm' | 'md' | 'lg';
+
 export interface IconButtonProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
-  /**
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  /*
    * The name of the icon to render.
    */
   icon?: UiIconName;
 
-  /**
-   * Icon can also be passed in as a child for more control.
-   * Children are not rendered if the `icon` prop is present.
+  /*
+   * Icon can also be passed as a child for more control.
+   * Ignored if the `icon` prop is provided.
    */
   children?: React.ReactNode;
 
-  /**
-   * The color of the icon.
-   */
-  color?: 'neutral' | 'light' | 'contrast';
-
-  /**
-   * The component used for the root node. Either a string to use a
-   * HTML element or a component.
+  /*
+   * The rendered element. Defaults to 'button'.
    */
   as?: React.ElementType;
 
-  /**
-   * Disables the button.
-   */
-  disabled?: boolean;
-
-  /**
-   * Makes the icon button accessible by providing a meaningful label
-   * which is announced correctly by screen readers.
+  /*
+   * Accessible label announced by screen readers.
+   * Also used as the default tooltip title if `tooltipTitle` is not set.
    */
   label: string;
 
-  /**
-   * The size of the icon button. The large size is intended for use
-   * alongside TextField components, matching their height.
+  /*
+   * Visual style.
+   * - `ghost`   — no background or border, appears on hover (default)
+   * - `subtle`  — muted persistent background, no border; for dense panel UIs
+   * - `outline` — bordered, background appears on hover
+   * - `filled`  — bordered + background + shadow
+   * @default 'ghost'
    */
-  size?: 'small' | 'medium' | 'large';
+  variant?: IconButtonVariant;
 
-  /**
-   * The variant of the icon button.
+  /*
+   * Icon color.
+   * - `neutral`  — standard muted icon color (default)
+   * - `muted`    — more receded, for secondary/supporting actions
+   * - `contrast` — for icons on solid/dark surfaces
+   * @default 'neutral'
    */
-  variant?: 'regular' | 'filled' | 'outlined';
+  color?: IconButtonColor;
 
-  /**
-   * If set, a tooltip will be added to the button
-   * using this property as its title.
+  /*
+   * Size. Heights match Button and Select for seamless toolbar composition.
+   * @default 'md'
+   */
+  size?: IconButtonSize;
+
+  /*
+   * Renders the button in an active/toggled state.
+   * Sets aria-pressed automatically.
+   */
+  active?: boolean;
+
+  /*
+   * Tooltip title. Falls back to `label` if not provided.
    */
   tooltipTitle?: React.ReactNode;
 
-  /**
-   * If set, a tooltip will be added to the button
-   * using this property as its description.
+  /*
+   * Optional tooltip description shown below the title.
    */
   tooltipDescription?: React.ReactNode;
 }
@@ -70,12 +81,14 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     {
       icon,
       children,
-      color,
       as,
       className,
       label,
-      size,
-      variant,
+      variant = 'ghost',
+      color = 'neutral',
+      size = 'md',
+      active,
+      disabled,
       tooltipTitle,
       tooltipDescription,
       ...other
@@ -85,16 +98,21 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     const { t } = useTranslation();
     const Component = as || 'button';
 
-    const Button = (
+    const button = (
       <Component
         type="button"
         ref={ref}
-        tabIndex={0}
         aria-label={t(label)}
-        className={mapPropsToClasses(
-          { className, color, size, variant },
-          'icon-button',
-        )}
+        aria-pressed={active}
+        disabled={disabled}
+        className={propsToClass('icon-button', {
+          variant,
+          color,
+          size,
+          active,
+          disabled,
+          className,
+        })}
         {...other}
       >
         {icon ? <Icon name={icon} /> : children}
@@ -103,13 +121,16 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 
     if (tooltipTitle || tooltipDescription) {
       return (
-        <Tooltip title={tooltipTitle} description={tooltipDescription}>
-          {Button}
+        <Tooltip
+          title={tooltipTitle ?? t(label)}
+          description={tooltipDescription}
+        >
+          {button}
         </Tooltip>
       );
     }
 
-    return Button;
+    return button;
   },
 );
 
