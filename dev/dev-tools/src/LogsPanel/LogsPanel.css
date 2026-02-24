@@ -53,6 +53,64 @@
 .dev-tools-level-btn-warn  { color: var(--text-warning);  background: var(--surface-warning); }
 .dev-tools-level-btn-error { color: var(--text-danger);   background: var(--surface-danger); }
 
+.dev-tools-active-filter-chip {
+  all: unset;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  color: lch(75 80 75);
+  background: color-mix(in lch, lch(75 80 75) 15%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 12rem;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.dev-tools-log-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover { color: var(--text-muted); }
+  &.is-active { color: lch(75 80 75); }
+}
+
+.dev-tools-log-source-file {
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+  &.is-active { color: lch(75 80 75); opacity: 1; }
+}
+
+.dev-tools-search {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.7rem;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-muted);
+  padding: 1px var(--space-1);
+
+  &::placeholder {
+    color: var(--text-subtle);
+    opacity: 0.6;
+  }
+
+  &:focus {
+    color: var(--text-regular);
+  }
+}
+
 .dev-tools-logs-list {
   flex: 1;
   overflow-y: auto;

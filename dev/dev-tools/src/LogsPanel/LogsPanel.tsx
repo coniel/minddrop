@@ -36,6 +36,16 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
   const [savedEntryIds, setSavedEntryIds] = useState<Set<number>>(new Set());
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [activeFilter, setActiveFilter] = useState<LogLevel | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [quickFilter, setQuickFilter] = useState<{
+    type: 'label' | 'file';
+    value: string;
+  } | null>(null);
+
+  // Clear quick filter when logs are cleared.
+  useEffect(() => {
+    if (logs.length === 0) setQuickFilter(null);
+  }, [logs.length]);
 
   // Auto-scroll to bottom only in oldest-first mode.
   // In newest-first mode new entries appear at the top, visible without scrolling.
@@ -67,12 +77,45 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
     setActiveFilter((prev) => (prev === level ? null : level));
   }, []);
 
+  const handleLabelClick = useCallback((label: string) => {
+    setQuickFilter((prev) =>
+      prev?.type === 'label' && prev.value === label
+        ? null
+        : { type: 'label', value: label },
+    );
+  }, []);
+
+  const handleFileClick = useCallback((file: string) => {
+    setQuickFilter((prev) =>
+      prev?.type === 'file' && prev.value === file
+        ? null
+        : { type: 'file', value: file },
+    );
+  }, []);
+
   const displayedLogs = useMemo(() => {
-    const filtered = activeFilter
-      ? logs.filter((e) => e.level === activeFilter)
-      : logs;
+    const q = searchQuery.toLowerCase();
+    const filtered = logs.filter((e) => {
+      if (activeFilter && e.level !== activeFilter) return false;
+      if (quickFilter) {
+        if (quickFilter.type === 'label') {
+          if (e.args.length < 2 || e.args[0] !== quickFilter.value) return false;
+        } else {
+          if (e.source?.file !== quickFilter.value) return false;
+        }
+      }
+      if (q) {
+        const text = e.args
+          .filter((a) => !isComplex(a))
+          .map(formatArg)
+          .join(' ')
+          .toLowerCase();
+        if (!text.includes(q)) return false;
+      }
+      return true;
+    });
     return sortOrder === 'newest' ? [...filtered].reverse() : filtered;
-  }, [logs, activeFilter, sortOrder]);
+  }, [logs, activeFilter, quickFilter, searchQuery, sortOrder]);
 
   const handleEntryContextMenu = useCallback(
     (e: React.MouseEvent, entryId: number) => {
@@ -148,6 +191,32 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
             {level}
           </button>
         ))}
+        <div className="dev-tools-filter-divider" />
+        <input
+          type="text"
+          className="dev-tools-search"
+          placeholder="search…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
+        />
+        {quickFilter && (
+          <>
+            <div className="dev-tools-filter-divider" />
+            <button
+              className="dev-tools-active-filter-chip"
+              onClick={() => setQuickFilter(null)}
+            >
+              {quickFilter.value.length > 16
+                ? `${quickFilter.value.slice(0, 15)}…`
+                : quickFilter.value}
+              {' ×'}
+            </button>
+          </>
+        )}
       </div>
 
       <div className="dev-tools-logs-list">
@@ -161,7 +230,11 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
           </Text>
         )}
         {displayedLogs.map((entry) => {
-          const hasComplex = entry.args.some(isComplex);
+          const isMultiPart =
+            entry.args.length >= 2 && typeof entry.args[0] === 'string';
+          const labelArg = isMultiPart ? (entry.args[0] as string) : null;
+          const contentArgs = isMultiPart ? entry.args.slice(1) : entry.args;
+          const hasComplex = contentArgs.some(isComplex);
           const force = getEffectiveForce(entry.id);
           const saved = savedEntryIds.has(entry.id);
 
@@ -181,8 +254,16 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
               </Text>
 
               <div className="dev-tools-log-args">
+                {labelArg !== null && (
+                  <span
+                    className={`dev-tools-log-label${quickFilter?.type === 'label' && quickFilter.value === labelArg ? ' is-active' : ''}`}
+                    onClick={() => handleLabelClick(labelArg)}
+                  >
+                    {labelArg}
+                  </span>
+                )}
                 {hasComplex ? (
-                  entry.args.map((arg, i) =>
+                  contentArgs.map((arg, i) =>
                     isComplex(arg) ? (
                       <JsonTree key={i} value={arg} externalForce={force} />
                     ) : (
@@ -193,7 +274,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
                   )
                 ) : (
                   <Text mono size="xs" className="dev-tools-log-message">
-                    {entry.args.map((arg) => formatArg(arg)).join(' ')}
+                    {contentArgs.map((arg) => formatArg(arg)).join(' ')}
                   </Text>
                 )}
               </div>
@@ -201,7 +282,13 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
               <div className="dev-tools-log-end">
                 {entry.source && (
                   <span className="dev-tools-log-source">
-                    {entry.source.file}:{entry.source.line}
+                    <span
+                      className={`dev-tools-log-source-file${quickFilter?.type === 'file' && quickFilter.value === entry.source.file ? ' is-active' : ''}`}
+                      onClick={() => handleFileClick(entry.source!.file)}
+                    >
+                      {entry.source.file}
+                    </span>
+                    :{entry.source.line}
                   </span>
                 )}
                 <div className="dev-tools-log-actions">
