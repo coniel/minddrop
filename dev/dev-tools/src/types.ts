@@ -1,0 +1,15 @@
+export type LogLevel = 'log' | 'info' | 'warn' | 'error';
+
+export interface LogEntry {
+  id: number;
+  level: LogLevel;
+  args: unknown[];
+  timestamp: number;
+}
+
+export type ActiveSection = 'stories' | 'state' | 'events' | 'logs';
+
+export interface ActiveStory {
+  groupIndex: number;
+  itemIndex: number;
+}

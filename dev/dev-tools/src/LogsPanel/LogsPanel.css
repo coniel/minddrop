@@ -1,0 +1,67 @@
+.dev-tools-logs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dev-tools-logs-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.dev-tools-logs-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-1) 0;
+}
+
+.dev-tools-log-entry {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.dev-tools-log-time {
+  flex-shrink: 0;
+  width: 5rem;
+}
+
+.dev-tools-log-message {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Log level colors */
+
+.dev-tools-log-warn {
+  background-color: var(--surface-warning);
+
+  .dev-tools-log-message {
+    color: var(--text-warning);
+  }
+}
+
+.dev-tools-log-error {
+  background-color: var(--surface-danger);
+
+  .dev-tools-log-message {
+    color: var(--text-danger);
+  }
+}
+
+.dev-tools-log-info {
+  .dev-tools-log-message {
+    color: var(--text-info);
+  }
+}
