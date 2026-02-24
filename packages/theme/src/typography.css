@@ -1,15 +1,15 @@
 /* Font Family */
 
 .font-family-sans {
-  font-family: var(--font-family-sans);
+  font-family: var(--font-sans);
 }
 
 .font-family-serif {
-  font-family: var(--font-family-serif);
+  font-family: var(--font-serif);
 }
 
 .font-family-mono {
-  font-family: var(--font-family-mono);
+  font-family: var(--font-mono);
 }
 
 /* Text Decoration/Style */

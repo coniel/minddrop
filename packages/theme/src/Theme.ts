@@ -1,22 +1,21 @@
-import { Events } from '@minddrop/events';
 import { ThemeDark, ThemeLight, ThemeSystem } from './constants';
-import { getThemeAppearance } from './getThemeAppearance';
-import { getThemeAppearanceSetting } from './getThemeAppearanceSetting';
-import { setThemeAppearance } from './setThemeAppearance';
-import { setThemeAppearanceSetting } from './setThemeAppearanceSetting';
-import { ThemeApi } from './types';
+import { SetAppearanceEvent, SetAppearanceSettingEvent } from './events';
 
-export const Theme: ThemeApi = {
-  // Constants
+export const events = {
+  SetAppearance: SetAppearanceEvent,
+  SetAppearanceSetting: SetAppearanceSettingEvent,
+};
+
+export const constants = {
   System: ThemeSystem,
   Light: ThemeLight,
   Dark: ThemeDark,
-
-  // Functions
-  getAppearance: getThemeAppearance,
-  getAppearanceSetting: getThemeAppearanceSetting,
-  setAppearance: setThemeAppearance,
-  setAppearanceSetting: setThemeAppearanceSetting,
-  addEventListener: Events.addListener,
-  removeEventListener: Events.removeListener,
 };
+
+export { getThemeAppearance as getAppearance } from './getThemeAppearance';
+export { getThemeAppearanceSetting as getAppearanceSetting } from './getThemeAppearanceSetting';
+export { initializeTheme as initialize } from './initializeTheme';
+export { setThemeAppearance as setAppearance } from './setThemeAppearance';
+export { setThemeAppearanceSetting as setAppearanceSetting } from './setThemeAppearanceSetting';
+export { useThemeAppearance as useAppearance } from './useThemeAppearance';
+export { useThemeAppearanceSetting as useAppearanceSetting } from './useThemeAppearanceSetting';

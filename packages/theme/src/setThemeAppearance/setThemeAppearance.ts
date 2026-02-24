@@ -2,6 +2,7 @@ import { Events } from '@minddrop/events';
 import { InvalidParameterError } from '@minddrop/utils';
 import { ThemeConfig } from '../ThemeConfig';
 import { ThemeDark, ThemeLight } from '../constants';
+import { SetAppearanceEvent } from '../events';
 import { ThemeAppearance } from '../types';
 
 /**
@@ -26,5 +27,5 @@ export function setThemeAppearance(appearance: ThemeAppearance): void {
   ThemeConfig.set('appearance', appearance);
 
   // Dispatch a 'theme:appearance:set-value' event
-  Events.dispatch('theme:appearance:set-value', appearance);
+  Events.dispatch(SetAppearanceEvent, appearance);
 }

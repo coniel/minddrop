@@ -1,0 +1,205 @@
+/* ============================================================
+   DESIGN TOKENS
+   Built on Radix color scales. All component CSS should
+   reference these tokens, never raw Radix values directly.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   SHARED TOKENS (light + dark)
+   ------------------------------------------------------------ */
+
+.light-theme,
+.dark-theme {
+  /* --- Typography --- */
+
+  --font-ui:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    'Segoe UI Variable Display', 'Segoe UI', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji';
+
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco',
+    'Liberation Mono', 'Courier New', monospace;
+
+  /* User content fonts (user-selectable) */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+
+  --font-serif: ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  /* --- Font scale --- */
+
+  --text-xs: 0.75rem; /* 12px — labels, captions */
+  --text-sm: 0.8125rem; /* 13px — secondary UI text */
+  --text-base: 0.875rem; /* 14px — primary UI text */
+  --text-md: 1rem; /* 16px — content body */
+  --text-lg: 1.25rem; /* 20px — content titles */
+  --text-xl: 1.5rem; /* 24px — section headings */
+  --text-2xl: 1.953rem; /* 31px — page titles */
+
+  /* --- Font weights --- */
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- Line heights --- */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-normal: 1.5;
+
+  /* --- Spacing scale (4px base) --- */
+
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.5rem; /* 24px */
+  --space-6: 2rem; /* 32px */
+  --space-7: 3rem; /* 48px */
+
+  /* --- Border radius --- */
+
+  --radius-xs: 0.1875rem; /*  3px — tooltips, small popovers */
+  --radius-sm: 0.25rem; /*  4px — badges, tags, inputs */
+  --radius-md: 0.375rem; /*  6px — buttons, nav items */
+  --radius-lg: 0.5rem; /*  8px — cards, panels */
+  --radius-xl: 0.75rem; /* 12px — dialogs, sheets */
+  --radius-full: 999px; /*      — pills, avatars */
+
+  /* --- Levels --- */
+
+  --level-dialog-backdrop: 40;
+  --level-dialog: 50;
+  --level-popover: 60;
+  --level-tooltip: 70;
+
+  /* --- Transitions --- */
+
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+
+  --ease-default: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  --transition-colors:
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out);
+
+  /* --- Semantic text colors --- */
+
+  --text-regular: var(--neutral-1200);
+  --text-muted: var(--neutral-1100);
+  --text-subtle: var(--neutral-1000);
+  --text-disabled: var(--neutral-800);
+  --text-placeholder: var(--neutral-900);
+
+  --text-primary: var(--primary-1200);
+  --text-primary-muted: var(--primary-1100);
+
+  --text-danger: var(--danger-1100);
+  --text-danger-muted: var(--danger-1000);
+
+  --text-warning: var(--warning-1100);
+  --text-warning-muted: var(--warning-1000);
+
+  --text-info: var(--info-1100);
+  --text-info-muted: var(--info-1000);
+
+  --text-on-solid: var(--neutral-100);
+
+  /* --- Semantic surface colors --- */
+
+  --surface-app: var(--app-background);
+  --surface-subtle: var(--neutral-200);
+  --surface-raised: var(--neutral-300);
+  --surface-overlay: var(--neutral-100);
+
+  --surface-neutral: var(--neutral-300);
+  --surface-neutral-hover: var(--neutral-400);
+  --surface-neutral-active: var(--neutral-500);
+
+  --surface-primary: var(--primary-300);
+  --surface-primary-hover: var(--primary-400);
+  --surface-primary-active: var(--primary-500);
+
+  --surface-danger: var(--danger-300);
+  --surface-danger-hover: var(--danger-400);
+  --surface-danger-active: var(--danger-500);
+
+  --surface-warning: var(--warning-300);
+  --surface-warning-hover: var(--warning-400);
+  --surface-warning-active: var(--warning-500);
+
+  --surface-info: var(--info-300);
+  --surface-info-hover: var(--info-400);
+  --surface-info-active: var(--info-500);
+
+  --surface-solid-neutral: var(--neutral-900);
+  --surface-solid-neutral-hover: var(--neutral-1000);
+  --surface-solid-primary: var(--primary-900);
+  --surface-solid-primary-hover: var(--primary-1000);
+  --surface-solid-danger: var(--danger-900);
+  --surface-solid-danger-hover: var(--danger-1000);
+  --surface-solid-warning: var(--warning-900);
+  --surface-solid-warning-hover: var(--warning-1000);
+  --surface-solid-info: var(--info-900);
+  --surface-solid-info-hover: var(--info-1000);
+
+  /* --- Semantic border colors --- */
+
+  --border-subtle: var(--neutral-500);
+  --border-default: var(--neutral-600);
+  --border-strong: var(--neutral-700);
+  --border-hover: var(--neutral-800);
+
+  --border-primary-subtle: var(--primary-500);
+  --border-primary: var(--primary-700);
+  --border-primary-hover: var(--primary-800);
+
+  --border-danger-subtle: var(--danger-500);
+  --border-danger: var(--danger-700);
+  --border-danger-hover: var(--danger-800);
+
+  --border-warning-subtle: var(--warning-500);
+  --border-warning: var(--warning-700);
+  --border-warning-hover: var(--warning-800);
+
+  --border-info-subtle: var(--info-500);
+  --border-info: var(--info-700);
+  --border-info-hover: var(--info-800);
+}
+
+/* ------------------------------------------------------------
+   BASE STYLES
+   ------------------------------------------------------------ */
+
+* {
+  cursor: default;
+}
+
+input,
+textarea,
+[contenteditable] {
+  cursor: text;
+}
+
+a[href] {
+  cursor: pointer;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--text-regular);
+  background-color: var(--surface-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

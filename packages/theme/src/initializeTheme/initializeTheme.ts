@@ -1,7 +1,13 @@
-import { Theme } from '../Theme';
+import { Events } from '@minddrop/events';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
+import {
+  SetAppearanceSettingEvent,
+  SetAppearanceSettingEventData,
+} from '../events';
+import { getThemeAppearanceSetting } from '../getThemeAppearanceSetting';
+import { setThemeAppearance } from '../setThemeAppearance';
 
-export function onRun() {
+export function initializeTheme() {
   // Media matcher that matches if OS is in dark mode
   const matchMediaDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
@@ -12,12 +18,12 @@ export function onRun() {
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     // Set the theme appearance to the system value
-    Theme.setAppearance(darkMode ? ThemeDark : ThemeLight);
+    setThemeAppearance(darkMode ? ThemeDark : ThemeLight);
   }
 
   // Listen to `theme:appearance:set-setting` events
-  Theme.addEventListener(
-    'theme:appearance:set-setting',
+  Events.addListener<SetAppearanceSettingEventData>(
+    SetAppearanceSettingEvent,
     'theme:appearance:set',
     (payload) => {
       // The event data is the new appearance setting
@@ -37,7 +43,7 @@ export function onRun() {
       } else {
         // If the setting has been set to a fixed value,
         // set the value as the current theme appearance.
-        Theme.setAppearance(appearanceSetting || ThemeLight);
+        setThemeAppearance(appearanceSetting || ThemeLight);
 
         // Remove the OS dark mode change listener
         matchMediaDarkMode.removeEventListener(
@@ -49,7 +55,7 @@ export function onRun() {
   );
 
   // Get the initial theme appearance setting
-  const appearanceSetting = Theme.getAppearanceSetting();
+  const appearanceSetting = getThemeAppearanceSetting();
 
   if (appearanceSetting === ThemeSystem) {
     // If the theme appearance setting is 'system', set
@@ -64,8 +70,6 @@ export function onRun() {
   } else {
     // If the setting has been set to a fixed value,
     // set the value as the current theme appearance.
-    Theme.setAppearance(appearanceSetting);
+    setThemeAppearance(appearanceSetting);
   }
 }
-
-export function onDisable() {}

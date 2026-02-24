@@ -1,14 +1,9 @@
-import '@radix-ui/themes/styles.css';
+import './reset.css';
 import './dark.css';
 import './light.css';
-import './base.css';
-import './variables.css';
-import './animations.css';
 import './typography.css';
+import './tokens.css';
 
-export { Theme as ThemeProvider } from '@radix-ui/themes';
 export * from './types';
-export * from './useThemeAppearance';
-export * from './useThemeAppearanceSetting';
-export * from './Theme';
-export * from './theme-extension';
+export type * from './events';
+export * as Theme from './Theme';

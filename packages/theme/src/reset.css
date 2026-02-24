@@ -178,3 +178,17 @@ svg {
   /* Fix misalignment in some browsers */
   -webkit-transform: translate(0px, 0px);
 }
+
+* {
+  cursor: default;
+}
+
+input,
+textarea,
+[contenteditable] {
+  cursor: text;
+}
+
+a[href] {
+  cursor: pointer; /* only actual navigation links */
+}
