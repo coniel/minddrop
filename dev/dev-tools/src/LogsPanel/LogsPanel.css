@@ -21,7 +21,7 @@
 
 .dev-tools-log-entry {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-1) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
@@ -34,12 +34,27 @@
 .dev-tools-log-time {
   flex-shrink: 0;
   width: 5rem;
+  padding-top: 2px;
 }
 
-.dev-tools-log-message {
+.dev-tools-log-args {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dev-tools-log-message,
+.dev-tools-log-text {
   white-space: pre-wrap;
   word-break: break-all;
+}
+
+.dev-tools-log-source {
+  flex-shrink: 0;
+  padding-top: 2px;
+  opacity: 0.6;
 }
 
 /* Log level colors */
@@ -47,7 +62,8 @@
 .dev-tools-log-warn {
   background-color: var(--surface-warning);
 
-  .dev-tools-log-message {
+  .dev-tools-log-message,
+  .dev-tools-log-text {
     color: var(--text-warning);
   }
 }
@@ -55,13 +71,15 @@
 .dev-tools-log-error {
   background-color: var(--surface-danger);
 
-  .dev-tools-log-message {
+  .dev-tools-log-message,
+  .dev-tools-log-text {
     color: var(--text-danger);
   }
 }
 
 .dev-tools-log-info {
-  .dev-tools-log-message {
+  .dev-tools-log-message,
+  .dev-tools-log-text {
     color: var(--text-info);
   }
 }

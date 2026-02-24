@@ -1,0 +1,50 @@
+.json-tree {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.json-node {
+  display: flex;
+  flex-direction: column;
+}
+
+.json-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.json-children {
+  padding-left: 1rem;
+}
+
+.json-toggle {
+  all: unset;
+  display: inline-flex;
+  width: 0.75rem;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: var(--text-subtle);
+  user-select: none;
+
+  &:hover { color: var(--text-regular); }
+}
+
+/* --- Value type colors --- */
+
+.json-key         { color: var(--text-regular); }
+.json-key-toggle  { cursor: pointer; &:hover { text-decoration: underline; } }
+.json-string    { color: var(--text-info); }
+.json-number    { color: var(--text-warning); }
+.json-bool-true { color: var(--text-success); }
+.json-bool-false { color: var(--text-danger); }
+.json-null      { color: var(--text-subtle); font-style: italic; }
+.json-undefined { color: var(--text-subtle); font-style: italic; }
+
+/* --- Structure --- */
+
+.json-date    { color: var(--text-warning); }
+
+.json-bracket { color: var(--text-muted); }
+.json-comma   { color: var(--text-subtle); }
+.json-preview { color: var(--text-subtle); font-style: italic; }
