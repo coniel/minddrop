@@ -10,10 +10,10 @@
     "typecheck": "tsc --noEmit --jsx react-jsx"
   },
   "devDependencies": {
-    "eslint": "^9.16.0",
+    "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",

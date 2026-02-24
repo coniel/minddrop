@@ -12,15 +12,15 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.1.0",
-    "@types/react": "^18.2.5",
-    "eslint": "^9.16.0",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@minddrop/file-system": "workspace:*",
-    "react": "^19.0.0",
+    "react": "^19.2.4",
     "zustand": "^4.3.8"
   }
 }

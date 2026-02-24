@@ -16,10 +16,10 @@
   "devDependencies": {
     "@minddrop/eslint-config": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
-    "eslint": "^9.16.0",
+    "eslint": "^9.39.3",
     "rimraf": "~5.0.0",
     "tsconfig": "workspace:*",
-    "typescript": "^5.7.2"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@minddrop/core": "workspace:*",
@@ -29,6 +29,6 @@
     "zustand": "^4.3.8"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "^19.2.4"
   }
 }
