@@ -16,7 +16,6 @@ export * from './isImageUrl';
 export * from './isSerializedDate';
 export * from './isUrl';
 export * from './isValidUrl';
-export * from './mapPropsToClasses';
 export * from './parseDateOrNow';
 export * from './reorderArray';
 export * from './restoreDates';

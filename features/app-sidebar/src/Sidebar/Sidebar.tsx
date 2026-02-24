@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
-import { Panel, mapPropsToClasses } from '@minddrop/ui-primitives';
+import { Panel, propsToClass } from '@minddrop/ui-primitives';
 import './Sidebar.css';
 
 const minWidth = 240;
@@ -71,7 +71,7 @@ export const Sidebar: FC<SidebarProps> = ({
   return (
     <Panel
       ref={sidebar}
-      className={mapPropsToClasses({ className, isDragging }, 'app-sidebar')}
+      className={propsToClass('app-sidebar', { className, isDragging })}
       {...other}
       style={{ ...style, width }}
       data-width={width}

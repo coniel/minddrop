@@ -1,6 +1,6 @@
 import { ContentIconName, UserIcon, useIcon, useIcons } from '@minddrop/icons';
 import { ContentColor } from '../types';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './ContentIcon.css';
 
 export interface ContentIconProps {
@@ -38,7 +38,7 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
   if (icon.type === 'emoji') {
     return (
       <span
-        className={mapPropsToClasses({ className }, 'content-icon emoji')}
+        className={['content-icon', 'emoji', className].filter(Boolean).join(' ')}
         data-testid="content-icon"
       >
         {icon.icon}
@@ -85,10 +85,7 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
     <IconComponent
       data-testid="content-icon"
       name={name}
-      className={mapPropsToClasses(
-        { className, color },
-        'content-icon icon-set-icon',
-      )}
+      className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
       {...other}
     />
   );

@@ -1,5 +1,5 @@
 import { Text, TextProps } from '../Text';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Subheading.css';
 
 export interface SubheadingProps extends TextProps {
@@ -18,7 +18,7 @@ export const Subheading: React.FC<SubheadingProps> = ({
   return (
     <Text
       weight="bold"
-      className={mapPropsToClasses({ className, noMargin }, 'subheading')}
+      className={propsToClass('subheading', { className, noMargin })}
       {...other}
     />
   );

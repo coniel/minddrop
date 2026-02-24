@@ -2,7 +2,7 @@ import React from 'react';
 import { ReactEditor, useSlate } from 'slate-react';
 import { ToDoElement } from '@minddrop/ast';
 import { Icon } from '@minddrop/ui-primitives';
-import { mapPropsToClasses } from '@minddrop/utils';
+import { propsToClass } from '@minddrop/ui-primitives';
 import { ElementPlaceholderText } from '../../ElementPlaceholderText';
 import { Transforms } from '../../Transforms';
 import { ToDoElementProps } from './ToDoElement.types';
@@ -31,10 +31,7 @@ export const ToDoElementComponent: React.FC<ToDoElementProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses(
-        { checked: element.checked },
-        'to-do-element',
-      )}
+      className={propsToClass('to-do-element', { checked: element.checked })}
       {...attributes}
     >
       <div contentEditable={false}>

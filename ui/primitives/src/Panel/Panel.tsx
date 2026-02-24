@@ -1,5 +1,5 @@
 import React from 'react';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Panel.css';
 
 export interface PanelProps extends React.HTMLProps<HTMLDivElement> {
@@ -14,7 +14,7 @@ export const Panel = React.forwardRef<HTMLDivElement, PanelProps>(
     return (
       <div
         ref={ref}
-        className={mapPropsToClasses({ className }, 'panel')}
+        className={propsToClass('panel', { className })}
         {...other}
       >
         {children}

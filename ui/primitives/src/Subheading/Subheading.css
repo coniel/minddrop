@@ -2,7 +2,7 @@
   display: block;
   margin-bottom: 0.5rem;
 
-  &.no-margin {
+  &.subheading-no-margin {
     margin-bottom: 0;
   }
 }

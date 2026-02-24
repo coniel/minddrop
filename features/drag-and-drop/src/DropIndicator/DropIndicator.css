@@ -5,37 +5,37 @@
   pointer-events: none;
   z-index: 999;
 
-  &.horizontal {
+  &.drop-indicator-horizontal {
     width: 100%;
     height: var(--circle-size);
 
-    &.position-inside {
+    &.drop-indicator-position-inside {
       top: 50%;
       transform: translateY(-50%);
     }
 
-    &.position-start {
+    &.drop-indicator-position-start {
       top: 0;
       transform: translateY(-50%);
     }
 
-    &.position-end {
+    &.drop-indicator-position-end {
       bottom: 0;
       transform: translateY(50%);
     }
 
-    &.position-after {
+    &.drop-indicator-position-after {
       bottom: 0;
       transform: translateY(calc(var(--gap) / 2 + var(--circle-size) / 2));
     }
 
-    &.position-before {
+    &.drop-indicator-position-before {
       top: 0;
       transform: translateY(calc((var(--gap) / -2 - var(--circle-size) / 2)));
     }
   }
 
-  &.vertical {
+  &.drop-indicator-vertical {
     height: 100%;
     width: var(--circle-size);
   }
@@ -44,7 +44,7 @@
     position: absolute;
     background-color: var(--blue10);
 
-    &.horizontal {
+    &.line-horizontal {
       width: calc(100% - 5px);
       height: 2px;
       left: 5px;
@@ -52,7 +52,7 @@
       transform: translateY(3px);
     }
 
-    &.vertical {
+    &.line-vertical {
       height: calc(100% - 5px);
       width: 2px;
       top: 5px;
@@ -67,12 +67,12 @@
     border-radius: 50%;
     border: 2px solid var(--blue10);
 
-    &.horizontal {
+    &.circle-horizontal {
       left: -1px;
       top: 0;
     }
 
-    &.vertical {
+    &.circle-vertical {
       top: -4px;
       left: 50%;
       transform: translateX(-50%);

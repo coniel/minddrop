@@ -3,69 +3,69 @@
 
   /* Color */
 
-  &.color-current-color {
+  &.content-icon-color-current-color {
     stroke: currentColor;
   }
 
-  &.color-default {
+  &.content-icon-color-default {
     color: var(--textNeutralLight);
   }
 
-  &.color-blue {
+  &.content-icon-color-blue {
     color: var(--blue9);
     background-color: var(--blue3);
     box-shadow: 0 0 0 3px var(--blue3);
   }
 
-  &.color-cyan {
+  &.content-icon-color-cyan {
     color: var(--cyan9);
     background-color: var(--cyan3);
     box-shadow: 0 0 0 3px var(--cyan3);
   }
 
-  &.color-red {
+  &.content-icon-color-red {
     color: var(--red9);
     background-color: var(--red3);
     box-shadow: 0 0 0 3px var(--red3);
   }
 
-  &.color-pink {
+  &.content-icon-color-pink {
     color: var(--pink9);
     background-color: var(--pink3);
     box-shadow: 0 0 0 3px var(--pink3);
   }
 
-  &.color-purple {
+  &.content-icon-color-purple {
     color: var(--purple9);
     background-color: var(--purple3);
     box-shadow: 0 0 0 3px var(--purple3);
   }
 
-  &.color-green {
+  &.content-icon-color-green {
     color: var(--green9);
     background-color: var(--green3);
     box-shadow: 0 0 0 3px var(--green3);
   }
 
-  &.color-orange {
+  &.content-icon-color-orange {
     color: var(--orange9);
     background-color: var(--orange3);
     box-shadow: 0 0 0 3px var(--orange3);
   }
 
-  &.color-yellow {
+  &.content-icon-color-yellow {
     color: var(--yellow9);
     background-color: var(--yellow3);
     box-shadow: 0 0 0 3px var(--yellow3);
   }
 
-  &.color-brown {
+  &.content-icon-color-brown {
     color: var(--brown9);
     background-color: var(--brown3);
     box-shadow: 0 0 0 3px var(--brown3);
   }
 
-  &.color-gray {
+  &.content-icon-color-gray {
     color: var(--gray9);
     background-color: var(--gray3);
     box-shadow: 0 0 0 3px var(--gray3);

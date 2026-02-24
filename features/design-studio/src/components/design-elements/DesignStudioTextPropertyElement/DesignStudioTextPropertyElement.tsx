@@ -1,5 +1,5 @@
 import { DefaultTypographyStyles } from '@minddrop/designs';
-import { mapPropsToClasses } from '@minddrop/ui-primitives';
+import { propsToClass } from '@minddrop/ui-primitives';
 import { FlatTextPropertyElement } from '../../../types';
 import './DesignStudioTextPropertyElement.css';
 
@@ -17,10 +17,7 @@ export const DesignStudioTextPropertyElement: React.FC<
 
   return (
     <div
-      className={mapPropsToClasses(
-        { underline, italic },
-        `design-studio-text-property-element ${font}`,
-      )}
+      className={`${propsToClass('design-studio-text-property-element', { underline, italic })} ${font}`}
       style={{
         textAlign: style['text-align'],
         fontWeight: style['font-weight'],

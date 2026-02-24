@@ -1,6 +1,6 @@
 import React from 'react';
 import { DropIndicatorPosition } from '@minddrop/selection';
-import { mapPropsToClasses } from '@minddrop/ui-primitives';
+import { propsToClass } from '@minddrop/ui-primitives';
 import './DropIndicator.css';
 
 interface DropIndicatorProps {
@@ -27,37 +27,28 @@ export const DropIndicator: React.FC<DropIndicatorProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses(
-        {
-          horizontal: isHorizontal,
-          vertical: !isHorizontal,
-          position,
-          className,
-        },
-        'drop-indicator',
-      )}
+      className={propsToClass('drop-indicator', {
+        horizontal: isHorizontal,
+        vertical: !isHorizontal,
+        position,
+        className,
+      })}
       style={{
         // @ts-expect-error - Gap is a CSS custom property
         '--gap': `${gap}px`,
       }}
     >
       <div
-        className={mapPropsToClasses(
-          {
-            horizontal: isHorizontal,
-            vertical: !isHorizontal,
-          },
-          'circle',
-        )}
+        className={propsToClass('circle', {
+          horizontal: isHorizontal,
+          vertical: !isHorizontal,
+        })}
       />
       <div
-        className={mapPropsToClasses(
-          {
-            horizontal: isHorizontal,
-            vertical: !isHorizontal,
-          },
-          'line',
-        )}
+        className={propsToClass('line', {
+          horizontal: isHorizontal,
+          vertical: !isHorizontal,
+        })}
       />
     </div>
   );

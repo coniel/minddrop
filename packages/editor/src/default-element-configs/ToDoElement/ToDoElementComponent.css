@@ -18,55 +18,55 @@
   outline: none;
 }
 
-.to-do-element.checked .content {
+.to-do-element-checked .content {
   text-decoration: line-through;
   opacity: 0.5;
 }
 
-.to-do-element.checked .icon {
+.to-do-element-checked .icon {
   stroke: var(--primary10);
 }
 
-.color-blue .to-do-element.checked .icon {
+.color-blue .to-do-element-checked .icon {
   stroke: var(--blue10);
 }
 
-.color-cyan .to-do-element.checked .icon {
+.color-cyan .to-do-element-checked .icon {
   stroke: var(--cyan10);
 }
 
-.color-red .to-do-element.checked .icon {
+.color-red .to-do-element-checked .icon {
   stroke: var(--red10);
 }
 
-.color-red .to-do-element.checked .icon {
+.color-red .to-do-element-checked .icon {
   stroke: var(--red10);
 }
 
-.color-pink .to-do-element.checked .icon {
+.color-pink .to-do-element-checked .icon {
   stroke: var(--pink10);
 }
 
-.color-purple .to-do-element.checked .icon {
+.color-purple .to-do-element-checked .icon {
   stroke: var(--purple10);
 }
 
-.color-green .to-do-element.checked .icon {
+.color-green .to-do-element-checked .icon {
   stroke: var(--green10);
 }
 
-.color-orange .to-do-element.checked .icon {
+.color-orange .to-do-element-checked .icon {
   stroke: var(--orange10);
 }
 
-.color-yellow .to-do-element.checked .icon {
+.color-yellow .to-do-element-checked .icon {
   stroke: var(--yellow10);
 }
 
-.color-brown .to-do-element.checked .icon {
+.color-brown .to-do-element-checked .icon {
   stroke: var(--brown10);
 }
 
-.color-gray .to-do-element.checked .icon {
+.color-gray .to-do-element-checked .icon {
   stroke: var(--gray10);
 }

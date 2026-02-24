@@ -1,6 +1,6 @@
 import { UiIconName, useIcons } from '@minddrop/icons';
 import { TextColor } from '../Text';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Icon.css';
 
 export interface IconProps extends React.HTMLProps<SVGSVGElement> {
@@ -28,7 +28,7 @@ export const Icon: React.FC<IconProps> = ({
   return (
     <UiIcon
       data-testid="icon"
-      className={mapPropsToClasses({ className, color }, 'icon')}
+      className={propsToClass('icon', { className, color })}
       name={name}
       {...other}
     />

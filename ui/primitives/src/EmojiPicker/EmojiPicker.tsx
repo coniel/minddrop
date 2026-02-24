@@ -2,7 +2,8 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
-import { mapPropsToClasses, useToggle } from '@minddrop/utils';
+import { useToggle } from '@minddrop/utils';
+import { propsToClass } from '../utils';
 import { IconButton } from '../IconButton';
 import { TextField } from '../fields/TextField';
 import { MenuLabel } from '../Menu';
@@ -132,7 +133,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses({ className }, 'emoji-picker')}
+      className={propsToClass('emoji-picker', { className })}
       {...other}
     >
       <Toolbar className="color-toolbar">

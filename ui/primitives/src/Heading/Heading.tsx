@@ -1,5 +1,5 @@
 import { Text, TextProps } from '../Text';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import './Heading.css';
 
 export interface HeadingProps extends TextProps {
@@ -19,7 +19,7 @@ export const Heading: React.FC<HeadingProps> = ({
     <Text
       size="lg"
       weight="bold"
-      className={mapPropsToClasses({ className, noMargin }, 'heading')}
+      className={propsToClass('heading', { className, noMargin })}
       {...other}
     />
   );

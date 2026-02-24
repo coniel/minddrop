@@ -28,8 +28,8 @@
     transition-duration: 0.2s;
   }
 
-  &.is-dragging .resize-handle .resize-indicator,
-  &.is-dragging .resize-handle:hover .resize-indicator {
+  &.app-sidebar-is-dragging .resize-handle .resize-indicator,
+  &.app-sidebar-is-dragging .resize-handle:hover .resize-indicator {
     background-color: var(--primary4);
     animation-duration: 0s;
     transition-delay: 0s;

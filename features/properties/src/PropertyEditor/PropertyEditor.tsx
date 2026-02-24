@@ -7,7 +7,7 @@ import {
   IconPicker,
   Text,
   TextField,
-  mapPropsToClasses,
+  propsToClass,
   useForm,
   useToggle,
 } from '@minddrop/ui-primitives';
@@ -133,7 +133,7 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses({ className, open }, 'property-editor')}
+      className={propsToClass('property-editor', { className, open })}
       {...other}
     >
       <div

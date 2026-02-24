@@ -9,7 +9,7 @@ import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
 import { ContentColor } from '../types';
-import { mapPropsToClasses } from '../utils';
+import { propsToClass } from '../utils';
 import {
   MinifiedContentIcon,
   UnminifiedContentIcon,
@@ -157,7 +157,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
 
   return (
     <div
-      className={mapPropsToClasses({ className }, 'content-icon-picker')}
+      className={propsToClass('content-icon-picker', { className })}
       {...other}
     >
       <Toolbar className="color-toolbar">

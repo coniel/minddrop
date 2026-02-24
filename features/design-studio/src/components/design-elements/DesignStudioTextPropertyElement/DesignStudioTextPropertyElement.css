@@ -1,9 +1,9 @@
 .design-studio-text-property-element {
-  &.underline {
+  &.design-studio-text-property-element-underline {
     text-decoration: underline;
   }
 
-  &.italic {
+  &.design-studio-text-property-element-italic {
     font-style: italic;
   }
 }
