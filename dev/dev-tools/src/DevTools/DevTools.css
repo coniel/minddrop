@@ -77,6 +77,20 @@
   flex-shrink: 0;
 }
 
+.dev-tools-section-tabs {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+
+  .icon-button-active {
+    background-color: var(--surface-neutral-hover);
+
+    .icon { color: var(--text-regular); }
+  }
+}
+
 .dev-tools-nav {
   flex: 1;
   padding: var(--space-1) 0;

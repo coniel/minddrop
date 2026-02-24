@@ -1,9 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import {
+  IconButton,
   MenuGroup,
   MenuItem,
   MenuLabel,
-  Separator,
   Text,
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
@@ -19,7 +19,7 @@ import './DevTools.css';
 
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [activeSection, setActiveSection] = useState<ActiveSection>('stories');
+  const [activeSection, setActiveSection] = useState<ActiveSection>('logs');
   const [activeStory, setActiveStory] = useState<ActiveStory>({
     groupIndex: 0,
     itemIndex: 0,
@@ -86,37 +86,40 @@ export const DevTools: React.FC = () => {
             </Text>
           </div>
 
-          <nav className="dev-tools-nav">
-            <MenuGroup padded>
-              <MenuItem
-                label="Stories"
-                icon="book-open"
-                active={activeSection === 'stories'}
-                onClick={() => setActiveSection('stories')}
-              />
-              <MenuItem
-                label="State"
-                icon="database"
-                active={activeSection === 'state'}
-                onClick={() => setActiveSection('state')}
-              />
-              <MenuItem
-                label="Events"
-                icon="zap"
-                active={activeSection === 'events'}
-                onClick={() => setActiveSection('events')}
-              />
-              <MenuItem
-                label="Logs"
-                icon="terminal"
-                active={activeSection === 'logs'}
-                onClick={() => setActiveSection('logs')}
-              />
-            </MenuGroup>
+          <div className="dev-tools-section-tabs">
+            <IconButton
+              icon="terminal"
+              label="Logs"
+              size="sm"
+              active={activeSection === 'logs'}
+              onClick={() => setActiveSection('logs')}
+            />
+            <IconButton
+              icon="database"
+              label="State"
+              size="sm"
+              active={activeSection === 'state'}
+              onClick={() => setActiveSection('state')}
+            />
+            <IconButton
+              icon="zap"
+              label="Events"
+              size="sm"
+              active={activeSection === 'events'}
+              onClick={() => setActiveSection('events')}
+            />
+            <IconButton
+              icon="book-open"
+              label="Stories"
+              size="sm"
+              active={activeSection === 'stories'}
+              onClick={() => setActiveSection('stories')}
+            />
+          </div>
 
+          <nav className="dev-tools-nav">
             {activeSection === 'stories' && (
               <>
-                <Separator margin="small" />
                 {stories.map((group, groupIndex) => (
                   <MenuGroup key={group.group} padded>
                     <MenuLabel label={group.group} />
