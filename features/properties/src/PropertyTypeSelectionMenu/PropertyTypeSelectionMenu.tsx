@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { PropertySchema, PropertySchemas } from '@minddrop/properties';
 import {
   DropdownMenu,
@@ -8,7 +9,6 @@ import {
   DropdownMenuProps,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuTriggerProps,
   MenuGroup,
 } from '@minddrop/ui-primitives';
 
@@ -17,7 +17,7 @@ export interface PropertyTypeSelectionMenuProps
   /**
    * The content of the PropertyTypeSelectionMenu.
    */
-  children?: DropdownMenuTriggerProps['children'];
+  children?: ReactElement;
 
   /**
    * Callback fired when a property type is selected.
