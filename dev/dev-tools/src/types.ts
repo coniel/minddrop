@@ -16,6 +16,13 @@ export interface SavedLog {
   timestamp: number;
 }
 
+export interface EventEntry {
+  id: number;
+  name: string;
+  data: unknown;
+  timestamp: number;
+}
+
 export type ActiveSection = 'stories' | 'state' | 'events' | 'logs';
 
 export interface ActiveStory {

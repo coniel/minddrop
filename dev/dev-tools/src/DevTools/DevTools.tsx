@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import {
   IconButton,
   MenuGroup,
@@ -9,11 +9,14 @@ import {
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
 import { DevToolsPlaceholder } from '../DevToolsPlaceholder';
+import { Events } from '@minddrop/events';
 import { DatabasesStateView, useDatabaseStoreCounts } from '../StateInspector';
+import { EventsPanel, nextEventId } from '../EventsPanel';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { ActiveSection, ActiveStory, LogEntry, SavedLog } from '../types';
 import {
   clearSavedLogsByFile,
+  eventsReducer,
   installConsoleInterceptors,
   loadSavedLogs,
   logsReducer,
@@ -24,6 +27,13 @@ import './DevTools.css';
 
 const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 type ResizeEdge = (typeof RESIZE_EDGES)[number];
+
+interface EventTreeNode {
+  segment: string;
+  fullPath: string;
+  count: number;
+  children: EventTreeNode[];
+}
 
 const STATE_STORES = [
   { id: 'databases', label: 'Databases' },
@@ -42,6 +52,8 @@ export const DevTools: React.FC = () => {
   const [windowPos, setWindowPos] = useState(
     () => JSON.parse(localStorage.getItem('dev-tools-window-pos') ?? 'null') ?? { x: 80, y: 80 },
   );
+  const windowPosRef = React.useRef(windowPos);
+  windowPosRef.current = windowPos;
   const [windowSize, setWindowSize] = useState(
     () => JSON.parse(localStorage.getItem('dev-tools-window-size') ?? 'null') ?? { width: 680, height: 480 },
   );
@@ -56,6 +68,55 @@ export const DevTools: React.FC = () => {
   const [logsView, setLogsView] = useState<string>('live');
   const [stateView, setStateView] = useState<StateView>('databases');
   const storeCounts = useDatabaseStoreCounts();
+  const [events, dispatchEvent] = useReducer(eventsReducer, []);
+  const [eventsView, setEventsView] = useState('all');
+  const [openNodes, setOpenNodes] = useState<Set<string>>(new Set());
+
+  const eventTree = useMemo(() => {
+    interface RawNode {
+      children: Map<string, RawNode>;
+      count: number;
+      fullPath: string;
+    }
+
+    const exactCounts = new Map<string, number>();
+    for (const e of events) {
+      exactCounts.set(e.name, (exactCounts.get(e.name) ?? 0) + 1);
+    }
+
+    const root: RawNode = { children: new Map(), count: 0, fullPath: '' };
+    const seen = new Set<string>();
+
+    for (let i = events.length - 1; i >= 0; i--) {
+      const name = events[i].name;
+      if (seen.has(name)) continue;
+      seen.add(name);
+
+      const count = exactCounts.get(name)!;
+      const parts = name.split(':');
+      let node = root;
+      let path = '';
+      for (const part of parts) {
+        path = path ? `${path}:${part}` : part;
+        if (!node.children.has(part)) {
+          node.children.set(part, { children: new Map(), count: 0, fullPath: path });
+        }
+        node.children.get(part)!.count += count;
+        node = node.children.get(part)!;
+      }
+    }
+
+    function toArray(rawNode: RawNode): EventTreeNode[] {
+      return [...rawNode.children.values()].map((child) => ({
+        segment: child.fullPath.split(':').pop()!,
+        fullPath: child.fullPath,
+        count: child.count,
+        children: toArray(child),
+      }));
+    }
+
+    return toArray(root);
+  }, [events]);
 
   useEffect(() => {
     localStorage.setItem('dev-tools-window-mode', JSON.stringify(windowMode));
@@ -80,6 +141,22 @@ export const DevTools: React.FC = () => {
     return () => {
       setLogListener(null);
     };
+  }, []);
+
+  // Catch-all event listener
+  useEffect(() => {
+    Events.on('*', 'dev-tools-events-panel', (event) => {
+      dispatchEvent({
+        type: 'add',
+        entry: {
+          id: nextEventId(),
+          name: event.name,
+          data: event.data,
+          timestamp: Date.now(),
+        },
+      });
+    });
+    return () => Events.removeListener('*', 'dev-tools-events-panel');
   }, []);
 
   // Keyboard shortcut handler
@@ -117,33 +194,54 @@ export const DevTools: React.FC = () => {
         setWindowSidebarOpen((v) => !v);
       }
 
-      if (e.key === 'q' && visible && windowMode) {
+      if (e.key === 'Tab' && visible && windowMode) {
+        e.preventDefault();
+        const gap = 12;
+        const snapWidth = 500;
+        const height = window.innerHeight - gap * 2;
+        if (windowPosRef.current.x === gap) {
+          setWindowSize({ width: snapWidth, height });
+          setWindowPos({ x: window.innerWidth - snapWidth - gap, y: gap });
+        } else {
+          setWindowSize({ width: snapWidth, height });
+          setWindowPos({ x: gap, y: gap });
+        }
+      }
+
+      if (e.key === '[' && visible && windowMode) {
         e.preventDefault();
         const gap = 12;
         setWindowSize({ width: 500, height: window.innerHeight - gap * 2 });
         setWindowPos({ x: gap, y: gap });
       }
 
-      if (e.key === 'w' && visible && windowMode) {
+      if (e.key === ']' && visible && windowMode) {
         e.preventDefault();
         const gap = 12;
         setWindowSize({ width: 500, height: window.innerHeight - gap * 2 });
         setWindowPos({ x: window.innerWidth - 500 - gap, y: gap });
       }
 
-      if (e.key === 'j' && visible) {
+      if (e.key === 'q' && visible) {
         e.preventDefault();
         setActiveSection('logs');
       }
 
-      if (e.key === 'k' && visible) {
+      if (e.key === 'w' && visible) {
         e.preventDefault();
         setActiveSection('state');
       }
 
-      if (e.key === 'l' && visible) {
+      if (e.key === 'e' && visible) {
         e.preventDefault();
         setActiveSection('events');
+      }
+
+      if (e.key === 'c' && visible && activeSection === 'events') {
+        e.preventDefault();
+        dispatchEvent({ type: 'clear' });
+        setEventsView('all');
+        setOpenNodes(new Set());
       }
     };
 
@@ -222,6 +320,51 @@ export const DevTools: React.FC = () => {
     window.addEventListener('mouseup', onMouseUp);
   };
 
+  const renderEventNode = (node: EventTreeNode, depth: number): React.ReactNode => {
+    const isOpen = openNodes.has(node.fullPath);
+    const hasChildren = node.children.length > 0;
+
+    const toggle = () => {
+      setEventsView(node.fullPath);
+      if (hasChildren) {
+        setOpenNodes((prev) => {
+          const next = new Set(prev);
+          if (next.has(node.fullPath)) next.delete(node.fullPath);
+          else next.add(node.fullPath);
+          return next;
+        });
+      }
+    };
+
+    const item = (
+      <>
+        <MenuItem size="compact" active={eventsView === node.fullPath} onClick={toggle}>
+          <span className="dev-tools-store-item-label">
+            <span className="dev-tools-events-source-label">
+              {hasChildren && (
+                <span className="dev-tools-events-chevron">
+                  {isOpen ? '▾' : '▸'}
+                </span>
+              )}
+              {node.segment}
+            </span>
+            <span className="dev-tools-count-badge">{node.count}</span>
+          </span>
+        </MenuItem>
+        {isOpen && hasChildren && (
+          <div className="dev-tools-events-children">
+            {node.children.map((child) => renderEventNode(child, depth + 1))}
+          </div>
+        )}
+      </>
+    );
+
+    if (depth === 0) {
+      return <MenuGroup key={node.fullPath} padded>{item}</MenuGroup>;
+    }
+    return <React.Fragment key={node.fullPath}>{item}</React.Fragment>;
+  };
+
   if (!visible) return null;
 
   const group = stories[activeStory.groupIndex];
@@ -243,10 +386,13 @@ export const DevTools: React.FC = () => {
       )}
 
       {activeSection === 'events' && (
-        <DevToolsPlaceholder
-          icon="zap"
-          title="Event log"
-          description="Add a catch-all listener to your event bus to stream events here."
+        <EventsPanel
+          events={events}
+          eventsView={eventsView}
+          onClear={() => {
+            dispatchEvent({ type: 'clear' });
+            setEventsView('all');
+          }}
         />
       )}
 
@@ -316,7 +462,7 @@ export const DevTools: React.FC = () => {
             />
           </div>
           <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
-            d / esc / f / s
+            d / esc / f / s / q w e
           </Text>
         </div>
 
@@ -330,13 +476,37 @@ export const DevTools: React.FC = () => {
                     {STATE_STORES.map(({ id, label }) => (
                       <MenuItem
                         key={id}
-                        label={label}
                         size="compact"
                         active={stateView === id}
                         onClick={() => setStateView(id)}
-                      />
+                      >
+                        <span className="dev-tools-store-item-label">
+                          {label}
+                          <span className="dev-tools-count-badge">
+                            {storeCounts[id]}
+                          </span>
+                        </span>
+                      </MenuItem>
                     ))}
                   </MenuGroup>
+                )}
+
+                {activeSection === 'events' && (
+                  <>
+                    <MenuGroup padded>
+                      <MenuItem
+                        size="compact"
+                        active={eventsView === 'all'}
+                        onClick={() => setEventsView('all')}
+                      >
+                        <span className="dev-tools-store-item-label">
+                          All Events
+                          <span className="dev-tools-count-badge">{events.length}</span>
+                        </span>
+                      </MenuItem>
+                    </MenuGroup>
+                    {eventTree.map((node) => renderEventNode(node, 0))}
+                  </>
                 )}
 
                 {activeSection === 'logs' && (
@@ -398,7 +568,7 @@ export const DevTools: React.FC = () => {
               DevTools
             </Text>
             <Text size="xs" color="subtle" mono>
-              d / esc / f
+              d / esc / f / q w e
             </Text>
           </div>
 
@@ -493,6 +663,24 @@ export const DevTools: React.FC = () => {
                   </MenuItem>
                 ))}
               </MenuGroup>
+            )}
+
+            {activeSection === 'events' && (
+              <>
+                <MenuGroup padded>
+                  <MenuItem
+                    size="compact"
+                    active={eventsView === 'all'}
+                    onClick={() => setEventsView('all')}
+                  >
+                    <span className="dev-tools-store-item-label">
+                      All Events
+                      <span className="dev-tools-count-badge">{events.length}</span>
+                    </span>
+                  </MenuItem>
+                </MenuGroup>
+                {eventTree.map((node) => renderEventNode(node, 0))}
+              </>
             )}
 
             {activeSection === 'stories' && (
