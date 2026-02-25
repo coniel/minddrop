@@ -1,4 +1,11 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import {
+  FC,
+  memo,
+  useCallback,
+  useDeferredValue,
+  useMemo,
+  useState,
+} from 'react';
 import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
@@ -56,11 +63,75 @@ const unminifiedIcons = ContentIconMetadata.icons.map((icon) =>
 
 const allLabels = getAllLabels(unminifiedIcons);
 
-// Margin top + title height
-const NAV_GROUP_HEADER_HEIGHT = 32 + 8;
-// Height + margin
-const ICON_SELECTION_BUTTON_HEIGHT = 34;
-const ICON_SELECTION_BUTTONS_PER_ROW = 13;
+// Pre-compute initial state at module level so the first mount
+// has nothing to compute.
+const initialResultsByCategory = groupByCategory(unminifiedIcons);
+
+// Fixed row heights for the flat virtual grid
+const HEADER_ROW_HEIGHT = 40;
+const ICON_ROW_HEIGHT = 34;
+const ICONS_PER_ROW = 13;
+
+type VirtualItem =
+  | { type: 'header'; label: string }
+  | { type: 'icons'; icons: UnminifiedContentIcon[] };
+
+function buildVirtualItems(
+  resultsByCategory: [string, UnminifiedContentIcon[]][],
+): VirtualItem[] {
+  const items: VirtualItem[] = [];
+
+  for (const [category, icons] of resultsByCategory) {
+    items.push({ type: 'header', label: category });
+
+    for (let i = 0; i < icons.length; i += ICONS_PER_ROW) {
+      items.push({ type: 'icons', icons: icons.slice(i, i + ICONS_PER_ROW) });
+    }
+  }
+
+  return items;
+}
+
+// Pre-compute initial virtual items at module level.
+const initialVirtualItems = buildVirtualItems(initialResultsByCategory);
+
+interface VirtualRowProps {
+  index: number;
+  style: React.CSSProperties;
+  virtualItems: VirtualItem[];
+  color: ContentColor;
+  onSelect: (icon: UnminifiedContentIcon) => void;
+}
+
+// Defined outside the component for stable identity — react-window unmounts
+// and remounts all rows whenever rowComponent's type changes, so an inline
+// definition would cause a full remount on every parent render.
+const VirtualRow = memo(
+  ({ index, style, virtualItems, color, onSelect }: VirtualRowProps) => {
+    const item = virtualItems[index];
+
+    if (item.type === 'header') {
+      return (
+        <div style={style} className="category-group">
+          <MenuLabel>{item.label}</MenuLabel>
+        </div>
+      );
+    }
+
+    return (
+      <div style={style} className="category-group-icons">
+        {item.icons.map((icon) => (
+          <IconSelectButton
+            key={icon.name}
+            icon={icon}
+            color={color}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    );
+  },
+);
 
 export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   onSelect,
@@ -72,20 +143,36 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
 }) => {
   const { t } = useTranslation({ keyPrefix: 'iconPicker' });
   const [query, setQuery] = useState('');
-  const [results, setResults] =
-    useState<UnminifiedContentIcon[]>(unminifiedIcons);
-  const [resultsByCategory, setResultsByCategory] = useState(
-    groupByCategory(unminifiedIcons),
-  );
+  // useDeferredValue keeps the search input responsive — React shows the
+  // previous results immediately while computing new ones at low priority.
+  const deferredQuery = useDeferredValue(query);
   const [color, setColor] = useState<ContentColor>(defaultColor);
 
-  // Triggered by changes to the search query
-  useEffect(() => {
-    const results = searchContentIcons(unminifiedIcons, allLabels, query);
+  const { results, resultsByCategory } = useMemo(() => {
+    // Skip recomputation for the initial empty-query case.
+    if (!deferredQuery) {
+      return {
+        results: unminifiedIcons,
+        resultsByCategory: initialResultsByCategory,
+      };
+    }
 
-    setResults(results);
-    setResultsByCategory(groupByCategory(results));
-  }, [query]);
+    const results = searchContentIcons(
+      unminifiedIcons,
+      allLabels,
+      deferredQuery,
+    );
+
+    return { results, resultsByCategory: groupByCategory(results) };
+  }, [deferredQuery]);
+
+  const virtualItems = useMemo(
+    () =>
+      deferredQuery
+        ? buildVirtualItems(resultsByCategory)
+        : initialVirtualItems,
+    [deferredQuery, resultsByCategory],
+  );
 
   const handleSelect = useCallback(
     (value: UnminifiedContentIcon) => {
@@ -116,44 +203,21 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
     [onSelectColor],
   );
 
-  const getCategoryItemSize = useCallback(
-    (index: number) => {
-      return (
-        NAV_GROUP_HEADER_HEIGHT +
-        Math.ceil(
-          resultsByCategory[index][1].length / ICON_SELECTION_BUTTONS_PER_ROW,
-        ) *
-          ICON_SELECTION_BUTTON_HEIGHT
-      );
-    },
-    [resultsByCategory],
+  const handleQueryChange = useCallback((value: string) => setQuery(value), []);
+
+  const getItemSize = useCallback(
+    (index: number) =>
+      virtualItems[index].type === 'header'
+        ? HEADER_ROW_HEIGHT
+        : ICON_ROW_HEIGHT,
+    [virtualItems],
   );
 
-  const Category = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.HTMLAttributes<HTMLDivElement>['style'];
-  }) => {
-    const [category, categoryIcons] = resultsByCategory[index];
-
-    return (
-      <div style={style} className="category-group">
-        <MenuLabel key={category}>{category}</MenuLabel>
-        <div className="category-group-icons">
-          {categoryIcons.map((icon) => (
-            <IconSelectButton
-              key={icon.name}
-              icon={icon}
-              color={color}
-              onSelect={handleSelect}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
+  // Memoized so react-window only re-renders rows when these values change.
+  const rowProps = useMemo(
+    () => ({ virtualItems, color, onSelect: handleSelect }),
+    [virtualItems, color, handleSelect],
+  );
 
   return (
     <div
@@ -174,7 +238,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
-          onValueChange={(value) => setQuery(value)}
+          onValueChange={handleQueryChange}
         />
         <Tooltip title={t('random')}>
           <IconButton
@@ -187,7 +251,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       </Toolbar>
       <div className="options">
         {results.length <= 60 && (
-          <div className="category-group">
+          <div className="category-group-icons" style={{ overflowY: 'auto' }}>
             {results.map((icon) => (
               <IconSelectButton
                 key={icon.name}
@@ -199,16 +263,19 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           </div>
         )}
         {results.length > 60 && (
-          // Use results length as key in order to force the entire
-          // list to be re-rendered when category count/heights change.
-          <div key={results.length}>
+          // Key on virtualItems.length so the list remounts when the number
+          // of rows changes (avoids stale row heights after filtering).
+          // flex+minHeight give the List a bounded height so its ResizeObserver
+          // reports the visible area rather than the full content height.
+          <div key={virtualItems.length} style={{ flex: 1, minHeight: 0 }}>
             <List
-              rowCount={resultsByCategory.length}
-              rowHeight={getCategoryItemSize}
-              rowComponent={Category}
+              rowCount={virtualItems.length}
+              rowHeight={getItemSize}
               // @ts-ignore - TODO: react-window types are incorrect, remove
               // when they are fixed.
-              rowProps={{}}
+              rowComponent={VirtualRow}
+              // @ts-ignore
+              rowProps={rowProps}
             />
           </div>
         )}
@@ -217,11 +284,11 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   );
 };
 
-const IconSelectButton: React.FC<{
+const IconSelectButton = memo<{
   icon: UnminifiedContentIcon;
   color: ContentColor;
   onSelect: (value: UnminifiedContentIcon) => void;
-}> = ({ icon, color, onSelect }) => {
+}>(({ icon, color, onSelect }) => {
   const handleSelect = useCallback(() => onSelect(icon), [onSelect, icon]);
 
   return (
@@ -233,7 +300,7 @@ const IconSelectButton: React.FC<{
       <ContentIcon icon={`content-icon:${icon.name}`} color={color} />
     </IconButton>
   );
-};
+});
 
 const ColorSelectButton: React.FC<{
   color: ContentColor;
@@ -253,10 +320,11 @@ const ColorSelectButton: React.FC<{
     >
       <div
         style={{
-          backgroundColor: color === 'default' ? 'none' : `var(--${color}8)`,
+          backgroundColor:
+            color === 'default' ? 'transparent' : `var(--${color}-900)`,
           boxShadow:
             color === 'default'
-              ? 'inset 0 0 0 1px var(--textNeutralLight)'
+              ? 'inset 0 0 0 1.5px var(--border-default)'
               : 'none',
           width: '16px',
           height: '16px',
