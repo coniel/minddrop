@@ -39,7 +39,15 @@ export const DropdownMenu = MenuPrimitive.Root;
 
 export type DropdownMenuTriggerProps = MenuPrimitive.Trigger.Props;
 
-export const DropdownMenuTrigger = MenuPrimitive.Trigger;
+export const DropdownMenuTrigger = ({
+  children,
+  render,
+  ...other
+}: Omit<DropdownMenuTriggerProps, 'children'> & {
+  children?: React.ReactElement;
+}) => <MenuPrimitive.Trigger render={children || render} {...other} />;
+
+DropdownMenuTrigger.displayName = 'DropdownMenuTrigger';
 
 /* ============================================================
    PORTAL
