@@ -108,3 +108,70 @@
 .dev-tools-story {
   min-height: 100%;
 }
+
+/* --- Window mode --- */
+
+.dev-tools-window {
+  position: fixed;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 320px;
+  min-height: 200px;
+  background-color: var(--surface-app);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.dev-tools-window-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dev-tools-window-body .dev-tools-content {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dev-tools-sidebar-window {
+  width: 200px;
+}
+
+.dev-tools-window-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--surface-overlay);
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+
+  &:active { cursor: grabbing; }
+
+  .dev-tools-section-tabs {
+    border-bottom: none;
+    padding: 0;
+  }
+}
+
+/* Resize handles */
+
+.dev-tools-resize-handle {
+  position: absolute;
+  z-index: 1;
+}
+
+.dev-tools-resize-n  { top: 0;    left: 8px;   right: 8px;  height: 6px;  cursor: n-resize; }
+.dev-tools-resize-s  { bottom: 0; left: 8px;   right: 8px;  height: 6px;  cursor: s-resize; }
+.dev-tools-resize-e  { top: 8px;  right: 0;    bottom: 8px; width: 6px;   cursor: e-resize; }
+.dev-tools-resize-w  { top: 8px;  left: 0;     bottom: 8px; width: 6px;   cursor: w-resize; }
+.dev-tools-resize-ne { top: 0;    right: 0;    width: 12px; height: 12px; cursor: ne-resize; }
+.dev-tools-resize-nw { top: 0;    left: 0;     width: 12px; height: 12px; cursor: nw-resize; }
+.dev-tools-resize-se { bottom: 0; right: 0;    width: 12px; height: 12px; cursor: se-resize; }
+.dev-tools-resize-sw { bottom: 0; left: 0;     width: 12px; height: 12px; cursor: sw-resize; }

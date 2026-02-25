@@ -68,10 +68,14 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
         e.preventDefault();
         setGlobalCollapse({ open: false, id: Date.now() });
       }
+      if (e.key === 'c') {
+        e.preventDefault();
+        onClear();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [onClear]);
 
   const toggleFilter = useCallback((level: LogLevel) => {
     setActiveFilter((prev) => (prev === level ? null : level));

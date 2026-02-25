@@ -21,8 +21,15 @@ import {
 } from '../utils';
 import './DevTools.css';
 
+const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
+type ResizeEdge = (typeof RESIZE_EDGES)[number];
+
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
+  const [windowMode, setWindowMode] = useState(false);
+  const [windowSidebarOpen, setWindowSidebarOpen] = useState(false);
+  const [windowPos, setWindowPos] = useState({ x: 80, y: 80 });
+  const [windowSize, setWindowSize] = useState({ width: 680, height: 480 });
   const [activeSection, setActiveSection] = useState<ActiveSection>('logs');
   const [activeStory, setActiveStory] = useState<ActiveStory>({
     groupIndex: 0,
@@ -67,12 +74,25 @@ export const DevTools: React.FC = () => {
       if (e.key === 'Escape' && visible) {
         setVisible(false);
       }
+
+      if (e.key === 'f' && visible) {
+        e.preventDefault();
+        setWindowMode((m) => {
+          if (!m && activeSection === 'stories') setActiveSection('logs');
+          return !m;
+        });
+      }
+
+      if (e.key === 's' && visible && windowMode) {
+        e.preventDefault();
+        setWindowSidebarOpen((v) => !v);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visible]);
+  }, [visible, activeSection, windowMode]);
 
   const onSave = useCallback((entry: LogEntry) => {
     const log: SavedLog = {
@@ -92,6 +112,58 @@ export const DevTools: React.FC = () => {
     setLogsView((v) => (v === file ? 'live' : v));
   }, []);
 
+  const handleMoveStart = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    e.preventDefault();
+    const orig = { ...windowPos };
+    const start = { x: e.clientX, y: e.clientY };
+
+    const onMouseMove = (me: MouseEvent) => {
+      setWindowPos({ x: orig.x + me.clientX - start.x, y: orig.y + me.clientY - start.y });
+    };
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  const handleResizeStart = (e: React.MouseEvent, edge: ResizeEdge) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const origPos = { ...windowPos };
+    const origSize = { ...windowSize };
+    const start = { x: e.clientX, y: e.clientY };
+
+    const onMouseMove = (me: MouseEvent) => {
+      const dx = me.clientX - start.x;
+      const dy = me.clientY - start.y;
+      let { x, y } = origPos;
+      let { width, height } = origSize;
+
+      if (edge.includes('e')) width = Math.max(320, origSize.width + dx);
+      if (edge.includes('s')) height = Math.max(200, origSize.height + dy);
+      if (edge.includes('w')) {
+        width = Math.max(320, origSize.width - dx);
+        x = origPos.x + origSize.width - width;
+      }
+      if (edge.includes('n')) {
+        height = Math.max(200, origSize.height - dy);
+        y = origPos.y + origSize.height - height;
+      }
+
+      setWindowPos({ x, y });
+      setWindowSize({ width, height });
+    };
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
   if (!visible) return null;
 
   const group = stories[activeStory.groupIndex];
@@ -100,6 +172,153 @@ export const DevTools: React.FC = () => {
   const savedFiles = [...new Set(savedLogs.map((l) => l.file))];
   const savedLogsForView = savedLogs.filter((l) => l.file === logsView);
 
+  const contentArea = (
+    <main className="dev-tools-content">
+      {activeSection === 'stories' && ActiveStoryComponent && (
+        <div className="dev-tools-story">
+          <ActiveStoryComponent />
+        </div>
+      )}
+
+      {activeSection === 'state' && (
+        <DevToolsPlaceholder
+          icon="database"
+          title="State inspector"
+          description="Import and register your state stores to inspect them here."
+        />
+      )}
+
+      {activeSection === 'events' && (
+        <DevToolsPlaceholder
+          icon="zap"
+          title="Event log"
+          description="Add a catch-all listener to your event bus to stream events here."
+        />
+      )}
+
+      {activeSection === 'logs' && logsView === 'live' && (
+        <LogsPanel
+          logs={logs}
+          onClear={() => dispatch({ type: 'clear' })}
+          onSave={onSave}
+        />
+      )}
+
+      {activeSection === 'logs' && logsView !== 'live' && (
+        <SavedLogsPanel logs={savedLogsForView} />
+      )}
+    </main>
+  );
+
+  // --- Window mode ---
+  if (windowMode) {
+    return (
+      <div
+        className="dev-tools-window"
+        style={{
+          left: windowPos.x,
+          top: windowPos.y,
+          width: windowSize.width,
+          height: windowSize.height,
+        }}
+      >
+        {RESIZE_EDGES.map((edge) => (
+          <div
+            key={edge}
+            className={`dev-tools-resize-handle dev-tools-resize-${edge}`}
+            onMouseDown={(e) => handleResizeStart(e, edge)}
+          />
+        ))}
+
+        <div className="dev-tools-window-header" onMouseDown={handleMoveStart}>
+          <IconButton
+            icon="panel-left"
+            label="Toggle sidebar"
+            size="sm"
+            active={windowSidebarOpen}
+            onClick={() => setWindowSidebarOpen((v) => !v)}
+          />
+          <div className="dev-tools-section-tabs">
+            <IconButton
+              icon="terminal"
+              label="Logs"
+              size="sm"
+              active={activeSection === 'logs'}
+              onClick={() => setActiveSection('logs')}
+            />
+            <IconButton
+              icon="database"
+              label="State"
+              size="sm"
+              active={activeSection === 'state'}
+              onClick={() => setActiveSection('state')}
+            />
+            <IconButton
+              icon="zap"
+              label="Events"
+              size="sm"
+              active={activeSection === 'events'}
+              onClick={() => setActiveSection('events')}
+            />
+          </div>
+          <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
+            d / esc / f / s
+          </Text>
+        </div>
+
+        <div className="dev-tools-window-body">
+          {windowSidebarOpen && (
+            <aside className="dev-tools-sidebar dev-tools-sidebar-window">
+              <nav className="dev-tools-nav">
+                {activeSection === 'logs' && (
+                  <>
+                    <MenuGroup padded>
+                      <MenuItem
+                        label="Console"
+                        icon="terminal"
+                        size="compact"
+                        active={logsView === 'live'}
+                        onClick={() => setLogsView('live')}
+                      />
+                    </MenuGroup>
+
+                    {savedFiles.length > 0 && (
+                      <>
+                        <Separator margin="small" />
+                        <MenuGroup padded>
+                          <MenuLabel label="Saved" />
+                          {savedFiles.map((file) => (
+                            <MenuItem
+                              key={file}
+                              label={file}
+                              size="compact"
+                              active={logsView === file}
+                              onClick={() => setLogsView(file)}
+                              actions={
+                                <IconButton
+                                  icon="x"
+                                  label={`Clear ${file}`}
+                                  size="sm"
+                                  onClick={() => handleClearFile(file)}
+                                />
+                              }
+                            />
+                          ))}
+                        </MenuGroup>
+                      </>
+                    )}
+                  </>
+                )}
+              </nav>
+            </aside>
+          )}
+          {contentArea}
+        </div>
+      </div>
+    );
+  }
+
+  // --- Fullscreen mode ---
   return (
     <div className="dev-tools-overlay">
       <div className="dev-tools">
@@ -110,7 +329,7 @@ export const DevTools: React.FC = () => {
               DevTools
             </Text>
             <Text size="xs" color="subtle" mono>
-              d / esc
+              d / esc / f
             </Text>
           </div>
 
@@ -213,41 +432,7 @@ export const DevTools: React.FC = () => {
         </aside>
 
         {/* --- Content --- */}
-        <main className="dev-tools-content">
-          {activeSection === 'stories' && ActiveStoryComponent && (
-            <div className="dev-tools-story">
-              <ActiveStoryComponent />
-            </div>
-          )}
-
-          {activeSection === 'state' && (
-            <DevToolsPlaceholder
-              icon="database"
-              title="State inspector"
-              description="Import and register your state stores to inspect them here."
-            />
-          )}
-
-          {activeSection === 'events' && (
-            <DevToolsPlaceholder
-              icon="zap"
-              title="Event log"
-              description="Add a catch-all listener to your event bus to stream events here."
-            />
-          )}
-
-          {activeSection === 'logs' && logsView === 'live' && (
-            <LogsPanel
-              logs={logs}
-              onClear={() => dispatch({ type: 'clear' })}
-              onSave={onSave}
-            />
-          )}
-
-          {activeSection === 'logs' && logsView !== 'live' && (
-            <SavedLogsPanel logs={savedLogsForView} />
-          )}
-        </main>
+        {contentArea}
       </div>
     </div>
   );
