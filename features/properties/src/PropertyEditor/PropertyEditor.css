@@ -1,25 +1,12 @@
 .property-editor {
-  border-bottom: 1px solid var(--divider);
+  border-bottom: 1px solid var(--border-default);
 
   .display {
     user-select: none;
-    display: flex;
-    align-items: center;
-    height: var(--regular-height);
-    column-gap: 0.5rem;
-    font-weight: var(--weight-regular);
     padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    color: var(--text-color-muted);
-
-    .content-icon {
-      color: var(--text-color-muted);
-    }
 
     &:hover {
-      cursor: pointer;
-      color: var(--text-color-regular);
-
+      .text,
       .content-icon {
         color: var(--text-color-regular);
       }
@@ -27,14 +14,7 @@
   }
 
   .label {
-    font-weight: var(--weight-medium);
     flex-grow: 1;
-  }
-
-  .content-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--text-color-regular);
   }
 
   .chevron-icon {
@@ -42,23 +22,10 @@
   }
 
   .editor {
-    padding: 1rem;
-    gap: 1rem;
-    background-color: var(--neutral1);
+    padding: var(--space-5) var(--space-4);
 
     .footer {
-      margin-left: -0.5rem;
-      display: flex;
-
-      gap: 0.25rem;
-      justify-content: space-between;
-
-      .primary-actions {
-        display: flex;
-        justify-content: flex-end;
-        flex: 1;
-        gap: 0.5rem;
-      }
+      margin: 0 -0.5rem;
     }
   }
 }

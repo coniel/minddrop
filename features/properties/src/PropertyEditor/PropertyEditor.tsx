@@ -1,20 +1,21 @@
+import { useState } from 'react';
+import { PropertySchema } from '@minddrop/properties';
 import {
   Button,
   ContentIcon,
   FieldDefinition,
+  FieldRoot,
   Group,
   Icon,
   IconButton,
   IconPicker,
   Text,
-  TextField,
+  TextInput,
   propsToClass,
   useForm,
   useToggle,
 } from '@minddrop/ui-primitives';
 import './PropertyEditor.css';
-import { useState } from 'react';
-import { PropertySchema } from '@minddrop/properties';
 
 export interface PropertyEditorProps
   extends Omit<React.HTMLProps<HTMLDivElement>, 'property'> {
@@ -137,58 +138,56 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
       className={propsToClass('property-editor', { className, open })}
       {...other}
     >
-      <div
+      <Group
         role="button"
         className="display"
         onClick={toggleOpen}
         style={{ display: open ? 'none' : 'flex' }}
       >
-        <ContentIcon icon={property.icon} />
-        <Text
-          size="sm"
-          color="inherit"
-          className="label"
-          text={property.name}
-        />
+        <ContentIcon color="muted" icon={property.icon} />
+        <Text size="sm" color="muted" className="label" text={property.name} />
         <Icon
           size={14}
           name="chevron-right"
           className="collapsible-indicator"
         />
-      </div>
+      </Group>
       <div className="editor" style={{ display: open ? 'flex' : 'none' }}>
-        <Group gap={2}>
-          <IconPicker
-            closeOnSelect
-            onSelect={handlePickIcon}
-            currentIcon={icon}
-          >
-            <IconButton
-              size="lg"
-              variant="filled"
-              label="properties.form.icon.label"
+        <FieldRoot>
+          <Group gap={2}>
+            <IconPicker
+              closeOnSelect
+              onSelect={handlePickIcon}
+              currentIcon={icon}
             >
-              <ContentIcon color="inherit" icon={icon} />
-            </IconButton>
-          </IconPicker>
-          <TextField
-            label="properties.form.name.label"
-            variant="filled"
-            defaultValue={property.name}
-            {...fieldProps.name}
-          />
-        </Group>
-        <div className="footer">
+              <IconButton
+                size="md"
+                variant="subtle"
+                color="neutral"
+                label="properties.form.icon.label"
+              >
+                <ContentIcon color="regular" icon={icon} />
+              </IconButton>
+            </IconPicker>
+            <TextInput
+              variant="subtle"
+              size="md"
+              defaultValue={property.name}
+              {...fieldProps.name}
+            />
+          </Group>
+        </FieldRoot>
+        <Group justify="between" className="footer">
           {deletable && (
             <Button
-              label="properties.actions.delete.label"
               size="sm"
               variant="ghost"
               danger="on-hover"
+              label="actions.delete"
               onClick={handleClickDelete}
             />
           )}
-          <div className="primary-actions">
+          <div>
             <Button
               label="actions.cancel"
               size="sm"
@@ -198,11 +197,12 @@ export const PropertyEditor: React.FC<PropertyEditorProps> = ({
             <Button
               label="actions.save"
               size="sm"
-              variant="filled"
+              variant="ghost"
+              color="primary"
               onClick={handleClickSave}
             />
           </div>
-        </div>
+        </Group>
       </div>
     </div>
   );
