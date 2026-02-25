@@ -3,7 +3,7 @@ import { DatabaseCreatedEventData } from '../events';
 
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
   // Create a new view for the database
-  Views.create('gallery', {
+  Views.create('table', {
     type: 'database',
     id: data.id,
   });
