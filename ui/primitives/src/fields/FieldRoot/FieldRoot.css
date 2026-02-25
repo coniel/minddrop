@@ -1,0 +1,11 @@
+.field-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.field-root[data-disabled] {
+  pointer-events: none;
+  opacity: 0.45;
+}
