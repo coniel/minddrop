@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState, useSyncExternalStore } from 'react';
-
-function useTime() {
-  return useSyncExternalStore(
-    (cb) => {
-      const id = setInterval(cb, 10000);
-      return () => clearInterval(id);
-    },
-    () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
-  );
-}
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import { Events } from '@minddrop/events';
 import {
   IconButton,
   MenuGroup,
@@ -18,12 +16,10 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
-import { DevToolsPlaceholder } from '../DevToolsPlaceholder';
-import { Events } from '@minddrop/events';
-import { DatabasesStateView, useDatabaseStoreCounts } from '../StateInspector';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
+import { DatabasesStateView, useDatabaseStoreCounts } from '../StateInspector';
 import { ActiveSection, ActiveStory, LogEntry, SavedLog } from '../types';
 import {
   clearSavedLogsByFile,
@@ -35,6 +31,21 @@ import {
   setLogListener,
 } from '../utils';
 import './DevTools.css';
+
+function useTime() {
+  return useSyncExternalStore(
+    (cb) => {
+      const id = setInterval(cb, 10000);
+      return () => clearInterval(id);
+    },
+    () =>
+      new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      }),
+  );
+}
 
 const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 type ResizeEdge = (typeof RESIZE_EDGES)[number];
@@ -56,17 +67,25 @@ type StateView = (typeof STATE_STORES)[number]['id'];
 
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [windowMode, setWindowMode] = useState(
-    () => JSON.parse(localStorage.getItem('dev-tools-window-mode') ?? 'false'),
+  const [windowMode, setWindowMode] = useState(() =>
+    JSON.parse(localStorage.getItem('dev-tools-window-mode') ?? 'false'),
   );
   const [windowSidebarOpen, setWindowSidebarOpen] = useState(false);
   const [windowPos, setWindowPos] = useState(
-    () => JSON.parse(localStorage.getItem('dev-tools-window-pos') ?? 'null') ?? { x: 80, y: 80 },
+    () =>
+      JSON.parse(localStorage.getItem('dev-tools-window-pos') ?? 'null') ?? {
+        x: 80,
+        y: 80,
+      },
   );
   const windowPosRef = React.useRef(windowPos);
   windowPosRef.current = windowPos;
   const [windowSize, setWindowSize] = useState(
-    () => JSON.parse(localStorage.getItem('dev-tools-window-size') ?? 'null') ?? { width: 680, height: 480 },
+    () =>
+      JSON.parse(localStorage.getItem('dev-tools-window-size') ?? 'null') ?? {
+        width: 680,
+        height: 480,
+      },
   );
   const [activeSection, setActiveSection] = useState<ActiveSection>('logs');
   const [activeStory, setActiveStory] = useState<ActiveStory>({
@@ -82,7 +101,9 @@ export const DevTools: React.FC = () => {
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState('all');
   const [openNodes, setOpenNodes] = useState<Set<string>>(new Set());
-  const [activeEventsTab, setActiveEventsTab] = useState<'events' | 'listeners'>('events');
+  const [activeEventsTab, setActiveEventsTab] = useState<
+    'events' | 'listeners'
+  >('events');
   const [listenersView, setListenersView] = useState('all');
   const [listenersTick, setListenersTick] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
@@ -97,7 +118,7 @@ export const DevTools: React.FC = () => {
       }
     }
     return result;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listenersTick]);
 
   const listenersTree = useMemo(() => {
@@ -118,7 +139,11 @@ export const DevTools: React.FC = () => {
       for (const part of parts) {
         path = path ? `${path}:${part}` : part;
         if (!node.children.has(part)) {
-          node.children.set(part, { children: new Map(), count: 0, fullPath: path });
+          node.children.set(part, {
+            children: new Map(),
+            count: 0,
+            fullPath: path,
+          });
         }
         node.children.get(part)!.count += count;
         node = node.children.get(part)!;
@@ -162,7 +187,11 @@ export const DevTools: React.FC = () => {
       for (const part of parts) {
         path = path ? `${path}:${part}` : part;
         if (!node.children.has(part)) {
-          node.children.set(part, { children: new Map(), count: 0, fullPath: path });
+          node.children.set(part, {
+            children: new Map(),
+            count: 0,
+            fullPath: path,
+          });
         }
         node.children.get(part)!.count += count;
         node = node.children.get(part)!;
@@ -267,9 +296,12 @@ export const DevTools: React.FC = () => {
         e.preventDefault();
         let selector = '';
         if (activeSection === 'logs') selector = '.dev-tools-search';
-        else if (activeSection === 'state') selector = '.store-inspector-search-input';
-        else if (activeSection === 'events' && activeEventsTab === 'events') selector = '.events-panel-search-input';
-        else if (activeSection === 'events' && activeEventsTab === 'listeners') selector = '.listeners-panel-search-input';
+        else if (activeSection === 'state')
+          selector = '.store-inspector-search-input';
+        else if (activeSection === 'events' && activeEventsTab === 'events')
+          selector = '.events-panel-search-input';
+        else if (activeSection === 'events' && activeEventsTab === 'listeners')
+          selector = '.listeners-panel-search-input';
         if (selector) {
           const input = document.querySelector<HTMLInputElement>(selector);
           input?.focus();
@@ -362,7 +394,10 @@ export const DevTools: React.FC = () => {
     const start = { x: e.clientX, y: e.clientY };
 
     const onMouseMove = (me: MouseEvent) => {
-      setWindowPos({ x: orig.x + me.clientX - start.x, y: orig.y + me.clientY - start.y });
+      setWindowPos({
+        x: orig.x + me.clientX - start.x,
+        y: orig.y + me.clientY - start.y,
+      });
     };
     const onMouseUp = () => {
       window.removeEventListener('mousemove', onMouseMove);
@@ -407,10 +442,14 @@ export const DevTools: React.FC = () => {
     window.addEventListener('mouseup', onMouseUp);
   };
 
-  const renderEventNode = (node: EventTreeNode, depth: number): React.ReactNode => {
+  const renderEventNode = (
+    node: EventTreeNode,
+    depth: number,
+  ): React.ReactNode => {
     const isOpen = openNodes.has(node.fullPath);
     const hasChildren = node.children.length > 0;
-    const isActive = activeEventsTab === 'events' && eventsView === node.fullPath;
+    const isActive =
+      activeEventsTab === 'events' && eventsView === node.fullPath;
 
     const toggle = () => {
       setActiveEventsTab('events');
@@ -449,7 +488,11 @@ export const DevTools: React.FC = () => {
     );
 
     if (depth === 0) {
-      return <MenuGroup key={node.fullPath} padded>{item}</MenuGroup>;
+      return (
+        <MenuGroup key={node.fullPath} padded>
+          {item}
+        </MenuGroup>
+      );
     }
     return <React.Fragment key={node.fullPath}>{item}</React.Fragment>;
   };
@@ -458,8 +501,13 @@ export const DevTools: React.FC = () => {
     <MenuGroup key={node.fullPath} padded>
       <MenuItem
         size="compact"
-        active={activeEventsTab === 'listeners' && listenersView === node.fullPath}
-        onClick={() => { setActiveEventsTab('listeners'); setListenersView(node.fullPath); }}
+        active={
+          activeEventsTab === 'listeners' && listenersView === node.fullPath
+        }
+        onClick={() => {
+          setActiveEventsTab('listeners');
+          setListenersView(node.fullPath);
+        }}
       >
         <span className="dev-tools-store-item-label">
           {node.segment}
@@ -670,12 +718,19 @@ export const DevTools: React.FC = () => {
                     <MenuGroup padded>
                       <MenuItem
                         size="compact"
-                        active={activeEventsTab === 'events' && eventsView === 'all'}
-                        onClick={() => { setActiveEventsTab('events'); setEventsView('all'); }}
+                        active={
+                          activeEventsTab === 'events' && eventsView === 'all'
+                        }
+                        onClick={() => {
+                          setActiveEventsTab('events');
+                          setEventsView('all');
+                        }}
                       >
                         <span className="dev-tools-store-item-label">
                           All Events
-                          <span className="dev-tools-count-badge">{events.length}</span>
+                          <span className="dev-tools-count-badge">
+                            {events.length}
+                          </span>
                         </span>
                       </MenuItem>
                     </MenuGroup>
@@ -684,12 +739,20 @@ export const DevTools: React.FC = () => {
                     <MenuGroup padded>
                       <MenuItem
                         size="compact"
-                        active={activeEventsTab === 'listeners' && listenersView === 'all'}
-                        onClick={() => { setActiveEventsTab('listeners'); setListenersView('all'); }}
+                        active={
+                          activeEventsTab === 'listeners' &&
+                          listenersView === 'all'
+                        }
+                        onClick={() => {
+                          setActiveEventsTab('listeners');
+                          setListenersView('all');
+                        }}
                       >
                         <span className="dev-tools-store-item-label">
                           All Listeners
-                          <span className="dev-tools-count-badge">{allListeners.length}</span>
+                          <span className="dev-tools-count-badge">
+                            {allListeners.length}
+                          </span>
                         </span>
                       </MenuItem>
                     </MenuGroup>
@@ -859,12 +922,19 @@ export const DevTools: React.FC = () => {
                 <MenuGroup padded>
                   <MenuItem
                     size="compact"
-                    active={activeEventsTab === 'events' && eventsView === 'all'}
-                    onClick={() => { setActiveEventsTab('events'); setEventsView('all'); }}
+                    active={
+                      activeEventsTab === 'events' && eventsView === 'all'
+                    }
+                    onClick={() => {
+                      setActiveEventsTab('events');
+                      setEventsView('all');
+                    }}
                   >
                     <span className="dev-tools-store-item-label">
                       All Events
-                      <span className="dev-tools-count-badge">{events.length}</span>
+                      <span className="dev-tools-count-badge">
+                        {events.length}
+                      </span>
                     </span>
                   </MenuItem>
                 </MenuGroup>
@@ -873,12 +943,19 @@ export const DevTools: React.FC = () => {
                 <MenuGroup padded>
                   <MenuItem
                     size="compact"
-                    active={activeEventsTab === 'listeners' && listenersView === 'all'}
-                    onClick={() => { setActiveEventsTab('listeners'); setListenersView('all'); }}
+                    active={
+                      activeEventsTab === 'listeners' && listenersView === 'all'
+                    }
+                    onClick={() => {
+                      setActiveEventsTab('listeners');
+                      setListenersView('all');
+                    }}
                   >
                     <span className="dev-tools-store-item-label">
                       All Listeners
-                      <span className="dev-tools-count-badge">{allListeners.length}</span>
+                      <span className="dev-tools-count-badge">
+                        {allListeners.length}
+                      </span>
                     </span>
                   </MenuItem>
                 </MenuGroup>

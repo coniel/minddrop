@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@minddrop/databases": "workspace:*",
+    "@minddrop/views": "workspace:*",
     "@minddrop/events": "workspace:*"
   },
   "devDependencies": {
