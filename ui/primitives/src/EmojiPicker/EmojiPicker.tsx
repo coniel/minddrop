@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
 import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
@@ -36,11 +36,73 @@ export interface EmojiPickerProps
   defaultSkinTone?: EmojiSkinTone;
 }
 
-// Margin top + title height
-const NAV_GROUP_HEADER_HEIGHT = 32 + 16;
-// Height + margin
-const EMOJI_SELECTION_BUTTON_HEIGHT = 34;
-const EMOJI_SELECTION_BUTTONS_PER_ROW = 13;
+// Pre-compute initial state at module level so the first mount
+// has nothing to compute.
+const initialResultsByGroup = Emoji.group(Emoji.all);
+
+const HEADER_ROW_HEIGHT = 48;
+const EMOJI_ROW_HEIGHT = 34;
+const EMOJIS_PER_ROW = 13;
+
+type VirtualItem =
+  | { type: 'header'; label: string }
+  | { type: 'emojis'; emojis: EmojiItem[] };
+
+function buildVirtualItems(
+  resultsByGroup: [string, EmojiItem[]][],
+): VirtualItem[] {
+  const items: VirtualItem[] = [];
+
+  for (const [group, emojis] of resultsByGroup) {
+    items.push({ type: 'header', label: group });
+
+    for (let i = 0; i < emojis.length; i += EMOJIS_PER_ROW) {
+      items.push({ type: 'emojis', emojis: emojis.slice(i, i + EMOJIS_PER_ROW) });
+    }
+  }
+
+  return items;
+}
+
+const initialVirtualItems = buildVirtualItems(initialResultsByGroup);
+
+interface VirtualRowProps {
+  index: number;
+  style: React.CSSProperties;
+  virtualItems: VirtualItem[];
+  skinTone: EmojiSkinTone;
+  onSelect: (emoji: EmojiItem) => void;
+}
+
+// Defined outside the component for stable identity — react-window unmounts
+// and remounts all rows whenever rowComponent's type changes, so an inline
+// definition would cause a full remount on every parent render.
+const VirtualRow = memo(
+  ({ index, style, virtualItems, skinTone, onSelect }: VirtualRowProps) => {
+    const item = virtualItems[index];
+
+    if (item.type === 'header') {
+      return (
+        <div style={style} className="category-group">
+          <MenuLabel>{item.label}</MenuLabel>
+        </div>
+      );
+    }
+
+    return (
+      <div style={style} className="category-group-emoji">
+        {item.emojis.map((emoji) => (
+          <EmojiButton
+            key={emoji.name}
+            emoji={emoji}
+            skinTone={skinTone}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    );
+  },
+);
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({
   onSelect,
@@ -52,17 +114,24 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 }) => {
   const { t } = useTranslation({ keyPrefix: 'emojiPicker' });
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<EmojiItem[]>(Emoji.all);
-  const [resultsByGroup, setResultsByGroup] = useState(Emoji.group(Emoji.all));
+  const deferredQuery = useDeferredValue(query);
   const [skinTone, setSkinTone] = useState(defaultSkinTone);
 
-  // Triggered by changes to the search query
-  useEffect(() => {
-    const results = Emoji.search(query);
+  const { results, resultsByGroup } = useMemo(() => {
+    if (!deferredQuery) {
+      return { results: Emoji.all, resultsByGroup: initialResultsByGroup };
+    }
 
-    setResults(results);
-    setResultsByGroup(Emoji.group(results));
-  }, [query]);
+    const results = Emoji.search(deferredQuery);
+
+    return { results, resultsByGroup: Emoji.group(results) };
+  }, [deferredQuery]);
+
+  const virtualItems = useMemo(
+    () =>
+      deferredQuery ? buildVirtualItems(resultsByGroup) : initialVirtualItems,
+    [deferredQuery, resultsByGroup],
+  );
 
   const handleSelect = useCallback(
     (value: EmojiItem) => {
@@ -92,44 +161,18 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
     [onSelectSkinTone],
   );
 
-  const getCategoryItemSize = useCallback(
-    (index: number) => {
-      return (
-        NAV_GROUP_HEADER_HEIGHT +
-        Math.ceil(
-          resultsByGroup[index][1].length / EMOJI_SELECTION_BUTTONS_PER_ROW,
-        ) *
-          EMOJI_SELECTION_BUTTON_HEIGHT
-      );
-    },
-    [resultsByGroup],
+  const handleQueryChange = useCallback((value: string) => setQuery(value), []);
+
+  const getItemSize = useCallback(
+    (index: number) =>
+      virtualItems[index].type === 'header' ? HEADER_ROW_HEIGHT : EMOJI_ROW_HEIGHT,
+    [virtualItems],
   );
 
-  const Category = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const [category, categoryIcons] = resultsByGroup[index];
-
-    return (
-      <div style={style} className="category-group">
-        <MenuLabel key={category}>{category}</MenuLabel>
-        <div className="category-group-emoji">
-          {categoryIcons.map((emoji) => (
-            <EmojiButton
-              key={emoji.name}
-              emoji={emoji}
-              skinTone={skinTone}
-              onSelect={handleSelect}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
+  const rowProps = useMemo(
+    () => ({ virtualItems, skinTone, onSelect: handleSelect }),
+    [virtualItems, skinTone, handleSelect],
+  );
 
   return (
     <div
@@ -152,7 +195,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
-          onValueChange={(value) => setQuery(value)}
+          onValueChange={handleQueryChange}
         />
         <Tooltip title={t('random')}>
           <IconButton
@@ -164,22 +207,8 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         </Tooltip>
       </Toolbar>
       <div className="options">
-        {results.length > 60 && (
-          // Use results length as key in order to force the entire
-          // list to be re-rendered when category count/heights change.
-          <div key={results.length}>
-            <List
-              rowCount={resultsByGroup.length}
-              rowHeight={getCategoryItemSize}
-              rowComponent={Category}
-              // @ts-ignore - TODO: react-window types are incorrect, remove
-              // when they are fixed.
-              rowProps={{}}
-            />
-          </div>
-        )}
         {results.length <= 60 && (
-          <div className="category-group">
+          <div className="category-group-emoji" style={{ overflowY: 'auto' }}>
             {results.map((emoji) => (
               <EmojiButton
                 key={emoji.name}
@@ -188,6 +217,18 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                 onSelect={handleSelect}
               />
             ))}
+          </div>
+        )}
+        {results.length > 60 && (
+          <div key={virtualItems.length} style={{ flex: 1, minHeight: 0 }}>
+            <List
+              rowCount={virtualItems.length}
+              rowHeight={getItemSize}
+              rowComponent={VirtualRow}
+              // @ts-ignore - TODO: react-window types are incorrect, remove
+              // when they are fixed.
+              rowProps={rowProps}
+            />
           </div>
         )}
       </div>
@@ -200,11 +241,11 @@ export const EmojiWithSkinTone: React.FC<{
   skinTone: EmojiSkinTone;
 }> = ({ emoji, skinTone }) => Emoji.getSkinToneVariant(emoji, skinTone);
 
-const EmojiButton: React.FC<{
+const EmojiButton = memo<{
   emoji: EmojiItem;
   skinTone: EmojiSkinTone;
   onSelect: (value: EmojiItem) => void;
-}> = ({ emoji, skinTone, onSelect }) => {
+}>(({ emoji, skinTone, onSelect }) => {
   const handleSelect = useCallback(() => onSelect(emoji), [onSelect, emoji]);
 
   return (
@@ -216,7 +257,7 @@ const EmojiButton: React.FC<{
       <EmojiWithSkinTone emoji={emoji} skinTone={skinTone} />
     </IconButton>
   );
-};
+});
 
 const SkinToneSelectEmoji: EmojiItem = {
   char: '🖖',

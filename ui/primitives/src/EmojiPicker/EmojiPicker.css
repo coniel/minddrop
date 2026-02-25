@@ -3,13 +3,13 @@
   flex-direction: column;
   height: 480px;
   width: 440px;
-  border-radius: var(--radiusLg);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 
   .toolbar {
     padding: 0 0.5rem;
     align-items: center;
-    border-bottom: 1px solid var(--borderNeutralSubtle);
+    border-bottom: 1px solid var(--border-subtle);
 
     .invisible-text-field {
       flex: 1;
@@ -24,22 +24,22 @@
     }
   }
 
+  /* Header virtual row */
   .category-group {
     padding: 0.5rem 0.5rem 0 0.5rem;
   }
 
+  /* Emoji virtual row — left padding matches old category-group + category-group-emoji combined */
   .category-group-emoji {
-    padding-left: 0.25rem;
-  }
-
-  .nav-group .icon-button,
-  .small-subset .icon-button {
-    margin: 1px;
+    padding: 0 0.5rem 0 0.75rem;
   }
 
   .options {
     flex: 1;
-    overflow-y: scroll;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .emoji-button {
