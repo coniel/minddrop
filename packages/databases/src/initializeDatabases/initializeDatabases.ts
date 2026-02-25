@@ -72,7 +72,13 @@ function findDatabasePaths(entries: FsEntry[], inHiddenDir = false): string[] {
 
 async function readDatabaseConfig(path: string): Promise<Database | null> {
   try {
-    return await Fs.readJsonFile<Database>(path);
+    const config = await Fs.readJsonFile<Database>(path);
+
+    return {
+      ...config,
+      // Remove .minddrop/database.json from the path
+      path: path.split('/').slice(0, -1).join('/'),
+    };
   } catch {
     return null;
   }
