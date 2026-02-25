@@ -2,5 +2,5 @@
   display: flex;
   column-gap: 4px;
   padding: 8px;
-  border-bottom: 1px solid var(--borderNeutralSubtle);
+  border-bottom: 1px solid var(--border-subtle);
 }

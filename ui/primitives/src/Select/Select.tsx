@@ -2,8 +2,8 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { useCallback } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
-import { SelectItem } from './SelectItem';
 import { propsToClass } from '../utils';
+import { SelectItem } from './SelectItem';
 import './Select.css';
 
 export type SelectVariant = 'ghost' | 'subtle' | 'outline' | 'filled';
@@ -112,14 +112,21 @@ export const Select = <TValue extends string | number = string>({
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal>
-        <SelectPrimitive.Positioner className="select-positioner" sideOffset={8}>
+        <SelectPrimitive.Positioner
+          className="select-positioner"
+          sideOffset={8}
+        >
           <SelectPrimitive.Popup className="select-popup">
             <SelectPrimitive.ScrollUpArrow className="select-scroll-arrow" />
             <SelectPrimitive.List className="select-list">
               {children
                 ? children
                 : options.map(({ label, value }) => (
-                    <SelectItem key={String(value)} label={label} value={value} />
+                    <SelectItem
+                      key={String(value)}
+                      label={label}
+                      value={value}
+                    />
                   ))}
             </SelectPrimitive.List>
             <SelectPrimitive.ScrollDownArrow className="select-scroll-arrow" />

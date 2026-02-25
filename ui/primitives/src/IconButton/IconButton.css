@@ -21,9 +21,10 @@
   border-radius: var(--radius-md);
   transition: var(--transition-colors);
 
-  .icon {
-    width: 1rem;
-    height: 1rem;
+  .icon,
+  .content-icon {
+    width: 1.125rem;
+    height: 1.125rem;
     flex-shrink: 0;
     color: var(--text-muted);
   }
@@ -47,31 +48,16 @@
 .icon-button-size-sm {
   width: 1.5rem;
   height: 1.5rem;
-
-  .icon {
-    width: 0.875rem;
-    height: 0.875rem;
-  }
 }
 
 .icon-button-size-md {
   width: 1.75rem;
   height: 1.75rem;
-
-  .icon {
-    width: 1rem;
-    height: 1rem;
-  }
 }
 
 .icon-button-size-lg {
   width: 2.25rem;
   height: 2.25rem;
-
-  .icon {
-    width: 1.125rem;
-    height: 1.125rem;
-  }
 }
 
 /* ------------------------------------------------------------

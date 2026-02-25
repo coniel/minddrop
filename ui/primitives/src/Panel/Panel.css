@@ -1,7 +1,9 @@
 .panel {
-  background-color: var(--panel-background-color);
-  border: 0.5px solid var(--panel-border-color);
-  box-shadow: var(--panel-box-shadow);
-  border-radius: 0.75rem;
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04);
   position: relative;
 }

@@ -1,3 +1,10 @@
+/* Size */
+
+.icon {
+  width: var(--icon-size-default);
+  height: var(--icon-size-default);
+}
+
 /* Color */
 
 .icon-color-current-color {
@@ -5,21 +12,41 @@
 }
 
 .icon-color-regular {
-  stroke: var(--textNeutral);
+  stroke: var(--text-regular);
 }
 
-.icon-color-white {
-  stroke: var(--textWhite);
+.icon-color-muted {
+  stroke: var(--text-muted);
 }
 
-.icon-color-light {
-  stroke: var(--textNeutralLight);
+.icon-color-subtle {
+  stroke: var(--text-subtle);
 }
 
-.icon-color-contrast {
-  stroke: var(--textContrast);
+.icon-color-disabled {
+  stroke: var(--text-disabled);
 }
 
-.icon-color-contrast-light {
-  stroke: var(--textContrastLight);
+.icon-color-primary {
+  stroke: var(--text-primary);
+}
+
+.icon-color-danger {
+  stroke: var(--text-danger);
+}
+
+.icon-color-danger-muted {
+  stroke: var(--text-danger-muted);
+}
+
+.icon-color-warning {
+  stroke: var(--text-warning);
+}
+
+.icon-color-info {
+  stroke: var(--text-info);
+}
+
+.icon-color-inherit {
+  stroke: inherit;
 }

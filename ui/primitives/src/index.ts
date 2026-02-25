@@ -1,4 +1,5 @@
 export * from './Button';
+export * from './Calendar';
 export * from './RadioToggleGroup';
 export * from './Collapsible';
 export * from './ConfirmationDialog';
@@ -20,6 +21,7 @@ export * from './Popover';
 export * from './Select';
 export * from './Separator';
 export * from './Subheading';
+export * from './Switch';
 export * from './Text';
 export * from './ToggleGroup';
 export * from './Toolbar';
