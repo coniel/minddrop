@@ -25,6 +25,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/utils": "workspace:*",
+    "react-day-picker": "^9.13.2",
     "react-window": "^2.2.7"
   }
 }

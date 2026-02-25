@@ -8,6 +8,7 @@
  * 2. Import it here and add it to the appropriate group
  */
 import { ButtonStories } from './Button/Button.stories';
+import { CalendarStories } from './Calendar/Calendar.stories';
 import { CollapsibleStories } from './Collapsible/Collapsible.stories';
 import { ComboboxStories } from './Combox/Combobox.stories';
 import { ConfirmationDialogStories } from './ConfirmationDialog/ConfirmationDialog.stories';
@@ -72,6 +73,12 @@ export const stories: StoryGroup[] = [
       { label: 'DropdownMenu', component: DropdownMenuStories },
       { label: 'ContextMenu', component: ContextMenuStories },
       { label: 'Combobox', component: ComboboxStories },
+    ],
+  },
+  {
+    group: 'Pickers',
+    items: [
+      { label: 'Calendar', component: CalendarStories },
     ],
   },
   {
