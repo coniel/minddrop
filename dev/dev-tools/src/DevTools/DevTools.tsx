@@ -26,10 +26,16 @@ type ResizeEdge = (typeof RESIZE_EDGES)[number];
 
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
-  const [windowMode, setWindowMode] = useState(false);
+  const [windowMode, setWindowMode] = useState(
+    () => JSON.parse(localStorage.getItem('dev-tools-window-mode') ?? 'false'),
+  );
   const [windowSidebarOpen, setWindowSidebarOpen] = useState(false);
-  const [windowPos, setWindowPos] = useState({ x: 80, y: 80 });
-  const [windowSize, setWindowSize] = useState({ width: 680, height: 480 });
+  const [windowPos, setWindowPos] = useState(
+    () => JSON.parse(localStorage.getItem('dev-tools-window-pos') ?? 'null') ?? { x: 80, y: 80 },
+  );
+  const [windowSize, setWindowSize] = useState(
+    () => JSON.parse(localStorage.getItem('dev-tools-window-size') ?? 'null') ?? { width: 680, height: 480 },
+  );
   const [activeSection, setActiveSection] = useState<ActiveSection>('logs');
   const [activeStory, setActiveStory] = useState<ActiveStory>({
     groupIndex: 0,
@@ -39,6 +45,18 @@ export const DevTools: React.FC = () => {
   const [savedLogs, setSavedLogs] = useState<SavedLog[]>(() => loadSavedLogs());
   // 'live' shows the console; any other string is a filename showing saved logs.
   const [logsView, setLogsView] = useState<string>('live');
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-window-mode', JSON.stringify(windowMode));
+  }, [windowMode]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-window-pos', JSON.stringify(windowPos));
+  }, [windowPos]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-window-size', JSON.stringify(windowSize));
+  }, [windowSize]);
 
   // Install console interceptors on first render
   useEffect(() => {
@@ -86,6 +104,35 @@ export const DevTools: React.FC = () => {
       if (e.key === 's' && visible && windowMode) {
         e.preventDefault();
         setWindowSidebarOpen((v) => !v);
+      }
+
+      if (e.key === 'q' && visible && windowMode) {
+        e.preventDefault();
+        const gap = 12;
+        setWindowSize({ width: 500, height: window.innerHeight - gap * 2 });
+        setWindowPos({ x: gap, y: gap });
+      }
+
+      if (e.key === 'w' && visible && windowMode) {
+        e.preventDefault();
+        const gap = 12;
+        setWindowSize({ width: 500, height: window.innerHeight - gap * 2 });
+        setWindowPos({ x: window.innerWidth - 500 - gap, y: gap });
+      }
+
+      if (e.key === 'j' && visible) {
+        e.preventDefault();
+        setActiveSection('logs');
+      }
+
+      if (e.key === 'k' && visible) {
+        e.preventDefault();
+        setActiveSection('state');
+      }
+
+      if (e.key === 'l' && visible) {
+        e.preventDefault();
+        setActiveSection('events');
       }
     };
 

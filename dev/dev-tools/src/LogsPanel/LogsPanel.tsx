@@ -283,34 +283,33 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
                 )}
               </div>
 
-              <div className="dev-tools-log-end">
-                {entry.source && (
-                  <span className="dev-tools-log-source">
-                    <span
-                      className={`dev-tools-log-source-file${quickFilter?.type === 'file' && quickFilter.value === entry.source.file ? ' is-active' : ''}`}
-                      onClick={() => handleFileClick(entry.source!.file)}
-                    >
-                      {entry.source.file}
-                    </span>
-                    :{entry.source.line}
+              {entry.source && (
+                <span className="dev-tools-log-source">
+                  <span
+                    className={`dev-tools-log-source-file${quickFilter?.type === 'file' && quickFilter.value === entry.source.file ? ' is-active' : ''}`}
+                    onClick={() => handleFileClick(entry.source!.file)}
+                  >
+                    {entry.source.file}
                   </span>
-                )}
-                <div className="dev-tools-log-actions">
-                  <IconButton
-                    icon="copy"
-                    label="Copy log"
-                    size="sm"
-                    onClick={() => handleCopy(entry)}
-                  />
-                  <IconButton
-                    icon="bookmark"
-                    label={saved ? 'Saved' : 'Save log'}
-                    size="sm"
-                    active={saved}
-                    className="dev-tools-log-save-btn"
-                    onClick={() => handleSave(entry)}
-                  />
-                </div>
+                  :{entry.source.line}
+                </span>
+              )}
+
+              <div className="dev-tools-log-actions">
+                <IconButton
+                  icon="copy"
+                  label="Copy log"
+                  size="sm"
+                  onClick={() => handleCopy(entry)}
+                />
+                <IconButton
+                  icon="bookmark"
+                  label={saved ? 'Saved' : 'Save log'}
+                  size="sm"
+                  active={saved}
+                  className="dev-tools-log-save-btn"
+                  onClick={() => handleSave(entry)}
+                />
               </div>
             </div>
           );

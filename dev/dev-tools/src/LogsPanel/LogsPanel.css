@@ -123,6 +123,7 @@
   gap: var(--space-3);
   padding: var(--space-1) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
+  position: relative;
 
   &:last-child {
     border-bottom: none;
@@ -149,16 +150,11 @@
   word-break: break-all;
 }
 
-.dev-tools-log-end {
-  flex-shrink: 0;
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  padding-top: 2px;
-  min-width: 5rem;
-}
-
+/* Fullscreen: source is absolute so it takes no layout space */
 .dev-tools-log-source {
+  position: absolute;
+  top: calc(var(--space-1) + 2px);
+  right: var(--space-4);
   font-family: var(--font-mono, monospace);
   font-size: 0.75rem;
   color: var(--text-subtle);
@@ -168,8 +164,8 @@
 
 .dev-tools-log-actions {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: var(--space-1);
+  right: var(--space-2);
   display: flex;
   gap: 2px;
   background-color: inherit;
@@ -182,6 +178,30 @@
 .dev-tools-log-entry:hover .dev-tools-log-actions {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Window mode: time + source form a meta row, args get full width below */
+.dev-tools-window .dev-tools-log-entry {
+  flex-wrap: wrap;
+  row-gap: 2px;
+  column-gap: var(--space-2);
+}
+
+.dev-tools-window .dev-tools-log-time {
+  order: 1;
+  width: auto;
+  padding-top: 0;
+}
+
+.dev-tools-window .dev-tools-log-source {
+  order: 2;
+  position: static;
+  flex: 1;
+}
+
+.dev-tools-window .dev-tools-log-args {
+  order: 3;
+  flex-basis: 100%;
 }
 
 .dev-tools-log-save-btn.icon-button-active .icon {
