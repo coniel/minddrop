@@ -1,6 +1,12 @@
 import { EventListenerCallback } from './EventListenerCallback.types';
+import { EventListenerMap } from './EventListenerMap.types';
 
 export interface EventsApi {
+  /**
+   * All registered event listeners.
+   */
+  listeners: EventListenerMap;
+
   /**
    * Adds the listener function to the **end** of the listeners array for
    * the event named `eventName`.

@@ -10,6 +10,7 @@ import { EventListenerMap, EventsApi } from './types';
 let eventListeners: EventListenerMap = {};
 
 export const Events: EventsApi = {
+  listeners: eventListeners,
   addListener: (...args) => addEventListener(eventListeners, ...args),
   on: (...args) => addEventListener(eventListeners, ...args),
   prependListener: (...args) => prependEventListener(eventListeners, ...args),
