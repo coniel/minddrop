@@ -1,0 +1,56 @@
+.dispatch-event-form {
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.dispatch-event-name-row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.dispatch-event-name-row > :first-child {
+  flex: 1;
+}
+
+.dispatch-event-entries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dispatch-event-entry {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.dispatch-event-entry-key {
+  width: 5.5rem;
+  flex-shrink: 0;
+}
+
+.dispatch-event-entry-value {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.dispatch-event-entry-value > * {
+  width: 100%;
+}
+
+.dispatch-event-entry-value .radio-toggle-group {
+  width: auto;
+}
+
+.dispatch-event-add-row {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}

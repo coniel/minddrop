@@ -32,12 +32,31 @@
   }
 }
 
+.events-panel-actions {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-2);
+  display: flex;
+  gap: 2px;
+  background-color: inherit;
+  border-radius: var(--radius-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.events-panel-entry:hover .events-panel-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .events-panel-row {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-1) var(--space-4);
   min-height: 1.75rem;
+  position: relative;
 
   &.is-clickable {
     cursor: pointer;

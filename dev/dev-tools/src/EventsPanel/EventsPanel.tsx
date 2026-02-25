@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Text } from '@minddrop/ui-primitives';
+import { IconButton, Text } from '@minddrop/ui-primitives';
+import { Events } from '@minddrop/events';
 import { EventEntry } from '../types';
 import { formatArg } from '../utils';
 import { ForceSignal, JsonTree } from '../LogsPanel/JsonTree';
+import { DispatchEventForm } from './DispatchEventForm';
 import './EventsPanel.css';
 
 export interface EventsPanelProps {
@@ -153,6 +155,18 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
                     {expanded ? '▾' : '▸'}
                   </span>
                 )}
+
+                <div className="events-panel-actions">
+                  <IconButton
+                    icon="rotate-ccw"
+                    label="Re-dispatch event"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      Events.dispatch(entry.name, entry.data);
+                    }}
+                  />
+                </div>
               </div>
 
               {expanded && complex && (
@@ -168,6 +182,8 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
           );
         })}
       </div>
+
+      <DispatchEventForm />
     </div>
   );
 };
