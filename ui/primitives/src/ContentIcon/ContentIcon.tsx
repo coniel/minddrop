@@ -1,5 +1,6 @@
 import { ContentIconName, UserIcon, useIcon, useIcons } from '@minddrop/icons';
 import { ContentColor } from '../types';
+import { TextColor } from '../types/Text.types';
 import { propsToClass } from '../utils';
 import './ContentIcon.css';
 
@@ -22,14 +23,16 @@ export interface ContentIconProps {
 
   /**
    * The color of the icon. Used only if the icon does not
-   * specify a color itself.
+   * specify a color itself. Can be a ContentColor, TextColor,
+   * 'inherit' to inherit the color of the surrounding text, or
+   * 'content-icon' to use the color of the icon itself.
    */
-  color?: ContentColor | 'inherit';
+  color?: ContentColor | TextColor | 'inherit' | 'content-icon';
 }
 
 export const ContentIcon: React.FC<ContentIconProps> = ({
   icon: iconString,
-  color = 'default',
+  color = 'content-icon',
   defaultIcon,
   className,
 }) => {
@@ -38,7 +41,7 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
   if (icon.type === 'emoji') {
     return (
       <span
-        className={['icon content-icon', 'emoji', className]
+        className={['content-icon', 'emoji', className]
           .filter(Boolean)
           .join(' ')}
         data-testid="content-icon"
@@ -52,7 +55,7 @@ export const ContentIcon: React.FC<ContentIconProps> = ({
     <IconSetIcon
       className={className}
       name={icon.icon}
-      color={icon.color || color}
+      color={color === 'content-icon' ? icon.color : color}
     />
   );
 };
@@ -62,7 +65,7 @@ interface IconSetIconProps extends React.HTMLProps<SVGSVGElement> {
    * The color of the icon, matching Text colors.
    * `current-color` will use the color of the surrounding text.
    */
-  color?: ContentColor | 'current-color';
+  color?: ContentColor | TextColor | 'current-color';
 
   /**
    * The name of the content icon to display.
@@ -87,7 +90,7 @@ const IconSetIcon: React.FC<IconSetIconProps> = ({
     <IconComponent
       data-testid="content-icon"
       name={name}
-      className={`icon icon-set-icon ${propsToClass('content-icon', { className, color })}`}
+      className={`icon-set-icon ${propsToClass('content-icon', { className, color })}`}
       {...other}
     />
   );
