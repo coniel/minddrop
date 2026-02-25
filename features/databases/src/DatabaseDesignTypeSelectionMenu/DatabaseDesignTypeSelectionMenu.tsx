@@ -36,11 +36,7 @@ export const DatabaseDesignTypeSelectionMenu: React.FC<
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <IconButton
-          size="sm"
-          label="databases.actions.addDesign"
-          icon="plus"
-        />
+        <IconButton size="sm" label="databases.actions.addDesign" icon="plus" />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuPositioner side="bottom" align="start">
