@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { IconButton, Text } from '@minddrop/ui-primitives';
 import { Events } from '@minddrop/events';
 import { EventEntry } from '../types';
 import { formatArg } from '../utils';
 import { ForceSignal, JsonTree } from '../LogsPanel/JsonTree';
-import { DispatchEventForm } from './DispatchEventForm';
+import { DispatchEventForm, DispatchEventFormHandle } from './DispatchEventForm';
 import './EventsPanel.css';
 
 export interface EventsPanelProps {
@@ -27,6 +27,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
   eventsView,
   onClear,
 }) => {
+  const formRef = useRef<DispatchEventFormHandle>(null);
   const [search, setSearch] = useState('');
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
   const [itemForces, setItemForces] = useState<Map<number, ForceSignal>>(
@@ -101,6 +102,19 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
         </Text>
       </div>
 
+      {(search || events.length > 0) && (
+        <div className="events-panel-search">
+          <input
+            className="events-panel-search-input"
+            type="text"
+            placeholder="Search…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === 'Escape' && setSearch('')}
+          />
+        </div>
+      )}
+
       <div className="events-panel-list">
         {displayed.length === 0 && (
           <Text size="sm" color="subtle" style={{ padding: 'var(--space-4)' }}>
@@ -158,6 +172,15 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
 
                 <div className="events-panel-actions">
                   <IconButton
+                    icon="pen"
+                    label="Pre-fill dispatch form"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      formRef.current?.fill(entry.name, entry.data);
+                    }}
+                  />
+                  <IconButton
                     icon="rotate-ccw"
                     label="Re-dispatch event"
                     size="sm"
@@ -183,7 +206,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
         })}
       </div>
 
-      <DispatchEventForm />
+      <DispatchEventForm ref={formRef} />
     </div>
   );
 };

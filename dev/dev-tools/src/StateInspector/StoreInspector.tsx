@@ -76,17 +76,20 @@ export function StoreInspector<T extends object>({
           {title}
         </Text>
         <span className="store-inspector-count">{items.length}</span>
+      </div>
+
+      <div className="store-inspector-search">
         <input
           type="text"
-          className="dev-tools-search"
-          placeholder="search…"
+          className="store-inspector-search-input"
+          placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => e.key === 'Escape' && setSearch('')}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck={false}
-          style={{ marginLeft: 'auto', maxWidth: '160px' }}
         />
       </div>
 
