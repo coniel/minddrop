@@ -61,6 +61,10 @@
   --space-6: 2rem; /* 32px */
   --space-7: 3rem; /* 48px */
 
+  /* --- Icon size --- */
+
+  --icon-size-default: 1.125rem; /* 18px */
+
   /* --- Border radius --- */
 
   --radius-xs: 0.1875rem; /*  3px — tooltips, small popovers */
