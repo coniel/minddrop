@@ -1,4 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useState, useSyncExternalStore } from 'react';
+
+function useTime() {
+  return useSyncExternalStore(
+    (cb) => {
+      const id = setInterval(cb, 10000);
+      return () => clearInterval(id);
+    },
+    () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+  );
+}
 import {
   IconButton,
   MenuGroup,
@@ -75,6 +85,8 @@ export const DevTools: React.FC = () => {
   const [activeEventsTab, setActiveEventsTab] = useState<'events' | 'listeners'>('events');
   const [listenersView, setListenersView] = useState('all');
   const [listenersTick, setListenersTick] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
+  const time = useTime();
 
   const allListeners = useMemo((): ListenerEntry[] => {
     const result: ListenerEntry[] = [];
@@ -229,8 +241,13 @@ export const DevTools: React.FC = () => {
         setVisible((v) => !v);
       }
 
-      if (e.key === 'Escape' && visible) {
-        setVisible(false);
+      if (e.key === 'Escape' && visible && showHelp) {
+        setShowHelp(false);
+      }
+
+      if (e.key === '?' && visible) {
+        e.preventDefault();
+        setShowHelp((v) => !v);
       }
 
       if (e.key === 'f' && visible) {
@@ -241,9 +258,23 @@ export const DevTools: React.FC = () => {
         });
       }
 
-      if (e.key === 's' && visible && windowMode) {
+      if (e.key === 'a' && visible && windowMode) {
         e.preventDefault();
         setWindowSidebarOpen((v) => !v);
+      }
+
+      if (e.key === 's' && visible) {
+        e.preventDefault();
+        let selector = '';
+        if (activeSection === 'logs') selector = '.dev-tools-search';
+        else if (activeSection === 'state') selector = '.store-inspector-search-input';
+        else if (activeSection === 'events' && activeEventsTab === 'events') selector = '.events-panel-search-input';
+        else if (activeSection === 'events' && activeEventsTab === 'listeners') selector = '.listeners-panel-search-input';
+        if (selector) {
+          const input = document.querySelector<HTMLInputElement>(selector);
+          input?.focus();
+          input?.select();
+        }
       }
 
       if (e.key === 'Tab' && visible && windowMode) {
@@ -289,18 +320,22 @@ export const DevTools: React.FC = () => {
         setActiveSection('events');
       }
 
-      if (e.key === 'c' && visible && activeSection === 'events') {
+      if (e.key === 'c' && visible) {
         e.preventDefault();
-        dispatchEvent({ type: 'clear' });
-        setEventsView('all');
-        setOpenNodes(new Set());
+        if (activeSection === 'events') {
+          dispatchEvent({ type: 'clear' });
+          setEventsView('all');
+          setOpenNodes(new Set());
+        } else if (activeSection === 'logs') {
+          dispatch({ type: 'clear' });
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visible, activeSection, windowMode]);
+  }, [visible, activeSection, windowMode, showHelp, activeEventsTab]);
 
   const onSave = useCallback((entry: LogEntry) => {
     const log: SavedLog = {
@@ -434,6 +469,65 @@ export const DevTools: React.FC = () => {
     </MenuGroup>
   );
 
+  const helpOverlay = showHelp && (
+    <div className="dev-tools-help-overlay" onClick={() => setShowHelp(false)}>
+      <div className="dev-tools-help-card" onClick={(e) => e.stopPropagation()}>
+        <div className="dev-tools-help-group">
+          <div className="dev-tools-help-group-title">General</div>
+          {[
+            ['d', 'Toggle DevTools'],
+            ['?', 'Help'],
+          ].map(([key, label]) => (
+            <div key={key} className="dev-tools-help-row">
+              <kbd className="dev-tools-help-key">{key}</kbd>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="dev-tools-help-group">
+          <div className="dev-tools-help-group-title">Window</div>
+          {[
+            ['f', 'Toggle fullscreen'],
+            ['a', 'Toggle sidebar'],
+            ['Tab', 'Snap left / right'],
+            ['[', 'Snap left'],
+            [']', 'Snap right'],
+          ].map(([key, label]) => (
+            <div key={key} className="dev-tools-help-row">
+              <kbd className="dev-tools-help-key">{key}</kbd>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="dev-tools-help-group">
+          <div className="dev-tools-help-group-title">Navigation</div>
+          {[
+            ['q', 'Logs'],
+            ['w', 'State'],
+            ['e', 'Events'],
+          ].map(([key, label]) => (
+            <div key={key} className="dev-tools-help-row">
+              <kbd className="dev-tools-help-key">{key}</kbd>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="dev-tools-help-group">
+          <div className="dev-tools-help-group-title">View</div>
+          {[
+            ['c', 'Clear view'],
+            ['s', 'Focus search'],
+          ].map(([key, label]) => (
+            <div key={key} className="dev-tools-help-row">
+              <kbd className="dev-tools-help-key">{key}</kbd>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
   if (!visible) return null;
 
   const group = stories[activeStory.groupIndex];
@@ -540,9 +634,11 @@ export const DevTools: React.FC = () => {
             />
           </div>
           <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
-            d / esc / f / s / q w e
+            {time}
           </Text>
         </div>
+
+        {helpOverlay}
 
         <div className="dev-tools-window-body">
           {windowSidebarOpen && (
@@ -652,6 +748,7 @@ export const DevTools: React.FC = () => {
   // --- Fullscreen mode ---
   return (
     <div className="dev-tools-overlay">
+      {helpOverlay}
       <div className="dev-tools">
         {/* --- Sidebar --- */}
         <aside className="dev-tools-sidebar">
@@ -660,7 +757,7 @@ export const DevTools: React.FC = () => {
               DevTools
             </Text>
             <Text size="xs" color="subtle" mono>
-              d / esc / f / q w e
+              {time}
             </Text>
           </div>
 

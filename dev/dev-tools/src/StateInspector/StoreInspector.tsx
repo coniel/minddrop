@@ -85,7 +85,7 @@ export function StoreInspector<T extends object>({
           placeholder="Search…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          onKeyDown={(e) => e.key === 'Escape' && setSearch('')}
+          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

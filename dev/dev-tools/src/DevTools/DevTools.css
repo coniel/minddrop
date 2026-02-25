@@ -200,7 +200,66 @@
   }
 }
 
-/* Resize handles */
+/* --- Help overlay --- */
+
+.dev-tools-help-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: lch(0 0 0 / 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dev-tools-help-card {
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 220px;
+}
+
+.dev-tools-help-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dev-tools-help-group-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: var(--space-1);
+}
+
+.dev-tools-help-row {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--text-regular);
+}
+
+.dev-tools-help-key {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  background: var(--surface-neutral-hover);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--space-2);
+  text-align: center;
+  justify-self: start;
+}
+
+/* --- Resize handles --- */
 
 .dev-tools-resize-handle {
   position: absolute;

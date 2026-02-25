@@ -202,6 +202,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
           placeholder="search…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearchQuery(''); e.currentTarget.blur(); } }}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"

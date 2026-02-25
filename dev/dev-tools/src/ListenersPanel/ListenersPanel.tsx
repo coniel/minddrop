@@ -58,18 +58,16 @@ export const ListenersPanel: React.FC<ListenersPanelProps> = ({
         </Text>
       </div>
 
-      {(search || listeners.length > 0) && (
-        <div className="listeners-panel-search">
-          <input
-            className="listeners-panel-search-input"
-            type="text"
-            placeholder="Search…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === 'Escape' && setSearch('')}
-          />
-        </div>
-      )}
+      <div className="listeners-panel-search">
+        <input
+          className="listeners-panel-search-input"
+          type="text"
+          placeholder="Search…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
+        />
+      </div>
 
       <div className="listeners-panel-list">
         {groups.size === 0 && (

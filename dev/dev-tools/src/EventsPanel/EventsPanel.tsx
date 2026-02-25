@@ -102,18 +102,16 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({
         </Text>
       </div>
 
-      {(search || events.length > 0) && (
-        <div className="events-panel-search">
-          <input
-            className="events-panel-search-input"
-            type="text"
-            placeholder="Search…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === 'Escape' && setSearch('')}
-          />
-        </div>
-      )}
+      <div className="events-panel-search">
+        <input
+          className="events-panel-search-input"
+          type="text"
+          placeholder="Search…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearch(''); e.currentTarget.blur(); } }}
+        />
+      </div>
 
       <div className="events-panel-list">
         {displayed.length === 0 && (
