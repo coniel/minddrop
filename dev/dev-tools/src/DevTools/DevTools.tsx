@@ -9,6 +9,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
 import { DevToolsPlaceholder } from '../DevToolsPlaceholder';
+import { DatabasesStateView, useDatabaseStoreCounts } from '../StateInspector';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { ActiveSection, ActiveStory, LogEntry, SavedLog } from '../types';
 import {
@@ -23,6 +24,14 @@ import './DevTools.css';
 
 const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
 type ResizeEdge = (typeof RESIZE_EDGES)[number];
+
+const STATE_STORES = [
+  { id: 'databases', label: 'Databases' },
+  { id: 'database-entries', label: 'Entries' },
+  { id: 'database-templates', label: 'Templates' },
+] as const;
+
+type StateView = (typeof STATE_STORES)[number]['id'];
 
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -45,6 +54,8 @@ export const DevTools: React.FC = () => {
   const [savedLogs, setSavedLogs] = useState<SavedLog[]>(() => loadSavedLogs());
   // 'live' shows the console; any other string is a filename showing saved logs.
   const [logsView, setLogsView] = useState<string>('live');
+  const [stateView, setStateView] = useState<StateView>('databases');
+  const storeCounts = useDatabaseStoreCounts();
 
   useEffect(() => {
     localStorage.setItem('dev-tools-window-mode', JSON.stringify(windowMode));
@@ -228,11 +239,7 @@ export const DevTools: React.FC = () => {
       )}
 
       {activeSection === 'state' && (
-        <DevToolsPlaceholder
-          icon="database"
-          title="State inspector"
-          description="Import and register your state stores to inspect them here."
-        />
+        <DatabasesStateView stateView={stateView} />
       )}
 
       {activeSection === 'events' && (
@@ -317,6 +324,21 @@ export const DevTools: React.FC = () => {
           {windowSidebarOpen && (
             <aside className="dev-tools-sidebar dev-tools-sidebar-window">
               <nav className="dev-tools-nav">
+                {activeSection === 'state' && (
+                  <MenuGroup padded>
+                    <MenuLabel label="Databases" />
+                    {STATE_STORES.map(({ id, label }) => (
+                      <MenuItem
+                        key={id}
+                        label={label}
+                        size="compact"
+                        active={stateView === id}
+                        onClick={() => setStateView(id)}
+                      />
+                    ))}
+                  </MenuGroup>
+                )}
+
                 {activeSection === 'logs' && (
                   <>
                     <MenuGroup padded>
@@ -450,6 +472,27 @@ export const DevTools: React.FC = () => {
                   </>
                 )}
               </>
+            )}
+
+            {activeSection === 'state' && (
+              <MenuGroup padded>
+                <MenuLabel label="Databases" />
+                {STATE_STORES.map(({ id, label }) => (
+                  <MenuItem
+                    key={id}
+                    size="compact"
+                    active={stateView === id}
+                    onClick={() => setStateView(id)}
+                  >
+                    <span className="dev-tools-store-item-label">
+                      {label}
+                      <span className="dev-tools-count-badge">
+                        {storeCounts[id]}
+                      </span>
+                    </span>
+                  </MenuItem>
+                ))}
+              </MenuGroup>
             )}
 
             {activeSection === 'stories' && (
