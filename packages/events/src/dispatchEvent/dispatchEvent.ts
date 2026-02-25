@@ -15,44 +15,47 @@ export async function dispatchEvent(
   eventName: string,
   data?: unknown,
 ): Promise<void> {
-  // If no listeners are registered for the event, stop here
-  if (!eventListeners[eventName]) {
-    return;
-  }
+  async function runListeners(listenerEventName: string): Promise<void> {
+    if (!eventListeners[listenerEventName]) {
+      return;
+    }
 
-  let propagationStopped = false;
-  const skipListeners: string[] = [];
+    let propagationStopped = false;
+    const skipListeners: string[] = [];
 
-  function stopPropagation() {
-    propagationStopped = true;
-  }
+    function stopPropagation() {
+      propagationStopped = true;
+    }
 
-  function skipPropagation(listenerId: string | string[]) {
-    if (Array.isArray(listenerId)) {
-      skipListeners.push(...listenerId);
-    } else {
-      skipListeners.push(listenerId);
+    function skipPropagation(listenerId: string | string[]) {
+      if (Array.isArray(listenerId)) {
+        skipListeners.push(...listenerId);
+      } else {
+        skipListeners.push(listenerId);
+      }
+    }
+
+    for (const listener of eventListeners[listenerEventName].listeners) {
+      if (propagationStopped) {
+        break;
+      }
+
+      if (skipListeners.includes(listener.id)) {
+        continue;
+      }
+      await listener.callback({
+        name: eventName,
+        stopPropagation,
+        skipPropagation,
+        data,
+      });
     }
   }
 
-  for (const listener of eventListeners[eventName].listeners) {
-    if (propagationStopped) {
-      // stopPropagation() was called by the previous listener
-      // so we break the loop.
-      break;
-    }
+  await runListeners(eventName);
 
-    if (skipListeners.includes(listener.id)) {
-      // A previous listener called skipPropagation on this
-      // listener so we skip it.
-      continue;
-    }
-
-    await listener.callback({
-      name: eventName,
-      stopPropagation,
-      skipPropagation,
-      data,
-    });
+  // Also notify catch-all ('*') listeners, with their own propagation context.
+  if (eventName !== '*') {
+    await runListeners('*');
   }
 }
