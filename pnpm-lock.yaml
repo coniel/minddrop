@@ -141,6 +141,13 @@ importers:
         version: 7.3.1(@types/node@20.17.19)
 
   dev/dev-tools:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
