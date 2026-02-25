@@ -6,6 +6,7 @@ export * from './ContentIcon';
 export * from './Dialog';
 export * from './DropdownMenu';
 export * from './fields';
+export * from './NumberField';
 export * from './Heading';
 export * from './Icon';
 export * from './IconButton';
