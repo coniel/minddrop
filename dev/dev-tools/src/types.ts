@@ -23,7 +23,14 @@ export interface EventEntry {
   timestamp: number;
 }
 
-export type ActiveSection = 'stories' | 'state' | 'events' | 'logs';
+export interface Note {
+  id: number;
+  content: string;
+  createdAt: number;
+  filePath: string;
+}
+
+export type ActiveSection = 'stories' | 'state' | 'events' | 'logs' | 'notes';
 
 export interface ActiveStory {
   groupIndex: number;

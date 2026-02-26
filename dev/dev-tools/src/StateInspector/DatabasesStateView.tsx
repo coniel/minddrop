@@ -1,25 +1,37 @@
 import React from 'react';
 import {
   Databases,
+  DatabaseAutomations,
   DatabaseEntries,
+  DatabaseEntrySerializers,
   DatabaseTemplates,
 } from '@minddrop/databases';
 import { StoreInspector } from './StoreInspector';
 
-type StateView = 'databases' | 'database-entries' | 'database-templates';
+export type DatabasesStateViewId =
+  | 'databases'
+  | 'database-entries'
+  | 'database-templates'
+  | 'database-automations'
+  | 'database-serializers';
 
 interface DatabasesStateViewProps {
-  stateView: StateView;
+  stateView: DatabasesStateViewId;
 }
 
 export function useDatabaseStoreCounts() {
   const databases = Databases.useAll();
   const entries = DatabaseEntries.Store.useAllItems();
   const templates = DatabaseTemplates.useAll();
+  const automations = DatabaseAutomations.useAll();
+  const serializers = DatabaseEntrySerializers.useAll();
+
   return {
     databases: databases.length,
     'database-entries': entries.length,
     'database-templates': templates.length,
+    'database-automations': automations.length,
+    'database-serializers': serializers.length,
   };
 }
 
@@ -29,6 +41,8 @@ export const DatabasesStateView: React.FC<DatabasesStateViewProps> = ({
   const databases = Databases.useAll();
   const entries = DatabaseEntries.Store.useAllItems();
   const templates = DatabaseTemplates.useAll();
+  const automations = DatabaseAutomations.useAll();
+  const serializers = DatabaseEntrySerializers.useAll();
 
   if (stateView === 'databases') {
     return (
@@ -59,6 +73,28 @@ export const DatabasesStateView: React.FC<DatabasesStateViewProps> = ({
         items={templates}
         getLabel={(template) => template.name}
         getId={(template) => template.name}
+      />
+    );
+  }
+
+  if (stateView === 'database-automations') {
+    return (
+      <StoreInspector
+        title="Database Automations"
+        items={automations}
+        getLabel={(automation) => automation.name}
+        getId={(automation) => automation.type}
+      />
+    );
+  }
+
+  if (stateView === 'database-serializers') {
+    return (
+      <StoreInspector
+        title="Database Entry Serializers"
+        items={serializers}
+        getLabel={(serializer) => serializer.name}
+        getId={(serializer) => serializer.id}
       />
     );
   }

@@ -1,0 +1,88 @@
+.notes-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.notes-panel-tabs {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--surface-overlay);
+}
+
+.notes-panel-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+  border: none;
+  border-right: 1px solid var(--border-subtle);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.notes-panel-tab:hover {
+  background-color: var(--surface-neutral-hover);
+  color: var(--text-regular);
+}
+
+.notes-panel-tab-active {
+  background-color: var(--surface-app);
+  color: var(--text-regular);
+}
+
+.notes-panel-tab-title {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notes-panel-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.notes-panel-editor > * {
+  height: 100%;
+}
+
+.notes-panel-editor .scroll-area-viewport {
+  min-height: 100%;
+}
+
+.notes-panel-editor .editor {
+  min-height: 100%;
+}
+
+/* Window mode: generous padding */
+.dev-tools-window .notes-panel-editor .scroll-area-viewport {
+  padding: var(--space-5);
+}
+
+/* Fullscreen mode: comfortable reading width, centered */
+.dev-tools .notes-panel-editor .scroll-area-viewport {
+  padding: var(--space-6) var(--space-7);
+}
+
+.dev-tools .notes-panel-editor .editor {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.notes-panel-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+}

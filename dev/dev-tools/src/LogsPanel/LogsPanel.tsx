@@ -181,7 +181,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
         />
         <div className="dev-tools-filter-divider" />
         <button
-          className={`dev-tools-level-btn dev-tools-level-btn-all${!activeFilter ? ' is-active' : ''}`}
+          className={`dev-tools-level-button dev-tools-level-button-all${!activeFilter ? ' is-active' : ''}`}
           onClick={() => setActiveFilter(null)}
         >
           all
@@ -189,7 +189,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
         {LOG_LEVELS.map((level) => (
           <button
             key={level}
-            className={`dev-tools-level-btn dev-tools-level-btn-${level}${activeFilter === level ? ' is-active' : ''}`}
+            className={`dev-tools-level-button dev-tools-level-button-${level}${activeFilter === level ? ' is-active' : ''}`}
             onClick={() => toggleFilter(level)}
           >
             {level}
@@ -308,7 +308,7 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
                   label={saved ? 'Saved' : 'Save log'}
                   size="sm"
                   active={saved}
-                  className="dev-tools-log-save-btn"
+                  className="dev-tools-log-save-button"
                   onClick={() => handleSave(entry)}
                 />
               </div>

@@ -30,7 +30,7 @@
   flex-shrink: 0;
 }
 
-.dev-tools-level-btn {
+.dev-tools-level-button {
   all: unset;
   padding: 1px var(--space-2);
   border-radius: var(--radius-sm);
@@ -45,13 +45,13 @@
 }
 
 /* Dim non-active buttons when a specific level filter is active */
-.dev-tools-logs-filter-bar.has-filter .dev-tools-level-btn:not(.is-active) { opacity: 0.3; }
+.dev-tools-logs-filter-bar.has-filter .dev-tools-level-button:not(.is-active) { opacity: 0.3; }
 
-.dev-tools-level-btn-all   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
-.dev-tools-level-btn-log   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
-.dev-tools-level-btn-info  { color: var(--text-info);     background: var(--surface-info, color-mix(in lch, var(--text-info) 12%, transparent)); }
-.dev-tools-level-btn-warn  { color: var(--text-warning);  background: var(--surface-warning); }
-.dev-tools-level-btn-error { color: var(--text-danger);   background: var(--surface-danger); }
+.dev-tools-level-button-all   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
+.dev-tools-level-button-log   { color: var(--text-muted);    background: var(--surface-neutral-hover); }
+.dev-tools-level-button-info  { color: var(--text-info);     background: var(--surface-info, color-mix(in lch, var(--text-info) 12%, transparent)); }
+.dev-tools-level-button-warn  { color: var(--text-warning);  background: var(--surface-warning); }
+.dev-tools-level-button-error { color: var(--text-danger);   background: var(--surface-danger); }
 
 .dev-tools-active-filter-chip {
   all: unset;
@@ -204,7 +204,7 @@
   flex-basis: 100%;
 }
 
-.dev-tools-log-save-btn.icon-button-active .icon {
+.dev-tools-log-save-button.icon-button-active .icon {
   color: lch(75 80 75);
 }
 

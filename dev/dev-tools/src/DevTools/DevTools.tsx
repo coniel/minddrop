@@ -3,10 +3,12 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
+  useRef,
   useState,
   useSyncExternalStore,
 } from 'react';
 import { Events } from '@minddrop/events';
+import { Fs } from '@minddrop/file-system';
 import {
   IconButton,
   MenuGroup,
@@ -16,11 +18,26 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
+import { Workspaces } from '@minddrop/workspaces';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
-import { DatabasesStateView, useDatabaseStoreCounts } from '../StateInspector';
-import { ActiveSection, ActiveStory, LogEntry, SavedLog } from '../types';
+import { NotesPanel } from '../NotesPanel';
+import {
+  DatabasesStateView,
+  DatabasesStateViewId,
+  DesignsStateView,
+  QueriesStateView,
+  ViewsStateView,
+  ViewsStateViewId,
+  WorkspacesStateView,
+  useDatabaseStoreCounts,
+  useDesignsStoreCounts,
+  useQueriesStoreCounts,
+  useViewsStoreCounts,
+  useWorkspacesStoreCounts,
+} from '../StateInspector';
+import { ActiveSection, ActiveStory, LogEntry, Note, SavedLog } from '../types';
 import {
   clearSavedLogsByFile,
   eventsReducer,
@@ -57,13 +74,75 @@ interface EventTreeNode {
   children: EventTreeNode[];
 }
 
-const STATE_STORES = [
-  { id: 'databases', label: 'Databases' },
-  { id: 'database-entries', label: 'Entries' },
-  { id: 'database-templates', label: 'Templates' },
-] as const;
+const STATE_STORE_GROUPS = [
+  {
+    label: 'Databases',
+    stores: [
+      { id: 'databases' as const, label: 'Databases' },
+      { id: 'database-entries' as const, label: 'Entries' },
+      { id: 'database-templates' as const, label: 'Templates' },
+      { id: 'database-automations' as const, label: 'Automations' },
+      { id: 'database-serializers' as const, label: 'Serializers' },
+    ],
+  },
+  {
+    label: 'Content',
+    stores: [
+      { id: 'workspaces' as const, label: 'Workspaces' },
+      { id: 'designs' as const, label: 'Designs' },
+      { id: 'queries' as const, label: 'Queries' },
+      { id: 'views' as const, label: 'Views' },
+      { id: 'view-types' as const, label: 'View Types' },
+    ],
+  },
+];
 
-type StateView = (typeof STATE_STORES)[number]['id'];
+type StateView =
+  | DatabasesStateViewId
+  | 'workspaces'
+  | 'designs'
+  | 'queries'
+  | ViewsStateViewId;
+
+let noteIdCounter = 0;
+
+function nextNoteId() {
+  noteIdCounter += 1;
+
+  return noteIdCounter;
+}
+
+function getNotesDirPath(workspacePath: string) {
+  return Fs.concatPath(workspacePath, 'dev', 'notes');
+}
+
+function focusEditorToEnd() {
+  const editorElement = document.querySelector<HTMLElement>(
+    '.notes-panel-editor .editor',
+  );
+
+  if (!editorElement) {
+    return;
+  }
+
+  editorElement.focus();
+
+  const selection = window.getSelection();
+  const range = document.createRange();
+  range.selectNodeContents(editorElement);
+  range.collapse(false);
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+}
+
+function getNoteFileTitle(content: string): string {
+  const firstLine = content
+    .split('\n')[0]
+    .replace(/^#+\s*/, '')
+    .trim();
+
+  return firstLine.replace(/[/\\:*?"<>|]/g, '').trim() || 'Note';
+}
 
 export const DevTools: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -97,7 +176,24 @@ export const DevTools: React.FC = () => {
   // 'live' shows the console; any other string is a filename showing saved logs.
   const [logsView, setLogsView] = useState<string>('live');
   const [stateView, setStateView] = useState<StateView>('databases');
-  const storeCounts = useDatabaseStoreCounts();
+  const databaseStoreCounts = useDatabaseStoreCounts();
+  const workspacesStoreCounts = useWorkspacesStoreCounts();
+  const designsStoreCounts = useDesignsStoreCounts();
+  const queriesStoreCounts = useQueriesStoreCounts();
+  const viewsStoreCounts = useViewsStoreCounts();
+  const storeCounts: Record<StateView, number> = {
+    ...databaseStoreCounts,
+    ...workspacesStoreCounts,
+    ...designsStoreCounts,
+    ...queriesStoreCounts,
+    ...viewsStoreCounts,
+  };
+  const workspacePath = Workspaces.useAll()[0]?.path ?? '';
+  const [notes, setNotes] = useState<Note[]>([]);
+  const notesRef = useRef(notes);
+  notesRef.current = notes;
+  const [openNoteIds, setOpenNoteIds] = useState<number[]>([]);
+  const [activeNoteId, setActiveNoteId] = useState<number | null>(null);
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState('all');
   const [openNodes, setOpenNodes] = useState<Set<string>>(new Set());
@@ -222,6 +318,22 @@ export const DevTools: React.FC = () => {
     localStorage.setItem('dev-tools-window-size', JSON.stringify(windowSize));
   }, [windowSize]);
 
+  // Prevent the application window from handling Escape (e.g. closing the webview).
+  // Uses capture so it runs before other listeners but only calls preventDefault,
+  // leaving internal handlers free to act on the event.
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape, { capture: true });
+
+    return () =>
+      window.removeEventListener('keydown', handleEscape, { capture: true });
+  }, []);
+
   // Install console interceptors on first render
   useEffect(() => {
     installConsoleInterceptors();
@@ -249,13 +361,83 @@ export const DevTools: React.FC = () => {
         },
       });
     });
+
     return () => Events.removeListener('*', 'dev-tools-events-panel');
   }, []);
+
+  // Load notes from file system on first render
+  useEffect(() => {
+    const loadNotes = async () => {
+      if (!workspacePath) {
+        return;
+      }
+
+      const notesDir = getNotesDirPath(workspacePath);
+
+      await Fs.ensureDir(notesDir);
+
+      const entries = await Fs.readDir(notesDir);
+      const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
+
+      if (mdEntries.length === 0) {
+        return;
+      }
+
+      const loadedNotes = await Promise.all(
+        mdEntries.map(async (entry) => {
+          const filePath = Fs.concatPath(notesDir, entry.name!);
+          const content = await Fs.readTextFile(filePath);
+
+          return {
+            id: nextNoteId(),
+            content,
+            createdAt: Date.now(),
+            filePath,
+          };
+        }),
+      );
+
+      setNotes(loadedNotes);
+    };
+
+    loadNotes();
+  }, [workspacePath]);
 
   // Keyboard shortcut handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
+
+      if (e.key === 'Escape' && target.isContentEditable) {
+        e.preventDefault();
+        target.blur();
+
+        return;
+      }
+
+      if (
+        e.metaKey &&
+        /^[0-9]$/.test(e.key) &&
+        target.isContentEditable &&
+        visible &&
+        activeSection === 'notes'
+      ) {
+        e.preventDefault();
+        const note = notesRef.current.find((n) =>
+          n.content
+            .split('\n')[0]
+            .replace(/^#+\s*/, '')
+            .trim()
+            .startsWith(e.key),
+        );
+
+        if (note) {
+          handleOpenNote(note.id);
+          setTimeout(focusEditorToEnd, 0);
+        }
+
+        return;
+      }
 
       if (
         target instanceof HTMLInputElement ||
@@ -270,8 +452,12 @@ export const DevTools: React.FC = () => {
         setVisible((v) => !v);
       }
 
-      if (e.key === 'Escape' && visible && showHelp) {
-        setShowHelp(false);
+      if (e.key === 'Escape' && visible) {
+        if (showHelp) {
+          setShowHelp(false);
+        } else {
+          setVisible(false);
+        }
       }
 
       if (e.key === '?' && visible) {
@@ -281,7 +467,7 @@ export const DevTools: React.FC = () => {
 
       if (e.key === 'f' && visible) {
         e.preventDefault();
-        setWindowMode((m) => {
+        setWindowMode((m: boolean) => {
           if (!m && activeSection === 'stories') setActiveSection('logs');
           return !m;
         });
@@ -307,6 +493,11 @@ export const DevTools: React.FC = () => {
           input?.focus();
           input?.select();
         }
+      }
+
+      if (e.key === 'h' && visible && activeSection === 'notes') {
+        e.preventDefault();
+        focusEditorToEnd();
       }
 
       if (e.key === 'Tab' && visible && windowMode) {
@@ -352,6 +543,36 @@ export const DevTools: React.FC = () => {
         setActiveSection('events');
       }
 
+      if (e.key === 'r' && visible) {
+        e.preventDefault();
+        setActiveSection('notes');
+      }
+
+      if (e.key === 'n') {
+        e.preventDefault();
+        handleCreateNote();
+        setVisible(true);
+        setActiveSection('notes');
+      }
+
+      if (/^[0-9]$/.test(e.key) && !e.metaKey) {
+        const note = notesRef.current.find((n) =>
+          n.content
+            .split('\n')[0]
+            .replace(/^#+\s*/, '')
+            .trim()
+            .startsWith(e.key),
+        );
+
+        if (note) {
+          e.preventDefault();
+          handleOpenNote(note.id);
+          setVisible(true);
+          setActiveSection('notes');
+          setTimeout(focusEditorToEnd, 0);
+        }
+      }
+
       if (e.key === 'c' && visible) {
         e.preventDefault();
         if (activeSection === 'events') {
@@ -386,6 +607,102 @@ export const DevTools: React.FC = () => {
     setSavedLogs((prev) => prev.filter((l) => l.file !== file));
     setLogsView((v) => (v === file ? 'live' : v));
   }, []);
+
+  const handleCreateNote = useCallback(async () => {
+    const notesDir = workspacePath ? getNotesDirPath(workspacePath) : null;
+
+    if (notesDir) {
+      await Fs.ensureDir(notesDir);
+    }
+
+    const filePath = notesDir
+      ? (await Fs.incrementalPath(Fs.concatPath(notesDir, 'Note.md'))).path
+      : '';
+
+    if (filePath) {
+      await Fs.writeTextFile(filePath, '');
+    }
+
+    const newNote: Note = {
+      id: nextNoteId(),
+      content: '',
+      createdAt: Date.now(),
+      filePath,
+    };
+
+    setNotes((previous) => [...previous, newNote]);
+    setOpenNoteIds((previous) => [...previous, newNote.id]);
+    setActiveNoteId(newNote.id);
+  }, []);
+
+  const handleOpenNote = useCallback((noteId: number) => {
+    setOpenNoteIds((previous) => {
+      if (previous.includes(noteId)) {
+        return previous;
+      }
+
+      return [...previous, noteId];
+    });
+    setActiveNoteId(noteId);
+  }, []);
+
+  const handleCloseNote = useCallback(
+    (noteId: number) => {
+      const index = openNoteIds.indexOf(noteId);
+      const remaining = openNoteIds.filter((id) => id !== noteId);
+
+      setOpenNoteIds(remaining);
+      setActiveNoteId((current) => {
+        if (current !== noteId) {
+          return current;
+        }
+
+        return remaining[index] ?? remaining[index - 1] ?? null;
+      });
+    },
+    [openNoteIds],
+  );
+
+  const handleNoteChange = useCallback(
+    async (noteId: number, content: string) => {
+      const note = notesRef.current.find((n) => n.id === noteId);
+      console.log(note);
+
+      if (!note) {
+        return;
+      }
+
+      const oldFileTitle = getNoteFileTitle(note.content);
+      const newFileTitle = getNoteFileTitle(content);
+
+      if (!note.filePath || oldFileTitle === newFileTitle) {
+        if (note.filePath) {
+          Fs.writeTextFile(note.filePath, content);
+        }
+
+        setNotes((previous) =>
+          previous.map((n) => (n.id === noteId ? { ...n, content } : n)),
+        );
+
+        return;
+      }
+
+      const parentDir = Fs.parentDirPath(note.filePath);
+      const { path: newPath } = await Fs.incrementalPath(
+        Fs.concatPath(parentDir, `${newFileTitle}.md`),
+      );
+
+      await Fs.rename(note.filePath, newPath);
+      await Fs.writeTextFile(newPath, content);
+
+      setNotes((previous) =>
+        previous.map((n) =>
+          n.id === noteId ? { ...n, content, filePath: newPath } : n,
+        ),
+      );
+    },
+    [],
+  );
 
   const handleMoveStart = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return;
@@ -553,6 +870,8 @@ export const DevTools: React.FC = () => {
             ['q', 'Logs'],
             ['w', 'State'],
             ['e', 'Events'],
+            ['r', 'Notes'],
+            ['n', 'New note'],
           ].map(([key, label]) => (
             <div key={key} className="dev-tools-help-row">
               <kbd className="dev-tools-help-key">{key}</kbd>
@@ -565,6 +884,7 @@ export const DevTools: React.FC = () => {
           {[
             ['c', 'Clear view'],
             ['s', 'Focus search'],
+            ['h', 'Focus editor'],
           ].map(([key, label]) => (
             <div key={key} className="dev-tools-help-row">
               <kbd className="dev-tools-help-key">{key}</kbd>
@@ -592,9 +912,28 @@ export const DevTools: React.FC = () => {
         </div>
       )}
 
-      {activeSection === 'state' && (
-        <DatabasesStateView stateView={stateView} />
-      )}
+      {activeSection === 'state' &&
+        (() => {
+          switch (stateView) {
+            case 'databases':
+            case 'database-entries':
+            case 'database-templates':
+            case 'database-automations':
+            case 'database-serializers':
+              return <DatabasesStateView stateView={stateView} />;
+            case 'workspaces':
+              return <WorkspacesStateView />;
+            case 'designs':
+              return <DesignsStateView />;
+            case 'queries':
+              return <QueriesStateView />;
+            case 'views':
+            case 'view-types':
+              return <ViewsStateView stateView={stateView} />;
+            default:
+              return null;
+          }
+        })()}
 
       {activeSection === 'events' && activeEventsTab === 'events' && (
         <EventsPanel
@@ -626,6 +965,18 @@ export const DevTools: React.FC = () => {
 
       {activeSection === 'logs' && logsView !== 'live' && (
         <SavedLogsPanel logs={savedLogsForView} />
+      )}
+
+      {activeSection === 'notes' && (
+        <NotesPanel
+          notes={notes}
+          openNoteIds={openNoteIds}
+          activeNoteId={activeNoteId}
+          onNoteChange={handleNoteChange}
+          onCloseNote={handleCloseNote}
+          onSelectNote={handleOpenNote}
+          onCreateNote={handleCreateNote}
+        />
       )}
     </main>
   );
@@ -680,6 +1031,13 @@ export const DevTools: React.FC = () => {
               active={activeSection === 'events'}
               onClick={() => setActiveSection('events')}
             />
+            <IconButton
+              icon="sticky-note"
+              label="Notes"
+              size="sm"
+              active={activeSection === 'notes'}
+              onClick={() => setActiveSection('notes')}
+            />
           </div>
           <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
             {time}
@@ -692,26 +1050,30 @@ export const DevTools: React.FC = () => {
           {windowSidebarOpen && (
             <aside className="dev-tools-sidebar dev-tools-sidebar-window">
               <nav className="dev-tools-nav">
-                {activeSection === 'state' && (
-                  <MenuGroup padded>
-                    <MenuLabel label="Databases" />
-                    {STATE_STORES.map(({ id, label }) => (
-                      <MenuItem
-                        key={id}
-                        size="compact"
-                        active={stateView === id}
-                        onClick={() => setStateView(id)}
-                      >
-                        <span className="dev-tools-store-item-label">
-                          {label}
-                          <span className="dev-tools-count-badge">
-                            {storeCounts[id]}
-                          </span>
-                        </span>
-                      </MenuItem>
-                    ))}
-                  </MenuGroup>
-                )}
+                {activeSection === 'state' &&
+                  STATE_STORE_GROUPS.map((group, groupIndex) => (
+                    <React.Fragment key={group.label}>
+                      {groupIndex > 0 && <Separator margin="small" />}
+                      <MenuGroup padded>
+                        <MenuLabel label={group.label} />
+                        {group.stores.map(({ id, label }) => (
+                          <MenuItem
+                            key={id}
+                            size="compact"
+                            active={stateView === id}
+                            onClick={() => setStateView(id)}
+                          >
+                            <span className="dev-tools-store-item-label">
+                              {label}
+                              <span className="dev-tools-count-badge">
+                                {storeCounts[id]}
+                              </span>
+                            </span>
+                          </MenuItem>
+                        ))}
+                      </MenuGroup>
+                    </React.Fragment>
+                  ))}
 
                 {activeSection === 'events' && (
                   <>
@@ -799,6 +1161,32 @@ export const DevTools: React.FC = () => {
                     )}
                   </>
                 )}
+
+                {activeSection === 'notes' && (
+                  <MenuGroup padded>
+                    <MenuItem
+                      size="compact"
+                      label="New Note"
+                      icon="plus"
+                      onClick={handleCreateNote}
+                    />
+                    {notes.map((note) => (
+                      <MenuItem
+                        key={note.id}
+                        size="compact"
+                        active={activeNoteId === note.id}
+                        onClick={() => handleOpenNote(note.id)}
+                      >
+                        <span className="dev-tools-store-item-label">
+                          {note.content
+                            .split('\n')[0]
+                            .replace(/^#+\s*/, '')
+                            .trim() || 'Untitled'}
+                        </span>
+                      </MenuItem>
+                    ))}
+                  </MenuGroup>
+                )}
               </nav>
             </aside>
           )}
@@ -845,6 +1233,13 @@ export const DevTools: React.FC = () => {
               size="sm"
               active={activeSection === 'events'}
               onClick={() => setActiveSection('events')}
+            />
+            <IconButton
+              icon="sticky-note"
+              label="Notes"
+              size="sm"
+              active={activeSection === 'notes'}
+              onClick={() => setActiveSection('notes')}
             />
             <IconButton
               icon="book-open"
@@ -896,26 +1291,30 @@ export const DevTools: React.FC = () => {
               </>
             )}
 
-            {activeSection === 'state' && (
-              <MenuGroup padded>
-                <MenuLabel label="Databases" />
-                {STATE_STORES.map(({ id, label }) => (
-                  <MenuItem
-                    key={id}
-                    size="compact"
-                    active={stateView === id}
-                    onClick={() => setStateView(id)}
-                  >
-                    <span className="dev-tools-store-item-label">
-                      {label}
-                      <span className="dev-tools-count-badge">
-                        {storeCounts[id]}
-                      </span>
-                    </span>
-                  </MenuItem>
-                ))}
-              </MenuGroup>
-            )}
+            {activeSection === 'state' &&
+              STATE_STORE_GROUPS.map((group, groupIndex) => (
+                <React.Fragment key={group.label}>
+                  {groupIndex > 0 && <Separator margin="small" />}
+                  <MenuGroup padded>
+                    <MenuLabel label={group.label} />
+                    {group.stores.map(({ id, label }) => (
+                      <MenuItem
+                        key={id}
+                        size="compact"
+                        active={stateView === id}
+                        onClick={() => setStateView(id)}
+                      >
+                        <span className="dev-tools-store-item-label">
+                          {label}
+                          <span className="dev-tools-count-badge">
+                            {storeCounts[id]}
+                          </span>
+                        </span>
+                      </MenuItem>
+                    ))}
+                  </MenuGroup>
+                </React.Fragment>
+              ))}
 
             {activeSection === 'events' && (
               <>
@@ -961,6 +1360,32 @@ export const DevTools: React.FC = () => {
                 </MenuGroup>
                 {listenersTree.map((node) => renderListenerNode(node))}
               </>
+            )}
+
+            {activeSection === 'notes' && (
+              <MenuGroup padded>
+                <MenuItem
+                  size="compact"
+                  label="New Note"
+                  icon="plus"
+                  onClick={handleCreateNote}
+                />
+                {notes.map((note) => (
+                  <MenuItem
+                    key={note.id}
+                    size="compact"
+                    active={activeNoteId === note.id}
+                    onClick={() => handleOpenNote(note.id)}
+                  >
+                    <span className="dev-tools-store-item-label">
+                      {note.content
+                        .split('\n')[0]
+                        .replace(/^#+\s*/, '')
+                        .trim() || 'Untitled'}
+                    </span>
+                  </MenuItem>
+                ))}
+              </MenuGroup>
             )}
 
             {activeSection === 'stories' && (
