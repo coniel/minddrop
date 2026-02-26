@@ -1,10 +1,9 @@
-import { Field } from '@base-ui/react/field';
 import React from 'react';
-import { TextColor, TextSize } from '../../Text';
+import { useTranslation } from '@minddrop/i18n';
+import { Text, TextColor, TextSize } from '../../Text';
 import { propsToClass } from '../../utils';
-import { InputLabel } from '../InputLabel';
 
-export interface FieldLabelProps extends Field.Label.Props {
+export interface InputLabelProps {
   /*
    * i18n key for the label text. Falls back to children if not provided.
    */
@@ -33,19 +32,23 @@ export interface FieldLabelProps extends Field.Label.Props {
   className?: string;
 }
 
-export const FieldLabel: React.FC<FieldLabelProps> = ({
+export const InputLabel: React.FC<InputLabelProps> = ({
   label,
   children,
   className,
   size = 'sm',
   color = 'muted',
-  ...other
 }) => {
+  const { t } = useTranslation();
+
   return (
-    <Field.Label className={propsToClass('field-label', { className })} {...other}>
-      <InputLabel size={size} color={color} label={label}>
-        {children}
-      </InputLabel>
-    </Field.Label>
+    <Text
+      size={size}
+      color={color}
+      weight="medium"
+      className={propsToClass('input-label', { className })}
+    >
+      {label ? t(label) : children}
+    </Text>
   );
 };
