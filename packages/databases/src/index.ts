@@ -10,6 +10,7 @@ export * from './events';
 export * from './database-templates';
 export * as Databases from './Databases';
 export * as DatabaseAutomations from './DatabaseAutomations';
+export * as DatabaseEntrySerializers from './DatabaseEntrySerializers';
 export * as DatabaseEntries from './DatabaseEntries';
 export * as DatabaseTemplates from './DatabaseTemplates';
 
