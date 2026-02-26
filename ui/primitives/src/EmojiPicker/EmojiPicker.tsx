@@ -78,7 +78,7 @@ interface VirtualRowProps {
 // and remounts all rows whenever rowComponent's type changes, so an inline
 // definition would cause a full remount on every parent render.
 const VirtualRow = memo(
-  ({ index, style, virtualItems, skinTone, onSelect }: VirtualRowProps) => {
+  ({ index, style, virtualItems, skinTone, onSelect }: VirtualRowProps): React.ReactElement => {
     const item = virtualItems[index];
 
     if (item.type === 'header') {
@@ -224,6 +224,8 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
             <List
               rowCount={virtualItems.length}
               rowHeight={getItemSize}
+              // @ts-ignore - TODO: react-window types are incorrect, remove
+              // when they are fixed.
               rowComponent={VirtualRow}
               // @ts-ignore - TODO: react-window types are incorrect, remove
               // when they are fixed.

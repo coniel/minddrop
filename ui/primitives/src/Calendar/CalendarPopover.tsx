@@ -20,6 +20,9 @@ type PickedPositionerProps = Pick<
   'side' | 'align' | 'sideOffset' | 'alignOffset'
 >;
 
+type PopoverOnOpenChange = NonNullable<PopoverProps['onOpenChange']>;
+type PopoverEventDetails = Parameters<PopoverOnOpenChange>[1];
+
 export type CalendarPopoverProps = PickedRootProps &
   PickedPositionerProps &
   CalendarProps & {
@@ -51,24 +54,41 @@ export const CalendarPopover = ({
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
 
-  const handleOpenChange = useCallback(
-    (nextOpen: boolean, event?: Event, reason?: string) => {
-      if (!isControlled) setInternalOpen(nextOpen);
-      onOpenChange?.(nextOpen, event, reason);
+  const handleOpenChange: PopoverOnOpenChange = useCallback(
+    (nextOpen, eventDetails) => {
+      if (!isControlled) {
+        setInternalOpen(nextOpen);
+      }
+
+      onOpenChange?.(nextOpen, eventDetails);
     },
     [isControlled, onOpenChange],
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { onSelect } = calendarProps as any;
+  const { onSelect } = calendarProps as CalendarProps & {
+    onSelect?: (...args: unknown[]) => void;
+  };
   const handleSelect = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (...args: any[]) => {
+    (...args: unknown[]) => {
       onSelect?.(...args);
-      if (closeOnSelect) handleOpenChange(false);
+
+      if (closeOnSelect) {
+        if (!isControlled) {
+          setInternalOpen(false);
+        }
+
+        // Notify consumer for controlled mode (no DOM event available here)
+        onOpenChange?.(false, undefined as unknown as PopoverEventDetails);
+      }
     },
-    [onSelect, closeOnSelect, handleOpenChange],
+    [onSelect, closeOnSelect, isControlled, onOpenChange],
   );
+
+  // Merge onSelect override outside JSX to satisfy DayPickerProps discriminated union
+  const mergedCalendarProps = {
+    ...(calendarProps as object),
+    onSelect: handleSelect,
+  } as CalendarProps;
 
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
@@ -81,10 +101,7 @@ export const CalendarPopover = ({
           alignOffset={alignOffset}
         >
           <PopoverContent>
-            <Calendar
-              {...(calendarProps as CalendarProps)}
-              onSelect={handleSelect}
-            />
+            <Calendar {...mergedCalendarProps} />
           </PopoverContent>
         </PopoverPositioner>
       </PopoverPortal>

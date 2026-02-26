@@ -25,7 +25,6 @@ describe('<IconRenderer />', () => {
   it('applies className to named icon', () => {
     render(<IconRenderer className="icon-class" icon="settings" />);
 
-    console.log(screen.getByTestId('icon').className);
     expect(screen.getByTestId('icon').className).toContain('icon-class');
   });
 
