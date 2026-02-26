@@ -137,7 +137,16 @@
     },
     "select": {
       "name": "Select",
-      "description": "A dropdown list of options."
+      "description": "A dropdown list of options.",
+      "options": {
+        "add": "Add an option",
+        "placeholder": "Option name",
+        "addHint": "to add",
+        "nameEnterHint": "to add option"
+      },
+      "multiselect": {
+        "label": "Allow multiple selections"
+      }
     },
     "multiselect": {
       "name": "Multiselect",
