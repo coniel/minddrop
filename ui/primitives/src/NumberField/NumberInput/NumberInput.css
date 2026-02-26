@@ -1,0 +1,242 @@
+/* ============================================================
+   NUMBER INPUT
+   Built on Base UI NumberField primitive.
+   Extends text-input styles — .text-input class is applied
+   to the root so all variant/size/state styles are inherited.
+   ============================================================ */
+
+/* --- Root --- */
+
+.number-input,
+.number-input-group {
+  cursor: text;
+}
+
+/* --- Group (flex row + position context for gradient/stepper) --- */
+
+.number-input-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* --- Input --- */
+
+.number-input-input {
+  /* Hides native browser spin buttons */
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* --- Stepper (increment + decrement button container) --- */
+
+.number-input-stepper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out);
+
+  .number-input-group:hover & {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* --- Gradient backdrop --- */
+
+.number-input-gradient {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+
+  .number-input-group:hover & {
+    opacity: 1;
+  }
+}
+
+/* Gradient colour matches the input's background per variant.
+   Uses a CSS custom property set on each variant wrapper so the
+   gradient always fades into the correct surface colour.
+   'transparent' in gradients interpolates through black, so we
+   use color-mix to produce a zero-alpha version of the bg colour. */
+
+.number-input-gradient {
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--number-input-bg) 0%, transparent),
+    var(--number-input-bg)
+  );
+}
+
+/* ghost / outline — no background fill, use app surface */
+.text-input-variant-ghost,
+.text-input-variant-outline {
+  --number-input-bg: var(--surface-app);
+}
+
+.text-input-variant-outline .number-input-group:hover {
+  --number-input-bg: var(--surface-neutral);
+}
+
+/* subtle */
+.text-input-variant-subtle {
+  --number-input-bg: var(--surface-subtle);
+}
+
+.text-input-variant-subtle .number-input-group:hover {
+  --number-input-bg: var(--surface-neutral);
+}
+
+/* filled */
+.text-input-variant-filled {
+  --number-input-bg: var(--surface-paper);
+}
+
+.text-input-variant-filled .number-input-group:hover {
+  --number-input-bg: var(--surface-neutral);
+}
+
+/* --- Trailing slot fades out on stepper hover --- */
+
+.number-input-group:hover .text-input-trailing {
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+/* --- Stepper buttons --- */
+
+.number-input-increment,
+.number-input-decrement {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  padding: 0;
+  color: var(--text-subtle);
+
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--text-regular);
+  }
+
+  &[data-disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+/* --- Triangle icons --- */
+
+.number-input-increment-icon,
+.number-input-decrement-icon {
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: solid transparent;
+  border-right: solid transparent;
+}
+
+/* Sizes scale with input size */
+
+.text-input-size-sm {
+  .number-input-increment-icon,
+  .number-input-decrement-icon {
+    border-left-width: 0.2rem;
+    border-right-width: 0.2rem;
+  }
+
+  .number-input-increment-icon {
+    border-bottom: 0.22rem solid currentColor;
+  }
+
+  .number-input-decrement-icon {
+    border-top: 0.22rem solid currentColor;
+  }
+}
+
+.text-input-size-md,
+.text-input:not(.text-input-size-sm):not(.text-input-size-lg) {
+  .number-input-increment-icon,
+  .number-input-decrement-icon {
+    border-left-width: 0.225rem;
+    border-right-width: 0.225rem;
+  }
+
+  .number-input-increment-icon {
+    border-bottom: 0.25rem solid currentColor;
+  }
+
+  .number-input-decrement-icon {
+    border-top: 0.25rem solid currentColor;
+  }
+}
+
+.text-input-size-lg {
+  .number-input-increment-icon,
+  .number-input-decrement-icon {
+    border-left-width: 0.275rem;
+    border-right-width: 0.275rem;
+  }
+
+  .number-input-increment-icon {
+    border-bottom: 0.3rem solid currentColor;
+  }
+
+  .number-input-decrement-icon {
+    border-top: 0.3rem solid currentColor;
+  }
+}
+
+/* --- Bump animations --- */
+
+/* Triggered by adding/removing .is-bumping class.
+   Double rAF in the component ensures rapid clicks restart cleanly. */
+
+@keyframes number-input-bump-up {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes number-input-bump-down {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(4px); }
+  100% { transform: translateY(0); }
+}
+
+.number-input-increment.is-bumping .number-input-increment-icon {
+  animation: number-input-bump-up 250ms linear forwards;
+}
+
+.number-input-decrement.is-bumping .number-input-decrement-icon {
+  animation: number-input-bump-down 250ms linear forwards;
+}
