@@ -528,24 +528,44 @@ export const DevTools: React.FC = () => {
         setWindowPos({ x: window.innerWidth - 500 - gap, y: gap });
       }
 
-      if (e.key === 'q' && visible) {
+      if (e.key === 'q') {
         e.preventDefault();
-        setActiveSection('logs');
+        if (visible && activeSection === 'logs') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('logs');
+        }
       }
 
-      if (e.key === 'w' && visible) {
+      if (e.key === 'w') {
         e.preventDefault();
-        setActiveSection('state');
+        if (visible && activeSection === 'state') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('state');
+        }
       }
 
-      if (e.key === 'e' && visible) {
+      if (e.key === 'e') {
         e.preventDefault();
-        setActiveSection('events');
+        if (visible && activeSection === 'events') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('events');
+        }
       }
 
-      if (e.key === 'r' && visible) {
+      if (e.key === 'r') {
         e.preventDefault();
-        setActiveSection('notes');
+        if (visible && activeSection === 'notes') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('notes');
+        }
       }
 
       if (e.key === 'n') {
@@ -867,11 +887,13 @@ export const DevTools: React.FC = () => {
         <div className="dev-tools-help-group">
           <div className="dev-tools-help-group-title">Navigation</div>
           {[
-            ['q', 'Logs'],
-            ['w', 'State'],
-            ['e', 'Events'],
-            ['r', 'Notes'],
+            ['q', 'Toggle logs'],
+            ['w', 'Toggle state'],
+            ['e', 'Toggle events'],
+            ['r', 'Toggle notes'],
             ['n', 'New note'],
+            ['0–9', 'Open note by title'],
+            ['⌘0–9', 'Open note by title (in editor)'],
           ].map(([key, label]) => (
             <div key={key} className="dev-tools-help-row">
               <kbd className="dev-tools-help-key">{key}</kbd>
@@ -884,7 +906,7 @@ export const DevTools: React.FC = () => {
           {[
             ['c', 'Clear view'],
             ['s', 'Focus search'],
-            ['h', 'Focus editor'],
+            ['h', 'Focus notes editor'],
           ].map(([key, label]) => (
             <div key={key} className="dev-tools-help-row">
               <kbd className="dev-tools-help-key">{key}</kbd>
