@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@minddrop/feature-databases": "workspace:*",
+    "@minddrop/feature-design-studio": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
