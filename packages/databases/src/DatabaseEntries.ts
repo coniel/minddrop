@@ -7,6 +7,7 @@ export { ensureDatabaseEntryAssetsDirExists as ensure } from './ensureDatabaseEn
 export { getDatabaseEntry as get } from './getDatabaseEntry';
 export { renameDatabaseEntry as rename } from './renameDatabaseEntry';
 export { updateDatabaseEntry as update } from './updateDatabaseEntry';
+export { clearDatabaseEntryProperty as clearProperty } from './clearDatabaseEntryProperty';
 export { updateDatabaseEntryProperty as updateProperty } from './updateDatabaseEntryProperty';
 export { writeDatabaseEntry as write } from './writeDatabaseEntry';
 export { initializeDatabaseEntries as initialize } from './initializeDatabaseEntries';
