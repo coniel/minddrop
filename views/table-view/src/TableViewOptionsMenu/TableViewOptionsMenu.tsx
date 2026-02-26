@@ -15,11 +15,13 @@ import { TablePadding } from '../types';
 import './TableViewOptionsMenu.css';
 
 interface TableViewOptionsMenuProps {
+  overflow: boolean;
   padding: TablePadding;
   showRowNumbers: boolean;
   rowSeparator: boolean;
   columnSeparator: boolean;
   highlightOnHover: boolean;
+  onOverflowChange: (overflow: boolean) => void;
   onPaddingChange: (padding: TablePadding) => void;
   onShowRowNumbersChange: (show: boolean) => void;
   onRowSeparatorChange: (show: boolean) => void;
@@ -28,11 +30,13 @@ interface TableViewOptionsMenuProps {
 }
 
 export const TableViewOptionsMenu: React.FC<TableViewOptionsMenuProps> = ({
+  overflow,
   padding,
   showRowNumbers,
   rowSeparator,
   columnSeparator,
   highlightOnHover,
+  onOverflowChange,
   onPaddingChange,
   onShowRowNumbersChange,
   onRowSeparatorChange,
@@ -58,6 +62,16 @@ export const TableViewOptionsMenu: React.FC<TableViewOptionsMenuProps> = ({
               className="table-view-options-content"
               minWidth={200}
             >
+              <div className="table-view-options-row">
+                <span className="table-view-options-label">
+                  {t('overflow')}
+                </span>
+                <Switch
+                  size="sm"
+                  checked={overflow}
+                  onCheckedChange={onOverflowChange}
+                />
+              </div>
               <div className="table-view-options-row">
                 <span className="table-view-options-label">
                   {t('rowNumbers')}

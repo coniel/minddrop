@@ -14,6 +14,8 @@ const COLUMN_TYPE_ICONS: Record<string, UiIconName> = {
 
 interface TableHeaderProps {
   columns: TableColumn[];
+  columnFlexStyles: Record<string, React.CSSProperties>;
+  overflow: boolean;
   selectedCount: number;
   totalCount: number;
   onStartResize: (columnId: string, event: React.MouseEvent) => void;
@@ -22,6 +24,8 @@ interface TableHeaderProps {
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
   columns,
+  columnFlexStyles,
+  overflow,
   selectedCount,
   totalCount,
   onStartResize,
@@ -41,24 +45,34 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
             className="table-header-checkbox"
           />
         </div>
-        {columns.map((column, index) => (
-          <div role="columnheader" key={column.id} className="table-header-cell">
-            <span className="table-header-cell-label">
-              <Icon
-                name={COLUMN_TYPE_ICONS[column.type] ?? 'baseline'}
-                color="subtle"
-                className="table-header-cell-icon"
-              />
-              <span className="table-header-cell-name">{column.name}</span>
-            </span>
-            {index < columns.length - 1 && (
-              <div
-                className="table-header-resize-handle"
-                onMouseDown={(e) => onStartResize(column.id, e)}
-              />
-            )}
-          </div>
-        ))}
+        {columns.map((column, index) => {
+          const isLastColumn = index === columns.length - 1;
+          const showResizeHandle = overflow || !isLastColumn;
+
+          return (
+            <div
+              role="columnheader"
+              key={column.id}
+              className="table-header-cell"
+              style={columnFlexStyles[column.id]}
+            >
+              <span className="table-header-cell-label">
+                <Icon
+                  name={COLUMN_TYPE_ICONS[column.type] ?? 'baseline'}
+                  color="subtle"
+                  className="table-header-cell-icon"
+                />
+                <span className="table-header-cell-name">{column.name}</span>
+              </span>
+              {showResizeHandle && (
+                <div
+                  className="table-header-resize-handle"
+                  onMouseDown={(event) => onStartResize(column.id, event)}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

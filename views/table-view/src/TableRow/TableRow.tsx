@@ -11,6 +11,7 @@ import './TableRow.css';
 interface TableRowProps {
   entry: DatabaseEntry;
   columns: TableColumn[];
+  columnFlexStyles: Record<string, React.CSSProperties>;
   rowNumber: number;
   showRowNumbers: boolean;
   isSelected: boolean;
@@ -87,6 +88,7 @@ export const TableRow = React.memo(
       {
         entry,
         columns,
+        columnFlexStyles,
         rowNumber,
         showRowNumbers,
         isSelected,
@@ -145,6 +147,7 @@ export const TableRow = React.memo(
                   key={column.id}
                   className="table-cell"
                   data-col-id={column.id}
+                  style={columnFlexStyles[column.id]}
                 >
                   <div className="table-cell-title">
                     <input
@@ -173,6 +176,7 @@ export const TableRow = React.memo(
                   key={column.id}
                   className="table-cell"
                   data-col-id={column.id}
+                  style={columnFlexStyles[column.id]}
                 >
                   <input
                     type="text"
@@ -195,6 +199,7 @@ export const TableRow = React.memo(
                 key={column.id}
                 className="table-cell"
                 data-col-id={column.id}
+                style={columnFlexStyles[column.id]}
               >
                 {Component ? (
                   <Component

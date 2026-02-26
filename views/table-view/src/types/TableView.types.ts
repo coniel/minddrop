@@ -10,6 +10,7 @@ export type TablePadding = 'compact' | 'comfortable' | 'spacious';
 export type FieldSize = 'sm' | 'md' | 'lg';
 
 export interface TableViewOptions {
+  overflow: boolean;
   showRowNumbers: boolean;
   columnWidths: Record<string, number>;
   padding: TablePadding;

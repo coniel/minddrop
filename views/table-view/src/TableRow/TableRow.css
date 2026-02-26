@@ -4,12 +4,12 @@
    ============================================================ */
 
 .table-row {
-  display: grid;
-  grid-template-columns: var(--table-columns);
+  display: flex;
   height: var(--table-row-height, 1.75rem);
 }
 
 .table-row-number {
+  flex: 0 0 2.5rem;
   padding: var(--space-2);
   text-align: center;
   display: flex;

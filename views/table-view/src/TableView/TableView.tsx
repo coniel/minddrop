@@ -1,27 +1,32 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
-import React, { CSSProperties, useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  CSSProperties,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
 import { ScrollArea } from '@minddrop/ui-primitives';
-import { ViewTypeComponentProps } from '@minddrop/views';
+import { ViewTypeComponentProps, Views } from '@minddrop/views';
 import { TableEditContext } from '../TableEditContext';
 import { TableHeader } from '../TableHeader';
 import { TableRow } from '../TableRow';
+import { TableViewOptionsMenu } from '../TableViewOptionsMenu';
 import {
+  DEFAULT_COLUMN_WIDTH,
+  DEFAULT_TITLE_COLUMN_WIDTH,
   FIELD_SIZE,
   ROW_HEIGHT,
   ROW_HEIGHT_PX,
   defaultTableViewOptions,
 } from '../constants';
-import { TableColumn, TableViewOptions } from '../types';
+import { TableColumn, TablePadding, TableViewOptions } from '../types';
 import { useColumnResize } from '../useColumnResize';
 import './TableView.css';
 
 const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
 const INPUT_TYPES = new Set(['text', 'title', 'number']);
-
-const fieldSize = FIELD_SIZE[defaultTableViewOptions.padding];
-const rowHeight = ROW_HEIGHT[defaultTableViewOptions.padding];
-const rowHeightPx = ROW_HEIGHT_PX[defaultTableViewOptions.padding];
 
 export const TableViewComponent: React.FC<
   ViewTypeComponentProps<TableViewOptions>
@@ -30,6 +35,15 @@ export const TableViewComponent: React.FC<
     view.dataSource.type === 'database' ? view.dataSource.id : '';
   const database = Databases.use(databaseId);
   const allEntries = DatabaseEntries.useAll(databaseId);
+
+  const options: TableViewOptions = useMemo(
+    () => ({ ...defaultTableViewOptions, ...(view.options ?? {}) }),
+    [view.options],
+  );
+
+  const fieldSize = FIELD_SIZE[options.padding];
+  const rowHeight = ROW_HEIGHT[options.padding];
+  const rowHeightPx = ROW_HEIGHT_PX[options.padding];
 
   const columns = useMemo<TableColumn[]>(() => {
     if (!database) {
@@ -66,16 +80,31 @@ export const TableViewComponent: React.FC<
 
   const { columnWidths, tableRef, startResize } = useColumnResize(
     columns,
-    view.options?.columnWidths ?? {},
+    options.columnWidths,
+    options.overflow,
   );
 
-  const tableColumns = useMemo(() => {
-    const dataCols = columns
-      .map((col) => `${columnWidths[col.id] ?? 100 / columns.length}fr`)
-      .join(' ');
+  const columnFlexStyles = useMemo<Record<string, CSSProperties>>(() => {
+    const styles: Record<string, CSSProperties> = {};
 
-    return `2.5rem ${dataCols}`;
-  }, [columns, columnWidths]);
+    for (const column of columns) {
+      if (options.overflow) {
+        const defaultWidth =
+          column.type === 'title'
+            ? DEFAULT_TITLE_COLUMN_WIDTH
+            : DEFAULT_COLUMN_WIDTH;
+        const width = columnWidths[column.id] ?? defaultWidth;
+
+        styles[column.id] = { flex: `0 0 ${width}px` };
+      } else {
+        const percentage = columnWidths[column.id] ?? 100 / columns.length;
+
+        styles[column.id] = { flex: `${percentage} 0 0%` };
+      }
+    }
+
+    return styles;
+  }, [columns, columnWidths, options.overflow]);
 
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [activeCell, setActiveCell] = useState<{
@@ -91,7 +120,8 @@ export const TableViewComponent: React.FC<
         '.scroll-area-viewport',
       ) ?? null,
     estimateSize: () => rowHeightPx,
-    measureElement: (el) => el?.getBoundingClientRect().height ?? rowHeightPx,
+    measureElement: (element) =>
+      element?.getBoundingClientRect().height ?? rowHeightPx,
     overscan: 5,
   });
 
@@ -106,8 +136,8 @@ export const TableViewComponent: React.FC<
   }, []);
 
   const handleTBodyClick = useCallback(
-    (e: React.MouseEvent) => {
-      const td = (e.target as Element).closest('[data-col-id]');
+    (event: React.MouseEvent) => {
+      const td = (event.target as Element).closest('[data-col-id]');
 
       if (!td) {
         return;
@@ -168,17 +198,15 @@ export const TableViewComponent: React.FC<
   );
 
   const handleTBodyBlur = useCallback(
-    (e: React.FocusEvent) => {
-      const input = e.target as HTMLElement;
+    (event: React.FocusEvent) => {
+      const input = event.target as HTMLElement;
 
       if (input.tagName !== 'INPUT') {
         return;
       }
 
       const td = input.closest('[data-col-id]');
-      const rowId = input
-        .closest('[data-row-id]')
-        ?.getAttribute('data-row-id');
+      const rowId = input.closest('[data-row-id]')?.getAttribute('data-row-id');
       const colId = td?.getAttribute('data-col-id');
 
       if (!rowId || !colId) {
@@ -209,18 +237,18 @@ export const TableViewComponent: React.FC<
     [columns, entriesById, handleCellChange],
   );
 
-  const handleTBodyKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key !== 'Enter') {
+  const handleTBodyKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (event.key !== 'Enter') {
       return;
     }
 
-    const input = e.target as HTMLElement;
+    const input = event.target as HTMLElement;
 
     if (input.tagName !== 'INPUT') {
       return;
     }
 
-    e.preventDefault();
+    event.preventDefault();
     (input as HTMLInputElement).blur();
   }, []);
 
@@ -245,6 +273,10 @@ export const TableViewComponent: React.FC<
     [entries],
   );
 
+  function handleOptionChange(update: Partial<TableViewOptions>) {
+    Views.update(view.id, { options: update });
+  }
+
   const editContextValue = useMemo(
     () => ({ activeCell, onCellChange: handleCellChange, deactivate }),
     [activeCell, handleCellChange, deactivate],
@@ -265,21 +297,17 @@ export const TableViewComponent: React.FC<
             style={
               {
                 '--table-row-height': rowHeight,
-                '--table-columns': tableColumns,
               } as CSSProperties
             }
-            data-row-separators={
-              defaultTableViewOptions.rowSeparator || undefined
-            }
-            data-col-separators={
-              defaultTableViewOptions.columnSeparator || undefined
-            }
-            data-hover-highlight={
-              defaultTableViewOptions.highlightOnHover || undefined
-            }
+            data-overflow={options.overflow || undefined}
+            data-row-separators={options.rowSeparator || undefined}
+            data-col-separators={options.columnSeparator || undefined}
+            data-hover-highlight={options.highlightOnHover || undefined}
           >
             <TableHeader
               columns={columns}
+              columnFlexStyles={columnFlexStyles}
+              overflow={options.overflow}
               selectedCount={selectedRows.size}
               totalCount={entries.length}
               onStartResize={startResize}
@@ -307,18 +335,46 @@ export const TableViewComponent: React.FC<
                     virtualIndex={virtualItem.index}
                     entry={entry}
                     columns={columns}
+                    columnFlexStyles={columnFlexStyles}
                     rowNumber={virtualItem.index + 1}
-                    showRowNumbers={defaultTableViewOptions.showRowNumbers}
+                    showRowNumbers={options.showRowNumbers}
                     isSelected={selectedRows.has(entryId)}
                     size={fieldSize}
                     onToggleRow={handleToggleRow}
                   />
                 );
               })}
-              <div style={{ height: `${paddingBottom}px` }} aria-hidden="true" />
+              <div
+                style={{ height: `${paddingBottom}px` }}
+                aria-hidden="true"
+              />
             </div>
           </div>
         </ScrollArea>
+        <TableViewOptionsMenu
+          overflow={options.overflow}
+          padding={options.padding}
+          showRowNumbers={options.showRowNumbers}
+          rowSeparator={options.rowSeparator}
+          columnSeparator={options.columnSeparator}
+          highlightOnHover={options.highlightOnHover}
+          onOverflowChange={(overflow) => handleOptionChange({ overflow })}
+          onPaddingChange={(padding: TablePadding) =>
+            handleOptionChange({ padding })
+          }
+          onShowRowNumbersChange={(showRowNumbers) =>
+            handleOptionChange({ showRowNumbers })
+          }
+          onRowSeparatorChange={(rowSeparator) =>
+            handleOptionChange({ rowSeparator })
+          }
+          onColumnSeparatorChange={(columnSeparator) =>
+            handleOptionChange({ columnSeparator })
+          }
+          onHighlightOnHoverChange={(highlightOnHover) =>
+            handleOptionChange({ highlightOnHover })
+          }
+        />
       </div>
     </TableEditContext.Provider>
   );

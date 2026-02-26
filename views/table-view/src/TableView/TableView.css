@@ -4,6 +4,7 @@
    ============================================================ */
 
 .table-view {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -21,6 +22,11 @@
 
 .table-view-table {
   width: 100%;
+}
+
+.table-view-table[data-overflow] {
+  width: max-content;
+  min-width: 100%;
 }
 
 /* Row separators */

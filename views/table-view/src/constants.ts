@@ -1,7 +1,13 @@
 import { SelectOption } from '@minddrop/ui-primitives';
 import { FieldSize, TablePadding, TableViewOptions } from './types';
 
+export const DEFAULT_COLUMN_WIDTH = 200;
+export const DEFAULT_TITLE_COLUMN_WIDTH = 300;
+export const MIN_COLUMN_WIDTH_PX = 50;
+export const MIN_COLUMN_WIDTH_PCT = 5;
+
 export const defaultTableViewOptions: TableViewOptions = {
+  overflow: false,
   showRowNumbers: true,
   columnWidths: {},
   padding: 'comfortable',
