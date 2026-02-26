@@ -6,3 +6,7 @@ export { initializeDesigns as initialize } from './initializeDesigns';
 export { readDesign as read } from './readDesign';
 export { updateDesign as update } from './updateDesign';
 export { writeDesign as write } from './writeDesign';
+export {
+  useDesign as use,
+  useDesigns as useAll,
+} from './DesignsStore';
