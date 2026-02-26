@@ -77,7 +77,7 @@ async function readDatabaseConfig(path: string): Promise<Database | null> {
     return {
       ...config,
       // Remove .minddrop/database.json from the path
-      path: path.split('/').slice(0, -1).join('/'),
+      path: path.split('/').slice(0, -2).join('/'),
     };
   } catch {
     return null;
