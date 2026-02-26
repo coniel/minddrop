@@ -3,6 +3,7 @@ import {
   DesignElement,
   DesignElementStyle,
   DesignElementTemplate,
+  Designs,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -28,11 +29,6 @@ export interface DesignStudioStore {
    * Whether the store has been initialized.
    */
   initialized: boolean;
-
-  /**
-   * Callback fired when the design is saved.
-   */
-  onSave: (design: Design) => void;
 
   /**
    * The design being edited.
@@ -62,7 +58,6 @@ export interface DesignStudioStore {
    */
   initialize: (
     design: Design,
-    onSave: (design: Design) => void,
     properties?: PropertiesSchema,
     propertyValues?: PropertyMap,
   ) => void;
@@ -122,13 +117,11 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   elements: {},
   properties: [],
   propertyValues: {},
-  onSave: () => {},
 
-  initialize: (design, onSave, properties = [], propertyValues = {}) => {
+  initialize: (design, properties = [], propertyValues = {}) => {
     set({
       design,
       elements: flattenTree(design.tree),
-      onSave,
       properties,
       propertyValues,
       initialized: true,
@@ -263,10 +256,7 @@ export const saveDesign = () => {
     return;
   }
 
-  DesignStudioStore.getState().onSave({
-    ...design,
-    tree,
-  } as Design);
+  Designs.update(design.id, { tree });
 };
 
 export const getDesignElement = <

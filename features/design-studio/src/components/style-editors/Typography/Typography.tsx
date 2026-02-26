@@ -1,9 +1,10 @@
+import { useTranslation } from '@minddrop/i18n';
 import {
-  FieldLabel,
   FlexItem,
   Group,
   MenuLabel,
   Stack,
+  Text,
 } from '@minddrop/ui-primitives';
 import { FontFamilySelect } from '../FontFamilySelect';
 import { FontWeightSelect } from '../FontWeightSelect';
@@ -17,6 +18,8 @@ export interface FontFamilyProps {
 }
 
 export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="typography">
       <MenuLabel label="designs.typography.label" />
@@ -32,19 +35,15 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
           </Group>
         </Stack>
         <Stack gap={1}>
-          <FieldLabel
-            label="designs.typography.text-align.label"
-            size="xs"
-            color="muted"
-          />
+          <Text size="xs" color="muted" weight="medium">
+            {t('designs.typography.text-align.label')}
+          </Text>
           <TextAlignToggle elementId={elementId} />
         </Stack>
         <Stack gap={1}>
-          <FieldLabel
-            label="designs.typography.text-transform.label"
-            size="xs"
-            color="muted"
-          />
+          <Text size="xs" color="muted" weight="medium">
+            {t('designs.typography.text-transform.label')}
+          </Text>
           <TextTransformToggle elementId={elementId} />
         </Stack>
       </Stack>

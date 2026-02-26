@@ -1,0 +1,285 @@
+.design-canvas {
+  position: absolute;
+  padding: 12px;
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-4);
+
+  .design-canvas-drag-handle {
+    width: 144px;
+    height: 8px;
+    background-color: var(--border-default);
+    border-radius: var(--radius-full);
+    margin: 0 auto;
+    cursor: grab;
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.35;
+    transition: opacity 0.5s ease 0.15s;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .design-canvas-hover-zone-top:hover ~ .design-canvas-drag-handle,
+  .design-canvas-drag-handle:hover {
+    opacity: 1;
+  }
+
+  .design-canvas-content {
+    background-color: var(--surface-base);
+    border-radius: var(--radius-xl);
+    background-color: var(--surface-subtle);
+
+    .design-canvas-svg {
+      display: block;
+    }
+  }
+
+  .design-canvas-hover-zone-top {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 80%;
+    height: 50px;
+    transform: translate(-50%, calc(-100% + 10px));
+  }
+
+  .design-canvas-hover-zone-top-left {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 130px;
+    height: 50px;
+    transform: translate(-40px, -100%);
+  }
+
+  .design-canvas-hover-zone-top-left-vertical {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 120px;
+    transform: translate(-40px, -40px);
+  }
+
+  .design-canvas-hover-zone-top-right {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 130px;
+    height: 50px;
+    transform: translate(40px, -100%);
+  }
+
+  .design-canvas-hover-zone-top-right-vertical {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 120px;
+    transform: translate(40px, -40px);
+  }
+
+  .design-canvas-hover-zone-bottom-left {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 130px;
+    height: 50px;
+    transform: translate(-40px, 100%);
+  }
+
+  .design-canvas-hover-zone-bottom-left-vertical {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 120px;
+    transform: translate(-40px, 40px);
+  }
+
+  .design-canvas-hover-zone-bottom-right {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    width: 130px;
+    height: 50px;
+    transform: translate(40px, 100%);
+  }
+
+  .design-canvas-hover-zone-bottom-right-vertical {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50px;
+    height: 120px;
+    transform: translate(40px, 40px);
+  }
+
+  .design-canvas-hover-zone-left,
+  .design-canvas-hover-zone-right {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 80%;
+  }
+
+  .design-canvas-hover-zone-left {
+    left: 0;
+    transform: translate(calc(-100% + 10px), -50%);
+  }
+
+  .design-canvas-hover-zone-right {
+    right: 0;
+    transform: translate(calc(100% - 10px), -50%);
+  }
+
+  .design-canvas-hover-zone-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 80%;
+    height: 50px;
+    transform: translate(-50%, calc(100% - 10px));
+  }
+
+  .design-canvas-resize-handle {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::after {
+      content: '';
+      background-color: var(--border-default);
+      border-radius: var(--radius-full);
+    }
+  }
+
+  .design-canvas-resize-handle-top-left,
+  .design-canvas-resize-handle-top-right,
+  .design-canvas-resize-handle-bottom-left,
+  .design-canvas-resize-handle-bottom-right {
+    width: 25px;
+    height: 25px;
+    z-index: 1;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .design-canvas-resize-handle-top-left,
+  .design-canvas-resize-handle-top-right,
+  .design-canvas-resize-handle-bottom-left,
+  .design-canvas-resize-handle-bottom-right {
+    opacity: 0;
+    transition: opacity 0.5s ease 0.15s;
+  }
+
+  .design-canvas-resize-handle-top-left {
+    top: 0;
+    left: 0;
+    cursor: nwse-resize;
+    transform: translate(-3px, -3px);
+  }
+
+  .design-canvas-resize-handle-top-right {
+    top: 0;
+    right: 0;
+    cursor: nesw-resize;
+    transform: translate(3px, -3px);
+  }
+
+  .design-canvas-resize-handle-bottom-left {
+    bottom: 0;
+    left: 0;
+    cursor: nesw-resize;
+    transform: translate(-3px, 3px);
+  }
+
+  .design-canvas-resize-handle-bottom-right {
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize;
+    transform: translate(3px, 3px);
+  }
+
+  .design-canvas-hover-zone-top-left:hover
+    ~ .design-canvas-resize-handle-top-left,
+  .design-canvas-hover-zone-top-left-vertical:hover
+    ~ .design-canvas-resize-handle-top-left,
+  .design-canvas-resize-handle-top-left:hover,
+  .design-canvas-hover-zone-top-right:hover
+    ~ .design-canvas-resize-handle-top-right,
+  .design-canvas-hover-zone-top-right-vertical:hover
+    ~ .design-canvas-resize-handle-top-right,
+  .design-canvas-resize-handle-top-right:hover,
+  .design-canvas-hover-zone-bottom-left:hover
+    ~ .design-canvas-resize-handle-bottom-left,
+  .design-canvas-hover-zone-bottom-left-vertical:hover
+    ~ .design-canvas-resize-handle-bottom-left,
+  .design-canvas-resize-handle-bottom-left:hover,
+  .design-canvas-hover-zone-bottom-right:hover
+    ~ .design-canvas-resize-handle-bottom-right,
+  .design-canvas-hover-zone-bottom-right-vertical:hover
+    ~ .design-canvas-resize-handle-bottom-right,
+  .design-canvas-resize-handle-bottom-right:hover {
+    opacity: 1;
+  }
+
+  .design-canvas-resize-handle-left,
+  .design-canvas-resize-handle-right {
+    top: 50%;
+    width: var(--space-4);
+    height: 144px;
+    cursor: ew-resize;
+
+    &::after {
+      width: 6px;
+      height: 144px;
+    }
+  }
+
+  .design-canvas-resize-handle-left {
+    left: 0;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease 0.15s;
+  }
+
+  .design-canvas-resize-handle-right {
+    right: 0;
+    transform: translate(50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease 0.15s;
+  }
+
+  .design-canvas-resize-handle-bottom {
+    bottom: 0;
+    left: 50%;
+    width: 144px;
+    height: var(--space-4);
+    cursor: ns-resize;
+    transform: translate(-50%, 50%);
+    opacity: 0;
+    transition: opacity 0.5s ease 0.15s;
+
+    &::after {
+      width: 144px;
+      height: 6px;
+    }
+  }
+
+  .design-canvas-hover-zone-left:hover + .design-canvas-resize-handle-left,
+  .design-canvas-resize-handle-left:hover,
+  .design-canvas-hover-zone-right:hover + .design-canvas-resize-handle-right,
+  .design-canvas-resize-handle-right:hover,
+  .design-canvas-hover-zone-bottom:hover + .design-canvas-resize-handle-bottom,
+  .design-canvas-resize-handle-bottom:hover {
+    opacity: 1;
+  }
+}

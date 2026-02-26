@@ -1,5 +1,9 @@
 import { vi } from 'vitest';
 import { DatabaseFixtures } from '@minddrop/databases';
+import {
+  cleanupDesignFixtures,
+  setupDesignFixtures,
+} from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
 import { initializeI18n } from '@minddrop/i18n';
@@ -16,16 +20,15 @@ initializeI18n();
 
 export const MockFs = initializeMockFileSystem([Paths.workspace]);
 
-export const onSave = vi.fn();
-
 export function setup(setupOptions: SetupOptions = { initializeStore: true }) {
   DatabaseFixtures.setup(MockFs);
+  setupDesignFixtures(MockFs);
 
   // Initialize the design studio store with the test design
   if (setupOptions.initializeStore !== false) {
     useDesignStudioStore
       .getState()
-      .initialize(testDesign, onSave, testDatabase.properties);
+      .initialize(testDesign, testDatabase.properties);
   }
 }
 
@@ -36,6 +39,7 @@ export function cleanup() {
 
   // Clear stores
   DatabaseFixtures.cleanup();
+  cleanupDesignFixtures();
   useDesignStudioStore.getState().clear();
   // Reset mock file system
   MockFs.reset();

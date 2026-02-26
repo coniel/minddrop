@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import {
   element_text_1,
   flatTree,
@@ -6,8 +6,6 @@ import {
   testDesign,
 } from '../test-utils';
 import { DesignStudioStore } from './DesignStudioStore';
-
-const onSave = vi.fn();
 
 describe('DesignStudioStore', () => {
   afterEach(() => {
@@ -17,7 +15,6 @@ describe('DesignStudioStore', () => {
   it('initializes the store', () => {
     DesignStudioStore.getState().initialize(
       testDesign,
-      onSave,
       testDatabase.properties,
     );
 
@@ -34,7 +31,6 @@ describe('DesignStudioStore', () => {
   it('updates the elements by deeply merging the updates with the existing element', () => {
     DesignStudioStore.getState().initialize(
       testDesign,
-      onSave,
       testDatabase.properties,
     );
 

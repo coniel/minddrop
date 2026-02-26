@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { TextAlign, textAligns } from '@minddrop/designs';
+import { useTranslation } from '@minddrop/i18n';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
@@ -11,6 +12,7 @@ export interface TextAlignToggleProps {
 }
 
 export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
+  const { t } = useTranslation();
   const textAlign = useElementStyle(elementId, 'text-align');
 
   const handleSelect = useCallback(
@@ -21,7 +23,7 @@ export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
   return (
     <RadioToggleGroup size="md" value={textAlign} onValueChange={handleSelect}>
       {textAligns.map((align) => (
-        <Toggle key={align.value} {...align} />
+        <Toggle key={align.value} {...align} label={t(align.label)} />
       ))}
     </RadioToggleGroup>
   );

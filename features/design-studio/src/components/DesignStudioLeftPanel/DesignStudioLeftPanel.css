@@ -1,0 +1,42 @@
+.design-studio-left-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  .panel-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: var(--space-4) var(--space-2);
+    border-bottom: 1px solid var(--border-subtle);
+
+    .button {
+      justify-content: center;
+    }
+  }
+
+  .designs-list {
+    padding: 0.5rem 0;
+  }
+
+  .design-type-group {
+    margin-bottom: 0.5rem;
+  }
+
+  .design-item {
+    padding: 0.375rem 0.75rem;
+    font-size: var(--font-size-sm);
+    color: var(--text-default);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--surface-hover);
+    }
+
+    &.active {
+      background-color: var(--surface-active);
+      color: var(--text-accent);
+    }
+  }
+}

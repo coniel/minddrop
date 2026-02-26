@@ -1,31 +1,20 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   CloseAppSidebarEvent,
   Events,
   OpenAppSidebarEvent,
 } from '@minddrop/events';
 import { Button, Panel, Toolbar } from '@minddrop/ui-primitives';
-import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
-import { FlatRootDesignElement } from '../../types';
-import { AvailableProperties } from '../AvailableProperties';
-import { ElementStyleEditor } from '../ElementStyleEditor';
-import { ElementsTree } from '../ElementsTree';
-import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
+import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
+import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import './DesignStudio.css';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
   backEventData,
   backButtonLabel,
-  properties,
-  propertyValues,
-  design,
-  onSave,
 }) => {
-  const initialize = useDesignStudioStore((state) => state.initialize);
-  const storeInitialized = useDesignStudioStore((state) => state.initialized);
-
   // Close the app sidebar when the design studio is opened
   useEffect(() => {
     Events.dispatch(CloseAppSidebarEvent);
@@ -35,10 +24,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     };
   }, []);
 
-  useEffect(() => {
-    initialize(design, onSave, properties, propertyValues);
-  }, [properties, propertyValues, initialize, design, onSave]);
-
   const handleClickBack = useCallback(() => {
     if (!backEvent) {
       return;
@@ -47,14 +32,10 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     Events.dispatch(backEvent, backEventData);
   }, [backEvent, backEventData]);
 
-  if (!storeInitialized) {
-    return null;
-  }
-
   return (
     <div className="design-studio">
       <Panel className="left-panel">
-        {properties && <AvailableProperties />}
+        <DesignStudioLeftPanel />
       </Panel>
       <div className="workspace">
         <Toolbar>
@@ -67,36 +48,9 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
             />
           )}
         </Toolbar>
-        <Workspace />
+        <DesignCanvas />
       </div>
-      <RightPanel />
+      <Panel className="right-panel" />
     </div>
-  );
-};
-
-const Workspace = () => {
-  const element = useElement<FlatRootDesignElement>('root');
-
-  if (!element) {
-    return null;
-  }
-
-  return <DesignStudioRootElement element={element} />;
-};
-
-const RightPanel = () => {
-  const [editingElement, setEditingElement] = useState<string | null>(null);
-
-  return (
-    <Panel className="right-panel">
-      {editingElement ? (
-        <ElementStyleEditor
-          elementId={editingElement}
-          onClose={() => setEditingElement(null)}
-        />
-      ) : (
-        <ElementsTree onClickElement={setEditingElement} />
-      )}
-    </Panel>
   );
 };

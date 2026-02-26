@@ -14,8 +14,13 @@
   }
 
   .workspace {
+    position: relative;
+    overflow: hidden;
     width: 100%;
     height: 100%;
+    background-color: var(--surface-app);
+    background-image: radial-gradient(circle, var(--border-subtle) 1px, transparent 1px);
+    background-size: 24px 24px;
 
     .toolbar {
       margin-bottom: 1rem;
