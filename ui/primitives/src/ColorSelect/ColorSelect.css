@@ -1,0 +1,125 @@
+/* ============================================================
+   COLOR SELECT
+   Select component for picking a content color.
+   Reuses Select's trigger/popup/item classes; adds swatch styles.
+   ============================================================ */
+
+/* --- Trigger content layout --- */
+
+.color-select-trigger-content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* --- Swatch (shared between trigger and items) --- */
+
+.color-select-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  flex-shrink: 0;
+}
+
+/* --- Popup min width --- */
+
+.color-select-popup.select-popup {
+  min-width: 160px;
+}
+
+/* --- Item --- */
+
+.color-select-item {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+
+  padding: 0 var(--space-3);
+  height: 1.75rem;
+
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-regular);
+  outline: none;
+  user-select: none;
+  cursor: default;
+
+  &[data-highlighted]::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline: var(--space-1);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-neutral-hover);
+    z-index: -1;
+  }
+
+  &[data-highlighted] {
+    z-index: 0;
+  }
+}
+
+.color-select-item-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: inherit;
+}
+
+/* --- Swatch colors --- */
+
+.color-select-swatch-default {
+  border-color: var(--border-default);
+}
+
+.color-select-swatch-blue {
+  background-color: var(--blue-600);
+  border-color: var(--blue-700);
+}
+
+.color-select-swatch-cyan {
+  background-color: var(--cyan-600);
+  border-color: var(--cyan-700);
+}
+
+.color-select-swatch-red {
+  background-color: var(--red-600);
+  border-color: var(--red-700);
+}
+
+.color-select-swatch-pink {
+  background-color: var(--pink-600);
+  border-color: var(--pink-700);
+}
+
+.color-select-swatch-purple {
+  background-color: var(--purple-600);
+  border-color: var(--purple-700);
+}
+
+.color-select-swatch-green {
+  background-color: var(--green-600);
+  border-color: var(--green-700);
+}
+
+.color-select-swatch-orange {
+  background-color: var(--orange-600);
+  border-color: var(--orange-700);
+}
+
+.color-select-swatch-yellow {
+  background-color: var(--yellow-600);
+  border-color: var(--yellow-700);
+}
+
+.color-select-swatch-brown {
+  background-color: var(--brown-600);
+  border-color: var(--brown-700);
+}
+
+.color-select-swatch-gray {
+  background-color: var(--gray-600);
+  border-color: var(--gray-700);
+}

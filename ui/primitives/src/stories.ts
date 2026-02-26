@@ -9,6 +9,7 @@
  */
 import { ButtonStories } from './Button/Button.stories';
 import { CalendarStories } from './Calendar/Calendar.stories';
+import { ColorSelectStories } from './ColorSelect/ColorSelect.stories';
 import { CollapsibleStories } from './Collapsible/Collapsible.stories';
 import { ComboboxStories } from './Combox/Combobox.stories';
 import { ConfirmationDialogStories } from './ConfirmationDialog/ConfirmationDialog.stories';
@@ -53,6 +54,7 @@ export const stories: StoryGroup[] = [
       { label: 'IconButton', component: IconButtonStories },
       { label: 'Text', component: TextStories },
       { label: 'Select', component: SelectStories },
+      { label: 'ColorSelect', component: ColorSelectStories },
       { label: 'KeyboardShortcut', component: KeyboardShortcutStories },
       { label: 'Separator', component: SeparatorStories },
     ],
