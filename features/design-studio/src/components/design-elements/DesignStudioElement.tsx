@@ -2,8 +2,6 @@ import React, { ReactElement } from 'react';
 import { useElement } from '../../DesignStudioStore';
 import { FlatDesignElement } from '../../types';
 import { DesignElementDragDropHandler } from '../DesignElementDragDropHandler';
-import { DesignStudioImagePropertyElement } from './DesignStudioImagePropertyElement';
-import { DesignStudioTextPropertyElement } from './DesignStudioTextPropertyElement';
 
 export interface DesignStudioElementProps {
   /**
@@ -47,15 +45,6 @@ export const DesignStudioElement: React.FC<DesignStudioElementProps> = ({
 
   if (!element) {
     return null;
-  }
-
-  switch (element.type) {
-    case 'text-property':
-      elementComponent = <DesignStudioTextPropertyElement element={element} />;
-      break;
-    case 'image-property':
-      elementComponent = <DesignStudioImagePropertyElement element={element} />;
-      break;
   }
 
   if (elementComponent) {
