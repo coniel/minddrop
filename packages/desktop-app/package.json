@@ -43,6 +43,7 @@
     "@minddrop/utils": "workspace:*",
     "@minddrop/feature-app-sidebar": "workspace:*",
     "@minddrop/views": "workspace:*",
+    "@minddrop/table-view": "workspace:*",
     "@minddrop/view-gallery": "workspace:*",
     "@minddrop/workspaces": "workspace:*"
   }

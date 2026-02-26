@@ -12,6 +12,7 @@ import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
 import { Theme, ThemeAppearance } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
+import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { Designs } from '../../../designs/src';
 import { initializeSelection } from './initializeSelection';
@@ -35,6 +36,7 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   if (initialized) {
     return cleanupFn;
   }
+  console.log('init');
 
   initialized = true;
 
@@ -49,13 +51,14 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
   Paths.httpServerHost = 'http://localhost:14567';
 
-  await Workspaces.initialize();
   // Initialize databases
+  await Workspaces.initialize();
   DatabaseTemplates.initialize();
   DatabaseAutomations.initialize();
+  await Designs.initialize();
+  await Views.initialize();
   await Databases.initialize();
   await DatabaseEntries.initialize();
-  await Designs.initialize();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
