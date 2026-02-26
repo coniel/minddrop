@@ -1,0 +1,89 @@
+.new-issue-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background-color: lch(0 0 0 / 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: new-issue-dialog-fade-in var(--duration-normal) var(--ease-out) forwards;
+}
+
+@keyframes new-issue-dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.new-issue-dialog {
+  width: 500px;
+  height: 650px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--surface-app);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+
+  animation: new-issue-dialog-slide-in var(--duration-normal) var(--ease-out) forwards;
+}
+
+@keyframes new-issue-dialog-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.new-issue-dialog-title {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-regular);
+  outline: none;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  width: 100%;
+}
+
+.new-issue-dialog-title::placeholder {
+  color: var(--text-subtle);
+}
+
+.new-issue-dialog-fields {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-4) var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.new-issue-dialog-fields-spacer {
+  flex: 1;
+}
+
+.new-issue-dialog-hint {
+  font-size: 0.65rem;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+.new-issue-dialog-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.new-issue-dialog-editor .editor {
+  padding: var(--space-3) var(--space-4);
+  min-height: 100%;
+}

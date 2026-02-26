@@ -21,6 +21,8 @@ import { stories } from '@minddrop/ui-primitives/stories';
 import { Workspaces } from '@minddrop/workspaces';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
+import { IssuesPanel } from '../IssuesPanel';
+import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { NotesPanel } from '../NotesPanel';
 import {
@@ -37,14 +39,26 @@ import {
   useViewsStoreCounts,
   useWorkspacesStoreCounts,
 } from '../StateInspector';
-import { ActiveSection, ActiveStory, LogEntry, Note, SavedLog } from '../types';
+import {
+  ActiveSection,
+  ActiveStory,
+  Issue,
+  IssueFeature,
+  IssueStatus,
+  IssueType,
+  LogEntry,
+  Note,
+  SavedLog,
+} from '../types';
 import {
   clearSavedLogsByFile,
   eventsReducer,
   installConsoleInterceptors,
   loadSavedLogs,
   logsReducer,
+  parseIssueFrontmatter,
   persistSavedLog,
+  serializeIssueFrontmatter,
   setLogListener,
 } from '../utils';
 import './DevTools.css';
@@ -135,6 +149,22 @@ function focusEditorToEnd() {
   selection?.addRange(range);
 }
 
+let issueIdCounter = 0;
+
+function nextIssueId() {
+  issueIdCounter += 1;
+
+  return issueIdCounter;
+}
+
+function getIssuesDirPath(workspacePath: string) {
+  return Fs.concatPath(workspacePath, 'dev', 'issues');
+}
+
+function sanitizeFileName(name: string): string {
+  return name.replace(/[/\\:*?"<>|]/g, '').trim() || 'New Issue';
+}
+
 function getNoteFileTitle(content: string): string {
   const firstLine = content
     .split('\n')[0]
@@ -206,6 +236,9 @@ export const DevTools: React.FC = () => {
   notesRef.current = notes;
   const [openNoteIds, setOpenNoteIds] = useState<number[]>([]);
   const [activeNoteId, setActiveNoteId] = useState<number | null>(null);
+  const [issues, setIssues] = useState<Issue[]>([]);
+  const issuesRef = useRef(issues);
+  issuesRef.current = issues;
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState(
     () => localStorage.getItem('dev-tools-events-view') ?? 'all',
@@ -224,6 +257,7 @@ export const DevTools: React.FC = () => {
   );
   const [listenersTick, setListenersTick] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
+  const [showNewIssueDialog, setShowNewIssueDialog] = useState(false);
   const time = useTime();
 
   const allListeners = useMemo((): ListenerEntry[] => {
@@ -480,6 +514,54 @@ export const DevTools: React.FC = () => {
     loadNotes();
   }, [workspacePath]);
 
+  // Load issues from file system on first render
+  useEffect(() => {
+    const loadIssues = async () => {
+      if (!workspacePath) {
+        return;
+      }
+
+      const issuesDir = getIssuesDirPath(workspacePath);
+
+      await Fs.ensureDir(issuesDir);
+
+      const entries = await Fs.readDir(issuesDir);
+      const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
+
+      if (mdEntries.length === 0) {
+        return;
+      }
+
+      const loadedIssues = await Promise.all(
+        mdEntries.map(async (entry) => {
+          const filePath = Fs.concatPath(issuesDir, entry.name!);
+          const raw = await Fs.readTextFile(filePath);
+          const { frontmatter, content } = parseIssueFrontmatter(raw);
+
+          if (frontmatter.number > issueIdCounter) {
+            issueIdCounter = frontmatter.number;
+          }
+
+          return {
+            id: nextIssueId(),
+            number: frontmatter.number,
+            title: frontmatter.title,
+            status: frontmatter.status as IssueStatus,
+            type: frontmatter.type as IssueType,
+            feature: frontmatter.feature as IssueFeature,
+            content,
+            filePath,
+            createdAt: new Date(frontmatter.created).getTime() || Date.now(),
+          };
+        }),
+      );
+
+      setIssues(loadedIssues);
+    };
+
+    loadIssues();
+  }, [workspacePath]);
+
   // Keyboard shortcut handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -637,12 +719,29 @@ export const DevTools: React.FC = () => {
 
       if (e.key === 'r') {
         e.preventDefault();
+
+        if (visible && activeSection === 'issues') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('issues');
+        }
+      }
+
+      if (e.key === 't') {
+        e.preventDefault();
+
         if (visible && activeSection === 'notes') {
           setVisible(false);
         } else {
           setVisible(true);
           setActiveSection('notes');
         }
+      }
+
+      if (e.key === 'i' && !showNewIssueDialog) {
+        e.preventDefault();
+        setShowNewIssueDialog(true);
       }
 
       if (e.key === 'n') {
@@ -685,7 +784,7 @@ export const DevTools: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visible, activeSection, windowMode, showHelp, activeEventsTab]);
+  }, [visible, activeSection, windowMode, showHelp, showNewIssueDialog, activeEventsTab]);
 
   const onSave = useCallback((entry: LogEntry) => {
     const log: SavedLog = {
@@ -800,6 +899,120 @@ export const DevTools: React.FC = () => {
     },
     [],
   );
+
+  const handleCreateIssue = useCallback(
+    async (data: NewIssueData) => {
+      const issuesDir = workspacePath ? getIssuesDirPath(workspacePath) : null;
+
+      if (issuesDir) {
+        await Fs.ensureDir(issuesDir);
+      }
+
+      const issueNumber = nextIssueId();
+      const createdAt = Date.now();
+      const fileName = sanitizeFileName(data.title);
+      const filePath = issuesDir
+        ? (await Fs.incrementalPath(Fs.concatPath(issuesDir, `${fileName}.md`)))
+            .path
+        : '';
+
+      const newIssue: Issue = {
+        id: issueNumber,
+        number: issueNumber,
+        title: data.title,
+        status: data.status,
+        type: data.type,
+        feature: data.feature,
+        content: data.content,
+        filePath,
+        createdAt,
+      };
+
+      if (filePath) {
+        await Fs.writeTextFile(
+          filePath,
+          serializeIssueFrontmatter(
+            {
+              title: newIssue.title,
+              number: newIssue.number,
+              status: newIssue.status,
+              type: newIssue.type,
+              feature: newIssue.feature,
+              created: new Date(createdAt).toISOString(),
+            },
+            data.content,
+          ),
+        );
+      }
+
+      setIssues((previous) => [...previous, newIssue]);
+      setShowNewIssueDialog(false);
+    },
+    [workspacePath],
+  );
+
+  const handleIssueChange = useCallback(
+    async (issueId: number, changes: Partial<Issue>) => {
+      const issue = issuesRef.current.find((item) => item.id === issueId);
+
+      if (!issue) {
+        return;
+      }
+
+      const updated = { ...issue, ...changes };
+      const oldTitle = sanitizeFileName(issue.title);
+      const newTitle = sanitizeFileName(updated.title);
+      let { filePath } = updated;
+
+      if (issue.filePath && oldTitle !== newTitle) {
+        const parentDir = Fs.parentDirPath(issue.filePath);
+        const { path: newPath } = await Fs.incrementalPath(
+          Fs.concatPath(parentDir, `${newTitle}.md`),
+        );
+
+        await Fs.rename(issue.filePath, newPath);
+        filePath = newPath;
+      }
+
+      if (filePath) {
+        await Fs.writeTextFile(
+          filePath,
+          serializeIssueFrontmatter(
+            {
+              title: updated.title,
+              number: updated.number,
+              status: updated.status,
+              type: updated.type,
+              feature: updated.feature,
+              created: new Date(updated.createdAt).toISOString(),
+            },
+            updated.content,
+          ),
+        );
+      }
+
+      setIssues((previous) =>
+        previous.map((item) =>
+          item.id === issueId ? { ...updated, filePath } : item,
+        ),
+      );
+    },
+    [],
+  );
+
+  const handleDeleteIssue = useCallback(async (issueId: number) => {
+    const issue = issuesRef.current.find((item) => item.id === issueId);
+
+    if (!issue) {
+      return;
+    }
+
+    if (issue.filePath) {
+      await Fs.removeFile(issue.filePath);
+    }
+
+    setIssues((previous) => previous.filter((item) => item.id !== issueId));
+  }, []);
 
   const handleMoveStart = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return;
@@ -967,7 +1180,9 @@ export const DevTools: React.FC = () => {
             ['q', 'Toggle logs'],
             ['w', 'Toggle state'],
             ['e', 'Toggle events'],
-            ['r', 'Toggle notes'],
+            ['r', 'Toggle issues'],
+            ['t', 'Toggle notes'],
+            ['i', 'New issue'],
             ['n', 'New note'],
             ['0–9', 'Open note by title'],
             ['⌘0–9', 'Open note by title (in editor)'],
@@ -995,7 +1210,14 @@ export const DevTools: React.FC = () => {
     </div>
   );
 
-  if (!visible) return null;
+  if (!visible) {
+    return showNewIssueDialog ? (
+      <NewIssueDialog
+        onSubmit={handleCreateIssue}
+        onClose={() => setShowNewIssueDialog(false)}
+      />
+    ) : null;
+  }
 
   const group = stories[activeStory.groupIndex];
   const ActiveStoryComponent = group?.items[activeStory.itemIndex]?.component;
@@ -1077,12 +1299,30 @@ export const DevTools: React.FC = () => {
           onCreateNote={handleCreateNote}
         />
       )}
+
+      {activeSection === 'issues' && (
+        <IssuesPanel
+          issues={issues}
+          onIssueChange={handleIssueChange}
+          onCreateIssue={() => setShowNewIssueDialog(true)}
+          onDeleteIssue={handleDeleteIssue}
+        />
+      )}
     </main>
+  );
+
+  const newIssueDialog = showNewIssueDialog && (
+    <NewIssueDialog
+      onSubmit={handleCreateIssue}
+      onClose={() => setShowNewIssueDialog(false)}
+    />
   );
 
   // --- Window mode ---
   if (windowMode) {
     return (
+      <>
+      {newIssueDialog}
       <div
         className="dev-tools-window"
         style={{
@@ -1129,6 +1369,13 @@ export const DevTools: React.FC = () => {
               size="sm"
               active={activeSection === 'events'}
               onClick={() => setActiveSection('events')}
+            />
+            <IconButton
+              icon="circle-dot"
+              label="Issues"
+              size="sm"
+              active={activeSection === 'issues'}
+              onClick={() => setActiveSection('issues')}
             />
             <IconButton
               icon="sticky-note"
@@ -1286,17 +1533,44 @@ export const DevTools: React.FC = () => {
                     ))}
                   </MenuGroup>
                 )}
+
+                {activeSection === 'issues' && (
+                  <MenuGroup padded>
+                    <MenuItem
+                      size="compact"
+                      label="New Issue"
+                      icon="plus"
+                      onClick={() => setShowNewIssueDialog(true)}
+                    />
+                    {issues.map((issue) => (
+                      <MenuItem
+                        key={issue.id}
+                        size="compact"
+                      >
+                        <span className="dev-tools-store-item-label">
+                          {issue.title || 'Untitled'}
+                          <span className="dev-tools-count-badge">
+                            #{issue.number}
+                          </span>
+                        </span>
+                      </MenuItem>
+                    ))}
+                  </MenuGroup>
+                )}
               </nav>
             </aside>
           )}
           {contentArea}
         </div>
       </div>
+      </>
     );
   }
 
   // --- Fullscreen mode ---
   return (
+    <>
+    {newIssueDialog}
     <div className="dev-tools-overlay">
       {helpOverlay}
       <div className="dev-tools">
@@ -1332,6 +1606,13 @@ export const DevTools: React.FC = () => {
               size="sm"
               active={activeSection === 'events'}
               onClick={() => setActiveSection('events')}
+            />
+            <IconButton
+              icon="circle-dot"
+              label="Issues"
+              size="sm"
+              active={activeSection === 'issues'}
+              onClick={() => setActiveSection('issues')}
             />
             <IconButton
               icon="sticky-note"
@@ -1487,6 +1768,27 @@ export const DevTools: React.FC = () => {
               </MenuGroup>
             )}
 
+            {activeSection === 'issues' && (
+              <MenuGroup padded>
+                <MenuItem
+                  size="compact"
+                  label="New Issue"
+                  icon="plus"
+                  onClick={() => setShowNewIssueDialog(true)}
+                />
+                {issues.map((issue) => (
+                  <MenuItem
+                    key={issue.id}
+                    size="compact"
+                  >
+                    <span className="dev-tools-store-item-label">
+                      {issue.title || 'Untitled'}
+                    </span>
+                  </MenuItem>
+                ))}
+              </MenuGroup>
+            )}
+
             {activeSection === 'stories' && (
               <>
                 {stories.map((group, groupIndex) => (
@@ -1517,5 +1819,6 @@ export const DevTools: React.FC = () => {
         {contentArea}
       </div>
     </div>
+    </>
   );
 };
