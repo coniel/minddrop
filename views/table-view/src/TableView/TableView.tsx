@@ -191,9 +191,22 @@ export const TableViewComponent: React.FC<
         return;
       }
 
-      handleCellChange(rowId, colId, (input as HTMLInputElement).value);
+      const newValue = (input as HTMLInputElement).value;
+      const entry = entriesById[rowId];
+
+      if (entry) {
+        const originalRaw =
+          column.type === 'title' ? entry.title : entry.properties[colId];
+        const originalValue = originalRaw == null ? '' : String(originalRaw);
+
+        if (newValue === originalValue) {
+          return;
+        }
+      }
+
+      handleCellChange(rowId, colId, newValue);
     },
-    [columns, handleCellChange],
+    [columns, entriesById, handleCellChange],
   );
 
   const handleTBodyKeyDown = useCallback((e: React.KeyboardEvent) => {

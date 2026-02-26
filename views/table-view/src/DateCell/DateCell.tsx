@@ -45,11 +45,16 @@ export const DateCell: React.FC<DateCellProps> = ({ value }) => {
   const handleSelect = useCallback(
     (date: Date | undefined) => {
       if (date) {
-        onCellChange(activeCell!.rowId, activeCell!.columnId, formatDate(date));
+        const formatted = formatDate(date);
+
+        if (formatted !== value) {
+          onCellChange(activeCell!.rowId, activeCell!.columnId, formatted);
+        }
+
         deactivate();
       }
     },
-    [activeCell, onCellChange, deactivate],
+    [value, activeCell, onCellChange, deactivate],
   );
 
   return (

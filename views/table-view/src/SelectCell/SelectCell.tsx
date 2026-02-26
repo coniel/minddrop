@@ -25,10 +25,13 @@ export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
 
   const handleValueChange = useCallback(
     (newValue: string) => {
-      onCellChange(activeCell!.rowId, activeCell!.columnId, newValue);
+      if (newValue !== value) {
+        onCellChange(activeCell!.rowId, activeCell!.columnId, newValue);
+      }
+
       deactivate();
     },
-    [activeCell, onCellChange, deactivate],
+    [value, activeCell, onCellChange, deactivate],
   );
 
   const handleOpenChange = useCallback(
