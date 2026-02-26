@@ -166,16 +166,28 @@ export const DevTools: React.FC = () => {
         height: 480,
       },
   );
-  const [activeSection, setActiveSection] = useState<ActiveSection>('logs');
-  const [activeStory, setActiveStory] = useState<ActiveStory>({
-    groupIndex: 0,
-    itemIndex: 0,
-  });
+  const [activeSection, setActiveSection] = useState<ActiveSection>(
+    () =>
+      (localStorage.getItem('dev-tools-active-section') as ActiveSection) ??
+      'logs',
+  );
+  const [activeStory, setActiveStory] = useState<ActiveStory>(
+    () =>
+      JSON.parse(
+        localStorage.getItem('dev-tools-active-story') ?? 'null',
+      ) ?? { groupIndex: 0, itemIndex: 0 },
+  );
   const [logs, dispatch] = useReducer(logsReducer, []);
   const [savedLogs, setSavedLogs] = useState<SavedLog[]>(() => loadSavedLogs());
   // 'live' shows the console; any other string is a filename showing saved logs.
-  const [logsView, setLogsView] = useState<string>('live');
-  const [stateView, setStateView] = useState<StateView>('databases');
+  const [logsView, setLogsView] = useState<string>(
+    () => localStorage.getItem('dev-tools-logs-view') ?? 'live',
+  );
+  const [stateView, setStateView] = useState<StateView>(
+    () =>
+      (localStorage.getItem('dev-tools-state-view') as StateView) ??
+      'databases',
+  );
   const databaseStoreCounts = useDatabaseStoreCounts();
   const workspacesStoreCounts = useWorkspacesStoreCounts();
   const designsStoreCounts = useDesignsStoreCounts();
@@ -195,12 +207,21 @@ export const DevTools: React.FC = () => {
   const [openNoteIds, setOpenNoteIds] = useState<number[]>([]);
   const [activeNoteId, setActiveNoteId] = useState<number | null>(null);
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
-  const [eventsView, setEventsView] = useState('all');
+  const [eventsView, setEventsView] = useState(
+    () => localStorage.getItem('dev-tools-events-view') ?? 'all',
+  );
   const [openNodes, setOpenNodes] = useState<Set<string>>(new Set());
   const [activeEventsTab, setActiveEventsTab] = useState<
     'events' | 'listeners'
-  >('events');
-  const [listenersView, setListenersView] = useState('all');
+  >(
+    () =>
+      (localStorage.getItem('dev-tools-events-tab') as
+        | 'events'
+        | 'listeners') ?? 'events',
+  );
+  const [listenersView, setListenersView] = useState(
+    () => localStorage.getItem('dev-tools-listeners-view') ?? 'all',
+  );
   const [listenersTick, setListenersTick] = useState(0);
   const [showHelp, setShowHelp] = useState(false);
   const time = useTime();
@@ -318,6 +339,47 @@ export const DevTools: React.FC = () => {
     localStorage.setItem('dev-tools-window-size', JSON.stringify(windowSize));
   }, [windowSize]);
 
+  useEffect(() => {
+    localStorage.setItem('dev-tools-active-section', activeSection);
+  }, [activeSection]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      'dev-tools-active-story',
+      JSON.stringify(activeStory),
+    );
+  }, [activeStory]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-logs-view', logsView);
+  }, [logsView]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-state-view', stateView);
+  }, [stateView]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-events-view', eventsView);
+  }, [eventsView]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-events-tab', activeEventsTab);
+  }, [activeEventsTab]);
+
+  useEffect(() => {
+    localStorage.setItem('dev-tools-listeners-view', listenersView);
+  }, [listenersView]);
+
+  useEffect(() => {
+    const activeNote = notes.find((note) => note.id === activeNoteId);
+
+    if (activeNote) {
+      localStorage.setItem('dev-tools-active-note-path', activeNote.filePath);
+    } else {
+      localStorage.removeItem('dev-tools-active-note-path');
+    }
+  }, [activeNoteId, notes]);
+
   // Prevent the application window from handling Escape (e.g. closing the webview).
   // Uses capture so it runs before other listeners but only calls preventDefault,
   // leaving internal handlers free to act on the event.
@@ -398,6 +460,21 @@ export const DevTools: React.FC = () => {
       );
 
       setNotes(loadedNotes);
+
+      const savedNoteFilePath = localStorage.getItem(
+        'dev-tools-active-note-path',
+      );
+
+      if (savedNoteFilePath) {
+        const savedNote = loadedNotes.find(
+          (note) => note.filePath === savedNoteFilePath,
+        );
+
+        if (savedNote) {
+          setOpenNoteIds([savedNote.id]);
+          setActiveNoteId(savedNote.id);
+        }
+      }
     };
 
     loadNotes();
