@@ -41,7 +41,7 @@ export interface ScrollAreaProps {
 }
 
 export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
-  ({ children, visibility = 'hover', className, style }, ref) => {
+  ({ children, visibility = 'scroll', className, style }, ref) => {
     const { setRef, handleScroll } = useScrollVisibility(visibility, ref);
 
     return (

@@ -47,7 +47,6 @@
   transition: transform var(--duration-fast) var(--ease-out);
 }
 
-
 /* ------------------------------------------------------------
    SIZES
    Track width = height × ~1.75 for a natural pill shape.
@@ -105,7 +104,6 @@
   }
 }
 
-
 /* ============================================================
    SWITCH FIELD
    Switch paired with label and description.
@@ -113,7 +111,7 @@
 
 .switch-field {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-3);
 }
 
@@ -121,21 +119,4 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-}
-
-.switch-field-label {
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--text-regular);
-  line-height: var(--leading-normal);
-  cursor: default;
-}
-
-.switch-field-description {
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  line-height: var(--leading-normal);
-  margin: 0;
 }

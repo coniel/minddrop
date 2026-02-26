@@ -6,7 +6,6 @@
    Sizes:    sm | md | lg (default)
    ============================================================ */
 
-
 /* --- Wrapper --- */
 
 .text-input {
@@ -29,7 +28,6 @@
   }
 }
 
-
 /* --- Input --- */
 
 .text-input-input {
@@ -37,6 +35,7 @@
   min-width: 0;
   box-sizing: border-box;
   margin: 0;
+  padding: 0;
   border: none;
   outline: none;
   background: transparent;
@@ -53,7 +52,6 @@
   }
 }
 
-
 /* --- Leading / trailing slots --- */
 
 .text-input-leading,
@@ -65,14 +63,14 @@
   color: var(--text-subtle);
 }
 
-.text-input-leading { margin-left: var(--space-1); }
-.text-input-trailing { margin-right: var(--space-1); }
+.text-input-leading {
+  margin-right: var(--space-1);
+}
 
 .text-input-trailing-interactive {
   pointer-events: auto;
   cursor: default;
 }
-
 
 /* ------------------------------------------------------------
    SIZES
@@ -80,25 +78,38 @@
 
 .text-input-size-sm {
   height: 1.5rem;
-  padding: 0 var(--space-2);
+  padding: 0 0 0 var(--space-2);
 
-  .text-input-input { font-size: var(--text-xs); }
+  .text-input-input {
+    font-size: var(--text-xs);
+  }
+  .text-input-trailing {
+    margin-right: var(--space-2);
+  }
 }
 
 .text-input-size-md {
   height: 1.75rem;
-  padding: 0 var(--space-3);
+  padding: 0 0 0 var(--space-3);
+
+  .text-input-trailing {
+    margin-right: var(--space-3);
+  }
 }
 
 /* lg is default — applied both explicitly and as fallback */
 .text-input-size-lg,
 .text-input:not(.text-input-size-sm):not(.text-input-size-md) {
   height: 2.25rem;
-  padding: 0 var(--space-4);
+  padding: 0 0 0 var(--space-4);
 
-  .text-input-input { font-size: var(--text-base); }
+  .text-input-input {
+    font-size: var(--text-base);
+  }
+  .text-input-trailing {
+    margin-right: var(--space-4);
+  }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: GHOST
@@ -125,27 +136,58 @@
 }
 
 /* Ghost size passthrough */
-.text-input-variant-ghost.text-input-size-xs   .text-input-input { font-size: var(--text-xs); }
-.text-input-variant-ghost.text-input-size-sm   .text-input-input { font-size: var(--text-sm); }
-.text-input-variant-ghost.text-input-size-base .text-input-input { font-size: var(--text-base); }
-.text-input-variant-ghost.text-input-size-md   .text-input-input { font-size: var(--text-md); }
-.text-input-variant-ghost.text-input-size-lg   .text-input-input { font-size: var(--text-lg); }
-.text-input-variant-ghost.text-input-size-xl   .text-input-input { font-size: var(--text-xl); }
-.text-input-variant-ghost.text-input-size-2xl  .text-input-input { font-size: var(--text-2xl); }
+.text-input-variant-ghost.text-input-size-xs .text-input-input {
+  font-size: var(--text-xs);
+}
+.text-input-variant-ghost.text-input-size-sm .text-input-input {
+  font-size: var(--text-sm);
+}
+.text-input-variant-ghost.text-input-size-base .text-input-input {
+  font-size: var(--text-base);
+}
+.text-input-variant-ghost.text-input-size-md .text-input-input {
+  font-size: var(--text-md);
+}
+.text-input-variant-ghost.text-input-size-lg .text-input-input {
+  font-size: var(--text-lg);
+}
+.text-input-variant-ghost.text-input-size-xl .text-input-input {
+  font-size: var(--text-xl);
+}
+.text-input-variant-ghost.text-input-size-2xl .text-input-input {
+  font-size: var(--text-2xl);
+}
 
 /* Ghost weight passthrough */
-.text-input-variant-ghost.text-input-weight-normal   .text-input-input { font-weight: var(--weight-normal); }
-.text-input-variant-ghost.text-input-weight-medium   .text-input-input { font-weight: var(--weight-medium); }
-.text-input-variant-ghost.text-input-weight-semibold .text-input-input { font-weight: var(--weight-semibold); }
-.text-input-variant-ghost.text-input-weight-bold     .text-input-input { font-weight: var(--weight-bold); }
+.text-input-variant-ghost.text-input-weight-normal .text-input-input {
+  font-weight: var(--weight-normal);
+}
+.text-input-variant-ghost.text-input-weight-medium .text-input-input {
+  font-weight: var(--weight-medium);
+}
+.text-input-variant-ghost.text-input-weight-semibold .text-input-input {
+  font-weight: var(--weight-semibold);
+}
+.text-input-variant-ghost.text-input-weight-bold .text-input-input {
+  font-weight: var(--weight-bold);
+}
 
 /* Ghost color passthrough */
-.text-input-variant-ghost.text-input-color-regular  .text-input-input { color: var(--text-regular); }
-.text-input-variant-ghost.text-input-color-muted    .text-input-input { color: var(--text-muted); }
-.text-input-variant-ghost.text-input-color-subtle   .text-input-input { color: var(--text-subtle); }
-.text-input-variant-ghost.text-input-color-primary  .text-input-input { color: var(--text-primary); }
-.text-input-variant-ghost.text-input-color-danger   .text-input-input { color: var(--text-danger); }
-
+.text-input-variant-ghost.text-input-color-regular .text-input-input {
+  color: var(--text-regular);
+}
+.text-input-variant-ghost.text-input-color-muted .text-input-input {
+  color: var(--text-muted);
+}
+.text-input-variant-ghost.text-input-color-subtle .text-input-input {
+  color: var(--text-subtle);
+}
+.text-input-variant-ghost.text-input-color-primary .text-input-input {
+  color: var(--text-primary);
+}
+.text-input-variant-ghost.text-input-color-danger .text-input-input {
+  color: var(--text-danger);
+}
 
 /* ------------------------------------------------------------
    VARIANT: SUBTLE
@@ -163,7 +205,6 @@
     background-color: var(--surface-neutral);
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: OUTLINE
@@ -183,7 +224,6 @@
     border-color: var(--border-strong);
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: FILLED
@@ -206,7 +246,6 @@
     box-shadow: none;
   }
 }
-
 
 /* ------------------------------------------------------------
    INVALID STATE

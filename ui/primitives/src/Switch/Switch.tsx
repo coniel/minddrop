@@ -1,7 +1,7 @@
 import { Field } from '@base-ui/react/field';
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { FieldDescription, FieldLabel } from '../fields';
 import { propsToClass } from '../utils';
 import './Switch.css';
 
@@ -87,24 +87,14 @@ export interface SwitchFieldProps extends SwitchProps {
 
 export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
   ({ label, description, size = 'md', ...switchProps }, ref) => {
-    const { t } = useTranslation();
-
     return (
       <Field.Root ref={ref} disabled={switchProps.disabled}>
         <div className="switch-field">
           <Switch size={size} {...switchProps} />
           {(label || description) && (
             <div className="switch-field-content">
-              {label && (
-                <Field.Label className="switch-field-label">
-                  {t(label)}
-                </Field.Label>
-              )}
-              {description && (
-                <Field.Description className="switch-field-description">
-                  {t(description)}
-                </Field.Description>
-              )}
+              {label && <FieldLabel label={label} />}
+              {description && <FieldDescription description={description} />}
             </div>
           )}
         </div>

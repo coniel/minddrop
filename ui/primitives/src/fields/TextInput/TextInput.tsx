@@ -97,6 +97,11 @@ export interface TextInputProps {
   autoComplete?: Input.Props['autoComplete'];
 
   /*
+   * HTML name attribute.
+   */
+  name?: string;
+
+  /*
    * Native change event handler.
    */
   onChange?: Input.Props['onChange'];
@@ -105,6 +110,21 @@ export interface TextInputProps {
    * Callback fired with the new string value on change.
    */
   onValueChange?: Input.Props['onValueChange'];
+
+  /*
+   * Focus event handler.
+   */
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+
+  /*
+   * Blur event handler.
+   */
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+
+  /*
+   * Key down event handler.
+   */
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
@@ -117,7 +137,11 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       disabled,
       invalid,
       leading,
+      name,
+      onBlur,
       onChange,
+      onFocus,
+      onKeyDown,
       onValueChange,
       placeholder,
       size = 'lg',
@@ -147,12 +171,16 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         <Input
           ref={ref}
           className="text-input-input"
+          name={name}
           type={type}
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder ? t(placeholder) : undefined}
           autoComplete={autoComplete}
+          onBlur={onBlur}
           onChange={onChange}
+          onFocus={onFocus}
+          onKeyDown={onKeyDown}
           onValueChange={onValueChange}
           disabled={disabled}
         />

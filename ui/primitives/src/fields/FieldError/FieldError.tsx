@@ -37,7 +37,7 @@ export const FieldError: React.FC<FieldErrorProps> = ({
   const { t } = useTranslation();
 
   return (
-    <Field.Error {...other}>
+    <Field.Error match={true} {...other}>
       <Text size={size} color={color}>
         {error ? t(error) : children}
       </Text>

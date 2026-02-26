@@ -18,6 +18,7 @@ export * from './Layout';
 export * from './Menu';
 export * from './Panel';
 export * from './Popover';
+export * from './ScrollArea';
 export * from './Select';
 export * from './Separator';
 export * from './Subheading';

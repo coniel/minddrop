@@ -70,6 +70,19 @@ export interface SelectProps<TValue extends string | number> {
    * allowing full control over item rendering.
    */
   children?: React.ReactNode;
+
+  /*
+   * Custom trigger element. When provided, the default trigger is
+   * replaced with the provided element.
+   */
+  trigger?: React.ReactElement;
+
+  /*
+   * Offset of the popup along the alignment axis (px).
+   * Positive shifts right, negative shifts left.
+   */
+  alignOffset?: number;
+
 }
 
 export const Select = <TValue extends string | number = string>({
@@ -81,6 +94,8 @@ export const Select = <TValue extends string | number = string>({
   onValueChange,
   value,
   children,
+  trigger,
+  alignOffset,
   ...other
 }: SelectProps<TValue>) => {
   const { t } = useTranslation();
@@ -103,18 +118,25 @@ export const Select = <TValue extends string | number = string>({
       <SelectPrimitive.Trigger
         className={propsToClass('select', { variant, size, className })}
       >
-        <SelectPrimitive.Value
-          className="select-value"
-          placeholder={placeholder ? t(placeholder) : undefined}
-        />
-        <SelectPrimitive.Icon className="select-icon">
-          <Icon name="chevron-down" />
-        </SelectPrimitive.Icon>
+        {trigger ? (
+          trigger
+        ) : (
+          <>
+            <SelectPrimitive.Value
+              className="select-value"
+              placeholder={placeholder ? t(placeholder) : undefined}
+            />
+            <SelectPrimitive.Icon className="select-icon">
+              <Icon name="chevron-down" />
+            </SelectPrimitive.Icon>
+          </>
+        )}
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal>
         <SelectPrimitive.Positioner
           className="select-positioner"
           sideOffset={8}
+          alignOffset={alignOffset}
         >
           <SelectPrimitive.Popup className="select-popup">
             <SelectPrimitive.ScrollUpArrow className="select-scroll-arrow" />
