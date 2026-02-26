@@ -335,6 +335,7 @@
     },
     "typography": {
       "label": "Typography",
+      "container-hint": "Inherited by child elements.",
       "italic": "Italic",
       "underline": "Underline",
       "font-family": {
@@ -368,6 +369,51 @@
         "center": "Center",
         "right": "Right",
         "justify": "Justify"
+      }
+    },
+    "layout": {
+      "label": "Layout"
+    },
+    "direction": {
+      "label": "Direction",
+      "column": "Column",
+      "row": "Row"
+    },
+    "gap": {
+      "label": "Gap"
+    },
+    "padding": {
+      "label": "Padding"
+    },
+    "wrap": {
+      "label": "Wrap overflow"
+    },
+    "position": {
+      "label": "Alignment",
+      "cell": "{{horizontal}} {{vertical}}"
+    },
+    "background-color": {
+      "label": "Background",
+      "color": "Colour",
+      "opacity": "Opacity"
+    },
+    "border": {
+      "label": "Border",
+      "style": {
+        "label": "Style",
+        "none": "None",
+        "solid": "Solid",
+        "dashed": "Dashed",
+        "dotted": "Dotted"
+      },
+      "width": {
+        "label": "Width"
+      },
+      "radius": {
+        "label": "Radius"
+      },
+      "color": {
+        "label": "Colour"
       }
     }
   },
@@ -414,6 +460,15 @@
     "labels": {
       "designs": "Designs",
       "elements": "Elements"
+    },
+    "elements": {
+      "container": "Container",
+      "text": "Text",
+      "title": "Title",
+      "formatted-text": "Formatted text",
+      "number": "Number",
+      "url": "URL",
+      "image": "Image"
     }
   },
   "views": {
