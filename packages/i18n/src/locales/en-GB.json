@@ -3,6 +3,9 @@
   "app": {
     "version": "Version"
   },
+  "designStudio": {
+    "open": "Open design studio"
+  },
   "actions": {
     "back": "Back",
     "cancel": "Cancel",
@@ -407,6 +410,12 @@
       "saturday": "Sa"
     }
   },
+  "design-studio": {
+    "labels": {
+      "designs": "Designs",
+      "elements": "Elements"
+    }
+  },
   "views": {
     "labels": {
       "view": "View",
@@ -426,6 +435,7 @@
       "openEntry": "Open",
       "options": {
         "title": "Table options",
+        "overflow": "Overflow columns",
         "rowNumbers": "Row numbers",
         "rowSeparator": "Row separator",
         "columnSeparator": "Column separator",
