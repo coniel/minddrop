@@ -32,7 +32,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   configurationPanelOpen: configPanelOpen = false,
 }) => {
   const database = Databases.use(databaseId);
-  const entries = DatabaseEntries.useAll(databaseId);
+  const entryIds = DatabaseEntries.useIds(databaseId);
   const databaseViews = Views.useDataSourceViews('database', databaseId);
   const [view, setView] = useState<View | null>(databaseViews[0] || null);
   const [configurationPanelOpen, toggleConfigurationPanel] =
@@ -75,7 +75,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
             <IconButton
               icon="plus"
               label="New"
-              color="light"
+              color="neutral"
               onClick={handleClickNewEntry}
             />
             <IconButton
@@ -85,11 +85,12 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   : 'panel-right-open'
               }
               label="Properties"
-              color="light"
+              color="neutral"
               onClick={toggleConfigurationPanel}
             />
           </Toolbar>
         </div>
+        {view && <ViewRenderer view={view} entries={entryIds} />}
       </Panel>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />
