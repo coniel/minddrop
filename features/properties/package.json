@@ -19,6 +19,7 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/properties": "workspace:*"
   }
 }

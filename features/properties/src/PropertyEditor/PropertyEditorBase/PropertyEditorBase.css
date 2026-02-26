@@ -28,4 +28,19 @@
       margin: 0 -0.5rem;
     }
   }
+
+  .field-root {
+    position: relative;
+  }
+
+  .property-editor-name-hint {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateY(100%);
+    z-index: 999;
+  }
 }
