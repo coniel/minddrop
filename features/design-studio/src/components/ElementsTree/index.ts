@@ -1,1 +1,1 @@
-export * from './ElementsTree';
+export { ElementsTree } from './ElementsTree';

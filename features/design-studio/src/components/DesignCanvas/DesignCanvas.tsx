@@ -1,5 +1,66 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { DesignType } from '@minddrop/designs';
+import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
+import { FlatRootDesignElement } from '../../types';
+import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
 import './DesignCanvas.css';
+
+interface CanvasLayout {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+}
+
+function getCanvasLayout(
+  designType: DesignType,
+  workspaceWidth: number,
+  workspaceHeight: number,
+): CanvasLayout {
+  switch (designType) {
+    case 'page': {
+      const width = Math.round(workspaceWidth * 0.9);
+      const height = Math.round(workspaceHeight * 0.92);
+
+      return {
+        width,
+        height,
+        x: Math.round((workspaceWidth - width) / 2),
+        y: Math.round((workspaceHeight - height) / 2 - workspaceHeight * 0.02),
+      };
+    }
+
+    case 'card': {
+      const width = 380;
+      const height = 400;
+
+      return {
+        width,
+        height,
+        x: Math.round((workspaceWidth - width) / 2),
+        y: Math.round(workspaceHeight * 0.3 - height / 2),
+      };
+    }
+
+    case 'list': {
+      const width = 600;
+      const height = 80;
+
+      return {
+        width,
+        height,
+        x: Math.round((workspaceWidth - width) / 2),
+        y: Math.round(workspaceHeight * 0.2 - height / 2),
+      };
+    }
+  }
+}
 
 type ResizeEdge =
   | 'left'
@@ -48,8 +109,10 @@ const CornerHandle: React.FC<CornerHandleProps> = ({
 );
 
 export const DesignCanvas: React.FC = () => {
+  const rootElement = useElement<FlatRootDesignElement>('root');
+  const designType = useDesignStudioStore((state) => state.design?.type);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [size, setSize] = useState({ width: 0, height: 0 });
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{
     startX: number;
@@ -242,6 +305,24 @@ export const DesignCanvas: React.FC = () => {
     resizeState.current = null;
   }, []);
 
+  useLayoutEffect(() => {
+    const workspace = canvasRef.current?.parentElement;
+
+    if (!workspace) {
+      return;
+    }
+
+    const type = designType || 'page';
+    const layout = getCanvasLayout(
+      type,
+      workspace.offsetWidth,
+      workspace.offsetHeight,
+    );
+
+    setSize({ width: layout.width, height: layout.height });
+    setPosition({ x: layout.x, y: Math.max(0, layout.y) });
+  }, [designType]);
+
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -294,7 +375,11 @@ export const DesignCanvas: React.FC = () => {
         className="design-canvas-drag-handle"
         onMouseDown={handleDragHandleMouseDown}
       />
-      <div className="design-canvas-content" style={{ height: size.height }} />
+      <div className="design-canvas-content" style={{ height: size.height }}>
+        {rootElement && (
+          <DesignStudioRootElement element={rootElement} />
+        )}
+      </div>
       <div className="design-canvas-hover-zone design-canvas-hover-zone-left" />
       <div
         className="design-canvas-resize-handle design-canvas-resize-handle-left"

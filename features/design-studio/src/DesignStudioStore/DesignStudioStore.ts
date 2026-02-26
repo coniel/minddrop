@@ -41,6 +41,11 @@ export interface DesignStudioStore {
   elements: Record<string, FlatDesignElement>;
 
   /**
+   * The ID of the currently selected element, or null if none.
+   */
+  selectedElementId: string | null;
+
+  /**
    * The properties of the design's parent (e.g. database), if any.
    */
   properties: PropertiesSchema;
@@ -106,6 +111,12 @@ export interface DesignStudioStore {
   removeElement: (id: string) => void;
 
   /**
+   * Selects an element by ID, or deselects if null.
+   * @param id - The ID of the element to select, or null to deselect.
+   */
+  selectElement: (id: string | null) => void;
+
+  /**
    * Resets the store to its initial state.
    */
   clear: () => void;
@@ -115,6 +126,7 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   initialized: false,
   design: null,
   elements: {},
+  selectedElementId: null,
   properties: [],
   propertyValues: {},
 
@@ -243,7 +255,15 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
-  clear: () => set({ elements: {}, properties: [], initialized: false }),
+  selectElement: (id) => set({ selectedElementId: id }),
+
+  clear: () =>
+    set({
+      elements: {},
+      selectedElementId: null,
+      properties: [],
+      initialized: false,
+    }),
 }));
 
 export const useDesignStudioStore = DesignStudioStore;

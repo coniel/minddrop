@@ -28,6 +28,7 @@ export const DesignStudioLeftPanel: React.FC = () => {
 
   const handleSelectDesign = useCallback((design: Design) => {
     DesignStudioStore.getState().initialize(design);
+    setActivePanel('elements');
   }, []);
 
   const handleCreateDesign = async (type: DesignType) => {

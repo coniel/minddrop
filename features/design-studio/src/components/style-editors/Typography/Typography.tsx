@@ -1,10 +1,8 @@
-import { useTranslation } from '@minddrop/i18n';
 import {
   FlexItem,
   Group,
-  MenuLabel,
+  InputLabel,
   Stack,
-  Text,
 } from '@minddrop/ui-primitives';
 import { FontFamilySelect } from '../FontFamilySelect';
 import { FontWeightSelect } from '../FontWeightSelect';
@@ -18,35 +16,29 @@ export interface FontFamilyProps {
 }
 
 export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
-  const { t } = useTranslation();
-
   return (
-    <div className="typography">
-      <MenuLabel label="designs.typography.label" />
-      <Stack gap={3}>
-        <Stack gap={1}>
-          <FontFamilySelect elementId={elementId} />
-          <Group gap={1}>
-            <FlexItem grow={1}>
-              <FontWeightSelect elementId={elementId} />
-            </FlexItem>
-            <ItalicToggle elementId={elementId} />
-            <UnderlineToggle elementId={elementId} />
-          </Group>
-        </Stack>
-        <Stack gap={1}>
-          <Text size="xs" color="muted" weight="medium">
-            {t('designs.typography.text-align.label')}
-          </Text>
-          <TextAlignToggle elementId={elementId} />
-        </Stack>
-        <Stack gap={1}>
-          <Text size="xs" color="muted" weight="medium">
-            {t('designs.typography.text-transform.label')}
-          </Text>
-          <TextTransformToggle elementId={elementId} />
-        </Stack>
+    <Stack gap={3}>
+      <Stack gap={1}>
+        <FontFamilySelect elementId={elementId} />
+        <Group gap={1}>
+          <FlexItem grow={1}>
+            <FontWeightSelect elementId={elementId} />
+          </FlexItem>
+          <ItalicToggle elementId={elementId} />
+          <UnderlineToggle elementId={elementId} />
+        </Group>
       </Stack>
-    </div>
+      <Stack gap={1}>
+        <InputLabel size="xs" label="designs.typography.text-align.label" />
+        <TextAlignToggle elementId={elementId} />
+      </Stack>
+      <Stack gap={1}>
+        <InputLabel
+          size="xs"
+          label="designs.typography.text-transform.label"
+        />
+        <TextTransformToggle elementId={elementId} />
+      </Stack>
+    </Stack>
   );
 };

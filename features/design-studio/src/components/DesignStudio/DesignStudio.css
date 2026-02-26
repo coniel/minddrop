@@ -23,7 +23,12 @@
     background-size: 24px 24px;
 
     .toolbar {
-      margin-bottom: 1rem;
+      margin-bottom: var(--space-2);
+    }
+
+    .workspace-design-name {
+      padding: 0 var(--space-4);
+      margin-bottom: var(--space-4);
     }
   }
 }

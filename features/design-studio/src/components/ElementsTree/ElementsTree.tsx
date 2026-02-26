@@ -1,24 +1,21 @@
-import { ElementsTreeElement } from './ElementsTreeElement';
+import { ScrollArea } from '@minddrop/ui-primitives';
+import { useElement } from '../../DesignStudioStore';
+import { FlatRootDesignElement } from '../../types';
+import { ElementsTreeNode } from './ElementsTreeNode';
 import './ElementsTree.css';
 
-export interface ElementsTreeProps {
-  /**
-   * Callback fired when an element is clicked.
-   */
-  onClickElement: (elementId: string) => void;
-}
+export const ElementsTree: React.FC = () => {
+  const root = useElement<FlatRootDesignElement>('root');
 
-export const ElementsTree: React.FC<ElementsTreeProps> = ({
-  onClickElement,
-}) => {
+  if (!root) {
+    return null;
+  }
+
   return (
-    <div className="design-elements-tree">
-      <ElementsTreeElement
-        disableDragAndDrop
-        index={0}
-        elementId="root"
-        onClick={onClickElement}
-      />
-    </div>
+    <ScrollArea>
+      <div className="elements-tree">
+        <ElementsTreeNode elementId="root" depth={0} />
+      </div>
+    </ScrollArea>
   );
 };

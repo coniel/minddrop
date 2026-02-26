@@ -1,0 +1,28 @@
+.element-style-editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.element-style-editor-content {
+  padding: var(--space-2);
+}
+
+.element-style-editor-header {
+  padding: var(--space-1) var(--space-2);
+}
+
+.element-style-editor-icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--text-color-muted);
+}
+
+.element-style-editor-section-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
