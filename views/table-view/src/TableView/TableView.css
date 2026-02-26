@@ -1,0 +1,53 @@
+/* ============================================================
+   TABLE VIEW
+   Notion/Airtable-style table layout.
+   ============================================================ */
+
+.table-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.table-view-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.table-view-scroll .scroll-area-viewport {
+  padding-bottom: 30vh;
+}
+
+.table-view-table {
+  width: 100%;
+}
+
+/* Row separators */
+.table-view-table[data-row-separators] .table-cell {
+  box-shadow: inset 0 -1px 0 var(--border-subtle);
+}
+
+/* Column separators (body only, not header) */
+.table-view-table[data-col-separators] .table-cell:not(:last-child) {
+  box-shadow: inset -1px 0 0 var(--border-subtle);
+}
+
+/* Both separators combined */
+.table-view-table[data-row-separators][data-col-separators]
+  .table-cell:not(:last-child) {
+  box-shadow:
+    inset 0 -1px 0 var(--border-subtle),
+    inset -1px 0 0 var(--border-subtle);
+}
+
+.table-view-table[data-row-separators][data-col-separators]
+  .table-cell:last-child {
+  box-shadow: inset 0 -1px 0 var(--border-subtle);
+}
+
+/* Hover highlight */
+.table-view-table[data-hover-highlight] .table-row:hover .table-cell {
+  background-color: var(--surface-subtle);
+}
+

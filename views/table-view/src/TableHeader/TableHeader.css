@@ -1,0 +1,90 @@
+/* ============================================================
+   TABLE HEADER
+   Sticky header row with column names and resize handles.
+   ============================================================ */
+
+.table-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--surface-overlay);
+}
+
+.table-header-row {
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table-header-row-number {
+  padding: var(--space-1) var(--space-2);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-header-checkbox {
+  margin-top: 0; /* override default optical offset */
+
+  &:hover {
+    border-color: var(--border-primary);
+  }
+}
+
+.table-header-cell {
+  position: relative;
+  padding: var(--space-1) var(--space-3);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.table-header-cell-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.table-header-cell-icon {
+  width: var(--text-base);
+  height: var(--text-base);
+  flex-shrink: 0;
+}
+
+.table-header-cell-name {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: var(--weight-normal);
+  color: var(--text-subtle);
+}
+
+/* ---- Resize handle ---- */
+
+.table-header-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0.5rem; /* 8px — wide enough to grab comfortably */
+  cursor: col-resize;
+  user-select: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 25%;
+    bottom: 25%;
+    right: 0.125rem;
+    width: 0.0625rem; /* 1px visible line */
+    background-color: var(--border-default);
+    opacity: 0;
+    transition: opacity var(--duration-fast);
+  }
+
+  &:hover::after,
+  &:active::after {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,38 @@
+/* ============================================================
+   DATE CELL
+   Clickable cell that opens a CalendarPopover on click.
+   ============================================================ */
+
+.date-cell {
+  width: 100%;
+  min-width: 0;
+  cursor: default;
+  min-height: var(--table-row-height, 1.75rem);
+  display: flex;
+  align-items: center;
+}
+
+.date-cell-value {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  color: var(--text-regular);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date-cell-chevron {
+  flex-shrink: 0;
+  color: var(--text-light);
+  display: none;
+}
+
+.date-cell:hover .date-cell-chevron {
+  display: block;
+}
+
+.date-cell[data-open] .date-cell-chevron {
+  display: none;
+}

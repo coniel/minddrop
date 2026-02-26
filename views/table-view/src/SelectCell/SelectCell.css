@@ -1,0 +1,38 @@
+/* ============================================================
+   SELECT CELL
+   Renders as a plain value div, swaps to a DropdownMenu on click.
+   ============================================================ */
+
+.select-cell {
+  width: 100%;
+  min-width: 0;
+  cursor: default;
+  min-height: var(--table-row-height, 1.75rem);
+  display: flex;
+  align-items: center;
+}
+
+.select-cell-chevron {
+  flex-shrink: 0;
+  color: var(--text-light);
+  display: none;
+}
+
+.select-cell:hover .select-cell-chevron {
+  display: block;
+}
+
+.select-cell[data-open] .select-cell-chevron {
+  display: none;
+}
+
+.select-cell-value {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  color: var(--text-regular);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

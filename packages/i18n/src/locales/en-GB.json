@@ -406,6 +406,26 @@
     "gallery": {
       "name": "Gallery",
       "description": "A gallery view."
+    },
+    "table": {
+      "name": "Table",
+      "description": "A table view.",
+      "of": "of",
+      "rowsPerPage": "Rows per page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "openEntry": "Open",
+      "options": {
+        "title": "Table options",
+        "rowNumbers": "Row numbers",
+        "rowSeparator": "Row separator",
+        "columnSeparator": "Column separator",
+        "highlightOnHover": "Highlight on hover",
+        "padding": "Padding",
+        "compact": "Compact",
+        "comfortable": "Comfortable",
+        "spacious": "Spacious"
+      }
     }
   }
 }

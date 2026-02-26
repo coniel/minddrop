@@ -1,0 +1,36 @@
+/* ============================================================
+   NUMBER CELL
+   Ghost NumberField stretched to fill the full cell height.
+   ============================================================ */
+
+.number-cell {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+/* NumberField root — fill available width */
+.number-cell .number-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Group and input wrapper — stretch to cell height */
+.number-cell .number-field-group,
+.number-cell .text-field-input-wrapper {
+  min-height: var(--table-row-height, 1.75rem);
+  display: flex;
+  align-items: center;
+}
+
+/* Input — fill width, match cell typography */
+.number-cell .text-field-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Match gradient backdrop to row hover colour */
+.number-cell .text-input-variant-ghost {
+  --number-input-bg: var(--surface-subtle);
+}
