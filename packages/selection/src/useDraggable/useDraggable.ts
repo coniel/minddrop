@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Events } from '@minddrop/events';
 import { addToSelection } from '../addToSelection';
 import {
@@ -30,6 +30,11 @@ export interface DragUtils {
   onDragEnd(event: DragEvent | React.DragEvent): void;
 
   /**
+   * Whether the item is currently being dragged.
+   */
+  isDragging: boolean;
+
+  /**
    * Combined event handlers for the drag functionality.
    * Useful for speading the handlers onto a component.
    */
@@ -48,6 +53,8 @@ export interface DragUtils {
  * @returns Drag utility functions.
  */
 export function useDraggable(selectionItem: SelectionItem): DragUtils {
+  const [isDragging, setIsDragging] = useState(false);
+
   const onDragStart = useCallback(
     (event: DragEvent | React.DragEvent) => {
       // Prevent parent from becoming the dragged element
@@ -74,6 +81,7 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
 
       // Set the dragging state to `true`
       SelectionStore.getState().setIsDragging(true);
+      setIsDragging(true);
 
       // Dispatch a 'selection:drag:start' event
       Events.dispatch<SelectionDragStartedEventData>(
@@ -88,6 +96,7 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
   );
 
   const onDragEnd = useCallback((event: DragEvent | React.DragEvent) => {
+    setIsDragging(false);
     // Set the dragging state to `false`
     SelectionStore.getState().setIsDragging(false);
 
@@ -101,6 +110,7 @@ export function useDraggable(selectionItem: SelectionItem): DragUtils {
   return {
     onDragStart,
     onDragEnd,
+    isDragging,
     draggableProps: {
       draggable: true,
       onDragStart,
