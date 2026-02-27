@@ -61,6 +61,8 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
+  watch: (...args) => FsAdapter.watch(...args),
+  unwatch: (...args) => FsAdapter.unwatch(...args),
 };
 
 async function setBaseDirPaths(): Promise<void> {

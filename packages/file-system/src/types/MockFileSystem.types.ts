@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FsEntry } from './FileEntry.types';
+import { FsWatchEvent } from './FileSystemAdapter.types';
 import { FileSystemAdapter } from './FileSystemAdapter.types';
 import {
   FsCreateDirOptions,
@@ -54,6 +55,8 @@ export interface MockFileSystem {
   removeDir(path: string, options?: FsRemoveDirOptions): void;
   downloadFile(url: string, path: string, options?: FsFileOptions): void;
   setFilePickerResult(result: string | string[] | null): void;
+  dispatchWatchEvent(kind: FsWatchEvent['kind'], paths: string[]): void;
+  printWatchers(): void;
 }
 
 export type MockFsRoot = Record<string, FsEntry>;

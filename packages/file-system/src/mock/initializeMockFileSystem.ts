@@ -11,6 +11,7 @@ import {
   FsEntry,
   FsFileOptions,
   FsReadFileOptions,
+  FsWatchEvent,
   MockFileDescriptor,
   MockFileSystem,
 } from '../types';
@@ -46,6 +47,12 @@ export function initializeMockFileSystem(
   let binaryFiles: Record<string, any> = init.binaryFiles;
   // Result of the file picker
   let filePickerResult: string | string[] | null = null;
+  // Watch callbacks keyed by watcher ID
+  const watchCallbacks = new Map<
+    string,
+    { paths: string[]; callback: (event: FsWatchEvent) => void }
+  >();
+  let nextWatcherId = 0;
 
   const MockFs: FileSystemAdapter = {
     getBaseDirPath: async (baseDir) => baseDir,
@@ -184,6 +191,15 @@ export function initializeMockFileSystem(
         });
       }
     },
+    watch: async (watchPaths, callback) => {
+      const id = String(nextWatcherId++);
+      watchCallbacks.set(id, { paths: watchPaths, callback });
+
+      return id;
+    },
+    unwatch: async (id) => {
+      watchCallbacks.delete(id);
+    },
   };
 
   registerFileSystemAdapter(MockFs);
@@ -195,6 +211,7 @@ export function initializeMockFileSystem(
     clear: () => {
       root = { path: 'root', name: 'root', children: [] };
       trash = [];
+      watchCallbacks.clear();
     },
     printFiles: () => {
       console.log('------------ MockFs files ------------');
@@ -216,6 +233,7 @@ export function initializeMockFileSystem(
       textFileContents = init.textFileContents;
       binaryFiles = init.binaryFiles;
       trash = [];
+      watchCallbacks.clear();
     },
     clearTrash: () => {
       trash = [];
@@ -349,6 +367,27 @@ export function initializeMockFileSystem(
     },
     setFilePickerResult: (result) => {
       filePickerResult = result;
+    },
+    printWatchers: () => {
+      console.log('---------- MockFs watchers -----------');
+      watchCallbacks.forEach(({ paths }, id) => {
+        console.log(`  [${id}] ${paths.join(', ')}`);
+      });
+      console.log('--------------------------------------');
+    },
+    dispatchWatchEvent: (kind, eventPaths) => {
+      watchCallbacks.forEach(({ paths: watchedPaths, callback }) => {
+        const matchingPaths = eventPaths.filter((eventPath) =>
+          watchedPaths.some(
+            (watchedPath) =>
+              eventPath === watchedPath || eventPath.startsWith(watchedPath + '/'),
+          ),
+        );
+
+        if (matchingPaths.length > 0) {
+          callback({ kind, paths: matchingPaths });
+        }
+      });
     },
   };
 }

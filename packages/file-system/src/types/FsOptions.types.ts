@@ -46,6 +46,13 @@ export interface CopyFileOptions {
   toPathBaseDir?: BaseDirectory;
 }
 
+export interface FsWatchOptions extends FsOptions {
+  /**
+   * Whether to watch recursively.
+   */
+  recursive?: boolean;
+}
+
 export interface OpenFilePickerOptions {
   /**
    * Whether to allow selecting a directory.

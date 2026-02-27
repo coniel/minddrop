@@ -10,9 +10,24 @@ import {
   FsRemoveDirOptions,
   FsRemoveFileOptions,
   FsRenameOptions,
+  FsWatchOptions,
   FsWriteFileOptions,
   OpenFilePickerOptions,
 } from './FsOptions.types';
+
+export type FsWatchEventKind = 'any' | 'create' | 'modify' | 'remove';
+
+export interface FsWatchEvent {
+  /**
+   * The kind of event that occurred.
+   */
+  kind: FsWatchEventKind;
+
+  /**
+   * The paths affected by the event.
+   */
+  paths: string[];
+}
 
 export interface FileSystemAdapter {
   /**
@@ -185,4 +200,25 @@ export interface FileSystemAdapter {
   openFilePicker(
     options?: OpenFilePickerOptions,
   ): Promise<string | string[] | null>;
+
+  /**
+   * Watches a file or directory for changes.
+   *
+   * @param paths - The paths to watch.
+   * @param callback - The callback to invoke when a change occurs.
+   * @param options - Watch options.
+   * @returns A promise resolving to the watcher ID.
+   */
+  watch(
+    paths: string[],
+    callback: (event: FsWatchEvent) => void,
+    options?: FsWatchOptions,
+  ): Promise<string>;
+
+  /**
+   * Stops watching the paths associated with the given watcher ID.
+   *
+   * @param id - The watcher ID returned by `watch`.
+   */
+  unwatch(id: string): Promise<void>;
 }
