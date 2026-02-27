@@ -8,7 +8,7 @@ import {
 import { Button } from '../Button';
 import { ContentIconPicker } from '../ContentIconPicker';
 import { EmojiPicker } from '../EmojiPicker';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import './IconPicker.css';
 import {
   Popover,

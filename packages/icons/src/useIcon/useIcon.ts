@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ContentColor } from '@minddrop/core';
+import { ContentColor } from '@minddrop/theme';
 import { EmojiSkinTone } from '../emoji';
 import { getContentIconColor } from '../getContentIconColor';
 import { getEmojiIconSkinTone } from '../getEmojiIconSkinTone';

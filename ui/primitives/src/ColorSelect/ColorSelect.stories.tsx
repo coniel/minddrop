@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import { ColorSelect } from './ColorSelect';
 import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 

@@ -1,4 +1,4 @@
-import { ContentColor } from '@minddrop/core';
+import { ContentColor } from '@minddrop/theme';
 import { UserIcon, UserIconType } from '../icons.types';
 import { parseIcon } from '../parseIcon';
 import { stringifyIcon } from '../stringifyIcon';

@@ -1,5 +1,5 @@
 import { ContentIconName, UserIcon, useIcon, useIcons } from '@minddrop/icons';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import { TextColor } from '../types/Text.types';
 import { propsToClass } from '../utils';
 import './ContentIcon.css';

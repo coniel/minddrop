@@ -1,4 +1,4 @@
-import { ContentColor } from '@minddrop/core';
+import { ContentColor } from '@minddrop/theme';
 import { EmojiSkinTone } from '../emoji';
 import { ContentIconName, UserIcon, UserIconType } from '../icons.types';
 

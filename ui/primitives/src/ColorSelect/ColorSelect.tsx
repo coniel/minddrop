@@ -4,7 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
 import { SelectSize, SelectVariant } from '../Select';
 import { ContentColors } from '../constants';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import { propsToClass } from '../utils';
 import '../Select/Select.css';
 import './ColorSelect.css';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItemRendererProps } from '../MenuItemRenderer';
-import { ContentColor } from './ContentColor.types';
+import { ContentColor } from '@minddrop/theme';
 
 export interface MenuItemConfig extends MenuItemRendererProps {
   type: 'menu-item';

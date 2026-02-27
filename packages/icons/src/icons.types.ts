@@ -1,6 +1,6 @@
 import { IconName } from 'lucide-react/dynamic';
 import { HTMLProps } from 'react';
-import { ContentColor } from '@minddrop/core';
+import { ContentColor } from '@minddrop/theme';
 import { ContentIcons } from './content-icons.min';
 import { EmojiSkinTone } from './emoji';
 

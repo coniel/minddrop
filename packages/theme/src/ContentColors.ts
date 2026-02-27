@@ -1,4 +1,4 @@
-import { ContentColor } from '../types';
+import { ContentColor } from './types';
 
 export const ContentColors: ContentColor[] = [
   'default',

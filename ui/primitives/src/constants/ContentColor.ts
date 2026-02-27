@@ -1,4 +1,4 @@
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 
 export interface ColorValue {
   /**

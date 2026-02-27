@@ -1,4 +1,4 @@
-import { ContentColor } from '@minddrop/utils';
+import { ContentColor } from '@minddrop/theme';
 import { PropertySchemaBase } from '../types';
 
 export interface SelectPropertyOption {

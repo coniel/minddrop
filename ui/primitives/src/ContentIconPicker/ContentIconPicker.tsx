@@ -15,7 +15,7 @@ import { MenuLabel } from '../Menu';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import { propsToClass } from '../utils';
 import {
   MinifiedContentIcon,

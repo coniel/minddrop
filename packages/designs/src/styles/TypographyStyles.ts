@@ -1,5 +1,5 @@
 import { UiIconName } from '@minddrop/icons';
-import { ContentColor } from '@minddrop/utils';
+import { ContentColor } from '@minddrop/theme';
 
 const i18nKey = (key: string) => `designs.typography.${key}`;
 

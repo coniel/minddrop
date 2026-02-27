@@ -2,7 +2,7 @@ import { Menu } from '@base-ui/react/menu';
 import React from 'react';
 import { i18n } from '@minddrop/i18n';
 import { ContentColors } from '../constants';
-import { ContentColor } from '../types';
+import { ContentColor } from '@minddrop/theme';
 import { propsToClass } from '../utils';
 import { MenuItem } from './MenuItem';
 
