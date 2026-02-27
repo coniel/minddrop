@@ -183,7 +183,7 @@ svg {
   cursor: default;
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="file"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="image"]),
 textarea,
 [contenteditable] {
   cursor: text;
