@@ -1,0 +1,95 @@
+/* ============================================================
+   SLIDER
+   Built on Base UI Slider primitive.
+   Sizes: sm | md (default)
+   ============================================================ */
+
+/* --- Root --- */
+
+.slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  touch-action: none;
+
+  &[data-disabled] {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+}
+
+/* --- Control --- */
+
+.slider-control {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  cursor: default;
+}
+
+/* --- Track --- */
+
+.slider-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-neutral-active);
+}
+
+/* --- Indicator (filled portion) --- */
+
+.slider-indicator {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--surface-solid-primary);
+}
+
+/* --- Thumb --- */
+
+.slider-thumb {
+  border-radius: var(--radius-full);
+  background-color: white;
+  box-shadow: 0 1px 3px lch(0 0 0 / 0.2);
+  outline: none;
+  transition: box-shadow var(--duration-fast) var(--ease-out);
+
+  &:focus-visible {
+    outline: 2px solid var(--border-primary);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    box-shadow: 0 1px 5px lch(0 0 0 / 0.3);
+  }
+}
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+/* sm — 2px track, 10px thumb */
+.slider-size-sm {
+  .slider-track {
+    height: 2px;
+  }
+
+  .slider-thumb {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+}
+
+/* md (default) — 4px track, 14px thumb */
+.slider-size-md {
+  .slider-track {
+    height: 4px;
+  }
+
+  .slider-thumb {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}

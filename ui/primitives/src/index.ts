@@ -21,6 +21,7 @@ export * from './Panel';
 export * from './Popover';
 export * from './ScrollArea';
 export * from './Select';
+export * from './Slider';
 export * from './Separator';
 export * from './Subheading';
 export * from './Switch';

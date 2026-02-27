@@ -25,6 +25,7 @@ import { PopoverStories } from './Popover/Popover.stories';
 import { RadioToggleGroupStories } from './RadioToggleGroup/RadioToggleGroup.stories';
 import { ScrollAreaStories } from './ScrollArea/ScrollArea.stories';
 import { SelectStories } from './Select/Select.stories';
+import { SliderStories } from './Slider/Slider.stories';
 import { SeparatorStories } from './Separator/Separator.stories';
 import { SwitchStories } from './Switch/Switch.stories';
 import { TextStories } from './Text/Text.stories';
@@ -103,6 +104,7 @@ export const stories: StoryGroup[] = [
       { label: 'ToggleGroup', component: ToggleGroupStories },
       { label: 'RadioToggleGroup', component: RadioToggleGroupStories },
       { label: 'Switch', component: SwitchStories },
+      { label: 'Slider', component: SliderStories },
     ],
   },
 ];
