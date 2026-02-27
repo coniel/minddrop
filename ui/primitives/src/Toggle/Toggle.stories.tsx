@@ -112,6 +112,68 @@ export const ToggleStories = () => {
 
 
       {/* --------------------------------------------------------
+          LABEL TEXT
+          When no icon or children are provided, the label is
+          rendered as visible text. The button auto-sizes to fit.
+      -------------------------------------------------------- */}
+      <StorySection title="Label text" description="When no icon or children are provided, the label is rendered as visible text. The button auto-sizes to fit.">
+        <StoryRow>
+          <StoryItem label="ghost">
+            <Toggle label="Bold" variant="ghost" />
+          </StoryItem>
+          <StoryItem label="ghost pressed">
+            <Toggle label="Bold" variant="ghost" pressed />
+          </StoryItem>
+          <StoryItem label="subtle">
+            <Toggle label="Italic" variant="subtle" />
+          </StoryItem>
+          <StoryItem label="outline">
+            <Toggle label="Underline" variant="outline" />
+          </StoryItem>
+          <StoryItem label="filled">
+            <Toggle label="Strike" variant="filled" />
+          </StoryItem>
+        </StoryRow>
+        <StoryRow>
+          <StoryItem label="sm">
+            <Toggle label="Bold" size="sm" />
+          </StoryItem>
+          <StoryItem label="md">
+            <Toggle label="Bold" size="md" />
+          </StoryItem>
+          <StoryItem label="lg">
+            <Toggle label="Bold" size="lg" />
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
+          CHILDREN
+          Custom content passed as children overrides the label.
+      -------------------------------------------------------- */}
+      <StorySection title="Children" description="Use children instead of the icon prop to render custom content.">
+        <StoryRow>
+          <StoryItem label="text child">
+            <Toggle label="Bold" variant="outline">
+              B
+            </Toggle>
+          </StoryItem>
+          <StoryItem label="text child pressed">
+            <Toggle label="Bold" variant="outline" pressed>
+              B
+            </Toggle>
+          </StoryItem>
+          <StoryItem label="emoji child">
+            <Toggle label="Star" variant="ghost">
+              ⭐
+            </Toggle>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
       <StorySection title="Disabled">

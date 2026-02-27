@@ -13,7 +13,12 @@ export interface ToggleProps {
   /*
    * Icon to display inside the toggle.
    */
-  icon: UiIconName;
+  icon?: UiIconName;
+
+  /*
+   * Content to display inside the toggle. Used as an alternative to `icon`.
+   */
+  children?: React.ReactNode;
 
   /*
    * Accessible label for the toggle button.
@@ -73,6 +78,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
   (
     {
       icon,
+      children,
       label,
       variant = 'subtle',
       size = 'md',
@@ -85,20 +91,25 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
       className,
     },
     ref,
-  ) => (
-    <TogglePrimitive
-      ref={ref}
-      aria-label={label}
-      pressed={pressed}
-      defaultPressed={defaultPressed}
-      onPressedChange={onPressedChange}
-      value={value}
-      disabled={disabled}
-      className={propsToClass('toggle', { variant, size, color, className })}
-    >
-      <Icon name={icon} />
-    </TogglePrimitive>
-  ),
+  ) => {
+    const isText = !icon;
+    const content = icon ? <Icon name={icon} /> : children || <span className="toggle-label">{label}</span>;
+
+    return (
+      <TogglePrimitive
+        ref={ref}
+        aria-label={label}
+        pressed={pressed}
+        defaultPressed={defaultPressed}
+        onPressedChange={onPressedChange}
+        value={value}
+        disabled={disabled}
+        className={propsToClass('toggle', { variant, size, color, text: isText, className })}
+      >
+        {content}
+      </TogglePrimitive>
+    );
+  },
 );
 
 Toggle.displayName = 'Toggle';

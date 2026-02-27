@@ -89,6 +89,38 @@ export const RadioToggleGroupStories = () => {
 
 
       {/* --------------------------------------------------------
+          CHILDREN
+      -------------------------------------------------------- */}
+      <StorySection title="Label text" description="Toggles with no icon or children render their label as visible text.">
+        <StoryRow>
+          <StoryItem label="label text">
+            <RadioToggleGroup defaultValue="grid">
+              <Toggle value="list" label="List" />
+              <Toggle value="grid" label="Grid" />
+              <Toggle value="columns" label="Columns" />
+            </RadioToggleGroup>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
+          CHILDREN
+      -------------------------------------------------------- */}
+      <StorySection title="Children" description="Toggles with custom children instead of icons.">
+        <StoryRow>
+          <StoryItem label="text children">
+            <RadioToggleGroup defaultValue="grid">
+              <Toggle value="list" label="List view">List</Toggle>
+              <Toggle value="grid" label="Grid view">Grid</Toggle>
+              <Toggle value="columns" label="Column view">Columns</Toggle>
+            </RadioToggleGroup>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
       <StorySection title="Disabled">

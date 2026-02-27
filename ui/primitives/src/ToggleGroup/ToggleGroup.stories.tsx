@@ -98,6 +98,38 @@ export const ToggleGroupStories = () => {
 
 
       {/* --------------------------------------------------------
+          CHILDREN
+      -------------------------------------------------------- */}
+      <StorySection title="Label text" description="Toggles with no icon or children render their label as visible text.">
+        <StoryRow>
+          <StoryItem label="label text">
+            <ToggleGroup defaultValue={['bold']}>
+              <Toggle value="bold" label="Bold" />
+              <Toggle value="italic" label="Italic" />
+              <Toggle value="underline" label="Underline" />
+            </ToggleGroup>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
+          CHILDREN
+      -------------------------------------------------------- */}
+      <StorySection title="Children" description="Toggles with custom children instead of icons.">
+        <StoryRow>
+          <StoryItem label="text children">
+            <ToggleGroup defaultValue={['bold']}>
+              <Toggle value="bold" label="Bold">Bold</Toggle>
+              <Toggle value="italic" label="Italic">Italic</Toggle>
+              <Toggle value="underline" label="Underline">Underline</Toggle>
+            </ToggleGroup>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+
+      {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
       <StorySection title="Disabled">
