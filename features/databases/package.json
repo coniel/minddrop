@@ -29,6 +29,7 @@
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",
-    "@minddrop/views": "workspace:*"
+    "@minddrop/views": "workspace:*",
+    "@minddrop/table-view": "workspace:*"
   }
 }

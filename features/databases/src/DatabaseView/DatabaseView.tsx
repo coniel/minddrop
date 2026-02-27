@@ -8,7 +8,7 @@ import {
   Toolbar,
   useToggle,
 } from '@minddrop/ui-primitives';
-import { View, Views } from '@minddrop/views';
+import { Views } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
 

@@ -1,6 +1,5 @@
 import { Databases } from '@minddrop/databases';
 import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
-import { DatabaseDesignMenuItem } from '../DatabaseDesignMenuItem';
 import { DatabaseDesignTypeSelectionMenu } from '../DatabaseDesignTypeSelectionMenu';
 
 export interface DatabaseDesignsMenuProps
@@ -27,13 +26,6 @@ export const DatabaseDesignsMenu: React.FC<DatabaseDesignsMenuProps> = ({
         label="labels.designs"
         actions={<DatabaseDesignTypeSelectionMenu databaseId={databaseId} />}
       />
-      {databaseConfig.designs.map((design) => (
-        <DatabaseDesignMenuItem
-          key={design.id}
-          databaseId={databaseId}
-          design={design}
-        />
-      ))}
     </MenuGroup>
   );
 };
