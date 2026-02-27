@@ -545,8 +545,10 @@ export const DevTools: React.FC = () => {
     loadNotes();
   }, [workspacePath]);
 
-  // Load issues from file system on first render
+  // Load issues from file system and watch for external changes
   useEffect(() => {
+    let watcherId: string | null = null;
+
     const loadIssues = async () => {
       if (!workspacePath) {
         return;
@@ -564,6 +566,8 @@ export const DevTools: React.FC = () => {
       const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
 
       if (mdEntries.length === 0) {
+        setIssues([]);
+
         return;
       }
 
@@ -591,7 +595,28 @@ export const DevTools: React.FC = () => {
       setIssues(loadedIssues);
     };
 
+    const startWatching = async () => {
+      if (!workspacePath) {
+        return;
+      }
+
+      const issuesDir = getIssuesDirPath(workspacePath);
+
+      await Fs.ensureDir(issuesDir);
+
+      watcherId = await Fs.watch([issuesDir], () => {
+        loadIssues();
+      });
+    };
+
     loadIssues();
+    startWatching();
+
+    return () => {
+      if (watcherId) {
+        Fs.unwatch(watcherId);
+      }
+    };
   }, [workspacePath]);
 
   // Keyboard shortcut handler
