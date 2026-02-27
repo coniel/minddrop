@@ -72,6 +72,25 @@
   cursor: default;
 }
 
+/* --- Clear button --- */
+
+.text-input-clear {
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.text-input:hover .text-input-clear,
+.text-input:focus-within .text-input-clear {
+  width: auto;
+  margin-right: var(--space-1);
+  overflow: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* ------------------------------------------------------------
    SIZES
    ------------------------------------------------------------ */

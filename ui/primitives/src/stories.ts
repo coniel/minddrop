@@ -36,6 +36,7 @@ import { TooltipStories } from './Tooltip/Tooltip.stories';
 import { CheckboxStories } from './fields/Checkbox/Checkbox.stories';
 import { RadioStories } from './fields/Radio/Radio.stories';
 import { TextFieldStories } from './fields/TextField/TextField.stories';
+import { TextInputStories } from './fields/TextInput/TextInput.stories';
 
 export interface StoryItem {
   label: string;
@@ -96,6 +97,7 @@ export const stories: StoryGroup[] = [
   {
     group: 'Fields',
     items: [
+      { label: 'TextInput', component: TextInputStories },
       { label: 'TextField', component: TextFieldStories },
       { label: 'NumberField', component: NumberFieldStories },
       { label: 'Checkbox', component: CheckboxStories },

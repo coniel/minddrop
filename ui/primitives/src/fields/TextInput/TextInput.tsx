@@ -1,6 +1,7 @@
 import { Input } from '@base-ui/react/input';
 import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { IconButton } from '../../IconButton';
 import { TextColor, TextSize, TextWeight } from '../../Text';
 import { propsToClass } from '../../utils';
 import './TextInput.css';
@@ -59,6 +60,16 @@ export interface TextInputProps {
    * For clear buttons, toggles, units.
    */
   trailing?: React.ReactNode;
+
+  /*
+   * When true, shows a clear button when the input has a value.
+   */
+  clearable?: boolean;
+
+  /*
+   * Callback fired when the clear button is clicked.
+   */
+  onClear?: () => void;
 
   /*
    * Marks the input as invalid (applies error styling).
@@ -132,6 +143,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     {
       autoComplete,
       className,
+      clearable,
       color,
       defaultValue,
       disabled,
@@ -140,6 +152,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       name,
       onBlur,
       onChange,
+      onClear,
       onFocus,
       onKeyDown,
       onValueChange,
@@ -155,6 +168,38 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) => {
     const { t } = useTranslation();
+    const innerRef = React.useRef<HTMLInputElement>(null);
+    const inputRef = (ref as React.RefObject<HTMLInputElement>) || innerRef;
+    const [internalValue, setInternalValue] = React.useState(
+      defaultValue ?? '',
+    );
+
+    const currentValue = value !== undefined ? value : internalValue;
+    const hasValue = clearable && !disabled && String(currentValue).length > 0;
+
+    const handleValueChange = (newValue: string) => {
+      if (value === undefined) {
+        setInternalValue(newValue);
+      }
+
+      onValueChange?.(newValue);
+    };
+
+    const handleClear = (event: React.MouseEvent) => {
+      event.preventDefault();
+
+      if (value === undefined) {
+        setInternalValue('');
+
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+
+      onClear?.();
+      onValueChange?.('');
+      inputRef.current?.focus();
+    };
 
     return (
       <label
@@ -169,7 +214,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       >
         {leading && <div className="text-input-leading">{leading}</div>}
         <Input
-          ref={ref}
+          ref={inputRef}
           className="text-input-input"
           name={name}
           type={type}
@@ -181,9 +226,19 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           onChange={onChange}
           onFocus={onFocus}
           onKeyDown={onKeyDown}
-          onValueChange={onValueChange}
+          onValueChange={handleValueChange}
           disabled={disabled}
         />
+        {hasValue && (
+          <IconButton
+            className="text-input-clear"
+            icon="x"
+            label="actions.clear"
+            size="sm"
+            color="muted"
+            onClick={handleClear}
+          />
+        )}
         {trailing && (
           <div className="text-input-trailing text-input-trailing-interactive">
             {trailing}
