@@ -11,3 +11,31 @@ export const DefaultDesignElementStyle: DesignElementStyle = {
   ...DefaultTypographyStyles,
   ...DefaultContainerStyles,
 };
+
+export type TextElementStyle = TypographyStyles;
+export type ContainerElementStyle = ContainerStyles &
+  Pick<TypographyStyles, 'font-family' | 'font-weight' | 'opacity'>;
+export type ImageElementStyle = Pick<
+  ContainerStyles,
+  'borderStyle' | 'borderColor' | 'borderWidth' | 'borderRadius'
+> &
+  Pick<TypographyStyles, 'opacity'>;
+
+export const DefaultTextElementStyle: TextElementStyle = {
+  ...DefaultTypographyStyles,
+};
+
+export const DefaultContainerElementStyle: ContainerElementStyle = {
+  ...DefaultContainerStyles,
+  'font-family': DefaultTypographyStyles['font-family'],
+  'font-weight': DefaultTypographyStyles['font-weight'],
+  opacity: DefaultTypographyStyles.opacity,
+};
+
+export const DefaultImageElementStyle: ImageElementStyle = {
+  borderStyle: DefaultContainerStyles.borderStyle,
+  borderColor: DefaultContainerStyles.borderColor,
+  borderWidth: DefaultContainerStyles.borderWidth,
+  borderRadius: DefaultContainerStyles.borderRadius,
+  opacity: DefaultTypographyStyles.opacity,
+};

@@ -1,4 +1,8 @@
-import { DesignElementStyle } from '../styles';
+import {
+  ContainerElementStyle,
+  ImageElementStyle,
+  TextElementStyle,
+} from '../styles';
 
 export interface DesignElementBase {
   /**
@@ -10,11 +14,6 @@ export interface DesignElementBase {
    * The type of element this is.
    */
   type: string;
-
-  /**
-   * The element style customizations.
-   */
-  style?: Partial<DesignElementStyle>;
 }
 
 /******************************************************************************
@@ -25,6 +24,11 @@ export interface TextElement extends DesignElementBase {
   type: 'text';
 
   /**
+   * The element style.
+   */
+  style: TextElementStyle;
+
+  /**
    * Placeholder text displayed when the element has no content.
    */
   placeholder?: string;
@@ -32,25 +36,35 @@ export interface TextElement extends DesignElementBase {
 
 export interface FormattedTextElement extends DesignElementBase {
   type: 'formatted-text';
+
+  /**
+   * The element style.
+   */
+  style: TextElementStyle;
 }
 
 export interface NumberElement extends DesignElementBase {
   type: 'number';
-}
 
-export interface UrlElement extends DesignElementBase {
-  type: 'url';
+  /**
+   * The element style.
+   */
+  style: TextElementStyle;
 }
 
 export interface ImageElement extends DesignElementBase {
   type: 'image';
+
+  /**
+   * The element style.
+   */
+  style: ImageElementStyle;
 }
 
 export type LeafDesignElement =
   | TextElement
   | FormattedTextElement
   | NumberElement
-  | UrlElement
   | ImageElement;
 
 /******************************************************************************
@@ -61,6 +75,11 @@ export interface RootElement extends DesignElementBase {
   type: 'root';
 
   /**
+   * The element style.
+   */
+  style: ContainerElementStyle;
+
+  /**
    * The child elements contained within this container.
    */
   children: DesignElement[];
@@ -68,6 +87,11 @@ export interface RootElement extends DesignElementBase {
 
 export interface ContainerElement extends DesignElementBase {
   type: 'container';
+
+  /**
+   * The element style.
+   */
+  style: ContainerElementStyle;
 
   /**
    * The child elements contained within this container.

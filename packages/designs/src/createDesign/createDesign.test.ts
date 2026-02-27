@@ -4,6 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { DesignsStore } from '../DesignsStore';
 import { i18nRoot } from '../constants';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DefaultContainerElementStyle } from '../styles';
 import { MockFs, cleanup, setup } from '../test-utils';
 import { Design } from '../types';
 import { getDesignFilePath, getDesignsDirPath } from '../utils';
@@ -17,6 +18,7 @@ const newDesign: Design = {
   tree: {
     id: 'root',
     type: 'root',
+    style: { ...DefaultContainerElementStyle },
     children: [],
   },
   id: expect.any(String),

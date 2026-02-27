@@ -1,4 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
+import { DefaultContainerElementStyle } from '../../styles';
 import { Design, DesignType } from '../../types';
 import { getDesignFilePath } from '../../utils';
 import {
@@ -18,6 +19,7 @@ function generateDesignFixture(type: DesignType, version: number): Design {
     tree: {
       id: 'root',
       type: 'root',
+      style: { ...DefaultContainerElementStyle },
       children: [
         element_container_1,
         // Set the ID of the design as the placeholder

@@ -4,6 +4,7 @@ import { i18n } from '@minddrop/i18n';
 import { uuid } from '@minddrop/utils';
 import { DesignsStore } from '../DesignsStore';
 import { DesignCreatedEvent, DesignCreatedEventData } from '../events';
+import { DefaultContainerElementStyle } from '../styles';
 import { Design, DesignType } from '../types';
 import { getDesignsDirPath } from '../utils';
 import { writeDesign } from '../writeDesign';
@@ -34,6 +35,7 @@ export async function createDesign(
     tree: {
       id: 'root',
       type: 'root',
+      style: { ...DefaultContainerElementStyle },
       children: [],
     },
   };

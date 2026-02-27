@@ -1,4 +1,5 @@
 import { i18nRoot } from '../constants';
+import { DefaultContainerElementStyle } from '../styles';
 import { Design } from '../types';
 
 export const DefaultCardDesign: Design = {
@@ -8,6 +9,7 @@ export const DefaultCardDesign: Design = {
   tree: {
     id: 'root',
     type: 'root',
+    style: { ...DefaultContainerElementStyle },
     children: [],
   },
   created: new Date(),

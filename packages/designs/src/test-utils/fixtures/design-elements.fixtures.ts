@@ -1,3 +1,7 @@
+import {
+  DefaultContainerElementStyle,
+  DefaultTextElementStyle,
+} from '../../styles';
 import { ContainerElement, DesignElement, TextElement } from '../../types';
 
 function generateTextElementFixture(version: number): TextElement {
@@ -5,7 +9,7 @@ function generateTextElementFixture(version: number): TextElement {
     id: `text-element-${version}`,
     type: 'text',
     style: {
-      'font-family': 'sans',
+      ...DefaultTextElementStyle,
     },
   };
 }
@@ -17,6 +21,7 @@ function generateContainerElementFixture(
   return {
     id: `container-element-${version}`,
     type: 'container',
+    style: { ...DefaultContainerElementStyle },
     children: children ?? [element_text_1],
   };
 }
