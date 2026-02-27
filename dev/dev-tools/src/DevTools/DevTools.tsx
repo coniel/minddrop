@@ -19,6 +19,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
 import { Workspaces } from '@minddrop/workspaces';
+import { ChangelogPanel, formatDate, getEffectiveDate, groupChangelogsByDate } from '../ChangelogPanel';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { IssuesPanel } from '../IssuesPanel';
@@ -43,6 +44,7 @@ import {
 import {
   ActiveSection,
   ActiveStory,
+  Changelog,
   Issue,
   IssuePackage,
   IssuePriority,
@@ -58,8 +60,10 @@ import {
   installConsoleInterceptors,
   loadSavedLogs,
   logsReducer,
+  parseChangelogFrontmatter,
   parseIssueFrontmatter,
   persistSavedLog,
+  serializeChangelogFrontmatter,
   serializeIssueFrontmatter,
   setLogListener,
 } from '../utils';
@@ -159,8 +163,20 @@ function nextIssueId() {
   return issueIdCounter;
 }
 
+let changelogIdCounter = 0;
+
+function nextChangelogId() {
+  changelogIdCounter += 1;
+
+  return changelogIdCounter;
+}
+
 function getIssuesDirPath(workspacePath: string) {
   return Fs.concatPath(workspacePath, 'dev', 'issues');
+}
+
+function getChangelogsDirPath(workspacePath: string) {
+  return Fs.concatPath(workspacePath, 'dev', 'logs');
 }
 
 function getDevConfigPath(workspacePath: string) {
@@ -169,6 +185,7 @@ function getDevConfigPath(workspacePath: string) {
 
 interface DevConfig {
   lastIssueNumber: number;
+  lastChangelogNumber?: number;
 }
 
 async function readDevConfig(workspacePath: string): Promise<DevConfig> {
@@ -270,6 +287,10 @@ export const DevTools: React.FC = () => {
   const issuesRef = useRef(issues);
   issuesRef.current = issues;
   const [selectedIssueId, setSelectedIssueId] = useState<number | null>(null);
+  const [changelogs, setChangelogs] = useState<Changelog[]>([]);
+  const changelogsRef = useRef(changelogs);
+  changelogsRef.current = changelogs;
+  const [selectedChangelogId, setSelectedChangelogId] = useState<number | null>(null);
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState(
     () => localStorage.getItem('dev-tools-events-view') ?? 'all',
@@ -619,6 +640,82 @@ export const DevTools: React.FC = () => {
     };
   }, [workspacePath]);
 
+  // Load changelogs from file system and watch for external changes
+  useEffect(() => {
+    let watcherId: string | null = null;
+
+    const loadChangelogs = async () => {
+      if (!workspacePath) {
+        return;
+      }
+
+      const changelogsDir = getChangelogsDirPath(workspacePath);
+
+      await Fs.ensureDir(changelogsDir);
+
+      // Read last changelog number from config
+      const config = await readDevConfig(workspacePath);
+      changelogIdCounter = config.lastChangelogNumber ?? 0;
+
+      const entries = await Fs.readDir(changelogsDir);
+      const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
+
+      if (mdEntries.length === 0) {
+        setChangelogs([]);
+
+        return;
+      }
+
+      const loadedChangelogs = await Promise.all(
+        mdEntries.map(async (entry) => {
+          const filePath = Fs.concatPath(changelogsDir, entry.name!);
+          const raw = await Fs.readTextFile(filePath);
+          const { frontmatter, content } = parseChangelogFrontmatter(raw);
+          const packages = frontmatter.packages
+            .split(',')
+            .map((value) => value.trim())
+            .filter((value) => value !== '') as IssuePackage[];
+
+          return {
+            id: frontmatter.number,
+            number: frontmatter.number,
+            title: frontmatter.title,
+            date: frontmatter.date,
+            packages,
+            content,
+            filePath,
+            createdAt: new Date(frontmatter.date + 'T00:00:00').getTime() || Date.now(),
+          };
+        }),
+      );
+
+      setChangelogs(loadedChangelogs);
+    };
+
+    const startWatching = async () => {
+      if (!workspacePath) {
+        return;
+      }
+
+      const changelogsDir = getChangelogsDirPath(workspacePath);
+
+      await Fs.ensureDir(changelogsDir);
+
+      watcherId = await Fs.watch([changelogsDir], () => {
+        loadChangelogs();
+      });
+    };
+
+    loadChangelogs();
+    startWatching();
+
+    return () => {
+      if (watcherId) {
+        Fs.unwatch(watcherId);
+      }
+    };
+  }, [workspacePath]);
+
   // Keyboard shortcut handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -793,6 +890,17 @@ export const DevTools: React.FC = () => {
         } else {
           setVisible(true);
           setActiveSection('notes');
+        }
+      }
+
+      if (e.key === 'y') {
+        e.preventDefault();
+
+        if (visible && activeSection === 'changelog') {
+          setVisible(false);
+        } else {
+          setVisible(true);
+          setActiveSection('changelog');
         }
       }
 
@@ -1006,7 +1114,10 @@ export const DevTools: React.FC = () => {
 
       // Update config with new last issue number
       if (workspacePath) {
+        const config = await readDevConfig(workspacePath);
+
         await writeDevConfig(workspacePath, {
+          ...config,
           lastIssueNumber: issueNumber,
         });
       }
@@ -1079,6 +1190,132 @@ export const DevTools: React.FC = () => {
     }
 
     setIssues((previous) => previous.filter((item) => item.id !== issueId));
+  }, []);
+
+  const handleCreateChangelog = useCallback(async () => {
+    const changelogsDir = workspacePath
+      ? getChangelogsDirPath(workspacePath)
+      : null;
+
+    if (changelogsDir) {
+      await Fs.ensureDir(changelogsDir);
+    }
+
+    const changelogNumber = nextChangelogId();
+    const date = getEffectiveDate();
+    const fileName = sanitizeFileName('New Changelog');
+    const filePath = changelogsDir
+      ? (
+          await Fs.incrementalPath(
+            Fs.concatPath(changelogsDir, `${changelogNumber} ${fileName}.md`),
+          )
+        ).path
+      : '';
+
+    const newChangelog: Changelog = {
+      id: changelogNumber,
+      number: changelogNumber,
+      title: '',
+      date,
+      packages: [],
+      content: '',
+      filePath,
+      createdAt: Date.now(),
+    };
+
+    if (filePath) {
+      await Fs.writeTextFile(
+        filePath,
+        serializeChangelogFrontmatter(
+          {
+            title: newChangelog.title,
+            number: newChangelog.number,
+            date: newChangelog.date,
+            packages: '',
+          },
+          '',
+        ),
+      );
+    }
+
+    if (workspacePath) {
+      const config = await readDevConfig(workspacePath);
+
+      await writeDevConfig(workspacePath, {
+        ...config,
+        lastChangelogNumber: changelogNumber,
+      });
+    }
+
+    setChangelogs((previous) => [...previous, newChangelog]);
+    setSelectedChangelogId(changelogNumber);
+  }, [workspacePath]);
+
+  const handleChangelogChange = useCallback(
+    async (changelogId: number, changes: Partial<Changelog>) => {
+      const changelog = changelogsRef.current.find(
+        (item) => item.id === changelogId,
+      );
+
+      if (!changelog) {
+        return;
+      }
+
+      const updated = { ...changelog, ...changes };
+      const oldTitle = sanitizeFileName(changelog.title || 'New Changelog');
+      const newTitle = sanitizeFileName(updated.title || 'New Changelog');
+      let { filePath } = updated;
+
+      if (changelog.filePath && oldTitle !== newTitle) {
+        const parentDir = Fs.parentDirPath(changelog.filePath);
+        const { path: newPath } = await Fs.incrementalPath(
+          Fs.concatPath(parentDir, `${updated.number} ${newTitle}.md`),
+        );
+
+        await Fs.rename(changelog.filePath, newPath);
+        filePath = newPath;
+      }
+
+      if (filePath) {
+        await Fs.writeTextFile(
+          filePath,
+          serializeChangelogFrontmatter(
+            {
+              title: updated.title,
+              number: updated.number,
+              date: updated.date,
+              packages: updated.packages.join(', '),
+            },
+            updated.content,
+          ),
+        );
+      }
+
+      setChangelogs((previous) =>
+        previous.map((item) =>
+          item.id === changelogId ? { ...updated, filePath } : item,
+        ),
+      );
+    },
+    [],
+  );
+
+  const handleDeleteChangelog = useCallback(async (changelogId: number) => {
+    const changelog = changelogsRef.current.find(
+      (item) => item.id === changelogId,
+    );
+
+    if (!changelog) {
+      return;
+    }
+
+    if (changelog.filePath) {
+      await Fs.removeFile(changelog.filePath);
+    }
+
+    setChangelogs((previous) =>
+      previous.filter((item) => item.id !== changelogId),
+    );
   }, []);
 
   const handleMoveStart = (e: React.MouseEvent) => {
@@ -1249,6 +1486,7 @@ export const DevTools: React.FC = () => {
             ['e', 'Toggle events'],
             ['r', 'Toggle issues'],
             ['t', 'Toggle notes'],
+            ['y', 'Toggle changelog'],
             ['i', 'New issue'],
             ['n', 'New note'],
             ['0–9', 'Open note by title'],
@@ -1376,6 +1614,47 @@ export const DevTools: React.FC = () => {
     </>
   );
 
+  const changelogGroups = groupChangelogsByDate(changelogs);
+
+  const changelogSidebar = (
+    <>
+      <MenuGroup padded>
+        <MenuItem
+          size="compact"
+          label="New Changelog"
+          icon="plus"
+          onClick={handleCreateChangelog}
+        />
+      </MenuGroup>
+      {changelogGroups.map((group, index) => (
+        <React.Fragment key={group.date}>
+          {index > 0 && <Separator margin="small" />}
+          <MenuGroup padded>
+            <MenuLabel>{formatDate(group.date)}</MenuLabel>
+            {group.items.map((changelog) => (
+              <MenuItem
+                key={changelog.id}
+                size="compact"
+                active={selectedChangelogId === changelog.id}
+                onClick={() => setSelectedChangelogId(changelog.id)}
+              >
+                <span className="dev-tools-issue-label">
+                  <span
+                    className="dev-tools-issue-number"
+                    style={{ color: 'var(--text-subtle)' }}
+                  >
+                    #{changelog.number}
+                  </span>
+                  {changelog.title || 'Untitled'}
+                </span>
+              </MenuItem>
+            ))}
+          </MenuGroup>
+        </React.Fragment>
+      ))}
+    </>
+  );
+
   const contentArea = (
     <main className="dev-tools-content">
       {activeSection === 'stories' && ActiveStoryComponent && (
@@ -1461,6 +1740,17 @@ export const DevTools: React.FC = () => {
           onDeleteIssue={handleDeleteIssue}
         />
       )}
+
+      {activeSection === 'changelog' && (
+        <ChangelogPanel
+          changelogs={changelogs}
+          selectedChangelogId={selectedChangelogId}
+          onSelectChangelog={setSelectedChangelogId}
+          onChangelogChange={handleChangelogChange}
+          onCreateChangelog={handleCreateChangelog}
+          onDeleteChangelog={handleDeleteChangelog}
+        />
+      )}
     </main>
   );
 
@@ -1537,6 +1827,13 @@ export const DevTools: React.FC = () => {
               size="sm"
               active={activeSection === 'notes'}
               onClick={() => setActiveSection('notes')}
+            />
+            <IconButton
+              icon="clock"
+              label="Changelog"
+              size="sm"
+              active={activeSection === 'changelog'}
+              onClick={() => setActiveSection('changelog')}
             />
           </div>
           <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
@@ -1689,6 +1986,8 @@ export const DevTools: React.FC = () => {
                 )}
 
                 {activeSection === 'issues' && issuesSidebar}
+
+                {activeSection === 'changelog' && changelogSidebar}
               </nav>
             </aside>
           )}
@@ -1752,6 +2051,13 @@ export const DevTools: React.FC = () => {
               size="sm"
               active={activeSection === 'notes'}
               onClick={() => setActiveSection('notes')}
+            />
+            <IconButton
+              icon="clock"
+              label="Changelog"
+              size="sm"
+              active={activeSection === 'changelog'}
+              onClick={() => setActiveSection('changelog')}
             />
             <IconButton
               icon="book-open"
@@ -1901,6 +2207,8 @@ export const DevTools: React.FC = () => {
             )}
 
             {activeSection === 'issues' && issuesSidebar}
+
+            {activeSection === 'changelog' && changelogSidebar}
 
             {activeSection === 'stories' && (
               <>

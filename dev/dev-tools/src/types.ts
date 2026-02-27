@@ -90,13 +90,25 @@ export interface Issue {
   createdAt: number;
 }
 
+export interface Changelog {
+  id: number;
+  number: number;
+  title: string;
+  date: string;
+  packages: IssuePackage[];
+  content: string;
+  filePath: string;
+  createdAt: number;
+}
+
 export type ActiveSection =
   | 'stories'
   | 'state'
   | 'events'
   | 'logs'
   | 'notes'
-  | 'issues';
+  | 'issues'
+  | 'changelog';
 
 export interface ActiveStory {
   groupIndex: number;
