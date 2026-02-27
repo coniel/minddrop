@@ -30,28 +30,28 @@ export interface PropertyDesignElementBase extends DesignElementBase {
 }
 
 export interface TitlePropertyElement extends PropertyDesignElementBase {
-  type: 'title-property';
+  type: 'title';
 }
 
 export interface TextPropertyElement extends PropertyDesignElementBase {
-  type: 'text-property';
+  type: 'text';
 }
 
 export interface FormattedTextPropertyElement
   extends PropertyDesignElementBase {
-  type: 'formatted-text-property';
+  type: 'formatted-text';
 }
 
 export interface NumberPropertyElement extends PropertyDesignElementBase {
-  type: 'number-property';
+  type: 'number';
 }
 
 export interface UrlPropertyElement extends PropertyDesignElementBase {
-  type: 'url-property';
+  type: 'url';
 }
 
 export interface ImagePropertyElement extends PropertyDesignElementBase {
-  type: 'image-property';
+  type: 'image';
 }
 
 export type PropertyDesignElement =
@@ -66,8 +66,8 @@ export type PropertyDesignElement =
  * Static Elements
  *****************************************************************************/
 
-export interface TextElement extends DesignElementBase {
-  type: 'text';
+export interface StaticTextElement extends DesignElementBase {
+  type: 'static-text';
 
   /**
    * The text value.
@@ -75,7 +75,7 @@ export interface TextElement extends DesignElementBase {
   value: string;
 }
 
-export type StaticDesignElement = TextElement;
+export type StaticDesignElement = StaticTextElement;
 
 /******************************************************************************
  * Container Elements

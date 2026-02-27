@@ -44,6 +44,7 @@ import {
   ActiveStory,
   Issue,
   IssueFeature,
+  IssuePriority,
   IssueStatus,
   IssueType,
   LogEntry,
@@ -548,6 +549,7 @@ export const DevTools: React.FC = () => {
             title: frontmatter.title,
             status: frontmatter.status as IssueStatus,
             type: frontmatter.type as IssueType,
+            priority: (frontmatter.priority || 'medium') as IssuePriority,
             feature: frontmatter.feature as IssueFeature,
             content,
             filePath,
@@ -912,7 +914,7 @@ export const DevTools: React.FC = () => {
       const createdAt = Date.now();
       const fileName = sanitizeFileName(data.title);
       const filePath = issuesDir
-        ? (await Fs.incrementalPath(Fs.concatPath(issuesDir, `${fileName}.md`)))
+        ? (await Fs.incrementalPath(Fs.concatPath(issuesDir, `${issueNumber} ${fileName}.md`)))
             .path
         : '';
 
@@ -922,6 +924,7 @@ export const DevTools: React.FC = () => {
         title: data.title,
         status: data.status,
         type: data.type,
+        priority: data.priority,
         feature: data.feature,
         content: data.content,
         filePath,
@@ -937,6 +940,7 @@ export const DevTools: React.FC = () => {
               number: newIssue.number,
               status: newIssue.status,
               type: newIssue.type,
+              priority: newIssue.priority,
               feature: newIssue.feature,
               created: new Date(createdAt).toISOString(),
             },
@@ -967,7 +971,7 @@ export const DevTools: React.FC = () => {
       if (issue.filePath && oldTitle !== newTitle) {
         const parentDir = Fs.parentDirPath(issue.filePath);
         const { path: newPath } = await Fs.incrementalPath(
-          Fs.concatPath(parentDir, `${newTitle}.md`),
+          Fs.concatPath(parentDir, `${updated.number} ${newTitle}.md`),
         );
 
         await Fs.rename(issue.filePath, newPath);
@@ -983,6 +987,7 @@ export const DevTools: React.FC = () => {
               number: updated.number,
               status: updated.status,
               type: updated.type,
+              priority: updated.priority,
               feature: updated.feature,
               created: new Date(updated.createdAt).toISOString(),
             },

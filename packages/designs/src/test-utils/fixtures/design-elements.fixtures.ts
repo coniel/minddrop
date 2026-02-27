@@ -1,9 +1,9 @@
-import { ContainerElement, DesignElement, TextElement } from '../../types';
+import { ContainerElement, DesignElement, StaticTextElement } from '../../types';
 
-function generateTextElementFixture(version: number): TextElement {
+function generateTextElementFixture(version: number): StaticTextElement {
   return {
     id: `text-element-${version}`,
-    type: 'text',
+    type: 'static-text',
     value: `Text ${version}`,
     style: {
       'font-family': 'sans',

@@ -9,5 +9,5 @@ import { DesignElement, PropertyDesignElement } from '@minddrop/designs';
 export function isPropertyElement(
   element: DesignElement,
 ): element is PropertyDesignElement {
-  return element.type.includes('property');
+  return 'property' in element;
 }

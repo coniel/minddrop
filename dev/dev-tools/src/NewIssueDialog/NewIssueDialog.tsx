@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { ScrollArea, Select } from '@minddrop/ui-primitives';
-import { IssueFeature, IssueStatus, IssueType } from '../types';
+import { IssueFeature, IssuePriority, IssueStatus, IssueType } from '../types';
 import {
   ISSUE_FEATURES,
+  ISSUE_PRIORITIES,
   ISSUE_STATUSES,
   ISSUE_TYPES,
 } from '../IssuesPanel/constants';
@@ -13,6 +14,7 @@ export interface NewIssueData {
   title: string;
   status: IssueStatus;
   type: IssueType;
+  priority: IssuePriority;
   feature: IssueFeature;
   content: string;
 }
@@ -32,6 +34,11 @@ const TYPE_OPTIONS = ISSUE_TYPES.map((type) => ({
   label: type.label,
 }));
 
+const PRIORITY_OPTIONS = ISSUE_PRIORITIES.map((priority) => ({
+  value: priority.value,
+  label: priority.label,
+}));
+
 const FEATURE_OPTIONS = ISSUE_FEATURES.map((feature) => ({
   value: feature.value,
   label: feature.label,
@@ -44,6 +51,7 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
   const [title, setTitle] = useState('');
   const [status, setStatus] = useState<IssueStatus>('open');
   const [type, setType] = useState<IssueType>('task');
+  const [priority, setPriority] = useState<IssuePriority>('medium');
   const [feature, setFeature] = useState<IssueFeature>('other');
   const contentRef = useRef('');
   const titleRef = useRef<HTMLInputElement>(null);
@@ -67,6 +75,7 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
           title: title.trim() || 'New Issue',
           status,
           type,
+          priority,
           feature,
           content: contentRef.current,
         });
@@ -77,7 +86,7 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
 
     return () =>
       window.removeEventListener('keydown', handleKeyDown, { capture: true });
-  }, [title, status, type, feature, onSubmit, onClose]);
+  }, [title, status, type, priority, feature, onSubmit, onClose]);
 
   return (
     <div className="new-issue-dialog-overlay" onMouseDown={onClose}>
@@ -107,6 +116,13 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
             value={type}
             onValueChange={(value: IssueType) => setType(value)}
             options={TYPE_OPTIONS}
+          />
+          <Select
+            size="sm"
+            variant="subtle"
+            value={priority}
+            onValueChange={(value: IssuePriority) => setPriority(value)}
+            options={PRIORITY_OPTIONS}
           />
           <Select
             size="sm"

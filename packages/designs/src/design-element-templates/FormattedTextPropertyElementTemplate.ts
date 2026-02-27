@@ -7,6 +7,6 @@ export type FormattedTextPropertyElementTemplate = Omit<
 
 export const FormattedTextPropertyElementTemplate: FormattedTextPropertyElementTemplate =
   {
-    type: 'formatted-text-property',
+    type: 'formatted-text',
     property: '',
   };

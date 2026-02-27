@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
-import { Issue, IssueFeature, IssueStatus, IssueType } from '../types';
+import { Issue, IssueFeature, IssuePriority, IssueStatus, IssueType } from '../types';
 import {
   FEATURE_COLORS,
   ISSUE_FEATURES,
+  ISSUE_PRIORITIES,
   ISSUE_STATUSES,
   ISSUE_TYPES,
+  PRIORITY_COLORS,
   STATUS_COLORS,
   STATUS_ICONS,
   TYPE_COLORS,
@@ -40,6 +42,11 @@ const TYPE_OPTIONS = ISSUE_TYPES.map((type) => ({
   label: type.label,
 }));
 
+const PRIORITY_OPTIONS = ISSUE_PRIORITIES.map((priority) => ({
+  value: priority.value,
+  label: priority.label,
+}));
+
 const FEATURE_OPTIONS = ISSUE_FEATURES.map((feature) => ({
   value: feature.value,
   label: feature.label,
@@ -51,6 +58,10 @@ function getFeatureLabel(value: string): string {
 
 function getTypeLabel(value: string): string {
   return ISSUE_TYPES.find((type) => type.value === value)?.label ?? value;
+}
+
+function getPriorityLabel(value: string): string {
+  return ISSUE_PRIORITIES.find((priority) => priority.value === value)?.label ?? value;
 }
 
 function formatRelativeDate(timestamp: number): string {
@@ -238,6 +249,15 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
           <Select
             size="sm"
             variant="subtle"
+            value={selectedIssue.priority}
+            onValueChange={(value: IssuePriority) =>
+              onIssueChange(selectedIssue.id, { priority: value })
+            }
+            options={PRIORITY_OPTIONS}
+          />
+          <Select
+            size="sm"
+            variant="subtle"
             value={selectedIssue.feature}
             onValueChange={(value: IssueFeature) =>
               onIssueChange(selectedIssue.id, { feature: value })
@@ -340,6 +360,16 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
                       }
                     >
                       {getTypeLabel(issue.type)}
+                    </span>
+                    <span
+                      className="issues-panel-chip"
+                      style={
+                        {
+                          '--chip-color': PRIORITY_COLORS[issue.priority],
+                        } as React.CSSProperties
+                      }
+                    >
+                      {getPriorityLabel(issue.priority)}
                     </span>
                     {issue.feature !== 'other' && (
                       <span

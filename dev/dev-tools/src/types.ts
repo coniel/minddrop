@@ -34,6 +34,8 @@ export type IssueStatus = 'open' | 'in-progress' | 'done' | 'wontfix';
 
 export type IssueType = 'bug' | 'feature' | 'improvement' | 'task';
 
+export type IssuePriority = 'low' | 'medium' | 'high' | 'urgent';
+
 export type IssueFeature =
   | 'app-sidebar'
   | 'ast'
@@ -71,6 +73,7 @@ export interface Issue {
   title: string;
   status: IssueStatus;
   type: IssueType;
+  priority: IssuePriority;
   feature: IssueFeature;
   content: string;
   filePath: string;

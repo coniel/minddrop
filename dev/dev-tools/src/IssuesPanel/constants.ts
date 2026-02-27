@@ -12,6 +12,13 @@ export const ISSUE_TYPES = [
   { value: 'task', label: 'Task' },
 ] as const;
 
+export const ISSUE_PRIORITIES = [
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+  { value: 'urgent', label: 'Urgent' },
+] as const;
+
 export const ISSUE_FEATURES = [
   { value: 'app-sidebar', label: 'App Sidebar' },
   { value: 'ast', label: 'AST' },
@@ -63,6 +70,13 @@ export const TYPE_COLORS: Record<string, string> = {
   feature: '#a371f7',
   improvement: '#39d353',
   task: '#768390',
+};
+
+export const PRIORITY_COLORS: Record<string, string> = {
+  low: '#768390',
+  medium: '#539bf5',
+  high: '#e0823d',
+  urgent: '#e5534b',
 };
 
 export const FEATURE_COLORS: Record<string, string> = {

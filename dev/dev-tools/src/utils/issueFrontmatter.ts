@@ -20,6 +20,7 @@ export interface IssueFrontmatter {
   number: number;
   status: string;
   type: string;
+  priority: string;
   feature: string;
   created: string;
 }
@@ -39,6 +40,7 @@ export function parseIssueFrontmatter(raw: string): {
         number: 0,
         status: 'open',
         type: 'task',
+        priority: 'medium',
         feature: 'other',
         created: new Date().toISOString(),
       },
@@ -55,6 +57,7 @@ export function parseIssueFrontmatter(raw: string): {
         number: 0,
         status: 'open',
         type: 'task',
+        priority: 'medium',
         feature: 'other',
         created: new Date().toISOString(),
       },
@@ -84,6 +87,7 @@ export function parseIssueFrontmatter(raw: string): {
       number: parseInt(frontmatter.number ?? '0', 10) || 0,
       status: frontmatter.status ?? 'open',
       type: frontmatter.type ?? 'task',
+      priority: frontmatter.priority ?? 'medium',
       feature: frontmatter.feature ?? 'other',
       created: frontmatter.created ?? new Date().toISOString(),
     },
@@ -101,6 +105,7 @@ export function serializeIssueFrontmatter(
     `number: ${frontmatter.number}`,
     `status: ${frontmatter.status}`,
     `type: ${frontmatter.type}`,
+    `priority: ${frontmatter.priority}`,
     `feature: ${frontmatter.feature}`,
     `created: ${frontmatter.created}`,
     DELIMITER,

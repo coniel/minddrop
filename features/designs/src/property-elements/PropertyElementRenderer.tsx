@@ -24,7 +24,7 @@ export const PropertyDesignElementRenderer: React.FC<
 
   const { schema, value } = property;
 
-  if (schema.type === 'text' && element.type === 'text-property') {
+  if (schema.type === 'text' && element.type === 'text') {
     return (
       <DesignTextPropertyElement
         element={element}
@@ -32,13 +32,13 @@ export const PropertyDesignElementRenderer: React.FC<
         propertyValue={typeof value !== 'undefined' ? `${value}` : undefined}
       />
     );
-  } else if (schema.type === 'title' && element.type === 'title-property') {
+  } else if (schema.type === 'title' && element.type === 'title') {
     return (
       <DesignText text={`${value}`} style={createStyleObject(element.style)} />
     );
   } else if (
     schema.type === 'image' &&
-    element.type === 'image-property' &&
+    element.type === 'image' &&
     (typeof value === 'string' || value === undefined)
   ) {
     return (
@@ -50,7 +50,7 @@ export const PropertyDesignElementRenderer: React.FC<
     );
   } else if (
     schema.type === 'formatted-text' &&
-    element.type === 'formatted-text-property'
+    element.type === 'formatted-text'
   ) {
     return (
       <DesignFormattedTextPropertyElement

@@ -28,7 +28,7 @@ export const DesignFormattedTextPropertyElement: React.FC<
   DesignFormattedTextPropertyElementProps
 > = ({ onValueChange, propertyValue }) => {
   return (
-    <div className="design-formatted-text-property-element">
+    <div className="design-formatted-text-element">
       <MarkdownEditor
         initialValue={propertyValue}
         onDebouncedChange={onValueChange}

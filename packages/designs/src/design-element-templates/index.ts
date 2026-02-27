@@ -29,11 +29,11 @@ export const ElementTemplates: Record<
   DesignElementTemplate
 > = {
   container: ContainerElementTemplate,
-  text: TextElementTemplate,
-  'title-property': TitlePropertyElementTemplate,
-  'text-property': TextPropertyElementTemplate,
-  'formatted-text-property': FormattedTextPropertyElementTemplate,
-  'url-property': UrlPropertyElementTemplate,
-  'image-property': ImagePropertyElementTemplate,
-  'number-property': NumberPropertyElementTemplate,
+  'static-text': TextElementTemplate,
+  title: TitlePropertyElementTemplate,
+  text: TextPropertyElementTemplate,
+  'formatted-text': FormattedTextPropertyElementTemplate,
+  url: UrlPropertyElementTemplate,
+  image: ImagePropertyElementTemplate,
+  number: NumberPropertyElementTemplate,
 };

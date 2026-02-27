@@ -24,7 +24,7 @@ export const DesignTextPropertyElement: React.FC<
   DesignTextPropertyElementProps
 > = ({ element, propertySchema, propertyValue }) => {
   return (
-    <div className="design-text-property-element">
+    <div className="design-text-element">
       <DesignText
         text={propertyValue || propertySchema.defaultValue}
         style={createStyleObject(element.style)}

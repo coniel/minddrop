@@ -15,7 +15,7 @@ export const DesignElementRenderer: React.FC<DesignElementRendererProps> = ({
   }
 
   switch (element.type) {
-    case 'text':
+    case 'static-text':
       return (
         <DesignText
           text={element.value}
