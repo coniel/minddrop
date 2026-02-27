@@ -74,6 +74,14 @@
   border-color: var(--border-default);
 }
 
+.color-select-swatch-transparent {
+  background: repeating-conic-gradient(
+    var(--surface-neutral) 0% 25%,
+    transparent 0% 50%
+  ) 0 0 / 6px 6px;
+  border-color: var(--border-default);
+}
+
 .color-select-swatch-blue {
   background-color: var(--blue-600);
   border-color: var(--blue-700);

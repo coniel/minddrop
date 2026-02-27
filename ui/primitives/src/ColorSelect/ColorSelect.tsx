@@ -1,5 +1,5 @@
 import { Select } from '@base-ui/react/select';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
 import { SelectSize, SelectVariant } from '../Select';
@@ -8,6 +8,23 @@ import { ContentColor } from '@minddrop/theme';
 import { propsToClass } from '../utils';
 import '../Select/Select.css';
 import './ColorSelect.css';
+
+export interface ColorSelectOption {
+  /*
+   * The option value.
+   */
+  value: string;
+
+  /*
+   * The display label. Can be an i18n key.
+   */
+  label: string;
+
+  /*
+   * CSS class applied to the swatch element.
+   */
+  swatchClass?: string;
+}
 
 export interface ColorSelectProps {
   /*
@@ -30,12 +47,17 @@ export interface ColorSelectProps {
   /*
    * The controlled value of the select.
    */
-  value?: ContentColor;
+  value?: ContentColor | string;
 
   /*
    * Callback fired when the selected value changes.
    */
   onValueChange?: (value: ContentColor) => void;
+
+  /*
+   * Extra options rendered before the standard content colors.
+   */
+  extraOptions?: ColorSelectOption[];
 }
 
 export const ColorSelect = ({
@@ -44,6 +66,7 @@ export const ColorSelect = ({
   size = 'md',
   value,
   onValueChange,
+  extraOptions = [],
 }: ColorSelectProps) => {
   const { t } = useTranslation();
 
@@ -58,10 +81,26 @@ export const ColorSelect = ({
     [onValueChange],
   );
 
-  const selectedColor = ContentColors.find((color) => color.value === value);
-  const items = ContentColors.map((color) => ({
-    value: color.value,
-    label: color.labelKey,
+  const allOptions = useMemo(() => {
+    const extras = extraOptions.map((option) => ({
+      value: option.value,
+      labelKey: option.label,
+      swatchClass: option.swatchClass,
+    }));
+
+    const colors = ContentColors.map((color) => ({
+      value: color.value,
+      labelKey: color.labelKey,
+      swatchClass: `color-select-swatch-${color.value}`,
+    }));
+
+    return [...extras, ...colors];
+  }, [extraOptions]);
+
+  const selectedOption = allOptions.find((option) => option.value === value);
+  const items = allOptions.map((option) => ({
+    value: option.value,
+    label: t(option.labelKey),
   }));
 
   return (
@@ -71,9 +110,9 @@ export const ColorSelect = ({
       >
         <Select.Value className="color-select-trigger-content">
           <span
-            className={`color-select-swatch color-select-swatch-${value || 'default'}`}
+            className={`color-select-swatch ${selectedOption?.swatchClass || `color-select-swatch-${value || 'default'}`}`}
           />
-          {selectedColor ? t(selectedColor.labelKey) : ''}
+          {selectedOption ? t(selectedOption.labelKey) : ''}
         </Select.Value>
         <Select.Icon className="select-icon">
           <Icon name="chevron-down" />
@@ -84,17 +123,17 @@ export const ColorSelect = ({
           <Select.Popup className="select-popup color-select-popup">
             <Select.ScrollUpArrow className="select-scroll-arrow" />
             <Select.List className="select-list">
-              {ContentColors.map((color) => (
+              {allOptions.map((option) => (
                 <Select.Item
-                  key={color.value}
-                  value={color.value}
+                  key={option.value}
+                  value={option.value}
                   className="color-select-item"
                 >
                   <Select.ItemText className="color-select-item-text">
                     <span
-                      className={`color-select-swatch color-select-swatch-${color.value}`}
+                      className={`color-select-swatch ${option.swatchClass || ''}`}
                     />
-                    {t(color.labelKey)}
+                    {t(option.labelKey)}
                   </Select.ItemText>
                 </Select.Item>
               ))}
