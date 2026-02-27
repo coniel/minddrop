@@ -82,7 +82,6 @@ export interface SelectProps<TValue extends string | number> {
    * Positive shifts right, negative shifts left.
    */
   alignOffset?: number;
-
 }
 
 export const Select = <TValue extends string | number = string>({
@@ -110,7 +109,7 @@ export const Select = <TValue extends string | number = string>({
 
   return (
     <SelectPrimitive.Root
-      items={options}
+      {...(options.length > 0 ? { items: options } : {})}
       value={value}
       onValueChange={handleValueChange}
       {...other}
