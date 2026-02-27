@@ -87,6 +87,14 @@ export type WebviewRPC = {
         params: { id: string };
         response: void;
       };
+      fsOpenFilePicker: {
+        params: {
+          directory?: boolean;
+          multiple?: boolean;
+          accept?: string[];
+        };
+        response: string | string[] | null;
+      };
       openUrl: {
         params: { url: string };
         response: void;

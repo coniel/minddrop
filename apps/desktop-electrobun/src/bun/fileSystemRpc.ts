@@ -316,4 +316,38 @@ export const fileSystemRpcHandlers = {
       watchers.delete(id);
     }
   },
+
+  fsOpenFilePicker: async ({
+    directory,
+    multiple,
+    accept,
+  }: {
+    directory?: boolean;
+    multiple?: boolean;
+    accept?: string[];
+  }): Promise<string | string[] | null> => {
+    // Map accept file types to Electrobun's allowedFileTypes format
+    const allowedFileTypes = accept?.length ? accept.join(',') : '*';
+
+    // Open the native file dialog
+    const chosenPaths = await Utils.openFileDialog({
+      startingFolder: Utils.paths.documents,
+      allowedFileTypes,
+      canChooseFiles: !directory,
+      canChooseDirectory: directory ?? false,
+      allowsMultipleSelection: multiple ?? false,
+    });
+
+    // Return null if no files were selected
+    if (!chosenPaths || chosenPaths.length === 0) {
+      return null;
+    }
+
+    // Return a single path or array based on the multiple option
+    if (multiple) {
+      return chosenPaths;
+    }
+
+    return chosenPaths[0];
+  },
 };

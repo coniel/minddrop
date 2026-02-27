@@ -7,6 +7,9 @@ import {
 } from './registerFileSystemAdapter';
 
 export const rpc = Electroview.defineRPC<WebviewRPC>({
+  // Disable RPC timeout to allow for long-running operations
+  // like native file dialogs that block until user interaction.
+  maxRequestTime: Infinity,
   handlers: {
     messages: {
       logToWebview: ({ message }) => {

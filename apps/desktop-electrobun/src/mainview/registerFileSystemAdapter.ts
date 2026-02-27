@@ -95,9 +95,12 @@ export const registerFileSystemAdapter = (rpc: any) =>
     downloadFile: (url, path, options = {}) =>
       rpc.request.fsDownloadFile({ url, path, baseDir: options.baseDir }),
 
-    openFilePicker: async () => {
-      throw new Error('openFilePicker is not implemented');
-    },
+    openFilePicker: async (options = {}) =>
+      rpc.request.fsOpenFilePicker({
+        directory: options.directory,
+        multiple: options.multiple,
+        accept: options.accept,
+      }),
 
     watch: async (paths, callback, options = {}) => {
       const id: string = await rpc.request.fsWatch({
