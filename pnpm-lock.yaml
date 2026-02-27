@@ -160,9 +160,6 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
@@ -194,6 +191,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../databases
+      '@minddrop/feature-design-studio':
+        specifier: workspace:*
+        version: link:../design-studio
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
