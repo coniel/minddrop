@@ -20,11 +20,11 @@ function generateDesignFixture(type: DesignType, version: number): Design {
       type: 'root',
       children: [
         element_container_1,
-        // Set the ID of the design as the text value
+        // Set the ID of the design as the placeholder
         // so it can be targeted by UI tests.
         {
           ...element_text_2,
-          value: `${type}-${version}`,
+          placeholder: `${type}-${version}`,
         },
       ],
     },

@@ -1,9 +1,9 @@
 import React from 'react';
-import { ImagePropertyElement as ImageElement } from '@minddrop/designs';
+import { ImageElement } from '@minddrop/designs';
 import { useImageSrc } from '@minddrop/file-system/src/useImageSrc';
 import { ImagePropertySchema } from '@minddrop/properties';
 
-export interface DesignImagePropertyElementProps {
+export interface DesignImageElementProps {
   /**
    * The text property element to render.
    */
@@ -20,8 +20,8 @@ export interface DesignImagePropertyElementProps {
   propertyValue?: string;
 }
 
-export const ImagePropertyElement = React.memo(
-  ({ propertyValue }: DesignImagePropertyElementProps) => {
+export const ImageElementRenderer = React.memo(
+  ({ propertyValue }: DesignImageElementProps) => {
     if (!propertyValue) {
       return null;
     }
@@ -47,4 +47,4 @@ const Image = React.memo(
 );
 
 Image.displayName = 'Image';
-ImagePropertyElement.displayName = 'ImagePropertyElement';
+ImageElementRenderer.displayName = 'ImageElementRenderer';

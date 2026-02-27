@@ -8,11 +8,11 @@ import {
 } from '../constants';
 import {
   cleanup,
-  elementIndex_0,
-  elementIndex_1,
-  elementIndex_1_0,
-  elementIndex_2,
-  flatCardElement,
+  element_0,
+  element_1,
+  element_1_0,
+  element_2,
+  flat_root_1,
   setup,
   testDesign,
 } from '../test-utils';
@@ -25,7 +25,7 @@ function getChildren() {
   ).children;
 }
 
-const children = flatCardElement.children;
+const children = flat_root_1.children;
 // Children with a new element inserted at index 1
 const childrenWithNewElement = [...children];
 childrenWithNewElement.splice(1, 0, expect.any(String));
@@ -90,8 +90,8 @@ describe('handleDropOnDesignElement', () => {
       it('does nothing if an element is dropped onto itself', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_2.id,
-          data: { [DesignElementsDataKey]: [elementIndex_2] },
+          targetId: element_2.id,
+          data: { [DesignElementsDataKey]: [element_2] },
         };
 
         handleDropOnDesignElement(drop);
@@ -103,8 +103,8 @@ describe('handleDropOnDesignElement', () => {
       it('does nothing if an element is dropped into its own children', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_1_0.id,
-          data: { [DesignElementsDataKey]: [elementIndex_1] },
+          targetId: element_1_0.id,
+          data: { [DesignElementsDataKey]: [element_1] },
         };
 
         handleDropOnDesignElement(drop);
@@ -117,10 +117,10 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 0 to before index 1
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_1.id,
+          targetId: element_1.id,
           index: 1,
           position: 'before',
-          data: { [DesignElementsDataKey]: [elementIndex_0] },
+          data: { [DesignElementsDataKey]: [element_0] },
         };
 
         handleDropOnDesignElement(drop);
@@ -133,10 +133,10 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 2 to after index 1
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_1.id,
+          targetId: element_1.id,
           index: 1,
           position: 'after',
-          data: { [DesignElementsDataKey]: [elementIndex_2] },
+          data: { [DesignElementsDataKey]: [element_2] },
         };
 
         handleDropOnDesignElement(drop);
@@ -151,19 +151,19 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 1_0 to after index 0
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_0.id,
+          targetId: element_0.id,
           index: 0,
           position: 'after',
-          data: { [DesignElementsDataKey]: [elementIndex_1_0] },
+          data: { [DesignElementsDataKey]: [element_1_0] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_0.id,
-          elementIndex_1_0.id,
-          elementIndex_1.id,
-          elementIndex_2.id,
+          element_0.id,
+          element_1_0.id,
+          element_1.id,
+          element_2.id,
         ]);
       });
 
@@ -171,19 +171,19 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 1_0 to before index 0
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_0.id,
+          targetId: element_0.id,
           index: 0,
           position: 'before',
-          data: { [DesignElementsDataKey]: [elementIndex_1_0] },
+          data: { [DesignElementsDataKey]: [element_1_0] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_1_0.id,
-          elementIndex_0.id,
-          elementIndex_1.id,
-          elementIndex_2.id,
+          element_1_0.id,
+          element_0.id,
+          element_1.id,
+          element_2.id,
         ]);
       });
     });
@@ -193,18 +193,18 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 2 to before index 1
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_1.id,
+          targetId: element_1.id,
           index: 1,
           position: 'before',
-          data: { [DesignElementsDataKey]: [elementIndex_2] },
+          data: { [DesignElementsDataKey]: [element_2] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_0.id,
-          elementIndex_2.id,
-          elementIndex_1.id,
+          element_0.id,
+          element_2.id,
+          element_1.id,
         ]);
       });
 
@@ -212,18 +212,18 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 0 to before index 2
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_2.id,
+          targetId: element_2.id,
           index: 2,
           position: 'before',
-          data: { [DesignElementsDataKey]: [elementIndex_0] },
+          data: { [DesignElementsDataKey]: [element_0] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_1.id,
-          elementIndex_0.id,
-          elementIndex_2.id,
+          element_1.id,
+          element_0.id,
+          element_2.id,
         ]);
       });
 
@@ -231,18 +231,18 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 2 to after index 0
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_0.id,
+          targetId: element_0.id,
           index: 0,
           position: 'after',
-          data: { [DesignElementsDataKey]: [elementIndex_2] },
+          data: { [DesignElementsDataKey]: [element_2] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_0.id,
-          elementIndex_2.id,
-          elementIndex_1.id,
+          element_0.id,
+          element_2.id,
+          element_1.id,
         ]);
       });
 
@@ -250,18 +250,18 @@ describe('handleDropOnDesignElement', () => {
         // Drop element from index 0 to after index 1
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          targetId: elementIndex_1.id,
+          targetId: element_1.id,
           index: 1,
           position: 'after',
-          data: { [DesignElementsDataKey]: [elementIndex_0] },
+          data: { [DesignElementsDataKey]: [element_0] },
         };
 
         handleDropOnDesignElement(drop);
 
         expect(getChildren()).toEqual([
-          elementIndex_1.id,
-          elementIndex_0.id,
-          elementIndex_2.id,
+          element_1.id,
+          element_0.id,
+          element_2.id,
         ]);
       });
     });

@@ -2,7 +2,7 @@ import { DesignElement, RootElement } from '@minddrop/designs';
 import {
   FlatContainerDesignElement,
   FlatDesignElement,
-  FlatStaticDesignElement,
+  FlatLeafDesignElement,
 } from '../../types';
 
 /**
@@ -17,10 +17,10 @@ export function flattenTree(
   const elements: Record<string, FlatDesignElement> = {};
 
   function traverse(node: DesignElement, parent?: string) {
-    elements[node.id] = { ...node } as FlatStaticDesignElement;
+    elements[node.id] = { ...node } as FlatLeafDesignElement;
 
     if (parent) {
-      (elements[node.id] as FlatStaticDesignElement).parent = parent;
+      (elements[node.id] as FlatLeafDesignElement).parent = parent;
     }
 
     if ('children' in node) {

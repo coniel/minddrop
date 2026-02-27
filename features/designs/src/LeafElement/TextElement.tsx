@@ -1,13 +1,13 @@
-import { TextPropertyElement } from '@minddrop/designs';
+import { TextElement } from '@minddrop/designs';
 import { TextPropertySchema } from '@minddrop/properties';
 import { DesignText } from '../DesignText';
 import { createStyleObject } from '../utils';
 
-export interface DesignTextPropertyElementProps {
+export interface DesignTextElementProps {
   /**
    * The text property element to render.
    */
-  element: TextPropertyElement;
+  element: TextElement;
 
   /**
    * The schema of the text property.
@@ -20,9 +20,11 @@ export interface DesignTextPropertyElementProps {
   propertyValue?: string;
 }
 
-export const DesignTextPropertyElement: React.FC<
-  DesignTextPropertyElementProps
-> = ({ element, propertySchema, propertyValue }) => {
+export const DesignTextElement: React.FC<DesignTextElementProps> = ({
+  element,
+  propertySchema,
+  propertyValue,
+}) => {
   return (
     <div className="design-text-element">
       <DesignText

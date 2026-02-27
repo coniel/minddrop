@@ -1,5 +1,4 @@
 import { DesignElementStyle } from '../styles';
-import { DesignType } from './Design.types';
 
 export interface DesignElementBase {
   /**
@@ -19,63 +18,40 @@ export interface DesignElementBase {
 }
 
 /******************************************************************************
- * Property Elements
+ * Elements
  *****************************************************************************/
 
-export interface PropertyDesignElementBase extends DesignElementBase {
-  /**
-   * The name of the property to use as the element's content.
-   */
-  property: string;
-}
-
-export interface TitlePropertyElement extends PropertyDesignElementBase {
-  type: 'title';
-}
-
-export interface TextPropertyElement extends PropertyDesignElementBase {
+export interface TextElement extends DesignElementBase {
   type: 'text';
+
+  /**
+   * Placeholder text displayed when the element has no content.
+   */
+  placeholder?: string;
 }
 
-export interface FormattedTextPropertyElement
-  extends PropertyDesignElementBase {
+export interface FormattedTextElement extends DesignElementBase {
   type: 'formatted-text';
 }
 
-export interface NumberPropertyElement extends PropertyDesignElementBase {
+export interface NumberElement extends DesignElementBase {
   type: 'number';
 }
 
-export interface UrlPropertyElement extends PropertyDesignElementBase {
+export interface UrlElement extends DesignElementBase {
   type: 'url';
 }
 
-export interface ImagePropertyElement extends PropertyDesignElementBase {
+export interface ImageElement extends DesignElementBase {
   type: 'image';
 }
 
-export type PropertyDesignElement =
-  | TitlePropertyElement
-  | TextPropertyElement
-  | FormattedTextPropertyElement
-  | NumberPropertyElement
-  | UrlPropertyElement
-  | ImagePropertyElement;
-
-/******************************************************************************
- * Static Elements
- *****************************************************************************/
-
-export interface StaticTextElement extends DesignElementBase {
-  type: 'static-text';
-
-  /**
-   * The text value.
-   */
-  value: string;
-}
-
-export type StaticDesignElement = StaticTextElement;
+export type LeafDesignElement =
+  | TextElement
+  | FormattedTextElement
+  | NumberElement
+  | UrlElement
+  | ImageElement;
 
 /******************************************************************************
  * Container Elements
@@ -103,8 +79,4 @@ export interface ContainerElement extends DesignElementBase {
  * Composite Types
  *****************************************************************************/
 
-export type DesignElement =
-  | PropertyDesignElement
-  | StaticDesignElement
-  | ContainerElement
-  | RootElement;
+export type DesignElement = LeafDesignElement | ContainerElement | RootElement;

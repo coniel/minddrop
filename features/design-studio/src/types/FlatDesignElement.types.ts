@@ -1,10 +1,9 @@
 import {
   ContainerElement,
-  ImagePropertyElement,
-  PropertyDesignElement,
+  ImageElement,
+  LeafDesignElement,
   RootElement,
-  StaticDesignElement,
-  TextPropertyElement,
+  TextElement,
 } from '@minddrop/designs';
 
 type Parent = { parent: string };
@@ -16,22 +15,18 @@ export type FlatContainerDesignElement = Omit<ContainerElement, 'children'> &
   Parent &
   Children;
 
-export type FlatStaticDesignElement = StaticDesignElement & Parent;
+export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
-export type FlatPropertyDesignElement = PropertyDesignElement & Parent;
-
-export type FlatTextPropertyElement = TextPropertyElement & Parent;
-export type FlatImagePropertyElement = ImagePropertyElement & Parent;
+export type FlatTextElement = TextElement & Parent;
+export type FlatImageElement = ImageElement & Parent;
 
 export type FlatDesignElement =
   | FlatRootDesignElement
   | FlatContainerDesignElement
-  | FlatStaticDesignElement
-  | FlatPropertyDesignElement;
+  | FlatLeafDesignElement;
 
 export type FlatChildDesignElement =
   | FlatContainerDesignElement
-  | FlatStaticDesignElement
-  | FlatPropertyDesignElement;
+  | FlatLeafDesignElement;
 
 export type FlatParentDesignElement = FlatContainerDesignElement;

@@ -1,8 +1,7 @@
-import { StaticTextElement } from '../types';
+import { TextElement } from '../types';
 
-export type TextElementTemplate = Omit<StaticTextElement, 'id'>;
+export type TextElementTemplate = Omit<TextElement, 'id'>;
 
 export const TextElementTemplate: TextElementTemplate = {
-  type: 'static-text',
-  value: '',
+  type: 'text',
 };

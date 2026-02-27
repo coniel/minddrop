@@ -18,7 +18,6 @@ export const iconMap: Record<string, UiIconName> = {
   root: 'layout',
   container: 'box',
   text: 'align-left',
-  title: 'heading',
   'formatted-text': 'file-text',
   number: 'hash',
   url: 'link',
@@ -28,7 +27,6 @@ export const iconMap: Record<string, UiIconName> = {
 export const labelMap: Record<string, string> = {
   container: 'design-studio.elements.container',
   text: 'design-studio.elements.text',
-  title: 'design-studio.elements.title',
   'formatted-text': 'design-studio.elements.formatted-text',
   number: 'design-studio.elements.number',
   url: 'design-studio.elements.url',

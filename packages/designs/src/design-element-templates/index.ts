@@ -1,39 +1,32 @@
 import { ContainerElementTemplate } from './ContainerElementTemplate';
-import { FormattedTextPropertyElementTemplate } from './FormattedTextPropertyElementTemplate';
-import { ImagePropertyElementTemplate } from './ImagePropertyElementTemplate';
-import { NumberPropertyElementTemplate } from './NumberPropertyElementTemplate';
+import { FormattedTextElementTemplate } from './FormattedTextElementTemplate';
+import { ImageElementTemplate } from './ImageElementTemplate';
+import { NumberElementTemplate } from './NumberElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
-import { TextPropertyElementTemplate } from './TextPropertyElementTemplate';
-import { TitlePropertyElementTemplate } from './TitlePropertyElementTemplate';
-import { UrlPropertyElementTemplate } from './UrlPropertyElementTemplate';
+import { UrlElementTemplate } from './UrlElementTemplate';
 
 export * from './ContainerElementTemplate';
-export * from './ImagePropertyElementTemplate';
+export * from './ImageElementTemplate';
 export * from './TextElementTemplate';
-export * from './TextPropertyElementTemplate';
-export * from './FormattedTextPropertyElementTemplate';
-export * from './UrlPropertyElementTemplate';
+export * from './FormattedTextElementTemplate';
+export * from './UrlElementTemplate';
 
 export type DesignElementTemplate =
   | ContainerElementTemplate
   | TextElementTemplate
-  | TitlePropertyElementTemplate
-  | TextPropertyElementTemplate
-  | FormattedTextPropertyElementTemplate
-  | UrlPropertyElementTemplate
-  | ImagePropertyElementTemplate
-  | NumberPropertyElementTemplate;
+  | FormattedTextElementTemplate
+  | UrlElementTemplate
+  | ImageElementTemplate
+  | NumberElementTemplate;
 
 export const ElementTemplates: Record<
   DesignElementTemplate['type'],
   DesignElementTemplate
 > = {
   container: ContainerElementTemplate,
-  'static-text': TextElementTemplate,
-  title: TitlePropertyElementTemplate,
-  text: TextPropertyElementTemplate,
-  'formatted-text': FormattedTextPropertyElementTemplate,
-  url: UrlPropertyElementTemplate,
-  image: ImagePropertyElementTemplate,
-  number: NumberPropertyElementTemplate,
+  text: TextElementTemplate,
+  'formatted-text': FormattedTextElementTemplate,
+  url: UrlElementTemplate,
+  image: ImageElementTemplate,
+  number: NumberElementTemplate,
 };

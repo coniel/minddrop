@@ -29,7 +29,6 @@ import './ElementStyleEditor.css';
 
 const textLikeTypes = new Set([
   'text',
-  'title',
   'formatted-text',
   'number',
   'url',

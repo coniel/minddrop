@@ -8,11 +8,11 @@ import {
 } from '../constants';
 import {
   cleanup,
-  elementIndex_0,
-  elementIndex_1,
-  elementIndex_1_0,
-  elementIndex_2,
-  flatCardElement,
+  element_0,
+  element_1,
+  element_1_0,
+  element_2,
+  flat_root_1,
   setup,
 } from '../test-utils';
 import { DesignStudioDropEventData, FlatRootDesignElement } from '../types';
@@ -24,7 +24,7 @@ function getChildren() {
   ).children;
 }
 
-const children = flatCardElement.children;
+const children = flat_root_1.children;
 
 const baseEvent = {
   data: {
@@ -77,7 +77,7 @@ describe('handleDropOnGap', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
           index: 1,
-          data: { [DesignElementsDataKey]: [elementIndex_1] },
+          data: { [DesignElementsDataKey]: [element_1] },
         };
 
         handleDropOnGap(drop, 'root', 1);
@@ -91,7 +91,7 @@ describe('handleDropOnGap', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
           index: 1,
-          data: { [DesignElementsDataKey]: [elementIndex_1] },
+          data: { [DesignElementsDataKey]: [element_1] },
         };
 
         handleDropOnGap(drop, 'root', 2);
@@ -105,16 +105,16 @@ describe('handleDropOnGap', () => {
       it('moves an element from a different parent to after the target index', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          data: { [DesignElementsDataKey]: [elementIndex_1_0] },
+          data: { [DesignElementsDataKey]: [element_1_0] },
         };
 
         handleDropOnGap(drop, 'root', 1);
 
         expect(getChildren()).toEqual([
-          elementIndex_0.id,
-          elementIndex_1_0.id,
-          elementIndex_1.id,
-          elementIndex_2.id,
+          element_0.id,
+          element_1_0.id,
+          element_1.id,
+          element_2.id,
         ]);
       });
     });
@@ -124,15 +124,15 @@ describe('handleDropOnGap', () => {
         // Drop element from index 2 to gap 1
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
-          data: { [DesignElementsDataKey]: [elementIndex_2] },
+          data: { [DesignElementsDataKey]: [element_2] },
         };
 
         handleDropOnGap(drop, 'root', 1);
 
         expect(getChildren()).toEqual([
-          elementIndex_0.id,
-          elementIndex_2.id,
-          elementIndex_1.id,
+          element_0.id,
+          element_2.id,
+          element_1.id,
         ]);
       });
 
@@ -141,15 +141,15 @@ describe('handleDropOnGap', () => {
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,
           index: 2,
-          data: { [DesignElementsDataKey]: [elementIndex_0] },
+          data: { [DesignElementsDataKey]: [element_0] },
         };
 
         handleDropOnGap(drop, 'root', 2);
 
         expect(getChildren()).toEqual([
-          elementIndex_1.id,
-          elementIndex_0.id,
-          elementIndex_2.id,
+          element_1.id,
+          element_0.id,
+          element_2.id,
         ]);
       });
     });

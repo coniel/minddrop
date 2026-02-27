@@ -1,7 +1,6 @@
 import { DesignElement } from '@minddrop/designs';
-import { DesignText } from './DesignText';
-import { PropertyDesignElementRenderer } from './property-elements';
-import { createStyleObject, isPropertyElement } from './utils';
+import { LeafElementRenderer } from './LeafElement';
+import { isLeafElement } from './utils';
 
 export interface DesignElementRendererProps {
   element: DesignElement;
@@ -10,19 +9,9 @@ export interface DesignElementRendererProps {
 export const DesignElementRenderer: React.FC<DesignElementRendererProps> = ({
   element,
 }) => {
-  if (isPropertyElement(element)) {
-    return <PropertyDesignElementRenderer element={element} />;
+  if (isLeafElement(element)) {
+    return <LeafElementRenderer element={element} />;
   }
 
-  switch (element.type) {
-    case 'static-text':
-      return (
-        <DesignText
-          text={element.value}
-          style={createStyleObject(element.style)}
-        />
-      );
-    default:
-      return null;
-  }
+  return null;
 };

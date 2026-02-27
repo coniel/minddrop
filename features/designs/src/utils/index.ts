@@ -1,3 +1,3 @@
 export * from './createStyleObject';
 export * from './createContainerStyleObject';
-export * from './isPropertyElement';
+export * from './isLeafElement';

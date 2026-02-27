@@ -1,12 +1,12 @@
-import { FormattedTextPropertyElement } from '@minddrop/designs';
+import { FormattedTextElement } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { FormattedTextPropertySchema } from '@minddrop/properties';
 
-export interface DesignFormattedTextPropertyElementProps {
+export interface DesignFormattedTextElementProps {
   /**
    * The text property element to render.
    */
-  element: FormattedTextPropertyElement;
+  element: FormattedTextElement;
 
   /**
    * The schema of the text property.
@@ -24,8 +24,8 @@ export interface DesignFormattedTextPropertyElementProps {
   propertyValue?: string;
 }
 
-export const DesignFormattedTextPropertyElement: React.FC<
-  DesignFormattedTextPropertyElementProps
+export const DesignFormattedTextElement: React.FC<
+  DesignFormattedTextElementProps
 > = ({ onValueChange, propertyValue }) => {
   return (
     <div className="design-formatted-text-element">
