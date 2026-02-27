@@ -148,7 +148,8 @@
     color: var(--text-regular);
   }
 
-  &[data-disabled] {
+  &[data-disabled],
+  &:disabled {
     opacity: 0.3;
     pointer-events: none;
   }

@@ -2,23 +2,24 @@
  * NumberField.stories.tsx
  * Dev reference for the NumberField component.
  */
-
 import { useState } from 'react';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { NumberField } from './NumberField';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 export const NumberFieldStories = () => {
   const [value, setValue] = useState<number | null>(42);
 
   return (
     <Story title="NumberField">
-
       {/* --------------------------------------------------------
           VARIANTS
           Inherits text-field variant styles directly — no
           duplicate CSS. Stepper buttons appear on hover.
       -------------------------------------------------------- */}
-      <StorySection title="Variants" description="Inherits all text-field variant styles. Stepper buttons appear on hover over the input.">
+      <StorySection
+        title="Variants"
+        description="Inherits all text-field variant styles. Stepper buttons appear on hover over the input."
+      >
         <StoryRow>
           <StoryItem label="ghost">
             <div style={{ width: 160 }}>
@@ -43,11 +44,13 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           SIZES
       -------------------------------------------------------- */}
-      <StorySection title="Sizes" description="Matches TextField/Button/Select sizes exactly. Triangle icons scale with size.">
+      <StorySection
+        title="Sizes"
+        description="Matches TextField/Button/Select sizes exactly. Triangle icons scale with size."
+      >
         <StoryRow>
           <StoryItem label="sm">
             <div style={{ width: 140 }}>
@@ -67,11 +70,13 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           LABEL
       -------------------------------------------------------- */}
-      <StorySection title="Label" description="Uses FieldLabel above the input.">
+      <StorySection
+        title="Label"
+        description="Uses FieldLabel above the input."
+      >
         <StoryRow>
           <StoryItem label="with label">
             <div style={{ width: 180 }}>
@@ -91,21 +96,19 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           MIN / MAX
           Decrement disables at min, increment disables at max.
           Base UI manages data-disabled on the button elements.
       -------------------------------------------------------- */}
-      <StorySection title="Min / max" description="Stepper buttons disable at boundaries. Base UI sets data-disabled automatically.">
+      <StorySection
+        title="Min / max"
+        description="Stepper buttons disable at boundaries. Base UI sets data-disabled automatically."
+      >
         <StoryRow>
           <StoryItem label="min=0 max=100">
             <div style={{ width: 160 }}>
-              <NumberField
-                defaultValue={50}
-                min={0}
-                max={100}
-              />
+              <NumberField defaultValue={50} min={0} max={100} />
             </div>
           </StoryItem>
           <StoryItem label="at min (0)">
@@ -131,11 +134,13 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           STEP
       -------------------------------------------------------- */}
-      <StorySection title="Step" description="Controls the increment/decrement amount per click.">
+      <StorySection
+        title="Step"
+        description="Controls the increment/decrement amount per click."
+      >
         <StoryRow>
           <StoryItem label="step=1 (default)">
             <div style={{ width: 160 }}>
@@ -155,11 +160,13 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           DECIMALS
       -------------------------------------------------------- */}
-      <StorySection title="Decimals" description="decimals=0 for integers only. decimals=N for N decimal places. Undefined allows unrestricted decimals.">
+      <StorySection
+        title="Decimals"
+        description="decimals=0 for integers only. decimals=N for N decimal places. Undefined allows unrestricted decimals."
+      >
         <StoryRow>
           <StoryItem label="decimals=0 (integers only)">
             <div style={{ width: 160 }}>
@@ -179,19 +186,28 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           LEADING / TRAILING
           Trailing fades out when stepper buttons appear.
       -------------------------------------------------------- */}
-      <StorySection title="Leading / trailing" description="Trailing element fades out on hover when stepper buttons appear. Stepper renders on top of trailing.">
+      <StorySection
+        title="Leading / trailing"
+        description="Trailing element fades out on hover when stepper buttons appear. Stepper renders on top of trailing."
+      >
         <StoryRow>
           <StoryItem label="leading prefix">
             <div style={{ width: 180 }}>
               <NumberField
                 defaultValue={42}
                 leading={
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-subtle)' }}>$</span>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-subtle)',
+                    }}
+                  >
+                    $
+                  </span>
                 }
               />
             </div>
@@ -201,7 +217,14 @@ export const NumberFieldStories = () => {
               <NumberField
                 defaultValue={320}
                 trailing={
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-subtle)' }}>px</span>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-subtle)',
+                    }}
+                  >
+                    px
+                  </span>
                 }
               />
             </div>
@@ -212,10 +235,24 @@ export const NumberFieldStories = () => {
                 defaultValue={9.99}
                 decimals={2}
                 leading={
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-subtle)' }}>$</span>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-subtle)',
+                    }}
+                  >
+                    $
+                  </span>
                 }
                 trailing={
-                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-subtle)' }}>USD</span>
+                  <span
+                    style={{
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-subtle)',
+                    }}
+                  >
+                    USD
+                  </span>
                 }
               />
             </div>
@@ -223,11 +260,13 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           CONTROLLED
       -------------------------------------------------------- */}
-      <StorySection title="Controlled" description="Manage value externally via value and onValueChange.">
+      <StorySection
+        title="Controlled"
+        description="Manage value externally via value and onValueChange."
+      >
         <StoryRow>
           <StoryItem label={`value: ${value}`}>
             <div style={{ width: 160 }}>
@@ -242,7 +281,6 @@ export const NumberFieldStories = () => {
         </StoryRow>
       </StorySection>
 
-
       {/* --------------------------------------------------------
           DISABLED
       -------------------------------------------------------- */}
@@ -255,7 +293,6 @@ export const NumberFieldStories = () => {
           </StoryItem>
         </StoryRow>
       </StorySection>
-
     </Story>
   );
 };

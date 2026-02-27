@@ -24,6 +24,7 @@ export interface NumberInputProps {
   invalid?: boolean;
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
+  clearable?: boolean;
 }
 
 export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
@@ -44,6 +45,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
       invalid,
       leading,
       trailing,
+      clearable,
     },
     ref,
   ) => {
@@ -125,14 +127,38 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
               <span className="number-input-increment-icon" aria-hidden />
             </NumberFieldPrimitive.Increment>
 
-            <NumberFieldPrimitive.Decrement
-              ref={decrementRef}
-              className="number-input-decrement"
-              onClick={() => bump(decrementRef.current)}
-              onAnimationEnd={() => handleAnimationEnd(decrementRef.current)}
-            >
-              <span className="number-input-decrement-icon" aria-hidden />
-            </NumberFieldPrimitive.Decrement>
+            {clearable && (value === undefined || value === null) ? (
+              <button
+                ref={decrementRef}
+                type="button"
+                className="number-input-decrement"
+                disabled
+              >
+                <span className="number-input-decrement-icon" aria-hidden />
+              </button>
+            ) : clearable && value !== undefined && value !== null && value <= min! ? (
+              <button
+                ref={decrementRef}
+                type="button"
+                className="number-input-decrement"
+                onClick={() => {
+                  onValueChange?.(null);
+                  bump(decrementRef.current);
+                }}
+                onAnimationEnd={() => handleAnimationEnd(decrementRef.current)}
+              >
+                <span className="number-input-decrement-icon" aria-hidden />
+              </button>
+            ) : (
+              <NumberFieldPrimitive.Decrement
+                ref={decrementRef}
+                className="number-input-decrement"
+                onClick={() => bump(decrementRef.current)}
+                onAnimationEnd={() => handleAnimationEnd(decrementRef.current)}
+              >
+                <span className="number-input-decrement-icon" aria-hidden />
+              </NumberFieldPrimitive.Decrement>
+            )}
           </div>
         </NumberFieldPrimitive.Group>
       </NumberFieldPrimitive.Root>

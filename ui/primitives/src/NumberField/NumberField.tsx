@@ -24,6 +24,7 @@ export interface NumberFieldProps
     | 'disabled'
     | 'leading'
     | 'trailing'
+    | 'clearable'
   > {
   className?: string;
   label?: string;
@@ -49,6 +50,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       error,
       leading,
       trailing,
+      clearable,
     },
     ref,
   ) => {
@@ -76,6 +78,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
           invalid={!!error}
           leading={leading}
           trailing={trailing}
+          clearable={clearable}
         />
 
         {error && <FieldError error={error} />}
