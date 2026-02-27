@@ -4,7 +4,7 @@ import { ContentColor } from '@minddrop/theme';
 const i18nKey = (key: string) => `designs.typography.${key}`;
 
 export type FontFamily = 'inherit' | 'sans' | 'serif' | 'mono';
-export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+export type FontWeight = 'inherit' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
@@ -27,7 +27,7 @@ export interface TypographyStyles {
 
 const fontValues: FontFamily[] = ['inherit', 'sans', 'serif', 'mono'];
 const weightValues: FontWeight[] = [
-  100, 200, 300, 400, 500, 600, 700, 800, 900,
+  'inherit', 100, 200, 300, 400, 500, 600, 700, 800, 900,
 ];
 
 export const fonts: { label: string; value: FontFamily }[] = fontValues.map(
@@ -97,7 +97,7 @@ export const textTransforms: {
 ];
 export const DefaultTypographyStyles: TypographyStyles = {
   'font-family': fonts[0].value,
-  'font-weight': fontWeights[3].value,
+  'font-weight': fontWeights[0].value,
   'font-size': 1,
   'line-height': 1.5,
   'letter-spacing': 0,

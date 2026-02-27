@@ -1,3 +1,4 @@
+export * from './createElementCssStyle';
 export * from './types';
 export * from './design-element-templates';
 export * from './styles';

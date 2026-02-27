@@ -1,4 +1,3 @@
-import { UiIconName } from '@minddrop/icons';
 import {
   Collapsible,
   CollapsibleContent,
@@ -6,6 +5,7 @@ import {
   Icon,
   Text,
 } from '@minddrop/ui-primitives';
+import { elementIconMap, elementLabelMap } from '../../constants';
 import { DesignStudioStore, useElement } from '../../DesignStudioStore';
 import { FlatDesignElement } from '../../types';
 
@@ -13,25 +13,6 @@ export interface ElementsTreeNodeProps {
   elementId: string;
   depth: number;
 }
-
-export const iconMap: Record<string, UiIconName> = {
-  root: 'layout',
-  container: 'box',
-  text: 'align-left',
-  'formatted-text': 'file-text',
-  number: 'hash',
-  url: 'link',
-  image: 'image',
-};
-
-export const labelMap: Record<string, string> = {
-  container: 'design-studio.elements.container',
-  text: 'design-studio.elements.text',
-  'formatted-text': 'design-studio.elements.formatted-text',
-  number: 'design-studio.elements.number',
-  url: 'design-studio.elements.url',
-  image: 'design-studio.elements.image',
-};
 
 function hasChildren(
   element: FlatDesignElement,
@@ -50,11 +31,11 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
     return null;
   }
 
-  const icon = iconMap[element.type] || 'box';
+  const icon = elementIconMap[element.type] || 'box';
   const label =
     element.type === 'root' && designType
       ? `designs.${designType}.name`
-      : labelMap[element.type] || element.type;
+      : elementLabelMap[element.type] || element.type;
   const isContainer = hasChildren(element) && element.children.length > 0;
 
   const handleClick = () => {

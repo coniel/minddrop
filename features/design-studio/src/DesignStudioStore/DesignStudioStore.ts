@@ -1,6 +1,5 @@
 import {
   Design,
-  DesignElement,
   DesignElementStyle,
   DesignElementTemplate,
   Designs,
@@ -17,12 +16,13 @@ import {
   useShallow,
   uuid,
 } from '@minddrop/utils';
+import { generateLoremIpsum } from '../utils';
 import {
   FlatChildDesignElement,
   FlatDesignElement,
   FlatParentDesignElement,
 } from '../types';
-import { flattenTree, getElementStyleValue, reconstructTree } from '../utils';
+import { flattenTree, reconstructTree } from '../utils';
 
 export interface DesignStudioStore {
   /**
@@ -86,7 +86,7 @@ export interface DesignStudioStore {
    */
   updateElement: (
     id: string,
-    updates: Partial<Omit<DesignElement, 'children'>>,
+    updates: { style?: Partial<DesignElementStyle>; placeholder?: string },
   ) => void;
 
   /**
@@ -167,7 +167,10 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
       const element = { ...state.elements[id] };
 
       if (element) {
-        Object.assign(element, deepMerge(element, updates));
+        Object.assign(
+          element,
+          deepMerge(element, updates as Partial<FlatDesignElement>),
+        );
       }
 
       return { elements: { ...state.elements, [id]: element } };
@@ -290,7 +293,7 @@ export const getDesignElement = <
 
 export const updateDesignElement = (
   id: string,
-  updates: Partial<FlatDesignElement>,
+  updates: { style?: Partial<DesignElementStyle>; placeholder?: string },
 ) => {
   DesignStudioStore.getState().updateElement(id, updates);
   saveDesign();
@@ -319,6 +322,7 @@ export const addDeisgnElementFromTemplate = (
     ...template,
     id: uuid(),
     parent: parentId,
+    ...(template.type === 'text' ? { placeholder: generateLoremIpsum(3) } : {}),
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index);
@@ -356,7 +360,7 @@ export const useElementStyle = <K extends keyof DesignElementStyle>(
 ): DesignElementStyle[K] => {
   const element = useElement(id);
 
-  return getElementStyleValue(element, key);
+  return (element.style as DesignElementStyle)[key];
 };
 
 export const useProperty = (name: string): PropertySchema | null => {

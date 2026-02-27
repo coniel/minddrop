@@ -21,7 +21,7 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
-import { ContentColor } from '@minddrop/utils';
+import { ContentColor } from '@minddrop/theme';
 import {
   PropertyEditorBase,
   PropertyEditorBaseProps,

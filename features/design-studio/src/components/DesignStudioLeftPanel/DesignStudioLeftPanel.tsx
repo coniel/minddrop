@@ -15,6 +15,7 @@ import {
   Spacer,
 } from '@minddrop/ui-primitives';
 import { DesignStudioStore } from '../../DesignStudioStore';
+import { ElementsPalette } from '../ElementsPalette/ElementsPalette';
 import './DesignStudioLeftPanel.css';
 
 type ActivePanel = 'designs' | 'elements';
@@ -123,6 +124,8 @@ export const DesignStudioLeftPanel: React.FC = () => {
           </div>
         </ScrollArea>
       )}
+
+      {activePanel === 'elements' && <ElementsPalette />}
     </div>
   );
 };

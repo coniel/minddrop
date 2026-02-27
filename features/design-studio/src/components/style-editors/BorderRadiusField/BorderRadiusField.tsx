@@ -24,12 +24,13 @@ export const BorderRadiusField = ({ elementId }: BorderRadiusFieldProps) => {
   return (
     <NumberField
       variant="subtle"
-      size="sm"
+      size="md"
       value={borderRadius}
       onValueChange={handleChange}
       min={0}
       max={100}
       step={1}
+      trailing="px"
     />
   );
 };

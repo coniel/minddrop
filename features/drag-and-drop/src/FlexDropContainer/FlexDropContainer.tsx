@@ -155,6 +155,8 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
           ? 'flex-end'
           : justify,
     ...style,
+    // Gap is handled by the gap zones
+    gap: 0,
   };
 
   return (

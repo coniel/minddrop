@@ -1,5 +1,4 @@
-import { DesignElementStyle } from '@minddrop/designs';
-import { propsToClass } from '@minddrop/ui-primitives';
+import { createTextCssStyle, TextElementStyle } from '@minddrop/designs';
 
 export interface DesignTextProps {
   /**
@@ -8,23 +7,14 @@ export interface DesignTextProps {
   text?: string;
 
   /**
-   * The style of the deisgn element rendering the text.
+   * The style of the design element rendering the text.
    */
-  style: DesignElementStyle;
+  style: TextElementStyle;
 }
 
 export const DesignText: React.FC<DesignTextProps> = ({ text, style }) => {
   return (
-    <span
-      className={propsToClass('design-text', {
-        fontFamily: style['font-family'],
-        underline: style.underline,
-        italic: style.italic,
-        textAlign: style['text-align'],
-        fontWeight: style['font-weight'],
-        textTransform: style['text-transform'],
-      })}
-    >
+    <span className="design-text" style={createTextCssStyle(style)}>
       {text}
     </span>
   );

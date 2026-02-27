@@ -24,12 +24,13 @@ export const PaddingField = ({ elementId }: PaddingFieldProps) => {
   return (
     <NumberField
       variant="subtle"
-      size="sm"
+      size="md"
       value={padding}
       onValueChange={handleChange}
       min={0}
       max={100}
       step={1}
+      trailing="px"
     />
   );
 };

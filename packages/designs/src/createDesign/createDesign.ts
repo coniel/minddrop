@@ -25,6 +25,11 @@ export async function createDesign(
   // Ensure the designs directory exists
   await Fs.ensureDir(getDesignsDirPath());
 
+  const defaultMinHeights: Record<string, number | undefined> = {
+    card: 200,
+    list: 48,
+  };
+
   // Generate a new design
   const design: Design = {
     type,
@@ -35,7 +40,10 @@ export async function createDesign(
     tree: {
       id: 'root',
       type: 'root',
-      style: { ...DefaultContainerElementStyle },
+      style: {
+        ...DefaultContainerElementStyle,
+        minHeight: defaultMinHeights[type],
+      },
       children: [],
     },
   };

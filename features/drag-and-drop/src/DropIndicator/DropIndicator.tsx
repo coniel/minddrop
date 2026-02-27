@@ -39,13 +39,13 @@ export const DropIndicator: React.FC<DropIndicatorProps> = ({
       }}
     >
       <div
-        className={propsToClass('circle', {
+        className={propsToClass('drop-indicator-circle', {
           horizontal: isHorizontal,
           vertical: !isHorizontal,
         })}
       />
       <div
-        className={propsToClass('line', {
+        className={propsToClass('drop-indicator-line', {
           horizontal: isHorizontal,
           vertical: !isHorizontal,
         })}

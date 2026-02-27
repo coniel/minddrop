@@ -1,10 +1,9 @@
-import { Design } from '@minddrop/designs';
+import { createElementCssStyle, Design } from '@minddrop/designs';
 import { DesignElementRenderer } from './DesignElementRenderer';
 import {
   DesignPropertiesProvider,
   DesignPropertiesProviderProps,
 } from './DesignPropertiesProvider';
-import { createContainerStyleObject } from './utils';
 
 export interface DesignRendererProps
   extends Pick<
@@ -23,15 +22,13 @@ export const DesignRenderer: React.FC<DesignRendererProps> = ({
   propertyValues = {},
   onUpdatePropertyValue,
 }) => {
-  const style = createContainerStyleObject(design.tree.style);
-
   return (
     <DesignPropertiesProvider
       properties={properties}
       propertyValues={propertyValues}
       onUpdatePropertyValue={onUpdatePropertyValue}
     >
-      <div className="card-element" style={style}>
+      <div className="card-element" style={createElementCssStyle(design.tree)}>
         {design.tree.children.map((child) => (
           <DesignElementRenderer key={child.id} element={child} />
         ))}

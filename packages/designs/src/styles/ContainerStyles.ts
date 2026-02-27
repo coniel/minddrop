@@ -47,6 +47,7 @@ export interface ContainerStyles {
   borderWidth: number;
   borderRadius: number;
   padding?: number;
+  minHeight?: number;
 }
 
 export const DefaultContainerStyles: ContainerStyles = {

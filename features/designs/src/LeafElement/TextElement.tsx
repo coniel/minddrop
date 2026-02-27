@@ -1,7 +1,6 @@
 import { TextElement } from '@minddrop/designs';
 import { TextPropertySchema } from '@minddrop/properties';
 import { DesignText } from '../DesignText';
-import { createStyleObject } from '../utils';
 
 export interface DesignTextElementProps {
   /**
@@ -29,7 +28,7 @@ export const DesignTextElement: React.FC<DesignTextElementProps> = ({
     <div className="design-text-element">
       <DesignText
         text={propertyValue || propertySchema.defaultValue}
-        style={createStyleObject(element.style)}
+        style={element.style}
       />
     </div>
   );

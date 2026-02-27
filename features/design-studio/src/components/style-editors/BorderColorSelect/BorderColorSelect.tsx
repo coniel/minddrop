@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { ColorSelect, ContentColor } from '@minddrop/ui-primitives';
+import { ContentColor } from '@minddrop/theme';
+import { ColorSelect } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
   useElementStyle,

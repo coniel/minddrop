@@ -15,13 +15,15 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../../DesignStudioStore';
-import { iconMap, labelMap } from '../ElementsTree/ElementsTreeNode';
+import { elementIconMap, elementLabelMap } from '../../constants';
 import { BackgroundColorSelect } from '../style-editors/BackgroundColorSelect';
 import { Border } from '../style-editors/Border';
 import { ContainerTypography } from '../style-editors/ContainerTypography';
 import { DirectionToggle } from '../style-editors/DirectionToggle';
 import { GapField } from '../style-editors/GapField';
+import { MinHeightField } from '../style-editors/MinHeightField';
 import { PaddingField } from '../style-editors/PaddingField';
+import { PlaceholderField } from '../style-editors/PlaceholderField';
 import { PositionGrid } from '../style-editors/PositionGrid';
 import { Typography } from '../style-editors/Typography';
 import { WrapSwitch } from '../style-editors/WrapSwitch';
@@ -53,11 +55,11 @@ export const ElementStyleEditor: React.FC = () => {
     return null;
   }
 
-  const icon = iconMap[element.type] || 'box';
+  const icon = elementIconMap[element.type] || 'box';
   const label =
     element.type === 'root' && designType
       ? `designs.${designType}.name`
-      : labelMap[element.type] || element.type;
+      : elementLabelMap[element.type] || element.type;
 
   const handleClickBack = () => {
     DesignStudioStore.getState().selectElement(null);
@@ -103,6 +105,17 @@ export const ElementStyleEditor: React.FC = () => {
                       <PaddingField elementId={selectedElementId} />
                     </Stack>
                   </FlexItem>
+                  {!(element.type === 'root' && designType === 'page') && (
+                    <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+                      <Stack gap={1}>
+                        <InputLabel
+                          size="xs"
+                          label="designs.min-height.label"
+                        />
+                        <MinHeightField elementId={selectedElementId} />
+                      </Stack>
+                    </FlexItem>
+                  )}
                 </Group>
                 <WrapSwitch elementId={selectedElementId} />
               </Stack>
@@ -124,16 +137,26 @@ export const ElementStyleEditor: React.FC = () => {
                   color="subtle"
                   text="designs.typography.container-hint"
                 />
-                <ContainerTypography elementId={selectedElementId} />
+                <ContainerTypography
+                  elementId={selectedElementId}
+                  isRoot={element.type === 'root'}
+                />
               </Stack>
             </>
           )}
 
           {textLikeTypes.has(element.type) && (
-            <Stack gap={3}>
-              <SectionLabel label="designs.typography.label" />
-              <Typography elementId={selectedElementId} />
-            </Stack>
+            <>
+              <Stack gap={3}>
+                <SectionLabel label="designs.typography.label" />
+                <Typography elementId={selectedElementId} />
+              </Stack>
+
+              <Stack gap={3}>
+                <SectionLabel label="designs.placeholder.label" />
+                <PlaceholderField elementId={selectedElementId} />
+              </Stack>
+            </>
           )}
         </Stack>
       </ScrollArea>

@@ -87,22 +87,24 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
           )}
         </Toolbar>
         {design && (
-          <div className="workspace-design-name">
-            <TextInput
-              ref={nameInputRef}
-              variant="ghost"
-              textSize="lg"
-              weight="semibold"
-              value={designName}
-              onValueChange={setDesignName}
-              onBlur={handleNameBlur}
-              onKeyDown={handleNameKeyDown}
-            />
-          </div>
+          <>
+            <div className="workspace-design-name">
+              <TextInput
+                ref={nameInputRef}
+                variant="ghost"
+                textSize="lg"
+                weight="semibold"
+                value={designName}
+                onValueChange={setDesignName}
+                onBlur={handleNameBlur}
+                onKeyDown={handleNameKeyDown}
+              />
+            </div>
+            <div className="workspace-canvas-area">
+              <DesignCanvas />
+            </div>
+          </>
         )}
-        <div className="workspace-canvas-area">
-          <DesignCanvas />
-        </div>
       </div>
       <Panel className="right-panel">
         {selectedElementId ? <ElementStyleEditor /> : <ElementsTree />}

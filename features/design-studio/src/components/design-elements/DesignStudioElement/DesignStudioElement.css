@@ -1,0 +1,15 @@
+.design-studio-element {
+  display: block;
+  width: 100%;
+  position: relative;
+  cursor: grab;
+}
+
+.design-studio-element,
+.design-studio-element * {
+  cursor: grab;
+}
+
+.design-studio-element-inner-is-dragging {
+  opacity: 0.5;
+}

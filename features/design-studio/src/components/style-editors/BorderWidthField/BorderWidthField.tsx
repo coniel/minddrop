@@ -24,12 +24,13 @@ export const BorderWidthField = ({ elementId }: BorderWidthFieldProps) => {
   return (
     <NumberField
       variant="subtle"
-      size="sm"
+      size="md"
       value={borderWidth}
       onValueChange={handleChange}
       min={0}
       max={20}
       step={1}
+      trailing="px"
     />
   );
 };

@@ -40,11 +40,11 @@
     width: var(--circle-size);
   }
 
-  .line {
+  .drop-indicator-line {
     position: absolute;
-    background-color: var(--blue10);
+    background-color: var(--blue-1000);
 
-    &.line-horizontal {
+    &.drop-indicator-line-horizontal {
       width: calc(100% - 5px);
       height: 2px;
       left: 5px;
@@ -52,7 +52,7 @@
       transform: translateY(3px);
     }
 
-    &.line-vertical {
+    &.drop-indicator-line-vertical {
       height: calc(100% - 5px);
       width: 2px;
       top: 5px;
@@ -60,19 +60,19 @@
     }
   }
 
-  .circle {
+  .drop-indicator-circle {
     position: absolute;
     width: var(--circle-size);
     height: var(--circle-size);
     border-radius: 50%;
-    border: 2px solid var(--blue10);
+    border: 2px solid var(--blue-1000);
 
-    &.circle-horizontal {
+    &.drop-indicator-circle-horizontal {
       left: -1px;
       top: 0;
     }
 
-    &.circle-vertical {
+    &.drop-indicator-circle-vertical {
       top: -4px;
       left: 50%;
       transform: translateX(-50%);

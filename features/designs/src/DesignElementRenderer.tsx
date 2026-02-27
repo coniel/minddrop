@@ -1,4 +1,4 @@
-import { DesignElement } from '@minddrop/designs';
+import { createElementCssStyle, DesignElement } from '@minddrop/designs';
 import { LeafElementRenderer } from './LeafElement';
 import { isLeafElement } from './utils';
 
@@ -11,6 +11,16 @@ export const DesignElementRenderer: React.FC<DesignElementRendererProps> = ({
 }) => {
   if (isLeafElement(element)) {
     return <LeafElementRenderer element={element} />;
+  }
+
+  if (element.type === 'container') {
+    return (
+      <div style={createElementCssStyle(element)}>
+        {element.children.map((child) => (
+          <DesignElementRenderer key={child.id} element={child} />
+        ))}
+      </div>
+    );
   }
 
   return null;

@@ -9,7 +9,7 @@ export const DefaultListDesign: Design = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle },
+    style: { ...DefaultContainerElementStyle, minHeight: 48 },
     children: [],
   },
   created: new Date(),

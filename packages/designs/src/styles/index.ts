@@ -14,7 +14,7 @@ export const DefaultDesignElementStyle: DesignElementStyle = {
 
 export type TextElementStyle = TypographyStyles;
 export type ContainerElementStyle = ContainerStyles &
-  Pick<TypographyStyles, 'font-family' | 'font-weight' | 'opacity'>;
+  Pick<TypographyStyles, 'font-family' | 'font-weight' | 'color' | 'opacity'>;
 export type ImageElementStyle = Pick<
   ContainerStyles,
   'borderStyle' | 'borderColor' | 'borderWidth' | 'borderRadius'
@@ -29,6 +29,7 @@ export const DefaultContainerElementStyle: ContainerElementStyle = {
   ...DefaultContainerStyles,
   'font-family': DefaultTypographyStyles['font-family'],
   'font-weight': DefaultTypographyStyles['font-weight'],
+  color: DefaultTypographyStyles.color,
   opacity: DefaultTypographyStyles.opacity,
 };
 

@@ -44,6 +44,7 @@ describe('DesignStudioStore', () => {
     expect(DesignStudioStore.getState().elements[element_text_1.id]).toEqual({
       ...flatTree[element_text_1.id],
       style: {
+        ...element_text_1.style,
         'font-family': 'mono',
       },
     });
@@ -58,6 +59,7 @@ describe('DesignStudioStore', () => {
     expect(DesignStudioStore.getState().elements[element_text_1.id]).toEqual({
       ...flatTree[element_text_1.id],
       style: {
+        ...element_text_1.style,
         'font-family': 'mono',
         'font-weight': 900,
       },

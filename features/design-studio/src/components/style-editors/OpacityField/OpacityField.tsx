@@ -24,7 +24,7 @@ export const OpacityField = ({ elementId }: OpacityFieldProps) => {
   return (
     <NumberField
       variant="subtle"
-      size="sm"
+      size="md"
       value={Math.round(opacity * 100)}
       onValueChange={handleChange}
       min={0}

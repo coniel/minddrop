@@ -24,12 +24,13 @@ export const GapField = ({ elementId }: GapFieldProps) => {
   return (
     <NumberField
       variant="subtle"
-      size="sm"
+      size="md"
       value={gap}
       onValueChange={handleChange}
       min={0}
       max={100}
       step={1}
+      trailing="px"
     />
   );
 };

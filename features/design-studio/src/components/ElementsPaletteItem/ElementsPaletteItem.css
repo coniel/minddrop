@@ -1,0 +1,33 @@
+.elements-palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  color: var(--text-default);
+  background-color: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: grab;
+  user-select: none;
+  transition:
+    box-shadow 120ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
+
+  &:hover {
+    background-color: var(--surface-raised);
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:active {
+    cursor: grabbing;
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+}
+
+.elements-palette-item-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}

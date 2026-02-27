@@ -21,7 +21,7 @@ export const WrapSwitch = ({ elementId }: WrapSwitchProps) => {
 
   return (
     <SwitchField
-      size="sm"
+      size="md"
       label="designs.wrap.label"
       checked={wrap}
       onCheckedChange={handleChange}

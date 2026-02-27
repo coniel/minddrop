@@ -5,6 +5,6 @@ export type ContainerElementTemplate = Omit<ContainerElement, 'id'>;
 
 export const ContainerElementTemplate: ContainerElementTemplate = {
   type: 'container',
-  style: { ...DefaultContainerElementStyle },
+  style: { ...DefaultContainerElementStyle, backgroundColor: 'transparent' },
   children: [],
 };

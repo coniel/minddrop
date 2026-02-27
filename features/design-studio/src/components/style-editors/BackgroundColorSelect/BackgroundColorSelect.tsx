@@ -18,6 +18,12 @@ export interface BackgroundColorSelectProps {
   elementId: string;
 }
 
+const transparentOption = {
+  value: 'transparent',
+  label: 'color.transparent',
+  swatchClass: 'color-select-swatch-transparent',
+};
+
 export const BackgroundColorSelect = ({
   elementId,
 }: BackgroundColorSelectProps) => {
@@ -37,9 +43,11 @@ export const BackgroundColorSelect = ({
     <Group gap={2}>
       <FlexItem grow={2} style={{ flexBasis: 0, minWidth: 0 }}>
         <ColorSelect
+          size="md"
           variant="subtle"
           value={backgroundColor}
           onValueChange={handleChange}
+          extraOptions={[transparentOption]}
         />
       </FlexItem>
       <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
