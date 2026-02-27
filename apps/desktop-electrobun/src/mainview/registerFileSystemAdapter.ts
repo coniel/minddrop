@@ -1,4 +1,19 @@
 import { registerFileSystemAdapter as register } from '@minddrop/file-system';
+import type { FsWatchEvent } from '@minddrop/file-system';
+
+const watchCallbacks = new Map<string, (event: FsWatchEvent) => void>();
+
+export function handleWatchEvent(event: {
+  id: string;
+  kind: FsWatchEvent['kind'];
+  paths: string[];
+}) {
+  const callback = watchCallbacks.get(event.id);
+
+  if (callback) {
+    callback({ kind: event.kind, paths: event.paths });
+  }
+}
 
 export const registerFileSystemAdapter = (rpc: any) =>
   register({
@@ -82,6 +97,23 @@ export const registerFileSystemAdapter = (rpc: any) =>
 
     openFilePicker: async () => {
       throw new Error('openFilePicker is not implemented');
+    },
+
+    watch: async (paths, callback, options = {}) => {
+      const id: string = await rpc.request.fsWatch({
+        paths,
+        recursive: options.recursive,
+        baseDir: options.baseDir,
+      });
+
+      watchCallbacks.set(id, callback);
+
+      return id;
+    },
+
+    unwatch: async (id) => {
+      watchCallbacks.delete(id);
+      await rpc.request.fsUnwatch({ id });
     },
   });
 

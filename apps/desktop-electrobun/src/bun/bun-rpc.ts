@@ -1,7 +1,7 @@
 import { BrowserView } from 'electrobun/bun';
 import { WebviewRPC } from '../types/WebviewRPC.types';
 import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
-import { fileSystemRpcHandlers } from './fileSystemRpc';
+import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
 
 export type RpcHandler = typeof fileSystemRpcHandlers;
 
@@ -21,4 +21,8 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       },
     },
   },
+});
+
+setWatchEventSender((event) => {
+  myWebviewRPC.send.fsWatchEvent(event);
 });

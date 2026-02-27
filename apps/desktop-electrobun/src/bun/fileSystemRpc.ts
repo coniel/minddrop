@@ -1,7 +1,9 @@
 import { Utils } from 'electrobun/bun';
+import { type FSWatcher, watch as fsWatch } from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'path';
 import { BaseDirectory } from '@minddrop/file-system';
+import type { FsWatchEventKind } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 
 function getBaseDirPath(dir: BaseDirectory): string {
@@ -55,6 +57,34 @@ async function readDirAsEntries(
         return fsEntry;
       }),
   );
+}
+
+const watchers = new Map<string, FSWatcher[]>();
+let nextWatcherId = 0;
+
+let sendWatchEvent:
+  | ((event: { id: string; kind: FsWatchEventKind; paths: string[] }) => void)
+  | null = null;
+
+export function setWatchEventSender(
+  sender: (event: {
+    id: string;
+    kind: FsWatchEventKind;
+    paths: string[];
+  }) => void,
+) {
+  sendWatchEvent = sender;
+}
+
+function mapFsEventKind(eventType: string): FsWatchEventKind {
+  switch (eventType) {
+    case 'rename':
+      return 'any';
+    case 'change':
+      return 'modify';
+    default:
+      return 'any';
+  }
 }
 
 export const fileSystemRpcHandlers = {
@@ -236,5 +266,54 @@ export const fileSystemRpcHandlers = {
     }
 
     await Bun.write(resolved, response);
+  },
+
+  fsWatch: async ({
+    paths: watchPaths,
+    recursive,
+    baseDir,
+  }: {
+    paths: string[];
+    recursive?: boolean;
+    baseDir?: BaseDirectory;
+  }): Promise<string> => {
+    const id = String(nextWatcherId++);
+    const pathWatchers: FSWatcher[] = [];
+
+    for (const watchPath of watchPaths) {
+      const resolved = resolvePath(watchPath, baseDir);
+      const watcher = fsWatch(
+        resolved,
+        { recursive: recursive ?? false },
+        (eventType, filename) => {
+          if (!sendWatchEvent) {
+            return;
+          }
+
+          const kind = mapFsEventKind(eventType);
+          const eventPath = filename ? path.join(resolved, filename) : resolved;
+
+          sendWatchEvent({ id, kind, paths: [eventPath] });
+        },
+      );
+
+      pathWatchers.push(watcher);
+    }
+
+    watchers.set(id, pathWatchers);
+
+    return id;
+  },
+
+  fsUnwatch: async ({ id }: { id: string }): Promise<void> => {
+    const pathWatchers = watchers.get(id);
+
+    if (pathWatchers) {
+      for (const watcher of pathWatchers) {
+        watcher.close();
+      }
+
+      watchers.delete(id);
+    }
   },
 };

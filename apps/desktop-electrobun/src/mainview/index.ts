@@ -1,7 +1,10 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
-import { registerFileSystemAdapter } from './registerFileSystemAdapter';
+import {
+  registerFileSystemAdapter,
+  handleWatchEvent,
+} from './registerFileSystemAdapter';
 
 export const rpc = Electroview.defineRPC<WebviewRPC>({
   handlers: {
@@ -9,6 +12,9 @@ export const rpc = Electroview.defineRPC<WebviewRPC>({
       logToWebview: ({ message }) => {
         // this will appear in the inspect element devtools console
         console.log('bun', message);
+      },
+      fsWatchEvent: (event) => {
+        handleWatchEvent(event);
       },
     },
   },

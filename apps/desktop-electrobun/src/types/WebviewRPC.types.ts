@@ -1,6 +1,6 @@
 import { RPCSchema } from 'electrobun';
 import { BaseDirectory } from '@minddrop/file-system';
-import type { FsEntry } from '@minddrop/file-system';
+import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
 
 export type WebviewRPC = {
   bun: RPCSchema<{
@@ -75,6 +75,18 @@ export type WebviewRPC = {
         params: { url: string; path: string; baseDir?: BaseDirectory };
         response: void;
       };
+      fsWatch: {
+        params: {
+          paths: string[];
+          recursive?: boolean;
+          baseDir?: BaseDirectory;
+        };
+        response: string;
+      };
+      fsUnwatch: {
+        params: { id: string };
+        response: void;
+      };
       openUrl: {
         params: { url: string };
         response: void;
@@ -97,6 +109,11 @@ export type WebviewRPC = {
     messages: {
       logToWebview: {
         message: string;
+      };
+      fsWatchEvent: {
+        id: string;
+        kind: FsWatchEventKind;
+        paths: string[];
       };
     };
   }>;
