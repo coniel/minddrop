@@ -14,7 +14,8 @@
   }
 
   .workspace {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     width: 100%;
     height: 100%;
@@ -29,6 +30,12 @@
     .workspace-design-name {
       padding: 0 var(--space-4);
       margin-bottom: var(--space-4);
+    }
+
+    .workspace-canvas-area {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
     }
   }
 }

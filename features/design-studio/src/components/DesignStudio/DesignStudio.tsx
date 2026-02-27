@@ -100,7 +100,9 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
             />
           </div>
         )}
-        <DesignCanvas />
+        <div className="workspace-canvas-area">
+          <DesignCanvas />
+        </div>
       </div>
       <Panel className="right-panel">
         {selectedElementId ? <ElementStyleEditor /> : <ElementsTree />}
