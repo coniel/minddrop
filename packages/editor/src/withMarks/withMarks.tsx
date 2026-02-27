@@ -54,7 +54,7 @@ function markConfigToInlineShortcuts(markConfig: MarkConfig): InlineShortcut[] {
 export function withMarks(
   editor: Editor,
   markConfigs: MarkConfig[],
-): [Editor, (props: RenderLeafProps) => JSX.Element] {
+): [Editor, (props: RenderLeafProps) => React.ReactElement] {
   const { apply } = editor;
 
   editor.apply = (operation) => {
