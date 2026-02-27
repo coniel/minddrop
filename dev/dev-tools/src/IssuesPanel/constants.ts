@@ -1,6 +1,7 @@
 export const ISSUE_STATUSES = [
   { value: 'open', label: 'Open' },
   { value: 'in-progress', label: 'In Progress' },
+  { value: 'review', label: 'Review' },
   { value: 'done', label: 'Done' },
   { value: 'wontfix', label: "Won't Fix" },
 ] as const;
@@ -19,41 +20,94 @@ export const ISSUE_PRIORITIES = [
   { value: 'urgent', label: 'Urgent' },
 ] as const;
 
-export const ISSUE_FEATURES = [
-  { value: 'app-sidebar', label: 'App Sidebar' },
-  { value: 'ast', label: 'AST' },
-  { value: 'core', label: 'Core' },
-  { value: 'database-entries', label: 'Database Entries' },
-  { value: 'databases', label: 'Databases' },
-  { value: 'design-studio', label: 'Design Studio' },
-  { value: 'designs', label: 'Designs' },
-  { value: 'desktop-app', label: 'Desktop App' },
-  { value: 'drag-and-drop', label: 'Drag & Drop' },
-  { value: 'editor', label: 'Editor' },
-  { value: 'events', label: 'Events' },
-  { value: 'extension', label: 'Extension' },
-  { value: 'extensions', label: 'Extensions' },
-  { value: 'file-system', label: 'File System' },
-  { value: 'gallery-view', label: 'Gallery View' },
-  { value: 'i18n', label: 'i18n' },
-  { value: 'icons', label: 'Icons' },
-  { value: 'item-type', label: 'Item Type' },
-  { value: 'markdown', label: 'Markdown' },
-  { value: 'markdown-editor', label: 'Markdown Editor' },
-  { value: 'properties', label: 'Properties' },
-  { value: 'queries', label: 'Queries' },
-  { value: 'selection', label: 'Selection' },
-  { value: 'table-view', label: 'Table View' },
-  { value: 'theme', label: 'Theme' },
-  { value: 'ui-primitives', label: 'UI Primitives' },
-  { value: 'views', label: 'Views' },
-  { value: 'workspaces', label: 'Workspaces' },
-  { value: 'other', label: 'Other' },
-] as const;
+export type PackageWorkspace =
+  | 'apps'
+  | 'dev'
+  | 'features'
+  | 'packages'
+  | 'ui'
+  | 'views'
+  | 'other';
+
+export interface PackageOption {
+  value: string;
+  label: string;
+  workspace: PackageWorkspace;
+}
+
+export const WORKSPACE_LABELS: Record<PackageWorkspace, string> = {
+  apps: 'Apps',
+  dev: 'Dev',
+  features: 'Features',
+  packages: 'Packages',
+  ui: 'UI',
+  views: 'Views',
+  other: 'Other',
+};
+
+export const WORKSPACE_COLORS: Record<PackageWorkspace, string> = {
+  apps: '#a371f7',
+  dev: '#636e7b',
+  features: '#539bf5',
+  packages: '#e0823d',
+  ui: '#b083f0',
+  views: '#39d353',
+  other: '#636e7b',
+};
+
+export const ISSUE_PACKAGES: PackageOption[] = [
+  // apps
+  { value: 'desktop', label: 'desktop', workspace: 'apps' },
+  { value: 'desktop-2', label: 'desktop-2', workspace: 'apps' },
+  // dev
+  { value: 'dev-tools', label: 'dev-tools', workspace: 'dev' },
+  // features (label strips feature- prefix)
+  { value: 'feature-app-sidebar', label: 'app-sidebar', workspace: 'features' },
+  { value: 'feature-database-entries', label: 'database-entries', workspace: 'features' },
+  { value: 'feature-databases', label: 'databases', workspace: 'features' },
+  { value: 'feature-design-studio', label: 'design-studio', workspace: 'features' },
+  { value: 'feature-designs', label: 'designs', workspace: 'features' },
+  { value: 'feature-drag-and-drop', label: 'drag-and-drop', workspace: 'features' },
+  { value: 'feature-markdown-editor', label: 'markdown-editor', workspace: 'features' },
+  { value: 'feature-properties', label: 'properties', workspace: 'features' },
+  { value: 'feature-views', label: 'views', workspace: 'features' },
+  // packages
+  { value: 'ast', label: 'ast', workspace: 'packages' },
+  { value: 'core', label: 'core', workspace: 'packages' },
+  { value: 'databases', label: 'databases', workspace: 'packages' },
+  { value: 'designs', label: 'designs', workspace: 'packages' },
+  { value: 'desktop-app', label: 'desktop-app', workspace: 'packages' },
+  { value: 'editor', label: 'editor', workspace: 'packages' },
+  { value: 'eslint-config', label: 'eslint-config', workspace: 'packages' },
+  { value: 'events', label: 'events', workspace: 'packages' },
+  { value: 'extension', label: 'extension', workspace: 'packages' },
+  { value: 'extensions', label: 'extensions', workspace: 'packages' },
+  { value: 'file-system', label: 'file-system', workspace: 'packages' },
+  { value: 'i18n', label: 'i18n', workspace: 'packages' },
+  { value: 'icons', label: 'icons', workspace: 'packages' },
+  { value: 'markdown', label: 'markdown', workspace: 'packages' },
+  { value: 'properties', label: 'properties', workspace: 'packages' },
+  { value: 'queries', label: 'queries', workspace: 'packages' },
+  { value: 'scripts', label: 'scripts', workspace: 'packages' },
+  { value: 'selection', label: 'selection', workspace: 'packages' },
+  { value: 'test-utils', label: 'test-utils', workspace: 'packages' },
+  { value: 'theme', label: 'theme', workspace: 'packages' },
+  { value: 'utils', label: 'utils', workspace: 'packages' },
+  { value: 'views', label: 'views', workspace: 'packages' },
+  { value: 'workspaces', label: 'workspaces', workspace: 'packages' },
+  // ui
+  { value: 'ui-primitives', label: 'ui-primitives', workspace: 'ui' },
+  // views
+  { value: 'table-view', label: 'table-view', workspace: 'views' },
+  { value: 'view-gallery', label: 'view-gallery', workspace: 'views' },
+  // other
+  { value: 'other', label: 'other', workspace: 'other' },
+];
 
 export const STATUS_COLORS: Record<string, string> = {
   open: 'var(--content-color-green)',
   'in-progress': 'var(--content-color-orange)',
+  review: 'var(--content-color-blue)',
   done: 'var(--content-color-purple)',
   wontfix: 'var(--content-color-grey)',
 };
@@ -61,6 +115,7 @@ export const STATUS_COLORS: Record<string, string> = {
 export const STATUS_ICONS: Record<string, string> = {
   open: 'open',
   'in-progress': 'in-progress',
+  review: 'review',
   done: 'done',
   wontfix: 'wontfix',
 };
@@ -79,34 +134,28 @@ export const PRIORITY_COLORS: Record<string, string> = {
   urgent: '#e5534b',
 };
 
-export const FEATURE_COLORS: Record<string, string> = {
-  'app-sidebar': '#539bf5',
-  ast: '#768390',
-  core: '#e5534b',
-  'database-entries': '#c69026',
-  databases: '#e0823d',
-  'design-studio': '#db61a2',
-  designs: '#f47067',
-  'desktop-app': '#a371f7',
-  'drag-and-drop': '#2dba4e',
-  editor: '#57ab5a',
-  events: '#daaa3f',
-  extension: '#c69026',
-  extensions: '#986ee2',
-  'file-system': '#636e7b',
-  'gallery-view': '#39d353',
-  i18n: '#6cb6ff',
-  icons: '#dcbdfb',
-  'item-type': '#2dba4e',
-  markdown: '#768390',
-  'markdown-editor': '#57ab5a',
-  properties: '#daaa3f',
-  queries: '#f47067',
-  selection: '#539bf5',
-  'table-view': '#e0823d',
-  theme: '#f692ce',
-  'ui-primitives': '#b083f0',
-  views: '#56d364',
-  workspaces: '#6cb6ff',
-  other: '#636e7b',
-};
+export function getPackageColor(packageValue: string): string {
+  const entry = ISSUE_PACKAGES.find((item) => item.value === packageValue);
+
+  return WORKSPACE_COLORS[entry?.workspace ?? 'other'];
+}
+
+export const PACKAGE_GROUPS = (() => {
+  const order: PackageWorkspace[] = [
+    'apps',
+    'dev',
+    'features',
+    'packages',
+    'ui',
+    'views',
+    'other',
+  ];
+
+  return order
+    .map((workspace) => ({
+      workspace,
+      label: WORKSPACE_LABELS[workspace],
+      packages: ISSUE_PACKAGES.filter((item) => item.workspace === workspace),
+    }))
+    .filter((group) => group.packages.length > 0);
+})();

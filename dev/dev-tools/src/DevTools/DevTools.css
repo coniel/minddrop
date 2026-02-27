@@ -141,6 +141,23 @@
   flex-shrink: 0;
 }
 
+.dev-tools-issue-label {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.dev-tools-issue-number {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  display: inline-block;
+  min-width: 2.2em;
+  text-align: right;
+  margin-right: var(--space-1);
+}
+
 .dev-tools-events-source-label {
   display: flex;
   align-items: center;

@@ -30,39 +30,49 @@ export interface Note {
   filePath: string;
 }
 
-export type IssueStatus = 'open' | 'in-progress' | 'done' | 'wontfix';
+export type IssueStatus = 'open' | 'in-progress' | 'review' | 'done' | 'wontfix';
 
 export type IssueType = 'bug' | 'feature' | 'improvement' | 'task';
 
 export type IssuePriority = 'low' | 'medium' | 'high' | 'urgent';
 
-export type IssueFeature =
-  | 'app-sidebar'
+export type IssuePackage =
   | 'ast'
   | 'core'
-  | 'database-entries'
   | 'databases'
-  | 'design-studio'
   | 'designs'
+  | 'desktop'
+  | 'desktop-2'
   | 'desktop-app'
-  | 'drag-and-drop'
+  | 'dev-tools'
   | 'editor'
+  | 'eslint-config'
   | 'events'
   | 'extension'
   | 'extensions'
+  | 'feature-app-sidebar'
+  | 'feature-database-entries'
+  | 'feature-databases'
+  | 'feature-design-studio'
+  | 'feature-designs'
+  | 'feature-drag-and-drop'
+  | 'feature-markdown-editor'
+  | 'feature-properties'
+  | 'feature-views'
   | 'file-system'
-  | 'gallery-view'
   | 'i18n'
   | 'icons'
-  | 'item-type'
   | 'markdown'
-  | 'markdown-editor'
   | 'properties'
   | 'queries'
+  | 'scripts'
   | 'selection'
   | 'table-view'
+  | 'test-utils'
   | 'theme'
   | 'ui-primitives'
+  | 'utils'
+  | 'view-gallery'
   | 'views'
   | 'workspaces'
   | 'other';
@@ -74,7 +84,7 @@ export interface Issue {
   status: IssueStatus;
   type: IssueType;
   priority: IssuePriority;
-  feature: IssueFeature;
+  package: IssuePackage;
   content: string;
   filePath: string;
   createdAt: number;

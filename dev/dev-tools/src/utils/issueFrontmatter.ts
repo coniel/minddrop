@@ -8,7 +8,7 @@
  * number: 1
  * status: open
  * type: bug
- * feature: databases
+ * package: databases
  * created: 2026-02-26T12:00:00.000Z
  * ---
  * Notes content here...
@@ -21,7 +21,7 @@ export interface IssueFrontmatter {
   status: string;
   type: string;
   priority: string;
-  feature: string;
+  package: string;
   created: string;
 }
 
@@ -41,7 +41,7 @@ export function parseIssueFrontmatter(raw: string): {
         status: 'open',
         type: 'task',
         priority: 'medium',
-        feature: 'other',
+        package: 'other',
         created: new Date().toISOString(),
       },
       content: raw,
@@ -58,7 +58,7 @@ export function parseIssueFrontmatter(raw: string): {
         status: 'open',
         type: 'task',
         priority: 'medium',
-        feature: 'other',
+        package: 'other',
         created: new Date().toISOString(),
       },
       content: raw,
@@ -88,7 +88,7 @@ export function parseIssueFrontmatter(raw: string): {
       status: frontmatter.status ?? 'open',
       type: frontmatter.type ?? 'task',
       priority: frontmatter.priority ?? 'medium',
-      feature: frontmatter.feature ?? 'other',
+      package: frontmatter.package ?? frontmatter.feature ?? 'other',
       created: frontmatter.created ?? new Date().toISOString(),
     },
     content,
@@ -106,7 +106,7 @@ export function serializeIssueFrontmatter(
     `status: ${frontmatter.status}`,
     `type: ${frontmatter.type}`,
     `priority: ${frontmatter.priority}`,
-    `feature: ${frontmatter.feature}`,
+    `package: ${frontmatter.package}`,
     `created: ${frontmatter.created}`,
     DELIMITER,
   ];

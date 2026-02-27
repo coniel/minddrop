@@ -44,6 +44,20 @@
   }
 }
 
+.new-issue-dialog-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-2);
+}
+
+.new-issue-dialog-title-number {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}
+
 .new-issue-dialog-title {
   background: none;
   border: none;
@@ -51,8 +65,8 @@
   font-weight: 600;
   color: var(--text-regular);
   outline: none;
-  padding: var(--space-4) var(--space-4) var(--space-2);
-  width: 100%;
+  flex: 1;
+  min-width: 0;
 }
 
 .new-issue-dialog-title::placeholder {

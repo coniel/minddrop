@@ -22,6 +22,7 @@ import { Workspaces } from '@minddrop/workspaces';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { IssuesPanel } from '../IssuesPanel';
+import { ISSUE_PACKAGES, TYPE_COLORS } from '../IssuesPanel/constants';
 import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { NotesPanel } from '../NotesPanel';
@@ -43,7 +44,7 @@ import {
   ActiveSection,
   ActiveStory,
   Issue,
-  IssueFeature,
+  IssuePackage,
   IssuePriority,
   IssueStatus,
   IssueType,
@@ -162,6 +163,34 @@ function getIssuesDirPath(workspacePath: string) {
   return Fs.concatPath(workspacePath, 'dev', 'issues');
 }
 
+function getDevConfigPath(workspacePath: string) {
+  return Fs.concatPath(workspacePath, 'dev', 'config.json');
+}
+
+interface DevConfig {
+  lastIssueNumber: number;
+}
+
+async function readDevConfig(workspacePath: string): Promise<DevConfig> {
+  try {
+    const raw = await Fs.readTextFile(getDevConfigPath(workspacePath));
+
+    return JSON.parse(raw);
+  } catch {
+    return { lastIssueNumber: 0 };
+  }
+}
+
+async function writeDevConfig(
+  workspacePath: string,
+  config: DevConfig,
+): Promise<void> {
+  await Fs.writeTextFile(
+    getDevConfigPath(workspacePath),
+    JSON.stringify(config, null, 2) + '\n',
+  );
+}
+
 function sanitizeFileName(name: string): string {
   return name.replace(/[/\\:*?"<>|]/g, '').trim() || 'New Issue';
 }
@@ -240,6 +269,7 @@ export const DevTools: React.FC = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const issuesRef = useRef(issues);
   issuesRef.current = issues;
+  const [selectedIssueId, setSelectedIssueId] = useState<number | null>(null);
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState(
     () => localStorage.getItem('dev-tools-events-view') ?? 'all',
@@ -526,6 +556,10 @@ export const DevTools: React.FC = () => {
 
       await Fs.ensureDir(issuesDir);
 
+      // Read last issue number from config
+      const config = await readDevConfig(workspacePath);
+      issueIdCounter = config.lastIssueNumber;
+
       const entries = await Fs.readDir(issuesDir);
       const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
 
@@ -539,18 +573,14 @@ export const DevTools: React.FC = () => {
           const raw = await Fs.readTextFile(filePath);
           const { frontmatter, content } = parseIssueFrontmatter(raw);
 
-          if (frontmatter.number > issueIdCounter) {
-            issueIdCounter = frontmatter.number;
-          }
-
           return {
-            id: nextIssueId(),
+            id: frontmatter.number,
             number: frontmatter.number,
             title: frontmatter.title,
             status: frontmatter.status as IssueStatus,
             type: frontmatter.type as IssueType,
             priority: (frontmatter.priority || 'medium') as IssuePriority,
-            feature: frontmatter.feature as IssueFeature,
+            package: frontmatter.package as IssuePackage,
             content,
             filePath,
             createdAt: new Date(frontmatter.created).getTime() || Date.now(),
@@ -925,7 +955,7 @@ export const DevTools: React.FC = () => {
         status: data.status,
         type: data.type,
         priority: data.priority,
-        feature: data.feature,
+        package: data.package,
         content: data.content,
         filePath,
         createdAt,
@@ -941,12 +971,19 @@ export const DevTools: React.FC = () => {
               status: newIssue.status,
               type: newIssue.type,
               priority: newIssue.priority,
-              feature: newIssue.feature,
+              package: newIssue.package,
               created: new Date(createdAt).toISOString(),
             },
             data.content,
           ),
         );
+      }
+
+      // Update config with new last issue number
+      if (workspacePath) {
+        await writeDevConfig(workspacePath, {
+          lastIssueNumber: issueNumber,
+        });
       }
 
       setIssues((previous) => [...previous, newIssue]);
@@ -988,7 +1025,7 @@ export const DevTools: React.FC = () => {
               status: updated.status,
               type: updated.type,
               priority: updated.priority,
-              feature: updated.feature,
+              package: updated.package,
               created: new Date(updated.createdAt).toISOString(),
             },
             updated.content,
@@ -1218,6 +1255,7 @@ export const DevTools: React.FC = () => {
   if (!visible) {
     return showNewIssueDialog ? (
       <NewIssueDialog
+        issueNumber={issueIdCounter + 1}
         onSubmit={handleCreateIssue}
         onClose={() => setShowNewIssueDialog(false)}
       />
@@ -1229,6 +1267,89 @@ export const DevTools: React.FC = () => {
 
   const savedFiles = [...new Set(savedLogs.map((l) => l.file))];
   const savedLogsForView = savedLogs.filter((l) => l.file === logsView);
+
+  // Group open issues by package for sidebar, sorted by type within each group
+  const TYPE_ORDER = ['bug', 'feature', 'improvement', 'task'];
+  const openIssues = issues.filter(
+    (issue) =>
+      issue.status === 'open' ||
+      issue.status === 'in-progress' ||
+      issue.status === 'review',
+  );
+  const issuesByPackage = new Map<string, Issue[]>();
+
+  for (const issue of openIssues) {
+    const key = issue.package;
+    const list = issuesByPackage.get(key);
+
+    if (list) {
+      list.push(issue);
+    } else {
+      issuesByPackage.set(key, [issue]);
+    }
+  }
+
+  for (const list of issuesByPackage.values()) {
+    list.sort(
+      (a, b) => TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type),
+    );
+  }
+
+  const sortedPackageKeys = [...issuesByPackage.keys()].sort((a, b) => {
+    const packageA = ISSUE_PACKAGES.find((item) => item.value === a);
+    const packageB = ISSUE_PACKAGES.find((item) => item.value === b);
+    const labelA = packageA?.label ?? a;
+    const labelB = packageB?.label ?? b;
+
+    return labelA.localeCompare(labelB);
+  });
+
+  const issuesSidebar = (
+    <>
+      <MenuGroup padded>
+        <MenuItem
+          size="compact"
+          label="New Issue"
+          icon="plus"
+          onClick={() => setShowNewIssueDialog(true)}
+        />
+      </MenuGroup>
+      {sortedPackageKeys.map((packageKey, index) => {
+        const packageInfo = ISSUE_PACKAGES.find(
+          (item) => item.value === packageKey,
+        );
+        const label = packageInfo?.label ?? packageKey;
+        const packageIssues = issuesByPackage.get(packageKey) ?? [];
+
+        return (
+          <React.Fragment key={packageKey}>
+            {index > 0 && <Separator margin="small" />}
+            <MenuGroup padded>
+              <MenuLabel>{label}</MenuLabel>
+              {packageIssues.map((issue) => (
+                <MenuItem
+                  key={issue.id}
+                  size="compact"
+                  active={selectedIssueId === issue.id}
+                  onClick={() => setSelectedIssueId(issue.id)}
+                >
+                  <span className="dev-tools-issue-label">
+                    <span
+                      className="dev-tools-issue-number"
+                      style={{ color: TYPE_COLORS[issue.type] }}
+                    >
+                      #{issue.number}
+                    </span>
+                    {issue.title || 'Untitled'}
+                  </span>
+                </MenuItem>
+              ))}
+            </MenuGroup>
+          </React.Fragment>
+        );
+      })}
+    </>
+  );
 
   const contentArea = (
     <main className="dev-tools-content">
@@ -1308,6 +1429,8 @@ export const DevTools: React.FC = () => {
       {activeSection === 'issues' && (
         <IssuesPanel
           issues={issues}
+          selectedIssueId={selectedIssueId}
+          onSelectIssue={setSelectedIssueId}
           onIssueChange={handleIssueChange}
           onCreateIssue={() => setShowNewIssueDialog(true)}
           onDeleteIssue={handleDeleteIssue}
@@ -1318,6 +1441,7 @@ export const DevTools: React.FC = () => {
 
   const newIssueDialog = showNewIssueDialog && (
     <NewIssueDialog
+      issueNumber={issueIdCounter + 1}
       onSubmit={handleCreateIssue}
       onClose={() => setShowNewIssueDialog(false)}
     />
@@ -1539,29 +1663,7 @@ export const DevTools: React.FC = () => {
                   </MenuGroup>
                 )}
 
-                {activeSection === 'issues' && (
-                  <MenuGroup padded>
-                    <MenuItem
-                      size="compact"
-                      label="New Issue"
-                      icon="plus"
-                      onClick={() => setShowNewIssueDialog(true)}
-                    />
-                    {issues.map((issue) => (
-                      <MenuItem
-                        key={issue.id}
-                        size="compact"
-                      >
-                        <span className="dev-tools-store-item-label">
-                          {issue.title || 'Untitled'}
-                          <span className="dev-tools-count-badge">
-                            #{issue.number}
-                          </span>
-                        </span>
-                      </MenuItem>
-                    ))}
-                  </MenuGroup>
-                )}
+                {activeSection === 'issues' && issuesSidebar}
               </nav>
             </aside>
           )}
@@ -1773,26 +1875,7 @@ export const DevTools: React.FC = () => {
               </MenuGroup>
             )}
 
-            {activeSection === 'issues' && (
-              <MenuGroup padded>
-                <MenuItem
-                  size="compact"
-                  label="New Issue"
-                  icon="plus"
-                  onClick={() => setShowNewIssueDialog(true)}
-                />
-                {issues.map((issue) => (
-                  <MenuItem
-                    key={issue.id}
-                    size="compact"
-                  >
-                    <span className="dev-tools-store-item-label">
-                      {issue.title || 'Untitled'}
-                    </span>
-                  </MenuItem>
-                ))}
-              </MenuGroup>
-            )}
+            {activeSection === 'issues' && issuesSidebar}
 
             {activeSection === 'stories' && (
               <>

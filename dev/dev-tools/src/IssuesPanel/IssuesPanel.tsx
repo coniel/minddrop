@@ -1,22 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Select as SelectPrimitive } from '@base-ui/react/select';
+import { Check } from 'lucide-react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
-import { IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
-import { Issue, IssueFeature, IssuePriority, IssueStatus, IssueType } from '../types';
+import { Button, IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
+import { Issue, IssuePackage, IssuePriority, IssueStatus, IssueType } from '../types';
 import {
-  FEATURE_COLORS,
-  ISSUE_FEATURES,
+  ISSUE_PACKAGES,
   ISSUE_PRIORITIES,
   ISSUE_STATUSES,
   ISSUE_TYPES,
+  PACKAGE_GROUPS,
   PRIORITY_COLORS,
   STATUS_COLORS,
   STATUS_ICONS,
   TYPE_COLORS,
+  getPackageColor,
 } from './constants';
 import './IssuesPanel.css';
 
 interface IssuesPanelProps {
   issues: Issue[];
+  selectedIssueId: number | null;
+  onSelectIssue: (issueId: number | null) => void;
   onIssueChange: (issueId: number, changes: Partial<Issue>) => void;
   onCreateIssue: () => void;
   onDeleteIssue: (issueId: number) => void;
@@ -25,11 +30,6 @@ interface IssuesPanelProps {
 const STATUS_FILTER_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
   ...ISSUE_STATUSES.map((status) => ({ value: status.value, label: status.label })),
-];
-
-const FEATURE_FILTER_OPTIONS = [
-  { value: 'all', label: 'All Features' },
-  ...ISSUE_FEATURES.map((feature) => ({ value: feature.value, label: feature.label })),
 ];
 
 const STATUS_OPTIONS = ISSUE_STATUSES.map((status) => ({
@@ -47,13 +47,43 @@ const PRIORITY_OPTIONS = ISSUE_PRIORITIES.map((priority) => ({
   label: priority.label,
 }));
 
-const FEATURE_OPTIONS = ISSUE_FEATURES.map((feature) => ({
-  value: feature.value,
-  label: feature.label,
-}));
+function PackageSelectItem({ value, label }: { value: string; label: string }) {
+  return (
+    <SelectPrimitive.Item value={value} className="select-item">
+      <SelectPrimitive.ItemIndicator className="select-item-indicator">
+        <Check size={12} />
+      </SelectPrimitive.ItemIndicator>
+      <SelectPrimitive.ItemText className="select-item-text">
+        {label}
+      </SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+}
 
-function getFeatureLabel(value: string): string {
-  return ISSUE_FEATURES.find((feature) => feature.value === value)?.label ?? value;
+function GroupedPackageItems({ includeAll }: { includeAll?: boolean }) {
+  return (
+    <>
+      {includeAll && <PackageSelectItem value="all" label="All Packages" />}
+      {PACKAGE_GROUPS.map((group) => (
+        <SelectPrimitive.Group key={group.workspace} className="select-group">
+          <SelectPrimitive.GroupLabel className="select-group-label">
+            {group.label}
+          </SelectPrimitive.GroupLabel>
+          {group.packages.map((packageItem) => (
+            <PackageSelectItem
+              key={packageItem.value}
+              value={packageItem.value}
+              label={packageItem.label}
+            />
+          ))}
+        </SelectPrimitive.Group>
+      ))}
+    </>
+  );
+}
+
+function getPackageLabel(value: string): string {
+  return ISSUE_PACKAGES.find((packageItem) => packageItem.value === value)?.label ?? value;
 }
 
 function getTypeLabel(value: string): string {
@@ -122,6 +152,12 @@ function StatusIcon({ status }: { status: string }) {
           />
         </>
       )}
+      {icon === 'review' && (
+        <>
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+          <circle cx="8" cy="8" r="3" fill="currentColor" />
+        </>
+      )}
       {icon === 'done' && (
         <>
           <circle cx="8" cy="8" r="7" fill="currentColor" />
@@ -188,15 +224,110 @@ function DebouncedTitleInput({
   );
 }
 
+function IssueRow({
+  issue,
+  onClick,
+  onMarkDone,
+}: {
+  issue: Issue;
+  onClick: () => void;
+  onMarkDone?: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      className={`issues-panel-row${expanded ? ' issues-panel-row-expanded' : ''}`}
+      onClick={onClick}
+    >
+      <StatusIcon status={issue.status} />
+      <div className="issues-panel-row-content">
+        <div className="issues-panel-row-title-line">
+          <span className="issues-panel-row-title">
+            {issue.title || 'Untitled'}
+          </span>
+          <span
+            className="issues-panel-chip"
+            style={
+              {
+                '--chip-color': TYPE_COLORS[issue.type],
+              } as React.CSSProperties
+            }
+          >
+            {getTypeLabel(issue.type)}
+          </span>
+          <span
+            className="issues-panel-chip"
+            style={
+              {
+                '--chip-color': PRIORITY_COLORS[issue.priority],
+              } as React.CSSProperties
+            }
+          >
+            {getPriorityLabel(issue.priority)}
+          </span>
+          {issue.package !== 'other' && (
+            <span
+              className="issues-panel-chip"
+              style={
+                {
+                  '--chip-color': getPackageColor(issue.package),
+                } as React.CSSProperties
+              }
+            >
+              {getPackageLabel(issue.package)}
+            </span>
+          )}
+        </div>
+        <div className="issues-panel-row-meta">
+          #{issue.number} opened {formatRelativeDate(issue.createdAt)}
+        </div>
+        {expanded && issue.content && (
+          <div className="issues-panel-row-expanded-content">
+            {issue.content}
+          </div>
+        )}
+      </div>
+      <div className="issues-panel-row-actions">
+        <Button
+          variant="outline"
+          size="sm"
+          startIcon={expanded ? 'chevron-up' : 'chevron-down'}
+          onClick={(event) => {
+            event.stopPropagation();
+            setExpanded((previous) => !previous);
+          }}
+        >
+          {expanded ? 'Collapse' : 'Expand'}
+        </Button>
+        {onMarkDone && (
+          <Button
+            variant="outline"
+            size="sm"
+            startIcon="check"
+            onClick={(event) => {
+              event.stopPropagation();
+              onMarkDone();
+            }}
+          >
+            Done
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export const IssuesPanel: React.FC<IssuesPanelProps> = ({
   issues,
+  selectedIssueId,
+  onSelectIssue,
   onIssueChange,
   onCreateIssue,
   onDeleteIssue,
 }) => {
-  const [selectedIssueId, setSelectedIssueId] = useState<number | null>(null);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [featureFilter, setFeatureFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('open');
+  const [packageFilter, setPackageFilter] = useState('all');
 
   const selectedIssue = issues.find((issue) => issue.id === selectedIssueId) ?? null;
 
@@ -209,8 +340,11 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
             icon="arrow-left"
             label="Back to list"
             size="sm"
-            onClick={() => setSelectedIssueId(null)}
+            onClick={() => onSelectIssue(null)}
           />
+          <span className="issues-panel-detail-title-number">
+            #{selectedIssue.number}
+          </span>
           <DebouncedTitleInput
             key={selectedIssue.id}
             defaultValue={selectedIssue.title}
@@ -222,7 +356,7 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
             size="sm"
             onClick={() => {
               onDeleteIssue(selectedIssue.id);
-              setSelectedIssueId(null);
+              onSelectIssue(null);
             }}
           />
         </div>
@@ -258,12 +392,13 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
           <Select
             size="sm"
             variant="subtle"
-            value={selectedIssue.feature}
-            onValueChange={(value: IssueFeature) =>
-              onIssueChange(selectedIssue.id, { feature: value })
+            value={selectedIssue.package}
+            onValueChange={(value: IssuePackage) =>
+              onIssueChange(selectedIssue.id, { package: value })
             }
-            options={FEATURE_OPTIONS}
-          />
+          >
+            <GroupedPackageItems />
+          </Select>
           <div className="issues-panel-detail-fields-spacer" />
           <span className="issues-panel-detail-fields-created">
             #{selectedIssue.number} · {formatRelativeDate(selectedIssue.createdAt)}
@@ -284,26 +419,33 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
   }
 
   // --- List view ---
+  const openStatuses = ['open', 'in-progress', 'review'];
+  const closedStatuses = ['done', 'wontfix'];
+
   const filteredIssues = issues.filter((issue) => {
-    if (statusFilter !== 'all' && issue.status !== statusFilter) {
+    if (statusFilter === 'open' && !openStatuses.includes(issue.status)) {
       return false;
     }
 
-    if (featureFilter !== 'all' && issue.feature !== featureFilter) {
+    if (statusFilter === 'done' && !closedStatuses.includes(issue.status)) {
+      return false;
+    }
+
+    if (packageFilter !== 'all' && issue.package !== packageFilter) {
       return false;
     }
 
     return true;
   });
 
-  const openCount = issues.filter((issue) => issue.status === 'open' || issue.status === 'in-progress').length;
+  const openCount = issues.filter((issue) => issue.status === 'open' || issue.status === 'in-progress' || issue.status === 'review').length;
   const closedCount = issues.filter((issue) => issue.status === 'done' || issue.status === 'wontfix').length;
 
   return (
     <div className="issues-panel">
       <div className="issues-panel-toolbar">
         <button
-          className={`issues-panel-tab-button${statusFilter === 'all' || statusFilter === 'open' || statusFilter === 'in-progress' ? ' issues-panel-tab-button-active' : ''}`}
+          className={`issues-panel-tab-button${statusFilter === 'all' || statusFilter === 'open' || statusFilter === 'in-progress' || statusFilter === 'review' ? ' issues-panel-tab-button-active' : ''}`}
           onClick={() => setStatusFilter(statusFilter === 'open' ? 'all' : 'open')}
         >
           <StatusIcon status="open" />
@@ -320,10 +462,11 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
         <Select
           size="sm"
           variant="subtle"
-          value={featureFilter}
-          onValueChange={setFeatureFilter}
-          options={FEATURE_FILTER_OPTIONS}
-        />
+          value={packageFilter}
+          onValueChange={setPackageFilter}
+        >
+          <GroupedPackageItems includeAll />
+        </Select>
         <IconButton
           icon="plus"
           label="New issue"
@@ -339,57 +482,48 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
       ) : (
         <ScrollArea>
           <div className="issues-panel-list">
-            {filteredIssues.map((issue) => (
-              <div
-                key={issue.id}
-                className="issues-panel-row"
-                onClick={() => setSelectedIssueId(issue.id)}
-              >
-                <StatusIcon status={issue.status} />
-                <div className="issues-panel-row-content">
-                  <div className="issues-panel-row-title-line">
-                    <span className="issues-panel-row-title">
-                      {issue.title || 'Untitled'}
-                    </span>
-                    <span
-                      className="issues-panel-chip"
-                      style={
-                        {
-                          '--chip-color': TYPE_COLORS[issue.type],
-                        } as React.CSSProperties
-                      }
-                    >
-                      {getTypeLabel(issue.type)}
-                    </span>
-                    <span
-                      className="issues-panel-chip"
-                      style={
-                        {
-                          '--chip-color': PRIORITY_COLORS[issue.priority],
-                        } as React.CSSProperties
-                      }
-                    >
-                      {getPriorityLabel(issue.priority)}
-                    </span>
-                    {issue.feature !== 'other' && (
-                      <span
-                        className="issues-panel-chip"
-                        style={
-                          {
-                            '--chip-color': FEATURE_COLORS[issue.feature],
-                          } as React.CSSProperties
-                        }
-                      >
-                        {getFeatureLabel(issue.feature)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="issues-panel-row-meta">
-                    #{issue.number} opened {formatRelativeDate(issue.createdAt)}
-                  </div>
-                </div>
-              </div>
-            ))}
+            {(() => {
+              const reviewIssues = filteredIssues.filter(
+                (issue) => issue.status === 'review',
+              );
+              const otherIssues = filteredIssues.filter(
+                (issue) => issue.status !== 'review',
+              );
+
+              return (
+                <>
+                  {reviewIssues.length > 0 && (
+                    <>
+                      <div className="issues-panel-section-label">
+                        Ready for review
+                      </div>
+                      {reviewIssues.map((issue) => (
+                        <IssueRow
+                          key={issue.id}
+                          issue={issue}
+                          onClick={() => onSelectIssue(issue.id)}
+                          onMarkDone={() =>
+                            onIssueChange(issue.id, { status: 'done' })
+                          }
+                        />
+                      ))}
+                      {otherIssues.length > 0 && (
+                        <div className="issues-panel-section-label issues-panel-section-label-spaced">
+                          Open
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {otherIssues.map((issue) => (
+                    <IssueRow
+                      key={issue.id}
+                      issue={issue}
+                      onClick={() => onSelectIssue(issue.id)}
+                    />
+                  ))}
+                </>
+              );
+            })()}
           </div>
         </ScrollArea>
       )}
