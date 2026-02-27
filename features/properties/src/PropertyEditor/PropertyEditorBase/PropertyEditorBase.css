@@ -1,7 +1,7 @@
 .property-editor {
   border-bottom: 1px solid var(--border-default);
 
-  .display {
+  .property-editor-display {
     user-select: none;
     padding: 0.75rem 1rem;
 
@@ -13,18 +13,16 @@
     }
   }
 
-  .label {
+  .property-editor-label {
     flex-grow: 1;
   }
 
-  .chevron-icon {
-    margin-right: 4px;
-  }
-
-  .editor {
+  .property-editor-form {
+    flex-direction: column;
+    gap: var(--space-3);
     padding: var(--space-5) var(--space-4);
 
-    .footer {
+    .property-editor-footer {
       margin: 0 -0.5rem;
     }
   }

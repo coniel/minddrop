@@ -194,19 +194,19 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
     >
       <Group
         role="button"
-        className="display"
+        className="property-editor-display"
         onClick={handleOpen}
         style={{ display: open ? 'none' : 'flex' }}
       >
         <ContentIcon color="muted" icon={property.icon} />
-        <Text size="sm" color="muted" className="label" text={property.name} />
+        <Text size="sm" color="muted" className="property-editor-label" text={property.name} />
         <Icon
           size={14}
           name="chevron-right"
           className="collapsible-indicator"
         />
       </Group>
-      <div className="editor" style={{ display: open ? 'flex' : 'none' }}>
+      <div className="property-editor-form" style={{ display: open ? 'flex' : 'none' }}>
         <FieldRoot invalid={!!fieldProps.name.error}>
           <Group gap={2}>
             <IconPicker
@@ -250,7 +250,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
           )}
         </FieldRoot>
         {children}
-        <Group justify="between" className="footer">
+        <Group justify="between" className="property-editor-footer">
           {deletable && (
             <Button
               size="sm"
