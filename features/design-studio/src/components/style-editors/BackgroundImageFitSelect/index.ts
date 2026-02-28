@@ -1,0 +1,1 @@
+export { BackgroundImageFitSelect } from './BackgroundImageFitSelect';

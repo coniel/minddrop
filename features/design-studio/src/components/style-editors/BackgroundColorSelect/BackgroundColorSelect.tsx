@@ -4,6 +4,8 @@ import {
   ContentColor,
   FlexItem,
   Group,
+  InputLabel,
+  Stack,
 } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
@@ -42,17 +44,23 @@ export const BackgroundColorSelect = ({
   return (
     <Group gap={2}>
       <FlexItem grow={2} style={{ flexBasis: 0, minWidth: 0 }}>
-        <ColorSelect
-          size="md"
-          variant="subtle"
-          value={backgroundColor}
-          valueColor={backgroundColor === 'transparent' ? 'muted' : 'regular'}
-          onValueChange={handleChange}
-          extraOptions={[transparentOption]}
-        />
+        <Stack gap={1}>
+          <InputLabel size="xs" label="designs.background-color.color" />
+          <ColorSelect
+            size="md"
+            variant="subtle"
+            value={backgroundColor}
+            valueColor={backgroundColor === 'transparent' ? 'muted' : 'regular'}
+            onValueChange={handleChange}
+            extraOptions={[transparentOption]}
+          />
+        </Stack>
       </FlexItem>
       <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-        <OpacityField elementId={elementId} />
+        <Stack gap={1}>
+          <InputLabel size="xs" label="designs.background-color.opacity" />
+          <OpacityField elementId={elementId} />
+        </Stack>
       </FlexItem>
     </Group>
   );

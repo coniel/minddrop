@@ -453,6 +453,15 @@
       "color": "Colour",
       "opacity": "Opacity"
     },
+    "background-image": {
+      "label": "Background image"
+    },
+    "background-image-fit": {
+      "label": "Fit",
+      "cover": "Cover",
+      "contain": "Contain",
+      "fill": "Fill"
+    },
     "number-format": {
       "label": "Format",
       "decimals": {

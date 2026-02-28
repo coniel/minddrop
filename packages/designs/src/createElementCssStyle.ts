@@ -84,7 +84,7 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
 export function createContainerCssStyle(
   style: ContainerElementStyle,
 ): CSSProperties {
-  return {
+  const cssStyle: CSSProperties = {
     display: 'flex',
     flexDirection: style.direction,
     alignItems: style.alignItems,
@@ -109,6 +109,15 @@ export function createContainerCssStyle(
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
     opacity: style.opacity,
   };
+
+  // Background image sizing (image URL applied in renderers via useImageSrc)
+  if (style.backgroundImage) {
+    cssStyle.backgroundSize = style.backgroundImageFit;
+    cssStyle.backgroundPosition = 'center';
+    cssStyle.backgroundRepeat = 'no-repeat';
+  }
+
+  return cssStyle;
 }
 
 export function createIconCssStyle(style: IconElementStyle): CSSProperties {

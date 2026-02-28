@@ -5,7 +5,10 @@ import {
   Stack,
   Text,
 } from '@minddrop/ui-primitives';
+import { useElementStyle } from '../../../DesignStudioStore';
 import { BackgroundColorSelect } from '../BackgroundColorSelect';
+import { BackgroundImageField } from '../BackgroundImageField';
+import { BackgroundImageFitSelect } from '../BackgroundImageFitSelect';
 import { Border } from '../Border';
 import { ContainerTypography } from '../ContainerTypography';
 import { DirectionToggle } from '../DirectionToggle';
@@ -26,6 +29,8 @@ export interface ContainerElementStyleEditorProps {
 export const ContainerElementStyleEditor: React.FC<
   ContainerElementStyleEditorProps
 > = ({ elementId, isRoot, showMinHeight = true }) => {
+  const backgroundImage = useElementStyle(elementId, 'backgroundImage');
+
   return (
     <>
       <Stack gap={3}>
@@ -62,6 +67,16 @@ export const ContainerElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.background-color.label" />
         <BackgroundColorSelect elementId={elementId} />
+        <Stack gap={1}>
+          <InputLabel size="xs" label="designs.background-image.label" />
+          <BackgroundImageField elementId={elementId} />
+        </Stack>
+        {backgroundImage && (
+          <Stack gap={1}>
+            <InputLabel size="xs" label="designs.background-image-fit.label" />
+            <BackgroundImageFitSelect elementId={elementId} />
+          </Stack>
+        )}
       </Stack>
 
       <Stack gap={3}>

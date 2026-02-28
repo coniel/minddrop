@@ -1,4 +1,10 @@
-import { ContainerElement, createContainerCssStyle } from '@minddrop/designs';
+import { useMemo } from 'react';
+import {
+  ContainerElement,
+  createContainerCssStyle,
+  getPlaceholderMediaDirPath,
+} from '@minddrop/designs';
+import { Fs } from '@minddrop/file-system';
 import { DesignElement } from './DesignElement';
 
 export interface DesignContainerElementProps {
@@ -18,15 +24,23 @@ export const DesignContainerElement: React.FC<DesignContainerElementProps> = ({
 }) => {
   const { style } = element;
 
+  // Resolve background image path if set
+  const imagePath = useMemo(
+    () =>
+      style.backgroundImage
+        ? Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage)
+        : null,
+    [style.backgroundImage],
+  );
+
+  const imageSrc = Fs.useImageSrc(imagePath);
+
   return (
     <div
       style={{
         ...createContainerCssStyle(style),
-        display: 'flex',
-        flexDirection: style.direction,
-        gap: `${style.gap}px`,
-        alignItems: style.alignItems,
-        justifyContent: style.justifyContent,
+        // Apply background image URL resolved from the file system
+        ...(imageSrc && { backgroundImage: `url(${imageSrc})` }),
       }}
     >
       {element.children.map((child) => (
