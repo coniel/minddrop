@@ -21,6 +21,7 @@ function generateViewFixture(
     id: `view-${type}-${number}`,
     name: `${type} ${number}`,
     type,
+    icon: 'layout',
     dataSource,
     lastModified: new Date('2024-01-01T00:00:00.000Z'),
     created: new Date('2024-01-01T00:00:00.000Z'),

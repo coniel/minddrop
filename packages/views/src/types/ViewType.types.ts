@@ -18,6 +18,11 @@ export interface ViewType<TViewOptions extends object = {}> {
   description: string;
 
   /**
+   * The default icon for views of this type.
+   */
+  icon: string;
+
+  /**
    * The component used to render the view.
    */
   component: React.ElementType<ViewTypeComponentProps<TViewOptions>>;

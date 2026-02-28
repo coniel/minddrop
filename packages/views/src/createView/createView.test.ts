@@ -17,6 +17,7 @@ const newView: View = {
   id: expect.any(String),
   name: viewType_gallery.name,
   type: viewType_gallery.type,
+  icon: viewType_gallery.icon,
   created: mockDate,
   lastModified: mockDate,
   dataSource: {

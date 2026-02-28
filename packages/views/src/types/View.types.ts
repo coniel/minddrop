@@ -15,6 +15,11 @@ export interface View<TViewOptions extends object = {}> {
   type: string;
 
   /**
+   * The icon for the view. Defaults to the view type's icon.
+   */
+  icon: string;
+
+  /**
    * The data source for the view.
    */
   dataSource: ViewDataSource;

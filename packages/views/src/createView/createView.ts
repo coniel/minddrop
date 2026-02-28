@@ -27,12 +27,13 @@ export async function createView(
   // Get the view type
   const viewType = getViewType(type);
 
-  // Create the view
+  // Create the view with the view type's default icon
   const view: View = {
     id: uuid(),
     dataSource,
     type: type,
     name: name || i18n.t(viewType.name),
+    icon: viewType.icon,
     created: new Date(),
     lastModified: new Date(),
   };
