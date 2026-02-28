@@ -79,6 +79,7 @@
   --level-dialog-backdrop: 40;
   --level-dialog: 50;
   --level-popover: 60;
+  --level-toast: 65;
   --level-tooltip: 70;
 
   /* --- Transitions --- */
