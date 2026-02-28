@@ -6,6 +6,7 @@
 
 .element-style-editor-content {
   padding: var(--space-2);
+  padding-bottom: var(--space-7);
 }
 
 .element-style-editor-header {

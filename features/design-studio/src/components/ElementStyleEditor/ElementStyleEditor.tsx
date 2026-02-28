@@ -1,14 +1,11 @@
 import {
-  Button,
   Group,
   Icon,
   ScrollArea,
   Stack,
   Text,
-  Toolbar,
 } from '@minddrop/ui-primitives';
 import {
-  DesignStudioStore,
   useDesignStudioStore,
   useElement,
 } from '../../DesignStudioStore';
@@ -39,21 +36,8 @@ export const ElementStyleEditor: React.FC = () => {
       ? `designs.${designType}.name`
       : elementLabelMap[element.type] || element.type;
 
-  const handleClickBack = () => {
-    DesignStudioStore.getState().selectElement(null);
-  };
-
   return (
     <div className="element-style-editor">
-      <Toolbar>
-        <Button
-          variant="ghost"
-          startIcon="chevron-left"
-          label="actions.back"
-          onClick={handleClickBack}
-        />
-      </Toolbar>
-
       <ScrollArea>
         <Stack gap={6} className="element-style-editor-content">
           <Group gap={2} className="element-style-editor-header">

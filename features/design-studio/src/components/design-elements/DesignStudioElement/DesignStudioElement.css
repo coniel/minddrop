@@ -1,7 +1,6 @@
 .design-studio-element {
   position: relative;
   cursor: grab;
-  align-self: stretch;
 }
 
 .design-studio-element,

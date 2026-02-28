@@ -1,48 +1,101 @@
+/* ============================================================
+   ELEMENTS TREE — Figma-style layer panel
+   ============================================================ */
+
 .elements-tree {
-  padding: var(--space-2);
   display: flex;
   flex-direction: column;
+  padding: var(--space-1) 0 var(--space-7);
 }
+
+/* --- Tree node row --- */
+
+.elements-tree-node {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 1.75rem;
+  padding: 0 var(--space-2);
+  user-select: none;
+}
+
+.elements-tree-node:hover {
+  background-color: var(--surface-neutral);
+}
+
+/* Selected state */
+.elements-tree-node[data-selected='true'] {
+  background-color: var(--surface-primary);
+}
+
+.elements-tree-node[data-selected='true']:hover {
+  background-color: var(--surface-primary-hover);
+}
+
+/* --- Chevron expand/collapse trigger --- */
 
 .elements-tree-node-chevron-trigger {
   all: unset;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
 }
 
+.elements-tree-node-chevron {
+  width: 0.625rem;
+  height: 0.625rem;
+  color: var(--text-subtle);
+  transition: transform var(--duration-fast) ease;
+}
+
+/* Collapsed chevron points right */
 .elements-tree-node-chevron-trigger:not([data-panel-open]) .elements-tree-node-chevron {
   transform: rotate(-90deg);
 }
 
-.elements-tree-node {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
-
-.elements-tree-node:hover {
-  background-color: var(--bgNeutralHover);
-}
-
-.elements-tree-node-icon {
-  width: 1rem;
-  height: 1rem;
-  color: var(--text-color-muted);
-}
-
-.elements-tree-node-chevron {
-  width: 1rem;
-  height: 1rem;
-  color: var(--text-color-muted);
-  transition: transform 150ms ease;
-}
+/* --- Placeholder keeps leaf nodes aligned with containers --- */
 
 .elements-tree-node-chevron-placeholder {
-  width: 1rem;
-  height: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* --- Vertical indent guide --- */
+
+.elements-tree-indent-guide {
+  border-left: 1px solid var(--border-subtle);
+}
+
+/* --- Element type icon --- */
+
+.elements-tree-node-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+/* Brighten icon when row is selected */
+.elements-tree-node[data-selected='true'] .elements-tree-node-icon {
+  color: var(--text-primary-muted);
+}
+
+/* --- Label --- */
+
+.elements-tree-node-label {
+  font-size: var(--text-xs);
+  line-height: 1;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Brighten label when row is selected */
+.elements-tree-node[data-selected='true'] .elements-tree-node-label {
+  color: var(--text-primary);
 }

@@ -7,6 +7,7 @@ export const TableViewType: ViewType<TableViewOptions> = {
   type: 'table',
   name: 'views.table.name',
   description: 'views.table.description',
+  icon: 'table',
   defaultOptions: defaultTableViewOptions,
   component: TableViewComponent,
 };

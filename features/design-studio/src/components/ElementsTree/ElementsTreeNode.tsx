@@ -1,9 +1,9 @@
+import { i18n } from '@minddrop/i18n';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
   Icon,
-  Text,
 } from '@minddrop/ui-primitives';
 import { elementIconMap, elementLabelMap } from '../../constants';
 import { DesignStudioStore, useElement } from '../../DesignStudioStore';
@@ -26,17 +26,24 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
 }) => {
   const element = useElement(elementId);
   const designType = DesignStudioStore((state) => state.design?.type);
+  const selectedElementId = DesignStudioStore(
+    (state) => state.selectedElementId,
+  );
 
   if (!element) {
     return null;
   }
 
   const icon = elementIconMap[element.type] || 'box';
-  const label =
+  const labelKey =
     element.type === 'root' && designType
       ? `designs.${designType}.name`
       : elementLabelMap[element.type] || element.type;
   const isContainer = hasChildren(element) && element.children.length > 0;
+  const isSelected = selectedElementId === elementId;
+
+  // Indentation: 4px per depth level, plus base padding
+  const indent = `calc(var(--space-2) + var(--space-1) * ${depth})`;
 
   const handleClick = () => {
     DesignStudioStore.getState().selectElement(elementId);
@@ -47,7 +54,8 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
       <Collapsible defaultOpen>
         <div
           className="elements-tree-node"
-          style={{ paddingLeft: `calc(var(--space-4) * ${depth})` }}
+          data-selected={isSelected}
+          style={{ paddingLeft: indent }}
           onClick={handleClick}
         >
           <CollapsibleTrigger
@@ -57,16 +65,23 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
             <Icon name="chevron-down" className="elements-tree-node-chevron" />
           </CollapsibleTrigger>
           <Icon name={icon} className="elements-tree-node-icon" />
-          <Text size="sm" text={label} />
+          <span className="elements-tree-node-label">{i18n.t(labelKey)}</span>
         </div>
         <CollapsibleContent>
-          {element.children.map((childId) => (
-            <ElementsTreeNode
-              key={childId}
-              elementId={childId}
-              depth={depth + 1}
-            />
-          ))}
+          <div
+            className="elements-tree-indent-guide"
+            style={{
+              marginLeft: `calc(var(--space-2) + var(--space-1) * ${depth} + 0.375rem - 0.5px)`,
+            }}
+          >
+            {element.children.map((childId) => (
+              <ElementsTreeNode
+                key={childId}
+                elementId={childId}
+                depth={depth + 1}
+              />
+            ))}
+          </div>
         </CollapsibleContent>
       </Collapsible>
     );
@@ -75,12 +90,13 @@ export const ElementsTreeNode: React.FC<ElementsTreeNodeProps> = ({
   return (
     <div
       className="elements-tree-node"
-      style={{ paddingLeft: `calc(var(--space-4) * ${depth})` }}
+      data-selected={isSelected}
+      style={{ paddingLeft: indent }}
       onClick={handleClick}
     >
       <span className="elements-tree-node-chevron-placeholder" />
       <Icon name={icon} className="elements-tree-node-icon" />
-      <Text size="sm" text={label} />
+      <span className="elements-tree-node-label">{i18n.t(labelKey)}</span>
     </div>
   );
 };

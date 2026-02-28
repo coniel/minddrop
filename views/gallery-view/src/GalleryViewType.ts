@@ -7,6 +7,7 @@ export const GalleryViewType: ViewType<GalleryViewOptions> = {
   type: 'gallery',
   name: 'views.gallery.name',
   description: 'views.gallery.description',
+  icon: 'layout-grid',
   defaultOptions: defaultGalleryViewOptions,
   component: GalleryViewComponent,
 };

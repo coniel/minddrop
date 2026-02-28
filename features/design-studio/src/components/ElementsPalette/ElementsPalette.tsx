@@ -1,4 +1,4 @@
-import { MenuGroup, MenuLabel, ScrollArea } from '@minddrop/ui-primitives';
+import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
 import { ElementsPaletteItem } from '../ElementsPaletteItem/ElementsPaletteItem';
 import './ElementsPalette.css';
 
@@ -19,17 +19,15 @@ const ELEMENT_GROUPS = [
 
 export const ElementsPalette: React.FC = () => {
   return (
-    <ScrollArea>
-      <div className="elements-palette">
-        {ELEMENT_GROUPS.map((group) => (
-          <MenuGroup key={group.label} padded>
-            <MenuLabel label={group.label} />
-            {group.types.map((type) => (
-              <ElementsPaletteItem key={type} type={type} />
-            ))}
-          </MenuGroup>
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="elements-palette">
+      {ELEMENT_GROUPS.map((group) => (
+        <MenuGroup key={group.label}>
+          <MenuLabel label={group.label} />
+          {group.types.map((type) => (
+            <ElementsPaletteItem key={type} type={type} />
+          ))}
+        </MenuGroup>
+      ))}
+    </div>
   );
 };

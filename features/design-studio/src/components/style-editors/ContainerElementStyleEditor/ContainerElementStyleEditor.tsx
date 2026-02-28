@@ -14,6 +14,7 @@ import { MinHeightField } from '../MinHeightField';
 import { PaddingFields } from '../PaddingFields/PaddingFields';
 import { PositionGrid } from '../PositionGrid';
 import { SectionLabel } from '../SectionLabel';
+import { StretchSwitch } from '../StretchSwitch';
 import { WrapSwitch } from '../WrapSwitch';
 
 export interface ContainerElementStyleEditorProps {
@@ -30,6 +31,7 @@ export const ContainerElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.layout.label" />
         <DirectionToggle elementId={elementId} />
+        {!isRoot && <StretchSwitch elementId={elementId} />}
         <WrapSwitch elementId={elementId} />
         <Stack gap={1}>
           <InputLabel size="xs" label="designs.position.label" />

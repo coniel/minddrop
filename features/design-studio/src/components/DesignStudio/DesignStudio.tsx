@@ -5,13 +5,12 @@ import {
   Events,
   OpenAppSidebarEvent,
 } from '@minddrop/events';
-import { Button, Panel, TextInput, Toolbar } from '@minddrop/ui-primitives';
+import { Panel, TextInput } from '@minddrop/ui-primitives';
 import { DesignStudioStore, saveDesign, useDesignStudioStore } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
 import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
 import { ElementStyleEditor } from '../ElementStyleEditor';
-import { ElementsTree } from '../ElementsTree';
 import './DesignStudio.css';
 
 export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
@@ -118,19 +117,11 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   return (
     <div className="design-studio">
       <Panel className="design-studio-left-panel">
-        <DesignStudioLeftPanel />
+        <DesignStudioLeftPanel
+          onClickBack={backEvent ? handleClickBack : undefined}
+        />
       </Panel>
       <div className="design-studio-workspace">
-        <Toolbar>
-          {backEvent && (
-            <Button
-              variant="ghost"
-              startIcon="chevron-left"
-              label={backButtonLabel || 'actions.back'}
-              onClick={handleClickBack}
-            />
-          )}
-        </Toolbar>
         {design && (
           <>
             <div className="design-studio-workspace-design-name">
@@ -155,7 +146,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         )}
       </div>
       <Panel className="design-studio-right-panel">
-        {selectedElementId ? <ElementStyleEditor /> : <ElementsTree />}
+        {selectedElementId && <ElementStyleEditor />}
       </Panel>
     </div>
   );

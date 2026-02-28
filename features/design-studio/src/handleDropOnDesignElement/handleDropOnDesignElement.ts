@@ -76,6 +76,30 @@ export function handleDropOnDesignElement(drop: DropEventData): void {
   const designElements = drop.data['design-elements'];
   const templates = drop.data[DesignElementTemplatesDataKey];
 
+  // Handle drops inside an empty container
+  if (drop.position === 'inside' && targetElement.type === 'container') {
+    if (templates && templates.length) {
+      return addDeisgnElementFromTemplate(
+        templates[0],
+        targetElement.id,
+        0,
+      );
+    }
+
+    if (designElements && designElements.length) {
+      const droppedElement = designElements[0];
+
+      // Prevent dropping an element onto itself
+      if (droppedElement.id === targetElement.id) {
+        return;
+      }
+
+      return moveDesignElement(droppedElement.id, targetElement.id, 0);
+    }
+
+    return;
+  }
+
   // Get the target element's parent
   const parentElement = getDesignElement<FlatParentDesignElement>(
     targetElement.parent,

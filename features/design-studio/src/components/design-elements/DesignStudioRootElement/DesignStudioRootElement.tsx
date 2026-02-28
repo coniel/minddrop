@@ -23,8 +23,9 @@ export const DesignStudioRootElement: React.FC<
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-    <div onClick={handleClick}>
+    <div onClick={handleClick} style={{ width: '100%', height: '100%' }}>
       <FlexDropContainer
+        key={style.direction}
         id="root"
         gap={style.gap}
         direction={style.direction}
@@ -33,6 +34,7 @@ export const DesignStudioRootElement: React.FC<
         className="design-studio-root-element"
         style={createElementCssStyle(element)}
         onDrop={handleDropOnGap}
+        fillEnd
       >
         {element.children.map((childId, index) => (
           <DesignStudioElement

@@ -5,8 +5,10 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../../../DesignStudioStore';
-import { FlatDesignElement } from '../../../types';
+import { ContainerElementStyle } from '@minddrop/designs';
+import { FlatContainerDesignElement, FlatDesignElement } from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
+import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
 import { DesignStudioImageElement } from '../DesignStudioImageElement';
 import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
@@ -46,6 +48,12 @@ export interface ElementComponentProps {
 
 function getElementComponent(element: FlatDesignElement): ReactElement | null {
   switch (element.type) {
+    case 'container':
+      return (
+        <DesignStudioContainerElement
+          element={element as FlatContainerDesignElement}
+        />
+      );
     case 'text':
       return <DesignStudioTextElement element={element} />;
     case 'formatted-text':
@@ -118,8 +126,21 @@ const DesignStudioElementInner: React.FC<{
     return null;
   }
 
+  // Determine if this element should stretch within its parent.
+  // Images always stretch; containers stretch based on their
+  // stretch property.
+  const shouldStretch =
+    element.type === 'image' ||
+    (element.type === 'container' &&
+      (element.style as ContainerElementStyle).stretch);
+
   return (
-    <div className="design-studio-element" data-element-id={element.id} {...dragDropProps}>
+    <div
+      className="design-studio-element"
+      data-element-id={element.id}
+      style={shouldStretch ? { alignSelf: 'stretch' } : undefined}
+      {...dragDropProps}
+    >
       <div
         className={propsToClass('design-studio-element-inner', { isDragging, isSelected, isFading })}
         onClick={handleClick}

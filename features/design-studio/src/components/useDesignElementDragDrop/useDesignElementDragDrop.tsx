@@ -1,9 +1,12 @@
-import React, { useCallback } from 'react';
-import { DropIndicator } from '@minddrop/feature-drag-and-drop';
+import React, { useCallback, useEffect, useRef } from 'react';
+import {
+  DropIndicator,
+  useFlexDropContainer,
+} from '@minddrop/feature-drag-and-drop';
 import { useDraggable, useDroppable } from '@minddrop/selection';
 import { DesignElementsDataKey } from '../../constants';
 import { handleDropOnDesignElement } from '../../handleDropOnDesignElement';
-import { FlatDesignElement } from '../../types';
+import { FlatContainerDesignElement, FlatDesignElement } from '../../types';
 
 export interface UseDesignElementDragDropOptions {
   index: number;
@@ -26,6 +29,14 @@ export function useDesignElementDragDrop({
   isLastChild = false,
   gap = 0,
 }: UseDesignElementDragDropOptions): UseDesignElementDragDropResult {
+  // Check if this is an empty container that should accept inside drops
+  const isEmptyContainer =
+    element.type === 'container' &&
+    (element as FlatContainerDesignElement).children.length === 0;
+
+  // Get the parent FlexDropContainer context for gap expansion
+  const flexDropContainer = useFlexDropContainer();
+
   const { draggableProps, isDragging } = useDraggable({
     id: element.id,
     type: DesignElementsDataKey,
@@ -38,11 +49,53 @@ export function useDesignElementDragDrop({
       type: 'design-element',
       id: element.id,
       axis: 'vertical',
-      enableInside: false,
-      edgeThreshold: 0.5,
+      enableInside: element.type === 'container',
+      edgeThreshold: isEmptyContainer ? 0 : 0.25,
       isLastChild,
       onDrop: handleDropOnDesignElement,
     });
+
+  // Track the previous position to avoid redundant context calls
+  const previousPositionRef = useRef(dropIndicatorPosition);
+
+  // Communicate before/after positions to the parent FlexDropContainer
+  // so it can expand the appropriate gap
+  useEffect(() => {
+    if (!flexDropContainer) {
+      return;
+    }
+
+    // Skip if position hasn't changed
+    if (previousPositionRef.current === dropIndicatorPosition) {
+      return;
+    }
+
+    previousPositionRef.current = dropIndicatorPosition;
+
+    if (!isDraggingOver || !dropIndicatorPosition) {
+      flexDropContainer.collapseGap();
+
+      return;
+    }
+
+    // Map element drop position to the adjacent gap index
+    if (
+      dropIndicatorPosition === 'before' ||
+      dropIndicatorPosition === 'start'
+    ) {
+      // Expand the gap before this element
+      flexDropContainer.expandGap(index);
+    } else if (
+      dropIndicatorPosition === 'after' ||
+      dropIndicatorPosition === 'end'
+    ) {
+      // Expand the gap after this element
+      flexDropContainer.expandGap(index + 1);
+    } else {
+      // "inside" position — collapse any expanded gap
+      flexDropContainer.collapseGap();
+    }
+  }, [flexDropContainer, isDraggingOver, dropIndicatorPosition, index]);
 
   // Wrap onDragStart to manually set the drag image.
   // Elements inside the design canvas (which uses CSS transform)
@@ -82,6 +135,11 @@ export function useDesignElementDragDrop({
     };
   }
 
+  // Only show the DropIndicator for "inside" drops on empty containers.
+  // Before/after positions are handled by gap expansion.
+  const showDropIndicator =
+    isDraggingOver && isEmptyContainer && dropIndicatorPosition === 'inside';
+
   return {
     isDragging,
     dragDropProps: {
@@ -92,7 +150,7 @@ export function useDesignElementDragDrop({
     dropIndicator: (
       <DropIndicator
         axis="horizontal"
-        show={isDraggingOver}
+        show={showDropIndicator}
         position={dropIndicatorPosition}
         gap={gap}
       />
