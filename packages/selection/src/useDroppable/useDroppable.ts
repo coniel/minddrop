@@ -221,6 +221,7 @@ export function useDroppable(options: UseDroppableOptions): UseDroppableReturn {
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
+      e.stopPropagation();
 
       const dropPosition = getDropPosition(e);
 
