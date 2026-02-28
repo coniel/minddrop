@@ -12,11 +12,15 @@ export type FieldSize = 'sm' | 'md' | 'lg';
 export interface TableViewOptions {
   overflow: boolean;
   showRowNumbers: boolean;
+  /** Percentage-based column widths used in non-overflow mode. */
   columnWidths: Record<string, number>;
+  /** Pixel-based column widths used in overflow mode. */
+  columnWidthsPx: Record<string, number>;
   padding: TablePadding;
   rowSeparator: boolean;
   columnSeparator: boolean;
   highlightOnHover: boolean;
+  zebraStripes: boolean;
 }
 
 export interface TableColumnOption {

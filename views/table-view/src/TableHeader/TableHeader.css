@@ -15,6 +15,7 @@
   white-space: nowrap;
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
 .table-header-row-number {
@@ -24,6 +25,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--surface-overlay);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .table-header-checkbox {
@@ -37,8 +40,9 @@
 .table-header-cell {
   position: relative;
   padding: var(--space-1) var(--space-3);
-  min-width: 0;
-  overflow: hidden;
+  min-width: 100px;
+  overflow: visible;
+  box-sizing: border-box;
   border-bottom: 1px solid var(--border-subtle);
   background-color: var(--surface-overlay);
 }
@@ -47,6 +51,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .table-header-cell-icon {
@@ -60,33 +67,62 @@
   font-size: var(--text-base);
   font-weight: var(--weight-normal);
   color: var(--text-subtle);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
-/* ---- Resize handle ---- */
+/* ---- Resize handles ----
+   Each column can have a left and/or right handle.
+   The grab zone is 40px wide, extending beyond the cell edge
+   so adjacent handles overlap seamlessly. The visible bar
+   (::after) sits at the cell border.
+   ------------------------------------------------------------ */
 
 .table-header-resize-handle {
   position: absolute;
   top: 0;
-  right: 0;
   bottom: 0;
-  width: 0.5rem; /* 8px — wide enough to grab comfortably */
+  width: 40px;
   cursor: col-resize;
   user-select: none;
+  z-index: 1;
 
+  /* Visible bar */
   &::after {
     content: '';
     position: absolute;
-    top: 25%;
-    bottom: 25%;
-    right: 0.125rem;
-    width: 0.0625rem; /* 1px visible line */
-    background-color: var(--border-default);
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    border-radius: 1px;
+    background-color: var(--border-primary);
+    box-shadow: 0 0 6px var(--border-primary-subtle);
     opacity: 0;
-    transition: opacity var(--duration-fast);
+    transition: opacity var(--duration-normal);
   }
 
   &:hover::after,
   &:active::after {
     opacity: 1;
+  }
+}
+
+/* Right handle: grab zone extends into the next column */
+.table-header-resize-handle-right {
+  right: -20px;
+
+  &::after {
+    right: 19px;
+  }
+}
+
+/* Left handle: grab zone extends into the previous column */
+.table-header-resize-handle-left {
+  left: -20px;
+
+  &::after {
+    left: 19px;
   }
 }

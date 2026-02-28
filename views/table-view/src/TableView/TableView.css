@@ -52,8 +52,19 @@
   box-shadow: inset 0 -1px 0 var(--border-subtle);
 }
 
+/* Zebra stripes — alternating row background */
+.table-view-table[data-zebra-stripes] .table-row:nth-child(even) .table-cell {
+  background-color: var(--surface-subtle);
+}
+
 /* Hover highlight */
 .table-view-table[data-hover-highlight] .table-row:hover .table-cell {
   background-color: var(--surface-subtle);
 }
 
+/* Hover highlight when zebra stripes are enabled */
+.table-view-table[data-zebra-stripes][data-hover-highlight]
+  .table-row:hover
+  .table-cell {
+  background-color: var(--surface-raised);
+}

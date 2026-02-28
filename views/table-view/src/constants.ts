@@ -3,17 +3,19 @@ import { FieldSize, TablePadding, TableViewOptions } from './types';
 
 export const DEFAULT_COLUMN_WIDTH = 200;
 export const DEFAULT_TITLE_COLUMN_WIDTH = 300;
-export const MIN_COLUMN_WIDTH_PX = 50;
-export const MIN_COLUMN_WIDTH_PCT = 5;
+export const MIN_COLUMN_WIDTH_PX = 100;
+export const MIN_COLUMN_WIDTH_PCT = 10;
 
 export const defaultTableViewOptions: TableViewOptions = {
   overflow: false,
   showRowNumbers: true,
   columnWidths: {},
+  columnWidthsPx: {},
   padding: 'comfortable',
   rowSeparator: true,
   columnSeparator: false,
   highlightOnHover: true,
+  zebraStripes: false,
 };
 
 export const FIELD_SIZE: Record<TablePadding, FieldSize> = {

@@ -42,10 +42,11 @@
 /* ---- Body cells ---- */
 
 .table-cell {
-  padding: 0;
+  padding: 0 var(--space-3);
   height: var(--table-row-height, 1.75rem);
   overflow: hidden;
-  min-width: 0;
+  min-width: 100px;
+  box-sizing: border-box;
 }
 
 /* ---- Persistent cell inputs (text / title / number) ---- */
@@ -62,15 +63,19 @@
   margin: 0;
   cursor: text;
 
-  /* Extend to cover the td's horizontal padding so caret aligns with display text */
-  padding-inline: var(--space-3);
-  margin-inline: calc(-1 * var(--space-3));
+  padding-inline: 0;
   height: var(--table-row-height, 1.75rem);
 }
 
-.table-cell-input--sm { font-size: var(--text-sm); }
-.table-cell-input--md { font-size: var(--text-base); }
-.table-cell-input--lg { font-size: var(--text-base); }
+.table-cell-input--sm {
+  font-size: var(--text-sm);
+}
+.table-cell-input--md {
+  font-size: var(--text-base);
+}
+.table-cell-input--lg {
+  font-size: var(--text-base);
+}
 
 /* ---- Title cell (input + open button) ---- */
 

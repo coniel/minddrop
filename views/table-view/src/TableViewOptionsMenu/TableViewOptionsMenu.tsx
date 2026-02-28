@@ -1,141 +1,84 @@
 import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  IconButton,
-  Popover,
-  PopoverContent,
-  PopoverPortal,
-  PopoverPositioner,
-  PopoverTrigger,
-  RadioToggleGroup,
-  Switch,
-  Toggle,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuSwitchItem,
+  MenuLabel,
 } from '@minddrop/ui-primitives';
-import { TablePadding } from '../types';
+import { ViewTypeSettingsMenuProps } from '@minddrop/views';
+import { TablePadding, TableViewOptions } from '../types';
 import './TableViewOptionsMenu.css';
 
-interface TableViewOptionsMenuProps {
-  overflow: boolean;
-  padding: TablePadding;
-  showRowNumbers: boolean;
-  rowSeparator: boolean;
-  columnSeparator: boolean;
-  highlightOnHover: boolean;
-  onOverflowChange: (overflow: boolean) => void;
-  onPaddingChange: (padding: TablePadding) => void;
-  onShowRowNumbersChange: (show: boolean) => void;
-  onRowSeparatorChange: (show: boolean) => void;
-  onColumnSeparatorChange: (show: boolean) => void;
-  onHighlightOnHoverChange: (show: boolean) => void;
-}
-
-export const TableViewOptionsMenu: React.FC<TableViewOptionsMenuProps> = ({
-  overflow,
-  padding,
-  showRowNumbers,
-  rowSeparator,
-  columnSeparator,
-  highlightOnHover,
-  onOverflowChange,
-  onPaddingChange,
-  onShowRowNumbersChange,
-  onRowSeparatorChange,
-  onColumnSeparatorChange,
-  onHighlightOnHoverChange,
-}) => {
+export const TableViewOptionsMenu: React.FC<
+  ViewTypeSettingsMenuProps<TableViewOptions>
+> = ({ options, onUpdateOptions }) => {
   const { t } = useTranslation({ keyPrefix: 'views.table.options' });
 
   return (
-    <div className="table-view-options-menu">
-      <Popover>
-        <PopoverTrigger>
-          <IconButton
-            icon="settings-2"
-            label={t('title')}
-            variant="ghost"
-            size="sm"
-          />
-        </PopoverTrigger>
-        <PopoverPortal>
-          <PopoverPositioner side="top" align="center">
-            <PopoverContent
-              className="table-view-options-content"
-              minWidth={200}
-            >
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">
-                  {t('overflow')}
-                </span>
-                <Switch
-                  size="sm"
-                  checked={overflow}
-                  onCheckedChange={onOverflowChange}
-                />
-              </div>
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">
-                  {t('rowNumbers')}
-                </span>
-                <Switch
-                  size="sm"
-                  checked={showRowNumbers}
-                  onCheckedChange={onShowRowNumbersChange}
-                />
-              </div>
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">
-                  {t('rowSeparator')}
-                </span>
-                <Switch
-                  size="sm"
-                  checked={rowSeparator}
-                  onCheckedChange={onRowSeparatorChange}
-                />
-              </div>
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">
-                  {t('columnSeparator')}
-                </span>
-                <Switch
-                  size="sm"
-                  checked={columnSeparator}
-                  onCheckedChange={onColumnSeparatorChange}
-                />
-              </div>
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">
-                  {t('highlightOnHover')}
-                </span>
-                <Switch
-                  size="sm"
-                  checked={highlightOnHover}
-                  onCheckedChange={onHighlightOnHoverChange}
-                />
-              </div>
-              <div className="table-view-options-row">
-                <span className="table-view-options-label">{t('padding')}</span>
-                <RadioToggleGroup
-                  value={padding}
-                  onValueChange={(v) => onPaddingChange(v as TablePadding)}
-                  size="sm"
-                >
-                  <Toggle icon="rows-4" label={t('compact')} value="compact" />
-                  <Toggle
-                    icon="rows-3"
-                    label={t('comfortable')}
-                    value="comfortable"
-                  />
-                  <Toggle
-                    icon="rows-2"
-                    label={t('spacious')}
-                    value="spacious"
-                  />
-                </RadioToggleGroup>
-              </div>
-            </PopoverContent>
-          </PopoverPositioner>
-        </PopoverPortal>
-      </Popover>
-    </div>
+    <DropdownMenuContent className="table-view-options-menu">
+      <DropdownMenuSwitchItem
+        label={t('overflow')}
+        checked={options.overflow}
+        onCheckedChange={(overflow) => onUpdateOptions({ overflow })}
+      />
+      <DropdownMenuSwitchItem
+        label={t('rowNumbers')}
+        checked={options.showRowNumbers}
+        onCheckedChange={(showRowNumbers) =>
+          onUpdateOptions({ showRowNumbers })
+        }
+      />
+      <DropdownMenuSwitchItem
+        label={t('rowSeparator')}
+        checked={options.rowSeparator}
+        onCheckedChange={(rowSeparator) => onUpdateOptions({ rowSeparator })}
+      />
+      <DropdownMenuSwitchItem
+        label={t('columnSeparator')}
+        checked={options.columnSeparator}
+        onCheckedChange={(columnSeparator) =>
+          onUpdateOptions({ columnSeparator })
+        }
+      />
+      <DropdownMenuSwitchItem
+        label={t('highlightOnHover')}
+        checked={options.highlightOnHover}
+        onCheckedChange={(highlightOnHover) =>
+          onUpdateOptions({ highlightOnHover })
+        }
+      />
+      <DropdownMenuSwitchItem
+        label={t('zebraStripes')}
+        checked={options.zebraStripes}
+        onCheckedChange={(zebraStripes) => onUpdateOptions({ zebraStripes })}
+      />
+      <DropdownMenuSeparator />
+      <DropdownMenuRadioGroup
+        value={options.padding}
+        onValueChange={(value) =>
+          onUpdateOptions({ padding: value as TablePadding })
+        }
+      >
+        <MenuLabel label={t('padding')} />
+        <DropdownMenuRadioItem
+          label={t('compact')}
+          value="compact"
+          icon="rows-4"
+        />
+        <DropdownMenuRadioItem
+          label={t('comfortable')}
+          value="comfortable"
+          icon="rows-3"
+        />
+        <DropdownMenuRadioItem
+          label={t('spacious')}
+          value="spacious"
+          icon="rows-2"
+        />
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
   );
 };

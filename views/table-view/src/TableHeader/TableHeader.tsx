@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { UiIconName } from '@minddrop/icons';
-import { Checkbox, Icon } from '@minddrop/ui-primitives';
+import { Checkbox, Icon, Tooltip } from '@minddrop/ui-primitives';
 import { TableColumn } from '../types';
 import './TableHeader.css';
 
@@ -34,6 +34,36 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   const allSelected = totalCount > 0 && selectedCount === totalCount;
   const someSelected = selectedCount > 0 && selectedCount < totalCount;
 
+  // Track which handle's tooltip is open (null = none).
+  // Set to null while dragging so the tooltip hides immediately.
+  const [tooltipHandleId, setTooltipHandleId] = useState<string | null>(null);
+  const [resizing, setResizing] = useState(false);
+
+  const handleResizeMouseDown = useCallback(
+    (columnId: string, event: React.MouseEvent) => {
+      setResizing(true);
+      setTooltipHandleId(null);
+
+      const handleMouseUp = () => {
+        setResizing(false);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+
+      document.addEventListener('mouseup', handleMouseUp);
+      onStartResize(columnId, event);
+    },
+    [onStartResize],
+  );
+
+  const handleTooltipOpenChange = useCallback(
+    (handleId: string, open: boolean) => {
+      if (!resizing) {
+        setTooltipHandleId(open ? handleId : null);
+      }
+    },
+    [resizing],
+  );
+
   return (
     <div role="rowgroup" className="table-header">
       <div role="row" className="table-header-row">
@@ -46,8 +76,21 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           />
         </div>
         {columns.map((column, index) => {
+          const isFirstColumn = index === 0;
           const isLastColumn = index === columns.length - 1;
-          const showResizeHandle = overflow || !isLastColumn;
+
+          // Right handle resizes this column
+          const showRightHandle = overflow || !isLastColumn;
+          // Left handle resizes the previous column
+          const showLeftHandle = index > 0;
+
+          const previousColumnId = !isFirstColumn
+            ? columns[index - 1].id
+            : null;
+
+          // Unique IDs for tooltip tracking
+          const rightHandleId = `${column.id}-right`;
+          const leftHandleId = `${column.id}-left`;
 
           return (
             <div
@@ -64,10 +107,64 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 />
                 <span className="table-header-cell-name">{column.name}</span>
               </span>
-              {showResizeHandle && (
+
+              {/* Left handle — resizes the previous column */}
+              {showLeftHandle && previousColumnId && !overflow && (
+                <Tooltip
+                  title="views.table.resizeHandle"
+                  description="views.table.resizeHandleShiftHint"
+                  delay={200}
+                  open={tooltipHandleId === leftHandleId}
+                  onOpenChange={(open) =>
+                    handleTooltipOpenChange(leftHandleId, open)
+                  }
+                  side="top"
+                  align="center"
+                >
+                  <div
+                    className="table-header-resize-handle table-header-resize-handle-left"
+                    onMouseDown={(event) =>
+                      handleResizeMouseDown(previousColumnId, event)
+                    }
+                  />
+                </Tooltip>
+              )}
+              {showLeftHandle && previousColumnId && overflow && (
                 <div
-                  className="table-header-resize-handle"
-                  onMouseDown={(event) => onStartResize(column.id, event)}
+                  className="table-header-resize-handle table-header-resize-handle-left"
+                  onMouseDown={(event) =>
+                    handleResizeMouseDown(previousColumnId, event)
+                  }
+                />
+              )}
+
+              {/* Right handle — resizes this column */}
+              {showRightHandle && !overflow && (
+                <Tooltip
+                  title="views.table.resizeHandle"
+                  description="views.table.resizeHandleShiftHint"
+                  delay={200}
+                  open={tooltipHandleId === rightHandleId}
+                  onOpenChange={(open) =>
+                    handleTooltipOpenChange(rightHandleId, open)
+                  }
+                  side="top"
+                  align="center"
+                >
+                  <div
+                    className="table-header-resize-handle table-header-resize-handle-right"
+                    onMouseDown={(event) =>
+                      handleResizeMouseDown(column.id, event)
+                    }
+                  />
+                </Tooltip>
+              )}
+              {showRightHandle && overflow && (
+                <div
+                  className="table-header-resize-handle table-header-resize-handle-right"
+                  onMouseDown={(event) =>
+                    handleResizeMouseDown(column.id, event)
+                  }
                 />
               )}
             </div>

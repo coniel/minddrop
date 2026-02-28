@@ -12,7 +12,6 @@ import { ViewTypeComponentProps, Views } from '@minddrop/views';
 import { TableEditContext } from '../TableEditContext';
 import { TableHeader } from '../TableHeader';
 import { TableRow } from '../TableRow';
-import { TableViewOptionsMenu } from '../TableViewOptionsMenu';
 import {
   DEFAULT_COLUMN_WIDTH,
   DEFAULT_TITLE_COLUMN_WIDTH,
@@ -21,7 +20,7 @@ import {
   ROW_HEIGHT_PX,
   defaultTableViewOptions,
 } from '../constants';
-import { TableColumn, TablePadding, TableViewOptions } from '../types';
+import { TableColumn, TableViewOptions } from '../types';
 import { useColumnResize } from '../useColumnResize';
 import './TableView.css';
 
@@ -78,10 +77,26 @@ export const TableViewComponent: React.FC<
     return map;
   }, [allEntries]);
 
+  // Select the correct set of initial widths based on mode
+  const initialWidths = options.overflow
+    ? options.columnWidthsPx
+    : options.columnWidths;
+
+  // Persist resized widths to the view options on resize end
+  const handleResizeEnd = useCallback(
+    (widths: Record<string, number>) => {
+      const optionsKey = options.overflow ? 'columnWidthsPx' : 'columnWidths';
+
+      Views.update(view.id, { options: { [optionsKey]: widths } });
+    },
+    [view.id, options.overflow],
+  );
+
   const { columnWidths, tableRef, startResize } = useColumnResize(
     columns,
-    options.columnWidths,
+    initialWidths,
     options.overflow,
+    handleResizeEnd,
   );
 
   const columnFlexStyles = useMemo<Record<string, CSSProperties>>(() => {
@@ -273,10 +288,6 @@ export const TableViewComponent: React.FC<
     [entries],
   );
 
-  function handleOptionChange(update: Partial<TableViewOptions>) {
-    Views.update(view.id, { options: update });
-  }
-
   const editContextValue = useMemo(
     () => ({ activeCell, onCellChange: handleCellChange, deactivate }),
     [activeCell, handleCellChange, deactivate],
@@ -303,6 +314,7 @@ export const TableViewComponent: React.FC<
             data-row-separators={options.rowSeparator || undefined}
             data-col-separators={options.columnSeparator || undefined}
             data-hover-highlight={options.highlightOnHover || undefined}
+            data-zebra-stripes={options.zebraStripes || undefined}
           >
             <TableHeader
               columns={columns}
@@ -351,30 +363,6 @@ export const TableViewComponent: React.FC<
             </div>
           </div>
         </ScrollArea>
-        <TableViewOptionsMenu
-          overflow={options.overflow}
-          padding={options.padding}
-          showRowNumbers={options.showRowNumbers}
-          rowSeparator={options.rowSeparator}
-          columnSeparator={options.columnSeparator}
-          highlightOnHover={options.highlightOnHover}
-          onOverflowChange={(overflow) => handleOptionChange({ overflow })}
-          onPaddingChange={(padding: TablePadding) =>
-            handleOptionChange({ padding })
-          }
-          onShowRowNumbersChange={(showRowNumbers) =>
-            handleOptionChange({ showRowNumbers })
-          }
-          onRowSeparatorChange={(rowSeparator) =>
-            handleOptionChange({ rowSeparator })
-          }
-          onColumnSeparatorChange={(columnSeparator) =>
-            handleOptionChange({ columnSeparator })
-          }
-          onHighlightOnHoverChange={(highlightOnHover) =>
-            handleOptionChange({ highlightOnHover })
-          }
-        />
       </div>
     </TableEditContext.Provider>
   );
