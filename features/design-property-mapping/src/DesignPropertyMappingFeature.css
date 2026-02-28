@@ -1,0 +1,7 @@
+.design-property-mapping-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--level-dialog-backdrop);
+  background: var(--surface-overlay);
+  opacity: 0.7;
+}

@@ -14,6 +14,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { DatabasesFeature } from '@minddrop/feature-databases';
+import { DesignPropertyMappingFeature } from '@minddrop/feature-design-property-mapping';
 import { DesignStudioFeature } from '@minddrop/feature-design-studio';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import {
@@ -69,6 +70,7 @@ export const DesktopApp: React.FC = () => {
           <DatabasesFeature />
           <ConfirmationDialogFeature />
           <ShowWindowOnRendered />
+          <DesignPropertyMappingFeature />
           <DesignStudioFeature />
           <DevTools />
         </MindDropApiProvider>

@@ -1,6 +1,7 @@
 import { Databases } from '@minddrop/databases';
-import { MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
-import { DatabaseDesignTypeSelectionMenu } from '../DatabaseDesignTypeSelectionMenu';
+import { Events } from '@minddrop/events';
+import { BrowseDesignsEvent } from '@minddrop/feature-design-property-mapping';
+import { IconButton, MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
 
 export interface DatabaseDesignsMenuProps
   extends React.HTMLProps<HTMLDivElement> {
@@ -19,12 +20,24 @@ export const DatabaseDesignsMenu: React.FC<DatabaseDesignsMenuProps> = ({
     return null;
   }
 
+  // Dispatch the browse designs event to open the design browser overlay
+  function handleAddDesign() {
+    Events.dispatch(BrowseDesignsEvent, { databaseId });
+  }
+
   return (
     <MenuGroup marginTop="large">
       <MenuLabel
         actionsAlwaysVisible
         label="labels.designs"
-        actions={<DatabaseDesignTypeSelectionMenu databaseId={databaseId} />}
+        actions={
+          <IconButton
+            size="sm"
+            label="databases.actions.addDesign"
+            icon="plus"
+            onClick={handleAddDesign}
+          />
+        }
       />
     </MenuGroup>
   );
