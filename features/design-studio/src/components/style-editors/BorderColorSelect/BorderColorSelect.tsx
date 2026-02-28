@@ -27,6 +27,7 @@ export const BorderColorSelect = ({ elementId }: BorderColorSelectProps) => {
     <ColorSelect
       variant="subtle"
       value={borderColor}
+      valueColor={borderColor === 'default' ? 'muted' : 'regular'}
       onValueChange={handleChange}
     />
   );

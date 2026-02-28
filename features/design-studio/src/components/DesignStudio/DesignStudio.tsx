@@ -6,7 +6,7 @@ import {
   OpenAppSidebarEvent,
 } from '@minddrop/events';
 import { Button, Panel, TextInput, Toolbar } from '@minddrop/ui-primitives';
-import { useDesignStudioStore } from '../../DesignStudioStore';
+import { DesignStudioStore, saveDesign, useDesignStudioStore } from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
 import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
@@ -53,6 +53,41 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     [],
   );
 
+  // Delete the highlighted element on Delete/Backspace
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Delete' && event.key !== 'Backspace') {
+        return;
+      }
+
+      // Don't delete when typing in an input
+      const tag = (event.target as HTMLElement).tagName;
+
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        return;
+      }
+
+      const store = DesignStudioStore.getState();
+      const { highlightedElementId } = store;
+
+      // Can't delete root or nothing
+      if (!highlightedElementId || highlightedElementId === 'root') {
+        return;
+      }
+
+      event.preventDefault();
+      store.removeElement(highlightedElementId);
+      store.selectElement(null);
+      saveDesign();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Close the app sidebar when the design studio is opened
   useEffect(() => {
     Events.dispatch(CloseAppSidebarEvent);
@@ -61,6 +96,16 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       Events.dispatch(OpenAppSidebarEvent);
     };
   }, []);
+
+  // Clear the canvas highlight when clicking the workspace background
+  const handleWorkspaceClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (event.target === event.currentTarget) {
+        DesignStudioStore.getState().clearHighlight();
+      }
+    },
+    [],
+  );
 
   const handleClickBack = useCallback(() => {
     if (!backEvent) {
@@ -72,10 +117,10 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
 
   return (
     <div className="design-studio">
-      <Panel className="left-panel">
+      <Panel className="design-studio-left-panel">
         <DesignStudioLeftPanel />
       </Panel>
-      <div className="workspace">
+      <div className="design-studio-workspace">
         <Toolbar>
           {backEvent && (
             <Button
@@ -88,7 +133,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
         </Toolbar>
         {design && (
           <>
-            <div className="workspace-design-name">
+            <div className="design-studio-workspace-design-name">
               <TextInput
                 ref={nameInputRef}
                 variant="ghost"
@@ -100,13 +145,16 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
                 onKeyDown={handleNameKeyDown}
               />
             </div>
-            <div className="workspace-canvas-area">
+            <div
+              className="design-studio-workspace-canvas-area"
+              onClick={handleWorkspaceClick}
+            >
               <DesignCanvas />
             </div>
           </>
         )}
       </div>
-      <Panel className="right-panel">
+      <Panel className="design-studio-right-panel">
         {selectedElementId ? <ElementStyleEditor /> : <ElementsTree />}
       </Panel>
     </div>

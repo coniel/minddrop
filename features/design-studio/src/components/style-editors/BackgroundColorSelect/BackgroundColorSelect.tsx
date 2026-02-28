@@ -46,6 +46,7 @@ export const BackgroundColorSelect = ({
           size="md"
           variant="subtle"
           value={backgroundColor}
+          valueColor={backgroundColor === 'transparent' ? 'muted' : 'regular'}
           onValueChange={handleChange}
           extraOptions={[transparentOption]}
         />

@@ -31,6 +31,7 @@ export const TextColorSelect = ({ elementId, showInherit = true }: TextColorSele
       size="md"
       variant="subtle"
       value={color}
+      valueColor={color === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}
       extraOptions={showInherit ? [inheritOption] : undefined}
     />

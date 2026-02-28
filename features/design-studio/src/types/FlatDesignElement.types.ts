@@ -2,6 +2,7 @@ import {
   ContainerElement,
   ImageElement,
   LeafDesignElement,
+  NumberElement,
   RootElement,
   TextElement,
 } from '@minddrop/designs';
@@ -18,6 +19,7 @@ export type FlatContainerDesignElement = Omit<ContainerElement, 'children'> &
 export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
 export type FlatTextElement = TextElement & Parent;
+export type FlatNumberElement = NumberElement & Parent;
 export type FlatImageElement = ImageElement & Parent;
 
 export type FlatDesignElement =

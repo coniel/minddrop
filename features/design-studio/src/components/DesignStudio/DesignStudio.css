@@ -1,19 +1,25 @@
+:root {
+  --design-studio-panel-content-width: 300px;
+}
+
 .design-studio {
   display: flex;
   height: 100%;
   gap: 0.5rem;
 
-  .left-panel {
-    width: 400px;
+  .design-studio-left-panel {
+    width: 300px;
+    flex-shrink: 0;
     height: 100%;
   }
 
-  .right-panel {
-    width: 400px;
+  .design-studio-right-panel {
+    width: 300px;
+    flex-shrink: 0;
     height: 100%;
   }
 
-  .workspace {
+  .design-studio-workspace {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -27,12 +33,12 @@
       margin-bottom: var(--space-2);
     }
 
-    .workspace-design-name {
+    .design-studio-workspace-design-name {
       padding: 0 var(--space-4);
       margin-bottom: var(--space-4);
     }
 
-    .workspace-canvas-area {
+    .design-studio-workspace-canvas-area {
       position: relative;
       flex: 1;
       overflow: hidden;

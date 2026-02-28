@@ -1,8 +1,7 @@
 .design-studio-element {
-  display: block;
-  width: 100%;
   position: relative;
   cursor: grab;
+  align-self: stretch;
 }
 
 .design-studio-element,
@@ -12,4 +11,28 @@
 
 .design-studio-element-inner-is-dragging {
   opacity: 0.5;
+}
+
+.design-studio-element-inner {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border-radius: var(--space-1);
+}
+
+.design-studio-element-inner-is-selected {
+  outline-color: var(--primary-700);
+}
+
+.design-studio-element-inner-is-fading {
+  animation: highlight-fade-out 0.3s ease forwards;
+}
+
+@keyframes highlight-fade-out {
+  from {
+    outline-color: var(--primary-700);
+  }
+
+  to {
+    outline-color: transparent;
+  }
 }

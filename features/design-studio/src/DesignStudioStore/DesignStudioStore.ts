@@ -3,6 +3,7 @@ import {
   DesignElementStyle,
   DesignElementTemplate,
   Designs,
+  NumberFormat,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -46,6 +47,16 @@ export interface DesignStudioStore {
   selectedElementId: string | null;
 
   /**
+   * The ID of the element highlighted on the canvas, or null if none.
+   */
+  highlightedElementId: string | null;
+
+  /**
+   * The ID of the element whose highlight is fading out, or null if none.
+   */
+  fadingHighlightElementId: string | null;
+
+  /**
    * The properties of the design's parent (e.g. database), if any.
    */
   properties: PropertiesSchema;
@@ -86,7 +97,7 @@ export interface DesignStudioStore {
    */
   updateElement: (
     id: string,
-    updates: { style?: Partial<DesignElementStyle>; placeholder?: string },
+    updates: { style?: Partial<DesignElementStyle>; placeholder?: string; placeholderImage?: string; format?: Partial<NumberFormat> },
   ) => void;
 
   /**
@@ -112,9 +123,20 @@ export interface DesignStudioStore {
 
   /**
    * Selects an element by ID, or deselects if null.
+   * Also highlights the element on the canvas.
    * @param id - The ID of the element to select, or null to deselect.
    */
   selectElement: (id: string | null) => void;
+
+  /**
+   * Clears the canvas highlight with a fade-out animation.
+   */
+  clearHighlight: () => void;
+
+  /**
+   * Clears the fading highlight after the animation completes.
+   */
+  clearFadingHighlight: () => void;
 
   /**
    * Resets the store to its initial state.
@@ -127,6 +149,8 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
   design: null,
   elements: {},
   selectedElementId: null,
+  highlightedElementId: null,
+  fadingHighlightElementId: null,
   properties: [],
   propertyValues: {},
 
@@ -134,6 +158,9 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     set({
       design,
       elements: flattenTree(design.tree),
+      selectedElementId: null,
+      highlightedElementId: null,
+      fadingHighlightElementId: null,
       properties,
       propertyValues,
       initialized: true,
@@ -258,12 +285,21 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
-  selectElement: (id) => set({ selectedElementId: id }),
+  selectElement: (id) => set({ selectedElementId: id, highlightedElementId: id, fadingHighlightElementId: null }),
+
+  clearHighlight: () => set((state) => ({
+    highlightedElementId: null,
+    fadingHighlightElementId: state.highlightedElementId,
+  })),
+
+  clearFadingHighlight: () => set({ fadingHighlightElementId: null }),
 
   clear: () =>
     set({
       elements: {},
       selectedElementId: null,
+      highlightedElementId: null,
+      fadingHighlightElementId: null,
       properties: [],
       initialized: false,
     }),
@@ -293,9 +329,12 @@ export const getDesignElement = <
 
 export const updateDesignElement = (
   id: string,
-  updates: { style?: Partial<DesignElementStyle>; placeholder?: string },
+  updates: { style?: Partial<DesignElementStyle>; placeholder?: string; placeholderImage?: string; format?: Partial<NumberFormat> },
 ) => {
-  DesignStudioStore.getState().updateElement(id, updates);
+  const store = DesignStudioStore.getState();
+
+  store.updateElement(id, updates);
+  store.clearHighlight();
   saveDesign();
 };
 
@@ -323,6 +362,7 @@ export const addDeisgnElementFromTemplate = (
     id: uuid(),
     parent: parentId,
     ...(template.type === 'text' ? { placeholder: generateLoremIpsum(3) } : {}),
+    ...(template.type === 'number' ? { placeholder: String(Math.floor(Math.random() * 900) + 100) } : {}),
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index);
@@ -334,10 +374,10 @@ export const updateElementStyle = <K extends keyof DesignElementStyle>(
   key: K,
   value: DesignElementStyle[K],
 ) => {
-  useDesignStudioStore
-    .getState()
-    .updateElement(id, { style: { [key]: value } });
+  const store = DesignStudioStore.getState();
 
+  store.updateElement(id, { style: { [key]: value } });
+  store.clearHighlight();
   saveDesign();
 };
 

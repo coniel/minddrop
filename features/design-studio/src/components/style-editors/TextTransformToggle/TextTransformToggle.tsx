@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { TextTransform, textTransforms } from '@minddrop/designs';
+import { TextTransform } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import {
@@ -10,6 +10,13 @@ import {
 export interface TextTransformToggleProps {
   elementId: string;
 }
+
+const options: { value: TextTransform; label: string; children: string | null }[] = [
+  { value: 'none', label: 'designs.typography.text-transform.none', children: null },
+  { value: 'uppercase', label: 'designs.typography.text-transform.uppercase', children: 'designs.typography.text-transform.uppercase-short' },
+  { value: 'lowercase', label: 'designs.typography.text-transform.lowercase', children: 'designs.typography.text-transform.lowercase-short' },
+  { value: 'capitalize', label: 'designs.typography.text-transform.capitalize', children: 'designs.typography.text-transform.capitalize-short' },
+];
 
 export const TextTransformToggle = ({
   elementId,
@@ -25,8 +32,10 @@ export const TextTransformToggle = ({
 
   return (
     <RadioToggleGroup value={textTransform} onValueChange={handleSelect}>
-      {textTransforms.map((transform) => (
-        <Toggle key={transform.value} {...transform} label={t(transform.label)} />
+      {options.map((option) => (
+        <Toggle key={option.value} value={option.value} label={t(option.label)}>
+          {option.children ? t(option.children) : null}
+        </Toggle>
       ))}
     </RadioToggleGroup>
   );

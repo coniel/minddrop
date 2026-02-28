@@ -30,6 +30,7 @@ export const FontWeightSelect = ({ elementId }: FontWeightSelectProps) => {
     <Select
       variant="subtle"
       value={fontWeight}
+      valueColor={fontWeight === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}
       options={fontWeights.map((font) => ({
         label: t(font.label),

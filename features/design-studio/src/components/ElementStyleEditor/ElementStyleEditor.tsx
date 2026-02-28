@@ -1,10 +1,7 @@
-import { useTranslation } from '@minddrop/i18n';
 import {
   Button,
-  FlexItem,
   Group,
   Icon,
-  InputLabel,
   ScrollArea,
   Stack,
   Text,
@@ -16,33 +13,14 @@ import {
   useElement,
 } from '../../DesignStudioStore';
 import { elementIconMap, elementLabelMap } from '../../constants';
-import { BackgroundColorSelect } from '../style-editors/BackgroundColorSelect';
-import { Border } from '../style-editors/Border';
-import { ContainerTypography } from '../style-editors/ContainerTypography';
-import { DirectionToggle } from '../style-editors/DirectionToggle';
-import { GapField } from '../style-editors/GapField';
-import { MinHeightField } from '../style-editors/MinHeightField';
-import { PaddingField } from '../style-editors/PaddingField';
-import { PlaceholderField } from '../style-editors/PlaceholderField';
-import { PositionGrid } from '../style-editors/PositionGrid';
-import { Typography } from '../style-editors/Typography';
-import { WrapSwitch } from '../style-editors/WrapSwitch';
+import { ContainerElementStyleEditor } from '../style-editors/ContainerElementStyleEditor';
+import { FormattedTextElementStyleEditor } from '../style-editors/FormattedTextElementStyleEditor';
+import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEditor';
+import { NumberElementStyleEditor } from '../style-editors/NumberElementStyleEditor';
+import { TextElementStyleEditor } from '../style-editors/TextElementStyleEditor';
 import './ElementStyleEditor.css';
 
-const textLikeTypes = new Set([
-  'text',
-  'formatted-text',
-  'number',
-  'url',
-]);
-
 const containerTypes = new Set(['root', 'container']);
-
-const SectionLabel: React.FC<{ label: string }> = ({ label }) => {
-  const { t } = useTranslation();
-
-  return <span className="element-style-editor-section-label">{t(label)}</span>;
-};
 
 export const ElementStyleEditor: React.FC = () => {
   const selectedElementId = useDesignStudioStore(
@@ -84,79 +62,29 @@ export const ElementStyleEditor: React.FC = () => {
           </Group>
 
           {containerTypes.has(element.type) && (
-            <>
-              <Stack gap={3}>
-                <SectionLabel label="designs.layout.label" />
-                <DirectionToggle elementId={selectedElementId} />
-                <Stack gap={1}>
-                  <InputLabel size="xs" label="designs.position.label" />
-                  <PositionGrid elementId={selectedElementId} />
-                </Stack>
-                <Group gap={2}>
-                  <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-                    <Stack gap={1}>
-                      <InputLabel size="xs" label="designs.gap.label" />
-                      <GapField elementId={selectedElementId} />
-                    </Stack>
-                  </FlexItem>
-                  <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-                    <Stack gap={1}>
-                      <InputLabel size="xs" label="designs.padding.label" />
-                      <PaddingField elementId={selectedElementId} />
-                    </Stack>
-                  </FlexItem>
-                  {!(element.type === 'root' && designType === 'page') && (
-                    <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-                      <Stack gap={1}>
-                        <InputLabel
-                          size="xs"
-                          label="designs.min-height.label"
-                        />
-                        <MinHeightField elementId={selectedElementId} />
-                      </Stack>
-                    </FlexItem>
-                  )}
-                </Group>
-                <WrapSwitch elementId={selectedElementId} />
-              </Stack>
-
-              <Stack gap={3}>
-                <SectionLabel label="designs.background-color.label" />
-                <BackgroundColorSelect elementId={selectedElementId} />
-              </Stack>
-
-              <Stack gap={3}>
-                <SectionLabel label="designs.border.label" />
-                <Border elementId={selectedElementId} />
-              </Stack>
-
-              <Stack gap={3}>
-                <SectionLabel label="designs.typography.label" />
-                <Text
-                  size="xs"
-                  color="subtle"
-                  text="designs.typography.container-hint"
-                />
-                <ContainerTypography
-                  elementId={selectedElementId}
-                  isRoot={element.type === 'root'}
-                />
-              </Stack>
-            </>
+            <ContainerElementStyleEditor
+              elementId={selectedElementId}
+              isRoot={element.type === 'root'}
+              showMinHeight={
+                !(element.type === 'root' && designType === 'page')
+              }
+            />
           )}
 
-          {textLikeTypes.has(element.type) && (
-            <>
-              <Stack gap={3}>
-                <SectionLabel label="designs.typography.label" />
-                <Typography elementId={selectedElementId} />
-              </Stack>
+          {(element.type === 'text' || element.type === 'url') && (
+            <TextElementStyleEditor elementId={selectedElementId} />
+          )}
 
-              <Stack gap={3}>
-                <SectionLabel label="designs.placeholder.label" />
-                <PlaceholderField elementId={selectedElementId} />
-              </Stack>
-            </>
+          {element.type === 'formatted-text' && (
+            <FormattedTextElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'number' && (
+            <NumberElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'image' && (
+            <ImageElementStyleEditor elementId={selectedElementId} />
           )}
         </Stack>
       </ScrollArea>

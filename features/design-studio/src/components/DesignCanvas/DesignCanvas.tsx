@@ -6,7 +6,11 @@ import {
   useState,
 } from 'react';
 import { DesignType } from '@minddrop/designs';
-import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
+import {
+  DesignStudioStore,
+  useDesignStudioStore,
+  useElement,
+} from '../../DesignStudioStore';
 import { FlatRootDesignElement } from '../../types';
 import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
 import './DesignCanvas.css';
@@ -141,8 +145,11 @@ export const DesignCanvas: React.FC = () => {
     [],
   );
 
+  const didDrag = useRef(false);
+
   const handleDragHandleMouseDown = useCallback(
     (event: React.MouseEvent) => {
+      didDrag.current = false;
       dragState.current = {
         startX: event.clientX,
         startY: event.clientY,
@@ -152,6 +159,13 @@ export const DesignCanvas: React.FC = () => {
     },
     [position],
   );
+
+  // Select root element when clicking (not dragging) the drag handle
+  const handleDragHandleClick = useCallback(() => {
+    if (!didDrag.current) {
+      DesignStudioStore.getState().selectElement('root');
+    }
+  }, []);
 
   const handleResizeMouseDown = useCallback(
     (event: React.MouseEvent, edge: ResizeEdge) => {
@@ -173,6 +187,7 @@ export const DesignCanvas: React.FC = () => {
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       if (dragState.current) {
+        didDrag.current = true;
         const rawX =
           dragState.current.originX +
           (event.clientX - dragState.current.startX);
@@ -486,6 +501,7 @@ export const DesignCanvas: React.FC = () => {
       <div
         className="design-canvas-drag-handle"
         onMouseDown={handleDragHandleMouseDown}
+        onClick={handleDragHandleClick}
       />
       <div
         className="design-canvas-content"

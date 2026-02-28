@@ -11,6 +11,34 @@ export interface BorderStyleToggleProps {
   elementId: string;
 }
 
+const svgProps = {
+  width: 16,
+  height: 16,
+  viewBox: '0 0 16 16',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeLinecap: 'round' as const,
+};
+
+const borderStyleIcons: Record<BorderStyle, React.ReactNode> = {
+  none: null,
+  solid: (
+    <svg {...svgProps} strokeWidth={2}>
+      <line x1="2" y1="8" x2="14" y2="8" />
+    </svg>
+  ),
+  dashed: (
+    <svg {...svgProps} strokeWidth={2}>
+      <line x1="2" y1="8" x2="14" y2="8" strokeDasharray="4 3" />
+    </svg>
+  ),
+  dotted: (
+    <svg {...svgProps} strokeWidth={2}>
+      <line x1="2" y1="8" x2="14" y2="8" strokeDasharray="1.5 3" />
+    </svg>
+  ),
+};
+
 export const BorderStyleToggle = ({ elementId }: BorderStyleToggleProps) => {
   const { t } = useTranslation();
   const borderStyle = useElementStyle(elementId, 'borderStyle');
@@ -29,7 +57,9 @@ export const BorderStyleToggle = ({ elementId }: BorderStyleToggleProps) => {
       onValueChange={handleSelect}
     >
       {borderStyles.map((style) => (
-        <Toggle key={style.value} {...style} label={t(style.label)} />
+        <Toggle key={style.value} value={style.value} label={t(style.label)}>
+          {borderStyleIcons[style.value]}
+        </Toggle>
       ))}
     </RadioToggleGroup>
   );

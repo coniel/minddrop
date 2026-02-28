@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Design, DesignType, Designs } from '@minddrop/designs';
+import { Design, DesignType, Designs, defaultDesignIds } from '@minddrop/designs';
 import {
   Button,
   DropdownMenu,
@@ -29,12 +29,12 @@ export const DesignStudioLeftPanel: React.FC = () => {
 
   const handleSelectDesign = useCallback((design: Design) => {
     DesignStudioStore.getState().initialize(design);
-    setActivePanel('elements');
   }, []);
 
   const handleCreateDesign = async (type: DesignType) => {
     const design = await Designs.create(type);
     handleSelectDesign(design);
+    setActivePanel('elements');
   };
 
   return (
@@ -99,7 +99,7 @@ export const DesignStudioLeftPanel: React.FC = () => {
           <div className="designs-list">
             {DESIGN_TYPES.map((type) => {
               const typeDesigns = designs.filter(
-                (design) => design.type === type,
+                (design) => design.type === type && !defaultDesignIds.includes(design.id),
               );
 
               if (!typeDesigns.length) {

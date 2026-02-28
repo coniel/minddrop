@@ -1,10 +1,17 @@
-import React, { ReactElement } from 'react';
-import { useElement } from '../../../DesignStudioStore';
+import React, { ReactElement, useCallback } from 'react';
+import { propsToClass } from '@minddrop/ui-primitives';
+import {
+  DesignStudioStore,
+  useDesignStudioStore,
+  useElement,
+} from '../../../DesignStudioStore';
 import { FlatDesignElement } from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
+import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
+import { DesignStudioImageElement } from '../DesignStudioImageElement';
+import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
 import { DesignStudioTextElement } from '../DesignStudioTextElement';
 import './DesignStudioElement.css';
-import { propsToClass } from '@minddrop/ui-primitives';
 
 export interface DesignStudioElementProps {
   /**
@@ -41,6 +48,12 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
   switch (element.type) {
     case 'text':
       return <DesignStudioTextElement element={element} />;
+    case 'formatted-text':
+      return <DesignStudioFormattedTextElement element={element} />;
+    case 'number':
+      return <DesignStudioNumberElement element={element} />;
+    case 'image':
+      return <DesignStudioImageElement element={element} />;
     default:
       return null;
   }
@@ -74,6 +87,13 @@ const DesignStudioElementInner: React.FC<{
   isLastChild: boolean;
   gap: number;
 }> = ({ element, index, isLastChild, gap }) => {
+  const isSelected = useDesignStudioStore(
+    (state) => state.highlightedElementId === element.id,
+  );
+  const isFading = useDesignStudioStore(
+    (state) => state.fadingHighlightElementId === element.id,
+  );
+
   const { dragDropProps, dropIndicator, isDragging } = useDesignElementDragDrop(
     {
       index,
@@ -83,6 +103,15 @@ const DesignStudioElementInner: React.FC<{
     },
   );
 
+  // Select the element to open its style editor
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      DesignStudioStore.getState().selectElement(element.id);
+    },
+    [element.id],
+  );
+
   const elementComponent = getElementComponent(element);
 
   if (!elementComponent) {
@@ -90,9 +119,11 @@ const DesignStudioElementInner: React.FC<{
   }
 
   return (
-    <div className="design-studio-element" {...dragDropProps}>
+    <div className="design-studio-element" data-element-id={element.id} {...dragDropProps}>
       <div
-        className={propsToClass('design-studio-element-inner', { isDragging })}
+        className={propsToClass('design-studio-element-inner', { isDragging, isSelected, isFading })}
+        onClick={handleClick}
+        onAnimationEnd={isFading ? () => DesignStudioStore.getState().clearFadingHighlight() : undefined}
       >
         {elementComponent}
       </div>

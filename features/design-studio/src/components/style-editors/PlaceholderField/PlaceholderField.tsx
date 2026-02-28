@@ -16,14 +16,15 @@ import { generateLoremIpsum } from '../../../utils';
 
 export interface PlaceholderFieldProps {
   elementId: string;
+  wordCounts?: number[];
 }
 
-const wordCounts = [
+const defaultWordCounts = [
   1, 2, 3, 4, 5, 8, 10, 12, 14, 16, 20, 25, 30, 35, 40, 50, 60, 70, 80, 100,
   120, 140, 160, 200, 250, 300,
 ];
 
-function closestWordCountStep(text: string): number {
+function closestWordCountStep(text: string, counts: number[]): number {
   if (!text) {
     return 0;
   }
@@ -31,10 +32,10 @@ function closestWordCountStep(text: string): number {
   const count = text.trim().split(/\s+/).length;
   let closest = 0;
 
-  for (let index = 0; index < wordCounts.length; index++) {
+  for (let index = 0; index < counts.length; index++) {
     if (
-      Math.abs(wordCounts[index] - count) <
-      Math.abs(wordCounts[closest] - count)
+      Math.abs(counts[index] - count) <
+      Math.abs(counts[closest] - count)
     ) {
       closest = index;
     }
@@ -43,14 +44,15 @@ function closestWordCountStep(text: string): number {
   return closest + 1;
 }
 
-export const PlaceholderField = ({ elementId }: PlaceholderFieldProps) => {
+export const PlaceholderField = ({ elementId, wordCounts: wordCountsProp }: PlaceholderFieldProps) => {
+  const wordCounts = wordCountsProp || defaultWordCounts;
   const placeholder = useDesignStudioStore(
     (state) =>
       (state.elements[elementId] as FlatTextElement)?.placeholder || '',
   );
 
   const [sliderStep, setSliderStep] = useState(() =>
-    closestWordCountStep(placeholder),
+    closestWordCountStep(placeholder, wordCounts),
   );
   const generatedTextRef = useRef(placeholder);
 

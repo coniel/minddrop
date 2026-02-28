@@ -1,9 +1,4 @@
-import {
-  FlexItem,
-  Group,
-  InputLabel,
-  Stack,
-} from '@minddrop/ui-primitives';
+import { FlexItem, Group, InputLabel, Stack } from '@minddrop/ui-primitives';
 import { FontFamilySelect } from '../FontFamilySelect';
 import { FontSizeField } from '../FontSizeField';
 import { FontWeightSelect } from '../FontWeightSelect';
@@ -11,7 +6,6 @@ import { ItalicToggle } from '../ItalicToggle';
 import { LetterSpacingField } from '../LetterSpacingField';
 import { LineHeightField } from '../LineHeightField';
 import { OpacityField } from '../OpacityField';
-import { TextAlignToggle } from '../TextAlignToggle';
 import { TextColorSelect } from '../TextColorSelect';
 import { TextTransformToggle } from '../TextTransformToggle';
 import { TruncateField } from '../TruncateField';
@@ -65,14 +59,7 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
         </FlexItem>
       </Group>
       <Stack gap={1}>
-        <InputLabel size="xs" label="designs.typography.text-align.label" />
-        <TextAlignToggle elementId={elementId} />
-      </Stack>
-      <Stack gap={1}>
-        <InputLabel
-          size="xs"
-          label="designs.typography.text-transform.label"
-        />
+        <InputLabel size="xs" label="designs.typography.text-transform.label" />
         <TextTransformToggle elementId={elementId} />
       </Stack>
       <Group gap={2}>
