@@ -25,6 +25,7 @@ export * from './Slider';
 export * from './Separator';
 export * from './Subheading';
 export * from './Switch';
+export * from './Tabs';
 export * from './Text';
 export * from './ToggleGroup';
 export * from './Toolbar';

@@ -1,0 +1,69 @@
+/* Tabs list — horizontal row of tab triggers */
+.tabs-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Individual tab trigger — ghost-style base */
+.tabs-tab {
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+
+  .icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+}
+
+/* Active/selected tab */
+.tabs-tab[data-active] {
+  background-color: var(--surface-subtle);
+  color: var(--text-regular);
+}
+
+/* Disabled state */
+.tabs-tab[data-disabled] {
+  color: var(--text-disabled);
+  pointer-events: none;
+}
+
+/* Hover state */
+.tabs-tab:hover {
+  background-color: var(--surface-neutral-hover);
+  color: var(--text-regular);
+}
+
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.tabs-tab-size-sm {
+  height: 1.5rem;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  gap: calc(var(--space-1) * 0.75);
+}
+
+.tabs-tab-size-md {
+  height: 1.75rem;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  gap: var(--space-2);
+}
+
+.tabs-tab-size-lg {
+  height: 2.25rem;
+  padding: 0 var(--space-4);
+  font-size: var(--text-base);
+  gap: var(--space-2);
+}
