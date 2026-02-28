@@ -152,6 +152,59 @@ describe('<SelectPropertyEditor />', () => {
     ).toHaveLength(3);
   });
 
+  it('blurs the option input when Escape is pressed', () => {
+    render(
+      <SelectPropertyEditor
+        defaultOpen
+        deletable={false}
+        property={property}
+        onSave={onSave}
+        onDelete={onDelete}
+      />,
+    );
+
+    const input = screen.getByDisplayValue('To do');
+
+    // Focus the input
+    fireEvent.focus(input);
+
+    // Press Escape
+    fireEvent.keyDown(input, { key: 'Escape' });
+
+    // Input should no longer have focus
+    expect(input).not.toHaveFocus();
+  });
+
+  it('removes an empty option when Escape is pressed', () => {
+    render(
+      <SelectPropertyEditor
+        defaultOpen
+        deletable={false}
+        property={{
+          ...property,
+          options: [...property.options, { value: '', color: 'green' }],
+        }}
+        onSave={onSave}
+        onDelete={onDelete}
+      />,
+    );
+
+    // There should be 3 option rows (2 existing + 1 empty)
+    const inputs = screen.getAllByPlaceholderText(
+      'properties.select.options.placeholder',
+    );
+
+    expect(inputs).toHaveLength(3);
+
+    // Press Escape on the empty option
+    fireEvent.keyDown(inputs[2], { key: 'Escape' });
+
+    // The empty option should be removed
+    expect(
+      screen.getAllByPlaceholderText('properties.select.options.placeholder'),
+    ).toHaveLength(2);
+  });
+
   it('deletes an option when its delete button is clicked', async () => {
     render(
       <SelectPropertyEditor
@@ -281,7 +334,10 @@ describe('<SelectPropertyEditor />', () => {
       <SelectPropertyEditor
         defaultOpen
         deletable={false}
-        property={{ ...property, options: [{ value: '', color: 'blue' }, ...property.options] }}
+        property={{
+          ...property,
+          options: [{ value: '', color: 'blue' }, ...property.options],
+        }}
         onSave={onSave}
         onDelete={onDelete}
       />,
@@ -293,7 +349,9 @@ describe('<SelectPropertyEditor />', () => {
 
     await waitFor(() => {
       expect(
-        screen.getAllByPlaceholderText('properties.select.options.placeholder')[0],
+        screen.getAllByPlaceholderText(
+          'properties.select.options.placeholder',
+        )[0],
       ).toHaveFocus();
     });
   });

@@ -6,6 +6,7 @@ import {
   SelectPropertyOption,
   SelectPropertySchema,
 } from '@minddrop/properties';
+import { ContentColor } from '@minddrop/theme';
 import {
   Button,
   ContentColors,
@@ -21,7 +22,6 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
-import { ContentColor } from '@minddrop/theme';
 import {
   PropertyEditorBase,
   PropertyEditorBaseProps,
@@ -70,15 +70,22 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
   }, []);
 
   async function handleSave(savedProperty: PropertySchema) {
+    // Filter out empty options before saving
+    const filteredOptions = options.filter((opt) => opt.value.trim() !== '');
+
+    // Update local state to match saved options
+    setOptions(filteredOptions);
+
     return onSave({
       ...(savedProperty as SelectPropertySchema),
-      options: options.filter((opt) => opt.value.trim() !== ''),
+      options: filteredOptions,
       multiselect,
     });
   }
 
   function handleCancel() {
-    setOptions(property.options);
+    // Reset to the original options, filtering out any empty ones
+    setOptions(property.options.filter((opt) => opt.value.trim() !== ''));
     setMultiselect(property.multiselect ?? false);
 
     if (onCancel) {
@@ -164,9 +171,16 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
               value={option.value}
               placeholder="properties.select.options.placeholder"
               onValueChange={(value) => handleOptionNameChange(index, value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
                   handleAddOption();
+                } else if (event.key === 'Escape') {
+                  // Blur the field, removing it if empty
+                  if (option.value.trim() === '') {
+                    handleDeleteOption(index);
+                  }
+
+                  (event.target as HTMLInputElement).blur();
                 }
               }}
               leading={
