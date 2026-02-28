@@ -16,6 +16,12 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/events": "workspace:*"
+    "@minddrop/databases": "workspace:*",
+    "@minddrop/designs": "workspace:*",
+    "@minddrop/events": "workspace:*",
+    "@minddrop/feature-design-studio": "workspace:*",
+    "@minddrop/i18n": "workspace:*",
+    "@minddrop/icons": "workspace:*",
+    "@minddrop/ui-primitives": "workspace:*"
   }
 }

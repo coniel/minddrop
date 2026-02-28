@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Events } from '@minddrop/events';
+import { DesignBrowser } from './DesignBrowser';
 import {
   BrowseDesignsEvent,
   BrowseDesignsEventData,
@@ -13,13 +14,15 @@ type OverlayView = 'browse-designs' | 'property-mapper' | null;
 
 export const DesignPropertyMappingFeature: React.FC = () => {
   const [view, setView] = useState<OverlayView>(null);
+  const [databaseId, setDatabaseId] = useState<string | null>(null);
 
   useEffect(() => {
     // Listen for browse designs events and show the design browser overlay
     Events.addListener<BrowseDesignsEventData>(
       BrowseDesignsEvent,
       `${EventListenerId}:browse`,
-      () => {
+      (event) => {
+        setDatabaseId(event.data.databaseId);
         setView('browse-designs');
       },
     );
@@ -28,7 +31,8 @@ export const DesignPropertyMappingFeature: React.FC = () => {
     Events.addListener<OpenPropertyMapperEventData>(
       OpenPropertyMapperEvent,
       `${EventListenerId}:mapper`,
-      () => {
+      (event) => {
+        setDatabaseId(event.data.databaseId);
         setView('property-mapper');
       },
     );
@@ -42,9 +46,33 @@ export const DesignPropertyMappingFeature: React.FC = () => {
     };
   }, []);
 
-  if (!view) {
+  // Close the overlay and reset state
+  const handleClose = useCallback(() => {
+    setView(null);
+    setDatabaseId(null);
+  }, []);
+
+  // Handle design selection — switch to mapper view
+  const handleSelectDesign = useCallback((designId: string) => {
+    setView('property-mapper');
+  }, []);
+
+  if (!view || !databaseId) {
     return null;
   }
 
-  return <div className="design-property-mapping-backdrop" />;
+  return (
+    <>
+      <div className="design-property-mapping-backdrop" onClick={handleClose} />
+
+      {/* Render the design browser overlay */}
+      {view === 'browse-designs' && (
+        <DesignBrowser
+          databaseId={databaseId}
+          onSelectDesign={handleSelectDesign}
+          onClose={handleClose}
+        />
+      )}
+    </>
+  );
 };

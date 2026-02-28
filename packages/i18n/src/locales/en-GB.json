@@ -514,6 +514,32 @@
         }
       }
     },
+    "icon": {
+      "label": "Icon",
+      "placeholder": {
+        "hint": "Double-click to choose icon"
+      },
+      "select": "Select icon",
+      "change": "Change",
+      "appearance": {
+        "label": "Appearance"
+      },
+      "size": {
+        "label": "Size"
+      },
+      "color": {
+        "label": "Colour"
+      },
+      "container": {
+        "label": "Container",
+        "size": "Size",
+        "size-placeholder": "Auto",
+        "radius": "Radius",
+        "radius-placeholder": "None",
+        "background-color": "Background",
+        "round": "Round"
+      }
+    },
     "border": {
       "label": "Border",
       "style": {
@@ -592,6 +618,7 @@
       "number": "Number",
       "url": "URL",
       "image": "Image",
+      "icon": "Icon",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
       "group": {
@@ -636,6 +663,14 @@
         "comfortable": "Comfortable",
         "spacious": "Spacious"
       }
+    }
+  },
+  "design-property-mapping": {
+    "browser": {
+      "title": "Choose a design",
+      "search": "Search designs...",
+      "newDesign": "New design",
+      "emptyPreview": "Select a design to preview"
     }
   }
 }

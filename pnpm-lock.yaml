@@ -320,9 +320,27 @@ importers:
 
   features/design-property-mapping:
     dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-design-studio':
+        specifier: workspace:*
+        version: link:../design-studio
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

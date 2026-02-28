@@ -1,0 +1,26 @@
+.design-browser {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  bottom: var(--space-2);
+  z-index: var(--level-dialog);
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.design-browser-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.design-browser-header .text-input {
+  flex: 1;
+}
+
+.design-browser-designs {
+  padding: var(--space-2) var(--space-2) var(--space-7);
+}
