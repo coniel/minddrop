@@ -56,7 +56,14 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
     color: getContentColorCss(style.color, 900, 'inherit'),
     fontStyle: style.italic ? 'italic' : 'normal',
     textDecoration: style.underline ? 'underline' : 'none',
+    maxWidth: style['max-width'] > 0 ? `${style['max-width']}px` : undefined,
     opacity: style.opacity,
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right'] ? `${style['margin-right']}rem` : undefined,
+    marginBottom: style['margin-bottom'] ? `${style['margin-bottom']}rem` : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    display:
+      style['margin-top'] || style['margin-bottom'] ? 'block' : undefined,
   };
 
   if (style.truncate > 0) {
@@ -78,8 +85,12 @@ export function createContainerCssStyle(
     alignItems: style.alignItems,
     justifyContent: style.justifyContent,
     flexWrap: style.wrap ? 'wrap' : 'nowrap',
+    alignSelf: style.stretch ? 'stretch' : undefined,
     gap: `${style.gap}px`,
-    padding: style.padding ? `${style.padding}px` : undefined,
+    paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
+    paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
+    paddingBottom: style.paddingBottom ? `${style.paddingBottom}rem` : undefined,
+    paddingLeft: style.paddingLeft ? `${style.paddingLeft}rem` : undefined,
     minHeight: style.minHeight ? `${style.minHeight}px` : undefined,
     fontFamily: resolveFontFamily(style['font-family']),
     fontWeight: style['font-weight'],
@@ -88,18 +99,39 @@ export function createContainerCssStyle(
     borderStyle: style.borderStyle,
     borderWidth: `${style.borderWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadius}px`,
+    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
     opacity: style.opacity,
   };
 }
 
 export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
+  // Resolve sizing unit (px or %) for width fields
+  const widthUnit = style.widthUnit || 'px';
+  const maxWidthUnit = style.maxWidthUnit || 'px';
+
   return {
+    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
+    height: style.height > 0 ? `${style.height}px` : undefined,
+    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
+    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+    objectFit: style.objectFit,
     borderStyle: style.borderStyle,
     borderWidth: `${style.borderWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadius}px`,
+    borderRadius: style.round
+      ? '50%'
+      : `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
     opacity: style.opacity,
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
+    marginLeft: style['margin-left']
+      ? `${style['margin-left']}rem`
+      : undefined,
   };
 }
 

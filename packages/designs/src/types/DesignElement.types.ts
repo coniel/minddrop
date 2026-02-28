@@ -4,6 +4,43 @@ import {
   TextElementStyle,
 } from '../styles';
 
+export interface NumberFormat {
+  /**
+   * Number of decimal places to display.
+   */
+  decimals: number;
+
+  /**
+   * Thousands separator style.
+   */
+  thousandsSeparator: 'none' | 'comma' | 'period' | 'space';
+
+  /**
+   * Text displayed before the number.
+   */
+  prefix: string;
+
+  /**
+   * Text displayed after the number.
+   */
+  suffix: string;
+
+  /**
+   * How to display the sign of the number.
+   */
+  signDisplay: 'auto' | 'always' | 'never';
+
+  /**
+   * Optional text style overrides for the prefix.
+   */
+  prefixStyle?: Partial<TextElementStyle>;
+
+  /**
+   * Optional text style overrides for the suffix.
+   */
+  suffixStyle?: Partial<TextElementStyle>;
+}
+
 export interface DesignElementBase {
   /**
    * A unique identifier for the element.
@@ -50,6 +87,16 @@ export interface NumberElement extends DesignElementBase {
    * The element style.
    */
   style: TextElementStyle;
+
+  /**
+   * Placeholder number displayed when the element has no content.
+   */
+  placeholder?: string;
+
+  /**
+   * Number formatting options.
+   */
+  format?: NumberFormat;
 }
 
 export interface ImageElement extends DesignElementBase {
@@ -59,6 +106,12 @@ export interface ImageElement extends DesignElementBase {
    * The element style.
    */
   style: ImageElementStyle;
+
+  /**
+   * The file name of a placeholder image stored in the
+   * placeholder-media directory.
+   */
+  placeholderImage?: string;
 }
 
 export type LeafDesignElement =

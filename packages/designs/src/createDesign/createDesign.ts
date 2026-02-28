@@ -42,6 +42,10 @@ export async function createDesign(
       type: 'root',
       style: {
         ...DefaultContainerElementStyle,
+        borderRadiusTopLeft: 8,
+        borderRadiusTopRight: 8,
+        borderRadiusBottomRight: 8,
+        borderRadiusBottomLeft: 8,
         minHeight: defaultMinHeights[type],
       },
       children: [],

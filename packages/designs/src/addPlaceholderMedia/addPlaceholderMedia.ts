@@ -9,7 +9,9 @@ import { getPlaceholderMediaDirPath } from '../utils';
  * @param sourcePath - The absolute path to the source file.
  * @returns The generated file name (UUID + extension).
  */
-export async function addDesignPlaceholderMedia(sourcePath: string): Promise<string> {
+export async function addDesignPlaceholderMedia(
+  sourcePath: string,
+): Promise<string> {
   const mediaDir = getPlaceholderMediaDirPath();
 
   // Ensure the placeholder-media directory exists

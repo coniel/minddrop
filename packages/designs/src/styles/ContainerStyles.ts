@@ -45,8 +45,15 @@ export interface ContainerStyles {
   borderStyle: BorderStyle;
   borderColor: string;
   borderWidth: number;
-  borderRadius: number;
-  padding?: number;
+  borderRadiusTopLeft: number;
+  borderRadiusTopRight: number;
+  borderRadiusBottomRight: number;
+  borderRadiusBottomLeft: number;
+  paddingTop: number;
+  paddingRight: number;
+  paddingBottom: number;
+  paddingLeft: number;
+  stretch: boolean;
   minHeight?: number;
 }
 
@@ -56,10 +63,17 @@ export const DefaultContainerStyles: ContainerStyles = {
   alignItems: 'start',
   justifyContent: 'start',
   wrap: false,
+  stretch: true,
   gap: 8,
-  borderRadius: 8,
+  borderRadiusTopLeft: 0,
+  borderRadiusTopRight: 0,
+  borderRadiusBottomRight: 0,
+  borderRadiusBottomLeft: 0,
   borderStyle: 'none',
   borderColor: 'default',
   borderWidth: 1,
-  padding: 0,
+  paddingTop: 0,
+  paddingRight: 0,
+  paddingBottom: 0,
+  paddingLeft: 0,
 };

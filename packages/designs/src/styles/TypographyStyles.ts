@@ -21,8 +21,14 @@ export interface TypographyStyles {
   color: ContentColor | string;
   opacity: number;
   'text-align': TextAlign;
+  // The maximum width of the text element (in px, 0 = none)
+  'max-width': number;
   // The maximum number of lines to display
   truncate: number;
+  'margin-top': number;
+  'margin-right': number;
+  'margin-bottom': number;
+  'margin-left': number;
 }
 
 const fontValues: FontFamily[] = ['inherit', 'sans', 'serif', 'mono'];
@@ -108,5 +114,10 @@ export const DefaultTypographyStyles: TypographyStyles = {
   color: 'default',
   opacity: 1,
   'text-align': 'left',
+  'max-width': 0,
   truncate: 0,
+  'margin-top': 0,
+  'margin-right': 0,
+  'margin-bottom': 0,
+  'margin-left': 0,
 };

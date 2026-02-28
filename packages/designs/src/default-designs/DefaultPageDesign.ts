@@ -9,7 +9,13 @@ export const DefaultPageDesign: Design = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle },
+    style: {
+      ...DefaultContainerElementStyle,
+      borderRadiusTopLeft: 8,
+      borderRadiusTopRight: 8,
+      borderRadiusBottomRight: 8,
+      borderRadiusBottomLeft: 8,
+    },
     children: [],
   },
   created: new Date(),

@@ -1,7 +1,10 @@
 export * from './createElementCssStyle';
 export * from './types';
+export * from './utils/formatNumber';
+export * from './utils/getPlaceholderMediaDirPath';
 export * from './design-element-templates';
 export * from './styles';
+export { defaultDesignIds } from './default-designs';
 export * from './errors';
 export * from './events';
 export * from './constants';

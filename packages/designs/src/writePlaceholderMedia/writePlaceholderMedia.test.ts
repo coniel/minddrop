@@ -14,6 +14,10 @@ vi.mock('@minddrop/utils', async () => {
   };
 });
 
+function createFile(name: string, content = 'data'): File {
+  return new File([content], name);
+}
+
 describe('writeDesignPlaceholderMedia', () => {
   beforeEach(() => {
     setup({ loadDesigns: false, loadDesignFiles: false });
@@ -26,33 +30,35 @@ describe('writeDesignPlaceholderMedia', () => {
 
     expect(MockFs.exists(mediaDir)).toBe(false);
 
-    await writeDesignPlaceholderMedia(new Blob(['test']), 'png');
+    await writeDesignPlaceholderMedia(createFile('photo.png'));
 
     expect(MockFs.exists(mediaDir)).toBe(true);
   });
 
-  it('writes the file with a UUID name and the given extension', async () => {
+  it('writes the file with a UUID name preserving the extension', async () => {
     const mediaDir = getPlaceholderMediaDirPath();
-    const file = new Blob(['image data']);
 
-    const fileName = await writeDesignPlaceholderMedia(file, 'jpg');
+    const fileName = await writeDesignPlaceholderMedia(
+      createFile('photo.jpg'),
+    );
 
     expect(fileName).toBe(`${MOCK_UUID}.jpg`);
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
   });
 
-  it('handles an empty extension', async () => {
+  it('handles a file without an extension', async () => {
     const mediaDir = getPlaceholderMediaDirPath();
-    const file = new Blob(['data']);
 
-    const fileName = await writeDesignPlaceholderMedia(file, '');
+    const fileName = await writeDesignPlaceholderMedia(createFile('README'));
 
     expect(fileName).toBe(MOCK_UUID);
     expect(MockFs.exists(`${mediaDir}/${fileName}`)).toBe(true);
   });
 
   it('returns the generated file name', async () => {
-    const result = await writeDesignPlaceholderMedia(new Blob(['test']), 'webp');
+    const result = await writeDesignPlaceholderMedia(
+      createFile('image.webp'),
+    );
 
     expect(result).toBe(`${MOCK_UUID}.webp`);
   });

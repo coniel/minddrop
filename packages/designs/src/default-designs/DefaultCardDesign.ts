@@ -9,7 +9,14 @@ export const DefaultCardDesign: Design = {
   tree: {
     id: 'root',
     type: 'root',
-    style: { ...DefaultContainerElementStyle, minHeight: 200 },
+    style: {
+      ...DefaultContainerElementStyle,
+      borderRadiusTopLeft: 8,
+      borderRadiusTopRight: 8,
+      borderRadiusBottomRight: 8,
+      borderRadiusBottomLeft: 8,
+      minHeight: 200,
+    },
     children: [],
   },
   created: new Date(),
