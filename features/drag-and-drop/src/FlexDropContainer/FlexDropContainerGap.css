@@ -1,0 +1,15 @@
+/* Base gap zone — transitions size and background smoothly */
+.flex-drop-gap {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  transition:
+    width var(--duration-normal) var(--ease-default),
+    height var(--duration-normal) var(--ease-default),
+    background-color var(--duration-normal) var(--ease-default);
+}
+
+/* Expanded state when a dragged item hovers over the gap */
+.flex-drop-gap-active {
+  background-color: var(--surface-primary);
+}

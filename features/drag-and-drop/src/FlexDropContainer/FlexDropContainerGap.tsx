@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { DropEventData, DropIndicatorPosition } from '@minddrop/selection';
+import { DropEventData } from '@minddrop/selection';
 import { getTransferData } from '@minddrop/utils';
-import { DropIndicator } from '../DropIndicator';
+import './FlexDropContainerGap.css';
 
 interface FlexDropContainerGapProps {
   /**
@@ -25,9 +25,16 @@ interface FlexDropContainerGapProps {
   size: number;
 
   /**
-   * If the gap is at the start or end of the container.
+   * Whether this gap is expanded (triggered by a child element
+   * detecting a before/after drag position).
    */
-  edge?: 'start' | 'end' | null;
+  isExpanded?: boolean;
+
+  /**
+   * Whether this gap should grow to fill all remaining space
+   * in the container.
+   */
+  fill?: boolean;
 
   /**
    * Callback fired when the gap zone is dropped.
@@ -35,94 +42,100 @@ interface FlexDropContainerGapProps {
   onDrop?: (data: DropEventData) => void;
 }
 
+// Expanded size (in px) when dragging over a gap
+const EXPANDED_SIZE = 32;
+
 export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   containerId,
   direction,
   size,
   index,
-  edge = null,
+  isExpanded = false,
+  fill = false,
   onDrop,
 }) => {
+  // Track direct drags over this gap zone
   const [isDraggingOver, setIsDraggingOver] = useState(false);
-  let dropIndicatorPosition: DropIndicatorPosition = 'inside';
 
-  if (edge === 'start') {
-    dropIndicatorPosition = 'end';
-  } else if (edge === 'end') {
-    dropIndicatorPosition = 'start';
-  }
+  // Gap is active when directly dragged over OR expanded by a sibling element
+  const isActive = isDraggingOver || isExpanded;
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
     setIsDraggingOver(true);
   };
 
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragEnter = (event: React.DragEvent) => {
+    event.preventDefault();
     setIsDraggingOver(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault();
 
     if (
-      e.currentTarget === e.target ||
-      !e.currentTarget.contains(e.relatedTarget as Node)
+      event.currentTarget === event.target ||
+      !event.currentTarget.contains(event.relatedTarget as Node)
     ) {
       setIsDraggingOver(false);
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
 
     setIsDraggingOver(false);
 
     if (onDrop) {
       onDrop({
-        data: getTransferData(e),
+        data: getTransferData(event),
         index,
         targetId: containerId,
         targetType: 'flex-drop-container',
-        event: e,
+        event,
         position: 'inside',
       });
     }
   };
 
-  // Calculate the gap style
-  const style: React.CSSProperties = {
-    position: 'relative',
-    flexShrink: 0,
-    ...(direction === 'row'
+  // Determine the active dimension based on layout direction
+  const isRow = direction === 'row';
+
+  // Use expanded size when active, otherwise use the prop size
+  const activeSize = isActive ? EXPANDED_SIZE : size;
+
+  // Calculate the gap style.
+  // Fill gaps grow to consume remaining space in the container.
+  // Other gaps use a fixed size.
+  const gapStyle: React.CSSProperties = {
+    alignSelf: 'stretch',
+    flexGrow: fill ? 1 : 0,
+    ...(isRow
       ? {
-          width: edge ? 'auto' : size,
-          flexGrow: edge ? 1 : 0,
-          alignSelf: 'stretch',
+          width: fill ? 'auto' : activeSize,
+          minWidth: fill && isActive ? EXPANDED_SIZE : undefined,
         }
       : {
-          height: edge ? 'auto' : size,
-          flexGrow: edge ? 1 : 0,
-          alignSelf: 'stretch',
+          height: fill ? 'auto' : activeSize,
+          minHeight: fill && isActive ? EXPANDED_SIZE : undefined,
         }),
   };
 
+  // Build the class name
+  const className = `flex-drop-gap${isActive ? ' flex-drop-gap-active' : ''}`;
+
   return (
     <div
-      style={style}
+      className={className}
+      style={gapStyle}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       data-gap-zone
       data-position={index}
-    >
-      <DropIndicator
-        show={isDraggingOver}
-        position={dropIndicatorPosition}
-        axis={direction === 'row' ? 'vertical' : 'horizontal'}
-      />
-    </div>
+    />
   );
 };
