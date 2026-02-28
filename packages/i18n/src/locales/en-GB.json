@@ -4,7 +4,8 @@
     "version": "Version"
   },
   "designStudio": {
-    "open": "Open design studio"
+    "open": "Open design studio",
+    "exit": "Exit design studio"
   },
   "actions": {
     "back": "Back",

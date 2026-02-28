@@ -65,8 +65,9 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
       <div className="panel-tabs">
         {onClickBack && (
           <IconButton
-            icon="chevron-left"
-            label="actions.back"
+            icon="arrow-left"
+            label="designStudio.exit"
+            tooltipTitle="designStudio.exit"
             color="neutral"
             onClick={onClickBack}
           />

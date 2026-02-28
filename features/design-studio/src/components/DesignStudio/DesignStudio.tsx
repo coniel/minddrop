@@ -4,9 +4,14 @@ import {
   CloseAppSidebarEvent,
   Events,
   OpenAppSidebarEvent,
+  OpenMainContentViewEvent,
 } from '@minddrop/events';
 import { Panel, TextInput } from '@minddrop/ui-primitives';
-import { DesignStudioStore, saveDesign, useDesignStudioStore } from '../../DesignStudioStore';
+import {
+  DesignStudioStore,
+  saveDesign,
+  useDesignStudioStore,
+} from '../../DesignStudioStore';
 import { OpenDesignStudioEventData } from '../../events';
 import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
@@ -107,19 +112,21 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   );
 
   const handleClickBack = useCallback(() => {
-    if (!backEvent) {
-      return;
+    if (backEvent) {
+      Events.dispatch(backEvent, backEventData);
+    } else {
+      // No back event provided, navigate to an empty view
+      // to unmount the design studio and reopen the sidebar.
+      Events.dispatch(OpenMainContentViewEvent, {
+        component: () => null,
+      });
     }
-
-    Events.dispatch(backEvent, backEventData);
   }, [backEvent, backEventData]);
 
   return (
     <div className="design-studio">
       <Panel className="design-studio-left-panel">
-        <DesignStudioLeftPanel
-          onClickBack={backEvent ? handleClickBack : undefined}
-        />
+        <DesignStudioLeftPanel onClickBack={handleClickBack} />
       </Panel>
       <div className="design-studio-workspace">
         {design && (
