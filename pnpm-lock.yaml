@@ -332,6 +332,9 @@ importers:
       '@minddrop/feature-design-studio':
         specifier: workspace:*
         version: link:../design-studio
+      '@minddrop/feature-designs':
+        specifier: workspace:*
+        version: link:../designs
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

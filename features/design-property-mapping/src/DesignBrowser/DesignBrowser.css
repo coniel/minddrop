@@ -3,10 +3,24 @@
   top: var(--space-2);
   left: var(--space-2);
   bottom: var(--space-2);
+  right: var(--space-2);
   z-index: var(--level-dialog);
+  display: flex;
+  flex-direction: row;
+}
+
+.design-browser-list-panel {
   display: flex;
   flex-direction: column;
   width: 300px;
+  flex-shrink: 0;
+}
+
+.design-browser-preview-panel {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid var(--border-subtle);
 }
 
 .design-browser-header {

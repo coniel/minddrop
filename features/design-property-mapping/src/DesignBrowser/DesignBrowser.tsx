@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Design, Designs, defaultDesignIds } from '@minddrop/designs';
+import { DesignCanvas, DesignRootElement } from '@minddrop/feature-designs';
 import { Panel } from '@minddrop/ui-primitives';
 import { DesignBrowserList } from './DesignBrowserList';
 import './DesignBrowser.css';
@@ -40,6 +41,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     }
   }, []);
 
+  // Fetch the selected design
+  const selectedDesign = Designs.use(selectedDesignId || '');
+
   // Handle selecting a design in the list
   const handleSelectDesign = useCallback((design: Design) => {
     setSelectedDesignId(design.id);
@@ -47,12 +51,24 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
 
   return (
     <Panel className="design-browser">
-      <DesignBrowserList
-        databaseId={databaseId}
-        selectedDesignId={selectedDesignId}
-        onSelectDesign={handleSelectDesign}
-        onClose={onClose}
-      />
+      {/* List panel */}
+      <div className="design-browser-list-panel">
+        <DesignBrowserList
+          databaseId={databaseId}
+          selectedDesignId={selectedDesignId}
+          onSelectDesign={handleSelectDesign}
+          onClose={onClose}
+        />
+      </div>
+
+      {/* Preview panel showing the design rendered in a canvas */}
+      <div className="design-browser-preview-panel">
+        {selectedDesign && (
+          <DesignCanvas designType={selectedDesign.type}>
+            <DesignRootElement element={selectedDesign.tree} />
+          </DesignCanvas>
+        )}
+      </div>
     </Panel>
   );
 };
