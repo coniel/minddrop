@@ -31,6 +31,25 @@ export interface ViewType<TViewOptions extends object = {}> {
    * The default options for the view type.
    */
   defaultOptions?: TViewOptions;
+
+  /**
+   * An optional component that renders a settings menu specific to this
+   * view type. Receives the current view options and a callback to update them.
+   */
+  settingsMenu?: React.ElementType<ViewTypeSettingsMenuProps<TViewOptions>>;
+}
+
+export interface ViewTypeSettingsMenuProps<TViewOptions extends object = {}> {
+  /**
+   * The current view options.
+   */
+  options: TViewOptions;
+
+  /**
+   * Callback to update the view options. Accepts a partial options object
+   * which will be merged with the current options.
+   */
+  onUpdateOptions: (options: Partial<TViewOptions>) => void;
 }
 
 export interface ViewTypeComponentProps<TViewOptions extends object = {}> {

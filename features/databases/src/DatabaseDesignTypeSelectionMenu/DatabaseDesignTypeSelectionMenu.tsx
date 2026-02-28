@@ -2,11 +2,7 @@ import { Databases } from '@minddrop/databases';
 import { DesignType, Designs } from '@minddrop/designs';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuTrigger,
   IconButton,
   MenuGroup,
 } from '@minddrop/ui-primitives';
@@ -34,42 +30,36 @@ export const DatabaseDesignTypeSelectionMenu: React.FC<
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
+    <DropdownMenu
+      trigger={
         <IconButton size="sm" label="databases.actions.addDesign" icon="plus" />
-      </DropdownMenuTrigger>
-      <DropdownMenuPortal>
-        <DropdownMenuPositioner side="bottom" align="start">
-          <DropdownMenuContent
-            minWidth={300}
-            className="property-type-selection-menu"
-          >
-            <MenuGroup padded>
-              <DropdownMenuItem
-                muted
-                icon="layout"
-                label="designs.page.new"
-                tooltipDescription="designs.page.description"
-                onClick={() => handleSelect('page')}
-              />
-              <DropdownMenuItem
-                muted
-                icon="layout-grid"
-                label="designs.card.new"
-                tooltipDescription="designs.card.description"
-                onClick={() => handleSelect('card')}
-              />
-              <DropdownMenuItem
-                muted
-                icon="layout-list"
-                label="designs.list.new"
-                tooltipDescription="designs.list.description"
-                onClick={() => handleSelect('list')}
-              />
-            </MenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenuPositioner>
-      </DropdownMenuPortal>
+      }
+      minWidth={300}
+      contentClassName="property-type-selection-menu"
+    >
+      <MenuGroup padded>
+        <DropdownMenuItem
+          muted
+          icon="layout"
+          label="designs.page.new"
+          tooltipDescription="designs.page.description"
+          onClick={() => handleSelect('page')}
+        />
+        <DropdownMenuItem
+          muted
+          icon="layout-grid"
+          label="designs.card.new"
+          tooltipDescription="designs.card.description"
+          onClick={() => handleSelect('card')}
+        />
+        <DropdownMenuItem
+          muted
+          icon="layout-list"
+          label="designs.list.new"
+          tooltipDescription="designs.list.description"
+          onClick={() => handleSelect('list')}
+        />
+      </MenuGroup>
     </DropdownMenu>
   );
 };
