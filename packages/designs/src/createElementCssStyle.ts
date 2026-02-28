@@ -2,6 +2,7 @@ import { CSSProperties } from 'react';
 import { ContentColors } from '@minddrop/theme';
 import {
   ContainerElementStyle,
+  IconElementStyle,
   ImageElementStyle,
   TextElementStyle,
 } from './styles';
@@ -59,8 +60,12 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
     maxWidth: style['max-width'] > 0 ? `${style['max-width']}px` : undefined,
     opacity: style.opacity,
     marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right'] ? `${style['margin-right']}rem` : undefined,
-    marginBottom: style['margin-bottom'] ? `${style['margin-bottom']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
     marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
     display:
       style['margin-top'] || style['margin-bottom'] ? 'block' : undefined,
@@ -89,7 +94,9 @@ export function createContainerCssStyle(
     gap: `${style.gap}px`,
     paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
     paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
-    paddingBottom: style.paddingBottom ? `${style.paddingBottom}rem` : undefined,
+    paddingBottom: style.paddingBottom
+      ? `${style.paddingBottom}rem`
+      : undefined,
     paddingLeft: style.paddingLeft ? `${style.paddingLeft}rem` : undefined,
     minHeight: style.minHeight ? `${style.minHeight}px` : undefined,
     fontFamily: resolveFontFamily(style['font-family']),
@@ -101,6 +108,38 @@ export function createContainerCssStyle(
     borderColor: getBorderColorCss(style.borderColor),
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
     opacity: style.opacity,
+  };
+}
+
+export function createIconCssStyle(style: IconElementStyle): CSSProperties {
+  // Whether the container has any visible styling applied
+  const hasContainer =
+    style.containerSize > 0 ||
+    (style.containerBackgroundColor !== 'transparent' &&
+      style.containerBackgroundColor !== 'default');
+
+  return {
+    // Use container size if set, otherwise fall back to icon size
+    width: style.containerSize > 0 ? `${style.containerSize}px` : undefined,
+    height: style.containerSize > 0 ? `${style.containerSize}px` : undefined,
+    backgroundColor: getBackgroundColorCss(style.containerBackgroundColor),
+    borderRadius: style.containerRound
+      ? '50%'
+      : style.containerBorderRadius > 0
+        ? `${style.containerBorderRadius}px`
+        : undefined,
+    opacity: style.opacity,
+    display: hasContainer ? 'inline-flex' : undefined,
+    alignItems: hasContainer ? 'center' : undefined,
+    justifyContent: hasContainer ? 'center' : undefined,
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
   };
 }
 
@@ -129,9 +168,7 @@ export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
     marginBottom: style['margin-bottom']
       ? `${style['margin-bottom']}rem`
       : undefined,
-    marginLeft: style['margin-left']
-      ? `${style['margin-left']}rem`
-      : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
   };
 }
 
@@ -142,6 +179,7 @@ export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
  */
 export type StylableElement =
   | { type: 'text' | 'formatted-text' | 'number'; style: TextElementStyle }
+  | { type: 'icon'; style: IconElementStyle }
   | { type: 'image'; style: ImageElementStyle }
   | { type: 'root' | 'container'; style: ContainerElementStyle };
 
@@ -158,6 +196,8 @@ export function createElementCssStyle(element: StylableElement): CSSProperties {
     case 'formatted-text':
     case 'number':
       return createTextCssStyle(element.style);
+    case 'icon':
+      return createIconCssStyle(element.style);
     case 'image':
       return createImageCssStyle(element.style);
     case 'root':

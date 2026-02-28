@@ -1,15 +1,16 @@
 import React, { ReactElement, useCallback } from 'react';
+import { ContainerElementStyle } from '@minddrop/designs';
 import { propsToClass } from '@minddrop/ui-primitives';
 import {
   DesignStudioStore,
   useDesignStudioStore,
   useElement,
 } from '../../../DesignStudioStore';
-import { ContainerElementStyle } from '@minddrop/designs';
 import { FlatContainerDesignElement, FlatDesignElement } from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
 import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
+import { DesignStudioIconElement } from '../DesignStudioIconElement';
 import { DesignStudioImageElement } from '../DesignStudioImageElement';
 import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
 import { DesignStudioTextElement } from '../DesignStudioTextElement';
@@ -60,6 +61,8 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
       return <DesignStudioFormattedTextElement element={element} />;
     case 'number':
       return <DesignStudioNumberElement element={element} />;
+    case 'icon':
+      return <DesignStudioIconElement element={element} />;
     case 'image':
       return <DesignStudioImageElement element={element} />;
     default:
@@ -142,9 +145,17 @@ const DesignStudioElementInner: React.FC<{
       {...dragDropProps}
     >
       <div
-        className={propsToClass('design-studio-element-inner', { isDragging, isSelected, isFading })}
+        className={propsToClass('design-studio-element-inner', {
+          isDragging,
+          isSelected,
+          isFading,
+        })}
         onClick={handleClick}
-        onAnimationEnd={isFading ? () => DesignStudioStore.getState().clearFadingHighlight() : undefined}
+        onAnimationEnd={
+          isFading
+            ? () => DesignStudioStore.getState().clearFadingHighlight()
+            : undefined
+        }
       >
         {elementComponent}
       </div>

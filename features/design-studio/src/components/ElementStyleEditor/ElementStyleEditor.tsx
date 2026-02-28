@@ -1,17 +1,9 @@
-import {
-  Group,
-  Icon,
-  ScrollArea,
-  Stack,
-  Text,
-} from '@minddrop/ui-primitives';
-import {
-  useDesignStudioStore,
-  useElement,
-} from '../../DesignStudioStore';
+import { Group, Icon, ScrollArea, Stack, Text } from '@minddrop/ui-primitives';
+import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
 import { elementIconMap, elementLabelMap } from '../../constants';
 import { ContainerElementStyleEditor } from '../style-editors/ContainerElementStyleEditor';
 import { FormattedTextElementStyleEditor } from '../style-editors/FormattedTextElementStyleEditor';
+import { IconElementStyleEditor } from '../style-editors/IconElementStyleEditor';
 import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEditor';
 import { NumberElementStyleEditor } from '../style-editors/NumberElementStyleEditor';
 import { TextElementStyleEditor } from '../style-editors/TextElementStyleEditor';
@@ -65,6 +57,10 @@ export const ElementStyleEditor: React.FC = () => {
 
           {element.type === 'number' && (
             <NumberElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'icon' && (
+            <IconElementStyleEditor elementId={selectedElementId} />
           )}
 
           {element.type === 'image' && (

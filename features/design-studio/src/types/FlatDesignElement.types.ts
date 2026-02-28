@@ -1,5 +1,6 @@
 import {
   ContainerElement,
+  IconElement,
   ImageElement,
   LeafDesignElement,
   NumberElement,
@@ -21,6 +22,7 @@ export type FlatLeafDesignElement = LeafDesignElement & Parent;
 export type FlatTextElement = TextElement & Parent;
 export type FlatNumberElement = NumberElement & Parent;
 export type FlatImageElement = ImageElement & Parent;
+export type FlatIconElement = IconElement & Parent;
 
 export type FlatDesignElement =
   | FlatRootDesignElement

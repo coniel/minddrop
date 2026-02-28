@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import { TypographyStyles } from '@minddrop/designs';
+import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import {
   updateElementStyle,
   useDesignStudioStore,
@@ -32,14 +32,17 @@ export const MarginFields = ({ elementId }: MarginFieldsProps) => {
     };
   });
 
-  // Check whether all 4 values are equal
+  // Whether all 4 values are currently equal
   const allEqual = useMemo(() => {
     const first = values['margin-top'];
 
     return sides.every((side) => values[side] === first);
   }, [values]);
 
-  const [synced, setSynced] = useState(allEqual);
+  // Start synced if all values are equal and non-zero
+  const [synced, setSynced] = useState(
+    () => allEqual && values['margin-top'] !== 0,
+  );
 
   // Auto-enable sync when all values become equal
   useEffect(() => {

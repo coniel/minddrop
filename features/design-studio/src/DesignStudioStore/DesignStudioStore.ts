@@ -17,12 +17,12 @@ import {
   useShallow,
   uuid,
 } from '@minddrop/utils';
-import { generateLoremIpsum } from '../utils';
 import {
   FlatChildDesignElement,
   FlatDesignElement,
   FlatParentDesignElement,
 } from '../types';
+import { generateLoremIpsum } from '../utils';
 import { flattenTree, reconstructTree } from '../utils';
 
 export interface DesignStudioStore {
@@ -97,7 +97,13 @@ export interface DesignStudioStore {
    */
   updateElement: (
     id: string,
-    updates: { style?: Partial<DesignElementStyle>; placeholder?: string; placeholderImage?: string; format?: Partial<NumberFormat> },
+    updates: {
+      style?: Partial<DesignElementStyle>;
+      placeholder?: string;
+      placeholderImage?: string;
+      format?: Partial<NumberFormat>;
+      icon?: string;
+    },
   ) => void;
 
   /**
@@ -285,12 +291,18 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     });
   },
 
-  selectElement: (id) => set({ selectedElementId: id, highlightedElementId: id, fadingHighlightElementId: null }),
+  selectElement: (id) =>
+    set({
+      selectedElementId: id,
+      highlightedElementId: id,
+      fadingHighlightElementId: null,
+    }),
 
-  clearHighlight: () => set((state) => ({
-    highlightedElementId: null,
-    fadingHighlightElementId: state.highlightedElementId,
-  })),
+  clearHighlight: () =>
+    set((state) => ({
+      highlightedElementId: null,
+      fadingHighlightElementId: state.highlightedElementId,
+    })),
 
   clearFadingHighlight: () => set({ fadingHighlightElementId: null }),
 
@@ -329,7 +341,13 @@ export const getDesignElement = <
 
 export const updateDesignElement = (
   id: string,
-  updates: { style?: Partial<DesignElementStyle>; placeholder?: string; placeholderImage?: string; format?: Partial<NumberFormat> },
+  updates: {
+    style?: Partial<DesignElementStyle>;
+    placeholder?: string;
+    placeholderImage?: string;
+    format?: Partial<NumberFormat>;
+    icon?: string;
+  },
 ) => {
   const store = DesignStudioStore.getState();
 
@@ -362,7 +380,9 @@ export const addDeisgnElementFromTemplate = (
     id: uuid(),
     parent: parentId,
     ...(template.type === 'text' ? { placeholder: generateLoremIpsum(3) } : {}),
-    ...(template.type === 'number' ? { placeholder: String(Math.floor(Math.random() * 900) + 100) } : {}),
+    ...(template.type === 'number'
+      ? { placeholder: String(Math.floor(Math.random() * 900) + 100) }
+      : {}),
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index);

@@ -10,6 +10,7 @@ export const elementIconMap: Record<string, UiIconName> = {
   'formatted-text': 'file-text',
   number: 'hash',
   image: 'image',
+  icon: 'smile',
 };
 
 export const elementLabelMap: Record<string, string> = {
@@ -18,4 +19,5 @@ export const elementLabelMap: Record<string, string> = {
   'formatted-text': 'design-studio.elements.formatted-text',
   number: 'design-studio.elements.number',
   image: 'design-studio.elements.image',
+  icon: 'design-studio.elements.icon',
 };

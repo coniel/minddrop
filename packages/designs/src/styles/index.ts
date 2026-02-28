@@ -14,6 +14,11 @@ export type DesignElementStyle = TypographyStyles &
     maxWidthUnit: SizeUnit;
     objectFit: ObjectFit;
     round: boolean;
+    size: number;
+    containerSize: number;
+    containerBackgroundColor: string;
+    containerBorderRadius: number;
+    containerRound: boolean;
   };
 export type DesignElementStyleOption = keyof DesignElementStyle;
 
@@ -28,6 +33,11 @@ export const DefaultDesignElementStyle: DesignElementStyle = {
   maxWidthUnit: '%',
   objectFit: 'cover',
   round: false,
+  size: 24,
+  containerSize: 0,
+  containerBackgroundColor: 'transparent',
+  containerBorderRadius: 0,
+  containerRound: false,
 };
 
 export type TextElementStyle = TypographyStyles;
@@ -72,6 +82,34 @@ export const DefaultContainerElementStyle: ContainerElementStyle = {
   'font-weight': DefaultTypographyStyles['font-weight'],
   color: DefaultTypographyStyles.color,
   opacity: DefaultTypographyStyles.opacity,
+};
+
+export interface IconElementStyle {
+  size: number;
+  color: string;
+  opacity: number;
+  containerSize: number;
+  containerBackgroundColor: string;
+  containerBorderRadius: number;
+  containerRound: boolean;
+  'margin-top': number;
+  'margin-right': number;
+  'margin-bottom': number;
+  'margin-left': number;
+}
+
+export const DefaultIconElementStyle: IconElementStyle = {
+  size: 24,
+  color: 'default',
+  opacity: 1,
+  containerSize: 0,
+  containerBackgroundColor: 'transparent',
+  containerBorderRadius: 0,
+  containerRound: false,
+  'margin-top': 0,
+  'margin-right': 0,
+  'margin-bottom': 0,
+  'margin-left': 0,
 };
 
 export const DefaultImageElementStyle: ImageElementStyle = {

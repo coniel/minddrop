@@ -1,5 +1,6 @@
 import {
   ContainerElementStyle,
+  IconElementStyle,
   ImageElementStyle,
   TextElementStyle,
 } from '../styles';
@@ -114,11 +115,26 @@ export interface ImageElement extends DesignElementBase {
   placeholderImage?: string;
 }
 
+export interface IconElement extends DesignElementBase {
+  type: 'icon';
+
+  /**
+   * The element style.
+   */
+  style: IconElementStyle;
+
+  /**
+   * Stringified UserIcon (e.g. "content-icon:cat:cyan" or "emoji:👍:0").
+   */
+  icon?: string;
+}
+
 export type LeafDesignElement =
   | TextElement
   | FormattedTextElement
   | NumberElement
-  | ImageElement;
+  | ImageElement
+  | IconElement;
 
 /******************************************************************************
  * Container Elements
