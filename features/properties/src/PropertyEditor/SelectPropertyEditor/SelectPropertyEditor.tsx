@@ -12,10 +12,6 @@ import {
   ContentColors,
   DropdownMenu,
   DropdownMenuColorSelectionItem,
-  DropdownMenuContent,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuTrigger,
   IconButton,
   KeyboardShortcut,
   SwitchField,
@@ -184,29 +180,24 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
                 }
               }}
               leading={
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
+                <DropdownMenu
+                  trigger={
                     <button className="option-color-button" type="button">
                       <span
                         className={`option-color-swatch option-color-swatch-${option.color}`}
                       />
                     </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuPositioner>
-                      <DropdownMenuContent>
-                        {ContentColors.map((c) => (
-                          <DropdownMenuColorSelectionItem
-                            key={c.value}
-                            color={c.value}
-                            onClick={() =>
-                              handleOptionColorChange(index, c.value)
-                            }
-                          />
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenuPositioner>
-                  </DropdownMenuPortal>
+                  }
+                >
+                  {ContentColors.map((c) => (
+                    <DropdownMenuColorSelectionItem
+                      key={c.value}
+                      color={c.value}
+                      onClick={() =>
+                        handleOptionColorChange(index, c.value)
+                      }
+                    />
+                  ))}
                 </DropdownMenu>
               }
             />

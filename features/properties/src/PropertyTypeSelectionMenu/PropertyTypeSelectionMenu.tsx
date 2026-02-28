@@ -2,20 +2,16 @@ import { ReactElement } from 'react';
 import { PropertySchema, PropertySchemas } from '@minddrop/properties';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
   DropdownMenuProps,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
   MenuGroup,
 } from '@minddrop/ui-primitives';
 
 export interface PropertyTypeSelectionMenuProps
-  extends Omit<DropdownMenuProps, 'children'> {
+  extends Omit<DropdownMenuProps, 'children' | 'trigger'> {
   /**
-   * The content of the PropertyTypeSelectionMenu.
+   * The trigger element for the menu.
    */
   children?: ReactElement;
 
@@ -45,40 +41,35 @@ export const PropertyTypeSelectionMenu: React.FC<
     .filter((schema) => !existingMetaProperties.includes(schema.type));
 
   return (
-    <DropdownMenu {...other}>
-      <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
-      <DropdownMenuPortal>
-        <DropdownMenuPositioner side="bottom" align="start">
-          <DropdownMenuContent
-            minWidth={300}
-            className="property-type-selection-menu"
-          >
-            <MenuGroup padded>
-              {basicProperties.map((schema) => (
-                <DropdownMenuItem
-                  key={schema.type}
-                  label={schema.name}
-                  contentIcon={schema.icon}
-                  tooltipDescription={schema.description}
-                  onClick={() => onSelect(schema)}
-                />
-              ))}
-            </MenuGroup>
-            {metaProperties.length > 0 && <DropdownMenuSeparator />}
-            <MenuGroup padded>
-              {metaProperties.map((schema) => (
-                <DropdownMenuItem
-                  key={schema.type}
-                  label={schema.name}
-                  contentIcon={schema.icon}
-                  tooltipTitle={schema.description}
-                  onClick={() => onSelect(schema)}
-                />
-              ))}
-            </MenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenuPositioner>
-      </DropdownMenuPortal>
+    <DropdownMenu
+      trigger={children!}
+      minWidth={300}
+      contentClassName="property-type-selection-menu"
+      {...other}
+    >
+      <MenuGroup padded>
+        {basicProperties.map((schema) => (
+          <DropdownMenuItem
+            key={schema.type}
+            label={schema.name}
+            contentIcon={schema.icon}
+            tooltipDescription={schema.description}
+            onClick={() => onSelect(schema)}
+          />
+        ))}
+      </MenuGroup>
+      {metaProperties.length > 0 && <DropdownMenuSeparator />}
+      <MenuGroup padded>
+        {metaProperties.map((schema) => (
+          <DropdownMenuItem
+            key={schema.type}
+            label={schema.name}
+            contentIcon={schema.icon}
+            tooltipTitle={schema.description}
+            onClick={() => onSelect(schema)}
+          />
+        ))}
+      </MenuGroup>
     </DropdownMenu>
   );
 };
