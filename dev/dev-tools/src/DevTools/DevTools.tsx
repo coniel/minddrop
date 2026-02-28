@@ -175,6 +175,10 @@ function getIssuesDirPath(workspacePath: string) {
   return Fs.concatPath(workspacePath, 'dev', 'issues');
 }
 
+function getClosedIssuesDirPath(workspacePath: string) {
+  return Fs.concatPath(workspacePath, 'dev', 'issues', 'closed');
+}
+
 function getChangelogsDirPath(workspacePath: string) {
   return Fs.concatPath(workspacePath, 'dev', 'logs');
 }
@@ -576,25 +580,37 @@ export const DevTools: React.FC = () => {
       }
 
       const issuesDir = getIssuesDirPath(workspacePath);
+      const closedDir = getClosedIssuesDirPath(workspacePath);
 
+      // Ensure both directories exist
       await Fs.ensureDir(issuesDir);
+      await Fs.ensureDir(closedDir);
 
       // Read last issue number from config
       const config = await readDevConfig(workspacePath);
       issueIdCounter = config.lastIssueNumber;
 
-      const entries = await Fs.readDir(issuesDir);
-      const mdEntries = entries.filter((entry) => entry.name?.endsWith('.md'));
+      // Read entries from both open and closed directories
+      const openEntries = await Fs.readDir(issuesDir);
+      const closedEntries = await Fs.readDir(closedDir);
 
-      if (mdEntries.length === 0) {
+      const openMdEntries = openEntries.filter(
+        (entry) => entry.name?.endsWith('.md'),
+      );
+      const closedMdEntries = closedEntries.filter(
+        (entry) => entry.name?.endsWith('.md'),
+      );
+
+      if (openMdEntries.length === 0 && closedMdEntries.length === 0) {
         setIssues([]);
 
         return;
       }
 
-      const loadedIssues = await Promise.all(
-        mdEntries.map(async (entry) => {
-          const filePath = Fs.concatPath(issuesDir, entry.name!);
+      // Load issues from both directories
+      const loadFromDir = (entries: typeof openMdEntries, dirPath: string) =>
+        entries.map(async (entry) => {
+          const filePath = Fs.concatPath(dirPath, entry.name!);
           const raw = await Fs.readTextFile(filePath);
           const { frontmatter, content } = parseIssueFrontmatter(raw);
 
@@ -610,8 +626,12 @@ export const DevTools: React.FC = () => {
             filePath,
             createdAt: new Date(frontmatter.created).getTime() || Date.now(),
           };
-        }),
-      );
+        });
+
+      const loadedIssues = await Promise.all([
+        ...loadFromDir(openMdEntries, issuesDir),
+        ...loadFromDir(closedMdEntries, closedDir),
+      ]);
 
       setIssues(loadedIssues);
     };
@@ -622,10 +642,14 @@ export const DevTools: React.FC = () => {
       }
 
       const issuesDir = getIssuesDirPath(workspacePath);
+      const closedDir = getClosedIssuesDirPath(workspacePath);
 
+      // Ensure both directories exist before watching
       await Fs.ensureDir(issuesDir);
+      await Fs.ensureDir(closedDir);
 
-      watcherId = await Fs.watch([issuesDir], () => {
+      // Watch both open and closed issue directories
+      watcherId = await Fs.watch([issuesDir, closedDir], () => {
         loadIssues();
       });
     };
@@ -676,12 +700,19 @@ export const DevTools: React.FC = () => {
             .map((value) => value.trim())
             .filter((value) => value !== '') as IssuePackage[];
 
+          // Parse comma-separated issue numbers into number[]
+          const issues = frontmatter.issues
+            .split(',')
+            .map((value) => parseInt(value.trim(), 10))
+            .filter((value) => !isNaN(value));
+
           return {
             id: frontmatter.number,
             number: frontmatter.number,
             title: frontmatter.title,
             date: frontmatter.date,
             packages,
+            issues,
             content,
             filePath,
             createdAt: new Date(frontmatter.date + 'T00:00:00').getTime() || Date.now(),
@@ -1067,7 +1098,14 @@ export const DevTools: React.FC = () => {
 
   const handleCreateIssue = useCallback(
     async (data: NewIssueData) => {
-      const issuesDir = workspacePath ? getIssuesDirPath(workspacePath) : null;
+      // Place closed issues (done/wontfix) in the closed directory
+      const closedStatuses: IssueStatus[] = ['done', 'wontfix'];
+      const isClosedStatus = closedStatuses.includes(data.status);
+      const issuesDir = workspacePath
+        ? isClosedStatus
+          ? getClosedIssuesDirPath(workspacePath)
+          : getIssuesDirPath(workspacePath)
+        : null;
 
       if (issuesDir) {
         await Fs.ensureDir(issuesDir);
@@ -1141,7 +1179,29 @@ export const DevTools: React.FC = () => {
       const newTitle = sanitizeFileName(updated.title);
       let { filePath } = updated;
 
-      if (issue.filePath && oldTitle !== newTitle) {
+      // Determine if the issue is moving between open/closed directories
+      const closedStatuses: IssueStatus[] = ['done', 'wontfix'];
+      const wasClosedStatus = closedStatuses.includes(issue.status);
+      const isClosedStatus = closedStatuses.includes(updated.status);
+      const statusCategoryChanged = wasClosedStatus !== isClosedStatus;
+
+      if (issue.filePath && workspacePath && statusCategoryChanged) {
+        // Move file between open and closed directories
+        const targetDir = isClosedStatus
+          ? getClosedIssuesDirPath(workspacePath)
+          : getIssuesDirPath(workspacePath);
+
+        await Fs.ensureDir(targetDir);
+
+        const fileName = sanitizeFileName(updated.title);
+        const { path: newPath } = await Fs.incrementalPath(
+          Fs.concatPath(targetDir, `${updated.number} ${fileName}.md`),
+        );
+
+        await Fs.rename(issue.filePath, newPath);
+        filePath = newPath;
+      } else if (issue.filePath && oldTitle !== newTitle) {
+        // Title changed but staying in same directory
         const parentDir = Fs.parentDirPath(issue.filePath);
         const { path: newPath } = await Fs.incrementalPath(
           Fs.concatPath(parentDir, `${updated.number} ${newTitle}.md`),
@@ -1175,7 +1235,7 @@ export const DevTools: React.FC = () => {
         ),
       );
     },
-    [],
+    [workspacePath],
   );
 
   const handleDeleteIssue = useCallback(async (issueId: number) => {
@@ -1218,6 +1278,7 @@ export const DevTools: React.FC = () => {
       title: '',
       date,
       packages: [],
+      issues: [],
       content: '',
       filePath,
       createdAt: Date.now(),
@@ -1232,6 +1293,7 @@ export const DevTools: React.FC = () => {
             number: newChangelog.number,
             date: newChangelog.date,
             packages: '',
+            issues: '',
           },
           '',
         ),
@@ -1285,6 +1347,7 @@ export const DevTools: React.FC = () => {
               number: updated.number,
               date: updated.date,
               packages: updated.packages.join(', '),
+              issues: updated.issues.join(', '),
             },
             updated.content,
           ),
@@ -1744,6 +1807,7 @@ export const DevTools: React.FC = () => {
       {activeSection === 'changelog' && (
         <ChangelogPanel
           changelogs={changelogs}
+          issues={issues}
           selectedChangelogId={selectedChangelogId}
           onSelectChangelog={setSelectedChangelogId}
           onChangelogChange={handleChangelogChange}

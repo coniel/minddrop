@@ -18,6 +18,7 @@ export interface ChangelogFrontmatter {
   number: number;
   date: string;
   packages: string;
+  issues: string;
 }
 
 const DELIMITER = '---';
@@ -35,6 +36,7 @@ export function parseChangelogFrontmatter(raw: string): {
         number: 0,
         date: new Date().toISOString().slice(0, 10),
         packages: '',
+        issues: '',
       },
       content: raw,
     };
@@ -49,6 +51,7 @@ export function parseChangelogFrontmatter(raw: string): {
         number: 0,
         date: new Date().toISOString().slice(0, 10),
         packages: '',
+        issues: '',
       },
       content: raw,
     };
@@ -76,6 +79,7 @@ export function parseChangelogFrontmatter(raw: string): {
       number: parseInt(frontmatter.number ?? '0', 10) || 0,
       date: frontmatter.date ?? new Date().toISOString().slice(0, 10),
       packages: frontmatter.packages ?? '',
+      issues: frontmatter.issues ?? '',
     },
     content,
   };
@@ -91,6 +95,7 @@ export function serializeChangelogFrontmatter(
     `number: ${frontmatter.number}`,
     `date: ${frontmatter.date}`,
     `packages: ${frontmatter.packages}`,
+    `issues: ${frontmatter.issues}`,
     DELIMITER,
   ];
 

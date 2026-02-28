@@ -3,7 +3,7 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check } from 'lucide-react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { Button, CalendarPopover, IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
-import { Changelog, IssuePackage } from '../types';
+import { Changelog, Issue, IssuePackage } from '../types';
 import {
   ISSUE_PACKAGES,
   PACKAGE_GROUPS,
@@ -13,6 +13,7 @@ import './ChangelogPanel.css';
 
 interface ChangelogPanelProps {
   changelogs: Changelog[];
+  issues: Issue[];
   selectedChangelogId: number | null;
   onSelectChangelog: (changelogId: number | null) => void;
   onChangelogChange: (changelogId: number, changes: Partial<Changelog>) => void;
@@ -189,6 +190,7 @@ function ChangelogRow({
 
 export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
   changelogs,
+  issues,
   selectedChangelogId,
   onSelectChangelog,
   onChangelogChange,
@@ -290,6 +292,53 @@ export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
               {getPackageLabel(packageValue)} ×
             </span>
           ))}
+
+          {/* Issue linking */}
+          <Select
+            size="sm"
+            variant="subtle"
+            value={undefined}
+            placeholder="Add issue"
+            onValueChange={(value: string) => {
+              const issueNumber = parseInt(value, 10);
+
+              if (!selectedChangelog.issues.includes(issueNumber)) {
+                onChangelogChange(selectedChangelog.id, {
+                  issues: [...selectedChangelog.issues, issueNumber],
+                });
+              }
+            }}
+          >
+            {issues.map((issue) => (
+              <PackageSelectItem
+                key={issue.number}
+                value={String(issue.number)}
+                label={`#${issue.number} ${issue.title}`}
+              />
+            ))}
+          </Select>
+          {selectedChangelog.issues.map((issueNumber) => (
+            <span
+              key={issueNumber}
+              className="changelog-panel-chip"
+              style={
+                {
+                  '--chip-color': 'var(--color-neutral-7)',
+                  cursor: 'pointer',
+                } as React.CSSProperties
+              }
+              onClick={() =>
+                onChangelogChange(selectedChangelog.id, {
+                  issues: selectedChangelog.issues.filter(
+                    (value) => value !== issueNumber,
+                  ),
+                })
+              }
+            >
+              #{issueNumber} ×
+            </span>
+          ))}
+
           <div className="changelog-panel-detail-fields-spacer" />
         </div>
 

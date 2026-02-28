@@ -96,6 +96,7 @@ export interface Changelog {
   title: string;
   date: string;
   packages: IssuePackage[];
+  issues: number[];
   content: string;
   filePath: string;
   createdAt: number;
