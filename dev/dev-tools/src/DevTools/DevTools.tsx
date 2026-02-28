@@ -19,13 +19,18 @@ import {
 } from '@minddrop/ui-primitives';
 import { stories } from '@minddrop/ui-primitives/stories';
 import { Workspaces } from '@minddrop/workspaces';
-import { ChangelogPanel, formatDate, getEffectiveDate, groupChangelogsByDate } from '../ChangelogPanel';
+import {
+  ChangelogPanel,
+  formatDate,
+  getEffectiveDate,
+  groupChangelogsByDate,
+} from '../ChangelogPanel';
 import { EventsPanel, nextEventId } from '../EventsPanel';
-import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { IssuesPanel } from '../IssuesPanel';
 import { ISSUE_PACKAGES, TYPE_COLORS } from '../IssuesPanel/constants';
-import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
+import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
+import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
 import { NotesPanel } from '../NotesPanel';
 import {
   DatabasesStateView,
@@ -254,9 +259,10 @@ export const DevTools: React.FC = () => {
   );
   const [activeStory, setActiveStory] = useState<ActiveStory>(
     () =>
-      JSON.parse(
-        localStorage.getItem('dev-tools-active-story') ?? 'null',
-      ) ?? { groupIndex: 0, itemIndex: 0 },
+      JSON.parse(localStorage.getItem('dev-tools-active-story') ?? 'null') ?? {
+        groupIndex: 0,
+        itemIndex: 0,
+      },
   );
   const [logs, dispatch] = useReducer(logsReducer, []);
   const [savedLogs, setSavedLogs] = useState<SavedLog[]>(() => loadSavedLogs());
@@ -294,7 +300,9 @@ export const DevTools: React.FC = () => {
   const [changelogs, setChangelogs] = useState<Changelog[]>([]);
   const changelogsRef = useRef(changelogs);
   changelogsRef.current = changelogs;
-  const [selectedChangelogId, setSelectedChangelogId] = useState<number | null>(null);
+  const [selectedChangelogId, setSelectedChangelogId] = useState<number | null>(
+    null,
+  );
   const [events, dispatchEvent] = useReducer(eventsReducer, []);
   const [eventsView, setEventsView] = useState(
     () => localStorage.getItem('dev-tools-events-view') ?? 'all',
@@ -434,10 +442,7 @@ export const DevTools: React.FC = () => {
   }, [activeSection]);
 
   useEffect(() => {
-    localStorage.setItem(
-      'dev-tools-active-story',
-      JSON.stringify(activeStory),
-    );
+    localStorage.setItem('dev-tools-active-story', JSON.stringify(activeStory));
   }, [activeStory]);
 
   useEffect(() => {
@@ -594,11 +599,11 @@ export const DevTools: React.FC = () => {
       const openEntries = await Fs.readDir(issuesDir);
       const closedEntries = await Fs.readDir(closedDir);
 
-      const openMdEntries = openEntries.filter(
-        (entry) => entry.name?.endsWith('.md'),
+      const openMdEntries = openEntries.filter((entry) =>
+        entry.name?.endsWith('.md'),
       );
-      const closedMdEntries = closedEntries.filter(
-        (entry) => entry.name?.endsWith('.md'),
+      const closedMdEntries = closedEntries.filter((entry) =>
+        entry.name?.endsWith('.md'),
       );
 
       if (openMdEntries.length === 0 && closedMdEntries.length === 0) {
@@ -715,7 +720,8 @@ export const DevTools: React.FC = () => {
             issues,
             content,
             filePath,
-            createdAt: new Date(frontmatter.date + 'T00:00:00').getTime() || Date.now(),
+            createdAt:
+              new Date(frontmatter.date + 'T00:00:00').getTime() || Date.now(),
           };
         }),
       );
@@ -924,7 +930,7 @@ export const DevTools: React.FC = () => {
         }
       }
 
-      if (e.key === 'y') {
+      if (e.key === 'y' || e.key === 'l') {
         e.preventDefault();
 
         if (visible && activeSection === 'changelog') {
@@ -980,7 +986,14 @@ export const DevTools: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [visible, activeSection, windowMode, showHelp, showNewIssueDialog, activeEventsTab]);
+  }, [
+    visible,
+    activeSection,
+    windowMode,
+    showHelp,
+    showNewIssueDialog,
+    activeEventsTab,
+  ]);
 
   const onSave = useCallback((entry: LogEntry) => {
     const log: SavedLog = {
@@ -1115,8 +1128,11 @@ export const DevTools: React.FC = () => {
       const createdAt = Date.now();
       const fileName = sanitizeFileName(data.title);
       const filePath = issuesDir
-        ? (await Fs.incrementalPath(Fs.concatPath(issuesDir, `${issueNumber} ${fileName}.md`)))
-            .path
+        ? (
+            await Fs.incrementalPath(
+              Fs.concatPath(issuesDir, `${issueNumber} ${fileName}.md`),
+            )
+          ).path
         : '';
 
       const newIssue: Issue = {
@@ -1549,7 +1565,7 @@ export const DevTools: React.FC = () => {
             ['e', 'Toggle events'],
             ['r', 'Toggle issues'],
             ['t', 'Toggle notes'],
-            ['y', 'Toggle changelog'],
+            ['y / l', 'Toggle changelog'],
             ['i', 'New issue'],
             ['n', 'New note'],
             ['0–9', 'Open note by title'],
@@ -1830,234 +1846,237 @@ export const DevTools: React.FC = () => {
   if (windowMode) {
     return (
       <>
-      {newIssueDialog}
-      <div
-        className="dev-tools-window"
-        style={{
-          left: windowPos.x,
-          top: windowPos.y,
-          width: windowSize.width,
-          height: windowSize.height,
-        }}
-      >
-        {RESIZE_EDGES.map((edge) => (
+        {newIssueDialog}
+        <div
+          className="dev-tools-window"
+          style={{
+            left: windowPos.x,
+            top: windowPos.y,
+            width: windowSize.width,
+            height: windowSize.height,
+          }}
+        >
+          {RESIZE_EDGES.map((edge) => (
+            <div
+              key={edge}
+              className={`dev-tools-resize-handle dev-tools-resize-${edge}`}
+              onMouseDown={(e) => handleResizeStart(e, edge)}
+            />
+          ))}
+
           <div
-            key={edge}
-            className={`dev-tools-resize-handle dev-tools-resize-${edge}`}
-            onMouseDown={(e) => handleResizeStart(e, edge)}
-          />
-        ))}
-
-        <div className="dev-tools-window-header" onMouseDown={handleMoveStart}>
-          <IconButton
-            icon="panel-left"
-            label="Toggle sidebar"
-            size="sm"
-            active={windowSidebarOpen}
-            onClick={() => setWindowSidebarOpen((v) => !v)}
-          />
-          <div className="dev-tools-section-tabs">
+            className="dev-tools-window-header"
+            onMouseDown={handleMoveStart}
+          >
             <IconButton
-              icon="terminal"
-              label="Logs"
+              icon="panel-left"
+              label="Toggle sidebar"
               size="sm"
-              active={activeSection === 'logs'}
-              onClick={() => setActiveSection('logs')}
+              active={windowSidebarOpen}
+              onClick={() => setWindowSidebarOpen((v) => !v)}
             />
-            <IconButton
-              icon="database"
-              label="State"
-              size="sm"
-              active={activeSection === 'state'}
-              onClick={() => setActiveSection('state')}
-            />
-            <IconButton
-              icon="zap"
-              label="Events"
-              size="sm"
-              active={activeSection === 'events'}
-              onClick={() => setActiveSection('events')}
-            />
-            <IconButton
-              icon="circle-dot"
-              label="Issues"
-              size="sm"
-              active={activeSection === 'issues'}
-              onClick={() => setActiveSection('issues')}
-            />
-            <IconButton
-              icon="sticky-note"
-              label="Notes"
-              size="sm"
-              active={activeSection === 'notes'}
-              onClick={() => setActiveSection('notes')}
-            />
-            <IconButton
-              icon="clock"
-              label="Changelog"
-              size="sm"
-              active={activeSection === 'changelog'}
-              onClick={() => setActiveSection('changelog')}
-            />
+            <div className="dev-tools-section-tabs">
+              <IconButton
+                icon="terminal"
+                label="Logs"
+                size="sm"
+                active={activeSection === 'logs'}
+                onClick={() => setActiveSection('logs')}
+              />
+              <IconButton
+                icon="database"
+                label="State"
+                size="sm"
+                active={activeSection === 'state'}
+                onClick={() => setActiveSection('state')}
+              />
+              <IconButton
+                icon="zap"
+                label="Events"
+                size="sm"
+                active={activeSection === 'events'}
+                onClick={() => setActiveSection('events')}
+              />
+              <IconButton
+                icon="circle-dot"
+                label="Issues"
+                size="sm"
+                active={activeSection === 'issues'}
+                onClick={() => setActiveSection('issues')}
+              />
+              <IconButton
+                icon="sticky-note"
+                label="Notes"
+                size="sm"
+                active={activeSection === 'notes'}
+                onClick={() => setActiveSection('notes')}
+              />
+              <IconButton
+                icon="clock"
+                label="Changelog"
+                size="sm"
+                active={activeSection === 'changelog'}
+                onClick={() => setActiveSection('changelog')}
+              />
+            </div>
+            <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
+              {time}
+            </Text>
           </div>
-          <Text size="xs" color="subtle" mono style={{ marginLeft: 'auto' }}>
-            {time}
-          </Text>
-        </div>
 
-        {helpOverlay}
+          {helpOverlay}
 
-        <div className="dev-tools-window-body">
-          {windowSidebarOpen && (
-            <aside className="dev-tools-sidebar dev-tools-sidebar-window">
-              <nav className="dev-tools-nav">
-                {activeSection === 'state' &&
-                  STATE_STORE_GROUPS.map((group, groupIndex) => (
-                    <React.Fragment key={group.label}>
-                      {groupIndex > 0 && <Separator margin="small" />}
-                      <MenuGroup padded>
-                        <MenuLabel label={group.label} />
-                        {group.stores.map(({ id, label }) => (
-                          <MenuItem
-                            key={id}
-                            size="compact"
-                            active={stateView === id}
-                            onClick={() => setStateView(id)}
-                          >
-                            <span className="dev-tools-store-item-label">
-                              {label}
-                              <span className="dev-tools-count-badge">
-                                {storeCounts[id]}
-                              </span>
-                            </span>
-                          </MenuItem>
-                        ))}
-                      </MenuGroup>
-                    </React.Fragment>
-                  ))}
-
-                {activeSection === 'events' && (
-                  <>
-                    <MenuGroup padded>
-                      <MenuItem
-                        size="compact"
-                        active={
-                          activeEventsTab === 'events' && eventsView === 'all'
-                        }
-                        onClick={() => {
-                          setActiveEventsTab('events');
-                          setEventsView('all');
-                        }}
-                      >
-                        <span className="dev-tools-store-item-label">
-                          All Events
-                          <span className="dev-tools-count-badge">
-                            {events.length}
-                          </span>
-                        </span>
-                      </MenuItem>
-                    </MenuGroup>
-                    {eventTree.map((node) => renderEventNode(node, 0))}
-                    <Separator margin="small" />
-                    <MenuGroup padded>
-                      <MenuItem
-                        size="compact"
-                        active={
-                          activeEventsTab === 'listeners' &&
-                          listenersView === 'all'
-                        }
-                        onClick={() => {
-                          setActiveEventsTab('listeners');
-                          setListenersView('all');
-                        }}
-                      >
-                        <span className="dev-tools-store-item-label">
-                          All Listeners
-                          <span className="dev-tools-count-badge">
-                            {allListeners.length}
-                          </span>
-                        </span>
-                      </MenuItem>
-                    </MenuGroup>
-                    {listenersTree.map((node) => renderListenerNode(node))}
-                  </>
-                )}
-
-                {activeSection === 'logs' && (
-                  <>
-                    <MenuGroup padded>
-                      <MenuItem
-                        label="Console"
-                        icon="terminal"
-                        size="compact"
-                        active={logsView === 'live'}
-                        onClick={() => setLogsView('live')}
-                      />
-                    </MenuGroup>
-
-                    {savedFiles.length > 0 && (
-                      <>
-                        <Separator margin="small" />
+          <div className="dev-tools-window-body">
+            {windowSidebarOpen && (
+              <aside className="dev-tools-sidebar dev-tools-sidebar-window">
+                <nav className="dev-tools-nav">
+                  {activeSection === 'state' &&
+                    STATE_STORE_GROUPS.map((group, groupIndex) => (
+                      <React.Fragment key={group.label}>
+                        {groupIndex > 0 && <Separator margin="small" />}
                         <MenuGroup padded>
-                          <MenuLabel label="Saved" />
-                          {savedFiles.map((file) => (
+                          <MenuLabel label={group.label} />
+                          {group.stores.map(({ id, label }) => (
                             <MenuItem
-                              key={file}
-                              label={file}
+                              key={id}
                               size="compact"
-                              active={logsView === file}
-                              onClick={() => setLogsView(file)}
-                              actions={
-                                <IconButton
-                                  icon="x"
-                                  label={`Clear ${file}`}
-                                  size="sm"
-                                  onClick={() => handleClearFile(file)}
-                                />
-                              }
-                            />
+                              active={stateView === id}
+                              onClick={() => setStateView(id)}
+                            >
+                              <span className="dev-tools-store-item-label">
+                                {label}
+                                <span className="dev-tools-count-badge">
+                                  {storeCounts[id]}
+                                </span>
+                              </span>
+                            </MenuItem>
                           ))}
                         </MenuGroup>
-                      </>
-                    )}
-                  </>
-                )}
-
-                {activeSection === 'notes' && (
-                  <MenuGroup padded>
-                    <MenuItem
-                      size="compact"
-                      label="New Note"
-                      icon="plus"
-                      onClick={handleCreateNote}
-                    />
-                    {notes.map((note) => (
-                      <MenuItem
-                        key={note.id}
-                        size="compact"
-                        active={activeNoteId === note.id}
-                        onClick={() => handleOpenNote(note.id)}
-                      >
-                        <span className="dev-tools-store-item-label">
-                          {note.content
-                            .split('\n')[0]
-                            .replace(/^#+\s*/, '')
-                            .trim() || 'Untitled'}
-                        </span>
-                      </MenuItem>
+                      </React.Fragment>
                     ))}
-                  </MenuGroup>
-                )}
 
-                {activeSection === 'issues' && issuesSidebar}
+                  {activeSection === 'events' && (
+                    <>
+                      <MenuGroup padded>
+                        <MenuItem
+                          size="compact"
+                          active={
+                            activeEventsTab === 'events' && eventsView === 'all'
+                          }
+                          onClick={() => {
+                            setActiveEventsTab('events');
+                            setEventsView('all');
+                          }}
+                        >
+                          <span className="dev-tools-store-item-label">
+                            All Events
+                            <span className="dev-tools-count-badge">
+                              {events.length}
+                            </span>
+                          </span>
+                        </MenuItem>
+                      </MenuGroup>
+                      {eventTree.map((node) => renderEventNode(node, 0))}
+                      <Separator margin="small" />
+                      <MenuGroup padded>
+                        <MenuItem
+                          size="compact"
+                          active={
+                            activeEventsTab === 'listeners' &&
+                            listenersView === 'all'
+                          }
+                          onClick={() => {
+                            setActiveEventsTab('listeners');
+                            setListenersView('all');
+                          }}
+                        >
+                          <span className="dev-tools-store-item-label">
+                            All Listeners
+                            <span className="dev-tools-count-badge">
+                              {allListeners.length}
+                            </span>
+                          </span>
+                        </MenuItem>
+                      </MenuGroup>
+                      {listenersTree.map((node) => renderListenerNode(node))}
+                    </>
+                  )}
 
-                {activeSection === 'changelog' && changelogSidebar}
-              </nav>
-            </aside>
-          )}
-          {contentArea}
+                  {activeSection === 'logs' && (
+                    <>
+                      <MenuGroup padded>
+                        <MenuItem
+                          label="Console"
+                          icon="terminal"
+                          size="compact"
+                          active={logsView === 'live'}
+                          onClick={() => setLogsView('live')}
+                        />
+                      </MenuGroup>
+
+                      {savedFiles.length > 0 && (
+                        <>
+                          <Separator margin="small" />
+                          <MenuGroup padded>
+                            <MenuLabel label="Saved" />
+                            {savedFiles.map((file) => (
+                              <MenuItem
+                                key={file}
+                                label={file}
+                                size="compact"
+                                active={logsView === file}
+                                onClick={() => setLogsView(file)}
+                                actions={
+                                  <IconButton
+                                    icon="x"
+                                    label={`Clear ${file}`}
+                                    size="sm"
+                                    onClick={() => handleClearFile(file)}
+                                  />
+                                }
+                              />
+                            ))}
+                          </MenuGroup>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {activeSection === 'notes' && (
+                    <MenuGroup padded>
+                      <MenuItem
+                        size="compact"
+                        label="New Note"
+                        icon="plus"
+                        onClick={handleCreateNote}
+                      />
+                      {notes.map((note) => (
+                        <MenuItem
+                          key={note.id}
+                          size="compact"
+                          active={activeNoteId === note.id}
+                          onClick={() => handleOpenNote(note.id)}
+                        >
+                          <span className="dev-tools-store-item-label">
+                            {note.content
+                              .split('\n')[0]
+                              .replace(/^#+\s*/, '')
+                              .trim() || 'Untitled'}
+                          </span>
+                        </MenuItem>
+                      ))}
+                    </MenuGroup>
+                  )}
+
+                  {activeSection === 'issues' && issuesSidebar}
+
+                  {activeSection === 'changelog' && changelogSidebar}
+                </nav>
+              </aside>
+            )}
+            {contentArea}
+          </div>
         </div>
-      </div>
       </>
     );
   }
@@ -2065,245 +2084,246 @@ export const DevTools: React.FC = () => {
   // --- Fullscreen mode ---
   return (
     <>
-    {newIssueDialog}
-    <div className="dev-tools-overlay">
-      {helpOverlay}
-      <div className="dev-tools">
-        {/* --- Sidebar --- */}
-        <aside className="dev-tools-sidebar">
-          <div className="dev-tools-sidebar-header">
-            <Text size="sm" weight="semibold">
-              DevTools
-            </Text>
-            <Text size="xs" color="subtle" mono>
-              {time}
-            </Text>
-          </div>
+      {newIssueDialog}
+      <div className="dev-tools-overlay">
+        {helpOverlay}
+        <div className="dev-tools">
+          {/* --- Sidebar --- */}
+          <aside className="dev-tools-sidebar">
+            <div className="dev-tools-sidebar-header">
+              <Text size="sm" weight="semibold">
+                DevTools
+              </Text>
+              <Text size="xs" color="subtle" mono>
+                {time}
+              </Text>
+            </div>
 
-          <div className="dev-tools-section-tabs">
-            <IconButton
-              icon="terminal"
-              label="Logs"
-              size="sm"
-              active={activeSection === 'logs'}
-              onClick={() => setActiveSection('logs')}
-            />
-            <IconButton
-              icon="database"
-              label="State"
-              size="sm"
-              active={activeSection === 'state'}
-              onClick={() => setActiveSection('state')}
-            />
-            <IconButton
-              icon="zap"
-              label="Events"
-              size="sm"
-              active={activeSection === 'events'}
-              onClick={() => setActiveSection('events')}
-            />
-            <IconButton
-              icon="circle-dot"
-              label="Issues"
-              size="sm"
-              active={activeSection === 'issues'}
-              onClick={() => setActiveSection('issues')}
-            />
-            <IconButton
-              icon="sticky-note"
-              label="Notes"
-              size="sm"
-              active={activeSection === 'notes'}
-              onClick={() => setActiveSection('notes')}
-            />
-            <IconButton
-              icon="clock"
-              label="Changelog"
-              size="sm"
-              active={activeSection === 'changelog'}
-              onClick={() => setActiveSection('changelog')}
-            />
-            <IconButton
-              icon="book-open"
-              label="Stories"
-              size="sm"
-              active={activeSection === 'stories'}
-              onClick={() => setActiveSection('stories')}
-            />
-          </div>
+            <div className="dev-tools-section-tabs">
+              <IconButton
+                icon="terminal"
+                label="Logs"
+                size="sm"
+                active={activeSection === 'logs'}
+                onClick={() => setActiveSection('logs')}
+              />
+              <IconButton
+                icon="database"
+                label="State"
+                size="sm"
+                active={activeSection === 'state'}
+                onClick={() => setActiveSection('state')}
+              />
+              <IconButton
+                icon="zap"
+                label="Events"
+                size="sm"
+                active={activeSection === 'events'}
+                onClick={() => setActiveSection('events')}
+              />
+              <IconButton
+                icon="circle-dot"
+                label="Issues"
+                size="sm"
+                active={activeSection === 'issues'}
+                onClick={() => setActiveSection('issues')}
+              />
+              <IconButton
+                icon="sticky-note"
+                label="Notes"
+                size="sm"
+                active={activeSection === 'notes'}
+                onClick={() => setActiveSection('notes')}
+              />
+              <IconButton
+                icon="clock"
+                label="Changelog"
+                size="sm"
+                active={activeSection === 'changelog'}
+                onClick={() => setActiveSection('changelog')}
+              />
+              <IconButton
+                icon="book-open"
+                label="Stories"
+                size="sm"
+                active={activeSection === 'stories'}
+                onClick={() => setActiveSection('stories')}
+              />
+            </div>
 
-          <nav className="dev-tools-nav">
-            {activeSection === 'logs' && (
-              <>
+            <nav className="dev-tools-nav">
+              {activeSection === 'logs' && (
+                <>
+                  <MenuGroup padded>
+                    <MenuItem
+                      label="Console"
+                      icon="terminal"
+                      size="compact"
+                      active={logsView === 'live'}
+                      onClick={() => setLogsView('live')}
+                    />
+                  </MenuGroup>
+
+                  {savedFiles.length > 0 && (
+                    <>
+                      <Separator margin="small" />
+                      <MenuGroup padded>
+                        <MenuLabel label="Saved" />
+                        {savedFiles.map((file) => (
+                          <MenuItem
+                            key={file}
+                            label={file}
+                            size="compact"
+                            active={logsView === file}
+                            onClick={() => setLogsView(file)}
+                            actions={
+                              <IconButton
+                                icon="x"
+                                label={`Clear ${file}`}
+                                size="sm"
+                                onClick={() => handleClearFile(file)}
+                              />
+                            }
+                          />
+                        ))}
+                      </MenuGroup>
+                    </>
+                  )}
+                </>
+              )}
+
+              {activeSection === 'state' &&
+                STATE_STORE_GROUPS.map((group, groupIndex) => (
+                  <React.Fragment key={group.label}>
+                    {groupIndex > 0 && <Separator margin="small" />}
+                    <MenuGroup padded>
+                      <MenuLabel label={group.label} />
+                      {group.stores.map(({ id, label }) => (
+                        <MenuItem
+                          key={id}
+                          size="compact"
+                          active={stateView === id}
+                          onClick={() => setStateView(id)}
+                        >
+                          <span className="dev-tools-store-item-label">
+                            {label}
+                            <span className="dev-tools-count-badge">
+                              {storeCounts[id]}
+                            </span>
+                          </span>
+                        </MenuItem>
+                      ))}
+                    </MenuGroup>
+                  </React.Fragment>
+                ))}
+
+              {activeSection === 'events' && (
+                <>
+                  <MenuGroup padded>
+                    <MenuItem
+                      size="compact"
+                      active={
+                        activeEventsTab === 'events' && eventsView === 'all'
+                      }
+                      onClick={() => {
+                        setActiveEventsTab('events');
+                        setEventsView('all');
+                      }}
+                    >
+                      <span className="dev-tools-store-item-label">
+                        All Events
+                        <span className="dev-tools-count-badge">
+                          {events.length}
+                        </span>
+                      </span>
+                    </MenuItem>
+                  </MenuGroup>
+                  {eventTree.map((node) => renderEventNode(node, 0))}
+                  <Separator margin="small" />
+                  <MenuGroup padded>
+                    <MenuItem
+                      size="compact"
+                      active={
+                        activeEventsTab === 'listeners' &&
+                        listenersView === 'all'
+                      }
+                      onClick={() => {
+                        setActiveEventsTab('listeners');
+                        setListenersView('all');
+                      }}
+                    >
+                      <span className="dev-tools-store-item-label">
+                        All Listeners
+                        <span className="dev-tools-count-badge">
+                          {allListeners.length}
+                        </span>
+                      </span>
+                    </MenuItem>
+                  </MenuGroup>
+                  {listenersTree.map((node) => renderListenerNode(node))}
+                </>
+              )}
+
+              {activeSection === 'notes' && (
                 <MenuGroup padded>
                   <MenuItem
-                    label="Console"
-                    icon="terminal"
                     size="compact"
-                    active={logsView === 'live'}
-                    onClick={() => setLogsView('live')}
+                    label="New Note"
+                    icon="plus"
+                    onClick={handleCreateNote}
                   />
+                  {notes.map((note) => (
+                    <MenuItem
+                      key={note.id}
+                      size="compact"
+                      active={activeNoteId === note.id}
+                      onClick={() => handleOpenNote(note.id)}
+                    >
+                      <span className="dev-tools-store-item-label">
+                        {note.content
+                          .split('\n')[0]
+                          .replace(/^#+\s*/, '')
+                          .trim() || 'Untitled'}
+                      </span>
+                    </MenuItem>
+                  ))}
                 </MenuGroup>
+              )}
 
-                {savedFiles.length > 0 && (
-                  <>
-                    <Separator margin="small" />
-                    <MenuGroup padded>
-                      <MenuLabel label="Saved" />
-                      {savedFiles.map((file) => (
+              {activeSection === 'issues' && issuesSidebar}
+
+              {activeSection === 'changelog' && changelogSidebar}
+
+              {activeSection === 'stories' && (
+                <>
+                  {stories.map((group, groupIndex) => (
+                    <MenuGroup key={group.group} padded>
+                      <MenuLabel label={group.group} />
+                      {group.items.map((item, itemIndex) => (
                         <MenuItem
-                          key={file}
-                          label={file}
+                          key={item.label}
+                          label={item.label}
                           size="compact"
-                          active={logsView === file}
-                          onClick={() => setLogsView(file)}
-                          actions={
-                            <IconButton
-                              icon="x"
-                              label={`Clear ${file}`}
-                              size="sm"
-                              onClick={() => handleClearFile(file)}
-                            />
+                          active={
+                            activeStory.groupIndex === groupIndex &&
+                            activeStory.itemIndex === itemIndex
+                          }
+                          onClick={() =>
+                            setActiveStory({ groupIndex, itemIndex })
                           }
                         />
                       ))}
                     </MenuGroup>
-                  </>
-                )}
-              </>
-            )}
+                  ))}
+                </>
+              )}
+            </nav>
+          </aside>
 
-            {activeSection === 'state' &&
-              STATE_STORE_GROUPS.map((group, groupIndex) => (
-                <React.Fragment key={group.label}>
-                  {groupIndex > 0 && <Separator margin="small" />}
-                  <MenuGroup padded>
-                    <MenuLabel label={group.label} />
-                    {group.stores.map(({ id, label }) => (
-                      <MenuItem
-                        key={id}
-                        size="compact"
-                        active={stateView === id}
-                        onClick={() => setStateView(id)}
-                      >
-                        <span className="dev-tools-store-item-label">
-                          {label}
-                          <span className="dev-tools-count-badge">
-                            {storeCounts[id]}
-                          </span>
-                        </span>
-                      </MenuItem>
-                    ))}
-                  </MenuGroup>
-                </React.Fragment>
-              ))}
-
-            {activeSection === 'events' && (
-              <>
-                <MenuGroup padded>
-                  <MenuItem
-                    size="compact"
-                    active={
-                      activeEventsTab === 'events' && eventsView === 'all'
-                    }
-                    onClick={() => {
-                      setActiveEventsTab('events');
-                      setEventsView('all');
-                    }}
-                  >
-                    <span className="dev-tools-store-item-label">
-                      All Events
-                      <span className="dev-tools-count-badge">
-                        {events.length}
-                      </span>
-                    </span>
-                  </MenuItem>
-                </MenuGroup>
-                {eventTree.map((node) => renderEventNode(node, 0))}
-                <Separator margin="small" />
-                <MenuGroup padded>
-                  <MenuItem
-                    size="compact"
-                    active={
-                      activeEventsTab === 'listeners' && listenersView === 'all'
-                    }
-                    onClick={() => {
-                      setActiveEventsTab('listeners');
-                      setListenersView('all');
-                    }}
-                  >
-                    <span className="dev-tools-store-item-label">
-                      All Listeners
-                      <span className="dev-tools-count-badge">
-                        {allListeners.length}
-                      </span>
-                    </span>
-                  </MenuItem>
-                </MenuGroup>
-                {listenersTree.map((node) => renderListenerNode(node))}
-              </>
-            )}
-
-            {activeSection === 'notes' && (
-              <MenuGroup padded>
-                <MenuItem
-                  size="compact"
-                  label="New Note"
-                  icon="plus"
-                  onClick={handleCreateNote}
-                />
-                {notes.map((note) => (
-                  <MenuItem
-                    key={note.id}
-                    size="compact"
-                    active={activeNoteId === note.id}
-                    onClick={() => handleOpenNote(note.id)}
-                  >
-                    <span className="dev-tools-store-item-label">
-                      {note.content
-                        .split('\n')[0]
-                        .replace(/^#+\s*/, '')
-                        .trim() || 'Untitled'}
-                    </span>
-                  </MenuItem>
-                ))}
-              </MenuGroup>
-            )}
-
-            {activeSection === 'issues' && issuesSidebar}
-
-            {activeSection === 'changelog' && changelogSidebar}
-
-            {activeSection === 'stories' && (
-              <>
-                {stories.map((group, groupIndex) => (
-                  <MenuGroup key={group.group} padded>
-                    <MenuLabel label={group.group} />
-                    {group.items.map((item, itemIndex) => (
-                      <MenuItem
-                        key={item.label}
-                        label={item.label}
-                        size="compact"
-                        active={
-                          activeStory.groupIndex === groupIndex &&
-                          activeStory.itemIndex === itemIndex
-                        }
-                        onClick={() =>
-                          setActiveStory({ groupIndex, itemIndex })
-                        }
-                      />
-                    ))}
-                  </MenuGroup>
-                ))}
-              </>
-            )}
-          </nav>
-        </aside>
-
-        {/* --- Content --- */}
-        {contentArea}
+          {/* --- Content --- */}
+          {contentArea}
+        </div>
       </div>
-    </div>
     </>
   );
 };
