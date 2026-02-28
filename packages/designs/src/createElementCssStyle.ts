@@ -135,6 +135,23 @@ export function createContainerCssStyle(
     cssStyle.WebkitBackdropFilter = filterValue;
   }
 
+  // Apply gradient mask to fade the backdrop effects
+  if (style.backdropBlurGradient && style.backdropBlur > 0) {
+    const directionMap: Record<string, string> = {
+      'to-top': 'to top',
+      'to-bottom': 'to bottom',
+      'to-left': 'to left',
+      'to-right': 'to right',
+    };
+
+    const cssDirection = directionMap[style.backdropBlurGradientDirection];
+    const extent = style.backdropBlurGradientExtent;
+    const maskValue = `linear-gradient(${cssDirection}, black ${extent}%, transparent 100%)`;
+
+    cssStyle.maskImage = maskValue;
+    cssStyle.WebkitMaskImage = maskValue;
+  }
+
   return cssStyle;
 }
 

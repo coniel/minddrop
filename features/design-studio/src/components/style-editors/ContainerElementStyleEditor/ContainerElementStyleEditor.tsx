@@ -6,6 +6,9 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { useElementStyle } from '../../../DesignStudioStore';
+import { BackdropBlurGradientDirectionToggle } from '../BackdropBlurGradientDirectionToggle';
+import { BackdropBlurGradientExtentSlider } from '../BackdropBlurGradientExtentSlider';
+import { BackdropBlurGradientSwitch } from '../BackdropBlurGradientSwitch';
 import { BackdropBlurSlider } from '../BackdropBlurSlider';
 import { BackdropBrightnessSlider } from '../BackdropBrightnessSlider';
 import { BackgroundColorSelect } from '../BackgroundColorSelect';
@@ -32,6 +35,11 @@ export const ContainerElementStyleEditor: React.FC<
   ContainerElementStyleEditorProps
 > = ({ elementId, isRoot, showMinHeight = true }) => {
   const backgroundImage = useElementStyle(elementId, 'backgroundImage');
+  const backdropBlur = useElementStyle(elementId, 'backdropBlur');
+  const backdropBlurGradient = useElementStyle(
+    elementId,
+    'backdropBlurGradient',
+  );
 
   return (
     <>
@@ -87,6 +95,29 @@ export const ContainerElementStyleEditor: React.FC<
           <InputLabel size="xs" label="designs.backdrop-brightness.label" />
           <BackdropBrightnessSlider elementId={elementId} />
         </Stack>
+        {backdropBlur > 0 && (
+          <>
+            <BackdropBlurGradientSwitch elementId={elementId} />
+            {backdropBlurGradient && (
+              <>
+                <Stack gap={3}>
+                  <InputLabel
+                    size="xs"
+                    label="designs.backdrop-blur-gradient-direction.label"
+                  />
+                  <BackdropBlurGradientDirectionToggle elementId={elementId} />
+                </Stack>
+                <Stack gap={3}>
+                  <InputLabel
+                    size="xs"
+                    label="designs.backdrop-blur-gradient-extent.label"
+                  />
+                  <BackdropBlurGradientExtentSlider elementId={elementId} />
+                </Stack>
+              </>
+            )}
+          </>
+        )}
       </Stack>
 
       <Stack gap={3}>

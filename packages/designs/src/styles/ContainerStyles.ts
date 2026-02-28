@@ -34,6 +34,7 @@ export const borderStyles: {
 export type ContainerDirection = 'row' | 'column';
 export type ContainerAlign = 'start' | 'center' | 'end';
 export type ContainerJustify = 'start' | 'center' | 'end';
+export type GradientDirection = 'to-top' | 'to-bottom' | 'to-left' | 'to-right';
 
 export interface ContainerStyles {
   direction: ContainerDirection;
@@ -59,6 +60,9 @@ export interface ContainerStyles {
   backgroundImageFit: 'cover' | 'contain' | 'fill';
   backdropBlur: number;
   backdropBrightness: number;
+  backdropBlurGradient: boolean;
+  backdropBlurGradientDirection: GradientDirection;
+  backdropBlurGradientExtent: number;
 }
 
 export const DefaultContainerStyles: ContainerStyles = {
@@ -84,4 +88,7 @@ export const DefaultContainerStyles: ContainerStyles = {
   backgroundImageFit: 'cover',
   backdropBlur: 0,
   backdropBrightness: 100,
+  backdropBlurGradient: false,
+  backdropBlurGradientDirection: 'to-top',
+  backdropBlurGradientExtent: 50,
 };

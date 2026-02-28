@@ -468,6 +468,19 @@
     "backdrop-brightness": {
       "label": "Backdrop brightness"
     },
+    "backdrop-blur-gradient": {
+      "label": "Blur gradient"
+    },
+    "backdrop-blur-gradient-direction": {
+      "label": "Gradient direction",
+      "to-top": "Up",
+      "to-bottom": "Down",
+      "to-left": "Left",
+      "to-right": "Right"
+    },
+    "backdrop-blur-gradient-extent": {
+      "label": "Gradient extent"
+    },
     "number-format": {
       "label": "Format",
       "decimals": {
