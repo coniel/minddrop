@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import {
+  createBackdropGradientOverlayStyle,
   createContainerCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
@@ -39,6 +40,9 @@ export const DesignStudioContainerElement: React.FC<
 
   // Whether to use a nested div (bg image on outer, effects on inner)
   const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
+
+  // Gradient overlay style (null when gradient is not active)
+  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
   const containerCssStyle = {
     ...createContainerCssStyle(style),
@@ -92,38 +96,7 @@ export const DesignStudioContainerElement: React.FC<
     ))
   );
 
-  // When backdrop effects + bg image are both active, wrap in an outer
-  // div with the background image so backdrop-filter affects the image
-  if (hasBackdropWithImage) {
-    return (
-      <div
-        style={{
-          backgroundImage: `url(${imageSrc})`,
-          backgroundSize: containerCssStyle.backgroundSize,
-          backgroundPosition: containerCssStyle.backgroundPosition,
-          backgroundRepeat: containerCssStyle.backgroundRepeat,
-          borderRadius: containerCssStyle.borderRadius,
-          overflow: 'hidden',
-          alignSelf: containerCssStyle.alignSelf,
-        }}
-      >
-        <FlexDropContainer
-          key={style.direction}
-          id={element.id}
-          gap={style.gap}
-          direction={style.direction}
-          align={style.alignItems}
-          justify={style.justifyContent}
-          style={containerCssStyle}
-          onDrop={handleDropOnGap}
-        >
-          {children}
-        </FlexDropContainer>
-      </div>
-    );
-  }
-
-  return (
+  const flexDropContainer = (
     <FlexDropContainer
       key={style.direction}
       id={element.id}
@@ -137,4 +110,49 @@ export const DesignStudioContainerElement: React.FC<
       {children}
     </FlexDropContainer>
   );
+
+  // When backdrop effects + bg image are both active, wrap in an outer
+  // div with the background image so backdrop-filter affects the image
+  if (hasBackdropWithImage) {
+    return (
+      <div
+        style={{
+          backgroundImage: `url(${imageSrc})`,
+          backgroundSize: containerCssStyle.backgroundSize,
+          backgroundPosition: containerCssStyle.backgroundPosition,
+          backgroundRepeat: containerCssStyle.backgroundRepeat,
+          borderRadius: containerCssStyle.borderRadius,
+          overflow: 'hidden',
+          alignSelf: containerCssStyle.alignSelf,
+          // Create stacking context for gradient overlay
+          ...(gradientOverlayStyle && {
+            position: 'relative' as const,
+            isolation: 'isolate' as const,
+          }),
+        }}
+      >
+        {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
+        {flexDropContainer}
+      </div>
+    );
+  }
+
+  // When gradient is active without a bg image, wrap in a
+  // relative container for the absolutely positioned overlay
+  if (gradientOverlayStyle) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          isolation: 'isolate',
+          alignSelf: containerCssStyle.alignSelf,
+        }}
+      >
+        <div style={gradientOverlayStyle} />
+        {flexDropContainer}
+      </div>
+    );
+  }
+
+  return flexDropContainer;
 };

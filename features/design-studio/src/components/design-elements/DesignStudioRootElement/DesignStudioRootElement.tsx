@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import {
+  createBackdropGradientOverlayStyle,
   createElementCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
@@ -37,6 +38,9 @@ export const DesignStudioRootElement: React.FC<
 
   // Whether to use a nested div (bg image on outer, effects on inner)
   const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
+
+  // Gradient overlay style (null when gradient is not active)
+  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
   // Select the root element when clicking the root background
   const handleClick = useCallback(() => {
@@ -90,8 +94,26 @@ export const DesignStudioRootElement: React.FC<
             overflow: 'hidden',
             width: '100%',
             height: '100%',
+            // Create stacking context for gradient overlay
+            ...(gradientOverlayStyle && {
+              position: 'relative' as const,
+              isolation: 'isolate' as const,
+            }),
           }}
         >
+          {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
+          {flexDropContainer}
+        </div>
+      ) : gradientOverlayStyle ? (
+        <div
+          style={{
+            position: 'relative',
+            isolation: 'isolate',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <div style={gradientOverlayStyle} />
           {flexDropContainer}
         </div>
       ) : (

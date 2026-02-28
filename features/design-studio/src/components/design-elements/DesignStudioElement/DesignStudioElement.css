@@ -13,6 +13,8 @@
 }
 
 .design-studio-element-inner {
+  font-size: 0;
+  line-height: 0;
   outline: 2px solid transparent;
   outline-offset: 2px;
   border-radius: var(--space-1);

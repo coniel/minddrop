@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   ContainerElement,
+  createBackdropGradientOverlayStyle,
   createContainerCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
@@ -42,7 +43,14 @@ export const DesignContainerElement: React.FC<DesignContainerElementProps> = ({
   // Whether to use a nested div (bg image on outer, effects on inner)
   const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
 
+  // Gradient overlay style (null when gradient is not active)
+  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
+
   const containerCssStyle = createContainerCssStyle(style);
+
+  const children = element.children.map((child) => (
+    <DesignElement key={child.id} element={child} />
+  ));
 
   // When backdrop effects + bg image are both active, the background
   // image goes on an outer wrapper so backdrop-filter affects the image
@@ -56,13 +64,32 @@ export const DesignContainerElement: React.FC<DesignContainerElementProps> = ({
           backgroundRepeat: containerCssStyle.backgroundRepeat,
           borderRadius: containerCssStyle.borderRadius,
           overflow: 'hidden',
+          // Create stacking context for gradient overlay
+          ...(gradientOverlayStyle && {
+            position: 'relative' as const,
+            isolation: 'isolate' as const,
+          }),
         }}
       >
-        <div style={containerCssStyle}>
-          {element.children.map((child) => (
-            <DesignElement key={child.id} element={child} />
-          ))}
-        </div>
+        {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
+        <div style={containerCssStyle}>{children}</div>
+      </div>
+    );
+  }
+
+  // When gradient is active without a bg image, wrap in a
+  // relative container for the absolutely positioned overlay
+  if (gradientOverlayStyle) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          isolation: 'isolate',
+          alignSelf: containerCssStyle.alignSelf,
+        }}
+      >
+        <div style={gradientOverlayStyle} />
+        <div style={containerCssStyle}>{children}</div>
       </div>
     );
   }
@@ -75,9 +102,7 @@ export const DesignContainerElement: React.FC<DesignContainerElementProps> = ({
         ...(imageSrc && { backgroundImage: `url(${imageSrc})` }),
       }}
     >
-      {element.children.map((child) => (
-        <DesignElement key={child.id} element={child} />
-      ))}
+      {children}
     </div>
   );
 };

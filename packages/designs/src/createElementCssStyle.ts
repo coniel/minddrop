@@ -102,7 +102,12 @@ export function createContainerCssStyle(
     fontFamily: resolveFontFamily(style['font-family']),
     fontWeight: style['font-weight'],
     color: getContentColorCss(style.color, 900, 'inherit'),
-    backgroundColor: getBackgroundColorCss(style.backgroundColor),
+    // When gradient overlay is active, background color goes on the
+    // overlay so it gets masked by the gradient too
+    backgroundColor:
+      style.backdropBlurGradient && style.backdropBlur > 0
+        ? 'transparent'
+        : getBackgroundColorCss(style.backgroundColor),
     borderStyle: style.borderStyle,
     borderWidth: `${style.borderWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
@@ -117,6 +122,56 @@ export function createContainerCssStyle(
     cssStyle.backgroundRepeat = 'no-repeat';
   }
 
+  // When gradient is enabled, backdrop effects go on a separate overlay
+  // div (see createBackdropGradientOverlayStyle). Otherwise apply directly.
+  const hasGradient = style.backdropBlurGradient && style.backdropBlur > 0;
+
+  if (!hasGradient) {
+    // Build backdrop-filter from blur and brightness
+    const backdropFilters: string[] = [];
+
+    if (style.backdropBlur > 0) {
+      backdropFilters.push(`blur(${style.backdropBlur}px)`);
+    }
+
+    if (style.backdropBrightness !== 100) {
+      backdropFilters.push(`brightness(${style.backdropBrightness}%)`);
+    }
+
+    if (backdropFilters.length > 0) {
+      const filterValue = backdropFilters.join(' ');
+
+      cssStyle.backdropFilter = filterValue;
+      cssStyle.WebkitBackdropFilter = filterValue;
+    }
+  }
+
+  return cssStyle;
+}
+
+const gradientDirectionMap: Record<string, string> = {
+  'to-top': 'to top',
+  'to-bottom': 'to bottom',
+  'to-left': 'to left',
+  'to-right': 'to right',
+};
+
+/**
+ * Returns CSS for an absolutely positioned overlay div that
+ * applies backdrop-filter with a gradient mask. Used when
+ * backdropBlurGradient is enabled so the mask doesn't clip
+ * the container's content.
+ *
+ * Returns null when no gradient overlay is needed.
+ */
+export function createBackdropGradientOverlayStyle(
+  style: ContainerElementStyle,
+): CSSProperties | null {
+  // Only needed when gradient is active
+  if (!style.backdropBlurGradient || style.backdropBlur <= 0) {
+    return null;
+  }
+
   // Build backdrop-filter from blur and brightness
   const backdropFilters: string[] = [];
 
@@ -128,31 +183,25 @@ export function createContainerCssStyle(
     backdropFilters.push(`brightness(${style.backdropBrightness}%)`);
   }
 
-  if (backdropFilters.length > 0) {
-    const filterValue = backdropFilters.join(' ');
+  const filterValue = backdropFilters.join(' ');
 
-    cssStyle.backdropFilter = filterValue;
-    cssStyle.WebkitBackdropFilter = filterValue;
-  }
+  // Build gradient mask
+  const cssDirection =
+    gradientDirectionMap[style.backdropBlurGradientDirection];
+  const extent = style.backdropBlurGradientExtent;
+  const maskValue = `linear-gradient(${cssDirection}, black 0%, transparent ${extent}%)`;
 
-  // Apply gradient mask to fade the backdrop effects
-  if (style.backdropBlurGradient && style.backdropBlur > 0) {
-    const directionMap: Record<string, string> = {
-      'to-top': 'to top',
-      'to-bottom': 'to bottom',
-      'to-left': 'to left',
-      'to-right': 'to right',
-    };
-
-    const cssDirection = directionMap[style.backdropBlurGradientDirection];
-    const extent = style.backdropBlurGradientExtent;
-    const maskValue = `linear-gradient(${cssDirection}, black ${extent}%, transparent 100%)`;
-
-    cssStyle.maskImage = maskValue;
-    cssStyle.WebkitMaskImage = maskValue;
-  }
-
-  return cssStyle;
+  return {
+    position: 'absolute',
+    inset: 0,
+    backgroundColor: getBackgroundColorCss(style.backgroundColor),
+    backdropFilter: filterValue,
+    WebkitBackdropFilter: filterValue,
+    maskImage: maskValue,
+    WebkitMaskImage: maskValue,
+    pointerEvents: 'none',
+    zIndex: -1,
+  };
 }
 
 export function createIconCssStyle(style: IconElementStyle): CSSProperties {
