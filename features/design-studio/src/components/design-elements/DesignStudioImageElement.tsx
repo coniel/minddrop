@@ -1,12 +1,12 @@
-import { ImageIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import {
   Designs,
   createImageCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { useTranslation } from '@minddrop/i18n';
+import { Icon } from '@minddrop/ui-primitives';
 import { updateDesignElement } from '../../DesignStudioStore';
 import { FlatImageElement } from '../../types';
 import { PlaceholderImageDialog } from '../style-editors/ImageElementStyleEditor/PlaceholderImageDialog';
@@ -125,7 +125,8 @@ export const DesignStudioImageElement: React.FC<
           cursor: 'pointer',
         }}
       >
-        <ImageIcon
+        <Icon
+          name="image"
           size={24}
           style={{ color: 'var(--contrast-500)', flexShrink: 0 }}
         />

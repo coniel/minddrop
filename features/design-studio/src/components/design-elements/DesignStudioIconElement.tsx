@@ -1,8 +1,7 @@
-import { SmileIcon } from 'lucide-react';
 import { useCallback } from 'react';
 import { createIconCssStyle } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { ContentIcon, IconPicker } from '@minddrop/ui-primitives';
+import { ContentIcon, Icon, IconPicker } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   updateElementStyle,
@@ -80,7 +79,8 @@ export const DesignStudioIconElement: React.FC<
           minHeight: 80,
         }}
       >
-        <SmileIcon
+        <Icon
+          name="smile"
           size={24}
           style={{ color: 'var(--contrast-500)', flexShrink: 0 }}
         />

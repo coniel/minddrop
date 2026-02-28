@@ -1,4 +1,3 @@
-import { ImageIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import {
   ImageElement,
@@ -6,6 +5,7 @@ import {
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { Icon } from '@minddrop/ui-primitives';
 
 export interface DesignImageElementProps {
   /**
@@ -66,7 +66,8 @@ export const DesignImageElement: React.FC<DesignImageElementProps> = ({
         backgroundColor: 'var(--neutral-400)',
       }}
     >
-      <ImageIcon
+      <Icon
+        name="image"
         size={24}
         style={{ color: 'var(--contrast-500)', flexShrink: 0 }}
       />
