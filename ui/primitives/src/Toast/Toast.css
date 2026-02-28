@@ -1,0 +1,144 @@
+/* ============================================================
+   TOAST
+   Built on Base UI Toast primitive.
+   ============================================================ */
+
+/* --- Viewport --- */
+
+.toast-viewport {
+  position: fixed;
+  bottom: var(--space-5);
+  right: var(--space-5);
+  z-index: var(--level-toast);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 22rem;
+  max-width: calc(100vw - var(--space-10));
+}
+
+/* --- Toast --- */
+
+.toast {
+  box-sizing: border-box;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  padding: var(--space-4);
+
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+
+  color: var(--text-regular);
+  font-family: var(--font-ui);
+
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+
+  &[data-starting-style] {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  &[data-ending-style] {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  &[data-swipe-direction='right'] {
+    transform: translateX(var(--toast-swipe-move-x));
+  }
+
+  &[data-swipe-direction='down'] {
+    transform: translateY(var(--toast-swipe-move-y));
+  }
+}
+
+/* --- Type variants — colored left border --- */
+
+.toast-type-success {
+  border-left: 3px solid var(--border-primary);
+}
+
+.toast-type-error {
+  border-left: 3px solid var(--border-danger);
+}
+
+.toast-type-warning {
+  border-left: 3px solid var(--border-warning);
+}
+
+/* --- Title --- */
+
+.toast-title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--text-regular);
+  line-height: var(--leading-tight);
+}
+
+/* --- Description --- */
+
+.toast-description {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+
+/* --- Close button --- */
+
+.toast-close {
+  flex-shrink: 0;
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text-regular);
+    background-color: var(--surface-hover);
+  }
+}
+
+/* --- Action button --- */
+
+.toast-action {
+  flex-shrink: 0;
+  margin-top: var(--space-2);
+
+  padding: var(--space-1) var(--space-3);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  font-family: var(--font-ui);
+
+  background: none;
+  border: 1px solid var(--border-moderate);
+  border-radius: var(--radius-md);
+  color: var(--text-regular);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--surface-hover);
+  }
+}

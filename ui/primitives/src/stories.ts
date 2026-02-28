@@ -32,6 +32,7 @@ import { TextStories } from './Text/Text.stories';
 import { ToggleStories } from './Toggle/Toggle.stories';
 import { ToggleGroupStories } from './ToggleGroup/ToggleGroup.stories';
 import { ToolbarStories } from './Toolbar';
+import { ToastStories } from './Toast/Toast.stories';
 import { TooltipStories } from './Tooltip/Tooltip.stories';
 import { CheckboxStories } from './fields/Checkbox/Checkbox.stories';
 import { RadioStories } from './fields/Radio/Radio.stories';
@@ -92,6 +93,7 @@ export const stories: StoryGroup[] = [
       { label: 'Dialog', component: DialogStories },
       { label: 'Popover', component: PopoverStories },
       { label: 'ConfirmationDialog', component: ConfirmationDialogStories },
+      { label: 'Toast', component: ToastStories },
     ],
   },
   {

@@ -28,6 +28,7 @@ export * from './Switch';
 export * from './Text';
 export * from './ToggleGroup';
 export * from './Toolbar';
+export * from './Toast';
 export * from './Tooltip';
 export * from './constants';
 export * from './types';
