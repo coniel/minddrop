@@ -73,13 +73,13 @@ export const BackgroundImageField = ({
         <Group gap={2}>
           <Button
             variant="subtle"
-            size="sm"
+            size="md"
             label="designs.image.placeholder.change"
             onClick={() => setDialogOpen(true)}
           />
           <Button
             variant="subtle"
-            size="sm"
+            size="md"
             label="designs.image.placeholder.remove"
             onClick={handleRemoveImage}
           />
@@ -98,14 +98,14 @@ export const BackgroundImageField = ({
       <Group gap={2}>
         <Button
           variant="subtle"
-          size="sm"
+          size="md"
           startIcon="image"
           label="designs.image.placeholder.select"
           onClick={handleSelectNewImage}
         />
         <Button
           variant="subtle"
-          size="sm"
+          size="md"
           startIcon="folder-open"
           label="designs.image.placeholder.browse"
           onClick={() => setDialogOpen(true)}

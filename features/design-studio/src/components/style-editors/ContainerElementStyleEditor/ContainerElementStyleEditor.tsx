@@ -6,6 +6,8 @@ import {
   Text,
 } from '@minddrop/ui-primitives';
 import { useElementStyle } from '../../../DesignStudioStore';
+import { BackdropBlurSlider } from '../BackdropBlurSlider';
+import { BackdropBrightnessSlider } from '../BackdropBrightnessSlider';
 import { BackgroundColorSelect } from '../BackgroundColorSelect';
 import { BackgroundImageField } from '../BackgroundImageField';
 import { BackgroundImageFitSelect } from '../BackgroundImageFitSelect';
@@ -77,6 +79,14 @@ export const ContainerElementStyleEditor: React.FC<
             <BackgroundImageFitSelect elementId={elementId} />
           </Stack>
         )}
+        <Stack gap={3}>
+          <InputLabel size="xs" label="designs.backdrop-blur.label" />
+          <BackdropBlurSlider elementId={elementId} />
+        </Stack>
+        <Stack gap={3}>
+          <InputLabel size="xs" label="designs.backdrop-brightness.label" />
+          <BackdropBrightnessSlider elementId={elementId} />
+        </Stack>
       </Stack>
 
       <Stack gap={3}>

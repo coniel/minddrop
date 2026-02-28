@@ -31,39 +31,72 @@ export const DesignStudioRootElement: React.FC<
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
+  // Whether any backdrop effects are active (blur or brightness)
+  const hasBackdropEffects =
+    style.backdropBlur > 0 || style.backdropBrightness !== 100;
+
+  // Whether to use a nested div (bg image on outer, effects on inner)
+  const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
+
   // Select the root element when clicking the root background
   const handleClick = useCallback(() => {
     DesignStudioStore.getState().selectElement('root');
   }, []);
 
+  const containerCssStyle = {
+    ...createElementCssStyle(element),
+    // Apply background image URL (only when backdrop effects are not active)
+    ...(imageSrc &&
+      !hasBackdropWithImage && { backgroundImage: `url(${imageSrc})` }),
+  };
+
+  const children = element.children.map((childId, index) => (
+    <DesignStudioElement
+      key={childId}
+      elementId={childId}
+      index={index}
+      gap={style.gap}
+      isLastChild={index === element.children.length - 1}
+    />
+  ));
+
+  const flexDropContainer = (
+    <FlexDropContainer
+      key={style.direction}
+      id="root"
+      gap={style.gap}
+      direction={style.direction}
+      align={style.alignItems}
+      justify={style.justifyContent}
+      className="design-studio-root-element"
+      style={containerCssStyle}
+      onDrop={handleDropOnGap}
+      fillEnd
+    >
+      {children}
+    </FlexDropContainer>
+  );
+
   return (
     <div onClick={handleClick} style={{ width: '100%', height: '100%' }}>
-      <FlexDropContainer
-        key={style.direction}
-        id="root"
-        gap={style.gap}
-        direction={style.direction}
-        align={style.alignItems}
-        justify={style.justifyContent}
-        className="design-studio-root-element"
-        style={{
-          ...createElementCssStyle(element),
-          // Apply background image URL resolved from the file system
-          ...(imageSrc && { backgroundImage: `url(${imageSrc})` }),
-        }}
-        onDrop={handleDropOnGap}
-        fillEnd
-      >
-        {element.children.map((childId, index) => (
-          <DesignStudioElement
-            key={childId}
-            elementId={childId}
-            index={index}
-            gap={style.gap}
-            isLastChild={index === element.children.length - 1}
-          />
-        ))}
-      </FlexDropContainer>
+      {hasBackdropWithImage ? (
+        <div
+          style={{
+            backgroundImage: `url(${imageSrc})`,
+            backgroundSize: containerCssStyle.backgroundSize,
+            backgroundPosition: containerCssStyle.backgroundPosition,
+            backgroundRepeat: containerCssStyle.backgroundRepeat,
+            borderRadius: containerCssStyle.borderRadius,
+            overflow: 'hidden',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          {flexDropContainer}
+        </div>
+      ) : (
+        flexDropContainer
+      )}
     </div>
   );
 };

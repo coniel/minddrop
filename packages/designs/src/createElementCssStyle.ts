@@ -117,6 +117,24 @@ export function createContainerCssStyle(
     cssStyle.backgroundRepeat = 'no-repeat';
   }
 
+  // Build backdrop-filter from blur and brightness
+  const backdropFilters: string[] = [];
+
+  if (style.backdropBlur > 0) {
+    backdropFilters.push(`blur(${style.backdropBlur}px)`);
+  }
+
+  if (style.backdropBrightness !== 100) {
+    backdropFilters.push(`brightness(${style.backdropBrightness}%)`);
+  }
+
+  if (backdropFilters.length > 0) {
+    const filterValue = backdropFilters.join(' ');
+
+    cssStyle.backdropFilter = filterValue;
+    cssStyle.WebkitBackdropFilter = filterValue;
+  }
+
   return cssStyle;
 }
 

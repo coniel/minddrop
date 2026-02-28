@@ -462,6 +462,12 @@
       "contain": "Contain",
       "fill": "Fill"
     },
+    "backdrop-blur": {
+      "label": "Backdrop blur"
+    },
+    "backdrop-brightness": {
+      "label": "Backdrop brightness"
+    },
     "number-format": {
       "label": "Format",
       "decimals": {

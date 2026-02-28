@@ -3,7 +3,7 @@ import React from 'react';
 import { propsToClass } from '../utils';
 import './Slider.css';
 
-export type SliderSize = 'sm' | 'md';
+export type SliderSize = 'sm' | 'md' | 'lg';
 
 export interface SliderProps {
   /**

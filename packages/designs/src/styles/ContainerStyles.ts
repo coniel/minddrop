@@ -57,6 +57,8 @@ export interface ContainerStyles {
   minHeight?: number;
   backgroundImage: string;
   backgroundImageFit: 'cover' | 'contain' | 'fill';
+  backdropBlur: number;
+  backdropBrightness: number;
 }
 
 export const DefaultContainerStyles: ContainerStyles = {
@@ -80,4 +82,6 @@ export const DefaultContainerStyles: ContainerStyles = {
   paddingLeft: 0,
   backgroundImage: '',
   backgroundImageFit: 'cover',
+  backdropBlur: 0,
+  backdropBrightness: 100,
 };

@@ -93,3 +93,15 @@
     height: 0.875rem;
   }
 }
+
+/* lg — 6px track, 18px thumb */
+.slider-size-lg {
+  .slider-track {
+    height: 6px;
+  }
+
+  .slider-thumb {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
