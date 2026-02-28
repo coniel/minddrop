@@ -8,11 +8,7 @@ import {
 import { i18n } from '@minddrop/i18n';
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuTrigger,
   IconButton,
   MenuGroup,
   MenuItem,
@@ -88,46 +84,40 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
           </TabsTab>
         </TabsList>
         <Spacer />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
+        <DropdownMenu
+          trigger={
             <IconButton
               icon="plus"
               label="design-studio.labels.new"
               color="neutral"
             />
-          </DropdownMenuTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuPositioner side="bottom" align="start">
-              <DropdownMenuContent
-                minWidth={300}
-                className="property-type-selection-menu"
-              >
-                <MenuGroup padded>
-                  <DropdownMenuItem
-                    muted
-                    icon="layout"
-                    label="designs.page.new"
-                    tooltipDescription="designs.page.description"
-                    onClick={() => handleCreateDesign('page')}
-                  />
-                  <DropdownMenuItem
-                    muted
-                    icon="layout-grid"
-                    label="designs.card.new"
-                    tooltipDescription="designs.card.description"
-                    onClick={() => handleCreateDesign('card')}
-                  />
-                  <DropdownMenuItem
-                    muted
-                    icon="layout-list"
-                    label="designs.list.new"
-                    tooltipDescription="designs.list.description"
-                    onClick={() => handleCreateDesign('list')}
-                  />
-                </MenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenuPositioner>
-          </DropdownMenuPortal>
+          }
+          minWidth={300}
+          contentClassName="property-type-selection-menu"
+        >
+          <MenuGroup padded>
+            <DropdownMenuItem
+              muted
+              icon="layout"
+              label="designs.page.new"
+              tooltipDescription="designs.page.description"
+              onClick={() => handleCreateDesign('page')}
+            />
+            <DropdownMenuItem
+              muted
+              icon="layout-grid"
+              label="designs.card.new"
+              tooltipDescription="designs.card.description"
+              onClick={() => handleCreateDesign('card')}
+            />
+            <DropdownMenuItem
+              muted
+              icon="layout-list"
+              label="designs.list.new"
+              tooltipDescription="designs.list.description"
+              onClick={() => handleCreateDesign('list')}
+            />
+          </MenuGroup>
         </DropdownMenu>
       </div>
 
