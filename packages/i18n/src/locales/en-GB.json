@@ -13,6 +13,7 @@
     "save": "Save",
     "delete": "Delete",
     "remove": "Remove",
+    "reset": "Reset",
     "edit": "Edit",
     "duplicate": "Duplicate",
     "manage": "Manage"
@@ -26,6 +27,8 @@
   },
   "color": {
     "default": "Default",
+    "inherit": "Inherit colour",
+    "transparent": "Transparent",
     "blue": "Blue",
     "cyan": "Cyan",
     "red": "Red",
@@ -177,7 +180,9 @@
     "actions": {
       "new": "New",
       "addProperty": "Add property",
-      "addDesign": "Add design"
+      "addDesign": "Add design",
+      "addView": "Add view",
+      "viewSettings": "View settings"
     },
     "labels": {
       "databases": "Databases"
@@ -339,13 +344,14 @@
       "italic": "Italic",
       "underline": "Underline",
       "font-family": {
-        "inherit": "Inherit",
+        "inherit": "Inherit font",
         "sans": "Sans",
         "serif": "Serif",
         "mono": "Mono"
       },
       "font-weight": {
         "label": "Weight",
+        "inherit": "Inherit weight",
         "100": "Thin",
         "200": "Extra-light",
         "300": "Light",
@@ -358,10 +364,36 @@
       },
       "text-transform": {
         "label": "Case",
-        "none": "As typed",
+        "none": "As is",
         "uppercase": "Uppercase",
         "lowercase": "Lowercase",
-        "capitalize": "Capitalize"
+        "capitalize": "Capitalize",
+        "uppercase-short": "AB",
+        "lowercase-short": "ab",
+        "capitalize-short": "Ab"
+      },
+      "color": {
+        "label": "Color"
+      },
+      "font-size": {
+        "label": "Size"
+      },
+      "line-height": {
+        "label": "Line height"
+      },
+      "letter-spacing": {
+        "label": "Spacing"
+      },
+      "alignment": {
+        "label": "Alignment"
+      },
+      "margin": {
+        "label": "Margin",
+        "top": "Top",
+        "right": "Right",
+        "bottom": "Bottom",
+        "left": "Left",
+        "sync": "Sync margin"
       },
       "text-align": {
         "label": "Alignment",
@@ -383,10 +415,33 @@
       "label": "Gap"
     },
     "padding": {
-      "label": "Padding"
+      "label": "Padding",
+      "sync": "Sync padding"
+    },
+    "min-height": {
+      "label": "Min height"
+    },
+    "placeholder": {
+      "label": "Placeholder",
+      "placeholder": "Placeholder text...",
+      "reroll": "Regenerate text"
+    },
+    "max-width": {
+      "label": "Max width",
+      "placeholder": "None"
+    },
+    "truncate": {
+      "label": "Max lines",
+      "placeholder": "None"
+    },
+    "opacity": {
+      "label": "Opacity"
     },
     "wrap": {
       "label": "Wrap overflow"
+    },
+    "stretch": {
+      "label": "Stretch"
     },
     "position": {
       "label": "Alignment",
@@ -396,6 +451,67 @@
       "label": "Background",
       "color": "Colour",
       "opacity": "Opacity"
+    },
+    "number-format": {
+      "label": "Format",
+      "decimals": {
+        "label": "Decimals",
+        "placeholder": "As is"
+      },
+      "thousands-separator": {
+        "label": "Thousands separator",
+        "none": "None",
+        "comma": "Comma",
+        "period": "Period",
+        "space": "Space"
+      },
+      "prefix": "Prefix",
+      "prefix-style": "Prefix text style",
+      "suffix": "Suffix",
+      "suffix-style": "Suffix text style",
+      "sign-display": {
+        "label": "Sign display",
+        "auto": "Auto",
+        "always": "Always",
+        "never": "Never"
+      }
+    },
+    "image": {
+      "placeholder": {
+        "label": "Placeholder image",
+        "select": "Select image",
+        "change": "Change",
+        "remove": "Remove",
+        "hint": "Drop or double-click to add image",
+        "browse": "Browse",
+        "dialog": {
+          "title": "Select image",
+          "selectNew": "Select new",
+          "empty": "No images yet"
+        }
+      },
+      "round": {
+        "label": "Round"
+      },
+      "sizing": {
+        "label": "Sizing",
+        "width": "Width",
+        "height": "Height",
+        "width-placeholder": "100",
+        "height-placeholder": "Auto",
+        "max-width": "Max width",
+        "max-height": "Max height",
+        "max-width-placeholder": "100",
+        "max-placeholder": "None",
+        "toggle-unit": "Toggle unit",
+        "sync": "Sync dimensions",
+        "object-fit": {
+          "label": "Fit",
+          "cover": "Cover",
+          "contain": "Contain",
+          "fill": "Fill"
+        }
+      }
     },
     "border": {
       "label": "Border",
@@ -410,7 +526,12 @@
         "label": "Width"
       },
       "radius": {
-        "label": "Radius"
+        "label": "Radius",
+        "top-left": "Top left",
+        "top-right": "Top right",
+        "bottom-right": "Bottom right",
+        "bottom-left": "Bottom left",
+        "sync": "Sync corners"
       },
       "color": {
         "label": "Colour"
@@ -459,7 +580,8 @@
   "design-studio": {
     "labels": {
       "designs": "Designs",
-      "elements": "Elements"
+      "elements": "Elements",
+      "layers": "Layers"
     },
     "elements": {
       "container": "Container",
@@ -468,8 +590,18 @@
       "formatted-text": "Formatted text",
       "number": "Number",
       "url": "URL",
-      "image": "Image"
+      "image": "Image",
+      "text-placeholder": "Text",
+      "container-empty-hint": "Drop elements here",
+      "group": {
+        "content": "Content",
+        "media": "Media",
+        "layout": "Layout"
+      }
     }
+  },
+  "toast": {
+    "close": "Close"
   },
   "views": {
     "labels": {
@@ -488,6 +620,8 @@
       "previousPage": "Previous page",
       "nextPage": "Next page",
       "openEntry": "Open",
+      "resizeHandle": "Drag to resize",
+      "resizeHandleShiftHint": "Hold Shift to distribute evenly",
       "options": {
         "title": "Table options",
         "overflow": "Overflow columns",
@@ -495,6 +629,7 @@
         "rowSeparator": "Row separator",
         "columnSeparator": "Column separator",
         "highlightOnHover": "Highlight on hover",
+        "zebraStripes": "Zebra stripes",
         "padding": "Padding",
         "compact": "Compact",
         "comfortable": "Comfortable",
