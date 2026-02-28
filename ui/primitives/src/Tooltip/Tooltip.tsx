@@ -77,6 +77,7 @@ export const Tooltip: FC<TooltipProps> = ({
       <TooltipPrimitive.Trigger delay={delay} render={children} />
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Positioner
+          className="tooltip-positioner"
           side={side}
           sideOffset={sideOffset}
           align={align}

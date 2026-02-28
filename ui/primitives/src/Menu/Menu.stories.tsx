@@ -1,37 +1,20 @@
 /**
  * Menu.stories.tsx
  * Dev reference for Menu, MenuGroup, MenuLabel, MenuSeparator,
- * ColorSelectionMenuItem, and MenuItemDropdownMenu.
+ * MenuRadioGroup, MenuRadioItem, ColorSelectionMenuItem,
+ * and MenuItemDropdownMenu.
  */
 import { IconButton } from '../IconButton';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ColorSelectionMenuItem } from './ColorSelectionMenuItem';
+import { Menu } from './Menu';
 import { MenuGroup } from './MenuGroup';
 import { MenuItem } from './MenuItem';
 import { MenuLabel } from './MenuLabel';
+import { MenuRadioGroup } from './MenuRadioGroup';
+import { MenuRadioItem } from './MenuRadioItem';
 import { MenuSeparator } from './MenuSeparator';
-
-/* Wrapper that mimics a floating menu popup */
-const MenuWrapper = ({
-  children,
-  width = 220,
-}: {
-  children: React.ReactNode;
-  width?: number;
-}) => (
-  <div
-    style={{
-      background: 'var(--surface-overlay)',
-      border: '1px solid var(--border-subtle)',
-      borderRadius: 'var(--radius-lg)',
-      boxShadow: 'var(--shadow-overlay)',
-      padding: 'var(--space-1) 0',
-      width,
-    }}
-  >
-    {children}
-  </div>
-);
+import { SwitchMenuItem } from './SwitchMenuItem';
 
 export const MenuStories = () => (
   <Story title="Menu">
@@ -47,12 +30,12 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="basic menu">
-          <MenuWrapper>
+          <Menu>
             <MenuItem label="Open" />
             <MenuItem label="Duplicate" />
             <MenuItem label="Rename" />
             <MenuItem label="Delete" danger />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -68,16 +51,16 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="padded">
-          <MenuWrapper>
+          <Menu>
             <MenuGroup padded>
               <MenuItem label="Open" />
               <MenuItem label="Duplicate" />
               <MenuItem label="Rename" />
             </MenuGroup>
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
         <StoryItem label="marginTop">
-          <MenuWrapper>
+          <Menu>
             <MenuGroup>
               <MenuItem label="Open" />
               <MenuItem label="Duplicate" />
@@ -85,7 +68,7 @@ export const MenuStories = () => (
             <MenuGroup marginTop="small">
               <MenuItem label="Delete" danger />
             </MenuGroup>
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
 
@@ -96,7 +79,7 @@ export const MenuStories = () => (
       -------------------------------------------------------- */}
       <StoryRow label="showActionsOnHover">
         <StoryItem label="hover the group">
-          <MenuWrapper>
+          <Menu>
             <MenuGroup
               showActionsOnHover
               actions={
@@ -119,7 +102,7 @@ export const MenuStories = () => (
               <MenuItem label="Item one" />
               <MenuItem label="Item two" />
             </MenuGroup>
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -135,21 +118,21 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="basic">
-          <MenuWrapper>
+          <Menu>
             <MenuLabel label="Workspaces" />
             <MenuItem label="Personal" />
             <MenuItem label="Team" />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
         <StoryItem label="button">
-          <MenuWrapper>
+          <Menu>
             <MenuLabel label="Workspaces" button onClick={() => {}} />
             <MenuItem label="Personal" />
             <MenuItem label="Team" />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
         <StoryItem label="with actions (hover label)">
-          <MenuWrapper>
+          <Menu>
             <MenuLabel
               label="Projects"
               actions={
@@ -163,10 +146,10 @@ export const MenuStories = () => (
             />
             <MenuItem label="Alpha" />
             <MenuItem label="Beta" />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
         <StoryItem label="actionsAlwaysVisible">
-          <MenuWrapper>
+          <Menu>
             <MenuLabel
               label="Projects"
               actionsAlwaysVisible
@@ -181,7 +164,7 @@ export const MenuStories = () => (
             />
             <MenuItem label="Alpha" />
             <MenuItem label="Beta" />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -198,7 +181,7 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="hover the group">
-          <MenuWrapper>
+          <Menu>
             <MenuGroup showLabelActionsOnHover>
               <MenuLabel
                 label="Projects"
@@ -214,7 +197,7 @@ export const MenuStories = () => (
               <MenuItem label="Alpha" />
               <MenuItem label="Beta" />
             </MenuGroup>
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -230,12 +213,12 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="separator">
-          <MenuWrapper>
+          <Menu>
             <MenuItem label="Open" />
             <MenuItem label="Duplicate" />
             <MenuSeparator />
             <MenuItem label="Move to trash" danger />
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -252,7 +235,7 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="all colors">
-          <MenuWrapper width={180}>
+          <Menu>
             <ColorSelectionMenuItem color="default" />
             <ColorSelectionMenuItem color="gray" />
             <ColorSelectionMenuItem color="red" />
@@ -264,7 +247,93 @@ export const MenuStories = () => (
             <ColorSelectionMenuItem color="purple" />
             <ColorSelectionMenuItem color="pink" />
             <ColorSelectionMenuItem color="brown" />
-          </MenuWrapper>
+          </Menu>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        RADIO GROUP + RADIO ITEM
+        Radio groups allow single-selection from a group of
+        options. Supports controlled and uncontrolled usage.
+    -------------------------------------------------------- */}
+    <StorySection
+      title="MenuRadioGroup + MenuRadioItem"
+      description="Radio group for single selection. Uncontrolled with defaultValue or controlled with value + onValueChange."
+    >
+      <StoryRow>
+        <StoryItem label="uncontrolled">
+          <Menu>
+            <MenuRadioGroup defaultValue="grid">
+              <MenuRadioItem value="list" label="List" />
+              <MenuRadioItem value="grid" label="Grid" />
+              <MenuRadioItem value="columns" label="Columns" />
+            </MenuRadioGroup>
+          </Menu>
+        </StoryItem>
+        <StoryItem label="with icons">
+          <Menu>
+            <MenuRadioGroup defaultValue="grid">
+              <MenuRadioItem value="list" label="List" icon="list" />
+              <MenuRadioItem value="grid" label="Grid" icon="grid-2x2" />
+              <MenuRadioItem value="columns" label="Columns" icon="columns-2" />
+            </MenuRadioGroup>
+          </Menu>
+        </StoryItem>
+        <StoryItem label="compact">
+          <Menu>
+            <MenuRadioGroup defaultValue="sm">
+              <MenuRadioItem value="sm" label="Small" size="compact" />
+              <MenuRadioItem value="md" label="Medium" size="compact" />
+              <MenuRadioItem value="lg" label="Large" size="compact" />
+            </MenuRadioGroup>
+          </Menu>
+        </StoryItem>
+        <StoryItem label="disabled items">
+          <Menu>
+            <MenuRadioGroup defaultValue="enabled">
+              <MenuRadioItem value="enabled" label="Enabled" />
+              <MenuRadioItem value="disabled" label="Disabled" disabled />
+            </MenuRadioGroup>
+          </Menu>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        SWITCH MENU ITEM
+        Menu item with a toggle switch on the right. Clicking
+        anywhere on the row toggles the switch. Supports both
+        controlled and uncontrolled usage.
+    -------------------------------------------------------- */}
+    <StorySection
+      title="SwitchMenuItem"
+      description="Menu item with a toggle switch. Click anywhere on the row to toggle. Works in DropdownMenu and ContextMenu."
+    >
+      <StoryRow>
+        <StoryItem label="uncontrolled">
+          <Menu>
+            <SwitchMenuItem label="Show grid" />
+            <SwitchMenuItem label="Snap to grid" defaultChecked />
+            <SwitchMenuItem label="Dark mode" icon="moon" />
+          </Menu>
+        </StoryItem>
+        <StoryItem label="disabled">
+          <Menu>
+            <SwitchMenuItem label="Enabled" defaultChecked />
+            <SwitchMenuItem label="Disabled off" disabled />
+            <SwitchMenuItem label="Disabled on" disabled checked />
+          </Menu>
+        </StoryItem>
+        <StoryItem label="compact">
+          <Menu>
+            <SwitchMenuItem label="Compact item" size="compact" />
+            <SwitchMenuItem
+              label="Compact checked"
+              size="compact"
+              defaultChecked
+            />
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>
@@ -281,7 +350,7 @@ export const MenuStories = () => (
     >
       <StoryRow>
         <StoryItem label="sidebar section">
-          <MenuWrapper width={240}>
+          <Menu>
             <MenuGroup showLabelActionsOnHover>
               <MenuLabel
                 label="Projects"
@@ -337,7 +406,7 @@ export const MenuStories = () => (
               <MenuItem icon="settings" label="Settings" />
               <MenuItem icon="trash" label="Trash" muted />
             </MenuGroup>
-          </MenuWrapper>
+          </Menu>
         </StoryItem>
       </StoryRow>
     </StorySection>

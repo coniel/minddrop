@@ -12,8 +12,8 @@ export interface NumberInputProps {
   className?: string;
   variant?: NumberInputVariant;
   size?: NumberInputSize;
-  value?: number;
-  defaultValue?: number;
+  value?: number | null;
+  defaultValue?: number | null;
   onValueChange?: (value: number | null) => void;
   min?: number;
   max?: number;
@@ -118,14 +118,29 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
           <div className="number-input-gradient" aria-hidden />
 
           <div className="number-input-stepper">
-            <NumberFieldPrimitive.Increment
-              ref={incrementRef}
-              className="number-input-increment"
-              onClick={() => bump(incrementRef.current)}
-              onAnimationEnd={() => handleAnimationEnd(incrementRef.current)}
-            >
-              <span className="number-input-increment-icon" aria-hidden />
-            </NumberFieldPrimitive.Increment>
+            {clearable && (value === undefined || value === null) ? (
+              <button
+                ref={incrementRef}
+                type="button"
+                className="number-input-increment"
+                onClick={() => {
+                  onValueChange?.(min ?? step);
+                  bump(incrementRef.current);
+                }}
+                onAnimationEnd={() => handleAnimationEnd(incrementRef.current)}
+              >
+                <span className="number-input-increment-icon" aria-hidden />
+              </button>
+            ) : (
+              <NumberFieldPrimitive.Increment
+                ref={incrementRef}
+                className="number-input-increment"
+                onClick={() => bump(incrementRef.current)}
+                onAnimationEnd={() => handleAnimationEnd(incrementRef.current)}
+              >
+                <span className="number-input-increment-icon" aria-hidden />
+              </NumberFieldPrimitive.Increment>
+            )}
 
             {clearable && (value === undefined || value === null) ? (
               <button

@@ -3,13 +3,16 @@
    Dark tooltip on both light and dark themes.
    ============================================================ */
 
+.tooltip-positioner {
+  z-index: var(--level-tooltip);
+}
+
 .tooltip {
   /* Dark surface regardless of theme */
   background-color: hsl(220 13% 12%);
   border: 1px solid hsl(220 13% 20%);
   color: hsl(220 10% 92%);
   box-shadow: var(--shadow-lg);
-  z-index: var(--level-tooltip);
 
   border-radius: var(--radius-xs);
   padding: var(--space-2) var(--space-3);

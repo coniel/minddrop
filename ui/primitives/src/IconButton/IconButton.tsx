@@ -7,7 +7,7 @@ import { propsToClass } from '../utils';
 import './IconButton.css';
 
 export type IconButtonVariant = 'ghost' | 'subtle' | 'outline' | 'filled';
-export type IconButtonColor = 'neutral' | 'muted' | 'contrast';
+export type IconButtonColor = 'neutral' | 'muted' | 'regular' | 'contrast' | 'primary';
 export type IconButtonSize = 'sm' | 'md' | 'lg';
 
 export interface IconButtonProps

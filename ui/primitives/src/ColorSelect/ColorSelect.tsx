@@ -1,12 +1,18 @@
-import { Select } from '@base-ui/react/select';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Icon } from '../Icon';
-import { SelectSize, SelectVariant } from '../Select';
-import { ContentColors } from '../constants';
 import { ContentColor } from '@minddrop/theme';
-import { propsToClass } from '../utils';
-import '../Select/Select.css';
+import {
+  SelectIcon,
+  SelectItem,
+  SelectPopup,
+  SelectRoot,
+  SelectSize,
+  SelectTrigger,
+  SelectValue,
+  SelectVariant,
+} from '../Select';
+import { TextColor } from '../Text';
+import { ContentColors } from '../constants';
 import './ColorSelect.css';
 
 export interface ColorSelectOption {
@@ -55,6 +61,11 @@ export interface ColorSelectProps {
   onValueChange?: (value: ContentColor) => void;
 
   /*
+   * Color of the displayed value text. Uses Text color tokens.
+   */
+  valueColor?: TextColor;
+
+  /*
    * Extra options rendered before the standard content colors.
    */
   extraOptions?: ColorSelectOption[];
@@ -65,22 +76,13 @@ export const ColorSelect = ({
   variant = 'outline',
   size = 'md',
   value,
+  valueColor,
   onValueChange,
   extraOptions = [],
 }: ColorSelectProps) => {
   const { t } = useTranslation();
 
-  const handleValueChange = useCallback(
-    (newValue: ContentColor | null) => {
-      if (newValue == null) {
-        return;
-      }
-
-      onValueChange?.(newValue);
-    },
-    [onValueChange],
-  );
-
+  // Build the combined list of extra options + content color options
   const allOptions = useMemo(() => {
     const extras = extraOptions.map((option) => ({
       value: option.value,
@@ -97,51 +99,47 @@ export const ColorSelect = ({
     return [...extras, ...colors];
   }, [extraOptions]);
 
+  // Find the currently selected option for rendering the trigger value
   const selectedOption = allOptions.find((option) => option.value === value);
+
+  // Build items array for Base UI virtual scrolling
   const items = allOptions.map((option) => ({
     value: option.value,
     label: t(option.labelKey),
   }));
 
   return (
-    <Select.Root items={items} value={value} onValueChange={handleValueChange}>
-      <Select.Trigger
-        className={`${propsToClass('select', { variant, size, className })} color-select`}
+    <SelectRoot<ContentColor>
+      items={items as { value: ContentColor; label: string }[]}
+      value={value as ContentColor}
+      onValueChange={onValueChange}
+    >
+      <SelectTrigger
+        className={`${className || ''} color-select`.trim()}
+        variant={variant}
+        size={size}
       >
-        <Select.Value className="color-select-trigger-content">
+        <SelectValue
+          className="color-select-trigger-content"
+          color={valueColor}
+        >
           <span
             className={`color-select-swatch ${selectedOption?.swatchClass || `color-select-swatch-${value || 'default'}`}`}
           />
           {selectedOption ? t(selectedOption.labelKey) : ''}
-        </Select.Value>
-        <Select.Icon className="select-icon">
-          <Icon name="chevron-down" />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner className="select-positioner" sideOffset={8}>
-          <Select.Popup className="select-popup color-select-popup">
-            <Select.ScrollUpArrow className="select-scroll-arrow" />
-            <Select.List className="select-list">
-              {allOptions.map((option) => (
-                <Select.Item
-                  key={option.value}
-                  value={option.value}
-                  className="color-select-item"
-                >
-                  <Select.ItemText className="color-select-item-text">
-                    <span
-                      className={`color-select-swatch ${option.swatchClass || ''}`}
-                    />
-                    {t(option.labelKey)}
-                  </Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select.List>
-            <Select.ScrollDownArrow className="select-scroll-arrow" />
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+        </SelectValue>
+        <SelectIcon />
+      </SelectTrigger>
+      <SelectPopup className="color-select-popup">
+        {allOptions.map((option) => (
+          <SelectItem key={option.value} value={option.value} hideIndicator>
+            <span
+              className={`color-select-swatch ${option.swatchClass || ''}`}
+            />
+            {t(option.labelKey)}
+          </SelectItem>
+        ))}
+      </SelectPopup>
+    </SelectRoot>
   );
 };

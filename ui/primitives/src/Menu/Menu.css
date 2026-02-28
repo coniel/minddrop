@@ -16,8 +16,9 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
-  padding: var(--space-1) 0;
+  padding: var(--space-1);
   outline: none;
+  min-width: 15rem;
 
   transform-origin: var(--transform-origin);
   transition:
@@ -283,6 +284,43 @@
 }
 
 /* ------------------------------------------------------------
+   RADIO INDICATOR
+   Primary-colored dot for MenuRadioItem. The indicator slot
+   always occupies space so labels stay aligned.
+   ------------------------------------------------------------ */
+
+.menu-item .menu-item-radio-indicator {
+  opacity: 1;
+}
+
+.menu-item .menu-item-radio-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  /* Checked — filled primary background, matching Switch */
+  &:has(.menu-item-radio-dot) {
+    background-color: var(--surface-solid-primary);
+    border-color: var(--surface-solid-primary);
+  }
+}
+
+.menu-item .menu-item-radio-dot {
+  display: block;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: var(--radius-full);
+  background-color: white;
+}
+
+/* ------------------------------------------------------------
    COLOR SELECTION MENU ITEM
    Menu item representing a user-selectable content color.
    The color swatch is a small circle using content color scales.
@@ -349,4 +387,14 @@
 .color-selection-menu-item .color-swatch-gray {
   background-color: var(--gray-600);
   border-color: var(--gray-700);
+}
+
+/* ------------------------------------------------------------
+   SWITCH MENU ITEM
+   Menu item with a toggle switch anchored to the right.
+   Clicking anywhere on the row toggles the switch.
+   ------------------------------------------------------------ */
+
+.switch-menu-item .switch {
+  pointer-events: none;
 }

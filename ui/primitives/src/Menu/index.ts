@@ -4,5 +4,8 @@ export * from './MenuLabel';
 export * from './MenuSeparator';
 export * from './MenuItem';
 export * from './MenuItemDropdownMenu';
+export * from './MenuRadioGroup';
+export * from './MenuRadioItem';
 export * from './ColorSelectionMenuItem';
+export * from './SwitchMenuItem';
 export * from './Menu.stories';

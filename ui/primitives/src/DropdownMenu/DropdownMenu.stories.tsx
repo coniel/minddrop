@@ -5,23 +5,22 @@
 import { useState } from 'react';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
+import { MenuItemRenderer as DropdownMenuItem } from '../MenuItemRenderer';
+import { RadioMenuItemRenderer as DropdownMenuRadioItem } from '../MenuItemRenderer';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuPositioner,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownSubmenu,
-  DropdownSubmenuContent,
-  DropdownSubmenuTriggerItem,
-} from './DropdownMenu';
+import { DropdownMenu } from './DropdownMenu';
+import { DropdownMenuContent } from './DropdownMenuContent';
+import { DropdownMenuGroup } from './DropdownMenuGroup';
+import { DropdownMenuLabel } from './DropdownMenuLabel';
+import { DropdownMenuPortal } from './DropdownMenuPortal';
+import { DropdownMenuPositioner } from './DropdownMenuPositioner';
+import { DropdownMenuRadioGroup } from './DropdownMenuRadioGroup';
+import { DropdownMenuRoot } from './DropdownMenuRoot';
+import { DropdownMenuSeparator } from './DropdownMenuSeparator';
+import { DropdownMenuTrigger } from './DropdownMenuTrigger';
+import { DropdownSubmenu } from './DropdownSubmenu';
+import { DropdownSubmenuContent } from './DropdownSubmenuContent';
+import { DropdownSubmenuTriggerItem } from './DropdownSubmenuTriggerItem';
 
 export const DropdownMenuStories = () => {
   const [view, setView] = useState('grid');
@@ -32,19 +31,147 @@ export const DropdownMenuStories = () => {
   return (
     <Story title="DropdownMenu">
       {/* --------------------------------------------------------
-          BASIC
-          Trigger uses the render prop — Base UI merges its
-          keyboard/aria handlers directly onto the element.
-          This is what fixes keyboard navigation vs the old
-          children-as-render pattern.
+          CONVENIENCE API
+          The simplified DropdownMenu wraps Root, Trigger, Portal,
+          Positioner, and Content into a single component.
       -------------------------------------------------------- */}
       <StorySection
-        title="Basic"
-        description="Trigger uses render prop so Base UI can attach keyboard handlers directly. Arrow keys navigate, Enter/Space select, Escape closes."
+        title="Convenience API"
+        description="Pass a trigger element and menu items as children. Handles Root, Trigger, Portal, Positioner, and Content internally."
       >
         <StoryRow>
           <StoryItem label="button trigger">
-            <DropdownMenu>
+            <DropdownMenu
+              trigger={<Button variant="outline">Open menu</Button>}
+            >
+              <DropdownMenuItem label="New file" onClick={action('New file')} />
+              <DropdownMenuItem label="Open..." onClick={action('Open')} />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem label="Save" onClick={action('Save')} />
+              <DropdownMenuItem
+                label="Save as..."
+                onClick={action('Save as')}
+              />
+            </DropdownMenu>
+            {lastAction && (
+              <span
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--text-muted)',
+                }}
+              >
+                → {lastAction}
+              </span>
+            )}
+          </StoryItem>
+          <StoryItem label="icon button trigger">
+            <DropdownMenu
+              trigger={
+                <IconButton
+                  variant="ghost"
+                  icon="more-horizontal"
+                  label="More options"
+                />
+              }
+              align="end"
+            >
+              <DropdownMenuItem label="Edit" onClick={action('Edit')} />
+              <DropdownMenuItem
+                label="Duplicate"
+                onClick={action('Duplicate')}
+              />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem label="Delete" onClick={action('Delete')} />
+            </DropdownMenu>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          CONVENIENCE API — ICONS + SHORTCUTS
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Convenience — icons and shortcuts"
+        description="Pass icon and keyboardShortcut to DropdownMenuItem. Works the same as the compositional API."
+      >
+        <StoryRow>
+          <StoryItem label="with icons + shortcuts">
+            <DropdownMenu
+              trigger={<Button variant="outline">Edit</Button>}
+              minWidth={200}
+            >
+              <DropdownMenuItem
+                label="Undo"
+                icon="rotate-ccw"
+                keyboardShortcut={['Mod', 'Z']}
+                onClick={action('Undo')}
+              />
+              <DropdownMenuItem
+                label="Redo"
+                icon="rotate-cw"
+                keyboardShortcut={['Mod', 'Shift', 'Z']}
+                onClick={action('Redo')}
+              />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                label="Cut"
+                icon="scissors"
+                keyboardShortcut={['Mod', 'X']}
+                onClick={action('Cut')}
+              />
+              <DropdownMenuItem
+                label="Copy"
+                icon="copy"
+                keyboardShortcut={['Mod', 'C']}
+                onClick={action('Copy')}
+              />
+              <DropdownMenuItem
+                label="Paste"
+                icon="clipboard"
+                keyboardShortcut={['Mod', 'V']}
+                onClick={action('Paste')}
+              />
+            </DropdownMenu>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          CONVENIENCE API — RADIO GROUP
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Convenience — radio group"
+        description="Radio groups work inside the convenience wrapper."
+      >
+        <StoryRow>
+          <StoryItem label={`view: ${view}`}>
+            <DropdownMenu
+              trigger={<Button variant="outline">View</Button>}
+              minWidth={160}
+            >
+              <DropdownMenuGroup label="View as">
+                <DropdownMenuRadioGroup value={view} onValueChange={setView}>
+                  <DropdownMenuRadioItem value="list" label="List" />
+                  <DropdownMenuRadioItem value="grid" label="Grid" />
+                  <DropdownMenuRadioItem value="columns" label="Columns" />
+                </DropdownMenuRadioGroup>
+              </DropdownMenuGroup>
+            </DropdownMenu>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          COMPOSITIONAL API — BASIC
+          Uses DropdownMenuRoot for full control over structure.
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Compositional API — basic"
+        description="Use DropdownMenuRoot + individual parts for advanced layouts like submenus, custom portals, or nested structures."
+      >
+        <StoryRow>
+          <StoryItem label="button trigger">
+            <DropdownMenuRoot>
               <DropdownMenuTrigger
                 render={<Button variant="outline">Open menu</Button>}
               />
@@ -72,64 +199,21 @@ export const DropdownMenuStories = () => {
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
-            </DropdownMenu>
-            {lastAction && (
-              <span
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  color: 'var(--text-muted)',
-                }}
-              >
-                → {lastAction}
-              </span>
-            )}
-          </StoryItem>
-          <StoryItem label="icon button trigger">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <IconButton
-                    variant="ghost"
-                    icon="more-horizontal"
-                    label="More options"
-                  />
-                }
-              />
-              <DropdownMenuPortal>
-                <DropdownMenuPositioner
-                  side="bottom"
-                  align="end"
-                  sideOffset={4}
-                >
-                  <DropdownMenuContent>
-                    <DropdownMenuItem label="Edit" onClick={action('Edit')} />
-                    <DropdownMenuItem
-                      label="Duplicate"
-                      onClick={action('Duplicate')}
-                    />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      label="Delete"
-                      onClick={action('Delete')}
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenuPositioner>
-              </DropdownMenuPortal>
-            </DropdownMenu>
+            </DropdownMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          LABELS + SEPARATORS
+          COMPOSITIONAL API — LABELS + SEPARATORS
       -------------------------------------------------------- */}
       <StorySection
-        title="Labels and separators"
+        title="Compositional — labels and separators"
         description="MenuLabel renders a section heading. MenuSeparator renders a visual divider."
       >
         <StoryRow>
           <StoryItem label="grouped">
-            <DropdownMenu>
+            <DropdownMenuRoot>
               <DropdownMenuTrigger
                 render={<Button variant="outline">Open</Button>}
               />
@@ -156,82 +240,21 @@ export const DropdownMenuStories = () => {
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
-            </DropdownMenu>
+            </DropdownMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          ICONS + KEYBOARD SHORTCUTS
+          COMPOSITIONAL API — SHIFT KEY SECONDARY STATE
       -------------------------------------------------------- */}
       <StorySection
-        title="Icons and keyboard shortcuts"
-        description="Pass icon and keyboardShortcut to DropdownMenuItem."
-      >
-        <StoryRow>
-          <StoryItem label="with icons + shortcuts">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={<Button variant="outline">Edit</Button>}
-              />
-              <DropdownMenuPortal>
-                <DropdownMenuPositioner
-                  side="bottom"
-                  align="start"
-                  sideOffset={4}
-                >
-                  <DropdownMenuContent minWidth={200}>
-                    <DropdownMenuItem
-                      label="Undo"
-                      icon="rotate-ccw"
-                      keyboardShortcut={['Mod', 'Z']}
-                      onClick={action('Undo')}
-                    />
-                    <DropdownMenuItem
-                      label="Redo"
-                      icon="rotate-cw"
-                      keyboardShortcut={['Mod', 'Shift', 'Z']}
-                      onClick={action('Redo')}
-                    />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      label="Cut"
-                      icon="scissors"
-                      keyboardShortcut={['Mod', 'X']}
-                      onClick={action('Cut')}
-                    />
-                    <DropdownMenuItem
-                      label="Copy"
-                      icon="copy"
-                      keyboardShortcut={['Mod', 'C']}
-                      onClick={action('Copy')}
-                    />
-                    <DropdownMenuItem
-                      label="Paste"
-                      icon="clipboard"
-                      keyboardShortcut={['Mod', 'V']}
-                      onClick={action('Paste')}
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenuPositioner>
-              </DropdownMenuPortal>
-            </DropdownMenu>
-          </StoryItem>
-        </StoryRow>
-      </StorySection>
-
-      {/* --------------------------------------------------------
-          SHIFT KEY SECONDARY STATE
-          Holding Shift changes the label, icon, and handler.
-          Useful for destructive variants of actions.
-      -------------------------------------------------------- */}
-      <StorySection
-        title="Shift secondary state"
+        title="Compositional — shift secondary state"
         description="Hold Shift to reveal secondary labels, icons, and handlers. Useful for destructive variants."
       >
         <StoryRow>
           <StoryItem label="shift to delete">
-            <DropdownMenu>
+            <DropdownMenuRoot>
               <DropdownMenuTrigger
                 render={<Button variant="outline">Actions</Button>}
               />
@@ -258,62 +281,21 @@ export const DropdownMenuStories = () => {
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
-            </DropdownMenu>
+            </DropdownMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          RADIO GROUP
+          COMPOSITIONAL API — SUBMENU
       -------------------------------------------------------- */}
       <StorySection
-        title="Radio group"
-        description="RadioGroup manages a single selected value. RadioItem renders with a checkmark indicator when selected."
-      >
-        <StoryRow>
-          <StoryItem label={`view: ${view}`}>
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={<Button variant="outline">View</Button>}
-              />
-              <DropdownMenuPortal>
-                <DropdownMenuPositioner
-                  side="bottom"
-                  align="start"
-                  sideOffset={4}
-                >
-                  <DropdownMenuContent minWidth={160}>
-                    <DropdownMenuGroup label="View as">
-                      <DropdownMenuRadioGroup
-                        value={view}
-                        onValueChange={setView}
-                      >
-                        <DropdownMenuRadioItem value="list" label="List" />
-                        <DropdownMenuRadioItem value="grid" label="Grid" />
-                        <DropdownMenuRadioItem
-                          value="columns"
-                          label="Columns"
-                        />
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenuPositioner>
-              </DropdownMenuPortal>
-            </DropdownMenu>
-          </StoryItem>
-        </StoryRow>
-      </StorySection>
-
-      {/* --------------------------------------------------------
-          SUBMENU
-      -------------------------------------------------------- */}
-      <StorySection
-        title="Submenu"
-        description="DropdownSubmenu nests a full menu inside a trigger item. Keyboard navigation works across levels."
+        title="Compositional — submenu"
+        description="DropdownSubmenu nests a full menu inside a trigger item. Requires the compositional API."
       >
         <StoryRow>
           <StoryItem label="with submenu">
-            <DropdownMenu>
+            <DropdownMenuRoot>
               <DropdownMenuTrigger
                 render={<Button variant="outline">File</Button>}
               />
@@ -361,21 +343,21 @@ export const DropdownMenuStories = () => {
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
-            </DropdownMenu>
+            </DropdownMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          DISABLED ITEMS
+          COMPOSITIONAL API — DISABLED ITEMS
       -------------------------------------------------------- */}
       <StorySection
-        title="Disabled items"
+        title="Compositional — disabled items"
         description="Disabled items are skipped during keyboard navigation."
       >
         <StoryRow>
           <StoryItem label="with disabled">
-            <DropdownMenu>
+            <DropdownMenuRoot>
               <DropdownMenuTrigger
                 render={<Button variant="outline">Open</Button>}
               />
@@ -405,7 +387,7 @@ export const DropdownMenuStories = () => {
                   </DropdownMenuContent>
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
-            </DropdownMenu>
+            </DropdownMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>

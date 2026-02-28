@@ -28,46 +28,6 @@
   min-width: 160px;
 }
 
-/* --- Item --- */
-
-.color-select-item {
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-
-  padding: 0 var(--space-3);
-  height: 1.75rem;
-
-  font-family: var(--font-ui);
-  font-size: var(--text-sm);
-  color: var(--text-regular);
-  outline: none;
-  user-select: none;
-  cursor: default;
-
-  &[data-highlighted]::before {
-    content: '';
-    position: absolute;
-    inset-block: 0;
-    inset-inline: var(--space-1);
-    border-radius: var(--radius-sm);
-    background-color: var(--surface-neutral-hover);
-    z-index: -1;
-  }
-
-  &[data-highlighted] {
-    z-index: 0;
-  }
-}
-
-.color-select-item-text {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: inherit;
-}
-
 /* --- Swatch colors --- */
 
 .color-select-swatch-default {
@@ -76,9 +36,10 @@
 
 .color-select-swatch-transparent {
   background: repeating-conic-gradient(
-    var(--surface-neutral) 0% 25%,
-    transparent 0% 50%
-  ) 0 0 / 6px 6px;
+      var(--surface-neutral) 0% 25%,
+      transparent 0% 50%
+    )
+    0 0 / 6px 6px;
   border-color: var(--border-default);
 }
 

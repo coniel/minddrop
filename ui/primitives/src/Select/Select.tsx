@@ -1,9 +1,10 @@
-import { Select as SelectPrimitive } from '@base-ui/react/select';
-import { useCallback } from 'react';
-import { useTranslation } from '@minddrop/i18n';
-import { Icon } from '../Icon';
-import { propsToClass } from '../utils';
+import { TextColor } from '../Text';
+import { SelectIcon } from './SelectIcon';
 import { SelectItem } from './SelectItem';
+import { SelectPopup } from './SelectPopup';
+import { SelectRoot } from './SelectRoot';
+import { SelectTrigger } from './SelectTrigger';
+import { SelectValue } from './SelectValue';
 import './Select.css';
 
 export type SelectVariant = 'ghost' | 'subtle' | 'outline' | 'filled';
@@ -28,18 +29,13 @@ export interface SelectProps<TValue extends string | number> {
   className?: string;
 
   /*
-   * Visual style of the trigger. Matches Button variants for seamless
-   * composition in toolbars and action rows.
-   * - `ghost`   — no background or border, appears on hover
-   * - `subtle`  — muted persistent background, no border
-   * - `outline` — bordered, background appears on hover
-   * - `filled`  — bordered + background + shadow
+   * Visual style of the trigger.
    * @default 'outline'
    */
   variant?: SelectVariant;
 
   /*
-   * Size of the trigger. Matches Button sizes exactly.
+   * Size of the trigger.
    * @default 'md'
    */
   size?: SelectSize;
@@ -78,6 +74,11 @@ export interface SelectProps<TValue extends string | number> {
   trigger?: React.ReactElement;
 
   /*
+   * Color of the displayed value text. Uses Text color tokens.
+   */
+  valueColor?: TextColor;
+
+  /*
    * Offset of the popup along the alignment axis (px).
    * Positive shifts right, negative shifts left.
    */
@@ -92,68 +93,28 @@ export const Select = <TValue extends string | number = string>({
   placeholder,
   onValueChange,
   value,
+  valueColor,
   children,
   trigger,
   alignOffset,
-  ...other
-}: SelectProps<TValue>) => {
-  const { t } = useTranslation();
-
-  const handleValueChange = useCallback(
-    (newValue: TValue | null) => {
-      if (newValue == null) return;
-      onValueChange?.(newValue);
-    },
-    [onValueChange],
-  );
-
-  return (
-    <SelectPrimitive.Root
-      {...(options.length > 0 ? { items: options } : {})}
-      value={value}
-      onValueChange={handleValueChange}
-      {...other}
-    >
-      <SelectPrimitive.Trigger
-        className={propsToClass('select', { variant, size, className })}
-      >
-        {trigger ? (
-          trigger
-        ) : (
-          <>
-            <SelectPrimitive.Value
-              className="select-value"
-              placeholder={placeholder ? t(placeholder) : undefined}
-            />
-            <SelectPrimitive.Icon className="select-icon">
-              <Icon name="chevron-down" />
-            </SelectPrimitive.Icon>
-          </>
-        )}
-      </SelectPrimitive.Trigger>
-      <SelectPrimitive.Portal>
-        <SelectPrimitive.Positioner
-          className="select-positioner"
-          sideOffset={8}
-          alignOffset={alignOffset}
-        >
-          <SelectPrimitive.Popup className="select-popup">
-            <SelectPrimitive.ScrollUpArrow className="select-scroll-arrow" />
-            <SelectPrimitive.List className="select-list">
-              {children
-                ? children
-                : options.map(({ label, value }) => (
-                    <SelectItem
-                      key={String(value)}
-                      label={label}
-                      value={value}
-                    />
-                  ))}
-            </SelectPrimitive.List>
-            <SelectPrimitive.ScrollDownArrow className="select-scroll-arrow" />
-          </SelectPrimitive.Popup>
-        </SelectPrimitive.Positioner>
-      </SelectPrimitive.Portal>
-    </SelectPrimitive.Root>
-  );
-};
+}: SelectProps<TValue>) => (
+  <SelectRoot items={options} value={value} onValueChange={onValueChange}>
+    <SelectTrigger className={className} variant={variant} size={size}>
+      {trigger ? (
+        trigger
+      ) : (
+        <>
+          <SelectValue color={valueColor} placeholder={placeholder} />
+          <SelectIcon />
+        </>
+      )}
+    </SelectTrigger>
+    <SelectPopup alignOffset={alignOffset}>
+      {children
+        ? children
+        : options.map(({ label, value }) => (
+            <SelectItem key={String(value)} label={label} value={value} />
+          ))}
+    </SelectPopup>
+  </SelectRoot>
+);

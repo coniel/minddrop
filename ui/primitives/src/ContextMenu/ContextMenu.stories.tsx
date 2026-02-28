@@ -3,23 +3,22 @@
  * Dev reference for the ContextMenu component system.
  */
 import { useState } from 'react';
+import { MenuItemRenderer as ContextMenuItem } from '../MenuItemRenderer';
+import { RadioMenuItemRenderer as ContextMenuRadioItem } from '../MenuItemRenderer';
 import { Text } from '../Text';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuItem,
-  ContextMenuPortal,
-  ContextMenuPositioner,
-  ContextMenuRadioGroup,
-  ContextMenuRadioItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-  ContextSubmenu,
-  ContextSubmenuContent,
-  ContextSubmenuTriggerItem,
-} from './ContextMenu';
+import { ContextMenu } from './ContextMenu';
+import { ContextMenuContent } from './ContextMenuContent';
+import { ContextMenuGroup } from './ContextMenuGroup';
+import { ContextMenuPortal } from './ContextMenuPortal';
+import { ContextMenuPositioner } from './ContextMenuPositioner';
+import { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
+import { ContextMenuRoot } from './ContextMenuRoot';
+import { ContextMenuSeparator } from './ContextMenuSeparator';
+import { ContextMenuTrigger } from './ContextMenuTrigger';
+import { ContextSubmenu } from './ContextSubmenu';
+import { ContextSubmenuContent } from './ContextSubmenuContent';
+import { ContextSubmenuTriggerItem } from './ContextSubmenuTriggerItem';
 
 export const ContextMenuStories = () => {
   const [view, setView] = useState('grid');
@@ -57,30 +56,20 @@ export const ContextMenuStories = () => {
   return (
     <Story title="ContextMenu">
       {/* --------------------------------------------------------
-          BASIC
-          ContextMenuTrigger wraps any region as the right-click
-          target. Unlike DropdownMenu, no visible trigger element
-          is needed.
+          CONVENIENCE API
+          The simplified ContextMenu wraps Root, Trigger, Portal,
+          Positioner, and Content into a single component.
       -------------------------------------------------------- */}
       <StorySection
-        title="Basic"
-        description="ContextMenuTrigger wraps any region as the right-click target. The menu opens at the cursor position."
+        title="Convenience API"
+        description="Pass a trigger region and menu items as children. Handles Root, Trigger, Portal, Positioner, and Content internally."
       >
         <StoryRow>
           <StoryItem label="basic">
-            <ContextMenu>
-              <ContextMenuTrigger>
-                <TriggerArea />
-              </ContextMenuTrigger>
-              <ContextMenuPortal>
-                <ContextMenuPositioner>
-                  <ContextMenuContent minWidth={180}>
-                    <ContextMenuItem label="Cut" onClick={action('Cut')} />
-                    <ContextMenuItem label="Copy" onClick={action('Copy')} />
-                    <ContextMenuItem label="Paste" onClick={action('Paste')} />
-                  </ContextMenuContent>
-                </ContextMenuPositioner>
-              </ContextMenuPortal>
+            <ContextMenu trigger={<TriggerArea />} minWidth={180}>
+              <ContextMenuItem label="Cut" onClick={action('Cut')} />
+              <ContextMenuItem label="Copy" onClick={action('Copy')} />
+              <ContextMenuItem label="Paste" onClick={action('Paste')} />
             </ContextMenu>
             {lastAction && (
               <Text size="sm" color="muted">
@@ -92,69 +81,82 @@ export const ContextMenuStories = () => {
       </StorySection>
 
       {/* --------------------------------------------------------
-          GROUPS + LABELS
+          CONVENIENCE API — ICONS
       -------------------------------------------------------- */}
       <StorySection
-        title="Groups and labels"
-        description="ContextMenuGroup wraps items with an optional label. ContextMenuLabel renders a standalone section heading."
+        title="Convenience — icons"
+        description="Pass icon to ContextMenuItem. Works the same as the compositional API."
       >
         <StoryRow>
-          <StoryItem label="grouped">
-            <ContextMenu>
-              <ContextMenuTrigger>
-                <TriggerArea />
-              </ContextMenuTrigger>
-              <ContextMenuPortal>
-                <ContextMenuPositioner>
-                  <ContextMenuContent minWidth={200}>
-                    <ContextMenuGroup label="Edit">
-                      <ContextMenuItem
-                        label="Cut"
-                        icon="scissors"
-                        onClick={action('Cut')}
-                      />
-                      <ContextMenuItem
-                        label="Copy"
-                        icon="copy"
-                        onClick={action('Copy')}
-                      />
-                      <ContextMenuItem
-                        label="Paste"
-                        icon="clipboard"
-                        onClick={action('Paste')}
-                      />
-                    </ContextMenuGroup>
-                    <ContextMenuSeparator />
-                    <ContextMenuGroup label="View">
-                      <ContextMenuItem
-                        label="Zoom in"
-                        icon="zoom-in"
-                        onClick={action('Zoom in')}
-                      />
-                      <ContextMenuItem
-                        label="Zoom out"
-                        icon="zoom-out"
-                        onClick={action('Zoom out')}
-                      />
-                    </ContextMenuGroup>
-                  </ContextMenuContent>
-                </ContextMenuPositioner>
-              </ContextMenuPortal>
+          <StoryItem label="with icons">
+            <ContextMenu trigger={<TriggerArea />} minWidth={200}>
+              <ContextMenuGroup label="Edit">
+                <ContextMenuItem
+                  label="Cut"
+                  icon="scissors"
+                  onClick={action('Cut')}
+                />
+                <ContextMenuItem
+                  label="Copy"
+                  icon="copy"
+                  onClick={action('Copy')}
+                />
+                <ContextMenuItem
+                  label="Paste"
+                  icon="clipboard"
+                  onClick={action('Paste')}
+                />
+              </ContextMenuGroup>
+              <ContextMenuSeparator />
+              <ContextMenuGroup label="View">
+                <ContextMenuItem
+                  label="Zoom in"
+                  icon="zoom-in"
+                  onClick={action('Zoom in')}
+                />
+                <ContextMenuItem
+                  label="Zoom out"
+                  icon="zoom-out"
+                  onClick={action('Zoom out')}
+                />
+              </ContextMenuGroup>
             </ContextMenu>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          SHIFT SECONDARY STATE
+          CONVENIENCE API — RADIO GROUP
       -------------------------------------------------------- */}
       <StorySection
-        title="Shift secondary state"
-        description="Hold Shift to reveal secondary labels, icons, and handlers."
+        title="Convenience — radio group"
+        description="Radio groups work inside the convenience wrapper."
+      >
+        <StoryRow>
+          <StoryItem label={`view: ${view}`}>
+            <ContextMenu trigger={<TriggerArea />} minWidth={160}>
+              <ContextMenuGroup label="View as">
+                <ContextMenuRadioGroup value={view} onValueChange={setView}>
+                  <ContextMenuRadioItem value="list" label="List" />
+                  <ContextMenuRadioItem value="grid" label="Grid" />
+                  <ContextMenuRadioItem value="columns" label="Columns" />
+                </ContextMenuRadioGroup>
+              </ContextMenuGroup>
+            </ContextMenu>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          COMPOSITIONAL API — SHIFT KEY SECONDARY STATE
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Compositional — shift secondary state"
+        description="Hold Shift to reveal secondary labels, icons, and handlers. Uses ContextMenuRoot for full control."
       >
         <StoryRow>
           <StoryItem label="shift to delete">
-            <ContextMenu>
+            <ContextMenuRoot>
               <ContextMenuTrigger>
                 <TriggerArea />
               </ContextMenuTrigger>
@@ -177,55 +179,21 @@ export const ContextMenuStories = () => {
                   </ContextMenuContent>
                 </ContextMenuPositioner>
               </ContextMenuPortal>
-            </ContextMenu>
+            </ContextMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          RADIO GROUP
+          COMPOSITIONAL API — SUBMENU
       -------------------------------------------------------- */}
       <StorySection
-        title="Radio group"
-        description="Same RadioGroup/RadioItem API as DropdownMenu."
-      >
-        <StoryRow>
-          <StoryItem label={`view: ${view}`}>
-            <ContextMenu>
-              <ContextMenuTrigger>
-                <TriggerArea />
-              </ContextMenuTrigger>
-              <ContextMenuPortal>
-                <ContextMenuPositioner>
-                  <ContextMenuContent minWidth={160}>
-                    <ContextMenuGroup label="View as">
-                      <ContextMenuRadioGroup
-                        value={view}
-                        onValueChange={setView}
-                      >
-                        <ContextMenuRadioItem value="list" label="List" />
-                        <ContextMenuRadioItem value="grid" label="Grid" />
-                        <ContextMenuRadioItem value="columns" label="Columns" />
-                      </ContextMenuRadioGroup>
-                    </ContextMenuGroup>
-                  </ContextMenuContent>
-                </ContextMenuPositioner>
-              </ContextMenuPortal>
-            </ContextMenu>
-          </StoryItem>
-        </StoryRow>
-      </StorySection>
-
-      {/* --------------------------------------------------------
-          SUBMENU
-      -------------------------------------------------------- */}
-      <StorySection
-        title="Submenu"
-        description="Same Submenu API as DropdownMenu. Keyboard navigation works across levels."
+        title="Compositional — submenu"
+        description="ContextSubmenu nests a full menu inside a trigger item. Requires the compositional API."
       >
         <StoryRow>
           <StoryItem label="with submenu">
-            <ContextMenu>
+            <ContextMenuRoot>
               <ContextMenuTrigger>
                 <TriggerArea />
               </ContextMenuTrigger>
@@ -266,21 +234,21 @@ export const ContextMenuStories = () => {
                   </ContextMenuContent>
                 </ContextMenuPositioner>
               </ContextMenuPortal>
-            </ContextMenu>
+            </ContextMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>
 
       {/* --------------------------------------------------------
-          DISABLED ITEMS
+          COMPOSITIONAL API — DISABLED ITEMS
       -------------------------------------------------------- */}
       <StorySection
-        title="Disabled items"
+        title="Compositional — disabled items"
         description="Disabled items are skipped during keyboard navigation."
       >
         <StoryRow>
           <StoryItem label="with disabled">
-            <ContextMenu>
+            <ContextMenuRoot>
               <ContextMenuTrigger>
                 <TriggerArea />
               </ContextMenuTrigger>
@@ -306,7 +274,7 @@ export const ContextMenuStories = () => {
                   </ContextMenuContent>
                 </ContextMenuPositioner>
               </ContextMenuPortal>
-            </ContextMenu>
+            </ContextMenuRoot>
           </StoryItem>
         </StoryRow>
       </StorySection>

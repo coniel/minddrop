@@ -70,8 +70,14 @@
 .icon-button-color-muted .icon {
   color: var(--text-subtle);
 }
+.icon-button-color-regular .icon {
+  color: var(--text-regular);
+}
 .icon-button-color-contrast .icon {
   color: var(--text-on-solid);
+}
+.icon-button-color-primary .icon {
+  color: var(--text-primary);
 }
 
 /* ------------------------------------------------------------

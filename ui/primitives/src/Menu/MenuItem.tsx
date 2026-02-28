@@ -56,6 +56,12 @@ export interface MenuItemProps {
   hasSubmenu?: boolean;
 
   /*
+   * Trailing element rendered after the label, before the
+   * keyboard shortcut and submenu indicator.
+   */
+  trailingIcon?: React.ReactNode;
+
+  /*
    * Keyboard shortcut displayed at the end of the item.
    */
   keyboardShortcut?: string[];
@@ -104,6 +110,16 @@ export interface MenuItemProps {
   className?: string;
 
   /*
+   * Overrides the default ARIA role (`menuitem`).
+   */
+  role?: React.AriaRole;
+
+  /*
+   * ARIA checked state for radio/checkbox item roles.
+   */
+  'aria-checked'?: boolean | 'true' | 'false' | 'mixed';
+
+  /*
    * Click handler.
    */
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -125,7 +141,9 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       keyboardShortcut,
       label,
       muted,
+      role = 'menuitem',
       size,
+      trailingIcon,
       ...other
     },
     ref,
@@ -138,7 +156,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       <Provider value={{ setForceActionsVisible }}>
         <div
           ref={ref}
-          role="menuitem"
+          role={role}
           className={propsToClass('menu-item', {
             size,
             active,
@@ -156,6 +174,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
             <ContentIcon className="item-icon" icon={contentIcon} />
           )}
           <span className="label">{label ? i18n.t(label) : children}</span>
+          {trailingIcon}
           {keyboardShortcut && (
             <KeyboardShortcut
               color="muted"

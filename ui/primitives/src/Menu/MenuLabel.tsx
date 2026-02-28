@@ -51,7 +51,10 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
   ) => (
     <div
       ref={ref}
-      className={propsToClass('menu-label', { actionsAlwaysVisible, className })}
+      className={propsToClass('menu-label', {
+        actionsAlwaysVisible,
+        className,
+      })}
       role={button ? 'button' : undefined}
       {...other}
     >

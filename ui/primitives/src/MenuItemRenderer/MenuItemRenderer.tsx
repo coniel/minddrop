@@ -1,8 +1,9 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Icon } from '../Icon';
 import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
+import { MenuRadioItem } from '../Menu/MenuRadioItem';
+import { SwitchMenuItem, SwitchMenuItemProps } from '../Menu/SwitchMenuItem';
 import { Tooltip } from '../Tooltip';
 
 /* ============================================================
@@ -175,8 +176,8 @@ export const MenuItemRenderer: FC<MenuItemRendererProps> = ({
 
 /* ============================================================
    RADIO MENU ITEM RENDERER
-   Wraps Menu.RadioItem with a styled MenuItem.
-   Accepts an itemIndicator for the selected state checkmark.
+   Wraps Menu.RadioItem with a styled MenuRadioItem.
+   Uses a primary-colored dot inside a circle as the indicator.
    ============================================================ */
 
 export const RadioMenuItemRenderer: FC<RadioMenuItemRendererProps> = ({
@@ -224,17 +225,18 @@ export const RadioMenuItemRenderer: FC<RadioMenuItemRendererProps> = ({
       disabled={disabled}
       onClick={shiftKeyDown && secondaryOnClick ? secondaryOnClick : onClick}
       render={
-        <MenuItem
+        <MenuRadioItem
+          value={value}
           disabled={disabled}
-          {...itemProps}
-          icon={
-            <MenuPrimitive.RadioItemIndicator>
-              <Icon name="check" className="item-indicator" />
-            </MenuPrimitive.RadioItemIndicator>
+          indicator={
+            <MenuPrimitive.RadioItemIndicator
+              render={<span className="menu-item-radio-dot" />}
+            />
           }
+          {...itemProps}
         >
           {itemIndicator}
-        </MenuItem>
+        </MenuRadioItem>
       }
       {...other}
     />
@@ -255,3 +257,34 @@ export const RadioMenuItemRenderer: FC<RadioMenuItemRendererProps> = ({
 
   return item;
 };
+
+/* ============================================================
+   SWITCH MENU ITEM RENDERER
+   Wraps Menu.CheckboxItem with a styled SwitchMenuItem.
+   Base UI handles keyboard, toggle state, aria, and
+   closeOnClick={false} by default.
+   ============================================================ */
+
+export interface SwitchMenuItemRendererProps
+  extends Omit<SwitchMenuItemProps, 'onClick'> {
+  /*
+   * Prevents interaction.
+   */
+  disabled?: boolean;
+}
+
+export const SwitchMenuItemRenderer: FC<SwitchMenuItemRendererProps> = ({
+  checked,
+  defaultChecked,
+  onCheckedChange,
+  disabled,
+  ...other
+}) => (
+  <MenuPrimitive.CheckboxItem
+    checked={checked}
+    defaultChecked={defaultChecked}
+    onCheckedChange={onCheckedChange}
+    disabled={disabled}
+    render={<SwitchMenuItem checked={checked} disabled={disabled} {...other} />}
+  />
+);
