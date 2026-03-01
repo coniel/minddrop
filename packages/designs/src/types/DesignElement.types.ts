@@ -85,6 +85,17 @@ export interface FormattedTextElement extends DesignElementBase {
    * The element style.
    */
   style: TextElementStyle;
+
+  /**
+   * Placeholder text displayed when the element has no content.
+   */
+  placeholder?: string;
+
+  /**
+   * Whether the element renders a rich text editor instead
+   * of static text.
+   */
+  editor?: boolean;
 }
 
 export interface NumberElement extends DesignElementBase {

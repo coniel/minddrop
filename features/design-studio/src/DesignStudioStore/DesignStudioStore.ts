@@ -381,6 +381,9 @@ export const addDeisgnElementFromTemplate = (
     id: uuid(),
     parent: parentId,
     ...(template.type === 'text' ? { placeholder: generateLoremIpsum(3) } : {}),
+    ...(template.type === 'formatted-text'
+      ? { placeholder: generateLoremIpsum(20) }
+      : {}),
     ...(template.type === 'number'
       ? { placeholder: String(Math.floor(Math.random() * 900) + 100) }
       : {}),
