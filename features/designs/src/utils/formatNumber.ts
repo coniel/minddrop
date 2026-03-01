@@ -1,4 +1,4 @@
-import { NumberFormat } from '../types';
+import { NumberFormat } from '@minddrop/designs';
 
 const defaultFormat: NumberFormat = {
   decimals: 0,
@@ -73,13 +73,10 @@ export function formatNumberParts(
   value: number,
   format?: Partial<NumberFormat>,
 ): FormattedNumberParts {
-  const {
-    decimals,
-    thousandsSeparator,
-    prefix,
-    suffix,
-    signDisplay,
-  } = { ...defaultFormat, ...format };
+  const { decimals, thousandsSeparator, prefix, suffix, signDisplay } = {
+    ...defaultFormat,
+    ...format,
+  };
 
   return {
     prefix,

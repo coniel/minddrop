@@ -1019,6 +1019,14 @@
         "round": "Round"
       }
     },
+    "url-display": {
+      "label": "Display"
+    },
+    "url-show-protocol": "Protocol",
+    "url-show-subdomain": "Subdomain",
+    "url-show-domain": "Domain",
+    "url-show-tld": "Top-level domain",
+    "url-show-path": "Path",
     "border": {
       "label": "Border",
       "style": {

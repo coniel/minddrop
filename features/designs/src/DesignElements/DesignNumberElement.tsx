@@ -1,10 +1,6 @@
-import {
-  NumberElement,
-  createTextCssStyle,
-  formatNumber,
-  formatNumberParts,
-} from '@minddrop/designs';
+import { NumberElement, createTextCssStyle } from '@minddrop/designs';
 import { useElementProperty } from '../DesignPropertiesProvider';
+import { formatNumber, formatNumberParts } from '../utils';
 
 const DEFAULT_AFFIX_MARGIN = 2 / 16;
 

@@ -4,12 +4,14 @@ import { IconElementTemplate } from './IconElementTemplate';
 import { ImageElementTemplate } from './ImageElementTemplate';
 import { NumberElementTemplate } from './NumberElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
+import { UrlElementTemplate } from './UrlElementTemplate';
 
 export * from './ContainerElementTemplate';
 export * from './IconElementTemplate';
 export * from './ImageElementTemplate';
 export * from './TextElementTemplate';
 export * from './FormattedTextElementTemplate';
+export * from './UrlElementTemplate';
 
 export type DesignElementTemplate =
   | ContainerElementTemplate
@@ -17,7 +19,8 @@ export type DesignElementTemplate =
   | FormattedTextElementTemplate
   | ImageElementTemplate
   | IconElementTemplate
-  | NumberElementTemplate;
+  | NumberElementTemplate
+  | UrlElementTemplate;
 
 export const ElementTemplates: Record<
   DesignElementTemplate['type'],
@@ -29,4 +32,5 @@ export const ElementTemplates: Record<
   image: ImageElementTemplate,
   icon: IconElementTemplate,
   number: NumberElementTemplate,
+  url: UrlElementTemplate,
 };

@@ -5,7 +5,7 @@ import './ElementsPalette.css';
 const ELEMENT_GROUPS = [
   {
     label: 'design-studio.elements.group.content',
-    types: ['text', 'formatted-text', 'number'],
+    types: ['text', 'formatted-text', 'number', 'url'],
   },
   {
     label: 'design-studio.elements.group.media',

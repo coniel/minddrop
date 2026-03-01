@@ -7,6 +7,7 @@ import { IconElementStyleEditor } from '../style-editors/IconElementStyleEditor'
 import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEditor';
 import { NumberElementStyleEditor } from '../style-editors/NumberElementStyleEditor';
 import { TextElementStyleEditor } from '../style-editors/TextElementStyleEditor';
+import { UrlElementStyleEditor } from '../style-editors/UrlElementStyleEditor';
 import './ElementStyleEditor.css';
 
 const containerTypes = new Set(['root', 'container']);
@@ -47,8 +48,12 @@ export const ElementStyleEditor: React.FC = () => {
             />
           )}
 
-          {(element.type === 'text' || element.type === 'url') && (
+          {element.type === 'text' && (
             <TextElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'url' && (
+            <UrlElementStyleEditor elementId={selectedElementId} />
           )}
 
           {element.type === 'formatted-text' && (

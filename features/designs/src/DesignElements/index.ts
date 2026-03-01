@@ -5,5 +5,6 @@ export * from './DesignFormattedTextElement';
 export * from './DesignNumberElement';
 export * from './DesignImageElement';
 export * from './DesignIconElement';
+export * from './DesignUrlElement';
 export * from './DesignContainerElement';
 export * from './DesignRootElement';

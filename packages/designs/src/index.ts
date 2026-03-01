@@ -1,6 +1,5 @@
 export * from './createElementCssStyle';
 export * from './types';
-export * from './utils/formatNumber';
 export * from './utils/getPlaceholderMediaDirPath';
 export * from './design-element-templates';
 export * from './styles';

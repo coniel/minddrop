@@ -271,7 +271,10 @@ export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
  * and flat element types.
  */
 export type StylableElement =
-  | { type: 'text' | 'formatted-text' | 'number'; style: TextElementStyle }
+  | {
+      type: 'text' | 'formatted-text' | 'number' | 'url';
+      style: TextElementStyle;
+    }
   | { type: 'icon'; style: IconElementStyle }
   | { type: 'image'; style: ImageElementStyle }
   | { type: 'root' | 'container'; style: ContainerElementStyle };
@@ -288,6 +291,7 @@ export function createElementCssStyle(element: StylableElement): CSSProperties {
     case 'text':
     case 'formatted-text':
     case 'number':
+    case 'url':
       return createTextCssStyle(element.style);
     case 'icon':
       return createIconCssStyle(element.style);

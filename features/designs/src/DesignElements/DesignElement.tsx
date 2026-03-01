@@ -1,6 +1,7 @@
 import {
   ContainerElement,
   DesignElement as DesignElementType,
+  UrlElement,
 } from '@minddrop/designs';
 import { DesignContainerElement } from './DesignContainerElement';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
@@ -9,6 +10,7 @@ import { DesignIconElement } from './DesignIconElement';
 import { DesignImageElement } from './DesignImageElement';
 import { DesignNumberElement } from './DesignNumberElement';
 import { DesignTextElement } from './DesignTextElement';
+import { DesignUrlElement } from './DesignUrlElement';
 
 export interface DesignElementProps {
   /**
@@ -37,6 +39,9 @@ export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
       break;
     case 'number':
       rendered = <DesignNumberElement element={element} />;
+      break;
+    case 'url':
+      rendered = <DesignUrlElement element={element as UrlElement} />;
       break;
     case 'image':
       rendered = <DesignImageElement element={element} />;
