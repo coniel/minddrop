@@ -85,6 +85,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   const savePropertyMap = useDesignPropertyMappingStore(
     (state) => state.savePropertyMap,
   );
+  const hoveredPropertyName = useDesignPropertyMappingStore(
+    (state) => state.hoveredPropertyName,
+  );
 
   // Fetch the selected design
   const selectedDesign = Designs.use(selectedDesignId || '');
@@ -234,6 +237,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
 
   // Whether unmapped elements are visually highlighted
   const [highlightUnmapped, setHighlightUnmapped] = useState(false);
+
+  // Whether mapped elements are visually highlighted
+  const [highlightMapped, setHighlightMapped] = useState(false);
 
   // Whether the counter is being hovered (highlights both
   // unmapped and mapped elements)
@@ -423,7 +429,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   useEffect(() => {
     const area = canvasAreaRef.current;
 
-    if (!area || !counterHovered) {
+    if (!area || (!counterHovered && !highlightMapped) || hoveredPropertyName) {
       return;
     }
 
@@ -452,7 +458,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
         child.classList.remove('mapped-highlight');
       });
     };
-  }, [counterHovered, propertyMap]);
+  }, [counterHovered, highlightMapped, hoveredPropertyName, propertyMap]);
 
   // Navigate back to the previous view
   const handleClickBack = useCallback(() => {
@@ -520,6 +526,12 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
                     size="sm"
                     checked={zoomEnabled}
                     onCheckedChange={setZoomEnabled}
+                  />
+                  <SwitchField
+                    label="design-property-mapping.browser.highlightMapped"
+                    size="sm"
+                    checked={highlightMapped}
+                    onCheckedChange={setHighlightMapped}
                   />
                   <SwitchField
                     label="design-property-mapping.browser.highlightUnmapped"
@@ -596,13 +608,16 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
         <PropertyConnectionLine containerRef={browserRef} />
       )}
 
-      {/* All connection lines shown when hovering the counter */}
-      {view === 'map-properties' && counterHovered && (
-        <AllPropertyConnectionLines
-          containerRef={browserRef}
-          propertyMap={propertyMap}
-        />
-      )}
+      {/* All connection lines shown when hovering the counter or show mapped toggle.
+          Hidden when a specific property is hovered to avoid visual clutter. */}
+      {view === 'map-properties' &&
+        (counterHovered || highlightMapped) &&
+        !hoveredPropertyName && (
+          <AllPropertyConnectionLines
+            containerRef={browserRef}
+            propertyMap={propertyMap}
+          />
+        )}
     </div>
   );
 };

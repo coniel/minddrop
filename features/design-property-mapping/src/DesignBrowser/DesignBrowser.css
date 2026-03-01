@@ -150,15 +150,15 @@
 
 /* Dashed outline on unmapped elements when the toggle is active */
 .unmapped-highlight {
-  outline: 3px dashed var(--danger-900);
+  outline: 2px dashed var(--danger-900);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
   transition: outline-color var(--duration-slow) var(--ease-out);
 }
 
-/* Green outline on mapped elements when hovering the counter */
+/* Outline on mapped elements when hovering the counter */
 .mapped-highlight {
-  outline: 3px dashed var(--border-primary);
+  outline: 2px solid var(--border-primary);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
