@@ -113,7 +113,7 @@ export const DatabaseConfigurationPanel: React.FC<
 
         <TabsPanel value="properties">
           <ScrollArea>
-            <div className="database-configuration-panel-tab-content">
+            <div className="database-configuration-panel-properties-content">
               <DatabasePropertiesEditor
                 databaseId={databaseId}
                 draftProperties={draftProperties}
@@ -126,7 +126,7 @@ export const DatabaseConfigurationPanel: React.FC<
 
         <TabsPanel value="designs">
           <ScrollArea>
-            <div className="database-configuration-panel-tab-content">
+            <div className="database-configuration-panel-designs-content">
               <DatabaseDesignsMenu databaseId={databaseId} />
             </div>
           </ScrollArea>
@@ -134,7 +134,7 @@ export const DatabaseConfigurationPanel: React.FC<
 
         <TabsPanel value="settings">
           <ScrollArea>
-            <div className="database-configuration-panel-tab-content" />
+            <div className="database-configuration-panel-settings-content" />
           </ScrollArea>
         </TabsPanel>
       </Tabs>

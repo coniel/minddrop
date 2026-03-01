@@ -34,6 +34,11 @@ export interface DatabasePropertyEditorProps {
    * Callback fired when a draft property is cancelled.
    */
   onCancelDraft?: () => void;
+
+  /**
+   * Props to spread on the drag handle for sortable list integration.
+   */
+  dragHandleProps?: Record<string, unknown>;
 }
 
 export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
@@ -42,6 +47,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
   isDraft = false,
   onSaveDraft,
   onCancelDraft,
+  dragHandleProps,
 }) => {
   function validateName(name: string): string | undefined {
     const i18nRoot = 'properties.form.name.validation';
@@ -148,6 +154,7 @@ export const DatabasePropertyEditor: React.FC<DatabasePropertyEditorProps> = ({
       onCancel={onCancelDraft}
       property={property}
       validators={{ name: validateName }}
+      dragHandleProps={dragHandleProps}
     />
   );
 };

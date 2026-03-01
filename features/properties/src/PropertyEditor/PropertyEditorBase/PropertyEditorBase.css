@@ -1,14 +1,30 @@
 .property-editor {
+  background-color: var(--surface-overlay);
   border-bottom: 1px solid var(--border-default);
+  box-shadow: 0 -1px 0 var(--border-default);
 
   .property-editor-display {
     user-select: none;
     padding: 0.75rem 1rem;
+    outline: none;
+
+    .property-editor-drag-handle {
+      cursor: grab;
+      margin-left: -0.25rem;
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
 
     &:hover {
       .text,
       .content-icon {
         color: var(--text-color-regular);
+      }
+
+      .property-editor-drag-handle {
+        stroke: var(--text-regular);
       }
     }
   }

@@ -86,6 +86,11 @@ export interface PropertyEditorBaseProps
   validators?: {
     name?: FieldDefinition['validate'];
   };
+
+  /**
+   * Props to spread on the drag handle for sortable list integration.
+   */
+  dragHandleProps?: Record<string, unknown>;
 }
 
 export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
@@ -100,6 +105,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
   defaultOpen = false,
   deletable = true,
   validators,
+  dragHandleProps,
   children,
   ...other
 }) => {
@@ -108,6 +114,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
   const [open, , setOpen] = useToggle(defaultOpen);
   const [isNameFocused, setIsNameFocused] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const wasDraggingRef = useRef(false);
 
   useEffect(() => {
     if (!open) {
@@ -133,7 +140,36 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
     },
   ]);
 
+  // Wrap drag handle props to track drag interactions and
+  // prevent the click handler from opening the editor
+  const resolvedDragHandleProps = dragHandleProps
+    ? {
+        ...dragHandleProps,
+        onPointerDown: (event: React.PointerEvent) => {
+          wasDraggingRef.current = true;
+
+          if (
+            dragHandleProps.onPointerDown &&
+            typeof dragHandleProps.onPointerDown === 'function'
+          ) {
+            (
+              dragHandleProps.onPointerDown as (
+                event: React.PointerEvent,
+              ) => void
+            )(event);
+          }
+        },
+      }
+    : undefined;
+
   function handleOpen() {
+    // Suppress open if a drag interaction just occurred
+    if (wasDraggingRef.current) {
+      wasDraggingRef.current = false;
+
+      return;
+    }
+
     setOpen(true);
 
     if (onOpen) {
@@ -198,6 +234,13 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
         onClick={handleOpen}
         style={{ display: open ? 'none' : 'flex' }}
       >
+        <Icon
+          size={14}
+          name="grip-vertical"
+          color="muted"
+          className="property-editor-drag-handle"
+          {...resolvedDragHandleProps}
+        />
         <ContentIcon color="muted" icon={property.icon} />
         <Text
           size="sm"
