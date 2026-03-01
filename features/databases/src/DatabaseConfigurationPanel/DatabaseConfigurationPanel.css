@@ -30,13 +30,20 @@
     padding: var(--space-2) 0;
   }
 
+  .database-configuration-panel-queries-content {
+    padding: var(--space-2) 0;
+  }
+
+  .database-configuration-panel-collections-content {
+    padding: var(--space-2) 0;
+  }
+
   .database-configuration-panel-settings-content {
     padding: var(--space-2) 0;
   }
 
   .database-properties-editor-sortable {
     gap: 0;
-
   }
 
   .menu-label {

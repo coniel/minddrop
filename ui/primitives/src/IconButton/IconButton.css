@@ -94,8 +94,13 @@
     }
   }
 
-  &:active {
+  &:active,
+  &.icon-button-active {
     background-color: var(--surface-neutral-active);
+
+    .icon {
+      color: var(--text-regular);
+    }
   }
 
   &.icon-button-color-contrast {

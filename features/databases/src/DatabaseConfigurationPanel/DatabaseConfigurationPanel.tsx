@@ -31,7 +31,7 @@ type DraftProperty = PropertySchema & {
   id: number;
 };
 
-type ActiveTab = 'properties' | 'designs' | 'settings';
+type ActiveTab = 'queries' | 'collections' | 'properties' | 'designs';
 
 /**
  * Renders the database configuration panel with tabbed
@@ -40,7 +40,8 @@ type ActiveTab = 'properties' | 'designs' | 'settings';
 export const DatabaseConfigurationPanel: React.FC<
   DatabaseConfigurationPanelProps
 > = ({ databaseId }) => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('properties');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('queries');
+  const [showSettings, setShowSettings] = useState(false);
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
   const databaseConfig = Databases.use(databaseId);
 
@@ -68,21 +69,33 @@ export const DatabaseConfigurationPanel: React.FC<
     <Panel className="database-configuration-panel">
       <Tabs
         className="database-configuration-panel-tabs-container"
-        value={activeTab}
-        onValueChange={(value) => setActiveTab(value as ActiveTab)}
+        value={showSettings ? '' : activeTab}
+        onValueChange={(value) => {
+          setActiveTab(value as ActiveTab);
+          setShowSettings(false);
+        }}
       >
         <div className="database-configuration-panel-tabs">
-          <IconButtonSpacer size="sm" />
+          <IconButton
+            size="sm"
+            label="labels.settings"
+            icon="settings"
+            active={showSettings}
+            onClick={() => setShowSettings(true)}
+          />
           <Spacer />
           <TabsList>
+            <TabsTab value="queries" size="sm">
+              {i18n.t('labels.queries')}
+            </TabsTab>
+            <TabsTab value="collections" size="sm">
+              {i18n.t('labels.collections')}
+            </TabsTab>
             <TabsTab value="properties" size="sm">
               {i18n.t('labels.properties')}
             </TabsTab>
             <TabsTab value="designs" size="sm">
               {i18n.t('labels.designs')}
-            </TabsTab>
-            <TabsTab value="settings" size="sm">
-              {i18n.t('labels.settings')}
             </TabsTab>
           </TabsList>
           <Spacer />
@@ -108,35 +121,51 @@ export const DatabaseConfigurationPanel: React.FC<
               backEventData={{ databaseId, configurationPanelOpen: true }}
             />
           )}
-          {activeTab === 'settings' && <IconButtonSpacer size="sm" />}
+          {activeTab !== 'properties' && activeTab !== 'designs' && (
+            <IconButtonSpacer size="sm" />
+          )}
         </div>
 
-        <TabsPanel value="properties">
-          <ScrollArea>
-            <div className="database-configuration-panel-properties-content">
-              <DatabasePropertiesEditor
-                databaseId={databaseId}
-                draftProperties={draftProperties}
-                onSaveDraft={removeDraftProperty}
-                onCancelDraft={removeDraftProperty}
-              />
-            </div>
-          </ScrollArea>
-        </TabsPanel>
-
-        <TabsPanel value="designs">
-          <ScrollArea>
-            <div className="database-configuration-panel-designs-content">
-              <DatabaseDesignsMenu databaseId={databaseId} />
-            </div>
-          </ScrollArea>
-        </TabsPanel>
-
-        <TabsPanel value="settings">
+        {showSettings ? (
           <ScrollArea>
             <div className="database-configuration-panel-settings-content" />
           </ScrollArea>
-        </TabsPanel>
+        ) : (
+          <>
+            <TabsPanel value="queries">
+              <ScrollArea>
+                <div className="database-configuration-panel-queries-content" />
+              </ScrollArea>
+            </TabsPanel>
+
+            <TabsPanel value="collections">
+              <ScrollArea>
+                <div className="database-configuration-panel-collections-content" />
+              </ScrollArea>
+            </TabsPanel>
+
+            <TabsPanel value="properties">
+              <ScrollArea>
+                <div className="database-configuration-panel-properties-content">
+                  <DatabasePropertiesEditor
+                    databaseId={databaseId}
+                    draftProperties={draftProperties}
+                    onSaveDraft={removeDraftProperty}
+                    onCancelDraft={removeDraftProperty}
+                  />
+                </div>
+              </ScrollArea>
+            </TabsPanel>
+
+            <TabsPanel value="designs">
+              <ScrollArea>
+                <div className="database-configuration-panel-designs-content">
+                  <DatabaseDesignsMenu databaseId={databaseId} />
+                </div>
+              </ScrollArea>
+            </TabsPanel>
+          </>
+        )}
       </Tabs>
     </Panel>
   );

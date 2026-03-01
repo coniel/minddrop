@@ -76,7 +76,9 @@
     "optional": "Optional",
     "properties": "Properties",
     "designs": "Designs",
-    "settings": "Settings"
+    "settings": "Settings",
+    "queries": "Queries",
+    "collections": "Collections"
   },
   "properties": {
     "actions": {
