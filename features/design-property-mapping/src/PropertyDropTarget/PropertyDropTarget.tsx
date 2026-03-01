@@ -17,19 +17,25 @@ export interface PropertyDropTargetProps {
   onDrop: (elementId: string, drop: DropEventData) => void;
 
   /**
+   * Whether this element already has a property mapped to it.
+   */
+  mapped?: boolean;
+
+  /**
    * The child content to render (the design element).
    */
   children: React.ReactNode;
 }
 
 /**
- * Wraps a design element to make it a drop target for
- * database properties during property-to-element mapping.
- * Shows a visual highlight when a property is dragged over.
+ * Wraps a compatible design element in the floating overlay
+ * layer to make it a visible drop target for database properties.
+ * Shows a highlight border when a property is dragged over.
  */
 export const PropertyDropTarget: React.FC<PropertyDropTargetProps> = ({
   element,
   onDrop,
+  mapped,
   children,
 }) => {
   // Handle drop events, forwarding the element ID
@@ -53,11 +59,19 @@ export const PropertyDropTarget: React.FC<PropertyDropTargetProps> = ({
     onDrop: handleDrop,
   });
 
+  // Build class names based on drag and mapped state
+  let className = 'property-drop-target';
+
+  if (mapped) {
+    className += ' mapped';
+  }
+
+  if (isDraggingOver) {
+    className += ' dragging-over';
+  }
+
   return (
-    <div
-      className={`property-drop-target${isDraggingOver ? ' dragging-over' : ''}`}
-      {...droppableProps}
-    >
+    <div className={className} {...droppableProps}>
       {children}
     </div>
   );
