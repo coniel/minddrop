@@ -41,6 +41,11 @@ export interface ViewType<TViewOptions extends object = {}> {
 
 export interface ViewTypeSettingsMenuProps<TViewOptions extends object = {}> {
   /**
+   * The view instance.
+   */
+  view: View<TViewOptions>;
+
+  /**
    * The current view options.
    */
   options: TViewOptions;

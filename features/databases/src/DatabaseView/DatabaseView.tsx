@@ -213,6 +213,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
               <DropdownMenuPortal>
                 <DropdownMenuPositioner side="bottom" align="end">
                   {React.createElement(activeViewType.settingsMenu, {
+                    view,
                     options: viewOptions,
                     onUpdateOptions: handleUpdateViewOptions,
                   })}

@@ -9,6 +9,7 @@ export const MIN_COLUMN_WIDTH_PCT = 10;
 export const defaultTableViewOptions: TableViewOptions = {
   overflow: false,
   showRowNumbers: true,
+  hiddenColumns: [],
   columnWidths: {},
   columnWidthsPx: {},
   padding: 'comfortable',

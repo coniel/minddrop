@@ -684,6 +684,7 @@
       "resizeHandleShiftHint": "Hold Shift to distribute evenly",
       "options": {
         "title": "Table options",
+        "columns": "Columns",
         "overflow": "Overflow columns",
         "rowNumbers": "Row numbers",
         "rowSeparator": "Row separator",

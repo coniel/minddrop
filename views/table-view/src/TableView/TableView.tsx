@@ -44,13 +44,18 @@ export const TableViewComponent: React.FC<
   const rowHeight = ROW_HEIGHT[options.padding];
   const rowHeightPx = ROW_HEIGHT_PX[options.padding];
 
+  const hiddenColumns = useMemo(
+    () => new Set(options.hiddenColumns),
+    [options.hiddenColumns],
+  );
+
   const columns = useMemo<TableColumn[]>(() => {
     if (!database) {
       return [];
     }
 
     return database.properties
-      .filter((p) => SUPPORTED_TYPES.has(p.type))
+      .filter((p) => SUPPORTED_TYPES.has(p.type) && !hiddenColumns.has(p.name))
       .map((p) => {
         const column: TableColumn = { id: p.name, name: p.name, type: p.type };
 
@@ -65,7 +70,7 @@ export const TableViewComponent: React.FC<
 
         return column;
       });
-  }, [database]);
+  }, [database, hiddenColumns]);
 
   const entriesById = useMemo<Record<string, DatabaseEntry>>(() => {
     const map: Record<string, DatabaseEntry> = {};
