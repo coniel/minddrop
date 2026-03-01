@@ -1,0 +1,32 @@
+.property-mapping-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  animation: property-mapping-fade-in var(--duration-normal) var(--ease-out);
+}
+
+.property-mapping-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: inherit;
+}
+
+.property-mapping-targets {
+  position: relative;
+  visibility: hidden;
+}
+
+@keyframes property-mapping-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.property-mapping-hidden-element {
+  pointer-events: none;
+}

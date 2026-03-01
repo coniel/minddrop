@@ -694,8 +694,12 @@
         "padding": "Padding",
         "compact": "Compact",
         "comfortable": "Comfortable",
-        "spacious": "Spacious"
-      }
+        "spacious": "Spacious",
+        "showChips": "Show chips"
+      },
+      "columnMenu": "Column options",
+      "showChips": "Show chips",
+      "hideColumn": "Hide column"
     }
   },
   "design-property-mapping": {
@@ -709,7 +713,9 @@
       "backToDesigns": "Back to designs",
       "searchProperties": "Search properties...",
       "addProperty": "Add property",
-      "dateGroup": "Date"
+      "dateGroup": "Date",
+      "zoom": "Zoom",
+      "mappingCounter": "{{mapped}}/{{total}} properties mapped"
     }
   }
 }

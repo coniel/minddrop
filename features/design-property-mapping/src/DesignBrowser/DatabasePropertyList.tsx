@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Databases } from '@minddrop/databases';
 import { DesignElementType } from '@minddrop/designs';
-import { PropertySchema, PropertyType } from '@minddrop/properties';
+import { PropertySchema } from '@minddrop/properties';
 import { useDraggable } from '@minddrop/selection';
 import {
   ContentIcon,
@@ -11,28 +11,11 @@ import {
   ScrollArea,
   TextInput,
 } from '@minddrop/ui-primitives';
-import { DatabasePropertiesDataKey } from '../constants';
-
-/**
- * Maps each property type to the design element type that
- * renders it. Used to group properties by element support.
- */
-const PropertyTypeElementMap: Record<PropertyType, DesignElementType | 'date'> =
-  {
-    title: 'text',
-    text: 'text',
-    'formatted-text': 'formatted-text',
-    url: 'text',
-    select: 'text',
-    toggle: 'text',
-    number: 'number',
-    date: 'date',
-    created: 'date',
-    'last-modified': 'date',
-    image: 'image',
-    file: 'image',
-    icon: 'icon',
-  };
+import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
+import {
+  DatabasePropertiesDataKey,
+  PropertyTypeElementMap,
+} from '../constants';
 
 /**
  * Element groups in display order with their i18n label keys.
@@ -67,6 +50,18 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const database = Databases.use(databaseId);
+  const propertyMap = useDesignPropertyMappingStore(
+    (state) => state.propertyMap,
+  );
+  const setHoveredPropertyName = useDesignPropertyMappingStore(
+    (state) => state.setHoveredPropertyName,
+  );
+
+  // Set of property names that are already mapped to design elements
+  const mappedPropertyNames = useMemo(
+    () => new Set(Object.values(propertyMap)),
+    [propertyMap],
+  );
   // Filter properties by search term
   const filteredProperties = useMemo(() => {
     if (!database) {
@@ -86,7 +81,8 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
   const groupedProperties = useMemo(() => {
     return filteredProperties.reduce(
       (groups, property) => {
-        const elementType = PropertyTypeElementMap[property.type];
+        // Use the first (primary) element type for grouping
+        const elementType = PropertyTypeElementMap[property.type][0];
 
         if (!groups[elementType]) {
           groups[elementType] = [];
@@ -148,6 +144,8 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
                     <DraggablePropertyItem
                       key={property.name}
                       property={property}
+                      mapped={mappedPropertyNames.has(property.name)}
+                      onHover={setHoveredPropertyName}
                     />
                   ))}
                 </div>
@@ -169,13 +167,26 @@ interface DraggablePropertyItemProps {
    * The property schema to render as a draggable item.
    */
   property: PropertySchema;
+
+  /**
+   * Whether this property is already mapped to a design element.
+   */
+  mapped: boolean;
+
+  /**
+   * Callback to set/clear the hovered property name.
+   */
+  onHover: (name: string | null) => void;
 }
 
 /**
  * A draggable property chip that can be dropped onto design elements.
+ * Shows a check icon and muted styling when already mapped.
  */
 const DraggablePropertyItem: React.FC<DraggablePropertyItemProps> = ({
   property,
+  mapped,
+  onHover,
 }) => {
   const { draggableProps } = useDraggable({
     id: property.name,
@@ -183,8 +194,27 @@ const DraggablePropertyItem: React.FC<DraggablePropertyItemProps> = ({
     data: property,
   });
 
+  // Hover handlers for mapped items to trigger the connection line
+  const handleMouseEnter = useCallback(() => {
+    if (mapped) {
+      onHover(property.name);
+    }
+  }, [mapped, onHover, property.name]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (mapped) {
+      onHover(null);
+    }
+  }, [mapped, onHover]);
+
   return (
-    <div className="draggable-property-item" {...draggableProps}>
+    <div
+      className={`draggable-property-item${mapped ? ' mapped' : ''}`}
+      data-property-name={property.name}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      {...draggableProps}
+    >
       {/* Drag handle */}
       <Icon
         name="grip-vertical"
@@ -199,6 +229,9 @@ const DraggablePropertyItem: React.FC<DraggablePropertyItemProps> = ({
 
       {/* Property name */}
       <span className="property-item-name">{property.name}</span>
+
+      {/* Mapped indicator */}
+      {mapped && <Icon name="check" className="property-item-check" />}
     </div>
   );
 };

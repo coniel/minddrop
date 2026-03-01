@@ -55,8 +55,14 @@ export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
 
   // Apply the wrapper if provided and the element type is not excluded
   if (wrapperConfig && !wrapperConfig.excludeTypes.includes(element.type)) {
-    return wrapperConfig.wrapper(element, rendered);
+    rendered = wrapperConfig.wrapper(element, rendered);
   }
 
-  return rendered;
+  // Wrap in a data-element-id div for DOM querying (e.g. connection lines).
+  // Uses display:contents so it doesn't affect layout.
+  return (
+    <div data-element-id={element.id} style={{ display: 'contents' }}>
+      {rendered}
+    </div>
+  );
 };

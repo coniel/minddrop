@@ -1,4 +1,5 @@
 import { Databases, DesignPropertyMap } from '@minddrop/databases';
+import { PropertyType } from '@minddrop/properties';
 import { createStore } from '@minddrop/utils';
 
 export interface DesignPropertyMappingStore {
@@ -21,6 +22,12 @@ export interface DesignPropertyMappingStore {
    * The in-progress property map: [elementId] -> propertyName.
    */
   propertyMap: DesignPropertyMap;
+
+  /**
+   * The property type currently being dragged, or null if
+   * no property drag is in progress.
+   */
+  draggingPropertyType: PropertyType | null;
 
   /**
    * Sets the database ID and resets other state.
@@ -49,6 +56,22 @@ export interface DesignPropertyMappingStore {
   unmapProperty: (elementId: string) => void;
 
   /**
+   * Sets the property type currently being dragged.
+   */
+  setDraggingPropertyType: (propertyType: PropertyType | null) => void;
+
+  /**
+   * The name of the property currently being hovered in the
+   * property list, or null if none.
+   */
+  hoveredPropertyName: string | null;
+
+  /**
+   * Sets the hovered property name.
+   */
+  setHoveredPropertyName: (name: string | null) => void;
+
+  /**
    * Resets all state.
    */
   clear: () => void;
@@ -60,6 +83,8 @@ export const DesignPropertyMappingStore =
     designId: null,
     view: 'browse',
     propertyMap: {},
+    draggingPropertyType: null,
+    hoveredPropertyName: null,
 
     initialize: (databaseId) => {
       set({
@@ -67,6 +92,7 @@ export const DesignPropertyMappingStore =
         designId: null,
         view: 'browse',
         propertyMap: {},
+        hoveredPropertyName: null,
       });
     },
 
@@ -92,17 +118,46 @@ export const DesignPropertyMappingStore =
     },
 
     mapProperty: (elementId, propertyName) => {
-      set((state) => ({
-        propertyMap: { ...state.propertyMap, [elementId]: propertyName },
-      }));
+      const { databaseId, designId } = get();
+
+      // Remove any existing mapping for this property name so
+      // a property is never mapped to multiple elements at once
+      const currentMap = get().propertyMap;
+      const previousElementId = Object.keys(currentMap).find(
+        (key) => currentMap[key] === propertyName,
+      );
+      const { [previousElementId as string]: _, ...cleanedMap } = currentMap;
+
+      const propertyMap = { ...cleanedMap, [elementId]: propertyName };
+
+      // Update the store
+      set({ propertyMap });
+
+      // Persist the updated map to the database
+      if (databaseId && designId) {
+        Databases.setDesignPropertyMap(databaseId, designId, propertyMap);
+      }
     },
 
     unmapProperty: (elementId) => {
-      set((state) => {
-        const { [elementId]: _, ...rest } = state.propertyMap;
+      const { databaseId, designId } = get();
+      const { [elementId]: _, ...propertyMap } = get().propertyMap;
 
-        return { propertyMap: rest };
-      });
+      // Update the store
+      set({ propertyMap });
+
+      // Persist the updated map to the database
+      if (databaseId && designId) {
+        Databases.setDesignPropertyMap(databaseId, designId, propertyMap);
+      }
+    },
+
+    setDraggingPropertyType: (propertyType) => {
+      set({ draggingPropertyType: propertyType });
+    },
+
+    setHoveredPropertyName: (name) => {
+      set({ hoveredPropertyName: name });
     },
 
     clear: () => {
@@ -111,6 +166,8 @@ export const DesignPropertyMappingStore =
         designId: null,
         view: 'browse',
         propertyMap: {},
+        draggingPropertyType: null,
+        hoveredPropertyName: null,
       });
     },
   }));

@@ -57,6 +57,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   if (hasBackdropWithImage) {
     return (
       <div
+        data-element-id={element.id}
         style={{
           backgroundImage: `url(${imageSrc})`,
           backgroundSize: containerCssStyle.backgroundSize,
@@ -81,7 +82,10 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
   // relative container for the absolutely positioned overlay
   if (gradientOverlayStyle) {
     return (
-      <div style={{ position: 'relative', isolation: 'isolate' }}>
+      <div
+        data-element-id={element.id}
+        style={{ position: 'relative', isolation: 'isolate' }}
+      >
         <div style={gradientOverlayStyle} />
         <div style={containerCssStyle}>{children}</div>
       </div>
@@ -90,6 +94,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
 
   return (
     <div
+      data-element-id={element.id}
       style={{
         ...containerCssStyle,
         // Apply background image URL resolved from the file system

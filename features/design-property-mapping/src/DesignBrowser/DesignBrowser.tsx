@@ -1,26 +1,31 @@
-import { useCallback, useEffect } from 'react';
 import {
-  Design,
-  DesignElement,
-  Designs,
-  defaultDesignIds,
-} from '@minddrop/designs';
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Databases } from '@minddrop/databases';
+import { Design, Designs, defaultDesignIds } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   Events,
   OpenAppSidebarEvent,
   OpenMainContentViewEvent,
 } from '@minddrop/events';
-import {
-  DesignCanvas,
-  DesignElementWrapperProvider,
-  DesignRootElement,
-} from '@minddrop/feature-designs';
+import { DesignCanvas, DesignRootElement } from '@minddrop/feature-designs';
+import { useTranslation } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
-import { DropEventData } from '@minddrop/selection';
-import { Button, Panel } from '@minddrop/ui-primitives';
+import {
+  DropEventData,
+  SelectionDragEndedEvent,
+  SelectionDragStartedEvent,
+  SelectionDragStartedEventData,
+} from '@minddrop/selection';
+import { Button, Panel, SwitchField } from '@minddrop/ui-primitives';
 import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
-import { PropertyDropTarget } from '../PropertyDropTarget';
+import { PropertyConnectionLine } from '../PropertyConnectionLine/PropertyConnectionLine';
+import { PropertyMappingOverlay } from '../PropertyMappingOverlay';
 import { DatabasePropertiesDataKey } from '../constants';
 import { DatabasePropertyList } from './DatabasePropertyList';
 import { DesignBrowserList } from './DesignBrowserList';
@@ -48,6 +53,8 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   backEvent,
   backEventData,
 }) => {
+  const { t } = useTranslation();
+
   // Read UI state from the store
   const view = useDesignPropertyMappingStore((state) => state.view);
   const selectedDesignId = useDesignPropertyMappingStore(
@@ -60,6 +67,58 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   const mapProperty = useDesignPropertyMappingStore(
     (state) => state.mapProperty,
   );
+  const setDraggingPropertyType = useDesignPropertyMappingStore(
+    (state) => state.setDraggingPropertyType,
+  );
+  const draggingPropertyType = useDesignPropertyMappingStore(
+    (state) => state.draggingPropertyType,
+  );
+  const propertyMap = useDesignPropertyMappingStore(
+    (state) => state.propertyMap,
+  );
+
+  // Database for counting total properties
+  const database = Databases.use(databaseId);
+  const mappedCount = Object.keys(propertyMap).length;
+  const totalCount = database?.properties.length ?? 0;
+
+  // Track property drag start/end to update the store's dragging state.
+  // Listens for selection drag events dispatched by useDraggable, which
+  // fire after the selection has been updated with the dragged item.
+  useEffect(() => {
+    if (view !== 'map-properties') {
+      return;
+    }
+
+    const listenerId = 'design-property-mapping';
+
+    // On drag start, check if a database property is being dragged
+    Events.addListener<SelectionDragStartedEventData>(
+      SelectionDragStartedEvent,
+      listenerId,
+      (event) => {
+        const propertyItem = event.data.selection.find(
+          (item) => item.type === DatabasePropertiesDataKey,
+        );
+
+        if (propertyItem) {
+          const property = propertyItem.data as PropertySchema;
+
+          setDraggingPropertyType(property.type);
+        }
+      },
+    );
+
+    // On drag end, clear the dragging state
+    Events.addListener(SelectionDragEndedEvent, listenerId, () => {
+      setDraggingPropertyType(null);
+    });
+
+    return () => {
+      Events.removeListener(SelectionDragStartedEvent, listenerId);
+      Events.removeListener(SelectionDragEndedEvent, listenerId);
+    };
+  }, [view, setDraggingPropertyType]);
 
   // Close the app sidebar when the design browser is opened
   useEffect(() => {
@@ -117,15 +176,97 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     [mapProperty],
   );
 
-  // Wrapper function for design elements in mapping mode
-  const elementWrapper = useCallback(
-    (element: DesignElement, children: React.ReactNode) => (
-      <PropertyDropTarget element={element} onDrop={handlePropertyDrop}>
-        {children}
-      </PropertyDropTarget>
-    ),
-    [handlePropertyDrop],
-  );
+  // Ref for the top-level browser container (used by connection line)
+  const browserRef = useRef<HTMLDivElement>(null);
+
+  // Ref for the canvas area container
+  const canvasAreaRef = useRef<HTMLDivElement>(null);
+
+  // Whether the zoom-to-fit scaling is enabled
+  const [zoomEnabled, setZoomEnabled] = useState(true);
+
+  // Scale + translate state for the mapping view zoom.
+  // Keeps the computed values so the reverse animation
+  // returns to the original position smoothly.
+  const [canvasScale, setCanvasScale] = useState<{
+    active: boolean;
+    scale: number;
+    originX: number;
+    originY: number;
+    translateX: number;
+    translateY: number;
+  }>({
+    active: false,
+    scale: 1,
+    originX: 0,
+    originY: 0,
+    translateX: 0,
+    translateY: 0,
+  });
+
+  // Calculate the optimal scale and centering offset when entering
+  // map-properties view. Measures the canvas position within the area,
+  // computes the largest scale (capped at 1.5) that fits when centered,
+  // and translates the canvas to the workspace center.
+  // Uses useLayoutEffect so the measurement happens after DOM updates
+  // but before the browser paints, avoiding a visible jump.
+  useLayoutEffect(() => {
+    // Deactivate scaling when not in mapping view or zoom is off
+    if (view !== 'map-properties' || !zoomEnabled) {
+      setCanvasScale((previous) => ({ ...previous, active: false }));
+
+      return;
+    }
+
+    const area = canvasAreaRef.current;
+
+    if (!area) {
+      return;
+    }
+
+    const canvas = area.querySelector('.design-canvas') as HTMLElement;
+
+    if (!canvas) {
+      return;
+    }
+
+    const areaRect = area.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+
+    // Canvas size
+    const canvasWidth = canvasRect.width;
+    const canvasHeight = canvasRect.height;
+
+    // Canvas center relative to the area
+    const centerX = canvasRect.left - areaRect.left + canvasWidth / 2;
+    const centerY = canvasRect.top - areaRect.top + canvasHeight / 2;
+
+    // Workspace center
+    const areaCenterX = areaRect.width / 2;
+    const areaCenterY = areaRect.height / 2;
+
+    // Max scale that fits when centered: the scaled canvas must
+    // not exceed the area bounds in either dimension
+    const maxScaleX = canvasWidth > 0 ? areaRect.width / canvasWidth : Infinity;
+    const maxScaleY =
+      canvasHeight > 0 ? areaRect.height / canvasHeight : Infinity;
+    const scale = Math.max(1, Math.min(1.5, maxScaleX, maxScaleY));
+
+    // Translate offset to move canvas center to workspace center.
+    // Applied after the scale (which is anchored at the canvas center),
+    // so a simple difference is sufficient.
+    const translateX = areaCenterX - centerX;
+    const translateY = areaCenterY - centerY;
+
+    setCanvasScale({
+      active: true,
+      scale,
+      originX: centerX,
+      originY: centerY,
+      translateX,
+      translateY,
+    });
+  }, [view, zoomEnabled]);
 
   // Navigate back to the previous view
   const handleClickBack = useCallback(() => {
@@ -140,7 +281,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   }, [backEvent, backEventData]);
 
   return (
-    <div className="design-browser">
+    <div ref={browserRef} className="design-browser">
       {/* List panel */}
       <Panel className="design-browser-list-panel">
         {view === 'browse' ? (
@@ -177,24 +318,58 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
               </div>
             )}
 
+            {/* Toolbar for the mapping view */}
+            {view === 'map-properties' && (
+              <div className="design-browser-action-bar">
+                <SwitchField
+                  label="design-property-mapping.browser.zoom"
+                  size="sm"
+                  checked={zoomEnabled}
+                  onCheckedChange={setZoomEnabled}
+                />
+                <span className="property-mapping-counter">
+                  {t('design-property-mapping.browser.mappingCounter', {
+                    mapped: mappedCount,
+                    total: totalCount,
+                  })}
+                </span>
+              </div>
+            )}
+
             {/* Canvas area for the design preview */}
-            <div className="design-browser-canvas-area">
-              <DesignCanvas designType={selectedDesign.type}>
-                {view === 'map-properties' ? (
-                  <DesignElementWrapperProvider
-                    wrapper={elementWrapper}
-                    excludeTypes={['root', 'container']}
-                  >
-                    <DesignRootElement element={selectedDesign.tree} />
-                  </DesignElementWrapperProvider>
-                ) : (
-                  <DesignRootElement element={selectedDesign.tree} />
+            <div
+              ref={canvasAreaRef}
+              className="design-browser-canvas-area"
+              style={{
+                transform: canvasScale.active
+                  ? `translate(${canvasScale.translateX}px, ${canvasScale.translateY}px) scale(${canvasScale.scale})`
+                  : 'translate(0, 0) scale(1)',
+                transformOrigin: `${canvasScale.originX}px ${canvasScale.originY}px`,
+              }}
+            >
+              <DesignCanvas
+                designType={selectedDesign.type}
+                className={
+                  view === 'map-properties' ? 'hide-handles' : undefined
+                }
+              >
+                <DesignRootElement element={selectedDesign.tree} />
+                {view === 'map-properties' && draggingPropertyType && (
+                  <PropertyMappingOverlay
+                    tree={selectedDesign.tree}
+                    onDrop={handlePropertyDrop}
+                  />
                 )}
               </DesignCanvas>
             </div>
           </>
         )}
       </div>
+
+      {/* Connection line from hovered mapped property to its design element */}
+      {view === 'map-properties' && (
+        <PropertyConnectionLine containerRef={browserRef} />
+      )}
     </div>
   );
 };
