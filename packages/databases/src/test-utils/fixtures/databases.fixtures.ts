@@ -29,6 +29,7 @@ function generateDatabase(
     properties: [],
     entrySerializer: 'markdown',
     icon: 'content-icon:shapes:blue',
+    entryOpenMode: 'dialog',
     propertyFileStorage: 'property',
     created: new Date('2024-01-01T00:00:00.000Z'),
     lastModified: new Date('2024-01-01T00:00:00.000Z'),

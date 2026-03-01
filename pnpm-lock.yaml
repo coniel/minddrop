@@ -228,9 +228,15 @@ importers:
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../../packages/designs
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -757,6 +763,9 @@ importers:
       '@minddrop/feature-app-sidebar':
         specifier: workspace:*
         version: link:../../features/app-sidebar
+      '@minddrop/feature-database-entries':
+        specifier: workspace:*
+        version: link:../../features/database-entries
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases

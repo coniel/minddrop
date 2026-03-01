@@ -3,6 +3,8 @@ import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseDesignType = 'page' | 'card' | 'list';
 
+export type DatabaseEntryOpenMode = 'dialog' | 'main-content';
+
 /**
  * A [design element ID]: [database property name] map.
  */
@@ -101,6 +103,14 @@ export interface Database {
    * rendering entries.
    */
   defaultDesigns: Record<string, string>;
+
+  /**
+   * How entries are opened when clicked.
+   * - `dialog`: Opens the entry as a dialog overlay.
+   * - `main-content`: Opens the entry in the main content area.
+   * @default 'dialog'
+   */
+  entryOpenMode: DatabaseEntryOpenMode;
 
   /**
    * An ordered list of view IDs defining the sort order of the
