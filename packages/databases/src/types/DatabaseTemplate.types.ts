@@ -1,3 +1,4 @@
+import { TranslateFn } from '../database-templates/database-template-utils';
 import { Database } from './Database.types';
 import { DatabaseAutomationTemplate } from './DatabaseAutomation.types';
 
@@ -10,3 +11,8 @@ export type DatabaseTemplate = Pick<
   > & {
     automations?: DatabaseAutomationTemplate[];
   };
+
+/**
+ * A function that creates a translated database template.
+ */
+export type DatabaseTemplateFn = (t: TranslateFn) => DatabaseTemplate;

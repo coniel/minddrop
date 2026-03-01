@@ -1,27 +1,31 @@
-import { DatabaseTemplate } from '../types';
-import { createI18n } from './database-template-utils';
+import { DatabaseTemplateFn } from '../types';
+import { TranslateFn, createI18n } from './database-template-utils';
 
-const { naming, propertyName } = createI18n('notes');
+/**
+ * Creates the Notes database template with translated strings.
+ */
+export const NotesDatabaseTemplate: DatabaseTemplateFn = (t: TranslateFn) => {
+  const { naming, propertyName } = createI18n(t, 'notes');
 
-export const NotesDatabaseTemplate: DatabaseTemplate = {
-  entrySerializer: 'markdown',
-  ...naming,
-  icon: 'content-icon:pencil:default',
-  properties: [
-    {
-      type: 'formatted-text',
-      name: propertyName('content'),
-      icon: 'content-icon:text-quote:default',
-    },
-    {
-      type: 'created',
-      name: propertyName('created'),
-      icon: 'content-icon:clock:default',
-    },
-    {
-      type: 'last-modified',
-      name: propertyName('lastModified'),
-      icon: 'content-icon:clock:default',
-    },
-  ],
+  return {
+    ...naming,
+    icon: 'content-icon:pencil:default',
+    properties: [
+      {
+        type: 'formatted-text',
+        name: propertyName('content'),
+        icon: 'content-icon:text-quote:default',
+      },
+      {
+        type: 'created',
+        name: propertyName('created'),
+        icon: 'content-icon:clock:default',
+      },
+      {
+        type: 'last-modified',
+        name: propertyName('lastModified'),
+        icon: 'content-icon:clock:default',
+      },
+    ],
+  };
 };
