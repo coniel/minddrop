@@ -151,6 +151,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@minddrop/feature-design-property-mapping':
+        specifier: workspace:*
+        version: link:../../features/design-property-mapping
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../../features/markdown-editor
@@ -274,6 +277,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-drag-and-drop':
+        specifier: workspace:*
+        version: link:../drag-and-drop
       '@minddrop/feature-properties':
         specifier: workspace:*
         version: link:../properties

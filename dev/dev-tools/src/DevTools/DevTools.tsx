@@ -35,12 +35,14 @@ import { NotesPanel } from '../NotesPanel';
 import {
   DatabasesStateView,
   DatabasesStateViewId,
+  DesignPropertyMappingStateView,
   DesignsStateView,
   QueriesStateView,
   ViewsStateView,
   ViewsStateViewId,
   WorkspacesStateView,
   useDatabaseStoreCounts,
+  useDesignPropertyMappingStoreCounts,
   useDesignsStoreCounts,
   useQueriesStoreCounts,
   useViewsStoreCounts,
@@ -120,6 +122,15 @@ const STATE_STORE_GROUPS = [
       { id: 'view-types' as const, label: 'View Types' },
     ],
   },
+  {
+    label: 'Features',
+    stores: [
+      {
+        id: 'design-property-mapping' as const,
+        label: 'Property Mapping',
+      },
+    ],
+  },
 ];
 
 type StateView =
@@ -127,7 +138,8 @@ type StateView =
   | 'workspaces'
   | 'designs'
   | 'queries'
-  | ViewsStateViewId;
+  | ViewsStateViewId
+  | 'design-property-mapping';
 
 let noteIdCounter = 0;
 
@@ -280,12 +292,15 @@ export const DevTools: React.FC = () => {
   const designsStoreCounts = useDesignsStoreCounts();
   const queriesStoreCounts = useQueriesStoreCounts();
   const viewsStoreCounts = useViewsStoreCounts();
+  const designPropertyMappingStoreCounts =
+    useDesignPropertyMappingStoreCounts();
   const storeCounts: Record<StateView, number> = {
     ...databaseStoreCounts,
     ...workspacesStoreCounts,
     ...designsStoreCounts,
     ...queriesStoreCounts,
     ...viewsStoreCounts,
+    ...designPropertyMappingStoreCounts,
   };
   const workspacePath = Workspaces.useAll()[0]?.path ?? '';
   const [notes, setNotes] = useState<Note[]>([]);
@@ -1760,6 +1775,8 @@ export const DevTools: React.FC = () => {
             case 'views':
             case 'view-types':
               return <ViewsStateView stateView={stateView} />;
+            case 'design-property-mapping':
+              return <DesignPropertyMappingStateView />;
             default:
               return null;
           }
