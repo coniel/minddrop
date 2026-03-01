@@ -6,7 +6,11 @@ import {
   useDesignStudioStore,
   useElement,
 } from '../../../DesignStudioStore';
-import { FlatContainerDesignElement, FlatDesignElement } from '../../../types';
+import {
+  FlatContainerDesignElement,
+  FlatDesignElement,
+  FlatFormattedTextElement,
+} from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
 import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
@@ -14,6 +18,7 @@ import { DesignStudioIconElement } from '../DesignStudioIconElement';
 import { DesignStudioImageElement } from '../DesignStudioImageElement';
 import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
 import { DesignStudioTextElement } from '../DesignStudioTextElement';
+import { DesignStudioUrlElement } from '../DesignStudioUrlElement';
 import './DesignStudioElement.css';
 
 export interface DesignStudioElementProps {
@@ -58,9 +63,15 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
     case 'text':
       return <DesignStudioTextElement element={element} />;
     case 'formatted-text':
-      return <DesignStudioFormattedTextElement element={element} />;
+      return (
+        <DesignStudioFormattedTextElement
+          element={element as FlatFormattedTextElement}
+        />
+      );
     case 'number':
       return <DesignStudioNumberElement element={element} />;
+    case 'url':
+      return <DesignStudioUrlElement element={element} />;
     case 'icon':
       return <DesignStudioIconElement element={element} />;
     case 'image':

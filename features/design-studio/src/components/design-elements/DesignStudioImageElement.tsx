@@ -1,12 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  Designs,
-  createImageCssStyle,
-  getPlaceholderMediaDirPath,
-} from '@minddrop/designs';
+import { useCallback, useState } from 'react';
+import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import { DesignImageElement } from '@minddrop/feature-designs';
 import { Fs } from '@minddrop/file-system';
-import { useTranslation } from '@minddrop/i18n';
-import { Icon } from '@minddrop/ui-primitives';
 import { updateDesignElement } from '../../DesignStudioStore';
 import { FlatImageElement } from '../../types';
 import { PlaceholderImageDialog } from '../style-editors/ImageElementStyleEditor/PlaceholderImageDialog';
@@ -15,22 +10,15 @@ export interface DesignStudioImageElementProps {
   element: FlatImageElement;
 }
 
+/**
+ * Renders an image element in the design studio.
+ * Wraps DesignImageElement with interactive placeholder
+ * image selection via double-click.
+ */
 export const DesignStudioImageElement: React.FC<
   DesignStudioImageElementProps
 > = ({ element }) => {
-  const { t } = useTranslation();
-  const cssStyle = createImageCssStyle(element.style);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const imagePath = useMemo(
-    () =>
-      element.placeholderImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), element.placeholderImage)
-        : null,
-    [element.placeholderImage],
-  );
-
-  const imageSrc = Fs.useImageSrc(imagePath);
 
   // Handles selecting an image from the dialog
   const handleImageSelect = useCallback(
@@ -84,67 +72,14 @@ export const DesignStudioImageElement: React.FC<
     }
   }, [handleSelectNewImage]);
 
-  if (imageSrc) {
-    return (
-      <>
-        <img
-          src={imageSrc}
-          alt=""
-          onDoubleClick={handleDoubleClick}
-          style={{
-            ...cssStyle,
-            maxWidth: '100%',
-            display: 'block',
-            minHeight: cssStyle.height || 80,
-            minWidth: 80,
-            cursor: 'pointer',
-          }}
-        />
-        <PlaceholderImageDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          onSelect={handleImageSelect}
-        />
-      </>
-    );
-  }
-
   return (
-    <>
-      <div
-        onDoubleClick={handleDoubleClick}
-        style={{
-          ...cssStyle,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--space-2)',
-          aspectRatio: '16 / 9',
-          backgroundColor: 'var(--neutral-400)',
-          cursor: 'pointer',
-        }}
-      >
-        <Icon
-          name="image"
-          size={24}
-          style={{ color: 'var(--contrast-500)', flexShrink: 0 }}
-        />
-        <span
-          style={{
-            color: 'var(--contrast-500)',
-            fontSize: 'var(--text-xs)',
-            textAlign: 'center',
-          }}
-        >
-          {t('designs.image.placeholder.hint')}
-        </span>
-      </div>
+    <div onDoubleClick={handleDoubleClick} style={{ cursor: 'pointer' }}>
+      <DesignImageElement element={element} />
       <PlaceholderImageDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSelect={handleImageSelect}
       />
-    </>
+    </div>
   );
 };

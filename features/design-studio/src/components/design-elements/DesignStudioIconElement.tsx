@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
-import { createIconCssStyle } from '@minddrop/designs';
-import { useTranslation } from '@minddrop/i18n';
-import { ContentIcon, Icon, IconPicker } from '@minddrop/ui-primitives';
+import { DesignIconElement } from '@minddrop/feature-designs';
+import { IconPicker } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   updateElementStyle,
@@ -12,12 +11,14 @@ export interface DesignStudioIconElementProps {
   element: FlatIconElement;
 }
 
+/**
+ * Renders an icon element in the design studio.
+ * Wraps DesignIconElement inside an IconPicker for
+ * interactive icon selection and color syncing.
+ */
 export const DesignStudioIconElement: React.FC<
   DesignStudioIconElementProps
 > = ({ element }) => {
-  const { t } = useTranslation();
-  const cssStyle = createIconCssStyle(element.style);
-
   // Handles selecting an icon from the picker, syncing the
   // color from the icon string into the style color field
   const handleSelect = useCallback(
@@ -34,65 +35,14 @@ export const DesignStudioIconElement: React.FC<
     [element.id],
   );
 
-  // Render selected icon with picker on click
-  if (element.icon) {
-    return (
-      <IconPicker
-        currentIcon={element.icon}
-        onSelect={handleSelect}
-        closeOnSelect
-      >
-        <div
-          style={{
-            ...cssStyle,
-            display: cssStyle.display || 'inline-flex',
-            alignItems: cssStyle.alignItems || 'center',
-            justifyContent: cssStyle.justifyContent || 'center',
-            // Override the default icon size CSS variable and font size
-            // so both SVG content icons and emoji scale correctly
-            ['--icon-size-default' as any]: `${element.style.size}px`,
-            fontSize: `${element.style.size}px`,
-            lineHeight: 1,
-          }}
-        >
-          <ContentIcon icon={element.icon} />
-        </div>
-      </IconPicker>
-    );
-  }
-
-  // Placeholder state — no icon selected yet
   return (
-    <IconPicker onSelect={handleSelect} closeOnSelect>
-      <div
-        style={{
-          ...cssStyle,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 'var(--space-2)',
-          padding: 'var(--space-4)',
-          backgroundColor: cssStyle.backgroundColor || 'var(--neutral-400)',
-          borderRadius: cssStyle.borderRadius || 'var(--space-1)',
-          minWidth: 80,
-          minHeight: 80,
-        }}
-      >
-        <Icon
-          name="smile"
-          size={24}
-          style={{ color: 'var(--contrast-500)', flexShrink: 0 }}
-        />
-        <span
-          style={{
-            color: 'var(--contrast-500)',
-            fontSize: 'var(--text-xs)',
-            textAlign: 'center',
-          }}
-        >
-          {t('designs.icon.placeholder.hint')}
-        </span>
+    <IconPicker
+      currentIcon={element.icon}
+      onSelect={handleSelect}
+      closeOnSelect
+    >
+      <div>
+        <DesignIconElement element={element} />
       </div>
     </IconPicker>
   );

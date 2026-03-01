@@ -1,4 +1,4 @@
-import { createTextCssStyle } from '@minddrop/designs';
+import { DesignTextElement } from '@minddrop/feature-designs';
 import { useTranslation } from '@minddrop/i18n';
 import { FlatTextElement } from '../../types';
 
@@ -6,20 +6,19 @@ export interface DesignStudioTextElementProps {
   element: FlatTextElement;
 }
 
+/**
+ * Renders a text element in the design studio.
+ * Wraps DesignTextElement with an i18n fallback placeholder.
+ */
 export const DesignStudioTextElement: React.FC<
   DesignStudioTextElementProps
 > = ({ element }) => {
   const { t } = useTranslation();
 
-  const placeholder =
-    element.placeholder || t('design-studio.elements.text-placeholder');
+  // Default the placeholder to the i18n string when not explicitly set
+  const elementWithPlaceholder = element.placeholder
+    ? element
+    : { ...element, placeholder: t('design-studio.elements.text-placeholder') };
 
-  return (
-    <span
-      style={createTextCssStyle(element.style)}
-      data-placeholder={placeholder}
-    >
-      {placeholder}
-    </span>
-  );
+  return <DesignTextElement element={elementWithPlaceholder} />;
 };
