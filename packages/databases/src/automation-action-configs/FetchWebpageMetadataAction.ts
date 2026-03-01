@@ -1,6 +1,7 @@
 import { PropertyValue } from '@minddrop/properties';
 import { getWebpageMetadata } from '@minddrop/utils';
 import { downloadPropertyFile } from '../downloadPropertyFile';
+import { renameDatabaseEntry } from '../renameDatabaseEntry';
 import {
   DatabaseAutomationAction,
   DatabaseAutomationUpdatePropertyActionConfig,
@@ -82,11 +83,7 @@ async function updateDatabaseEntryWithMetadata(
   let iconPromise: Promise<string | false> | undefined;
   let imageAsset: Promise<string | false> | undefined;
 
-  // Rename the entry using the webpage title if available
-  if (metadata.title && propertyMapping.title) {
-    properties[propertyMapping.title] = metadata.title;
-  }
-
+  // Set the description property if available
   if (metadata.description && propertyMapping.description) {
     properties[propertyMapping.description] = metadata.description;
   }
@@ -129,7 +126,13 @@ async function updateDatabaseEntryWithMetadata(
     }
   }
 
+  // Update the entry's non-title properties
   await updateDatabaseEntry(updatedDatabaseEntry.id, {
     properties,
   });
+
+  // Rename the entry using the webpage title if available
+  if (metadata.title && propertyMapping.title) {
+    await renameDatabaseEntry(updatedDatabaseEntry.id, metadata.title);
+  }
 }
