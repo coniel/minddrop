@@ -5,6 +5,7 @@ import {
   OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DesignBrowser, DesignBrowserProps } from './DesignBrowser';
+import { DesignPropertyMappingStore } from './DesignPropertyMappingStore';
 import {
   BrowseDesignsEvent,
   BrowseDesignsEventData,
@@ -36,6 +37,9 @@ export const DesignPropertyMappingFeature: React.FC = () => {
       BrowseDesignsEvent,
       `${EventListenerId}:browse`,
       (event) => {
+        // Initialize the store with the database ID
+        DesignPropertyMappingStore.getState().initialize(event.data.databaseId);
+
         Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
           OpenMainContentViewEvent,
           {
@@ -60,6 +64,9 @@ export const DesignPropertyMappingFeature: React.FC = () => {
     );
 
     return () => {
+      // Clear the store on cleanup
+      DesignPropertyMappingStore.getState().clear();
+
       Events.removeListener(BrowseDesignsEvent, `${EventListenerId}:browse`);
       Events.removeListener(
         OpenPropertyMapperEvent,

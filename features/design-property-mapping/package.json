@@ -25,6 +25,7 @@
     "@minddrop/selection": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
-    "@minddrop/ui-primitives": "workspace:*"
+    "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   Design,
   DesignElement,
@@ -16,9 +16,12 @@ import {
   DesignElementWrapperProvider,
   DesignRootElement,
 } from '@minddrop/feature-designs';
+import { PropertySchema } from '@minddrop/properties';
 import { DropEventData } from '@minddrop/selection';
 import { Button, Panel } from '@minddrop/ui-primitives';
+import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
 import { PropertyDropTarget } from '../PropertyDropTarget';
+import { DatabasePropertiesDataKey } from '../constants';
 import { DatabasePropertyList } from './DatabasePropertyList';
 import { DesignBrowserList } from './DesignBrowserList';
 import './DesignBrowser.css';
@@ -45,9 +48,18 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   backEvent,
   backEventData,
 }) => {
-  // Current view: browsing designs or mapping properties
-  const [view, setView] = useState<'browse' | 'map-properties'>('browse');
-  const [selectedDesignId, setSelectedDesignId] = useState<string | null>(null);
+  // Read UI state from the store
+  const view = useDesignPropertyMappingStore((state) => state.view);
+  const selectedDesignId = useDesignPropertyMappingStore(
+    (state) => state.designId,
+  );
+  const selectDesign = useDesignPropertyMappingStore(
+    (state) => state.selectDesign,
+  );
+  const setView = useDesignPropertyMappingStore((state) => state.setView);
+  const mapProperty = useDesignPropertyMappingStore(
+    (state) => state.mapProperty,
+  );
 
   // Close the app sidebar when the design browser is opened
   useEffect(() => {
@@ -66,30 +78,43 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     );
 
     if (firstDesign) {
-      setSelectedDesignId(firstDesign.id);
+      selectDesign(firstDesign.id);
     }
-  }, []);
+  }, [selectDesign]);
 
   // Fetch the selected design
   const selectedDesign = Designs.use(selectedDesignId || '');
 
   // Handle selecting a design in the list
-  const handleSelectDesign = useCallback((design: Design) => {
-    setSelectedDesignId(design.id);
-  }, []);
+  const handleSelectDesign = useCallback(
+    (design: Design) => {
+      selectDesign(design.id);
+    },
+    [selectDesign],
+  );
 
   // Switch to the property mapping view
   const handleUseDesign = useCallback(() => {
     setView('map-properties');
-  }, []);
+  }, [setView]);
 
   // Handle a property being dropped onto a design element
   const handlePropertyDrop = useCallback(
     (elementId: string, drop: DropEventData) => {
-      // TODO: create the property-to-element mapping
-      console.log('Property dropped on element', elementId, drop);
+      // Extract the property schema from the drop data
+      const data = drop.data as Record<string, unknown>;
+      const properties = data[DatabasePropertiesDataKey] as
+        | PropertySchema[]
+        | undefined;
+
+      if (!properties || properties.length === 0) {
+        return;
+      }
+
+      // Map the first property to the element
+      mapProperty(elementId, properties[0].name);
     },
-    [],
+    [mapProperty],
   );
 
   // Wrapper function for design elements in mapping mode
@@ -128,7 +153,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
         ) : (
           <DatabasePropertyList
             databaseId={databaseId}
-            onBack={() => setView('browse')}
+            onBack={() => {
+              setView('browse');
+            }}
           />
         )}
       </Panel>
