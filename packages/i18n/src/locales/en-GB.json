@@ -74,7 +74,8 @@
     "copy": "copy",
     "optional": "Optional",
     "properties": "Properties",
-    "designs": "Designs"
+    "designs": "Designs",
+    "settings": "Settings"
   },
   "properties": {
     "actions": {
@@ -864,6 +865,10 @@
       "label": "Placeholder",
       "placeholder": "Placeholder text...",
       "reroll": "Regenerate text"
+    },
+    "static": {
+      "label": "Static",
+      "description": "Static elements display fixed content and cannot be mapped to a database property"
     },
     "max-width": {
       "label": "Max width",
