@@ -111,12 +111,24 @@
 
 .switch-field {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.switch-field-header {
+  display: flex;
   align-items: center;
   gap: var(--space-3);
 }
 
-.switch-field-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+.switch-field > :last-child:not(.switch-field-header) {
+  margin-left: calc(2rem + var(--space-3));
+}
+
+.switch-field:has(.switch-size-sm) > :last-child:not(.switch-field-header) {
+  margin-left: calc(1.5rem + var(--space-3));
+}
+
+.switch-field:has(.switch-size-lg) > :last-child:not(.switch-field-header) {
+  margin-left: calc(2.5rem + var(--space-3));
 }

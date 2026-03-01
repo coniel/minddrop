@@ -1,6 +1,7 @@
 import { Field } from '@base-ui/react/field';
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import React from 'react';
+import { TextColor } from '../Text';
 import { FieldDescription, FieldLabel } from '../fields';
 import { propsToClass } from '../utils';
 import './Switch.css';
@@ -83,19 +84,31 @@ export interface SwitchFieldProps extends SwitchProps {
    * Can be an i18n key.
    */
   description?: string;
+
+  /*
+   * Color of the description text.
+   * @default 'muted'
+   */
+  descriptionColor?: TextColor;
 }
 
 export const SwitchField = React.forwardRef<HTMLDivElement, SwitchFieldProps>(
-  ({ label, description, size = 'md', ...switchProps }, ref) => {
+  (
+    { label, description, descriptionColor, size = 'md', ...switchProps },
+    ref,
+  ) => {
     return (
       <Field.Root ref={ref} disabled={switchProps.disabled}>
         <div className="switch-field">
-          <Switch size={size} {...switchProps} />
-          {(label || description) && (
-            <div className="switch-field-content">
-              {label && <FieldLabel label={label} />}
-              {description && <FieldDescription description={description} />}
-            </div>
+          <div className="switch-field-header">
+            <Switch size={size} {...switchProps} />
+            {label && <FieldLabel label={label} />}
+          </div>
+          {description && (
+            <FieldDescription
+              description={description}
+              color={descriptionColor}
+            />
           )}
         </div>
       </Field.Root>
