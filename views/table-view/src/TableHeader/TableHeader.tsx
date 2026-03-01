@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useSortableDrag } from '@minddrop/feature-drag-and-drop';
 import { UiIconName } from '@minddrop/icons';
 import { Checkbox, Icon, Tooltip } from '@minddrop/ui-primitives';
 import { TableColumn } from '../types';
@@ -20,6 +21,7 @@ interface TableHeaderProps {
   totalCount: number;
   onStartResize: (columnId: string, event: React.MouseEvent) => void;
   onToggleAll: (checked: boolean) => void;
+  onReorderColumns: (columnOrder: string[]) => void;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -30,6 +32,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   totalCount,
   onStartResize,
   onToggleAll,
+  onReorderColumns,
 }) => {
   const allSelected = totalCount > 0 && selectedCount === totalCount;
   const someSelected = selectedCount > 0 && selectedCount < totalCount;
@@ -38,6 +41,20 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   // Set to null while dragging so the tooltip hides immediately.
   const [tooltipHandleId, setTooltipHandleId] = useState<string | null>(null);
   const [resizing, setResizing] = useState(false);
+
+  // Column IDs for the sortable drag hook
+  const columnIds = useMemo(
+    () => columns.map((column) => column.id),
+    [columns],
+  );
+
+  // Sortable drag hook for horizontal column reordering
+  const sortableProps = useSortableDrag({
+    items: columnIds,
+    direction: 'horizontal',
+    gap: 0,
+    onSort: onReorderColumns,
+  });
 
   const handleResizeMouseDown = useCallback(
     (columnId: string, event: React.MouseEvent) => {
@@ -92,13 +109,26 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
           const rightHandleId = `${column.id}-right`;
           const leftHandleId = `${column.id}-left`;
 
+          // Get drag render props for this column
+          const dragProps = sortableProps.get(column.id);
+
           return (
             <div
               role="columnheader"
               key={column.id}
-              className="table-header-cell"
-              style={columnFlexStyles[column.id]}
+              ref={dragProps?.ref}
+              className={`table-header-cell ${dragProps?.className ?? ''}`}
+              style={{
+                ...columnFlexStyles[column.id],
+                ...dragProps?.style,
+              }}
             >
+              {/* Drag zone fills the cell, sits behind resize handles */}
+              <div
+                className="table-header-cell-drag-zone"
+                {...dragProps?.handleProps}
+              />
+
               <span className="table-header-cell-label">
                 <Icon
                   name={COLUMN_TYPE_ICONS[column.type] ?? 'baseline'}

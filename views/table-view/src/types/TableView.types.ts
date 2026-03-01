@@ -14,6 +14,12 @@ export interface TableViewOptions {
   showRowNumbers: boolean;
   /** Column IDs hidden from the table display. */
   hiddenColumns: string[];
+  /**
+   * Ordered list of column IDs defining the display order.
+   * Columns not in this list appear after ordered ones,
+   * in their default database property order.
+   */
+  columnOrder: string[];
   /** Percentage-based column widths used in non-overflow mode. */
   columnWidths: Record<string, number>;
   /** Pixel-based column widths used in overflow mode. */

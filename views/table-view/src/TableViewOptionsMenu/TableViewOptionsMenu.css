@@ -6,3 +6,49 @@
 .table-view-options-menu {
   min-width: 16rem;
 }
+
+/* ---- Column list items ----
+   Each column item wraps a drag handle and a switch menu item.
+   ------------------------------------------------------------ */
+
+.table-view-column-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Drag handle icon */
+.table-view-column-item-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  margin-left: var(--space-1);
+  cursor: grab;
+  color: var(--text-muted);
+  touch-action: none;
+}
+
+.table-view-column-item-handle:active {
+  cursor: grabbing;
+}
+
+/* Let the switch item fill the remaining space */
+.table-view-column-item > .menu-item {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- Drag states ---- */
+
+.table-view-column-item.sortable-list-item-dragging {
+  z-index: 1;
+  transition: none;
+  opacity: 0.8;
+  background-color: var(--surface-overlay);
+  border-radius: var(--radius-md);
+}
+
+.table-view-column-item.sortable-list-item-shifting {
+  transition: transform var(--duration-normal) var(--ease-default);
+}

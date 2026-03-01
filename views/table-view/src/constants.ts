@@ -10,6 +10,7 @@ export const defaultTableViewOptions: TableViewOptions = {
   overflow: false,
   showRowNumbers: true,
   hiddenColumns: [],
+  columnOrder: [],
   columnWidths: {},
   columnWidthsPx: {},
   padding: 'comfortable',

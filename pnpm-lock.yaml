@@ -1586,6 +1586,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/feature-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../features/drag-and-drop
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

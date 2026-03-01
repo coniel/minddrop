@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Databases } from '@minddrop/databases';
+import { useSortableDrag } from '@minddrop/feature-drag-and-drop';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
   DropdownSubmenu,
   DropdownSubmenuContent,
   DropdownSubmenuTriggerItem,
+  Icon,
   MenuLabel,
 } from '@minddrop/ui-primitives';
 import { ViewTypeSettingsMenuProps } from '@minddrop/views';
@@ -52,35 +54,104 @@ export const TableViewOptionsMenu: React.FC<
     [options.hiddenColumns, onUpdateOptions],
   );
 
-  // Get the list of columns that can be toggled
-  const toggleableColumns = useMemo(() => {
+  // Get the list of columns that can be toggled, sorted
+  // by the persisted column order
+  const sortedColumns = useMemo(() => {
     if (!database) {
       return [];
     }
 
-    return database.properties.filter((property) =>
+    const supported = database.properties.filter((property) =>
       SUPPORTED_TYPES.has(property.type),
     );
-  }, [database]);
+
+    const order = options.columnOrder ?? [];
+
+    if (order.length === 0) {
+      return supported;
+    }
+
+    // Sort by column order, placing unordered columns at the end
+    const propertyMap = new Map(
+      supported.map((property) => [property.name, property]),
+    );
+    const sorted: typeof supported = [];
+
+    for (const id of order) {
+      const property = propertyMap.get(id);
+
+      if (property) {
+        sorted.push(property);
+        propertyMap.delete(id);
+      }
+    }
+
+    for (const property of propertyMap.values()) {
+      sorted.push(property);
+    }
+
+    return sorted;
+  }, [database, options.columnOrder]);
+
+  // Column IDs for the sortable drag hook
+  const columnIds = useMemo(
+    () => sortedColumns.map((property) => property.name),
+    [sortedColumns],
+  );
+
+  // Persist the new column order on drag end
+  const handleSort = useCallback(
+    (columnOrder: string[]) => {
+      onUpdateOptions({ columnOrder });
+    },
+    [onUpdateOptions],
+  );
+
+  // Sortable drag hook for vertical column reordering
+  const sortableProps = useSortableDrag({
+    items: columnIds,
+    direction: 'vertical',
+    gap: 0,
+    onSort: handleSort,
+  });
 
   return (
     <DropdownMenuContent className="table-view-options-menu">
-      {/* Column visibility submenu */}
+      {/* Column visibility and order submenu */}
       <DropdownSubmenu>
         <DropdownSubmenuTriggerItem label={t('columns')} icon="columns-3" />
         <DropdownMenuPortal>
           <DropdownMenuPositioner side="right" align="start" sideOffset={4}>
-            <DropdownSubmenuContent minWidth={180}>
-              {toggleableColumns.map((property) => (
-                <DropdownMenuSwitchItem
-                  key={property.name}
-                  label={property.name}
-                  checked={!hiddenColumns.has(property.name)}
-                  onCheckedChange={(checked) =>
-                    handleToggleColumn(property.name, checked)
-                  }
-                />
-              ))}
+            <DropdownSubmenuContent minWidth={220}>
+              {sortedColumns.map((property) => {
+                const dragProps = sortableProps.get(property.name);
+
+                return (
+                  <div
+                    key={property.name}
+                    ref={dragProps?.ref}
+                    className={`table-view-column-item ${dragProps?.className ?? ''}`}
+                    style={dragProps?.style}
+                  >
+                    {/* Drag handle */}
+                    <span
+                      className="table-view-column-item-handle"
+                      {...dragProps?.handleProps}
+                    >
+                      <Icon name="grip-vertical" color="muted" />
+                    </span>
+
+                    {/* Switch item for toggling visibility */}
+                    <DropdownMenuSwitchItem
+                      label={property.name}
+                      checked={!hiddenColumns.has(property.name)}
+                      onCheckedChange={(checked) =>
+                        handleToggleColumn(property.name, checked)
+                      }
+                    />
+                  </div>
+                );
+              })}
             </DropdownSubmenuContent>
           </DropdownMenuPositioner>
         </DropdownMenuPortal>

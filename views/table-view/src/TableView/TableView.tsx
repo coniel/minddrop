@@ -54,7 +54,8 @@ export const TableViewComponent: React.FC<
       return [];
     }
 
-    return database.properties
+    // Build columns from visible, supported database properties
+    const unsorted = database.properties
       .filter((p) => SUPPORTED_TYPES.has(p.type) && !hiddenColumns.has(p.name))
       .map((p) => {
         const column: TableColumn = { id: p.name, name: p.name, type: p.type };
@@ -70,7 +71,42 @@ export const TableViewComponent: React.FC<
 
         return column;
       });
-  }, [database, hiddenColumns]);
+
+    // Sort columns by the persisted column order, placing
+    // any columns not in the order list at the end
+    const order = options.columnOrder;
+
+    if (order.length === 0) {
+      return unsorted;
+    }
+
+    const columnMap = new Map(unsorted.map((column) => [column.id, column]));
+    const sorted: TableColumn[] = [];
+
+    // Add columns in the specified order
+    for (const id of order) {
+      const column = columnMap.get(id);
+
+      if (column) {
+        sorted.push(column);
+        columnMap.delete(id);
+      }
+    }
+
+    // Append any remaining columns not in the order list
+    for (const column of columnMap.values()) {
+      sorted.push(column);
+    }
+
+    return sorted;
+  }, [database, hiddenColumns, options.columnOrder]);
+
+  // Stable key derived from column order, used to force
+  // the virtualizer to remount when columns reorder
+  const columnsKey = useMemo(
+    () => columns.map((column) => column.id).join(','),
+    [columns],
+  );
 
   const entriesById = useMemo<Record<string, DatabaseEntry>>(() => {
     const map: Record<string, DatabaseEntry> = {};
@@ -86,6 +122,14 @@ export const TableViewComponent: React.FC<
   const initialWidths = options.overflow
     ? options.columnWidthsPx
     : options.columnWidths;
+
+  // Persist the new column order to view options
+  const handleReorderColumns = useCallback(
+    (columnOrder: string[]) => {
+      Views.update(view.id, { options: { columnOrder } });
+    },
+    [view.id],
+  );
 
   // Persist resized widths to the view options on resize end
   const handleResizeEnd = useCallback(
@@ -305,7 +349,11 @@ export const TableViewComponent: React.FC<
   return (
     <TableEditContext.Provider value={editContextValue}>
       <div className="table-view">
-        <ScrollArea className="table-view-scroll" ref={scrollAreaRef}>
+        <ScrollArea
+          key={columnsKey}
+          className="table-view-scroll"
+          ref={scrollAreaRef}
+        >
           <div
             role="table"
             className="table-view-table"
@@ -329,6 +377,7 @@ export const TableViewComponent: React.FC<
               totalCount={entries.length}
               onStartResize={startResize}
               onToggleAll={handleToggleAll}
+              onReorderColumns={handleReorderColumns}
             />
             <div
               role="rowgroup"

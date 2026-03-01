@@ -47,6 +47,14 @@
   background-color: var(--surface-overlay);
 }
 
+/* Invisible drag zone covering the cell, behind resize handles */
+.table-header-cell-drag-zone {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  touch-action: none;
+}
+
 .table-header-cell-label {
   display: inline-flex;
   align-items: center;
@@ -71,6 +79,21 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   min-width: 0;
+}
+
+/* ---- Column drag reorder ----
+   When a header cell is being dragged to reorder, it floats
+   above its siblings. Displaced cells animate into position.
+   ------------------------------------------------------------ */
+
+.table-header-cell.sortable-list-item-dragging {
+  z-index: 2;
+  transition: none;
+  opacity: 0.8;
+}
+
+.table-header-cell.sortable-list-item-shifting {
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
 /* ---- Resize handles ----
