@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { SortableList } from '@minddrop/feature-drag-and-drop';
 import { ViewRenderer } from '@minddrop/feature-views';
 import { useTranslation } from '@minddrop/i18n';
 import {
@@ -44,8 +45,41 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 }) => {
   const database = Databases.use(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
-  const databaseViews = Views.useDataSourceViews('database', databaseId);
+  const unsortedViews = Views.useDataSourceViews('database', databaseId);
   const viewTypes = ViewTypes.useAll();
+
+  // Sort views according to the persisted view order
+  const databaseViews = useMemo(() => {
+    if (!database?.viewOrder) {
+      return unsortedViews;
+    }
+
+    const orderMap = new Map(
+      database.viewOrder.map((id, index) => [id, index]),
+    );
+
+    return [...unsortedViews].sort((a, b) => {
+      const indexA = orderMap.get(a.id);
+      const indexB = orderMap.get(b.id);
+
+      // New views (not in order map) are sorted by creation date
+      // and placed after ordered views
+      if (indexA === undefined && indexB === undefined) {
+        return new Date(a.created).getTime() - new Date(b.created).getTime();
+      }
+
+      // New views go after ordered views
+      if (indexA === undefined) {
+        return 1;
+      }
+
+      if (indexB === undefined) {
+        return -1;
+      }
+
+      return indexA - indexB;
+    });
+  }, [unsortedViews, database?.viewOrder]);
   const [activeViewId, setActiveViewId] = useState<string | undefined>(
     databaseViews[0]?.id,
   );
@@ -160,17 +194,43 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         {/* View switcher bar */}
         <div className="view-switcher">
           <Tabs value={view?.id} onValueChange={setActiveViewId}>
-            <TabsList>
-              {databaseViews.map((databaseView) => (
-                <TabsTab
-                  key={databaseView.id}
-                  value={databaseView.id}
-                  startIcon={databaseView.icon}
-                >
-                  {databaseView.name}
-                </TabsTab>
-              ))}
-            </TabsList>
+            <SortableList
+              as={TabsList}
+              items={databaseViews.map((databaseView) => databaseView.id)}
+              direction="horizontal"
+              gap={1}
+              onSort={(newOrder) => {
+                // Reorder views in the views store
+                Views.reorderDataSourceViews(newOrder);
+                // Persist the sort order to the database
+                Databases.update(databaseId, { viewOrder: newOrder });
+              }}
+              renderItem={(
+                id,
+                { ref, handleProps, isDragging, style, className },
+              ) => {
+                const databaseView = databaseViews.find(
+                  (view) => view.id === id,
+                );
+
+                if (!databaseView) {
+                  return null;
+                }
+
+                return (
+                  <TabsTab
+                    ref={ref}
+                    value={databaseView.id}
+                    startIcon={databaseView.icon}
+                    className={className}
+                    style={style}
+                    {...handleProps}
+                  >
+                    {databaseView.name}
+                  </TabsTab>
+                );
+              }}
+            />
           </Tabs>
 
           {/* Add view dropdown */}

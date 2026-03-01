@@ -103,6 +103,12 @@ export interface Database {
   defaultDesigns: Record<string, string>;
 
   /**
+   * An ordered list of view IDs defining the sort order of the
+   * database's views. Only set if views have been manually sorted.
+   */
+  viewOrder?: string[];
+
+  /**
    * The database's automations if it has any.
    */
   automations?: DatabaseAutomation[];
