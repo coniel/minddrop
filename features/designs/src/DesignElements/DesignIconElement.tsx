@@ -61,8 +61,6 @@ export const DesignIconElement: React.FC<DesignIconElementProps> = ({
         padding: 'var(--space-4)',
         backgroundColor: cssStyle.backgroundColor || 'var(--neutral-400)',
         borderRadius: cssStyle.borderRadius || 'var(--space-1)',
-        minWidth: 80,
-        minHeight: 80,
       }}
     >
       <Icon
