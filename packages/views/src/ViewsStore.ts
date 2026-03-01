@@ -47,3 +47,12 @@ export const useDataSourceViews = (
     (view) => view.dataSource.type === type && view.dataSource.id === id,
   );
 };
+
+/**
+ * Reorders the views for a specific data source by their IDs.
+ *
+ * @param viewIds - The view IDs in the desired order.
+ */
+export const reorderDataSourceViews = (viewIds: string[]): void => {
+  ViewsStore.reorder(viewIds);
+};

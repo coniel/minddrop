@@ -1,0 +1,56 @@
+/* ============================================================
+   SORTABLE LIST
+   Drag-and-drop reorderable list with axis-locked movement.
+   ============================================================ */
+
+.sortable-list {
+  display: flex;
+  position: relative;
+}
+
+/* --- Direction variants --- */
+
+.sortable-list-direction-vertical {
+  flex-direction: column;
+}
+
+.sortable-list-direction-horizontal {
+  flex-direction: row;
+}
+
+/* --- Gap scale --- */
+
+.sortable-list-gap-1 {
+  gap: var(--space-1);
+}
+.sortable-list-gap-2 {
+  gap: var(--space-2);
+}
+.sortable-list-gap-3 {
+  gap: var(--space-3);
+}
+.sortable-list-gap-4 {
+  gap: var(--space-4);
+}
+.sortable-list-gap-5 {
+  gap: var(--space-5);
+}
+.sortable-list-gap-6 {
+  gap: var(--space-6);
+}
+.sortable-list-gap-7 {
+  gap: var(--space-7);
+}
+
+/* --- Item states --- */
+
+/* Non-dragged items slide smoothly when displaced */
+.sortable-list-item-shifting {
+  transition: transform var(--duration-normal) var(--ease-default);
+}
+
+/* The actively dragged item has no transition and sits above others */
+.sortable-list-item-dragging {
+  z-index: 1;
+  transition: none;
+}

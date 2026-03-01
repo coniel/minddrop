@@ -10,4 +10,5 @@ export {
   useViews as useAll,
   useViewsOfType as useOfType,
   useDataSourceViews,
+  reorderDataSourceViews,
 } from './ViewsStore';

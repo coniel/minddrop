@@ -27,6 +27,12 @@ export interface ArrayStoreInteralApi<TItem extends object> {
   remove(path: string): void;
 
   /**
+   * Reorders items in the store by placing them in the given ID order.
+   * Items not in the provided IDs remain in their original positions.
+   */
+  reorder(ids: string[]): void;
+
+  /**
    * Clear all items.
    */
   clear(): void;
@@ -76,6 +82,41 @@ export function createArrayStore<TItem extends object>(
         };
       }),
 
+    reorder: (ids) =>
+      set((state) => {
+        // Build an index map from ID to desired position
+        const orderMap = new Map(ids.map((id, index) => [id, index]));
+
+        // Separate items into those being reordered and those staying put
+        const reordered: TItem[] = new Array(ids.length);
+        const rest: TItem[] = [];
+
+        for (const item of state.items) {
+          const position = orderMap.get(item[identifierKey] as string);
+
+          if (position !== undefined) {
+            reordered[position] = item;
+          } else {
+            rest.push(item);
+          }
+        }
+
+        // Find the index of the first reordered item in the original array
+        // to know where to splice the reordered block back in
+        const firstReorderedIndex = state.items.findIndex((item) =>
+          orderMap.has(item[identifierKey] as string),
+        );
+
+        // Rebuild the array: items before the block, reordered block, items after
+        const result = [
+          ...rest.slice(0, firstReorderedIndex),
+          ...reordered,
+          ...rest.slice(firstReorderedIndex),
+        ];
+
+        return { items: result };
+      }),
+
     clear: () => set({ items: [] }),
   }));
 
@@ -102,6 +143,7 @@ export function createArrayStore<TItem extends object>(
     remove: (id) => store.getState().remove(id),
     load: (items) => store.getState().load(items),
     update: (id, data) => store.getState().update(id, data),
+    reorder: (ids) => store.getState().reorder(ids),
     clear: () => store.getState().clear(),
     useItem: (id) => {
       return store().items.find((item) => item[identifierKey] === id) || null;
@@ -161,6 +203,14 @@ export interface ArrayItemStore<TItem extends object> {
    * @param id - The identifier of the item to remove.
    */
   remove(id: string): void;
+
+  /**
+   * Reorders items in the store by placing them in the given ID order.
+   * Items not in the provided IDs remain in their original positions.
+   *
+   * @param ids - The IDs in the desired order.
+   */
+  reorder(ids: string[]): void;
 
   /**
    * Clears all items from the store.
