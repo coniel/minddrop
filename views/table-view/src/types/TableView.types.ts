@@ -1,3 +1,4 @@
+import { ContentColor } from '@minddrop/ui-primitives';
 import { View } from '@minddrop/views';
 
 export interface TableView extends View {
@@ -31,16 +32,17 @@ export interface TableViewOptions {
   zebraStripes: boolean;
 }
 
-export interface TableColumnOption {
+export interface TableSelectOption {
   label: string;
   value: string;
+  color?: ContentColor;
 }
 
 export interface TableColumn {
   id: string;
   name: string;
   type: string;
-  options?: TableColumnOption[];
+  options?: TableSelectOption[];
 }
 
 export interface TableRowData {

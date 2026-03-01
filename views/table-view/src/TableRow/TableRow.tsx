@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { DatabaseEntry } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { Button, Checkbox, Icon } from '@minddrop/ui-primitives';
+import { Button, Checkbox, Chip, Icon } from '@minddrop/ui-primitives';
 import { DateCell } from '../DateCell';
 import { SelectCell } from '../SelectCell';
 import { useTableEditContext } from '../TableEditContext';
@@ -30,12 +30,21 @@ function stopPropagation(e: React.MouseEvent) {
   e.stopPropagation();
 }
 
-const SelectDisplay: React.FC<CellProps> = React.memo(({ value }) => (
-  <div className="select-cell">
-    <span className="select-cell-value">{value}</span>
-    <Icon name="chevron-down" className="select-cell-chevron" />
-  </div>
-));
+const SelectDisplay: React.FC<CellProps> = React.memo(({ value, column }) => {
+  // Find the matching option to get its color
+  const option = column.options?.find((o) => o.value === value);
+
+  return (
+    <div className="select-cell">
+      {value ? (
+        <Chip size="sm" color={option?.color || 'default'}>
+          {value}
+        </Chip>
+      ) : null}
+      <Icon name="chevron-down" className="select-cell-chevron" />
+    </div>
+  );
+});
 
 SelectDisplay.displayName = 'SelectDisplay';
 

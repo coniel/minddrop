@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { DatabaseEntries, DatabaseEntry, Databases } from '@minddrop/databases';
-import { ScrollArea } from '@minddrop/ui-primitives';
+import { ContentColor, ScrollArea } from '@minddrop/ui-primitives';
 import { ViewTypeComponentProps, Views } from '@minddrop/views';
 import { TableEditContext } from '../TableEditContext';
 import { TableHeader } from '../TableHeader';
@@ -62,10 +62,15 @@ export const TableViewComponent: React.FC<
 
         if (p.type === 'select') {
           const opts =
-            (p as unknown as { options?: { value: string }[] }).options ?? [];
+            (
+              p as unknown as {
+                options?: { value: string; color?: ContentColor }[];
+              }
+            ).options ?? [];
           column.options = opts.map((o) => ({
             label: o.value,
             value: o.value,
+            color: o.color,
           }));
         }
 

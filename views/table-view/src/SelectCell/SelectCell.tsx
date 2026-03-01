@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import {
+  Chip,
   DropdownMenu,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -18,6 +19,9 @@ interface SelectCellProps {
 export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
   const { activeCell, onCellChange, deactivate } = useTableEditContext();
   const options = column.options ?? [];
+
+  // Find the matching option to get its color
+  const selectedOption = options.find((o) => o.value === value);
 
   const handleValueChange = useCallback(
     (newValue: string) => {
@@ -45,21 +49,26 @@ export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
       onOpenChange={handleOpenChange}
       trigger={
         <div className="select-cell" data-open>
-          <span className="select-cell-value">{value}</span>
+          {value ? (
+            <Chip size="sm" color={selectedOption?.color || 'default'}>
+              {value}
+            </Chip>
+          ) : null}
           <Icon name="chevron-down" className="select-cell-chevron" />
         </div>
       }
       minWidth={260}
     >
-      <DropdownMenuRadioGroup
-        value={value}
-        onValueChange={handleValueChange}
-      >
+      <DropdownMenuRadioGroup value={value} onValueChange={handleValueChange}>
         {options.map((option) => (
           <DropdownMenuRadioItem
             key={option.value}
             value={option.value}
-            label={option.label}
+            label={
+              <Chip size="sm" color={option.color || 'default'}>
+                {option.label}
+              </Chip>
+            }
           />
         ))}
       </DropdownMenuRadioGroup>
