@@ -3,7 +3,7 @@ import { Databases } from '@minddrop/databases';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
-import { IconButton, MenuGroup, MenuLabel } from '@minddrop/ui-primitives';
+import { IconButton, MenuLabel } from '@minddrop/ui-primitives';
 import { DatabasePropertyEditor } from '../DatabasePropertyEditor';
 
 export interface DatabasePropertiesEditorProps
@@ -43,7 +43,7 @@ export const DatabasePropertiesEditor: React.FC<
   }
 
   return (
-    <MenuGroup className="property-list">
+    <div className="property-list">
       <MenuLabel
         actionsAlwaysVisible
         label="labels.properties"
@@ -80,6 +80,6 @@ export const DatabasePropertiesEditor: React.FC<
           property={property}
         />
       ))}
-    </MenuGroup>
+    </div>
   );
 };

@@ -199,14 +199,22 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
         style={{ display: open ? 'none' : 'flex' }}
       >
         <ContentIcon color="muted" icon={property.icon} />
-        <Text size="sm" color="muted" className="property-editor-label" text={property.name} />
+        <Text
+          size="sm"
+          color="muted"
+          className="property-editor-label"
+          text={property.name}
+        />
         <Icon
           size={14}
           name="chevron-right"
           className="collapsible-indicator"
         />
       </Group>
-      <div className="property-editor-form" style={{ display: open ? 'flex' : 'none' }}>
+      <div
+        className="property-editor-form"
+        style={{ display: open ? 'flex' : 'none' }}
+      >
         <FieldRoot invalid={!!fieldProps.name.error}>
           <Group gap={2}>
             <IconPicker
