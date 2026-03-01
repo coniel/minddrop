@@ -9,8 +9,9 @@
  */
 import { ButtonStories } from './Button/Button.stories';
 import { CalendarStories } from './Calendar/Calendar.stories';
-import { ColorSelectStories } from './ColorSelect/ColorSelect.stories';
+import { ChipStories } from './Chip/Chip.stories';
 import { CollapsibleStories } from './Collapsible/Collapsible.stories';
+import { ColorSelectStories } from './ColorSelect/ColorSelect.stories';
 import { ComboboxStories } from './Combox/Combobox.stories';
 import { ConfirmationDialogStories } from './ConfirmationDialog/ConfirmationDialog.stories';
 import { ContextMenuStories } from './ContextMenu/ContextMenu.stories';
@@ -25,15 +26,15 @@ import { PopoverStories } from './Popover/Popover.stories';
 import { RadioToggleGroupStories } from './RadioToggleGroup/RadioToggleGroup.stories';
 import { ScrollAreaStories } from './ScrollArea/ScrollArea.stories';
 import { SelectStories } from './Select/Select.stories';
-import { SliderStories } from './Slider/Slider.stories';
 import { SeparatorStories } from './Separator/Separator.stories';
+import { SliderStories } from './Slider/Slider.stories';
 import { SwitchStories } from './Switch/Switch.stories';
 import { TabsStories } from './Tabs/Tabs.stories';
 import { TextStories } from './Text/Text.stories';
+import { ToastStories } from './Toast/Toast.stories';
 import { ToggleStories } from './Toggle/Toggle.stories';
 import { ToggleGroupStories } from './ToggleGroup/ToggleGroup.stories';
 import { ToolbarStories } from './Toolbar';
-import { ToastStories } from './Toast/Toast.stories';
 import { TooltipStories } from './Tooltip/Tooltip.stories';
 import { CheckboxStories } from './fields/Checkbox/Checkbox.stories';
 import { RadioStories } from './fields/Radio/Radio.stories';
@@ -60,6 +61,7 @@ export const stories: StoryGroup[] = [
       { label: 'Select', component: SelectStories },
       { label: 'ColorSelect', component: ColorSelectStories },
       { label: 'KeyboardShortcut', component: KeyboardShortcutStories },
+      { label: 'Chip', component: ChipStories },
       { label: 'Separator', component: SeparatorStories },
       { label: 'Tabs', component: TabsStories },
     ],
@@ -84,9 +86,7 @@ export const stories: StoryGroup[] = [
   },
   {
     group: 'Pickers',
-    items: [
-      { label: 'Calendar', component: CalendarStories },
-    ],
+    items: [{ label: 'Calendar', component: CalendarStories }],
   },
   {
     group: 'Overlay',

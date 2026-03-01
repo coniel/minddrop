@@ -1,5 +1,6 @@
 export * from './Button';
 export * from './Calendar';
+export * from './Chip';
 export * from './ColorSelect';
 export * from './RadioToggleGroup';
 export * from './Collapsible';

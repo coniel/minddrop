@@ -1,0 +1,107 @@
+/* ============================================================
+   CHIP
+   Variants: rectangular (default) | round
+   Sizes:    sm | md (default) | lg
+   Colors:   default | content colors (blue, cyan, red, etc.)
+   ============================================================ */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+
+  /* Rectangular (default) variant */
+  border-radius: var(--radius-sm);
+
+  /* Default color */
+  background-color: var(--neutral-300);
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------
+   VARIANT: ROUND
+   ------------------------------------------------------------ */
+
+.chip-variant-round {
+  border-radius: var(--radius-full);
+}
+
+/* ------------------------------------------------------------
+   SIZES
+   ------------------------------------------------------------ */
+
+.chip-size-sm {
+  height: 1.25rem;
+  padding: 0 var(--space-1);
+  font-size: 0.6875rem; /* 11px */
+}
+
+.chip-size-md {
+  height: 1.375rem;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.chip-size-lg {
+  height: 1.625rem;
+  padding: 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+/* ------------------------------------------------------------
+   CONTENT COLORS
+   ------------------------------------------------------------ */
+
+.chip-color-blue {
+  background-color: var(--blue-400);
+  color: var(--blue-1100);
+}
+
+.chip-color-cyan {
+  background-color: var(--cyan-400);
+  color: var(--cyan-1100);
+}
+
+.chip-color-red {
+  background-color: var(--red-400);
+  color: var(--red-1100);
+}
+
+.chip-color-pink {
+  background-color: var(--pink-400);
+  color: var(--pink-1100);
+}
+
+.chip-color-purple {
+  background-color: var(--purple-400);
+  color: var(--purple-1100);
+}
+
+.chip-color-green {
+  background-color: var(--green-400);
+  color: var(--green-1100);
+}
+
+.chip-color-orange {
+  background-color: var(--orange-400);
+  color: var(--orange-1100);
+}
+
+.chip-color-yellow {
+  background-color: var(--yellow-400);
+  color: var(--yellow-1100);
+}
+
+.chip-color-brown {
+  background-color: var(--brown-400);
+  color: var(--brown-1100);
+}
+
+.chip-color-gray {
+  background-color: var(--gray-400);
+  color: var(--gray-1100);
+}
