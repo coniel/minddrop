@@ -1,5 +1,5 @@
-import { createElementCssStyle, Design } from '@minddrop/designs';
-import { DesignElementRenderer } from './DesignElementRenderer';
+import { Design } from '@minddrop/designs';
+import { DesignRootElement } from './DesignElements';
 import {
   DesignPropertiesProvider,
   DesignPropertiesProviderProps,
@@ -8,7 +8,7 @@ import {
 export interface DesignRendererProps
   extends Pick<
     DesignPropertiesProviderProps,
-    'onUpdatePropertyValue' | 'properties' | 'propertyValues'
+    'onUpdatePropertyValue' | 'properties' | 'propertyValues' | 'propertyMap'
   > {
   /**
    * The design to render.
@@ -16,23 +16,26 @@ export interface DesignRendererProps
   design: Design;
 }
 
+/**
+ * Renders a design with real property values bound via propertyMap.
+ * Wraps the design tree in a DesignPropertiesProvider so that
+ * child element renderers can access mapped property data.
+ */
 export const DesignRenderer: React.FC<DesignRendererProps> = ({
   design,
   properties = [],
   propertyValues = {},
+  propertyMap = {},
   onUpdatePropertyValue,
 }) => {
   return (
     <DesignPropertiesProvider
       properties={properties}
       propertyValues={propertyValues}
+      propertyMap={propertyMap}
       onUpdatePropertyValue={onUpdatePropertyValue}
     >
-      <div className="card-element" style={createElementCssStyle(design.tree)}>
-        {design.tree.children.map((child) => (
-          <DesignElementRenderer key={child.id} element={child} />
-        ))}
-      </div>
+      <DesignRootElement element={design.tree} />
     </DesignPropertiesProvider>
   );
 };

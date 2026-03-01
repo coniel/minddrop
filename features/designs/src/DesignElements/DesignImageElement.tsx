@@ -6,6 +6,7 @@ import {
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { Icon } from '@minddrop/ui-primitives';
+import { useElementProperty } from '../DesignPropertiesProvider';
 
 export interface DesignImageElementProps {
   /**
@@ -15,27 +16,37 @@ export interface DesignImageElementProps {
 }
 
 /**
- * Pure display renderer for an image design element.
- * Renders the placeholder image if set, otherwise shows
+ * Display renderer for an image design element.
+ * Shows the mapped property image when available,
+ * otherwise falls back to the placeholder image or
  * a placeholder div with an image icon.
  */
 export const DesignImageElement: React.FC<DesignImageElementProps> = ({
   element,
 }) => {
+  const property = useElementProperty(element.id);
   const cssStyle = createImageCssStyle(element.style);
 
-  // Resolve full path to the placeholder image file
-  const imagePath = useMemo(
-    () =>
-      element.placeholderImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), element.placeholderImage)
-        : null,
-    [element.placeholderImage],
-  );
+  // Use the mapped property value (file path) if available,
+  // otherwise resolve the placeholder image from the design media dir
+  const imagePath = useMemo(() => {
+    if (property?.value && typeof property.value === 'string') {
+      return property.value;
+    }
+
+    if (element.placeholderImage) {
+      return Fs.concatPath(
+        getPlaceholderMediaDirPath(),
+        element.placeholderImage,
+      );
+    }
+
+    return null;
+  }, [property?.value, element.placeholderImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // Render the placeholder image
+  // Render the image
   if (imageSrc) {
     return (
       <img

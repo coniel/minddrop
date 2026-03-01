@@ -6,6 +6,7 @@ import {
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { useElementProperty } from '../DesignPropertiesProvider';
 import { DesignElement } from './DesignElement';
 
 export interface DesignContainerElementProps {
@@ -16,23 +17,30 @@ export interface DesignContainerElementProps {
 }
 
 /**
- * Pure display renderer for a container design element.
+ * Display renderer for a container design element.
  * Renders a div with container styles and recursively
- * renders child elements.
+ * renders child elements. When mapped to an image property,
+ * uses the property value as background image.
  */
 export const DesignContainerElement: React.FC<DesignContainerElementProps> = ({
   element,
 }) => {
   const { style } = element;
+  const property = useElementProperty(element.id);
 
-  // Resolve background image path if set
-  const imagePath = useMemo(
-    () =>
-      style.backgroundImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage)
-        : null,
-    [style.backgroundImage],
-  );
+  // Use the mapped property value (file path) as background image
+  // if available, otherwise resolve the placeholder from the design media dir
+  const imagePath = useMemo(() => {
+    if (property?.value && typeof property.value === 'string') {
+      return property.value;
+    }
+
+    if (style.backgroundImage) {
+      return Fs.concatPath(getPlaceholderMediaDirPath(), style.backgroundImage);
+    }
+
+    return null;
+  }, [property?.value, style.backgroundImage]);
 
   const imageSrc = Fs.useImageSrc(imagePath);
 

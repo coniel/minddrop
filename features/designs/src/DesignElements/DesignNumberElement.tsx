@@ -4,6 +4,7 @@ import {
   formatNumber,
   formatNumberParts,
 } from '@minddrop/designs';
+import { useElementProperty } from '../DesignPropertiesProvider';
 
 const DEFAULT_AFFIX_MARGIN = 2 / 16;
 
@@ -15,22 +16,30 @@ export interface DesignNumberElementProps {
 }
 
 /**
- * Pure display renderer for a number design element.
- * Shows the element's placeholder number with prefix/suffix
- * formatting and style applied.
+ * Display renderer for a number design element.
+ * Shows the mapped property value when available,
+ * otherwise falls back to the placeholder number.
+ * Applies prefix/suffix formatting and style.
  */
 export const DesignNumberElement: React.FC<DesignNumberElementProps> = ({
   element,
 }) => {
-  const rawPlaceholder = element.placeholder || '0';
-  const numericValue = Number(rawPlaceholder);
+  const property = useElementProperty(element.id);
+
+  // Use the mapped property value if available, otherwise the placeholder
+  const rawValue =
+    property?.value != null ? property.value : element.placeholder || '0';
+
+  const numericValue = Number(rawValue);
   const baseStyle = createTextCssStyle(element.style);
 
-  // Non-numeric placeholder — render as plain text
+  // Non-numeric value — render as plain text
   if (isNaN(numericValue)) {
+    const text = String(rawValue);
+
     return (
-      <span style={baseStyle} data-placeholder={rawPlaceholder}>
-        {rawPlaceholder}
+      <span style={baseStyle} data-placeholder={text}>
+        {text}
       </span>
     );
   }

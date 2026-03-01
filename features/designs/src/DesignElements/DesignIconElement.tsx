@@ -1,5 +1,6 @@
 import { IconElement, createIconCssStyle } from '@minddrop/designs';
 import { ContentIcon, Icon } from '@minddrop/ui-primitives';
+import { useElementProperty } from '../DesignPropertiesProvider';
 
 export interface DesignIconElementProps {
   /**
@@ -9,17 +10,25 @@ export interface DesignIconElementProps {
 }
 
 /**
- * Pure display renderer for an icon design element.
- * Renders the ContentIcon if an icon is set, otherwise
- * shows a placeholder div with a smile icon.
+ * Display renderer for an icon design element.
+ * Shows the mapped property icon when available,
+ * otherwise falls back to the element's icon or
+ * a placeholder with a smile icon.
  */
 export const DesignIconElement: React.FC<DesignIconElementProps> = ({
   element,
 }) => {
+  const property = useElementProperty(element.id);
   const cssStyle = createIconCssStyle(element.style);
 
-  // Render the selected icon
-  if (element.icon) {
+  // Use the mapped property value if available, otherwise the element's icon
+  const iconValue =
+    property?.value && typeof property.value === 'string'
+      ? property.value
+      : element.icon;
+
+  // Render the icon
+  if (iconValue) {
     return (
       <div
         style={{
@@ -34,7 +43,7 @@ export const DesignIconElement: React.FC<DesignIconElementProps> = ({
           lineHeight: 1,
         }}
       >
-        <ContentIcon icon={element.icon} />
+        <ContentIcon icon={iconValue} />
       </div>
     );
   }

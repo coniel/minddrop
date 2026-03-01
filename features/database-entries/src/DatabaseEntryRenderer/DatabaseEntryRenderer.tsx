@@ -5,6 +5,7 @@ import {
   DatabaseEntry,
   Databases,
 } from '@minddrop/databases';
+import { Designs } from '@minddrop/designs';
 import { DesignRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
 
@@ -45,21 +46,25 @@ interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
 
 const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
   const database = Databases.use(entry.database);
-  const specificedDesign = useMemo(
-    () => (designId ? Databases.getDesign(entry.database, designId) : null),
-    [entry.database, designId],
-  );
+  // Use the specified design if provided, otherwise fall back
+  // to the database's default design for the given type
   const design = useMemo(
     () =>
-      specificedDesign ||
+      (designId ? Designs.get(designId, false) : null) ||
       Databases.getDefaultDesign(entry.database, designType),
-    [specificedDesign, entry.database, designType],
+    [designId, entry.database, designType],
   );
   const onUpdatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
       DatabaseEntries.updateProperty(entry.id, name, value);
     },
     [entry.id],
+  );
+
+  // Get the property map for this design (element ID → property name)
+  const propertyMap = useMemo(
+    () => Databases.getDesignPropertyMap(entry.database, design.id) || {},
+    [entry.database, design.id],
   );
 
   if (!database) {
@@ -86,6 +91,7 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
   return (
     <DesignRenderer
       design={design}
+      propertyMap={propertyMap}
       propertyValues={propertyValues}
       properties={database.properties}
       onUpdatePropertyValue={onUpdatePropertyValue}
