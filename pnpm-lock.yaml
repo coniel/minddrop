@@ -344,6 +344,9 @@ importers:
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

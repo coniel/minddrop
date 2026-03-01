@@ -1,16 +1,17 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Databases } from '@minddrop/databases';
 import { DesignElementType } from '@minddrop/designs';
 import { PropertySchema, PropertyType } from '@minddrop/properties';
+import { useDraggable } from '@minddrop/selection';
 import {
+  ContentIcon,
   Icon,
   IconButton,
-  MenuGroup,
-  MenuItem,
   MenuLabel,
   ScrollArea,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { DatabasePropertiesDataKey } from '../constants';
 
 /**
  * Maps each property type to the design element type that
@@ -66,7 +67,6 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const database = Databases.use(databaseId);
-
   // Filter properties by search term
   const filteredProperties = useMemo(() => {
     if (!database) {
@@ -132,7 +132,7 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
 
       {/* Scrollable property list grouped by design element type */}
       <ScrollArea>
-        <div className="design-browser-designs">
+        <div className="property-list">
           {ElementGroups.map(({ key, label }) => {
             const properties = groupedProperties[key];
 
@@ -141,22 +141,64 @@ export const DatabasePropertyList: React.FC<DatabasePropertyListProps> = ({
             }
 
             return (
-              <MenuGroup key={key}>
+              <div key={key} className="property-group">
                 <MenuLabel label={label} />
-                {properties.map((property) => (
-                  <MenuItem
-                    key={property.name}
-                    contentIcon={property.icon}
-                    muted
-                  >
-                    {property.name}
-                  </MenuItem>
-                ))}
-              </MenuGroup>
+                <div className="property-group-items">
+                  {properties.map((property) => (
+                    <DraggablePropertyItem
+                      key={property.name}
+                      property={property}
+                    />
+                  ))}
+                </div>
+              </div>
             );
           })}
         </div>
       </ScrollArea>
+    </div>
+  );
+};
+
+/******************************************************************************
+ * DraggablePropertyItem
+ *****************************************************************************/
+
+interface DraggablePropertyItemProps {
+  /**
+   * The property schema to render as a draggable item.
+   */
+  property: PropertySchema;
+}
+
+/**
+ * A draggable property chip that can be dropped onto design elements.
+ */
+const DraggablePropertyItem: React.FC<DraggablePropertyItemProps> = ({
+  property,
+}) => {
+  const { draggableProps } = useDraggable({
+    id: property.name,
+    type: DatabasePropertiesDataKey,
+    data: property,
+  });
+
+  return (
+    <div className="draggable-property-item" {...draggableProps}>
+      {/* Drag handle */}
+      <Icon
+        name="grip-vertical"
+        color="muted"
+        className="property-item-handle"
+      />
+
+      {/* Property icon */}
+      {property.icon && (
+        <ContentIcon icon={property.icon} className="property-item-icon" />
+      )}
+
+      {/* Property name */}
+      <span className="property-item-name">{property.name}</span>
     </div>
   );
 };

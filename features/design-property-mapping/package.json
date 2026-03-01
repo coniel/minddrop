@@ -22,6 +22,7 @@
     "@minddrop/feature-design-studio": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/properties": "workspace:*",
+    "@minddrop/selection": "workspace:*",
     "@minddrop/icons": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*"
