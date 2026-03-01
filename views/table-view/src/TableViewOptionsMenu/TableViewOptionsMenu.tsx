@@ -22,6 +22,9 @@ import './TableViewOptionsMenu.css';
 
 const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
 
+/**
+ * Renders the settings menu for configuring table view options.
+ */
 export const TableViewOptionsMenu: React.FC<
   ViewTypeSettingsMenuProps<TableViewOptions>
 > = ({ view, options, onUpdateOptions }) => {

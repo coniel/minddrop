@@ -1,0 +1,30 @@
+/* ============================================================
+   TEXT CELL
+   Input cell with optional open button for title columns.
+   ============================================================ */
+
+.text-cell {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+}
+
+.text-cell .table-cell-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.text-cell-open-button {
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast);
+}
+
+.table-row:hover .text-cell-open-button {
+  opacity: 1;
+  pointer-events: auto;
+}

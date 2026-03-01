@@ -1,68 +1,79 @@
 import React, { useCallback, useMemo } from 'react';
 import { DatabaseEntry } from '@minddrop/databases';
 import { useTranslation } from '@minddrop/i18n';
-import { Button, Checkbox, Chip, Icon } from '@minddrop/ui-primitives';
-import { DateCell } from '../DateCell';
-import { SelectCell } from '../SelectCell';
+import { Checkbox } from '@minddrop/ui-primitives';
+import { DateCell, DateDisplay } from '../DateCell';
+import { NumberCell } from '../NumberCell';
+import { SelectCell, SelectDisplay } from '../SelectCell';
 import { useTableEditContext } from '../TableEditContext';
+import { TextCell } from '../TextCell';
 import { FieldSize, TableColumn } from '../types';
+import { propertyValueToString } from '../utils';
 import './TableRow.css';
 
 interface TableRowProps {
+  /**
+   * The database entry to render.
+   */
   entry: DatabaseEntry;
+
+  /**
+   * The column definitions for the table.
+   */
   columns: TableColumn[];
+
+  /**
+   * A map of column IDs to their flex CSS styles.
+   */
   columnFlexStyles: Record<string, React.CSSProperties>;
+
+  /**
+   * The 1-based row number to display.
+   */
   rowNumber: number;
+
+  /**
+   * Whether to show row numbers.
+   */
   showRowNumbers: boolean;
+
+  /**
+   * Whether the row is currently selected.
+   */
   isSelected: boolean;
+
+  /**
+   * The field size variant.
+   */
   size: FieldSize;
+
+  /**
+   * Callback when the row's checkbox is toggled.
+   */
   onToggleRow: (rowId: string, checked: boolean) => void;
+
+  /**
+   * The index of the row in the virtualised list.
+   */
   virtualIndex?: number;
 }
 
 interface CellProps {
+  /**
+   * The cell's string value.
+   */
   value: string;
+
+  /**
+   * The column configuration.
+   */
   column: TableColumn;
+
+  /**
+   * The field size variant.
+   */
   size: FieldSize;
 }
-
-function stopPropagation(e: React.MouseEvent) {
-  e.stopPropagation();
-}
-
-const SelectDisplay: React.FC<CellProps> = React.memo(({ value, column }) => {
-  // Find the matching option to get its color
-  const option = column.options?.find((o) => o.value === value);
-
-  // Render as plain text when showChips is disabled
-  const showChips = column.showChips !== false;
-
-  return (
-    <div className="select-cell">
-      {value ? (
-        showChips ? (
-          <Chip size="sm" color={option?.color || 'default'}>
-            {value}
-          </Chip>
-        ) : (
-          <span className="select-cell-text">{value}</span>
-        )
-      ) : null}
-      <Icon name="chevron-down" className="select-cell-chevron" />
-    </div>
-  );
-});
-
-SelectDisplay.displayName = 'SelectDisplay';
-
-const DateDisplay: React.FC<CellProps> = React.memo(({ value }) => (
-  <div className="date-cell">
-    <span className="date-cell-value">{value}</span>
-    <Icon name="chevron-down" className="date-cell-chevron" />
-  </div>
-));
-
-DateDisplay.displayName = 'DateDisplay';
 
 const DISPLAY_COMPONENTS: Partial<
   Record<string, React.ComponentType<CellProps>>
@@ -76,28 +87,12 @@ const EDITOR_COMPONENTS: Partial<
 > = {
   select: SelectCell,
   date: DateCell,
+  number: NumberCell,
 };
 
-function propertyValueToString(value: unknown): string {
-  if (value === null || value === undefined) {
-    return '';
-  }
-
-  if (value instanceof Date) {
-    return value.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  }
-
-  if (Array.isArray(value)) {
-    return value.join(', ');
-  }
-
-  return String(value);
-}
-
+/**
+ * Renders a single data row in the table view.
+ */
 export const TableRow = React.memo(
   React.forwardRef<HTMLDivElement, TableRowProps>(
     (
@@ -156,7 +151,7 @@ export const TableRow = React.memo(
             />
           </div>
           {columns.map((column) => {
-            if (column.type === 'title') {
+            if (column.type === 'title' || column.type === 'text') {
               return (
                 <div
                   role="cell"
@@ -165,39 +160,11 @@ export const TableRow = React.memo(
                   data-col-id={column.id}
                   style={columnFlexStyles[column.id]}
                 >
-                  <div className="table-cell-title">
-                    <input
-                      type="text"
-                      className={`table-cell-input table-cell-input--${size}`}
-                      defaultValue={cells[column.id] ?? ''}
-                    />
-                    <Button
-                      variant="subtle"
-                      size="sm"
-                      startIcon="arrow-up-right"
-                      className="text-cell-open-button"
-                      onClick={stopPropagation}
-                    >
-                      {t('openEntry')}
-                    </Button>
-                  </div>
-                </div>
-              );
-            }
-
-            if (column.type === 'text' || column.type === 'number') {
-              return (
-                <div
-                  role="cell"
-                  key={column.id}
-                  className="table-cell"
-                  data-col-id={column.id}
-                  style={columnFlexStyles[column.id]}
-                >
-                  <input
-                    type="text"
-                    className={`table-cell-input table-cell-input--${size}`}
-                    defaultValue={cells[column.id] ?? ''}
+                  <TextCell
+                    value={cells[column.id] ?? ''}
+                    size={size}
+                    showOpenButton={column.type === 'title'}
+                    openButtonLabel={t('openEntry')}
                   />
                 </div>
               );

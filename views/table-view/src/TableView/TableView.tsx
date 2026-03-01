@@ -25,8 +25,11 @@ import { useColumnResize } from '../useColumnResize';
 import './TableView.css';
 
 const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
-const INPUT_TYPES = new Set(['text', 'title', 'number']);
+const INPUT_TYPES = new Set(['text', 'title']);
 
+/**
+ * Renders a virtualised table view of database entries.
+ */
 export const TableViewComponent: React.FC<
   ViewTypeComponentProps<TableViewOptions>
 > = ({ view, entries }) => {

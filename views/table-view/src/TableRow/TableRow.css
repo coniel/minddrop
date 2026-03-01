@@ -65,6 +65,7 @@
 
   padding-inline: 0;
   height: var(--table-row-height, 1.75rem);
+  line-height: var(--table-row-height, 1.75rem);
 }
 
 .table-cell-input--sm {
@@ -77,30 +78,15 @@
   font-size: var(--text-base);
 }
 
-/* ---- Title cell (input + open button) ---- */
+/* ---- Static display cells (select / date / number) ---- */
 
-.table-cell-title {
+.table-cell-static {
   display: flex;
   align-items: center;
   width: 100%;
-  min-width: 0;
-  position: relative;
-}
-
-.table-cell-title .table-cell-input {
-  flex: 1;
-  min-width: 0;
-}
-
-.text-cell-open-button {
-  position: absolute;
-  right: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--duration-fast);
-}
-
-.table-row:hover .text-cell-open-button {
-  opacity: 1;
-  pointer-events: auto;
+  height: var(--table-row-height, 1.75rem);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-regular);
+  cursor: text;
 }

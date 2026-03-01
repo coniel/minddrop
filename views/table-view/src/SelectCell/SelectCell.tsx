@@ -11,11 +11,25 @@ import { TableColumn } from '../types';
 import './SelectCell.css';
 
 interface SelectCellProps {
+  /**
+   * The currently selected value.
+   */
   value: string;
+
+  /**
+   * The column configuration including options and display settings.
+   */
   column: TableColumn;
+
+  /**
+   * The field size variant.
+   */
   size: 'sm' | 'md' | 'lg';
 }
 
+/**
+ * Renders the active editor state of a select cell as a dropdown menu.
+ */
 export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
   const { activeCell, onCellChange, deactivate } = useTableEditContext();
   const options = column.options ?? [];

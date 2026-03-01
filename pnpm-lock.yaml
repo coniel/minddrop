@@ -1607,6 +1607,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views

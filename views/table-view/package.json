@@ -21,6 +21,7 @@
     "@minddrop/feature-drag-and-drop": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
+    "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",
     "@tanstack/react-virtual": "^3.0.0"
   }

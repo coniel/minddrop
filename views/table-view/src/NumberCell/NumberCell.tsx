@@ -1,38 +1,45 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { NumberField } from '@minddrop/ui-primitives';
+import { NumberInput } from '@minddrop/ui-primitives';
 import { useTableEditContext } from '../TableEditContext';
 import { TableColumn } from '../types';
 import './NumberCell.css';
 
 interface NumberCellProps {
+  /**
+   * The cell's string-encoded number value.
+   */
   value: string;
+
+  /**
+   * The column configuration.
+   */
   column: TableColumn;
+
+  /**
+   * The field size variant.
+   */
   size: 'sm' | 'md' | 'lg';
 }
 
-function parseNum(v: string): number | undefined {
-  if (!v) {
-    return undefined;
-  }
-
-  const n = Number(v);
-
-  return isNaN(n) ? undefined : n;
-}
-
+/**
+ * Renders a number input cell that saves on blur.
+ */
 export const NumberCell: React.FC<NumberCellProps> = ({ value }) => {
   const { activeCell, onCellChange, deactivate } = useTableEditContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const latestRef = useRef<number | null>(parseNum(value) ?? null);
 
+  // Auto-focus the input when the cell becomes active
   useEffect(() => {
-    const input = containerRef.current?.querySelector<HTMLInputElement>('input');
+    const input =
+      containerRef.current?.querySelector<HTMLInputElement>('input');
     input?.focus();
   }, []);
 
+  // Save the value and deactivate when focus leaves the cell
   const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
-      if (e.currentTarget.contains(e.relatedTarget as Node)) {
+    (event: React.FocusEvent<HTMLDivElement>) => {
+      if (event.currentTarget.contains(event.relatedTarget as Node)) {
         return;
       }
 
@@ -48,14 +55,16 @@ export const NumberCell: React.FC<NumberCellProps> = ({ value }) => {
     [value, onCellChange, activeCell, deactivate],
   );
 
-  const handleValueChange = useCallback((v: number | null) => {
-    latestRef.current = v;
+  // Track the latest value without triggering re-renders
+  const handleValueChange = useCallback((newValue: number | null) => {
+    latestRef.current = newValue;
   }, []);
 
   return (
     <div ref={containerRef} className="number-cell" onBlur={handleBlur}>
-      <NumberField
+      <NumberInput
         variant="ghost"
+        size="sm"
         defaultValue={parseNum(value)}
         onValueChange={handleValueChange}
       />
@@ -64,3 +73,13 @@ export const NumberCell: React.FC<NumberCellProps> = ({ value }) => {
 };
 
 NumberCell.displayName = 'NumberCell';
+
+function parseNum(value: string): number | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const number = Number(value);
+
+  return isNaN(number) ? undefined : number;
+}

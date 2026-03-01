@@ -26,18 +26,60 @@ const COLUMN_TYPE_ICONS: Record<string, UiIconName> = {
 };
 
 interface TableHeaderProps {
+  /**
+   * The column definitions for the table.
+   */
   columns: TableColumn[];
+
+  /**
+   * A map of column IDs to their flex CSS styles.
+   */
   columnFlexStyles: Record<string, React.CSSProperties>;
+
+  /**
+   * Whether the table content overflows horizontally.
+   */
   overflow: boolean;
+
+  /**
+   * The number of currently selected rows.
+   */
   selectedCount: number;
+
+  /**
+   * The total number of rows in the table.
+   */
   totalCount: number;
+
+  /**
+   * Callback when a column resize handle is dragged.
+   */
   onStartResize: (columnId: string, event: React.MouseEvent) => void;
+
+  /**
+   * Callback when the select-all checkbox is toggled.
+   */
   onToggleAll: (checked: boolean) => void;
+
+  /**
+   * Callback when columns are reordered via drag and drop.
+   */
   onReorderColumns: (columnOrder: string[]) => void;
+
+  /**
+   * Callback when a select column's chip display is toggled.
+   */
   onToggleShowChips: (columnId: string, showChips: boolean) => void;
+
+  /**
+   * Callback when a column is hidden.
+   */
   onHideColumn: (columnId: string) => void;
 }
 
+/**
+ * Renders the table header row with column labels, resize handles, and column menus.
+ */
 export const TableHeader: React.FC<TableHeaderProps> = ({
   columns,
   columnFlexStyles,

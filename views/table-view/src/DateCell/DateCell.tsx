@@ -1,34 +1,30 @@
 import React, { useCallback } from 'react';
 import { CalendarPopover, Icon } from '@minddrop/ui-primitives';
+import { formatDate, parseDate } from '@minddrop/utils';
 import { useTableEditContext } from '../TableEditContext';
 import { TableColumn } from '../types';
 import './DateCell.css';
 
 interface DateCellProps {
+  /**
+   * The formatted date string value.
+   */
   value: string;
+
+  /**
+   * The column configuration.
+   */
   column: TableColumn;
+
+  /**
+   * The field size variant.
+   */
   size: 'sm' | 'md' | 'lg';
 }
 
-function parseDate(value: string): Date | undefined {
-  if (!value) {
-    return undefined;
-  }
-
-  const d = new Date(value);
-
-  return isNaN(d.getTime()) ? undefined : d;
-}
-
-function formatDate(date: Date): string {
-  // TODO: Use the user's locale
-  return date.toLocaleDateString('en-GB', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
-
+/**
+ * Renders the active editor state of a date cell as a calendar popover.
+ */
 export const DateCell: React.FC<DateCellProps> = ({ value }) => {
   const { activeCell, onCellChange, deactivate } = useTableEditContext();
   const selected = parseDate(value);

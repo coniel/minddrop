@@ -1,6 +1,6 @@
 /* ============================================================
    NUMBER CELL
-   Ghost NumberField stretched to fill the full cell height.
+   Ghost NumberInput stretched to fill the full cell height.
    ============================================================ */
 
 .number-cell {
@@ -8,24 +8,27 @@
   min-width: 0;
   display: flex;
   align-items: stretch;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-regular);
+  cursor: text;
 }
 
-/* NumberField root — fill available width */
-.number-cell .number-field {
+/* NumberInput root — fill available width */
+.number-cell .number-input {
   flex: 1;
   min-width: 0;
 }
 
-/* Group and input wrapper — stretch to cell height */
-.number-cell .number-field-group,
-.number-cell .text-field-input-wrapper {
+/* Group — stretch to cell height */
+.number-cell .number-input-group {
   min-height: var(--table-row-height, 1.75rem);
   display: flex;
   align-items: center;
 }
 
-/* Input — fill width, match cell typography */
-.number-cell .text-field-input {
+/* Input — fill width */
+.number-cell .number-input-input {
   flex: 1;
   min-width: 0;
 }
