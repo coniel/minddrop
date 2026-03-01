@@ -2,11 +2,16 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
-import { Databases } from '@minddrop/databases';
-import { Design, Designs, defaultDesignIds } from '@minddrop/designs';
+import {
+  Design,
+  DesignElement,
+  Designs,
+  defaultDesignIds,
+} from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   Events,
@@ -22,7 +27,7 @@ import {
   SelectionDragStartedEvent,
   SelectionDragStartedEventData,
 } from '@minddrop/selection';
-import { Button, Panel, SwitchField } from '@minddrop/ui-primitives';
+import { Button, Group, Panel, SwitchField } from '@minddrop/ui-primitives';
 import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
 import { PropertyConnectionLine } from '../PropertyConnectionLine/PropertyConnectionLine';
 import { PropertyMappingOverlay } from '../PropertyMappingOverlay';
@@ -77,10 +82,41 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     (state) => state.propertyMap,
   );
 
-  // Database for counting total properties
-  const database = Databases.use(databaseId);
+  // Fetch the selected design
+  const selectedDesign = Designs.use(selectedDesignId || '');
+
+  // Count mapped elements vs total mappable elements in the design.
+  // Mappable elements are leaf elements and containers with a background image.
   const mappedCount = Object.keys(propertyMap).length;
-  const totalCount = database?.properties.length ?? 0;
+  const totalMappableElements = useMemo(() => {
+    if (!selectedDesign) {
+      return 0;
+    }
+
+    let count = 0;
+
+    const countElements = (element: DesignElement) => {
+      // Skip structural containers (no background image)
+      if (
+        (element.type === 'container' || element.type === 'root') &&
+        !element.style.backgroundImage
+      ) {
+        element.children.forEach(countElements);
+
+        return;
+      }
+
+      count += 1;
+
+      if ('children' in element) {
+        element.children.forEach(countElements);
+      }
+    };
+
+    countElements(selectedDesign.tree);
+
+    return count;
+  }, [selectedDesign]);
 
   // Track property drag start/end to update the store's dragging state.
   // Listens for selection drag events dispatched by useDraggable, which
@@ -141,9 +177,6 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     }
   }, [selectDesign]);
 
-  // Fetch the selected design
-  const selectedDesign = Designs.use(selectedDesignId || '');
-
   // Handle selecting a design in the list
   const handleSelectDesign = useCallback(
     (design: Design) => {
@@ -184,6 +217,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
 
   // Whether the zoom-to-fit scaling is enabled
   const [zoomEnabled, setZoomEnabled] = useState(true);
+
+  // Whether unmapped elements are visually highlighted
+  const [highlightUnmapped, setHighlightUnmapped] = useState(false);
 
   // Scale + translate state for the mapping view zoom.
   // Keeps the computed values so the reverse animation
@@ -268,6 +304,98 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     });
   }, [view, zoomEnabled]);
 
+  // Toggle a CSS class on unmapped element DOM nodes so users
+  // can see which elements still need a property mapping.
+  // Skips structural containers (no background color/image) since
+  // they are layout-only and not meaningful mapping targets.
+  useEffect(() => {
+    const area = canvasAreaRef.current;
+
+    if (!area || !highlightUnmapped || !selectedDesign) {
+      return;
+    }
+
+    // Build a flat lookup of element data from the design tree
+    const elementMap: Record<string, DesignElement> = {};
+
+    const collectElements = (element: DesignElement) => {
+      elementMap[element.id] = element;
+
+      if ('children' in element) {
+        element.children.forEach(collectElements);
+      }
+    };
+
+    collectElements(selectedDesign.tree);
+
+    // Query all rendered design elements inside the canvas
+    const elementNodes = area.querySelectorAll('[data-element-id]');
+
+    // Track which first-children we added the class to for cleanup
+    const highlighted: Element[] = [];
+
+    elementNodes.forEach((node) => {
+      const elementId = node.getAttribute('data-element-id');
+
+      if (!elementId) {
+        return;
+      }
+
+      // Skip elements that are already mapped
+      if (propertyMap[elementId]) {
+        return;
+      }
+
+      const element = elementMap[elementId];
+
+      // Skip containers without a background image — only image
+      // containers are meaningful mapping targets
+      if (
+        element &&
+        (element.type === 'container' || element.type === 'root') &&
+        !element.style.backgroundImage
+      ) {
+        return;
+      }
+
+      // The wrapper uses display: contents, so target the first child
+      const child = node.firstElementChild;
+
+      if (child) {
+        child.classList.add('unmapped-highlight');
+        highlighted.push(child);
+      }
+    });
+
+    // Cleanup: remove the class when dependencies change or toggle off
+    return () => {
+      highlighted.forEach((child) => {
+        child.classList.remove('unmapped-highlight');
+      });
+    };
+  }, [highlightUnmapped, propertyMap, selectedDesign]);
+
+  // Fade out unmapped highlights while a property is being dragged
+  useEffect(() => {
+    const area = canvasAreaRef.current;
+
+    if (!area || !highlightUnmapped || !draggingPropertyType) {
+      return;
+    }
+
+    const elements = area.querySelectorAll('.unmapped-highlight');
+
+    elements.forEach((element) => {
+      element.classList.add('unmapped-highlight-hidden');
+    });
+
+    return () => {
+      elements.forEach((element) => {
+        element.classList.remove('unmapped-highlight-hidden');
+      });
+    };
+  }, [draggingPropertyType, highlightUnmapped]);
+
   // Navigate back to the previous view
   const handleClickBack = useCallback(() => {
     if (backEvent) {
@@ -321,16 +449,24 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
             {/* Toolbar for the mapping view */}
             {view === 'map-properties' && (
               <div className="design-browser-action-bar">
-                <SwitchField
-                  label="design-property-mapping.browser.zoom"
-                  size="sm"
-                  checked={zoomEnabled}
-                  onCheckedChange={setZoomEnabled}
-                />
+                <Group gap={5}>
+                  <SwitchField
+                    label="design-property-mapping.browser.zoom"
+                    size="sm"
+                    checked={zoomEnabled}
+                    onCheckedChange={setZoomEnabled}
+                  />
+                  <SwitchField
+                    label="design-property-mapping.browser.highlightUnmapped"
+                    size="sm"
+                    checked={highlightUnmapped}
+                    onCheckedChange={setHighlightUnmapped}
+                  />
+                </Group>
                 <span className="property-mapping-counter">
                   {t('design-property-mapping.browser.mappingCounter', {
                     mapped: mappedCount,
-                    total: totalCount,
+                    total: totalMappableElements,
                   })}
                 </span>
               </div>

@@ -715,6 +715,7 @@
       "addProperty": "Add property",
       "dateGroup": "Date",
       "zoom": "Zoom",
+      "highlightUnmapped": "Show unmapped",
       "mappingCounter": "{{mapped}}/{{total}} properties mapped"
     }
   }

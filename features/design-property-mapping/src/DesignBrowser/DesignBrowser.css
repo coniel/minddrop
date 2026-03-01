@@ -146,6 +146,19 @@
   opacity: 0.5;
 }
 
+/* Dashed outline on unmapped elements when the toggle is active */
+.unmapped-highlight {
+  outline: 3px dashed var(--danger-900);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+  transition: outline-color var(--duration-slow) var(--ease-out);
+}
+
+/* Fade out the highlight when a property drag starts */
+.unmapped-highlight.unmapped-highlight-hidden {
+  outline-color: transparent;
+}
+
 /* Highlighted element when hovering a mapped property */
 [data-element-id] > .property-mapping-highlighted,
 .property-mapping-highlighted {
