@@ -341,6 +341,9 @@ importers:
       '@minddrop/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

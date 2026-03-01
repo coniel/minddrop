@@ -103,7 +103,7 @@ export const DesignBrowserList: React.FC<DesignBrowserListProps> = ({
       <div className="design-browser-header">
         <TextInput
           variant="subtle"
-          size="sm"
+          size="md"
           placeholder="design-property-mapping.browser.search"
           leading={<Icon name="search" color="muted" />}
           value={searchTerm}

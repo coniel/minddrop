@@ -1,6 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Events } from '@minddrop/events';
-import { DesignBrowser } from './DesignBrowser';
+import { useEffect } from 'react';
+import {
+  Events,
+  OpenMainContentViewEvent,
+  OpenMainContentViewEventData,
+} from '@minddrop/events';
+import { DesignBrowser, DesignBrowserProps } from './DesignBrowser';
 import {
   BrowseDesignsEvent,
   BrowseDesignsEventData,
@@ -8,32 +12,50 @@ import {
   OpenPropertyMapperEvent,
   OpenPropertyMapperEventData,
 } from './events';
-import './DesignPropertyMappingFeature.css';
-
-type OverlayView = 'browse-designs' | 'property-mapper' | null;
 
 export const DesignPropertyMappingFeature: React.FC = () => {
-  const [view, setView] = useState<OverlayView>(null);
-  const [databaseId, setDatabaseId] = useState<string | null>(null);
-
   useEffect(() => {
-    // Listen for browse designs events and show the design browser overlay
+    // Track the current main content view so we can provide
+    // back navigation when the design browser is opened.
+    let currentView: OpenMainContentViewEventData | null = null;
+
+    Events.addListener<OpenMainContentViewEventData>(
+      OpenMainContentViewEvent,
+      `${EventListenerId}:view-tracker`,
+      ({ data }) => {
+        // Don't track design browser views as the "current view"
+        if (data.component !== DesignBrowser) {
+          currentView = data;
+        }
+      },
+    );
+
+    // Listen for browse designs events and open the design browser
+    // as the main content view
     Events.addListener<BrowseDesignsEventData>(
       BrowseDesignsEvent,
       `${EventListenerId}:browse`,
       (event) => {
-        setDatabaseId(event.data.databaseId);
-        setView('browse-designs');
+        Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
+          OpenMainContentViewEvent,
+          {
+            component: DesignBrowser,
+            props: {
+              ...event.data,
+              backEvent: currentView ? OpenMainContentViewEvent : undefined,
+              backEventData: currentView || undefined,
+            },
+          },
+        );
       },
     );
 
-    // Listen for mapper open events and show the property mapper overlay
+    // Listen for mapper open events
     Events.addListener<OpenPropertyMapperEventData>(
       OpenPropertyMapperEvent,
       `${EventListenerId}:mapper`,
-      (event) => {
-        setDatabaseId(event.data.databaseId);
-        setView('property-mapper');
+      () => {
+        // TODO: open property mapper as main content view
       },
     );
 
@@ -43,36 +65,12 @@ export const DesignPropertyMappingFeature: React.FC = () => {
         OpenPropertyMapperEvent,
         `${EventListenerId}:mapper`,
       );
+      Events.removeListener(
+        OpenMainContentViewEvent,
+        `${EventListenerId}:view-tracker`,
+      );
     };
   }, []);
 
-  // Close the overlay and reset state
-  const handleClose = useCallback(() => {
-    setView(null);
-    setDatabaseId(null);
-  }, []);
-
-  // Handle design selection — switch to mapper view
-  const handleSelectDesign = useCallback((designId: string) => {
-    setView('property-mapper');
-  }, []);
-
-  if (!view || !databaseId) {
-    return null;
-  }
-
-  return (
-    <>
-      <div className="design-property-mapping-backdrop" onClick={handleClose} />
-
-      {/* Render the design browser overlay */}
-      {view === 'browse-designs' && (
-        <DesignBrowser
-          databaseId={databaseId}
-          onSelectDesign={handleSelectDesign}
-          onClose={handleClose}
-        />
-      )}
-    </>
-  );
+  return null;
 };

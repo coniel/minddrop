@@ -1,26 +1,39 @@
 .design-browser {
-  position: fixed;
-  top: var(--space-2);
-  left: var(--space-2);
-  bottom: var(--space-2);
-  right: var(--space-2);
-  z-index: var(--level-dialog);
   display: flex;
-  flex-direction: row;
+  height: 100%;
+  gap: 0.5rem;
 }
 
 .design-browser-list-panel {
-  display: flex;
-  flex-direction: column;
   width: 300px;
   flex-shrink: 0;
+  height: 100%;
 }
 
 .design-browser-preview-panel {
+  display: flex;
+  flex-direction: column;
   flex: 1;
-  position: relative;
   overflow: hidden;
-  border-left: 1px solid var(--border-subtle);
+  background-color: var(--surface-app);
+  background-image: radial-gradient(
+    circle,
+    var(--border-subtle) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+
+.design-browser-action-bar {
+  display: flex;
+  justify-content: flex-start;
+  padding: var(--space-4);
+}
+
+.design-browser-canvas-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
 }
 
 .design-browser-header {
@@ -36,5 +49,8 @@
 }
 
 .design-browser-designs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   padding: var(--space-2) var(--space-2) var(--space-7);
 }

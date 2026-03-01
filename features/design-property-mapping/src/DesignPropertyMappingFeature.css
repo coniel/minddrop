@@ -1,6 +1,0 @@
-.design-property-mapping-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--level-dialog-backdrop);
-  background-color: var(--surface-app);
-}

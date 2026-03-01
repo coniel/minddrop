@@ -173,3 +173,15 @@ export interface ContainerElement extends DesignElementBase {
  *****************************************************************************/
 
 export type DesignElement = LeafDesignElement | ContainerElement | RootElement;
+
+/**
+ * Union of all design element type identifiers.
+ */
+export type DesignElementType =
+  | 'root'
+  | 'container'
+  | 'text'
+  | 'formatted-text'
+  | 'number'
+  | 'image'
+  | 'icon';
