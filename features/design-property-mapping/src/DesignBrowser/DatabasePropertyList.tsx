@@ -27,6 +27,7 @@ const ElementGroups: {
   { key: 'text', label: 'design-studio.elements.text' },
   { key: 'formatted-text', label: 'design-studio.elements.formatted-text' },
   { key: 'number', label: 'design-studio.elements.number' },
+  { key: 'url', label: 'design-studio.elements.url' },
   { key: 'date', label: 'design-property-mapping.browser.dateGroup' },
   { key: 'image', label: 'design-studio.elements.image' },
   { key: 'icon', label: 'design-studio.elements.icon' },

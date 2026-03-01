@@ -28,7 +28,7 @@ export const PropertyTypeElementMap: Record<
   title: ['text'],
   text: ['text'],
   'formatted-text': ['formatted-text'],
-  url: ['text'],
+  url: ['url'],
   select: ['text'],
   toggle: ['text'],
   number: ['number'],
