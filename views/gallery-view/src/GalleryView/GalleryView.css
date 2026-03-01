@@ -26,3 +26,7 @@
   grid-template-columns: repeat(var(--gallery-column-count, 1), 1fr);
   gap: var(--gallery-gap, 1rem);
 }
+
+.gallery-row > * {
+  min-width: 0;
+}
