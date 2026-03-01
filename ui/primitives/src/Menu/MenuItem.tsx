@@ -21,9 +21,10 @@ export const useMenuItemContext = hook;
 
 export interface MenuItemProps {
   /*
-   * i18n key for the label. Falls back to children if not provided.
+   * Label text. Strings are treated as i18n keys and translated.
+   * Falls back to children if not provided.
    */
-  label?: string;
+  label?: React.ReactNode;
 
   /*
    * Label content. Used when `label` i18n key is not provided.
@@ -173,7 +174,13 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           {contentIcon && (
             <ContentIcon className="item-icon" icon={contentIcon} />
           )}
-          <span className="label">{label ? i18n.t(label) : children}</span>
+          <span className="label">
+            {label
+              ? typeof label === 'string'
+                ? i18n.t(label)
+                : label
+              : children}
+          </span>
           {trailingIcon}
           {keyboardShortcut && (
             <KeyboardShortcut

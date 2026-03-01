@@ -62,7 +62,7 @@ export const MenuRadioItem = React.forwardRef<
           <span className="menu-item-radio-circle">{dotContent}</span>
         </span>
       }
-      onClick={context ? handleClick : undefined}
+      {...(context ? { onClick: handleClick } : {})}
     />
   );
 });
