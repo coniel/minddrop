@@ -34,6 +34,102 @@
       }
     }
 
+    .empty-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 150px;
+    }
+
+    .empty-illustration {
+      position: relative;
+      width: 340px;
+      height: 340px;
+    }
+
+    /* Concentric rings */
+    .empty-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-default);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .empty-ring-1 {
+      width: 80px;
+      height: 80px;
+      opacity: 0.9;
+    }
+
+    .empty-ring-2 {
+      width: 140px;
+      height: 140px;
+      opacity: 0.7;
+    }
+
+    .empty-ring-3 {
+      width: 200px;
+      height: 200px;
+      opacity: 0.5;
+    }
+
+    .empty-ring-4 {
+      width: 260px;
+      height: 260px;
+      opacity: 0.35;
+    }
+
+    .empty-ring-5 {
+      width: 320px;
+      height: 320px;
+      opacity: 0.2;
+    }
+
+    /* Central icon — larger and darker */
+    .empty-center-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--text-regular);
+      border-radius: var(--radius-md);
+      color: var(--text-on-solid);
+
+      .icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    /* Scattered orbit icons */
+    .empty-orbit-icon {
+      position: absolute;
+      color: var(--text-subtle);
+      background: var(--surface-raised);
+      border-radius: var(--radius-md);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      &.empty-orbit-icon-outer {
+        opacity: 0.65;
+      }
+    }
+
     .view-switcher {
       display: flex;
       align-items: center;

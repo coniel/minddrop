@@ -12,12 +12,15 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Heading,
+  Icon,
   IconButton,
   MenuGroup,
   Panel,
+  Stack,
   Tabs,
   TabsList,
   TabsTab,
+  Text,
   Toolbar,
   useToggle,
 } from '@minddrop/ui-primitives';
@@ -114,7 +117,10 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     [activeViewType, view?.options],
   );
 
-  const { t } = useTranslation({ keyPrefix: 'databases.actions' });
+  const { t } = useTranslation();
+
+  // Determine whether the database is empty
+  const isEmpty = entryIds.length === 0;
 
   // Callback to update the active view's options
   const handleUpdateViewOptions = useCallback(
@@ -191,99 +197,190 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           </Toolbar>
         </div>
 
-        {/* View switcher bar */}
-        <div className="view-switcher">
-          <Tabs value={view?.id} onValueChange={setActiveViewId}>
-            <SortableList
-              as={TabsList}
-              items={databaseViews.map((databaseView) => databaseView.id)}
-              direction="horizontal"
-              gap={1}
-              onSort={(newOrder) => {
-                // Reorder views in the views store
-                Views.reorderDataSourceViews(newOrder);
-                // Persist the sort order to the database
-                Databases.update(databaseId, { viewOrder: newOrder });
-              }}
-              renderItem={(
-                id,
-                { ref, handleProps, isDragging, style, className },
-              ) => {
-                const databaseView = databaseViews.find(
-                  (view) => view.id === id,
-                );
+        {/* View switcher bar — hidden when the database has no entries */}
+        {!isEmpty && (
+          <div className="view-switcher">
+            <Tabs value={view?.id} onValueChange={setActiveViewId}>
+              <SortableList
+                as={TabsList}
+                items={databaseViews.map((databaseView) => databaseView.id)}
+                direction="horizontal"
+                gap={1}
+                onSort={(newOrder) => {
+                  // Reorder views in the views store
+                  Views.reorderDataSourceViews(newOrder);
+                  // Persist the sort order to the database
+                  Databases.update(databaseId, { viewOrder: newOrder });
+                }}
+                renderItem={(
+                  id,
+                  { ref, handleProps, isDragging, style, className },
+                ) => {
+                  const databaseView = databaseViews.find(
+                    (view) => view.id === id,
+                  );
 
-                if (!databaseView) {
-                  return null;
-                }
+                  if (!databaseView) {
+                    return null;
+                  }
 
-                return (
-                  <TabsTab
-                    ref={ref}
-                    value={databaseView.id}
-                    startIcon={databaseView.icon}
-                    className={className}
-                    style={style}
-                    {...handleProps}
-                  >
-                    {databaseView.name}
-                  </TabsTab>
-                );
-              }}
-            />
-          </Tabs>
-
-          {/* Add view dropdown */}
-          <DropdownMenu
-            trigger={
-              <IconButton
-                size="sm"
-                label="databases.actions.addView"
-                icon="plus"
+                  return (
+                    <TabsTab
+                      ref={ref}
+                      value={databaseView.id}
+                      startIcon={databaseView.icon}
+                      className={className}
+                      style={style}
+                      {...handleProps}
+                    >
+                      {databaseView.name}
+                    </TabsTab>
+                  );
+                }}
               />
-            }
-            minWidth={200}
-          >
-            <MenuGroup padded>
-              {viewTypes.map((viewType) => (
-                <DropdownMenuItem
-                  key={viewType.type}
-                  muted
-                  icon={viewType.icon}
-                  label={viewType.name}
-                  tooltipDescription={viewType.description}
-                  onClick={() => handleAddView(viewType.type)}
-                />
-              ))}
-            </MenuGroup>
-          </DropdownMenu>
+            </Tabs>
 
-          {/* View settings dropdown, shown only when the view type has a settings menu */}
-          {activeViewType?.settingsMenu && (
-            <DropdownMenuRoot>
-              <DropdownMenuTrigger>
+            {/* Add view dropdown */}
+            <DropdownMenu
+              trigger={
                 <IconButton
-                  className="view-settings-button"
                   size="sm"
-                  label={t('viewSettings')}
-                  tooltipTitle={t('viewSettings')}
-                  icon="settings-2"
+                  label="databases.actions.addView"
+                  icon="plus"
                 />
-              </DropdownMenuTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuPositioner side="bottom" align="end">
-                  {React.createElement(activeViewType.settingsMenu, {
-                    view,
-                    options: viewOptions,
-                    onUpdateOptions: handleUpdateViewOptions,
-                  })}
-                </DropdownMenuPositioner>
-              </DropdownMenuPortal>
-            </DropdownMenuRoot>
-          )}
-        </div>
+              }
+              minWidth={200}
+            >
+              <MenuGroup padded>
+                {viewTypes.map((viewType) => (
+                  <DropdownMenuItem
+                    key={viewType.type}
+                    muted
+                    icon={viewType.icon}
+                    label={viewType.name}
+                    tooltipDescription={viewType.description}
+                    onClick={() => handleAddView(viewType.type)}
+                  />
+                ))}
+              </MenuGroup>
+            </DropdownMenu>
 
-        {view && <ViewRenderer key={view.id} view={view} entries={entryIds} />}
+            {/* View settings dropdown, shown only when the view type has a settings menu */}
+            {activeViewType?.settingsMenu && (
+              <DropdownMenuRoot>
+                <DropdownMenuTrigger>
+                  <IconButton
+                    className="view-settings-button"
+                    size="sm"
+                    label={t('databases.actions.viewSettings')}
+                    tooltipTitle={t('databases.actions.viewSettings')}
+                    icon="settings-2"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuPositioner side="bottom" align="end">
+                    {React.createElement(activeViewType.settingsMenu, {
+                      view,
+                      options: viewOptions,
+                      onUpdateOptions: handleUpdateViewOptions,
+                    })}
+                  </DropdownMenuPositioner>
+                </DropdownMenuPortal>
+              </DropdownMenuRoot>
+            )}
+          </div>
+        )}
+
+        {/* Empty state placeholder */}
+        {isEmpty && (
+          <div className="empty-placeholder">
+            <Stack align="center" gap={4}>
+              {/* Concentric rings illustration with scattered icons */}
+              <div className="empty-illustration">
+                <div className="empty-ring empty-ring-1" />
+                <div className="empty-ring empty-ring-2" />
+                <div className="empty-ring empty-ring-3" />
+                <div className="empty-ring empty-ring-4" />
+                <div className="empty-ring empty-ring-5" />
+
+                {/* Central icon */}
+                <div className="empty-center-icon">
+                  <Icon name="file-text" />
+                </div>
+
+                {/* Icons on the second ring */}
+                <div
+                  className="empty-orbit-icon"
+                  style={{ top: '25%', left: '43%' }}
+                >
+                  <Icon name="file" />
+                </div>
+                <div
+                  className="empty-orbit-icon"
+                  style={{ top: '56%', left: '27%' }}
+                >
+                  <Icon name="table" />
+                </div>
+                <div
+                  className="empty-orbit-icon"
+                  style={{ top: '50%', left: '65%' }}
+                >
+                  <Icon name="folder" />
+                </div>
+
+                {/* Icons on the fourth ring */}
+                <div
+                  className="empty-orbit-icon empty-orbit-icon-outer"
+                  style={{ top: '14%', left: '68%' }}
+                >
+                  <Icon name="layout-grid" />
+                </div>
+                <div
+                  className="empty-orbit-icon empty-orbit-icon-outer"
+                  style={{ top: '18%', left: '18%' }}
+                >
+                  <Icon name="image" />
+                </div>
+                <div
+                  className="empty-orbit-icon empty-orbit-icon-outer"
+                  style={{ top: '73%', left: '15%' }}
+                >
+                  <Icon name="text" />
+                </div>
+                <div
+                  className="empty-orbit-icon empty-orbit-icon-outer"
+                  style={{ top: '70%', left: '72%' }}
+                >
+                  <Icon name="link" />
+                </div>
+              </div>
+
+              {/* Text content */}
+              <Text size="lg" weight="semibold" color="muted">
+                {t('databases.empty.title')}
+              </Text>
+              <Text
+                size="sm"
+                color="subtle"
+                style={{ maxWidth: 380, textAlign: 'center' }}
+              >
+                {t('databases.empty.addViaButton')}
+              </Text>
+              <Text
+                size="sm"
+                color="subtle"
+                style={{ maxWidth: 380, textAlign: 'center' }}
+              >
+                {t('databases.empty.dropOrPaste')}
+              </Text>
+            </Stack>
+          </div>
+        )}
+
+        {/* View content */}
+        {!isEmpty && view && (
+          <ViewRenderer key={view.id} view={view} entries={entryIds} />
+        )}
       </Panel>
       {configurationPanelOpen && (
         <DatabaseConfigurationPanel databaseId={databaseId} />

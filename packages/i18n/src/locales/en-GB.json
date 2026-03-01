@@ -226,6 +226,11 @@
         "pathConflict": "A folder with this name already exists in the at the specified location."
       }
     },
+    "empty": {
+      "title": "No entries yet",
+      "addViaButton": "Click the + button at the top right to add a new entry.",
+      "dropOrPaste": "You can also drop or paste text, files, and links."
+    },
     "entrySerializers": {
       "markdown": {
         "name": "Markdown",
