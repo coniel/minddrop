@@ -1,7 +1,19 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSortableDrag } from '@minddrop/feature-drag-and-drop';
+import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/icons';
-import { Checkbox, Icon, Tooltip } from '@minddrop/ui-primitives';
+import {
+  Checkbox,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuPositioner,
+  DropdownMenuRoot,
+  DropdownMenuSeparator,
+  DropdownMenuSwitchItem,
+  Icon,
+  Tooltip,
+} from '@minddrop/ui-primitives';
 import { TableColumn } from '../types';
 import './TableHeader.css';
 
@@ -22,6 +34,8 @@ interface TableHeaderProps {
   onStartResize: (columnId: string, event: React.MouseEvent) => void;
   onToggleAll: (checked: boolean) => void;
   onReorderColumns: (columnOrder: string[]) => void;
+  onToggleShowChips: (columnId: string, showChips: boolean) => void;
+  onHideColumn: (columnId: string) => void;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -33,9 +47,22 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   onStartResize,
   onToggleAll,
   onReorderColumns,
+  onToggleShowChips,
+  onHideColumn,
 }) => {
+  const { t } = useTranslation({ keyPrefix: 'views.table' });
   const allSelected = totalCount > 0 && selectedCount === totalCount;
   const someSelected = selectedCount > 0 && selectedCount < totalCount;
+
+  // Track which column's dropdown menu is open (null = none)
+  const [menuColumnId, setMenuColumnId] = useState<string | null>(null);
+
+  // Refs for column header cells, used as menu anchor positions
+  const cellRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Tracks whether a pointer drag occurred, so we can suppress
+  // the click event that fires after a drag-and-release
+  const didDrag = React.useRef(false);
 
   // Track which handle's tooltip is open (null = none).
   // Set to null while dragging so the tooltip hides immediately.
@@ -116,19 +143,47 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
             <div
               role="columnheader"
               key={column.id}
-              ref={dragProps?.ref}
+              ref={(node) => {
+                cellRefs.current[column.id] = node;
+                dragProps?.ref(node);
+              }}
               className={`table-header-cell ${dragProps?.className ?? ''}`}
               style={{
                 ...columnFlexStyles[column.id],
                 ...dragProps?.style,
               }}
             >
-              {/* Drag zone fills the cell, sits behind resize handles */}
+              {/* Drag zone fills the cell, sits behind resize handles.
+                 Click (without drag) opens the column menu. */}
               <div
                 className="table-header-cell-drag-zone"
                 {...dragProps?.handleProps}
+                onPointerDown={(event) => {
+                  didDrag.current = false;
+                  dragProps?.handleProps?.onPointerDown?.(event);
+                }}
+                onPointerMove={(event) => {
+                  didDrag.current = true;
+                  dragProps?.handleProps?.onPointerMove?.(event);
+                }}
+                onClick={() => {
+                  if (didDrag.current) {
+                    return;
+                  }
+
+                  setMenuColumnId((current) =>
+                    current === column.id ? null : column.id,
+                  );
+                }}
+                onContextMenu={(event) => {
+                  event.preventDefault();
+                  setMenuColumnId((current) =>
+                    current === column.id ? null : column.id,
+                  );
+                }}
               />
 
+              {/* Column label — pointer-events: none so drags pass through */}
               <span className="table-header-cell-label">
                 <Icon
                   name={COLUMN_TYPE_ICONS[column.type] ?? 'baseline'}
@@ -137,6 +192,58 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 />
                 <span className="table-header-cell-name">{column.name}</span>
               </span>
+
+              {/* Column options menu — controlled, opens on click */}
+              <DropdownMenuRoot
+                open={menuColumnId === column.id}
+                onOpenChange={(open, details) => {
+                  if (!open && details.reason === 'outside-press') {
+                    // Check if the press landed on a header drag zone —
+                    // if so, let the cell's onClick handle the toggle
+                    const target = (details.event as MouseEvent)
+                      ?.target as Element | null;
+
+                    if (target?.closest('.table-header-cell-drag-zone')) {
+                      return;
+                    }
+                  }
+
+                  if (!open) {
+                    setMenuColumnId(null);
+                  }
+                }}
+              >
+                <DropdownMenuPortal>
+                  <DropdownMenuPositioner
+                    side="bottom"
+                    align="start"
+                    anchor={() => cellRefs.current[column.id]}
+                  >
+                    <DropdownMenuContent>
+                      {/* Show chips toggle for select columns */}
+                      {column.type === 'select' && (
+                        <>
+                          <DropdownMenuSwitchItem
+                            label={t('showChips')}
+                            checked={column.showChips !== false}
+                            onCheckedChange={(checked) =>
+                              onToggleShowChips(column.id, checked)
+                            }
+                          />
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
+
+                      {/* Hide column action */}
+                      <DropdownMenuItem
+                        label={t('hideColumn')}
+                        icon="eye-off"
+                        onClick={() => onHideColumn(column.id)}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenuPositioner>
+                </DropdownMenuPortal>
+              </DropdownMenuRoot>
 
               {/* Left handle — resizes the previous column */}
               {showLeftHandle && previousColumnId && !overflow && (

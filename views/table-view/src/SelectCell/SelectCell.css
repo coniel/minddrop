@@ -36,3 +36,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Plain text display when chips are disabled */
+.select-cell-text {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  color: var(--text-regular);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

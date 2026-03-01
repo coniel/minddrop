@@ -10,21 +10,42 @@ export type TablePadding = 'compact' | 'comfortable' | 'spacious';
 
 export type FieldSize = 'sm' | 'md' | 'lg';
 
+export interface ColumnConfig {
+  /**
+   * Percentage-based width used in non-overflow mode.
+   */
+  width?: number;
+
+  /**
+   * Pixel-based width used in overflow mode.
+   */
+  widthPx?: number;
+
+  /**
+   * Whether the column is hidden.
+   */
+  hidden?: boolean;
+
+  /**
+   * Whether to display select values as colored chips.
+   * Defaults to true when undefined.
+   */
+  showChips?: boolean;
+}
+
 export interface TableViewOptions {
   overflow: boolean;
   showRowNumbers: boolean;
-  /** Column IDs hidden from the table display. */
-  hiddenColumns: string[];
   /**
    * Ordered list of column IDs defining the display order.
    * Columns not in this list appear after ordered ones,
    * in their default database property order.
    */
   columnOrder: string[];
-  /** Percentage-based column widths used in non-overflow mode. */
-  columnWidths: Record<string, number>;
-  /** Pixel-based column widths used in overflow mode. */
-  columnWidthsPx: Record<string, number>;
+  /**
+   * Per-column configuration (widths, visibility, etc.).
+   */
+  columns: Record<string, ColumnConfig>;
   padding: TablePadding;
   rowSeparator: boolean;
   columnSeparator: boolean;
@@ -43,6 +64,12 @@ export interface TableColumn {
   name: string;
   type: string;
   options?: TableSelectOption[];
+
+  /**
+   * Whether to display select values as colored chips.
+   * Defaults to true when undefined.
+   */
+  showChips?: boolean;
 }
 
 export interface TableRowData {

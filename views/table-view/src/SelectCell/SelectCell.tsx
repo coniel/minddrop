@@ -23,6 +23,9 @@ export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
   // Find the matching option to get its color
   const selectedOption = options.find((o) => o.value === value);
 
+  // Whether to render values as colored chips
+  const showChips = column.showChips !== false;
+
   const handleValueChange = useCallback(
     (newValue: string) => {
       if (newValue !== value) {
@@ -50,9 +53,13 @@ export const SelectCell: React.FC<SelectCellProps> = ({ value, column }) => {
       trigger={
         <div className="select-cell" data-open>
           {value ? (
-            <Chip size="sm" color={selectedOption?.color || 'default'}>
-              {value}
-            </Chip>
+            showChips ? (
+              <Chip size="sm" color={selectedOption?.color || 'default'}>
+                {value}
+              </Chip>
+            ) : (
+              <span className="select-cell-text">{value}</span>
+            )
           ) : null}
           <Icon name="chevron-down" className="select-cell-chevron" />
         </div>

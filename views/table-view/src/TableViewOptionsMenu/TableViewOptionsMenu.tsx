@@ -32,26 +32,30 @@ export const TableViewOptionsMenu: React.FC<
     view.dataSource.type === 'database' ? view.dataSource.id : '';
   const database = Databases.use(databaseId);
 
-  // Build the set of hidden column IDs
+  // Derive the set of hidden column IDs from the columns config
   const hiddenColumns = useMemo(
-    () => new Set(options.hiddenColumns ?? []),
-    [options.hiddenColumns],
+    () =>
+      new Set(
+        Object.entries(options.columns ?? {})
+          .filter(([, config]) => config.hidden)
+          .map(([id]) => id),
+      ),
+    [options.columns],
   );
 
-  // Toggle a column's visibility
+  // Toggle a column's visibility via the per-column config
   const handleToggleColumn = useCallback(
     (columnId: string, visible: boolean) => {
-      const current = new Set(options.hiddenColumns ?? []);
-
-      if (visible) {
-        current.delete(columnId);
-      } else {
-        current.add(columnId);
-      }
-
-      onUpdateOptions({ hiddenColumns: Array.from(current) });
+      onUpdateOptions({
+        columns: {
+          [columnId]: {
+            ...(options.columns ?? {})[columnId],
+            hidden: !visible,
+          },
+        },
+      });
     },
-    [options.hiddenColumns, onUpdateOptions],
+    [options.columns, onUpdateOptions],
   );
 
   // Get the list of columns that can be toggled, sorted

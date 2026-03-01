@@ -44,9 +44,15 @@ export const TableViewComponent: React.FC<
   const rowHeight = ROW_HEIGHT[options.padding];
   const rowHeightPx = ROW_HEIGHT_PX[options.padding];
 
+  // Derive the set of hidden column IDs from the columns config
   const hiddenColumns = useMemo(
-    () => new Set(options.hiddenColumns),
-    [options.hiddenColumns],
+    () =>
+      new Set(
+        Object.entries(options.columns)
+          .filter(([, config]) => config.hidden)
+          .map(([id]) => id),
+      ),
+    [options.columns],
   );
 
   const columns = useMemo<TableColumn[]>(() => {
@@ -72,6 +78,13 @@ export const TableViewComponent: React.FC<
             value: o.value,
             color: o.color,
           }));
+
+          // Copy the showChips setting from the column config
+          const columnConfig = options.columns[p.name];
+
+          if (columnConfig?.showChips === false) {
+            column.showChips = false;
+          }
         }
 
         return column;
@@ -123,10 +136,20 @@ export const TableViewComponent: React.FC<
     return map;
   }, [allEntries]);
 
-  // Select the correct set of initial widths based on mode
-  const initialWidths = options.overflow
-    ? options.columnWidthsPx
-    : options.columnWidths;
+  // Derive initial widths from per-column config based on mode
+  const initialWidths = useMemo(() => {
+    const widths: Record<string, number> = {};
+
+    for (const [id, config] of Object.entries(options.columns)) {
+      const value = options.overflow ? config.widthPx : config.width;
+
+      if (value !== undefined) {
+        widths[id] = value;
+      }
+    }
+
+    return widths;
+  }, [options.columns, options.overflow]);
 
   // Persist the new column order to view options
   const handleReorderColumns = useCallback(
@@ -136,14 +159,40 @@ export const TableViewComponent: React.FC<
     [view.id],
   );
 
-  // Persist resized widths to the view options on resize end
+  // Toggle a column's showChips setting
+  const handleToggleShowChips = useCallback(
+    (columnId: string, showChips: boolean) => {
+      Views.update(view.id, {
+        options: { columns: { [columnId]: { showChips } } },
+      });
+    },
+    [view.id],
+  );
+
+  // Hide a column by setting its hidden flag
+  const handleHideColumn = useCallback(
+    (columnId: string) => {
+      Views.update(view.id, {
+        options: { columns: { [columnId]: { hidden: true } } },
+      });
+    },
+    [view.id],
+  );
+
+  // Persist resized widths into per-column config on resize end
   const handleResizeEnd = useCallback(
     (widths: Record<string, number>) => {
-      const optionsKey = options.overflow ? 'columnWidthsPx' : 'columnWidths';
+      // Merge new widths into existing column configs
+      const updatedColumns = { ...options.columns };
+      const widthKey = options.overflow ? 'widthPx' : 'width';
 
-      Views.update(view.id, { options: { [optionsKey]: widths } });
+      for (const [id, value] of Object.entries(widths)) {
+        updatedColumns[id] = { ...updatedColumns[id], [widthKey]: value };
+      }
+
+      Views.update(view.id, { options: { columns: updatedColumns } });
     },
-    [view.id, options.overflow],
+    [view.id, options.overflow, options.columns],
   );
 
   const { columnWidths, tableRef, startResize } = useColumnResize(
@@ -383,6 +432,8 @@ export const TableViewComponent: React.FC<
               onStartResize={startResize}
               onToggleAll={handleToggleAll}
               onReorderColumns={handleReorderColumns}
+              onToggleShowChips={handleToggleShowChips}
+              onHideColumn={handleHideColumn}
             />
             <div
               role="rowgroup"
