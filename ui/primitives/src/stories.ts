@@ -36,6 +36,7 @@ import { ToggleStories } from './Toggle/Toggle.stories';
 import { ToggleGroupStories } from './ToggleGroup/ToggleGroup.stories';
 import { ToolbarStories } from './Toolbar';
 import { TooltipStories } from './Tooltip/Tooltip.stories';
+import { WebViewStories } from './WebView/WebView.stories';
 import { CheckboxStories } from './fields/Checkbox/Checkbox.stories';
 import { RadioStories } from './fields/Radio/Radio.stories';
 import { TextFieldStories } from './fields/TextField/TextField.stories';
@@ -64,6 +65,7 @@ export const stories: StoryGroup[] = [
       { label: 'Chip', component: ChipStories },
       { label: 'Separator', component: SeparatorStories },
       { label: 'Tabs', component: TabsStories },
+      { label: 'WebView', component: WebViewStories },
     ],
   },
   {

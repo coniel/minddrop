@@ -32,6 +32,7 @@ export * from './ToggleGroup';
 export * from './Toolbar';
 export * from './Toast';
 export * from './Tooltip';
+export * from './WebView';
 export * from './constants';
 export * from './types';
 export * from './utils';

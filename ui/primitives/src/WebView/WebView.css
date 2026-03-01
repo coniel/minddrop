@@ -1,0 +1,11 @@
+/* ============================================================
+   WEBVIEW
+   Renders web content inside an iframe.
+   ============================================================ */
+
+.webview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
