@@ -1,14 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
-import { Button, CalendarPopover, IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
-import { Changelog, Issue, IssuePackage } from '../types';
+import {
+  Button,
+  CalendarPopover,
+  IconButton,
+  ScrollArea,
+  Select,
+} from '@minddrop/ui-primitives';
 import {
   ISSUE_PACKAGES,
   PACKAGE_GROUPS,
   getPackageColor,
 } from '../IssuesPanel/constants';
+import { Changelog, Issue, IssuePackage } from '../types';
 import './ChangelogPanel.css';
 
 interface ChangelogPanelProps {
@@ -56,30 +62,45 @@ function GroupedPackageItems() {
 }
 
 function getPackageLabel(value: string): string {
-  return ISSUE_PACKAGES.find((packageItem) => packageItem.value === value)?.label ?? value;
+  return (
+    ISSUE_PACKAGES.find((packageItem) => packageItem.value === value)?.label ??
+    value
+  );
 }
 
 /**
- * Returns today's date as YYYY-MM-DD, treating hours before 6 AM
- * as belonging to the previous day.
+ * Returns the current Helsinki datetime as YYYY-MM-DD HH:MM.
  */
 export function getEffectiveDate(): string {
   const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/Helsinki',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 
-  if (now.getHours() < 6) {
-    now.setDate(now.getDate() - 1);
-  }
+  const parts = formatter.formatToParts(now);
+  const year = parts.find((part) => part.type === 'year')!.value;
+  const month = parts.find((part) => part.type === 'month')!.value;
+  const day = parts.find((part) => part.type === 'day')!.value;
+  const hour = parts.find((part) => part.type === 'hour')!.value;
+  const minute = parts.find((part) => part.type === 'minute')!.value;
 
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
+/**
+ * Formats a date string (YYYY-MM-DD or YYYY-MM-DD HH:MM) for display.
+ */
 export function formatDate(dateString: string): string {
   try {
-    const date = new Date(dateString + 'T00:00:00');
+    // Extract just the date portion (YYYY-MM-DD)
+    const datePart = dateString.slice(0, 10);
+    const date = new Date(datePart + 'T00:00:00');
 
     return date.toLocaleDateString('en-GB', {
       day: 'numeric',
@@ -91,7 +112,43 @@ export function formatDate(dateString: string): string {
   }
 }
 
-export function groupChangelogsByDate(changelogs: Changelog[]): { date: string; items: Changelog[] }[] {
+/**
+ * Returns the effective grouping date for a changelog entry.
+ * Entries before 8 AM are considered part of the previous day.
+ */
+function getGroupingDate(dateString: string): string {
+  // Date-only entries (YYYY-MM-DD) group by their date as-is
+  if (dateString.length <= 10) {
+    return dateString;
+  }
+
+  // Extract hours from YYYY-MM-DD HH:MM format
+  const hours = parseInt(dateString.slice(11, 13), 10);
+
+  // If before 8 AM, shift to previous day
+  if (hours < 8) {
+    const date = new Date(dateString.slice(0, 10) + 'T00:00:00');
+    date.setDate(date.getDate() - 1);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  return dateString.slice(0, 10);
+}
+
+/**
+ * Groups changelogs by effective date (8 AM cutoff), sorted
+ * newest first. Within each group, entries are sorted by number
+ * descending.
+ */
+export function groupChangelogsByDate(
+  changelogs: Changelog[],
+): { date: string; items: Changelog[] }[] {
+  // Sort by full date string descending, then by number descending
   const sorted = [...changelogs].sort((a, b) => {
     if (a.date !== b.date) {
       return b.date.localeCompare(a.date);
@@ -103,12 +160,14 @@ export function groupChangelogsByDate(changelogs: Changelog[]): { date: string; 
   const groups: { date: string; items: Changelog[] }[] = [];
 
   for (const changelog of sorted) {
+    // Derive effective grouping date using the 8 AM cutoff
+    const effectiveDate = getGroupingDate(changelog.date);
     const last = groups[groups.length - 1];
 
-    if (last && last.date === changelog.date) {
+    if (last && last.date === effectiveDate) {
       last.items.push(changelog);
     } else {
-      groups.push({ date: changelog.date, items: [changelog] });
+      groups.push({ date: effectiveDate, items: [changelog] });
     }
   }
 
@@ -158,8 +217,9 @@ function ChangelogRow({
   changelog: Changelog;
   onClick: () => void;
 }) {
-  const packages = changelog.packages
-    .filter((packageValue) => packageValue.length > 0);
+  const packages = changelog.packages.filter(
+    (packageValue) => packageValue.length > 0,
+  );
 
   return (
     <div className="changelog-panel-row" onClick={onClick}>
@@ -197,14 +257,15 @@ export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
   onCreateChangelog,
   onDeleteChangelog,
 }) => {
-  const selectedChangelog = changelogs.find(
-    (changelog) => changelog.id === selectedChangelogId,
-  ) ?? null;
+  const selectedChangelog =
+    changelogs.find((changelog) => changelog.id === selectedChangelogId) ??
+    null;
 
   // --- Detail view ---
   if (selectedChangelog) {
-    const selectedPackages = selectedChangelog.packages
-      .filter((packageValue) => packageValue.length > 0);
+    const selectedPackages = selectedChangelog.packages.filter(
+      (packageValue) => packageValue.length > 0,
+    );
 
     return (
       <div className="changelog-panel-detail">
@@ -239,15 +300,23 @@ export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
         <div className="changelog-panel-detail-fields">
           <CalendarPopover
             mode="single"
-            selected={new Date(selectedChangelog.date + 'T00:00:00')}
+            selected={
+              new Date(selectedChangelog.date.slice(0, 10) + 'T00:00:00')
+            }
             onSelect={(date: Date | undefined) => {
               if (date) {
                 const year = date.getFullYear();
                 const month = String(date.getMonth() + 1).padStart(2, '0');
                 const day = String(date.getDate()).padStart(2, '0');
 
+                // Preserve the time portion if it exists
+                const timePart =
+                  selectedChangelog.date.length > 10
+                    ? selectedChangelog.date.slice(10)
+                    : '';
+
                 onChangelogChange(selectedChangelog.id, {
-                  date: `${year}-${month}-${day}`,
+                  date: `${year}-${month}-${day}${timePart}`,
                 });
               }
             }}
@@ -361,7 +430,13 @@ export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
   return (
     <div className="changelog-panel">
       <div className="changelog-panel-toolbar">
-        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-regular)' }}>
+        <span
+          style={{
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            color: 'var(--text-regular)',
+          }}
+        >
           {changelogs.length} {changelogs.length === 1 ? 'entry' : 'entries'}
         </span>
         <div className="changelog-panel-toolbar-spacer" />
