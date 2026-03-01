@@ -1567,6 +1567,9 @@ importers:
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
+      '@tanstack/react-virtual':
+        specifier: ^3.0.0
+        version: 3.13.19(react-dom@19.2.4)(react@19.2.4)
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
