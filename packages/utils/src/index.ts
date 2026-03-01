@@ -8,6 +8,7 @@ export * from './createContext';
 export * from './createStore';
 export * from './deepMerge';
 export * from './errors';
+export * from './formatDate';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
 export * from './getTransferData';
@@ -29,6 +30,7 @@ export * from './useForm';
 export * from './useInputValue';
 export * from './useToggle';
 export * from './omitPath';
+export * from './parseDate';
 export * from './test-utils';
 export { v4 as uuid } from 'uuid';
 
