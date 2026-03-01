@@ -56,6 +56,11 @@ export interface DesignPropertyMappingStore {
   unmapProperty: (elementId: string) => void;
 
   /**
+   * Persists the current property map to the database.
+   */
+  savePropertyMap: () => void;
+
+  /**
    * Sets the property type currently being dragged.
    */
   setDraggingPropertyType: (propertyType: PropertyType | null) => void;
@@ -118,8 +123,6 @@ export const DesignPropertyMappingStore =
     },
 
     mapProperty: (elementId, propertyName) => {
-      const { databaseId, designId } = get();
-
       // Remove any existing mapping for this property name so
       // a property is never mapped to multiple elements at once
       const currentMap = get().propertyMap;
@@ -130,23 +133,21 @@ export const DesignPropertyMappingStore =
 
       const propertyMap = { ...cleanedMap, [elementId]: propertyName };
 
-      // Update the store
+      // Update the store (persistence deferred to savePropertyMap)
       set({ propertyMap });
-
-      // Persist the updated map to the database
-      if (databaseId && designId) {
-        Databases.setDesignPropertyMap(databaseId, designId, propertyMap);
-      }
     },
 
     unmapProperty: (elementId) => {
-      const { databaseId, designId } = get();
       const { [elementId]: _, ...propertyMap } = get().propertyMap;
 
-      // Update the store
+      // Update the store (persistence deferred to savePropertyMap)
       set({ propertyMap });
+    },
 
-      // Persist the updated map to the database
+    savePropertyMap: () => {
+      const { databaseId, designId, propertyMap } = get();
+
+      // Persist the property map to the database
       if (databaseId && designId) {
         Databases.setDesignPropertyMap(databaseId, designId, propertyMap);
       }

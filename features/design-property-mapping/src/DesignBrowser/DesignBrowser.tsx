@@ -29,6 +29,7 @@ import {
 } from '@minddrop/selection';
 import { Button, Group, Panel, SwitchField } from '@minddrop/ui-primitives';
 import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
+import { AllPropertyConnectionLines } from '../PropertyConnectionLine/AllPropertyConnectionLines';
 import { PropertyConnectionLine } from '../PropertyConnectionLine/PropertyConnectionLine';
 import { PropertyMappingOverlay } from '../PropertyMappingOverlay';
 import { DatabasePropertiesDataKey } from '../constants';
@@ -80,6 +81,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   );
   const propertyMap = useDesignPropertyMappingStore(
     (state) => state.propertyMap,
+  );
+  const savePropertyMap = useDesignPropertyMappingStore(
+    (state) => state.savePropertyMap,
   );
 
   // Fetch the selected design
@@ -231,6 +235,10 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   // Whether unmapped elements are visually highlighted
   const [highlightUnmapped, setHighlightUnmapped] = useState(false);
 
+  // Whether the counter is being hovered (highlights both
+  // unmapped and mapped elements)
+  const [counterHovered, setCounterHovered] = useState(false);
+
   // Scale + translate state for the mapping view zoom.
   // Keeps the computed values so the reverse animation
   // returns to the original position smoothly.
@@ -321,7 +329,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   useEffect(() => {
     const area = canvasAreaRef.current;
 
-    if (!area || !highlightUnmapped || !selectedDesign) {
+    if (!area || (!highlightUnmapped && !counterHovered) || !selectedDesign) {
       return;
     }
 
@@ -388,7 +396,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
         child.classList.remove('unmapped-highlight');
       });
     };
-  }, [highlightUnmapped, propertyMap, selectedDesign]);
+  }, [highlightUnmapped, counterHovered, propertyMap, selectedDesign]);
 
   // Fade out unmapped highlights while a property is being dragged
   useEffect(() => {
@@ -411,6 +419,41 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     };
   }, [draggingPropertyType, highlightUnmapped]);
 
+  // Highlight mapped elements in green when hovering the counter
+  useEffect(() => {
+    const area = canvasAreaRef.current;
+
+    if (!area || !counterHovered) {
+      return;
+    }
+
+    // Query all rendered design elements inside the canvas
+    const elementNodes = area.querySelectorAll('[data-element-id]');
+    const highlighted: Element[] = [];
+
+    elementNodes.forEach((node) => {
+      const elementId = node.getAttribute('data-element-id');
+
+      if (!elementId || !propertyMap[elementId]) {
+        return;
+      }
+
+      // The wrapper uses display: contents, so target the first child
+      const child = node.firstElementChild;
+
+      if (child) {
+        child.classList.add('mapped-highlight');
+        highlighted.push(child);
+      }
+    });
+
+    return () => {
+      highlighted.forEach((child) => {
+        child.classList.remove('mapped-highlight');
+      });
+    };
+  }, [counterHovered, propertyMap]);
+
   // Navigate back to the previous view
   const handleClickBack = useCallback(() => {
     if (backEvent) {
@@ -422,6 +465,12 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
       });
     }
   }, [backEvent, backEventData]);
+
+  // Save the property map and navigate back
+  const handleSave = useCallback(() => {
+    savePropertyMap();
+    handleClickBack();
+  }, [savePropertyMap, handleClickBack]);
 
   return (
     <div ref={browserRef} className="design-browser">
@@ -464,6 +513,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
             {/* Toolbar for the mapping view */}
             {view === 'map-properties' && (
               <div className="design-browser-action-bar">
+                {/* Left: toggle switches */}
                 <Group gap={5}>
                   <SwitchField
                     label="design-property-mapping.browser.zoom"
@@ -478,12 +528,36 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
                     onCheckedChange={setHighlightUnmapped}
                   />
                 </Group>
-                <span className="property-mapping-counter">
+
+                {/* Center: mapping progress counter */}
+                {/* Hovering highlights mapped and unmapped elements */}
+                <span
+                  className="property-mapping-counter"
+                  onMouseEnter={() => setCounterHovered(true)}
+                  onMouseLeave={() => setCounterHovered(false)}
+                >
                   {t('design-property-mapping.browser.mappingCounter', {
                     mapped: mappedCount,
                     total: totalMappableElements,
                   })}
                 </span>
+
+                {/* Right: cancel and save buttons */}
+                <Group gap={2}>
+                  <Button
+                    label="actions.cancel"
+                    variant="subtle"
+                    size="lg"
+                    onClick={handleClickBack}
+                  />
+                  <Button
+                    label="actions.done"
+                    variant="solid"
+                    color="primary"
+                    size="lg"
+                    onClick={handleSave}
+                  />
+                </Group>
               </div>
             )}
 
@@ -520,6 +594,14 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
       {/* Connection line from hovered mapped property to its design element */}
       {view === 'map-properties' && (
         <PropertyConnectionLine containerRef={browserRef} />
+      )}
+
+      {/* All connection lines shown when hovering the counter */}
+      {view === 'map-properties' && counterHovered && (
+        <AllPropertyConnectionLines
+          containerRef={browserRef}
+          propertyMap={propertyMap}
+        />
       )}
     </div>
   );

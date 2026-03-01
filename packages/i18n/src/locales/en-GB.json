@@ -12,6 +12,7 @@
     "cancel": "Cancel",
     "clear": "Clear",
     "save": "Save",
+    "done": "Done",
     "delete": "Delete",
     "remove": "Remove",
     "reset": "Reset",
@@ -866,6 +867,10 @@
       "label": "Placeholder",
       "placeholder": "Placeholder text...",
       "reroll": "Regenerate text"
+    },
+    "editor": {
+      "label": "Editor",
+      "description": "Displays a rich text editor instead of static text"
     },
     "static": {
       "label": "Static",

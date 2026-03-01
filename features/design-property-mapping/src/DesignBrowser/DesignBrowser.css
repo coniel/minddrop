@@ -31,7 +31,7 @@
   right: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: var(--space-4);
   z-index: 1;
 }
@@ -78,7 +78,9 @@
 /* Mapping progress counter in the workspace toolbar */
 
 .property-mapping-counter {
-  margin-left: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: var(--font-size-xs);
   font-family: var(--font-mono);
   color: var(--text-muted);
@@ -152,6 +154,13 @@
   outline-offset: 2px;
   border-radius: var(--radius-sm);
   transition: outline-color var(--duration-slow) var(--ease-out);
+}
+
+/* Green outline on mapped elements when hovering the counter */
+.mapped-highlight {
+  outline: 3px dashed var(--border-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Fade out the highlight when a property drag starts */
