@@ -1,4 +1,5 @@
 export * from './DesignElement';
+export * from './DesignElementWrapperContext';
 export * from './DesignTextElement';
 export * from './DesignFormattedTextElement';
 export * from './DesignNumberElement';

@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Design, Designs, defaultDesignIds } from '@minddrop/designs';
+import {
+  Design,
+  DesignElement,
+  Designs,
+  defaultDesignIds,
+} from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
   Events,
   OpenAppSidebarEvent,
   OpenMainContentViewEvent,
 } from '@minddrop/events';
-import { DesignCanvas, DesignRootElement } from '@minddrop/feature-designs';
+import {
+  DesignCanvas,
+  DesignElementWrapperProvider,
+  DesignRootElement,
+} from '@minddrop/feature-designs';
+import { DropEventData } from '@minddrop/selection';
 import { Button, Panel } from '@minddrop/ui-primitives';
+import { PropertyDropTarget } from '../PropertyDropTarget';
 import { DatabasePropertyList } from './DatabasePropertyList';
 import { DesignBrowserList } from './DesignBrowserList';
 import './DesignBrowser.css';
@@ -72,6 +83,25 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     setView('map-properties');
   }, []);
 
+  // Handle a property being dropped onto a design element
+  const handlePropertyDrop = useCallback(
+    (elementId: string, drop: DropEventData) => {
+      // TODO: create the property-to-element mapping
+      console.log('Property dropped on element', elementId, drop);
+    },
+    [],
+  );
+
+  // Wrapper function for design elements in mapping mode
+  const elementWrapper = useCallback(
+    (element: DesignElement, children: React.ReactNode) => (
+      <PropertyDropTarget element={element} onDrop={handlePropertyDrop}>
+        {children}
+      </PropertyDropTarget>
+    ),
+    [handlePropertyDrop],
+  );
+
   // Navigate back to the previous view
   const handleClickBack = useCallback(() => {
     if (backEvent) {
@@ -123,7 +153,16 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
             {/* Canvas area for the design preview */}
             <div className="design-browser-canvas-area">
               <DesignCanvas designType={selectedDesign.type}>
-                <DesignRootElement element={selectedDesign.tree} />
+                {view === 'map-properties' ? (
+                  <DesignElementWrapperProvider
+                    wrapper={elementWrapper}
+                    excludeTypes={['root', 'container']}
+                  >
+                    <DesignRootElement element={selectedDesign.tree} />
+                  </DesignElementWrapperProvider>
+                ) : (
+                  <DesignRootElement element={selectedDesign.tree} />
+                )}
               </DesignCanvas>
             </div>
           </>

@@ -3,6 +3,7 @@ import {
   DesignElement as DesignElementType,
 } from '@minddrop/designs';
 import { DesignContainerElement } from './DesignContainerElement';
+import { useDesignElementWrapper } from './DesignElementWrapperContext';
 import { DesignFormattedTextElement } from './DesignFormattedTextElement';
 import { DesignIconElement } from './DesignIconElement';
 import { DesignImageElement } from './DesignImageElement';
@@ -19,22 +20,43 @@ export interface DesignElementProps {
 /**
  * Dispatcher component that routes a design element to the
  * correct type-specific renderer based on `element.type`.
+ * If a DesignElementWrapperProvider is present, wraps the
+ * rendered element with the provided wrapper function.
  */
 export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
+  const wrapperConfig = useDesignElementWrapper();
+
+  let rendered: React.ReactNode;
+
   switch (element.type) {
     case 'text':
-      return <DesignTextElement element={element} />;
+      rendered = <DesignTextElement element={element} />;
+      break;
     case 'formatted-text':
-      return <DesignFormattedTextElement element={element} />;
+      rendered = <DesignFormattedTextElement element={element} />;
+      break;
     case 'number':
-      return <DesignNumberElement element={element} />;
+      rendered = <DesignNumberElement element={element} />;
+      break;
     case 'image':
-      return <DesignImageElement element={element} />;
+      rendered = <DesignImageElement element={element} />;
+      break;
     case 'icon':
-      return <DesignIconElement element={element} />;
+      rendered = <DesignIconElement element={element} />;
+      break;
     case 'container':
-      return <DesignContainerElement element={element as ContainerElement} />;
+      rendered = (
+        <DesignContainerElement element={element as ContainerElement} />
+      );
+      break;
     default:
       return null;
   }
+
+  // Apply the wrapper if provided and the element type is not excluded
+  if (wrapperConfig && !wrapperConfig.excludeTypes.includes(element.type)) {
+    return wrapperConfig.wrapper(element, rendered);
+  }
+
+  return rendered;
 };
