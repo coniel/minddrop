@@ -22,6 +22,7 @@ import { FlatIconElement } from '../../../types';
 import { MarginFields } from '../MarginFields';
 import { OpacityField } from '../OpacityField';
 import { SectionLabel } from '../SectionLabel';
+import { StaticElementField } from '../StaticElementField';
 
 export interface IconElementStyleEditorProps {
   elementId: string;
@@ -176,6 +177,7 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
             <Button variant="subtle" size="sm" label="designs.icon.change" />
           </IconPicker>
         </Stack>
+        <StaticElementField elementId={elementId} />
       </Stack>
 
       {/* Icon size and color */}

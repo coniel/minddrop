@@ -1,9 +1,4 @@
-import {
-  FlexItem,
-  Group,
-  InputLabel,
-  Stack,
-} from '@minddrop/ui-primitives';
+import { FlexItem, Group, InputLabel, Stack } from '@minddrop/ui-primitives';
 import { DecimalPlacesField } from '../DecimalPlacesField';
 import { FontFamilySelect } from '../FontFamilySelect';
 import { FontSizeField } from '../FontSizeField';
@@ -17,6 +12,7 @@ import { OpacityField } from '../OpacityField';
 import { PrefixField } from '../PrefixField';
 import { SectionLabel } from '../SectionLabel';
 import { SignDisplaySelect } from '../SignDisplaySelect';
+import { StaticElementField } from '../StaticElementField';
 import { SuffixField } from '../SuffixField';
 import { TextAlignToggle } from '../TextAlignToggle';
 import { TextColorSelect } from '../TextColorSelect';
@@ -35,6 +31,7 @@ export const NumberElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.placeholder.label" />
         <NumberPlaceholderField elementId={elementId} />
+        <StaticElementField elementId={elementId} />
       </Stack>
 
       <Stack gap={3}>
@@ -141,7 +138,6 @@ export const NumberElementStyleEditor: React.FC<
           <MarginFields elementId={elementId} />
         </Stack>
       </Stack>
-
     </>
   );
 };

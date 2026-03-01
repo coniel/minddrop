@@ -21,6 +21,7 @@ import { ObjectFitSelect } from '../ObjectFitSelect';
 import { OpacityField } from '../OpacityField';
 import { SectionLabel } from '../SectionLabel';
 import { SizingFields } from '../SizingFields/SizingFields';
+import { StaticElementField } from '../StaticElementField';
 import { PlaceholderImageDialog } from './PlaceholderImageDialog';
 
 export interface ImageElementStyleEditorProps {
@@ -208,6 +209,7 @@ export const ImageElementStyleEditor: React.FC<
           onOpenChange={setDialogOpen}
           onSelect={handleImageSelect}
         />
+        <StaticElementField elementId={elementId} />
       </Stack>
 
       <Stack gap={3}>

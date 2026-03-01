@@ -347,6 +347,7 @@ export const updateDesignElement = (
     placeholderImage?: string;
     format?: Partial<NumberFormat>;
     icon?: string;
+    static?: boolean;
   },
 ) => {
   const store = DesignStudioStore.getState();

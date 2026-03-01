@@ -2,12 +2,13 @@ import { InputLabel, Stack } from '@minddrop/ui-primitives';
 import { MarginFields } from '../MarginFields';
 import { PlaceholderField } from '../PlaceholderField';
 import { SectionLabel } from '../SectionLabel';
+import { StaticElementField } from '../StaticElementField';
 import { TextAlignToggle } from '../TextAlignToggle';
 import { Typography } from '../Typography';
 
 const wordCounts = [
-  5, 10, 20, 30, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800,
-  900, 1000,
+  5, 10, 20, 30, 50, 75, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900,
+  1000,
 ];
 
 export interface FormattedTextElementStyleEditorProps {
@@ -22,6 +23,7 @@ export const FormattedTextElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.placeholder.label" />
         <PlaceholderField elementId={elementId} wordCounts={wordCounts} />
+        <StaticElementField elementId={elementId} />
       </Stack>
 
       <Stack gap={3}>

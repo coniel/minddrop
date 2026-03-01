@@ -2,6 +2,7 @@ import { InputLabel, Stack } from '@minddrop/ui-primitives';
 import { MarginFields } from '../MarginFields';
 import { PlaceholderField } from '../PlaceholderField';
 import { SectionLabel } from '../SectionLabel';
+import { StaticElementField } from '../StaticElementField';
 import { TextAlignToggle } from '../TextAlignToggle';
 import { Typography } from '../Typography';
 
@@ -17,6 +18,7 @@ export const TextElementStyleEditor: React.FC<TextElementStyleEditorProps> = ({
       <Stack gap={3}>
         <SectionLabel label="designs.placeholder.label" />
         <PlaceholderField elementId={elementId} />
+        <StaticElementField elementId={elementId} />
       </Stack>
 
       <Stack gap={3}>
