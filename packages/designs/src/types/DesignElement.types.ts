@@ -52,6 +52,12 @@ export interface DesignElementBase {
    * The type of element this is.
    */
   type: string;
+
+  /**
+   * Whether the element displays static content rather than
+   * being mappable to a database property.
+   */
+  static?: boolean;
 }
 
 /******************************************************************************
