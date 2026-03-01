@@ -96,6 +96,16 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     let count = 0;
 
     const countElements = (element: DesignElement) => {
+      // Skip static elements — they display fixed content
+      // and cannot be mapped to properties
+      if (element.static) {
+        if ('children' in element) {
+          element.children.forEach(countElements);
+        }
+
+        return;
+      }
+
       // Skip structural containers (no background image)
       if (
         (element.type === 'container' || element.type === 'root') &&
@@ -347,6 +357,11 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
       }
 
       const element = elementMap[elementId];
+
+      // Skip static elements — they are not mapping targets
+      if (element?.static) {
+        return;
+      }
 
       // Skip containers without a background image — only image
       // containers are meaningful mapping targets

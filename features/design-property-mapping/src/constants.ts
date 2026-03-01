@@ -50,6 +50,11 @@ export function isPropertyCompatibleWithElement(
   propertyType: PropertyType,
   element: DesignElement | RootElement,
 ): boolean {
+  // Static elements cannot be mapped to properties
+  if (element.static) {
+    return false;
+  }
+
   const compatibleTypes = PropertyTypeElementMap[propertyType];
 
   if (!compatibleTypes.includes(element.type)) {
