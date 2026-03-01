@@ -22,6 +22,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   backEvent,
   backEventData,
   backButtonLabel,
+  newDesignType,
 }) => {
   const selectedElementId = useDesignStudioStore(
     (state) => state.selectedElementId,
@@ -126,7 +127,10 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
   return (
     <div className="design-studio">
       <Panel className="design-studio-left-panel">
-        <DesignStudioLeftPanel onClickBack={handleClickBack} />
+        <DesignStudioLeftPanel
+          onClickBack={handleClickBack}
+          newDesignType={newDesignType}
+        />
       </Panel>
       <div className="design-studio-workspace">
         {design && (

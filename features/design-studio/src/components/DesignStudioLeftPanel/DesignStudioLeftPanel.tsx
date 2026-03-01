@@ -1,14 +1,13 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Design,
   DesignType,
   Designs,
   defaultDesignIds,
 } from '@minddrop/designs';
+import { NewDesignMenu } from '@minddrop/feature-designs';
 import { i18n } from '@minddrop/i18n';
 import {
-  DropdownMenu,
-  DropdownMenuItem,
   IconButton,
   MenuGroup,
   MenuItem,
@@ -36,25 +35,58 @@ const designTypeIconMap: Record<string, string> = {
 };
 
 export interface DesignStudioLeftPanelProps {
+  /**
+   * Callback fired when the back button is clicked.
+   */
   onClickBack?: () => void;
+
+  /**
+   * When set, a new design of this type is created and
+   * opened on mount.
+   */
+  newDesignType?: DesignType;
 }
 
 export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
   onClickBack,
+  newDesignType,
 }) => {
-  const [activePanel, setActivePanel] = useState<ActivePanel>('designs');
+  const [activePanel, setActivePanel] = useState<ActivePanel>(
+    newDesignType ? 'elements' : 'designs',
+  );
   const designs = Designs.useAll();
   const activeDesignId = DesignStudioStore((state) => state.design?.id);
+  const hasCreatedNewDesign = useRef(false);
 
   const handleSelectDesign = useCallback((design: Design) => {
     DesignStudioStore.getState().initialize(design);
   }, []);
 
-  const handleCreateDesign = async (type: DesignType) => {
+  // Create and open a new design on mount when newDesignType is set
+  useEffect(() => {
+    if (!newDesignType || hasCreatedNewDesign.current) {
+      return;
+    }
+
+    hasCreatedNewDesign.current = true;
+
+    async function createNewDesign() {
+      const design = await Designs.create(newDesignType!);
+
+      handleSelectDesign(design);
+      setActivePanel('elements');
+    }
+
+    createNewDesign();
+  }, [newDesignType, handleSelectDesign]);
+
+  // Create a new design from the NewDesignMenu
+  async function handleCreateDesign(type: DesignType) {
     const design = await Designs.create(type);
+
     handleSelectDesign(design);
     setActivePanel('elements');
-  };
+  }
 
   return (
     <Tabs
@@ -85,41 +117,7 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
           </TabsTab>
         </TabsList>
         <Spacer />
-        <DropdownMenu
-          trigger={
-            <IconButton
-              icon="plus"
-              label="design-studio.labels.new"
-              color="neutral"
-            />
-          }
-          minWidth={300}
-          contentClassName="property-type-selection-menu"
-        >
-          <MenuGroup padded>
-            <DropdownMenuItem
-              muted
-              icon="layout"
-              label="designs.page.new"
-              tooltipDescription="designs.page.description"
-              onClick={() => handleCreateDesign('page')}
-            />
-            <DropdownMenuItem
-              muted
-              icon="layout-grid"
-              label="designs.card.new"
-              tooltipDescription="designs.card.description"
-              onClick={() => handleCreateDesign('card')}
-            />
-            <DropdownMenuItem
-              muted
-              icon="layout-list"
-              label="designs.list.new"
-              tooltipDescription="designs.list.description"
-              onClick={() => handleCreateDesign('list')}
-            />
-          </MenuGroup>
-        </DropdownMenu>
+        <NewDesignMenu onSelectType={handleCreateDesign} />
       </div>
 
       <TabsPanel value="designs">

@@ -10,12 +10,10 @@ import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
 } from '@minddrop/feature-design-studio';
+import { NewDesignMenu } from '@minddrop/feature-designs';
 import { UiIconName } from '@minddrop/icons';
 import {
-  DropdownMenu,
-  DropdownMenuItem,
   Icon,
-  IconButton,
   MenuGroup,
   MenuItem,
   MenuLabel,
@@ -79,22 +77,18 @@ export const DesignBrowserList: React.FC<DesignBrowserListProps> = ({
     });
   }, [designs, searchTerm]);
 
-  // Handle creating a new design of the given type
+  // Open the design studio to create a new design of the given type
   const handleCreateDesign = useCallback(
-    async (type: DesignType) => {
-      // Create a new design of the specified type
-      const design = await Designs.create(type);
-
+    (type: DesignType) => {
       // Close the browser overlay
       onClose();
 
-      // Open the design studio with the new design
+      // Open the design studio with a new design
       Events.dispatch<OpenDesignStudioEventData>(OpenDesignStudioEvent, {
-        backEvent: '',
-        backEventData: {},
+        newDesignType: type,
       });
     },
-    [databaseId, onClose],
+    [onClose],
   );
 
   return (
@@ -110,40 +104,7 @@ export const DesignBrowserList: React.FC<DesignBrowserListProps> = ({
           onValueChange={setSearchTerm}
           clearable
         />
-        <DropdownMenu
-          trigger={
-            <IconButton
-              icon="plus"
-              label="design-property-mapping.browser.newDesign"
-              color="neutral"
-            />
-          }
-          minWidth={300}
-        >
-          <MenuGroup padded>
-            <DropdownMenuItem
-              muted
-              icon="layout"
-              label="designs.page.new"
-              tooltipDescription="designs.page.description"
-              onClick={() => handleCreateDesign('page')}
-            />
-            <DropdownMenuItem
-              muted
-              icon="layout-grid"
-              label="designs.card.new"
-              tooltipDescription="designs.card.description"
-              onClick={() => handleCreateDesign('card')}
-            />
-            <DropdownMenuItem
-              muted
-              icon="layout-list"
-              label="designs.list.new"
-              tooltipDescription="designs.list.description"
-              onClick={() => handleCreateDesign('list')}
-            />
-          </MenuGroup>
-        </DropdownMenu>
+        <NewDesignMenu onSelectType={handleCreateDesign} />
       </div>
 
       {/* Scrollable design list grouped by type */}

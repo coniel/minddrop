@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Databases } from '@minddrop/databases';
-import { Events } from '@minddrop/events';
-import { BrowseDesignsEvent } from '@minddrop/feature-design-property-mapping';
+import { NewDesignMenu } from '@minddrop/feature-designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
 import { PropertySchema } from '@minddrop/properties';
@@ -18,6 +17,7 @@ import {
 } from '@minddrop/ui-primitives';
 import { DatabaseDesignsMenu } from '../DatabaseDesignsMenu';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
+import { OpenDatabaseViewEvent } from '../events';
 import './DatabaseConfigurationPanel.css';
 
 export interface DatabaseConfigurationPanelProps {
@@ -58,11 +58,6 @@ export const DatabaseConfigurationPanel: React.FC<
   // Remove a draft property by its ID
   function removeDraftProperty(id: number) {
     setDraftProperties((prevDrafts) => prevDrafts.filter((p) => p.id !== id));
-  }
-
-  // Dispatch the browse designs event to open the design browser overlay
-  function handleAddDesign() {
-    Events.dispatch(BrowseDesignsEvent, { databaseId });
   }
 
   if (!databaseConfig) {
@@ -107,11 +102,10 @@ export const DatabaseConfigurationPanel: React.FC<
             </PropertyTypeSelectionMenu>
           )}
           {activeTab === 'designs' && (
-            <IconButton
-              size="sm"
-              label="databases.actions.addDesign"
-              icon="plus"
-              onClick={handleAddDesign}
+            <NewDesignMenu
+              databaseId={databaseId}
+              backEvent={OpenDatabaseViewEvent}
+              backEventData={{ databaseId, configurationPanelOpen: true }}
             />
           )}
           {activeTab === 'settings' && <IconButtonSpacer size="sm" />}
