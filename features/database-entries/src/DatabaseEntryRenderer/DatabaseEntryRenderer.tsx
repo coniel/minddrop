@@ -6,8 +6,11 @@ import {
   Databases,
 } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
+import { Events } from '@minddrop/events';
 import { DesignRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
+import { OpenDatabaseEntryEvent, OpenDatabaseEntryEventData } from '../events';
+import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
   /**
@@ -61,6 +64,24 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
     [entry.id],
   );
 
+  // Dispatch the open entry event when clicking on the entry
+  const onOpenEntry = useCallback(() => {
+    Events.dispatch<OpenDatabaseEntryEventData>(OpenDatabaseEntryEvent, {
+      entryId: entry.id,
+    });
+  }, [entry.id]);
+
+  // Handle keyboard activation (Enter/Space) for accessibility
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        onOpenEntry();
+      }
+    },
+    [onOpenEntry],
+  );
+
   // Get the property map for this design (element ID → property name)
   const propertyMap = useMemo(
     () => Databases.getDesignPropertyMap(entry.database, design.id) || {},
@@ -89,12 +110,20 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
   });
 
   return (
-    <DesignRenderer
-      design={design}
-      propertyMap={propertyMap}
-      propertyValues={propertyValues}
-      properties={database.properties}
-      onUpdatePropertyValue={onUpdatePropertyValue}
-    />
+    <div
+      className={`database-entry database-entry-${designType}`}
+      role="button"
+      tabIndex={0}
+      onClick={onOpenEntry}
+      onKeyDown={onKeyDown}
+    >
+      <DesignRenderer
+        design={design}
+        propertyMap={propertyMap}
+        propertyValues={propertyValues}
+        properties={database.properties}
+        onUpdatePropertyValue={onUpdatePropertyValue}
+      />
+    </div>
   );
 };

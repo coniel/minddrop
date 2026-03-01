@@ -1,0 +1,8 @@
+.database-entry-card > * {
+  outline: 1px solid transparent;
+  transition: outline-color var(--duration-normal) var(--ease-out);
+}
+
+.database-entry-card:hover > * {
+  outline-color: var(--border-subtle);
+}
