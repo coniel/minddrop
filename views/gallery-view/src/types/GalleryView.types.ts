@@ -1,5 +1,7 @@
 import { View } from '@minddrop/views';
 
+export type GalleryGap = 'compact' | 'comfortable' | 'spacious';
+
 export interface GalleryView extends View {
   type: 'wall-view';
   options: Partial<GalleryViewOptions>;
@@ -15,4 +17,9 @@ export interface GalleryViewOptions {
    * The minimum width of a column.
    */
   minColumnWidth: number;
+
+  /**
+   * The gap between cards.
+   */
+  gap: GalleryGap;
 }

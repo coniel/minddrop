@@ -1,5 +1,6 @@
 import { ViewType } from '@minddrop/views';
 import { GalleryViewComponent } from './GalleryView';
+import { GalleryViewOptionsMenu } from './GalleryViewOptionsMenu/GalleryViewOptionsMenu';
 import { defaultGalleryViewOptions } from './constants';
 import { GalleryViewOptions } from './types';
 
@@ -10,4 +11,5 @@ export const GalleryViewType: ViewType<GalleryViewOptions> = {
   icon: 'layout-grid',
   defaultOptions: defaultGalleryViewOptions,
   component: GalleryViewComponent,
+  settingsMenu: GalleryViewOptionsMenu,
 };

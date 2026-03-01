@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
 import { DatabaseEntryRenderer } from '@minddrop/feature-database-entries';
 import { ViewTypeComponentProps } from '@minddrop/views';
-import { defaultGalleryViewOptions } from '../constants';
-import { GalleryViewOptions } from '../types';
+import { GAP_SIZE, defaultGalleryViewOptions } from '../constants';
+import { GalleryGap, GalleryViewOptions } from '../types';
 import './GalleryView.css';
 
 interface Column {
@@ -23,6 +23,10 @@ export const GalleryViewComponent: React.FC<
       view.options?.minColumnWidth || defaultGalleryViewOptions.minColumnWidth,
     [view.options],
   );
+
+  // Resolve the gap option to a CSS value
+  const gap: GalleryGap = view.options?.gap || defaultGalleryViewOptions.gap;
+
   const ref = useRef<HTMLDivElement>(null);
   const [viewWidth, setViewWidth] = useState(0);
   const columnCount = useMemo(
@@ -47,7 +51,11 @@ export const GalleryViewComponent: React.FC<
   }, []);
 
   return (
-    <div ref={ref} className="gallery-view">
+    <div
+      ref={ref}
+      className="gallery-view"
+      style={{ '--gallery-gap': GAP_SIZE[gap] } as React.CSSProperties}
+    >
       {columns.map((column) => (
         <Column key={column.id} id={column.id} entries={column.entries} />
       ))}

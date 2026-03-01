@@ -670,7 +670,18 @@
     },
     "gallery": {
       "name": "Gallery",
-      "description": "A gallery view."
+      "description": "A gallery view.",
+      "options": {
+        "maxColumns": "Max columns",
+        "cardSize": "Card size",
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "gap": "Gap",
+        "compact": "Compact",
+        "comfortable": "Comfortable",
+        "spacious": "Spacious"
+      }
     },
     "table": {
       "name": "Table",

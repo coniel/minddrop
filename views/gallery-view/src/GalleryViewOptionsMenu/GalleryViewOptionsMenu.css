@@ -1,0 +1,8 @@
+/* ============================================================
+   GALLERY VIEW OPTIONS MENU
+   View-type-specific settings menu content for gallery views.
+   ============================================================ */
+
+.gallery-view-options-menu {
+  min-width: 16rem;
+}
