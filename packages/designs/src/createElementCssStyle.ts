@@ -5,6 +5,7 @@ import {
   IconElementStyle,
   ImageElementStyle,
   TextElementStyle,
+  WebviewElementStyle,
 } from './styles';
 
 const colorNames: string[] = ContentColors;
@@ -58,6 +59,7 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
     fontStyle: style.italic ? 'italic' : 'normal',
     textDecoration: style.underline ? 'underline' : 'none',
     maxWidth: style['max-width'] > 0 ? `${style['max-width']}px` : undefined,
+    overflowWrap: 'anywhere',
     opacity: style.opacity,
     marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
     marginRight: style['margin-right']
@@ -265,6 +267,34 @@ export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
   };
 }
 
+export function createWebviewCssStyle(
+  style: WebviewElementStyle,
+): CSSProperties {
+  // Resolve sizing unit (px or %) for width fields
+  const widthUnit = style.widthUnit || 'px';
+  const maxWidthUnit = style.maxWidthUnit || 'px';
+
+  return {
+    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
+    height: style.height > 0 ? `${style.height}px` : undefined,
+    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
+    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+    borderStyle: style.borderStyle,
+    borderWidth: `${style.borderWidth}px`,
+    borderColor: getBorderColorCss(style.borderColor),
+    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    opacity: style.opacity,
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+  };
+}
+
 /**
  * An element with a type and style, used as input for
  * `createElementCssStyle`. Accepts both `DesignElement`
@@ -277,6 +307,7 @@ export type StylableElement =
     }
   | { type: 'icon'; style: IconElementStyle }
   | { type: 'image'; style: ImageElementStyle }
+  | { type: 'webview'; style: WebviewElementStyle }
   | { type: 'root' | 'container'; style: ContainerElementStyle };
 
 /**
@@ -297,6 +328,8 @@ export function createElementCssStyle(element: StylableElement): CSSProperties {
       return createIconCssStyle(element.style);
     case 'image':
       return createImageCssStyle(element.style);
+    case 'webview':
+      return createWebviewCssStyle(element.style);
     case 'root':
     case 'container':
       return createContainerCssStyle(element.style);
