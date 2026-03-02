@@ -69,7 +69,7 @@ export const Sidebar: FC<SidebarProps> = ({
   );
 
   return (
-    <Panel
+    <div
       ref={sidebar}
       className={propsToClass('app-sidebar', { className, isDragging })}
       {...other}
@@ -84,6 +84,6 @@ export const Sidebar: FC<SidebarProps> = ({
       >
         <div className="resize-indicator" />
       </div>
-    </Panel>
+    </div>
   );
 };

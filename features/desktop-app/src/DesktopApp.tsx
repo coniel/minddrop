@@ -15,14 +15,9 @@ import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
-import {
-  ConfirmationDialog,
-  Panel,
-  TooltipProvider,
-} from '@minddrop/ui-primitives';
+import { ConfirmationDialog, TooltipProvider } from '@minddrop/ui-primitives';
 import { AppSidebar } from './AppSidebar';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
-import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
@@ -59,7 +54,6 @@ export const DesktopApp: React.FC = () => {
       >
         <MindDropApiProvider>
           <div className="app">
-            <Panel className="toolbar-panel"></Panel>
             <div className="content-panels">
               {showSidebar && <AppSidebar />}
               <MainContent />
@@ -68,7 +62,6 @@ export const DesktopApp: React.FC = () => {
           </div>
           <DatabasesFeature />
           <ConfirmationDialogFeature />
-          <ShowWindowOnRendered />
           <DesignsFeature />
           <DevTools />
         </MindDropApiProvider>

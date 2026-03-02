@@ -7,10 +7,6 @@
   background-color: var(--app-background-color);
 }
 
-.toolbar-panel {
-  height: 2.5rem;
-}
-
 .content-panels {
   flex: 1;
   display: flex;
