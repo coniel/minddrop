@@ -19,7 +19,7 @@ import { ContainerTypography } from '../ContainerTypography';
 import { DirectionToggle } from '../DirectionToggle';
 import { GapField } from '../GapField';
 import { MinHeightField } from '../MinHeightField';
-import { PaddingFields } from '../PaddingFields/PaddingFields';
+import { PaddingFields } from '../PaddingFields';
 import { PositionGrid } from '../PositionGrid';
 import { SectionLabel } from '../SectionLabel';
 import { StretchSwitch } from '../StretchSwitch';
