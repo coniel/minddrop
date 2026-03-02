@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
+import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/ui-icons';
 import { useToggle } from '@minddrop/utils';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';

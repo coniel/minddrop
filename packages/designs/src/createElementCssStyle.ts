@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { ContentColors } from '@minddrop/theme';
+import { ContentColors } from '@minddrop/ui-theme';
 import {
   ContainerElementStyle,
   IconElementStyle,

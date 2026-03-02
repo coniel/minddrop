@@ -6,7 +6,7 @@ import {
   defaultDesignIds,
 } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
-import { UiIconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   Icon,
   MenuGroup,

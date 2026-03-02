@@ -18,8 +18,8 @@
   "dependencies": {
     "@minddrop/core": "workspace:*",
     "@minddrop/i18n": "workspace:*",
-    "@minddrop/theme": "workspace:*",
-    "@minddrop/icons": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }
 }

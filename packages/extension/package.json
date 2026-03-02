@@ -20,10 +20,10 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
     "@minddrop/file-system": "workspace:*",
-    "@minddrop/icons": "workspace:*",
+    "@minddrop/ui-icons": "workspace:*",
     "@minddrop/markdown": "workspace:*",
     "@minddrop/selection": "workspace:*",
-    "@minddrop/theme": "workspace:*",
+    "@minddrop/ui-theme": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }

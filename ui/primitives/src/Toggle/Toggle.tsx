@@ -1,6 +1,6 @@
-import React from 'react';
 import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
-import { UiIconName } from '@minddrop/icons';
+import React from 'react';
+import { UiIconName } from '@minddrop/ui-icons';
 import { Icon } from '../Icon';
 import { propsToClass } from '../utils';
 import './Toggle.css';
@@ -93,7 +93,11 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
     ref,
   ) => {
     const isText = !icon;
-    const content = icon ? <Icon name={icon} /> : children || <span className="toggle-label">{label}</span>;
+    const content = icon ? (
+      <Icon name={icon} />
+    ) : (
+      children || <span className="toggle-label">{label}</span>
+    );
 
     return (
       <TogglePrimitive
@@ -104,7 +108,13 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         onPressedChange={onPressedChange}
         value={value}
         disabled={disabled}
-        className={propsToClass('toggle', { variant, size, color, text: isText, className })}
+        className={propsToClass('toggle', {
+          variant,
+          size,
+          color,
+          text: isText,
+          className,
+        })}
       >
         {content}
       </TogglePrimitive>

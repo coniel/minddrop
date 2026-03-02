@@ -1,10 +1,20 @@
-import { UiIconName } from '@minddrop/icons';
-import { ContentColor } from '@minddrop/theme';
+import { UiIconName } from '@minddrop/ui-icons';
+import { ContentColor } from '@minddrop/ui-theme';
 
 const i18nKey = (key: string) => `designs.typography.${key}`;
 
 export type FontFamily = 'inherit' | 'sans' | 'serif' | 'mono';
-export type FontWeight = 'inherit' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+export type FontWeight =
+  | 'inherit'
+  | 100
+  | 200
+  | 300
+  | 400
+  | 500
+  | 600
+  | 700
+  | 800
+  | 900;
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
@@ -33,7 +43,16 @@ export interface TypographyStyles {
 
 const fontValues: FontFamily[] = ['inherit', 'sans', 'serif', 'mono'];
 const weightValues: FontWeight[] = [
-  'inherit', 100, 200, 300, 400, 500, 600, 700, 800, 900,
+  'inherit',
+  100,
+  200,
+  300,
+  400,
+  500,
+  600,
+  700,
+  800,
+  900,
 ];
 
 export const fonts: { label: string; value: FontFamily }[] = fontValues.map(

@@ -15,7 +15,7 @@ import userEvent from '@testing-library/user-event';
 import React, { FC, ReactElement } from 'react';
 import { vi } from 'vitest';
 import { i18n, initializeI18n } from '@minddrop/i18n';
-import { IconsProvider } from '@minddrop/icons';
+import { IconsProvider } from '@minddrop/ui-icons';
 import '@testing-library/jest-dom/vitest';
 
 class ResizeObserver {

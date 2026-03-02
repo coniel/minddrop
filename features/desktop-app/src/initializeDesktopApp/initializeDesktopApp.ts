@@ -11,7 +11,7 @@ import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
-import { Theme, ThemeAppearance } from '@minddrop/theme';
+import { Theme, ThemeAppearance } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';

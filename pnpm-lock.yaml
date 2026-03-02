@@ -38,7 +38,7 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
       '@minddrop/utils':
@@ -99,7 +99,7 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
       '@minddrop/utils':
@@ -267,9 +267,6 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
@@ -279,15 +276,18 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/theme':
-        specifier: workspace:*
-        version: link:../../ui/theme
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -343,9 +343,6 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
@@ -355,12 +352,15 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/theme':
+      '@minddrop/ui-icons':
         specifier: workspace:*
-        version: link:../../ui/theme
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -441,12 +441,12 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
-      '@minddrop/theme':
-        specifier: workspace:*
-        version: link:../../ui/theme
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -590,7 +590,7 @@ importers:
 
   packages/designs:
     dependencies:
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
     devDependencies:
@@ -603,7 +603,7 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@minddrop/icons':
+      '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
       '@minddrop/utils':
@@ -760,21 +760,21 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
-      '@minddrop/theme':
+      '@minddrop/ui-icons':
         specifier: workspace:*
-        version: link:../../ui/theme
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -809,21 +809,21 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../ui/icons
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../selection
-      '@minddrop/theme':
+      '@minddrop/ui-icons':
         specifier: workspace:*
-        version: link:../../ui/theme
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
+      '@minddrop/ui-theme':
+        specifier: workspace:*
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -975,10 +975,10 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@minddrop/icons':
+      '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
       '@minddrop/utils':
@@ -1077,7 +1077,7 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@minddrop/icons':
+      '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
       mockdate:
@@ -1260,7 +1260,7 @@ importers:
       '@minddrop/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../theme
       '@minddrop/utils':
@@ -1297,10 +1297,10 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
-      '@minddrop/icons':
+      '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../icons
-      '@minddrop/theme':
+      '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../theme
       '@minddrop/utils':
@@ -1427,7 +1427,7 @@ importers:
       '@minddrop/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@minddrop/icons':
+      '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons
       eslint:

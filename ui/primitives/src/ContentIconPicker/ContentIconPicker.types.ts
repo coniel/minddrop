@@ -1,4 +1,4 @@
-import { ContentIconName } from '@minddrop/icons';
+import { ContentIconName } from '@minddrop/ui-icons';
 
 // [name, category indexes, label indexes]
 export type MinifiedContentIcon = [ContentIconName, number[], number[]];

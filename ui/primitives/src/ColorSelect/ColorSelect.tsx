@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { ContentColor } from '@minddrop/theme';
+import { ContentColor } from '@minddrop/ui-theme';
 import {
   SelectIcon,
   SelectItem,

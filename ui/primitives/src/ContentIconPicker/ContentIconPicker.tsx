@@ -9,8 +9,8 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
-import { ContentColor } from '@minddrop/theme';
+import { ContentIconMetadata, ContentIconName } from '@minddrop/ui-icons';
+import { ContentColor } from '@minddrop/ui-theme';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';

@@ -3,9 +3,9 @@ import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
-import { Icons } from '@minddrop/icons';
 import { Markdown } from '@minddrop/markdown';
 import { Selection } from '@minddrop/selection';
+import { Icons } from '@minddrop/ui-icons';
 import * as Utils from '@minddrop/utils';
 import { Ui } from '../Ui';
 

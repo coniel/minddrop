@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { ContentColor } from '@minddrop/theme';
+import { ContentColor } from '@minddrop/ui-theme';
 import { propsToClass } from '../utils';
 import './Chip.css';
 

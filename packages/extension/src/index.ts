@@ -9,10 +9,10 @@ export type * from '@minddrop/events';
 export type * from '@minddrop/file-system';
 export type * from '@minddrop/markdown';
 export type * from '@minddrop/selection';
-export type * from '@minddrop/theme';
+export type * from '@minddrop/ui-theme';
 export type * from '@minddrop/ui-primitives';
 
-export * from '@minddrop/icons';
+export * from '@minddrop/ui-icons';
 
 export * as Utils from '@minddrop/utils';
 

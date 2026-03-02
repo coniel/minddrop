@@ -7,7 +7,6 @@ import {
   fonts,
 } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { ContentColor } from '@minddrop/theme';
 import {
   Button,
   ColorSelect,
@@ -25,6 +24,7 @@ import {
   SelectItem,
   Stack,
 } from '@minddrop/ui-primitives';
+import { ContentColor } from '@minddrop/ui-theme';
 import {
   saveDesign,
   updateDesignElement,

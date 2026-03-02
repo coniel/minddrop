@@ -2,11 +2,10 @@
  * ColorSelect.stories.tsx
  * Dev reference for the ColorSelect component.
  */
-
 import { useState } from 'react';
-import { ContentColor } from '@minddrop/theme';
+import { ContentColor } from '@minddrop/ui-theme';
+import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ColorSelect } from './ColorSelect';
-import { Story, StorySection, StoryRow, StoryItem } from '../dev/Story';
 
 const Controlled = ({
   variant,

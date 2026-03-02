@@ -1,4 +1,4 @@
-import { UiIconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/ui-icons';
 
 export type BorderStyle = 'none' | 'solid' | 'dashed' | 'dotted';
 

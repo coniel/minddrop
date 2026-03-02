@@ -17,7 +17,7 @@ import {
   DatabasesFeature,
 } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
-import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
+import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
 import {
   ConfirmationDialog,
   Panel,

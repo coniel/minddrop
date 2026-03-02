@@ -4,11 +4,11 @@ import {
   EmojiSkinTone,
   UserIconType,
   useIcons,
-} from '@minddrop/icons';
+} from '@minddrop/ui-icons';
+import { ContentColor } from '@minddrop/ui-theme';
 import { Button } from '../Button';
 import { ContentIconPicker } from '../ContentIconPicker';
 import { EmojiPicker } from '../EmojiPicker';
-import { ContentColor } from '@minddrop/theme';
 import './IconPicker.css';
 import {
   Popover,

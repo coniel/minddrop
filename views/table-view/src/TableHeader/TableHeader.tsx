@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from '@minddrop/i18n';
-import { UiIconName } from '@minddrop/icons';
 import { useSortableDrag } from '@minddrop/ui-drag-and-drop';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   Checkbox,
   DropdownMenuContent,

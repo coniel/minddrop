@@ -4,8 +4,8 @@ import {
   DesignElementType,
   RootElement,
 } from '@minddrop/designs';
-import { UiIconName } from '@minddrop/icons';
 import { PropertyType } from '@minddrop/properties';
+import { UiIconName } from '@minddrop/ui-icons';
 
 // -- Design Studio constants --
 

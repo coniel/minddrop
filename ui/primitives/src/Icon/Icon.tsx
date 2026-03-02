@@ -1,4 +1,4 @@
-import { UiIconName, useIcons } from '@minddrop/icons';
+import { UiIconName, useIcons } from '@minddrop/ui-icons';
 import { TextColor } from '../Text';
 import { propsToClass } from '../utils';
 import './Icon.css';

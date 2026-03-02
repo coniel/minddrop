@@ -6,7 +6,7 @@ import {
   defaultDesignIds,
 } from '@minddrop/designs';
 import { i18n } from '@minddrop/i18n';
-import { UiIconName } from '@minddrop/icons';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   IconButton,
   MenuGroup,

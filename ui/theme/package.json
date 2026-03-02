@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/theme",
+  "name": "@minddrop/ui-theme",
   "version": "0.5.1",
   "source": "src/index.ts",
   "main": "src/index.ts",

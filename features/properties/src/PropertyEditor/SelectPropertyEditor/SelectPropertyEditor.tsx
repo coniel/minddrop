@@ -6,7 +6,6 @@ import {
   SelectPropertyOption,
   SelectPropertySchema,
 } from '@minddrop/properties';
-import { ContentColor } from '@minddrop/theme';
 import {
   Button,
   ContentColors,
@@ -18,6 +17,7 @@ import {
   Text,
   TextInput,
 } from '@minddrop/ui-primitives';
+import { ContentColor } from '@minddrop/ui-theme';
 import {
   PropertyEditorBase,
   PropertyEditorBaseProps,
@@ -193,9 +193,7 @@ export const SelectPropertyEditor: React.FC<SelectPropertyEditorProps> = ({
                     <DropdownMenuColorSelectionItem
                       key={c.value}
                       color={c.value}
-                      onClick={() =>
-                        handleOptionColorChange(index, c.value)
-                      }
+                      onClick={() => handleOptionColorChange(index, c.value)}
                     />
                   ))}
                 </DropdownMenu>

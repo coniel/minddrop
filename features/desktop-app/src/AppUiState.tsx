@@ -1,5 +1,5 @@
 import { createPersistentConfig } from '@minddrop/core';
-import { EmojiSkinTone } from '@minddrop/icons';
+import { EmojiSkinTone } from '@minddrop/ui-icons';
 
 export interface AppUiState {
   /**
