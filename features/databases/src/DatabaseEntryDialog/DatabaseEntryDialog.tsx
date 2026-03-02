@@ -2,11 +2,18 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
-import { DatabaseEntries } from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { getWindowSizeSlot } from '@minddrop/utils';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
+import {
+  DialogSize,
+  EntryDialogSizeConfig,
+  dialogSizeKey,
+} from './EntryDialogSizeConfig';
 import './DatabaseEntryDialog.css';
 
 type ResizeEdge =
@@ -93,17 +100,59 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   const backdropRef = useRef<HTMLDivElement>(null);
   const resizeState = useRef<ResizeState | null>(null);
 
-  // Compute initial canvas size, clamped to 90% of viewport
+  // Keep a ref to the current size so handleMouseUp can read
+  // it without needing size in its dependency array
+  const sizeRef = useRef(size);
+  sizeRef.current = size;
+
+  // Get the entry so we can resolve the page design ID
+  const entry = DatabaseEntries.use(entryId);
+
+  // Resolve the page design ID for the entry's database
+  const databaseId = entry?.database ?? null;
+  const designId = useMemo(() => {
+    if (!databaseId) {
+      return null;
+    }
+
+    try {
+      return Databases.getDefaultDesign(databaseId, 'page').id;
+    } catch {
+      return null;
+    }
+  }, [databaseId]);
+
+  // Restore a saved size or fall back to the default
   useLayoutEffect(() => {
     if (!open) {
       return;
     }
 
-    const width = Math.min(1200, Math.round(window.innerWidth * 0.9));
-    const height = Math.min(900, Math.round(window.innerHeight * 0.9));
+    // Default size: clamped to 90% of viewport
+    const defaultWidth = Math.min(1200, Math.round(window.innerWidth * 0.9));
+    const defaultHeight = Math.min(900, Math.round(window.innerHeight * 0.9));
 
-    setSize({ width, height });
-  }, [open]);
+    // Attempt to restore a persisted size for this design + slot
+    if (designId) {
+      const key = dialogSizeKey(designId, getWindowSizeSlot());
+      const saved = EntryDialogSizeConfig.get(key) as DialogSize | undefined;
+
+      if (saved) {
+        // Clamp the saved size to 90% of the current viewport
+        const maxWidth = Math.round(window.innerWidth * 0.9);
+        const maxHeight = Math.round(window.innerHeight * 0.9);
+
+        setSize({
+          width: Math.min(saved.width, maxWidth),
+          height: Math.min(saved.height, maxHeight),
+        });
+
+        return;
+      }
+    }
+
+    setSize({ width: defaultWidth, height: defaultHeight });
+  }, [open, designId]);
 
   // Close the dialog when clicking the backdrop
   const handleBackdropClick = useCallback(
@@ -276,10 +325,17 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     }
   }, []);
 
-  // End resize on mouseup
+  // End resize on mouseup and persist the final size
   const handleMouseUp = useCallback(() => {
+    // Only persist if a resize was in progress and we have a design ID
+    if (resizeState.current && designId) {
+      const key = dialogSizeKey(designId, getWindowSizeSlot());
+
+      EntryDialogSizeConfig.set(key, sizeRef.current);
+    }
+
     resizeState.current = null;
-  }, []);
+  }, [designId]);
 
   // Attach global mouse listeners for resize
   useEffect(() => {

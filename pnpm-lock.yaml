@@ -188,6 +188,9 @@ importers:
 
   features/databases:
     dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases

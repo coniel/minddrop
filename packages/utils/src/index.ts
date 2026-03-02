@@ -11,6 +11,7 @@ export * from './errors';
 export * from './formatDate';
 export * from './fuzzySearch';
 export * from './getFileExtensionFromUrl';
+export * from './getWindowSizeSlot';
 export * from './getTransferData';
 export * from './isDomainMatch';
 export * from './isImageUrl';
