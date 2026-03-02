@@ -66,6 +66,9 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
     <DesignElement key={child.id} element={child} />
   ));
 
+  // Shared sizing so the root element fills the canvas content area
+  const fillStyle = { width: '100%' as const, height: '100%' as const };
+
   // When backdrop effects + bg image are both active, the background
   // image goes on an outer wrapper so backdrop-filter affects the image
   if (hasBackdropWithImage) {
@@ -74,6 +77,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
         className={className}
         data-element-id={element.id}
         style={{
+          ...fillStyle,
           backgroundImage: `url(${imageSrc})`,
           backgroundSize: containerCssStyle.backgroundSize,
           backgroundPosition: containerCssStyle.backgroundPosition,
@@ -100,7 +104,11 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
       <div
         className={className}
         data-element-id={element.id}
-        style={{ position: 'relative', isolation: 'isolate' }}
+        style={{
+          ...fillStyle,
+          position: 'relative',
+          isolation: 'isolate',
+        }}
       >
         <div style={gradientOverlayStyle} />
         <div style={containerCssStyle}>{children}</div>
@@ -114,6 +122,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
       data-element-id={element.id}
       style={{
         ...containerCssStyle,
+        ...fillStyle,
         // Apply background image URL resolved from the file system
         ...(imageSrc && { backgroundImage: `url(${imageSrc})` }),
       }}

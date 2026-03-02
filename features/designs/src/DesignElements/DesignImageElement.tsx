@@ -55,6 +55,7 @@ export const DesignImageElement: React.FC<DesignImageElementProps> = ({
         style={{
           ...cssStyle,
           maxWidth: '100%',
+          maxHeight: '100%',
           display: 'block',
           minHeight: cssStyle.height,
           minWidth: cssStyle.width,
