@@ -60,6 +60,12 @@
   }
 }
 
+/* --- No padding --- */
+
+.dialog-popup-no-padding {
+  padding: 0;
+}
+
 /* --- Width variants --- */
 
 /* sm — confirmations, simple prompts */
@@ -75,6 +81,7 @@
 /* lg — complex forms, rich content */
 .dialog-popup-width-lg {
   width: 72rem;
+  height: 80vh;
 }
 
 /* --- Title --- */

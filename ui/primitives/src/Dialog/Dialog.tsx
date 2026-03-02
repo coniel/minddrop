@@ -16,19 +16,30 @@ export interface DialogProps extends DialogPrimitives.Popup.Props {
    * @default 'md'
    */
   width?: DialogWidth;
+
+  /**
+   * Whether to remove the default padding.
+   * @default false
+   */
+  noPadding?: boolean;
 }
 
 export const Dialog: React.FC<DialogProps> = ({
   children,
   className,
   width = 'md',
+  noPadding,
   ...other
 }) => {
   return (
     <DialogPrimitives.Portal>
       <DialogPrimitives.Backdrop className="dialog-backdrop" />
       <DialogPrimitives.Popup
-        className={propsToClass('dialog-popup', { width, className })}
+        className={propsToClass('dialog-popup', {
+          width,
+          noPadding,
+          className,
+        })}
         {...other}
       >
         {children}
