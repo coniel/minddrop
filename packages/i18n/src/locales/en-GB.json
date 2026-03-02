@@ -870,10 +870,6 @@
       "placeholder": "Placeholder text...",
       "reroll": "Regenerate text"
     },
-    "editor": {
-      "label": "Editor",
-      "description": "Displays a rich text editor instead of static text"
-    },
     "static": {
       "label": "Static",
       "description": "Static elements display fixed content and cannot be mapped to a database property"
