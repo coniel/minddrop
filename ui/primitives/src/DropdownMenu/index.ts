@@ -25,17 +25,17 @@ export type { DropdownMenuLabelProps } from './DropdownMenuLabel';
 export { DropdownMenuGroup } from './DropdownMenuGroup';
 export type { DropdownMenuGroupProps } from './DropdownMenuGroup';
 
-export { MenuItemRenderer as DropdownMenuItem } from '../MenuItemRenderer';
-export type { MenuItemRendererProps as DropdownMenuItemProps } from '../MenuItemRenderer';
+export { ActionMenuItem as DropdownMenuItem } from '../ActionMenuItem';
+export type { ActionMenuItemProps as DropdownMenuItemProps } from '../ActionMenuItem';
 
 export { DropdownMenuRadioGroup } from './DropdownMenuRadioGroup';
 export type { DropdownMenuRadioGroupProps } from './DropdownMenuRadioGroup';
 
-export { RadioMenuItemRenderer as DropdownMenuRadioItem } from '../MenuItemRenderer';
-export type { RadioMenuItemRendererProps as DropdownMenuRadioItemProps } from '../MenuItemRenderer';
+export { ActionMenuRadioItem as DropdownMenuRadioItem } from '../ActionMenuItem';
+export type { ActionMenuRadioItemProps as DropdownMenuRadioItemProps } from '../ActionMenuItem';
 
-export { SwitchMenuItemRenderer as DropdownMenuSwitchItem } from '../MenuItemRenderer';
-export type { SwitchMenuItemRendererProps as DropdownMenuSwitchItemProps } from '../MenuItemRenderer';
+export { ActionMenuSwitchItem as DropdownMenuSwitchItem } from '../ActionMenuItem';
+export type { ActionMenuSwitchItemProps as DropdownMenuSwitchItemProps } from '../ActionMenuItem';
 
 export { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';
 export type { DropdownMenuColorSelectionItemProps } from './DropdownMenuColorSelectionItem';

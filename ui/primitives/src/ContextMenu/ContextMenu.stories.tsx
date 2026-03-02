@@ -3,8 +3,8 @@
  * Dev reference for the ContextMenu component system.
  */
 import { useState } from 'react';
-import { MenuItemRenderer as ContextMenuItem } from '../MenuItemRenderer';
-import { RadioMenuItemRenderer as ContextMenuRadioItem } from '../MenuItemRenderer';
+import { ActionMenuItem as ContextMenuItem } from '../ActionMenuItem';
+import { ActionMenuRadioItem as ContextMenuRadioItem } from '../ActionMenuItem';
 import { Text } from '../Text';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { ContextMenu } from './ContextMenu';

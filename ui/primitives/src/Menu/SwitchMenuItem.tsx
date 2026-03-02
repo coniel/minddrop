@@ -9,7 +9,7 @@ import { MenuItem, MenuItemProps } from './MenuItem';
    on the row toggles the switch. Supports controlled and
    uncontrolled usage.
 
-   When used inside a SwitchMenuItemRenderer, toggle and
+   When used inside an ActionMenuSwitchItem, toggle and
    keyboard are handled by Base UI's CheckboxItem — this
    component is purely presentational in that case.
    ============================================================ */

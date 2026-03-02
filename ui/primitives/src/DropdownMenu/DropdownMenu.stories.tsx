@@ -3,10 +3,10 @@
  * Dev reference for the DropdownMenu component system.
  */
 import { useState } from 'react';
+import { ActionMenuItem as DropdownMenuItem } from '../ActionMenuItem';
+import { ActionMenuRadioItem as DropdownMenuRadioItem } from '../ActionMenuItem';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
-import { MenuItemRenderer as DropdownMenuItem } from '../MenuItemRenderer';
-import { RadioMenuItemRenderer as DropdownMenuRadioItem } from '../MenuItemRenderer';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { DropdownMenu } from './DropdownMenu';
 import { DropdownMenuContent } from './DropdownMenuContent';

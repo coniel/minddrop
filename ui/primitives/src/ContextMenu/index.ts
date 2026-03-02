@@ -25,17 +25,17 @@ export type { ContextMenuLabelProps } from './ContextMenuLabel';
 export { ContextMenuGroup } from './ContextMenuGroup';
 export type { ContextMenuGroupProps } from './ContextMenuGroup';
 
-export { MenuItemRenderer as ContextMenuItem } from '../MenuItemRenderer';
-export type { MenuItemRendererProps as ContextMenuItemProps } from '../MenuItemRenderer';
+export { ActionMenuItem as ContextMenuItem } from '../ActionMenuItem';
+export type { ActionMenuItemProps as ContextMenuItemProps } from '../ActionMenuItem';
 
 export { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
 export type { ContextMenuRadioGroupProps } from './ContextMenuRadioGroup';
 
-export { RadioMenuItemRenderer as ContextMenuRadioItem } from '../MenuItemRenderer';
-export type { RadioMenuItemRendererProps as ContextMenuRadioItemProps } from '../MenuItemRenderer';
+export { ActionMenuRadioItem as ContextMenuRadioItem } from '../ActionMenuItem';
+export type { ActionMenuRadioItemProps as ContextMenuRadioItemProps } from '../ActionMenuItem';
 
-export { SwitchMenuItemRenderer as ContextMenuSwitchItem } from '../MenuItemRenderer';
-export type { SwitchMenuItemRendererProps as ContextMenuSwitchItemProps } from '../MenuItemRenderer';
+export { ActionMenuSwitchItem as ContextMenuSwitchItem } from '../ActionMenuItem';
+export type { ActionMenuSwitchItemProps as ContextMenuSwitchItemProps } from '../ActionMenuItem';
 
 export { ContextMenuColorSelectionItem } from './ContextMenuColorSelectionItem';
 export type { ContextMenuColorSelectionItemProps } from './ContextMenuColorSelectionItem';

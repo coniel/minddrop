@@ -1,5 +1,5 @@
 import React from 'react';
-import { MenuItemRendererProps } from '../../MenuItemRenderer';
+import { ActionMenuItemProps } from '../../ActionMenuItem';
 import {
   MenuColorSelectionItemConfig,
   MenuColorSelectionItemProps,
@@ -8,7 +8,7 @@ import {
 } from '../../types';
 
 export interface MenuComponents {
-  Item: React.ElementType<MenuItemRendererProps>;
+  Item: React.ElementType<ActionMenuItemProps>;
   Label: React.ElementType;
   Separator: React.ElementType;
   Submenu: React.ElementType;
@@ -69,7 +69,7 @@ export function generateMenu(
 
       return [
         ...items,
-        <Item key={index} {...(props as MenuItemRendererProps)} />,
+        <Item key={index} {...(props as ActionMenuItemProps)} />,
       ];
     }
 

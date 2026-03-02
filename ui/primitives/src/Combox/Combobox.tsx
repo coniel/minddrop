@@ -1,10 +1,10 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import React, { FC } from 'react';
 import { useTranslation } from '@minddrop/i18n';
+import { ActionMenuItemProps } from '../ActionMenuItem';
 import { Menu, MenuItem } from '../Menu';
 import { MenuLabel } from '../Menu/MenuLabel';
 import { MenuSeparator } from '../Menu/MenuSeparator';
-import { MenuItemRendererProps } from '../MenuItemRenderer';
 import './Combobox.css';
 
 /* ============================================================
@@ -145,11 +145,11 @@ ComboboxList.displayName = 'ComboboxList';
 
 /* ============================================================
    ITEM
-   Uses MenuItemRenderer for consistent styling with
+   Uses ActionMenuItem for consistent styling with
    DropdownMenu and ContextMenu items.
    ============================================================ */
 
-export type ComboboxItemProps = Omit<MenuItemRendererProps, 'onClick'> & {
+export type ComboboxItemProps = Omit<ActionMenuItemProps, 'onClick'> & {
   /*
    * The value this item represents.
    */

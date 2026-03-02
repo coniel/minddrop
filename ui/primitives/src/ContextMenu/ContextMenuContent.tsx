@@ -1,7 +1,7 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import React, { useMemo } from 'react';
+import { ActionMenuItem } from '../ActionMenuItem';
 import { Menu } from '../Menu';
-import { MenuItemRenderer } from '../MenuItemRenderer';
 import { MenuContents } from '../types';
 import { generateMenu } from '../utils';
 import { ContextMenuColorSelectionItem } from './ContextMenuColorSelectionItem';
@@ -43,7 +43,7 @@ export const ContextMenuContent = React.forwardRef<
     () =>
       generateMenu(
         {
-          Item: MenuItemRenderer,
+          Item: ActionMenuItem,
           Label: ContextMenuLabel,
           Separator: ContextMenuSeparator,
           Submenu: ContextSubmenu,

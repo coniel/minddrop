@@ -35,6 +35,7 @@ export * from './Tooltip';
 export * from './WebView';
 export * from './constants';
 export * from './types';
+export * from './ActionMenuItem';
 export * from './utils';
 
 export { useToggle, useForm } from '@minddrop/utils';

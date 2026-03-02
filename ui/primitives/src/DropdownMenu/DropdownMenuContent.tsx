@@ -1,7 +1,7 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { useMemo } from 'react';
+import { ActionMenuItem } from '../ActionMenuItem';
 import { Menu } from '../Menu';
-import { MenuItemRenderer } from '../MenuItemRenderer';
 import { MenuContents } from '../types';
 import { generateMenu } from '../utils';
 import { DropdownMenuColorSelectionItem } from './DropdownMenuColorSelectionItem';
@@ -43,7 +43,7 @@ export const DropdownMenuContent = React.forwardRef<
     () =>
       generateMenu(
         {
-          Item: MenuItemRenderer,
+          Item: ActionMenuItem,
           Label: DropdownMenuLabel,
           Separator: DropdownMenuSeparator,
           Submenu: DropdownSubmenu,

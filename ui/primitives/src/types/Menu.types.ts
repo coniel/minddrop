@@ -1,8 +1,8 @@
 import React from 'react';
 import { ContentColor } from '@minddrop/ui-theme';
-import { MenuItemRendererProps } from '../MenuItemRenderer';
+import { ActionMenuItemProps } from '../ActionMenuItem';
 
-export interface MenuItemConfig extends MenuItemRendererProps {
+export interface MenuItemConfig extends ActionMenuItemProps {
   type: 'menu-item';
 }
 
@@ -21,7 +21,7 @@ export interface MenuSeparatorConfig {
 
 export interface SubmenuTriggerItemProps
   extends Pick<
-    MenuItemRendererProps,
+    ActionMenuItemProps,
     'label' | 'icon' | 'disabled' | 'textValue'
   > {
   /**
@@ -57,7 +57,7 @@ export interface MenuColorSelectionItemConfig {
    *
    * @param event The event.
    */
-  onSelect?: MenuItemRendererProps['onClick'];
+  onSelect?: ActionMenuItemProps['onClick'];
 }
 
 export type MenuColorSelectionItemProps = Omit<
