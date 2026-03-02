@@ -1,7 +1,15 @@
-import { ThemeAppearance, ThemeAppearanceSetting } from './types';
+import { ResolvedThemeVariant, ThemeVariant } from './types';
 
-export const SetAppearanceEvent = 'theme:appearance:set-value';
-export const SetAppearanceSettingEvent = 'theme:appearance:set-setting';
+export const VariantChangedEvent = 'theme:variant:changed';
 
-export type SetAppearanceEventData = ThemeAppearance;
-export type SetAppearanceSettingEventData = ThemeAppearanceSetting;
+export interface VariantChangedEventData {
+  /**
+   * The current theme variant setting.
+   */
+  variant: ThemeVariant;
+
+  /**
+   * The resolved appearance value ('light' or 'dark').
+   */
+  resolvedAppearance: ResolvedThemeVariant;
+}

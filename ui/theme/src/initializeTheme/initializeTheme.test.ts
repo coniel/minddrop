@@ -7,18 +7,25 @@ import {
   it,
   vi,
 } from 'vitest';
-import * as Theme from '../Theme';
-import { ThemeConfig } from '../ThemeConfig';
+import { Events } from '@minddrop/events';
+import { ThemeStore } from '../ThemeStore';
 import { ThemeDark, ThemeLight, ThemeSystem } from '../constants';
-import { setThemeAppearanceSetting } from '../setThemeAppearanceSetting';
+import { VariantChangedEvent, VariantChangedEventData } from '../events';
+import { setThemeVariant } from '../setThemeVariant';
 import { cleanup, setup } from '../test-utils';
-import { ThemeAppearance } from '../types';
+import { ResolvedThemeVariant } from '../types';
 import { initializeTheme } from './initializeTheme';
+
+// Short delay to wait for async event dispatch
+const waitForEvents = () =>
+  new Promise((resolve) => {
+    setTimeout(resolve, 50);
+  });
 
 describe('initializeTheme', () => {
   let matchMediaEventListeners: VoidFunction[] = [];
 
-  function mockMatchMedia(appearance: ThemeAppearance = ThemeLight) {
+  function mockMatchMedia(appearance: ResolvedThemeVariant = ThemeLight) {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockImplementation(() => ({
@@ -36,9 +43,9 @@ describe('initializeTheme', () => {
     });
   }
 
-  function simulateOsAppearanceChange(appearance: ThemeAppearance) {
+  function simulateOsAppearanceChange(appearance: ResolvedThemeVariant) {
     // Mock match media to return a match for
-    // the speficied appearance.
+    // the specified appearance.
     mockMatchMedia(appearance);
 
     // Run match media event listeners to simulate OS
@@ -60,175 +67,200 @@ describe('initializeTheme', () => {
     cleanup();
 
     // Reset the local persistent store data to default values
-    ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
+    ThemeStore.set('variant', ThemeSystem);
 
     // Clear mock match media event listeners
     matchMediaEventListeners = [];
   });
 
-  it('loads the appearance setting value from the local persistent store', () => {
-    // Set the initial appearance setting value in the
-    // local persistent store.
-    ThemeConfig.update('config', { appearanceSetting: ThemeDark });
+  it('loads the variant value from the local persistent store', () => {
+    // Set the initial variant value in the local persistent store
+    ThemeStore.set('variant', ThemeDark);
 
     // Initialize theme
     initializeTheme();
 
-    // Should load the apperance setting from the local
-    // persistent store into the theme store.
-    expect(ThemeConfig.get('config')?.appearanceSetting).toBe(ThemeDark);
+    // Should keep the variant from the local persistent store
+    expect(ThemeStore.get('variant')).toBe(ThemeDark);
   });
 
-  describe('initial theme appearance', () => {
-    it('sets the OS value when the setting is `system`', () => {
+  describe('initial theme variant', () => {
+    it('dispatches resolved OS value when the variant is `system`', async () => {
       // Mock match media to return a match for dark mode
       mockMatchMedia(ThemeDark);
-      // Set the initial appearance setting value to 'system'
-      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
+      // Set the initial variant value to 'system'
+      ThemeStore.set('variant', ThemeSystem);
+
+      // Track dispatched event data
+      let eventData: VariantChangedEventData | null = null;
+
+      Events.addListener<VariantChangedEventData>(
+        VariantChangedEvent,
+        'test',
+        (payload) => {
+          eventData = payload.data;
+        },
+      );
 
       // Initialize theme
       initializeTheme();
 
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
+      // Wait for async event dispatch
+      await waitForEvents();
+
+      // Should dispatch with system variant and resolved dark
+      expect(eventData?.variant).toBe(ThemeSystem);
+      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
     });
 
-    it('sets the setting value when the setting is `light` or `dark`', () => {
+    it('dispatches resolved value when the variant is `light` or `dark`', async () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
-      // Set the initial appearance setting value to 'dark'
-      ThemeConfig.update('config', { appearanceSetting: ThemeDark });
+      // Set the initial variant value to 'dark'
+      ThemeStore.set('variant', ThemeDark);
+
+      // Track dispatched event data
+      let eventData: VariantChangedEventData | null = null;
+
+      Events.addListener<VariantChangedEventData>(
+        VariantChangedEvent,
+        'test',
+        (payload) => {
+          eventData = payload.data;
+        },
+      );
 
       // Initialize theme
       initializeTheme();
 
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
+      // Wait for async event dispatch
+      await waitForEvents();
+
+      // Should dispatch with dark variant and resolved dark
+      expect(eventData?.variant).toBe(ThemeDark);
+      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
     });
 
-    it('listens for OS dark mode changes when setting is `system`', () => {
+    it('listens for OS dark mode changes when variant is `system`', async () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
-      // Set the initial appearance setting value to 'system'
-      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
+      // Set the initial variant value to 'system'
+      ThemeStore.set('variant', ThemeSystem);
 
       // Initialize theme
       initializeTheme();
+
+      // Wait for async event dispatch from initialization
+      await waitForEvents();
+
+      // Track dispatched event data
+      let eventData: VariantChangedEventData | null = null;
+
+      Events.addListener<VariantChangedEventData>(
+        VariantChangedEvent,
+        'test',
+        (payload) => {
+          eventData = payload.data;
+        },
+      );
 
       // Simulate OS appearance change to dark mode
       simulateOsAppearanceChange(ThemeDark);
 
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
+      // Wait for async event dispatch
+      await waitForEvents();
+
+      // Should dispatch with resolved dark appearance
+      expect(eventData?.resolvedAppearance).toBe(ThemeDark);
     });
   });
 
-  describe('theme appearance setting change', () => {
-    it('updates the local persistent store appearanceSetting value', async () => {
+  describe('theme variant change', () => {
+    it('updates the local persistent store variant value', async () => {
       // Initialize theme
       initializeTheme();
 
-      // Change the appearance setting value
-      setThemeAppearanceSetting(ThemeDark);
+      // Change the variant value
+      setThemeVariant(ThemeDark);
 
       // Wait for the event to be dispatched
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50);
-      });
+      await waitForEvents();
 
-      // Should set the new appearance setting in the local
-      // persistent store.
-      expect(ThemeConfig.get('config')?.appearanceSetting).toBe(ThemeDark);
+      // Should set the new variant in the local persistent store
+      expect(ThemeStore.get('variant')).toBe(ThemeDark);
     });
 
-    it('sets the OS value if the setting is `system`', async () => {
-      // Mock match media to return a match for dark mode
-      mockMatchMedia(ThemeDark);
-      // Set the initial appearance setting value to 'light'
-      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
-
-      // Initialize theme
-      initializeTheme();
-
-      // Set the theme appearance setting to 'system'
-      Theme.setAppearanceSetting(ThemeSystem);
-
-      // Wait for the event listener to run
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50);
-      });
-
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
-    });
-
-    it('sets the setting value if the setting is `light` or `dark`', async () => {
+    it('listens for OS dark mode changes if variant is `system`', async () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
-      // Set the initial appearance setting value to 'light'
-      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
+      // Set the initial variant value to 'light'
+      ThemeStore.set('variant', ThemeLight);
 
       // Initialize theme
       initializeTheme();
 
-      // Set the theme appearance setting to 'dark'
-      Theme.setAppearanceSetting(ThemeDark);
+      // Set the theme variant to 'system'
+      setThemeVariant(ThemeSystem);
 
       // Wait for the event listener to run
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50);
-      });
+      await waitForEvents();
 
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
-    });
+      // Track the resolved appearance from the event
+      let lastResolvedAppearance: string | null = null;
 
-    it('listens for OS dark mode changes if setting is `system`', async () => {
-      // Mock match media to return a match for light mode
-      mockMatchMedia(ThemeLight);
-      // Set the initial appearance setting value to 'light'
-      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
-
-      // Initialize theme
-      initializeTheme();
-
-      // Set the theme appearance setting to 'system'
-      Theme.setAppearanceSetting(ThemeSystem);
-
-      // Wait for the event listener to run
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50);
-      });
+      Events.addListener<VariantChangedEventData>(
+        VariantChangedEvent,
+        'test-os-change',
+        (payload) => {
+          lastResolvedAppearance = payload.data.resolvedAppearance;
+        },
+      );
 
       // Simulate OS appearance change to dark mode
       simulateOsAppearanceChange(ThemeDark);
 
-      // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
+      // Wait for async event dispatch
+      await waitForEvents();
+
+      // Should have dispatched with dark resolved appearance
+      expect(lastResolvedAppearance).toBe(ThemeDark);
     });
 
-    it('removes OS dark mode changes listener if setting is `light` or `dark`', async () => {
+    it('removes OS dark mode changes listener if variant is `light` or `dark`', async () => {
       // Mock match media to return a match for dark mode
       mockMatchMedia(ThemeDark);
-      // Set the initial appearance setting value to 'system'
-      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
+      // Set the initial variant value to 'system'
+      ThemeStore.set('variant', ThemeSystem);
 
       // Initialize theme
       initializeTheme();
 
-      // Set the theme appearance setting to 'dark'
-      Theme.setAppearanceSetting(ThemeDark);
+      // Set the theme variant to 'dark'
+      setThemeVariant(ThemeDark);
 
       // Wait for the event listener to run
-      await new Promise((resolve) => {
-        setTimeout(resolve, 50);
-      });
+      await waitForEvents();
+
+      // Track whether a new event is dispatched
+      let eventDispatched = false;
+
+      Events.addListener<VariantChangedEventData>(
+        VariantChangedEvent,
+        'test-no-os-change',
+        () => {
+          eventDispatched = true;
+        },
+      );
 
       // Simulate OS appearance change to light mode
       simulateOsAppearanceChange(ThemeLight);
 
-      // Theme appearance should remain 'dark'
-      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
+      // Wait to ensure no event fires
+      await waitForEvents();
+
+      // No event should have been dispatched since
+      // OS listener was removed.
+      expect(eventDispatched).toBe(false);
     });
   });
 });

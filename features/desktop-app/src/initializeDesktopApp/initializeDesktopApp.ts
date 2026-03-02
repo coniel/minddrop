@@ -11,7 +11,7 @@ import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeI18n } from '@minddrop/i18n';
-import { Theme, ThemeAppearance } from '@minddrop/ui-theme';
+import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
@@ -40,6 +40,13 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
   initialized = true;
 
+  // Watch for theme variant changes
+  Events.addListener(
+    Theme.events.VariantChanged,
+    'app:set-body-theme-appearance-class',
+    setThemeAppearanceClassOnBody,
+  );
+
   EditorElements.registerDefaults();
   EditorMarks.registerDefaults();
   Ast.registerDefaultConfigs();
@@ -66,15 +73,8 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Watch for app config file changes
   // const cancelConfigsWatcher = await watchAppConfigFiles();
 
-  // Watch for theme appearance changes
-  Events.addListener(
-    Theme.events.SetAppearance,
-    'app:set-body-theme-appearance-class',
-    setThemeAppearanceClassOnBody,
-  );
-
   // Initialize theme
-  Theme.initialize();
+  await Theme.initialize();
 
   // Initialize extensions
   await initializeExtensions([]);
@@ -84,9 +84,9 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
     // cancelConfigsWatcher();
 
     console.log('cleanupFn');
-    // Remove theme appearance listener
+    // Remove theme variant listener
     Events.removeListener(
-      Theme.events.SetAppearance,
+      Theme.events.VariantChanged,
       'app:set-body-theme-appearance-class',
     );
   };
@@ -96,12 +96,14 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
 
 /**
  * Toggles the theme appearance class on <body>
- * whenever the theme appearance value is changes.
+ * whenever the theme variant changes.
  */
-function setThemeAppearanceClassOnBody({ data }: { data: ThemeAppearance }) {
-  console.log('setThemeAppearanceClassOnBody', data);
-
-  if (data === 'dark') {
+function setThemeAppearanceClassOnBody({
+  data,
+}: {
+  data: VariantChangedEventData;
+}) {
+  if (data.resolvedAppearance === 'dark') {
     document.body.classList.remove('light-theme');
     document.body.classList.add('dark-theme');
   } else {

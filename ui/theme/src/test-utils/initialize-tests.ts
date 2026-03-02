@@ -5,8 +5,7 @@ import {
   initializeMockFileSystem,
 } from '@minddrop/file-system';
 import { act } from '@minddrop/test-utils';
-import { ThemeConfig } from '../ThemeConfig';
-import { ThemeLight, ThemeSystem } from '../constants';
+import { ThemeStore } from '../ThemeStore';
 
 const { configsFileDescriptor } = FILE_SYSTEM_TEST_DATA;
 
@@ -25,10 +24,6 @@ export function cleanup() {
 
   act(() => {
     // Reset the config to default values
-    ThemeConfig.set({
-      id: 'config',
-      appearance: ThemeLight,
-      appearanceSetting: ThemeSystem,
-    });
+    ThemeStore.reset();
   });
 }

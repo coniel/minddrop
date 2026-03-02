@@ -1,9 +1,8 @@
 import { ThemeDark, ThemeLight, ThemeSystem } from './constants';
-import { SetAppearanceEvent, SetAppearanceSettingEvent } from './events';
+import { VariantChangedEvent } from './events';
 
 export const events = {
-  SetAppearance: SetAppearanceEvent,
-  SetAppearanceSetting: SetAppearanceSettingEvent,
+  VariantChanged: VariantChangedEvent,
 };
 
 export const constants = {
@@ -12,10 +11,9 @@ export const constants = {
   Dark: ThemeDark,
 };
 
-export { getThemeAppearance as getAppearance } from './getThemeAppearance';
-export { getThemeAppearanceSetting as getAppearanceSetting } from './getThemeAppearanceSetting';
+export { getThemeVariant as getVariant } from './getThemeVariant';
 export { initializeTheme as initialize } from './initializeTheme';
-export { setThemeAppearance as setAppearance } from './setThemeAppearance';
-export { setThemeAppearanceSetting as setAppearanceSetting } from './setThemeAppearanceSetting';
-export { useThemeAppearance as useAppearance } from './useThemeAppearance';
-export { useThemeAppearanceSetting as useAppearanceSetting } from './useThemeAppearanceSetting';
+export { resolveThemeVariant as resolveVariant } from './resolveThemeVariant';
+export { setThemeVariant as setVariant } from './setThemeVariant';
+export { useThemeVariant as useVariant } from './useThemeVariant';
+export { ThemeVariantPicker as VariantPicker } from './ThemeVariantPicker';

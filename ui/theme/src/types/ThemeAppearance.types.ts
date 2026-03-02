@@ -1,5 +1,5 @@
-// The resolved appearance value
-export type ThemeAppearance = 'light' | 'dark';
+// The resolved theme appearance value
+export type ResolvedThemeVariant = 'light' | 'dark';
 
-// The appearance setting, picked by the user
-export type ThemeAppearanceSetting = 'light' | 'dark' | 'system';
+// The theme variant setting, picked by the user
+export type ThemeVariant = 'light' | 'dark' | 'system';
