@@ -1,17 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Events } from '@minddrop/events';
 import {
-  StoreLoadEvent,
-  StoreLoadRequestEvent,
+  StoreHydrateEvent,
+  StoreHydrateRequestEvent,
+  StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
 import { createKeyValueStore } from './createKeyValueStore';
 
-interface TestValues {
+type TestValues = {
   theme: string;
   fontSize: number;
   sidebarOpen: boolean;
-}
+};
 
 const defaults: TestValues = {
   theme: 'light',
@@ -108,8 +109,8 @@ describe('createKeyValueStore', () => {
       });
     });
 
-    it('throws when calling loadPersisted', () => {
-      expect(() => store.loadPersisted()).toThrow();
+    it('throws when calling hydrate', () => {
+      expect(() => store.hydrate()).toThrow();
     });
 
     it('does not dispatch persist events', () => {
@@ -195,10 +196,10 @@ describe('createKeyValueStore', () => {
       expect(callback).not.toHaveBeenCalled();
     });
 
-    describe('loadPersisted', () => {
+    describe('hydrate', () => {
       it('dispatches a load request event', async () =>
         new Promise<void>((done) => {
-          Events.addListener(StoreLoadRequestEvent, 'test', (payload) => {
+          Events.addListener(StoreHydrateRequestEvent, 'test', (payload) => {
             expect(payload.data).toEqual({
               persistTo: 'app-config',
               namespace: 'test-kv',
@@ -206,12 +207,62 @@ describe('createKeyValueStore', () => {
             done();
           });
 
-          store.loadPersisted();
+          store.hydrate();
         }));
+
+      it('resolves after the load event is dispatched', async () => {
+        // Create a fresh store so its load listener is active
+        const freshStore = createKeyValueStore<TestValues>(defaults, {
+          persistTo: 'app-config',
+          namespace: 'hydrate-resolve-test',
+        });
+
+        // Simulate the platform layer responding to the load request
+        Events.addListener(StoreHydrateRequestEvent, 'test', () => {
+          Events.dispatch(StoreHydrateEvent, {
+            namespace: 'hydrate-resolve-test',
+            data: { theme: 'dark', fontSize: 20 },
+          });
+        });
+
+        await freshStore.hydrate();
+
+        expect(freshStore.get('theme')).toBe('dark');
+        expect(freshStore.get('fontSize')).toBe(20);
+        // Unset values keep their defaults
+        expect(freshStore.get('sidebarOpen')).toBe(true);
+      });
+
+      it('dispatches a hydrated event', async () => {
+        // Create a fresh store so its listener is active
+        const freshStore = createKeyValueStore<TestValues>(defaults, {
+          persistTo: 'app-config',
+          namespace: 'hydrated-event-test',
+        });
+
+        const callback = vi.fn();
+        Events.addListener(StoreHydratedEvent, 'test', callback);
+
+        // Simulate the platform layer responding to the load request
+        Events.addListener(StoreHydrateRequestEvent, 'test', () => {
+          Events.dispatch(StoreHydrateEvent, {
+            namespace: 'hydrated-event-test',
+            data: { theme: 'dark' },
+          });
+        });
+
+        await freshStore.hydrate();
+
+        expect(callback).toHaveBeenCalledWith(
+          expect.objectContaining({
+            data: { namespace: 'hydrated-event-test' },
+          }),
+        );
+      });
     });
   });
 
-  describe('loadPersisted listener', () => {
+  describe('hydrate listener', () => {
     it('loads data when a matching load event is dispatched', async () => {
       // Create a fresh store so its listener is active
       const freshStore = createKeyValueStore<TestValues>(defaults, {
@@ -220,7 +271,7 @@ describe('createKeyValueStore', () => {
       });
 
       // Dispatch a load event with data for this store
-      await Events.dispatch(StoreLoadEvent, {
+      await Events.dispatch(StoreHydrateEvent, {
         namespace: 'kv-load-test',
         data: { theme: 'dark', fontSize: 20 },
       });
@@ -239,7 +290,7 @@ describe('createKeyValueStore', () => {
       });
 
       // Dispatch a load event for a different namespace
-      await Events.dispatch(StoreLoadEvent, {
+      await Events.dispatch(StoreHydrateEvent, {
         namespace: 'other-package',
         data: { theme: 'dark' },
       });

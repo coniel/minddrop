@@ -29,12 +29,12 @@ export type StorePersistEventData = {
  * Event dispatched when a store requests its persisted
  * data from the platform layer.
  */
-export const StoreLoadRequestEvent = 'stores:load-request';
+export const StoreHydrateRequestEvent = 'stores:hydrate-request';
 
 /**
- * Payload dispatched with the `stores:load-request` event.
+ * Payload dispatched with the `stores:hydrate-request` event.
  */
-export type StoreLoadRequestEventData = {
+export type StoreHydrateRequestEventData = {
   /**
    * Where the data is persisted.
    */
@@ -50,14 +50,14 @@ export type StoreLoadRequestEventData = {
  * Event dispatched by the platform layer to provide a store
  * with its persisted data.
  */
-export const StoreLoadEvent = 'stores:load';
+export const StoreHydrateEvent = 'stores:hydrate';
 
 /**
- * Payload dispatched with the `stores:load` event.
+ * Payload dispatched with the `stores:hydrate` event.
  */
-export type StoreLoadEventData = {
+export type StoreHydrateEventData = {
   /**
-   * The namespace of the store being loaded.
+   * The namespace of the store being hydrated.
    */
   namespace: string;
 
@@ -65,4 +65,20 @@ export type StoreLoadEventData = {
    * The persisted data to load into the store.
    */
   data: Record<string, unknown> | unknown[];
+};
+
+/**
+ * Event dispatched after a store has been hydrated with
+ * its persisted data.
+ */
+export const StoreHydratedEvent = 'stores:hydrated';
+
+/**
+ * Payload dispatched with the `stores:hydrated` event.
+ */
+export type StoreHydratedEventData = {
+  /**
+   * The namespace of the store that was hydrated.
+   */
+  namespace: string;
 };
