@@ -6,6 +6,10 @@
   flex-direction: column;
   gap: var(--space-4);
 
+  .app-sidebar-bottom-toolbar {
+    margin-top: auto;
+  }
+
   .resize-handle {
     width: 13px;
     position: absolute;
