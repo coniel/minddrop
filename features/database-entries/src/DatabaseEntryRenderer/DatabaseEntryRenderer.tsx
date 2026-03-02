@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   DatabaseDesignType,
   DatabaseEntries,
@@ -30,18 +30,21 @@ export interface DatabaseEntryRendererProps {
   designId?: string;
 }
 
-export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> = ({
-  entryId,
-  ...other
-}) => {
-  const entry = DatabaseEntries.use(entryId);
+/**
+ * Renders a database entry using the appropriate design.
+ */
+export const DatabaseEntryRenderer: React.FC<DatabaseEntryRendererProps> =
+  React.memo(({ entryId, ...other }) => {
+    const entry = DatabaseEntries.use(entryId);
 
-  if (!entry) {
-    return null;
-  }
+    if (!entry) {
+      return null;
+    }
 
-  return <Entry entry={entry} {...other} />;
-};
+    return <Entry entry={entry} {...other} />;
+  });
+
+DatabaseEntryRenderer.displayName = 'DatabaseEntryRenderer';
 
 interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
   entry: DatabaseEntry;
