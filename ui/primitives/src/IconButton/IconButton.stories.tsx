@@ -139,8 +139,10 @@ export const IconButtonStories = () => (
             variant="filled"
             icon="settings"
             label="Settings"
-            tooltipTitle="Settings"
-            tooltipDescription="Manage your workspace preferences"
+            tooltip={{
+              title: 'Settings',
+              description: 'Manage your workspace preferences',
+            }}
           />
         </StoryItem>
       </StoryRow>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon } from '../Icon';
-import { Tooltip } from '../Tooltip';
+import { Tooltip, TooltipProps } from '../Tooltip';
 import { propsToClass } from '../utils';
 import './IconButton.css';
 
@@ -35,7 +35,6 @@ export interface IconButtonProps
 
   /*
    * Accessible label announced by screen readers.
-   * Also used as the default tooltip title if `tooltipTitle` is not set.
    */
   label: string;
 
@@ -71,14 +70,10 @@ export interface IconButtonProps
   active?: boolean;
 
   /*
-   * Tooltip title. Falls back to `label` if not provided.
+   * Tooltip configuration. When provided, wraps the button
+   * in a Tooltip with the given props.
    */
-  tooltipTitle?: React.ReactNode;
-
-  /*
-   * Optional tooltip description shown below the title.
-   */
-  tooltipDescription?: React.ReactNode;
+  tooltip?: Omit<TooltipProps, 'children'>;
 }
 
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
@@ -94,8 +89,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       size = 'md',
       active,
       disabled,
-      tooltipTitle,
-      tooltipDescription,
+      tooltip,
       ...other
     },
     ref,
@@ -124,15 +118,8 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       </Component>
     );
 
-    if (tooltipTitle || tooltipDescription) {
-      return (
-        <Tooltip
-          title={tooltipTitle ?? t(label)}
-          description={tooltipDescription}
-        >
-          {button}
-        </Tooltip>
-      );
+    if (tooltip) {
+      return <Tooltip {...tooltip}>{button}</Tooltip>;
     }
 
     return button;

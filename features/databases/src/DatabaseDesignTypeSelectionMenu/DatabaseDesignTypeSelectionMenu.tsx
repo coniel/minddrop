@@ -42,21 +42,21 @@ export const DatabaseDesignTypeSelectionMenu: React.FC<
           muted
           icon="layout"
           label="designs.page.new"
-          tooltipDescription="designs.page.description"
+          tooltip={{ description: 'designs.page.description' }}
           onClick={() => handleSelect('page')}
         />
         <DropdownMenuItem
           muted
           icon="layout-grid"
           label="designs.card.new"
-          tooltipDescription="designs.card.description"
+          tooltip={{ description: 'designs.card.description' }}
           onClick={() => handleSelect('card')}
         />
         <DropdownMenuItem
           muted
           icon="layout-list"
           label="designs.list.new"
-          tooltipDescription="designs.list.description"
+          tooltip={{ description: 'designs.list.description' }}
           onClick={() => handleSelect('list')}
         />
       </MenuGroup>

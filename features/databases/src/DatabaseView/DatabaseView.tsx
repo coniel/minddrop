@@ -258,7 +258,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                     muted
                     icon={viewType.icon}
                     label={viewType.name}
-                    tooltipDescription={viewType.description}
+                    tooltip={{ description: viewType.description }}
                     onClick={() => handleAddView(viewType.type)}
                   />
                 ))}
@@ -273,7 +273,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                     className="view-settings-button"
                     size="sm"
                     label={t('databases.actions.viewSettings')}
-                    tooltipTitle={t('databases.actions.viewSettings')}
+                    tooltip={{ title: t('databases.actions.viewSettings') }}
                     icon="settings-2"
                   />
                 </DropdownMenuTrigger>

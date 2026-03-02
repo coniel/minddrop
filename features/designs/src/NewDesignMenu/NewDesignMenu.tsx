@@ -89,21 +89,21 @@ export const NewDesignMenu: React.FC<NewDesignMenuProps> = ({
           muted
           icon="layout-grid"
           label="designs.card.new"
-          tooltipDescription="designs.card.description"
+          tooltip={{ description: 'designs.card.description' }}
           onClick={() => handleSelectType('card')}
         />
         <DropdownMenuItem
           muted
           icon="layout-list"
           label="designs.list.new"
-          tooltipDescription="designs.list.description"
+          tooltip={{ description: 'designs.list.description' }}
           onClick={() => handleSelectType('list')}
         />
         <DropdownMenuItem
           muted
           icon="layout"
           label="designs.page.new"
-          tooltipDescription="designs.page.description"
+          tooltip={{ description: 'designs.page.description' }}
           onClick={() => handleSelectType('page')}
         />
       </MenuGroup>

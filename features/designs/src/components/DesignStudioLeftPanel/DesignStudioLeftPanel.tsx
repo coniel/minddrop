@@ -100,7 +100,7 @@ export const DesignStudioLeftPanel: React.FC<DesignStudioLeftPanelProps> = ({
           <IconButton
             icon="arrow-left"
             label="designStudio.exit"
-            tooltipTitle="designStudio.exit"
+            tooltip={{ title: 'designStudio.exit' }}
             color="neutral"
             onClick={onClickBack}
           />

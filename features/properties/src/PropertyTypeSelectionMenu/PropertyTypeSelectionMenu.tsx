@@ -53,7 +53,7 @@ export const PropertyTypeSelectionMenu: React.FC<
             key={schema.type}
             label={schema.name}
             contentIcon={schema.icon}
-            tooltipDescription={schema.description}
+            tooltip={{ description: schema.description }}
             onClick={() => onSelect(schema)}
           />
         ))}
@@ -65,7 +65,7 @@ export const PropertyTypeSelectionMenu: React.FC<
             key={schema.type}
             label={schema.name}
             contentIcon={schema.icon}
-            tooltipTitle={schema.description}
+            tooltip={{ title: schema.description }}
             onClick={() => onSelect(schema)}
           />
         ))}

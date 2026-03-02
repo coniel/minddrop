@@ -4,7 +4,7 @@ import { useTranslation } from '@minddrop/i18n';
 import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
 import { MenuRadioItem } from '../Menu/MenuRadioItem';
 import { SwitchMenuItem, SwitchMenuItemProps } from '../Menu/SwitchMenuItem';
-import { Tooltip } from '../Tooltip';
+import { Tooltip, TooltipProps } from '../Tooltip';
 
 /* ============================================================
    SHARED TYPES
@@ -43,14 +43,10 @@ export interface MenuItemRendererProps extends Omit<MenuItemProps, 'onClick'> {
   secondaryKeyboardShortcut?: string[];
 
   /*
-   * Tooltip title shown on hover.
+   * Tooltip configuration. When provided, wraps the item
+   * in a Tooltip with the given props.
    */
-  tooltipTitle?: React.ReactNode;
-
-  /*
-   * Tooltip description shown on hover.
-   */
-  tooltipDescription?: React.ReactNode;
+  tooltip?: Omit<TooltipProps, 'children'>;
 
   /*
    * Text used for typeahead when content is non-textual.
@@ -121,8 +117,7 @@ export const MenuItemRenderer: FC<MenuItemRendererProps> = ({
   secondaryOnClick,
   keyboardShortcut,
   secondaryKeyboardShortcut,
-  tooltipTitle,
-  tooltipDescription,
+  tooltip,
   disabled,
   textValue,
   ...other
@@ -158,14 +153,9 @@ export const MenuItemRenderer: FC<MenuItemRendererProps> = ({
     />
   );
 
-  if (tooltipTitle || tooltipDescription) {
+  if (tooltip) {
     return (
-      <Tooltip
-        side="right"
-        sideOffset={6}
-        title={tooltipTitle}
-        description={tooltipDescription}
-      >
+      <Tooltip side="right" sideOffset={6} {...tooltip}>
         {item}
       </Tooltip>
     );
@@ -189,8 +179,7 @@ export const RadioMenuItemRenderer: FC<RadioMenuItemRendererProps> = ({
   secondaryOnClick,
   keyboardShortcut,
   secondaryKeyboardShortcut,
-  tooltipTitle,
-  tooltipDescription,
+  tooltip,
   disabled,
   textValue,
   value,
@@ -242,14 +231,9 @@ export const RadioMenuItemRenderer: FC<RadioMenuItemRendererProps> = ({
     />
   );
 
-  if (tooltipTitle || tooltipDescription) {
+  if (tooltip) {
     return (
-      <Tooltip
-        side="right"
-        sideOffset={6}
-        title={tooltipTitle}
-        description={tooltipDescription}
-      >
+      <Tooltip side="right" sideOffset={6} {...tooltip}>
         {item}
       </Tooltip>
     );

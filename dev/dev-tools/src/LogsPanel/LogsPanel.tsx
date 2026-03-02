@@ -29,7 +29,9 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
   onSave,
 }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
-  const [globalCollapse, setGlobalCollapse] = useState<ForceSignal | null>(null);
+  const [globalCollapse, setGlobalCollapse] = useState<ForceSignal | null>(
+    null,
+  );
   const [entryForces, setEntryForces] = useState<Map<number, ForceSignal>>(
     new Map(),
   );
@@ -103,7 +105,8 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
       if (activeFilter && e.level !== activeFilter) return false;
       if (quickFilter) {
         if (quickFilter.type === 'label') {
-          if (e.args.length < 2 || e.args[0] !== quickFilter.value) return false;
+          if (e.args.length < 2 || e.args[0] !== quickFilter.value)
+            return false;
         } else {
           if (e.source?.file !== quickFilter.value) return false;
         }
@@ -169,11 +172,15 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
         </Text>
       </div>
 
-      <div className={`dev-tools-logs-filter-bar${activeFilter ? ' has-filter' : ''}`}>
+      <div
+        className={`dev-tools-logs-filter-bar${activeFilter ? ' has-filter' : ''}`}
+      >
         <IconButton
           icon={sortOrder === 'newest' ? 'arrow-down' : 'arrow-up'}
           label="Toggle sort order"
-          tooltipTitle={sortOrder === 'newest' ? 'Newest first' : 'Oldest first'}
+          tooltip={{
+            title: sortOrder === 'newest' ? 'Newest first' : 'Oldest first',
+          }}
           size="sm"
           onClick={() =>
             setSortOrder((o) => (o === 'newest' ? 'oldest' : 'newest'))
@@ -202,7 +209,12 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
           placeholder="search…"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Escape') { if (e.shiftKey) setSearchQuery(''); e.currentTarget.blur(); } }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              if (e.shiftKey) setSearchQuery('');
+              e.currentTarget.blur();
+            }
+          }}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -226,12 +238,10 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
 
       <div className="dev-tools-logs-list">
         {displayedLogs.length === 0 && (
-          <Text
-            size="sm"
-            color="subtle"
-            style={{ padding: 'var(--space-4)' }}
-          >
-            {logs.length === 0 ? 'No logs yet.' : 'No logs match the current filter.'}
+          <Text size="sm" color="subtle" style={{ padding: 'var(--space-4)' }}>
+            {logs.length === 0
+              ? 'No logs yet.'
+              : 'No logs match the current filter.'}
           </Text>
         )}
         {displayedLogs.map((entry) => {
@@ -272,7 +282,12 @@ export const LogsPanel: React.FC<LogsPanelProps> = ({
                     isComplex(arg) ? (
                       <JsonTree key={i} value={arg} externalForce={force} />
                     ) : (
-                      <Text key={i} mono size="xs" className="dev-tools-log-text">
+                      <Text
+                        key={i}
+                        mono
+                        size="xs"
+                        className="dev-tools-log-text"
+                      >
                         {formatArg(arg)}
                       </Text>
                     ),

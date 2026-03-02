@@ -15,7 +15,7 @@ export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
         <ToolbarIconButton
           icon="palette"
           label="designStudio.open"
-          tooltipTitle="designStudio.open"
+          tooltip={{ title: 'designStudio.open' }}
           onClick={handleOpenDesignStudio}
         />
       </Toolbar>
