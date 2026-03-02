@@ -349,6 +349,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/table-view':
         specifier: workspace:*
         version: link:../../views/table-view
@@ -1365,9 +1368,18 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../icons
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
