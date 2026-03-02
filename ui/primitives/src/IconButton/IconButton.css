@@ -21,8 +21,7 @@
   border-radius: var(--radius-md);
   transition: var(--transition-colors);
 
-  .icon,
-  .content-icon {
+  .icon {
     width: 1.125rem;
     height: 1.125rem;
     flex-shrink: 0;

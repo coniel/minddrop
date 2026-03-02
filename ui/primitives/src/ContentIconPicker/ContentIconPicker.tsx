@@ -1,28 +1,30 @@
+import { useVirtualizer } from '@tanstack/react-virtual';
 import {
   FC,
   memo,
   useCallback,
   useDeferredValue,
   useMemo,
+  useRef,
   useState,
 } from 'react';
-import { List } from 'react-window';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/icons';
+import { ContentColor } from '@minddrop/theme';
 import { ContentIcon } from '../ContentIcon';
 import { IconButton } from '../IconButton';
 import { MenuLabel } from '../Menu';
+import { ScrollArea } from '../ScrollArea';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
 import { ContentColors } from '../constants';
-import { ContentColor } from '@minddrop/theme';
 import { propsToClass } from '../utils';
 import {
   MinifiedContentIcon,
   UnminifiedContentIcon,
 } from './ContentIconPicker.types';
 import {
-  getAllLabels,
+  buildIconLabelIndex,
   groupByCategory,
   searchContentIcons,
   unminifyContentIcon,
@@ -61,7 +63,7 @@ const unminifiedIcons = ContentIconMetadata.icons.map((icon) =>
   ),
 );
 
-const allLabels = getAllLabels(unminifiedIcons);
+const { labels: allLabels, labelToIcon } = buildIconLabelIndex(unminifiedIcons);
 
 // Pre-compute initial state at module level so the first mount
 // has nothing to compute.
@@ -95,44 +97,6 @@ function buildVirtualItems(
 // Pre-compute initial virtual items at module level.
 const initialVirtualItems = buildVirtualItems(initialResultsByCategory);
 
-interface VirtualRowProps {
-  index: number;
-  style: React.CSSProperties;
-  virtualItems: VirtualItem[];
-  color: ContentColor;
-  onSelect: (icon: UnminifiedContentIcon) => void;
-}
-
-// Defined outside the component for stable identity — react-window unmounts
-// and remounts all rows whenever rowComponent's type changes, so an inline
-// definition would cause a full remount on every parent render.
-const VirtualRow = memo(
-  ({ index, style, virtualItems, color, onSelect }: VirtualRowProps) => {
-    const item = virtualItems[index];
-
-    if (item.type === 'header') {
-      return (
-        <div style={style} className="category-group">
-          <MenuLabel>{item.label}</MenuLabel>
-        </div>
-      );
-    }
-
-    return (
-      <div style={style} className="category-group-icons">
-        {item.icons.map((icon) => (
-          <IconSelectButton
-            key={icon.name}
-            icon={icon}
-            color={color}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
-    );
-  },
-);
-
 export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   onSelect,
   onSelectColor,
@@ -147,6 +111,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
   // previous results immediately while computing new ones at low priority.
   const deferredQuery = useDeferredValue(query);
   const [color, setColor] = useState<ContentColor>(defaultColor);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { results, resultsByCategory } = useMemo(() => {
     // Skip recomputation for the initial empty-query case.
@@ -160,6 +125,7 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
     const results = searchContentIcons(
       unminifiedIcons,
       allLabels,
+      labelToIcon,
       deferredQuery,
     );
 
@@ -173,6 +139,19 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
         : initialVirtualItems,
     [deferredQuery, resultsByCategory],
   );
+
+  const virtualizer = useVirtualizer({
+    count: virtualItems.length,
+    getScrollElement: () =>
+      scrollContainerRef.current?.querySelector<HTMLElement>(
+        '.scroll-area-viewport',
+      ) ?? null,
+    estimateSize: (index) =>
+      virtualItems[index].type === 'header'
+        ? HEADER_ROW_HEIGHT
+        : ICON_ROW_HEIGHT,
+    overscan: 5,
+  });
 
   const handleSelect = useCallback(
     (value: UnminifiedContentIcon) => {
@@ -205,20 +184,6 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
 
   const handleQueryChange = useCallback((value: string) => setQuery(value), []);
 
-  const getItemSize = useCallback(
-    (index: number) =>
-      virtualItems[index].type === 'header'
-        ? HEADER_ROW_HEIGHT
-        : ICON_ROW_HEIGHT,
-    [virtualItems],
-  );
-
-  // Memoized so react-window only re-renders rows when these values change.
-  const rowProps = useMemo(
-    () => ({ virtualItems, color, onSelect: handleSelect }),
-    [virtualItems, color, handleSelect],
-  );
-
   return (
     <div
       className={propsToClass('content-icon-picker', { className })}
@@ -238,6 +203,9 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
           variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           onValueChange={handleQueryChange}
         />
         <Tooltip title={t('random')}>
@@ -251,33 +219,80 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       </Toolbar>
       <div className="options">
         {results.length <= 60 && (
-          <div className="category-group-icons" style={{ overflowY: 'auto' }}>
-            {results.map((icon) => (
-              <IconSelectButton
-                key={icon.name}
-                icon={icon}
-                color={color}
-                onSelect={handleSelect}
-              />
-            ))}
-          </div>
+          <ScrollArea style={{ flex: 1, minHeight: 0 }}>
+            <div className="category-group-icons">
+              {results.map((icon) => (
+                <IconSelectButton
+                  key={icon.name}
+                  icon={icon}
+                  color={color}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         )}
         {results.length > 60 && (
-          // Key on virtualItems.length so the list remounts when the number
-          // of rows changes (avoids stale row heights after filtering).
-          // flex+minHeight give the List a bounded height so its ResizeObserver
-          // reports the visible area rather than the full content height.
-          <div key={virtualItems.length} style={{ flex: 1, minHeight: 0 }}>
-            <List
-              rowCount={virtualItems.length}
-              rowHeight={getItemSize}
-              // @ts-ignore - TODO: react-window types are incorrect, remove
-              // when they are fixed.
-              rowComponent={VirtualRow}
-              // @ts-ignore
-              rowProps={rowProps}
-            />
-          </div>
+          <ScrollArea
+            key={virtualItems.length}
+            ref={scrollContainerRef}
+            style={{ flex: 1, minHeight: 0 }}
+          >
+            <div
+              style={{
+                height: virtualizer.getTotalSize(),
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const item = virtualItems[virtualRow.index];
+
+                if (item.type === 'header') {
+                  return (
+                    <div
+                      key={virtualRow.key}
+                      className="category-group"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: virtualRow.size,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      <MenuLabel>{item.label}</MenuLabel>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={virtualRow.key}
+                    className="category-group-icons"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: virtualRow.size,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    {item.icons.map((icon) => (
+                      <IconSelectButton
+                        key={icon.name}
+                        icon={icon}
+                        color={color}
+                        onSelect={handleSelect}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
         )}
       </div>
     </div>

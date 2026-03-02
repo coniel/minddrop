@@ -49,45 +49,63 @@ export function groupByCategory(icons: UnminifiedContentIcon[]) {
   );
 }
 
-// Get all labels from all icons as an array
-export const getAllLabels = (icons: UnminifiedContentIcon[]) => {
-  const labels = new Set<string>();
+/**
+ * Extracts all unique labels from all icons and builds
+ * a label-to-icon index for O(1) lookups during search.
+ */
+export function buildIconLabelIndex(icons: UnminifiedContentIcon[]) {
+  const labelSet = new Set<string>();
+  const labelToIcon = new Map<string, UnminifiedContentIcon[]>();
 
-  icons.forEach((icon) => {
-    icon.labels.forEach((label) => {
-      labels.add(label);
-    });
-  });
+  for (const icon of icons) {
+    for (const label of icon.labels) {
+      labelSet.add(label);
 
-  return Array.from(labels);
-};
+      let items = labelToIcon.get(label);
+
+      if (!items) {
+        items = [];
+        labelToIcon.set(label, items);
+      }
+
+      items.push(icon);
+    }
+  }
+
+  return { labels: Array.from(labelSet), labelToIcon };
+}
 
 /**
  * Filters content icons based on a fuzzy search matching
- * their labels and category.
+ * their labels and category. Uses a pre-built label index
+ * for fast lookups.
  */
 export function searchContentIcons(
   icons: UnminifiedContentIcon[],
   labels: string[],
+  labelToIcon: Map<string, UnminifiedContentIcon[]>,
   query: string,
 ) {
   const matchedLabels = fuzzySearch(labels, query);
 
   // If there is no query or a single character query
-  // has no results, return everything.
+  // has no results, return everything
   if (!query || (query.length === 1 && !matchedLabels.length)) {
     return icons;
   }
 
   const results = new Set<UnminifiedContentIcon>();
 
-  matchedLabels.forEach((label) => {
-    // Add all icons with the matched label to the results
-    // set.
-    icons
-      .filter((icon) => icon.labels.includes(label))
-      .forEach((icon) => results.add(icon));
-  });
+  // Look up each matched label in the pre-built index
+  for (const label of matchedLabels) {
+    const items = labelToIcon.get(label);
+
+    if (items) {
+      for (const icon of items) {
+        results.add(icon);
+      }
+    }
+  }
 
   return Array.from(results);
 }

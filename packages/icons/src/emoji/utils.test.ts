@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EmojiItem, EmojiSkinTone, MinifiedEmoji } from './Emoji.types';
 import {
-  getAllLabels,
+  buildEmojiLabelIndex,
   getSkinToneVariant,
   groupByGroup,
   searchEmoji,
@@ -41,11 +41,10 @@ const emojiSkinTone: EmojiItem = {
   skinToneVariants: minifiedEmojiSkinTone[3],
 };
 
-const allLabels = [
-  ...emoji.labels,
-  minifiedEmojiSkinTone[1],
-  groups[minifiedEmojiSkinTone[2][0]],
-];
+const { labels: allLabels, labelToEmoji } = buildEmojiLabelIndex([
+  emoji,
+  emojiSkinTone,
+]);
 
 describe('<EmojiPicker /> utils', () => {
   describe('unminifyEmoji', () => {
@@ -84,24 +83,30 @@ describe('<EmojiPicker /> utils', () => {
     });
   });
 
-  describe('getAllLabels', () => {
+  describe('buildEmojiLabelIndex', () => {
     it('merges all labels into a single array without duplicates', () => {
-      expect(getAllLabels([emoji, emojiSkinTone])).toEqual(allLabels);
+      const { labels } = buildEmojiLabelIndex([emoji, emojiSkinTone]);
+
+      expect(labels).toEqual(allLabels);
     });
   });
 
-  describe('searchContentIcons', () => {
+  describe('searchEmoji', () => {
     it('performs a search', () => {
       expect(
-        searchEmoji([emoji, emojiSkinTone], allLabels, minifiedEmoji[1]),
+        searchEmoji(
+          [emoji, emojiSkinTone],
+          allLabels,
+          labelToEmoji,
+          minifiedEmoji[1],
+        ),
       ).toEqual([emoji]);
     });
 
     it('dedupes results', () => {
-      expect(searchEmoji([emoji, emojiSkinTone], allLabels, 'group')).toEqual([
-        emoji,
-        emojiSkinTone,
-      ]);
+      expect(
+        searchEmoji([emoji, emojiSkinTone], allLabels, labelToEmoji, 'group'),
+      ).toEqual([emoji, emojiSkinTone]);
     });
   });
 });

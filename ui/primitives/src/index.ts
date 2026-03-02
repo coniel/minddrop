@@ -40,3 +40,6 @@ export * from './utils';
 export { useToggle, useForm } from '@minddrop/utils';
 export type { FieldDefinition } from '@minddrop/utils';
 export * from './Toggle';
+
+export { useVirtualizer } from '@tanstack/react-virtual';
+export type { VirtualItem } from '@tanstack/react-virtual';

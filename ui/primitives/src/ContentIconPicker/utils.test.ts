@@ -4,7 +4,7 @@ import {
   UnminifiedContentIcon,
 } from './ContentIconPicker.types';
 import {
-  getAllLabels,
+  buildIconLabelIndex,
   groupByCategory,
   searchContentIcons,
   unminifyContentIcon,
@@ -26,16 +26,10 @@ const contentIcon2: UnminifiedContentIcon = {
   labels: ['dog', labels[1], labels[2], categories[0], categories[1]],
 };
 
-const allLabels = [
-  contentIcon1.name,
-  labels[1],
-  labels[3],
-  categories[0],
-  categories[2],
-  contentIcon2.name,
-  labels[2],
-  categories[1],
-];
+const { labels: allLabels, labelToIcon } = buildIconLabelIndex([
+  contentIcon1,
+  contentIcon2,
+]);
 
 describe('<IconPicker /> utils', () => {
   describe('unminifyIcons', () => {
@@ -56,22 +50,34 @@ describe('<IconPicker /> utils', () => {
     });
   });
 
-  describe('getAllLabels', () => {
+  describe('buildIconLabelIndex', () => {
     it('merges all labels into a single array without duplicates', () => {
-      expect(getAllLabels([contentIcon1, contentIcon2])).toEqual(allLabels);
+      const { labels } = buildIconLabelIndex([contentIcon1, contentIcon2]);
+
+      expect(labels).toEqual(allLabels);
     });
   });
 
   describe('searchContentIcons', () => {
     it('performs a search', () => {
       expect(
-        searchContentIcons([contentIcon1, contentIcon2], allLabels, 'dog'),
+        searchContentIcons(
+          [contentIcon1, contentIcon2],
+          allLabels,
+          labelToIcon,
+          'dog',
+        ),
       ).toEqual([contentIcon2]);
     });
 
     it('dedupes results', () => {
       expect(
-        searchContentIcons([contentIcon1, contentIcon2], allLabels, 'category'),
+        searchContentIcons(
+          [contentIcon1, contentIcon2],
+          allLabels,
+          labelToIcon,
+          'category',
+        ),
       ).toEqual([contentIcon1, contentIcon2]);
     });
   });

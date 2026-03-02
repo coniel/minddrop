@@ -51,40 +51,63 @@ export function groupByGroup(emojis: EmojiItem[]): [string, EmojiItem[]][] {
   }, []);
 }
 
-// Get all unique labels from all emoji as an array
-export const getAllLabels = (emojis: EmojiItem[]) =>
-  Array.from(
-    new Set(
-      emojis.reduce<string[]>((all, emoji) => [...all, ...emoji.labels], []),
-    ),
-  );
+/**
+ * Extracts all unique labels from all emoji and builds
+ * a label-to-emoji index for O(1) lookups during search.
+ */
+export function buildEmojiLabelIndex(emojis: EmojiItem[]) {
+  const labelSet = new Set<string>();
+  const labelToEmoji = new Map<string, EmojiItem[]>();
+
+  for (const emoji of emojis) {
+    for (const label of emoji.labels) {
+      labelSet.add(label);
+
+      let items = labelToEmoji.get(label);
+
+      if (!items) {
+        items = [];
+        labelToEmoji.set(label, items);
+      }
+
+      items.push(emoji);
+    }
+  }
+
+  return { labels: Array.from(labelSet), labelToEmoji };
+}
 
 /**
  * Filters emoji based on a fuzzy search matching
- * their labels.
+ * their labels. Uses a pre-built label index for
+ * fast lookups.
  */
 export function searchEmoji(
   emojis: EmojiItem[],
   labels: string[],
+  labelToEmoji: Map<string, EmojiItem[]>,
   query: string,
 ) {
   const matchedLabels = fuzzySearch(labels, query);
 
   // If there is no query or a single character query
-  // has no results, return everything.
+  // has no results, return everything
   if (!query || (query.length === 1 && !matchedLabels.length)) {
     return emojis;
   }
 
   const results = new Set<EmojiItem>();
 
-  matchedLabels.forEach((label) => {
-    // Add all emoji with the matched label to the
-    // results set.
-    emojis
-      .filter((emoji) => emoji.labels.includes(label))
-      .forEach((emoji) => results.add(emoji));
-  });
+  // Look up each matched label in the pre-built index
+  for (const label of matchedLabels) {
+    const items = labelToEmoji.get(label);
+
+    if (items) {
+      for (const emoji of items) {
+        results.add(emoji);
+      }
+    }
+  }
 
   return Array.from(results);
 }

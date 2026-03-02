@@ -1,15 +1,24 @@
-import { FC, memo, useCallback, useDeferredValue, useMemo, useState } from 'react';
-import { List } from 'react-window';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import {
+  FC,
+  memo,
+  useCallback,
+  useDeferredValue,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { Emoji, EmojiItem, EmojiSkinTone } from '@minddrop/icons';
 import { useToggle } from '@minddrop/utils';
-import { propsToClass } from '../utils';
 import { IconButton } from '../IconButton';
-import { TextField } from '../fields/TextField';
 import { MenuLabel } from '../Menu';
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
+import { ScrollArea } from '../ScrollArea';
 import { Toolbar } from '../Toolbar';
 import { Tooltip } from '../Tooltip';
+import { TextField } from '../fields/TextField';
+import { propsToClass } from '../utils';
 import './EmojiPicker.css';
 
 export interface EmojiPickerProps
@@ -57,7 +66,10 @@ function buildVirtualItems(
     items.push({ type: 'header', label: group });
 
     for (let i = 0; i < emojis.length; i += EMOJIS_PER_ROW) {
-      items.push({ type: 'emojis', emojis: emojis.slice(i, i + EMOJIS_PER_ROW) });
+      items.push({
+        type: 'emojis',
+        emojis: emojis.slice(i, i + EMOJIS_PER_ROW),
+      });
     }
   }
 
@@ -65,44 +77,6 @@ function buildVirtualItems(
 }
 
 const initialVirtualItems = buildVirtualItems(initialResultsByGroup);
-
-interface VirtualRowProps {
-  index: number;
-  style: React.CSSProperties;
-  virtualItems: VirtualItem[];
-  skinTone: EmojiSkinTone;
-  onSelect: (emoji: EmojiItem) => void;
-}
-
-// Defined outside the component for stable identity — react-window unmounts
-// and remounts all rows whenever rowComponent's type changes, so an inline
-// definition would cause a full remount on every parent render.
-const VirtualRow = memo(
-  ({ index, style, virtualItems, skinTone, onSelect }: VirtualRowProps): React.ReactElement => {
-    const item = virtualItems[index];
-
-    if (item.type === 'header') {
-      return (
-        <div style={style} className="category-group">
-          <MenuLabel>{item.label}</MenuLabel>
-        </div>
-      );
-    }
-
-    return (
-      <div style={style} className="category-group-emoji">
-        {item.emojis.map((emoji) => (
-          <EmojiButton
-            key={emoji.name}
-            emoji={emoji}
-            skinTone={skinTone}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
-    );
-  },
-);
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({
   onSelect,
@@ -116,6 +90,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
   const [skinTone, setSkinTone] = useState(defaultSkinTone);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { results, resultsByGroup } = useMemo(() => {
     if (!deferredQuery) {
@@ -132,6 +107,19 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
       deferredQuery ? buildVirtualItems(resultsByGroup) : initialVirtualItems,
     [deferredQuery, resultsByGroup],
   );
+
+  const virtualizer = useVirtualizer({
+    count: virtualItems.length,
+    getScrollElement: () =>
+      scrollContainerRef.current?.querySelector<HTMLElement>(
+        '.scroll-area-viewport',
+      ) ?? null,
+    estimateSize: (index) =>
+      virtualItems[index].type === 'header'
+        ? HEADER_ROW_HEIGHT
+        : EMOJI_ROW_HEIGHT,
+    overscan: 5,
+  });
 
   const handleSelect = useCallback(
     (value: EmojiItem) => {
@@ -163,22 +151,8 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   const handleQueryChange = useCallback((value: string) => setQuery(value), []);
 
-  const getItemSize = useCallback(
-    (index: number) =>
-      virtualItems[index].type === 'header' ? HEADER_ROW_HEIGHT : EMOJI_ROW_HEIGHT,
-    [virtualItems],
-  );
-
-  const rowProps = useMemo(
-    () => ({ virtualItems, skinTone, onSelect: handleSelect }),
-    [virtualItems, skinTone, handleSelect],
-  );
-
   return (
-    <div
-      className={propsToClass('emoji-picker', { className })}
-      {...other}
-    >
+    <div className={propsToClass('emoji-picker', { className })} {...other}>
       <Toolbar className="color-toolbar">
         {Emoji.skinTones.map((skinTone) => (
           <IconButton
@@ -195,6 +169,9 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           variant="ghost"
           placeholder={t('filter')}
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           onValueChange={handleQueryChange}
         />
         <Tooltip title={t('random')}>
@@ -208,30 +185,80 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
       </Toolbar>
       <div className="options">
         {results.length <= 60 && (
-          <div className="category-group-emoji" style={{ overflowY: 'auto' }}>
-            {results.map((emoji) => (
-              <EmojiButton
-                key={emoji.name}
-                emoji={emoji}
-                skinTone={skinTone}
-                onSelect={handleSelect}
-              />
-            ))}
-          </div>
+          <ScrollArea style={{ flex: 1, minHeight: 0 }}>
+            <div className="category-group-emoji">
+              {results.map((emoji) => (
+                <EmojiButton
+                  key={emoji.name}
+                  emoji={emoji}
+                  skinTone={skinTone}
+                  onSelect={handleSelect}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         )}
         {results.length > 60 && (
-          <div key={virtualItems.length} style={{ flex: 1, minHeight: 0 }}>
-            <List
-              rowCount={virtualItems.length}
-              rowHeight={getItemSize}
-              // @ts-ignore - TODO: react-window types are incorrect, remove
-              // when they are fixed.
-              rowComponent={VirtualRow}
-              // @ts-ignore - TODO: react-window types are incorrect, remove
-              // when they are fixed.
-              rowProps={rowProps}
-            />
-          </div>
+          <ScrollArea
+            key={virtualItems.length}
+            ref={scrollContainerRef}
+            style={{ flex: 1, minHeight: 0 }}
+          >
+            <div
+              style={{
+                height: virtualizer.getTotalSize(),
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const item = virtualItems[virtualRow.index];
+
+                if (item.type === 'header') {
+                  return (
+                    <div
+                      key={virtualRow.key}
+                      className="category-group"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: virtualRow.size,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      <MenuLabel>{item.label}</MenuLabel>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={virtualRow.key}
+                    className="category-group-emoji"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: virtualRow.size,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    {item.emojis.map((emoji) => (
+                      <EmojiButton
+                        key={emoji.name}
+                        emoji={emoji}
+                        skinTone={skinTone}
+                        onSelect={handleSelect}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
         )}
       </div>
     </div>
