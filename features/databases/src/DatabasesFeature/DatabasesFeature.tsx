@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { DatabaseEntries } from '@minddrop/databases';
 import {
   Events,
   OpenMainContentViewEvent,
   OpenMainContentViewEventData,
 } from '@minddrop/events';
-import { Dialog, DialogRoot } from '@minddrop/ui-primitives';
-import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
+import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
 import {
@@ -82,28 +80,15 @@ export const DatabasesFeature: React.FC = () => {
   return (
     <>
       <NewDatabaseDialog />
-      <DialogRoot open={dialogOpen} onOpenChange={setDialogOpen}>
-        <Dialog width="lg" noPadding>
-          {dialogEntryId && <EntryDialogContent entryId={dialogEntryId} />}
-        </Dialog>
-      </DialogRoot>
+      {dialogEntryId && (
+        <DatabaseEntryDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          entryId={dialogEntryId}
+        />
+      )}
     </>
   );
-};
-
-/**
- * Renders the content of the entry dialog using the
- * entry's page design.
- */
-const EntryDialogContent: React.FC<{ entryId: string }> = ({ entryId }) => {
-  // Get the entry data
-  const entry = DatabaseEntries.use(entryId);
-
-  if (!entry) {
-    return null;
-  }
-
-  return <DatabaseEntryRenderer entryId={entryId} designType="page" />;
 };
 
 /**
