@@ -15,15 +15,13 @@ import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
+import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
 
-// import { watchAppConfigFiles } from './watchAppConfigFiles';
-
 // In development mode, React will run useEffect hooks twice
-// when the app is first loaded. This is a workaround to prevent
-// the app from being initialized twice.
-let cleanupFn: VoidFunction = () => {};
+// when the app is first loaded. This guard prevents the app
+// from being initialized twice.
 let initialized = false;
 
 // Initialize internationalization
@@ -32,13 +30,16 @@ initializeI18n();
 /**
  * Initializes the desktop app.
  */
-export async function initializeDesktopApp(): Promise<VoidFunction> {
+export async function initializeDesktopApp(): Promise<void> {
   if (initialized) {
-    return cleanupFn;
+    return;
   }
-  console.log('init');
 
   initialized = true;
+
+  // Register listeners that persist and hydrate app-config
+  // stores to JSON files in the AppData directory
+  registerAppDataStoreListeners();
 
   // Watch for theme variant changes
   Events.addListener(
@@ -70,28 +71,11 @@ export async function initializeDesktopApp(): Promise<VoidFunction> {
   // Initialize global selection keyboard shortcuts
   initializeSelection();
 
-  // Watch for app config file changes
-  // const cancelConfigsWatcher = await watchAppConfigFiles();
-
   // Initialize theme
   await Theme.initialize();
 
   // Initialize extensions
   await initializeExtensions([]);
-
-  cleanupFn = () => {
-    // Remove config files watcher
-    // cancelConfigsWatcher();
-
-    console.log('cleanupFn');
-    // Remove theme variant listener
-    Events.removeListener(
-      Theme.events.VariantChanged,
-      'app:set-body-theme-appearance-class',
-    );
-  };
-
-  return cleanupFn;
 }
 
 /**
