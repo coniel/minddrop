@@ -13,10 +13,7 @@ describe('registerMarkConfig', () => {
     registerMarkConfig(boldMarkConfig);
 
     // Should add config to store
-    expect(MarkConfigsStore.get(boldMarkConfig.key)).toEqual({
-      id: boldMarkConfig.key,
-      ...boldMarkConfig,
-    });
+    expect(MarkConfigsStore.get(boldMarkConfig.key)).toEqual(boldMarkConfig);
   });
 
   it('dispatches a `editor:mark:register` event', () =>
@@ -24,10 +21,7 @@ describe('registerMarkConfig', () => {
       // Listen to 'editor:mark:register' events
       Events.addListener('editor:mark:register', 'test', (payload) => {
         // Payload data should be the registered config
-        expect(payload.data).toEqual({
-          id: boldMarkConfig.key,
-          ...boldMarkConfig,
-        });
+        expect(payload.data).toEqual(boldMarkConfig);
 
         done();
       });

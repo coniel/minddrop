@@ -8,10 +8,7 @@ import { unregisterMarkConfig } from './unregisterMarkConfig';
 describe('unregisterMarkConfig', () => {
   beforeEach(() => {
     // Register a config
-    MarkConfigsStore.set({
-      id: boldMarkConfig.key,
-      ...boldMarkConfig,
-    });
+    MarkConfigsStore.set(boldMarkConfig);
   });
 
   afterEach(cleanup);
@@ -21,7 +18,7 @@ describe('unregisterMarkConfig', () => {
     unregisterMarkConfig(boldMarkConfig.key);
 
     // Should remove config from store
-    expect(MarkConfigsStore.get(boldMarkConfig.key)).toBeUndefined();
+    expect(MarkConfigsStore.get(boldMarkConfig.key)).toBeNull();
   });
 
   it('dispatches a `editor:mark:register` event', () =>

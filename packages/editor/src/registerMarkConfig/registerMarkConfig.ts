@@ -9,12 +9,9 @@ import { MarkConfig } from '../types';
  * @param config - The config to register.
  */
 export function registerMarkConfig(config: MarkConfig): void {
-  // Add the config to the MarkConfigsStore,
-  // using the key as its ID.
-  const registeredConfig = { ...config, id: config.key };
-
-  MarkConfigsStore.set(registeredConfig);
+  // Add the config to the MarkConfigsStore
+  MarkConfigsStore.set(config);
 
   // Dispatch a 'editor:mark:register' event
-  Events.dispatch('editor:mark:register', registeredConfig);
+  Events.dispatch('editor:mark:register', config);
 }

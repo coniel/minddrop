@@ -1,4 +1,4 @@
-import { createItemStore } from '@minddrop/core';
+import { createObjectStore } from '@minddrop/utils';
 import { MarkConfig } from './types';
 
-export const MarkConfigsStore = createItemStore<MarkConfig & { id: string }>();
+export const MarkConfigsStore = createObjectStore<MarkConfig>('key');

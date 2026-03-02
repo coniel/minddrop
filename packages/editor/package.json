@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
-    "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",

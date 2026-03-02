@@ -627,9 +627,6 @@ importers:
       '@minddrop/ast':
         specifier: workspace:*
         version: link:../ast
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events

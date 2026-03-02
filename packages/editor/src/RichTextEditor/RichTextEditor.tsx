@@ -98,7 +98,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
           ),
           'paragraph',
         ),
-        Object.values(MarkConfigsStore.getAll()),
+        MarkConfigsStore.getAllArray(),
       ),
     [editor],
   );
