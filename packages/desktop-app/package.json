@@ -30,7 +30,6 @@
     "@minddrop/editor": "workspace:*",
     "@minddrop/events": "workspace:*",
     "@minddrop/extensions": "workspace:*",
-    "@minddrop/feature-database-entries": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
     "@minddrop/file-system": "workspace:*",

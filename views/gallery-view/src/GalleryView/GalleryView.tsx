@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import React from 'react';
-import { DatabaseEntryRenderer } from '@minddrop/feature-database-entries';
+import { DatabaseEntryRenderer } from '@minddrop/feature-databases';
 import { ScrollArea } from '@minddrop/ui-primitives';
 import { ViewTypeComponentProps } from '@minddrop/views';
 import { GAP_SIZE, defaultGalleryViewOptions } from '../constants';

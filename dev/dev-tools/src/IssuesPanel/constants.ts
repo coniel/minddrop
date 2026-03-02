@@ -63,11 +63,6 @@ export const ISSUE_PACKAGES: PackageOption[] = [
   { value: 'dev-tools', label: 'dev-tools', workspace: 'dev' },
   // features (label strips feature- prefix)
   { value: 'feature-app-sidebar', label: 'app-sidebar', workspace: 'features' },
-  {
-    value: 'feature-database-entries',
-    label: 'database-entries',
-    workspace: 'features',
-  },
   { value: 'feature-databases', label: 'databases', workspace: 'features' },
   { value: 'feature-designs', label: 'designs', workspace: 'features' },
   {

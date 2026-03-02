@@ -13,8 +13,10 @@ import {
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
-import { DatabaseEntriesFeature } from '@minddrop/feature-database-entries';
-import { DatabasesFeature } from '@minddrop/feature-databases';
+import {
+  DatabaseEntriesFeature,
+  DatabasesFeature,
+} from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import {

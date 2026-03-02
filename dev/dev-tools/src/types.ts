@@ -56,7 +56,6 @@ export type IssuePackage =
   | 'extension'
   | 'extensions'
   | 'feature-app-sidebar'
-  | 'feature-database-entries'
   | 'feature-databases'
   | 'feature-designs'
   | 'feature-drag-and-drop'

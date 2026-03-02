@@ -8,7 +8,7 @@ import {
 import { Dialog, DialogRoot } from '@minddrop/ui-primitives';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
 import {
-  EventListenerId,
+  DatabaseEntriesEventListenerId,
   OpenDatabaseEntryEvent,
   OpenDatabaseEntryEventData,
 } from '../events';
@@ -23,7 +23,7 @@ export const DatabaseEntriesFeature: React.FC = () => {
     // in the appropriate mode.
     Events.addListener<OpenDatabaseEntryEventData>(
       OpenDatabaseEntryEvent,
-      EventListenerId,
+      DatabaseEntriesEventListenerId,
       ({ data }) => {
         // Resolve the open mode, falling back to the database default
         const openMode = resolveOpenMode(data.entryId, data.openMode);
@@ -46,7 +46,10 @@ export const DatabaseEntriesFeature: React.FC = () => {
     );
 
     return () => {
-      Events.removeListener(OpenDatabaseEntryEvent, EventListenerId);
+      Events.removeListener(
+        OpenDatabaseEntryEvent,
+        DatabaseEntriesEventListenerId,
+      );
     };
   }, []);
 
