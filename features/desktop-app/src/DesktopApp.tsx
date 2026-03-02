@@ -12,10 +12,7 @@ import {
   OpenRightPanelEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
-import {
-  DatabaseEntriesFeature,
-  DatabasesFeature,
-} from '@minddrop/feature-databases';
+import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
 import {
@@ -70,7 +67,6 @@ export const DesktopApp: React.FC = () => {
             </div>
           </div>
           <DatabasesFeature />
-          <DatabaseEntriesFeature />
           <ConfirmationDialogFeature />
           <ShowWindowOnRendered />
           <DesignsFeature />
