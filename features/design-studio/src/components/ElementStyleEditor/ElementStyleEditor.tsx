@@ -8,6 +8,7 @@ import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEdito
 import { NumberElementStyleEditor } from '../style-editors/NumberElementStyleEditor';
 import { TextElementStyleEditor } from '../style-editors/TextElementStyleEditor';
 import { UrlElementStyleEditor } from '../style-editors/UrlElementStyleEditor';
+import { WebviewElementStyleEditor } from '../style-editors/WebviewElementStyleEditor';
 import './ElementStyleEditor.css';
 
 const containerTypes = new Set(['root', 'container']);
@@ -70,6 +71,10 @@ export const ElementStyleEditor: React.FC = () => {
 
           {element.type === 'image' && (
             <ImageElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'webview' && (
+            <WebviewElementStyleEditor elementId={selectedElementId} />
           )}
         </Stack>
       </ScrollArea>

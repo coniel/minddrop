@@ -1019,6 +1019,10 @@
         "round": "Round"
       }
     },
+    "webview": {
+      "placeholder": "Displays a web page from a URL property",
+      "embed-blocked": "This site does not allow embedding"
+    },
     "url-display": {
       "label": "Display"
     },
@@ -1106,6 +1110,7 @@
       "url": "URL",
       "image": "Image",
       "icon": "Icon",
+      "webview": "Web view",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
       "group": {

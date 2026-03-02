@@ -6,3 +6,11 @@
 .database-entry-card:hover > * {
   outline-color: var(--border-subtle);
 }
+
+.database-entry-page {
+  height: 100%;
+}
+
+.database-entry-page > * {
+  height: 100%;
+}

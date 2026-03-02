@@ -57,6 +57,15 @@ export const PropertyMappingOverlay: React.FC<PropertyMappingOverlayProps> = ({
         draggingPropertyType &&
         isPropertyCompatibleWithElement(draggingPropertyType, element);
 
+      // Image and webview elements stretch to fill their parent
+      // container, so the wrapper must also stretch to match
+      const fillStyle =
+        element.type === 'image'
+          ? ({ alignSelf: 'stretch' } as const)
+          : element.type === 'webview'
+            ? ({ flex: 1, alignSelf: 'stretch' } as const)
+            : undefined;
+
       if (isCompatible) {
         // Check if this element already has a property mapped to it
         const isMapped = element.id in propertyMap;
@@ -66,6 +75,7 @@ export const PropertyMappingOverlay: React.FC<PropertyMappingOverlayProps> = ({
             element={element}
             onDrop={onDrop}
             mapped={isMapped}
+            style={fillStyle}
           >
             {children}
           </PropertyDropTarget>
@@ -74,7 +84,11 @@ export const PropertyMappingOverlay: React.FC<PropertyMappingOverlayProps> = ({
 
       // Incompatible elements remain hidden (inherit visibility: hidden
       // from the parent .property-mapping-targets container)
-      return <div className="property-mapping-hidden-element">{children}</div>;
+      return (
+        <div className="property-mapping-hidden-element" style={fillStyle}>
+          {children}
+        </div>
+      );
     },
     [draggingPropertyType, onDrop, propertyMap],
   );

@@ -19,6 +19,7 @@ import { DesignStudioImageElement } from '../DesignStudioImageElement';
 import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
 import { DesignStudioTextElement } from '../DesignStudioTextElement';
 import { DesignStudioUrlElement } from '../DesignStudioUrlElement';
+import { DesignStudioWebviewElement } from '../DesignStudioWebviewElement';
 import './DesignStudioElement.css';
 
 export interface DesignStudioElementProps {
@@ -76,6 +77,8 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
       return <DesignStudioIconElement element={element} />;
     case 'image':
       return <DesignStudioImageElement element={element} />;
+    case 'webview':
+      return <DesignStudioWebviewElement element={element} />;
     default:
       return null;
   }
@@ -145,6 +148,7 @@ const DesignStudioElementInner: React.FC<{
   // stretch property.
   const shouldStretch =
     element.type === 'image' ||
+    element.type === 'webview' ||
     (element.type === 'container' &&
       (element.style as ContainerElementStyle).stretch);
 
@@ -152,7 +156,18 @@ const DesignStudioElementInner: React.FC<{
     <div
       className="design-studio-element"
       data-element-id={element.id}
-      style={shouldStretch ? { alignSelf: 'stretch' } : undefined}
+      style={
+        shouldStretch
+          ? element.type === 'webview'
+            ? {
+                alignSelf: 'stretch',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }
+            : { alignSelf: 'stretch' }
+          : undefined
+      }
       {...dragDropProps}
     >
       <div
@@ -161,6 +176,11 @@ const DesignStudioElementInner: React.FC<{
           isSelected,
           isFading,
         })}
+        style={
+          element.type === 'webview'
+            ? { flex: 1, display: 'flex', flexDirection: 'column' as const }
+            : undefined
+        }
         onClick={handleClick}
         onAnimationEnd={
           isFading

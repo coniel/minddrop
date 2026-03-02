@@ -112,6 +112,51 @@ export const DefaultIconElementStyle: IconElementStyle = {
   'margin-left': 0,
 };
 
+export interface WebviewElementStyle
+  extends Pick<
+      ContainerStyles,
+      | 'borderStyle'
+      | 'borderColor'
+      | 'borderWidth'
+      | 'borderRadiusTopLeft'
+      | 'borderRadiusTopRight'
+      | 'borderRadiusBottomRight'
+      | 'borderRadiusBottomLeft'
+    >,
+    Pick<TypographyStyles, 'opacity'> {
+  width: number;
+  height: number;
+  maxWidth: number;
+  maxHeight: number;
+  widthUnit: SizeUnit;
+  maxWidthUnit: SizeUnit;
+  'margin-top': number;
+  'margin-right': number;
+  'margin-bottom': number;
+  'margin-left': number;
+}
+
+export const DefaultWebviewElementStyle: WebviewElementStyle = {
+  borderStyle: DefaultContainerStyles.borderStyle,
+  borderColor: DefaultContainerStyles.borderColor,
+  borderWidth: DefaultContainerStyles.borderWidth,
+  borderRadiusTopLeft: 0,
+  borderRadiusTopRight: 0,
+  borderRadiusBottomRight: 0,
+  borderRadiusBottomLeft: 0,
+  opacity: DefaultTypographyStyles.opacity,
+  width: 100,
+  height: 0,
+  maxWidth: 100,
+  maxHeight: 0,
+  widthUnit: '%',
+  maxWidthUnit: '%',
+  'margin-top': 0,
+  'margin-right': 0,
+  'margin-bottom': 0,
+  'margin-left': 0,
+};
+
 export const DefaultImageElementStyle: ImageElementStyle = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,

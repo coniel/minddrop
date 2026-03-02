@@ -3,6 +3,7 @@ import {
   IconElementStyle,
   ImageElementStyle,
   TextElementStyle,
+  WebviewElementStyle,
 } from '../styles';
 
 export interface NumberFormat {
@@ -185,13 +186,23 @@ export interface IconElement extends DesignElementBase {
   icon?: string;
 }
 
+export interface WebviewElement extends DesignElementBase {
+  type: 'webview';
+
+  /**
+   * The element style.
+   */
+  style: WebviewElementStyle;
+}
+
 export type LeafDesignElement =
   | TextElement
   | FormattedTextElement
   | NumberElement
   | UrlElement
   | ImageElement
-  | IconElement;
+  | IconElement
+  | WebviewElement;
 
 /******************************************************************************
  * Container Elements
@@ -242,4 +253,5 @@ export type DesignElementType =
   | 'number'
   | 'url'
   | 'image'
-  | 'icon';
+  | 'icon'
+  | 'webview';

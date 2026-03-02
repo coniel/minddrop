@@ -5,6 +5,7 @@ import { ImageElementTemplate } from './ImageElementTemplate';
 import { NumberElementTemplate } from './NumberElementTemplate';
 import { TextElementTemplate } from './TextElementTemplate';
 import { UrlElementTemplate } from './UrlElementTemplate';
+import { WebviewElementTemplate } from './WebviewElementTemplate';
 
 export * from './ContainerElementTemplate';
 export * from './IconElementTemplate';
@@ -12,6 +13,7 @@ export * from './ImageElementTemplate';
 export * from './TextElementTemplate';
 export * from './FormattedTextElementTemplate';
 export * from './UrlElementTemplate';
+export * from './WebviewElementTemplate';
 
 export type DesignElementTemplate =
   | ContainerElementTemplate
@@ -20,7 +22,8 @@ export type DesignElementTemplate =
   | ImageElementTemplate
   | IconElementTemplate
   | NumberElementTemplate
-  | UrlElementTemplate;
+  | UrlElementTemplate
+  | WebviewElementTemplate;
 
 export const ElementTemplates: Record<
   DesignElementTemplate['type'],
@@ -33,4 +36,5 @@ export const ElementTemplates: Record<
   icon: IconElementTemplate,
   number: NumberElementTemplate,
   url: UrlElementTemplate,
+  webview: WebviewElementTemplate,
 };

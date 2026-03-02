@@ -6,5 +6,6 @@ export * from './DesignNumberElement';
 export * from './DesignImageElement';
 export * from './DesignIconElement';
 export * from './DesignUrlElement';
+export * from './DesignWebviewElement';
 export * from './DesignContainerElement';
 export * from './DesignRootElement';

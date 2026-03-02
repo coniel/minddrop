@@ -1,0 +1,52 @@
+.design-webview-element {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  background-color: var(--neutral-400);
+}
+
+.design-webview-element-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  animation: webview-fallback-fade-in 0.3s ease 1s both;
+}
+
+.design-webview-element-icon {
+  color: var(--contrast-500);
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  opacity: 0.8;
+}
+
+.design-webview-element-text {
+  color: var(--contrast-500);
+  opacity: 0.8;
+}
+
+.design-webview-element-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+}
+
+@keyframes webview-fallback-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

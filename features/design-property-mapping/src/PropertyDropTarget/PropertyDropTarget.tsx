@@ -22,6 +22,11 @@ export interface PropertyDropTargetProps {
   mapped?: boolean;
 
   /**
+   * Optional inline styles applied to the wrapper div.
+   */
+  style?: React.CSSProperties;
+
+  /**
    * The child content to render (the design element).
    */
   children: React.ReactNode;
@@ -36,6 +41,7 @@ export const PropertyDropTarget: React.FC<PropertyDropTargetProps> = ({
   element,
   onDrop,
   mapped,
+  style,
   children,
 }) => {
   // Handle drop events, forwarding the element ID
@@ -71,7 +77,7 @@ export const PropertyDropTarget: React.FC<PropertyDropTargetProps> = ({
   }
 
   return (
-    <div className={className} {...droppableProps}>
+    <div className={className} style={style} {...droppableProps}>
       {children}
     </div>
   );

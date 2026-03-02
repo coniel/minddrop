@@ -8,6 +8,7 @@ import {
   RootElement,
   TextElement,
   UrlElement,
+  WebviewElement,
 } from '@minddrop/designs';
 
 type Parent = { parent: string };
@@ -27,6 +28,7 @@ export type FlatNumberElement = NumberElement & Parent;
 export type FlatImageElement = ImageElement & Parent;
 export type FlatUrlElement = UrlElement & Parent;
 export type FlatIconElement = IconElement & Parent;
+export type FlatWebviewElement = WebviewElement & Parent;
 
 export type FlatDesignElement =
   | FlatRootDesignElement

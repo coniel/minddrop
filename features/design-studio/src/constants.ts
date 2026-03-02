@@ -12,6 +12,7 @@ export const elementIconMap: Record<string, UiIconName> = {
   url: 'link',
   image: 'image',
   icon: 'smile',
+  webview: 'globe',
 };
 
 export const elementLabelMap: Record<string, string> = {
@@ -22,4 +23,5 @@ export const elementLabelMap: Record<string, string> = {
   url: 'design-studio.elements.url',
   image: 'design-studio.elements.image',
   icon: 'design-studio.elements.icon',
+  webview: 'design-studio.elements.webview',
 };
