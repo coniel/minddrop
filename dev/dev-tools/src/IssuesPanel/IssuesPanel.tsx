@@ -1,15 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
-import { Button, IconButton, ScrollArea, Select } from '@minddrop/ui-primitives';
-import { Issue, IssuePackage, IssuePriority, IssueStatus, IssueType } from '../types';
+import {
+  Button,
+  IconButton,
+  ScrollArea,
+  Select,
+} from '@minddrop/ui-primitives';
+import {
+  Issue,
+  IssuePackage,
+  IssuePriority,
+  IssueStatus,
+  IssueType,
+} from '../types';
 import {
   ISSUE_PACKAGES,
   ISSUE_PRIORITIES,
   ISSUE_STATUSES,
   ISSUE_TYPES,
-  PACKAGE_GROUPS,
   PRIORITY_COLORS,
   STATUS_COLORS,
   STATUS_ICONS,
@@ -29,7 +39,10 @@ interface IssuesPanelProps {
 
 const STATUS_FILTER_OPTIONS = [
   { value: 'all', label: 'All Statuses' },
-  ...ISSUE_STATUSES.map((status) => ({ value: status.value, label: status.label })),
+  ...ISSUE_STATUSES.map((status) => ({
+    value: status.value,
+    label: status.label,
+  })),
 ];
 
 const STATUS_OPTIONS = ISSUE_STATUSES.map((status) => ({
@@ -60,30 +73,26 @@ function PackageSelectItem({ value, label }: { value: string; label: string }) {
   );
 }
 
-function GroupedPackageItems({ includeAll }: { includeAll?: boolean }) {
+function PackageItems({ includeAll }: { includeAll?: boolean }) {
   return (
     <>
       {includeAll && <PackageSelectItem value="all" label="All Packages" />}
-      {PACKAGE_GROUPS.map((group) => (
-        <SelectPrimitive.Group key={group.workspace} className="select-group">
-          <SelectPrimitive.GroupLabel className="select-group-label">
-            {group.label}
-          </SelectPrimitive.GroupLabel>
-          {group.packages.map((packageItem) => (
-            <PackageSelectItem
-              key={packageItem.value}
-              value={packageItem.value}
-              label={packageItem.label}
-            />
-          ))}
-        </SelectPrimitive.Group>
+      {ISSUE_PACKAGES.map((packageItem) => (
+        <PackageSelectItem
+          key={packageItem.value}
+          value={packageItem.value}
+          label={packageItem.label}
+        />
       ))}
     </>
   );
 }
 
 function getPackageLabel(value: string): string {
-  return ISSUE_PACKAGES.find((packageItem) => packageItem.value === value)?.label ?? value;
+  return (
+    ISSUE_PACKAGES.find((packageItem) => packageItem.value === value)?.label ??
+    value
+  );
 }
 
 function getTypeLabel(value: string): string {
@@ -91,7 +100,10 @@ function getTypeLabel(value: string): string {
 }
 
 function getPriorityLabel(value: string): string {
-  return ISSUE_PRIORITIES.find((priority) => priority.value === value)?.label ?? value;
+  return (
+    ISSUE_PRIORITIES.find((priority) => priority.value === value)?.label ??
+    value
+  );
 }
 
 function formatRelativeDate(timestamp: number): string {
@@ -143,7 +155,13 @@ function StatusIcon({ status }: { status: string }) {
       )}
       {icon === 'in-progress' && (
         <>
-          <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+          <circle
+            cx="8"
+            cy="8"
+            r="6.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
           <path
             d="M8 1.5A6.5 6.5 0 0 1 14.5 8"
             stroke="currentColor"
@@ -154,7 +172,13 @@ function StatusIcon({ status }: { status: string }) {
       )}
       {icon === 'review' && (
         <>
-          <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+          <circle
+            cx="8"
+            cy="8"
+            r="6.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
           <circle cx="8" cy="8" r="3" fill="currentColor" />
         </>
       )}
@@ -329,7 +353,8 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
   const [statusFilter, setStatusFilter] = useState('open');
   const [packageFilter, setPackageFilter] = useState('all');
 
-  const selectedIssue = issues.find((issue) => issue.id === selectedIssueId) ?? null;
+  const selectedIssue =
+    issues.find((issue) => issue.id === selectedIssueId) ?? null;
 
   // --- Detail view ---
   if (selectedIssue) {
@@ -397,11 +422,12 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
               onIssueChange(selectedIssue.id, { package: value })
             }
           >
-            <GroupedPackageItems />
+            <PackageItems />
           </Select>
           <div className="issues-panel-detail-fields-spacer" />
           <span className="issues-panel-detail-fields-created">
-            #{selectedIssue.number} · {formatRelativeDate(selectedIssue.createdAt)}
+            #{selectedIssue.number} ·{' '}
+            {formatRelativeDate(selectedIssue.createdAt)}
           </span>
         </div>
 
@@ -438,22 +464,33 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
     return true;
   });
 
-  const openCount = issues.filter((issue) => issue.status === 'open' || issue.status === 'in-progress' || issue.status === 'review').length;
-  const closedCount = issues.filter((issue) => issue.status === 'done' || issue.status === 'wontfix').length;
+  const openCount = issues.filter(
+    (issue) =>
+      issue.status === 'open' ||
+      issue.status === 'in-progress' ||
+      issue.status === 'review',
+  ).length;
+  const closedCount = issues.filter(
+    (issue) => issue.status === 'done' || issue.status === 'wontfix',
+  ).length;
 
   return (
     <div className="issues-panel">
       <div className="issues-panel-toolbar">
         <button
           className={`issues-panel-tab-button${statusFilter === 'all' || statusFilter === 'open' || statusFilter === 'in-progress' || statusFilter === 'review' ? ' issues-panel-tab-button-active' : ''}`}
-          onClick={() => setStatusFilter(statusFilter === 'open' ? 'all' : 'open')}
+          onClick={() =>
+            setStatusFilter(statusFilter === 'open' ? 'all' : 'open')
+          }
         >
           <StatusIcon status="open" />
           {openCount} Open
         </button>
         <button
           className={`issues-panel-tab-button${statusFilter === 'done' || statusFilter === 'wontfix' ? ' issues-panel-tab-button-active' : ''}`}
-          onClick={() => setStatusFilter(statusFilter === 'done' ? 'all' : 'done')}
+          onClick={() =>
+            setStatusFilter(statusFilter === 'done' ? 'all' : 'done')
+          }
         >
           <StatusIcon status="done" />
           {closedCount} Closed
@@ -465,7 +502,7 @@ export const IssuesPanel: React.FC<IssuesPanelProps> = ({
           value={packageFilter}
           onValueChange={setPackageFilter}
         >
-          <GroupedPackageItems includeAll />
+          <PackageItems includeAll />
         </Select>
         <IconButton
           icon="plus"

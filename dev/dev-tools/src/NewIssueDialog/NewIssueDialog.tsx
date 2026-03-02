@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { ScrollArea, Select } from '@minddrop/ui-primitives';
-import { IssuePackage, IssuePriority, IssueStatus, IssueType } from '../types';
 import {
+  ISSUE_PACKAGES,
   ISSUE_PRIORITIES,
   ISSUE_STATUSES,
   ISSUE_TYPES,
-  PACKAGE_GROUPS,
 } from '../IssuesPanel/constants';
+import { IssuePackage, IssuePriority, IssueStatus, IssueType } from '../types';
 import './NewIssueDialog.css';
 
 export interface NewIssueData {
@@ -55,22 +55,15 @@ function PackageSelectItem({ value, label }: { value: string; label: string }) {
   );
 }
 
-function GroupedPackageItems() {
+function PackageItems() {
   return (
     <>
-      {PACKAGE_GROUPS.map((group) => (
-        <SelectPrimitive.Group key={group.workspace} className="select-group">
-          <SelectPrimitive.GroupLabel className="select-group-label">
-            {group.label}
-          </SelectPrimitive.GroupLabel>
-          {group.packages.map((packageItem) => (
-            <PackageSelectItem
-              key={packageItem.value}
-              value={packageItem.value}
-              label={packageItem.label}
-            />
-          ))}
-        </SelectPrimitive.Group>
+      {ISSUE_PACKAGES.map((packageItem) => (
+        <PackageSelectItem
+          key={packageItem.value}
+          value={packageItem.value}
+          label={packageItem.label}
+        />
       ))}
     </>
   );
@@ -128,9 +121,7 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="new-issue-dialog-title-row">
-          <span className="new-issue-dialog-title-number">
-            #{issueNumber}
-          </span>
+          <span className="new-issue-dialog-title-number">#{issueNumber}</span>
           <input
             ref={titleRef}
             className="new-issue-dialog-title"
@@ -168,7 +159,7 @@ export const NewIssueDialog: React.FC<NewIssueDialogProps> = ({
             value={issuePackage}
             onValueChange={(value: IssuePackage) => setIssuePackage(value)}
           >
-            <GroupedPackageItems />
+            <PackageItems />
           </Select>
           <div className="new-issue-dialog-fields-spacer" />
           <span className="new-issue-dialog-hint">⌘↵ submit</span>

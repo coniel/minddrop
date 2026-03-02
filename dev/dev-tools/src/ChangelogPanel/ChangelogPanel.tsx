@@ -9,11 +9,7 @@ import {
   ScrollArea,
   Select,
 } from '@minddrop/ui-primitives';
-import {
-  ISSUE_PACKAGES,
-  PACKAGE_GROUPS,
-  getPackageColor,
-} from '../IssuesPanel/constants';
+import { ISSUE_PACKAGES, getPackageColor } from '../IssuesPanel/constants';
 import { Changelog, Issue, IssuePackage } from '../types';
 import './ChangelogPanel.css';
 
@@ -40,22 +36,15 @@ function PackageSelectItem({ value, label }: { value: string; label: string }) {
   );
 }
 
-function GroupedPackageItems() {
+function PackageItems() {
   return (
     <>
-      {PACKAGE_GROUPS.map((group) => (
-        <SelectPrimitive.Group key={group.workspace} className="select-group">
-          <SelectPrimitive.GroupLabel className="select-group-label">
-            {group.label}
-          </SelectPrimitive.GroupLabel>
-          {group.packages.map((packageItem) => (
-            <PackageSelectItem
-              key={packageItem.value}
-              value={packageItem.value}
-              label={packageItem.label}
-            />
-          ))}
-        </SelectPrimitive.Group>
+      {ISSUE_PACKAGES.map((packageItem) => (
+        <PackageSelectItem
+          key={packageItem.value}
+          value={packageItem.value}
+          label={packageItem.label}
+        />
       ))}
     </>
   );
@@ -338,7 +327,7 @@ export const ChangelogPanel: React.FC<ChangelogPanelProps> = ({
               }
             }}
           >
-            <GroupedPackageItems />
+            <PackageItems />
           </Select>
           {selectedPackages.map((packageValue) => (
             <span

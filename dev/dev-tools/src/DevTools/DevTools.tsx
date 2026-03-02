@@ -27,7 +27,11 @@ import {
 } from '../ChangelogPanel';
 import { EventsPanel, nextEventId } from '../EventsPanel';
 import { IssuesPanel } from '../IssuesPanel';
-import { ISSUE_PACKAGES, TYPE_COLORS } from '../IssuesPanel/constants';
+import {
+  ISSUE_PACKAGES,
+  TYPE_COLORS,
+  stripPathPrefix,
+} from '../IssuesPanel/constants';
 import { ListenerEntry, ListenersPanel } from '../ListenersPanel';
 import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
@@ -641,7 +645,7 @@ export const DevTools: React.FC = () => {
             status: frontmatter.status as IssueStatus,
             type: frontmatter.type as IssueType,
             priority: (frontmatter.priority || 'medium') as IssuePriority,
-            package: frontmatter.package as IssuePackage,
+            package: stripPathPrefix(frontmatter.package) as IssuePackage,
             content,
             filePath,
             createdAt: new Date(frontmatter.created).getTime() || Date.now(),
@@ -715,10 +719,15 @@ export const DevTools: React.FC = () => {
           const filePath = Fs.concatPath(changelogsDir, entry.name!);
           const raw = await Fs.readTextFile(filePath);
           const { frontmatter, content } = parseChangelogFrontmatter(raw);
-          const packages = frontmatter.packages
-            .split(',')
-            .map((value) => value.trim())
-            .filter((value) => value !== '') as IssuePackage[];
+          // Split, normalize, and deduplicate package names
+          const packages = [
+            ...new Set(
+              frontmatter.packages
+                .split(',')
+                .map((value) => stripPathPrefix(value.trim()))
+                .filter((value) => value !== ''),
+            ),
+          ] as IssuePackage[];
 
           // Parse comma-separated issue numbers into number[]
           const issues = frontmatter.issues

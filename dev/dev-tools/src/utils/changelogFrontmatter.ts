@@ -7,7 +7,7 @@
  * title: Added border support to design studio
  * number: 1
  * date: 2026-02-27 22:44
- * packages: designs, feature-design-studio
+ * packages: designs, design-studio
  * ---
  * Content here...
  * ```
@@ -68,10 +68,35 @@ export function parseChangelogFrontmatter(raw: string): {
 
     const key = lines[index].slice(0, colonIndex).trim();
     const value = lines[index].slice(colonIndex + 1).trim();
-    frontmatter[key] = value;
+
+    // Handle YAML list format (e.g. `packages:\n  - foo\n  - bar`)
+    if (!value) {
+      const listItems: string[] = [];
+
+      while (index + 1 < closingIndex && lines[index + 1].startsWith('  - ')) {
+        index++;
+
+        // Strip workspace path prefixes (e.g. `features/databases` → `databases`)
+        let item = lines[index].slice(4);
+
+        if (item.startsWith('ui/')) {
+          item = `ui-${item.slice(3)}`;
+        } else {
+          item = item.replace(/^(views|features|packages|apps|dev)\//, '');
+        }
+        listItems.push(item);
+      }
+
+      frontmatter[key] = [...new Set(listItems)].join(', ');
+    } else {
+      frontmatter[key] = value;
+    }
   }
 
-  const content = lines.slice(closingIndex + 1).join('\n').replace(/^\n/, '');
+  const content = lines
+    .slice(closingIndex + 1)
+    .join('\n')
+    .replace(/^\n/, '');
 
   return {
     frontmatter: {
