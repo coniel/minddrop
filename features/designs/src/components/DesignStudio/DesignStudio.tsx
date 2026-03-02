@@ -15,6 +15,8 @@ import {
 import { OpenDesignStudioEventData } from '../../events';
 import { DesignCanvas } from '../DesignCanvas/DesignCanvas';
 import { DesignStudioLeftPanel } from '../DesignStudioLeftPanel';
+import { DesignStudioToolbar } from '../DesignStudioToolbar';
+import { DesignStudioViewport } from '../DesignStudioViewport';
 import { ElementStyleEditor } from '../ElementStyleEditor';
 import './DesignStudio.css';
 
@@ -102,16 +104,6 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
     };
   }, []);
 
-  // Clear the canvas highlight when clicking the workspace background
-  const handleWorkspaceClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      if (event.target === event.currentTarget) {
-        DesignStudioStore.getState().clearHighlight();
-      }
-    },
-    [],
-  );
-
   const handleClickBack = useCallback(() => {
     if (backEvent) {
       Events.dispatch(backEvent, backEventData);
@@ -135,23 +127,22 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       <div className="design-studio-workspace">
         {design && (
           <>
-            <div className="design-studio-workspace-design-name">
-              <TextInput
-                ref={nameInputRef}
-                variant="ghost"
-                textSize="lg"
-                weight="semibold"
-                value={designName}
-                onValueChange={setDesignName}
-                onBlur={handleNameBlur}
-                onKeyDown={handleNameKeyDown}
-              />
-            </div>
-            <div
-              className="design-studio-workspace-canvas-area"
-              onClick={handleWorkspaceClick}
-            >
+            <DesignStudioViewport>
               <DesignCanvas />
+            </DesignStudioViewport>
+            <div className="design-studio-workspace-header">
+              <div className="design-studio-workspace-design-name">
+                <TextInput
+                  ref={nameInputRef}
+                  variant="subtle"
+                  size="sm"
+                  value={designName}
+                  onValueChange={setDesignName}
+                  onBlur={handleNameBlur}
+                  onKeyDown={handleNameKeyDown}
+                />
+              </div>
+              <DesignStudioToolbar />
             </div>
           </>
         )}

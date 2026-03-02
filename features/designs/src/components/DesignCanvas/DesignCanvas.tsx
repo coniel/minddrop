@@ -15,6 +15,11 @@ import { FlatRootDesignElement } from '../../types';
 import { DesignStudioRootElement } from '../design-elements/DesignStudioRootElement';
 import './DesignCanvas.css';
 
+/**
+ * Returns the current zoom level from the store.
+ */
+const getZoom = () => DesignStudioStore.getState().zoom;
+
 interface CanvasLayout {
   width: number;
   height: number;
@@ -126,25 +131,6 @@ export const DesignCanvas: React.FC = () => {
 
   const autoHeight = designType === 'card' || designType === 'list';
 
-  const clampPosition = useCallback(
-    (x: number, y: number, canvasWidth?: number, canvasHeight?: number) => {
-      const workspace = canvasRef.current?.parentElement;
-
-      if (!workspace || !canvasRef.current) {
-        return { x, y };
-      }
-
-      const width = canvasWidth ?? canvasRef.current.offsetWidth;
-      const height = canvasHeight ?? canvasRef.current.offsetHeight;
-
-      return {
-        x: Math.max(0, Math.min(workspace.offsetWidth - width, x)),
-        y: Math.max(0, Math.min(workspace.offsetHeight - height, y)),
-      };
-    },
-    [],
-  );
-
   const didDrag = useRef(false);
 
   const handleDragHandleMouseDown = useCallback(
@@ -184,240 +170,188 @@ export const DesignCanvas: React.FC = () => {
     [size, position],
   );
 
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (dragState.current) {
-        didDrag.current = true;
-        const rawX =
-          dragState.current.originX +
-          (event.clientX - dragState.current.startX);
-        const rawY =
-          dragState.current.originY +
-          (event.clientY - dragState.current.startY);
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    // Scale mouse deltas by current zoom level
+    const zoom = getZoom();
 
-        setPosition(clampPosition(rawX, rawY));
-      }
+    if (dragState.current) {
+      didDrag.current = true;
+      const rawX =
+        dragState.current.originX +
+        (event.clientX - dragState.current.startX) / zoom;
+      const rawY =
+        dragState.current.originY +
+        (event.clientY - dragState.current.startY) / zoom;
 
-      if (resizeState.current) {
-        const {
-          edge,
-          startX,
-          startY,
-          originWidth,
-          originHeight,
-          originX,
-          originY,
-        } = resizeState.current;
-        const deltaX = event.clientX - startX;
-        const deltaY = event.clientY - startY;
-        const workspaceWidth =
-          canvasRef.current?.parentElement?.offsetWidth ?? Infinity;
-        const workspaceHeight =
-          canvasRef.current?.parentElement?.offsetHeight ?? Infinity;
+      setPosition({ x: rawX, y: rawY });
+    }
 
-        // Anchored edges, the opposite edge from the one being dragged stays fixed.
-        const rightEdge = originX + originWidth;
-        const bottomEdge = originY + originHeight;
+    if (resizeState.current) {
+      const {
+        edge,
+        startX,
+        startY,
+        originWidth,
+        originHeight,
+        originX,
+        originY,
+      } = resizeState.current;
+      const deltaX = (event.clientX - startX) / zoom;
+      const deltaY = (event.clientY - startY) / zoom;
 
-        const mirror = event.shiftKey;
-        const centerX = originX + originWidth / 2;
-        const centerY = originY + originHeight / 2;
+      // Anchored edges, the opposite edge from the one being dragged stays fixed.
+      const rightEdge = originX + originWidth;
+      const bottomEdge = originY + originHeight;
 
-        switch (edge) {
-          case 'right': {
-            const newWidth = Math.min(
-              Math.max(200, originWidth + deltaX * (mirror ? 2 : 1)),
-              mirror ? centerX * 2 : workspaceWidth - originX,
-            );
+      const mirror = event.shiftKey;
+      const centerX = originX + originWidth / 2;
+      const centerY = originY + originHeight / 2;
 
-            if (mirror) {
-              const newX = centerX - newWidth / 2;
+      switch (edge) {
+        case 'right': {
+          const newWidth = Math.max(
+            200,
+            originWidth + deltaX * (mirror ? 2 : 1),
+          );
 
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              setSize((current) => ({ ...current, width: newWidth }));
-            }
+          if (mirror) {
+            const newX = centerX - newWidth / 2;
 
-            break;
+            setSize((current) => ({ ...current, width: newWidth }));
+            setPosition((current) => ({ ...current, x: newX }));
+          } else {
+            setSize((current) => ({ ...current, width: newWidth }));
           }
 
-          case 'left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(200, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newX = centerX - newWidth / 2;
+          break;
+        }
 
-              setSize((current) => ({ ...current, width: newWidth }));
-              setPosition((current) => ({ ...current, x: newX }));
-            } else {
-              const newX = Math.max(
-                0,
-                Math.min(rightEdge - 200, originX + deltaX),
-              );
+        case 'left': {
+          if (mirror) {
+            const newWidth = Math.max(200, originWidth - deltaX * 2);
+            const newX = centerX - newWidth / 2;
 
-              setSize((current) => ({ ...current, width: rightEdge - newX }));
-              setPosition((current) => ({ ...current, x: newX }));
-            }
+            setSize((current) => ({ ...current, width: newWidth }));
+            setPosition((current) => ({ ...current, x: newX }));
+          } else {
+            const newX = Math.min(rightEdge - 200, originX + deltaX);
 
-            break;
+            setSize((current) => ({
+              ...current,
+              width: rightEdge - newX,
+            }));
+            setPosition((current) => ({ ...current, x: newX }));
           }
 
-          case 'bottom': {
-            const newHeight = Math.min(
-              Math.max(100, originHeight + deltaY * (mirror ? 2 : 1)),
-              mirror ? centerY * 2 : workspaceHeight - originY,
-            );
+          break;
+        }
 
-            if (mirror) {
-              const newY = centerY - newHeight / 2;
+        case 'bottom': {
+          const newHeight = Math.max(
+            100,
+            originHeight + deltaY * (mirror ? 2 : 1),
+          );
 
-              setSize((current) => ({ ...current, height: newHeight }));
-              setPosition((current) => ({ ...current, y: newY }));
-            } else {
-              setSize((current) => ({ ...current, height: newHeight }));
-            }
+          if (mirror) {
+            const newY = centerY - newHeight / 2;
 
-            break;
+            setSize((current) => ({ ...current, height: newHeight }));
+            setPosition((current) => ({ ...current, y: newY }));
+          } else {
+            setSize((current) => ({ ...current, height: newHeight }));
           }
 
-          case 'top-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(200, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
+          break;
+        }
 
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                0,
-                Math.min(rightEdge - 200, originX + deltaX),
-              );
-              const newY = Math.max(
-                0,
-                Math.min(bottomEdge - 100, originY + deltaY),
-              );
+        case 'top-left': {
+          if (mirror) {
+            const newWidth = Math.max(200, originWidth - deltaX * 2);
+            const newHeight = Math.max(100, originHeight - deltaY * 2);
 
-              setSize({ width: rightEdge - newX, height: bottomEdge - newY });
-              setPosition({ x: newX, y: newY });
-            }
+            setSize({ width: newWidth, height: newHeight });
+            setPosition({
+              x: centerX - newWidth / 2,
+              y: centerY - newHeight / 2,
+            });
+          } else {
+            const newX = Math.min(rightEdge - 200, originX + deltaX);
+            const newY = Math.min(bottomEdge - 100, originY + deltaY);
 
-            break;
+            setSize({
+              width: rightEdge - newX,
+              height: bottomEdge - newY,
+            });
+            setPosition({ x: newX, y: newY });
           }
 
-          case 'top-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(200, originWidth + deltaX * 2),
-                centerX * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight - deltaY * 2),
-                (workspaceHeight - centerY) * 2,
-              );
+          break;
+        }
 
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(200, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newY = Math.max(
-                0,
-                Math.min(bottomEdge - 100, originY + deltaY),
-              );
+        case 'top-right': {
+          if (mirror) {
+            const newWidth = Math.max(200, originWidth + deltaX * 2);
+            const newHeight = Math.max(100, originHeight - deltaY * 2);
 
-              setSize({ width: newWidth, height: bottomEdge - newY });
-              setPosition((current) => ({ ...current, y: newY }));
-            }
+            setSize({ width: newWidth, height: newHeight });
+            setPosition({
+              x: centerX - newWidth / 2,
+              y: centerY - newHeight / 2,
+            });
+          } else {
+            const newWidth = Math.max(200, originWidth + deltaX);
+            const newY = Math.min(bottomEdge - 100, originY + deltaY);
 
-            break;
+            setSize({ width: newWidth, height: bottomEdge - newY });
+            setPosition((current) => ({ ...current, y: newY }));
           }
 
-          case 'bottom-left': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(200, originWidth - deltaX * 2),
-                (workspaceWidth - centerX) * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight + deltaY * 2),
-                centerY * 2,
-              );
+          break;
+        }
 
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newX = Math.max(
-                0,
-                Math.min(rightEdge - 200, originX + deltaX),
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
+        case 'bottom-left': {
+          if (mirror) {
+            const newWidth = Math.max(200, originWidth - deltaX * 2);
+            const newHeight = Math.max(100, originHeight + deltaY * 2);
 
-              setSize({ width: rightEdge - newX, height: newHeight });
-              setPosition((current) => ({ ...current, x: newX }));
-            }
+            setSize({ width: newWidth, height: newHeight });
+            setPosition({
+              x: centerX - newWidth / 2,
+              y: centerY - newHeight / 2,
+            });
+          } else {
+            const newX = Math.min(rightEdge - 200, originX + deltaX);
+            const newHeight = Math.max(100, originHeight + deltaY);
 
-            break;
+            setSize({ width: rightEdge - newX, height: newHeight });
+            setPosition((current) => ({ ...current, x: newX }));
           }
 
-          case 'bottom-right': {
-            if (mirror) {
-              const newWidth = Math.min(
-                Math.max(200, originWidth + deltaX * 2),
-                centerX * 2,
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight + deltaY * 2),
-                centerY * 2,
-              );
+          break;
+        }
 
-              setSize({ width: newWidth, height: newHeight });
-              setPosition({
-                x: centerX - newWidth / 2,
-                y: centerY - newHeight / 2,
-              });
-            } else {
-              const newWidth = Math.min(
-                Math.max(200, originWidth + deltaX),
-                workspaceWidth - originX,
-              );
-              const newHeight = Math.min(
-                Math.max(100, originHeight + deltaY),
-                workspaceHeight - originY,
-              );
+        case 'bottom-right': {
+          if (mirror) {
+            const newWidth = Math.max(200, originWidth + deltaX * 2);
+            const newHeight = Math.max(100, originHeight + deltaY * 2);
 
-              setSize({ width: newWidth, height: newHeight });
-            }
+            setSize({ width: newWidth, height: newHeight });
+            setPosition({
+              x: centerX - newWidth / 2,
+              y: centerY - newHeight / 2,
+            });
+          } else {
+            const newWidth = Math.max(200, originWidth + deltaX);
+            const newHeight = Math.max(100, originHeight + deltaY);
 
-            break;
+            setSize({ width: newWidth, height: newHeight });
           }
+
+          break;
         }
       }
-    },
-    [clampPosition],
-  );
+    }
+  }, []);
 
   const handleMouseUp = useCallback(() => {
     dragState.current = null;

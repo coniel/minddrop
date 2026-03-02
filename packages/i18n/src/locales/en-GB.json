@@ -5,7 +5,11 @@
   },
   "designStudio": {
     "open": "Open design studio",
-    "exit": "Exit design studio"
+    "exit": "Exit design studio",
+    "resetView": "Reset view",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "zoomLevel": "Zoom level"
   },
   "actions": {
     "back": "Back",
