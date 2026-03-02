@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { Databases } from '@minddrop/databases';
+import { PropertySchema } from '@minddrop/properties';
 import {
   SortableItemRenderProps,
   SortableList,
-} from '@minddrop/feature-drag-and-drop';
-import { PropertySchema } from '@minddrop/properties';
+} from '@minddrop/ui-drag-and-drop';
 import { DatabasePropertyEditor } from '../DatabasePropertyEditor';
 
 type DraftProperty = PropertySchema & {

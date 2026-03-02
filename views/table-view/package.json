@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@minddrop/databases": "workspace:*",
-    "@minddrop/feature-drag-and-drop": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*",

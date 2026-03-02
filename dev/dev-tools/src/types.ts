@@ -57,7 +57,7 @@ export type IssuePackage =
   | 'extensions'
   | 'feature-databases'
   | 'feature-designs'
-  | 'feature-drag-and-drop'
+  | 'ui-drag-and-drop'
   | 'feature-markdown-editor'
   | 'feature-properties'
   | 'feature-views'

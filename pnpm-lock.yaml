@@ -200,9 +200,6 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
-      '@minddrop/feature-drag-and-drop':
-        specifier: workspace:*
-        version: link:../drag-and-drop
       '@minddrop/feature-properties':
         specifier: workspace:*
         version: link:../properties
@@ -224,6 +221,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -258,9 +258,6 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-drag-and-drop':
-        specifier: workspace:*
-        version: link:../drag-and-drop
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../markdown-editor
@@ -285,6 +282,9 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../../packages/theme
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -389,37 +389,6 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.1.4
         version: 5.1.4(vite@7.3.1)
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  features/drag-and-drop:
-    dependencies:
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/selection':
-        specifier: workspace:*
-        version: link:../../packages/selection
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -1329,6 +1298,37 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  ui/drag-and-drop:
+    dependencies:
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/selection':
+        specifier: workspace:*
+        version: link:../../packages/selection
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   ui/primitives:
     dependencies:
       '@base-ui/react':
@@ -1405,12 +1405,12 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
-      '@minddrop/feature-drag-and-drop':
-        specifier: workspace:*
-        version: link:../../features/drag-and-drop
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@minddrop/ui-drag-and-drop':
+        specifier: workspace:*
+        version: link:../../ui/drag-and-drop
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

@@ -1,5 +1,5 @@
 {
-  "name": "@minddrop/feature-drag-and-drop",
+  "name": "@minddrop/ui-drag-and-drop",
   "version": "0.0.0",
   "main": "src/index",
   "types": "src/index",

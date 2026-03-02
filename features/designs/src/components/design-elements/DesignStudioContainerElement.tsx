@@ -4,9 +4,9 @@ import {
   createContainerCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
-import { FlexDropContainer } from '@minddrop/feature-drag-and-drop';
 import { Fs } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
+import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { Icon } from '@minddrop/ui-primitives';
 import { handleDropOnGap } from '../../handleDropOnGap';
 import { FlatContainerDesignElement } from '../../types';

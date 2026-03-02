@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Databases } from '@minddrop/databases';
-import { useSortableDrag } from '@minddrop/feature-drag-and-drop';
 import { useTranslation } from '@minddrop/i18n';
+import { useSortableDrag } from '@minddrop/ui-drag-and-drop';
 import {
   DropdownMenuContent,
   DropdownMenuPortal,

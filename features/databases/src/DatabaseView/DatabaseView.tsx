@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { SortableList } from '@minddrop/feature-drag-and-drop';
 import { ViewRenderer } from '@minddrop/feature-views';
 import { useTranslation } from '@minddrop/i18n';
+import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
   DropdownMenu,

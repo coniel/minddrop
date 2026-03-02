@@ -4,8 +4,8 @@ import {
   createElementCssStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
-import { FlexDropContainer } from '@minddrop/feature-drag-and-drop';
 import { Fs } from '@minddrop/file-system';
+import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { DesignStudioStore } from '../../../DesignStudioStore';
 import { handleDropOnGap } from '../../../handleDropOnGap';
 import { FlatRootDesignElement } from '../../../types';

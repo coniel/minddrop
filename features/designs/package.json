@@ -19,7 +19,7 @@
     "@minddrop/databases": "workspace:*",
     "@minddrop/designs": "workspace:*",
     "@minddrop/events": "workspace:*",
-    "@minddrop/feature-drag-and-drop": "workspace:*",
+    "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/feature-markdown-editor": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",

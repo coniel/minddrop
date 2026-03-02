@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import { useDraggable, useDroppable } from '@minddrop/selection';
 import {
   DropIndicator,
   useFlexDropContainer,
-} from '@minddrop/feature-drag-and-drop';
-import { useDraggable, useDroppable } from '@minddrop/selection';
+} from '@minddrop/ui-drag-and-drop';
 import { DesignElementsDataKey } from '../../constants';
 import { handleDropOnDesignElement } from '../../handleDropOnDesignElement';
 import { FlatContainerDesignElement, FlatDesignElement } from '../../types';

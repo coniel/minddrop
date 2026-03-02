@@ -64,11 +64,7 @@ export const ISSUE_PACKAGES: PackageOption[] = [
   // features (label strips feature- prefix)
   { value: 'feature-databases', label: 'databases', workspace: 'features' },
   { value: 'feature-designs', label: 'designs', workspace: 'features' },
-  {
-    value: 'feature-drag-and-drop',
-    label: 'drag-and-drop',
-    workspace: 'features',
-  },
+  { value: 'ui-drag-and-drop', label: 'drag-and-drop', workspace: 'ui' },
   {
     value: 'feature-markdown-editor',
     label: 'markdown-editor',
