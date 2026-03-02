@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { getWindowSizeSlot } from '@minddrop/utils';
+import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
 import {
   DialogSize,
@@ -105,6 +105,18 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
   const sizeRef = useRef(size);
   sizeRef.current = size;
 
+  // The user's intended size and the viewport at the time it
+  // was set, used to compute display size on window resize
+  const baseSizeRef = useRef<{
+    width: number;
+    height: number;
+    viewportWidth: number;
+    viewportHeight: number;
+  } | null>(null);
+
+  // Track the current window size slot to detect crossings
+  const slotRef = useRef<WindowSizeSlot | null>(null);
+
   // Get the entry so we can resolve the page design ID
   const entry = DatabaseEntries.use(entryId);
 
@@ -128,30 +140,42 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       return;
     }
 
-    // Default size: clamped to 90% of viewport
-    const defaultWidth = Math.min(1200, Math.round(window.innerWidth * 0.9));
-    const defaultHeight = Math.min(900, Math.round(window.innerHeight * 0.9));
+    const slot = getWindowSizeSlot();
+
+    slotRef.current = slot;
+
+    let width: number;
+    let height: number;
 
     // Attempt to restore a persisted size for this design + slot
     if (designId) {
-      const key = dialogSizeKey(designId, getWindowSizeSlot());
+      const key = dialogSizeKey(designId, slot);
       const saved = EntryDialogSizeConfig.get(key) as DialogSize | undefined;
 
       if (saved) {
         // Clamp the saved size to 90% of the current viewport
-        const maxWidth = Math.round(window.innerWidth * 0.9);
-        const maxHeight = Math.round(window.innerHeight * 0.9);
-
-        setSize({
-          width: Math.min(saved.width, maxWidth),
-          height: Math.min(saved.height, maxHeight),
-        });
-
-        return;
+        width = Math.min(saved.width, Math.round(window.innerWidth * 0.9));
+        height = Math.min(saved.height, Math.round(window.innerHeight * 0.9));
+      } else {
+        // Fall back to default
+        width = Math.min(1200, Math.round(window.innerWidth * 0.9));
+        height = Math.min(900, Math.round(window.innerHeight * 0.9));
       }
+    } else {
+      // No design ID yet, use default
+      width = Math.min(1200, Math.round(window.innerWidth * 0.9));
+      height = Math.min(900, Math.round(window.innerHeight * 0.9));
     }
 
-    setSize({ width: defaultWidth, height: defaultHeight });
+    // Record the base size for window resize calculations
+    baseSizeRef.current = {
+      width,
+      height,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+    };
+
+    setSize({ width, height });
   }, [open, designId]);
 
   // Close the dialog when clicking the backdrop
@@ -332,6 +356,13 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       const key = dialogSizeKey(designId, getWindowSizeSlot());
 
       EntryDialogSizeConfig.set(key, sizeRef.current);
+
+      // Update the base size to reflect the user's new intent
+      baseSizeRef.current = {
+        ...sizeRef.current,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+      };
     }
 
     resizeState.current = null;
@@ -351,6 +382,112 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [open, handleMouseMove, handleMouseUp]);
+
+  // Adapt dialog size when the window is resized
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleWindowResize = () => {
+      const newSlot = getWindowSizeSlot();
+      const newViewportWidth = window.innerWidth;
+      const newViewportHeight = window.innerHeight;
+
+      // If the slot changed, load the saved size for the new slot
+      if (slotRef.current && newSlot !== slotRef.current) {
+        slotRef.current = newSlot;
+
+        let width: number;
+        let height: number;
+
+        // Try to load a saved size for the new slot
+        if (designId) {
+          const key = dialogSizeKey(designId, newSlot);
+          const saved = EntryDialogSizeConfig.get(key) as
+            | DialogSize
+            | undefined;
+
+          if (saved) {
+            width = Math.min(saved.width, Math.round(newViewportWidth * 0.9));
+            height = Math.min(
+              saved.height,
+              Math.round(newViewportHeight * 0.9),
+            );
+          } else {
+            width = Math.min(1200, Math.round(newViewportWidth * 0.9));
+            height = Math.min(900, Math.round(newViewportHeight * 0.9));
+          }
+        } else {
+          width = Math.min(1200, Math.round(newViewportWidth * 0.9));
+          height = Math.min(900, Math.round(newViewportHeight * 0.9));
+        }
+
+        // Update the base size to the loaded preset
+        baseSizeRef.current = {
+          width,
+          height,
+          viewportWidth: newViewportWidth,
+          viewportHeight: newViewportHeight,
+        };
+
+        setSize({ width, height });
+
+        return;
+      }
+
+      // Same slot — apply margin clamping based on the user's
+      // intended size
+      if (!baseSizeRef.current) {
+        return;
+      }
+
+      const base = baseSizeRef.current;
+
+      // Compute the user's margin as a fraction of the viewport
+      // when the base size was set
+      const baseMarginX = (base.viewportWidth - base.width) / 2;
+      const baseMarginFractionX = baseMarginX / base.viewportWidth;
+
+      let displayWidth: number;
+
+      if (baseMarginFractionX < 0.1) {
+        // User was close to the edge — maintain fixed px margin
+        displayWidth = newViewportWidth - 2 * baseMarginX;
+      } else {
+        // User had plenty of margin — enforce 10% minimum
+        displayWidth = Math.min(base.width, newViewportWidth * 0.8);
+      }
+
+      const baseMarginY = (base.viewportHeight - base.height) / 2;
+      const baseMarginFractionY = baseMarginY / base.viewportHeight;
+
+      let displayHeight: number;
+
+      if (baseMarginFractionY < 0.1) {
+        // User was close to the edge — maintain fixed px margin
+        displayHeight = newViewportHeight - 2 * baseMarginY;
+      } else {
+        // User had plenty of margin — enforce 10% minimum
+        displayHeight = Math.min(base.height, newViewportHeight * 0.8);
+      }
+
+      // Clamp to minimum dimensions
+      displayWidth = Math.max(MIN_WIDTH, displayWidth);
+      displayHeight = Math.max(MIN_HEIGHT, displayHeight);
+
+      setSize({
+        width: Math.round(displayWidth),
+        height: Math.round(displayHeight),
+      });
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, [open, designId]);
 
   if (!open) {
     return null;
