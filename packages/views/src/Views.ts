@@ -3,6 +3,8 @@ export { deleteView as delete } from './deleteView';
 export { getView as get } from './getView';
 export { readView as read } from './readView';
 export { updateView as update } from './updateView';
+export { setDatabaseDesign } from './setDatabaseDesign';
+export { setEntryDesign } from './setEntryDesign';
 export { initializeViews as initialize } from './initializeViews';
 export {
   ViewsStore as Store,
