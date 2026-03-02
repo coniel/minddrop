@@ -15,8 +15,7 @@ import { MindDropApiProvider } from '@minddrop/extensions';
 import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import { DatabaseEntriesFeature } from '@minddrop/feature-database-entries';
 import { DatabasesFeature } from '@minddrop/feature-databases';
-import { DesignPropertyMappingFeature } from '@minddrop/feature-design-property-mapping';
-import { DesignStudioFeature } from '@minddrop/feature-design-studio';
+import { DesignsFeature } from '@minddrop/feature-designs';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/icons';
 import {
   ConfirmationDialog,
@@ -72,8 +71,7 @@ export const DesktopApp: React.FC = () => {
           <DatabaseEntriesFeature />
           <ConfirmationDialogFeature />
           <ShowWindowOnRendered />
-          <DesignPropertyMappingFeature />
-          <DesignStudioFeature />
+          <DesignsFeature />
           <DevTools />
         </MindDropApiProvider>
       </IconsProvider>

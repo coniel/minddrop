@@ -32,8 +32,6 @@
     "@minddrop/extensions": "workspace:*",
     "@minddrop/feature-database-entries": "workspace:*",
     "@minddrop/feature-databases": "workspace:*",
-    "@minddrop/feature-design-property-mapping": "workspace:*",
-    "@minddrop/feature-design-studio": "workspace:*",
     "@minddrop/feature-designs": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",

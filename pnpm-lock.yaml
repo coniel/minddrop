@@ -151,9 +151,9 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-design-property-mapping':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../../features/design-property-mapping
+        version: link:../../features/designs
       '@minddrop/feature-markdown-editor':
         specifier: workspace:*
         version: link:../../features/markdown-editor
@@ -194,9 +194,9 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../databases
-      '@minddrop/feature-design-studio':
+      '@minddrop/feature-designs':
         specifier: workspace:*
-        version: link:../design-studio
+        version: link:../designs
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -274,12 +274,6 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-design-property-mapping':
-        specifier: workspace:*
-        version: link:../design-property-mapping
-      '@minddrop/feature-design-studio':
-        specifier: workspace:*
-        version: link:../design-studio
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
@@ -330,7 +324,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  features/design-property-mapping:
+  features/designs:
     dependencies:
       '@minddrop/databases':
         specifier: workspace:*
@@ -341,61 +335,15 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
-      '@minddrop/feature-design-studio':
-        specifier: workspace:*
-        version: link:../design-studio
-      '@minddrop/feature-designs':
-        specifier: workspace:*
-        version: link:../designs
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/icons':
-        specifier: workspace:*
-        version: link:../../packages/icons
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
-      '@minddrop/selection':
-        specifier: workspace:*
-        version: link:../../packages/selection
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  features/design-studio:
-    dependencies:
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../../packages/databases
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/feature-designs':
-        specifier: workspace:*
-        version: link:../designs
       '@minddrop/feature-drag-and-drop':
         specifier: workspace:*
         version: link:../drag-and-drop
+      '@minddrop/feature-markdown-editor':
+        specifier: workspace:*
+        version: link:../markdown-editor
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -414,58 +362,6 @@ importers:
       '@minddrop/theme':
         specifier: workspace:*
         version: link:../../packages/theme
-      '@minddrop/ui-primitives':
-        specifier: workspace:*
-        version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../../packages/file-system
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  features/designs:
-    dependencies:
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../../packages/databases
-      '@minddrop/designs':
-        specifier: workspace:*
-        version: link:../../packages/designs
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/feature-markdown-editor':
-        specifier: workspace:*
-        version: link:../markdown-editor
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../../packages/file-system
-      '@minddrop/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
-      '@minddrop/selection':
-        specifier: workspace:*
-        version: link:../../packages/selection
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../../packages/test-utils
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -769,12 +665,6 @@ importers:
       '@minddrop/feature-databases':
         specifier: workspace:*
         version: link:../../features/databases
-      '@minddrop/feature-design-property-mapping':
-        specifier: workspace:*
-        version: link:../../features/design-property-mapping
-      '@minddrop/feature-design-studio':
-        specifier: workspace:*
-        version: link:../../features/design-studio
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../../features/designs
@@ -1536,12 +1426,12 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@tanstack/react-virtual':
+        specifier: ^3.0.0
+        version: 3.13.19(react-dom@19.2.4)(react@19.2.4)
       react-day-picker:
         specifier: ^9.13.2
         version: 9.13.2(react@19.2.4)
-      react-window:
-        specifier: ^2.2.7
-        version: 2.2.7(react-dom@19.2.4)(react@19.2.4)
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -6317,16 +6207,6 @@ packages:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /react-window@2.2.7(react-dom@19.2.4)(react@19.2.4):
-    resolution: {integrity: sha512-SH5nvfUQwGHYyriDUAOt7wfPsfG9Qxd6OdzQxl5oQ4dsSsUicqQvjV7dR+NqZ4coY0fUn3w1jnC5PwzIUWEg5w==}
-    peerDependencies:
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-    dependencies:
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    dev: false
 
   /react@19.2.4:
     resolution: {integrity: sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==}

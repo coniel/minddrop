@@ -9,7 +9,7 @@ import {
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-design-studio';
+} from '@minddrop/feature-designs';
 import { render, screen, userEvent, waitFor } from '@minddrop/test-utils';
 import { cleanup, setup } from '../test-utils';
 import { DatabaseDesignMenuItem } from './DatabaseDesignMenuItem';

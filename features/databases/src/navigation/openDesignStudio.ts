@@ -3,7 +3,7 @@ import { Events } from '@minddrop/events';
 import {
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
-} from '@minddrop/feature-design-studio';
+} from '@minddrop/feature-designs';
 import { OpenDatabaseViewEvent } from '../events';
 
 export function openDesignStudio(databaseId: string, designId: string) {

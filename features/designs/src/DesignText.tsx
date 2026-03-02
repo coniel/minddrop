@@ -1,4 +1,4 @@
-import { createTextCssStyle, TextElementStyle } from '@minddrop/designs';
+import { TextElementStyle, createTextCssStyle } from '@minddrop/designs';
 
 export interface DesignTextProps {
   /**

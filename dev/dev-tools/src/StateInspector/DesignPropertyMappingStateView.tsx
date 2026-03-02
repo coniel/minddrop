@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDesignPropertyMappingStore } from '@minddrop/feature-design-property-mapping';
+import { useDesignPropertyMappingStore } from '@minddrop/feature-designs';
 import { JsonTree } from '../LogsPanel/JsonTree';
 
 export function useDesignPropertyMappingStoreCounts() {

@@ -1,4 +1,4 @@
-import { createElementCssStyle, DesignElement } from '@minddrop/designs';
+import { DesignElement, createElementCssStyle } from '@minddrop/designs';
 import { LeafElementRenderer } from './LeafElement';
 import { isLeafElement } from './utils';
 

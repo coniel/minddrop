@@ -30,7 +30,12 @@ export interface Note {
   filePath: string;
 }
 
-export type IssueStatus = 'open' | 'in-progress' | 'review' | 'done' | 'wontfix';
+export type IssueStatus =
+  | 'open'
+  | 'in-progress'
+  | 'review'
+  | 'done'
+  | 'wontfix';
 
 export type IssueType = 'bug' | 'feature' | 'improvement' | 'task';
 
@@ -53,7 +58,6 @@ export type IssuePackage =
   | 'feature-app-sidebar'
   | 'feature-database-entries'
   | 'feature-databases'
-  | 'feature-design-studio'
   | 'feature-designs'
   | 'feature-drag-and-drop'
   | 'feature-markdown-editor'

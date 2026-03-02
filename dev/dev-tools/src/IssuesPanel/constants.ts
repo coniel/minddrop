@@ -63,12 +63,23 @@ export const ISSUE_PACKAGES: PackageOption[] = [
   { value: 'dev-tools', label: 'dev-tools', workspace: 'dev' },
   // features (label strips feature- prefix)
   { value: 'feature-app-sidebar', label: 'app-sidebar', workspace: 'features' },
-  { value: 'feature-database-entries', label: 'database-entries', workspace: 'features' },
+  {
+    value: 'feature-database-entries',
+    label: 'database-entries',
+    workspace: 'features',
+  },
   { value: 'feature-databases', label: 'databases', workspace: 'features' },
-  { value: 'feature-design-studio', label: 'design-studio', workspace: 'features' },
   { value: 'feature-designs', label: 'designs', workspace: 'features' },
-  { value: 'feature-drag-and-drop', label: 'drag-and-drop', workspace: 'features' },
-  { value: 'feature-markdown-editor', label: 'markdown-editor', workspace: 'features' },
+  {
+    value: 'feature-drag-and-drop',
+    label: 'drag-and-drop',
+    workspace: 'features',
+  },
+  {
+    value: 'feature-markdown-editor',
+    label: 'markdown-editor',
+    workspace: 'features',
+  },
   { value: 'feature-properties', label: 'properties', workspace: 'features' },
   { value: 'feature-views', label: 'views', workspace: 'features' },
   // packages
