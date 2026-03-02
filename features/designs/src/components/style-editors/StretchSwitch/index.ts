@@ -1,1 +1,0 @@
-export { StretchSwitch } from './StretchSwitch';

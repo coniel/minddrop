@@ -1,1 +1,0 @@
-export { BackdropBlurGradientSwitch } from './BackdropBlurGradientSwitch';

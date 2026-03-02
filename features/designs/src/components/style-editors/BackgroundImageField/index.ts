@@ -1,1 +1,0 @@
-export { BackgroundImageField } from './BackgroundImageField';

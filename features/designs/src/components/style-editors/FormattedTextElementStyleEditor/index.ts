@@ -1,1 +1,0 @@
-export { FormattedTextElementStyleEditor } from './FormattedTextElementStyleEditor';

@@ -20,7 +20,7 @@ import { MarginFields } from '../MarginFields';
 import { ObjectFitSelect } from '../ObjectFitSelect';
 import { OpacityField } from '../OpacityField';
 import { SectionLabel } from '../SectionLabel';
-import { SizingFields } from '../SizingFields/SizingFields';
+import { SizingFields } from '../SizingFields';
 import { StaticElementField } from '../StaticElementField';
 import { PlaceholderImageDialog } from './PlaceholderImageDialog';
 
