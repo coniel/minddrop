@@ -10,5 +10,5 @@ import { ThemeAppearanceSetting } from '../types';
 export function getThemeAppearanceSetting(): ThemeAppearanceSetting {
   // Return the appearance setting from the theme config
   // or 'system' if no value is set.
-  return ThemeConfig.get('appearanceSetting', ThemeSystem);
+  return ThemeConfig.get('config')?.appearanceSetting ?? ThemeSystem;
 }

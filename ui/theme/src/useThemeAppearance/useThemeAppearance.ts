@@ -8,5 +8,5 @@ import { ThemeAppearance } from '../types';
  * @returns The current theme appearance.
  */
 export function useThemeAppearance(): ThemeAppearance {
-  return ThemeConfig.useValue('appearance', ThemeLight);
+  return ThemeConfig.useItem('config')?.appearance ?? ThemeLight;
 }

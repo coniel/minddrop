@@ -10,5 +10,5 @@ import { ThemeAppearance } from '../types';
 export function getThemeAppearance(): ThemeAppearance {
   // Return the current theme appearance from the theme
   // config, or 'light' if no appearance is set.
-  return ThemeConfig.get('appearance', ThemeLight);
+  return ThemeConfig.get('config')?.appearance ?? ThemeLight;
 }

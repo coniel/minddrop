@@ -1,13 +1,32 @@
-import { createPersistentConfig } from '@minddrop/core';
-import { ThemeDark, ThemeLight, ThemeSystem } from './constants';
-import { ThemeState } from './types';
+import { createObjectStore } from '@minddrop/stores';
+import { ThemeLight, ThemeSystem } from './constants';
+import { ThemeAppearance, ThemeAppearanceSetting } from './types';
 
-export const ThemeConfig = createPersistentConfig<ThemeState>(
-  'minddrop:theme',
-  {
-    appearance: window.matchMedia('(prefers-color-scheme: dark)')
-      ? ThemeDark
-      : ThemeLight,
-    appearanceSetting: ThemeSystem,
-  },
-);
+export interface ThemeConfigItem {
+  /**
+   * The config item identifier.
+   */
+  id: string;
+
+  /**
+   * The currently active theme appearance.
+   */
+  appearance: ThemeAppearance;
+
+  /**
+   * The theme appearance setting.
+   */
+  appearanceSetting: ThemeAppearanceSetting;
+}
+
+export const ThemeConfig = createObjectStore<ThemeConfigItem>('id', {
+  persistTo: 'app-config',
+  namespace: 'theme',
+});
+
+// Initialize with default values
+ThemeConfig.set({
+  id: 'config',
+  appearance: ThemeLight,
+  appearanceSetting: ThemeSystem,
+});

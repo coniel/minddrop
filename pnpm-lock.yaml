@@ -1359,15 +1359,15 @@ importers:
 
   ui/theme:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@minddrop/events':
         specifier: workspace:*
         version: link:../../packages/events
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils

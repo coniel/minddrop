@@ -8,5 +8,5 @@ import { ThemeAppearanceSetting } from '../types';
  * @returns The theme appearance setting.
  */
 export function useThemeAppearanceSetting(): ThemeAppearanceSetting {
-  return ThemeConfig.useValue('appearanceSetting', ThemeSystem);
+  return ThemeConfig.useItem('config')?.appearanceSetting ?? ThemeSystem;
 }

@@ -60,7 +60,7 @@ describe('initializeTheme', () => {
     cleanup();
 
     // Reset the local persistent store data to default values
-    ThemeConfig.set('appearanceSetting', ThemeSystem);
+    ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
 
     // Clear mock match media event listeners
     matchMediaEventListeners = [];
@@ -69,14 +69,14 @@ describe('initializeTheme', () => {
   it('loads the appearance setting value from the local persistent store', () => {
     // Set the initial appearance setting value in the
     // local persistent store.
-    ThemeConfig.set('appearanceSetting', ThemeDark);
+    ThemeConfig.update('config', { appearanceSetting: ThemeDark });
 
     // Initialize theme
     initializeTheme();
 
     // Should load the apperance setting from the local
     // persistent store into the theme store.
-    expect(ThemeConfig.get('appearanceSetting')).toBe(ThemeDark);
+    expect(ThemeConfig.get('config')?.appearanceSetting).toBe(ThemeDark);
   });
 
   describe('initial theme appearance', () => {
@@ -84,33 +84,33 @@ describe('initializeTheme', () => {
       // Mock match media to return a match for dark mode
       mockMatchMedia(ThemeDark);
       // Set the initial appearance setting value to 'system'
-      ThemeConfig.set('appearanceSetting', ThemeSystem);
+      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
 
       // Initialize theme
       initializeTheme();
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
 
     it('sets the setting value when the setting is `light` or `dark`', () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
       // Set the initial appearance setting value to 'dark'
-      ThemeConfig.set('appearanceSetting', ThemeDark);
+      ThemeConfig.update('config', { appearanceSetting: ThemeDark });
 
       // Initialize theme
       initializeTheme();
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
 
     it('listens for OS dark mode changes when setting is `system`', () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
       // Set the initial appearance setting value to 'system'
-      ThemeConfig.set('appearanceSetting', ThemeSystem);
+      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
 
       // Initialize theme
       initializeTheme();
@@ -119,7 +119,7 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeDark);
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
   });
 
@@ -138,14 +138,14 @@ describe('initializeTheme', () => {
 
       // Should set the new appearance setting in the local
       // persistent store.
-      expect(ThemeConfig.get('appearanceSetting')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearanceSetting).toBe(ThemeDark);
     });
 
     it('sets the OS value if the setting is `system`', async () => {
       // Mock match media to return a match for dark mode
       mockMatchMedia(ThemeDark);
       // Set the initial appearance setting value to 'light'
-      ThemeConfig.set('appearanceSetting', ThemeLight);
+      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
 
       // Initialize theme
       initializeTheme();
@@ -159,14 +159,14 @@ describe('initializeTheme', () => {
       });
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
 
     it('sets the setting value if the setting is `light` or `dark`', async () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
       // Set the initial appearance setting value to 'light'
-      ThemeConfig.set('appearanceSetting', ThemeLight);
+      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
 
       // Initialize theme
       initializeTheme();
@@ -180,14 +180,14 @@ describe('initializeTheme', () => {
       });
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
 
     it('listens for OS dark mode changes if setting is `system`', async () => {
       // Mock match media to return a match for light mode
       mockMatchMedia(ThemeLight);
       // Set the initial appearance setting value to 'light'
-      ThemeConfig.set('appearanceSetting', ThemeLight);
+      ThemeConfig.update('config', { appearanceSetting: ThemeLight });
 
       // Initialize theme
       initializeTheme();
@@ -204,14 +204,14 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeDark);
 
       // Should set theme appearance to 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
 
     it('removes OS dark mode changes listener if setting is `light` or `dark`', async () => {
       // Mock match media to return a match for dark mode
       mockMatchMedia(ThemeDark);
       // Set the initial appearance setting value to 'system'
-      ThemeConfig.set('appearanceSetting', ThemeSystem);
+      ThemeConfig.update('config', { appearanceSetting: ThemeSystem });
 
       // Initialize theme
       initializeTheme();
@@ -228,7 +228,7 @@ describe('initializeTheme', () => {
       simulateOsAppearanceChange(ThemeLight);
 
       // Theme appearance should remain 'dark'
-      expect(ThemeConfig.get('appearance')).toBe(ThemeDark);
+      expect(ThemeConfig.get('config')?.appearance).toBe(ThemeDark);
     });
   });
 });

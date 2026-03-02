@@ -24,9 +24,11 @@ export function cleanup() {
   MockFsAdapter.reset();
 
   act(() => {
-    // Reset the appearance to the default value
-    ThemeConfig.set('appearance', ThemeLight);
-    // Reset the appearance setting to the default value
-    ThemeConfig.set('appearanceSetting', ThemeSystem);
+    // Reset the config to default values
+    ThemeConfig.set({
+      id: 'config',
+      appearance: ThemeLight,
+      appearanceSetting: ThemeSystem,
+    });
   });
 }

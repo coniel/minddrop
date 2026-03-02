@@ -16,7 +16,7 @@ describe('useAppearance', () => {
 
     act(() => {
       // Set the current appearance to 'dark'
-      ThemeConfig.set('appearance', ThemeDark);
+      ThemeConfig.update('config', { appearance: ThemeDark });
     });
 
     // Should return the current appearance

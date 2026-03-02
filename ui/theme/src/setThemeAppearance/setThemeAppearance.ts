@@ -24,7 +24,7 @@ export function setThemeAppearance(appearance: ThemeAppearance): void {
   }
 
   // Set the value in the theme store
-  ThemeConfig.set('appearance', appearance);
+  ThemeConfig.update('config', { appearance });
 
   // Dispatch a 'theme:appearance:set-value' event
   Events.dispatch(SetAppearanceEvent, appearance);

@@ -25,7 +25,7 @@ describe('setThemeAppearanceSetting', () => {
     setThemeAppearanceSetting(ThemeDark);
 
     // Should set the setting in the theme store
-    expect(ThemeConfig.get('appearanceSetting')).toBe(ThemeDark);
+    expect(ThemeConfig.get('config')?.appearanceSetting).toBe(ThemeDark);
   });
 
   it('dispatches a `theme:appearance:set-setting` event', () =>

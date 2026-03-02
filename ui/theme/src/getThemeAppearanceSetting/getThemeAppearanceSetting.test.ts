@@ -11,7 +11,7 @@ describe('getThemeAppearanceSetting', () => {
 
   it('returns the theme appearance setting', () => {
     // Set the current appearance setting to 'dark'
-    ThemeConfig.set('appearanceSetting', ThemeDark);
+    ThemeConfig.update('config', { appearanceSetting: ThemeDark });
 
     // Get the appearance setting
     const appearance = getThemeAppearanceSetting();

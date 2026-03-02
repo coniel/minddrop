@@ -12,7 +12,7 @@ describe('useThemeAppearanceSetting', () => {
 
   it('returns the appearance setting', () => {
     // Set the appearance setting to 'dark'
-    ThemeConfig.set('appearanceSetting', ThemeDark);
+    ThemeConfig.update('config', { appearanceSetting: ThemeDark });
 
     // Get the appearance setting
     const { result } = renderHook(() => useThemeAppearanceSetting());

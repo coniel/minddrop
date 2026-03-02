@@ -22,8 +22,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "zustand": "^4.3.8"
