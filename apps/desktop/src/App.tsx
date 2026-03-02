@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { initializeDesktopApp } from '@minddrop/desktop-app';
+import { initializeDesktopApp } from '@minddrop/feature-desktop-app';
 import './registerBackEndUtilsAdapter';
 import './registerFileSystemAdapter';
 

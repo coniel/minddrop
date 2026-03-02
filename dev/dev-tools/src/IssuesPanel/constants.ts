@@ -62,7 +62,6 @@ export const ISSUE_PACKAGES: PackageOption[] = [
   // dev
   { value: 'dev-tools', label: 'dev-tools', workspace: 'dev' },
   // features (label strips feature- prefix)
-  { value: 'feature-app-sidebar', label: 'app-sidebar', workspace: 'features' },
   { value: 'feature-databases', label: 'databases', workspace: 'features' },
   { value: 'feature-designs', label: 'designs', workspace: 'features' },
   {
@@ -82,7 +81,7 @@ export const ISSUE_PACKAGES: PackageOption[] = [
   { value: 'core', label: 'core', workspace: 'packages' },
   { value: 'databases', label: 'databases', workspace: 'packages' },
   { value: 'designs', label: 'designs', workspace: 'packages' },
-  { value: 'desktop-app', label: 'desktop-app', workspace: 'packages' },
+  { value: 'feature-desktop-app', label: 'desktop-app', workspace: 'features' },
   { value: 'editor', label: 'editor', workspace: 'packages' },
   { value: 'eslint-config', label: 'eslint-config', workspace: 'packages' },
   { value: 'events', label: 'events', workspace: 'packages' },

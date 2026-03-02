@@ -12,7 +12,6 @@ import {
   OpenRightPanelEvent,
 } from '@minddrop/events';
 import { MindDropApiProvider } from '@minddrop/extensions';
-import { AppSidebar } from '@minddrop/feature-app-sidebar';
 import {
   DatabaseEntriesFeature,
   DatabasesFeature,
@@ -24,6 +23,7 @@ import {
   Panel,
   TooltipProvider,
 } from '@minddrop/ui-primitives';
+import { AppSidebar } from './AppSidebar';
 import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
 import { ShowWindowOnRendered } from './utils';
 import './DesktopApp.css';

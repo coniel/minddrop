@@ -13,7 +13,7 @@
     "start": "bun run dev"
   },
   "dependencies": {
-    "@minddrop/desktop-app": "workspace:*",
+    "@minddrop/feature-desktop-app": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/theme": "workspace:*",
     "@minddrop/utils": "workspace:*",

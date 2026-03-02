@@ -6,6 +6,7 @@ import {
   DatabaseTemplates,
   Databases,
 } from '@minddrop/databases';
+import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
@@ -14,7 +15,6 @@ import { Theme, ThemeAppearance } from '@minddrop/theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
-import { Designs } from '../../../designs/src';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
 
