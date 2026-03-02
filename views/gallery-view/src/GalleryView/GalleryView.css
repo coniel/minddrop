@@ -16,17 +16,13 @@
 
 .gallery-view-content {
   padding: var(--space-4);
-  display: flex;
-  flex-direction: column;
-  row-gap: var(--gallery-gap, 1rem);
+  column-count: var(--gallery-column-count, 1);
+  column-gap: var(--gallery-gap, 1rem);
 }
 
-.gallery-row {
-  display: grid;
-  grid-template-columns: repeat(var(--gallery-column-count, 1), 1fr);
-  gap: var(--gallery-gap, 1rem);
-}
-
-.gallery-row > * {
-  min-width: 0;
+.gallery-view-content > * {
+  break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--gallery-gap, 1rem);
 }

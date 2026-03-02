@@ -20,7 +20,6 @@
     "@minddrop/i18n": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/views": "workspace:*",
-    "@tanstack/react-virtual": "^3.0.0"
+    "@minddrop/views": "workspace:*"
   }
 }
