@@ -48,7 +48,7 @@ export const ThemeVariantPicker: React.FC = () => {
         <DropdownMenuRadioItem
           value="system"
           label={t('system')}
-          icon={resolvedIcon}
+          icon="monitor"
         />
       </DropdownMenuRadioGroup>
     </DropdownMenu>
