@@ -40,7 +40,7 @@ importers:
         version: link:../../packages/file-system
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -101,7 +101,7 @@ importers:
         version: link:../../packages/file-system
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -269,7 +269,7 @@ importers:
         version: link:../../packages/i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../../packages/icons
+        version: link:../../ui/icons
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
@@ -281,7 +281,7 @@ importers:
         version: link:../../packages/test-utils
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../ui/theme
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
@@ -345,7 +345,7 @@ importers:
         version: link:../../packages/i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../../packages/icons
+        version: link:../../ui/icons
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
@@ -357,7 +357,7 @@ importers:
         version: link:../../packages/test-utils
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../ui/theme
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -443,7 +443,7 @@ importers:
         version: link:../../packages/test-utils
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../ui/theme
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -592,7 +592,7 @@ importers:
     dependencies:
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../theme
+        version: link:../../ui/theme
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -605,7 +605,7 @@ importers:
         version: link:../i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../icons
+        version: link:../../ui/icons
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -762,7 +762,7 @@ importers:
         version: link:../file-system
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../icons
+        version: link:../../ui/icons
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
@@ -771,7 +771,7 @@ importers:
         version: link:../selection
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../theme
+        version: link:../../ui/theme
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -811,7 +811,7 @@ importers:
         version: link:../i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../icons
+        version: link:../../ui/icons
       '@minddrop/markdown':
         specifier: workspace:*
         version: link:../markdown
@@ -820,7 +820,7 @@ importers:
         version: link:../selection
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../theme
+        version: link:../../ui/theme
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -884,40 +884,6 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.17.19
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/icons:
-    dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
-      '@minddrop/theme':
-        specifier: workspace:*
-        version: link:../theme
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-      lucide-react:
-        specifier: ^0.487.0
-        version: 0.487.0(react@19.2.4)
-      react:
-        specifier: ^19.2.4
-        version: 19.2.4
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@types/react':
-        specifier: ^19.2.14
-        version: 19.2.14
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -1011,10 +977,10 @@ importers:
         version: link:../i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../icons
+        version: link:../../ui/icons
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../theme
+        version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
@@ -1113,7 +1079,7 @@ importers:
         version: link:../i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../icons
+        version: link:../../ui/icons
       mockdate:
         specifier: ^3.0.5
         version: 3.0.5
@@ -1145,46 +1111,6 @@ importers:
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/theme:
-    dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../events
-      '@minddrop/file-system':
-        specifier: workspace:*
-        version: link:../file-system
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
-      react:
-        specifier: ^19.2.4
-        version: 19.2.4
-      zustand:
-        specifier: ^4.3.8
-        version: 4.5.6(@types/react@19.2.14)(react@19.2.4)
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@minddrop/test-utils':
-        specifier: workspace:*
-        version: link:../test-utils
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      rimraf:
-        specifier: ~5.0.0
-        version: 5.0.10
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -1329,6 +1255,40 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  ui/icons:
+    dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@minddrop/theme':
+        specifier: workspace:*
+        version: link:../theme
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      lucide-react:
+        specifier: ^0.487.0
+        version: 0.487.0(react@19.2.4)
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   ui/primitives:
     dependencies:
       '@base-ui/react':
@@ -1339,10 +1299,10 @@ importers:
         version: link:../../packages/i18n
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../../packages/icons
+        version: link:../icons
       '@minddrop/theme':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -1362,6 +1322,46 @@ importers:
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  ui/theme:
+    dependencies:
+      '@minddrop/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../../packages/file-system
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      zustand:
+        specifier: ^4.3.8
+        version: 4.5.6(react@19.2.4)
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@minddrop/test-utils':
+        specifier: workspace:*
+        version: link:../../packages/test-utils
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      rimraf:
+        specifier: ~5.0.0
+        version: 5.0.10
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -1429,7 +1429,7 @@ importers:
         version: link:../../packages/eslint-config
       '@minddrop/icons':
         specifier: workspace:*
-        version: link:../../packages/icons
+        version: link:../../ui/icons
       eslint:
         specifier: ^9.16.0
         version: 9.39.3
@@ -7484,6 +7484,25 @@ packages:
       '@types/react': 19.2.14
       react: 19.2.4
       use-sync-external-store: 1.4.0(react@19.2.4)
+    dev: false
+
+  /zustand@4.5.6(react@19.2.4):
+    resolution: {integrity: sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      react: 19.2.4
+      use-sync-external-store: 1.6.0(react@19.2.4)
     dev: false
 
   /zwitch@2.0.4:
