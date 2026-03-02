@@ -5,6 +5,7 @@ export * from './back-end-utils';
 export * from './constants';
 export * from './createArrayStore';
 export * from './createContext';
+export * from './createObjectStore';
 export * from './createStore';
 export * from './deepMerge';
 export * from './errors';
