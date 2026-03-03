@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
+import { FloatingActionButton } from '@minddrop/ui-primitives';
 import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
 import {
@@ -16,15 +17,7 @@ import {
 } from './EntryDialogSizeConfig';
 import './DatabaseEntryDialog.css';
 
-type ResizeEdge =
-  | 'left'
-  | 'right'
-  | 'top'
-  | 'bottom'
-  | 'top-left'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-right';
+type ResizeEdge = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 interface ResizeState {
   edge: ResizeEdge;
@@ -37,6 +30,10 @@ interface ResizeState {
 // Minimum canvas dimensions
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 100;
+
+// Minimum gap between the canvas edge and the viewport edge
+const EDGE_PADDING_X = 50;
+const EDGE_PADDING_Y = 25;
 
 interface CornerHandleProps {
   path: string;
@@ -153,18 +150,21 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       const saved = EntryDialogSizeConfig.get(key) as DialogSize | undefined;
 
       if (saved) {
-        // Clamp the saved size to 90% of the current viewport
-        width = Math.min(saved.width, Math.round(window.innerWidth * 0.9));
-        height = Math.min(saved.height, Math.round(window.innerHeight * 0.9));
+        // Clamp the saved size to fit within the edge padding
+        width = Math.min(saved.width, window.innerWidth - EDGE_PADDING_X * 2);
+        height = Math.min(
+          saved.height,
+          window.innerHeight - EDGE_PADDING_Y * 2,
+        );
       } else {
         // Fall back to default
-        width = Math.min(1200, Math.round(window.innerWidth * 0.9));
-        height = Math.min(900, Math.round(window.innerHeight * 0.9));
+        width = Math.min(1200, window.innerWidth - EDGE_PADDING_X * 2);
+        height = Math.min(900, window.innerHeight - EDGE_PADDING_Y * 2);
       }
     } else {
       // No design ID yet, use default
-      width = Math.min(1200, Math.round(window.innerWidth * 0.9));
-      height = Math.min(900, Math.round(window.innerHeight * 0.9));
+      width = Math.min(1200, window.innerWidth - EDGE_PADDING_X * 2);
+      height = Math.min(900, window.innerHeight - EDGE_PADDING_Y * 2);
     }
 
     // Record the base size for window resize calculations
@@ -178,10 +178,15 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     setSize({ width, height });
   }, [open, designId]);
 
-  // Close the dialog when clicking the backdrop
+  // Close the dialog when clicking the backdrop or a hover zone
   const handleBackdropClick = useCallback(
     (event: React.MouseEvent) => {
-      if (event.target === backdropRef.current) {
+      const target = event.target as HTMLElement;
+
+      if (
+        target === backdropRef.current ||
+        target.classList.contains('entry-dialog-hover-zone')
+      ) {
         onOpenChange(false);
       }
     },
@@ -234,59 +239,11 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     const deltaX = event.clientX - startX;
     const deltaY = event.clientY - startY;
 
-    // Maximum dimensions (full viewport)
-    const maxWidth = window.innerWidth;
-    const maxHeight = window.innerHeight;
+    // Maximum dimensions (viewport minus edge padding on each side)
+    const maxWidth = window.innerWidth - EDGE_PADDING_X * 2;
+    const maxHeight = window.innerHeight - EDGE_PADDING_Y * 2;
 
     switch (edge) {
-      case 'right': {
-        // Mirrored: both sides expand equally
-        const newWidth = Math.min(
-          Math.max(MIN_WIDTH, originWidth + deltaX * 2),
-          maxWidth,
-        );
-
-        setSize((current) => ({ ...current, width: newWidth }));
-
-        break;
-      }
-
-      case 'left': {
-        // Mirrored: both sides expand equally (inverse direction)
-        const newWidth = Math.min(
-          Math.max(MIN_WIDTH, originWidth - deltaX * 2),
-          maxWidth,
-        );
-
-        setSize((current) => ({ ...current, width: newWidth }));
-
-        break;
-      }
-
-      case 'top': {
-        // Mirrored: top and bottom expand equally (inverse direction)
-        const newHeight = Math.min(
-          Math.max(MIN_HEIGHT, originHeight - deltaY * 2),
-          maxHeight,
-        );
-
-        setSize((current) => ({ ...current, height: newHeight }));
-
-        break;
-      }
-
-      case 'bottom': {
-        // Mirrored: top and bottom expand equally
-        const newHeight = Math.min(
-          Math.max(MIN_HEIGHT, originHeight + deltaY * 2),
-          maxHeight,
-        );
-
-        setSize((current) => ({ ...current, height: newHeight }));
-
-        break;
-      }
-
       case 'top-left': {
         const newWidth = Math.min(
           Math.max(MIN_WIDTH, originWidth - deltaX * 2),
@@ -409,18 +366,21 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
             | undefined;
 
           if (saved) {
-            width = Math.min(saved.width, Math.round(newViewportWidth * 0.9));
+            width = Math.min(
+              saved.width,
+              newViewportWidth - EDGE_PADDING_X * 2,
+            );
             height = Math.min(
               saved.height,
-              Math.round(newViewportHeight * 0.9),
+              newViewportHeight - EDGE_PADDING_Y * 2,
             );
           } else {
-            width = Math.min(1200, Math.round(newViewportWidth * 0.9));
-            height = Math.min(900, Math.round(newViewportHeight * 0.9));
+            width = Math.min(1200, newViewportWidth - EDGE_PADDING_X * 2);
+            height = Math.min(900, newViewportHeight - EDGE_PADDING_Y * 2);
           }
         } else {
-          width = Math.min(1200, Math.round(newViewportWidth * 0.9));
-          height = Math.min(900, Math.round(newViewportHeight * 0.9));
+          width = Math.min(1200, newViewportWidth - EDGE_PADDING_X * 2);
+          height = Math.min(900, newViewportHeight - EDGE_PADDING_Y * 2);
         }
 
         // Update the base size to the loaded preset
@@ -456,7 +416,10 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
         displayWidth = newViewportWidth - 2 * baseMarginX;
       } else {
         // User had plenty of margin — enforce 10% minimum
-        displayWidth = Math.min(base.width, newViewportWidth * 0.8);
+        displayWidth = Math.min(
+          base.width,
+          newViewportWidth - EDGE_PADDING_X * 2,
+        );
       }
 
       const baseMarginY = (base.viewportHeight - base.height) / 2;
@@ -468,8 +431,11 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
         // User was close to the edge — maintain fixed px margin
         displayHeight = newViewportHeight - 2 * baseMarginY;
       } else {
-        // User had plenty of margin — enforce 10% minimum
-        displayHeight = Math.min(base.height, newViewportHeight * 0.8);
+        // User had plenty of margin — enforce edge padding minimum
+        displayHeight = Math.min(
+          base.height,
+          newViewportHeight - EDGE_PADDING_Y * 2,
+        );
       }
 
       // Clamp to minimum dimensions
@@ -513,7 +479,6 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
           onMouseDown={(event) => handleResizeMouseDown(event, 'top-left')}
         />
         <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top-right" />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top-right-vertical" />
         <CornerHandle
           className="entry-dialog-resize-handle-top-right"
           path="M 0 0 A 25 25 0 0 1 25 25"
@@ -539,31 +504,40 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
           <EntryDialogContent entryId={entryId} />
         </div>
 
-        {/* Left/right edge handles */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-left" />
-        <div
-          className="entry-dialog-resize-handle entry-dialog-resize-handle-left"
-          onMouseDown={(event) => handleResizeMouseDown(event, 'left')}
-        />
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-right" />
-        <div
-          className="entry-dialog-resize-handle entry-dialog-resize-handle-right"
-          onMouseDown={(event) => handleResizeMouseDown(event, 'right')}
-        />
+        {/* Previous entry navigation button */}
+        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-left">
+          <FloatingActionButton
+            className="entry-dialog-nav-button entry-dialog-nav-button-previous"
+            icon="chevron-left"
+            label="databases.entries.actions.previousEntry"
+          />
+        </div>
 
-        {/* Top edge handle */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-top" />
-        <div
-          className="entry-dialog-resize-handle entry-dialog-resize-handle-top"
-          onMouseDown={(event) => handleResizeMouseDown(event, 'top')}
-        />
+        {/* Next entry navigation button */}
+        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-right">
+          <FloatingActionButton
+            className="entry-dialog-nav-button entry-dialog-nav-button-next"
+            icon="chevron-right"
+            label="databases.entries.actions.nextEntry"
+          />
+        </div>
 
-        {/* Bottom edge handle */}
-        <div className="entry-dialog-hover-zone entry-dialog-hover-zone-bottom" />
-        <div
-          className="entry-dialog-resize-handle entry-dialog-resize-handle-bottom"
-          onMouseDown={(event) => handleResizeMouseDown(event, 'bottom')}
-        />
+        {/* Actions toolbar */}
+        <div className="entry-dialog-toolbar">
+          <FloatingActionButton
+            icon="x"
+            label="actions.close"
+            onClick={() => onOpenChange(false)}
+          />
+          <FloatingActionButton
+            icon="maximize-2"
+            label="databases.entries.actions.openAsPage"
+          />
+          <FloatingActionButton
+            icon="ellipsis-vertical"
+            label="databases.entries.actions.entryOptions"
+          />
+        </div>
       </div>
     </div>
   );

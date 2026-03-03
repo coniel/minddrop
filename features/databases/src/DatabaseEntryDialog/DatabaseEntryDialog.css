@@ -15,7 +15,7 @@
 .entry-dialog-canvas {
   position: relative;
   padding: 12px;
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow-4);
 
   /* --- Corner resize handles (SVG arcs) --- */
@@ -76,68 +76,31 @@
     transform: translate(3px, 3px);
   }
 
-  /* --- Edge resize handles (bars) --- */
+  /* --- Navigation buttons (previous/next entry) --- */
 
-  .entry-dialog-resize-handle-left,
-  .entry-dialog-resize-handle-right {
-    top: 50%;
-    width: var(--space-4);
-    height: 60%;
-    max-height: 100%;
-    cursor: ew-resize;
-
-    &::after {
-      width: 6px;
-      height: 60%;
-      max-height: 100%;
-    }
-  }
-
-  .entry-dialog-resize-handle-left {
-    left: 0;
-    transform: translate(-50%, -50%);
+  .entry-dialog-nav-button {
     opacity: 0;
     transition: opacity 0.5s ease 0.15s;
   }
 
-  .entry-dialog-resize-handle-right {
+  /* --- Actions toolbar --- */
+
+  .entry-dialog-toolbar {
+    position: absolute;
+    top: var(--space-6);
     right: 0;
-    transform: translate(50%, -50%);
-    opacity: 0;
-    transition: opacity 0.5s ease 0.15s;
-  }
-
-  .entry-dialog-resize-handle-top,
-  .entry-dialog-resize-handle-bottom {
-    left: 50%;
-    width: 60%;
-    max-width: 100%;
-    height: var(--space-4);
-    cursor: ns-resize;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.15s;
-
-    &::after {
-      width: 60%;
-      max-width: 100%;
-      height: 6px;
-    }
-  }
-
-  .entry-dialog-resize-handle-top {
-    top: 0;
-    transform: translate(-50%, -50%);
-  }
-
-  .entry-dialog-resize-handle-bottom {
-    bottom: 0;
-    transform: translate(-50%, 50%);
+    transform: translateX(100%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
   /* --- Content wrapper --- */
 
   .entry-dialog-content {
     height: 100%;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
   }
 
   /* --- Hover zones (invisible areas that trigger handle visibility) --- */
@@ -167,15 +130,6 @@
     width: 130px;
     height: 50px;
     transform: translate(40px, -100%);
-  }
-
-  .entry-dialog-hover-zone-top-right-vertical {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px;
-    height: 120px;
-    transform: translate(40px, -40px);
   }
 
   .entry-dialog-hover-zone-bottom-left {
@@ -218,36 +172,20 @@
   .entry-dialog-hover-zone-right {
     position: absolute;
     top: 50%;
-    width: 50px;
+    width: 2.25rem;
     height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(0, -50%);
   }
 
   .entry-dialog-hover-zone-left {
-    left: 0;
-    transform: translate(calc(-100% + 10px), -50%);
+    right: 100%;
   }
 
   .entry-dialog-hover-zone-right {
-    right: 0;
-    transform: translate(calc(100% - 10px), -50%);
-  }
-
-  .entry-dialog-hover-zone-top {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 60%;
-    height: 50px;
-    transform: translate(-50%, calc(-100% + 10px));
-  }
-
-  .entry-dialog-hover-zone-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 60%;
-    height: 50px;
-    transform: translate(-50%, calc(100% - 10px));
+    left: 100%;
   }
 
   /* --- Hover zone → handle visibility selectors --- */
@@ -258,8 +196,6 @@
     ~ .entry-dialog-resize-handle-top-left,
   .entry-dialog-resize-handle-top-left:hover,
   .entry-dialog-hover-zone-top-right:hover
-    ~ .entry-dialog-resize-handle-top-right,
-  .entry-dialog-hover-zone-top-right-vertical:hover
     ~ .entry-dialog-resize-handle-top-right,
   .entry-dialog-resize-handle-top-right:hover,
   .entry-dialog-hover-zone-bottom-left:hover
@@ -275,14 +211,10 @@
     opacity: 1;
   }
 
-  .entry-dialog-hover-zone-left:hover + .entry-dialog-resize-handle-left,
-  .entry-dialog-resize-handle-left:hover,
-  .entry-dialog-hover-zone-right:hover + .entry-dialog-resize-handle-right,
-  .entry-dialog-resize-handle-right:hover,
-  .entry-dialog-hover-zone-top:hover + .entry-dialog-resize-handle-top,
-  .entry-dialog-resize-handle-top:hover,
-  .entry-dialog-hover-zone-bottom:hover + .entry-dialog-resize-handle-bottom,
-  .entry-dialog-resize-handle-bottom:hover {
+  .entry-dialog-hover-zone-left:hover .entry-dialog-nav-button-previous,
+  .entry-dialog-nav-button-previous:hover,
+  .entry-dialog-hover-zone-right:hover .entry-dialog-nav-button-next,
+  .entry-dialog-nav-button-next:hover {
     opacity: 1;
   }
 }

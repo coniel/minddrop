@@ -22,7 +22,8 @@
     "reset": "Reset",
     "edit": "Edit",
     "duplicate": "Duplicate",
-    "manage": "Manage"
+    "manage": "Manage",
+    "close": "Close"
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -197,6 +198,14 @@
       "browseDesigns": "Browse designs",
       "addView": "Add view",
       "viewSettings": "View settings"
+    },
+    "entries": {
+      "actions": {
+        "previousEntry": "Previous entry",
+        "nextEntry": "Next entry",
+        "openAsPage": "Open as full page",
+        "entryOptions": "Entry options"
+      }
     },
     "labels": {
       "databases": "Databases"
