@@ -1,0 +1,68 @@
+/* ============================================================
+   FLOATING ACTION BUTTON
+   Round, white icon button with a scale effect on hover/press.
+   Always renders in light-mode colours.
+   ============================================================ */
+
+.floating-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid hsl(208 11.3% 88.9%);
+  border-radius: var(--radius-full);
+  outline: none;
+  user-select: none;
+  cursor: default;
+
+  background-color: white;
+  box-shadow:
+    lch(0 0 0 / 0.022) 0px 3px 6px -2px,
+    lch(0 0 0 / 0.044) 0px 1px 1px;
+
+  scale: 1;
+  transition:
+    scale 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  .icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    color: hsl(206 6% 43.5%);
+  }
+
+  &:hover {
+    scale: 1.08;
+    background-color: hsl(209 13.3% 95.3%);
+    border-color: hsl(207 11.1% 85.9%);
+
+    .icon {
+      color: hsl(206 24% 9%);
+    }
+  }
+
+  &:active {
+    scale: 0.95;
+    background-color: hsl(209 12.2% 93.2%);
+    box-shadow: none;
+    transition-duration: 0.1s;
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--border-primary);
+    outline-offset: 2px;
+  }
+}
