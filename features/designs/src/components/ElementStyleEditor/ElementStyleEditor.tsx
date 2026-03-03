@@ -5,6 +5,7 @@ import { ContainerElementStyleEditor } from '../style-editors/ContainerElementSt
 import { FormattedTextElementStyleEditor } from '../style-editors/FormattedTextElementStyleEditor';
 import { IconElementStyleEditor } from '../style-editors/IconElementStyleEditor';
 import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEditor';
+import { ImageViewerElementStyleEditor } from '../style-editors/ImageViewerElementStyleEditor';
 import { NumberElementStyleEditor } from '../style-editors/NumberElementStyleEditor';
 import { TextElementStyleEditor } from '../style-editors/TextElementStyleEditor';
 import { UrlElementStyleEditor } from '../style-editors/UrlElementStyleEditor';
@@ -71,6 +72,10 @@ export const ElementStyleEditor: React.FC = () => {
 
           {element.type === 'image' && (
             <ImageElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'image-viewer' && (
+            <ImageViewerElementStyleEditor elementId={selectedElementId} />
           )}
 
           {element.type === 'webview' && (

@@ -1,20 +1,24 @@
 .property-mapping-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 10;
+  pointer-events: none;
   animation: property-mapping-fade-in var(--duration-normal) var(--ease-out);
 }
 
 .property-mapping-dim {
-  position: absolute;
-  inset: 0;
+  position: fixed;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: inherit;
+  pointer-events: auto;
 }
 
-.property-mapping-targets {
-  position: relative;
-  visibility: hidden;
+/* Strip margins from element copies — the overlay already
+   positions each target at the correct viewport coordinates,
+   so re-applying margins would double-offset the content. The
+   data-element-id wrapper uses display:contents, so target the
+   actual rendered element inside it */
+.property-mapping-element-copy > [data-element-id] > * {
+  margin: 0 !important;
 }
 
 @keyframes property-mapping-fade-in {
@@ -25,8 +29,4 @@
   to {
     opacity: 1;
   }
-}
-
-.property-mapping-hidden-element {
-  pointer-events: none;
 }

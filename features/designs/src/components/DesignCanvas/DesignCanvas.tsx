@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { DesignType } from '@minddrop/designs';
+import { DesignPreviewProvider } from '../../DesignElements';
 import {
   DesignStudioStore,
   useDesignStudioStore,
@@ -439,7 +440,9 @@ export const DesignCanvas: React.FC = () => {
         className="design-canvas-content"
         style={autoHeight ? undefined : { height: size.height }}
       >
-        {rootElement && <DesignStudioRootElement element={rootElement} />}
+        <DesignPreviewProvider value={true}>
+          {rootElement && <DesignStudioRootElement element={rootElement} />}
+        </DesignPreviewProvider>
       </div>
       <div className="design-canvas-hover-zone design-canvas-hover-zone-left" />
       <div

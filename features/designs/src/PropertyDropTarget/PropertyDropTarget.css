@@ -1,7 +1,5 @@
 .property-drop-target {
-  visibility: visible;
   pointer-events: auto;
-  position: relative;
   border-radius: var(--radius-sm);
   background-color: color-mix(in srgb, var(--surface-primary) 60%, transparent);
   box-shadow: 0 0 6px 3px var(--border-primary-subtle);

@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { DesignType } from '@minddrop/designs';
+import { DesignPreviewProvider } from '../DesignElements';
 import './DesignCanvas.css';
 
 type ResizeEdge =
@@ -548,7 +549,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
         className="design-canvas-content"
         style={autoHeight ? undefined : { height: size.height }}
       >
-        {children}
+        <DesignPreviewProvider value>{children}</DesignPreviewProvider>
       </div>
 
       {/* Left/right edge handles (always visible for all types) */}

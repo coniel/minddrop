@@ -135,7 +135,7 @@
 
 .property-item-name {
   flex: 1;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
   color: var(--text-default);
   overflow: hidden;
   text-overflow: ellipsis;

@@ -28,6 +28,7 @@
     "@minddrop/selection": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
+    "@minddrop/ui-components": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
     "@minddrop/utils": "workspace:*"
   }

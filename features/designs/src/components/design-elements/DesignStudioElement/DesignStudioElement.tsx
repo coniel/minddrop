@@ -16,6 +16,7 @@ import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
 import { DesignStudioIconElement } from '../DesignStudioIconElement';
 import { DesignStudioImageElement } from '../DesignStudioImageElement';
+import { DesignStudioImageViewerElement } from '../DesignStudioImageViewerElement';
 import { DesignStudioNumberElement } from '../DesignStudioNumberElement';
 import { DesignStudioTextElement } from '../DesignStudioTextElement';
 import { DesignStudioUrlElement } from '../DesignStudioUrlElement';
@@ -77,6 +78,8 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
       return <DesignStudioIconElement element={element} />;
     case 'image':
       return <DesignStudioImageElement element={element} />;
+    case 'image-viewer':
+      return <DesignStudioImageViewerElement element={element} />;
     case 'webview':
       return <DesignStudioWebviewElement element={element} />;
     default:
@@ -148,6 +151,7 @@ const DesignStudioElementInner: React.FC<{
   // stretch property.
   const shouldStretch =
     element.type === 'image' ||
+    element.type === 'image-viewer' ||
     element.type === 'webview' ||
     (element.type === 'container' &&
       (element.style as ContainerElementStyle).stretch);
@@ -158,7 +162,7 @@ const DesignStudioElementInner: React.FC<{
       data-element-id={element.id}
       style={
         shouldStretch
-          ? element.type === 'webview'
+          ? element.type === 'webview' || element.type === 'image-viewer'
             ? {
                 alignSelf: 'stretch',
                 flex: 1,
@@ -177,7 +181,7 @@ const DesignStudioElementInner: React.FC<{
           isFading,
         })}
         style={
-          element.type === 'webview'
+          element.type === 'webview' || element.type === 'image-viewer'
             ? { flex: 1, display: 'flex', flexDirection: 'column' as const }
             : undefined
         }

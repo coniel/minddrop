@@ -9,7 +9,7 @@ const ELEMENT_GROUPS = [
   },
   {
     label: 'design-studio.elements.group.media',
-    types: ['image', 'icon', 'webview'],
+    types: ['image', 'image-viewer', 'icon', 'webview'],
   },
   {
     label: 'design-studio.elements.group.layout',

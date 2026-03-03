@@ -20,6 +20,7 @@ export const elementIconMap: Record<string, UiIconName> = {
   number: 'hash',
   url: 'link',
   image: 'image',
+  'image-viewer': 'scan',
   icon: 'smile',
   webview: 'globe',
 };
@@ -31,6 +32,7 @@ export const elementLabelMap: Record<string, string> = {
   number: 'design-studio.elements.number',
   url: 'design-studio.elements.url',
   image: 'design-studio.elements.image',
+  'image-viewer': 'design-studio.elements.image-viewer',
   icon: 'design-studio.elements.icon',
   webview: 'design-studio.elements.webview',
 };
@@ -66,8 +68,8 @@ export const PropertyTypeElementMap: Record<
   date: ['date'],
   created: ['date'],
   'last-modified': ['date'],
-  image: ['image', 'container', 'root'],
-  file: ['image', 'container', 'root'],
+  image: ['image', 'image-viewer', 'container', 'root'],
+  file: ['image', 'image-viewer', 'container', 'root'],
   icon: ['icon'],
 };
 
