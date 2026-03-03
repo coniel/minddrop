@@ -204,7 +204,8 @@
         "previousEntry": "Previous entry",
         "nextEntry": "Next entry",
         "openAsPage": "Open as full page",
-        "entryOptions": "Entry options"
+        "entryOptions": "Entry options",
+        "goToDatabase": "Go to database"
       }
     },
     "labels": {
@@ -1118,6 +1119,7 @@
       "number": "Number",
       "url": "URL",
       "image": "Image",
+      "image-viewer": "Image viewer",
       "icon": "Icon",
       "webview": "Web view",
       "text-placeholder": "Text",
