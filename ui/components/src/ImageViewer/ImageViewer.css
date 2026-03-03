@@ -1,0 +1,30 @@
+.image-viewer-container {
+  min-height: 200px;
+}
+
+.image-viewer-image {
+  display: block;
+  max-width: none;
+  user-select: none;
+}
+
+.image-viewer-toolbar-container {
+  position: absolute;
+  bottom: var(--space-2);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.image-viewer-toolbar {
+  background-color: color-mix(in srgb, var(--surface-base), transparent 10%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--space-2);
+  padding: var(--space-1);
+  box-shadow: var(--shadow-md);
+}
+
+.image-viewer-zoom-button {
+  width: 3.375rem;
+}
