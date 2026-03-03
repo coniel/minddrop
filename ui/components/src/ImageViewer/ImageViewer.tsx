@@ -32,6 +32,13 @@ export interface ImageViewerProps {
    * Additional CSS class name applied to the container.
    */
   className?: string;
+
+  /**
+   * When true, disables all interactive controls (zoom, pan,
+   * toolbar) and shows a message on hover indicating that
+   * controls are disabled.
+   */
+  preview?: boolean;
 }
 
 /**
@@ -45,6 +52,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
   src,
   style,
   className,
+  preview = false,
 }) => {
   const { t } = useTranslation();
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -129,12 +137,12 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     return () => cancelAnimationFrame(frame);
   }, [zoom, pan]);
 
-  return (
+  const viewer = (
     <div
       ref={containerRef}
       className={`image-viewer-container${className ? ` ${className}` : ''}`}
       style={{
-        ...style,
+        ...(preview ? undefined : style),
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -233,4 +241,23 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
       </div>
     </div>
   );
+
+  // In preview mode, wrap with an overlay that blocks all
+  // interaction and shows a message on hover
+  if (preview) {
+    return (
+      <div className="image-viewer-preview-wrapper" style={style}>
+        {viewer}
+
+        {/* Transparent overlay blocking clicks/scrolls */}
+        <div className="image-viewer-preview-overlay">
+          <div className="image-viewer-preview-message">
+            {t('imageViewer.previewMessage')}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return viewer;
 };

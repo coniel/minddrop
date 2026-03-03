@@ -3,6 +3,9 @@
   "app": {
     "version": "Version"
   },
+  "imageViewer": {
+    "previewMessage": "Image viewer controls disabled in preview mode"
+  },
   "designStudio": {
     "open": "Open design studio",
     "exit": "Exit design studio",
