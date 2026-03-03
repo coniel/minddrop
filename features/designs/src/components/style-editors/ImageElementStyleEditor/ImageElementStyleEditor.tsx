@@ -1,13 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
-import { Fs } from '@minddrop/file-system';
-import {
-  Button,
-  Group,
-  InputLabel,
-  Stack,
-  SwitchField,
-} from '@minddrop/ui-primitives';
+import { useCallback } from 'react';
+import { InputLabel, Stack, SwitchField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   updateElementStyle,
@@ -19,10 +11,10 @@ import { Border } from '../Border';
 import { MarginFields } from '../MarginFields';
 import { ObjectFitSelect } from '../ObjectFitSelect';
 import { OpacityField } from '../OpacityField';
+import { PlaceholderImageField } from '../PlaceholderImageField';
 import { SectionLabel } from '../SectionLabel';
 import { SizingFields } from '../SizingFields';
 import { StaticElementField } from '../StaticElementField';
-import { PlaceholderImageDialog } from './PlaceholderImageDialog';
 
 export interface ImageElementStyleEditorProps {
   elementId: string;
@@ -39,16 +31,6 @@ export const ImageElementStyleEditor: React.FC<
     (state) =>
       (state.elements[elementId] as FlatImageElement)?.placeholderImage,
   );
-
-  const imagePath = useMemo(
-    () =>
-      placeholderImage
-        ? Fs.concatPath(getPlaceholderMediaDirPath(), placeholderImage)
-        : null,
-    [placeholderImage],
-  );
-
-  const imageSrc = Fs.useImageSrc(imagePath);
 
   const handleRoundChange = useCallback(
     (checked: boolean) => {
@@ -93,121 +75,19 @@ export const ImageElementStyleEditor: React.FC<
     [elementId, width, height],
   );
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Handles selecting an image from the placeholder image dialog
-  const handleImageSelect = useCallback(
-    (fileName: string) => {
-      updateDesignElement(elementId, { placeholderImage: fileName });
-    },
-    [elementId],
-  );
-
-  // Handles selecting a new image via the OS file picker
-  const handleSelectNewImage = useCallback(async () => {
-    const filePath = await Fs.openFilePicker({
-      accept: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'],
-    });
-
-    if (!filePath) {
-      return;
-    }
-
-    const fileName = await Designs.addPlaceholderMedia(filePath as string);
-    updateDesignElement(elementId, { placeholderImage: fileName });
-  }, [elementId]);
-
-  const handleRemoveImage = useCallback(() => {
-    updateDesignElement(elementId, { placeholderImage: '' });
-  }, [elementId]);
-
-  // Opens the dialog if existing images exist, otherwise opens the file picker
-  const handleImageDoubleClick = useCallback(async () => {
-    const dirPath = getPlaceholderMediaDirPath();
-    const dirExists = await Fs.exists(dirPath);
-
-    if (!dirExists) {
-      handleSelectNewImage();
-
-      return;
-    }
-
-    const entries = await Fs.readDir(dirPath);
-    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
-    const hasImages = entries.some((entry) => {
-      if (!entry.name) {
-        return false;
-      }
-
-      const extension = entry.name.split('.').pop()?.toLowerCase();
-
-      return extension && imageExtensions.includes(extension);
-    });
-
-    if (hasImages) {
-      setDialogOpen(true);
-    } else {
-      handleSelectNewImage();
-    }
-  }, [handleSelectNewImage]);
-
   return (
     <>
       <Stack gap={3}>
         <SectionLabel label="designs.image.placeholder.label" />
-        {imageSrc ? (
-          <Stack gap={2}>
-            <img
-              src={imageSrc}
-              alt=""
-              onDoubleClick={handleImageDoubleClick}
-              style={{
-                width: '100%',
-                borderRadius: 'var(--space-1)',
-                objectFit: 'cover',
-                maxHeight: 120,
-                cursor: 'pointer',
-              }}
-            />
-            <Group gap={2}>
-              <Button
-                variant="subtle"
-                size="sm"
-                label="designs.image.placeholder.change"
-                onClick={() => setDialogOpen(true)}
-              />
-              <Button
-                variant="subtle"
-                size="sm"
-                label="designs.image.placeholder.remove"
-                onClick={handleRemoveImage}
-              />
-            </Group>
-          </Stack>
-        ) : (
-          <Group gap={2}>
-            <Button
-              variant="subtle"
-              color="primary"
-              size="sm"
-              startIcon="image"
-              label="designs.image.placeholder.select"
-              onClick={handleSelectNewImage}
-            />
-            <Button
-              variant="subtle"
-              color="primary"
-              size="sm"
-              startIcon="folder-open"
-              label="designs.image.placeholder.browse"
-              onClick={() => setDialogOpen(true)}
-            />
-          </Group>
-        )}
-        <PlaceholderImageDialog
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          onSelect={handleImageSelect}
+        <PlaceholderImageField
+          image={placeholderImage || ''}
+          primary
+          onSelect={(fileName) =>
+            updateDesignElement(elementId, { placeholderImage: fileName })
+          }
+          onRemove={() =>
+            updateDesignElement(elementId, { placeholderImage: '' })
+          }
         />
         <StaticElementField elementId={elementId} />
       </Stack>

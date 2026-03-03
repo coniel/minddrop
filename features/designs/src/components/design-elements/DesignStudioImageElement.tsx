@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react';
 import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
+import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { DesignImageElement } from '../../DesignElements';
 import { updateDesignElement } from '../../DesignStudioStore';
 import { FlatImageElement } from '../../types';
-import { PlaceholderImageDialog } from '../style-editors/ImageElementStyleEditor/PlaceholderImageDialog';
+import { PlaceholderImageDialog } from '../style-editors/PlaceholderImageField/PlaceholderImageDialog';
 
 export interface DesignStudioImageElementProps {
   element: FlatImageElement;
@@ -31,7 +32,7 @@ export const DesignStudioImageElement: React.FC<
   // Handles selecting a new image via the OS file picker
   const handleSelectNewImage = useCallback(async () => {
     const filePath = await Fs.openFilePicker({
-      accept: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'],
+      accept: FilePropertySupportedFileExtensions.image,
     });
 
     if (!filePath) {
@@ -54,7 +55,7 @@ export const DesignStudioImageElement: React.FC<
     }
 
     const entries = await Fs.readDir(dirPath);
-    const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+    const imageExtensions = FilePropertySupportedFileExtensions.image;
     const hasImages = entries.some((entry) => {
       if (!entry.name) {
         return false;
