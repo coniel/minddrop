@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/** Minimum zoom level. */
+/**
+ * Minimum internal zoom level. At 0.5, the image is 50% of
+ * its contained size (50% of the container in the fitted dimension).
+ */
 const MIN_ZOOM = 0.5;
 
-/** Maximum zoom level. */
-const MAX_ZOOM = 5;
+/** Maximum actual pixel scale (1000%). */
+const MAX_ACTUAL_SCALE = 10;
 
 /** Zoom sensitivity for mouse scroll wheel. */
 const WHEEL_ZOOM_FACTOR = 0.003;
@@ -18,8 +21,11 @@ const PINCH_ZOOM_FACTOR = 0.012;
  */
 const GESTURE_TIMEOUT = 120;
 
-/** Preset zoom levels shown in the dropdown menu. */
-export const ZOOM_PRESETS = [0.5, 0.75, 1, 1.25, 1.5, 2, 3, 5];
+/**
+ * Preset zoom levels shown in the dropdown menu.
+ * Values represent actual pixel scale (1 = 100% = 1:1 pixels).
+ */
+export const ZOOM_PRESETS = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 5];
 
 interface Point {
   x: number;
@@ -31,6 +37,12 @@ interface ImageViewerZoomOptions {
    * Ref to the container element (for cursor position calculations).
    */
   containerRef: React.RefObject<HTMLDivElement | null>;
+
+  /**
+   * Base scale factor from contained image fitting.
+   * Used to convert between internal zoom and actual pixel scale.
+   */
+  baseScale: number;
 
   /**
    * Returns the centering offset for a given zoom level.
@@ -51,9 +63,15 @@ interface ImageViewerZoomOptions {
 
 interface ImageViewerZoomResult {
   /**
-   * Current user zoom level (1 = contained fit).
+   * Current internal zoom level (1 = contained fit).
    */
   zoom: number;
+
+  /**
+   * Current actual pixel scale (baseScale * zoom).
+   * 1 = 100% = 1:1 pixels.
+   */
+  actualZoom: number;
 
   /**
    * Current user pan offset in screen pixels.
@@ -71,9 +89,9 @@ interface ImageViewerZoomResult {
   zoomOut: () => void;
 
   /**
-   * Set zoom to a specific level.
+   * Set zoom to a specific actual pixel scale level.
    */
-  setZoom: (level: number) => void;
+  setZoom: (actualLevel: number) => void;
 
   /**
    * Set the pan offset directly.
@@ -81,7 +99,7 @@ interface ImageViewerZoomResult {
   setPan: React.Dispatch<React.SetStateAction<Point>>;
 
   /**
-   * Reset zoom to 1 and pan to center.
+   * Reset zoom to contained fit and pan to center.
    */
   reset: () => void;
 
@@ -96,27 +114,51 @@ interface ImageViewerZoomResult {
   handleDoubleClick: (event: React.MouseEvent) => void;
 
   /**
+   * Whether zoom is at the minimum allowed level.
+   */
+  isMinZoom: boolean;
+
+  /**
+   * Whether zoom is at the maximum allowed level.
+   */
+  isMaxZoom: boolean;
+
+  /**
    * Whether the cursor is currently hovering over the container.
    */
   isHoveredRef: React.RefObject<boolean>;
 }
 
-/** Returns the zoom step size based on the current zoom level. */
-function getZoomStep(zoom: number): number {
-  if (zoom < 2) {
+/**
+ * Returns the zoom step size based on the actual pixel scale.
+ * Steps are defined in actual scale units for consistent behaviour
+ * regardless of image/container size.
+ */
+function getActualZoomStep(actualScale: number): number {
+  if (actualScale < 0.25) {
+    return 0.05;
+  }
+
+  if (actualScale < 1) {
+    return 0.1;
+  }
+
+  if (actualScale < 2) {
     return 0.25;
   }
 
-  if (zoom < 3) {
+  if (actualScale < 3) {
     return 0.5;
   }
 
   return 1;
 }
 
-/** Clamps a zoom value to the valid range. */
-function clampZoom(value: number): number {
-  return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
+/** Clamps an internal zoom value to the valid range. */
+function clampZoom(value: number, baseScale: number): number {
+  const maxZoom = MAX_ACTUAL_SCALE / baseScale;
+
+  return Math.min(maxZoom, Math.max(MIN_ZOOM, value));
 }
 
 /**
@@ -124,9 +166,15 @@ function clampZoom(value: number): number {
  * Handles zoom in/out with adaptive stepping, scroll-to-zoom
  * with focal point, preset levels, and reset. Also listens
  * for the '0' key to reset when hovering.
+ *
+ * All user-facing zoom values (display, presets, setZoom) use
+ * actual pixel scale where 1 = 100% = 1:1 native pixels.
+ * Internally, zoom is relative to the contained fit (zoom=1
+ * means the image fits fully within the container).
  */
 export function useImageViewerZoom({
   containerRef,
+  baseScale,
   getCenteredPan,
   getEffectivePan,
   clampPan,
@@ -134,6 +182,9 @@ export function useImageViewerZoom({
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
   const isHoveredRef = useRef(false);
+
+  // Actual pixel scale for display and external API
+  const actualZoom = baseScale * zoom;
 
   // Tracks whether the current scroll gesture is a trackpad pan.
   // Once any event in a gesture has deltaX !== 0, we latch into
@@ -212,45 +263,59 @@ export function useImageViewerZoom({
     [zoom, pan, containerRef, getCenteredPan, getEffectivePan, clampPan],
   );
 
-  // Zoom in by one adaptive step, snapping to 100% if within 5%
+  // Zoom in by one adaptive step based on actual pixel scale,
+  // snapping to 100% actual if within 5%
   const zoomIn = useCallback(() => {
-    let targetZoom = zoom + getZoomStep(zoom);
+    const currentActual = baseScale * zoom;
+    let targetActual = currentActual + getActualZoomStep(currentActual);
 
-    if (Math.abs(targetZoom - 1) <= 0.05) {
-      targetZoom = 1;
+    // Snap to 100% actual pixels if within 5%
+    if (Math.abs(targetActual - 1) <= 0.05) {
+      targetActual = 1;
     }
 
-    targetZoom = clampZoom(targetZoom);
-    animateTo(targetZoom, getTargetPanForCenter(targetZoom));
-  }, [zoom, animateTo, getTargetPanForCenter]);
+    const targetZoom = clampZoom(targetActual / baseScale, baseScale);
 
-  // Zoom out by one adaptive step, snapping to 100% if within 5%
+    animateTo(targetZoom, getTargetPanForCenter(targetZoom));
+  }, [zoom, baseScale, animateTo, getTargetPanForCenter]);
+
+  // Zoom out by one adaptive step based on actual pixel scale,
+  // snapping to 100% actual if within 5%
   const zoomOut = useCallback(() => {
-    const step = getZoomStep(zoom - 0.01);
-    let targetZoom = zoom - step;
+    const currentActual = baseScale * zoom;
+    const step = getActualZoomStep(currentActual - 0.001);
+    let targetActual = currentActual - step;
 
-    if (Math.abs(targetZoom - 1) <= 0.05) {
-      targetZoom = 1;
+    // Snap to 100% actual pixels if within 5%
+    if (Math.abs(targetActual - 1) <= 0.05) {
+      targetActual = 1;
     }
 
-    targetZoom = clampZoom(targetZoom);
-    animateTo(targetZoom, getTargetPanForCenter(targetZoom));
-  }, [zoom, animateTo, getTargetPanForCenter]);
+    const targetZoom = clampZoom(targetActual / baseScale, baseScale);
 
-  // Set zoom to a specific preset level
+    animateTo(targetZoom, getTargetPanForCenter(targetZoom));
+  }, [zoom, baseScale, animateTo, getTargetPanForCenter]);
+
+  // Set zoom to a specific actual pixel scale level
   const setZoomLevel = useCallback(
-    (level: number) => {
-      const targetZoom = clampZoom(level);
+    (actualLevel: number) => {
+      const targetZoom = clampZoom(actualLevel / baseScale, baseScale);
 
       animateTo(targetZoom, getTargetPanForCenter(targetZoom));
     },
-    [animateTo, getTargetPanForCenter],
+    [baseScale, animateTo, getTargetPanForCenter],
   );
 
-  // Reset zoom and pan to defaults (contained + centered)
+  // Reset zoom and pan to defaults (contained fit + centered)
   const reset = useCallback(() => {
     animateTo(1, { x: 0, y: 0 });
   }, [animateTo]);
+
+  // Lerp chase for centering pan when scrolling past min zoom.
+  // Each scroll notch updates the target closer to center, and
+  // the animation smoothly chases it.
+  const centerTargetRef = useRef<Point>({ x: 0, y: 0 });
+  const centerAnimationRef = useRef<number>(0);
 
   // Tracks the wheel zoom animation state. Pan is always computed
   // relative to the original start values to avoid cumulative drift.
@@ -275,7 +340,7 @@ export function useImageViewerZoom({
       const cursorX = event.clientX - rect.left;
       const cursorY = event.clientY - rect.top;
 
-      const targetZoom = clampZoom(zoom * 1.75);
+      const targetZoom = clampZoom(zoom * 1.75, baseScale);
       const ratio = targetZoom / zoom;
 
       // Compute target pan so the cursor point stays stationary
@@ -291,6 +356,7 @@ export function useImageViewerZoom({
     [
       zoom,
       pan,
+      baseScale,
       containerRef,
       getCenteredPan,
       getEffectivePan,
@@ -331,6 +397,62 @@ export function useImageViewerZoom({
 
       // Pinch and mouse wheel zoom toward the cursor
       if (isPinch || isZoom) {
+        // At min zoom and scrolling to zoom out further — move
+        // pan target toward center, with a lerp chase animation
+        if (zoom <= MIN_ZOOM + 0.001 && event.deltaY > 0) {
+          const strength = Math.min(Math.abs(event.deltaY) * 0.005, 0.3);
+
+          // Update the target closer to center based on scroll strength.
+          // Use current pan as base if no animation is running yet.
+          const base = centerAnimationRef.current
+            ? centerTargetRef.current
+            : pan;
+
+          centerTargetRef.current = {
+            x: base.x * (1 - strength),
+            y: base.y * (1 - strength),
+          };
+
+          // Snap target to exact center when close enough
+          if (
+            Math.abs(centerTargetRef.current.x) < 0.5 &&
+            Math.abs(centerTargetRef.current.y) < 0.5
+          ) {
+            centerTargetRef.current = { x: 0, y: 0 };
+          }
+
+          // Start a lerp chase if not already running
+          if (!centerAnimationRef.current) {
+            const lerpFactor = 0.2;
+
+            const animate = () => {
+              setPan((current) => {
+                const target = centerTargetRef.current;
+                const diffX = target.x - current.x;
+                const diffY = target.y - current.y;
+
+                // Stop when close enough to the target
+                if (Math.abs(diffX) < 0.5 && Math.abs(diffY) < 0.5) {
+                  centerAnimationRef.current = 0;
+
+                  return target;
+                }
+
+                centerAnimationRef.current = requestAnimationFrame(animate);
+
+                return {
+                  x: current.x + diffX * lerpFactor,
+                  y: current.y + diffY * lerpFactor,
+                };
+              });
+            };
+
+            centerAnimationRef.current = requestAnimationFrame(animate);
+          }
+
+          return;
+        }
+
         const container = containerRef.current;
 
         if (!container) {
@@ -346,7 +468,7 @@ export function useImageViewerZoom({
         // Pinch gestures apply immediately (high frequency, already smooth)
         if (isPinch) {
           const delta = -event.deltaY * PINCH_ZOOM_FACTOR;
-          const newZoom = clampZoom(zoom * (1 + delta));
+          const newZoom = clampZoom(zoom * (1 + delta), baseScale);
           const ratio = newZoom / zoom;
 
           const currentEffective = getEffectivePan(zoom, pan);
@@ -370,7 +492,10 @@ export function useImageViewerZoom({
           ? wheelTargetZoomRef.current
           : zoom;
 
-        wheelTargetZoomRef.current = clampZoom(baseZoom * (1 + delta));
+        wheelTargetZoomRef.current = clampZoom(
+          baseZoom * (1 + delta),
+          baseScale,
+        );
         wheelCursorRef.current = { x: cursorX, y: cursorY };
 
         // Capture the start state when beginning a new animation
@@ -439,25 +564,45 @@ export function useImageViewerZoom({
         }),
       );
     },
-    [zoom, pan, containerRef, getCenteredPan, getEffectivePan, clampPan],
+    [
+      zoom,
+      pan,
+      baseScale,
+      containerRef,
+      getCenteredPan,
+      getEffectivePan,
+      clampPan,
+    ],
   );
 
-  // Listen for '0' key to reset when hovering over the container
+  // Listen for keyboard shortcuts when hovering over the container:
+  // '+' / '=' to zoom in, '-' to zoom out, '0' to reset
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === '0' && isHoveredRef.current) {
+      if (!isHoveredRef.current) {
+        return;
+      }
+
+      if (event.key === '0') {
         event.preventDefault();
         reset();
+      } else if (event.key === '+' || event.key === '=') {
+        event.preventDefault();
+        zoomIn();
+      } else if (event.key === '-') {
+        event.preventDefault();
+        zoomOut();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [reset]);
+  }, [reset, zoomIn, zoomOut]);
 
   return {
     zoom,
+    actualZoom,
     pan,
     setPan,
     zoomIn,
@@ -466,6 +611,8 @@ export function useImageViewerZoom({
     reset,
     handleWheel,
     handleDoubleClick,
+    isMinZoom: zoom <= MIN_ZOOM,
+    isMaxZoom: actualZoom >= MAX_ACTUAL_SCALE,
     isHoveredRef,
   };
 }

@@ -46,6 +46,13 @@ interface ContainedImageResult {
    * partially visible within the container.
    */
   clampPan: (zoom: number, pan: Point) => Point;
+
+  /**
+   * Whether the image has loaded and the base scale has
+   * been computed. Use this to hide the image until it's
+   * ready to prevent a flash of the unscaled image.
+   */
+  ready: boolean;
 }
 
 /**
@@ -189,6 +196,9 @@ export function useContainedImage(): ContainedImageResult {
     [baseScale, naturalSize, getCenteredPan],
   );
 
+  // Ready once the image has loaded and dimensions are known
+  const ready = naturalSize.width > 0 && naturalSize.height > 0;
+
   return useMemo(
     () => ({
       containerRef,
@@ -197,7 +207,15 @@ export function useContainedImage(): ContainedImageResult {
       getCenteredPan,
       getEffectivePan,
       clampPan,
+      ready,
     }),
-    [baseScale, handleImageLoad, getCenteredPan, getEffectivePan, clampPan],
+    [
+      baseScale,
+      handleImageLoad,
+      getCenteredPan,
+      getEffectivePan,
+      clampPan,
+      ready,
+    ],
   );
 }

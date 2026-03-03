@@ -17,12 +17,6 @@ import { useImageViewerDrag } from './useImageViewerDrag';
 import { ZOOM_PRESETS, useImageViewerZoom } from './useImageViewerZoom';
 import './ImageViewer.css';
 
-/** Minimum zoom level (mirrored from useImageViewerZoom). */
-const MIN_ZOOM = 0.5;
-
-/** Maximum zoom level (mirrored from useImageViewerZoom). */
-const MAX_ZOOM = 5;
-
 export interface ImageViewerProps {
   /**
    * The image source URL to display.
@@ -63,11 +57,13 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     getCenteredPan,
     getEffectivePan,
     clampPan,
+    ready,
   } = useContainedImage();
 
   // Zoom state and controls
   const {
     zoom,
+    actualZoom,
     pan,
     setPan,
     zoomIn,
@@ -76,9 +72,12 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     reset,
     handleWheel,
     handleDoubleClick,
+    isMinZoom,
+    isMaxZoom,
     isHoveredRef,
   } = useImageViewerZoom({
     containerRef,
+    baseScale,
     getCenteredPan,
     getEffectivePan,
     clampPan,
@@ -91,6 +90,16 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     zoom,
     clampPan,
   );
+
+  // Reset zoom and pan when the image source changes
+  const previousSrcRef = useRef(src);
+
+  useEffect(() => {
+    if (src !== previousSrcRef.current) {
+      previousSrcRef.current = src;
+      reset();
+    }
+  }, [src, reset]);
 
   // Compute final transform values
   const effectivePan = getEffectivePan(zoom, pan);
@@ -149,6 +158,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
         style={{
           transform: `translate(${effectivePan.x}px, ${effectivePan.y}px) scale(${effectiveScale})`,
           transformOrigin: '0 0',
+          visibility: ready ? 'visible' : 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
         }}
       />
@@ -168,7 +178,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
             variant="subtle"
             size="sm"
             onClick={zoomOut}
-            disabled={zoom <= MIN_ZOOM}
+            disabled={isMinZoom}
           />
 
           {/* Zoom level drop-up menu */}
@@ -179,7 +189,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
                 variant="subtle"
                 className="image-viewer-zoom-button"
               >
-                {Math.round(zoom * 100)}%
+                {Math.round(actualZoom * 100)}%
               </ToolbarButton>
             </DropdownMenuTrigger>
             <DropdownMenuPortal>
@@ -205,7 +215,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
             variant="subtle"
             size="sm"
             onClick={zoomIn}
-            disabled={zoom >= MAX_ZOOM}
+            disabled={isMaxZoom}
           />
 
           <ToolbarSeparator />
