@@ -14,6 +14,7 @@ export const DesignElementTypes: DesignElementType[] = [
   'formatted-text',
   'number',
   'image',
+  'image-viewer',
   'icon',
 ];
 
@@ -25,5 +26,6 @@ export const LeafDesignElementTypes: DesignElementType[] = [
   'formatted-text',
   'number',
   'image',
+  'image-viewer',
   'icon',
 ];

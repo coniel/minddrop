@@ -2,6 +2,7 @@ import {
   ContainerElementStyle,
   IconElementStyle,
   ImageElementStyle,
+  ImageViewerElementStyle,
   TextElementStyle,
   WebviewElementStyle,
 } from '../styles';
@@ -127,6 +128,21 @@ export interface ImageElement extends DesignElementBase {
   placeholderImage?: string;
 }
 
+export interface ImageViewerElement extends DesignElementBase {
+  type: 'image-viewer';
+
+  /**
+   * The element style.
+   */
+  style: ImageViewerElementStyle;
+
+  /**
+   * The file name of a placeholder image stored in the
+   * placeholder-media directory.
+   */
+  placeholderImage?: string;
+}
+
 export interface UrlElement extends DesignElementBase {
   type: 'url';
 
@@ -195,6 +211,7 @@ export type LeafDesignElement =
   | NumberElement
   | UrlElement
   | ImageElement
+  | ImageViewerElement
   | IconElement
   | WebviewElement;
 
@@ -247,5 +264,6 @@ export type DesignElementType =
   | 'number'
   | 'url'
   | 'image'
+  | 'image-viewer'
   | 'icon'
   | 'webview';
