@@ -4,6 +4,7 @@ export { DatabasesStore as Store } from './DatabasesStore';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
 export { getDatabase as get } from './getDatabase';
+export { getDatabasesFromEntries as getFromEntries } from './getDatabasesFromEntries';
 export { initializeDatabases as initialize } from './initializeDatabases';
 export { removeDatabaseProperty as removeProperty } from './removeDatabaseProperty';
 export { updateDatabase as update } from './updateDatabase';
