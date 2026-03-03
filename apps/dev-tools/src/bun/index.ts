@@ -12,6 +12,7 @@ const REPO_ROOT = Bun.spawnSync(['git', 'rev-parse', '--show-toplevel'])
   .trim();
 const CHANGES_DIR = `${REPO_ROOT}/dev/changes`;
 const PLANS_DIR = `${REPO_ROOT}/dev/plans`;
+const GIT_DIR = `${REPO_ROOT}/.git`;
 
 // Create typed RPC for the webview
 const rpc = BrowserView.defineRPC<DevReviewRPC>({
@@ -64,7 +65,7 @@ new BrowserWindow({
 // Watch the changes directory for manifest updates
 try {
   watch(CHANGES_DIR, (_eventType, filename) => {
-    if (filename && filename.endsWith('.json')) {
+    if (!filename || filename.endsWith('.json')) {
       rpc.send.manifestsChanged({});
     }
   });
@@ -73,10 +74,22 @@ try {
   console.log('Changes directory not found, skipping watcher');
 }
 
+// Watch .git directory for index changes (commits, staging, etc.)
+try {
+  watch(GIT_DIR, (_eventType, filename) => {
+    if (!filename || filename === 'index' || filename === 'HEAD') {
+      rpc.send.manifestsChanged({});
+    }
+  });
+  console.log(`Watching ${GIT_DIR} for git state changes`);
+} catch {
+  console.log('.git directory not found, skipping watcher');
+}
+
 // Watch the plans directory for plan file updates
 try {
   watch(PLANS_DIR, (_eventType, filename) => {
-    if (filename && filename.endsWith('.md')) {
+    if (!filename || filename.endsWith('.md')) {
       rpc.send.plansChanged({});
     }
   });

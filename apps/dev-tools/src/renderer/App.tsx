@@ -169,6 +169,15 @@ export const App: React.FC = () => {
     setSelectedFile(null);
   }, []);
 
+  // Handle deleting a work group
+  const handleDeleteManifest = useCallback(
+    async (slug: string) => {
+      await rpc.request.deleteManifest({ slug });
+      await refreshData();
+    },
+    [refreshData],
+  );
+
   // Handle assigning an untracked file to a manifest
   const handleAssignFile = useCallback(
     async (file: string, slug: string) => {
@@ -189,6 +198,7 @@ export const App: React.FC = () => {
         plans={plans}
         selectedPlan={selectedPlan}
         onSelectPlan={handleSelectPlan}
+        onDeleteManifest={handleDeleteManifest}
       />
       <div className="app-main">
         {selectedFile ? (

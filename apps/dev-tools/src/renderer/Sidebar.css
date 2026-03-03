@@ -33,11 +33,20 @@
   margin-bottom: 2px;
 }
 
+.sidebar-group-header-row {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-group-header-row:hover .sidebar-delete-button {
+  opacity: 1;
+}
+
 .sidebar-group-header {
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 100%;
+  flex: 1;
   padding: 6px 12px;
   background: none;
   border: none;
@@ -47,6 +56,26 @@
 }
 
 .sidebar-group-header:hover {
+  background: var(--color-bg-hover);
+}
+
+.sidebar-delete-button {
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 3px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  opacity: 0;
+}
+
+.sidebar-delete-button:hover {
+  color: var(--color-text);
   background: var(--color-bg-hover);
 }
 

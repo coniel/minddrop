@@ -45,6 +45,11 @@ interface SidebarProps {
    * Called when a plan is selected for viewing.
    */
   onSelectPlan: (filename: string) => void;
+
+  /**
+   * Called when a work group is deleted.
+   */
+  onDeleteManifest: (slug: string) => void;
 }
 
 /**
@@ -59,6 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   plans,
   selectedPlan,
   onSelectPlan,
+  onDeleteManifest,
 }) => {
   // Track which groups are expanded
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
@@ -142,18 +148,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           return (
             <div key={manifest.slug} className="sidebar-group">
-              <button
-                className="sidebar-group-header"
-                onClick={() => toggleGroup(manifest.slug)}
-              >
-                <span className="sidebar-group-chevron">
-                  {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
-                </span>
-                <span className="sidebar-group-title">{manifest.title}</span>
-                <span className="sidebar-group-count">
-                  {manifest.files.length}
-                </span>
-              </button>
+              <div className="sidebar-group-header-row">
+                <button
+                  className="sidebar-group-header"
+                  onClick={() => toggleGroup(manifest.slug)}
+                >
+                  <span className="sidebar-group-chevron">
+                    {expandedGroups.has(manifest.slug) ? '▼' : '▶'}
+                  </span>
+                  <span className="sidebar-group-title">{manifest.title}</span>
+                  <span className="sidebar-group-count">
+                    {manifest.files.length}
+                  </span>
+                </button>
+                <button
+                  className="sidebar-delete-button"
+                  onClick={() => onDeleteManifest(manifest.slug)}
+                  title="Remove work group"
+                >
+                  ✕
+                </button>
+              </div>
 
               {expandedGroups.has(manifest.slug) && (
                 <>

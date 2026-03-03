@@ -78,6 +78,14 @@ export type DevReviewRPC = {
       };
 
       /**
+       * Deletes a manifest file by slug.
+       */
+      deleteManifest: {
+        params: { slug: string };
+        response: void;
+      };
+
+      /**
        * Returns all plan files from dev/plans/.
        */
       getPlans: {

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import type { Manifest, ManifestWithSlug } from '../types';
 
 // Resolve repo root dynamically via git (import.meta.dir points to
@@ -68,6 +68,21 @@ function getCurrentFile(path: string): string {
 }
 
 /**
+ * Runs a git command and adds each output line to the target set.
+ */
+function collectGitOutput(command: string[], target: Set<string>): void {
+  const result = Bun.spawnSync(command, { cwd: REPO_ROOT });
+
+  if (result.exitCode === 0) {
+    const lines = result.stdout.toString().trim().split('\n').filter(Boolean);
+
+    for (const line of lines) {
+      target.add(line);
+    }
+  }
+}
+
+/**
  * Gets files that have changed in git (added, modified, or deleted)
  * but aren't listed in any manifest.
  */
@@ -87,40 +102,34 @@ function getUntrackedChanges(): string[] {
 
   // Get modified/deleted files relative to each manifest's baseRef
   for (const manifest of manifests) {
-    const result = Bun.spawnSync(
+    collectGitOutput(
       ['git', 'diff', '--name-only', manifest.baseRef],
-      { cwd: REPO_ROOT },
+      allChangedFiles,
     );
-
-    if (result.exitCode === 0) {
-      const files = result.stdout.toString().trim().split('\n').filter(Boolean);
-
-      for (const file of files) {
-        allChangedFiles.add(file);
-      }
-    }
   }
+
+  // Get uncommitted changes vs HEAD (modified + staged)
+  collectGitOutput(['git', 'diff', '--name-only', 'HEAD'], allChangedFiles);
 
   // Get new files not yet tracked by git
-  const untrackedResult = Bun.spawnSync(
+  collectGitOutput(
     ['git', 'ls-files', '--others', '--exclude-standard'],
-    { cwd: REPO_ROOT },
+    allChangedFiles,
   );
-
-  if (untrackedResult.exitCode === 0) {
-    const files = untrackedResult.stdout
-      .toString()
-      .trim()
-      .split('\n')
-      .filter(Boolean);
-
-    for (const file of files) {
-      allChangedFiles.add(file);
-    }
-  }
 
   // Filter out files that are already in manifests
   return [...allChangedFiles].filter((file) => !manifestedFiles.has(file));
+}
+
+/**
+ * Deletes a manifest file by slug.
+ */
+function deleteManifest(slug: string): void {
+  const manifestPath = `${CHANGES_DIR}/${slug}.json`;
+
+  if (existsSync(manifestPath)) {
+    unlinkSync(manifestPath);
+  }
 }
 
 /**
@@ -219,6 +228,10 @@ export const rpcHandlers = {
 
   addFileToManifest: async ({ slug, file }: { slug: string; file: string }) => {
     addFileToManifest(slug, file);
+  },
+
+  deleteManifest: async ({ slug }: { slug: string }) => {
+    deleteManifest(slug);
   },
 
   getPlans: async () => {
