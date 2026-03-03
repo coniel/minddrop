@@ -1,0 +1,11 @@
+{
+  "theme": {
+    "appearance": {
+      "action": "Set theme appearance",
+      "label": "Appearance",
+      "system": "Use system setting",
+      "light": "Light",
+      "dark": "Dark"
+    }
+  }
+}

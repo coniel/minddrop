@@ -1,11 +1,16 @@
 import { Events } from '@minddrop/events';
+import { I18n } from '@minddrop/i18n';
 import { ThemeStore } from '../ThemeStore';
 import { ThemeSystem } from '../constants';
 import { VariantChangedEvent, VariantChangedEventData } from '../events';
 import { getThemeVariant } from '../getThemeVariant';
+import locales from '../locales';
 import { resolveThemeVariant } from '../resolveThemeVariant';
 
 export async function initializeTheme() {
+  // Register theme translations
+  I18n.registerTranslations(locales);
+
   // Hydrate the theme store with persisted data from the platform layer
   await ThemeStore.hydrate();
 
