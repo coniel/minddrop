@@ -26,12 +26,26 @@ function getContentColorCss(
   return `var(--${color}-${shade})`;
 }
 
-function getBackgroundColorCss(color: string): string {
+function getBackgroundColorCss(color: string, opacity?: number): string {
   if (color === 'transparent') {
     return 'transparent';
   }
 
-  return getContentColorCss(color, 100, 'var(--surface-paper)');
+  const colorValue = getContentColorCss(color, 100, 'var(--surface-paper)');
+
+  // Apply opacity to the background color value so it doesn't
+  // affect child element opacity
+  if (opacity !== undefined && opacity < 1) {
+    if (opacity <= 0) {
+      return 'transparent';
+    }
+
+    const transparentPercent = Math.round((1 - opacity) * 100);
+
+    return `color-mix(in srgb, ${colorValue}, transparent ${transparentPercent}%)`;
+  }
+
+  return colorValue;
 }
 
 function getBorderColorCss(color: string): string {
@@ -105,16 +119,17 @@ export function createContainerCssStyle(
     fontWeight: style['font-weight'],
     color: getContentColorCss(style.color, 900, 'inherit'),
     // When gradient overlay is active, background color goes on the
-    // overlay so it gets masked by the gradient too
+    // overlay so it gets masked by the gradient too.
+    // Opacity is applied to the background color (not the element)
+    // so that child elements are not affected.
     backgroundColor:
       style.backdropBlurGradient && style.backdropBlur > 0
         ? 'transparent'
-        : getBackgroundColorCss(style.backgroundColor),
+        : getBackgroundColorCss(style.backgroundColor, style.opacity),
     borderStyle: style.borderStyle,
     borderWidth: `${style.borderWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
-    opacity: style.opacity,
   };
 
   // Background image sizing (image URL applied in renderers via useImageSrc)
@@ -196,7 +211,10 @@ export function createBackdropGradientOverlayStyle(
   return {
     position: 'absolute',
     inset: 0,
-    backgroundColor: getBackgroundColorCss(style.backgroundColor),
+    backgroundColor: getBackgroundColorCss(
+      style.backgroundColor,
+      style.opacity,
+    ),
     backdropFilter: filterValue,
     WebkitBackdropFilter: filterValue,
     maskImage: maskValue,
