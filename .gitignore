@@ -32,3 +32,6 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# dev review manifests
+dev/changes/*.json

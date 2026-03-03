@@ -1,0 +1,31 @@
+{
+  "name": "@minddrop/app-dev-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dev review tool for reviewing file changes across work groups",
+  "scripts": {
+    "dev": "bun run build && electrobun dev",
+    "dev:hmr": "concurrently \"bun run hmr\" \"bun run dev\"",
+    "hmr": "vite --port 5174",
+    "build": "vite build && electrobun build",
+    "start": "bun run dev"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "electrobun": "1.13.1",
+    "monaco-editor": "^0.52.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}
