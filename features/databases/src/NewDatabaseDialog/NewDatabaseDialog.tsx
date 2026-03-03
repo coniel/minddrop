@@ -267,7 +267,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
 };
 
 async function validateDatabaseName(value: string) {
-  const databases = Databases.Store.getAll();
+  const databases = Databases.Store.getAllArray();
   const nameConfict = databases.find((db) => db.name === value);
 
   // Ensure no database with the same name exists

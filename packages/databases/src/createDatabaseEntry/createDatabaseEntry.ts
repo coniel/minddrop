@@ -76,7 +76,7 @@ export async function createDatabaseEntry<
   };
 
   // Add the entry to the store
-  DatabaseEntriesStore.add(entry);
+  DatabaseEntriesStore.set(entry);
 
   // Werite the entry to the file system
   await writeDatabaseEntry(entry.id);

@@ -23,6 +23,8 @@ describe('initializeDatabases', () => {
   it('loads databases into the store', async () => {
     await initializeDatabases();
 
-    expect(DatabasesStore.getAll()).toEqual(expect.arrayContaining(databases));
+    expect(DatabasesStore.getAllArray()).toEqual(
+      expect.arrayContaining(databases),
+    );
   });
 });

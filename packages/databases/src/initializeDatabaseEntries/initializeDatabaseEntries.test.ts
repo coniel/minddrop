@@ -11,6 +11,6 @@ describe('initializeDatabaseEntries', () => {
   it('loads database entries into the store from the file system', async () => {
     await initializeDatabaseEntries();
 
-    expect(DatabaseEntriesStore.getAll()).toEqual(databaseEntries);
+    expect(DatabaseEntriesStore.getAllArray()).toEqual(databaseEntries);
   });
 });

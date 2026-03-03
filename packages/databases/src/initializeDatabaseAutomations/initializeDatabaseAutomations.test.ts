@@ -86,8 +86,8 @@ describe('initializeDatabaseAutomations', () => {
   beforeEach(() => {
     setup();
 
-    DatabasesStore.add(database);
-    DatabaseEntriesStore.add(entry);
+    DatabasesStore.set(database);
+    DatabaseEntriesStore.set(entry);
   });
 
   afterEach(cleanup);

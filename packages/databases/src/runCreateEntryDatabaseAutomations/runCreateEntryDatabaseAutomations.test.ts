@@ -45,19 +45,19 @@ describe('runCreateEntryDatabaseAutomations', () => {
 
     DatabaseAutomationActionConfigsStore.add(actionConfig);
 
-    DatabaseEntriesStore.add(entry);
+    DatabaseEntriesStore.set(entry);
   });
 
   afterEach(cleanup);
 
   it('does nothing if the database has no automations', () => {
-    DatabasesStore.add(objectDatabase);
+    DatabasesStore.set(objectDatabase);
 
     expect(() => runCreateEntryDatabaseAutomations(objectEntry1)).not.toThrow();
   });
 
   it('runs the automation action', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       id: 'automation-database-id',
       automations: [automation],
@@ -69,7 +69,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   });
 
   it('does nothing if the automation action is missing a config', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       id: 'automation-database-id',
       automations: [{ ...automation, actions: [actionMissingConfig] }],
@@ -79,7 +79,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   });
 
   it('only runs create-entry automations', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       id: 'automation-database-id',
       automations: [

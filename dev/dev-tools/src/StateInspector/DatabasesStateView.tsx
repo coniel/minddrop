@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  Databases,
   DatabaseAutomations,
   DatabaseEntries,
   DatabaseEntrySerializers,
   DatabaseTemplates,
+  Databases,
 } from '@minddrop/databases';
 import { StoreInspector } from './StoreInspector';
 
@@ -21,7 +21,7 @@ interface DatabasesStateViewProps {
 
 export function useDatabaseStoreCounts() {
   const databases = Databases.useAll();
-  const entries = DatabaseEntries.Store.useAllItems();
+  const entries = DatabaseEntries.Store.useAllItemsArray();
   const templates = DatabaseTemplates.useAll();
   const automations = DatabaseAutomations.useAll();
   const serializers = DatabaseEntrySerializers.useAll();
@@ -39,7 +39,7 @@ export const DatabasesStateView: React.FC<DatabasesStateViewProps> = ({
   stateView,
 }) => {
   const databases = Databases.useAll();
-  const entries = DatabaseEntries.Store.useAllItems();
+  const entries = DatabaseEntries.Store.useAllItemsArray();
   const templates = DatabaseTemplates.useAll();
   const automations = DatabaseAutomations.useAll();
   const serializers = DatabaseEntrySerializers.useAll();

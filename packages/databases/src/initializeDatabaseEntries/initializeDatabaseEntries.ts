@@ -10,7 +10,7 @@ import { readDatabaseEntry } from '../readDatabaseEntry';
  */
 export async function initializeDatabaseEntries(): Promise<void> {
   // Get all databases
-  const databases = DatabasesStore.getAll();
+  const databases = DatabasesStore.getAllArray();
 
   const databaseEntries = await Promise.all(
     databases.map(async (database) => {

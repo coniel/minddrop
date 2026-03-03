@@ -62,7 +62,7 @@ export async function createDatabase(
   }
 
   // Add the database to the store
-  DatabasesStore.add(databaseConfig);
+  DatabasesStore.set(databaseConfig);
 
   // Create the database directory at the specified path
   await Fs.createDir(dbPath);

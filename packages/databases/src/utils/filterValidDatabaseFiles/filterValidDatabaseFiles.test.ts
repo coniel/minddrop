@@ -17,7 +17,7 @@ describe('filterValidDatabaseFiles', () => {
   afterEach(cleanup);
 
   it('returns all files as invalid if the database has no file based props', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       properties: [],
     });
@@ -32,7 +32,7 @@ describe('filterValidDatabaseFiles', () => {
   });
 
   it('returns all files as valid if the database has a generic file prop', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       properties: [
         {
@@ -52,7 +52,7 @@ describe('filterValidDatabaseFiles', () => {
   });
 
   it('retuns valid files if the database has non-generic file props', () => {
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       properties: [
         {

@@ -1,7 +1,8 @@
-import { createArrayStore, useShallow } from '@minddrop/utils';
+import { shallow } from 'zustand/shallow';
+import { createObjectStore } from '@minddrop/stores';
 import { DatabaseEntry } from './types';
 
-export const DatabaseEntriesStore = createArrayStore<DatabaseEntry>('id');
+export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>('id');
 
 /**
  * Retrieves an entry by ID or null if it doesn't exist.
@@ -10,31 +11,33 @@ export const DatabaseEntriesStore = createArrayStore<DatabaseEntry>('id');
  * @returns The entry or null if it doesn't exist.
  */
 export const useDatabaseEntry = (entryId: string): DatabaseEntry | null =>
-  DatabaseEntriesStore.useStore(
-    (state) => state.items.find((item) => item.id === entryId) || null,
-  );
+  DatabaseEntriesStore.useItem(entryId);
 
 /**
  * Retrieves all entries for a given database.
  *
- * @returns And array of all entries.
+ * @returns An array of all entries.
  */
 export const useDatabaseEntries = (databaseId: string): DatabaseEntry[] =>
-  DatabaseEntriesStore.useStore((state) =>
-    state.items.filter((entry) => entry.database === databaseId),
+  DatabaseEntriesStore.useStore(
+    (state) =>
+      Object.values(state.items).filter(
+        (entry) => entry.database === databaseId,
+      ),
+    shallow,
   );
 
 /**
  * Retrieves the IDs of all entries for a given database.
  *
- * @returns And array of all entry IDs.
+ * @returns An array of all entry IDs.
  */
 export const useDatabaseEntryIds = (databaseId: string): string[] => {
   return DatabaseEntriesStore.useStore(
-    useShallow((state) =>
-      state.items
+    (state) =>
+      Object.values(state.items)
         .filter((entry) => entry.database === databaseId)
         .map((entry) => entry.id),
-    ),
+    shallow,
   );
 };

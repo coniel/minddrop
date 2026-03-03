@@ -571,6 +571,9 @@ importers:
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../properties
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils

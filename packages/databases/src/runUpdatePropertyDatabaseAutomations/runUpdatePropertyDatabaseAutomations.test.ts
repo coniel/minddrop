@@ -62,8 +62,8 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
     setup();
 
     DatabaseAutomationActionConfigsStore.add(actionConfig);
-    DatabaseEntriesStore.add(entry);
-    DatabasesStore.add(database);
+    DatabaseEntriesStore.set(entry);
+    DatabasesStore.set(database);
   });
 
   afterEach(cleanup);
@@ -93,7 +93,7 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
 
   it('does nothing if the automation action is missing a config', () => {
     DatabasesStore.remove(database.id);
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...database,
       automations: [{ ...automation, actions: [actionMissingConfig] }],
     });
@@ -105,7 +105,7 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
 
   it('only runs update-property automations', () => {
     DatabasesStore.remove(database.id);
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       id: 'automation-database-id',
       automations: [

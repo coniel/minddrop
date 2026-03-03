@@ -34,7 +34,7 @@ describe('writeDatabaseEntry', () => {
   it('throws if the entry database does not exist', async () => {
     DatabaseEntriesStore.clear();
     // Add an entry with a non-existent database
-    DatabaseEntriesStore.add({
+    DatabaseEntriesStore.set({
       ...objectEntry1,
       database: 'non-existent-db',
     });
@@ -47,13 +47,13 @@ describe('writeDatabaseEntry', () => {
   it('throws if the entry serializer is not registered', async () => {
     DatabaseEntriesStore.clear();
     // Add a database with a non-existent entry serializer
-    DatabasesStore.add({
+    DatabasesStore.set({
       ...objectDatabase,
       id: 'missing-entry-serializer',
       entrySerializer: 'non-existent-entry-serializer',
     });
     // Add an entry with a non-existent entry serializer
-    DatabaseEntriesStore.add({
+    DatabaseEntriesStore.set({
       ...objectEntry1,
       database: 'missing-entry-serializer',
     });
