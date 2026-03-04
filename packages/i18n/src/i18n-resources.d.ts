@@ -39,6 +39,7 @@ declare module 'i18next' {
           duplicate: string;
           manage: string;
           close: string;
+          search: string;
         };
         error: {
           unknown: string;
@@ -212,6 +213,7 @@ declare module 'i18next' {
               openAsPage: string;
               entryOptions: string;
               goToDatabase: string;
+              create: string;
             };
           };
           labels: {
@@ -1161,6 +1163,10 @@ declare module 'i18next' {
               comfortable: string;
               spacious: string;
             };
+          };
+          notebook: {
+            name: string;
+            description: string;
           };
           table: {
             name: string;

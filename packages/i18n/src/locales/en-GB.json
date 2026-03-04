@@ -26,7 +26,8 @@
     "edit": "Edit",
     "duplicate": "Duplicate",
     "manage": "Manage",
-    "close": "Close"
+    "close": "Close",
+    "search": "Search..."
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -1150,6 +1151,10 @@
         "comfortable": "Comfortable",
         "spacious": "Spacious"
       }
+    },
+    "notebook": {
+      "name": "Notebook",
+      "description": "A notebook view with a list and page preview."
     },
     "table": {
       "name": "Table",

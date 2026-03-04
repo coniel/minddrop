@@ -1352,6 +1352,9 @@ importers:
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../primitives
+      '@minddrop/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -1568,12 +1571,12 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views
