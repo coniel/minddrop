@@ -6,6 +6,11 @@ declare module 'i18next' {
     defaultNS: 'core';
     resources: {
       core: {
+        collections: {
+          labels: {
+            collection: string;
+          };
+        };
         test: string;
         app: {
           version: string;
