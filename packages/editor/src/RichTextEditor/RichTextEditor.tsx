@@ -15,6 +15,15 @@ import { withMarks } from '../withMarks';
 import { withReturnBehaviour } from '../withReturnBehaviour';
 import './RichTextEditor.css';
 
+/**
+ * Prevents click and keyboard events from bubbling out of
+ * the editor so that ancestor handlers don't interfere with
+ * editing interactions.
+ */
+function stopEditorPropagation(event: React.SyntheticEvent): void {
+  event.stopPropagation();
+}
+
 export interface EditorProps {
   /**
    * The initial value of the editor.
@@ -103,9 +112,19 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     [editor],
   );
 
-  const onKeyDown = useMemo(
+  const markHotkeys = useMemo(
     () => withMarkHotkeys(editor, defaultMarkConfigs),
     [editor],
+  );
+
+  // Compose mark hotkeys with stopPropagation so that keyboard
+  // events don't bubble to parent handlers
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      markHotkeys(event);
+    },
+    [markHotkeys],
   );
 
   useEffect(() => {
@@ -126,6 +145,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onKeyDown={onKeyDown}
+        onClick={stopEditorPropagation}
         onFocus={onFocus}
         onBlur={onBlur}
       />
