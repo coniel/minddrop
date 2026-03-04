@@ -199,7 +199,8 @@
         "nextEntry": "Next entry",
         "openAsPage": "Open as full page",
         "entryOptions": "Entry options",
-        "goToDatabase": "Go to database"
+        "goToDatabase": "Go to database",
+        "create": "Create entry"
       }
     },
     "labels": {
