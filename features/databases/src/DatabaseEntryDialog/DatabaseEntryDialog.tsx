@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
-import { FloatingActionButton } from '@minddrop/ui-primitives';
+import { DropdownMenu, FloatingActionButton } from '@minddrop/ui-primitives';
+import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
 import { CornerHandle } from './CornerHandle';
 import { useDialogResize } from './useDialogResize';
@@ -187,10 +188,18 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
             icon="maximize-2"
             label="databases.entries.actions.openAsPage"
           />
-          <FloatingActionButton
-            icon="ellipsis-vertical"
-            label="databases.entries.actions.entryOptions"
-          />
+          <DropdownMenu
+            trigger={
+              <FloatingActionButton
+                icon="ellipsis-vertical"
+                label="databases.entries.actions.entryOptions"
+              />
+            }
+            side="right"
+            align="start"
+          >
+            <DatabaseEntryOptionsMenu entryId={entryId} />
+          </DropdownMenu>
         </div>
       </div>
     </div>
