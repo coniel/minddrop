@@ -1,4 +1,5 @@
 import { ContainerElementTemplate } from './ContainerElementTemplate';
+import { EditorElementTemplate } from './EditorElementTemplate';
 import { FormattedTextElementTemplate } from './FormattedTextElementTemplate';
 import { IconElementTemplate } from './IconElementTemplate';
 import { ImageElementTemplate } from './ImageElementTemplate';
@@ -9,6 +10,7 @@ import { UrlElementTemplate } from './UrlElementTemplate';
 import { WebviewElementTemplate } from './WebviewElementTemplate';
 
 export * from './ContainerElementTemplate';
+export * from './EditorElementTemplate';
 export * from './IconElementTemplate';
 export * from './ImageElementTemplate';
 export * from './ImageViewerElementTemplate';
@@ -26,6 +28,7 @@ export type DesignElementTemplate =
   | IconElementTemplate
   | NumberElementTemplate
   | UrlElementTemplate
+  | EditorElementTemplate
   | WebviewElementTemplate;
 
 export const ElementTemplates: Record<
@@ -40,5 +43,6 @@ export const ElementTemplates: Record<
   icon: IconElementTemplate,
   number: NumberElementTemplate,
   url: UrlElementTemplate,
+  editor: EditorElementTemplate,
   webview: WebviewElementTemplate,
 };

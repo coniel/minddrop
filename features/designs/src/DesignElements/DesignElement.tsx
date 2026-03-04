@@ -1,11 +1,13 @@
 import {
   ContainerElement,
   DesignElement as DesignElementType,
+  EditorElement,
   ImageViewerElement,
   UrlElement,
   WebviewElement,
 } from '@minddrop/designs';
 import { DesignContainerElement } from './DesignContainerElement';
+import { DesignEditorElement } from './DesignEditorElement';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
 import { DesignFormattedTextElement } from './DesignFormattedTextElement';
 import { DesignIconElement } from './DesignIconElement';
@@ -57,6 +59,9 @@ export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
       break;
     case 'icon':
       rendered = <DesignIconElement element={element} />;
+      break;
+    case 'editor':
+      rendered = <DesignEditorElement element={element as EditorElement} />;
       break;
     case 'webview':
       rendered = <DesignWebviewElement element={element as WebviewElement} />;

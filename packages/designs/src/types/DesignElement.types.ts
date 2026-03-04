@@ -1,5 +1,6 @@
 import {
   ContainerElementStyle,
+  EditorElementStyle,
   IconElementStyle,
   ImageElementStyle,
   ImageViewerElementStyle,
@@ -196,6 +197,15 @@ export interface IconElement extends DesignElementBase {
   icon?: string;
 }
 
+export interface EditorElement extends DesignElementBase {
+  type: 'editor';
+
+  /**
+   * The element style.
+   */
+  style: EditorElementStyle;
+}
+
 export interface WebviewElement extends DesignElementBase {
   type: 'webview';
 
@@ -213,6 +223,7 @@ export type LeafDesignElement =
   | ImageElement
   | ImageViewerElement
   | IconElement
+  | EditorElement
   | WebviewElement;
 
 /******************************************************************************
@@ -266,4 +277,5 @@ export type DesignElementType =
   | 'image'
   | 'image-viewer'
   | 'icon'
+  | 'editor'
   | 'webview';

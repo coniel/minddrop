@@ -2,6 +2,7 @@ import { Group, Icon, ScrollArea, Stack, Text } from '@minddrop/ui-primitives';
 import { useDesignStudioStore, useElement } from '../../DesignStudioStore';
 import { elementIconMap, elementLabelMap } from '../../constants';
 import { ContainerElementStyleEditor } from '../style-editors/ContainerElementStyleEditor';
+import { EditorElementStyleEditor } from '../style-editors/EditorElementStyleEditor';
 import { FormattedTextElementStyleEditor } from '../style-editors/FormattedTextElementStyleEditor';
 import { IconElementStyleEditor } from '../style-editors/IconElementStyleEditor';
 import { ImageElementStyleEditor } from '../style-editors/ImageElementStyleEditor';
@@ -76,6 +77,10 @@ export const ElementStyleEditor: React.FC = () => {
 
           {element.type === 'image-viewer' && (
             <ImageViewerElementStyleEditor elementId={selectedElementId} />
+          )}
+
+          {element.type === 'editor' && (
+            <EditorElementStyleEditor elementId={selectedElementId} />
           )}
 
           {element.type === 'webview' && (

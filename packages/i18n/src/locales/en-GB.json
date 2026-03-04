@@ -1119,6 +1119,7 @@
       "webview": "Web view",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
+      "editor-preview-message": "Editor disabled in preview mode",
       "group": {
         "content": "Content",
         "media": "Media",

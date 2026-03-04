@@ -89,6 +89,18 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't close when Escape is pressed inside an editable element.
+      // The first press should blur/deselect within the field instead.
+      const target = event.target as HTMLElement;
+
+      if (
+        target.isContentEditable ||
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA'
+      ) {
+        return;
+      }
+
       if (event.key === 'Escape') {
         onOpenChange(false);
       }

@@ -9,10 +9,12 @@ import {
 import {
   FlatContainerDesignElement,
   FlatDesignElement,
+  FlatEditorElement,
   FlatFormattedTextElement,
 } from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
 import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
+import { DesignStudioEditorElement } from '../DesignStudioEditorElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
 import { DesignStudioIconElement } from '../DesignStudioIconElement';
 import { DesignStudioImageElement } from '../DesignStudioImageElement';
@@ -54,6 +56,41 @@ export interface ElementComponentProps {
   index: number;
 }
 
+/**
+ * Element types that stretch to fill their parent's height.
+ */
+const fillHeightTypes: Set<string> = new Set([
+  'webview',
+  'image-viewer',
+  'editor',
+]);
+
+/**
+ * Element types that always fill the full width of their parent.
+ */
+const fullWidthTypes: Set<string> = new Set([
+  'image',
+  'image-viewer',
+  'webview',
+  'editor',
+]);
+
+/**
+ * Returns whether the element should stretch within its parent.
+ * Images, viewers, and editors always stretch; containers stretch
+ * based on their stretch style property.
+ */
+function shouldElementStretch(element: FlatDesignElement): boolean {
+  if (fullWidthTypes.has(element.type)) {
+    return true;
+  }
+
+  return (
+    element.type === 'container' &&
+    (element.style as ContainerElementStyle).stretch
+  );
+}
+
 function getElementComponent(element: FlatDesignElement): ReactElement | null {
   switch (element.type) {
     case 'container':
@@ -72,6 +109,10 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
       );
     case 'number':
       return <DesignStudioNumberElement element={element} />;
+    case 'editor':
+      return (
+        <DesignStudioEditorElement element={element as FlatEditorElement} />
+      );
     case 'url':
       return <DesignStudioUrlElement element={element} />;
     case 'icon':
@@ -146,23 +187,16 @@ const DesignStudioElementInner: React.FC<{
     return null;
   }
 
-  // Determine if this element should stretch within its parent.
-  // Images always stretch; containers stretch based on their
-  // stretch property.
-  const shouldStretch =
-    element.type === 'image' ||
-    element.type === 'image-viewer' ||
-    element.type === 'webview' ||
-    (element.type === 'container' &&
-      (element.style as ContainerElementStyle).stretch);
+  const stretch = shouldElementStretch(element);
+  const fillHeight = fillHeightTypes.has(element.type);
 
   return (
     <div
       className="design-studio-element"
       data-element-id={element.id}
       style={
-        shouldStretch
-          ? element.type === 'webview' || element.type === 'image-viewer'
+        stretch
+          ? fillHeight
             ? {
                 alignSelf: 'stretch',
                 flex: 1,
@@ -181,7 +215,7 @@ const DesignStudioElementInner: React.FC<{
           isFading,
         })}
         style={
-          element.type === 'webview' || element.type === 'image-viewer'
+          fillHeight
             ? { flex: 1, display: 'flex', flexDirection: 'column' as const }
             : undefined
         }

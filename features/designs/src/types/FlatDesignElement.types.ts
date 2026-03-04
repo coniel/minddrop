@@ -1,5 +1,6 @@
 import {
   ContainerElement,
+  EditorElement,
   FormattedTextElement,
   IconElement,
   ImageElement,
@@ -30,6 +31,7 @@ export type FlatImageElement = ImageElement & Parent;
 export type FlatImageViewerElement = ImageViewerElement & Parent;
 export type FlatUrlElement = UrlElement & Parent;
 export type FlatIconElement = IconElement & Parent;
+export type FlatEditorElement = EditorElement & Parent;
 export type FlatWebviewElement = WebviewElement & Parent;
 
 export type FlatDesignElement =
