@@ -105,6 +105,7 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   secondaryLabel,
   icon,
   secondaryIcon,
+  contentIcon,
   onClick,
   secondaryOnClick,
   keyboardShortcut,
@@ -133,8 +134,9 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
         label: altLabel ?? primaryLabel,
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
+        contentIcon,
       }
-    : { label: primaryLabel, icon, keyboardShortcut };
+    : { label: primaryLabel, icon, keyboardShortcut, contentIcon };
 
   const item = (
     <MenuPrimitive.Item
