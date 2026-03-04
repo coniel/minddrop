@@ -97,3 +97,34 @@ try {
 } catch {
   console.log('Plans directory not found, skipping watcher');
 }
+
+// Watch for locale file changes and regenerate i18n types
+let i18nDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+const I18N_SCRIPT = `${REPO_ROOT}/packages/scripts/generate-i18n-types.ts`;
+
+try {
+  watch(REPO_ROOT, { recursive: true }, (_eventType, filename) => {
+    if (!filename || !filename.endsWith('locales/en-GB.json')) {
+      return;
+    }
+
+    // Skip node_modules
+    if (filename.includes('node_modules')) {
+      return;
+    }
+
+    // Debounce rapid changes
+    if (i18nDebounceTimer) {
+      clearTimeout(i18nDebounceTimer);
+    }
+
+    i18nDebounceTimer = setTimeout(() => {
+      i18nDebounceTimer = null;
+      console.log(`Locale file changed: ${filename}, regenerating i18n types`);
+      Bun.spawn(['bun', 'run', I18N_SCRIPT], { stdout: 'inherit' });
+    }, 300);
+  });
+  console.log('Watching for locale file changes (i18n type generation)');
+} catch {
+  console.log('Failed to set up locale file watcher');
+}

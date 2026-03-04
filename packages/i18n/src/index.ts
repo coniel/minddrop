@@ -1,3 +1,5 @@
+/// <reference path="./i18n-resources.d.ts" />
+import type { KeyPrefix } from 'i18next';
 import { useTranslation as baseUseTranslation } from 'react-i18next';
 import { registerTranslations } from './registerTranslations';
 
@@ -7,13 +9,13 @@ export type { TransProps } from 'react-i18next';
 /**
  * Returns a translation function, with an optional namespace and key prefix.
  */
-export const useTranslation = ({
+export const useTranslation = <KPrefix extends KeyPrefix<'core'> = undefined>({
   namespace,
   keyPrefix,
 }: {
   namespace?: string;
-  keyPrefix?: string;
-} = {}) => baseUseTranslation(namespace || 'core', { keyPrefix });
+  keyPrefix?: KPrefix;
+} = {}) => baseUseTranslation((namespace || 'core') as 'core', { keyPrefix });
 
 /**
  * I18n API for packages to register their translations.
