@@ -26,7 +26,19 @@ export const DesignEditorElement: React.FC<DesignEditorElementProps> = ({
   // Use the mapped property value if available
   const value = property?.value != null ? String(property.value) : undefined;
 
-  const editorStyle = createEditorCssStyle(element.style);
+  const fullStyle = createEditorCssStyle(element.style);
+
+  // Split padding from the container style so it is applied
+  // to the inner editor element instead
+  const {
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
+    ...containerStyle
+  } = fullStyle;
+
+  const editorStyle = { paddingTop, paddingRight, paddingBottom, paddingLeft };
 
   // In preview mode, wrap with an overlay that blocks all
   // interaction and shows a message on hover
@@ -34,18 +46,18 @@ export const DesignEditorElement: React.FC<DesignEditorElementProps> = ({
     return (
       <DesignPreviewOverlay
         label="design-studio.elements.editor-preview-message"
-        style={editorStyle}
+        style={containerStyle}
       >
         <div className="design-editor-element">
-          <MarkdownEditor initialValue={value} />
+          <MarkdownEditor initialValue={value} style={editorStyle} />
         </div>
       </DesignPreviewOverlay>
     );
   }
 
   return (
-    <div className="design-editor-element" style={editorStyle}>
-      <MarkdownEditor initialValue={value} />
+    <div className="design-editor-element" style={containerStyle}>
+      <MarkdownEditor initialValue={value} style={editorStyle} />
     </div>
   );
 };

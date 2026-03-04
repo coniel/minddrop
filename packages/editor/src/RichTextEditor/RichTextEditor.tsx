@@ -56,6 +56,11 @@ export interface EditorProps {
    * If true, the editor will be focused on mount.
    */
   autoFocus?: boolean;
+
+  /**
+   * Optional inline styles applied to the editable area.
+   */
+  style?: React.CSSProperties;
 }
 
 export const RichTextEditor: React.FC<EditorProps> = ({
@@ -65,6 +70,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   onFocus,
   onBlur,
   autoFocus,
+  style,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
@@ -142,6 +148,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       <Editable
         autoFocus={false}
         className="editor"
+        style={style}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         onKeyDown={onKeyDown}
