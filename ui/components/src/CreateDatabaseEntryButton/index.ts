@@ -1,2 +1,1 @@
 export * from './CreateDatabaseEntryButton';
-export * from './ImageViewer';

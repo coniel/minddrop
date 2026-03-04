@@ -1,4 +1,3 @@
-export * from './CreateDatabaseEntryButton';
 export * from './DatabaseEntryDialog';
 export * from './DatabaseEntryOptionsMenu';
 export * from './DatabaseEntryRenderer';

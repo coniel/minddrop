@@ -20,6 +20,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/databases": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*"
   }
