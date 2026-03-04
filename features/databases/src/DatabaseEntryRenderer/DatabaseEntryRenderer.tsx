@@ -28,6 +28,12 @@ export interface DatabaseEntryRendererProps {
    * If not provided, the default design will be used.
    */
   designId?: string;
+
+  /**
+   * Optional click handler. When provided, this is called instead
+   * of dispatching the default OpenDatabaseEntryEvent.
+   */
+  onClick?: (entryId: string) => void;
 }
 
 /**
@@ -50,7 +56,12 @@ interface EntryProps extends Omit<DatabaseEntryRendererProps, 'entryId'> {
   entry: DatabaseEntry;
 }
 
-const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
+const Entry: React.FC<EntryProps> = ({
+  entry,
+  designId,
+  designType,
+  onClick,
+}) => {
   const database = Databases.use(entry.database);
   // Use the specified design if provided, otherwise fall back
   // to the database's default design for the given type
@@ -67,12 +78,19 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
     [entry.id],
   );
 
-  // Dispatch the open entry event when clicking on the entry
+  // Call the custom onClick handler if provided, otherwise
+  // dispatch the default open entry event
   const onOpenEntry = useCallback(() => {
+    if (onClick) {
+      onClick(entry.id);
+
+      return;
+    }
+
     Events.dispatch<OpenDatabaseEntryEventData>(OpenDatabaseEntryEvent, {
       entryId: entry.id,
     });
-  }, [entry.id]);
+  }, [entry.id, onClick]);
 
   // Handle keyboard activation (Enter/Space) for accessibility
   const onKeyDown = useCallback(
@@ -112,13 +130,17 @@ const Entry: React.FC<EntryProps> = ({ entry, designId, designType }) => {
     }
   });
 
+  // Page entries are not clickable items, so they should not
+  // have button role or keyboard activation
+  const isClickable = designType !== 'page';
+
   return (
     <div
       className={`database-entry database-entry-${designType}`}
-      role="button"
-      tabIndex={0}
-      onClick={onOpenEntry}
-      onKeyDown={onKeyDown}
+      role={isClickable ? 'button' : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onClick={isClickable ? onOpenEntry : undefined}
+      onKeyDown={isClickable ? onKeyDown : undefined}
     >
       <DesignRenderer
         design={design}
