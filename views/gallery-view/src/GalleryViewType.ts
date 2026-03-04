@@ -9,6 +9,7 @@ export const GalleryViewType: ViewType<GalleryViewOptions> = {
   name: 'views.gallery.name',
   description: 'views.gallery.description',
   icon: 'layout-grid',
+  supportedDataSources: ['database', 'query', 'collection'],
   defaultOptions: defaultGalleryViewOptions,
   component: GalleryViewComponent,
   settingsMenu: GalleryViewOptionsMenu,

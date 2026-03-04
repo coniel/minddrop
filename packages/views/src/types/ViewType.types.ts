@@ -1,6 +1,7 @@
 import { View } from './View.types';
+import { ViewDataSourceType } from './ViewDataSource.types';
 
-export interface ViewType<TViewOptions extends object = {}> {
+export interface ViewType<TViewOptions extends object = object> {
   /**
    * A unique identifier for the view type. Used to reference the view type
    * in view instances.
@@ -23,6 +24,11 @@ export interface ViewType<TViewOptions extends object = {}> {
   icon: string;
 
   /**
+   * The types of data sources supported by the view type.
+   */
+  supportedDataSources: ViewDataSourceType[];
+
+  /**
    * The component used to render the view.
    */
   component: React.ElementType<ViewTypeComponentProps<TViewOptions>>;
@@ -39,7 +45,9 @@ export interface ViewType<TViewOptions extends object = {}> {
   settingsMenu?: React.ElementType<ViewTypeSettingsMenuProps<TViewOptions>>;
 }
 
-export interface ViewTypeSettingsMenuProps<TViewOptions extends object = {}> {
+export interface ViewTypeSettingsMenuProps<
+  TViewOptions extends object = object,
+> {
   /**
    * The view instance.
    */
@@ -57,7 +65,7 @@ export interface ViewTypeSettingsMenuProps<TViewOptions extends object = {}> {
   onUpdateOptions: (options: Partial<TViewOptions>) => void;
 }
 
-export interface ViewTypeComponentProps<TViewOptions extends object = {}> {
+export interface ViewTypeComponentProps<TViewOptions extends object = object> {
   /**
    * The view instance.
    */

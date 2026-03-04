@@ -1,4 +1,6 @@
-export interface View<TViewOptions extends object = {}> {
+import { ViewDataSource } from './ViewDataSource.types';
+
+export interface View<TViewOptions extends object = object> {
   /**
    * A unique identifier for the view.
    */
@@ -52,35 +54,3 @@ export interface View<TViewOptions extends object = {}> {
    */
   entryDesignMap?: Record<string, string>;
 }
-
-export interface DatabaseViewDataSource {
-  type: 'database';
-
-  /**
-   * The ID of the source database.
-   */
-  id: string;
-}
-
-export interface QueryViewDataSource {
-  type: 'query';
-
-  /**
-   * The ID of the source query.
-   */
-  id: string;
-}
-
-export interface CollectionViewDataSource {
-  type: 'collection';
-
-  /**
-   * The ID of the source collection.
-   */
-  id: string;
-}
-
-export type ViewDataSource =
-  | DatabaseViewDataSource
-  | QueryViewDataSource
-  | CollectionViewDataSource;

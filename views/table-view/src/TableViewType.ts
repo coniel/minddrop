@@ -9,6 +9,7 @@ export const TableViewType: ViewType<TableViewOptions> = {
   name: 'views.table.name',
   description: 'views.table.description',
   icon: 'table',
+  supportedDataSources: ['database', 'query', 'collection'],
   defaultOptions: defaultTableViewOptions,
   component: TableViewComponent,
   settingsMenu: TableViewOptionsMenu,
