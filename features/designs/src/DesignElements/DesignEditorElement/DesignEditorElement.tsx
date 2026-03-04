@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { EditorElement, createEditorCssStyle } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { useElementProperty } from '../../DesignPropertiesProvider';
@@ -40,6 +41,14 @@ export const DesignEditorElement: React.FC<DesignEditorElementProps> = ({
 
   const editorStyle = { paddingTop, paddingRight, paddingBottom, paddingLeft };
 
+  // Update the mapped property value when the editor content changes
+  const handleChange = useCallback(
+    (markdown: string) => {
+      property?.updateValue(markdown);
+    },
+    [property],
+  );
+
   // In preview mode, wrap with an overlay that blocks all
   // interaction and shows a message on hover
   if (preview) {
@@ -57,7 +66,11 @@ export const DesignEditorElement: React.FC<DesignEditorElementProps> = ({
 
   return (
     <div className="design-editor-element" style={containerStyle}>
-      <MarkdownEditor initialValue={value} style={editorStyle} />
+      <MarkdownEditor
+        initialValue={value}
+        onDebouncedChange={handleChange}
+        style={editorStyle}
+      />
     </div>
   );
 };
