@@ -1,0 +1,79 @@
+.notebook-view {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.notebook-view-list-panel {
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-subtle);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.notebook-view-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  flex-shrink: 0;
+}
+
+.notebook-view-toolbar .text-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.notebook-view-list-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.notebook-view-list-item[data-selected] {
+  background: var(--surface-subtle);
+}
+
+.notebook-view-resize-handle {
+  width: 13px;
+  flex-shrink: 0;
+  position: relative;
+  cursor: col-resize;
+  margin-left: -7px;
+  margin-right: -6px;
+  z-index: 1;
+}
+
+.notebook-view-resize-indicator {
+  width: 5px;
+  height: 100%;
+  position: absolute;
+  left: calc(50% - 3px);
+  transition: background-color 0s;
+  transition-delay: 0s;
+}
+
+.notebook-view-resize-handle:hover .notebook-view-resize-indicator {
+  background-color: var(--primary4);
+  transition-delay: 0.3s;
+  transition-duration: 0.2s;
+}
+
+.notebook-view[data-dragging] .notebook-view-resize-indicator,
+.notebook-view[data-dragging]
+  .notebook-view-resize-handle:hover
+  .notebook-view-resize-indicator {
+  background-color: var(--primary4);
+  transition-delay: 0s;
+  transition-duration: 0s;
+}
+
+.notebook-view-page-panel {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
