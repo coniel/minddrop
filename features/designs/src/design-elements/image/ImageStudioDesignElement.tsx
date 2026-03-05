@@ -1,5 +1,9 @@
 import { useCallback, useState } from 'react';
-import { Designs, getPlaceholderMediaDirPath } from '@minddrop/designs';
+import {
+  Designs,
+  ImageElement,
+  getPlaceholderMediaDirPath,
+} from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
 import { updateDesignElement } from '../../DesignStudioStore';
@@ -24,7 +28,9 @@ export const ImageStudioDesignElement: React.FC<
   // Handles selecting an image from the dialog
   const handleImageSelect = useCallback(
     (fileName: string) => {
-      updateDesignElement(element.id, { placeholderImage: fileName });
+      updateDesignElement<ImageElement>(element.id, {
+        placeholderImage: fileName,
+      });
     },
     [element.id],
   );
@@ -40,7 +46,9 @@ export const ImageStudioDesignElement: React.FC<
     }
 
     const fileName = await Designs.addPlaceholderMedia(filePath as string);
-    updateDesignElement(element.id, { placeholderImage: fileName });
+    updateDesignElement<ImageElement>(element.id, {
+      placeholderImage: fileName,
+    });
   }, [element.id]);
 
   // Opens the dialog if existing images exist, otherwise opens the file picker

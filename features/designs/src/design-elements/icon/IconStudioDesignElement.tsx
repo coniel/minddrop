@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { IconElement } from '@minddrop/designs';
 import { IconPicker } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -23,7 +24,7 @@ export const IconStudioDesignElement: React.FC<
   // color from the icon string into the style color field
   const handleSelect = useCallback(
     (iconString: string) => {
-      updateDesignElement(element.id, { icon: iconString });
+      updateDesignElement<IconElement>(element.id, { icon: iconString });
 
       // Extract color from content-icon string (e.g. "content-icon:cat:cyan")
       const parts = iconString.split(':');

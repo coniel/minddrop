@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { UrlElement } from '@minddrop/designs';
 import {
   InputLabel,
   Stack,
@@ -57,7 +58,7 @@ export const UrlElementStyleEditor: React.FC<UrlElementStyleEditorProps> = ({
   // Update the placeholder text on the element
   const handlePlaceholderChange = useCallback(
     (value: string) => {
-      updateDesignElement(elementId, { placeholder: value });
+      updateDesignElement<UrlElement>(elementId, { placeholder: value });
     },
     [elementId],
   );
@@ -65,7 +66,7 @@ export const UrlElementStyleEditor: React.FC<UrlElementStyleEditorProps> = ({
   // Toggle a URL part visibility flag
   const handleToggle = useCallback(
     (field: string, checked: boolean) => {
-      updateDesignElement(elementId, { [field]: checked });
+      updateDesignElement<UrlElement>(elementId, { [field]: checked });
     },
     [elementId],
   );

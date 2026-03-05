@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { DateElement } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import {
   InputLabel,
@@ -112,7 +113,7 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
       );
 
       if (match) {
-        updateDesignElement(elementId, {
+        updateDesignElement<DateElement>(elementId, {
           format: { dateStyle: match.value },
         });
       }
@@ -134,7 +135,9 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
           size="md"
           value={mode}
           onValueChange={(value) =>
-            updateDesignElement(elementId, { format: { mode: value } })
+            updateDesignElement<DateElement>(elementId, {
+              format: { mode: value },
+            })
           }
         >
           <Toggle value="date" label={t('designs.date-format.mode.date')} />
@@ -163,7 +166,7 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
           checked={showTime}
           disabled={isRelative}
           onCheckedChange={(checked) =>
-            updateDesignElement(elementId, {
+            updateDesignElement<DateElement>(elementId, {
               format: { showTime: checked },
             })
           }

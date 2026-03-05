@@ -1,5 +1,6 @@
 import {
   Design,
+  DesignElement,
   DesignElementStyle,
   DesignElementTemplate,
   Designs,
@@ -23,6 +24,21 @@ import {
   FlatParentDesignElement,
 } from '../types';
 import { flattenTree, reconstructTree } from '../utils';
+
+// Makes a type deeply partial one level down: object-valued
+// properties (style, format) become Partial so callers can
+// pass e.g. { format: { decimals: 3 } } without all fields
+type DeepPartialOne<T> = {
+  [K in keyof T]?: NonNullable<T[K]> extends object
+    ? Partial<NonNullable<T[K]>>
+    : T[K];
+};
+
+// Distributes Partial over a union so that properties from any
+// member of the union are accepted, not just common ones
+type DesignElementUpdates<T> = T extends unknown
+  ? DeepPartialOne<Omit<T, 'id' | 'type'>>
+  : never;
 
 export interface DesignStudioStore {
   /**
@@ -125,13 +141,7 @@ export interface DesignStudioStore {
    */
   updateElement: (
     id: string,
-    updates: {
-      style?: Partial<DesignElementStyle>;
-      placeholder?: string;
-      placeholderImage?: string;
-      format?: Record<string, unknown>;
-      icon?: string;
-    },
+    updates: DesignElementUpdates<DesignElement>,
   ) => void;
 
   /**
@@ -396,16 +406,9 @@ export const getDesignElement = <
   id: string,
 ): TType => DesignStudioStore.getState().elements[id] as TType;
 
-export const updateDesignElement = (
+export const updateDesignElement = <T extends DesignElement>(
   id: string,
-  updates: {
-    style?: Partial<DesignElementStyle>;
-    placeholder?: string;
-    placeholderImage?: string;
-    format?: Record<string, unknown>;
-    icon?: string;
-    static?: boolean;
-  },
+  updates: DesignElementUpdates<T>,
 ) => {
   const store = DesignStudioStore.getState();
 

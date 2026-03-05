@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { generateNumberPlaceholder } from '@minddrop/designs';
+import { NumberElement, generateNumberPlaceholder } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -43,12 +43,12 @@ export const NumberPlaceholderField = ({
 
     const value = generateNumberPlaceholder(sliderStep);
 
-    updateDesignElement(elementId, { placeholder: value });
+    updateDesignElement<NumberElement>(elementId, { placeholder: value });
   }, [elementId, sliderStep]);
 
   const handleChange = useCallback(
     (value: number | null) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         placeholder: value !== null ? String(value) : '',
       });
     },
@@ -67,7 +67,7 @@ export const NumberPlaceholderField = ({
       setSliderStep(value);
 
       if (value === 0) {
-        updateDesignElement(elementId, { placeholder: '' });
+        updateDesignElement<NumberElement>(elementId, { placeholder: '' });
 
         return;
       }
@@ -84,12 +84,12 @@ export const NumberPlaceholderField = ({
           ? currentValue + '0'.repeat(value - currentDigits)
           : generateNumberPlaceholder(value);
 
-        updateDesignElement(elementId, { placeholder: padded });
+        updateDesignElement<NumberElement>(elementId, { placeholder: padded });
       } else if (value < currentDigits) {
         // Cut off digits from the end
         const trimmed = currentValue.slice(0, value);
 
-        updateDesignElement(elementId, { placeholder: trimmed });
+        updateDesignElement<NumberElement>(elementId, { placeholder: trimmed });
       }
     },
     [elementId],

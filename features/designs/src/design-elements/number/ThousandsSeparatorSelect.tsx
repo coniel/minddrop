@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { NumberElement } from '@minddrop/designs';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -44,7 +45,7 @@ export const ThousandsSeparatorSelect = ({
 
   const handleChange = useCallback(
     (newValue: string) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         format: {
           thousandsSeparator: newValue as 'none' | 'comma' | 'period' | 'space',
         },

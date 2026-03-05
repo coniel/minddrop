@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { NumberElement } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import {
@@ -28,7 +29,7 @@ export const SignDisplaySelect = ({ elementId }: SignDisplaySelectProps) => {
 
   const handleChange = useCallback(
     (newValue: string) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         format: {
           signDisplay: newValue as 'auto' | 'always' | 'never',
         },

@@ -1,3 +1,4 @@
+import { ImageViewerElement } from '@minddrop/designs';
 import { Stack } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -38,10 +39,14 @@ export const ImageViewerElementStyleEditor: React.FC<
         <PlaceholderImageField
           image={placeholderImage || ''}
           onSelect={(fileName) =>
-            updateDesignElement(elementId, { placeholderImage: fileName })
+            updateDesignElement<ImageViewerElement>(elementId, {
+              placeholderImage: fileName,
+            })
           }
           onRemove={() =>
-            updateDesignElement(elementId, { placeholderImage: '' })
+            updateDesignElement<ImageViewerElement>(elementId, {
+              placeholderImage: '',
+            })
           }
         />
       </Stack>

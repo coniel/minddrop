@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import {
   FontFamily,
   FontWeight,
+  NumberElement,
   TextElementStyle,
   fontWeights,
   fonts,
@@ -69,7 +70,7 @@ export const FormatTextStylePopover = ({
 
   const updateStyle = useCallback(
     (updates: Partial<TextElementStyle>) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         format: { [styleKey]: { ...overrideStyle, ...updates } },
       });
     },

@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { generateLoremIpsum } from '@minddrop/designs';
+import { TextElement, generateLoremIpsum } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -63,12 +63,12 @@ export const TextPlaceholderField = ({
     const text = generateLoremIpsum(wordCounts[sliderStep - 1]);
 
     generatedTextRef.current = text;
-    updateDesignElement(elementId, { placeholder: text });
+    updateDesignElement<TextElement>(elementId, { placeholder: text });
   }, [elementId, sliderStep, wordCounts]);
 
   const handleChange = useCallback(
     (value: string) => {
-      updateDesignElement(elementId, { placeholder: value });
+      updateDesignElement<TextElement>(elementId, { placeholder: value });
     },
     [elementId],
   );
@@ -88,12 +88,12 @@ export const TextPlaceholderField = ({
 
       if (value === 0) {
         generatedTextRef.current = '';
-        updateDesignElement(elementId, { placeholder: '' });
+        updateDesignElement<TextElement>(elementId, { placeholder: '' });
       } else {
         const text = generateLoremIpsum(wordCounts[value - 1]);
 
         generatedTextRef.current = text;
-        updateDesignElement(elementId, { placeholder: text });
+        updateDesignElement<TextElement>(elementId, { placeholder: text });
       }
     },
     [elementId, wordCounts],

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { NumberElement } from '@minddrop/designs';
 import { NumberField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -18,7 +19,7 @@ export const DecimalPlacesField = ({ elementId }: DecimalPlacesFieldProps) => {
 
   const handleChange = useCallback(
     (value: number | null) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         format: { decimals: value ?? 0 },
       });
     },

@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { IconElement } from '@minddrop/designs';
 import {
   Button,
   ColorSelect,
@@ -59,7 +60,7 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
   // color from the icon string into the style color field
   const handleIconSelect = useCallback(
     (newIconString: string) => {
-      updateDesignElement(elementId, { icon: newIconString });
+      updateDesignElement<IconElement>(elementId, { icon: newIconString });
 
       // Extract color from content-icon string (e.g. "content-icon:cat:cyan")
       const parts = newIconString.split(':');
@@ -73,7 +74,7 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
 
   // Handles clearing the icon
   const handleIconClear = useCallback(() => {
-    updateDesignElement(elementId, { icon: '' });
+    updateDesignElement<IconElement>(elementId, { icon: '' });
   }, [elementId]);
 
   // Handles changing the icon size, clamping container size
@@ -107,7 +108,9 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
 
         if (parts[0] === 'content-icon' && parts.length >= 3) {
           parts[2] = value;
-          updateDesignElement(elementId, { icon: parts.join(':') });
+          updateDesignElement<IconElement>(elementId, {
+            icon: parts.join(':'),
+          });
         }
       }
     },

@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { DateElement } from '@minddrop/designs';
 import { DateInput } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -41,7 +42,7 @@ export const DatePlaceholderField: React.FC<DatePlaceholderFieldProps> = ({
   const handleChange = useCallback(
     (date: Date | null) => {
       if (!date) {
-        updateDesignElement(elementId, { placeholder: '' });
+        updateDesignElement<DateElement>(elementId, { placeholder: '' });
 
         return;
       }
@@ -49,7 +50,7 @@ export const DatePlaceholderField: React.FC<DatePlaceholderFieldProps> = ({
       // Store as ISO date string (YYYY-MM-DD)
       const iso = date.toISOString().split('T')[0];
 
-      updateDesignElement(elementId, { placeholder: iso });
+      updateDesignElement<DateElement>(elementId, { placeholder: iso });
     },
     [elementId],
   );

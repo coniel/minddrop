@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { NumberElement } from '@minddrop/designs';
 import { FlexItem, Group, TextField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -19,7 +20,7 @@ export const SuffixField = ({ elementId }: SuffixFieldProps) => {
 
   const handleChange = useCallback(
     (value: string) => {
-      updateDesignElement(elementId, {
+      updateDesignElement<NumberElement>(elementId, {
         format: { suffix: value },
       });
     },

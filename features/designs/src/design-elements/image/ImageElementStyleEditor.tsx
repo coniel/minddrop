@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { ImageElement } from '@minddrop/designs';
 import { InputLabel, Stack, SwitchField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
@@ -83,10 +84,14 @@ export const ImageElementStyleEditor: React.FC<
           image={placeholderImage || ''}
           primary
           onSelect={(fileName) =>
-            updateDesignElement(elementId, { placeholderImage: fileName })
+            updateDesignElement<ImageElement>(elementId, {
+              placeholderImage: fileName,
+            })
           }
           onRemove={() =>
-            updateDesignElement(elementId, { placeholderImage: '' })
+            updateDesignElement<ImageElement>(elementId, {
+              placeholderImage: '',
+            })
           }
         />
         <StaticElementField elementId={elementId} />
