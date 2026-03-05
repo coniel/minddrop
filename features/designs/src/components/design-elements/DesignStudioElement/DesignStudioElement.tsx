@@ -14,6 +14,7 @@ import {
 } from '../../../types';
 import { useDesignElementDragDrop } from '../../useDesignElementDragDrop';
 import { DesignStudioContainerElement } from '../DesignStudioContainerElement';
+import { DesignStudioDateElement } from '../DesignStudioDateElement';
 import { DesignStudioEditorElement } from '../DesignStudioEditorElement';
 import { DesignStudioFormattedTextElement } from '../DesignStudioFormattedTextElement';
 import { DesignStudioIconElement } from '../DesignStudioIconElement';
@@ -109,6 +110,8 @@ function getElementComponent(element: FlatDesignElement): ReactElement | null {
       );
     case 'number':
       return <DesignStudioNumberElement element={element} />;
+    case 'date':
+      return <DesignStudioDateElement element={element} />;
     case 'editor':
       return (
         <DesignStudioEditorElement element={element as FlatEditorElement} />

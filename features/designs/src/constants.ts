@@ -18,6 +18,7 @@ export const elementIconMap: Record<string, UiIconName> = {
   text: 'align-left',
   'formatted-text': 'file-text',
   number: 'hash',
+  date: 'calendar',
   url: 'link',
   image: 'image',
   'image-viewer': 'scan',
@@ -31,6 +32,7 @@ export const elementLabelMap: Record<string, string> = {
   text: 'design-studio.elements.text',
   'formatted-text': 'design-studio.elements.formatted-text',
   number: 'design-studio.elements.number',
+  date: 'design-studio.elements.date',
   url: 'design-studio.elements.url',
   image: 'design-studio.elements.image',
   'image-viewer': 'design-studio.elements.image-viewer',
@@ -52,28 +54,23 @@ export const DatabasePropertiesDataKey = 'database-properties';
  * Maps each property type to the design element types that
  * can render it. Used to determine which design elements
  * accept which property types during drag-and-drop mapping.
- *
- * Note: 'date' is not a real DesignElementType — date properties
- * currently cannot be mapped to any design element.
  */
-export const PropertyTypeElementMap: Record<
-  PropertyType,
-  (DesignElementType | 'date')[]
-> = {
-  title: ['text'],
-  text: ['text'],
-  'formatted-text': ['formatted-text', 'editor'],
-  url: ['url', 'webview'],
-  select: ['text'],
-  toggle: ['text'],
-  number: ['number'],
-  date: ['date'],
-  created: ['date'],
-  'last-modified': ['date'],
-  image: ['image', 'image-viewer', 'container', 'root'],
-  file: ['image', 'image-viewer', 'container', 'root'],
-  icon: ['icon'],
-};
+export const PropertyTypeElementMap: Record<PropertyType, DesignElementType[]> =
+  {
+    title: ['text'],
+    text: ['text'],
+    'formatted-text': ['formatted-text', 'editor'],
+    url: ['url', 'webview'],
+    select: ['text'],
+    toggle: ['text'],
+    number: ['number'],
+    date: ['date'],
+    created: ['date'],
+    'last-modified': ['date'],
+    image: ['image', 'image-viewer', 'container', 'root'],
+    file: ['image', 'image-viewer', 'container', 'root'],
+    icon: ['icon'],
+  };
 
 /**
  * Checks whether a property type is compatible with a given

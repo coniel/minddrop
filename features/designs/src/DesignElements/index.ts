@@ -5,6 +5,7 @@ export * from './DesignPreviewOverlay';
 export * from './DesignTextElement';
 export * from './DesignFormattedTextElement';
 export * from './DesignEditorElement';
+export * from './DesignDateElement';
 export * from './DesignNumberElement';
 export * from './DesignImageElement';
 export * from './DesignImageViewerElement';

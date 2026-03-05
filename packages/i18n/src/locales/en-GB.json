@@ -27,7 +27,8 @@
     "duplicate": "Duplicate",
     "manage": "Manage",
     "close": "Close",
-    "search": "Search..."
+    "search": "Search...",
+    "pickDate": "Pick a date..."
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -962,6 +963,14 @@
         "never": "Never"
       }
     },
+    "date-format": {
+      "label": "Date format",
+      "mode": {
+        "date": "Date",
+        "relative": "Relative"
+      },
+      "show-time": "Time"
+    },
     "image": {
       "placeholder": {
         "label": "Placeholder image",
@@ -1113,6 +1122,7 @@
       "title": "Title",
       "formatted-text": "Formatted text",
       "number": "Number",
+      "date": "Date",
       "url": "URL",
       "image": "Image",
       "image-viewer": "Image viewer",

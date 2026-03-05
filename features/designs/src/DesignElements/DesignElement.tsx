@@ -7,6 +7,7 @@ import {
   WebviewElement,
 } from '@minddrop/designs';
 import { DesignContainerElement } from './DesignContainerElement';
+import { DesignDateElement } from './DesignDateElement';
 import { DesignEditorElement } from './DesignEditorElement';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
 import { DesignFormattedTextElement } from './DesignFormattedTextElement';
@@ -45,6 +46,9 @@ export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
       break;
     case 'number':
       rendered = <DesignNumberElement element={element} />;
+      break;
+    case 'date':
+      rendered = <DesignDateElement element={element} />;
       break;
     case 'url':
       rendered = <DesignUrlElement element={element as UrlElement} />;

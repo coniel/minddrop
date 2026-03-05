@@ -8,6 +8,27 @@ import {
   WebviewElementStyle,
 } from '../styles';
 
+export interface DateFormat {
+  /**
+   * Whether to display an absolute date or a relative
+   * description (e.g. "2 days ago").
+   */
+  mode: 'date' | 'relative';
+
+  /**
+   * The date style preset.
+   * 'compact' = 5/3/26, 'short' = 05/03/2026,
+   * 'medium' = 5 Mar 2026, 'long' = 5 March 2026,
+   * 'full' = Thu, 5 Mar 2026.
+   */
+  dateStyle: 'compact' | 'short' | 'medium' | 'long' | 'full';
+
+  /**
+   * Whether to include the time in the formatted output.
+   */
+  showTime: boolean;
+}
+
 export interface NumberFormat {
   /**
    * Number of decimal places to display.
@@ -112,6 +133,26 @@ export interface NumberElement extends DesignElementBase {
    * Number formatting options.
    */
   format?: NumberFormat;
+}
+
+export interface DateElement extends DesignElementBase {
+  type: 'date';
+
+  /**
+   * The element style.
+   */
+  style: TextElementStyle;
+
+  /**
+   * Placeholder date displayed when the element has no content.
+   * Stored as an ISO date string (YYYY-MM-DD).
+   */
+  placeholder?: string;
+
+  /**
+   * Date formatting options.
+   */
+  format?: DateFormat;
 }
 
 export interface ImageElement extends DesignElementBase {
@@ -219,6 +260,7 @@ export type LeafDesignElement =
   | TextElement
   | FormattedTextElement
   | NumberElement
+  | DateElement
   | UrlElement
   | ImageElement
   | ImageViewerElement
@@ -273,6 +315,7 @@ export type DesignElementType =
   | 'text'
   | 'formatted-text'
   | 'number'
+  | 'date'
   | 'url'
   | 'image'
   | 'image-viewer'

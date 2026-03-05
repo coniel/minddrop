@@ -22,6 +22,11 @@ export interface SelectRootProps<TValue extends string | number> {
   onValueChange?: (value: TValue) => void;
 
   /*
+   * Whether the select is disabled.
+   */
+  disabled?: boolean;
+
+  /*
    * The select content.
    */
   children: React.ReactNode;
@@ -31,6 +36,7 @@ export const SelectRoot = <TValue extends string | number = string>({
   items,
   value,
   onValueChange,
+  disabled,
   children,
   ...other
 }: SelectRootProps<TValue>) => {
@@ -51,6 +57,7 @@ export const SelectRoot = <TValue extends string | number = string>({
       {...(items && items.length > 0 ? { items } : {})}
       value={value}
       onValueChange={handleValueChange}
+      disabled={disabled}
       {...other}
     >
       {children}

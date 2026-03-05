@@ -40,6 +40,7 @@ declare module 'i18next' {
           manage: string;
           close: string;
           search: string;
+          pickDate: string;
         };
         error: {
           unknown: string;
@@ -974,6 +975,14 @@ declare module 'i18next' {
               never: string;
             };
           };
+          'date-format': {
+            label: string;
+            mode: {
+              date: string;
+              relative: string;
+            };
+            'show-time': string;
+          };
           image: {
             placeholder: {
               label: string;
@@ -1125,6 +1134,7 @@ declare module 'i18next' {
             title: string;
             'formatted-text': string;
             number: string;
+            date: string;
             url: string;
             image: string;
             'image-viewer': string;

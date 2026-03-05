@@ -385,7 +385,7 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
  */
 export type StylableElement =
   | {
-      type: 'text' | 'formatted-text' | 'number' | 'url';
+      type: 'text' | 'formatted-text' | 'number' | 'date' | 'url';
       style: TextElementStyle;
     }
   | { type: 'icon'; style: IconElementStyle }
@@ -407,6 +407,7 @@ export function createElementCssStyle(element: StylableElement): CSSProperties {
     case 'text':
     case 'formatted-text':
     case 'number':
+    case 'date':
     case 'url':
       return createTextCssStyle(element.style);
     case 'icon':

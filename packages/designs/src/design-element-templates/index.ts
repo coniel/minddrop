@@ -1,4 +1,5 @@
 import { ContainerElementTemplate } from './ContainerElementTemplate';
+import { DateElementTemplate } from './DateElementTemplate';
 import { EditorElementTemplate } from './EditorElementTemplate';
 import { FormattedTextElementTemplate } from './FormattedTextElementTemplate';
 import { IconElementTemplate } from './IconElementTemplate';
@@ -10,6 +11,7 @@ import { UrlElementTemplate } from './UrlElementTemplate';
 import { WebviewElementTemplate } from './WebviewElementTemplate';
 
 export * from './ContainerElementTemplate';
+export * from './DateElementTemplate';
 export * from './EditorElementTemplate';
 export * from './IconElementTemplate';
 export * from './ImageElementTemplate';
@@ -27,6 +29,7 @@ export type DesignElementTemplate =
   | ImageViewerElementTemplate
   | IconElementTemplate
   | NumberElementTemplate
+  | DateElementTemplate
   | UrlElementTemplate
   | EditorElementTemplate
   | WebviewElementTemplate;
@@ -42,6 +45,7 @@ export const ElementTemplates: Record<
   'image-viewer': ImageViewerElementTemplate,
   icon: IconElementTemplate,
   number: NumberElementTemplate,
+  date: DateElementTemplate,
   url: UrlElementTemplate,
   editor: EditorElementTemplate,
   webview: WebviewElementTemplate,

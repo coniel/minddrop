@@ -1,4 +1,5 @@
 export * from './flattenTree';
+export * from './formatDesignDate';
 export * from './formatNumber';
 export * from './formatUrl';
 export * from './generateLoremIpsum';

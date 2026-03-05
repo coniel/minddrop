@@ -1,5 +1,6 @@
 import {
   ContainerElement,
+  DateElement,
   EditorElement,
   FormattedTextElement,
   IconElement,
@@ -27,6 +28,7 @@ export type FlatLeafDesignElement = LeafDesignElement & Parent;
 export type FlatTextElement = TextElement & Parent;
 export type FlatFormattedTextElement = FormattedTextElement & Parent;
 export type FlatNumberElement = NumberElement & Parent;
+export type FlatDateElement = DateElement & Parent;
 export type FlatImageElement = ImageElement & Parent;
 export type FlatImageViewerElement = ImageViewerElement & Parent;
 export type FlatUrlElement = UrlElement & Parent;

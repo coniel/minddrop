@@ -83,6 +83,11 @@ export interface SelectProps<TValue extends string | number> {
    * Positive shifts right, negative shifts left.
    */
   alignOffset?: number;
+
+  /*
+   * Whether the select is disabled.
+   */
+  disabled?: boolean;
 }
 
 export const Select = <TValue extends string | number = string>({
@@ -97,8 +102,14 @@ export const Select = <TValue extends string | number = string>({
   children,
   trigger,
   alignOffset,
+  disabled,
 }: SelectProps<TValue>) => (
-  <SelectRoot items={options} value={value} onValueChange={onValueChange}>
+  <SelectRoot
+    items={options}
+    value={value}
+    onValueChange={onValueChange}
+    disabled={disabled}
+  >
     <SelectTrigger className={className} variant={variant} size={size}>
       {trigger ? (
         trigger

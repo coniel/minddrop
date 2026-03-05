@@ -1,4 +1,5 @@
 import {
+  DateFormat,
   Design,
   DesignElementStyle,
   DesignElementTemplate,
@@ -130,7 +131,7 @@ export interface DesignStudioStore {
       style?: Partial<DesignElementStyle>;
       placeholder?: string;
       placeholderImage?: string;
-      format?: Partial<NumberFormat>;
+      format?: Partial<NumberFormat> | Partial<DateFormat>;
       icon?: string;
     },
   ) => void;
@@ -403,7 +404,7 @@ export const updateDesignElement = (
     style?: Partial<DesignElementStyle>;
     placeholder?: string;
     placeholderImage?: string;
-    format?: Partial<NumberFormat>;
+    format?: Partial<NumberFormat> | Partial<DateFormat>;
     icon?: string;
     static?: boolean;
   },
