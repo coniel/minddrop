@@ -4,6 +4,11 @@
 export type ViewMode = 'diff' | 'original' | 'current';
 
 /**
+ * Git change status for a file.
+ */
+export type FileStatus = 'added' | 'modified' | 'deleted';
+
+/**
  * Represents a currently selected file for viewing.
  */
 /**

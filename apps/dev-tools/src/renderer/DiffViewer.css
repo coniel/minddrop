@@ -50,7 +50,32 @@
   background: var(--color-bg-selected);
 }
 
+.diff-viewer-split-toggle {
+  margin-right: 6px;
+}
+
+.diff-viewer-split-toggle.disabled {
+  opacity: 0.4;
+}
+
 .diff-viewer-editor {
   flex: 1;
   overflow: hidden;
+}
+
+.diff-viewer-statusbar {
+  padding: 2px 8px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-header);
+  border-top: 1px solid var(--color-border);
+}
+
+.diff-viewer-statusbar input {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
 }

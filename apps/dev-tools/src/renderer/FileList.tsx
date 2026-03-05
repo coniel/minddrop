@@ -1,4 +1,5 @@
 import { FileIcon } from './FileIcon';
+import type { FileStatus } from './types';
 import './Sidebar.css';
 
 interface FileListProps {
@@ -16,6 +17,11 @@ interface FileListProps {
    * Called when a file is clicked.
    */
   onSelectFile: (path: string) => void;
+
+  /**
+   * Git status for each changed file.
+   */
+  fileStatuses: Record<string, FileStatus>;
 }
 
 /**
@@ -25,13 +31,14 @@ export const FileList: React.FC<FileListProps> = ({
   files,
   selectedPath,
   onSelectFile,
+  fileStatuses,
 }) => {
   return (
     <div className="file-list">
       {files.map((file) => (
         <button
           key={file}
-          className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''}`}
+          className={`sidebar-file-button ${selectedPath === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
           onClick={() => onSelectFile(file)}
           title={file}
         >

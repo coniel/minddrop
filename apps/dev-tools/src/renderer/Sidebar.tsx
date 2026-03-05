@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ManifestWithSlug } from '../types';
 import { FileIcon } from './FileIcon';
 import { FileList } from './FileList';
-import type { Plan, SelectedFile } from './types';
+import type { FileStatus, Plan, SelectedFile } from './types';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -50,6 +50,16 @@ interface SidebarProps {
    * Called when a work group is deleted.
    */
   onDeleteManifest: (slug: string) => void;
+
+  /**
+   * Git status for each changed file.
+   */
+  fileStatuses: Record<string, FileStatus>;
+
+  /**
+   * Optional inline styles for resize overrides.
+   */
+  style?: React.CSSProperties;
 }
 
 /**
@@ -65,7 +75,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedPlan,
   onSelectPlan,
   onDeleteManifest,
+  fileStatuses,
+  style,
 }) => {
+  // Detect footer layout (<=1200px)
+  const isFooterLayout = useMediaQuery('(max-width: 1200px)');
+
   // Track which groups are expanded
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     () => new Set(manifests.map((manifest) => manifest.slug)),
@@ -74,8 +89,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Track which untracked file has its assign dropdown open
   const [assigningFile, setAssigningFile] = useState<string | null>(null);
 
-  // Toggle a group's expanded state
+  // Toggle a group's expanded state (disabled in footer layout)
   const toggleGroup = (slug: string) => {
+    if (isFooterLayout) {
+      return;
+    }
+
     setExpandedGroups((previous) => {
       const next = new Set(previous);
 
@@ -139,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   });
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={style}>
       <div className="sidebar-header">Work Groups</div>
 
       <div className="sidebar-content">
@@ -170,7 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </button>
               </div>
 
-              {expandedGroups.has(manifest.slug) && (
+              {(isFooterLayout || expandedGroups.has(manifest.slug)) && (
                 <>
                   {groupPlans.map((plan) => (
                     <button
@@ -188,6 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onSelectFile={(path) =>
                       handleSelectManifestFile(manifest, path)
                     }
+                    fileStatuses={fileStatuses}
                   />
                 </>
               )}
@@ -200,15 +220,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {untrackedFiles.length > 0 && (
-          <>
+          <div className="sidebar-untracked-section">
             <div className="sidebar-header sidebar-header-untracked">
               Untracked Changes
+              <span className="sidebar-header-count">
+                {untrackedFiles.length}
+              </span>
             </div>
 
             {untrackedFiles.map((file) => (
               <div key={file} className="sidebar-untracked-file">
                 <button
-                  className={`sidebar-file-button ${selectedFile?.path === file ? 'selected' : ''}`}
+                  className={`sidebar-file-button ${selectedFile?.path === file ? 'selected' : ''} ${fileStatuses[file] ? `file-status-${fileStatuses[file]}` : ''}`}
                   onClick={() => handleSelectUntrackedFile(file)}
                 >
                   <FileIcon filename={file} />
@@ -243,11 +266,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               </div>
             ))}
-          </>
+          </div>
         )}
 
         {unmatchedPlans.length > 0 && (
-          <>
+          <div className="sidebar-plans-section">
             <div className="sidebar-header sidebar-header-plans">Plans</div>
 
             {unmatchedPlans.map((plan) => (
@@ -259,7 +282,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {plan.name}
               </button>
             ))}
-          </>
+          </div>
         )}
       </div>
     </div>
@@ -271,4 +294,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
  */
 function getFileName(path: string): string {
   return path.split('/').pop() ?? path;
+}
+
+/**
+ * Returns whether the given media query currently matches.
+ */
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(
+    () => window.matchMedia(query).matches,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(query);
+
+    const handler = (event: MediaQueryListEvent) => {
+      setMatches(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handler);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handler);
+    };
+  }, [query]);
+
+  return matches;
 }

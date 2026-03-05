@@ -1,5 +1,8 @@
 import type { Monaco } from '@monaco-editor/react';
 import { DiffEditor, Editor, loader } from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
+import { initVimMode } from 'monaco-vim';
+import { useCallback, useEffect, useRef } from 'react';
 import { darkPlusTheme } from './darkPlusTheme';
 import type { SelectedFile, ViewMode } from './types';
 import './DiffViewer.css';
@@ -35,6 +38,16 @@ interface DiffViewerProps {
    * Current file content on disk.
    */
   currentContent: string;
+
+  /**
+   * Whether to render the diff side-by-side (true) or inline (false).
+   */
+  splitDiff: boolean;
+
+  /**
+   * Called when the split/inline diff toggle is changed.
+   */
+  onSplitDiffChange: (split: boolean) => void;
 }
 
 /**
@@ -46,9 +59,56 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   onViewModeChange,
   originalContent,
   currentContent,
+  splitDiff,
+  onSplitDiffChange,
 }) => {
   // Infer language from file extension
   const language = getLanguageFromPath(selectedFile.path);
+
+  // Vim mode refs
+  const statusBarRef = useRef<HTMLDivElement>(null);
+  const vimModeRef = useRef<ReturnType<typeof initVimMode> | null>(null);
+
+  // Dispose any active vim mode instance
+  const disposeVim = useCallback(() => {
+    if (vimModeRef.current) {
+      vimModeRef.current.dispose();
+      vimModeRef.current = null;
+    }
+  }, []);
+
+  // Attach vim mode to an editor instance
+  const attachVim = useCallback(
+    (editorInstance: editor.IStandaloneCodeEditor) => {
+      disposeVim();
+      vimModeRef.current = initVimMode(editorInstance, statusBarRef.current);
+    },
+    [disposeVim],
+  );
+
+  // Handle regular editor mount
+  const handleEditorMount = useCallback(
+    (editorInstance: editor.IStandaloneCodeEditor) => {
+      attachVim(editorInstance);
+      editorInstance.focus();
+    },
+    [attachVim],
+  );
+
+  // Handle diff editor mount (attach vim to modified editor)
+  const handleDiffEditorMount = useCallback(
+    (diffEditor: editor.IStandaloneDiffEditor) => {
+      const modifiedEditor = diffEditor.getModifiedEditor();
+      attachVim(modifiedEditor);
+      modifiedEditor.focus();
+    },
+    [attachVim],
+  );
+
+  // Clean up vim mode on unmount
+  useEffect(() => {
+    return disposeVim;
+  }, [disposeVim]);
 
   return (
     <div className="diff-viewer">
@@ -58,6 +118,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
         </div>
 
         <div className="diff-viewer-tabs">
+          <button
+            className={`diff-viewer-tab diff-viewer-split-toggle ${viewMode === 'diff' ? '' : 'disabled'}`}
+            onClick={() => onSplitDiffChange(!splitDiff)}
+            title={splitDiff ? 'Switch to inline diff' : 'Switch to split diff'}
+          >
+            {splitDiff ? 'Split' : 'Inline'}
+          </button>
+
           <TabButton
             label="Diff"
             active={viewMode === 'diff'}
@@ -83,9 +151,10 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             modified={currentContent}
             language={language}
             theme="dark-plus"
+            onMount={handleDiffEditorMount}
             options={{
               readOnly: true,
-              renderSideBySide: true,
+              renderSideBySide: splitDiff,
               minimap: { enabled: false },
               scrollBeyondLastLine: false,
               fontSize: 13,
@@ -98,6 +167,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             value={originalContent}
             language={language}
             theme="dark-plus"
+            onMount={handleEditorMount}
             options={{
               readOnly: true,
               minimap: { enabled: false },
@@ -112,6 +182,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             value={currentContent}
             language={language}
             theme="dark-plus"
+            onMount={handleEditorMount}
             options={{
               readOnly: true,
               minimap: { enabled: false },
@@ -121,6 +192,8 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           />
         )}
       </div>
+
+      <div className="diff-viewer-statusbar" ref={statusBarRef} />
     </div>
   );
 };

@@ -207,6 +207,57 @@ function getPlanContent(filename: string): string {
 }
 
 /**
+ * Returns the git status for all changed files relative to a base ref.
+ */
+function getFileStatuses(
+  baseRef: string,
+): Record<string, 'added' | 'modified' | 'deleted'> {
+  const statuses: Record<string, 'added' | 'modified' | 'deleted'> = {};
+
+  // Get statuses relative to the base ref
+  const result = Bun.spawnSync(['git', 'diff', '--name-status', baseRef], {
+    cwd: REPO_ROOT,
+  });
+
+  if (result.exitCode === 0) {
+    const lines = result.stdout.toString().trim().split('\n').filter(Boolean);
+
+    for (const line of lines) {
+      const status = line[0];
+      const path = line.slice(1).trim();
+
+      if (status === 'A') {
+        statuses[path] = 'added';
+      } else if (status === 'D') {
+        statuses[path] = 'deleted';
+      } else {
+        statuses[path] = 'modified';
+      }
+    }
+  }
+
+  // Also mark untracked files as added
+  const untrackedResult = Bun.spawnSync(
+    ['git', 'ls-files', '--others', '--exclude-standard'],
+    { cwd: REPO_ROOT },
+  );
+
+  if (untrackedResult.exitCode === 0) {
+    const lines = untrackedResult.stdout
+      .toString()
+      .trim()
+      .split('\n')
+      .filter(Boolean);
+
+    for (const line of lines) {
+      statuses[line] = 'added';
+    }
+  }
+
+  return statuses;
+}
+
+/**
  * All RPC request handlers for the dev review app.
  */
 export const rpcHandlers = {
@@ -232,6 +283,10 @@ export const rpcHandlers = {
 
   deleteManifest: async ({ slug }: { slug: string }) => {
     deleteManifest(slug);
+  },
+
+  getFileStatuses: async ({ baseRef }: { baseRef: string }) => {
+    return getFileStatuses(baseRef);
   },
 
   getPlans: async () => {

@@ -1,7 +1,10 @@
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 :root {
@@ -31,7 +34,8 @@ body,
 
 body {
   font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', Menlo,
+    Consolas, monospace;
   font-size: 13px;
   color: var(--color-text);
   background: var(--color-bg);
@@ -56,4 +60,36 @@ body {
   height: 100%;
   color: var(--color-text-muted);
   font-size: 14px;
+}
+
+.app-resize-handle {
+  flex-shrink: 0;
+  width: 4px;
+  background: transparent;
+  cursor: col-resize;
+  transition: background 0.15s;
+}
+
+.app-resize-handle:hover,
+.app-resize-handle:active {
+  background: var(--color-accent);
+}
+
+@media (max-width: 1200px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .app-main {
+    flex: 1;
+    min-height: 0;
+    order: 0;
+  }
+
+  .app-resize-handle {
+    width: 100%;
+    height: 4px;
+    cursor: row-resize;
+    order: 1;
+  }
 }

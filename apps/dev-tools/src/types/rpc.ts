@@ -70,6 +70,15 @@ export type DevReviewRPC = {
       };
 
       /**
+       * Returns the git status (added, modified, deleted) for each
+       * changed file relative to a base ref.
+       */
+      getFileStatuses: {
+        params: { baseRef: string };
+        response: Record<string, 'added' | 'modified' | 'deleted'>;
+      };
+
+      /**
        * Adds a file to an existing manifest.
        */
       addFileToManifest: {
