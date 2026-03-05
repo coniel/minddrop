@@ -65,25 +65,47 @@ export const DateElementConfig: DesignElementConfig = {
   group: 'content',
   styleCategory: 'text',
   compatiblePropertyTypes: ['date', 'created', 'last-modified'],
+  generatePlaceholder: () => new Date().toISOString().slice(0, 10),
   template: {
     type: 'date',
     style: { ...DefaultTextElementStyle },
-    placeholder: new Date().toISOString().slice(0, 10),
+    placeholder: '',
   },
 };
 ```
 
 ### Config properties
 
-| Property                  | Purpose                                                                                                                     |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `type`                    | Unique element type identifier string                                                                                       |
-| `icon`                    | `UiIconName` shown in the palette and style editor header                                                                   |
-| `label`                   | i18n key for the element's display name                                                                                     |
-| `group`                   | Palette section: `'content'`, `'media'`, or `'layout'`. Omit to exclude from the palette                                    |
-| `styleCategory`           | Which CSS style function to use: `'text'`, `'icon'`, `'image'`, `'image-viewer'`, `'editor'`, `'webview'`, or `'container'` |
-| `compatiblePropertyTypes` | `PropertyType[]` - which database property types this element can render                                                    |
-| `template`                | Default element data spread when adding from the palette                                                                    |
+| Property                  | Purpose                                                                                                                                                                                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`                    | Unique element type identifier string                                                                                                                                                                                                                 |
+| `icon`                    | `UiIconName` shown in the palette and style editor header                                                                                                                                                                                             |
+| `label`                   | i18n key for the element's display name                                                                                                                                                                                                               |
+| `group`                   | Palette section: `'content'`, `'media'`, or `'layout'`. Omit to exclude from the palette                                                                                                                                                              |
+| `styleCategory`           | Which CSS style function to use: `'text'`, `'icon'`, `'image'`, `'image-viewer'`, `'editor'`, `'webview'`, or `'container'`                                                                                                                           |
+| `compatiblePropertyTypes` | `PropertyType[]` - which database property types this element can render                                                                                                                                                                              |
+| `generatePlaceholder`     | `() => string` - Optional function that generates a random placeholder value. Called when the element is added from the palette. The return value is set as the element's `placeholder` field. If omitted, the template's `placeholder` is used as-is |
+| `template`                | Default element data spread when adding from the palette. If the element has a `generatePlaceholder`, set `placeholder: ''` in the template (it will be overridden at creation time)                                                                  |
+
+### Placeholder generators
+
+If the element needs a `generatePlaceholder` function, place the generator in `packages/designs/src/design-element-configs/placeholder-generators/`. Each generator gets its own file:
+
+```
+packages/designs/src/design-element-configs/placeholder-generators/
+  generateLoremIpsum.ts       # shared: generates N lorem ipsum words
+  generateNumberPlaceholder.ts # generates a random number with N digits
+  generateBadgePlaceholder.ts  # generates N comma-separated capitalised words
+  index.ts                     # barrel export
+```
+
+Generators are exported from `@minddrop/designs` so they can also be used in style editor placeholder fields (e.g. re-roll buttons).
+
+To add a new generator:
+
+1. Create `placeholder-generators/generateMyPlaceholder.ts`
+2. Export it from `placeholder-generators/index.ts`
+3. Import and use it in the config's `generatePlaceholder` property
 
 ### Style types
 
@@ -325,7 +347,20 @@ Shared sub-components available in `style-editors/`:
 | `PlaceholderImageField` | Placeholder image picker                                   |
 | `StaticElementField`    | Static/mappable toggle                                     |
 
-Use `updateDesignElement(elementId, { ... })` from `DesignStudioStore` to persist style changes.
+Use `updateDesignElement<T>(elementId, { ... })` from `DesignStudioStore` to persist style changes. The generic parameter is the element's interface type (e.g. `DateElement`, `ImageElement`). This ensures only valid properties for that element type are accepted:
+
+```ts
+import { DateElement } from '@minddrop/designs';
+import { updateDesignElement } from '../../DesignStudioStore';
+
+// Correct: explicit element type
+updateDesignElement<DateElement>(elementId, { format: { dateStyle: 'long' } });
+
+// TypeScript error: 'format' does not exist on ImageElement
+updateDesignElement<ImageElement>(elementId, { format: { dateStyle: 'long' } });
+```
+
+The updates object is deeply partial one level down: object-valued properties like `style` and `format` accept partial objects, so you can pass e.g. `{ format: { decimals: 3 } }` without providing all fields.
 
 ### 3d. Barrel index
 
@@ -395,7 +430,7 @@ The label key from the config (e.g. `design-studio.elements.date`) must have a t
 
 ## Checklist
 
-- [ ] Config file created with interface and `DesignElementConfig`
+- [ ] Config file created with interface and `DesignElementConfig` (including `generatePlaceholder` if needed)
 - [ ] Config registered in `design-element-configs/index.ts` (imports, re-export, unions, array)
 - [ ] Element directory created at `features/designs/src/design-elements/<type>/`
 - [ ] Display renderer: `[Name]DesignElement.tsx`
@@ -405,6 +440,7 @@ The label key from the config (e.g. `design-studio.elements.date`) must have a t
 - [ ] Flat type alias added to `FlatDesignElement.types.ts` (if needed)
 - [ ] UI registry entry added to `design-elements/index.ts`
 - [ ] i18n translations added to `en-GB.json`
+- [ ] Placeholder generator added to `placeholder-generators/` (if element has dynamic placeholders)
 - [ ] `pnpm i` run (if new dependencies added)
 - [ ] `npx prettier --write` on all touched files
 - [ ] Typecheck passes: `npx tsc --noEmit -p features/designs/tsconfig.json`
