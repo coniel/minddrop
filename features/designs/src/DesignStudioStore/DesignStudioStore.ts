@@ -3,6 +3,7 @@ import {
   DesignElementStyle,
   DesignElementTemplate,
   Designs,
+  elementConfigs,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -21,7 +22,6 @@ import {
   FlatDesignElement,
   FlatParentDesignElement,
 } from '../types';
-import { generateLoremIpsum } from '../utils';
 import { flattenTree, reconstructTree } from '../utils';
 
 export interface DesignStudioStore {
@@ -433,17 +433,15 @@ export const addDeisgnElementFromTemplate = (
   parentId: string,
   index: number,
 ) => {
+  // Look up the config for this element type to generate a placeholder
+  const config = elementConfigs.find((config) => config.type === template.type);
+  const placeholder = config?.generatePlaceholder?.();
+
   const element = {
     ...template,
     id: uuid(),
     parent: parentId,
-    ...(template.type === 'text' ? { placeholder: generateLoremIpsum(3) } : {}),
-    ...(template.type === 'formatted-text'
-      ? { placeholder: generateLoremIpsum(20) }
-      : {}),
-    ...(template.type === 'number'
-      ? { placeholder: String(Math.floor(Math.random() * 900) + 100) }
-      : {}),
+    ...(placeholder != null ? { placeholder } : {}),
   } as FlatDesignElement;
 
   DesignStudioStore.getState().addElement(element, parentId, index);

@@ -31,6 +31,7 @@ import type { WebviewElement } from './webview';
  * Re-exports
  *****************************************************************************/
 
+export * from './placeholder-generators';
 export * from './text';
 export * from './formatted-text';
 export * from './number';

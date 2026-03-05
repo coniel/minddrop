@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { generateNumberPlaceholder } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -14,21 +15,6 @@ import { FlatNumberElement } from '../../types';
 
 export interface NumberPlaceholderFieldProps {
   elementId: string;
-}
-
-function randomWithDigits(digits: number): number {
-  if (digits <= 0) {
-    return 0;
-  }
-
-  if (digits === 1) {
-    return Math.floor(Math.random() * 9) + 1;
-  }
-
-  const min = Math.pow(10, digits - 1);
-  const max = Math.pow(10, digits) - 1;
-
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function digitCount(value: string): number {
@@ -55,9 +41,9 @@ export const NumberPlaceholderField = ({
       return;
     }
 
-    const value = randomWithDigits(sliderStep);
+    const value = generateNumberPlaceholder(sliderStep);
 
-    updateDesignElement(elementId, { placeholder: String(value) });
+    updateDesignElement(elementId, { placeholder: value });
   }, [elementId, sliderStep]);
 
   const handleChange = useCallback(
@@ -96,7 +82,7 @@ export const NumberPlaceholderField = ({
         // Add 0s to the end
         const padded = currentValue
           ? currentValue + '0'.repeat(value - currentDigits)
-          : String(randomWithDigits(value));
+          : generateNumberPlaceholder(value);
 
         updateDesignElement(elementId, { placeholder: padded });
       } else if (value < currentDigits) {

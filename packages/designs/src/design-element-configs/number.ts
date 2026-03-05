@@ -1,5 +1,6 @@
 import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
+import { generateNumberPlaceholder } from './placeholder-generators';
 
 export interface NumberFormat {
   /**
@@ -68,4 +69,5 @@ export const NumberElementConfig: DesignElementConfig = {
     type: 'number',
     style: { ...DefaultTextElementStyle },
   },
+  generatePlaceholder: () => generateNumberPlaceholder(3),
 };

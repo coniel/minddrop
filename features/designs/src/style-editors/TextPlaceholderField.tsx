@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
+import { generateLoremIpsum } from '@minddrop/designs';
 import {
   Group,
   IconButton,
@@ -11,7 +12,6 @@ import {
   useDesignStudioStore,
 } from '../DesignStudioStore';
 import { FlatTextElement } from '../types';
-import { generateLoremIpsum } from '../utils';
 
 export interface TextPlaceholderFieldProps {
   elementId: string;

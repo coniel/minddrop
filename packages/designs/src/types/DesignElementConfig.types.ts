@@ -81,4 +81,11 @@ export interface DesignElementConfig {
    * Default element data used when adding from the palette.
    */
   template: Record<string, unknown>;
+
+  /**
+   * Generates a random placeholder value each time an element
+   * of this type is created from the palette. When provided,
+   * the returned string is set as the element's `placeholder`.
+   */
+  generatePlaceholder?: () => string;
 }

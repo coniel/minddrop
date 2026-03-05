@@ -1,5 +1,6 @@
 import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
+import { generateLoremIpsum } from './placeholder-generators';
 
 export interface TextElement extends DesignElementBase {
   type: 'text';
@@ -26,4 +27,5 @@ export const TextElementConfig: DesignElementConfig = {
     type: 'text',
     style: { ...DefaultTextElementStyle },
   },
+  generatePlaceholder: () => generateLoremIpsum(3),
 };
