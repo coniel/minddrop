@@ -15,6 +15,7 @@ import { ColorSelectStories } from './ColorSelect/ColorSelect.stories';
 import { ComboboxStories } from './Combox/Combobox.stories';
 import { ConfirmationDialogStories } from './ConfirmationDialog/ConfirmationDialog.stories';
 import { ContextMenuStories } from './ContextMenu/ContextMenu.stories';
+import { DateFieldStories } from './DateField/DateField.stories';
 import { DialogStories } from './Dialog/Dialog.stories';
 import { DropdownMenuStories } from './DropdownMenu/DropdownMenu.stories';
 import { IconButtonStories } from './IconButton/IconButton.stories';
@@ -105,6 +106,7 @@ export const stories: StoryGroup[] = [
     items: [
       { label: 'TextInput', component: TextInputStories },
       { label: 'TextField', component: TextFieldStories },
+      { label: 'DateField', component: DateFieldStories },
       { label: 'NumberField', component: NumberFieldStories },
       { label: 'Checkbox', component: CheckboxStories },
       { label: 'Radio', component: RadioStories },

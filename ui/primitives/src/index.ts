@@ -10,6 +10,7 @@ export * from './Dialog';
 export * from './DropdownMenu';
 export * from './fields';
 export * from './FloatingActionButton';
+export * from './DateField';
 export * from './NumberField';
 export * from './Heading';
 export * from './Icon';

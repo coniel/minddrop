@@ -1,0 +1,26 @@
+/* ============================================================
+   DATE INPUT
+   Applies text-input classes for variants, sizes, and states.
+   Only date-input-specific overrides live here.
+   ============================================================ */
+
+/* --- Display text --- */
+
+.date-input-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Placeholder styling when empty */
+.date-input-empty .date-input-text {
+  color: var(--text-placeholder);
+  font-weight: var(--weight-normal);
+}
+
+/* --- Disabled --- */
+
+.date-input-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
