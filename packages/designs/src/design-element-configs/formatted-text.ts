@@ -26,6 +26,7 @@ export const FormattedTextElementConfig: DesignElementConfig = {
   template: {
     type: 'formatted-text',
     style: { ...DefaultTextElementStyle },
+    placeholder: '',
   },
   generatePlaceholder: () => generateLoremIpsum(20),
 };

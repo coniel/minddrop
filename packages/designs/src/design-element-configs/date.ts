@@ -62,6 +62,7 @@ export const DateElementConfig: DesignElementConfig = {
   template: {
     type: 'date',
     style: { ...DefaultTextElementStyle },
-    placeholder: new Date().toISOString().slice(0, 10),
+    placeholder: '',
   },
+  generatePlaceholder: () => new Date().toISOString().slice(0, 10),
 };
