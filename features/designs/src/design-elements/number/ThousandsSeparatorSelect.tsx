@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
 import { NumberElement } from '@minddrop/designs';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
 export interface ThousandsSeparatorSelectProps {
@@ -37,10 +34,11 @@ const options = [
 export const ThousandsSeparatorSelect = ({
   elementId,
 }: ThousandsSeparatorSelectProps) => {
-  const value = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatNumberElement)?.format
-        ?.thousandsSeparator ?? 'none',
+  const { thousandsSeparator: value } = useElementData(
+    elementId,
+    (element: FlatNumberElement) => ({
+      thousandsSeparator: element.format?.thousandsSeparator ?? 'none',
+    }),
   );
 
   const handleChange = useCallback(

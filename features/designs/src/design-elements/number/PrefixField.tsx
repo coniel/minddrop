@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
 import { NumberElement } from '@minddrop/designs';
 import { FlexItem, Group, TextField } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 import { FormatTextStylePopover } from '../formatted-text/FormatTextStylePopover';
 
@@ -13,9 +10,11 @@ export interface PrefixFieldProps {
 }
 
 export const PrefixField = ({ elementId }: PrefixFieldProps) => {
-  const prefix = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatNumberElement)?.format?.prefix ?? '',
+  const { prefix } = useElementData(
+    elementId,
+    (element: FlatNumberElement) => ({
+      prefix: element.format?.prefix ?? '',
+    }),
   );
 
   const handleChange = useCallback(

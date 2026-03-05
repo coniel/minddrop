@@ -6,10 +6,7 @@ import {
   SwitchField,
   TextField,
 } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
@@ -31,29 +28,22 @@ export interface UrlElementStyleEditorProps {
 export const UrlElementStyleEditor: React.FC<UrlElementStyleEditorProps> = ({
   elementId,
 }) => {
-  const placeholder = useDesignStudioStore(
-    (state) => (state.elements[elementId] as FlatUrlElement)?.placeholder || '',
-  );
-
-  // Read URL part visibility flags
-  const showProtocol = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatUrlElement)?.showProtocol ?? false,
-  );
-  const showSubdomain = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatUrlElement)?.showSubdomain ?? true,
-  );
-  const showDomain = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatUrlElement)?.showDomain ?? true,
-  );
-  const showTld = useDesignStudioStore(
-    (state) => (state.elements[elementId] as FlatUrlElement)?.showTld ?? true,
-  );
-  const showPath = useDesignStudioStore(
-    (state) => (state.elements[elementId] as FlatUrlElement)?.showPath ?? false,
-  );
+  // Read URL element data from the store
+  const {
+    placeholder,
+    showProtocol,
+    showSubdomain,
+    showDomain,
+    showTld,
+    showPath,
+  } = useElementData(elementId, (element: FlatUrlElement) => ({
+    placeholder: element.placeholder || '',
+    showProtocol: element.showProtocol ?? false,
+    showSubdomain: element.showSubdomain ?? true,
+    showDomain: element.showDomain ?? true,
+    showTld: element.showTld ?? true,
+    showPath: element.showPath ?? false,
+  }));
 
   // Update the placeholder text on the element
   const handlePlaceholderChange = useCallback(

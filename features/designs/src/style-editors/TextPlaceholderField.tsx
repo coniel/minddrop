@@ -7,10 +7,7 @@ import {
   Stack,
   TextField,
 } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../DesignStudioStore';
 import { FlatTextElement } from '../types';
 
 export interface TextPlaceholderFieldProps {
@@ -45,9 +42,11 @@ export const TextPlaceholderField = ({
   wordCounts: wordCountsProp,
 }: TextPlaceholderFieldProps) => {
   const wordCounts = wordCountsProp || defaultWordCounts;
-  const placeholder = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatTextElement)?.placeholder || '',
+  const { placeholder } = useElementData(
+    elementId,
+    (element: FlatTextElement) => ({
+      placeholder: element.placeholder || '',
+    }),
   );
 
   const [sliderStep, setSliderStep] = useState(() =>

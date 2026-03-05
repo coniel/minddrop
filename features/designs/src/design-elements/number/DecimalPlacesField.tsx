@@ -1,10 +1,7 @@
 import { useCallback } from 'react';
 import { NumberElement } from '@minddrop/designs';
 import { NumberField } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
 export interface DecimalPlacesFieldProps {
@@ -12,9 +9,11 @@ export interface DecimalPlacesFieldProps {
 }
 
 export const DecimalPlacesField = ({ elementId }: DecimalPlacesFieldProps) => {
-  const decimals = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatNumberElement)?.format?.decimals ?? 0,
+  const { decimals } = useElementData(
+    elementId,
+    (element: FlatNumberElement) => ({
+      decimals: element.format?.decimals ?? 0,
+    }),
   );
 
   const handleChange = useCallback(

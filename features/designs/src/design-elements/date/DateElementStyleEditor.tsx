@@ -10,10 +10,7 @@ import {
   SwitchField,
   Toggle,
 } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
@@ -80,20 +77,13 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
   const { t } = useTranslation();
 
   // Read format values from the store
-  const mode = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatDateElement)?.format?.mode ?? 'date',
-  );
-
-  const dateStyle = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatDateElement)?.format?.dateStyle ??
-      'medium',
-  );
-
-  const showTime = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatDateElement)?.format?.showTime ?? false,
+  const { mode, dateStyle, showTime } = useElementData(
+    elementId,
+    (element: FlatDateElement) => ({
+      mode: element.format?.mode ?? 'date',
+      dateStyle: element.format?.dateStyle ?? 'medium',
+      showTime: element.format?.showTime ?? false,
+    }),
   );
 
   // Whether controls should be disabled (relative mode)

@@ -1,9 +1,6 @@
 import { ImageViewerElement } from '@minddrop/designs';
 import { Stack } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
@@ -27,9 +24,11 @@ export interface ImageViewerElementStyleEditorProps {
 export const ImageViewerElementStyleEditor: React.FC<
   ImageViewerElementStyleEditorProps
 > = ({ elementId }) => {
-  const placeholderImage = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatImageViewerElement)?.placeholderImage,
+  const { placeholderImage } = useElementData(
+    elementId,
+    (element: FlatImageViewerElement) => ({
+      placeholderImage: element.placeholderImage,
+    }),
   );
 
   return (

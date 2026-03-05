@@ -362,6 +362,24 @@ updateDesignElement<ImageElement>(elementId, { format: { dateStyle: 'long' } });
 
 The updates object is deeply partial one level down: object-valued properties like `style` and `format` accept partial objects, so you can pass e.g. `{ format: { decimals: 3 } }` without providing all fields.
 
+To **read** element-specific properties reactively, use `useElementData` from `DesignStudioStore`. Annotate the callback parameter with the element's flat type to get full type inference on the returned object. `useElementData` uses `useShallow` internally, so the component only re-renders when a selected value actually changes:
+
+```ts
+import { useElementData } from '../../DesignStudioStore';
+import { FlatDateElement } from '../../types';
+
+const { mode, dateStyle, showTime } = useElementData(
+  elementId,
+  (element: FlatDateElement) => ({
+    mode: element.format?.mode ?? 'date',
+    dateStyle: element.format?.dateStyle ?? 'medium',
+    showTime: element.format?.showTime ?? false,
+  }),
+);
+```
+
+Consolidate all element reads into a single `useElementData` call rather than using multiple `useDesignStudioStore` selectors.
+
 ### 3d. Barrel index
 
 Export the 3 components from `index.ts`:

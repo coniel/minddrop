@@ -30,6 +30,7 @@ import {
   saveDesign,
   updateDesignElement,
   useDesignStudioStore,
+  useElementData,
 } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
@@ -45,15 +46,45 @@ export const FormatTextStylePopover = ({
   label,
 }: FormatTextStylePopoverProps) => {
   const { t } = useTranslation();
-  const element = useDesignStudioStore(
-    (state) => state.elements[elementId] as FlatNumberElement,
-  );
+  const marginKey = styleKey === 'prefixStyle' ? 'margin-right' : 'margin-left';
 
-  const baseStyle = element?.style;
-  const overrideStyle = element?.format?.[styleKey];
-  const hasCustomStyles =
-    overrideStyle !== undefined && Object.keys(overrideStyle).length > 0;
+  // Read all derived style values from the element
+  const {
+    overrideStyle,
+    hasCustomStyles,
+    fontFamily,
+    fontWeight,
+    fontSize,
+    letterSpacing,
+    color,
+    opacity,
+    italic,
+    underline,
+    margin,
+  } = useElementData(elementId, (element: FlatNumberElement) => {
+    const baseStyle = element?.style;
+    const override = element?.format?.[styleKey];
 
+    return {
+      overrideStyle: override,
+      hasCustomStyles:
+        override !== undefined && Object.keys(override).length > 0,
+      fontFamily:
+        override?.['font-family'] ?? baseStyle?.['font-family'] ?? 'inherit',
+      fontWeight:
+        override?.['font-weight'] ?? baseStyle?.['font-weight'] ?? 'inherit',
+      fontSize: override?.['font-size'] ?? baseStyle?.['font-size'],
+      letterSpacing:
+        override?.['letter-spacing'] ?? baseStyle?.['letter-spacing'],
+      color: override?.color ?? baseStyle?.color ?? 'default',
+      opacity: override?.opacity ?? baseStyle?.opacity,
+      italic: override?.italic ?? baseStyle?.italic ?? false,
+      underline: override?.underline ?? baseStyle?.underline ?? false,
+      margin: override?.[marginKey] ?? baseStyle?.[marginKey] ?? 2 / 16,
+    };
+  });
+
+  // Reset the override style back to element defaults
   const resetStyle = useCallback(() => {
     useDesignStudioStore.setState((state) => {
       const element = {
@@ -68,28 +99,20 @@ export const FormatTextStylePopover = ({
     saveDesign();
   }, [elementId, styleKey]);
 
+  // Update a style property on the override
   const updateStyle = useCallback(
     (updates: Partial<TextElementStyle>) => {
       updateDesignElement<NumberElement>(elementId, {
-        format: { [styleKey]: { ...overrideStyle, ...updates } },
+        format: {
+          [styleKey]: {
+            ...(overrideStyle as Partial<TextElementStyle>),
+            ...updates,
+          },
+        },
       });
     },
     [elementId, styleKey, overrideStyle],
   );
-
-  const fontFamily =
-    overrideStyle?.['font-family'] ?? baseStyle?.['font-family'] ?? 'inherit';
-  const fontWeight =
-    overrideStyle?.['font-weight'] ?? baseStyle?.['font-weight'] ?? 'inherit';
-  const fontSize = overrideStyle?.['font-size'] ?? baseStyle?.['font-size'];
-  const letterSpacing =
-    overrideStyle?.['letter-spacing'] ?? baseStyle?.['letter-spacing'];
-  const color = overrideStyle?.color ?? baseStyle?.color ?? 'default';
-  const opacity = overrideStyle?.opacity ?? baseStyle?.opacity;
-  const italic = overrideStyle?.italic ?? baseStyle?.italic ?? false;
-  const underline = overrideStyle?.underline ?? baseStyle?.underline ?? false;
-  const marginKey = styleKey === 'prefixStyle' ? 'margin-right' : 'margin-left';
-  const margin = overrideStyle?.[marginKey] ?? baseStyle?.[marginKey] ?? 2 / 16;
 
   return (
     <Popover>

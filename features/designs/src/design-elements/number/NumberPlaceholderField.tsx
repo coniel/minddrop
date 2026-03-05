@@ -10,6 +10,7 @@ import {
 import {
   updateDesignElement,
   useDesignStudioStore,
+  useElementData,
 } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
@@ -26,9 +27,11 @@ function digitCount(value: string): number {
 export const NumberPlaceholderField = ({
   elementId,
 }: NumberPlaceholderFieldProps) => {
-  const placeholder = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatNumberElement)?.placeholder || '',
+  const { placeholder } = useElementData(
+    elementId,
+    (element: FlatNumberElement) => ({
+      placeholder: element.placeholder || '',
+    }),
   );
 
   const numericValue = placeholder ? Number(placeholder) : null;

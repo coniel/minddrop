@@ -2,10 +2,7 @@ import { useCallback } from 'react';
 import { NumberElement } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
 export interface SignDisplaySelectProps {
@@ -21,10 +18,11 @@ const options = [
 export const SignDisplaySelect = ({ elementId }: SignDisplaySelectProps) => {
   const { t } = useTranslation();
 
-  const value = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatNumberElement)?.format?.signDisplay ??
-      'auto',
+  const { signDisplay: value } = useElementData(
+    elementId,
+    (element: FlatNumberElement) => ({
+      signDisplay: element.format?.signDisplay ?? 'auto',
+    }),
   );
 
   const handleChange = useCallback(

@@ -4,7 +4,7 @@ import { InputLabel, Stack, SwitchField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   updateElementStyle,
-  useDesignStudioStore,
+  useElementData,
   useElementStyle,
 } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
@@ -28,9 +28,11 @@ export const ImageElementStyleEditor: React.FC<
   const height = useElementStyle(elementId, 'height');
   const round = useElementStyle(elementId, 'round');
 
-  const placeholderImage = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatImageElement)?.placeholderImage,
+  const { placeholderImage } = useElementData(
+    elementId,
+    (element: FlatImageElement) => ({
+      placeholderImage: element.placeholderImage,
+    }),
   );
 
   const handleRoundChange = useCallback(

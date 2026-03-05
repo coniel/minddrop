@@ -476,6 +476,25 @@ export const useElement = <
   return element as TType;
 };
 
+/**
+ * Subscribes to element-specific data with a single selector.
+ * Consolidates multiple store reads into one call and avoids
+ * per-call type casts at the call site. Annotate the callback
+ * parameter with the concrete element type so both generics
+ * are inferred automatically.
+ */
+export const useElementData = <
+  TElement,
+  TResult extends Record<string, unknown>,
+>(
+  id: string,
+  selector: (element: TElement) => TResult,
+): TResult => {
+  return useDesignStudioStore(
+    useShallow((state) => selector(state.elements[id] as TElement)),
+  );
+};
+
 export const useElementStyle = <K extends keyof DesignElementStyle>(
   id: string,
   key: K,

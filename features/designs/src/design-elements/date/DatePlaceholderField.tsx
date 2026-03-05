@@ -1,10 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { DateElement } from '@minddrop/designs';
 import { DateInput } from '@minddrop/ui-primitives';
-import {
-  updateDesignElement,
-  useDesignStudioStore,
-} from '../../DesignStudioStore';
+import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatDateElement } from '../../types';
 
 export interface DatePlaceholderFieldProps {
@@ -22,9 +19,11 @@ export const DatePlaceholderField: React.FC<DatePlaceholderFieldProps> = ({
   elementId,
 }) => {
   // Read the current placeholder value from the store
-  const placeholder = useDesignStudioStore(
-    (state) =>
-      (state.elements[elementId] as FlatDateElement)?.placeholder || '',
+  const { placeholder } = useElementData(
+    elementId,
+    (element: FlatDateElement) => ({
+      placeholder: element.placeholder || '',
+    }),
   );
 
   // Parse the stored ISO string into a Date object

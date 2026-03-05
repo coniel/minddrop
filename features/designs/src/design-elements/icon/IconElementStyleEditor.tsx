@@ -16,7 +16,7 @@ import {
 import {
   updateDesignElement,
   updateElementStyle,
-  useDesignStudioStore,
+  useElementData,
   useElementStyle,
 } from '../../DesignStudioStore';
 import { MarginFields } from '../../style-editors/MarginFields';
@@ -52,8 +52,11 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
   const containerRound = useElementStyle(elementId, 'containerRound');
 
   // Get the current icon string from the element
-  const iconString = useDesignStudioStore(
-    (state) => (state.elements[elementId] as FlatIconElement)?.icon,
+  const { icon: iconString } = useElementData(
+    elementId,
+    (element: FlatIconElement) => ({
+      icon: element.icon,
+    }),
   );
 
   // Handles selecting an icon from the picker, syncing the
