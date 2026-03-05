@@ -1,19 +1,19 @@
 import { useCallback } from 'react';
-import { NumberElement } from '@minddrop/designs';
+import { NumberElement, SignDisplay } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
-import { FlatNumberElement } from '../../types';
+import { FlatNumberElement, StyleOptions } from '../../types';
 
 export interface SignDisplaySelectProps {
   elementId: string;
 }
 
-const options = [
+const options: StyleOptions<SignDisplay> = [
   { value: 'auto', label: 'designs.number-format.sign-display.auto' },
   { value: 'always', label: 'designs.number-format.sign-display.always' },
   { value: 'never', label: 'designs.number-format.sign-display.never' },
-] as const;
+];
 
 export const SignDisplaySelect = ({ elementId }: SignDisplaySelectProps) => {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export const SignDisplaySelect = ({ elementId }: SignDisplaySelectProps) => {
     (newValue: string) => {
       updateDesignElement<NumberElement>(elementId, {
         format: {
-          signDisplay: newValue as 'auto' | 'always' | 'never',
+          signDisplay: newValue as SignDisplay,
         },
       });
     },

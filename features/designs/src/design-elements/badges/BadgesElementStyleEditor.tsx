@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { BadgesElement, BadgesSize, BadgesVariant } from '@minddrop/designs';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import { useTranslation } from '@minddrop/i18n';
 import {
   InputLabel,
   RadioToggleGroup,
@@ -14,10 +14,10 @@ import { SectionLabel } from '../../style-editors/SectionLabel';
 import { StaticElementField } from '../../style-editors/StaticElementField';
 import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
 import { Typography } from '../../style-editors/Typography';
-import { FlatBadgesElement } from '../../types';
+import { FlatBadgesElement, StyleOptions } from '../../types';
 import { BadgesPlaceholderField } from './BadgesPlaceholderField';
 
-const sizeOptions: { label: TranslationKey; value: BadgesSize }[] = [
+const sizeOptions: StyleOptions<BadgesSize> = [
   { label: 'designs.badges.size.small', value: 'sm' },
   { label: 'designs.badges.size.medium', value: 'md' },
   { label: 'designs.badges.size.large', value: 'lg' },

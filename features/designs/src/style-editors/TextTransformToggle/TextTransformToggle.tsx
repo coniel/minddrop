@@ -3,16 +3,15 @@ import { TextTransform } from '@minddrop/designs';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { StyleOption } from '../../types';
 
 export interface TextTransformToggleProps {
   elementId: string;
 }
 
-const options: {
-  value: TextTransform;
-  label: TranslationKey;
+const options: (StyleOption<TextTransform> & {
   children: TranslationKey | null;
-}[] = [
+})[] = [
   {
     value: 'none',
     label: 'designs.typography.text-transform.none',

@@ -3,16 +3,17 @@ import { ObjectFit } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { StyleOptions } from '../../types';
 
 export interface BackgroundImageFitSelectProps {
   elementId: string;
 }
 
-const options = [
+const options: StyleOptions<ObjectFit> = [
   { value: 'cover', label: 'designs.background-image-fit.cover' },
   { value: 'contain', label: 'designs.background-image-fit.contain' },
   { value: 'fill', label: 'designs.background-image-fit.fill' },
-] as const;
+];
 
 export const BackgroundImageFitSelect = ({
   elementId,

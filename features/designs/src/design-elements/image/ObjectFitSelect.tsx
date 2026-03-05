@@ -3,16 +3,17 @@ import { ObjectFit } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import { Select, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
+import { StyleOptions } from '../../types';
 
 export interface ObjectFitSelectProps {
   elementId: string;
 }
 
-const options = [
+const options: StyleOptions<ObjectFit> = [
   { value: 'cover', label: 'designs.image.sizing.object-fit.cover' },
   { value: 'contain', label: 'designs.image.sizing.object-fit.contain' },
   { value: 'fill', label: 'designs.image.sizing.object-fit.fill' },
-] as const;
+];
 
 export const ObjectFitSelect = ({ elementId }: ObjectFitSelectProps) => {
   const { t } = useTranslation();

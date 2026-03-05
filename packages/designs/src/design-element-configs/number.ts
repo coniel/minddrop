@@ -2,6 +2,16 @@ import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
 import { generateNumberPlaceholder } from './placeholder-generators';
 
+/**
+ * Thousands separator style for number formatting.
+ */
+export type ThousandsSeparator = 'none' | 'comma' | 'period' | 'space';
+
+/**
+ * How to display the sign of a number.
+ */
+export type SignDisplay = 'auto' | 'always' | 'never';
+
 export interface NumberFormat {
   /**
    * Number of decimal places to display.
@@ -11,7 +21,7 @@ export interface NumberFormat {
   /**
    * Thousands separator style.
    */
-  thousandsSeparator: 'none' | 'comma' | 'period' | 'space';
+  thousandsSeparator: ThousandsSeparator;
 
   /**
    * Text displayed before the number.
@@ -26,7 +36,7 @@ export interface NumberFormat {
   /**
    * How to display the sign of the number.
    */
-  signDisplay: 'auto' | 'always' | 'never';
+  signDisplay: SignDisplay;
 
   /**
    * Optional text style overrides for the prefix.

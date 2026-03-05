@@ -1,12 +1,22 @@
 import { DefaultTextElementStyle, TextElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
 
+/**
+ * Whether to display an absolute date or a relative description.
+ */
+export type DateMode = 'date' | 'relative';
+
+/**
+ * Date style preset controlling the output format.
+ */
+export type DateStyle = 'compact' | 'short' | 'medium' | 'long' | 'full';
+
 export interface DateFormat {
   /**
    * Whether to display an absolute date or a relative
    * description (e.g. "2 days ago").
    */
-  mode: 'date' | 'relative';
+  mode: DateMode;
 
   /**
    * The date style preset.
@@ -14,7 +24,7 @@ export interface DateFormat {
    * 'medium' = 5 Mar 2026, 'long' = 5 March 2026,
    * 'full' = Thu, 5 Mar 2026.
    */
-  dateStyle: 'compact' | 'short' | 'medium' | 'long' | 'full';
+  dateStyle: DateStyle;
 
   /**
    * Whether to include the time in the formatted output.
