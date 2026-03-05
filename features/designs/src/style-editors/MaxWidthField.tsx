@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface MaxWidthFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's max width.
+ */
 export const MaxWidthField = ({ elementId }: MaxWidthFieldProps) => {
   const maxWidth = useElementStyle(elementId, 'max-width');
 

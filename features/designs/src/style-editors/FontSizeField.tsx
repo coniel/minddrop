@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface FontSizeFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's font size.
+ */
 export const FontSizeField = ({ elementId }: FontSizeFieldProps) => {
   const fontSize = useElementStyle(elementId, 'font-size');
 

@@ -12,6 +12,9 @@ import { FlatImageElement } from '../../types';
 import { ImageDesignElement } from './ImageDesignElement';
 
 export interface ImageStudioDesignElementProps {
+  /**
+   * The image element to render in the studio.
+   */
   element: FlatImageElement;
 }
 

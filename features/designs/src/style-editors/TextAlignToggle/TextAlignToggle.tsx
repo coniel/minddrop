@@ -5,9 +5,15 @@ import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface TextAlignToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a toggle group for selecting an element's text alignment.
+ */
 export const TextAlignToggle = ({ elementId }: TextAlignToggleProps) => {
   const { t } = useTranslation();
   const textAlign = useElementStyle(elementId, 'text-align');

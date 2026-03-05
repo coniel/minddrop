@@ -15,6 +15,9 @@ import {
 import { FlatNumberElement } from '../../types';
 
 export interface NumberPlaceholderFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -24,6 +27,11 @@ function digitCount(value: string): number {
   return digits.length || 0;
 }
 
+/**
+ * Renders an editable placeholder field for number design elements.
+ * Provides a number input, re-roll button, and slider to control
+ * the number of placeholder digits.
+ */
 export const NumberPlaceholderField = ({
   elementId,
 }: NumberPlaceholderFieldProps) => {

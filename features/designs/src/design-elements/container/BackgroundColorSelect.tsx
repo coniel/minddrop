@@ -22,6 +22,10 @@ const transparentOption = {
   swatchClass: 'color-select-swatch-transparent',
 };
 
+/**
+ * Renders a color select and opacity field for configuring
+ * the background color on a container element.
+ */
 export const BackgroundColorSelect = ({
   elementId,
 }: BackgroundColorSelectProps) => {

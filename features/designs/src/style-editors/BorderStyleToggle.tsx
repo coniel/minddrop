@@ -5,6 +5,9 @@ import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface BorderStyleToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -36,6 +39,9 @@ const borderStyleIcons: Record<BorderStyle, React.ReactNode> = {
   ),
 };
 
+/**
+ * Renders a toggle group for selecting an element's border style.
+ */
 export const BorderStyleToggle = ({ elementId }: BorderStyleToggleProps) => {
   const { t } = useTranslation();
   const borderStyle = useElementStyle(elementId, 'borderStyle');

@@ -5,9 +5,16 @@ import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement } from '../../types';
 
 export interface DecimalPlacesFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number input for configuring the decimal places
+ * on a number design element.
+ */
 export const DecimalPlacesField = ({ elementId }: DecimalPlacesFieldProps) => {
   const { decimals } = useElementData(
     elementId,

@@ -4,6 +4,9 @@ import { UrlDesignElement } from './UrlDesignElement';
 const DEFAULT_URL_PLACEHOLDER = 'https://www.example.com/page';
 
 export interface UrlStudioDesignElementProps {
+  /**
+   * The URL element to render in the studio.
+   */
   element: FlatUrlElement;
 }
 

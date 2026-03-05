@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface TruncateFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for setting an element's max line count.
+ */
 export const TruncateField = ({ elementId }: TruncateFieldProps) => {
   const truncate = useElementStyle(elementId, 'truncate');
 

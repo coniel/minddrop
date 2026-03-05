@@ -3,6 +3,9 @@ import { FlatTextElement } from '../../types';
 import { TextDesignElement } from './TextDesignElement';
 
 export interface TextStudioDesignElementProps {
+  /**
+   * The text element to render in the studio.
+   */
   element: FlatTextElement;
 }
 

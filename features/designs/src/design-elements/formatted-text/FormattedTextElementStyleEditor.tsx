@@ -11,9 +11,16 @@ const wordCounts = [
 ];
 
 export interface FormattedTextElementStyleEditorProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders the style editor panel for formatted text design elements.
+ * Provides placeholder, typography, alignment, and margin controls.
+ */
 export const FormattedTextElementStyleEditor: React.FC<
   FormattedTextElementStyleEditorProps
 > = ({ elementId }) => {

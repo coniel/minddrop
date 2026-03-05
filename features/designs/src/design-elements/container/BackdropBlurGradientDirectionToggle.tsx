@@ -5,6 +5,9 @@ import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface BackdropBlurGradientDirectionToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -35,6 +38,10 @@ const directions: {
   },
 ];
 
+/**
+ * Renders a toggle group for choosing the backdrop blur
+ * gradient direction on a container element.
+ */
 export const BackdropBlurGradientDirectionToggle = ({
   elementId,
 }: BackdropBlurGradientDirectionToggleProps) => {

@@ -16,13 +16,19 @@ import {
 import './PlaceholderImageDialog.css';
 
 export interface PlaceholderImageDialogProps {
-  /** Whether the dialog is open. */
+  /**
+   * Whether the dialog is open.
+   */
   open: boolean;
 
-  /** Called when the dialog open state changes. */
+  /**
+   * Called when the dialog open state changes.
+   */
   onOpenChange: (open: boolean) => void;
 
-  /** Called when the user selects an image. */
+  /**
+   * Called when the user selects an image.
+   */
   onSelect: (fileName: string) => void;
 }
 

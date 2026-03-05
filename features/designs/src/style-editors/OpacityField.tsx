@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface OpacityFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's opacity.
+ */
 export const OpacityField = ({ elementId }: OpacityFieldProps) => {
   const opacity = useElementStyle(elementId, 'opacity');
 

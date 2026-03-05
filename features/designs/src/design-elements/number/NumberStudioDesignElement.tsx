@@ -2,6 +2,9 @@ import { FlatNumberElement } from '../../types';
 import { NumberDesignElement } from './NumberDesignElement';
 
 export interface NumberStudioDesignElementProps {
+  /**
+   * The number element to render in the studio.
+   */
   element: FlatNumberElement;
 }
 

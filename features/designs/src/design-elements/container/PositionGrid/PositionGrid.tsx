@@ -8,12 +8,19 @@ import {
 import './PositionGrid.css';
 
 export interface PositionGridProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
 const alignValues: ContainerAlign[] = ['start', 'center', 'end'];
 const justifyValues: ContainerJustify[] = ['start', 'center', 'end'];
 
+/**
+ * Renders a 3x3 grid of buttons for choosing the alignment
+ * and justification of children in a container element.
+ */
 export const PositionGrid = ({ elementId }: PositionGridProps) => {
   const { t } = useTranslation();
   const alignItems = useElementStyle(elementId, 'alignItems');

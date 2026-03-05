@@ -6,9 +6,16 @@ import { FlatNumberElement } from '../../types';
 import { FormatTextStylePopover } from '../formatted-text/FormatTextStylePopover';
 
 export interface SuffixFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a text input and style popover for configuring the
+ * suffix on a number design element.
+ */
 export const SuffixField = ({ elementId }: SuffixFieldProps) => {
   const { suffix } = useElementData(
     elementId,

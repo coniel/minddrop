@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface LineHeightFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's line height.
+ */
 export const LineHeightField = ({ elementId }: LineHeightFieldProps) => {
   const lineHeight = useElementStyle(elementId, 'line-height');
 

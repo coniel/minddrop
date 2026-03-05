@@ -26,6 +26,9 @@ import { StaticElementField } from '../../style-editors/StaticElementField';
 import { FlatIconElement } from '../../types';
 
 export interface IconElementStyleEditorProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -35,6 +38,10 @@ const transparentOption = {
   swatchClass: 'color-select-swatch-transparent',
 };
 
+/**
+ * Renders the style editor panel for icon design elements.
+ * Provides icon selection, size, color, container, and margin controls.
+ */
 export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
   elementId,
 }) => {

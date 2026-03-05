@@ -9,6 +9,9 @@ import {
 } from '../../../DesignStudioStore';
 
 export interface DirectionToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -29,6 +32,10 @@ const directions: {
   },
 ];
 
+/**
+ * Renders a toggle group for choosing the flex direction
+ * (column or row) on a container element.
+ */
 export const DirectionToggle = ({ elementId }: DirectionToggleProps) => {
   const { t } = useTranslation();
   const direction = useElementStyle(elementId, 'direction');

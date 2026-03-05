@@ -11,9 +11,16 @@ import {
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface SizingFieldsProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders width, height, max-width, and max-height fields with
+ * sync and unit toggle controls.
+ */
 export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
   const width = useElementStyle(elementId, 'width');
   const height = useElementStyle(elementId, 'height');

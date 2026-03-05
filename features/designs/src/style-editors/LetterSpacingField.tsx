@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface LetterSpacingFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's letter spacing.
+ */
 export const LetterSpacingField = ({ elementId }: LetterSpacingFieldProps) => {
   const letterSpacing = useElementStyle(elementId, 'letter-spacing');
 

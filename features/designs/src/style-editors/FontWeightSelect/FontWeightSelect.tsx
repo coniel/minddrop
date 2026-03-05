@@ -11,6 +11,9 @@ export interface FontWeightSelectProps {
   elementId: string;
 }
 
+/**
+ * Renders a select dropdown for choosing an element's font weight.
+ */
 export const FontWeightSelect = ({ elementId }: FontWeightSelectProps) => {
   const { t } = useTranslation();
   const fontWeight = useElementStyle(elementId, 'font-weight');

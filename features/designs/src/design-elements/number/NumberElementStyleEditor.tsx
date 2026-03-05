@@ -20,9 +20,17 @@ import { SuffixField } from './SuffixField';
 import { ThousandsSeparatorSelect } from './ThousandsSeparatorSelect';
 
 export interface NumberElementStyleEditorProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders the style editor panel for number design elements.
+ * Provides placeholder, number format, typography, alignment,
+ * and margin controls.
+ */
 export const NumberElementStyleEditor: React.FC<
   NumberElementStyleEditorProps
 > = ({ elementId }) => {

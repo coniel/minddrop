@@ -35,11 +35,26 @@ import {
 import { FlatNumberElement } from '../../types';
 
 export interface FormatTextStylePopoverProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
+
+  /**
+   * Which affix style to configure.
+   */
   styleKey: 'prefixStyle' | 'suffixStyle';
+
+  /**
+   * The i18n label for the popover trigger button.
+   */
   label: string;
 }
 
+/**
+ * Renders a popover with typography controls for customising the
+ * prefix or suffix style on a number design element.
+ */
 export const FormatTextStylePopover = ({
   elementId,
   styleKey,

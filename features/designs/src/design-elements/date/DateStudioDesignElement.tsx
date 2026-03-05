@@ -2,6 +2,9 @@ import { FlatDateElement } from '../../types';
 import { DateDesignElement } from './DateDesignElement';
 
 export interface DateStudioDesignElementProps {
+  /**
+   * The date element to render in the studio.
+   */
   element: FlatDateElement;
 }
 

@@ -18,9 +18,17 @@ import { FlatImageElement } from '../../types';
 import { ObjectFitSelect } from './ObjectFitSelect';
 
 export interface ImageElementStyleEditorProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders the style editor panel for image design elements.
+ * Provides placeholder image, sizing, object fit, round, border,
+ * opacity, and margin controls.
+ */
 export const ImageElementStyleEditor: React.FC<
   ImageElementStyleEditorProps
 > = ({ elementId }) => {

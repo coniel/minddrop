@@ -4,6 +4,9 @@ import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useDesignStudioStore } from '../DesignStudioStore';
 
 export interface MarginFieldsProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -16,6 +19,9 @@ const sides = [
 
 type SideKey = (typeof sides)[number];
 
+/**
+ * Renders four margin fields arranged in a cross layout with a sync toggle.
+ */
 export const MarginFields = ({ elementId }: MarginFieldsProps) => {
   // Read all 4 margin values from the store (stored as rem, displayed as px)
   const values = useDesignStudioStore((state) => {

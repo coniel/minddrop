@@ -11,7 +11,14 @@ import { updateDesignElement, useElementData } from '../DesignStudioStore';
 import { FlatTextElement } from '../types';
 
 export interface TextPlaceholderFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
+
+  /**
+   * Custom word count steps for the lorem ipsum slider.
+   */
   wordCounts?: number[];
 }
 
@@ -37,6 +44,10 @@ function closestWordCountStep(text: string, counts: number[]): number {
   return closest + 1;
 }
 
+/**
+ * Renders a text field with a lorem ipsum generator slider for
+ * editing an element's placeholder text.
+ */
 export const TextPlaceholderField = ({
   elementId,
   wordCounts: wordCountsProp,

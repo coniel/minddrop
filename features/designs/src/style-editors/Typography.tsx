@@ -13,9 +13,16 @@ import { TruncateField } from './TruncateField';
 import { UnderlineToggle } from './UnderlineToggle';
 
 export interface FontFamilyProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders the full typography editor panel with font, color, size,
+ * spacing, transform, max-width, and truncation controls.
+ */
 export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
   return (
     <Stack gap={3}>

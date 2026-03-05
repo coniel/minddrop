@@ -13,9 +13,18 @@ import { handleDropOnGap } from '../../handleDropOnGap';
 import { FlatContainerDesignElement } from '../../types';
 
 export interface ContainerStudioDesignElementProps {
+  /**
+   * The container element to render in the studio.
+   */
   element: FlatContainerDesignElement;
 }
 
+/**
+ * Renders a container element in the design studio.
+ * Wraps children in a flex drop container for drag-and-drop
+ * reordering, with support for background images and
+ * backdrop effects.
+ */
 export const ContainerStudioDesignElement: React.FC<
   ContainerStudioDesignElementProps
 > = ({ element }) => {

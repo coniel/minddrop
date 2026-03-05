@@ -4,6 +4,9 @@ import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useDesignStudioStore } from '../DesignStudioStore';
 
 export interface PaddingFieldsProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -16,6 +19,9 @@ const sides = [
 
 type SideKey = (typeof sides)[number];
 
+/**
+ * Renders four padding fields arranged in a cross layout with a sync toggle.
+ */
 export const PaddingFields = ({ elementId }: PaddingFieldsProps) => {
   // Read all 4 padding values from the store (stored as rem, displayed as px)
   const values = useDesignStudioStore((state) => {

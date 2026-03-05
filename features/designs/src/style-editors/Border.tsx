@@ -5,10 +5,20 @@ import { BorderStyleToggle } from './BorderStyleToggle';
 import { BorderWidthField } from './BorderWidthField';
 
 export interface BorderProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
+
+  /**
+   * Whether to disable the border radius control.
+   */
   disableRadius?: boolean;
 }
 
+/**
+ * Renders border style, width, color, and radius controls for an element.
+ */
 export const Border: React.FC<BorderProps> = ({ elementId, disableRadius }) => {
   return (
     <Stack gap={3}>

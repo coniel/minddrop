@@ -6,6 +6,9 @@ import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOptions } from '../../types';
 
 export interface BackgroundImageFitSelectProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -15,6 +18,10 @@ const options: StyleOptions<ObjectFit> = [
   { value: 'fill', label: 'designs.background-image-fit.fill' },
 ];
 
+/**
+ * Renders a select for choosing the background image fit mode
+ * on a container element.
+ */
 export const BackgroundImageFitSelect = ({
   elementId,
 }: BackgroundImageFitSelectProps) => {

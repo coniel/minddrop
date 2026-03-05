@@ -4,6 +4,9 @@ import { Group, IconButton, NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useDesignStudioStore } from '../DesignStudioStore';
 
 export interface BorderRadiusFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -23,6 +26,10 @@ const cornerLabels: Record<CornerKey, string> = {
   borderRadiusBottomLeft: 'designs.border.radius.bottom-left',
 };
 
+/**
+ * Renders four corner radius fields with a sync toggle for an element's
+ * border radius.
+ */
 export const BorderRadiusField = ({ elementId }: BorderRadiusFieldProps) => {
   const values = useDesignStudioStore((state) => {
     const style = state.elements[elementId].style as ContainerElementStyle;

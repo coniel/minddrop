@@ -7,9 +7,16 @@ import { TextPlaceholderField } from '../../style-editors/TextPlaceholderField';
 import { Typography } from '../../style-editors/Typography';
 
 export interface TextElementStyleEditorProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders the style editor panel for text design elements.
+ * Provides placeholder, typography, alignment, and margin controls.
+ */
 export const TextElementStyleEditor: React.FC<TextElementStyleEditorProps> = ({
   elementId,
 }) => {

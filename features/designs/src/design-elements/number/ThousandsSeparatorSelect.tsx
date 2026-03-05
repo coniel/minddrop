@@ -5,6 +5,9 @@ import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement, StyleOption } from '../../types';
 
 export interface ThousandsSeparatorSelectProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -33,6 +36,10 @@ const options: (StyleOption<ThousandsSeparator> & {
   },
 ];
 
+/**
+ * Renders a toggle group for choosing the thousands separator
+ * on a number design element.
+ */
 export const ThousandsSeparatorSelect = ({
   elementId,
 }: ThousandsSeparatorSelectProps) => {

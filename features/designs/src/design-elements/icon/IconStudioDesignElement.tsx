@@ -9,6 +9,9 @@ import { FlatIconElement } from '../../types';
 import { IconDesignElement } from './IconDesignElement';
 
 export interface IconStudioDesignElementProps {
+  /**
+   * The icon element to render in the studio.
+   */
   element: FlatIconElement;
 }
 

@@ -3,9 +3,15 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface BorderWidthFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number field for editing an element's border width.
+ */
 export const BorderWidthField = ({ elementId }: BorderWidthFieldProps) => {
   const borderWidth = useElementStyle(elementId, 'borderWidth');
 

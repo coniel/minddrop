@@ -3,9 +3,16 @@ import { Slider } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface BackdropBlurGradientExtentSliderProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a slider for adjusting the backdrop blur gradient
+ * extent on a container element.
+ */
 export const BackdropBlurGradientExtentSlider = ({
   elementId,
 }: BackdropBlurGradientExtentSliderProps) => {

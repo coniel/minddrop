@@ -6,6 +6,9 @@ import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOption } from '../../types';
 
 export interface TextTransformToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -34,6 +37,9 @@ const options: (StyleOption<TextTransform> & {
   },
 ];
 
+/**
+ * Renders a toggle group for selecting an element's text transform.
+ */
 export const TextTransformToggle = ({
   elementId,
 }: TextTransformToggleProps) => {

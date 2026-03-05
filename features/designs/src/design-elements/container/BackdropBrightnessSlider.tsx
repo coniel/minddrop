@@ -3,9 +3,16 @@ import { Slider } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface BackdropBrightnessSliderProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a slider for adjusting the backdrop brightness
+ * on a container element.
+ */
 export const BackdropBrightnessSlider = ({
   elementId,
 }: BackdropBrightnessSliderProps) => {

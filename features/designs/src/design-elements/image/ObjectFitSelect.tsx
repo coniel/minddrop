@@ -6,6 +6,9 @@ import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOptions } from '../../types';
 
 export interface ObjectFitSelectProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -15,6 +18,10 @@ const options: StyleOptions<ObjectFit> = [
   { value: 'fill', label: 'designs.image.sizing.object-fit.fill' },
 ];
 
+/**
+ * Renders a select for choosing the object-fit mode
+ * on an image design element.
+ */
 export const ObjectFitSelect = ({ elementId }: ObjectFitSelectProps) => {
   const { t } = useTranslation();
   const value = useElementStyle(elementId, 'objectFit');

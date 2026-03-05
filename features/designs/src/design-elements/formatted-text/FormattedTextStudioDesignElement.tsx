@@ -3,6 +3,9 @@ import { FlatFormattedTextElement } from '../../types';
 import { FormattedTextDesignElement } from './FormattedTextDesignElement';
 
 export interface FormattedTextStudioDesignElementProps {
+  /**
+   * The formatted text element to render in the studio.
+   */
   element: FlatFormattedTextElement;
 }
 

@@ -3,9 +3,16 @@ import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface GapFieldProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a number input for adjusting the gap between
+ * children in a container element.
+ */
 export const GapField = ({ elementId }: GapFieldProps) => {
   const gap = useElementStyle(elementId, 'gap');
 

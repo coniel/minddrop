@@ -3,7 +3,14 @@ import { ColorSelect } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface TextColorSelectProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
+
+  /**
+   * Whether to show the inherit option.
+   */
   showInherit?: boolean;
 }
 
@@ -13,6 +20,9 @@ const inheritOption = {
   swatchClass: 'color-select-swatch-default',
 };
 
+/**
+ * Renders a color select for an element's text color.
+ */
 export const TextColorSelect = ({
   elementId,
   showInherit = true,

@@ -11,6 +11,9 @@ export interface FontFamilySelectProps {
   elementId: string;
 }
 
+/**
+ * Renders a select dropdown for choosing an element's font family.
+ */
 export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
   const { t } = useTranslation();
   const fontFamily = useElementStyle(elementId, 'font-family');

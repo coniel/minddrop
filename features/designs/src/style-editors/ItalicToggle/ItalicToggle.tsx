@@ -3,9 +3,15 @@ import { Toggle } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
 export interface ItalicToggleProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
+/**
+ * Renders a toggle button for an element's italic style.
+ */
 export const ItalicToggle = ({ elementId }: ItalicToggleProps) => {
   const italic = useElementStyle(elementId, 'italic');
 

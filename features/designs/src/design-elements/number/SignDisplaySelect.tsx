@@ -6,6 +6,9 @@ import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { FlatNumberElement, StyleOptions } from '../../types';
 
 export interface SignDisplaySelectProps {
+  /**
+   * The ID of the element to edit.
+   */
   elementId: string;
 }
 
@@ -15,6 +18,10 @@ const options: StyleOptions<SignDisplay> = [
   { value: 'never', label: 'designs.number-format.sign-display.never' },
 ];
 
+/**
+ * Renders a select for choosing the sign display mode
+ * on a number design element.
+ */
 export const SignDisplaySelect = ({ elementId }: SignDisplaySelectProps) => {
   const { t } = useTranslation();
 
