@@ -1,6 +1,11 @@
 import type { DesignElement as DesignElementType } from '@minddrop/designs';
 import type { FlatDesignElement } from '../types';
 import {
+  BadgesDesignElement,
+  BadgesElementStyleEditor,
+  BadgesStudioDesignElement,
+} from './badges';
+import {
   ContainerDesignElement,
   ContainerElementStyleEditor,
   ContainerStudioDesignElement,
@@ -104,6 +109,12 @@ const asStudio = (
  * All registered element UI configurations.
  */
 const elementUIs: ElementUIConfig[] = [
+  {
+    type: 'badges',
+    DisplayComponent: asDisplay(BadgesDesignElement),
+    StudioComponent: asStudio(BadgesStudioDesignElement),
+    StyleEditorComponent: BadgesElementStyleEditor,
+  },
   {
     type: 'text',
     DisplayComponent: asDisplay(TextDesignElement),

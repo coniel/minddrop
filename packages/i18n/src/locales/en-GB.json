@@ -963,6 +963,22 @@
         "never": "Never"
       }
     },
+    "badges": {
+      "variant": {
+        "label": "Variant",
+        "rectangular": "Rectangular",
+        "round": "Round"
+      },
+      "size": {
+        "label": "Size",
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "placeholder": {
+        "label": "Placeholder"
+      }
+    },
     "date-format": {
       "label": "Date format",
       "mode": {
@@ -1129,6 +1145,7 @@
       "image-viewer": "Image viewer",
       "icon": "Icon",
       "editor": "Editor",
+      "badges": "Badges",
       "webview": "Web view",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",

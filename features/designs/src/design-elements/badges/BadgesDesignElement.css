@@ -1,0 +1,6 @@
+.badges-element-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}

@@ -35,7 +35,10 @@ export const ElementStyleEditor: React.FC = () => {
           </Group>
 
           {StyleEditorComponent && (
-            <StyleEditorComponent elementId={selectedElementId} />
+            <StyleEditorComponent
+              key={selectedElementId}
+              elementId={selectedElementId}
+            />
           )}
         </Stack>
       </ScrollArea>

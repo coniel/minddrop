@@ -975,6 +975,22 @@ declare module 'i18next' {
               never: string;
             };
           };
+          badges: {
+            variant: {
+              label: string;
+              rectangular: string;
+              round: string;
+            };
+            size: {
+              label: string;
+              small: string;
+              medium: string;
+              large: string;
+            };
+            placeholder: {
+              label: string;
+            };
+          };
           'date-format': {
             label: string;
             mode: {
@@ -1141,6 +1157,7 @@ declare module 'i18next' {
             'image-viewer': string;
             icon: string;
             editor: string;
+            badges: string;
             webview: string;
             'text-placeholder': string;
             'container-empty-hint': string;

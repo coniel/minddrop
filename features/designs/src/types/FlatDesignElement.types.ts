@@ -1,4 +1,5 @@
 import {
+  BadgesElement,
   ContainerElement,
   DateElement,
   EditorElement,
@@ -25,6 +26,7 @@ export type FlatContainerDesignElement = Omit<ContainerElement, 'children'> &
 
 export type FlatLeafDesignElement = LeafDesignElement & Parent;
 
+export type FlatBadgesElement = BadgesElement & Parent;
 export type FlatTextElement = TextElement & Parent;
 export type FlatFormattedTextElement = FormattedTextElement & Parent;
 export type FlatNumberElement = NumberElement & Parent;

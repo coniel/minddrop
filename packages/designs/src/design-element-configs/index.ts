@@ -2,6 +2,8 @@ import type { TranslationKey } from '@minddrop/i18n';
 import type { PropertyType } from '@minddrop/properties';
 import type { UiIconName } from '@minddrop/ui-icons';
 import type { DesignElementConfig, ElementGroup } from '../types';
+import { BadgesElementConfig } from './badges';
+import type { BadgesElement } from './badges';
 import { ContainerElementConfig } from './container';
 import type { ContainerElement } from './container';
 import { DateElementConfig } from './date';
@@ -32,6 +34,7 @@ import type { WebviewElement } from './webview';
  *****************************************************************************/
 
 export * from './placeholder-generators';
+export * from './badges';
 export * from './text';
 export * from './formatted-text';
 export * from './number';
@@ -53,6 +56,7 @@ export * from './root';
  * Union of all leaf (non-container) design element types.
  */
 export type LeafDesignElement =
+  | BadgesElement
   | TextElement
   | FormattedTextElement
   | NumberElement
@@ -75,6 +79,7 @@ export type DesignElement = LeafDesignElement | ContainerElement | RootElement;
 export type DesignElementType =
   | 'root'
   | 'container'
+  | 'badges'
   | 'text'
   | 'formatted-text'
   | 'number'
@@ -96,6 +101,7 @@ type Template<T> = Omit<T, 'id'>;
  * Union of all design element template types (element without id).
  */
 export type DesignElementTemplate =
+  | Template<BadgesElement>
   | Template<TextElement>
   | Template<FormattedTextElement>
   | Template<NumberElement>
@@ -116,6 +122,7 @@ export type DesignElementTemplate =
  * All registered design element configs.
  */
 export const elementConfigs: DesignElementConfig[] = [
+  BadgesElementConfig,
   TextElementConfig,
   FormattedTextElementConfig,
   EditorElementConfig,
