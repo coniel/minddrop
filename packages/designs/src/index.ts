@@ -1,7 +1,7 @@
 export * from './createElementCssStyle';
 export * from './types';
 export * from './utils/getPlaceholderMediaDirPath';
-export * from './design-element-templates';
+export * from './design-element-configs';
 export * from './styles';
 export { defaultDesignIds } from './default-designs';
 export * from './errors';

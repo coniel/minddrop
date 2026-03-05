@@ -695,6 +695,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
       '@minddrop/ui-icons':
         specifier: workspace:*
         version: link:../../ui/icons

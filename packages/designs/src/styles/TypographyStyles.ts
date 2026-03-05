@@ -1,7 +1,8 @@
+import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 
-const i18nKey = (key: string) => `designs.typography.${key}`;
+const i18nKey = createI18nKeyBuilder('designs.typography.');
 
 export type FontFamily = 'inherit' | 'sans' | 'serif' | 'mono';
 export type FontWeight =
@@ -55,20 +56,19 @@ const weightValues: FontWeight[] = [
   900,
 ];
 
-export const fonts: { label: string; value: FontFamily }[] = fontValues.map(
-  (font) => ({
-    label: i18nKey(`font-family.${font}`),
+export const fonts: { label: TranslationKey; value: FontFamily }[] =
+  fontValues.map((font) => ({
+    label: i18nKey('font-family', font),
     value: font,
-  }),
-);
+  }));
 
 export const fontWeights = weightValues.map((weight) => ({
-  label: i18nKey(`font-weight.${weight}`),
+  label: i18nKey('font-weight', weight),
   value: weight,
 }));
 
 export const textAligns: {
-  label: string;
+  label: TranslationKey;
   value: TextAlign;
   icon: UiIconName;
 }[] = [
@@ -95,7 +95,7 @@ export const textAligns: {
 ];
 
 export const textTransforms: {
-  label: string;
+  label: TranslationKey;
   value: TextTransform;
   icon: UiIconName;
 }[] = [

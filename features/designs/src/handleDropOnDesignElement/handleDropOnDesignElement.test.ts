@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TextElementTemplate } from '@minddrop/designs';
+import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { useDesignStudioStore } from '../DesignStudioStore';
 import {
@@ -62,7 +62,11 @@ describe('handleDropOnDesignElement', () => {
       const drop: DropEventData<DesignStudioDropEventData> = {
         ...baseEvent,
         position: 'after',
-        data: { [DesignElementTemplatesDataKey]: [TextElementTemplate] },
+        data: {
+          [DesignElementTemplatesDataKey]: [
+            TextElementConfig.template as DesignElementTemplate,
+          ],
+        },
       };
 
       handleDropOnDesignElement(drop);
@@ -76,7 +80,11 @@ describe('handleDropOnDesignElement', () => {
         position: 'before',
         index: 1,
         targetId: testDesign.tree.children[1].id,
-        data: { [DesignElementTemplatesDataKey]: [TextElementTemplate] },
+        data: {
+          [DesignElementTemplatesDataKey]: [
+            TextElementConfig.template as DesignElementTemplate,
+          ],
+        },
       };
 
       handleDropOnDesignElement(drop);

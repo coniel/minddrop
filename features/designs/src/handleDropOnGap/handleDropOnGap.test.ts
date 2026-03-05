@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { TextElementTemplate } from '@minddrop/designs';
+import { DesignElementTemplate, TextElementConfig } from '@minddrop/designs';
 import { DropEventData } from '@minddrop/selection';
 import { useDesignStudioStore } from '../DesignStudioStore';
 import {
@@ -61,7 +61,11 @@ describe('handleDropOnGap', () => {
 
       const drop: DropEventData<DesignStudioDropEventData> = {
         ...baseEvent,
-        data: { [DesignElementTemplatesDataKey]: [TextElementTemplate] },
+        data: {
+          [DesignElementTemplatesDataKey]: [
+            TextElementConfig.template as DesignElementTemplate,
+          ],
+        },
       };
 
       handleDropOnGap(drop, 'root', 1);

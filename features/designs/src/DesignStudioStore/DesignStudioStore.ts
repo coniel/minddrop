@@ -1,10 +1,8 @@
 import {
-  DateFormat,
   Design,
   DesignElementStyle,
   DesignElementTemplate,
   Designs,
-  NumberFormat,
 } from '@minddrop/designs';
 import {
   PropertiesSchema,
@@ -131,7 +129,7 @@ export interface DesignStudioStore {
       style?: Partial<DesignElementStyle>;
       placeholder?: string;
       placeholderImage?: string;
-      format?: Partial<NumberFormat> | Partial<DateFormat>;
+      format?: Record<string, unknown>;
       icon?: string;
     },
   ) => void;
@@ -404,7 +402,7 @@ export const updateDesignElement = (
     style?: Partial<DesignElementStyle>;
     placeholder?: string;
     placeholderImage?: string;
-    format?: Partial<NumberFormat> | Partial<DateFormat>;
+    format?: Record<string, unknown>;
     icon?: string;
     static?: boolean;
   },

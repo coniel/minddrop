@@ -1,44 +1,25 @@
 import {
   ContainerElement,
   DesignElement,
-  DesignElementType,
+  ELEMENT_GROUPS,
+  PropertyTypeElementMap,
   RootElement,
+  elementIconMap,
+  elementLabelMap,
 } from '@minddrop/designs';
 import { PropertyType } from '@minddrop/properties';
-import { UiIconName } from '@minddrop/ui-icons';
 
 // -- Design Studio constants --
 
 export const DesignElementTemplatesDataKey = 'design-element-templates';
 export const DesignElementsDataKey = 'design-elements';
 
-export const elementIconMap: Record<string, UiIconName> = {
-  root: 'layout',
-  container: 'box',
-  text: 'align-left',
-  'formatted-text': 'file-text',
-  number: 'hash',
-  date: 'calendar',
-  url: 'link',
-  image: 'image',
-  'image-viewer': 'scan',
-  icon: 'smile',
-  editor: 'text-cursor',
-  webview: 'globe',
-};
-
-export const elementLabelMap: Record<string, string> = {
-  container: 'design-studio.elements.container',
-  text: 'design-studio.elements.text',
-  'formatted-text': 'design-studio.elements.formatted-text',
-  number: 'design-studio.elements.number',
-  date: 'design-studio.elements.date',
-  url: 'design-studio.elements.url',
-  image: 'design-studio.elements.image',
-  'image-viewer': 'design-studio.elements.image-viewer',
-  icon: 'design-studio.elements.icon',
-  editor: 'design-studio.elements.editor',
-  webview: 'design-studio.elements.webview',
+// Re-export config-derived maps for feature-internal consumers
+export {
+  ELEMENT_GROUPS,
+  PropertyTypeElementMap,
+  elementIconMap,
+  elementLabelMap,
 };
 
 // -- Design Property Mapping constants --
@@ -49,28 +30,6 @@ export const elementLabelMap: Record<string, string> = {
  * from the property list onto design elements.
  */
 export const DatabasePropertiesDataKey = 'database-properties';
-
-/**
- * Maps each property type to the design element types that
- * can render it. Used to determine which design elements
- * accept which property types during drag-and-drop mapping.
- */
-export const PropertyTypeElementMap: Record<PropertyType, DesignElementType[]> =
-  {
-    title: ['text'],
-    text: ['text'],
-    'formatted-text': ['formatted-text', 'editor'],
-    url: ['url', 'webview'],
-    select: ['text'],
-    toggle: ['text'],
-    number: ['number'],
-    date: ['date'],
-    created: ['date'],
-    'last-modified': ['date'],
-    image: ['image', 'image-viewer', 'container', 'root'],
-    file: ['image', 'image-viewer', 'container', 'root'],
-    icon: ['icon'],
-  };
 
 /**
  * Checks whether a property type is compatible with a given
@@ -89,7 +48,7 @@ export function isPropertyCompatibleWithElement(
 
   const compatibleTypes = PropertyTypeElementMap[propertyType];
 
-  if (!compatibleTypes.includes(element.type)) {
+  if (!compatibleTypes || !compatibleTypes.includes(element.type)) {
     return false;
   }
 

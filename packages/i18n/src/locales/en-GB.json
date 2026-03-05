@@ -1117,6 +1117,7 @@
       "layers": "Layers"
     },
     "elements": {
+      "root": "Root",
       "container": "Container",
       "text": "Text",
       "title": "Title",

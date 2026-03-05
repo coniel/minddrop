@@ -6,7 +6,7 @@ import {
 } from '@minddrop/events';
 import { DesignBrowser, DesignBrowserProps } from './DesignBrowser';
 import { DesignPropertyMappingStore } from './DesignPropertyMappingStore';
-import { DesignStudio } from './components/DesignStudio';
+import { DesignStudio } from './DesignStudio';
 import {
   BrowseDesignsEvent,
   BrowseDesignsEventData,

@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
 import { ContentColors } from '@minddrop/ui-theme';
+import { elementConfigs } from './design-element-configs';
 import {
   ContainerElementStyle,
   EditorElementStyle,
@@ -9,6 +10,7 @@ import {
   TextElementStyle,
   WebviewElementStyle,
 } from './styles';
+import type { StyleCategory } from './types';
 
 const colorNames: string[] = ContentColors;
 
@@ -378,50 +380,39 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
   };
 }
 
-/**
- * An element with a type and style, used as input for
- * `createElementCssStyle`. Accepts both `DesignElement`
- * and flat element types.
- */
-export type StylableElement =
-  | {
-      type: 'text' | 'formatted-text' | 'number' | 'date' | 'url';
-      style: TextElementStyle;
-    }
-  | { type: 'icon'; style: IconElementStyle }
-  | { type: 'image'; style: ImageElementStyle }
-  | { type: 'image-viewer'; style: ImageViewerElementStyle }
-  | { type: 'editor'; style: EditorElementStyle }
-  | { type: 'webview'; style: WebviewElementStyle }
-  | { type: 'root' | 'container'; style: ContainerElementStyle };
+// Maps style categories to their CSS generator functions
+const styleCategoryFns: Record<StyleCategory, (style: never) => CSSProperties> =
+  {
+    text: createTextCssStyle as (style: never) => CSSProperties,
+    icon: createIconCssStyle as (style: never) => CSSProperties,
+    image: createImageCssStyle as (style: never) => CSSProperties,
+    'image-viewer': createImageViewerCssStyle as (
+      style: never,
+    ) => CSSProperties,
+    editor: createEditorCssStyle as (style: never) => CSSProperties,
+    webview: createWebviewCssStyle as (style: never) => CSSProperties,
+    container: createContainerCssStyle as (style: never) => CSSProperties,
+  };
+
+// Build element type to style category lookup from configs
+const typeToStyleCategory: Record<string, StyleCategory> = Object.fromEntries(
+  elementConfigs.map((config) => [config.type, config.styleCategory]),
+);
 
 /**
  * Maps a design element's style object to a CSS-compatible
- * React style object.
+ * React style object. Uses the element config's styleCategory
+ * to select the appropriate CSS generator.
  *
  * @param element - The design element (or any object with a type and style).
  * @returns A React CSSProperties object.
  */
-export function createElementCssStyle(element: StylableElement): CSSProperties {
-  switch (element.type) {
-    case 'text':
-    case 'formatted-text':
-    case 'number':
-    case 'date':
-    case 'url':
-      return createTextCssStyle(element.style);
-    case 'icon':
-      return createIconCssStyle(element.style);
-    case 'image':
-      return createImageCssStyle(element.style);
-    case 'image-viewer':
-      return createImageViewerCssStyle(element.style);
-    case 'editor':
-      return createEditorCssStyle(element.style);
-    case 'webview':
-      return createWebviewCssStyle(element.style);
-    case 'root':
-    case 'container':
-      return createContainerCssStyle(element.style);
-  }
+export function createElementCssStyle(element: {
+  type: string;
+  style: unknown;
+}): CSSProperties {
+  const category = typeToStyleCategory[element.type];
+  const styleFn = styleCategoryFns[category];
+
+  return styleFn(element.style as never);
 }

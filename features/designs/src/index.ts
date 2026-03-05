@@ -1,4 +1,4 @@
-export * from './components/DesignStudio';
+export * from './DesignStudio';
 export * from './constants';
 export * from './DesignBrowser';
 export * from './DesignCanvas';

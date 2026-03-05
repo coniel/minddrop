@@ -17,6 +17,7 @@
     "@minddrop/eslint-config": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/properties": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "tsconfig": "workspace:*",

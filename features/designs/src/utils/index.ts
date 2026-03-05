@@ -1,7 +1,4 @@
 export * from './flattenTree';
-export * from './formatDesignDate';
-export * from './formatNumber';
-export * from './formatUrl';
 export * from './generateLoremIpsum';
 export * from './getBackgroundColorStyle';
 export * from './getBorderColorStyle';
@@ -9,4 +6,3 @@ export * from './getContentColorCss';
 export * from './isLeafElement';
 export * from './isValidDesignStudioDrop';
 export * from './reconstructTree';
-export * from './toEmbedUrl';

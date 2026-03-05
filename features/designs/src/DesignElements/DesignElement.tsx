@@ -1,23 +1,6 @@
-import {
-  ContainerElement,
-  DesignElement as DesignElementType,
-  EditorElement,
-  ImageViewerElement,
-  UrlElement,
-  WebviewElement,
-} from '@minddrop/designs';
-import { DesignContainerElement } from './DesignContainerElement';
-import { DesignDateElement } from './DesignDateElement';
-import { DesignEditorElement } from './DesignEditorElement';
+import { DesignElement as DesignElementType } from '@minddrop/designs';
+import { elementUIMap } from '../design-elements';
 import { useDesignElementWrapper } from './DesignElementWrapperContext';
-import { DesignFormattedTextElement } from './DesignFormattedTextElement';
-import { DesignIconElement } from './DesignIconElement';
-import { DesignImageElement } from './DesignImageElement';
-import { DesignImageViewerElement } from './DesignImageViewerElement';
-import { DesignNumberElement } from './DesignNumberElement';
-import { DesignTextElement } from './DesignTextElement';
-import { DesignUrlElement } from './DesignUrlElement';
-import { DesignWebviewElement } from './DesignWebviewElement';
 
 export interface DesignElementProps {
   /**
@@ -35,49 +18,15 @@ export interface DesignElementProps {
 export const DesignElement: React.FC<DesignElementProps> = ({ element }) => {
   const wrapperConfig = useDesignElementWrapper();
 
-  let rendered: React.ReactNode;
+  // Look up the UI config for this element type
+  const ui = elementUIMap[element.type];
 
-  switch (element.type) {
-    case 'text':
-      rendered = <DesignTextElement element={element} />;
-      break;
-    case 'formatted-text':
-      rendered = <DesignFormattedTextElement element={element} />;
-      break;
-    case 'number':
-      rendered = <DesignNumberElement element={element} />;
-      break;
-    case 'date':
-      rendered = <DesignDateElement element={element} />;
-      break;
-    case 'url':
-      rendered = <DesignUrlElement element={element as UrlElement} />;
-      break;
-    case 'image':
-      rendered = <DesignImageElement element={element} />;
-      break;
-    case 'image-viewer':
-      rendered = (
-        <DesignImageViewerElement element={element as ImageViewerElement} />
-      );
-      break;
-    case 'icon':
-      rendered = <DesignIconElement element={element} />;
-      break;
-    case 'editor':
-      rendered = <DesignEditorElement element={element as EditorElement} />;
-      break;
-    case 'webview':
-      rendered = <DesignWebviewElement element={element as WebviewElement} />;
-      break;
-    case 'container':
-      rendered = (
-        <DesignContainerElement element={element as ContainerElement} />
-      );
-      break;
-    default:
-      return null;
+  if (!ui) {
+    return null;
   }
+
+  const Component = ui.DisplayComponent;
+  let rendered: React.ReactNode = <Component element={element} />;
 
   // Apply the wrapper if provided and the element type is not excluded
   if (wrapperConfig && !wrapperConfig.excludeTypes.includes(element.type)) {

@@ -1129,6 +1129,7 @@ declare module 'i18next' {
             layers: string;
           };
           elements: {
+            root: string;
             container: string;
             text: string;
             title: string;

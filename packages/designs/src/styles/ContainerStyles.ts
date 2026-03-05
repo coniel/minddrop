@@ -1,11 +1,12 @@
+import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 
 export type BorderStyle = 'none' | 'solid' | 'dashed' | 'dotted';
 
-const i18nKey = (key: string) => `designs.border.${key}`;
+const i18nKey = createI18nKeyBuilder('designs.border.');
 
 export const borderStyles: {
-  label: string;
+  label: TranslationKey;
   value: BorderStyle;
   icon: UiIconName;
 }[] = [
