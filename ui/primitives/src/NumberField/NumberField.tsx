@@ -1,9 +1,13 @@
 import React from 'react';
-import { FieldRoot } from '../fields/FieldRoot';
-import { FieldLabel } from '../fields/FieldLabel';
 import { FieldError } from '../fields/FieldError';
+import { FieldLabel } from '../fields/FieldLabel';
+import { FieldRoot } from '../fields/FieldRoot';
 import { NumberInput } from './NumberInput';
-import type { NumberInputVariant, NumberInputSize, NumberInputProps } from './NumberInput';
+import type {
+  NumberInputProps,
+  NumberInputSize,
+  NumberInputVariant,
+} from './NumberInput';
 
 export type NumberFieldVariant = NumberInputVariant;
 export type NumberFieldSize = NumberInputSize;
@@ -25,6 +29,7 @@ export interface NumberFieldProps
     | 'leading'
     | 'trailing'
     | 'clearable'
+    | 'onBlur'
   > {
   className?: string;
   label?: string;
@@ -51,6 +56,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
       leading,
       trailing,
       clearable,
+      onBlur,
     },
     ref,
   ) => {
@@ -79,6 +85,7 @@ export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(
           leading={leading}
           trailing={trailing}
           clearable={clearable}
+          onBlur={onBlur}
         />
 
         {error && <FieldError error={error} />}

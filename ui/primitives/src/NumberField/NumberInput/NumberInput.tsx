@@ -25,6 +25,7 @@ export interface NumberInputProps {
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
   clearable?: boolean;
+  onBlur?: () => void;
 }
 
 export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
@@ -46,6 +47,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
       leading,
       trailing,
       clearable,
+      onBlur,
     },
     ref,
   ) => {
@@ -109,11 +111,10 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
             ref={inputRef}
             className="text-input-input number-input-input"
             placeholder={placeholder ? t(placeholder) : undefined}
+            onBlur={onBlur}
           />
 
-          {trailing && (
-            <div className="text-input-trailing">{trailing}</div>
-          )}
+          {trailing && <div className="text-input-trailing">{trailing}</div>}
 
           <div className="number-input-gradient" aria-hidden />
 
@@ -151,7 +152,10 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
               >
                 <span className="number-input-decrement-icon" aria-hidden />
               </button>
-            ) : clearable && value !== undefined && value !== null && value <= min! ? (
+            ) : clearable &&
+              value !== undefined &&
+              value !== null &&
+              value <= min! ? (
               <button
                 ref={decrementRef}
                 type="button"
