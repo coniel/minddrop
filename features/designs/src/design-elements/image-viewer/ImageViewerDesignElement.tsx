@@ -15,6 +15,11 @@ export interface ImageViewerDesignElementProps {
    * The image viewer element to render.
    */
   element: ImageViewerElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -25,10 +30,11 @@ export interface ImageViewerDesignElementProps {
  */
 export const ImageViewerDesignElement: React.FC<
   ImageViewerDesignElementProps
-> = ({ element }) => {
+> = ({ element, rootProps }) => {
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
   const containerStyle = createImageViewerCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
   // When no explicit height is configured, grow to fill the
   // parent flex container
@@ -54,10 +60,11 @@ export const ImageViewerDesignElement: React.FC<
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // No image set — show placeholder with icon
+  // No image set - show placeholder with icon
   if (!imageSrc) {
     return (
       <div
+        {...rootProps}
         style={{
           ...containerStyle,
           display: 'flex',
@@ -67,6 +74,7 @@ export const ImageViewerDesignElement: React.FC<
           gap: 'var(--space-2)',
           aspectRatio: '16 / 9',
           backgroundColor: 'var(--neutral-400)',
+          ...rootStyle,
         }}
       >
         <Icon
@@ -79,6 +87,11 @@ export const ImageViewerDesignElement: React.FC<
   }
 
   return (
-    <ImageViewer src={imageSrc} style={containerStyle} preview={preview} />
+    <ImageViewer
+      {...rootProps}
+      src={imageSrc}
+      style={{ ...containerStyle, ...rootStyle }}
+      preview={preview}
+    />
   );
 };

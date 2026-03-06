@@ -7,6 +7,11 @@ export interface UrlDesignElementProps {
    * The URL element to render.
    */
   element: UrlElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -17,6 +22,7 @@ export interface UrlDesignElementProps {
  */
 export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
@@ -35,9 +41,12 @@ export const UrlDesignElement: React.FC<UrlDesignElementProps> = ({
       })
     : rawText;
 
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+
   return (
     <span
-      style={createTextCssStyle(element.style)}
+      {...rootProps}
+      style={{ ...createTextCssStyle(element.style), ...rootStyle }}
       data-placeholder={element.placeholder}
     >
       {displayText}

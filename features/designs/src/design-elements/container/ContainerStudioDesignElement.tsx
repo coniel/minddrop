@@ -17,6 +17,12 @@ export interface ContainerStudioDesignElementProps {
    * The container element to render in the studio.
    */
   element: FlatContainerDesignElement;
+
+  /**
+   * Props to spread on the outermost DOM element for
+   * drag-and-drop and click-to-select behaviour.
+   */
+  rootProps: Record<string, unknown>;
 }
 
 /**
@@ -27,10 +33,17 @@ export interface ContainerStudioDesignElementProps {
  */
 export const ContainerStudioDesignElement: React.FC<
   ContainerStudioDesignElementProps
-> = ({ element }) => {
+> = ({ element, rootProps }) => {
   const { t } = useTranslation();
   const { style } = element;
   const isEmpty = element.children.length === 0;
+
+  // Separate style from rootProps so it can be merged with
+  // container styles rather than clobbering them
+  const { style: rootStyle, ...rootPropsWithoutStyle } = rootProps as {
+    style?: CSSProperties;
+    [key: string]: unknown;
+  };
 
   // Resolve background image path if set
   const imagePath = useMemo(
@@ -53,25 +66,12 @@ export const ContainerStudioDesignElement: React.FC<
   // Gradient overlay style (null when gradient is not active)
   const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
-  // Sizing properties (width/height/maxWidth/maxHeight) are applied
-  // on the DesignStudioElement wrapper so percentage values resolve
-  // against the correct parent. Strip them here to avoid duplication.
-  const {
-    width: _width,
-    height: _height,
-    maxWidth: _maxWidth,
-    maxHeight: _maxHeight,
-    ...baseContainerStyle
-  } = createContainerCssStyle(style);
+  // Use the full container style (sizing is no longer split onto
+  // a wrapper since the wrapper has been removed)
+  const baseContainerStyle = createContainerCssStyle(style);
 
   const containerCssStyle = {
     ...baseContainerStyle,
-    // Fill the wrapper so the container stretches to match
-    // the height allocated by the parent layout
-    flex: 1,
-    // Allow shrinking below content size so children don't
-    // overflow when they exceed the allocated space
-    minHeight: 0,
     // Apply background image URL (only when backdrop effects are not active).
     // When a background color is also set, layer it as a gradient on top
     // of the image so it overlays rather than sitting behind it.
@@ -119,9 +119,7 @@ export const ContainerStudioDesignElement: React.FC<
         key={childId}
         elementId={childId}
         index={index}
-        gap={style.gap}
         isLastChild={index === element.children.length - 1}
-        parentDirection={style.direction}
       />
     ))
   );
@@ -134,8 +132,9 @@ export const ContainerStudioDesignElement: React.FC<
       direction={style.direction}
       align={style.alignItems}
       justify={style.justifyContent}
-      style={containerCssStyle}
+      style={{ ...containerCssStyle, ...rootStyle }}
       onDrop={handleDropOnGap}
+      {...rootPropsWithoutStyle}
     >
       {children}
     </FlexDropContainer>
@@ -146,6 +145,7 @@ export const ContainerStudioDesignElement: React.FC<
   if (hasBackdropWithImage) {
     return (
       <div
+        {...rootPropsWithoutStyle}
         style={{
           backgroundImage: `url(${imageSrc})`,
           backgroundSize: containerCssStyle.backgroundSize,
@@ -154,16 +154,27 @@ export const ContainerStudioDesignElement: React.FC<
           borderRadius: containerCssStyle.borderRadius,
           overflow: 'hidden',
           alignSelf: containerCssStyle.alignSelf,
-          flex: 1,
           // Create stacking context for gradient overlay
           ...(gradientOverlayStyle && {
             position: 'relative' as const,
             isolation: 'isolate' as const,
           }),
+          ...rootStyle,
         }}
       >
         {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
-        {flexDropContainer}
+        <FlexDropContainer
+          key={style.direction}
+          id={element.id}
+          gap={style.gap}
+          direction={style.direction}
+          align={style.alignItems}
+          justify={style.justifyContent}
+          style={containerCssStyle}
+          onDrop={handleDropOnGap}
+        >
+          {children}
+        </FlexDropContainer>
       </div>
     );
   }
@@ -173,15 +184,27 @@ export const ContainerStudioDesignElement: React.FC<
   if (gradientOverlayStyle) {
     return (
       <div
+        {...rootPropsWithoutStyle}
         style={{
           position: 'relative',
           isolation: 'isolate',
           alignSelf: containerCssStyle.alignSelf,
-          flex: 1,
+          ...rootStyle,
         }}
       >
         <div style={gradientOverlayStyle} />
-        {flexDropContainer}
+        <FlexDropContainer
+          key={style.direction}
+          id={element.id}
+          gap={style.gap}
+          direction={style.direction}
+          align={style.alignItems}
+          justify={style.justifyContent}
+          style={containerCssStyle}
+          onDrop={handleDropOnGap}
+        >
+          {children}
+        </FlexDropContainer>
       </div>
     );
   }

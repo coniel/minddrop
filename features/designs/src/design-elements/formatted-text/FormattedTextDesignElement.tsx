@@ -6,6 +6,11 @@ export interface FormattedTextDesignElementProps {
    * The formatted text element to render.
    */
   element: FormattedTextElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -14,12 +19,21 @@ export interface FormattedTextDesignElementProps {
  */
 export const FormattedTextDesignElement: React.FC<
   FormattedTextDesignElementProps
-> = ({ element }) => {
+> = ({ element, rootProps }) => {
   const property = useElementProperty(element.id);
 
   // Use the mapped property value if available, otherwise the placeholder
   const displayText =
     property?.value != null ? String(property.value) : element.placeholder;
 
-  return <div style={createTextCssStyle(element.style)}>{displayText}</div>;
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+
+  return (
+    <div
+      {...rootProps}
+      style={{ ...createTextCssStyle(element.style), ...rootStyle }}
+    >
+      {displayText}
+    </div>
+  );
 };

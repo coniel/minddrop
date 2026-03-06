@@ -1,15 +1,9 @@
-import React, { useCallback } from 'react';
-import { ContainerElementStyle } from '@minddrop/designs';
-import { propsToClass } from '@minddrop/ui-primitives';
-import {
-  DesignStudioStore,
-  useDesignStudioStore,
-  useElement,
-} from '../DesignStudioStore';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from '@minddrop/i18n';
+import { DesignStudioStore, useElement } from '../DesignStudioStore';
 import { elementUIMap } from '../design-elements';
 import { FlatDesignElement } from '../types';
 import { useDesignElementDragDrop } from '../useDesignElementDragDrop';
-import './DesignStudioElement.css';
 
 export interface DesignStudioElementProps {
   /**
@@ -28,50 +22,12 @@ export interface DesignStudioElementProps {
    * @default false
    */
   isLastChild?: boolean;
-
-  /**
-   * The gap between the elements within the same parent.
-   *
-   * @default 0
-   */
-  gap?: number;
-
-  /**
-   * The flex direction of the parent container.
-   * Used to determine how stretch elements fill available space.
-   *
-   * @default 'column'
-   */
-  parentDirection?: React.CSSProperties['flexDirection'];
 }
-
-/**
- * Element types that stretch to fill their parent's height.
- */
-const fillHeightTypes: Set<string> = new Set([
-  'container',
-  'image',
-  'webview',
-  'image-viewer',
-  'editor',
-]);
-
-/**
- * Element types that always fill the full width of their parent.
- */
-const fullWidthTypes: Set<string> = new Set([
-  'image',
-  'image-viewer',
-  'webview',
-  'editor',
-]);
 
 export const DesignStudioElement: React.FC<DesignStudioElementProps> = ({
   elementId,
   index,
   isLastChild = false,
-  gap = 0,
-  parentDirection = 'column',
 }) => {
   const element = useElement(elementId);
 
@@ -84,8 +40,6 @@ export const DesignStudioElement: React.FC<DesignStudioElementProps> = ({
       element={element}
       index={index}
       isLastChild={isLastChild}
-      gap={gap}
-      parentDirection={parentDirection}
     />
   );
 };
@@ -94,24 +48,14 @@ const DesignStudioElementInner: React.FC<{
   element: FlatDesignElement;
   index: number;
   isLastChild: boolean;
-  gap: number;
-  parentDirection: React.CSSProperties['flexDirection'];
-}> = ({ element, index, isLastChild, gap, parentDirection }) => {
-  const isSelected = useDesignStudioStore(
-    (state) => state.highlightedElementId === element.id,
-  );
-  const isFading = useDesignStudioStore(
-    (state) => state.fadingHighlightElementId === element.id,
-  );
+}> = ({ element, index, isLastChild }) => {
+  const { t } = useTranslation();
 
-  const { dragDropProps, dropIndicator, isDragging } = useDesignElementDragDrop(
-    {
-      index,
-      element,
-      isLastChild,
-      gap,
-    },
-  );
+  const { dragDropProps, isDragging } = useDesignElementDragDrop({
+    index,
+    element,
+    isLastChild,
+  });
 
   // Select the element to open its style editor
   const handleClick = useCallback(
@@ -122,146 +66,74 @@ const DesignStudioElementInner: React.FC<{
     [element.id],
   );
 
-  const elementComponent = getElementComponent(element);
-
-  if (!elementComponent) {
-    return null;
-  }
-
-  const stretch = shouldElementStretch(element);
-  const fillHeight = fillHeightTypes.has(element.type);
-  const isRowParent = parentDirection === 'row';
-
-  // For containers, explicit sizing (width/height) must live on the
-  // wrapper so percentage values resolve against the correct parent
-  const isContainer = element.type === 'container';
-  const containerStyle = isContainer
-    ? (element.style as ContainerElementStyle)
-    : null;
-  const containerSizing = containerStyle
-    ? getContainerWrapperSizing(containerStyle)
-    : {};
-  const hasExplicitWidth = isContainer && containerStyle!.width > 0;
-  const hasExplicitHeight = isContainer && containerStyle!.height > 0;
-
-  // Build the wrapper style based on stretch, fill, and explicit sizing
-  const wrapperStyle: React.CSSProperties = {
-    ...containerSizing,
-    ...(stretch
-      ? {
-          alignSelf: 'stretch',
-          ...(fillHeight
-            ? {
-                // Grow to fill available space unless an explicit size
-                // is set on that axis
-                ...(!hasExplicitWidth && !hasExplicitHeight && { flexGrow: 1 }),
-                display: 'flex',
-                flexDirection: 'column' as const,
-                // Allow shrinking below content size so children
-                // (e.g. images) don't overflow the container
-                minHeight: 0,
-              }
-            : {
-                // In a row parent, stretch elements need flexGrow to fill
-                // available width (alignSelf only stretches the cross axis)
-                flexGrow: isRowParent && !hasExplicitWidth ? 1 : undefined,
-                // Prevent content from forcing element wider than its
-                // flex-allocated share
-                minWidth: isRowParent ? 0 : undefined,
-              }),
-        }
-      : {}),
-  };
-
-  return (
-    <div
-      className="design-studio-element"
-      data-element-id={element.id}
-      style={Object.keys(wrapperStyle).length > 0 ? wrapperStyle : undefined}
-      {...dragDropProps}
-    >
-      <div
-        className={propsToClass('design-studio-element-inner', {
-          isDragging,
-          isSelected,
-          isFading,
-        })}
-        style={
-          fillHeight
-            ? {
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column' as const,
-                minHeight: 0,
-              }
-            : undefined
-        }
-        onClick={handleClick}
-        onAnimationEnd={
-          isFading
-            ? () => DesignStudioStore.getState().clearFadingHighlight()
-            : undefined
-        }
-      >
-        {elementComponent}
-      </div>
-      {dropIndicator}
-    </div>
+  // Build the props that the component must spread
+  // on its outermost DOM element
+  const rootProps = useMemo(
+    () => ({
+      ...dragDropProps,
+      onClick: handleClick,
+      'data-element-id': element.id,
+      style: isDragging ? { opacity: 0.5 } : undefined,
+    }),
+    [dragDropProps, handleClick, element.id, isDragging],
   );
-};
 
-/**
- * Returns whether the element should stretch within its parent.
- * Images, viewers, and editors always stretch; containers stretch
- * based on their stretch style property.
- */
-function shouldElementStretch(element: FlatDesignElement): boolean {
-  if (fullWidthTypes.has(element.type)) {
-    return true;
-  }
-
-  return (
-    element.type === 'container' &&
-    (element.style as ContainerElementStyle).stretch
-  );
-}
-
-/**
- * Extracts explicit sizing properties from a container element's
- * style so they can be applied to the outermost wrapper div.
- * Percentage widths must live on the wrapper (the actual flex
- * item) rather than on an inner element, otherwise they resolve
- * against the wrong parent.
- */
-function getContainerWrapperSizing(
-  style: ContainerElementStyle,
-): React.CSSProperties {
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
-  return {
-    width: style.width > 0 ? `${style.width}${widthUnit}` : undefined,
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth:
-      style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : undefined,
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
-  };
-}
-
-/**
- * Looks up the studio renderer for the given element type
- * from the UI registry and returns the rendered component.
- */
-function getElementComponent(
-  element: FlatDesignElement,
-): React.ReactElement | null {
   const ui = elementUIMap[element.type];
 
   if (!ui) {
     return null;
   }
 
-  const Component = ui.StudioComponent;
+  // Use the StudioComponent when one exists (for elements that
+  // need interactive studio behaviour like image pickers or
+  // FlexDropContainer). Otherwise fall back to DisplayComponent.
+  if (ui.StudioComponent) {
+    return <ui.StudioComponent element={element} rootProps={rootProps} />;
+  }
 
-  return <Component element={element} />;
+  // Enrich the element with default placeholders for the studio
+  const enrichedElement = enrichElementForStudio(element, t);
+
+  return (
+    <ui.DisplayComponent element={enrichedElement} rootProps={rootProps} />
+  );
+};
+
+/**
+ * Default placeholders keyed by element type. Uses i18n keys
+ * for translatable text, hardcoded strings for non-translatable.
+ */
+const i18nPlaceholders: Record<string, string> = {
+  text: 'design-studio.elements.text-placeholder',
+  'formatted-text': 'design-studio.elements.text-placeholder',
+};
+
+const hardcodedPlaceholders: Record<string, string> = {
+  url: 'https://www.example.com/page',
+};
+
+/**
+ * Enriches a flat design element with studio-specific default
+ * placeholder values when the element doesn't already have one.
+ */
+function enrichElementForStudio(
+  element: FlatDesignElement,
+  t: (key: string) => string,
+): FlatDesignElement {
+  // Only enrich elements that have a placeholder field
+  if ('placeholder' in element && !element.placeholder) {
+    const i18nKey = i18nPlaceholders[element.type];
+
+    if (i18nKey) {
+      return { ...element, placeholder: t(i18nKey) };
+    }
+
+    const hardcoded = hardcodedPlaceholders[element.type];
+
+    if (hardcoded) {
+      return { ...element, placeholder: hardcoded };
+    }
+  }
+
+  return element;
 }

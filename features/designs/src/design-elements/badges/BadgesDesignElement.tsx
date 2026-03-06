@@ -10,6 +10,11 @@ export interface BadgesDesignElementProps {
    * The badges element to render.
    */
   element: BadgesElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -19,11 +24,14 @@ export interface BadgesDesignElementProps {
  */
 export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
   // Build the wrapper style (margins, text-align)
   const wrapperStyle = createWrapperStyle(element.style);
+  const rootStyle = rootProps?.style as CSSProperties | undefined;
+  const mergedStyle = { ...wrapperStyle, ...rootStyle };
 
   // Build the base badge item style (typography, padding, radius)
   const baseItemStyle = createBadgeItemStyle(element.style);
@@ -38,7 +46,11 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
       : [String(property.value)];
 
     return (
-      <div className="badges-element-container" style={wrapperStyle}>
+      <div
+        {...rootProps}
+        className="badges-element-container"
+        style={mergedStyle}
+      >
         {values.map((value) => {
           // Look up the option colour from the schema
           const option = schema.options?.find(
@@ -64,7 +76,13 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   const placeholderLabels = parsePlaceholder(element.placeholder);
 
   if (placeholderLabels.length === 0) {
-    return <div className="badges-element-container" style={wrapperStyle} />;
+    return (
+      <div
+        {...rootProps}
+        className="badges-element-container"
+        style={mergedStyle}
+      />
+    );
   }
 
   // Non-default content colours for deterministic placeholder colouring.
@@ -74,7 +92,11 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
   const colourOffset = hashStringToIndex(element.id, colourPalette.length);
 
   return (
-    <div className="badges-element-container" style={wrapperStyle}>
+    <div
+      {...rootProps}
+      className="badges-element-container"
+      style={mergedStyle}
+    >
       {placeholderLabels.map((label, index) => {
         const color =
           colourPalette[(colourOffset + index) % colourPalette.length];

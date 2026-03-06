@@ -9,6 +9,11 @@ export interface WebviewDesignElementProps {
    * The webview element to render.
    */
   element: WebviewElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -19,6 +24,7 @@ export interface WebviewDesignElementProps {
  */
 export const WebviewDesignElement: React.FC<WebviewDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
@@ -33,13 +39,19 @@ export const WebviewDesignElement: React.FC<WebviewDesignElementProps> = ({
 
   // Dynamic styles from the element's style config
   const cssStyle = createWebviewCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+  const mergedStyle = { ...cssStyle, ...rootStyle };
 
   // Render iframe with fallback text behind it. If the site
   // blocks iframe embedding (X-Frame-Options), the iframe
   // renders empty/transparent and the message shows through.
   if (url) {
     return (
-      <div className="design-webview-element" style={cssStyle}>
+      <div
+        {...rootProps}
+        className="design-webview-element"
+        style={mergedStyle}
+      >
         {/* Fallback text visible when the iframe is empty.
             Fades in after 1s to avoid flashing on pages that
             support embedding but haven't loaded yet. */}
@@ -62,9 +74,9 @@ export const WebviewDesignElement: React.FC<WebviewDesignElementProps> = ({
     );
   }
 
-  // No URL set — show placeholder preview
+  // No URL set - show placeholder preview
   return (
-    <div className="design-webview-element" style={cssStyle}>
+    <div {...rootProps} className="design-webview-element" style={mergedStyle}>
       <Icon name="globe" className="design-webview-element-icon" />
       <Text
         size="sm"

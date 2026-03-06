@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Designs,
   ImageViewerElement,
@@ -16,6 +16,12 @@ export interface ImageViewerStudioDesignElementProps {
    * The image viewer element to render in the studio.
    */
   element: FlatImageViewerElement;
+
+  /**
+   * Props to spread on the outermost DOM element for
+   * drag-and-drop and click-to-select behaviour.
+   */
+  rootProps: Record<string, unknown>;
 }
 
 /**
@@ -25,7 +31,7 @@ export interface ImageViewerStudioDesignElementProps {
  */
 export const ImageViewerStudioDesignElement: React.FC<
   ImageViewerStudioDesignElementProps
-> = ({ element }) => {
+> = ({ element, rootProps }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // Handles selecting an image from the dialog
@@ -84,14 +90,20 @@ export const ImageViewerStudioDesignElement: React.FC<
     }
   }, [handleSelectNewImage]);
 
+  // Merge double-click handler into rootProps
+  const mergedRootProps = useMemo(
+    () => ({ ...rootProps, onDoubleClick: handleDoubleClick }),
+    [rootProps, handleDoubleClick],
+  );
+
   return (
-    <div onDoubleClick={handleDoubleClick} style={{ flex: 1, display: 'flex' }}>
-      <ImageViewerDesignElement element={element} />
+    <>
+      <ImageViewerDesignElement element={element} rootProps={mergedRootProps} />
       <PlaceholderImageDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSelect={handleImageSelect}
       />
-    </div>
+    </>
   );
 };

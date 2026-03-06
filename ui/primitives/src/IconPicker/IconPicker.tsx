@@ -27,15 +27,27 @@ export interface IconPickerProps {
   defaultPicker?: UserIconType;
 
   /**
-   * The popover trigger element.
+   * The popover trigger element. Optional when using
+   * controlled open state.
    */
-  children: ReactElement;
+  children?: ReactElement;
 
   /**
    * The current icon string. Used to set the default
    * color or emoji skin tone.
    */
   currentIcon?: string;
+
+  /**
+   * Controlled open state. When provided, the picker
+   * operates in controlled mode.
+   */
+  open?: boolean;
+
+  /**
+   * Callback fired when the open state changes.
+   */
+  onOpenChange?(open: boolean): void;
 
   /**
    * Whether to close the picker upon selection.
@@ -81,6 +93,12 @@ export interface IconPickerProps {
   onClear?(): void;
 
   /**
+   * The anchor element for popover positioning. Required
+   * when no children trigger is provided.
+   */
+  anchor?: PopoverPositionerProps['anchor'];
+
+  /**
    * The popover alignment.
    * @default 'start'
    */
@@ -105,8 +123,15 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   onSelectIcon,
   onSelectIconColor,
   currentIcon,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  anchor,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+
+  // Support both controlled and uncontrolled open state
+  const open = controlledOpen ?? uncontrolledOpen;
+  const setOpen = controlledOnOpenChange ?? setUncontrolledOpen;
   const [tab, setTab] = useState<UserIconType>(
     defaultPicker || UserIconType.ContentIcon,
   );
@@ -184,11 +209,11 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger>{children}</PopoverTrigger>
+      {children && <PopoverTrigger>{children}</PopoverTrigger>}
       <PopoverPortal>
-        <PopoverPositioner align="start" side="bottom">
+        <PopoverPositioner align="start" side="bottom" anchor={anchor}>
           <PopoverContent>
-            <div className="icon-picker">
+            <div className="icon-picker" onClick={stopPropagation}>
               <div className="header">
                 <Button
                   label="iconPicker.label"
@@ -233,6 +258,12 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     </Popover>
   );
 };
+
+// Prevent clicks inside the picker from bubbling through
+// React's portal event system to parent components
+function stopPropagation(event: React.MouseEvent) {
+  event.stopPropagation();
+}
 
 function getIconColorFromIconString(
   iconString: string | undefined,

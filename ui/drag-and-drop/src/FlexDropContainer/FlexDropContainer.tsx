@@ -13,7 +13,7 @@ import {
 } from './FlexDropContainerContext';
 import { FlexDropContainerGap } from './FlexDropContainerGap';
 
-interface FlexDropContainerProps {
+interface FlexDropContainerProps extends Record<string, unknown> {
   /**
    * The ID of the container. Used as the drop event target ID.
    */
@@ -79,6 +79,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   className = '',
   style = {},
   fillEnd = false,
+  ...rest
 }) => {
   // Track which gap index is expanded (triggered by child elements)
   const [expandedGapIndex, setExpandedGapIndex] = useState<number | null>(null);
@@ -201,7 +202,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 
   return (
     <FlexDropContainerContext.Provider value={contextValue}>
-      <div className={className} style={containerStyle}>
+      <div {...rest} className={className} style={containerStyle}>
         {elements}
       </div>
     </FlexDropContainerContext.Provider>

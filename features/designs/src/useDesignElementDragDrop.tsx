@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useDraggable, useDroppable } from '@minddrop/selection';
-import {
-  DropIndicator,
-  useFlexDropContainer,
-} from '@minddrop/ui-drag-and-drop';
+import { useFlexDropContainer } from '@minddrop/ui-drag-and-drop';
 import { DesignElementsDataKey } from './constants';
 import { handleDropOnDesignElement } from './handleDropOnDesignElement';
 import { FlatContainerDesignElement, FlatDesignElement } from './types';
@@ -13,12 +10,10 @@ export interface UseDesignElementDragDropOptions {
   element: FlatDesignElement;
   disabled?: boolean;
   isLastChild?: boolean;
-  gap?: number;
 }
 
 export interface UseDesignElementDragDropResult {
   dragDropProps: Record<string, unknown>;
-  dropIndicator: React.ReactNode;
   isDragging: boolean;
 }
 
@@ -27,7 +22,6 @@ export function useDesignElementDragDrop({
   element,
   disabled = false,
   isLastChild = false,
-  gap = 0,
 }: UseDesignElementDragDropOptions): UseDesignElementDragDropResult {
   // Check if this is an empty container that should accept inside drops
   const isEmptyContainer =
@@ -92,7 +86,7 @@ export function useDesignElementDragDrop({
       // Expand the gap after this element
       flexDropContainer.expandGap(index + 1);
     } else {
-      // "inside" position — collapse any expanded gap
+      // "inside" position - collapse any expanded gap
       flexDropContainer.collapseGap();
     }
   }, [flexDropContainer, isDraggingOver, dropIndicatorPosition, index]);
@@ -130,15 +124,9 @@ export function useDesignElementDragDrop({
   if (disabled) {
     return {
       dragDropProps: {},
-      dropIndicator: null,
       isDragging: false,
     };
   }
-
-  // Only show the DropIndicator for "inside" drops on empty containers.
-  // Before/after positions are handled by gap expansion.
-  const showDropIndicator =
-    isDraggingOver && isEmptyContainer && dropIndicatorPosition === 'inside';
 
   return {
     isDragging,
@@ -147,13 +135,5 @@ export function useDesignElementDragDrop({
       ...droppableProps,
       onDragStart,
     },
-    dropIndicator: (
-      <DropIndicator
-        axis="horizontal"
-        show={showDropIndicator}
-        position={dropIndicatorPosition}
-        gap={gap}
-      />
-    ),
   };
 }

@@ -9,6 +9,11 @@ export interface NumberDesignElementProps {
    * The number element to render.
    */
   element: NumberElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -19,6 +24,7 @@ export interface NumberDesignElementProps {
  */
 export const NumberDesignElement: React.FC<NumberDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
@@ -28,13 +34,15 @@ export const NumberDesignElement: React.FC<NumberDesignElementProps> = ({
 
   const numericValue = Number(rawValue);
   const baseStyle = createTextCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+  const mergedStyle = { ...baseStyle, ...rootStyle };
 
-  // Non-numeric value — render as plain text
+  // Non-numeric value - render as plain text
   if (isNaN(numericValue)) {
     const text = String(rawValue);
 
     return (
-      <span style={baseStyle} data-placeholder={text}>
+      <span {...rootProps} style={mergedStyle} data-placeholder={text}>
         {text}
       </span>
     );
@@ -43,10 +51,10 @@ export const NumberDesignElement: React.FC<NumberDesignElementProps> = ({
   const parts = formatNumberParts(numericValue, element.format);
   const fullText = formatNumber(numericValue, element.format);
 
-  // No prefix or suffix — render as a simple span
+  // No prefix or suffix - render as a simple span
   if (!parts.prefix && !parts.suffix) {
     return (
-      <span style={baseStyle} data-placeholder={fullText}>
+      <span {...rootProps} style={mergedStyle} data-placeholder={fullText}>
         {fullText}
       </span>
     );
@@ -68,7 +76,7 @@ export const NumberDesignElement: React.FC<NumberDesignElementProps> = ({
   });
 
   return (
-    <span style={baseStyle} data-placeholder={fullText}>
+    <span {...rootProps} style={mergedStyle} data-placeholder={fullText}>
       {parts.prefix && <span style={prefixStyle}>{parts.prefix}</span>}
       {parts.number}
       {parts.suffix && <span style={suffixStyle}>{parts.suffix}</span>}

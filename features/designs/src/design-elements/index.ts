@@ -1,29 +1,16 @@
 import type { DesignElement as DesignElementType } from '@minddrop/designs';
 import type { FlatDesignElement } from '../types';
-import {
-  BadgesDesignElement,
-  BadgesElementStyleEditor,
-  BadgesStudioDesignElement,
-} from './badges';
+import { BadgesDesignElement, BadgesElementStyleEditor } from './badges';
 import {
   ContainerDesignElement,
   ContainerElementStyleEditor,
   ContainerStudioDesignElement,
 } from './container';
-import {
-  DateDesignElement,
-  DateElementStyleEditor,
-  DateStudioDesignElement,
-} from './date';
-import {
-  EditorDesignElement,
-  EditorElementStyleEditor,
-  EditorStudioDesignElement,
-} from './editor';
+import { DateDesignElement, DateElementStyleEditor } from './date';
+import { EditorDesignElement, EditorElementStyleEditor } from './editor';
 import {
   FormattedTextDesignElement,
   FormattedTextElementStyleEditor,
-  FormattedTextStudioDesignElement,
 } from './formatted-text';
 import {
   IconDesignElement,
@@ -40,26 +27,10 @@ import {
   ImageViewerElementStyleEditor,
   ImageViewerStudioDesignElement,
 } from './image-viewer';
-import {
-  NumberDesignElement,
-  NumberElementStyleEditor,
-  NumberStudioDesignElement,
-} from './number';
-import {
-  TextDesignElement,
-  TextElementStyleEditor,
-  TextStudioDesignElement,
-} from './text';
-import {
-  UrlDesignElement,
-  UrlElementStyleEditor,
-  UrlStudioDesignElement,
-} from './url';
-import {
-  WebviewDesignElement,
-  WebviewElementStyleEditor,
-  WebviewStudioDesignElement,
-} from './webview';
+import { NumberDesignElement, NumberElementStyleEditor } from './number';
+import { TextDesignElement, TextElementStyleEditor } from './text';
+import { UrlDesignElement, UrlElementStyleEditor } from './url';
+import { WebviewDesignElement, WebviewElementStyleEditor } from './webview';
 
 /******************************************************************************
  * Types
@@ -77,13 +48,25 @@ export interface ElementUIConfig {
 
   /**
    * Component that renders the element in the design preview.
+   * Also used as the studio renderer when no StudioComponent
+   * is provided.
    */
-  DisplayComponent: React.ComponentType<{ element: DesignElementType }>;
+  DisplayComponent: React.ComponentType<{
+    element: DesignElementType;
+    rootProps?: Record<string, unknown>;
+  }>;
 
   /**
-   * Component that renders the element in the design studio canvas.
+   * Optional component that renders the element in the design
+   * studio canvas. When omitted, DisplayComponent is used
+   * instead. Receives `rootProps` which must be spread on the
+   * outermost DOM element to enable drag-and-drop and
+   * click-to-select.
    */
-  StudioComponent: React.ComponentType<{ element: FlatDesignElement }>;
+  StudioComponent?: React.ComponentType<{
+    element: FlatDesignElement;
+    rootProps: Record<string, unknown>;
+  }>;
 
   /**
    * Component that renders the style editor panel for this element.
@@ -99,11 +82,17 @@ export interface ElementUIConfig {
 // component internally narrows to its specific element type
 const asDisplay = (
   component: React.ComponentType<any>,
-): React.ComponentType<{ element: DesignElementType }> => component;
+): React.ComponentType<{
+  element: DesignElementType;
+  rootProps?: Record<string, unknown>;
+}> => component;
 
 const asStudio = (
   component: React.ComponentType<any>,
-): React.ComponentType<{ element: FlatDesignElement }> => component;
+): React.ComponentType<{
+  element: FlatDesignElement;
+  rootProps: Record<string, unknown>;
+}> => component;
 
 /**
  * All registered element UI configurations.
@@ -112,37 +101,31 @@ const elementUIs: ElementUIConfig[] = [
   {
     type: 'badges',
     DisplayComponent: asDisplay(BadgesDesignElement),
-    StudioComponent: asStudio(BadgesStudioDesignElement),
     StyleEditorComponent: BadgesElementStyleEditor,
   },
   {
     type: 'text',
     DisplayComponent: asDisplay(TextDesignElement),
-    StudioComponent: asStudio(TextStudioDesignElement),
     StyleEditorComponent: TextElementStyleEditor,
   },
   {
     type: 'formatted-text',
     DisplayComponent: asDisplay(FormattedTextDesignElement),
-    StudioComponent: asStudio(FormattedTextStudioDesignElement),
     StyleEditorComponent: FormattedTextElementStyleEditor,
   },
   {
     type: 'number',
     DisplayComponent: asDisplay(NumberDesignElement),
-    StudioComponent: asStudio(NumberStudioDesignElement),
     StyleEditorComponent: NumberElementStyleEditor,
   },
   {
     type: 'date',
     DisplayComponent: asDisplay(DateDesignElement),
-    StudioComponent: asStudio(DateStudioDesignElement),
     StyleEditorComponent: DateElementStyleEditor,
   },
   {
     type: 'url',
     DisplayComponent: asDisplay(UrlDesignElement),
-    StudioComponent: asStudio(UrlStudioDesignElement),
     StyleEditorComponent: UrlElementStyleEditor,
   },
   {
@@ -166,13 +149,11 @@ const elementUIs: ElementUIConfig[] = [
   {
     type: 'editor',
     DisplayComponent: asDisplay(EditorDesignElement),
-    StudioComponent: asStudio(EditorStudioDesignElement),
     StyleEditorComponent: EditorElementStyleEditor,
   },
   {
     type: 'webview',
     DisplayComponent: asDisplay(WebviewDesignElement),
-    StudioComponent: asStudio(WebviewStudioDesignElement),
     StyleEditorComponent: WebviewElementStyleEditor,
   },
   {

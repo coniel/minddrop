@@ -6,6 +6,11 @@ export interface TextDesignElementProps {
    * The text element to render.
    */
   element: TextElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -15,6 +20,7 @@ export interface TextDesignElementProps {
  */
 export const TextDesignElement: React.FC<TextDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
@@ -22,9 +28,13 @@ export const TextDesignElement: React.FC<TextDesignElementProps> = ({
   const displayText =
     property?.value != null ? String(property.value) : element.placeholder;
 
+  // Merge rootProps style with the element style
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+
   return (
     <span
-      style={createTextCssStyle(element.style)}
+      {...rootProps}
+      style={{ ...createTextCssStyle(element.style), ...rootStyle }}
       data-placeholder={element.placeholder}
     >
       {displayText}

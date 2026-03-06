@@ -11,6 +11,11 @@ export interface EditorDesignElementProps {
    * The editor element to render.
    */
   element: EditorElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -20,6 +25,7 @@ export interface EditorDesignElementProps {
  */
 export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const preview = useDesignPreview();
   const property = useElementProperty(element.id);
@@ -40,6 +46,8 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   } = fullStyle;
 
   const editorStyle = { paddingTop, paddingRight, paddingBottom, paddingLeft };
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+  const mergedContainerStyle = { ...containerStyle, ...rootStyle };
 
   // Update the mapped property value when the editor content changes
   const handleChange = useCallback(
@@ -54,8 +62,9 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   if (preview) {
     return (
       <DesignPreviewOverlay
+        {...rootProps}
         label="design-studio.elements.editor-preview-message"
-        style={containerStyle}
+        style={mergedContainerStyle}
       >
         <div className="design-editor-element">
           <MarkdownEditor initialValue={value} style={editorStyle} />
@@ -65,7 +74,11 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
   }
 
   return (
-    <div className="design-editor-element" style={containerStyle}>
+    <div
+      {...rootProps}
+      className="design-editor-element"
+      style={mergedContainerStyle}
+    >
       <MarkdownEditor
         initialValue={value}
         onDebouncedChange={handleChange}

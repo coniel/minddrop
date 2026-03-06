@@ -7,6 +7,11 @@ export interface DateDesignElementProps {
    * The date element to render.
    */
   element: DateElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -17,6 +22,7 @@ export interface DateDesignElementProps {
  */
 export const DateDesignElement: React.FC<DateDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
 
@@ -25,10 +31,12 @@ export const DateDesignElement: React.FC<DateDesignElementProps> = ({
     property?.value != null ? property.value : element.placeholder;
 
   const baseStyle = createTextCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
+  const mergedStyle = { ...baseStyle, ...rootStyle };
 
   // No value at all - render empty placeholder
   if (!rawValue) {
-    return <span style={baseStyle} />;
+    return <span {...rootProps} style={mergedStyle} />;
   }
 
   // Parse the value to a Date object
@@ -39,7 +47,7 @@ export const DateDesignElement: React.FC<DateDesignElementProps> = ({
     const text = String(rawValue);
 
     return (
-      <span style={baseStyle} data-placeholder={text}>
+      <span {...rootProps} style={mergedStyle} data-placeholder={text}>
         {text}
       </span>
     );
@@ -49,7 +57,7 @@ export const DateDesignElement: React.FC<DateDesignElementProps> = ({
   const formatted = formatDesignDate(date, element.format);
 
   return (
-    <span style={baseStyle} data-placeholder={formatted}>
+    <span {...rootProps} style={mergedStyle} data-placeholder={formatted}>
       {formatted}
     </span>
   );

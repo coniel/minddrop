@@ -13,6 +13,11 @@ export interface ImageDesignElementProps {
    * The image element to render.
    */
   element: ImageElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -23,9 +28,11 @@ export interface ImageDesignElementProps {
  */
 export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
   const cssStyle = createImageCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
   // Use the mapped property value (file path) if available,
   // otherwise resolve the placeholder image from the design media dir
@@ -57,6 +64,7 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
 
     return (
       <img
+        {...rootProps}
         src={imageSrc}
         alt=""
         style={{
@@ -69,14 +77,16 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
             minHeight: cssStyle.height,
             minWidth: cssStyle.width,
           }),
+          ...rootStyle,
         }}
       />
     );
   }
 
-  // No image set — show placeholder with icon
+  // No image set - show placeholder with icon
   return (
     <div
+      {...rootProps}
       style={{
         ...cssStyle,
         display: 'flex',
@@ -86,6 +96,7 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
         gap: 'var(--space-2)',
         aspectRatio: '16 / 9',
         backgroundColor: 'var(--neutral-400)',
+        ...rootStyle,
       }}
     >
       <Icon

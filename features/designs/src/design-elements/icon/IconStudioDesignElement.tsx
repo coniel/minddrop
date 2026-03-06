@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { IconElement } from '@minddrop/designs';
 import { IconPicker } from '@minddrop/ui-primitives';
 import {
@@ -13,16 +13,25 @@ export interface IconStudioDesignElementProps {
    * The icon element to render in the studio.
    */
   element: FlatIconElement;
+
+  /**
+   * Props to spread on the outermost DOM element for
+   * drag-and-drop and click-to-select behaviour.
+   */
+  rootProps: Record<string, unknown>;
 }
 
 /**
  * Renders an icon element in the design studio.
- * Wraps IconDesignElement inside an IconPicker for
- * interactive icon selection and color syncing.
+ * Opens an IconPicker on double-click for interactive
+ * icon selection and color syncing.
  */
 export const IconStudioDesignElement: React.FC<
   IconStudioDesignElementProps
-> = ({ element }) => {
+> = ({ element, rootProps }) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null);
+
   // Handles selecting an icon from the picker, syncing the
   // color from the icon string into the style color field
   const handleSelect = useCallback(
@@ -39,15 +48,35 @@ export const IconStudioDesignElement: React.FC<
     [element.id],
   );
 
+  // Open the icon picker on double-click
+  const handleDoubleClick = useCallback(() => {
+    setPickerOpen(true);
+  }, []);
+
+  // Only allow the popover to close, not open via trigger click.
+  // Opening is handled exclusively by double-click.
+  const handleOpenChange = useCallback((nextOpen: boolean) => {
+    if (!nextOpen) {
+      setPickerOpen(false);
+    }
+  }, []);
+
+  // Merge double-click handler and anchor ref into rootProps
+  const mergedRootProps = useMemo(
+    () => ({ ...rootProps, onDoubleClick: handleDoubleClick, ref: anchorRef }),
+    [rootProps, handleDoubleClick],
+  );
+
   return (
     <IconPicker
       currentIcon={element.icon}
       onSelect={handleSelect}
+      open={pickerOpen}
+      onOpenChange={handleOpenChange}
+      anchor={anchorRef}
       closeOnSelect
     >
-      <div>
-        <IconDesignElement element={element} />
-      </div>
+      <IconDesignElement element={element} rootProps={mergedRootProps} />
     </IconPicker>
   );
 };

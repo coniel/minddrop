@@ -7,6 +7,11 @@ export interface IconDesignElementProps {
    * The icon element to render.
    */
   element: IconElement;
+
+  /**
+   * Optional props to spread on the root DOM element.
+   */
+  rootProps?: Record<string, unknown>;
 }
 
 /**
@@ -17,9 +22,11 @@ export interface IconDesignElementProps {
  */
 export const IconDesignElement: React.FC<IconDesignElementProps> = ({
   element,
+  rootProps,
 }) => {
   const property = useElementProperty(element.id);
   const cssStyle = createIconCssStyle(element.style);
+  const rootStyle = rootProps?.style as React.CSSProperties | undefined;
 
   // Use the mapped property value if available, otherwise the element's icon
   const iconValue =
@@ -31,6 +38,7 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
   if (iconValue) {
     return (
       <div
+        {...rootProps}
         style={{
           ...cssStyle,
           display: cssStyle.display || 'inline-flex',
@@ -41,6 +49,7 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
           ['--icon-size-default' as string]: `${element.style.size}px`,
           fontSize: `${element.style.size}px`,
           lineHeight: 1,
+          ...rootStyle,
         }}
       >
         <ContentIcon icon={iconValue} />
@@ -48,9 +57,10 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
     );
   }
 
-  // No icon set — show placeholder with smile icon
+  // No icon set - show placeholder with smile icon
   return (
     <div
+      {...rootProps}
       style={{
         ...cssStyle,
         display: 'flex',
@@ -61,6 +71,7 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
         padding: 'var(--space-4)',
         backgroundColor: cssStyle.backgroundColor || 'var(--neutral-400)',
         borderRadius: cssStyle.borderRadius || 'var(--space-1)',
+        ...rootStyle,
       }}
     >
       <Icon

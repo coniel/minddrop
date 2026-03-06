@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import './DesignPreviewOverlay.css';
 
-export interface DesignPreviewOverlayProps {
+export interface DesignPreviewOverlayProps extends Record<string, unknown> {
   /**
    * The i18n key for the message displayed on hover.
    */
@@ -28,11 +28,12 @@ export const DesignPreviewOverlay: React.FC<DesignPreviewOverlayProps> = ({
   label,
   style,
   children,
+  ...rest
 }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="design-preview-overlay-wrapper" style={style}>
+    <div {...rest} className="design-preview-overlay-wrapper" style={style}>
       {children}
 
       {/* Transparent overlay blocking interaction */}
