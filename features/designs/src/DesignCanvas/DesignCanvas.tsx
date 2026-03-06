@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { DesignType } from '@minddrop/designs';
 import { DesignPreviewProvider } from '../DesignElements';
+import { DesignStudioStore } from '../DesignStudioStore';
 import './DesignCanvas.css';
 
 type ResizeEdge =
@@ -210,6 +211,14 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
     },
     [position],
   );
+
+  // Select the root element when clicking the drag handle
+  // without actually dragging the canvas
+  const handleDragHandleClick = useCallback(() => {
+    if (!didDrag.current) {
+      DesignStudioStore.getState().selectElement('root');
+    }
+  }, []);
 
   // Start a resize operation on mousedown
   const handleResizeMouseDown = useCallback(
@@ -542,6 +551,7 @@ export const DesignCanvas: React.FC<DesignCanvasProps> = ({
       <div
         className="design-canvas-drag-handle"
         onMouseDown={handleDragHandleMouseDown}
+        onClick={handleDragHandleClick}
       />
 
       {/* Content wrapper */}

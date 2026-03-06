@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { DesignStudioStore, useDesignStudioStore } from '../DesignStudioStore';
+import { SelectionOverlay } from '../SelectionOverlay';
 import {
   getViewportCenter,
   resetView,
@@ -17,6 +18,7 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
   const zoom = useDesignStudioStore((state) => state.zoom);
   const pan = useDesignStudioStore((state) => state.pan);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const transformLayerRef = useRef<HTMLDivElement>(null);
   const isPanning = useRef(false);
   const panStart = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
   const isSpaceHeld = useRef(false);
@@ -88,10 +90,15 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
         };
       }
 
-      // Clear highlight when clicking the viewport background
+      // Clear the canvas highlight when clicking the viewport
+      // background or the canvas hover zones (resize/drag areas).
+      // Selection stays on the current element (defaults to root).
+      const target = event.target as HTMLElement;
+
       if (
-        event.target === event.currentTarget ||
-        event.target === viewportRef.current?.firstElementChild
+        target === event.currentTarget ||
+        target === viewportRef.current?.firstElementChild ||
+        target.classList.contains('design-canvas-hover-zone')
       ) {
         DesignStudioStore.getState().clearHighlight();
       }
@@ -142,6 +149,13 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
 
       // Don't handle shortcuts when typing in inputs
       if (isTextInput) {
+        return;
+      }
+
+      // Escape to clear the selection overlay
+      if (event.key === 'Escape') {
+        DesignStudioStore.getState().clearHighlight();
+
         return;
       }
 
@@ -213,12 +227,14 @@ export const DesignStudioViewport: React.FC<React.PropsWithChildren> = ({
       onMouseDown={handleMouseDown}
     >
       <div
+        ref={transformLayerRef}
         className="design-studio-viewport-transform-layer"
         style={{
           transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
         }}
       >
         {children}
+        <SelectionOverlay transformLayerRef={transformLayerRef} />
       </div>
     </div>
   );

@@ -229,7 +229,7 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
     set({
       design,
       elements: flattenTree(design.tree),
-      selectedElementId: null,
+      selectedElementId: 'root',
       highlightedElementId: null,
       fadingHighlightElementId: null,
       properties,
@@ -360,7 +360,7 @@ export const DesignStudioStore = createStore<DesignStudioStore>((set) => ({
 
   selectElement: (id) =>
     set({
-      selectedElementId: id,
+      selectedElementId: id ?? 'root',
       highlightedElementId: id,
       fadingHighlightElementId: null,
     }),

@@ -81,7 +81,11 @@ export const DesignStudioRootElement: React.FC<
   );
 
   return (
-    <div onClick={handleClick} style={{ width: '100%', height: '100%' }}>
+    <div
+      onClick={handleClick}
+      data-element-id="root"
+      style={{ width: '100%', height: '100%' }}
+    >
       {hasBackdropWithImage ? (
         <div
           style={{
