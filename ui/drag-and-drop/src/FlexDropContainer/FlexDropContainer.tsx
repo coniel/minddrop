@@ -4,9 +4,11 @@ import React, {
   cloneElement,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { DropEventData } from '@minddrop/selection';
+import { getTransferData } from '@minddrop/utils';
 import {
   FlexDropContainerContext,
   FlexDropContainerContextValue,
@@ -47,7 +49,7 @@ interface FlexDropContainerProps extends Record<string, unknown> {
   justify?: React.CSSProperties['justifyContent'];
 
   /**
-   * Callback fired when a gap zone is dropped.
+   * Callback fired when a gap zone or empty space is dropped on.
    */
   onDrop?: (data: DropEventData, containerId: string, gapIndex: number) => void;
 
@@ -60,12 +62,6 @@ interface FlexDropContainerProps extends Record<string, unknown> {
    * Additional styles applied to the root container element.
    */
   style?: React.CSSProperties;
-
-  /**
-   * Whether the trailing gap should grow to fill all remaining
-   * space in the container.
-   */
-  fillEnd?: boolean;
 }
 
 export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
@@ -78,11 +74,13 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
   onDrop,
   className = '',
   style = {},
-  fillEnd = false,
   ...rest
 }) => {
   // Track which gap index is expanded (triggered by child elements)
   const [expandedGapIndex, setExpandedGapIndex] = useState<number | null>(null);
+
+  // Ref for determining drop index from mouse position
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const childArray = Children.toArray(children).filter((child) =>
     React.isValidElement(child),
@@ -111,28 +109,9 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     [expandGap, collapseGap],
   );
 
-  // Determine which edge gaps need to fill based on alignment.
-  // The leading gap fills when content is pushed away from the start
-  // (end, center, space-around, space-evenly).
-  // The trailing gap fills when content is pushed away from the end
-  // (start, center, space-around, space-evenly).
-  // fillEnd additionally enables the trailing fill, but only when
-  // it wouldn't conflict with end alignment.
-  const fillStart =
-    justify === 'center' ||
-    justify === 'end' ||
-    justify === 'space-around' ||
-    justify === 'space-evenly';
-  const fillTrailing =
-    justify === 'center' ||
-    justify === 'start' ||
-    justify === 'space-around' ||
-    justify === 'space-evenly' ||
-    (fillEnd && justify !== 'end');
-
   const elements: ReactElement[] = [];
 
-  // Always add a leading gap (fills remaining space based on alignment)
+  // Always add a leading gap for visual expansion during drag
   if (childArray.length > 0) {
     elements.push(
       <FlexDropContainerGap
@@ -141,7 +120,6 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
         direction={direction}
         size={0}
         index={0}
-        fill={fillStart}
         isExpanded={expandedGapIndex === 0}
         onDrop={(data) => handleDropInGap(data, 0)}
       />,
@@ -170,7 +148,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     }
   });
 
-  // Always add a trailing gap (fills remaining space based on alignment or fillEnd)
+  // Always add a trailing gap for visual expansion during drag
   const trailingIndex = childArray.length;
 
   elements.push(
@@ -180,10 +158,106 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       direction={direction}
       size={0}
       index={trailingIndex}
-      fill={fillTrailing}
       isExpanded={expandedGapIndex === trailingIndex}
       onDrop={(data) => handleDropInGap(data, trailingIndex)}
     />,
+  );
+
+  // Determine the drop index when something is dropped on the
+  // container's empty space (not on a gap or child element).
+  // Compares the mouse position along the main axis to the
+  // midpoint of all children to decide start vs end.
+  const getDropIndexFromPosition = useCallback(
+    (event: React.DragEvent): number => {
+      if (!containerRef.current || childArray.length === 0) {
+        return 0;
+      }
+
+      const isRow = direction === 'row' || direction === 'row-reverse';
+
+      // Find the bounding box of all child elements (skip gap zones)
+      const childElements = containerRef.current.querySelectorAll(
+        ':scope > :not([data-gap-zone])',
+      );
+
+      if (childElements.length === 0) {
+        return 0;
+      }
+
+      const firstChild = childElements[0].getBoundingClientRect();
+      const lastChild =
+        childElements[childElements.length - 1].getBoundingClientRect();
+
+      // Calculate the midpoint of all children along the main axis
+      const childrenStart = isRow ? firstChild.left : firstChild.top;
+      const childrenEnd = isRow ? lastChild.right : lastChild.bottom;
+      const childrenMidpoint = (childrenStart + childrenEnd) / 2;
+
+      // Compare mouse position to the children midpoint
+      const mousePosition = isRow ? event.clientX : event.clientY;
+
+      return mousePosition < childrenMidpoint ? 0 : childArray.length;
+    },
+    [direction, childArray.length],
+  );
+
+  // Handle drag over on the container itself.
+  // Expands the nearest edge gap to show where the drop would land.
+  const handleContainerDragOver = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+
+      // Only react to drags directly over the container's empty space
+      if (event.target !== containerRef.current) {
+        return;
+      }
+
+      const index = getDropIndexFromPosition(event);
+
+      setExpandedGapIndex(index);
+    },
+    [getDropIndexFromPosition],
+  );
+
+  // Collapse the expanded gap when the drag leaves the container
+  const handleContainerDragLeave = useCallback((event: React.DragEvent) => {
+    if (event.target === containerRef.current) {
+      setExpandedGapIndex(null);
+    }
+  }, []);
+
+  // Handle drop on the container's empty space
+  const handleContainerDrop = useCallback(
+    (event: React.DragEvent) => {
+      setExpandedGapIndex(null);
+
+      // Only handle drops directly on the container, not
+      // drops that bubbled up from gap zones
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (onDrop) {
+        const dropIndex = getDropIndexFromPosition(event);
+
+        onDrop(
+          {
+            data: getTransferData(event),
+            index: dropIndex,
+            targetId: id,
+            targetType: 'flex-drop-container',
+            event,
+            position: 'inside',
+          },
+          id,
+          dropIndex,
+        );
+      }
+    },
+    [id, onDrop, getDropIndexFromPosition],
   );
 
   // Calculate the container style
@@ -192,9 +266,12 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
     flexDirection: direction,
     alignItems:
       align === 'start' ? 'flex-start' : align === 'end' ? 'flex-end' : align,
-    // Alignment along the main axis is handled by fill gaps,
-    // so always use flex-start here.
-    justifyContent: 'flex-start',
+    justifyContent:
+      justify === 'start'
+        ? 'flex-start'
+        : justify === 'end'
+          ? 'flex-end'
+          : justify,
     ...style,
     // Gap is handled by the gap zones
     gap: 0,
@@ -202,7 +279,15 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
 
   return (
     <FlexDropContainerContext.Provider value={contextValue}>
-      <div {...rest} className={className} style={containerStyle}>
+      <div
+        {...rest}
+        ref={containerRef}
+        className={className}
+        style={containerStyle}
+        onDragOver={handleContainerDragOver}
+        onDragLeave={handleContainerDragLeave}
+        onDrop={handleContainerDrop}
+      >
         {elements}
       </div>
     </FlexDropContainerContext.Provider>

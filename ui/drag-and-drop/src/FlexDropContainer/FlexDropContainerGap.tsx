@@ -31,12 +31,6 @@ interface FlexDropContainerGapProps {
   isExpanded?: boolean;
 
   /**
-   * Whether this gap should grow to fill all remaining space
-   * in the container.
-   */
-  fill?: boolean;
-
-  /**
    * Callback fired when the gap zone is dropped.
    */
   onDrop?: (data: DropEventData) => void;
@@ -51,7 +45,6 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   size,
   index,
   isExpanded = false,
-  fill = false,
   onDrop,
 }) => {
   // Track direct drags over this gap zone
@@ -106,21 +99,11 @@ export const FlexDropContainerGap: React.FC<FlexDropContainerGapProps> = ({
   // Use expanded size when active, otherwise use the prop size
   const activeSize = isActive ? EXPANDED_SIZE : size;
 
-  // Calculate the gap style.
-  // Fill gaps grow to consume remaining space in the container.
-  // Other gaps use a fixed size.
+  // Calculate the gap style using a fixed size
   const gapStyle: React.CSSProperties = {
     alignSelf: 'stretch',
-    flexGrow: fill ? 1 : 0,
-    ...(isRow
-      ? {
-          width: fill ? 'auto' : activeSize,
-          minWidth: fill && isActive ? EXPANDED_SIZE : undefined,
-        }
-      : {
-          height: fill ? 'auto' : activeSize,
-          minHeight: fill && isActive ? EXPANDED_SIZE : undefined,
-        }),
+    flexGrow: 0,
+    ...(isRow ? { width: activeSize } : { height: activeSize }),
   };
 
   // Build the class name

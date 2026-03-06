@@ -74,7 +74,6 @@ export const DesignStudioRootElement: React.FC<
       className="design-studio-root-element"
       style={containerCssStyle}
       onDrop={handleDropOnGap}
-      fillEnd
     >
       {children}
     </FlexDropContainer>

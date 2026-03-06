@@ -143,6 +143,7 @@ export function createContainerCssStyle(
     borderWidth: `${style.borderWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    overflow: 'hidden',
   };
 
   // Background image sizing (image URL applied in renderers via useImageSrc)
