@@ -29,6 +29,7 @@ const ElementGroups: {
   { key: 'number', label: 'design-studio.elements.number' },
   { key: 'url', label: 'design-studio.elements.url' },
   { key: 'date', label: 'design-property-mapping.browser.dateGroup' },
+  { key: 'badges', label: 'design-studio.elements.badges' },
   { key: 'image', label: 'design-studio.elements.image' },
   { key: 'icon', label: 'design-studio.elements.icon' },
 ];
