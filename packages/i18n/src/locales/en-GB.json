@@ -1149,6 +1149,9 @@
         "media": "Media",
         "layout": "Layout"
       }
+    },
+    "mappable": {
+      "tooltip": "Can be mapped to"
     }
   },
   "toast": {

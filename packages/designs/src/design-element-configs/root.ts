@@ -21,7 +21,7 @@ export const RootElementConfig: DesignElementConfig = {
   icon: 'layout',
   label: 'design-studio.elements.root',
   styleCategory: 'container',
-  compatiblePropertyTypes: ['image', 'file'],
+  compatiblePropertyTypes: ['image'],
   template: {
     type: 'root',
     style: { ...DefaultContainerElementStyle },

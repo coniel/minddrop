@@ -1162,6 +1162,9 @@ declare module 'i18next' {
               layout: string;
             };
           };
+          mappable: {
+            tooltip: string;
+          };
         };
         toast: {
           close: string;

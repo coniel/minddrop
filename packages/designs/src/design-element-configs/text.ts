@@ -22,7 +22,7 @@ export const TextElementConfig: DesignElementConfig = {
   label: 'design-studio.elements.text',
   group: 'content',
   styleCategory: 'text',
-  compatiblePropertyTypes: ['title', 'text', 'select', 'toggle'],
+  compatiblePropertyTypes: ['title', 'text', 'select'],
   template: {
     type: 'text',
     style: { ...DefaultTextElementStyle },

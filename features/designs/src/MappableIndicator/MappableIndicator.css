@@ -1,0 +1,15 @@
+/* --- Mappable indicator icon --- */
+
+.mappable-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.mappable-indicator-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--text-primary-muted);
+}

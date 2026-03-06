@@ -22,7 +22,7 @@ export const ImageElementConfig: DesignElementConfig = {
   label: 'design-studio.elements.image',
   group: 'media',
   styleCategory: 'image',
-  compatiblePropertyTypes: ['image', 'file'],
+  compatiblePropertyTypes: ['image'],
   template: {
     type: 'image',
     style: { ...DefaultImageElementStyle },

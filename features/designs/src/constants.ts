@@ -4,9 +4,11 @@ import {
   ELEMENT_GROUPS,
   PropertyTypeElementMap,
   RootElement,
+  elementConfigs,
   elementIconMap,
   elementLabelMap,
 } from '@minddrop/designs';
+import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
 
 // -- Design Studio constants --
@@ -20,6 +22,36 @@ export {
   PropertyTypeElementMap,
   elementIconMap,
   elementLabelMap,
+};
+
+/**
+ * Maps element type identifiers to the property types they
+ * can be mapped to.
+ */
+export const elementCompatiblePropertyTypesMap: Record<
+  string,
+  readonly PropertyType[]
+> = Object.fromEntries(
+  elementConfigs.map((config) => [config.type, config.compatiblePropertyTypes]),
+);
+
+/**
+ * Maps property type identifiers to their i18n label keys.
+ */
+export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
+  title: 'properties.title.name',
+  text: 'properties.text.name',
+  number: 'properties.number.name',
+  date: 'properties.date.name',
+  toggle: 'properties.toggle.name',
+  url: 'properties.url.name',
+  image: 'properties.image.name',
+  select: 'properties.select.name',
+  icon: 'properties.icon.name',
+  'formatted-text': 'properties.textFormatted.name',
+  created: 'properties.created.name',
+  'last-modified': 'properties.lastModified.name',
+  file: 'properties.file.name',
 };
 
 // -- Design Property Mapping constants --

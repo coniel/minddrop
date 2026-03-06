@@ -25,7 +25,7 @@ export const ImageViewerElementConfig: DesignElementConfig = {
   label: 'design-studio.elements.image-viewer',
   group: 'media',
   styleCategory: 'image-viewer',
-  compatiblePropertyTypes: ['image', 'file'],
+  compatiblePropertyTypes: ['image'],
   template: {
     type: 'image-viewer',
     style: { ...DefaultImageViewerElementStyle },

@@ -22,7 +22,7 @@ export const ContainerElementConfig: DesignElementConfig = {
   label: 'design-studio.elements.container',
   group: 'layout',
   styleCategory: 'container',
-  compatiblePropertyTypes: ['image', 'file'],
+  compatiblePropertyTypes: ['image'],
   template: {
     type: 'container',
     style: { ...DefaultContainerElementStyle, backgroundColor: 'transparent' },
