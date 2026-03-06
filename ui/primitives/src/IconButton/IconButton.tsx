@@ -12,7 +12,10 @@ export type IconButtonColor =
   | 'muted'
   | 'regular'
   | 'contrast'
-  | 'primary';
+  | 'primary'
+  | 'danger'
+  | 'inherit';
+export type IconButtonDanger = 'on-hover' | 'always';
 export type IconButtonSize = 'sm' | 'md' | 'lg';
 
 export interface IconButtonProps
@@ -70,6 +73,11 @@ export interface IconButtonProps
   active?: boolean;
 
   /*
+   * Applies danger styling - shown on hover or always.
+   */
+  danger?: IconButtonDanger;
+
+  /*
    * Tooltip configuration. When provided, wraps the button
    * in a Tooltip with the given props.
    */
@@ -88,6 +96,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       color = 'neutral',
       size = 'md',
       active,
+      danger,
       disabled,
       tooltip,
       ...other
@@ -109,6 +118,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           color,
           size,
           active,
+          danger,
           disabled,
           className,
         })}

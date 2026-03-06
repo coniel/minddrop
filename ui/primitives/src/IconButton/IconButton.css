@@ -79,6 +79,16 @@
 .icon-button-color-primary .icon {
   color: var(--text-primary);
 }
+.icon-button-color-danger .icon {
+  color: var(--text-danger);
+}
+.icon-button.icon-button-color-inherit {
+  color: inherit;
+}
+
+.icon-button.icon-button-color-inherit .icon {
+  color: inherit;
+}
 
 /* ------------------------------------------------------------
    VARIANT: GHOST
@@ -101,6 +111,28 @@
     .icon {
       color: var(--text-regular);
     }
+  }
+
+  &.icon-button-color-inherit:hover .icon,
+  &.icon-button-color-inherit:active .icon {
+    color: inherit;
+  }
+
+  &.icon-button-color-danger,
+  &.icon-button-danger-always {
+    .icon { color: var(--text-danger); }
+
+    &:hover {
+      background-color: var(--surface-danger-hover);
+      .icon { color: var(--text-danger); }
+    }
+
+    &:active { background-color: var(--surface-danger-active); }
+  }
+
+  &.icon-button-danger-on-hover:hover {
+    background-color: var(--surface-danger-hover);
+    .icon { color: var(--text-danger); }
   }
 
   &.icon-button-color-contrast {
