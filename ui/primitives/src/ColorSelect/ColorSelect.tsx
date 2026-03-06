@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
+import { InputLabel } from '../fields/InputLabel';
 import {
   SelectIcon,
   SelectItem,
@@ -11,6 +12,7 @@ import {
   SelectValue,
   SelectVariant,
 } from '../Select';
+import { Stack } from '../Layout/Stack';
 import { TextColor } from '../Text';
 import { ContentColors } from '../constants';
 import './ColorSelect.css';
@@ -65,10 +67,15 @@ export interface ColorSelectProps {
    */
   valueColor?: TextColor;
 
-  /*
+  /**
    * Extra options rendered before the standard content colors.
    */
   extraOptions?: ColorSelectOption[];
+
+  /**
+   * Optional i18n label key displayed above the select.
+   */
+  label?: string;
 }
 
 export const ColorSelect = ({
@@ -79,6 +86,7 @@ export const ColorSelect = ({
   valueColor,
   onValueChange,
   extraOptions = [],
+  label,
 }: ColorSelectProps) => {
   const { t } = useTranslation();
 
@@ -108,7 +116,7 @@ export const ColorSelect = ({
     label: t(option.labelKey),
   }));
 
-  return (
+  const select = (
     <SelectRoot<ContentColor>
       items={items as { value: ContentColor; label: string }[]}
       value={value as ContentColor}
@@ -141,5 +149,16 @@ export const ColorSelect = ({
         ))}
       </SelectPopup>
     </SelectRoot>
+  );
+
+  if (!label) {
+    return select;
+  }
+
+  return (
+    <Stack gap={1}>
+      <InputLabel size="xs" label={label} />
+      {select}
+    </Stack>
   );
 };

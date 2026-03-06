@@ -5,5 +5,6 @@ export * from './FieldRoot';
 export * from './InputLabel';
 export * from './TextInput';
 export * from './TextField';
+export * from './SelectField';
 export * from './Checkbox';
 export * from './Radio';
