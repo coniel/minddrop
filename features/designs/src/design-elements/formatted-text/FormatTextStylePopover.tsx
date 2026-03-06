@@ -197,34 +197,34 @@ export const FormatTextStylePopover = ({
                   <IconButton
                     icon="italic"
                     label="designs.typography.italic"
-                    size="sm"
+                    variant="subtle"
+                    size="md"
                     active={italic}
                     onClick={() => updateStyle({ italic: !italic })}
                   />
                   <IconButton
                     icon="underline"
                     label="designs.typography.underline"
-                    size="sm"
+                    variant="subtle"
+                    size="md"
                     active={underline}
                     onClick={() => updateStyle({ underline: !underline })}
                   />
                 </Group>
               </Stack>
 
-              <Stack gap={1}>
-                <InputLabel size="xs" label="designs.typography.color.label" />
-                <ColorSelect
-                  size="md"
-                  variant="subtle"
-                  value={color}
-                  valueColor={color === 'default' ? 'muted' : 'regular'}
-                  onValueChange={(value: ContentColor | null) => {
-                    if (value) {
-                      updateStyle({ color: value });
-                    }
-                  }}
-                />
-              </Stack>
+              <ColorSelect
+                size="md"
+                variant="subtle"
+                label="designs.typography.color.label"
+                value={color}
+                valueColor={color === 'default' ? 'muted' : 'regular'}
+                onValueChange={(value: ContentColor | null) => {
+                  if (value) {
+                    updateStyle({ color: value });
+                  }
+                }}
+              />
 
               <Group gap={2}>
                 <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>

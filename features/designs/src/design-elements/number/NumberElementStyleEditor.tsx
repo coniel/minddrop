@@ -1,17 +1,9 @@
+import { DefaultTextElementStyle } from '@minddrop/designs';
 import { FlexItem, Group, InputLabel, Stack } from '@minddrop/ui-primitives';
-import { FontFamilySelect } from '../../style-editors/FontFamilySelect';
-import { FontSizeField } from '../../style-editors/FontSizeField';
-import { FontWeightSelect } from '../../style-editors/FontWeightSelect';
-import { ItalicToggle } from '../../style-editors/ItalicToggle';
-import { LetterSpacingField } from '../../style-editors/LetterSpacingField';
-import { LineHeightField } from '../../style-editors/LineHeightField';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
-import { OpacityField } from '../../style-editors/OpacityField';
 import { SectionLabel } from '../../style-editors/SectionLabel';
-import { StaticElementField } from '../../style-editors/StaticElementField';
-import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
-import { TextColorSelect } from '../../style-editors/TextColorSelect';
-import { UnderlineToggle } from '../../style-editors/UnderlineToggle';
+import { Typography } from '../../style-editors/Typography';
 import { DecimalPlacesField } from './DecimalPlacesField';
 import { NumberPlaceholderField } from './NumberPlaceholderField';
 import { PrefixField } from './PrefixField';
@@ -26,6 +18,22 @@ export interface NumberElementStyleEditorProps {
   elementId: string;
 }
 
+// Default values for the typography collapsible section
+const typographyDefaults = {
+  'font-family': DefaultTextElementStyle['font-family'],
+  'font-weight': DefaultTextElementStyle['font-weight'],
+  color: DefaultTextElementStyle.color,
+  opacity: DefaultTextElementStyle.opacity,
+} as const;
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultTextElementStyle['margin-top'],
+  'margin-right': DefaultTextElementStyle['margin-right'],
+  'margin-bottom': DefaultTextElementStyle['margin-bottom'],
+  'margin-left': DefaultTextElementStyle['margin-left'],
+} as const;
+
 /**
  * Renders the style editor panel for number design elements.
  * Provides placeholder, number format, typography, alignment,
@@ -39,7 +47,6 @@ export const NumberElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.placeholder.label" />
         <NumberPlaceholderField elementId={elementId} />
-        <StaticElementField elementId={elementId} />
       </Stack>
 
       <Stack gap={3}>
@@ -62,13 +69,10 @@ export const NumberElementStyleEditor: React.FC<
             </Stack>
           </FlexItem>
           <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel
-                size="xs"
-                label="designs.number-format.sign-display.label"
-              />
-              <SignDisplaySelect elementId={elementId} />
-            </Stack>
+            <SignDisplaySelect
+              elementId={elementId}
+              label="designs.number-format.sign-display.label"
+            />
           </FlexItem>
         </Group>
         <Group gap={2}>
@@ -87,65 +91,27 @@ export const NumberElementStyleEditor: React.FC<
         </Group>
       </Stack>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.label" />
-        <Stack gap={1}>
-          <FontFamilySelect elementId={elementId} />
-          <Group gap={1}>
-            <FlexItem grow={1}>
-              <FontWeightSelect elementId={elementId} />
-            </FlexItem>
-            <ItalicToggle elementId={elementId} />
-            <UnderlineToggle elementId={elementId} />
-          </Group>
-        </Stack>
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.typography.color.label" />
-          <TextColorSelect elementId={elementId} />
-        </Stack>
-        <Group gap={2}>
-          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel
-                size="xs"
-                label="designs.typography.font-size.label"
-              />
-              <FontSizeField elementId={elementId} />
-            </Stack>
-          </FlexItem>
-          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel
-                size="xs"
-                label="designs.typography.line-height.label"
-              />
-              <LineHeightField elementId={elementId} />
-            </Stack>
-          </FlexItem>
-          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel
-                size="xs"
-                label="designs.typography.letter-spacing.label"
-              />
-              <LetterSpacingField elementId={elementId} />
-            </Stack>
-          </FlexItem>
-        </Group>
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.opacity.label" />
-          <OpacityField elementId={elementId} />
-        </Stack>
-      </Stack>
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.label"
+        defaultStyles={typographyDefaults}
+      >
+        <Typography
+          elementId={elementId}
+          hideLineHeight
+          hideTextTransform
+          hideTextAlign
+          hideMaxWidth
+        />
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.alignment.label" />
-        <TextAlignToggle elementId={elementId} />
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.typography.margin.label" />
-          <MarginFields elementId={elementId} />
-        </Stack>
-      </Stack>
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
+        <MarginFields elementId={elementId} />
+      </CollapsibleSection>
     </>
   );
 };

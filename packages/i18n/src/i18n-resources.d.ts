@@ -854,6 +854,9 @@ declare module 'i18next' {
             alignment: {
               label: string;
             };
+            'alignment-margin': {
+              label: string;
+            };
             margin: {
               label: string;
               top: string;
@@ -893,6 +896,7 @@ declare module 'i18next' {
             placeholder: string;
             reroll: string;
           };
+          'clear-custom-styling': string;
           static: {
             label: string;
             description: string;
@@ -976,17 +980,6 @@ declare module 'i18next' {
             };
           };
           badges: {
-            variant: {
-              label: string;
-              rectangular: string;
-              round: string;
-            };
-            size: {
-              label: string;
-              small: string;
-              medium: string;
-              large: string;
-            };
             placeholder: {
               label: string;
             };
@@ -1000,6 +993,7 @@ declare module 'i18next' {
             'show-time': string;
           };
           image: {
+            label: string;
             placeholder: {
               label: string;
               select: string;

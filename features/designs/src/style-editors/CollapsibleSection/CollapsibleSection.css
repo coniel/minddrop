@@ -1,0 +1,31 @@
+/* Trigger button for collapsed sections */
+.collapsible-section-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-4) 0;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+}
+
+.collapsible-section[data-open='false'] .collapsible-section-trigger:hover {
+  color: var(--text-regular);
+}
+
+.collapsible-section[data-open='false'] .collapsible-section-trigger:hover .element-style-editor-section-label {
+  color: var(--text-regular);
+}
+
+.collapsible-section[data-open='true'] {
+  padding-bottom: var(--space-5);
+}
+
+/* The trigger row is 24px tall (icon button) but the label is 14px,
+   adding 5px below the text baseline. Subtract that from space-3 so
+   the visual gap to the first field matches permanent sections. */
+.collapsible-section[data-open='true'] .collapsible-section-trigger {
+  padding-bottom: calc(var(--space-3) - 5px);
+}
+
+

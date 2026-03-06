@@ -60,7 +60,6 @@ export const DatePlaceholderField: React.FC<DatePlaceholderFieldProps> = ({
       size="md"
       value={value}
       onValueChange={handleChange}
-      clearable
       placeholder="actions.pickDate"
     />
   );

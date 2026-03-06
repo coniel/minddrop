@@ -1,4 +1,4 @@
-import { InputLabel, Stack } from '@minddrop/ui-primitives';
+import { Stack } from '@minddrop/ui-primitives';
 import { FontFamilySelect } from './FontFamilySelect';
 import { FontWeightSelect } from './FontWeightSelect';
 import { TextColorSelect } from './TextColorSelect';
@@ -29,10 +29,11 @@ export const ContainerTypography: React.FC<ContainerTypographyProps> = ({
         <FontFamilySelect elementId={elementId} />
         <FontWeightSelect elementId={elementId} />
       </Stack>
-      <Stack gap={1}>
-        <InputLabel size="xs" label="designs.typography.color.label" />
-        <TextColorSelect elementId={elementId} showInherit={!isRoot} />
-      </Stack>
+      <TextColorSelect
+        elementId={elementId}
+        showInherit={!isRoot}
+        label="designs.typography.color.label"
+      />
     </Stack>
   );
 };

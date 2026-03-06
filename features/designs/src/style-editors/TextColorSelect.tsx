@@ -12,6 +12,11 @@ export interface TextColorSelectProps {
    * Whether to show the inherit option.
    */
   showInherit?: boolean;
+
+  /**
+   * Optional i18n label key displayed above the select.
+   */
+  label?: string;
 }
 
 const inheritOption = {
@@ -26,6 +31,7 @@ const inheritOption = {
 export const TextColorSelect = ({
   elementId,
   showInherit = true,
+  label,
 }: TextColorSelectProps) => {
   const color = useElementStyle(elementId, 'color');
 
@@ -40,6 +46,7 @@ export const TextColorSelect = ({
     <ColorSelect
       size="md"
       variant="subtle"
+      label={label}
       value={color}
       valueColor={color === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { SwitchField } from '@minddrop/ui-primitives';
+import { SwitchField, Tooltip } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   useDesignStudioStore,
@@ -34,13 +34,15 @@ export const StaticElementField: React.FC<StaticElementFieldProps> = ({
   );
 
   return (
-    <SwitchField
-      size="md"
-      label="designs.static.label"
-      description="designs.static.description"
-      descriptionColor="subtle"
-      checked={isStatic}
-      onCheckedChange={handleChange}
-    />
+    <Tooltip title="designs.static.description">
+      <div>
+        <SwitchField
+          size="md"
+          label="designs.static.label"
+          checked={isStatic}
+          onCheckedChange={handleChange}
+        />
+      </div>
+    </Tooltip>
   );
 };

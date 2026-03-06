@@ -7,23 +7,68 @@ import { LetterSpacingField } from './LetterSpacingField';
 import { LineHeightField } from './LineHeightField';
 import { MaxWidthField } from './MaxWidthField';
 import { OpacityField } from './OpacityField';
+import { TextAlignToggle } from './TextAlignToggle';
 import { TextColorSelect } from './TextColorSelect';
 import { TextTransformToggle } from './TextTransformToggle';
 import { TruncateField } from './TruncateField';
 import { UnderlineToggle } from './UnderlineToggle';
 
-export interface FontFamilyProps {
+export interface TypographyProps {
   /**
    * The ID of the element to edit.
    */
   elementId: string;
+
+  /**
+   * Whether to hide the color select.
+   * @default false
+   */
+  hideColor?: boolean;
+
+  /**
+   * Whether to hide the opacity field.
+   * @default false
+   */
+  hideOpacity?: boolean;
+
+  /**
+   * Whether to hide the line height field.
+   * @default false
+   */
+  hideLineHeight?: boolean;
+
+  /**
+   * Whether to hide the text transform toggle.
+   * @default false
+   */
+  hideTextTransform?: boolean;
+
+  /**
+   * Whether to hide the text alignment toggle.
+   * @default false
+   */
+  hideTextAlign?: boolean;
+
+  /**
+   * Whether to hide the max width and max lines row.
+   * @default false
+   */
+  hideMaxWidth?: boolean;
 }
 
 /**
  * Renders the full typography editor panel with font, color, size,
  * spacing, transform, max-width, and truncation controls.
  */
-export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
+export const Typography: React.FC<TypographyProps> = ({
+  elementId,
+  hideColor = false,
+  hideOpacity = false,
+  hideLineHeight = false,
+  hideTextTransform = false,
+  hideTextAlign = false,
+  hideMaxWidth = false,
+}) => {
   return (
     <Stack gap={3}>
       {/* Font family, weight, italic, underline */}
@@ -39,20 +84,26 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
       </Stack>
 
       {/* Colour (2/3) + opacity (1/3) */}
-      <Group gap={2}>
-        <FlexItem grow={2} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel size="xs" label="designs.typography.color.label" />
-            <TextColorSelect elementId={elementId} />
-          </Stack>
-        </FlexItem>
-        <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel size="xs" label="designs.opacity.label" />
-            <OpacityField elementId={elementId} />
-          </Stack>
-        </FlexItem>
-      </Group>
+      {(!hideColor || !hideOpacity) && (
+        <Group gap={2}>
+          {!hideColor && (
+            <FlexItem grow={2} style={{ flexBasis: 0, minWidth: 0 }}>
+              <TextColorSelect
+                elementId={elementId}
+                label="designs.typography.color.label"
+              />
+            </FlexItem>
+          )}
+          {!hideOpacity && (
+            <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+              <Stack gap={1}>
+                <InputLabel size="xs" label="designs.opacity.label" />
+                <OpacityField elementId={elementId} />
+              </Stack>
+            </FlexItem>
+          )}
+        </Group>
+      )}
 
       {/* Font size, line height, letter spacing */}
       <Group gap={2}>
@@ -62,15 +113,17 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
             <FontSizeField elementId={elementId} />
           </Stack>
         </FlexItem>
-        <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel
-              size="xs"
-              label="designs.typography.line-height.label"
-            />
-            <LineHeightField elementId={elementId} />
-          </Stack>
-        </FlexItem>
+        {!hideLineHeight && (
+          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+            <Stack gap={1}>
+              <InputLabel
+                size="xs"
+                label="designs.typography.line-height.label"
+              />
+              <LineHeightField elementId={elementId} />
+            </Stack>
+          </FlexItem>
+        )}
         <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
           <Stack gap={1}>
             <InputLabel
@@ -82,27 +135,40 @@ export const Typography: React.FC<FontFamilyProps> = ({ elementId }) => {
         </FlexItem>
       </Group>
 
-      {/* Text transform */}
-      <Stack gap={1}>
-        <InputLabel size="xs" label="designs.typography.text-transform.label" />
-        <TextTransformToggle elementId={elementId} />
-      </Stack>
+      {/* Text transform and alignment */}
+      {!hideTextTransform && (
+        <Stack gap={1}>
+          <InputLabel
+            size="xs"
+            label="designs.typography.text-transform.label"
+          />
+          <TextTransformToggle elementId={elementId} />
+        </Stack>
+      )}
+      {!hideTextAlign && (
+        <Stack gap={1}>
+          <InputLabel size="xs" label="designs.typography.text-align.label" />
+          <TextAlignToggle elementId={elementId} />
+        </Stack>
+      )}
 
       {/* Max width + max lines */}
-      <Group gap={2}>
-        <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel size="xs" label="designs.max-width.label" />
-            <MaxWidthField elementId={elementId} />
-          </Stack>
-        </FlexItem>
-        <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel size="xs" label="designs.truncate.label" />
-            <TruncateField elementId={elementId} />
-          </Stack>
-        </FlexItem>
-      </Group>
+      {!hideMaxWidth && (
+        <Group gap={2}>
+          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+            <Stack gap={1}>
+              <InputLabel size="xs" label="designs.max-width.label" />
+              <MaxWidthField elementId={elementId} />
+            </Stack>
+          </FlexItem>
+          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+            <Stack gap={1}>
+              <InputLabel size="xs" label="designs.truncate.label" />
+              <TruncateField elementId={elementId} />
+            </Stack>
+          </FlexItem>
+        </Group>
+      )}
     </Stack>
   );
 };

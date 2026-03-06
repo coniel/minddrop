@@ -123,14 +123,14 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
             <Button
               variant="subtle"
               color={primary ? 'primary' : undefined}
-              size="sm"
+              size="md"
               label="designs.image.placeholder.change"
               onClick={() => setDialogOpen(true)}
             />
             <Button
               variant="subtle"
               color={primary ? 'primary' : undefined}
-              size="sm"
+              size="md"
               label="designs.image.placeholder.remove"
               onClick={onRemove}
             />
@@ -141,7 +141,7 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
           <Button
             variant="subtle"
             color={primary ? 'primary' : undefined}
-            size="sm"
+            size="md"
             startIcon="folder-open"
             label="designs.image.placeholder.browse"
             onClick={() => setDialogOpen(true)}
@@ -149,7 +149,7 @@ export const PlaceholderImageField: React.FC<PlaceholderImageFieldProps> = ({
           <Button
             variant="subtle"
             color={primary ? 'primary' : undefined}
-            size="sm"
+            size="md"
             startIcon="image"
             label="designs.image.placeholder.select"
             onClick={handleSelectNewImage}

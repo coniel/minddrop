@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { Slider } from '@minddrop/ui-primitives';
+import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
-export interface BackdropBlurSliderProps {
+export interface BackdropBlurFieldProps {
   /**
    * The ID of the element to edit.
    */
@@ -10,33 +10,30 @@ export interface BackdropBlurSliderProps {
 }
 
 /**
- * Renders a slider for adjusting the backdrop blur amount
+ * Renders a number field for adjusting the backdrop blur amount
  * on a container element.
  */
-export const BackdropBlurSlider = ({ elementId }: BackdropBlurSliderProps) => {
+export const BackdropBlurField = ({ elementId }: BackdropBlurFieldProps) => {
   const backdropBlur = useElementStyle(elementId, 'backdropBlur');
 
-  // Update the blur value from the slider
+  // Update the blur value
   const handleChange = useCallback(
-    (value: number | number[]) => {
-      const blurValue = Array.isArray(value) ? value[0] : value;
-
-      updateElementStyle(elementId, 'backdropBlur', blurValue);
+    (value: number | null) => {
+      updateElementStyle(elementId, 'backdropBlur', value ?? 0);
     },
     [elementId],
   );
 
   return (
-    <div style={{ paddingLeft: 9, paddingRight: 9 }}>
-      <Slider
-        size="lg"
-        value={backdropBlur}
-        onValueChange={handleChange}
-        min={0}
-        max={20}
-        step={1}
-        ariaLabel="Backdrop blur"
-      />
-    </div>
+    <NumberField
+      variant="subtle"
+      size="md"
+      value={backdropBlur}
+      onValueChange={handleChange}
+      min={0}
+      max={20}
+      step={1}
+      trailing="px"
+    />
   );
 };

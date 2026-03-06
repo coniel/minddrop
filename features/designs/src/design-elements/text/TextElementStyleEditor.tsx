@@ -1,8 +1,9 @@
-import { InputLabel, Stack } from '@minddrop/ui-primitives';
+import { DefaultTextElementStyle } from '@minddrop/designs';
+import { Stack } from '@minddrop/ui-primitives';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
 import { StaticElementField } from '../../style-editors/StaticElementField';
-import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
 import { TextPlaceholderField } from '../../style-editors/TextPlaceholderField';
 import { Typography } from '../../style-editors/Typography';
 
@@ -12,6 +13,14 @@ export interface TextElementStyleEditorProps {
    */
   elementId: string;
 }
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultTextElementStyle['margin-top'],
+  'margin-right': DefaultTextElementStyle['margin-right'],
+  'margin-bottom': DefaultTextElementStyle['margin-bottom'],
+  'margin-left': DefaultTextElementStyle['margin-left'],
+} as const;
 
 /**
  * Renders the style editor panel for text design elements.
@@ -33,14 +42,13 @@ export const TextElementStyleEditor: React.FC<TextElementStyleEditorProps> = ({
         <Typography elementId={elementId} />
       </Stack>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.alignment.label" />
-        <TextAlignToggle elementId={elementId} />
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.typography.margin.label" />
-          <MarginFields elementId={elementId} />
-        </Stack>
-      </Stack>
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
+        <MarginFields elementId={elementId} />
+      </CollapsibleSection>
     </>
   );
 };

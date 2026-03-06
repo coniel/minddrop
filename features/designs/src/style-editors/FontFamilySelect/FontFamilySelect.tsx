@@ -28,6 +28,7 @@ export const FontFamilySelect = ({ elementId }: FontFamilySelectProps) => {
   return (
     <Select
       variant="subtle"
+      size="md"
       value={fontFamily}
       valueColor={fontFamily === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}

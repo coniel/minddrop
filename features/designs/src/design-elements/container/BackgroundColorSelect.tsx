@@ -41,17 +41,15 @@ export const BackgroundColorSelect = ({
   return (
     <Group gap={2}>
       <FlexItem grow={2} style={{ flexBasis: 0, minWidth: 0 }}>
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.background-color.color" />
-          <ColorSelect
-            size="md"
-            variant="subtle"
-            value={backgroundColor}
-            valueColor={backgroundColor === 'transparent' ? 'muted' : 'regular'}
-            onValueChange={handleChange}
-            extraOptions={[transparentOption]}
-          />
-        </Stack>
+        <ColorSelect
+          size="md"
+          variant="subtle"
+          label="designs.background-color.color"
+          value={backgroundColor}
+          valueColor={backgroundColor === 'transparent' ? 'muted' : 'regular'}
+          onValueChange={handleChange}
+          extraOptions={[transparentOption]}
+        />
       </FlexItem>
       <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
         <Stack gap={1}>

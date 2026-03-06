@@ -1,7 +1,12 @@
-import { ImageViewerElement } from '@minddrop/designs';
+import {
+  DefaultImageViewerElementStyle,
+  ImageViewerElement,
+} from '@minddrop/designs';
 import { Stack } from '@minddrop/ui-primitives';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
+import { BorderRadiusField } from '../../style-editors/BorderRadiusField';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
 import { PlaceholderImageField } from '../../style-editors/PlaceholderImageField';
@@ -15,6 +20,35 @@ export interface ImageViewerElementStyleEditorProps {
    */
   elementId: string;
 }
+
+// Default values for the border collapsible section
+const borderDefaults = {
+  borderStyle: DefaultImageViewerElementStyle.borderStyle,
+  borderColor: DefaultImageViewerElementStyle.borderColor,
+  borderWidth: DefaultImageViewerElementStyle.borderWidth,
+} as const;
+
+// Default values for the radius collapsible section
+const radiusDefaults = {
+  borderRadiusTopLeft: DefaultImageViewerElementStyle.borderRadiusTopLeft,
+  borderRadiusTopRight: DefaultImageViewerElementStyle.borderRadiusTopRight,
+  borderRadiusBottomRight:
+    DefaultImageViewerElementStyle.borderRadiusBottomRight,
+  borderRadiusBottomLeft: DefaultImageViewerElementStyle.borderRadiusBottomLeft,
+} as const;
+
+// Default values for the opacity collapsible section
+const opacityDefaults = {
+  opacity: DefaultImageViewerElementStyle.opacity,
+} as const;
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultImageViewerElementStyle['margin-top'],
+  'margin-right': DefaultImageViewerElementStyle['margin-right'],
+  'margin-bottom': DefaultImageViewerElementStyle['margin-bottom'],
+  'margin-left': DefaultImageViewerElementStyle['margin-left'],
+} as const;
 
 /**
  * Renders the style editor for an image viewer element.
@@ -55,20 +89,37 @@ export const ImageViewerElementStyleEditor: React.FC<
         <SizingFields elementId={elementId} />
       </Stack>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.border.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.border.label"
+        defaultStyles={borderDefaults}
+      >
         <Border elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.opacity.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.border.radius.label"
+        defaultStyles={radiusDefaults}
+      >
+        <BorderRadiusField elementId={elementId} />
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.opacity.label"
+        defaultStyles={opacityDefaults}
+      >
         <OpacityField elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.margin.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
         <MarginFields elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
     </>
   );
 };

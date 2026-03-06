@@ -76,6 +76,36 @@ export const DefaultTextElementStyle: TextElementStyle = {
   ...DefaultTypographyStyles,
 };
 
+export interface BadgesElementStyle extends TypographyStyles {
+  paddingTop: number;
+  paddingRight: number;
+  paddingBottom: number;
+  paddingLeft: number;
+  borderStyle: ContainerStyles['borderStyle'];
+  borderWidth: number;
+  borderRadiusTopLeft: number;
+  borderRadiusTopRight: number;
+  borderRadiusBottomRight: number;
+  borderRadiusBottomLeft: number;
+  round: boolean;
+}
+
+export const DefaultBadgesElementStyle: BadgesElementStyle = {
+  ...DefaultTypographyStyles,
+  'font-size': 0.75,
+  paddingTop: 0.3125,
+  paddingRight: 0.5,
+  paddingBottom: 0.3125,
+  paddingLeft: 0.5,
+  borderStyle: DefaultContainerStyles.borderStyle,
+  borderWidth: DefaultContainerStyles.borderWidth,
+  borderRadiusTopLeft: 4,
+  borderRadiusTopRight: 4,
+  borderRadiusBottomRight: 4,
+  borderRadiusBottomLeft: 4,
+  round: false,
+};
+
 export const DefaultContainerElementStyle: ContainerElementStyle = {
   ...DefaultContainerStyles,
   'font-family': DefaultTypographyStyles['font-family'],

@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { Slider } from '@minddrop/ui-primitives';
+import { NumberField } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 
-export interface BackdropBrightnessSliderProps {
+export interface BackdropBrightnessFieldProps {
   /**
    * The ID of the element to edit.
    */
@@ -10,35 +10,32 @@ export interface BackdropBrightnessSliderProps {
 }
 
 /**
- * Renders a slider for adjusting the backdrop brightness
+ * Renders a number field for adjusting the backdrop brightness
  * on a container element.
  */
-export const BackdropBrightnessSlider = ({
+export const BackdropBrightnessField = ({
   elementId,
-}: BackdropBrightnessSliderProps) => {
+}: BackdropBrightnessFieldProps) => {
   const backdropBrightness = useElementStyle(elementId, 'backdropBrightness');
 
-  // Update the brightness value from the slider
+  // Update the brightness value
   const handleChange = useCallback(
-    (value: number | number[]) => {
-      const brightnessValue = Array.isArray(value) ? value[0] : value;
-
-      updateElementStyle(elementId, 'backdropBrightness', brightnessValue);
+    (value: number | null) => {
+      updateElementStyle(elementId, 'backdropBrightness', value ?? 0);
     },
     [elementId],
   );
 
   return (
-    <div style={{ paddingLeft: 9, paddingRight: 9 }}>
-      <Slider
-        size="lg"
-        value={backdropBrightness}
-        onValueChange={handleChange}
-        min={0}
-        max={200}
-        step={5}
-        ariaLabel="Backdrop brightness"
-      />
-    </div>
+    <NumberField
+      variant="subtle"
+      size="md"
+      value={backdropBrightness}
+      onValueChange={handleChange}
+      min={0}
+      max={200}
+      step={5}
+      trailing="%"
+    />
   );
 };

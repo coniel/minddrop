@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { ImageElement } from '@minddrop/designs';
-import { InputLabel, Stack, SwitchField } from '@minddrop/ui-primitives';
+import { DefaultImageElementStyle, ImageElement } from '@minddrop/designs';
+import { Stack, SwitchField } from '@minddrop/ui-primitives';
 import {
   updateDesignElement,
   updateElementStyle,
@@ -8,6 +8,8 @@ import {
   useElementStyle,
 } from '../../DesignStudioStore';
 import { Border } from '../../style-editors/Border';
+import { BorderRadiusField } from '../../style-editors/BorderRadiusField';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
 import { PlaceholderImageField } from '../../style-editors/PlaceholderImageField';
@@ -23,6 +25,35 @@ export interface ImageElementStyleEditorProps {
    */
   elementId: string;
 }
+
+// Default values for the border collapsible section
+const borderDefaults = {
+  borderStyle: DefaultImageElementStyle.borderStyle,
+  borderColor: DefaultImageElementStyle.borderColor,
+  borderWidth: DefaultImageElementStyle.borderWidth,
+} as const;
+
+// Default values for the radius collapsible section
+const radiusDefaults = {
+  borderRadiusTopLeft: DefaultImageElementStyle.borderRadiusTopLeft,
+  borderRadiusTopRight: DefaultImageElementStyle.borderRadiusTopRight,
+  borderRadiusBottomRight: DefaultImageElementStyle.borderRadiusBottomRight,
+  borderRadiusBottomLeft: DefaultImageElementStyle.borderRadiusBottomLeft,
+  round: DefaultImageElementStyle.round,
+} as const;
+
+// Default values for the opacity collapsible section
+const opacityDefaults = {
+  opacity: DefaultImageElementStyle.opacity,
+} as const;
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultImageElementStyle['margin-top'],
+  'margin-right': DefaultImageElementStyle['margin-right'],
+  'margin-bottom': DefaultImageElementStyle['margin-bottom'],
+  'margin-left': DefaultImageElementStyle['margin-left'],
+} as const;
 
 /**
  * Renders the style editor panel for image design elements.
@@ -110,32 +141,56 @@ export const ImageElementStyleEditor: React.FC<
       <Stack gap={3}>
         <SectionLabel label="designs.image.sizing.label" />
         <SizingFields elementId={elementId} />
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.image.sizing.object-fit.label" />
-          <ObjectFitSelect elementId={elementId} />
-        </Stack>
+        <ObjectFitSelect
+          elementId={elementId}
+          label="designs.image.sizing.object-fit.label"
+        />
+      </Stack>
+
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.border.label"
+        defaultStyles={borderDefaults}
+      >
+        <Border elementId={elementId} />
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.border.radius.label"
+        defaultStyles={radiusDefaults}
+      >
+        <div
+          style={{
+            opacity: round ? 0.4 : undefined,
+            pointerEvents: round ? 'none' : undefined,
+          }}
+        >
+          <BorderRadiusField elementId={elementId} />
+        </div>
         <SwitchField
           size="md"
           label="designs.image.round.label"
           checked={round}
           onCheckedChange={handleRoundChange}
         />
-      </Stack>
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.border.label" />
-        <Border elementId={elementId} disableRadius={round} />
-      </Stack>
-
-      <Stack gap={3}>
-        <SectionLabel label="designs.opacity.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.opacity.label"
+        defaultStyles={opacityDefaults}
+      >
         <OpacityField elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.margin.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
         <MarginFields elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
     </>
   );
 };

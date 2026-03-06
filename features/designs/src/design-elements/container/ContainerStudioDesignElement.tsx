@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { CSSProperties, useMemo } from 'react';
 import {
   createBackdropGradientOverlayStyle,
   createContainerCssStyle,
@@ -53,11 +53,15 @@ export const ContainerStudioDesignElement: React.FC<
   // Gradient overlay style (null when gradient is not active)
   const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
+  const baseContainerStyle = createContainerCssStyle(style);
+
   const containerCssStyle = {
-    ...createContainerCssStyle(style),
-    // Apply background image URL (only when backdrop effects are not active)
-    ...(imageSrc &&
-      !hasBackdropWithImage && { backgroundImage: `url(${imageSrc})` }),
+    ...baseContainerStyle,
+    // Apply background image URL (only when backdrop effects are not active).
+    // When a background color is also set, layer it as a gradient on top
+    // of the image so it overlays rather than sitting behind it.
+    ...(!hasBackdropWithImage &&
+      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
     // Ensure the container has a visible size when empty
     ...(isEmpty && {
       minHeight: 80,
@@ -165,3 +169,29 @@ export const ContainerStudioDesignElement: React.FC<
 
   return flexDropContainer;
 };
+
+/**
+ * Returns background-image CSS that layers a color overlay on top
+ * of a background image when both are present. When only an image
+ * is set (no meaningful color), returns just the image. When no
+ * image is set, returns nothing so background-color applies normally.
+ */
+function getBackgroundImageStyle(
+  imageSrc: string | null,
+  backgroundColor: CSSProperties['backgroundColor'],
+): CSSProperties {
+  if (!imageSrc) {
+    return {};
+  }
+
+  // When a non-transparent background color is set, layer it as a
+  // solid gradient on top of the image
+  if (backgroundColor && backgroundColor !== 'transparent') {
+    return {
+      backgroundImage: `linear-gradient(${backgroundColor}, ${backgroundColor}), url(${imageSrc})`,
+      backgroundColor: 'transparent',
+    };
+  }
+
+  return { backgroundImage: `url(${imageSrc})` };
+}

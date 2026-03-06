@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react';
-import { SizeUnit } from '@minddrop/designs';
+import { useCallback, useRef, useState } from 'react';
 import {
   FlexItem,
   Group,
@@ -29,10 +28,15 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
   const widthUnit = useElementStyle(elementId, 'widthUnit') || 'px';
   const maxWidthUnit = useElementStyle(elementId, 'maxWidthUnit') || 'px';
 
+  const widthRef = useRef<HTMLDivElement>(null);
+  const maxWidthRef = useRef<HTMLDivElement>(null);
+
   const [sizeSynced, setSizeSynced] = useState(false);
   const [maxSizeSynced, setMaxSizeSynced] = useState(false);
 
-  // Handles width changes, syncing height if linked
+  // Handles width changes, syncing height if linked.
+  // In % mode the field always displays 100 when unset, so
+  // increment is disabled at max=100 and decrement goes to 99.
   const handleWidthChange = useCallback(
     (value: number | null) => {
       const resolved = value ?? 0;
@@ -46,10 +50,23 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
     [elementId, sizeSynced],
   );
 
-  // Handles height changes, syncing width if linked
+  // On blur, switch empty px width to % (displays as 100%)
+  const handleWidthBlur = useCallback(() => {
+    if (!width && widthUnit !== '%') {
+      updateElementStyle(elementId, 'widthUnit', '%');
+    }
+  }, [elementId, width, widthUnit]);
+
+  // Handles height changes, syncing width if linked.
+  // When the field is empty and a stepper button is clicked,
+  // jump to 200 instead of going from 0.
   const handleHeightChange = useCallback(
     (value: number | null) => {
-      const resolved = value ?? 0;
+      let resolved = value ?? 0;
+
+      if (!height && value !== null) {
+        resolved = 200;
+      }
 
       updateElementStyle(elementId, 'height', resolved);
 
@@ -57,29 +74,13 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
         updateElementStyle(elementId, 'width', resolved);
       }
     },
-    [elementId, sizeSynced],
-  );
-
-  // Resolves a max-size value, defaulting to 150 when incrementing from empty
-  const resolveMaxSize = useCallback(
-    (value: number | null, current: number): number => {
-      if (value === null) {
-        return 0;
-      }
-
-      if (!current && value === 1) {
-        return 150;
-      }
-
-      return value;
-    },
-    [],
+    [elementId, sizeSynced, height],
   );
 
   // Handles max-width changes, syncing max-height if linked
   const handleMaxWidthChange = useCallback(
     (value: number | null) => {
-      const resolved = resolveMaxSize(value, maxWidth);
+      const resolved = value ?? 0;
 
       updateElementStyle(elementId, 'maxWidth', resolved);
 
@@ -87,13 +88,26 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
         updateElementStyle(elementId, 'maxHeight', resolved);
       }
     },
-    [elementId, maxWidth, maxSizeSynced, resolveMaxSize],
+    [elementId, maxSizeSynced],
   );
 
-  // Handles max-height changes, syncing max-width if linked
+  // On blur, switch empty px max-width to % (displays as 100%)
+  const handleMaxWidthBlur = useCallback(() => {
+    if (!maxWidth && maxWidthUnit !== '%') {
+      updateElementStyle(elementId, 'maxWidthUnit', '%');
+    }
+  }, [elementId, maxWidth, maxWidthUnit]);
+
+  // Handles max-height changes, syncing max-width if linked.
+  // When empty, stepper jumps to 200 instead of going from 0.
   const handleMaxHeightChange = useCallback(
     (value: number | null) => {
-      const resolved = resolveMaxSize(value, maxHeight);
+      let resolved = value ?? 0;
+
+      // Jump to 200 when the field is empty
+      if (!maxHeight && value !== null) {
+        resolved = 200;
+      }
 
       updateElementStyle(elementId, 'maxHeight', resolved);
 
@@ -101,7 +115,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
         updateElementStyle(elementId, 'maxWidth', resolved);
       }
     },
-    [elementId, maxHeight, maxSizeSynced, resolveMaxSize],
+    [elementId, maxHeight, maxSizeSynced],
   );
 
   // Toggles size sync, switching width to px when syncing
@@ -136,26 +150,59 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
     setMaxSizeSynced((current) => !current);
   }, [elementId, maxSizeSynced, maxWidth, maxWidthUnit]);
 
-  // Toggles a sizing field between px and % units, clamping to 100 when
-  // switching to % if the current value exceeds 100
-  const toggleUnit = useCallback(
-    (
-      unitField: 'widthUnit' | 'maxWidthUnit',
-      valueField: 'width' | 'maxWidth',
-      currentUnit: SizeUnit,
-      currentValue: number,
-    ) => {
-      const newUnit = currentUnit === 'px' ? '%' : 'px';
+  // Toggles a sizing field between px and % units.
+  // When switching to %, clamps value to 100.
+  // When switching to px, matches the other field's px value if available.
+  // Focuses the field after toggling.
+  const toggleWidthUnit = useCallback(() => {
+    const newUnit = widthUnit === 'px' ? '%' : 'px';
 
-      updateElementStyle(elementId, unitField, newUnit);
+    updateElementStyle(elementId, 'widthUnit', newUnit);
 
-      // Clamp value to 100 when switching to %
-      if (newUnit === '%' && currentValue > 100) {
-        updateElementStyle(elementId, valueField, 100);
+    if (newUnit === '%' && width > 100) {
+      updateElementStyle(elementId, 'width', 100);
+    }
+
+    // Use the element's rendered width when switching to px
+    if (newUnit === 'px') {
+      const element = document.querySelector(
+        `[data-element-id="${elementId}"]`,
+      ) as HTMLElement | null;
+
+      if (element) {
+        updateElementStyle(elementId, 'width', element.clientWidth);
       }
-    },
-    [elementId],
-  );
+    }
+
+    requestAnimationFrame(() => {
+      widthRef.current?.querySelector('input')?.focus();
+    });
+  }, [elementId, width, widthUnit, maxWidth, maxWidthUnit]);
+
+  const toggleMaxWidthUnit = useCallback(() => {
+    const newUnit = maxWidthUnit === 'px' ? '%' : 'px';
+
+    updateElementStyle(elementId, 'maxWidthUnit', newUnit);
+
+    if (newUnit === '%' && maxWidth > 100) {
+      updateElementStyle(elementId, 'maxWidth', 100);
+    }
+
+    // Use the element's rendered width when switching to px
+    if (newUnit === 'px') {
+      const element = document.querySelector(
+        `[data-element-id="${elementId}"]`,
+      ) as HTMLElement | null;
+
+      if (element) {
+        updateElementStyle(elementId, 'maxWidth', element.clientWidth);
+      }
+    }
+
+    requestAnimationFrame(() => {
+      maxWidthRef.current?.querySelector('input')?.focus();
+    });
+  }, [elementId, maxWidth, maxWidthUnit, width, widthUnit]);
 
   return (
     <>
@@ -165,15 +212,17 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           <Stack gap={1}>
             <InputLabel size="xs" label="designs.image.sizing.width" />
             <NumberField
+              ref={widthRef}
               variant="subtle"
               size="md"
-              value={width || null}
+              value={widthUnit === '%' ? width || 100 : width || null}
               onValueChange={handleWidthChange}
+              onBlur={handleWidthBlur}
               min={0}
               max={widthUnit === '%' ? 100 : undefined}
               step={1}
               trailing={widthUnit}
-              clearable
+              clearable={widthUnit !== '%'}
               placeholder="designs.image.sizing.width-placeholder"
             />
           </Stack>
@@ -185,7 +234,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           size="md"
           active={widthUnit === '%'}
           disabled={sizeSynced}
-          onClick={() => toggleUnit('widthUnit', 'width', widthUnit, width)}
+          onClick={toggleWidthUnit}
           style={{ alignSelf: 'flex-end' }}
         />
         <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
@@ -221,15 +270,17 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           <Stack gap={1}>
             <InputLabel size="xs" label="designs.image.sizing.max-width" />
             <NumberField
+              ref={maxWidthRef}
               variant="subtle"
               size="md"
-              value={maxWidth || null}
+              value={maxWidthUnit === '%' ? maxWidth || 100 : maxWidth || null}
               onValueChange={handleMaxWidthChange}
+              onBlur={handleMaxWidthBlur}
               min={0}
               max={maxWidthUnit === '%' ? 100 : undefined}
               step={1}
-              trailing={maxWidth ? maxWidthUnit : undefined}
-              clearable
+              trailing={maxWidthUnit}
+              clearable={maxWidthUnit !== '%'}
               placeholder="designs.image.sizing.max-width-placeholder"
             />
           </Stack>
@@ -241,9 +292,7 @@ export const SizingFields: React.FC<SizingFieldsProps> = ({ elementId }) => {
           size="md"
           active={maxWidthUnit === '%'}
           disabled={maxSizeSynced}
-          onClick={() =>
-            toggleUnit('maxWidthUnit', 'maxWidth', maxWidthUnit, maxWidth)
-          }
+          onClick={toggleMaxWidthUnit}
           style={{ alignSelf: 'flex-end' }}
         />
         <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>

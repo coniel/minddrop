@@ -112,7 +112,12 @@ export const PlaceholderImageDialog: React.FC<PlaceholderImageDialogProps> = ({
             />
             <DialogClose
               render={
-                <IconButton label="actions.cancel" icon="x" color="muted" />
+                <IconButton
+                  label="actions.cancel"
+                  icon="x"
+                  variant="subtle"
+                  color="muted"
+                />
               }
             />
           </div>

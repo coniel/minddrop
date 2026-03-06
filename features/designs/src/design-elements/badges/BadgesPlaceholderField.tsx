@@ -96,7 +96,7 @@ export const BadgesPlaceholderField: React.FC<BadgesPlaceholderFieldProps> = ({
   );
 
   return (
-    <Stack gap={3}>
+    <Stack gap={4}>
       <Group gap={1}>
         <IconButton
           icon="refresh-cw"

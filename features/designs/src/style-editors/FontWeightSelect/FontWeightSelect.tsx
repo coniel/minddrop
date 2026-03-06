@@ -29,6 +29,7 @@ export const FontWeightSelect = ({ elementId }: FontWeightSelectProps) => {
   return (
     <Select
       variant="subtle"
+      size="md"
       value={fontWeight}
       valueColor={fontWeight === 'inherit' ? 'muted' : 'regular'}
       onValueChange={handleChange}

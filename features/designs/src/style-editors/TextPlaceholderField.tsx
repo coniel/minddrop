@@ -110,12 +110,13 @@ export const TextPlaceholderField = ({
   );
 
   return (
-    <Stack gap={3}>
+    <Stack gap={4}>
       <Group gap={1}>
         <IconButton
           icon="refresh-cw"
           label="designs.placeholder.reroll"
-          size="sm"
+          variant="subtle"
+          size="md"
           disabled={sliderStep === 0}
           onClick={handleReroll}
         />

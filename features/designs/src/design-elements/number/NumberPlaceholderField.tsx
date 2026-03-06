@@ -107,7 +107,7 @@ export const NumberPlaceholderField = ({
   );
 
   return (
-    <Stack gap={3}>
+    <Stack gap={4}>
       <Group gap={1}>
         <IconButton
           icon="refresh-cw"

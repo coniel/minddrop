@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { ObjectFit } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { Select, SelectItem } from '@minddrop/ui-primitives';
+import { SelectField, SelectItem } from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../../DesignStudioStore';
 import { StyleOptions } from '../../types';
 
@@ -10,6 +10,11 @@ export interface ObjectFitSelectProps {
    * The ID of the element to edit.
    */
   elementId: string;
+
+  /**
+   * Optional i18n label key displayed above the select.
+   */
+  label?: string;
 }
 
 const options: StyleOptions<ObjectFit> = [
@@ -22,7 +27,7 @@ const options: StyleOptions<ObjectFit> = [
  * Renders a select for choosing the object-fit mode
  * on an image design element.
  */
-export const ObjectFitSelect = ({ elementId }: ObjectFitSelectProps) => {
+export const ObjectFitSelect = ({ elementId, label }: ObjectFitSelectProps) => {
   const { t } = useTranslation();
   const value = useElementStyle(elementId, 'objectFit');
 
@@ -34,8 +39,10 @@ export const ObjectFitSelect = ({ elementId }: ObjectFitSelectProps) => {
   );
 
   return (
-    <Select
+    <SelectField
       variant="subtle"
+      size="md"
+      label={label}
       value={value}
       onValueChange={handleChange}
       options={options.map((option) => ({
@@ -50,6 +57,6 @@ export const ObjectFitSelect = ({ elementId }: ObjectFitSelectProps) => {
           value={option.value}
         />
       ))}
-    </Select>
+    </SelectField>
   );
 };

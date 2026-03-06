@@ -1,7 +1,7 @@
-import { BadgesElement, createTextCssStyle } from '@minddrop/designs';
+import { CSSProperties } from 'react';
+import { BadgesElement, BadgesElementStyle } from '@minddrop/designs';
 import { SelectPropertySchema } from '@minddrop/properties';
-import { Chip, ChipSize, ChipVariant } from '@minddrop/ui-primitives';
-import { ContentColors } from '@minddrop/ui-theme';
+import { ContentColor, ContentColors } from '@minddrop/ui-theme';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import './BadgesDesignElement.css';
 
@@ -14,7 +14,7 @@ export interface BadgesDesignElementProps {
 
 /**
  * Display renderer for a badges design element.
- * Renders select property values as colored Chip components,
+ * Renders select property values as styled span elements,
  * falling back to placeholder badges when no property is mapped.
  */
 export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
@@ -22,14 +22,13 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
 }) => {
   const property = useElementProperty(element.id);
 
-  // Resolve variant and size with defaults
-  const variant: ChipVariant = element.variant ?? 'rectangular';
-  const size: ChipSize = element.size ?? 'md';
+  // Build the wrapper style (margins, text-align)
+  const wrapperStyle = createWrapperStyle(element.style);
 
-  // Build the wrapper style from the text style config
-  const wrapperStyle = createTextCssStyle(element.style);
+  // Build the base badge item style (typography, padding, radius)
+  const baseItemStyle = createBadgeItemStyle(element.style);
 
-  // When a property is mapped, render its select values as chips
+  // When a property is mapped, render its select values as badges
   if (property?.value != null) {
     const schema = property.schema as SelectPropertySchema;
 
@@ -46,15 +45,15 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
             (option) => option.value === value,
           );
 
+          const itemStyle = {
+            ...baseItemStyle,
+            ...getBadgeColorStyle(option?.color),
+          };
+
           return (
-            <Chip
-              key={value}
-              variant={variant}
-              size={size}
-              color={option?.color}
-            >
+            <span key={value} style={itemStyle}>
               {value}
-            </Chip>
+            </span>
           );
         })}
       </div>
@@ -76,19 +75,96 @@ export const BadgesDesignElement: React.FC<BadgesDesignElementProps> = ({
 
   return (
     <div className="badges-element-container" style={wrapperStyle}>
-      {placeholderLabels.map((label, index) => (
-        <Chip
-          key={`${label}-${index}`}
-          variant={variant}
-          size={size}
-          color={colourPalette[(colourOffset + index) % colourPalette.length]}
-        >
-          {label}
-        </Chip>
-      ))}
+      {placeholderLabels.map((label, index) => {
+        const color =
+          colourPalette[(colourOffset + index) % colourPalette.length];
+
+        const itemStyle = {
+          ...baseItemStyle,
+          ...getBadgeColorStyle(color),
+        };
+
+        return (
+          <span key={`${label}-${index}`} style={itemStyle}>
+            {label}
+          </span>
+        );
+      })}
     </div>
   );
 };
+
+/**
+ * Builds the wrapper div style from the badges element style.
+ * Applies margins and text alignment.
+ */
+function createWrapperStyle(style: BadgesElementStyle): CSSProperties {
+  return {
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+  };
+}
+
+/**
+ * Builds the inline style for individual badge items from the
+ * element's typography, padding, and border radius properties.
+ */
+function createBadgeItemStyle(style: BadgesElementStyle): CSSProperties {
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    lineHeight: 1,
+    whiteSpace: 'nowrap',
+    fontFamily:
+      style['font-family'] === 'inherit'
+        ? 'inherit'
+        : `var(--font-${style['font-family']})`,
+    fontWeight: style['font-weight'],
+    fontSize: `${style['font-size']}rem`,
+    letterSpacing: `${style['letter-spacing']}em`,
+    fontStyle: style.italic ? 'italic' : 'normal',
+    textDecoration: style.underline ? 'underline' : 'none',
+    textTransform: style['text-transform'],
+    opacity: style.opacity,
+    paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
+    paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
+    paddingBottom: style.paddingBottom
+      ? `${style.paddingBottom}rem`
+      : undefined,
+    paddingLeft: style.paddingLeft ? `${style.paddingLeft}rem` : undefined,
+    borderStyle: style.borderStyle,
+    borderWidth: `${style.borderWidth}px`,
+    borderColor: 'currentColor',
+    borderRadius: style.round
+      ? '9999px'
+      : `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+  };
+}
+
+/**
+ * Returns background and text color CSS for a badge based on
+ * its content color. Falls back to neutral styling when no
+ * color is provided.
+ */
+function getBadgeColorStyle(color?: ContentColor): CSSProperties {
+  if (!color || color === 'default') {
+    return {
+      backgroundColor: 'var(--neutral-300)',
+      color: 'var(--text-muted)',
+    };
+  }
+
+  return {
+    backgroundColor: `var(--${color}-400)`,
+    color: `var(--${color}-1100)`,
+  };
+}
 
 /**
  * Hashes a string into an index within the given range using

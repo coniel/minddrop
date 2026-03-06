@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { IconElement } from '@minddrop/designs';
+import { DefaultIconElementStyle, IconElement } from '@minddrop/designs';
 import {
   Button,
   ColorSelect,
@@ -19,6 +19,7 @@ import {
   useElementData,
   useElementStyle,
 } from '../../DesignStudioStore';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { OpacityField } from '../../style-editors/OpacityField';
 import { SectionLabel } from '../../style-editors/SectionLabel';
@@ -37,6 +38,22 @@ const transparentOption = {
   label: 'color.transparent',
   swatchClass: 'color-select-swatch-transparent',
 };
+
+// Default values for the container collapsible section
+const containerDefaults = {
+  containerSize: DefaultIconElementStyle.containerSize,
+  containerBackgroundColor: DefaultIconElementStyle.containerBackgroundColor,
+  containerBorderRadius: DefaultIconElementStyle.containerBorderRadius,
+  containerRound: DefaultIconElementStyle.containerRound,
+} as const;
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultIconElementStyle['margin-top'],
+  'margin-right': DefaultIconElementStyle['margin-right'],
+  'margin-bottom': DefaultIconElementStyle['margin-bottom'],
+  'margin-left': DefaultIconElementStyle['margin-left'],
+} as const;
 
 /**
  * Renders the style editor panel for icon design elements.
@@ -213,15 +230,13 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
             </Stack>
           </FlexItem>
           <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel size="xs" label="designs.icon.color.label" />
-              <ColorSelect
-                size="md"
-                variant="subtle"
-                value={color as ContentColor}
-                onValueChange={handleColorChange}
-              />
-            </Stack>
+            <ColorSelect
+              size="md"
+              variant="subtle"
+              label="designs.icon.color.label"
+              value={color as ContentColor}
+              onValueChange={handleColorChange}
+            />
           </FlexItem>
         </Group>
         <Stack gap={1}>
@@ -231,8 +246,11 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
       </Stack>
 
       {/* Container */}
-      <Stack gap={3}>
-        <SectionLabel label="designs.icon.container.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.icon.container.label"
+        defaultStyles={containerDefaults}
+      >
         <Group gap={2}>
           <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
             <Stack gap={1}>
@@ -250,24 +268,17 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
             </Stack>
           </FlexItem>
           <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-            <Stack gap={1}>
-              <InputLabel
-                size="xs"
-                label="designs.icon.container.background-color"
-              />
-              <ColorSelect
-                size="md"
-                variant="subtle"
-                value={containerBackgroundColor as ContentColor}
-                valueColor={
-                  containerBackgroundColor === 'transparent'
-                    ? 'muted'
-                    : 'regular'
-                }
-                onValueChange={handleContainerBackgroundColorChange}
-                extraOptions={[transparentOption]}
-              />
-            </Stack>
+            <ColorSelect
+              size="md"
+              variant="subtle"
+              label="designs.icon.container.background-color"
+              value={containerBackgroundColor as ContentColor}
+              valueColor={
+                containerBackgroundColor === 'transparent' ? 'muted' : 'regular'
+              }
+              onValueChange={handleContainerBackgroundColorChange}
+              extraOptions={[transparentOption]}
+            />
           </FlexItem>
         </Group>
         <Group gap={2} style={{ alignItems: 'end' }}>
@@ -301,13 +312,16 @@ export const IconElementStyleEditor: React.FC<IconElementStyleEditorProps> = ({
             </div>
           </FlexItem>
         </Group>
-      </Stack>
+      </CollapsibleSection>
 
       {/* Margin */}
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.margin.label" />
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
         <MarginFields elementId={elementId} />
-      </Stack>
+      </CollapsibleSection>
     </>
   );
 };

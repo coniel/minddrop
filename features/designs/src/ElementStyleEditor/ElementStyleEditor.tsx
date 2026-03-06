@@ -28,7 +28,7 @@ export const ElementStyleEditor: React.FC = () => {
   return (
     <div className="element-style-editor">
       <ScrollArea>
-        <Stack gap={6} className="element-style-editor-content">
+        <Stack gap={0} className="element-style-editor-content">
           <Group gap={2} className="element-style-editor-header">
             <Icon name={icon} className="element-style-editor-icon" />
             <Text size="sm" weight="medium" text={label} />

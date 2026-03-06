@@ -1,6 +1,5 @@
 import { FlexItem, Group, InputLabel, Stack } from '@minddrop/ui-primitives';
 import { BorderColorSelect } from './BorderColorSelect';
-import { BorderRadiusField } from './BorderRadiusField';
 import { BorderStyleToggle } from './BorderStyleToggle';
 import { BorderWidthField } from './BorderWidthField';
 
@@ -11,15 +10,19 @@ export interface BorderProps {
   elementId: string;
 
   /**
-   * Whether to disable the border radius control.
+   * Whether to hide the border color select.
+   * @default false
    */
-  disableRadius?: boolean;
+  hideColor?: boolean;
 }
 
 /**
- * Renders border style, width, color, and radius controls for an element.
+ * Renders border style, width, and color controls for an element.
  */
-export const Border: React.FC<BorderProps> = ({ elementId, disableRadius }) => {
+export const Border: React.FC<BorderProps> = ({
+  elementId,
+  hideColor = false,
+}) => {
   return (
     <Stack gap={3}>
       <BorderStyleToggle elementId={elementId} />
@@ -30,19 +33,15 @@ export const Border: React.FC<BorderProps> = ({ elementId, disableRadius }) => {
             <BorderWidthField elementId={elementId} />
           </Stack>
         </FlexItem>
-        <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
-          <Stack gap={1}>
-            <InputLabel size="xs" label="designs.border.color.label" />
-            <BorderColorSelect elementId={elementId} />
-          </Stack>
-        </FlexItem>
+        {!hideColor && (
+          <FlexItem grow={1} style={{ flexBasis: 0, minWidth: 0 }}>
+            <BorderColorSelect
+              elementId={elementId}
+              label="designs.border.color.label"
+            />
+          </FlexItem>
+        )}
       </Group>
-      {!disableRadius && (
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.border.radius.label" />
-          <BorderRadiusField elementId={elementId} />
-        </Stack>
-      )}
     </Stack>
   );
 };

@@ -1,10 +1,6 @@
-import { DefaultTextElementStyle, TextElementStyle } from '../styles';
+import { BadgesElementStyle, DefaultBadgesElementStyle } from '../styles';
 import { DesignElementBase, DesignElementConfig } from '../types';
 import { generateBadgePlaceholder } from './placeholder-generators';
-
-export type BadgesVariant = 'rectangular' | 'round';
-
-export type BadgesSize = 'sm' | 'md' | 'lg';
 
 export interface BadgesElement extends DesignElementBase {
   type: 'badges';
@@ -12,19 +8,7 @@ export interface BadgesElement extends DesignElementBase {
   /**
    * The element style.
    */
-  style: TextElementStyle;
-
-  /**
-   * Shape variant of the badge chips.
-   * @default 'rectangular'
-   */
-  variant?: BadgesVariant;
-
-  /**
-   * Size of the badge chips.
-   * @default 'md'
-   */
-  size?: BadgesSize;
+  style: BadgesElementStyle;
 
   /**
    * Comma-separated placeholder badge labels displayed
@@ -42,7 +26,7 @@ export const BadgesElementConfig: DesignElementConfig = {
   compatiblePropertyTypes: ['select'],
   template: {
     type: 'badges',
-    style: { ...DefaultTextElementStyle },
+    style: { ...DefaultBadgesElementStyle },
     placeholder: '',
   },
   generatePlaceholder: () => generateBadgePlaceholder(2),

@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
-import { DateElement } from '@minddrop/designs';
+import { DateElement, DefaultTextElementStyle } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
 import {
-  InputLabel,
   RadioToggleGroup,
   Select,
   SelectItem,
@@ -11,9 +10,9 @@ import {
   Toggle,
 } from '@minddrop/ui-primitives';
 import { updateDesignElement, useElementData } from '../../DesignStudioStore';
+import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { MarginFields } from '../../style-editors/MarginFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
-import { TextAlignToggle } from '../../style-editors/TextAlignToggle';
 import { Typography } from '../../style-editors/Typography';
 import { FlatDateElement } from '../../types';
 import { DatePlaceholderField } from './DatePlaceholderField';
@@ -24,6 +23,22 @@ export interface DateElementStyleEditorProps {
    */
   elementId: string;
 }
+
+// Default values for the typography collapsible section
+const typographyDefaults = {
+  'font-family': DefaultTextElementStyle['font-family'],
+  'font-weight': DefaultTextElementStyle['font-weight'],
+  color: DefaultTextElementStyle.color,
+  opacity: DefaultTextElementStyle.opacity,
+} as const;
+
+// Default values for the margin collapsible section
+const marginDefaults = {
+  'margin-top': DefaultTextElementStyle['margin-top'],
+  'margin-right': DefaultTextElementStyle['margin-right'],
+  'margin-bottom': DefaultTextElementStyle['margin-bottom'],
+  'margin-left': DefaultTextElementStyle['margin-left'],
+} as const;
 
 // Date style preset options with locale-formatted example labels.
 // Uses a fixed sample date (5 Mar 2026) for preview.
@@ -163,19 +178,26 @@ export const DateElementStyleEditor: React.FC<DateElementStyleEditorProps> = ({
         />
       </Stack>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.label" />
-        <Typography elementId={elementId} />
-      </Stack>
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.label"
+        defaultStyles={typographyDefaults}
+      >
+        <Typography
+          elementId={elementId}
+          hideLineHeight
+          hideTextAlign
+          hideMaxWidth
+        />
+      </CollapsibleSection>
 
-      <Stack gap={3}>
-        <SectionLabel label="designs.typography.alignment.label" />
-        <TextAlignToggle elementId={elementId} />
-        <Stack gap={1}>
-          <InputLabel size="xs" label="designs.typography.margin.label" />
-          <MarginFields elementId={elementId} />
-        </Stack>
-      </Stack>
+      <CollapsibleSection
+        elementId={elementId}
+        label="designs.typography.margin.label"
+        defaultStyles={marginDefaults}
+      >
+        <MarginFields elementId={elementId} />
+      </CollapsibleSection>
     </>
   );
 };
