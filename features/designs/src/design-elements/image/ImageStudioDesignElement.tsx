@@ -85,7 +85,17 @@ export const ImageStudioDesignElement: React.FC<
   }, [handleSelectNewImage]);
 
   return (
-    <div onDoubleClick={handleDoubleClick} style={{ cursor: 'pointer' }}>
+    <div
+      onDoubleClick={handleDoubleClick}
+      style={{
+        cursor: 'pointer',
+        // Fill the flex-allocated space so the img's
+        // max-height: 100% has a definite value to resolve against
+        flex: 1,
+        minHeight: 0,
+        overflow: 'hidden',
+      }}
+    >
       <ImageDesignElement element={element} />
       <PlaceholderImageDialog
         open={dialogOpen}

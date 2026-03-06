@@ -104,6 +104,10 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
 export function createContainerCssStyle(
   style: ContainerElementStyle,
 ): CSSProperties {
+  // Resolve sizing units (px or %) for width fields
+  const widthUnit = style.widthUnit || 'px';
+  const maxWidthUnit = style.maxWidthUnit || 'px';
+
   const cssStyle: CSSProperties = {
     display: 'flex',
     flexDirection: style.direction,
@@ -112,6 +116,11 @@ export function createContainerCssStyle(
     flexWrap: style.wrap ? 'wrap' : 'nowrap',
     alignSelf: style.stretch ? 'stretch' : undefined,
     gap: `${style.gap}px`,
+    width: style.width > 0 ? `${style.width}${widthUnit}` : undefined,
+    height: style.height > 0 ? `${style.height}px` : undefined,
+    maxWidth:
+      style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : undefined,
+    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
     paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
     paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
     paddingBottom: style.paddingBottom

@@ -53,10 +53,25 @@ export const ContainerStudioDesignElement: React.FC<
   // Gradient overlay style (null when gradient is not active)
   const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
-  const baseContainerStyle = createContainerCssStyle(style);
+  // Sizing properties (width/height/maxWidth/maxHeight) are applied
+  // on the DesignStudioElement wrapper so percentage values resolve
+  // against the correct parent. Strip them here to avoid duplication.
+  const {
+    width: _width,
+    height: _height,
+    maxWidth: _maxWidth,
+    maxHeight: _maxHeight,
+    ...baseContainerStyle
+  } = createContainerCssStyle(style);
 
   const containerCssStyle = {
     ...baseContainerStyle,
+    // Fill the wrapper so the container stretches to match
+    // the height allocated by the parent layout
+    flex: 1,
+    // Allow shrinking below content size so children don't
+    // overflow when they exceed the allocated space
+    minHeight: 0,
     // Apply background image URL (only when backdrop effects are not active).
     // When a background color is also set, layer it as a gradient on top
     // of the image so it overlays rather than sitting behind it.
@@ -65,6 +80,7 @@ export const ContainerStudioDesignElement: React.FC<
     // Ensure the container has a visible size when empty
     ...(isEmpty && {
       minHeight: 80,
+      minWidth: 80,
       backgroundColor: 'var(--neutral-400)',
     }),
   };
@@ -105,6 +121,7 @@ export const ContainerStudioDesignElement: React.FC<
         index={index}
         gap={style.gap}
         isLastChild={index === element.children.length - 1}
+        parentDirection={style.direction}
       />
     ))
   );
@@ -137,6 +154,7 @@ export const ContainerStudioDesignElement: React.FC<
           borderRadius: containerCssStyle.borderRadius,
           overflow: 'hidden',
           alignSelf: containerCssStyle.alignSelf,
+          flex: 1,
           // Create stacking context for gradient overlay
           ...(gradientOverlayStyle && {
             position: 'relative' as const,
@@ -159,6 +177,7 @@ export const ContainerStudioDesignElement: React.FC<
           position: 'relative',
           isolation: 'isolate',
           alignSelf: containerCssStyle.alignSelf,
+          flex: 1,
         }}
       >
         <div style={gradientOverlayStyle} />

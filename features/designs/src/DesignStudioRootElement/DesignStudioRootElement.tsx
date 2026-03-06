@@ -61,6 +61,7 @@ export const DesignStudioRootElement: React.FC<
       index={index}
       gap={style.gap}
       isLastChild={index === element.children.length - 1}
+      parentDirection={style.direction}
     />
   ));
 

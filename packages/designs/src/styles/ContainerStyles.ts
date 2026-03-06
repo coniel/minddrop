@@ -64,6 +64,12 @@ export interface ContainerStyles {
   backdropBlurGradient: boolean;
   backdropBlurGradientDirection: GradientDirection;
   backdropBlurGradientExtent: number;
+  width: number;
+  height: number;
+  maxWidth: number;
+  maxHeight: number;
+  widthUnit: 'px' | '%';
+  maxWidthUnit: 'px' | '%';
 }
 
 export const DefaultContainerStyles: ContainerStyles = {
@@ -92,4 +98,10 @@ export const DefaultContainerStyles: ContainerStyles = {
   backdropBlurGradient: false,
   backdropBlurGradientDirection: 'to-top',
   backdropBlurGradientExtent: 50,
+  width: 0,
+  height: 0,
+  maxWidth: 0,
+  maxHeight: 0,
+  widthUnit: '%',
+  maxWidthUnit: '%',
 };

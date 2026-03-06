@@ -20,6 +20,7 @@ import { CollapsibleSection } from '../../style-editors/CollapsibleSection';
 import { ContainerTypography } from '../../style-editors/ContainerTypography';
 import { PaddingFields } from '../../style-editors/PaddingFields';
 import { SectionLabel } from '../../style-editors/SectionLabel';
+import { SizingFields } from '../../style-editors/SizingFields';
 import { BackdropBlurGradientDirectionToggle } from './BackdropBlurGradientDirectionToggle';
 import { BackdropBlurGradientExtentSlider } from './BackdropBlurGradientExtentSlider';
 import { BackdropBlurGradientSwitch } from './BackdropBlurGradientSwitch';
@@ -133,6 +134,13 @@ export const ContainerElementStyleEditor: React.FC<
         {!isRoot && <StretchSwitch elementId={elementId} />}
         <WrapSwitch elementId={elementId} />
       </Stack>
+
+      {!isRoot && (
+        <Stack gap={3}>
+          <SectionLabel label="designs.image.sizing.label" />
+          <SizingFields elementId={elementId} />
+        </Stack>
+      )}
 
       <CollapsibleSection
         elementId={elementId}

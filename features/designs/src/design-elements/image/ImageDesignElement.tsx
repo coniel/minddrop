@@ -46,19 +46,29 @@ export const ImageDesignElement: React.FC<ImageDesignElementProps> = ({
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // Render the image
+  // Render the image.
+  // For "contain", strip width/height so the img sizes naturally
+  // to its aspect ratio constrained by max-width/max-height.
+  // This makes the element box match the visible image so
+  // border-radius clips correctly (object-fit: contain would
+  // otherwise letterbox inside an oversized element box).
   if (imageSrc) {
+    const isContain = element.style.objectFit === 'contain';
+
     return (
       <img
         src={imageSrc}
         alt=""
         style={{
           ...cssStyle,
+          ...(isContain && { width: undefined, height: undefined }),
           maxWidth: '100%',
           maxHeight: '100%',
           display: 'block',
-          minHeight: cssStyle.height,
-          minWidth: cssStyle.width,
+          ...(!isContain && {
+            minHeight: cssStyle.height,
+            minWidth: cssStyle.width,
+          }),
         }}
       />
     );
