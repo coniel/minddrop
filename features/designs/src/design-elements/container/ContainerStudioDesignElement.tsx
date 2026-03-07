@@ -1,9 +1,10 @@
 import { CSSProperties, useMemo } from 'react';
 import {
-  createBackdropGradientOverlayStyle,
+  createBackdropImageWrapperStyle,
   createContainerCssStyle,
   getBackgroundImageStyle,
   getPlaceholderMediaDirPath,
+  resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { useTranslation } from '@minddrop/i18n';
@@ -57,25 +58,15 @@ export const ContainerStudioDesignElement: React.FC<
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // Whether any backdrop effects are active (blur or brightness)
-  const hasBackdropEffects =
-    style.backdropBlur > 0 || style.backdropBrightness !== 100;
+  const { hasBackdropWithImage, gradientOverlayStyle } =
+    resolveContainerBackdrop(style, imageSrc);
 
-  // Whether to use a nested div (bg image on outer, effects on inner)
-  const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
-
-  // Gradient overlay style (null when gradient is not active)
-  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
-
-  // Use the full container style (sizing is no longer split onto
-  // a wrapper since the wrapper has been removed)
   const baseContainerStyle = createContainerCssStyle(style);
 
+  // Pre-merge background image into the container style. When backdrop
+  // effects are active the image goes on a separate wrapper instead.
   const containerCssStyle = {
     ...baseContainerStyle,
-    // Apply background image URL (only when backdrop effects are not active).
-    // When a background color is also set, layer it as a gradient on top
-    // of the image so it overlays rather than sitting behind it.
     ...(!hasBackdropWithImage &&
       getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
     // Ensure the container has a visible size when empty
@@ -125,55 +116,36 @@ export const ContainerStudioDesignElement: React.FC<
     ))
   );
 
-  const flexDropContainer = (
-    <FlexDropContainer
-      {...rootPropsWithoutStyle}
-      key={style.direction}
-      id={element.id}
-      gap={style.gap}
-      direction={style.direction}
-      align={style.alignItems}
-      justify={style.justifyContent}
-      style={{ ...containerCssStyle, ...rootStyle }}
-      onDrop={handleDropOnGap}
-    >
-      {children}
-    </FlexDropContainer>
-  );
+  // Shared FlexDropContainer props used in all three render paths
+  const flexDropProps = {
+    key: style.direction,
+    id: element.id,
+    gap: style.gap,
+    direction: style.direction,
+    align: style.alignItems,
+    justify: style.justifyContent,
+    onDrop: handleDropOnGap,
+  } as const;
 
   // When backdrop effects + bg image are both active, wrap in an outer
-  // div with the background image so backdrop-filter affects the image
+  // div with the background image so backdrop-filter affects the image.
+  // rootProps go on the outer wrapper since it is the outermost element.
   if (hasBackdropWithImage) {
     return (
       <div
         {...rootPropsWithoutStyle}
         style={{
-          backgroundImage: `url(${imageSrc})`,
-          backgroundSize: containerCssStyle.backgroundSize,
-          backgroundPosition: containerCssStyle.backgroundPosition,
-          backgroundRepeat: containerCssStyle.backgroundRepeat,
-          borderRadius: containerCssStyle.borderRadius,
-          overflow: 'hidden',
+          ...createBackdropImageWrapperStyle(
+            imageSrc!,
+            containerCssStyle,
+            gradientOverlayStyle,
+          ),
           alignSelf: containerCssStyle.alignSelf,
-          // Create stacking context for gradient overlay
-          ...(gradientOverlayStyle && {
-            position: 'relative' as const,
-            isolation: 'isolate' as const,
-          }),
           ...rootStyle,
         }}
       >
         {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
-        <FlexDropContainer
-          key={style.direction}
-          id={element.id}
-          gap={style.gap}
-          direction={style.direction}
-          align={style.alignItems}
-          justify={style.justifyContent}
-          style={containerCssStyle}
-          onDrop={handleDropOnGap}
-        >
+        <FlexDropContainer {...flexDropProps} style={containerCssStyle}>
           {children}
         </FlexDropContainer>
       </div>
@@ -194,21 +166,21 @@ export const ContainerStudioDesignElement: React.FC<
         }}
       >
         <div style={gradientOverlayStyle} />
-        <FlexDropContainer
-          key={style.direction}
-          id={element.id}
-          gap={style.gap}
-          direction={style.direction}
-          align={style.alignItems}
-          justify={style.justifyContent}
-          style={containerCssStyle}
-          onDrop={handleDropOnGap}
-        >
+        <FlexDropContainer {...flexDropProps} style={containerCssStyle}>
           {children}
         </FlexDropContainer>
       </div>
     );
   }
 
-  return flexDropContainer;
+  // Default: no wrapping needed, rootProps go on the FlexDropContainer
+  return (
+    <FlexDropContainer
+      {...rootPropsWithoutStyle}
+      {...flexDropProps}
+      style={{ ...containerCssStyle, ...rootStyle }}
+    >
+      {children}
+    </FlexDropContainer>
+  );
 };

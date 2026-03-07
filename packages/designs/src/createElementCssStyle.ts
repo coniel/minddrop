@@ -363,6 +363,53 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
 }
 
 /**
+ * Computes the backdrop effect state for a container element.
+ * Returns whether the backdrop needs an image wrapper and the
+ * gradient overlay style (null when no gradient is active).
+ */
+export function resolveContainerBackdrop(
+  style: ContainerElementStyle,
+  imageSrc: string | null,
+): {
+  hasBackdropWithImage: boolean;
+  gradientOverlayStyle: CSSProperties | null;
+} {
+  const hasBackdropEffects =
+    style.backdropBlur > 0 || style.backdropBrightness !== 100;
+
+  return {
+    hasBackdropWithImage: hasBackdropEffects && !!imageSrc,
+    gradientOverlayStyle: createBackdropGradientOverlayStyle(style),
+  };
+}
+
+/**
+ * Returns CSS for the outer wrapper div used when both a
+ * background image and backdrop effects are active. The image
+ * goes on this wrapper so backdrop-filter can blur/darken it
+ * without affecting child content.
+ */
+export function createBackdropImageWrapperStyle(
+  imageSrc: string,
+  containerStyle: CSSProperties,
+  gradientOverlayStyle: CSSProperties | null,
+): CSSProperties {
+  return {
+    backgroundImage: `url(${imageSrc})`,
+    backgroundSize: containerStyle.backgroundSize,
+    backgroundPosition: containerStyle.backgroundPosition,
+    backgroundRepeat: containerStyle.backgroundRepeat,
+    borderRadius: containerStyle.borderRadius,
+    overflow: 'hidden',
+    // Create stacking context for gradient overlay
+    ...(gradientOverlayStyle && {
+      position: 'relative' as const,
+      isolation: 'isolate' as const,
+    }),
+  };
+}
+
+/**
  * Returns background-image CSS that layers a color overlay on top
  * of a background image when both are present. When only an image
  * is set (no meaningful color), returns just the image URL. When no

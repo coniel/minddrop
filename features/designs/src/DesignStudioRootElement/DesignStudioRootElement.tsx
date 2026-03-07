@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import {
-  createBackdropGradientOverlayStyle,
+  createBackdropImageWrapperStyle,
   createElementCssStyle,
   getBackgroundImageStyle,
   getPlaceholderMediaDirPath,
+  resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FlexDropContainer } from '@minddrop/ui-drag-and-drop';
@@ -33,15 +34,8 @@ export const DesignStudioRootElement: React.FC<
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // Whether any backdrop effects are active (blur or brightness)
-  const hasBackdropEffects =
-    style.backdropBlur > 0 || style.backdropBrightness !== 100;
-
-  // Whether to use a nested div (bg image on outer, effects on inner)
-  const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
-
-  // Gradient overlay style (null when gradient is not active)
-  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
+  const { hasBackdropWithImage, gradientOverlayStyle } =
+    resolveContainerBackdrop(style, imageSrc);
 
   // Select the root element when clicking the root background.
   // Only fires when the click target is inside this element,
@@ -58,11 +52,10 @@ export const DesignStudioRootElement: React.FC<
 
   const baseContainerStyle = createElementCssStyle(element);
 
+  // Pre-merge background image into the container style. When backdrop
+  // effects are active the image goes on a separate wrapper instead.
   const containerCssStyle = {
     ...baseContainerStyle,
-    // Apply background image URL (only when backdrop effects are not active).
-    // When a background color is also set, layer it as a gradient on top
-    // of the image so it overlays rather than sitting behind it.
     ...(!hasBackdropWithImage &&
       getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
   };
@@ -92,28 +85,19 @@ export const DesignStudioRootElement: React.FC<
     </FlexDropContainer>
   );
 
+  const fillStyle = { width: '100%' as const, height: '100%' as const };
+
   return (
-    <div
-      onClick={handleClick}
-      data-element-id="root"
-      style={{ width: '100%', height: '100%' }}
-    >
+    <div onClick={handleClick} data-element-id="root" style={fillStyle}>
       {hasBackdropWithImage ? (
         <div
           style={{
-            backgroundImage: `url(${imageSrc})`,
-            backgroundSize: containerCssStyle.backgroundSize,
-            backgroundPosition: containerCssStyle.backgroundPosition,
-            backgroundRepeat: containerCssStyle.backgroundRepeat,
-            borderRadius: containerCssStyle.borderRadius,
-            overflow: 'hidden',
-            width: '100%',
-            height: '100%',
-            // Create stacking context for gradient overlay
-            ...(gradientOverlayStyle && {
-              position: 'relative' as const,
-              isolation: 'isolate' as const,
-            }),
+            ...fillStyle,
+            ...createBackdropImageWrapperStyle(
+              imageSrc!,
+              containerCssStyle,
+              gradientOverlayStyle,
+            ),
           }}
         >
           {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
@@ -122,10 +106,9 @@ export const DesignStudioRootElement: React.FC<
       ) : gradientOverlayStyle ? (
         <div
           style={{
+            ...fillStyle,
             position: 'relative',
             isolation: 'isolate',
-            width: '100%',
-            height: '100%',
           }}
         >
           <div style={gradientOverlayStyle} />

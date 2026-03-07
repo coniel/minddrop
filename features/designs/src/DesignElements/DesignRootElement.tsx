@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import {
   RootElement,
-  createBackdropGradientOverlayStyle,
+  createBackdropImageWrapperStyle,
   createElementCssStyle,
   getBackgroundImageStyle,
   getPlaceholderMediaDirPath,
+  resolveContainerBackdrop,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { useElementProperty } from '../DesignPropertiesProvider';
@@ -51,17 +52,18 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
 
   const imageSrc = Fs.useImageSrc(imagePath);
 
-  // Whether any backdrop effects are active (blur or brightness)
-  const hasBackdropEffects =
-    style.backdropBlur > 0 || style.backdropBrightness !== 100;
+  const { hasBackdropWithImage, gradientOverlayStyle } =
+    resolveContainerBackdrop(style, imageSrc);
 
-  // Whether to use a nested div (bg image on outer, effects on inner)
-  const hasBackdropWithImage = hasBackdropEffects && !!imageSrc;
+  const baseContainerStyle = createElementCssStyle(element);
 
-  // Gradient overlay style (null when gradient is not active)
-  const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
-
-  const containerCssStyle = createElementCssStyle(element);
+  // Pre-merge background image into the container style. When backdrop
+  // effects are active the image goes on a separate wrapper instead.
+  const containerCssStyle = {
+    ...baseContainerStyle,
+    ...(!hasBackdropWithImage &&
+      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
+  };
 
   const children = element.children.map((child) => (
     <DesignElement key={child.id} element={child} />
@@ -79,17 +81,11 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
         data-element-id={element.id}
         style={{
           ...fillStyle,
-          backgroundImage: `url(${imageSrc})`,
-          backgroundSize: containerCssStyle.backgroundSize,
-          backgroundPosition: containerCssStyle.backgroundPosition,
-          backgroundRepeat: containerCssStyle.backgroundRepeat,
-          borderRadius: containerCssStyle.borderRadius,
-          overflow: 'hidden',
-          // Create stacking context for gradient overlay
-          ...(gradientOverlayStyle && {
-            position: 'relative' as const,
-            isolation: 'isolate' as const,
-          }),
+          ...createBackdropImageWrapperStyle(
+            imageSrc!,
+            containerCssStyle,
+            gradientOverlayStyle,
+          ),
         }}
       >
         {gradientOverlayStyle && <div style={gradientOverlayStyle} />}
@@ -121,14 +117,7 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
     <div
       className={className}
       data-element-id={element.id}
-      style={{
-        ...containerCssStyle,
-        ...fillStyle,
-        // Apply background image URL resolved from the file system.
-        // When a background color is also set, layer it as a gradient
-        // on top of the image so it overlays rather than sitting behind it.
-        ...getBackgroundImageStyle(imageSrc, containerCssStyle.backgroundColor),
-      }}
+      style={{ ...containerCssStyle, ...fillStyle }}
     >
       {children}
     </div>
