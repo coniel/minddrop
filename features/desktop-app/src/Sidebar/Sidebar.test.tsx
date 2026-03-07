@@ -20,8 +20,8 @@ describe('<Sidebar />', () => {
     expect(content.style.height).toBe('20px');
   });
 
-  it('sets the width to initialWidth', () => {
-    const { getByText } = render(<Sidebar initialWidth={400}>content</Sidebar>);
+  it('sets the width to width', () => {
+    const { getByText } = render(<Sidebar width={400}>content</Sidebar>);
 
     const sidebar = getByText('content');
 
@@ -34,7 +34,7 @@ describe('<Sidebar />', () => {
   it('call onResized when resized', () => {
     const onResized = vi.fn();
     render(
-      <Sidebar initialWidth={400} onResized={onResized}>
+      <Sidebar width={400} onResized={onResized}>
         content
       </Sidebar>,
     );

@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from 'react';
-import { Panel, propsToClass } from '@minddrop/ui-primitives';
+import { propsToClass } from '@minddrop/ui-primitives';
 import './Sidebar.css';
 
 const minWidth = 240;
@@ -7,9 +7,9 @@ const maxWidth = 500;
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * The initial width in px of the sidebar.
+   * The width in px of the sidebar.
    */
-  initialWidth?: number;
+  width?: number;
 
   /**
    * Callback fired when user finishes resizing the sidebar.
@@ -21,40 +21,42 @@ export const Sidebar: FC<SidebarProps> = ({
   children,
   className,
   style = {},
-  initialWidth = 300,
+  width: widthProp = 300,
   onResized,
   ...other
 }) => {
   const sidebar = useRef<HTMLDivElement>(null);
-  const dragOffest = useRef<number>(initialWidth);
-  const widthRef = useRef<number>(initialWidth);
-  const [width, setWidth] = useState(initialWidth);
+  const dragOffset = useRef<number>(0);
+  const dragWidth = useRef<number>(widthProp);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (!sidebar.current || !dragOffest.current) {
-        return;
-      }
+  // Use local drag width during drag, prop value otherwise
+  const width = isDragging ? dragWidth.current : widthProp;
 
-      const newWidth = Math.min(
-        Math.max(event.clientX - dragOffest.current, minWidth),
-        maxWidth,
-      );
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    if (!sidebar.current) {
+      return;
+    }
 
-      setWidth(newWidth);
-      widthRef.current = newWidth;
-    },
-    [dragOffest],
-  );
+    const newWidth = Math.min(
+      Math.max(event.clientX - dragOffset.current, minWidth),
+      maxWidth,
+    );
+
+    dragWidth.current = newWidth;
+
+    // Update the DOM directly during drag for smooth resizing
+    sidebar.current.style.width = `${newWidth}px`;
+    sidebar.current.setAttribute('data-width', String(newWidth));
+  }, []);
 
   const handleMouseUp = useCallback(() => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
     setIsDragging(false);
 
-    if (onResized && widthRef.current) {
-      onResized(widthRef.current);
+    if (onResized) {
+      onResized(dragWidth.current);
     }
   }, [onResized, handleMouseMove]);
 
@@ -63,9 +65,10 @@ export const Sidebar: FC<SidebarProps> = ({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       setIsDragging(true);
-      dragOffest.current = event.clientX - width;
+      dragOffset.current = event.clientX - widthProp;
+      dragWidth.current = widthProp;
     },
-    [width, handleMouseMove, handleMouseUp],
+    [widthProp, handleMouseMove, handleMouseUp],
   );
 
   return (
