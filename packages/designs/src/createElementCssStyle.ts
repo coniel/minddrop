@@ -64,6 +64,77 @@ function resolveFontFamily(family: string): string {
   return `var(--font-${family})`;
 }
 
+// -- Shared CSS helpers for repeated style patterns --
+
+/**
+ * Resolves margin style properties to CSS values.
+ */
+function resolveMarginCss(style: {
+  'margin-top': number;
+  'margin-right': number;
+  'margin-bottom': number;
+  'margin-left': number;
+}): CSSProperties {
+  return {
+    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
+    marginRight: style['margin-right']
+      ? `${style['margin-right']}rem`
+      : undefined,
+    marginBottom: style['margin-bottom']
+      ? `${style['margin-bottom']}rem`
+      : undefined,
+    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+  };
+}
+
+/**
+ * Resolves border style properties to CSS values.
+ */
+function resolveBorderCss(style: {
+  borderStyle: string;
+  borderColor: string;
+  borderWidth: number;
+  borderRadiusTopLeft: number;
+  borderRadiusTopRight: number;
+  borderRadiusBottomRight: number;
+  borderRadiusBottomLeft: number;
+}): CSSProperties {
+  return {
+    borderStyle: style.borderStyle,
+    borderWidth: `${style.borderWidth}px`,
+    borderColor: getBorderColorCss(style.borderColor),
+    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+  };
+}
+
+/**
+ * Resolves sizing properties (width/height/maxWidth/maxHeight) to
+ * CSS values. When fallback is provided, it is used when the value
+ * is 0; otherwise the property is left undefined.
+ */
+function resolveSizingCss(
+  style: {
+    width: number;
+    height: number;
+    maxWidth: number;
+    maxHeight: number;
+    widthUnit: string;
+    maxWidthUnit: string;
+  },
+  fallback?: string,
+): CSSProperties {
+  const widthUnit = style.widthUnit || 'px';
+  const maxWidthUnit = style.maxWidthUnit || 'px';
+
+  return {
+    width: style.width > 0 ? `${style.width}${widthUnit}` : fallback,
+    height: style.height > 0 ? `${style.height}px` : undefined,
+    maxWidth:
+      style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : fallback,
+    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+  };
+}
+
 export function createTextCssStyle(style: TextElementStyle): CSSProperties {
   const cssStyle: CSSProperties = {
     fontFamily: resolveFontFamily(style['font-family']),
@@ -79,14 +150,7 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
     maxWidth: style['max-width'] > 0 ? `${style['max-width']}px` : undefined,
     overflowWrap: 'anywhere',
     opacity: style.opacity,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
     display:
       style['margin-top'] || style['margin-bottom'] ? 'block' : undefined,
   };
@@ -104,10 +168,6 @@ export function createTextCssStyle(style: TextElementStyle): CSSProperties {
 export function createContainerCssStyle(
   style: ContainerElementStyle,
 ): CSSProperties {
-  // Resolve sizing units (px or %) for width fields
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
   const cssStyle: CSSProperties = {
     display: 'flex',
     flexDirection: style.direction,
@@ -116,11 +176,7 @@ export function createContainerCssStyle(
     flexWrap: style.wrap ? 'wrap' : 'nowrap',
     alignSelf: style.stretch ? 'stretch' : undefined,
     gap: `${style.gap}px`,
-    width: style.width > 0 ? `${style.width}${widthUnit}` : undefined,
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth:
-      style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : undefined,
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+    ...resolveSizingCss(style),
     paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
     paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
     paddingBottom: style.paddingBottom
@@ -139,10 +195,7 @@ export function createContainerCssStyle(
       style.backdropBlurGradient && style.backdropBlur > 0
         ? 'transparent'
         : getBackgroundColorCss(style.backgroundColor, style.opacity),
-    borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    ...resolveBorderCss(style),
     overflow: 'hidden',
   };
 
@@ -259,134 +312,59 @@ export function createIconCssStyle(style: IconElementStyle): CSSProperties {
     display: hasContainer ? 'inline-flex' : undefined,
     alignItems: hasContainer ? 'center' : undefined,
     justifyContent: hasContainer ? 'center' : undefined,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
   };
 }
 
 export function createImageCssStyle(style: ImageElementStyle): CSSProperties {
-  // Resolve sizing unit (px or %) for width fields
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
   return {
-    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+    ...resolveSizingCss(style, '100%'),
     objectFit: style.objectFit,
-    borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: style.round
-      ? '50%'
-      : `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    ...resolveBorderCss(style),
+    // Round overrides border-radius to make a circle
+    ...(style.round && { borderRadius: '50%' }),
     opacity: style.opacity,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
   };
 }
 
 export function createWebviewCssStyle(
   style: WebviewElementStyle,
 ): CSSProperties {
-  // Resolve sizing unit (px or %) for width fields
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
   return {
-    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
-    borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    ...resolveSizingCss(style, '100%'),
+    ...resolveBorderCss(style),
     opacity: style.opacity,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
   };
 }
 
 export function createImageViewerCssStyle(
   style: ImageViewerElementStyle,
 ): CSSProperties {
-  // Resolve sizing unit (px or %) for width fields
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
   return {
-    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
-    borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    ...resolveSizingCss(style, '100%'),
+    ...resolveBorderCss(style),
     opacity: style.opacity,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
   };
 }
 
 export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
-  // Resolve sizing units (px or %) for width fields
-  const widthUnit = style.widthUnit || 'px';
-  const maxWidthUnit = style.maxWidthUnit || 'px';
-
   return {
-    width: style.width > 0 ? `${style.width}${widthUnit}` : '100%',
-    height: style.height > 0 ? `${style.height}px` : undefined,
-    maxWidth: style.maxWidth > 0 ? `${style.maxWidth}${maxWidthUnit}` : '100%',
-    maxHeight: style.maxHeight > 0 ? `${style.maxHeight}px` : undefined,
+    ...resolveSizingCss(style, '100%'),
     paddingTop: style.paddingTop ? `${style.paddingTop}rem` : undefined,
     paddingRight: style.paddingRight ? `${style.paddingRight}rem` : undefined,
     paddingBottom: style.paddingBottom
       ? `${style.paddingBottom}rem`
       : undefined,
     paddingLeft: style.paddingLeft ? `${style.paddingLeft}rem` : undefined,
-    borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
-    borderColor: getBorderColorCss(style.borderColor),
-    borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
+    ...resolveBorderCss(style),
     fontFamily: resolveFontFamily(style['font-family']),
     fontWeight: style['font-weight'],
     color: getContentColorCss(style.color, 900, 'inherit'),
     opacity: style.opacity,
-    marginTop: style['margin-top'] ? `${style['margin-top']}rem` : undefined,
-    marginRight: style['margin-right']
-      ? `${style['margin-right']}rem`
-      : undefined,
-    marginBottom: style['margin-bottom']
-      ? `${style['margin-bottom']}rem`
-      : undefined,
-    marginLeft: style['margin-left'] ? `${style['margin-left']}rem` : undefined,
+    ...resolveMarginCss(style),
   };
 }
 
