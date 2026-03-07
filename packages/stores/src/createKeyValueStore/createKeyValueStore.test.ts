@@ -22,7 +22,7 @@ const defaults: TestValues = {
 
 describe('createKeyValueStore', () => {
   describe('without persistence', () => {
-    const store = createKeyValueStore<TestValues>(defaults);
+    const store = createKeyValueStore<TestValues>('Test:KeyValue', defaults);
 
     beforeEach(() => {
       store.reset();
@@ -126,10 +126,14 @@ describe('createKeyValueStore', () => {
   });
 
   describe('with persistence', () => {
-    const store = createKeyValueStore<TestValues>(defaults, {
-      persistTo: 'app-config',
-      namespace: 'test-kv',
-    });
+    const store = createKeyValueStore<TestValues>(
+      'Test:KeyValuePersist',
+      defaults,
+      {
+        persistTo: 'app-config',
+        namespace: 'test-kv',
+      },
+    );
 
     beforeEach(() => {
       // Clear events first so old listeners don't receive
@@ -212,10 +216,14 @@ describe('createKeyValueStore', () => {
 
       it('resolves after the load event is dispatched', async () => {
         // Create a fresh store so its load listener is active
-        const freshStore = createKeyValueStore<TestValues>(defaults, {
-          persistTo: 'app-config',
-          namespace: 'hydrate-resolve-test',
-        });
+        const freshStore = createKeyValueStore<TestValues>(
+          'Test:KeyValuePersist',
+          defaults,
+          {
+            persistTo: 'app-config',
+            namespace: 'hydrate-resolve-test',
+          },
+        );
 
         // Simulate the platform layer responding to the load request
         Events.addListener(StoreHydrateRequestEvent, 'test', () => {
@@ -235,10 +243,14 @@ describe('createKeyValueStore', () => {
 
       it('dispatches a hydrated event', async () => {
         // Create a fresh store so its listener is active
-        const freshStore = createKeyValueStore<TestValues>(defaults, {
-          persistTo: 'app-config',
-          namespace: 'hydrated-event-test',
-        });
+        const freshStore = createKeyValueStore<TestValues>(
+          'Test:KeyValuePersist',
+          defaults,
+          {
+            persistTo: 'app-config',
+            namespace: 'hydrated-event-test',
+          },
+        );
 
         const callback = vi.fn();
         Events.addListener(StoreHydratedEvent, 'test', callback);
@@ -265,10 +277,14 @@ describe('createKeyValueStore', () => {
   describe('hydrate listener', () => {
     it('loads data when a matching load event is dispatched', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createKeyValueStore<TestValues>(defaults, {
-        persistTo: 'app-config',
-        namespace: 'kv-load-test',
-      });
+      const freshStore = createKeyValueStore<TestValues>(
+        'Test:KeyValuePersist',
+        defaults,
+        {
+          persistTo: 'app-config',
+          namespace: 'kv-load-test',
+        },
+      );
 
       // Dispatch a load event with data for this store
       await Events.dispatch(StoreHydrateEvent, {
@@ -284,10 +300,14 @@ describe('createKeyValueStore', () => {
 
     it('ignores load events for other namespaces', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createKeyValueStore<TestValues>(defaults, {
-        persistTo: 'app-config',
-        namespace: 'kv-load-test-2',
-      });
+      const freshStore = createKeyValueStore<TestValues>(
+        'Test:KeyValuePersist',
+        defaults,
+        {
+          persistTo: 'app-config',
+          namespace: 'kv-load-test-2',
+        },
+      );
 
       // Dispatch a load event for a different namespace
       await Events.dispatch(StoreHydrateEvent, {

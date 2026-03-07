@@ -1,7 +1,10 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Database } from './types';
 
-export const DatabasesStore = createObjectStore<Database>('id');
+export const DatabasesStore = createObjectStore<Database>(
+  'Databases:Databases',
+  'id',
+);
 
 /**
  * Retrieves a Database by ID or null if it doesn't exist.

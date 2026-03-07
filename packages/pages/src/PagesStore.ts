@@ -1,7 +1,7 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Page } from './types';
 
-export const PagesStore = createObjectStore<Page>('id');
+export const PagesStore = createObjectStore<Page>('Pages:Pages', 'id');
 
 /**
  * Retrieves a Page by ID or null if it doesn't exist.

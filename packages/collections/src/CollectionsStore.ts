@@ -1,7 +1,10 @@
 import { createObjectStore } from '@minddrop/stores';
 import { Collection } from './types';
 
-export const CollectionsStore = createObjectStore<Collection>('id');
+export const CollectionsStore = createObjectStore<Collection>(
+  'Collections:Collections',
+  'id',
+);
 
 /**
  * Retrieves a Collection by ID or null if it doesn't exist.

@@ -1,4 +1,4 @@
-import { createPersistentConfig } from '@minddrop/core';
+import { createKeyValueStore } from '@minddrop/stores';
 import { EmojiSkinTone } from '@minddrop/ui-icons';
 
 export interface AppUiState {
@@ -24,18 +24,18 @@ const defaultState: AppUiState = {
   defaultEmojiSkinTone: 0,
 };
 
-export const AppUiState = createPersistentConfig<AppUiState>(
-  'app-ui',
+export const AppUiState = createKeyValueStore<AppUiState>(
+  'App:UiState',
   defaultState,
+  {
+    persistTo: 'app-config',
+    namespace: 'app-ui',
+  },
 );
 
-export const useCurrentView = () => AppUiState.useValue('view', null);
+export const useCurrentView = () => AppUiState.useValue('view');
 
-export const useSidebarWidth = () =>
-  AppUiState.useValue('sidebarWidth', defaultState.sidebarWidth);
+export const useSidebarWidth = () => AppUiState.useValue('sidebarWidth');
 
 export const useDefaultEmojiSkinTone = () =>
-  AppUiState.useValue(
-    'defaultEmojiSkinTone',
-    defaultState.defaultEmojiSkinTone,
-  );
+  AppUiState.useValue('defaultEmojiSkinTone');

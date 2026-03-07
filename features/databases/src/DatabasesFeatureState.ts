@@ -9,7 +9,7 @@ export interface DatabasesFeatureStateValues {
 }
 
 export const DatabasesFeatureState =
-  createKeyValueStore<DatabasesFeatureStateValues>({
+  createKeyValueStore<DatabasesFeatureStateValues>('Databases:FeatureState', {
     activeDatabaseId: null,
   });
 

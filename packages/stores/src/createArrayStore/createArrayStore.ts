@@ -7,6 +7,7 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
+import { registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
 export interface ArrayStoreInternalApi<TItem extends object> {
@@ -144,11 +145,13 @@ export interface ArrayItemStore<TItem extends object> {
  * dispatch a `stores:persist` event so the platform layer can
  * handle writing the data to storage.
  *
+ * @param name - The namespaced name for the store registry (e.g. "Databases:Entries").
  * @param identifierKey - The key to use as the identifier for the items.
  * @param persist - Optional persistence configuration.
  * @returns The array store.
  */
 export function createArrayStore<TItem extends object>(
+  name: string,
   identifierKey: keyof TItem,
   persist?: PersistOptions,
 ): ArrayItemStore<TItem> {
@@ -281,6 +284,9 @@ export function createArrayStore<TItem extends object>(
 
     return items.find((item) => item[identifierKey] === itemId) || null;
   }
+
+  // Register the store in the global registry
+  registerStore(name, 'array', store as UseBoundStore<StoreApi<unknown>>);
 
   return {
     get,

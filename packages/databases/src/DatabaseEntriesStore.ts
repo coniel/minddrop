@@ -2,7 +2,10 @@ import { shallow } from 'zustand/shallow';
 import { createObjectStore } from '@minddrop/stores';
 import { DatabaseEntry } from './types';
 
-export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>('id');
+export const DatabaseEntriesStore = createObjectStore<DatabaseEntry>(
+  'Databases:Entries',
+  'id',
+);
 
 /**
  * Retrieves an entry by ID or null if it doesn't exist.

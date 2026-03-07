@@ -10,6 +10,7 @@ export interface ThemeStoreValues {
 }
 
 export const ThemeStore = createKeyValueStore<ThemeStoreValues>(
+  'Theme:Theme',
   { variant: ThemeSystem },
   {
     persistTo: 'app-config',

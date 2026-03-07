@@ -37,20 +37,9 @@ import { LogsPanel, SavedLogsPanel } from '../LogsPanel';
 import { NewIssueData, NewIssueDialog } from '../NewIssueDialog';
 import { NotesPanel } from '../NotesPanel';
 import {
-  DatabasesStateView,
-  DatabasesStateViewId,
-  DesignPropertyMappingStateView,
-  DesignsStateView,
-  QueriesStateView,
-  ViewsStateView,
-  ViewsStateViewId,
-  WorkspacesStateView,
-  useDatabaseStoreCounts,
-  useDesignPropertyMappingStoreCounts,
-  useDesignsStoreCounts,
-  useQueriesStoreCounts,
-  useViewsStoreCounts,
-  useWorkspacesStoreCounts,
+  RegistryStoreInspector,
+  useStoreGroups,
+  useStoreItemCount,
 } from '../StateInspector';
 import {
   ActiveSection,
@@ -104,46 +93,6 @@ interface EventTreeNode {
   count: number;
   children: EventTreeNode[];
 }
-
-const STATE_STORE_GROUPS = [
-  {
-    label: 'Databases',
-    stores: [
-      { id: 'databases' as const, label: 'Databases' },
-      { id: 'database-entries' as const, label: 'Entries' },
-      { id: 'database-templates' as const, label: 'Templates' },
-      { id: 'database-automations' as const, label: 'Automations' },
-      { id: 'database-serializers' as const, label: 'Serializers' },
-    ],
-  },
-  {
-    label: 'Content',
-    stores: [
-      { id: 'workspaces' as const, label: 'Workspaces' },
-      { id: 'designs' as const, label: 'Designs' },
-      { id: 'queries' as const, label: 'Queries' },
-      { id: 'views' as const, label: 'Views' },
-      { id: 'view-types' as const, label: 'View Types' },
-    ],
-  },
-  {
-    label: 'Features',
-    stores: [
-      {
-        id: 'design-property-mapping' as const,
-        label: 'Property Mapping',
-      },
-    ],
-  },
-];
-
-type StateView =
-  | DatabasesStateViewId
-  | 'workspaces'
-  | 'designs'
-  | 'queries'
-  | ViewsStateViewId
-  | 'design-property-mapping';
 
 let noteIdCounter = 0;
 
@@ -286,26 +235,10 @@ export const DevTools: React.FC = () => {
   const [logsView, setLogsView] = useState<string>(
     () => localStorage.getItem('dev-tools-logs-view') ?? 'live',
   );
-  const [stateView, setStateView] = useState<StateView>(
-    () =>
-      (localStorage.getItem('dev-tools-state-view') as StateView) ??
-      'databases',
+  const [stateView, setStateView] = useState<string>(
+    () => localStorage.getItem('dev-tools-state-view') ?? '',
   );
-  const databaseStoreCounts = useDatabaseStoreCounts();
-  const workspacesStoreCounts = useWorkspacesStoreCounts();
-  const designsStoreCounts = useDesignsStoreCounts();
-  const queriesStoreCounts = useQueriesStoreCounts();
-  const viewsStoreCounts = useViewsStoreCounts();
-  const designPropertyMappingStoreCounts =
-    useDesignPropertyMappingStoreCounts();
-  const storeCounts: Record<StateView, number> = {
-    ...databaseStoreCounts,
-    ...workspacesStoreCounts,
-    ...designsStoreCounts,
-    ...queriesStoreCounts,
-    ...viewsStoreCounts,
-    ...designPropertyMappingStoreCounts,
-  };
+  const storeGroups = useStoreGroups();
   const workspacePath = Workspaces.useAll()[0]?.path ?? '';
   const [notes, setNotes] = useState<Note[]>([]);
   const notesRef = useRef(notes);
@@ -1768,27 +1701,16 @@ export const DevTools: React.FC = () => {
 
       {activeSection === 'state' &&
         (() => {
-          switch (stateView) {
-            case 'databases':
-            case 'database-entries':
-            case 'database-templates':
-            case 'database-automations':
-            case 'database-serializers':
-              return <DatabasesStateView stateView={stateView} />;
-            case 'workspaces':
-              return <WorkspacesStateView />;
-            case 'designs':
-              return <DesignsStateView />;
-            case 'queries':
-              return <QueriesStateView />;
-            case 'views':
-            case 'view-types':
-              return <ViewsStateView stateView={stateView} />;
-            case 'design-property-mapping':
-              return <DesignPropertyMappingStateView />;
-            default:
-              return null;
+          // Find the registered store matching the active state view
+          const registeredStore = storeGroups
+            .flatMap((group) => group.stores)
+            .find((store) => store.name === stateView);
+
+          if (!registeredStore) {
+            return null;
           }
+
+          return <RegistryStoreInspector store={registeredStore} />;
         })()}
 
       {activeSection === 'events' && activeEventsTab === 'events' && (
@@ -1957,25 +1879,18 @@ export const DevTools: React.FC = () => {
               <aside className="dev-tools-sidebar dev-tools-sidebar-window">
                 <nav className="dev-tools-nav">
                   {activeSection === 'state' &&
-                    STATE_STORE_GROUPS.map((group, groupIndex) => (
+                    storeGroups.map((group, groupIndex) => (
                       <React.Fragment key={group.label}>
                         {groupIndex > 0 && <Separator margin="small" />}
                         <MenuGroup padded>
                           <MenuLabel label={group.label} />
-                          {group.stores.map(({ id, label }) => (
-                            <MenuItem
-                              key={id}
-                              size="compact"
-                              active={stateView === id}
-                              onClick={() => setStateView(id)}
-                            >
-                              <span className="dev-tools-store-item-label">
-                                {label}
-                                <span className="dev-tools-count-badge">
-                                  {storeCounts[id]}
-                                </span>
-                              </span>
-                            </MenuItem>
+                          {group.stores.map((store) => (
+                            <StoreMenuItem
+                              key={store.name}
+                              store={store}
+                              active={stateView === store.name}
+                              onClick={() => setStateView(store.name)}
+                            />
                           ))}
                         </MenuGroup>
                       </React.Fragment>
@@ -2219,25 +2134,18 @@ export const DevTools: React.FC = () => {
               )}
 
               {activeSection === 'state' &&
-                STATE_STORE_GROUPS.map((group, groupIndex) => (
+                storeGroups.map((group, groupIndex) => (
                   <React.Fragment key={group.label}>
                     {groupIndex > 0 && <Separator margin="small" />}
                     <MenuGroup padded>
                       <MenuLabel label={group.label} />
-                      {group.stores.map(({ id, label }) => (
-                        <MenuItem
-                          key={id}
-                          size="compact"
-                          active={stateView === id}
-                          onClick={() => setStateView(id)}
-                        >
-                          <span className="dev-tools-store-item-label">
-                            {label}
-                            <span className="dev-tools-count-badge">
-                              {storeCounts[id]}
-                            </span>
-                          </span>
-                        </MenuItem>
+                      {group.stores.map((store) => (
+                        <StoreMenuItem
+                          key={store.name}
+                          store={store}
+                          active={stateView === store.name}
+                          onClick={() => setStateView(store.name)}
+                        />
                       ))}
                     </MenuGroup>
                   </React.Fragment>
@@ -2353,3 +2261,28 @@ export const DevTools: React.FC = () => {
     </>
   );
 };
+
+interface StoreMenuItemProps {
+  store: import('@minddrop/stores').RegisteredStore;
+  active: boolean;
+  onClick: () => void;
+}
+
+/**
+ * Renders a sidebar menu item for a registered store,
+ * showing its display name and live item count.
+ */
+function StoreMenuItem({ store, active, onClick }: StoreMenuItemProps) {
+  const count = useStoreItemCount(store);
+  const colonIndex = store.name.indexOf(':');
+  const label = colonIndex >= 0 ? store.name.slice(colonIndex + 1) : store.name;
+
+  return (
+    <MenuItem size="compact" active={active} onClick={onClick}>
+      <span className="dev-tools-store-item-label">
+        {label}
+        <span className="dev-tools-count-badge">{count}</span>
+      </span>
+    </MenuItem>
+  );
+}

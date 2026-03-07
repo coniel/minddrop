@@ -212,6 +212,9 @@ importers:
       '@minddrop/queries':
         specifier: workspace:*
         version: link:../../packages/queries
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/views':
         specifier: workspace:*
         version: link:../../packages/views

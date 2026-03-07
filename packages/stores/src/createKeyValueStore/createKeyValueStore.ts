@@ -7,6 +7,7 @@ import {
   StoreHydratedEvent,
   StorePersistEvent,
 } from '../events';
+import { registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
 export interface KeyValueStoreInternalApi<
@@ -106,11 +107,13 @@ export interface KeyValueStore<TValues extends Record<string, unknown>> {
  * dispatch a `stores:persist` event so the platform layer can
  * handle writing the data to storage.
  *
+ * @param name - The namespaced name for the store registry (e.g. "App:UiState").
  * @param defaults - The default values for the store.
  * @param persist - Optional persistence configuration.
  * @returns The key-value store.
  */
 export function createKeyValueStore<TValues extends Record<string, unknown>>(
+  name: string,
   defaults: TValues,
   persist?: PersistOptions,
 ): KeyValueStore<TValues> {
@@ -192,6 +195,9 @@ export function createKeyValueStore<TValues extends Record<string, unknown>>(
       data: store.getState().values,
     });
   }
+
+  // Register the store in the global registry
+  registerStore(name, 'key-value', store as UseBoundStore<StoreApi<unknown>>);
 
   return {
     get: (key) => store.getState().values[key],

@@ -20,7 +20,7 @@ const item3: TestItem = { id: 'item-3', name: 'Item 3', value: 3 };
 
 describe('createObjectStore', () => {
   describe('without persistence', () => {
-    const store = createObjectStore<TestItem>('id');
+    const store = createObjectStore<TestItem>('Test:Object', 'id');
 
     beforeEach(() => {
       store.clear();
@@ -215,7 +215,7 @@ describe('createObjectStore', () => {
   });
 
   describe('with persistence', () => {
-    const store = createObjectStore<TestItem>('id', {
+    const store = createObjectStore<TestItem>('Test:ObjectPersist', 'id', {
       persistTo: 'app-config',
       namespace: 'test-package',
     });
@@ -318,10 +318,14 @@ describe('createObjectStore', () => {
 
       it('resolves after the load event is dispatched', async () => {
         // Create a fresh store so its load listener is active
-        const freshStore = createObjectStore<TestItem>('id', {
-          persistTo: 'app-config',
-          namespace: 'hydrate-resolve-test',
-        });
+        const freshStore = createObjectStore<TestItem>(
+          'Test:ObjectPersist',
+          'id',
+          {
+            persistTo: 'app-config',
+            namespace: 'hydrate-resolve-test',
+          },
+        );
 
         // Simulate the platform layer responding to the load request
         Events.addListener(StoreHydrateRequestEvent, 'test', () => {
@@ -341,10 +345,14 @@ describe('createObjectStore', () => {
 
       it('dispatches a hydrated event', async () => {
         // Create a fresh store so its listener is active
-        const freshStore = createObjectStore<TestItem>('id', {
-          persistTo: 'app-config',
-          namespace: 'hydrated-event-test',
-        });
+        const freshStore = createObjectStore<TestItem>(
+          'Test:ObjectPersist',
+          'id',
+          {
+            persistTo: 'app-config',
+            namespace: 'hydrated-event-test',
+          },
+        );
 
         const callback = vi.fn();
         Events.addListener(StoreHydratedEvent, 'test', callback);
@@ -371,10 +379,14 @@ describe('createObjectStore', () => {
   describe('hydrate listener', () => {
     it('loads data when a matching load event is dispatched', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createObjectStore<TestItem>('id', {
-        persistTo: 'app-config',
-        namespace: 'load-test',
-      });
+      const freshStore = createObjectStore<TestItem>(
+        'Test:ObjectPersist',
+        'id',
+        {
+          persistTo: 'app-config',
+          namespace: 'load-test',
+        },
+      );
 
       // Dispatch a load event with data for this store
       await Events.dispatch(StoreHydrateEvent, {
@@ -390,10 +402,14 @@ describe('createObjectStore', () => {
 
     it('ignores load events for other namespaces', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createObjectStore<TestItem>('id', {
-        persistTo: 'app-config',
-        namespace: 'load-test-2',
-      });
+      const freshStore = createObjectStore<TestItem>(
+        'Test:ObjectPersist',
+        'id',
+        {
+          persistTo: 'app-config',
+          namespace: 'load-test-2',
+        },
+      );
 
       // Dispatch a load event for a different namespace
       await Events.dispatch(StoreHydrateEvent, {

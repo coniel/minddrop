@@ -20,7 +20,7 @@ const item3: TestItem = { id: 'item-3', name: 'Item 3', value: 3 };
 
 describe('createArrayStore', () => {
   describe('without persistence', () => {
-    const store = createArrayStore<TestItem>('id');
+    const store = createArrayStore<TestItem>('Test:Array', 'id');
 
     beforeEach(() => {
       store.clear();
@@ -155,7 +155,7 @@ describe('createArrayStore', () => {
   });
 
   describe('with persistence', () => {
-    const store = createArrayStore<TestItem>('id', {
+    const store = createArrayStore<TestItem>('Test:ArrayPersist', 'id', {
       persistTo: 'workspace-config',
       namespace: 'test-package',
     });
@@ -275,10 +275,14 @@ describe('createArrayStore', () => {
 
       it('resolves after the load event is dispatched', async () => {
         // Create a fresh store so its load listener is active
-        const freshStore = createArrayStore<TestItem>('id', {
-          persistTo: 'workspace-config',
-          namespace: 'hydrate-resolve-test',
-        });
+        const freshStore = createArrayStore<TestItem>(
+          'Test:ArrayPersist',
+          'id',
+          {
+            persistTo: 'workspace-config',
+            namespace: 'hydrate-resolve-test',
+          },
+        );
 
         // Simulate the platform layer responding to the load request
         Events.addListener(StoreHydrateRequestEvent, 'test', () => {
@@ -295,10 +299,14 @@ describe('createArrayStore', () => {
 
       it('dispatches a hydrated event', async () => {
         // Create a fresh store so its listener is active
-        const freshStore = createArrayStore<TestItem>('id', {
-          persistTo: 'workspace-config',
-          namespace: 'hydrated-event-test',
-        });
+        const freshStore = createArrayStore<TestItem>(
+          'Test:ArrayPersist',
+          'id',
+          {
+            persistTo: 'workspace-config',
+            namespace: 'hydrated-event-test',
+          },
+        );
 
         const callback = vi.fn();
         Events.addListener(StoreHydratedEvent, 'test', callback);
@@ -325,7 +333,7 @@ describe('createArrayStore', () => {
   describe('hydrate listener', () => {
     it('loads data when a matching load event is dispatched', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createArrayStore<TestItem>('id', {
+      const freshStore = createArrayStore<TestItem>('Test:ArrayPersist', 'id', {
         persistTo: 'workspace-config',
         namespace: 'load-test',
       });
@@ -341,7 +349,7 @@ describe('createArrayStore', () => {
 
     it('ignores load events for other namespaces', async () => {
       // Create a fresh store so its listener is active
-      const freshStore = createArrayStore<TestItem>('id', {
+      const freshStore = createArrayStore<TestItem>('Test:ArrayPersist', 'id', {
         persistTo: 'workspace-config',
         namespace: 'load-test-2',
       });
