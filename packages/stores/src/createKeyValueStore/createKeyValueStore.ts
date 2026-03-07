@@ -10,9 +10,7 @@ import {
 import { registerStore } from '../storeRegistry';
 import { PersistOptions } from '../types';
 
-export interface KeyValueStoreInternalApi<
-  TValues extends Record<string, unknown>,
-> {
+export interface KeyValueStoreInternalApi<TValues extends Record<string, any>> {
   /**
    * The key-value data.
    */
@@ -35,7 +33,7 @@ export interface KeyValueStoreInternalApi<
   reset(key?: keyof TValues): void;
 }
 
-export interface KeyValueStore<TValues extends Record<string, unknown>> {
+export interface KeyValueStore<TValues extends Record<string, any>> {
   /**
    * The internal Zustand store.
    */
@@ -112,7 +110,7 @@ export interface KeyValueStore<TValues extends Record<string, unknown>> {
  * @param persist - Optional persistence configuration.
  * @returns The key-value store.
  */
-export function createKeyValueStore<TValues extends Record<string, unknown>>(
+export function createKeyValueStore<TValues extends Record<string, any>>(
   name: string,
   defaults: TValues,
   persist?: PersistOptions,
