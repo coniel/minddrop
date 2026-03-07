@@ -65,8 +65,11 @@ export const ImageStudioDesignElement: React.FC<
     });
   }, [element.id]);
 
-  // Opens the dialog if existing images exist, otherwise opens the file picker
+  // Opens the dialog if existing images exist, otherwise opens the file picker.
+  // Clears the drag overlay so it doesn't cover the dialog.
   const handleDoubleClick = useCallback(async () => {
+    setOverlayRect(null);
+
     const dirPath = getPlaceholderMediaDirPath();
     const dirExists = await Fs.exists(dirPath);
 

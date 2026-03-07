@@ -42,8 +42,16 @@ export const DesignStudioRootElement: React.FC<
   // Gradient overlay style (null when gradient is not active)
   const gradientOverlayStyle = createBackdropGradientOverlayStyle(style);
 
-  // Select the root element when clicking the root background
-  const handleClick = useCallback(() => {
+  // Select the root element when clicking the root background.
+  // Only fires when the click target is inside this element,
+  // ignoring clicks from dialog overlays closing.
+  const handleClick = useCallback((event: React.MouseEvent) => {
+    const rootElement = event.currentTarget as HTMLElement;
+
+    if (!rootElement.contains(event.target as Node)) {
+      return;
+    }
+
     DesignStudioStore.getState().selectElement('root');
   }, []);
 
