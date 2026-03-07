@@ -14,7 +14,7 @@ import {
   serializedSelectionItem_A_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { useDraggable } from './useDraggable';
 
 vi.mock('../dragStart', () => ({ dragStart: vi.fn() }));

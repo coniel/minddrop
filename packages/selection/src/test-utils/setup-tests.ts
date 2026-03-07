@@ -4,7 +4,7 @@ import {
   SelectionItemSerializersStore,
   registerSelectionItemSerializer,
 } from '../SelectionItemSerializersStore';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import {
   selection,
   selectionItemSerializer_A,

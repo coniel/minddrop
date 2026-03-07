@@ -8,7 +8,7 @@ import {
   selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { clearSelection } from './clearSelection';
 
 const selection = [selectionItem_A_1, selectionItem_A_2, selectionItem_B_1];

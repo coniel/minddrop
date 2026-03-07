@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, selectionItem_A_1, setup } from '../test-utils';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { selectionIsEmpty } from './selectionIsEmpty';
 
 describe('selectionIsEmpty', () => {

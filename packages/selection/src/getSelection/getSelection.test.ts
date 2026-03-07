@@ -6,7 +6,7 @@ import {
   selectionItem_B_1,
   setup,
 } from '../test-utils';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { getSelection } from './getSelection';
 
 describe('getSelection', () => {

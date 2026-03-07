@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { SelectionClearedEvent, SelectionClearedEventData } from '../events';
 import { getSelection } from '../getSelection';
 import { removeFromSelection } from '../removeFromSelection';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 
 /**
  * Clears the current selection and resets the dragging state.

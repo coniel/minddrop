@@ -1,5 +1,5 @@
 import { SelectionItem } from '../types';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 
 /**
  * Returns the current selection as a SelectionItem array.

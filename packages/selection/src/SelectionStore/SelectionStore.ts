@@ -61,3 +61,10 @@ export const SelectionStore = create<SelectionStore>()((set) => ({
 
   clear: () => set({ selectedItems: [], isDragging: false }),
 }));
+
+/**
+ * Returns whether a drag operation is currently in progress.
+ */
+export function useIsDragging(): boolean {
+  return SelectionStore((state) => state.isDragging);
+}

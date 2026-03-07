@@ -4,7 +4,7 @@ import {
   SelectionItemsAddedEventData,
 } from '../events';
 import { SelectionItem } from '../types';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { containsSelectionItem, dedupeSelectionItemsArray } from '../utils';
 
 /**

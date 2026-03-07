@@ -11,7 +11,7 @@ import { getSelection } from '../getSelection';
 import { isSelected } from '../isSelected';
 import { select } from '../select';
 import { SelectionItem } from '../types';
-import { SelectionStore } from '../useSelectionStore';
+import { SelectionStore } from '../SelectionStore';
 import { serializeSelectionToDataTransfer } from '../utils';
 
 export interface DragUtils {

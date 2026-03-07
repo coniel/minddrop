@@ -4,7 +4,7 @@ import {
   selectionItem_A_2,
   selectionItem_B_1,
 } from '../test-utils';
-import { SelectionStore } from './useSelectionStore';
+import { SelectionStore } from './SelectionStore';
 
 describe('useSelectionStore', () => {
   afterEach(() => {
