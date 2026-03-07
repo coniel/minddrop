@@ -41,9 +41,6 @@ export const IconDesignElement: React.FC<IconDesignElementProps> = ({
         {...rootProps}
         style={{
           ...cssStyle,
-          display: cssStyle.display || 'inline-flex',
-          alignItems: cssStyle.alignItems || 'center',
-          justifyContent: cssStyle.justifyContent || 'center',
           // Override the default icon size CSS variable and font size
           // so both SVG content icons and emoji scale correctly
           ['--icon-size-default' as string]: `${element.style.size}px`,

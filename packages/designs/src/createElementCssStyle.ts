@@ -292,12 +292,6 @@ export function createBackdropGradientOverlayStyle(
 }
 
 export function createIconCssStyle(style: IconElementStyle): CSSProperties {
-  // Whether the container has any visible styling applied
-  const hasContainer =
-    style.containerSize > 0 ||
-    (style.containerBackgroundColor !== 'transparent' &&
-      style.containerBackgroundColor !== 'default');
-
   return {
     // Use container size if set, otherwise fall back to icon size
     width: style.containerSize > 0 ? `${style.containerSize}px` : undefined,
@@ -309,9 +303,9 @@ export function createIconCssStyle(style: IconElementStyle): CSSProperties {
         ? `${style.containerBorderRadius}px`
         : undefined,
     opacity: style.opacity,
-    display: hasContainer ? 'inline-flex' : undefined,
-    alignItems: hasContainer ? 'center' : undefined,
-    justifyContent: hasContainer ? 'center' : undefined,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     ...resolveMarginCss(style),
   };
 }
