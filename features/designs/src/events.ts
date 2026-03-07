@@ -1,5 +1,9 @@
 import { DesignType } from '@minddrop/designs';
 
+// -- View names --
+
+export const DesignStudioViewName = 'designs:view:studio';
+export const DesignBrowserViewName = 'designs:view:browser';
 // -- Design Studio events --
 
 export const DesignStudioEventListenerId = 'feature-design-studio';

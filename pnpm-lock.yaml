@@ -267,6 +267,9 @@ importers:
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/table-view':
         specifier: workspace:*
         version: link:../../views/table-view

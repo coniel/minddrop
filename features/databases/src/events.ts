@@ -3,6 +3,8 @@ import { DatabaseEntryOpenMode } from '@minddrop/databases';
 export const EventListenerId = 'databases-feature';
 export const OpenNewDatabaseDialogEvent = 'databases:new-database-dialog:open';
 export const OpenDatabaseViewEvent = 'databases:view:open';
+export const MainDatabaseViewName = 'databases:view:database';
+export const MainDatabaseEntryViewName = 'databases:view:entry';
 
 export interface OpenDatabaseViewEventData {
   databaseId: string;

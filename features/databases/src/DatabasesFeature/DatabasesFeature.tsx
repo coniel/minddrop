@@ -6,10 +6,13 @@ import {
 } from '@minddrop/events';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
+import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
 import {
   DatabaseEntriesEventListenerId,
   EventListenerId,
+  MainDatabaseEntryViewName,
+  MainDatabaseViewName,
   OpenDatabaseEntryEvent,
   OpenDatabaseEntryEventData,
   OpenDatabaseViewEvent,
@@ -26,6 +29,26 @@ export const DatabasesFeature: React.FC = () => {
   const [dialogEntryId, setDialogEntryId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Track the active database in the main content area.
+    // Set the active database ID when a database view is opened,
+    // clear it when any other view is opened.
+    Events.addListener<OpenMainContentViewEventData>(
+      OpenMainContentViewEvent,
+      `${EventListenerId}:main-content`,
+      ({ data }) => {
+        if (data.view === MainDatabaseViewName) {
+          const props = data.props as OpenDatabaseViewEventData | undefined;
+
+          DatabasesFeatureState.set(
+            'activeDatabaseId',
+            props?.databaseId ?? null,
+          );
+        } else {
+          DatabasesFeatureState.set('activeDatabaseId', null);
+        }
+      },
+    );
+
     // Listen for open database view events, and open the database view
     // when one is received
     Events.addListener<OpenDatabaseViewEventData>(
@@ -35,6 +58,7 @@ export const DatabasesFeature: React.FC = () => {
         Events.dispatch<OpenMainContentViewEventData<DatabaseViewProps>>(
           OpenMainContentViewEvent,
           {
+            view: MainDatabaseViewName,
             component: DatabaseView,
             props: data,
           },
@@ -56,6 +80,7 @@ export const DatabasesFeature: React.FC = () => {
           Events.dispatch<OpenMainContentViewEventData>(
             OpenMainContentViewEvent,
             {
+              view: MainDatabaseEntryViewName,
               component: MainContentEntryPage,
               props: { entryId: data.entryId },
             },
@@ -69,6 +94,10 @@ export const DatabasesFeature: React.FC = () => {
     );
 
     return () => {
+      Events.removeListener(
+        OpenMainContentViewEvent,
+        `${EventListenerId}:main-content`,
+      );
       Events.removeListener(OpenDatabaseViewEvent, EventListenerId);
       Events.removeListener(
         OpenDatabaseEntryEvent,

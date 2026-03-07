@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Designs } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
+  DefaultMainContentViewName,
   Events,
   OpenAppSidebarEvent,
   OpenMainContentViewEvent,
@@ -115,6 +116,7 @@ export const DesignStudio: React.FC<OpenDesignStudioEventData> = ({
       // No back event provided, navigate to an empty view
       // to unmount the design studio and reopen the sidebar.
       Events.dispatch(OpenMainContentViewEvent, {
+        view: DefaultMainContentViewName,
         component: () => null,
       });
     }

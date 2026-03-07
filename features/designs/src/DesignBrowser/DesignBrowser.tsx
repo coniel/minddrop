@@ -14,6 +14,7 @@ import {
 } from '@minddrop/designs';
 import {
   CloseAppSidebarEvent,
+  DefaultMainContentViewName,
   Events,
   OpenAppSidebarEvent,
   OpenMainContentViewEvent,
@@ -468,6 +469,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     } else {
       // No back event provided, navigate to an empty view
       Events.dispatch(OpenMainContentViewEvent, {
+        view: DefaultMainContentViewName,
         component: () => null,
       });
     }

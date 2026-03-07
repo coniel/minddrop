@@ -10,8 +10,10 @@ import { DesignStudio } from './DesignStudio';
 import {
   BrowseDesignsEvent,
   BrowseDesignsEventData,
+  DesignBrowserViewName,
   DesignPropertyMappingEventListenerId,
   DesignStudioEventListenerId,
+  DesignStudioViewName,
   OpenDesignStudioEvent,
   OpenDesignStudioEventData,
   OpenPropertyMapperEvent,
@@ -36,8 +38,8 @@ export const DesignsFeature: React.FC = () => {
         // Don't track design studio or design browser views
         // as the "current view"
         if (
-          data.component !== DesignStudio &&
-          data.component !== DesignBrowser
+          data.view !== DesignStudioViewName &&
+          data.view !== DesignBrowserViewName
         ) {
           currentView = data;
         }
@@ -64,6 +66,7 @@ export const DesignsFeature: React.FC = () => {
         Events.dispatch<
           OpenMainContentViewEventData<OpenDesignStudioEventData>
         >(OpenMainContentViewEvent, {
+          view: DesignStudioViewName,
           component: DesignStudio,
           props: eventData,
         });
@@ -84,6 +87,7 @@ export const DesignsFeature: React.FC = () => {
         Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
           OpenMainContentViewEvent,
           {
+            view: DesignBrowserViewName,
             component: DesignBrowser,
             props: {
               ...event.data,

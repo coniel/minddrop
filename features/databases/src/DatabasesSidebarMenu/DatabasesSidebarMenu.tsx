@@ -9,14 +9,17 @@ import {
   MenuItem,
   MenuLabel,
 } from '@minddrop/ui-primitives';
+import { useActiveDatabaseId } from '../DatabasesFeatureState';
 import {
   OpenDatabaseViewEvent,
   OpenDatabaseViewEventData,
   OpenNewDatabaseDialogEvent,
 } from '../events';
 
+/** Renders the collapsible databases section in the app sidebar. */
 export const DatabasesSidebarMenu: React.FC = () => {
   const databases = Databases.useAll();
+  const activeDatabaseId = useActiveDatabaseId();
 
   function handleAddDatabase(event: React.MouseEvent) {
     event.stopPropagation();
@@ -55,6 +58,7 @@ export const DatabasesSidebarMenu: React.FC = () => {
             {databases.map((database) => (
               <MenuItem
                 muted
+                active={database.id === activeDatabaseId}
                 contentIcon={database.icon || 'content-icon:shapes:inherit'}
                 key={database.id}
                 onClick={() => handleOpenDatabaseView(database.id)}

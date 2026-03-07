@@ -1,4 +1,5 @@
 export const OpenMainContentViewEvent = 'app:main-content:open';
+export const DefaultMainContentViewName = 'app:view:default';
 export const OpenRightPanelEvent = 'app:right-panel:open';
 export const CloseRightPanelEvent = 'app:right-panel:close';
 export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
@@ -6,7 +7,20 @@ export const OpenAppSidebarEvent = 'app:sidebar:open';
 export const CloseAppSidebarEvent = 'app:sidebar:close';
 
 export type OpenMainContentViewEventData<P = any> = {
+  /**
+   * Identifier for the view being opened, following the
+   * convention `[package]:view:[name]`.
+   */
+  view: string;
+
+  /**
+   * The component to render in the main content area.
+   */
   component: React.ComponentType<P>;
+
+  /**
+   * Props passed to the component.
+   */
   props?: P;
 };
 
