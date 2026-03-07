@@ -32,10 +32,3 @@ export const AppUiState = createKeyValueStore<AppUiState>(
     namespace: 'app-ui',
   },
 );
-
-export const useCurrentView = () => AppUiState.useValue('view');
-
-export const useSidebarWidth = () => AppUiState.useValue('sidebarWidth');
-
-export const useDefaultEmojiSkinTone = () =>
-  AppUiState.useValue('defaultEmojiSkinTone');

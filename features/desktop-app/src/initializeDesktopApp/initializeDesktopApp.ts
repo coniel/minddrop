@@ -15,6 +15,7 @@ import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
+import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
@@ -40,6 +41,9 @@ export async function initializeDesktopApp(): Promise<void> {
   // Register listeners that persist and hydrate app-config
   // stores to JSON files in the AppData directory
   registerAppDataStoreListeners();
+
+  // Hydrate app UI state from persisted config
+  await AppUiState.hydrate();
 
   // Watch for theme variant changes
   Events.addListener(

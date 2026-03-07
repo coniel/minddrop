@@ -17,11 +17,11 @@ import { DesignsFeature } from '@minddrop/feature-designs';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
 import { ConfirmationDialog, TooltipProvider } from '@minddrop/ui-primitives';
 import { AppSidebar } from './AppSidebar';
-import { AppUiState, useDefaultEmojiSkinTone } from './AppUiState';
+import { AppUiState } from './AppUiState';
 import './DesktopApp.css';
 
 export const DesktopApp: React.FC = () => {
-  const defaultEmojiSkinTone = useDefaultEmojiSkinTone();
+  const defaultEmojiSkinTone = AppUiState.useValue('defaultEmojiSkinTone');
   const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {

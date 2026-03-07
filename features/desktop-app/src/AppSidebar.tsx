@@ -3,11 +3,11 @@ import { DatabasesSidebarMenu } from '@minddrop/feature-databases';
 import { OpenDesignStudioEvent } from '@minddrop/feature-designs';
 import { Toolbar, ToolbarIconButton } from '@minddrop/ui-primitives';
 import { ThemeVariantPicker } from '@minddrop/ui-theme';
-import { AppUiState, useSidebarWidth } from './AppUiState';
+import { AppUiState } from './AppUiState';
 import { Sidebar, SidebarProps } from './Sidebar';
 
 export const AppSidebar: React.FC<SidebarProps> = ({ ...other }) => {
-  const sidebarWidth = useSidebarWidth();
+  const sidebarWidth = AppUiState.useValue('sidebarWidth');
 
   function handleOpenDesignStudio() {
     Events.dispatch(OpenDesignStudioEvent, {});
