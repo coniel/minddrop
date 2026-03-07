@@ -61,6 +61,11 @@ export interface EditorProps {
    * Optional inline styles applied to the editable area.
    */
   style?: React.CSSProperties;
+
+  /**
+   * When true, the editor is read-only and cannot be edited.
+   */
+  readOnly?: boolean;
 }
 
 export const RichTextEditor: React.FC<EditorProps> = ({
@@ -71,6 +76,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
   onBlur,
   autoFocus,
   style,
+  readOnly = false,
 }) => {
   const editor = useMemo(() => createEditor(), []);
   const editorRef = useRef(editor);
@@ -147,6 +153,7 @@ export const RichTextEditor: React.FC<EditorProps> = ({
     >
       <Editable
         autoFocus={false}
+        readOnly={readOnly}
         className="editor"
         style={style}
         renderElement={renderElement}

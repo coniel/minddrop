@@ -3,9 +3,6 @@
   "app": {
     "version": "Version"
   },
-  "imageViewer": {
-    "previewMessage": "Image viewer controls disabled in preview mode"
-  },
   "designStudio": {
     "open": "Open design studio",
     "exit": "Exit design studio",
@@ -1143,7 +1140,6 @@
       "webview": "Web view",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
-      "editor-preview-message": "Editor disabled in preview mode",
       "group": {
         "content": "Content",
         "media": "Media",

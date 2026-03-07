@@ -10,17 +10,26 @@ export const {
   design_card_1,
   element_text_1,
   element_text_2,
+  element_text_3,
   element_container_1,
 } = DesignFixtures;
 const { objectDatabase } = DatabaseFixtures;
 
 export const testDatabase = objectDatabase;
 
+// Override the container's children to use element_text_3
+// instead of element_text_1 so every element in the tree
+// has a unique ID
+const containerWithUniqueChild = {
+  ...element_container_1,
+  children: [element_text_3],
+};
+
 export const testDesign = {
   ...design_card_1,
   tree: {
     ...design_card_1.tree,
-    children: [element_text_1, element_container_1, element_text_2],
+    children: [element_text_1, containerWithUniqueChild, element_text_2],
   },
 };
 
@@ -35,14 +44,14 @@ export const flat_element_text_1: FlatLeafDesignElement = {
   parent: 'root',
 };
 
-export const flat_element_text_1_1: FlatLeafDesignElement = {
-  ...element_text_1,
+export const flat_element_text_3_1: FlatLeafDesignElement = {
+  ...element_text_3,
   parent: element_container_1.id,
 };
 
 export const flat_element_container_1: FlatContainerDesignElement = {
   ...element_container_1,
-  children: [flat_element_text_1_1.id],
+  children: [flat_element_text_3_1.id],
   parent: 'root',
 };
 
@@ -53,7 +62,7 @@ export const flat_element_text_2: FlatLeafDesignElement = {
 
 export const element_0 = flat_element_text_1;
 export const element_1 = flat_element_container_1;
-export const element_1_0 = flat_element_text_1_1;
+export const element_1_0 = flat_element_text_3_1;
 export const element_2 = flat_element_text_2;
 
 export const flatTree = {
@@ -71,12 +80,12 @@ export const flatTree = {
     ...element_container_1,
     id: element_container_1.id,
     parent: 'root',
-    children: element_container_1.children.map((child) => child.id),
+    children: [element_text_3.id],
   },
-  [element_text_1.id]: {
-    ...element_text_1,
+  [element_text_3.id]: {
+    ...element_text_3,
     parent: element_container_1.id,
-    id: element_text_1.id,
+    id: element_text_3.id,
   },
   [element_text_2.id]: {
     ...element_text_2,

@@ -7,6 +7,7 @@ import {
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
 import { FilePropertySupportedFileExtensions } from '@minddrop/properties';
+import { Selection } from '@minddrop/selection';
 import { updateDesignElement } from '../../DesignStudioStore';
 import { PlaceholderImageDialog } from '../../style-editors/PlaceholderImageField/PlaceholderImageDialog';
 import { FlatImageElement } from '../../types';
@@ -27,13 +28,21 @@ export interface ImageStudioDesignElementProps {
 
 /**
  * Renders an image element in the design studio.
- * Wraps ImageDesignElement with interactive placeholder
- * image selection via double-click.
+ * Uses a portaled overlay to intercept native WebKit image
+ * drag (which conflicts with HTML5 DnD). The overlay only
+ * handles drag initiation and clicks; the img itself handles
+ * drop events so it participates in the FlexDropContainer
+ * normally. During active drags the overlay gets
+ * pointer-events:none so it does not block drop targets.
  */
 export const ImageStudioDesignElement: React.FC<
   ImageStudioDesignElementProps
 > = ({ element, rootProps }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const isDragging = Selection.useIsDragging();
+
+  // Track whether this image initiated the current drag
+  const [isSelfDragging, setIsSelfDragging] = useState(false);
 
   // Rect of the img element, set on mouseenter to position
   // the drag overlay. Null when overlay is not shown.
@@ -66,7 +75,7 @@ export const ImageStudioDesignElement: React.FC<
   }, [element.id]);
 
   // Opens the dialog if existing images exist, otherwise opens the file picker.
-  // Clears the drag overlay so it doesn't cover the dialog.
+  // Clears the drag overlay so it does not cover the dialog.
   const handleDoubleClick = useCallback(async () => {
     setOverlayRect(null);
 
@@ -98,10 +107,7 @@ export const ImageStudioDesignElement: React.FC<
     }
   }, [handleSelectNewImage]);
 
-  // Show the drag overlay when the mouse enters the img.
-  // The overlay is a fixed-position transparent div that
-  // intercepts drag events, avoiding native browser image
-  // drag which conflicts with HTML5 DnD on WebKit.
+  // Show the drag overlay when the mouse enters the img
   const handleMouseEnter = useCallback((event: React.MouseEvent) => {
     const rect = event.currentTarget.getBoundingClientRect();
     setOverlayRect(rect);
@@ -112,7 +118,7 @@ export const ImageStudioDesignElement: React.FC<
     setOverlayRect(null);
   }, []);
 
-  // Hide the overlay on any wheel event so it doesn't
+  // Hide the overlay on any wheel event so it does not
   // block scrolling or sit at a stale position
   React.useEffect(() => {
     if (!overlayRect) {
@@ -128,23 +134,32 @@ export const ImageStudioDesignElement: React.FC<
     };
   }, [overlayRect]);
 
-  // Split rootProps: visual props go on the img, interactive
-  // props go on the drag overlay
-  const { style: rootStyle, ...rootPropsWithoutStyle } = rootProps as {
+  // Split rootProps into drag-initiation props (for the overlay)
+  // and drop/identification props (for the img)
+  const {
+    draggable,
+    onDragStart: originalOnDragStart,
+    onDragEnd: originalOnDragEnd,
+    onClick,
+    style: rootStyle,
+    ...imgDropProps
+  } = rootProps as {
+    draggable?: boolean;
+    onDragStart?: (event: React.DragEvent) => void;
+    onDragEnd?: (event: React.DragEvent) => void;
+    onClick?: (event: React.MouseEvent) => void;
     style?: CSSProperties;
     [key: string]: unknown;
   };
 
-  const elementId = rootPropsWithoutStyle['data-element-id'] as string;
+  const elementId = imgDropProps['data-element-id'] as string;
 
   // Override onDragStart to use the actual img element as the
   // drag ghost instead of the invisible overlay div
-  const originalOnDragStart = rootPropsWithoutStyle.onDragStart as (
-    event: React.DragEvent,
-  ) => void;
-
   const handleDragStart = useCallback(
     (event: React.DragEvent) => {
+      setIsSelfDragging(true);
+
       // Let the original handler set up selection and data transfer
       originalOnDragStart?.(event);
 
@@ -176,30 +191,16 @@ export const ImageStudioDesignElement: React.FC<
     [originalOnDragStart, elementId],
   );
 
-  // Visual-only props for the img (no drag handlers)
+  // Props for the img: drop handlers, ref, data-element-id,
+  // click, mouseEnter, and visual style
   const imgRootProps = useMemo(
     () => ({
-      'data-element-id': elementId,
+      ...imgDropProps,
+      onClick,
       onMouseEnter: handleMouseEnter,
       style: rootStyle,
     }),
-    [elementId, handleMouseEnter, rootStyle],
-  );
-
-  // Full interactive props for the overlay
-  const overlayProps = useMemo(
-    () => ({
-      ...rootPropsWithoutStyle,
-      onDragStart: handleDragStart,
-      onDoubleClick: handleDoubleClick,
-      onMouseLeave: handleOverlayMouseLeave,
-    }),
-    [
-      rootPropsWithoutStyle,
-      handleDragStart,
-      handleDoubleClick,
-      handleOverlayMouseLeave,
-    ],
+    [imgDropProps, onClick, handleMouseEnter, rootStyle],
   );
 
   return (
@@ -208,7 +209,22 @@ export const ImageStudioDesignElement: React.FC<
       {overlayRect &&
         createPortal(
           <div
-            {...overlayProps}
+            draggable={draggable}
+            onDragStart={handleDragStart}
+            onDragEnd={(event: React.DragEvent) => {
+              setIsSelfDragging(false);
+              originalOnDragEnd?.(event);
+            }}
+            onClick={onClick}
+            onDragOver={(event: React.DragEvent) => {
+              event.preventDefault();
+            }}
+            onDrop={(event: React.DragEvent) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onDoubleClick={handleDoubleClick}
+            onMouseLeave={handleOverlayMouseLeave}
             style={{
               position: 'fixed',
               top: overlayRect.top,
@@ -217,6 +233,10 @@ export const ImageStudioDesignElement: React.FC<
               height: overlayRect.height,
               zIndex: 9999,
               background: 'transparent',
+              // During active drags, let events pass through to
+              // the img below so it can act as a drop target
+              // within the FlexDropContainer
+              ...(isDragging && !isSelfDragging && { pointerEvents: 'none' }),
               ...rootStyle,
             }}
           />,

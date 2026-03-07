@@ -54,6 +54,10 @@ export function handleDropOnDesignElement(drop: DropEventData): void {
   // Get the target element
   const targetElement = getDesignElement<FlatChildDesignElement>(drop.targetId);
 
+  if (!targetElement) {
+    return;
+  }
+
   // If native files were dropped on an image element, handle as
   // a placeholder image drop
   if (

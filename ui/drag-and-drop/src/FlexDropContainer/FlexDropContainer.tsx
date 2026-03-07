@@ -239,6 +239,7 @@ export const FlexDropContainer: React.FC<FlexDropContainerProps> = ({
       }
 
       event.preventDefault();
+      event.stopPropagation();
 
       if (onDrop) {
         const dropIndex = getDropIndexFromPosition(event);

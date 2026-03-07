@@ -45,6 +45,11 @@ export function handleDropOnGap(
     // The dropped element
     const droppedElement = designElements[0];
 
+    // Prevent dropping a container into itself
+    if (droppedElement.id === containerId) {
+      return;
+    }
+
     // Element was dropped in from a different container.
     // We can simply move it to the gap index.
     if (droppedElement.parent !== containerId) {
@@ -77,6 +82,11 @@ export function handleDropOnGap(
     );
     const targetIndex =
       droppedElementIndex < gapIndex ? gapIndex - 1 : gapIndex;
+
+    // Don't sort if the element is already at the target index
+    if (droppedElementIndex === targetIndex) {
+      return;
+    }
 
     // Sort the dropped element to the target index within the parent's children array.
     sortDesignElement(droppedElement.id, targetIndex);

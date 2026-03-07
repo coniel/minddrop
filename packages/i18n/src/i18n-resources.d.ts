@@ -15,9 +15,6 @@ declare module 'i18next' {
         app: {
           version: string;
         };
-        imageViewer: {
-          previewMessage: string;
-        };
         designStudio: {
           open: string;
           exit: string;
@@ -1155,7 +1152,6 @@ declare module 'i18next' {
             webview: string;
             'text-placeholder': string;
             'container-empty-hint': string;
-            'editor-preview-message': string;
             group: {
               content: string;
               media: string;

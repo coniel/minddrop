@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   ImageViewerElement,
   createImageViewerCssStyle,
@@ -86,9 +86,23 @@ export const ImageViewerDesignElement: React.FC<
     );
   }
 
+  // In studio mode (rootProps present), render a root div that
+  // receives the drag/drop/click handlers and make the ImageViewer
+  // non-interactive so events reach the root div
+  if (rootProps) {
+    return (
+      <div {...rootProps} style={{ ...containerStyle, ...rootStyle }}>
+        <ImageViewer
+          src={imageSrc}
+          style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
+          preview={false}
+        />
+      </div>
+    );
+  }
+
   return (
     <ImageViewer
-      {...rootProps}
       src={imageSrc}
       style={{ ...containerStyle, ...rootStyle }}
       preview={preview}

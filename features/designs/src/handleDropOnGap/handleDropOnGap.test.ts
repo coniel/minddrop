@@ -90,7 +90,19 @@ describe('handleDropOnGap', () => {
         expect(getChildren()).toEqual(children);
       });
 
-      it('does nothing if an element is dropped onto the gap preceeding it', () => {
+      it('does nothing if a container is dropped into itself', () => {
+        const drop: DropEventData<DesignStudioDropEventData> = {
+          ...baseEvent,
+          data: { [DesignElementsDataKey]: [element_1] },
+        };
+
+        handleDropOnGap(drop, element_1.id, 0);
+
+        // Should not change the children
+        expect(getChildren()).toEqual(children);
+      });
+
+      it('does nothing if an element is dropped onto the gap following it', () => {
         // Drop element from index 1 to gap 2, which is after the element
         const drop: DropEventData<DesignStudioDropEventData> = {
           ...baseEvent,

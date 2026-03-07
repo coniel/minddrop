@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { EditorElement, createEditorCssStyle } from '@minddrop/designs';
 import { MarkdownEditor } from '@minddrop/feature-markdown-editor';
 import { useDesignPreview } from '../../DesignElements/DesignPreviewContext';
-import { DesignPreviewOverlay } from '../../DesignElements/DesignPreviewOverlay';
 import { useElementProperty } from '../../DesignPropertiesProvider';
 import './EditorDesignElement.css';
 
@@ -57,22 +56,6 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
     [property],
   );
 
-  // In preview mode, wrap with an overlay that blocks all
-  // interaction and shows a message on hover
-  if (preview) {
-    return (
-      <DesignPreviewOverlay
-        {...rootProps}
-        label="design-studio.elements.editor-preview-message"
-        style={mergedContainerStyle}
-      >
-        <div className="design-editor-element">
-          <MarkdownEditor initialValue={value} style={editorStyle} />
-        </div>
-      </DesignPreviewOverlay>
-    );
-  }
-
   return (
     <div
       {...rootProps}
@@ -81,8 +64,12 @@ export const EditorDesignElement: React.FC<EditorDesignElementProps> = ({
     >
       <MarkdownEditor
         initialValue={value}
-        onDebouncedChange={handleChange}
-        style={editorStyle}
+        onDebouncedChange={preview ? undefined : handleChange}
+        readOnly={preview}
+        style={{
+          ...editorStyle,
+          ...(preview ? { pointerEvents: 'none' as const } : undefined),
+        }}
       />
     </div>
   );

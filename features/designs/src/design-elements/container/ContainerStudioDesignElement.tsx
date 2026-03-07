@@ -126,6 +126,7 @@ export const ContainerStudioDesignElement: React.FC<
 
   const flexDropContainer = (
     <FlexDropContainer
+      {...rootPropsWithoutStyle}
       key={style.direction}
       id={element.id}
       gap={style.gap}
@@ -134,7 +135,6 @@ export const ContainerStudioDesignElement: React.FC<
       justify={style.justifyContent}
       style={{ ...containerCssStyle, ...rootStyle }}
       onDrop={handleDropOnGap}
-      {...rootPropsWithoutStyle}
     >
       {children}
     </FlexDropContainer>

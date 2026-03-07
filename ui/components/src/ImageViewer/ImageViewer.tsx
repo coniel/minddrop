@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef } from 'react';
+import { CSSProperties, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import {
   DropdownMenuContent,
@@ -137,24 +137,35 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
     return () => cancelAnimationFrame(frame);
   }, [zoom, pan]);
 
-  const viewer = (
+  // In preview mode, disable all interactive handlers
+  const containerHandlers = useMemo(
+    () =>
+      preview
+        ? {}
+        : {
+            onWheel: handleWheel,
+            onMouseDown: handleMouseDown,
+            onDoubleClick: handleDoubleClick,
+            onMouseEnter: () => {
+              isHoveredRef.current = true;
+            },
+            onMouseLeave: () => {
+              isHoveredRef.current = false;
+            },
+          },
+    [preview, handleWheel, handleMouseDown, handleDoubleClick, isHoveredRef],
+  );
+
+  return (
     <div
       ref={containerRef}
       className={`image-viewer-container${className ? ` ${className}` : ''}`}
       style={{
-        ...(preview ? undefined : style),
+        ...style,
         position: 'relative',
         overflow: 'hidden',
       }}
-      onWheel={handleWheel}
-      onMouseDown={handleMouseDown}
-      onDoubleClick={handleDoubleClick}
-      onMouseEnter={() => {
-        isHoveredRef.current = true;
-      }}
-      onMouseLeave={() => {
-        isHoveredRef.current = false;
-      }}
+      {...containerHandlers}
     >
       {/* Image with zoom/pan transform */}
       <img
@@ -167,7 +178,7 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
           transform: `translate(${effectivePan.x}px, ${effectivePan.y}px) scale(${effectiveScale})`,
           transformOrigin: '0 0',
           visibility: ready ? 'visible' : 'hidden',
-          cursor: isDragging ? 'grabbing' : 'grab',
+          cursor: preview ? undefined : isDragging ? 'grabbing' : 'grab',
         }}
       />
 
@@ -241,23 +252,4 @@ export const ImageViewer: React.FC<ImageViewerProps> = ({
       </div>
     </div>
   );
-
-  // In preview mode, wrap with an overlay that blocks all
-  // interaction and shows a message on hover
-  if (preview) {
-    return (
-      <div className="image-viewer-preview-wrapper" style={style}>
-        {viewer}
-
-        {/* Transparent overlay blocking clicks/scrolls */}
-        <div className="image-viewer-preview-overlay">
-          <div className="image-viewer-preview-message">
-            {t('imageViewer.previewMessage')}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return viewer;
 };
