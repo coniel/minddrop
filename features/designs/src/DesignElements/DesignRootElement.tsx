@@ -3,6 +3,7 @@ import {
   RootElement,
   createBackdropGradientOverlayStyle,
   createElementCssStyle,
+  getBackgroundImageStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -123,8 +124,10 @@ export const DesignRootElement: React.FC<DesignRootElementProps> = ({
       style={{
         ...containerCssStyle,
         ...fillStyle,
-        // Apply background image URL resolved from the file system
-        ...(imageSrc && { backgroundImage: `url(${imageSrc})` }),
+        // Apply background image URL resolved from the file system.
+        // When a background color is also set, layer it as a gradient
+        // on top of the image so it overlays rather than sitting behind it.
+        ...getBackgroundImageStyle(imageSrc, containerCssStyle.backgroundColor),
       }}
     >
       {children}

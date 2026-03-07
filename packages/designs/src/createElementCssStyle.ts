@@ -390,6 +390,32 @@ export function createEditorCssStyle(style: EditorElementStyle): CSSProperties {
   };
 }
 
+/**
+ * Returns background-image CSS that layers a color overlay on top
+ * of a background image when both are present. When only an image
+ * is set (no meaningful color), returns just the image URL. When no
+ * image is set, returns nothing so background-color applies normally.
+ */
+export function getBackgroundImageStyle(
+  imageSrc: string | null,
+  backgroundColor: CSSProperties['backgroundColor'],
+): CSSProperties {
+  if (!imageSrc) {
+    return {};
+  }
+
+  // When a non-transparent background color is set, layer it as a
+  // solid gradient on top of the image
+  if (backgroundColor && backgroundColor !== 'transparent') {
+    return {
+      backgroundImage: `linear-gradient(${backgroundColor}, ${backgroundColor}), url(${imageSrc})`,
+      backgroundColor: 'transparent',
+    };
+  }
+
+  return { backgroundImage: `url(${imageSrc})` };
+}
+
 // Maps style categories to their CSS generator functions
 const styleCategoryFns: Record<StyleCategory, (style: never) => CSSProperties> =
   {

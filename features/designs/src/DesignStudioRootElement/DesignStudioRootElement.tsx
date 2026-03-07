@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import {
   createBackdropGradientOverlayStyle,
   createElementCssStyle,
+  getBackgroundImageStyle,
   getPlaceholderMediaDirPath,
 } from '@minddrop/designs';
 import { Fs } from '@minddrop/file-system';
@@ -55,11 +56,15 @@ export const DesignStudioRootElement: React.FC<
     DesignStudioStore.getState().selectElement('root');
   }, []);
 
+  const baseContainerStyle = createElementCssStyle(element);
+
   const containerCssStyle = {
-    ...createElementCssStyle(element),
-    // Apply background image URL (only when backdrop effects are not active)
-    ...(imageSrc &&
-      !hasBackdropWithImage && { backgroundImage: `url(${imageSrc})` }),
+    ...baseContainerStyle,
+    // Apply background image URL (only when backdrop effects are not active).
+    // When a background color is also set, layer it as a gradient on top
+    // of the image so it overlays rather than sitting behind it.
+    ...(!hasBackdropWithImage &&
+      getBackgroundImageStyle(imageSrc, baseContainerStyle.backgroundColor)),
   };
 
   const children = element.children.map((childId, index) => (
