@@ -193,6 +193,10 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          collection: {
+            name: string;
+            description: string;
+          };
         };
         databases: {
           propertyFilesDirName: string;

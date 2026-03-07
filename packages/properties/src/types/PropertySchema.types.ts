@@ -1,4 +1,5 @@
 import {
+  CollectionPropertySchema,
   CreatedPropertySchema,
   DatePropertySchema,
   FilePropertySchema,
@@ -15,6 +16,7 @@ import {
 } from '../schemas';
 
 export type PropertySchema =
+  | CollectionPropertySchema
   | CreatedPropertySchema
   | DatePropertySchema
   | FormattedTextPropertySchema

@@ -52,6 +52,7 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   created: 'properties.created.name',
   'last-modified': 'properties.lastModified.name',
   file: 'properties.file.name',
+  collection: 'properties.collection.name',
 };
 
 // -- Design Property Mapping constants --

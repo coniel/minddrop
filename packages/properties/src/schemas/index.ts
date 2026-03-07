@@ -1,4 +1,5 @@
 import { PropertySchema, PropertyType } from '../types';
+import { CollectionPropertySchema } from './CollectionPropertySchema';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
 import { FilePropertySchema } from './FilePropertySchema';
@@ -13,6 +14,7 @@ import { TitlePropertySchema } from './TitlePropertySchema';
 import { TogglePropertySchema } from './TogglePropertySchema';
 import { UrlPropertySchema } from './UrlPropertySchema';
 
+export * from './CollectionPropertySchema';
 export * from './CreatedPropertySchema';
 export * from './DatePropertySchema';
 export * from './FilePropertySchema';
@@ -41,4 +43,5 @@ export const PropertySchemas: Record<PropertyType, PropertySchema> = {
   created: CreatedPropertySchema,
   'last-modified': LastModifiedPropertySchema,
   file: FilePropertySchema,
+  collection: CollectionPropertySchema,
 };

@@ -180,6 +180,10 @@
     "file": {
       "name": "File",
       "description": "A file attachment."
+    },
+    "collection": {
+      "name": "Collection",
+      "description": "A collection of referenced entries."
     }
   },
   "databases": {
