@@ -7,3 +7,6 @@ export * from './filterValidDatabaseUrls';
 export * from './getDefaultFileProperty';
 export * from './getIncrementalPropertyFilePath';
 export * from './getPropertyFilePath';
+export * from './parseVirtualCollectionId';
+export * from './virtualCollectionId';
+export * from './virtualCollectionName';

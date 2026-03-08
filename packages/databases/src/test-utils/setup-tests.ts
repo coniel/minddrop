@@ -1,4 +1,5 @@
 import { vi } from 'vitest';
+import { Collections } from '@minddrop/collections';
 import { cleanupDesignFixtures, setupDesignFixtures } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { initializeMockFileSystem } from '@minddrop/file-system';
@@ -48,6 +49,7 @@ export function cleanup() {
   DatabasesStore.clear();
   DatabaseEntriesStore.clear();
   DatabaseEntrySerializersStore.clear();
+  Collections.Store.clear();
 
   // Reset mock file system
   MockFs.reset();

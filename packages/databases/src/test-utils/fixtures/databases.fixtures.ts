@@ -200,6 +200,26 @@ export const entryStorageDatabase = generateDatabase({
   ],
 });
 
+export const collectionDatabase = generateDatabase({
+  id: 'collection-database',
+  name: 'Collection Database',
+  entryName: 'Collection Entry',
+  properties: [
+    {
+      type: 'text',
+      name: 'Title',
+    },
+    {
+      type: 'collection',
+      name: 'Related',
+    },
+    {
+      type: 'collection',
+      name: 'References',
+    },
+  ],
+});
+
 export const databases = [
   objectDatabase,
   urlDatabase,
@@ -209,6 +229,7 @@ export const databases = [
   commonStorageDatabase,
   propertyStorageDatabase,
   entryStorageDatabase,
+  collectionDatabase,
 ];
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [

@@ -645,6 +645,9 @@ importers:
 
   packages/databases:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../collections
       '@minddrop/designs':
         specifier: workspace:*
         version: link:../designs

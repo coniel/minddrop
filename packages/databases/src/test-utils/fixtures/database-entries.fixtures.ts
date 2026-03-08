@@ -2,6 +2,7 @@ import { MockFileDescriptor } from '@minddrop/file-system';
 import { DatabaseEntry } from '../../types';
 import { entryCorePropertiesFilePath } from '../../utils';
 import {
+  collectionDatabase,
   commonStorageDatabase,
   entryStorageDatabase,
   objectDatabase,
@@ -219,6 +220,34 @@ lastModified: ${entryStorageEntry1.lastModified.toISOString()}`;
  * Exports
  *****************************************************************************/
 
+export const collectionEntry1: DatabaseEntry = {
+  id: 'collection-entry-1',
+  title: 'Collection Entry 1',
+  database: collectionDatabase.id,
+  path: `${collectionDatabase.path}/Collection Entry 1.md`,
+  created: new Date('2024-01-01T00:00:00.000Z'),
+  lastModified: new Date('2024-01-01T00:00:00.000Z'),
+  properties: {
+    Title: 'Collection Entry 1',
+    Related: ['related-entry-1', 'related-entry-2'],
+    References: ['reference-entry-1'],
+  },
+};
+
+export const collectionEntry1FileContents = `---
+Title: Collection Entry 1
+Related:
+  - related-entry-1
+  - related-entry-2
+References:
+  - reference-entry-1
+---`;
+
+export const collectionEntry1CorePropertiesFileContents = `id: ${collectionEntry1.id}
+title: ${collectionEntry1.title}
+created: ${collectionEntry1.created.toISOString()}
+lastModified: ${collectionEntry1.lastModified.toISOString()}`;
+
 export const databaseEntries = [
   objectEntry1,
   urlEntry1,
@@ -228,6 +257,7 @@ export const databaseEntries = [
   commonStorageEntry1,
   propertyStorageEntry1,
   entryStorageEntry1,
+  collectionEntry1,
 ];
 
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
@@ -294,6 +324,14 @@ export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
   {
     path: entryCorePropertiesFilePath(entryStorageEntry1.path),
     textContent: entryStorageEntry1CorePropertiesFileContents,
+  },
+  {
+    path: collectionEntry1.path,
+    textContent: collectionEntry1FileContents,
+  },
+  {
+    path: entryCorePropertiesFilePath(collectionEntry1.path),
+    textContent: collectionEntry1CorePropertiesFileContents,
   },
 ];
 

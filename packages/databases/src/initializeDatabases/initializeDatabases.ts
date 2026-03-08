@@ -1,3 +1,7 @@
+import {
+  CollectionUpdatedEvent,
+  CollectionUpdatedEventData,
+} from '@minddrop/collections';
 import { Events } from '@minddrop/events';
 import { Fs, FsEntry } from '@minddrop/file-system';
 import { Paths } from '@minddrop/utils';
@@ -6,8 +10,38 @@ import { DatabaseEntrySerializersStore } from '../DatabaseEntrySerializersStore'
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseConfigFileName } from '../constants';
 import { coreEntrySerializers } from '../entry-serializers';
-import { onCreateDatabase } from '../event-handlers';
-import { DatabaseCreatedEvent, DatabaseCreatedEventData } from '../events';
+import {
+  onAddProperty,
+  onCreateDatabase,
+  onCreateEntry,
+  onDeleteDatabase,
+  onDeleteEntry,
+  onRemoveProperty,
+  onRenameDatabase,
+  onRenameEntry,
+  onRenameProperty,
+  onUpdateCollection,
+} from '../event-handlers';
+import {
+  DatabaseCreatedEvent,
+  DatabaseCreatedEventData,
+  DatabaseDeletedEvent,
+  DatabaseDeletedEventData,
+  DatabaseEntryCreatedEvent,
+  DatabaseEntryCreatedEventData,
+  DatabaseEntryDeletedEvent,
+  DatabaseEntryDeletedEventData,
+  DatabaseEntryRenamedEvent,
+  DatabaseEntryRenamedEventData,
+  DatabasePropertyAddedEvent,
+  DatabasePropertyAddedEventData,
+  DatabasePropertyRemovedEvent,
+  DatabasePropertyRemovedEventData,
+  DatabasePropertyRenamedEvent,
+  DatabasePropertyRenamedEventData,
+  DatabaseRenamedEvent,
+  DatabaseRenamedEventData,
+} from '../events';
 import { Database } from '../types';
 
 /**
@@ -47,6 +81,7 @@ async function getWorkspaceDatabasePaths(
   workspace: Workspace,
 ): Promise<string[]> {
   const workspaceFiles = await Fs.readDir(workspace.path, { recursive: true });
+
   return findDatabasePaths(workspaceFiles);
 }
 
@@ -90,6 +125,78 @@ function initializeEventHandlers() {
     'databases',
     ({ data }) => {
       onCreateDatabase(data);
+    },
+  );
+
+  Events.on<DatabaseDeletedEventData>(
+    DatabaseDeletedEvent,
+    'databases',
+    ({ data }) => {
+      onDeleteDatabase(data);
+    },
+  );
+
+  Events.on<DatabaseRenamedEventData>(
+    DatabaseRenamedEvent,
+    'databases',
+    ({ data }) => {
+      onRenameDatabase(data);
+    },
+  );
+
+  Events.on<DatabasePropertyAddedEventData>(
+    DatabasePropertyAddedEvent,
+    'databases',
+    ({ data }) => {
+      onAddProperty(data);
+    },
+  );
+
+  Events.on<DatabasePropertyRemovedEventData>(
+    DatabasePropertyRemovedEvent,
+    'databases',
+    ({ data }) => {
+      onRemoveProperty(data);
+    },
+  );
+
+  Events.on<DatabasePropertyRenamedEventData>(
+    DatabasePropertyRenamedEvent,
+    'databases',
+    ({ data }) => {
+      onRenameProperty(data);
+    },
+  );
+
+  Events.on<DatabaseEntryCreatedEventData>(
+    DatabaseEntryCreatedEvent,
+    'databases',
+    ({ data }) => {
+      onCreateEntry(data);
+    },
+  );
+
+  Events.on<DatabaseEntryDeletedEventData>(
+    DatabaseEntryDeletedEvent,
+    'databases',
+    ({ data }) => {
+      onDeleteEntry(data);
+    },
+  );
+
+  Events.on<DatabaseEntryRenamedEventData>(
+    DatabaseEntryRenamedEvent,
+    'databases',
+    ({ data }) => {
+      onRenameEntry(data);
+    },
+  );
+
+  Events.on<CollectionUpdatedEventData>(
+    CollectionUpdatedEvent,
+    'databases',
+    ({ data }) => {
+      onUpdateCollection(data);
     },
   );
 }
