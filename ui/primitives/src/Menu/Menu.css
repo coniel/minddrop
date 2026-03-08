@@ -321,6 +321,22 @@
 }
 
 /* ------------------------------------------------------------
+   CHECK MENU ITEM
+   ------------------------------------------------------------ */
+
+/* Hide the check icon by default */
+.check-menu-item .check-menu-item-icon {
+  visibility: hidden;
+}
+
+/* Show when checked via aria (Menu.CheckboxItem) or
+   data-selected (Combobox.Item) */
+.check-menu-item[aria-checked='true'] .check-menu-item-icon,
+.check-menu-item[data-selected] .check-menu-item-icon {
+  visibility: visible;
+}
+
+/* ------------------------------------------------------------
    COLOR SELECTION MENU ITEM
    Menu item representing a user-selectable content color.
    The color swatch is a small circle using content color scales.

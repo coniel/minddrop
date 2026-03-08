@@ -44,7 +44,15 @@ export function useShiftState(enabled: boolean) {
    TYPES
    ============================================================ */
 
-export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
+export interface ActionMenuItemProps
+  extends Omit<MenuItemProps, 'onClick'>,
+    Record<string, unknown> {
+  /**
+   * Base UI primitive component used as the outer item.
+   * Defaults to Menu.Item. Pass Combobox.Item for combobox usage.
+   * @default MenuPrimitive.Item
+   */
+  component?: React.ElementType;
   /**
    * The label in its secondary (shift) state.
    */
@@ -101,6 +109,7 @@ export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
 
 /** Renders a Base UI Menu.Item with styled MenuItem and optional shift-key secondary state. */
 export const ActionMenuItem: FC<ActionMenuItemProps> = ({
+  component: Component = MenuPrimitive.Item,
   label,
   secondaryLabel,
   icon,
@@ -139,7 +148,7 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
     : { label: primaryLabel, icon, keyboardShortcut, contentIcon };
 
   const item = (
-    <MenuPrimitive.Item
+    <Component
       disabled={disabled}
       onClick={shiftKeyDown && secondaryOnClick ? secondaryOnClick : onClick}
       render={<MenuItem disabled={disabled} {...itemProps} />}

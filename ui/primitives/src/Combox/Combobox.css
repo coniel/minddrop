@@ -1,48 +1,327 @@
 /* ============================================================
    COMBOBOX
-   Input uses TextField outline/md classes directly.
-   Popup reuses Menu panel styles.
+   Trigger with chips, popup with search input and list.
+   ============================================================ */
+
+/* ============================================================
+   TRIGGER
+   Styled like a text-input. Contains chips and a chevron.
+   ============================================================ */
+
+.combobox-trigger {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  gap: var(--space-1);
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-regular);
+  background: none;
+
+  transition: var(--transition-colors);
+
+  &:has(.combobox-chip) {
+    transition:
+      background-color 150ms ease 75ms,
+      border-color 150ms ease 75ms;
+  }
+}
+
+/* --- Trigger content area --- */
+
+.combobox-trigger-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+/* Chips container rendered by Combobox.Chips */
+.combobox-trigger-content [role='toolbar'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* --- Chevron icon --- */
+
+.combobox-trigger-icon {
+  flex-shrink: 0;
+  color: var(--text-subtle);
+}
+
+.combobox-trigger[data-popup-open] .combobox-trigger-icon {
+  transform: rotate(180deg);
+}
+
+/* --- Placeholder text --- */
+
+.combobox-trigger-placeholder {
+  color: var(--text-placeholder);
+  font-weight: var(--weight-normal);
+}
+
+/* ============================================================
+   TRIGGER SIZES
+   ============================================================ */
+
+.combobox-trigger-size-md {
+  min-height: 1.75rem;
+  padding: 3px var(--space-2) 3px 3px;
+
+  .combobox-trigger-content,
+  .combobox-trigger-content [role='toolbar'] {
+    gap: 3px;
+  }
+}
+
+.combobox-trigger-size-lg,
+.combobox-trigger:not(.combobox-trigger-size-md) {
+  min-height: 2.25rem;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
+
+  .combobox-chip {
+    height: 26px;
+    padding: 4px var(--space-1);
+
+    &:has(.combobox-chip-icon) {
+      padding-right: var(--space-2);
+    }
+  }
+}
+
+/* ============================================================
+   TRIGGER VARIANTS
+   ============================================================ */
+
+/* --- Subtle --- */
+
+.combobox-trigger-variant-subtle {
+  background-color: var(--surface-subtle);
+
+  &:hover:not(:has(.combobox-chip:hover)) {
+    background-color: var(--surface-neutral);
+  }
+}
+
+/* --- Outline --- */
+
+.combobox-trigger-variant-outline {
+  border-color: var(--border-default);
+
+  &:hover:not(:has(.combobox-chip:hover)) {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+  }
+}
+
+/* --- Filled --- */
+
+.combobox-trigger-variant-filled {
+  background-color: var(--surface-paper);
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-raised);
+
+  &:hover:not(:has(.combobox-chip:hover)) {
+    background-color: var(--surface-neutral);
+    border-color: var(--border-strong);
+  }
+}
+
+/* ============================================================
+   TRIGGER INVALID STATE
+   ============================================================ */
+
+.combobox-trigger-invalid.combobox-trigger-variant-outline,
+.combobox-trigger-invalid.combobox-trigger-variant-filled {
+  border-color: var(--border-danger);
+}
+
+.combobox-trigger-invalid.combobox-trigger-variant-subtle {
+  background-color: var(--surface-danger);
+}
+
+/* ============================================================
+   TRIGGER CHIPS
+   ============================================================ */
+
+.combobox-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 20px;
+  max-width: var(--combobox-chip-max-width, 100%);
+
+  padding: 1px var(--space-1);
+
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+
+  background-color: var(--surface-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-regular);
+}
+
+.combobox-chip-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.combobox-chip:has(.combobox-chip-icon) {
+  padding-right: var(--space-2);
+}
+
+.combobox-chip-icon {
+  flex-shrink: 0;
+  margin-right: 2px;
+  color: var(--text-subtle);
+}
+
+.combobox-chip-remove {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 0 var(--space-1);
+  border: none;
+  border-radius: inherit;
+  background-color: var(--surface-neutral);
+  color: var(--text-muted);
+}
+
+.combobox-chip:hover .combobox-chip-remove {
+  display: flex;
+}
+
+/* ============================================================
+   POSITIONER
    ============================================================ */
 
 .combobox-positioner {
   z-index: var(--level-popover);
 }
 
-.combobox-input {
-  /* Input itself needs no extra styles —
-     text-field-input handles everything */
+/* ============================================================
+   POPUP
+   ============================================================ */
+
+.combobox-popup {
+  width: max(220px, var(--anchor-width));
+  background-color: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-overlay);
+  padding: var(--space-1) 0 var(--space-1) var(--space-1);
+  outline: none;
 }
 
-/* --- List --- */
+/* ============================================================
+   SEARCH INPUT (inside popup)
+   ============================================================ */
+
+.combobox-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 1.75rem;
+  padding: 0 var(--space-2);
+  margin-right: var(--space-1);
+  margin-bottom: var(--space-1);
+
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-neutral);
+}
+
+.combobox-input-icon {
+  flex-shrink: 0;
+  color: var(--text-subtle);
+}
+
+.combobox-input {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-regular);
+  line-height: 1;
+
+  &::placeholder {
+    color: var(--text-placeholder);
+    font-weight: var(--weight-normal);
+  }
+}
+
+/* ============================================================
+   LIST
+   ============================================================ */
+
+.combobox-list-scroll-area {
+  max-height: 320px;
+  padding-right: var(--space-1);
+}
+
+.combobox-list-scroll-area .scroll-area-viewport {
+  max-height: inherit;
+}
 
 .combobox-list {
   list-style: none;
   margin: 0;
-  padding: var(--space-1) 0;
-  overflow-y: auto;
-  max-height: var(--available-height, 320px);
-  scroll-padding-block: var(--space-2);
-  min-width: 12rem;
+  padding: 0;
 }
 
-/* --- Item indicator --- */
+/* ============================================================
+   VIRTUALIZED LIST
+   ============================================================ */
 
-.combobox-item-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary-muted);
-  width: 1rem;
-  height: 1rem;
-  flex-shrink: 0;
+.combobox-virtualized-placeholder {
+  position: relative;
+  width: 100%;
 }
 
-/* --- Empty state --- */
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
 
 .combobox-empty {
-  padding: var(--space-3) var(--space-3);
   font-family: var(--font-ui);
   font-size: var(--text-sm);
   color: var(--text-subtle);
   text-align: center;
+  margin-right: var(--space-1);
+}
+
+/* Only show padding when the empty state has content */
+.combobox-empty:not(:empty) {
+  padding: var(--space-3);
+}
+
+/* Collapse when empty so it takes no space */
+.combobox-empty:empty {
+  display: none;
 }
