@@ -98,33 +98,52 @@ try {
   console.log('Plans directory not found, skipping watcher');
 }
 
-// Watch for locale file changes and regenerate i18n types
+// Watch working tree for file changes (i18n regeneration + manifest refresh)
 let i18nDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+let fileChangeDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 const I18N_SCRIPT = `${REPO_ROOT}/packages/scripts/generate-i18n-types.ts`;
 
 try {
   watch(REPO_ROOT, { recursive: true }, (_eventType, filename) => {
-    if (!filename || !filename.endsWith('locales/en-GB.json')) {
+    if (!filename) {
       return;
     }
 
-    // Skip node_modules
-    if (filename.includes('node_modules')) {
+    // Skip non-source directories
+    if (
+      filename.includes('node_modules') ||
+      filename.startsWith('.git/') ||
+      filename.startsWith('dev/')
+    ) {
       return;
     }
 
-    // Debounce rapid changes
-    if (i18nDebounceTimer) {
-      clearTimeout(i18nDebounceTimer);
+    // Regenerate i18n types when locale files change
+    if (filename.endsWith('locales/en-GB.json')) {
+      if (i18nDebounceTimer) {
+        clearTimeout(i18nDebounceTimer);
+      }
+
+      i18nDebounceTimer = setTimeout(() => {
+        i18nDebounceTimer = null;
+        console.log(
+          `Locale file changed: ${filename}, regenerating i18n types`,
+        );
+        Bun.spawn(['bun', 'run', I18N_SCRIPT], { stdout: 'inherit' });
+      }, 300);
     }
 
-    i18nDebounceTimer = setTimeout(() => {
-      i18nDebounceTimer = null;
-      console.log(`Locale file changed: ${filename}, regenerating i18n types`);
-      Bun.spawn(['bun', 'run', I18N_SCRIPT], { stdout: 'inherit' });
-    }, 300);
+    // Notify the frontend so it can refresh untracked changes
+    if (fileChangeDebounceTimer) {
+      clearTimeout(fileChangeDebounceTimer);
+    }
+
+    fileChangeDebounceTimer = setTimeout(() => {
+      fileChangeDebounceTimer = null;
+      rpc.send.manifestsChanged({});
+    }, 500);
   });
-  console.log('Watching for locale file changes (i18n type generation)');
+  console.log('Watching working tree for file and locale changes');
 } catch {
-  console.log('Failed to set up locale file watcher');
+  console.log('Failed to set up working tree file watcher');
 }

@@ -83,8 +83,8 @@ function collectGitOutput(command: string[], target: Set<string>): void {
 }
 
 /**
- * Gets files that have changed in git (added, modified, or deleted)
- * but aren't listed in any manifest.
+ * Gets files with uncommitted changes or untracked by git
+ * that aren't listed in any manifest.
  */
 function getUntrackedChanges(): string[] {
   const manifests = readAllManifests();
@@ -99,14 +99,6 @@ function getUntrackedChanges(): string[] {
   }
 
   const allChangedFiles = new Set<string>();
-
-  // Get modified/deleted files relative to each manifest's baseRef
-  for (const manifest of manifests) {
-    collectGitOutput(
-      ['git', 'diff', '--name-only', manifest.baseRef],
-      allChangedFiles,
-    );
-  }
 
   // Get uncommitted changes vs HEAD (modified + staged)
   collectGitOutput(['git', 'diff', '--name-only', 'HEAD'], allChangedFiles);
