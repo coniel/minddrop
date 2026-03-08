@@ -34,3 +34,7 @@ export interface Collection {
 export type UpdateCollectionData = Partial<
   Pick<Collection, 'name' | 'entries'>
 >;
+
+export type UpdateVirtualCollectionData = Partial<
+  Pick<Collection, 'id' | 'name' | 'entries'>
+>;

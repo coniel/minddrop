@@ -1,8 +1,13 @@
 import { Events } from '@minddrop/events';
+import { InvalidParameterError } from '@minddrop/utils';
 import { CollectionsStore } from '../CollectionsStore';
 import { CollectionUpdatedEvent } from '../events';
 import { getCollection } from '../getCollection';
-import { Collection, UpdateCollectionData } from '../types';
+import {
+  Collection,
+  UpdateCollectionData,
+  UpdateVirtualCollectionData,
+} from '../types';
 import { writeCollection } from '../writeCollection';
 
 /**
@@ -17,7 +22,7 @@ import { writeCollection } from '../writeCollection';
  */
 export async function updateCollection(
   collectionId: string,
-  data: UpdateCollectionData,
+  data: UpdateCollectionData | UpdateVirtualCollectionData,
 ): Promise<Collection> {
   // Get the collection
   const collection = getCollection(collectionId);
@@ -29,8 +34,24 @@ export async function updateCollection(
     lastModified: new Date(),
   };
 
-  // Update the collection in the store
-  CollectionsStore.update(collectionId, { ...data, lastModified: new Date() });
+  // If the ID is changing (virtual collections only), remove the old
+  // entry and set the new one
+  if ('id' in data && data.id && data.id !== collectionId) {
+    if (!collection.virtual) {
+      throw new InvalidParameterError(
+        'Cannot change the ID of a non-virtual collection',
+      );
+    }
+
+    CollectionsStore.remove(collectionId);
+    CollectionsStore.set(updatedCollection);
+  } else {
+    // Update the collection in the store
+    CollectionsStore.update(collectionId, {
+      ...data,
+      lastModified: new Date(),
+    });
+  }
 
   // Write the collection config to the file system if not virtual
   if (!collection.virtual) {
