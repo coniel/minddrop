@@ -32,8 +32,10 @@ export async function updateCollection(
   // Update the collection in the store
   CollectionsStore.update(collectionId, { ...data, lastModified: new Date() });
 
-  // Write the collection config to the file system
-  await writeCollection(collectionId);
+  // Write the collection config to the file system if not virtual
+  if (!collection.virtual) {
+    await writeCollection(collectionId);
+  }
 
   // Dispatch the collection updated event
   Events.dispatch(CollectionUpdatedEvent, {

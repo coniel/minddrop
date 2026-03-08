@@ -18,6 +18,20 @@ export const collection_3 = generateCollectionFixture(3);
 
 export const collections = [collection_1, collection_2, collection_3];
 
+function generateVirtualCollectionFixture(number: number): Collection {
+  return {
+    ...generateCollectionFixture(number),
+    id: `virtual-collection-${number}`,
+    virtual: true,
+    name: `Virtual Collection ${number}`,
+  };
+}
+
+export const collection_virtual_1 = generateVirtualCollectionFixture(1);
+export const collection_virtual_2 = generateVirtualCollectionFixture(2);
+
+export const collections_virtual = [collection_virtual_1, collection_virtual_2];
+
 export const collectionFiles: (string | MockFileDescriptor)[] = [
   getCollectionsDirPath(),
   ...collections.map((collection) => ({

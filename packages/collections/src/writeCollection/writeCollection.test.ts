@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { InvalidParameterError } from '@minddrop/utils';
+import { CollectionsStore } from '../CollectionsStore';
 import { CollectionNotFoundError } from '../errors';
 import { MockFs, cleanup, collection_1, setup } from '../test-utils';
 import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
@@ -10,8 +12,17 @@ describe('writeCollection', () => {
   afterEach(cleanup);
 
   it('throws an error if the collection does not exist', async () => {
-    await expect(() => writeCollection('missing')).rejects.toThrow(
-      CollectionNotFoundError,
+    await expect(() =>
+      writeCollection('missing'),
+    ).rejects.toThrow(CollectionNotFoundError);
+  });
+
+  it('throws an error if the collection is virtual', async () => {
+    // Add a virtual collection to the store
+    CollectionsStore.set({ ...collection_1, id: 'virtual-1', virtual: true });
+
+    await expect(() => writeCollection('virtual-1')).rejects.toThrow(
+      InvalidParameterError,
     );
   });
 

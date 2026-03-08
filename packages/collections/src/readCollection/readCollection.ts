@@ -10,9 +10,7 @@ import { Collection } from '../types';
 export async function readCollection(path: string): Promise<Collection | null> {
   try {
     // Read the collection config from the file system
-    const collection = await Fs.readJsonFile<Collection>(path);
-
-    return collection;
+    return await Fs.readJsonFile<Collection>(path);
   } catch {
     return null;
   }

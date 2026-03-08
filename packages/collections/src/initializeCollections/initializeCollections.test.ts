@@ -7,7 +7,9 @@ import { getCollectionFilePath, getCollectionsDirPath } from '../utils';
 import { initializeCollections } from './initializeCollections';
 
 describe('initializeCollections', () => {
-  beforeEach(() => setup({ loadCollections: false }));
+  beforeEach(() =>
+    setup({ loadCollections: false, loadVirtualCollections: false }),
+  );
 
   afterEach(cleanup);
 

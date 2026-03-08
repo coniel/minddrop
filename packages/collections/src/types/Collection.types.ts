@@ -5,6 +5,12 @@ export interface Collection {
   id: string;
 
   /**
+   * Whether the collection is virtual (exists only in memory,
+   * not persisted to a file).
+   */
+  virtual?: boolean;
+
+  /**
    * The user defined name of the collection.
    */
   name: string;
