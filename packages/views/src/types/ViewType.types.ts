@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { View } from './View.types';
 import { ViewDataSourceType } from './ViewDataSource.types';
 
@@ -11,12 +12,12 @@ export interface ViewType<TViewOptions extends object = object> {
   /**
    * The name of the view type.
    */
-  name: string;
+  name: TranslationKey;
 
   /**
    * The description of the view type.
    */
-  description: string;
+  description: TranslationKey;
 
   /**
    * The default icon for views of this type.
@@ -43,6 +44,13 @@ export interface ViewType<TViewOptions extends object = object> {
    * view type. Receives the current view options and a callback to update them.
    */
   settingsMenu?: React.ElementType<ViewTypeSettingsMenuProps<TViewOptions>>;
+
+  /**
+   * A component that renders a skeleton/placeholder version of the
+   * view type. Used in contexts like the design studio where no
+   * real data is available.
+   */
+  skeletonComponent: React.ElementType;
 }
 
 export interface ViewTypeSettingsMenuProps<

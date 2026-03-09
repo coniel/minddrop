@@ -1,0 +1,102 @@
+.notebook-view-skeleton {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* --- List panel --- */
+
+.notebook-view-skeleton-list {
+  width: 280px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.notebook-view-skeleton-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.notebook-view-skeleton-search {
+  flex: 1;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}
+
+.notebook-view-skeleton-button {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}
+
+/* --- List items --- */
+
+.notebook-view-skeleton-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.notebook-view-skeleton-list-item-selected {
+  background-color: var(--surface-subtle);
+}
+
+.notebook-view-skeleton-list-item-title {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+}
+
+.notebook-view-skeleton-list-item-subtitle {
+  height: 10px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton-muted);
+}
+
+/* --- Page panel --- */
+
+.notebook-view-skeleton-page {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.notebook-view-skeleton-page-title {
+  width: 40%;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+  margin-bottom: var(--space-2);
+}
+
+.notebook-view-skeleton-page-gap {
+  height: var(--space-3);
+}
+
+.notebook-view-skeleton-page-heading {
+  height: 16px;
+  margin-top: var(--space-4);
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+}
+
+.notebook-view-skeleton-page-line {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton-muted);
+}

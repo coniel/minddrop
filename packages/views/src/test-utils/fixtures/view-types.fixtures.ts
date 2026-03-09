@@ -7,6 +7,7 @@ function generateViewTypeFixture(type: string): ViewType {
     description: `Description for view type ${type}`,
     icon: 'layout',
     component: () => null,
+    skeletonComponent: () => null,
     defaultOptions: {
       foo: 'bar',
     },

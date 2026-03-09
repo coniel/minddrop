@@ -1,0 +1,66 @@
+.table-view-skeleton {
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+/* --- Header --- */
+
+.table-view-skeleton-header {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.table-view-skeleton-header-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  min-width: 100px;
+}
+
+.table-view-skeleton-header-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+}
+
+.table-view-skeleton-header-label {
+  width: 60px;
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+}
+
+/* --- Row number column --- */
+
+.table-view-skeleton-row-number {
+  flex: 0 0 2.5rem;
+}
+
+/* --- Body rows --- */
+
+.table-view-skeleton-row {
+  display: flex;
+  height: 2.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.table-view-skeleton-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  min-width: 100px;
+}
+
+.table-view-skeleton-cell-value {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-skeleton);
+}
+
+.table-view-skeleton-cell-number {
+  justify-content: flex-end;
+}

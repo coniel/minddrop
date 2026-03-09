@@ -1,0 +1,38 @@
+.gallery-view-skeleton {
+  column-count: 1;
+  column-gap: var(--space-3);
+  padding: var(--space-4);
+  pointer-events: none;
+}
+
+.gallery-view-skeleton-card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}
+
+@container (min-width: 400px) {
+  .gallery-view-skeleton {
+    column-count: 2;
+  }
+}
+
+@container (min-width: 600px) {
+  .gallery-view-skeleton {
+    column-count: 3;
+  }
+}
+
+@container (min-width: 900px) {
+  .gallery-view-skeleton {
+    column-count: 4;
+  }
+}
+
+@container (min-width: 1200px) {
+  .gallery-view-skeleton {
+    column-count: 5;
+  }
+}
