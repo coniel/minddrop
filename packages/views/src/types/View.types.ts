@@ -7,6 +7,12 @@ export interface View<TViewOptions extends object = object> {
   id: string;
 
   /**
+   * Whether the view is virtual (exists only in memory,
+   * not persisted to a file).
+   */
+  virtual?: boolean;
+
+  /**
    * A user defined name for the view.
    */
   name: string;
@@ -54,3 +60,11 @@ export interface View<TViewOptions extends object = object> {
    */
   entryDesignMap?: Record<string, string>;
 }
+
+export type UpdateViewData = Partial<
+  Pick<View, 'name' | 'options' | 'databaseDesignMap' | 'entryDesignMap'>
+>;
+
+export type UpdateVirtualViewData = Partial<
+  Pick<View, 'id' | 'name' | 'options' | 'databaseDesignMap' | 'entryDesignMap'>
+>;

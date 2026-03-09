@@ -1,6 +1,7 @@
 export * from './types';
 export * from './errors';
 export * from './constants';
+export * from './loadVirtualViews/loadVirtualViews';
 export * from './test-utils/setup-fixtures';
 export * as Views from './Views';
 export * as ViewTypes from './ViewTypes';

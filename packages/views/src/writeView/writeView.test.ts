@@ -1,5 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { MockFs, cleanup, setup, view_gallery_1 } from '../test-utils';
+import { InvalidParameterError } from '@minddrop/utils';
+import { ViewsStore } from '../ViewsStore';
+import {
+  MockFs,
+  cleanup,
+  setup,
+  view_gallery_1,
+  view_virtual_1,
+} from '../test-utils';
 import { getViewFilePath } from '../utils';
 import { getViewsDirPath } from '../utils/getViewsDirPath';
 import { writeView } from './writeView';
@@ -24,5 +32,14 @@ describe('writeView', () => {
     await writeView(view_gallery_1.id);
 
     expect(MockFs.exists(getViewsDirPath())).toBe(true);
+  });
+
+  it('throws when writing a virtual view', async () => {
+    // Add a virtual view to the store
+    ViewsStore.add(view_virtual_1);
+
+    await expect(writeView(view_virtual_1.id)).rejects.toThrow(
+      InvalidParameterError,
+    );
   });
 });

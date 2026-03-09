@@ -21,8 +21,10 @@ export async function deleteView(id: string): Promise<void> {
   // Remove the view from the store
   ViewsStore.remove(id);
 
-  // Delete the view file
-  await Fs.removeFile(getViewFilePath(id));
+  // Delete the view file from the file system if not virtual
+  if (!view.virtual) {
+    await Fs.removeFile(getViewFilePath(id));
+  }
 
   // Dispatch a view deleted event
   Events.dispatch<ViewDeletedEventData>(ViewDeletedEvent, view);

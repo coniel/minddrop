@@ -81,6 +81,28 @@ export const view_board_3 = generateViewFixture(
   3,
 );
 
+function generateVirtualViewFixture(
+  type: string,
+  dataSource: ViewDataSource,
+  number: number,
+): View {
+  return {
+    ...generateViewFixture(type, dataSource, number),
+    id: `view-virtual-${type}-${number}`,
+    name: `virtual ${type} ${number}`,
+    virtual: true,
+  };
+}
+
+export const view_virtual_1 = generateVirtualViewFixture(
+  'gallery',
+  {
+    type: 'database',
+    id: 'database-1',
+  },
+  1,
+);
+
 export const views = [
   view_gallery_1,
   view_gallery_2,
@@ -89,6 +111,9 @@ export const views = [
   view_board_2,
   view_board_3,
 ];
+
+// All views including virtual ones
+export const allViews = [...views, view_virtual_1];
 
 export const viewFiles: MockFileDescriptor[] = views.map((view) => ({
   path: Fs.concatPath(

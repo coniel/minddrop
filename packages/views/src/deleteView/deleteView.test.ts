@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { ViewsStore } from '../ViewsStore';
 import { ViewDeletedEvent } from '../events';
-import { MockFs, cleanup, setup, view_gallery_1 } from '../test-utils';
+import {
+  MockFs,
+  cleanup,
+  setup,
+  view_gallery_1,
+  view_virtual_1,
+} from '../test-utils';
 import { getViewFilePath } from '../utils';
 import { deleteView } from './deleteView';
 
@@ -21,6 +27,16 @@ describe('deleteView', () => {
     await deleteView(view_gallery_1.id);
 
     expect(MockFs.exists(getViewFilePath(view_gallery_1.id))).toBe(false);
+  });
+
+  it('does not delete a file for virtual views', async () => {
+    // Add a virtual view to the store
+    ViewsStore.add(view_virtual_1);
+
+    await deleteView(view_virtual_1.id);
+
+    // Should not throw or attempt file deletion
+    expect(ViewsStore.get(view_virtual_1.id)).toBeNull();
   });
 
   it('dispatches a view deleted event', async () =>
