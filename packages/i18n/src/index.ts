@@ -25,4 +25,5 @@ export const I18n = {
 };
 
 export * from './initializeI18n';
+export * from './createI18nKeyBuilder';
 export * from './i18n.types';
