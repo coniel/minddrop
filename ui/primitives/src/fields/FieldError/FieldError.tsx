@@ -1,13 +1,13 @@
 import { Field } from '@base-ui/react/field';
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Text, TextColor, TextSize } from '../../Text';
 
 export interface FieldErrorProps extends Field.Error.Props {
   /*
    * i18n key for the error text. Falls back to children if not provided.
    */
-  error?: string;
+  error?: TranslationKey;
 
   /*
    * Error content. Used when no i18n key is provided.

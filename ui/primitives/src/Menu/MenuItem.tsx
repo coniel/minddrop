@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { i18n } from '@minddrop/i18n';
+import { TranslatableNode } from '../types';
 import { createContext } from '@minddrop/utils';
 import { ContentIcon } from '../ContentIcon';
 import { Icon } from '../Icon';
@@ -24,7 +25,7 @@ export interface MenuItemProps {
    * Label text. Strings are treated as i18n keys and translated.
    * Falls back to children if not provided.
    */
-  label?: React.ReactNode;
+  label?: TranslatableNode;
 
   /*
    * Label content. Used when `label` i18n key is not provided.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
 import { propsToClass } from '../utils';
 import './Chip.css';
@@ -17,7 +17,7 @@ export interface ChipProps
   /**
    * i18n key for the chip label.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /**
    * Shape variant.

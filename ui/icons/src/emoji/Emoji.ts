@@ -17,7 +17,15 @@ const unminifiedEmoji = emojiData.emoji.map((minifiedEmoji) =>
 const { labels: allLabels, labelToEmoji } =
   buildEmojiLabelIndex(unminifiedEmoji);
 
-const skinTones: { value: EmojiSkinTone; label: string }[] = [
+export type EmojiSkinToneLabel =
+  | 'none'
+  | 'light'
+  | 'mediumLight'
+  | 'medium'
+  | 'mediumDark'
+  | 'dark';
+
+const skinTones: { value: EmojiSkinTone; label: EmojiSkinToneLabel }[] = [
   { value: 0, label: 'none' },
   { value: 1, label: 'light' },
   { value: 2, label: 'mediumLight' },

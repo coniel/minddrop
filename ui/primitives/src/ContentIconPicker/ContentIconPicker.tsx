@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { ContentIconMetadata, ContentIconName } from '@minddrop/ui-icons';
 import { ContentColor } from '@minddrop/ui-theme';
 import { ContentIcon } from '../ContentIcon';
@@ -201,17 +201,17 @@ export const ContentIconPicker: FC<ContentIconPickerProps> = ({
       <Toolbar>
         <TextField
           variant="ghost"
-          placeholder={t('filter')}
+          placeholder="iconPicker.filter"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck={false}
           onValueChange={handleQueryChange}
         />
-        <Tooltip title={t('random')}>
+        <Tooltip title="iconPicker.random">
           <IconButton
             icon="shuffle"
-            label="random"
+            label="iconPicker.random"
             color="contrast"
             onClick={handleClickRandom}
           />
@@ -309,7 +309,7 @@ const IconSelectButton = memo<{
   return (
     <IconButton
       className="icon-selection-button"
-      label={icon.name}
+      stringLabel={icon.name}
       onClick={handleSelect}
     >
       <ContentIcon icon={`content-icon:${icon.name}`} color={color} />
@@ -317,19 +317,19 @@ const IconSelectButton = memo<{
   );
 });
 
+const colorKey = createI18nKeyBuilder('color.');
+
 const ColorSelectButton: React.FC<{
   color: ContentColor;
   onClick: (value: ContentColor) => void;
 }> = ({ color, onClick }) => {
-  const { t } = useTranslation({ keyPrefix: 'color' });
-
   const handleSelect = useCallback(() => {
     onClick(color);
   }, [color, onClick]);
 
   return (
     <IconButton
-      label={t(color)}
+      label={colorKey(color)}
       className="color-selection-button"
       onClick={handleSelect}
     >

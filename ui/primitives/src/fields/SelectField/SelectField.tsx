@@ -1,11 +1,12 @@
-import React from 'react';
 import { Field } from '@base-ui/react/field';
+import React from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { Select } from '../../Select';
-import type { SelectProps, SelectVariant, SelectSize } from '../../Select';
-import { FieldRoot } from '../FieldRoot';
-import { FieldLabel } from '../FieldLabel';
+import type { SelectProps, SelectSize, SelectVariant } from '../../Select';
 import { FieldDescription } from '../FieldDescription';
 import { FieldError } from '../FieldError';
+import { FieldLabel } from '../FieldLabel';
+import { FieldRoot } from '../FieldRoot';
 
 export type SelectFieldVariant = SelectVariant;
 export type SelectFieldSize = SelectSize;
@@ -32,20 +33,20 @@ export interface SelectFieldProps<TValue extends string | number>
   /*
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Helper text displayed below the select.
    * Hidden when error is present.
    * Can be an i18n key.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
    */
-  error?: string;
+  error?: TranslationKey;
 }
 
 /**

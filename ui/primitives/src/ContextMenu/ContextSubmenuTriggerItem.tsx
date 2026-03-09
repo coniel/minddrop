@@ -2,6 +2,7 @@ import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu
 import { FC } from 'react';
 import { IconProp } from '../IconRenderer';
 import { MenuItem } from '../Menu/MenuItem';
+import { TranslatableNode } from '../types';
 
 /* --- ContextSubmenuTriggerItem ---
    The trigger item that opens a nested submenu. */
@@ -11,7 +12,7 @@ export interface ContextSubmenuTriggerItemProps
     ContextMenuPrimitive.SubmenuTrigger.Props,
     'children' | 'label'
   > {
-  label?: string;
+  label?: TranslatableNode;
   icon?: IconProp;
   disabled?: boolean;
 }

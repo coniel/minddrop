@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import {
   CalendarPopover,
   CalendarPopoverProps,
@@ -49,7 +49,7 @@ export interface DateInputProps {
   /**
    * Placeholder text. Can be an i18n key.
    */
-  placeholder?: string;
+  placeholder?: TranslationKey;
 
   /**
    * Marks the input as invalid (applies error styling).
@@ -185,7 +185,7 @@ export const DateInput = React.forwardRef<HTMLDivElement, DateInputProps>(
         {/* Display text or placeholder */}
         <span className="text-input-input date-input-text" ref={triggerRef}>
           {displayText ||
-            (placeholder ? (t as (key: string) => string)(placeholder) : '')}
+            (placeholder ? t(placeholder) : '')}
         </span>
 
         {/* Clear button */}

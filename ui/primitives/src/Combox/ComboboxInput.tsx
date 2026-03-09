@@ -1,6 +1,6 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import { FC } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
 
 /* --- ComboboxInput ---
@@ -10,7 +10,7 @@ export interface ComboboxInputProps extends ComboboxPrimitive.Input.Props {
   /**
    * Placeholder text. Can be an i18n key.
    */
-  placeholder?: string;
+  placeholder?: TranslationKey;
 
   /**
    * Class name applied to the input element.

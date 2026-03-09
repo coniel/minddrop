@@ -2,13 +2,14 @@ import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { FC } from 'react';
 import { IconProp } from '../IconRenderer';
 import { MenuItem } from '../Menu/MenuItem';
+import { TranslatableNode } from '../types';
 
 /* --- DropdownSubmenuTriggerItem ---
    The trigger item that opens a nested submenu. */
 
 export interface DropdownSubmenuTriggerItemProps
   extends Omit<MenuPrimitive.SubmenuTrigger.Props, 'children' | 'label'> {
-  label?: string;
+  label?: TranslatableNode;
   icon?: IconProp;
   disabled?: boolean;
 }

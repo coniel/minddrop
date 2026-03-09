@@ -1,6 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import React, { FC, useMemo } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import React, { FC } from 'react';
 import { MenuRadioItem } from '../Menu/MenuRadioItem';
 import { Tooltip } from '../Tooltip';
 import { ActionMenuItemProps, useShiftState } from './ActionMenuItem';
@@ -45,27 +44,16 @@ export const ActionMenuRadioItem: FC<ActionMenuRadioItemProps> = ({
   itemIndicator,
   ...other
 }) => {
-  const { t } = useTranslation();
-
   const shiftKeyDown = useShiftState(!!secondaryOnClick);
 
-  const primaryLabel = useMemo(
-    () => (typeof label === 'string' ? t(label) : label),
-    [label, t],
-  );
-  const altLabel = useMemo(
-    () =>
-      typeof secondaryLabel === 'string' ? t(secondaryLabel) : secondaryLabel,
-    [secondaryLabel, t],
-  );
-
+  // Pass labels through to MenuRadioItem which handles translation
   const itemProps = shiftKeyDown
     ? {
-        label: altLabel ?? primaryLabel,
+        label: secondaryLabel ?? label,
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
       }
-    : { label: primaryLabel, icon, keyboardShortcut };
+    : { label, icon, keyboardShortcut };
 
   const item = (
     <MenuPrimitive.RadioItem

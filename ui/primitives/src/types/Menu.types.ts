@@ -1,4 +1,5 @@
 import React from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
 import { ActionMenuItemProps } from '../ActionMenuItem';
 
@@ -12,7 +13,7 @@ export interface MenuLabelConfig {
   /**
    * The menu label text.
    */
-  label: string;
+  label: TranslationKey;
 }
 
 export interface MenuSeparatorConfig {

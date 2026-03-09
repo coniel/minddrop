@@ -1,5 +1,6 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import { FC } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { ContextMenuLabel } from './ContextMenuLabel';
 
 /* --- ContextMenuGroup ---
@@ -10,7 +11,7 @@ export interface ContextMenuGroupProps
   /*
    * Group label. Can be an i18n key. Translated internally.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 export const ContextMenuGroup: FC<ContextMenuGroupProps> = ({

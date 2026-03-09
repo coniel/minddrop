@@ -27,6 +27,7 @@ declare module 'i18next' {
           back: string;
           cancel: string;
           clear: string;
+          selectAll: string;
           save: string;
           done: string;
           delete: string;
@@ -66,6 +67,7 @@ declare module 'i18next' {
           random: string;
           filter: string;
           skinTone: {
+            action: string;
             none: string;
             dark: string;
             mediumDark: string;
@@ -1061,6 +1063,12 @@ declare module 'i18next' {
             placeholder: string;
             'embed-blocked': string;
           };
+          view: {
+            placeholder: string;
+            viewType: {
+              label: string;
+            };
+          };
           'url-display': {
             label: string;
           };
@@ -1132,6 +1140,8 @@ declare module 'i18next' {
             friday: string;
             saturday: string;
           };
+          previousMonth: string;
+          nextMonth: string;
         };
         'design-studio': {
           labels: {
@@ -1154,12 +1164,14 @@ declare module 'i18next' {
             editor: string;
             badges: string;
             webview: string;
+            view: string;
             'text-placeholder': string;
             'container-empty-hint': string;
             group: {
               content: string;
               media: string;
               layout: string;
+              views: string;
             };
           };
           mappable: {

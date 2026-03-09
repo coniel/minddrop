@@ -1,4 +1,5 @@
 import React from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { FieldDescription } from '../fields/FieldDescription';
 import { FieldError } from '../fields/FieldError';
 import { FieldLabel } from '../fields/FieldLabel';
@@ -35,20 +36,20 @@ export interface DateFieldProps
   /**
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /**
    * Helper text displayed below the input.
    * Hidden when error is present.
    * Can be an i18n key.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /**
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
    */
-  error?: string;
+  error?: TranslationKey;
 
   /**
    * Disables the field.

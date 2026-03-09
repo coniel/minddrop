@@ -1,6 +1,7 @@
 import { Field } from '@base-ui/react/field';
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import React from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { TextColor } from '../Text';
 import { FieldDescription, FieldLabel } from '../fields';
 import { propsToClass } from '../utils';
@@ -77,13 +78,13 @@ export interface SwitchFieldProps extends SwitchProps {
   /*
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Helper text displayed below the label.
    * Can be an i18n key.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Color of the description text.

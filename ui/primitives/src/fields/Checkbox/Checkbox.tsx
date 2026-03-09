@@ -1,7 +1,7 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { Field } from '@base-ui/react/field';
 import React, { createContext, useContext, useId } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { propsToClass } from '../../utils';
 import './Checkbox.css';
 
@@ -83,7 +83,7 @@ export interface CheckboxFieldProps {
   /*
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Label content. Used when no i18n key is provided.
@@ -93,7 +93,7 @@ export interface CheckboxFieldProps {
   /*
    * Helper text below the label.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Controlled checked state.
@@ -216,7 +216,7 @@ export interface CheckboxGroupProps {
   /*
    * Group label rendered above the checkboxes.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * When true, renders a "select all" checkbox above the group.
@@ -229,7 +229,7 @@ export interface CheckboxGroupProps {
    * Label for the select-all checkbox.
    * @default 'Select all'
    */
-  selectAllLabel?: string;
+  selectAllLabel?: TranslationKey;
 
   /*
    * Disables all checkboxes in the group.
@@ -253,7 +253,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   options,
   label,
   selectAll,
-  selectAllLabel = 'Select all',
+  selectAllLabel = 'actions.selectAll',
   disabled,
   className,
   children,

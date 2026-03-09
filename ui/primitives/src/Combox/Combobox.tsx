@@ -1,5 +1,6 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import React, { useCallback, useRef, useState } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { ContentIcon } from '../ContentIcon';
 import { IconProp, IconRenderer } from '../IconRenderer';
 import { ComboboxChip } from './ComboboxChip';
@@ -100,7 +101,7 @@ export interface ComboboxProps
   /**
    * Placeholder text for the search input inside the popup.
    */
-  searchPlaceholder?: string;
+  searchPlaceholder?: TranslationKey;
 
   /**
    * Text shown when no items match the search.

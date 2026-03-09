@@ -2,7 +2,7 @@ import { Field } from '@base-ui/react/field';
 import { Radio as RadioPrimitive } from '@base-ui/react/radio';
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import React, { useId } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { propsToClass } from '../../utils';
 import './Radio.css';
 
@@ -41,7 +41,7 @@ export interface RadioFieldProps {
   /*
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Label content. Used when no i18n key is provided.
@@ -51,7 +51,7 @@ export interface RadioFieldProps {
   /*
    * Helper text below the label.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Prevents interaction.
@@ -121,7 +121,7 @@ export interface RadioGroupProps {
   /*
    * Group label rendered above the options.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Disables all radio fields in the group.
@@ -181,12 +181,12 @@ export interface RadioCardProps {
   /*
    * Card title.
    */
-  title: string;
+  title: TranslationKey;
 
   /*
    * Card description below the title.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Optional icon or any node rendered above the title.
@@ -272,7 +272,7 @@ export interface RadioCardGroupProps {
   /*
    * Group label rendered above the cards.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Layout direction of the cards.

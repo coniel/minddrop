@@ -1,5 +1,6 @@
 import React from 'react';
 import { Field } from '@base-ui/react/field';
+import { TranslationKey } from '@minddrop/i18n';
 import { FieldRoot } from '../FieldRoot';
 import { FieldLabel } from '../FieldLabel';
 import { FieldDescription } from '../FieldDescription';
@@ -37,20 +38,20 @@ export interface TextFieldProps
   /*
    * Label text. Can be an i18n key.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Helper text displayed below the input.
    * Hidden when error is present.
    * Can be an i18n key.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Error message. Also sets the field to invalid state.
    * Can be an i18n key.
    */
-  error?: string;
+  error?: TranslationKey;
 }
 
 export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(

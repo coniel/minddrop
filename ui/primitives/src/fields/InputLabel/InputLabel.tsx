@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Text, TextColor, TextSize } from '../../Text';
 import { propsToClass } from '../../utils';
 
@@ -7,7 +7,7 @@ export interface InputLabelProps {
   /*
    * i18n key for the label text. Falls back to children if not provided.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Label content. Used when no i18n key is provided.

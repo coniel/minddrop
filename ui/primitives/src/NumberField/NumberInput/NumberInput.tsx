@@ -1,6 +1,6 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 import React, { useCallback, useRef } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import type { TextInputSize, TextInputVariant } from '../../fields/TextInput';
 import { propsToClass } from '../../utils';
 import './NumberInput.css';
@@ -19,7 +19,7 @@ export interface NumberInputProps {
   max?: number;
   step?: number;
   decimals?: number;
-  placeholder?: string;
+  placeholder?: TranslationKey;
   disabled?: boolean;
   invalid?: boolean;
   leading?: React.ReactNode;
@@ -96,7 +96,7 @@ export const NumberInput = React.forwardRef<HTMLDivElement, NumberInputProps>(
           .filter(Boolean)
           .join(' ')}
         value={value}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue ?? undefined}
         onValueChange={onValueChange}
         min={min}
         max={max}

@@ -1,9 +1,9 @@
 import React from 'react';
 import { ActionMenuItemProps } from '../../ActionMenuItem';
 import {
-  MenuColorSelectionItemConfig,
   MenuColorSelectionItemProps,
   MenuContents,
+  SubmenuContents,
   SubmenuTriggerItemProps,
 } from '../../types';
 
@@ -23,7 +23,7 @@ export interface MenuComponents {
  */
 export function generateMenu(
   components: MenuComponents,
-  menu: MenuContents,
+  menu: MenuContents | Exclude<SubmenuContents, React.ReactElement>,
 ): React.ReactNode[] {
   const {
     Item,
@@ -36,7 +36,12 @@ export function generateMenu(
   } = components;
 
   return menu.reduce((items, item, index) => {
-    const { type, ...props } = item;
+    // Pass through React elements as-is
+    if (React.isValidElement(item)) {
+      return [...items, item];
+    }
+
+    const { type } = item;
 
     // Generate Separator
     if (type === 'menu-separator') {
@@ -44,7 +49,7 @@ export function generateMenu(
     }
 
     // Generate Label
-    if (type === 'menu-label' && 'label' in item) {
+    if (type === 'menu-label') {
       return [...items, <Label key={index}>{item.label}</Label>];
     }
 
@@ -61,30 +66,25 @@ export function generateMenu(
             <SubmenuContent className={`menu ${submenuContentClass}`}>
               {React.isValidElement(submenu)
                 ? submenu
-                : generateMenu(components, submenu as MenuContents)}
+                : generateMenu(components, submenu)}
             </SubmenuContent>
           </Submenu>,
         ];
       }
 
-      return [
-        ...items,
-        <Item key={index} {...(props as ActionMenuItemProps)} />,
-      ];
+      const { type: _type, ...itemProps } = item;
+
+      return [...items, <Item key={index} {...itemProps} />];
     }
 
     // Generate ColorSelectionItem
     if (type === 'menu-color-selection-item') {
-      const { color, onSelect } = item as MenuColorSelectionItemConfig;
+      const { color, onSelect } = item;
 
       return [
         ...items,
         <ColorSelectionItem key={index} color={color} onSelect={onSelect} />,
       ];
-    }
-
-    if (React.isValidElement(item)) {
-      return [...items, item];
     }
 
     return items;

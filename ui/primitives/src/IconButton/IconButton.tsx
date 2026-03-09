@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon } from '../Icon';
 import { Tooltip, TooltipProps } from '../Tooltip';
@@ -18,7 +18,7 @@ export type IconButtonColor =
 export type IconButtonDanger = 'on-hover' | 'always';
 export type IconButtonSize = 'sm' | 'md' | 'lg';
 
-export interface IconButtonProps
+interface IconButtonBaseProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /*
    * The name of the icon to render.
@@ -35,11 +35,6 @@ export interface IconButtonProps
    * The rendered element. Defaults to 'button'.
    */
   as?: React.ElementType;
-
-  /*
-   * Accessible label announced by screen readers.
-   */
-  label: string;
 
   /*
    * Visual style.
@@ -84,6 +79,31 @@ export interface IconButtonProps
   tooltip?: Omit<TooltipProps, 'children'>;
 }
 
+export interface TranslatedLabelIconButtonProps extends IconButtonBaseProps {
+  /*
+   * Accessible label announced by screen readers.
+   * Translated via i18n before being applied.
+   */
+  label: TranslationKey;
+
+  stringLabel?: never;
+}
+
+export interface StringLabelIconButtonProps extends IconButtonBaseProps {
+  /*
+   * Accessible label announced by screen readers.
+   * Used as-is without translation, for external or
+   * dynamic strings that are not i18n keys.
+   */
+  stringLabel: string;
+
+  label?: never;
+}
+
+export type IconButtonProps =
+  | TranslatedLabelIconButtonProps
+  | StringLabelIconButtonProps;
+
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   (
     {
@@ -92,6 +112,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       as,
       className,
       label,
+      stringLabel,
       variant = 'ghost',
       color = 'neutral',
       size = 'md',
@@ -106,11 +127,14 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
     const { t } = useTranslation();
     const Component = as || 'button';
 
+    // Resolve the aria-label from either the translated or string label
+    const ariaLabel = label ? t(label) : stringLabel;
+
     const button = (
       <Component
         type="button"
         ref={ref}
-        aria-label={t(label)}
+        aria-label={ariaLabel}
         aria-pressed={active}
         disabled={disabled}
         className={propsToClass('icon-button', {

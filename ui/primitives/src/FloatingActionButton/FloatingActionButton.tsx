@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import { Icon } from '../Icon';
 import { Tooltip, TooltipProps } from '../Tooltip';
@@ -15,7 +15,7 @@ export interface FloatingActionButtonProps
   /**
    * Accessible label announced by screen readers.
    */
-  label: string;
+  label: TranslationKey;
 
   /**
    * The rendered element. Defaults to 'button'.

@@ -2,6 +2,7 @@ import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import React from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from '@minddrop/i18n';
+import { TranslatableNode } from '../types';
 import { propsToClass } from '../utils';
 import './Toast.css';
 
@@ -61,7 +62,10 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
 
 Toast.displayName = 'Toast';
 
-export interface ToastTitleProps extends ToastPrimitive.Title.Props {}
+export interface ToastTitleProps
+  extends Omit<ToastPrimitive.Title.Props, 'children'> {
+  children?: TranslatableNode;
+}
 
 export const ToastTitle = React.forwardRef<HTMLHeadingElement, ToastTitleProps>(
   ({ children, className, ...other }, ref) => {
@@ -83,7 +87,10 @@ export const ToastTitle = React.forwardRef<HTMLHeadingElement, ToastTitleProps>(
 
 ToastTitle.displayName = 'ToastTitle';
 
-export interface ToastDescriptionProps extends ToastPrimitive.Description.Props {}
+export interface ToastDescriptionProps
+  extends Omit<ToastPrimitive.Description.Props, 'children'> {
+  children?: TranslatableNode;
+}
 
 export const ToastDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -127,7 +134,10 @@ export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
 
 ToastClose.displayName = 'ToastClose';
 
-export interface ToastActionProps extends ToastPrimitive.Action.Props {}
+export interface ToastActionProps
+  extends Omit<ToastPrimitive.Action.Props, 'children'> {
+  children?: TranslatableNode;
+}
 
 export const ToastAction = React.forwardRef<HTMLButtonElement, ToastActionProps>(
   ({ children, className, ...other }, ref) => {

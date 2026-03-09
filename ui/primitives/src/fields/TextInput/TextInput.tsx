@@ -1,6 +1,6 @@
 import { Input } from '@base-ui/react/input';
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { IconButton } from '../../IconButton';
 import { TextColor, TextSize, TextWeight } from '../../Text';
 import { propsToClass } from '../../utils';
@@ -100,7 +100,7 @@ export interface TextInputProps {
   /*
    * Placeholder text. Can be an i18n key.
    */
-  placeholder?: Input.Props['placeholder'];
+  placeholder?: TranslationKey;
 
   /*
    * autoComplete attribute.
@@ -120,7 +120,7 @@ export interface TextInputProps {
   /*
    * Callback fired with the new string value on change.
    */
-  onValueChange?: Input.Props['onValueChange'];
+  onValueChange?: (value: string) => void;
 
   /*
    * Focus event handler.

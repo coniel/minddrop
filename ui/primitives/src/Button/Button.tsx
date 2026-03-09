@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { IconProp, IconRenderer } from '../IconRenderer';
 import { propsToClass } from '../utils';
 import './Button.css';
@@ -18,7 +18,7 @@ export interface ButtonBaseProps {
   /*
    * i18n key for the button label.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Visual style of the button.

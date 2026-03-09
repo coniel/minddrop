@@ -1,6 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { FC, useEffect, useState } from 'react';
 import { MenuItem, MenuItemProps } from '../Menu/MenuItem';
 import { Tooltip, TooltipProps } from '../Tooltip';
 
@@ -44,9 +43,7 @@ export function useShiftState(enabled: boolean) {
    TYPES
    ============================================================ */
 
-export interface ActionMenuItemProps
-  extends Omit<MenuItemProps, 'onClick'>,
-    Record<string, unknown> {
+export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
   /**
    * Base UI primitive component used as the outer item.
    * Defaults to Menu.Item. Pass Combobox.Item for combobox usage.
@@ -124,28 +121,17 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   textValue,
   ...other
 }) => {
-  const { t } = useTranslation();
-
   const shiftKeyDown = useShiftState(!!secondaryOnClick);
 
-  const primaryLabel = useMemo(
-    () => (typeof label === 'string' ? t(label) : label),
-    [label, t],
-  );
-  const altLabel = useMemo(
-    () =>
-      typeof secondaryLabel === 'string' ? t(secondaryLabel) : secondaryLabel,
-    [secondaryLabel, t],
-  );
-
+  // Pass labels through to MenuItem which handles translation
   const itemProps = shiftKeyDown
     ? {
-        label: altLabel ?? primaryLabel,
+        label: secondaryLabel ?? label,
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
         contentIcon,
       }
-    : { label: primaryLabel, icon, keyboardShortcut, contentIcon };
+    : { label, icon, keyboardShortcut, contentIcon };
 
   const item = (
     <Component

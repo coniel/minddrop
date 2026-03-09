@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { useTranslation } from '@minddrop/i18n';
 import { KeyboardShortcut } from '../KeyboardShortcut';
 import { Text } from '../Text';
+import { TranslatableNode } from '../types';
 import './Tooltip.css';
 
 type TooltipBaseProps = Pick<
@@ -24,15 +25,27 @@ export interface TooltipProps extends TooltipBaseProps, TooltipContentProps {
 
   /*
    * Primary content — typically the name of the action or element.
-   * Can be an i18n key.
+   * Translated via i18n when a string is provided.
    */
-  title?: React.ReactNode;
+  title?: TranslatableNode;
+
+  /*
+   * Primary content as a plain string, used as-is without
+   * translation. Takes priority over `title`.
+   */
+  stringTitle?: string;
 
   /*
    * Optional secondary content providing additional context.
-   * Can be an i18n key.
+   * Translated via i18n when a string is provided.
    */
-  description?: React.ReactNode;
+  description?: TranslatableNode;
+
+  /*
+   * Secondary content as a plain string, used as-is without
+   * translation. Takes priority over `description`.
+   */
+  stringDescription?: string;
 
   /*
    * Keyboard shortcut displayed below the title/description.
@@ -53,7 +66,9 @@ export const Tooltip: FC<TooltipProps> = ({
   onOpenChange,
   delay,
   title,
+  stringTitle,
   description,
+  stringDescription,
   keyboardShortcut,
   className,
   side = 'bottom',
@@ -64,9 +79,17 @@ export const Tooltip: FC<TooltipProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const translatedTitle = typeof title === 'string' ? t(title) : title;
-  const translatedDescription =
-    typeof description === 'string' ? t(description) : description;
+  // Translated props take precedence over string versions
+  const resolvedTitle = title
+    ? typeof title === 'string'
+      ? t(title)
+      : title
+    : stringTitle;
+  const resolvedDescription = description
+    ? typeof description === 'string'
+      ? t(description)
+      : description
+    : stringDescription;
 
   return (
     <TooltipPrimitive.Root
@@ -87,14 +110,14 @@ export const Tooltip: FC<TooltipProps> = ({
             className={['tooltip', className].filter(Boolean).join(' ')}
             {...other}
           >
-            {title && (
+            {resolvedTitle && (
               <Text as="div" size="sm" weight="medium">
-                {translatedTitle}
+                {resolvedTitle}
               </Text>
             )}
-            {description && (
+            {resolvedDescription && (
               <Text as="div" size="sm" className="tooltip-description">
-                {translatedDescription}
+                {resolvedDescription}
               </Text>
             )}
             {keyboardShortcut && (

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
 import { InputLabel } from '../fields/InputLabel';
 import {
@@ -26,7 +26,7 @@ export interface ColorSelectOption {
   /*
    * The display label. Can be an i18n key.
    */
-  label: string;
+  label: TranslationKey;
 
   /*
    * CSS class applied to the swatch element.
@@ -75,7 +75,7 @@ export interface ColorSelectProps {
   /**
    * Optional i18n label key displayed above the select.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 export const ColorSelect = ({

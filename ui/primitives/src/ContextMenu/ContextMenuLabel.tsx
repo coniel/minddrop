@@ -1,6 +1,6 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import React, { FC } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { MenuLabel } from '../Menu/MenuLabel';
 
 /* --- ContextMenuLabel ---
@@ -14,7 +14,7 @@ export interface ContextMenuLabelProps
    * Label string. Can be an i18n key. Translated internally.
    * Use children for non-string content.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 export const ContextMenuLabel: FC<ContextMenuLabelProps> = ({

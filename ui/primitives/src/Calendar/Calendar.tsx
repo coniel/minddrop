@@ -5,10 +5,11 @@ import {
   DropdownNavProps,
   DropdownProps,
 } from 'react-day-picker';
-import { useTranslation } from '@minddrop/i18n';
+import { createI18nKeyBuilder, useTranslation } from '@minddrop/i18n';
 import { IconButton } from '../IconButton';
 import { Group } from '../Layout';
 import { Select } from '../Select';
+import { SelectItem } from '../Select/SelectItem';
 import './Calendar.css';
 
 export type CalendarProps = DayPickerProps;
@@ -42,10 +43,9 @@ const CURRENT_YEAR = new Date().getFullYear();
 const START_MONTH = new Date(CURRENT_YEAR - 100, 0);
 const END_MONTH = new Date(CURRENT_YEAR + 100, 11);
 
-const YEAR_OPTIONS = Array.from({ length: 201 }, (_, i) => {
-  const year = CURRENT_YEAR - 100 + i;
-  return { value: String(year), label: String(year) };
-});
+const calendarMonthKey = createI18nKeyBuilder('calendar.months.');
+
+const YEARS = Array.from({ length: 201 }, (_, i) => CURRENT_YEAR - 100 + i);
 
 const CALENDAR_CLASS_NAMES: DayPickerProps['classNames'] = {
   root: 'calendar',
@@ -79,11 +79,9 @@ const CALENDAR_CLASS_NAMES: DayPickerProps['classNames'] = {
 };
 
 function MonthDropdown({ value, onChange }: DropdownProps) {
-  const { t } = useTranslation();
-
   const selectOptions = MONTH_KEYS.map((key, index) => ({
     value: String(index),
-    label: t(`calendar.months.${key}`),
+    label: calendarMonthKey(key),
   }));
 
   const handleChange = (newValue: string) => {
@@ -118,14 +116,19 @@ function YearDropdown({ value, onChange }: DropdownProps) {
       variant="ghost"
       size="sm"
       value={value !== undefined ? String(value) : undefined}
-      options={YEAR_OPTIONS}
       onValueChange={handleChange}
-    />
+    >
+      {YEARS.map((year) => (
+        <SelectItem key={year} value={String(year)}>
+          {year}
+        </SelectItem>
+      ))}
+    </Select>
   );
 }
 
 function PrevMonthButton({
-  'aria-label': ariaLabel,
+  'aria-label': _ariaLabel,
   children: _children,
   color: _color,
   ...props
@@ -134,7 +137,7 @@ function PrevMonthButton({
     <IconButton
       className="calendar-button-previous"
       icon="chevron-left"
-      label={ariaLabel ?? ''}
+      label="calendar.previousMonth"
       variant="ghost"
       size="sm"
       {...props}
@@ -143,7 +146,7 @@ function PrevMonthButton({
 }
 
 function NextMonthButton({
-  'aria-label': ariaLabel,
+  'aria-label': _ariaLabel,
   children: _children,
   color: _color,
   ...props
@@ -152,7 +155,7 @@ function NextMonthButton({
     <IconButton
       className="calendar-button-next"
       icon="chevron-right"
-      label={ariaLabel ?? ''}
+      label="calendar.nextMonth"
       variant="ghost"
       size="sm"
       {...props}

@@ -157,7 +157,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
         {Emoji.skinTones.map((skinTone) => (
           <IconButton
             key={skinTone.value}
-            label={t(skinTone.label)}
+            label={`emojiPicker.skinTone.${skinTone.label}`}
             onClick={() => handleSelectSkinTone(skinTone.value)}
           >
             {Emoji.getSkinToneVariant(SkinToneSelectEmoji, skinTone.value)}
@@ -167,17 +167,17 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
       <Toolbar>
         <TextField
           variant="ghost"
-          placeholder={t('filter')}
+          placeholder="emojiPicker.filter"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck={false}
           onValueChange={handleQueryChange}
         />
-        <Tooltip title={t('random')}>
+        <Tooltip title="emojiPicker.random">
           <IconButton
             icon="shuffle"
-            label="random"
+            label="emojiPicker.random"
             color="contrast"
             onClick={handleClickRandom}
           />
@@ -280,7 +280,7 @@ const EmojiButton = memo<{
   return (
     <IconButton
       className="emoji-button"
-      label={emoji.name}
+      stringLabel={emoji.name}
       onClick={handleSelect}
     >
       <EmojiWithSkinTone emoji={emoji} skinTone={skinTone} />
@@ -317,9 +317,9 @@ const SkinToneSelect: React.FC<{
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
       <PopoverTrigger>
         <div>
-          <Tooltip title={t('action')}>
+          <Tooltip title="emojiPicker.skinTone.action">
             <IconButton
-              label={t('action')}
+              label="emojiPicker.skinTone.action"
               className="open-skin-tone-popover-button"
               onClick={togglePopover}
             >
@@ -332,7 +332,7 @@ const SkinToneSelect: React.FC<{
         {Emoji.skinTones.map((skinTone) => (
           <IconButton
             key={skinTone.value}
-            label={t(skinTone.label)}
+            label={`emojiPicker.skinTone.${skinTone.label}`}
             onClick={createSelectHandler(skinTone.value)}
           >
             {Emoji.getSkinToneVariant(SkinToneSelectEmoji, skinTone.value)}

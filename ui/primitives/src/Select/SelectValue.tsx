@@ -1,5 +1,5 @@
 import { Select as SelectPrimitive } from '@base-ui/react/select';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { TextColor } from '../Text';
 import { propsToClass } from '../utils';
 
@@ -20,7 +20,7 @@ export interface SelectValueProps {
   /*
    * Placeholder text shown when no value is selected. Can be an i18n key.
    */
-  placeholder?: string;
+  placeholder?: TranslationKey;
 
   /*
    * Custom rendered value content. When provided, overrides

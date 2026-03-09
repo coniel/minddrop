@@ -1,5 +1,6 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { FC } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { DropdownMenuLabel } from './DropdownMenuLabel';
 
 /* --- DropdownMenuGroup ---
@@ -9,7 +10,7 @@ export interface DropdownMenuGroupProps extends MenuPrimitive.Group.Props {
   /*
    * Group label. Can be an i18n key. Translated internally.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 export const DropdownMenuGroup: FC<DropdownMenuGroupProps> = ({

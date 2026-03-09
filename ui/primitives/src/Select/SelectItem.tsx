@@ -1,5 +1,5 @@
 import { Select as SelectPrimitive } from '@base-ui/react/select';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Icon } from '../Icon';
 import { propsToClass } from '../utils';
 
@@ -8,7 +8,7 @@ export interface SelectItemProps {
    * The display label for the item. Can be an i18n key.
    * Ignored when `children` is provided.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * The value of the item.
@@ -44,6 +44,9 @@ export const SelectItem = ({
 }: SelectItemProps) => {
   const { t } = useTranslation();
 
+  // Resolve the displayed content from children or label
+  const resolvedChildren = children ?? (label ? t(label) : null);
+
   return (
     <SelectPrimitive.Item
       value={value}
@@ -58,7 +61,7 @@ export const SelectItem = ({
         </SelectPrimitive.ItemIndicator>
       )}
       <SelectPrimitive.ItemText className="select-item-text">
-        {children ? children : t(label || '')}
+        {resolvedChildren}
       </SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   );

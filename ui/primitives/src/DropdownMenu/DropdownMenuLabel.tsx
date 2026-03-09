@@ -1,6 +1,6 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { FC } from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { MenuLabel } from '../Menu/MenuLabel';
 
 /* --- DropdownMenuLabel ---
@@ -14,7 +14,7 @@ export interface DropdownMenuLabelProps
    * Label string. Can be an i18n key. Translated internally.
    * Use children for non-string content.
    */
-  label?: string;
+  label?: TranslationKey;
 }
 
 export const DropdownMenuLabel: FC<DropdownMenuLabelProps> = ({

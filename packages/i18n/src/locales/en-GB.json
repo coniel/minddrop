@@ -15,6 +15,7 @@
     "back": "Back",
     "cancel": "Cancel",
     "clear": "Clear",
+    "selectAll": "Select all",
     "save": "Save",
     "done": "Done",
     "delete": "Delete",
@@ -54,6 +55,7 @@
     "random": "Random",
     "filter": "Search emoji...",
     "skinTone": {
+      "action": "Change skin tone",
       "none": "None",
       "dark": "Dark skin tone",
       "mediumDark": "Medium dark skin tone",
@@ -1049,6 +1051,12 @@
       "placeholder": "Displays a web page from a URL property",
       "embed-blocked": "This site does not allow embedding"
     },
+    "view": {
+      "placeholder": "Displays a view from a collection property",
+      "viewType": {
+        "label": "View type"
+      }
+    },
     "url-display": {
       "label": "Display"
     },
@@ -1119,7 +1127,9 @@
       "thursday": "Th",
       "friday": "Fr",
       "saturday": "Sa"
-    }
+    },
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
   },
   "design-studio": {
     "labels": {
@@ -1142,12 +1152,14 @@
       "editor": "Editor",
       "badges": "Badges",
       "webview": "Web view",
+      "view": "View",
       "text-placeholder": "Text",
       "container-empty-hint": "Drop elements here",
       "group": {
         "content": "Content",
         "media": "Media",
-        "layout": "Layout"
+        "layout": "Layout",
+        "views": "Views"
       }
     },
     "mappable": {

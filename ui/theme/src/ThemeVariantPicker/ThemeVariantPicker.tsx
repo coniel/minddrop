@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   DropdownMenu,
@@ -24,8 +23,6 @@ const variantIcons: Record<string, UiIconName> = {
  * (light, dark, or system).
  */
 export const ThemeVariantPicker: React.FC = () => {
-  const { t } = useTranslation({ keyPrefix: 'theme.appearance' });
-
   // Get the current variant setting and resolve it
   const variant = Theme.useVariant();
   const resolvedVariant = Theme.resolveVariant(variant);
@@ -37,17 +34,25 @@ export const ThemeVariantPicker: React.FC = () => {
 
   return (
     <DropdownMenu
-      trigger={<IconButton icon={triggerIcon} label={t('label')} />}
+      trigger={<IconButton icon={triggerIcon} label="theme.appearance.label" />}
     >
       <DropdownMenuRadioGroup
         value={variant}
         onValueChange={(value) => Theme.setVariant(value as ThemeVariant)}
       >
-        <DropdownMenuRadioItem value="light" label={t('light')} icon="sun" />
-        <DropdownMenuRadioItem value="dark" label={t('dark')} icon="moon" />
+        <DropdownMenuRadioItem
+          value="light"
+          label="theme.appearance.light"
+          icon="sun"
+        />
+        <DropdownMenuRadioItem
+          value="dark"
+          label="theme.appearance.dark"
+          icon="moon"
+        />
         <DropdownMenuRadioItem
           value="system"
-          label={t('system')}
+          label="theme.appearance.system"
           icon="monitor"
         />
       </DropdownMenuRadioGroup>

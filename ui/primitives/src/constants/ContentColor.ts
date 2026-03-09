@@ -1,10 +1,11 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { ContentColor } from '@minddrop/ui-theme';
 
 export interface ColorValue {
   /**
    * The i18n label key.
    */
-  labelKey: string;
+  labelKey: TranslationKey;
 
   /**
    * The color value.

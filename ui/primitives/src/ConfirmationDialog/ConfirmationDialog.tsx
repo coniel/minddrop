@@ -1,5 +1,6 @@
 import { AlertDialog } from '@base-ui/react/alert-dialog';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import { TranslatableNode } from '../types';
 import { Button } from '../Button';
 import './ConfirmationDialog.css';
 
@@ -7,23 +8,23 @@ export interface ConfirmationDialogProps extends AlertDialog.Root.Props {
   /*
    * Label for the confirm button. Can be an i18n key.
    */
-  confirmLabel: string;
+  confirmLabel: TranslationKey;
 
   /*
    * Label for the cancel button. Can be an i18n key.
    * @default 'actions.cancel'
    */
-  cancelLabel?: string;
+  cancelLabel?: TranslationKey;
 
   /*
    * Dialog title. Accepts a string (i18n key) or a React node.
    */
-  title: React.ReactNode;
+  title: TranslatableNode;
 
   /*
    * Dialog message body. Accepts a string (i18n key) or a React node.
    */
-  message: React.ReactNode;
+  message: TranslatableNode;
 
   /*
    * When true, styles the confirm button as a destructive action.

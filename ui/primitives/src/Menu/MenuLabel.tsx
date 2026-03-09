@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { Text } from '../Text';
 import { propsToClass } from '../utils';
 
@@ -7,7 +7,7 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
   /*
    * i18n key for the label text. Falls back to children if not provided.
    */
-  label?: string;
+  label?: TranslationKey;
 
   /*
    * Label content. Used when no i18n key is provided.

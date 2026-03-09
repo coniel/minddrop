@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { propsToClass } from '../utils';
 import './Text.css';
 
@@ -26,7 +26,7 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /*
    * i18n key. Takes precedence over children.
    */
-  text?: string;
+  text?: TranslationKey;
 
   /*
    * The rendered element. Defaults to 'span', or 'p' when paragraph is true.

@@ -1,4 +1,5 @@
 import React from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { FieldError } from '../fields/FieldError';
 import { FieldLabel } from '../fields/FieldLabel';
 import { FieldRoot } from '../fields/FieldRoot';
@@ -32,8 +33,8 @@ export interface NumberFieldProps
     | 'onBlur'
   > {
   className?: string;
-  label?: string;
-  error?: string;
+  label?: TranslationKey;
+  error?: TranslationKey;
 }
 
 export const NumberField = React.forwardRef<HTMLDivElement, NumberFieldProps>(

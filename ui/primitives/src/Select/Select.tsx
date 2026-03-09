@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { TextColor } from '../Text';
 import { SelectIcon } from './SelectIcon';
 import { SelectItem } from './SelectItem';
@@ -14,7 +15,7 @@ export interface SelectOption<TValue extends string | number> {
   /*
    * The display label for the option. Can be an i18n key.
    */
-  label: string;
+  label: TranslationKey;
 
   /*
    * The value of the option.
@@ -43,7 +44,7 @@ export interface SelectProps<TValue extends string | number> {
   /*
    * Placeholder text shown when no value is selected. Can be an i18n key.
    */
-  placeholder?: string;
+  placeholder?: TranslationKey;
 
   /*
    * The options to render as select items.

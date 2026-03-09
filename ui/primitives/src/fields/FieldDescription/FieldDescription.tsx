@@ -1,13 +1,13 @@
 import { Field } from '@base-ui/react/field';
 import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { TranslationKey, useTranslation } from '@minddrop/i18n';
 import { Text, TextColor, TextSize } from '../../Text';
 
 export interface FieldDescriptionProps extends Field.Description.Props {
   /*
    * i18n key for the description text. Falls back to children if not provided.
    */
-  description?: string;
+  description?: TranslationKey;
 
   /*
    * Description content. Used when no i18n key is provided.
