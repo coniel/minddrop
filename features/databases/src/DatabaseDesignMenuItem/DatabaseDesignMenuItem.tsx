@@ -6,6 +6,7 @@ import {
   OpenConfirmationDialogEventData,
 } from '@minddrop/events';
 import { i18n } from '@minddrop/i18n';
+import { UiIconName } from '@minddrop/ui-icons';
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -75,16 +76,11 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
     <MenuItem
       muted
       icon={icon(design)}
-      label={design.name}
       onClick={handleOpenDesignStudio}
       actions={
         <MenuItemDropdownMenu>
           <DropdownMenuTrigger>
-            <IconButton
-              size="sm"
-              icon="more-vertical"
-              label="actions.manage"
-            />
+            <IconButton size="sm" icon="more-vertical" label="actions.manage" />
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
             <DropdownMenuPositioner side="bottom" align="start">
@@ -114,11 +110,13 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
           </DropdownMenuPortal>
         </MenuItemDropdownMenu>
       }
-    />
+    >
+      {design.name}
+    </MenuItem>
   );
 };
 
-function icon(design: Design) {
+function icon(design: Design): UiIconName | undefined {
   if (design.type === 'page') {
     return 'layout';
   } else if (design.type === 'card') {

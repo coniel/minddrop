@@ -186,6 +186,10 @@
     "collection": {
       "name": "Collection",
       "description": "A collection of referenced entries."
+    },
+    "query": {
+      "name": "Query",
+      "description": "A saved query."
     }
   },
   "databases": {
@@ -196,7 +200,9 @@
       "addDesign": "Add design",
       "browseDesigns": "Browse designs",
       "addView": "Add view",
-      "viewSettings": "View settings"
+      "viewSettings": "View settings",
+      "newEntry": "New entry",
+      "configuration": "Configuration"
     },
     "entries": {
       "actions": {
@@ -1235,6 +1241,7 @@
       "searchProperties": "Search properties...",
       "addProperty": "Add property",
       "dateGroup": "Date",
+      "collectionGroup": "Collection",
       "zoom": "Zoom",
       "highlightMapped": "Show mapped",
       "highlightUnmapped": "Show unmapped",

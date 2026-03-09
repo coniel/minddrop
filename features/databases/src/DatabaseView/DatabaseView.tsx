@@ -180,7 +180,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
           <Toolbar>
             <IconButton
               icon="plus"
-              label="New"
+              label="databases.actions.newEntry"
               color="neutral"
               onClick={handleClickNewEntry}
             />
@@ -190,7 +190,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   ? 'panel-right-close'
                   : 'panel-right-open'
               }
-              label="Properties"
+              label="databases.actions.configuration"
               color="neutral"
               onClick={toggleConfigurationPanel}
             />
@@ -272,8 +272,8 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   <IconButton
                     className="view-settings-button"
                     size="sm"
-                    label={t('databases.actions.viewSettings')}
-                    tooltip={{ title: t('databases.actions.viewSettings') }}
+                    label="databases.actions.viewSettings"
+                    tooltip={{ title: 'databases.actions.viewSettings' }}
                     icon="settings-2"
                   />
                 </DropdownMenuTrigger>

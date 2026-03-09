@@ -199,6 +199,10 @@ declare module 'i18next' {
             name: string;
             description: string;
           };
+          query: {
+            name: string;
+            description: string;
+          };
         };
         databases: {
           propertyFilesDirName: string;
@@ -209,6 +213,8 @@ declare module 'i18next' {
             browseDesigns: string;
             addView: string;
             viewSettings: string;
+            newEntry: string;
+            configuration: string;
           };
           entries: {
             actions: {
@@ -1247,6 +1253,7 @@ declare module 'i18next' {
             searchProperties: string;
             addProperty: string;
             dateGroup: string;
+            collectionGroup: string;
             zoom: string;
             highlightMapped: string;
             highlightUnmapped: string;

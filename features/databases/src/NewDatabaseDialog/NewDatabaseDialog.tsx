@@ -6,7 +6,7 @@ import {
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
-import { i18n } from '@minddrop/i18n';
+import { TranslationKey, i18n } from '@minddrop/i18n';
 import { PropertiesSchema } from '@minddrop/properties';
 import {
   Button,
@@ -139,17 +139,13 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
     [setFieldValue],
   );
 
-  let databaseTypeName = '';
-  let databaseDescription = '';
-  let databasenamePlaceholder = '';
-  let entryNamePlaceholder = '';
+  let databaseTypeName: TranslationKey | null = null;
+  let databaseDescription: TranslationKey | null = null;
   let properties: PropertiesSchema = [];
 
   if (selectedTemplate) {
     databaseTypeName = selectedTemplate.name;
-    databaseDescription = selectedTemplate.description || '';
-    databasenamePlaceholder = selectedTemplate.name;
-    entryNamePlaceholder = selectedTemplate.entryName;
+    databaseDescription = selectedTemplate.description || null;
     properties = selectedTemplate.properties || [];
   }
 
@@ -194,8 +190,10 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
           {selectedTemplate && (
             <div className="content">
               <div className="description">
-                <Heading text={databaseTypeName} />
-                <Text paragraph color="muted" text={databaseDescription} />
+                {databaseTypeName && <Heading text={databaseTypeName} />}
+                {databaseDescription && (
+                  <Text paragraph color="muted" text={databaseDescription} />
+                )}
               </div>
               <div className="fields">
                 <Group gap={2} align="end">
@@ -216,14 +214,14 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                   <TextField
                     variant="filled"
                     label="databases.form.name.label"
-                    placeholder={databasenamePlaceholder}
+                    placeholder="databases.form.name.placeholder"
                     {...fieldProps.name}
                   />
                 </Group>
                 <TextField
                   variant="filled"
                   label="databases.form.entryName.label"
-                  placeholder={entryNamePlaceholder}
+                  placeholder="databases.form.entryName.placeholder"
                   {...fieldProps.entryName}
                 />
               </div>

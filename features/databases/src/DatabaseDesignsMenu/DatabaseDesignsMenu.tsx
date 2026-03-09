@@ -1,6 +1,10 @@
 import { Databases } from '@minddrop/databases';
 import { DesignType, Designs } from '@minddrop/designs';
+import { createI18nKeyBuilder } from '@minddrop/i18n';
+import { UiIconName } from '@minddrop/ui-icons';
 import { MenuGroup, MenuItem, MenuLabel } from '@minddrop/ui-primitives';
+
+const designTypeI18nKey = createI18nKeyBuilder('designs.');
 
 export interface DatabaseDesignsMenuProps
   extends React.HTMLProps<HTMLDivElement> {
@@ -12,7 +16,7 @@ export interface DatabaseDesignsMenuProps
 
 const DESIGN_TYPES: DesignType[] = ['page', 'card', 'list'];
 
-const designTypeIconMap: Record<string, string> = {
+const designTypeIconMap: Record<string, UiIconName> = {
   page: 'layout',
   card: 'layout-grid',
   list: 'layout-list',
@@ -54,7 +58,7 @@ export const DatabaseDesignsMenu: React.FC<DatabaseDesignsMenuProps> = ({
 
         return (
           <MenuGroup key={type}>
-            <MenuLabel label={`designs.${type}.name`} />
+            <MenuLabel label={designTypeI18nKey(type, 'name')} />
             {typeDesigns.map((design) => (
               <MenuItem
                 key={design.id}

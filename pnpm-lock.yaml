@@ -282,6 +282,9 @@ importers:
       '@minddrop/ui-drag-and-drop':
         specifier: workspace:*
         version: link:../../ui/drag-and-drop
+      '@minddrop/ui-icons':
+        specifier: workspace:*
+        version: link:../../ui/icons
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
@@ -307,6 +310,9 @@ importers:
 
   features/designs:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
@@ -352,6 +358,9 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/views':
+        specifier: workspace:*
+        version: link:../../packages/views
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
