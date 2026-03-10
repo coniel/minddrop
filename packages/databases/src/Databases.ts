@@ -12,6 +12,7 @@ export { updateDatabaseProperty as updateProperty } from './updateDatabaseProper
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
 export { filterValidDatabaseFiles as filterFiles } from './utils';
+export { readWorkspaceDatabases } from './readWorkspaceDatabases';
 export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
 export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatabaseDesignPropertyMap';
 export { removeDatabaseDesignPropertyMap as removeDesignPropertyMap } from './removeDatabaseDesignPropertyMap';

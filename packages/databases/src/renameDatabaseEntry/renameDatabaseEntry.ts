@@ -2,7 +2,10 @@ import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
 import { titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabaseEntryRenamedEvent } from '../events';
+import {
+  DatabaseEntryRenamedEvent,
+  DatabaseEntryRenamedEventData,
+} from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
@@ -111,7 +114,10 @@ export async function renameDatabaseEntry<
   writeDatabaseEntry(id);
 
   // Dispatch an entry rename event
-  Events.dispatch(DatabaseEntryRenamedEvent, renamedDatabaseEntry);
+  Events.dispatch<DatabaseEntryRenamedEventData>(DatabaseEntryRenamedEvent, {
+    original: entry,
+    updated: renamedDatabaseEntry,
+  });
 
   // Return the renamed entry
   return renamedDatabaseEntry;
