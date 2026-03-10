@@ -3,5 +3,6 @@ export * from './getBackgroundColorStyle';
 export * from './getBorderColorStyle';
 export * from './getContentColorCss';
 export * from './isLeafElement';
+export * from './isPropertyCompatibleWithElement';
 export * from './isValidDesignStudioDrop';
 export * from './reconstructTree';

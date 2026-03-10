@@ -1,15 +1,13 @@
 import {
-  ContainerElement,
-  DesignElement,
   ELEMENT_GROUPS,
   PropertyTypeElementMap,
-  RootElement,
   elementConfigs,
   elementIconMap,
   elementLabelMap,
 } from '@minddrop/designs';
 import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from '@minddrop/properties';
+import { ViewDataSourceType } from '@minddrop/views';
 
 // -- Design Studio constants --
 
@@ -53,7 +51,38 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
   'last-modified': 'properties.lastModified.name',
   file: 'properties.file.name',
   collection: 'properties.collection.name',
+  // TODO: remove @ts-expect-error once query property type is added
+  // @ts-expect-error query property type not yet defined
+  query: 'properties.query.name',
 };
+
+/**
+ * Maps view data source types to their corresponding property
+ * types. Used to determine which property types a view element
+ * supports based on the view type's supported data sources.
+ */
+export const dataSourcePropertyTypeMap: Partial<
+  Record<ViewDataSourceType, PropertyType>
+> = {
+  collection: 'collection',
+  // TODO: remove @ts-expect-error once query property type is added
+  // @ts-expect-error query property type not yet defined
+  query: 'query',
+};
+
+/**
+ * Reverse of dataSourcePropertyTypeMap. Maps property types back
+ * to their corresponding data source types. Used to check whether
+ * a view element's view type supports a given property type.
+ */
+export const propertyTypeDataSourceMap: Partial<
+  Record<PropertyType, ViewDataSourceType>
+> = Object.fromEntries(
+  Object.entries(dataSourcePropertyTypeMap).map(([source, propType]) => [
+    propType,
+    source,
+  ]),
+);
 
 // -- Design Property Mapping constants --
 
@@ -63,38 +92,3 @@ export const propertyTypeLabelMap: Record<PropertyType, TranslationKey> = {
  * from the property list onto design elements.
  */
 export const DatabasePropertiesDataKey = 'database-properties';
-
-/**
- * Checks whether a property type is compatible with a given
- * design element. For image/file properties, containers and
- * root elements are only compatible when they have a background
- * image set.
- */
-export function isPropertyCompatibleWithElement(
-  propertyType: PropertyType,
-  element: DesignElement | RootElement,
-): boolean {
-  // Static elements cannot be mapped to properties
-  if (element.static) {
-    return false;
-  }
-
-  const compatibleTypes = PropertyTypeElementMap[propertyType];
-
-  if (!compatibleTypes || !compatibleTypes.includes(element.type)) {
-    return false;
-  }
-
-  // Image/file properties require containers/root to have a background image
-  const isImageProperty = propertyType === 'image' || propertyType === 'file';
-  const isContainerOrRoot =
-    element.type === 'container' || element.type === 'root';
-
-  if (isImageProperty && isContainerOrRoot) {
-    const style = (element as ContainerElement | RootElement).style;
-
-    return !!style.backgroundImage;
-  }
-
-  return true;
-}

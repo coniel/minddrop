@@ -12,6 +12,7 @@ import {
   RootElement,
   TextElement,
   UrlElement,
+  ViewElement,
   WebviewElement,
 } from '@minddrop/designs';
 
@@ -36,6 +37,7 @@ export type FlatImageViewerElement = ImageViewerElement & Parent;
 export type FlatUrlElement = UrlElement & Parent;
 export type FlatIconElement = IconElement & Parent;
 export type FlatEditorElement = EditorElement & Parent;
+export type FlatViewElement = ViewElement & Parent;
 export type FlatWebviewElement = WebviewElement & Parent;
 
 export type FlatDesignElement =

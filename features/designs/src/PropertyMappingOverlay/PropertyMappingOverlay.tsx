@@ -13,7 +13,7 @@ import {
 } from '../DesignElements';
 import { useDesignPropertyMappingStore } from '../DesignPropertyMappingStore';
 import { PropertyDropTarget } from '../PropertyDropTarget';
-import { isPropertyCompatibleWithElement } from '../constants';
+import { isPropertyCompatibleWithElement } from '../utils';
 import './PropertyMappingOverlay.css';
 
 export interface PropertyMappingOverlayProps {

@@ -187,6 +187,51 @@ export const DefaultWebviewElementStyle: WebviewElementStyle = {
   'margin-left': 0,
 };
 
+export interface ViewElementStyle
+  extends Pick<
+    ContainerStyles,
+    | 'borderStyle'
+    | 'borderColor'
+    | 'borderWidth'
+    | 'borderRadiusTopLeft'
+    | 'borderRadiusTopRight'
+    | 'borderRadiusBottomRight'
+    | 'borderRadiusBottomLeft'
+  > {
+  width: number;
+  height: number;
+  maxWidth: number;
+  maxHeight: number;
+  widthUnit: SizeUnit;
+  maxWidthUnit: SizeUnit;
+  backgroundColor: string;
+  'margin-top': number;
+  'margin-right': number;
+  'margin-bottom': number;
+  'margin-left': number;
+}
+
+export const DefaultViewElementStyle: ViewElementStyle = {
+  borderStyle: DefaultContainerStyles.borderStyle,
+  borderColor: DefaultContainerStyles.borderColor,
+  borderWidth: DefaultContainerStyles.borderWidth,
+  borderRadiusTopLeft: 0,
+  borderRadiusTopRight: 0,
+  borderRadiusBottomRight: 0,
+  borderRadiusBottomLeft: 0,
+  backgroundColor: 'transparent',
+  width: 100,
+  height: 0,
+  maxWidth: 100,
+  maxHeight: 0,
+  widthUnit: '%',
+  maxWidthUnit: '%',
+  'margin-top': 0,
+  'margin-right': 0,
+  'margin-bottom': 0,
+  'margin-left': 0,
+};
+
 export interface ImageViewerElementStyle
   extends Pick<
       ContainerStyles,

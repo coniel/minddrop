@@ -30,6 +30,7 @@ import {
 import { NumberDesignElement, NumberElementStyleEditor } from './number';
 import { TextDesignElement, TextElementStyleEditor } from './text';
 import { UrlDesignElement, UrlElementStyleEditor } from './url';
+import { ViewDesignElement, ViewElementStyleEditor } from './view';
 import { WebviewDesignElement, WebviewElementStyleEditor } from './webview';
 
 /******************************************************************************
@@ -155,6 +156,11 @@ const elementUIs: ElementUIConfig[] = [
     type: 'webview',
     DisplayComponent: asDisplay(WebviewDesignElement),
     StyleEditorComponent: WebviewElementStyleEditor,
+  },
+  {
+    type: 'view',
+    DisplayComponent: asDisplay(ViewDesignElement),
+    StyleEditorComponent: ViewElementStyleEditor,
   },
   {
     type: 'container',

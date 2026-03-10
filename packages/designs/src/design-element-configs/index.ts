@@ -26,6 +26,8 @@ import { TextElementConfig } from './text';
 import type { TextElement } from './text';
 import { UrlElementConfig } from './url';
 import type { UrlElement } from './url';
+import { ViewElementConfig } from './view';
+import type { ViewElement } from './view';
 import { WebviewElementConfig } from './webview';
 import type { WebviewElement } from './webview';
 
@@ -37,6 +39,7 @@ export * from './placeholder-generators';
 export * from './badges';
 export * from './text';
 export * from './formatted-text';
+export * from './view';
 export * from './number';
 export * from './date';
 export * from './url';
@@ -66,7 +69,8 @@ export type LeafDesignElement =
   | ImageViewerElement
   | IconElement
   | EditorElement
-  | WebviewElement;
+  | WebviewElement
+  | ViewElement;
 
 /**
  * Union of all design element types.
@@ -89,7 +93,8 @@ export type DesignElementType =
   | 'image-viewer'
   | 'icon'
   | 'editor'
-  | 'webview';
+  | 'webview'
+  | 'view';
 
 /**
  * Strips the `id` field from an element type to produce
@@ -112,6 +117,7 @@ export type DesignElementTemplate =
   | Template<IconElement>
   | Template<EditorElement>
   | Template<WebviewElement>
+  | Template<ViewElement>
   | Template<ContainerElement>;
 
 /******************************************************************************
@@ -133,6 +139,7 @@ export const elementConfigs: DesignElementConfig[] = [
   ImageViewerElementConfig,
   IconElementConfig,
   WebviewElementConfig,
+  ViewElementConfig,
   ContainerElementConfig,
   RootElementConfig,
 ];
@@ -168,7 +175,7 @@ export const elementLabelMap: Record<string, TranslationKey> =
  * Element groups for the design studio palette, derived
  * from each config's group property.
  */
-export const ELEMENT_GROUPS: { label: string; types: string[] }[] = (
+export const ELEMENT_GROUPS: { label: TranslationKey; types: string[] }[] = (
   ['content', 'media', 'layout'] as ElementGroup[]
 ).map((group) => ({
   label: `design-studio.elements.group.${group}`,

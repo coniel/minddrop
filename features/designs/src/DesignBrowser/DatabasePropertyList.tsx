@@ -32,6 +32,7 @@ const ElementGroups: {
   { key: 'badges', label: 'design-studio.elements.badges' },
   { key: 'image', label: 'design-studio.elements.image' },
   { key: 'icon', label: 'design-studio.elements.icon' },
+  { key: 'view', label: 'design-property-mapping.browser.collectionGroup' },
 ];
 
 export interface DatabasePropertyListProps {

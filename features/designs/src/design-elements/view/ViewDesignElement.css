@@ -1,0 +1,26 @@
+.design-view-element {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.design-view-element-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  color: var(--text-tertiary);
+}
+
+.design-view-element-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+}
+
+.design-view-element-text {
+  opacity: 0.7;
+}

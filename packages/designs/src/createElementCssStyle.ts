@@ -8,6 +8,7 @@ import {
   ImageElementStyle,
   ImageViewerElementStyle,
   TextElementStyle,
+  ViewElementStyle,
   WebviewElementStyle,
 } from './styles';
 import type { StyleCategory } from './types';
@@ -333,6 +334,15 @@ export function createWebviewCssStyle(
   };
 }
 
+export function createViewCssStyle(style: ViewElementStyle): CSSProperties {
+  return {
+    ...resolveSizingCss(style, '100%'),
+    ...resolveBorderCss(style),
+    backgroundColor: getBackgroundColorCss(style.backgroundColor),
+    ...resolveMarginCss(style),
+  };
+}
+
 export function createImageViewerCssStyle(
   style: ImageViewerElementStyle,
 ): CSSProperties {
@@ -446,6 +456,7 @@ const styleCategoryFns: Record<StyleCategory, (style: never) => CSSProperties> =
     ) => CSSProperties,
     editor: createEditorCssStyle as (style: never) => CSSProperties,
     webview: createWebviewCssStyle as (style: never) => CSSProperties,
+    view: createViewCssStyle as (style: never) => CSSProperties,
     container: createContainerCssStyle as (style: never) => CSSProperties,
   };
 

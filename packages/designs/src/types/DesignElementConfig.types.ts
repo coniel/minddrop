@@ -17,6 +17,7 @@ export type StyleCategory =
   | 'image-viewer'
   | 'editor'
   | 'webview'
+  | 'view'
   | 'container';
 
 /**
