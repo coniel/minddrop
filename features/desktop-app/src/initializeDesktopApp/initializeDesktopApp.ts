@@ -10,6 +10,7 @@ import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
+import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
@@ -37,6 +38,9 @@ export async function initializeDesktopApp(): Promise<void> {
   }
 
   initialized = true;
+
+  // Register search translations
+  initializeSearch();
 
   // Register listeners that persist and hydrate app-config
   // stores to JSON files in the AppData directory

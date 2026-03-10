@@ -14,6 +14,7 @@ import {
 import { MindDropApiProvider } from '@minddrop/extensions';
 import { DatabasesFeature } from '@minddrop/feature-databases';
 import { DesignsFeature } from '@minddrop/feature-designs';
+import { SearchFeature } from '@minddrop/feature-search';
 import { EmojiSkinTone, IconsProvider } from '@minddrop/ui-icons';
 import { ConfirmationDialog, TooltipProvider } from '@minddrop/ui-primitives';
 import { AppSidebar } from './AppSidebar';
@@ -63,6 +64,7 @@ export const DesktopApp: React.FC = () => {
           <DatabasesFeature />
           <ConfirmationDialogFeature />
           <DesignsFeature />
+          <SearchFeature />
           <DevTools />
         </MindDropApiProvider>
       </IconsProvider>

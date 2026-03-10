@@ -1260,6 +1260,10 @@ declare module 'i18next' {
             mappingCounter: string;
           };
         };
+        search: {
+          open: string;
+          placeholder: string;
+        };
         theme: {
           appearance: {
             action: string;

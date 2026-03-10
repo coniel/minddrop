@@ -1,0 +1,1 @@
+export { filterMatchedProperties } from './filterMatchedProperties';
