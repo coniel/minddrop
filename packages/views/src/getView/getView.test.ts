@@ -17,4 +17,12 @@ describe('getView', () => {
 
     expect(view).toEqual(view_gallery_1);
   });
+
+  it('returns null when throwOnNotFound is false and view does not exist', () => {
+    expect(getView('missing-view', false)).toBeNull();
+  });
+
+  it('does not throw when throwOnNotFound is false', () => {
+    expect(() => getView('missing-view', false)).not.toThrow();
+  });
 });
