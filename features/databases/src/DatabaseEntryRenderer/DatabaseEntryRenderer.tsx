@@ -9,7 +9,7 @@ import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { DesignRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
-import { OpenDatabaseEntryEvent, OpenDatabaseEntryEventData } from '../events';
+import { OpenDatabaseEntryViewEvent, OpenDatabaseEntryViewEventData } from '../events';
 import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
@@ -31,7 +31,7 @@ export interface DatabaseEntryRendererProps {
 
   /**
    * Optional click handler. When provided, this is called instead
-   * of dispatching the default OpenDatabaseEntryEvent.
+   * of dispatching the default OpenDatabaseEntryViewEvent.
    */
   onClick?: (entryId: string) => void;
 }
@@ -63,14 +63,28 @@ const Entry: React.FC<EntryProps> = ({
   onClick,
 }) => {
   const database = Databases.use(entry.database);
+
   // Use the specified design if provided, otherwise fall back
-  // to the database's default design for the given type
+  // to the database's default design for the given type.
   const design = useMemo(
     () =>
       (designId ? Designs.get(designId, false) : null) ||
       Databases.getDefaultDesign(entry.database, designType),
     [designId, entry.database, designType],
   );
+
+  // Get the property map for this design (element ID -> property name)
+  const propertyMap = useMemo(
+    () => Databases.getDesignPropertyMap(entry.database, design.id) || {},
+    [entry.database, design.id],
+  );
+
+  // Get display-ready property values (image paths, virtual view IDs, etc.)
+  const propertyValues = useMemo(
+    () => DatabaseEntries.displayPropertyValues(entry.id, design, propertyMap),
+    [entry.id, design, propertyMap],
+  );
+
   const onUpdatePropertyValue = useCallback(
     (name: string, value: PropertyValue) => {
       DatabaseEntries.updateProperty(entry.id, name, value);
@@ -79,7 +93,7 @@ const Entry: React.FC<EntryProps> = ({
   );
 
   // Call the custom onClick handler if provided, otherwise
-  // dispatch the default open entry event
+  // dispatch the default open entry event.
   const onOpenEntry = useCallback(() => {
     if (onClick) {
       onClick(entry.id);
@@ -87,7 +101,7 @@ const Entry: React.FC<EntryProps> = ({
       return;
     }
 
-    Events.dispatch<OpenDatabaseEntryEventData>(OpenDatabaseEntryEvent, {
+    Events.dispatch<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
       entryId: entry.id,
     });
   }, [entry.id, onClick]);
@@ -103,35 +117,12 @@ const Entry: React.FC<EntryProps> = ({
     [onOpenEntry],
   );
 
-  // Get the property map for this design (element ID → property name)
-  const propertyMap = useMemo(
-    () => Databases.getDesignPropertyMap(entry.database, design.id) || {},
-    [entry.database, design.id],
-  );
-
   if (!database) {
     return null;
   }
 
-  const propertyValues: Record<string, PropertyValue> = {
-    Title: entry.title,
-    ...entry.properties,
-  };
-
-  database.properties.forEach((property) => {
-    const value = propertyValues[property.name];
-
-    if (property.type === 'image' && typeof value === 'string') {
-      propertyValues[property.name] = DatabaseEntries.propertyFilePath(
-        entry.id,
-        property.name,
-        value,
-      );
-    }
-  });
-
   // Page entries are not clickable items, so they should not
-  // have button role or keyboard activation
+  // have button role or keyboard activation.
   const isClickable = designType !== 'page';
 
   return (

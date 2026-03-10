@@ -13,8 +13,8 @@ import {
   EventListenerId,
   MainDatabaseEntryViewName,
   MainDatabaseViewName,
-  OpenDatabaseEntryEvent,
-  OpenDatabaseEntryEventData,
+  OpenDatabaseEntryViewEvent,
+  OpenDatabaseEntryViewEventData,
   OpenDatabaseViewEvent,
   OpenDatabaseViewEventData,
 } from '../events';
@@ -68,8 +68,8 @@ export const DatabasesFeature: React.FC = () => {
 
     // Listen for database entry open events and open the entry
     // in the appropriate mode
-    Events.addListener<OpenDatabaseEntryEventData>(
-      OpenDatabaseEntryEvent,
+    Events.addListener<OpenDatabaseEntryViewEventData>(
+      OpenDatabaseEntryViewEvent,
       DatabaseEntriesEventListenerId,
       ({ data }) => {
         // Resolve the open mode, falling back to the database default
@@ -100,7 +100,7 @@ export const DatabasesFeature: React.FC = () => {
       );
       Events.removeListener(OpenDatabaseViewEvent, EventListenerId);
       Events.removeListener(
-        OpenDatabaseEntryEvent,
+        OpenDatabaseEntryViewEvent,
         DatabaseEntriesEventListenerId,
       );
     };

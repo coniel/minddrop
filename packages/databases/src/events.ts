@@ -1,5 +1,5 @@
 import { PropertySchema } from '@minddrop/properties';
-import { Database, DatabaseEntry } from './types';
+import { Database, DatabaseEntry, DatabaseEntryOpenMode } from './types';
 
 // Database events
 export const DatabaseCreatedEvent = 'databases:database:created';
@@ -62,6 +62,36 @@ export interface DatabasePropertyRenamedEventData {
    * The new property name.
    */
   newName: string;
+}
+
+// Navigation events
+export const OpenDatabaseViewEvent = 'databases:view:open';
+
+export interface OpenDatabaseViewEventData {
+  /**
+   * The ID of the database to open.
+   */
+  databaseId: string;
+
+  /**
+   * Whether to open the configuration panel.
+   */
+  configurationPanelOpen?: boolean;
+}
+
+export const OpenDatabaseEntryViewEvent = 'database-entries:entry:open';
+
+export interface OpenDatabaseEntryViewEventData {
+  /**
+   * The ID of the database entry to open.
+   */
+  entryId: string;
+
+  /**
+   * How to open the entry. If not provided, falls back to the
+   * database's `entryOpenMode` setting.
+   */
+  openMode?: DatabaseEntryOpenMode;
 }
 
 // Entry events
