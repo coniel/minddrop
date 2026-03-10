@@ -9,7 +9,10 @@ import { Designs } from '@minddrop/designs';
 import { Events } from '@minddrop/events';
 import { DesignRenderer } from '@minddrop/feature-designs';
 import { PropertyValue } from '@minddrop/properties';
-import { OpenDatabaseEntryViewEvent, OpenDatabaseEntryViewEventData } from '../events';
+import {
+  OpenDatabaseEntryViewEvent,
+  OpenDatabaseEntryViewEventData,
+} from '../events';
 import './DatabaseEntryRenderer.css';
 
 export interface DatabaseEntryRendererProps {
@@ -101,9 +104,12 @@ const Entry: React.FC<EntryProps> = ({
       return;
     }
 
-    Events.dispatch<OpenDatabaseEntryViewEventData>(OpenDatabaseEntryViewEvent, {
-      entryId: entry.id,
-    });
+    Events.dispatch<OpenDatabaseEntryViewEventData>(
+      OpenDatabaseEntryViewEvent,
+      {
+        entryId: entry.id,
+      },
+    );
   }, [entry.id, onClick]);
 
   // Handle keyboard activation (Enter/Space) for accessibility

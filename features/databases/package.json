@@ -16,6 +16,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@minddrop/collections": "workspace:*",
     "@minddrop/core": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",

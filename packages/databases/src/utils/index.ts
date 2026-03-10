@@ -10,3 +10,6 @@ export * from './getPropertyFilePath';
 export * from './parseVirtualCollectionId';
 export * from './virtualCollectionId';
 export * from './virtualCollectionName';
+export * from './virtualViewId';
+export * from './createEntryVirtualViews';
+export * from './entryDisplayPropertyValues';
