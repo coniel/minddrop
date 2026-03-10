@@ -20,6 +20,7 @@ export * from './IconRenderer';
 export * from './KeyboardShortcut';
 export * from './Layout';
 export * from './Menu';
+export * from './hooks';
 export * from './Panel';
 export * from './Popover';
 export * from './ScrollArea';
