@@ -1,5 +1,6 @@
 import { BrowserWindow, Screen, Updater, Utils } from 'electrobun/bun';
 import { myWebviewRPC } from './bun-rpc';
+import { initializeSearch } from './search';
 import './server';
 
 type WindowState = {
@@ -153,4 +154,12 @@ mainWindow.on('resize', (event: any) => {
   const display = getDisplayForPosition(state.x, state.y);
   state.displayId = String(display.id);
   saveState();
+});
+
+// --- Initialize search ---
+
+// Start search indexing in parallel with renderer initialization.
+// Runs autonomously on the Bun side by reading workspace files directly.
+initializeSearch().catch((error) => {
+  console.error('[search] Initialization failed:', error);
 });

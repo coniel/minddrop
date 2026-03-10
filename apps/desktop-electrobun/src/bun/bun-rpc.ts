@@ -2,6 +2,14 @@ import { BrowserView } from 'electrobun/bun';
 import { WebviewRPC } from '../types/WebviewRPC.types';
 import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
 import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
+import {
+  handleSearchDatabaseSync,
+  handleSearchFullText,
+  handleSearchReindexDatabase,
+  handleSearchRenameProperty,
+  handleSearchStructured,
+  handleSearchSync,
+} from './search';
 
 export type RpcHandler = typeof fileSystemRpcHandlers;
 
@@ -12,6 +20,12 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
     requests: {
       ...fileSystemRpcHandlers,
       ...backEndUtilsRpcHandlers,
+      searchFullText: handleSearchFullText,
+      searchStructured: handleSearchStructured,
+      searchSync: handleSearchSync,
+      searchDatabaseSync: handleSearchDatabaseSync,
+      searchReindexDatabase: handleSearchReindexDatabase,
+      searchRenameProperty: handleSearchRenameProperty,
     },
     // When the browser sends a message we can handle it
     // in the main bun process

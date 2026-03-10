@@ -1,6 +1,12 @@
 import { RPCSchema } from 'electrobun';
 import { BaseDirectory } from '@minddrop/file-system';
 import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
+import type { QueryPropertyFilter, QueryPropertySort } from '@minddrop/queries';
+import type {
+  FullTextSearchResult,
+  SearchEntryData,
+  StructuredSearchResult,
+} from '@minddrop/search';
 
 export type WebviewRPC = {
   bun: RPCSchema<{
@@ -109,6 +115,59 @@ export type WebviewRPC = {
       };
       showItemInFolder: {
         params: { path: string };
+        response: void;
+      };
+      searchFullText: {
+        params: {
+          workspaceId: string;
+          query: string;
+          limit?: number;
+          databaseId?: string;
+        };
+        response: FullTextSearchResult[];
+      };
+      searchStructured: {
+        params: {
+          workspaceId: string;
+          databaseId?: string;
+          filters: QueryPropertyFilter[];
+          sort: QueryPropertySort[];
+          limit?: number;
+          offset?: number;
+        };
+        response: StructuredSearchResult;
+      };
+      searchSync: {
+        params: {
+          workspaceId: string;
+          action: 'upsert' | 'delete';
+          entries?: SearchEntryData[];
+          entryIds?: string[];
+        };
+        response: void;
+      };
+      searchDatabaseSync: {
+        params: {
+          workspaceId: string;
+          action: 'upsert' | 'delete';
+          database: { id: string; name: string; path: string; icon: string };
+        };
+        response: void;
+      };
+      searchReindexDatabase: {
+        params: {
+          workspaceId: string;
+          databaseId: string;
+        };
+        response: void;
+      };
+      searchRenameProperty: {
+        params: {
+          workspaceId: string;
+          databaseId: string;
+          oldName: string;
+          newName: string;
+        };
         response: void;
       };
     };

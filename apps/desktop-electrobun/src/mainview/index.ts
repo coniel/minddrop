@@ -1,10 +1,12 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { WebviewRPC } from '../types';
+import { initializeSearchSync } from './initializeSearchSync';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
 import {
-  registerFileSystemAdapter,
   handleWatchEvent,
+  registerFileSystemAdapter,
 } from './registerFileSystemAdapter';
+import { registerSearchAdapterRpc } from './registerSearchAdapter';
 
 export const rpc = Electroview.defineRPC<WebviewRPC>({
   // Disable RPC timeout to allow for long-running operations
@@ -28,3 +30,5 @@ const electrobun = new Electrobun.Electroview({ rpc });
 
 registerFileSystemAdapter(electrobun.rpc);
 registerBackEndUtilsAdapter(electrobun.rpc);
+registerSearchAdapterRpc(electrobun.rpc);
+initializeSearchSync(electrobun.rpc);

@@ -1,0 +1,1 @@
+export { searchFullText } from './searchFullText';

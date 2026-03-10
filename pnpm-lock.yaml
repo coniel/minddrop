@@ -93,21 +93,42 @@ importers:
 
   apps/desktop-electrobun:
     dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
       '@minddrop/feature-desktop-app':
         specifier: workspace:*
         version: link:../../features/desktop-app
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../../packages/queries
+      '@minddrop/search':
+        specifier: workspace:*
+        version: link:../../packages/search
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
       electrobun:
         specifier: 1.14.4
         version: 1.14.4
+      minisearch:
+        specifier: ^7.1.1
+        version: 7.2.0
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -240,6 +261,9 @@ importers:
 
   features/databases:
     dependencies:
+      '@minddrop/collections':
+        specifier: workspace:*
+        version: link:../../packages/collections
       '@minddrop/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -407,6 +431,9 @@ importers:
       '@minddrop/feature-designs':
         specifier: workspace:*
         version: link:../designs
+      '@minddrop/feature-search':
+        specifier: workspace:*
+        version: link:../search
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../../packages/file-system
@@ -416,6 +443,9 @@ importers:
       '@minddrop/notebook-view':
         specifier: workspace:*
         version: link:../../views/notebook-view
+      '@minddrop/search':
+        specifier: workspace:*
+        version: link:../../packages/search
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
@@ -526,6 +556,43 @@ importers:
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  features/search:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@minddrop/search':
+        specifier: workspace:*
+        version: link:../../packages/search
+      '@minddrop/ui-primitives':
+        specifier: workspace:*
+        version: link:../../ui/primitives
+      '@minddrop/workspaces':
+        specifier: workspace:*
+        version: link:../../packages/workspaces
+      react:
+        specifier: ^19.1.0
+        version: 19.2.4
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
@@ -1181,6 +1248,28 @@ importers:
       svg-parser:
         specifier: ^2.0.4
         version: 2.0.4
+
+  packages/search:
+    dependencies:
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../properties
+      '@minddrop/queries':
+        specifier: workspace:*
+        version: link:../queries
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/selection:
     dependencies:
@@ -6277,6 +6366,10 @@ packages:
   /minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  /minisearch@7.2.0:
+    resolution: {integrity: sha512-dqT2XBYUOZOiC5t2HRnwADjhNS2cecp9u+TJRiJ1Qp/f5qjkeT5APcGPjHw+bz89Ms8Jp+cG4AlE+QZ/QnDglg==}
+    dev: false
 
   /mockdate@3.0.5:
     resolution: {integrity: sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==}
