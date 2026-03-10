@@ -1,6 +1,26 @@
+import {
+  DatabaseCreatedEvent,
+  DatabaseDeletedEvent,
+  DatabasePropertyAddedEvent,
+  DatabasePropertyRemovedEvent,
+  DatabasePropertyRenamedEvent,
+  DatabaseRenamedEvent,
+  DatabaseUpdatedEvent,
+} from './events';
 import { handleDataTransfer } from './handleDataTransfer';
 
+export const events = {
+  created: DatabaseCreatedEvent,
+  updated: DatabaseUpdatedEvent,
+  deleted: DatabaseDeletedEvent,
+  renamed: DatabaseRenamedEvent,
+  propertyAdded: DatabasePropertyAddedEvent,
+  propertyRemoved: DatabasePropertyRemovedEvent,
+  propertyRenamed: DatabasePropertyRenamedEvent,
+} as const;
+
 export { DatabasesStore as Store } from './DatabasesStore';
+export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
 export { createDatabase as create } from './createDatabase';
 export { getDatabase as get } from './getDatabase';
