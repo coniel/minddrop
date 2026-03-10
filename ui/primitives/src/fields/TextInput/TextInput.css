@@ -136,7 +136,7 @@
    context via textSize/weight/color props.
    ------------------------------------------------------------ */
 
-.text-input-variant-ghost {
+.text-input.text-input.text-input-variant-ghost {
   padding: 0;
   border: none;
   background: none;

@@ -108,6 +108,21 @@ export interface TextInputProps {
   autoComplete?: Input.Props['autoComplete'];
 
   /*
+   * autoCorrect attribute.
+   */
+  autoCorrect?: string;
+
+  /*
+   * autoCapitalize attribute.
+   */
+  autoCapitalize?: string;
+
+  /*
+   * spellCheck attribute.
+   */
+  spellCheck?: boolean;
+
+  /*
    * HTML name attribute.
    */
   name?: string;
@@ -141,7 +156,9 @@ export interface TextInputProps {
 export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
+      autoCapitalize,
       autoComplete,
+      autoCorrect,
       className,
       clearable,
       color,
@@ -158,6 +175,7 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       onValueChange,
       placeholder,
       size = 'lg',
+      spellCheck,
       textSize,
       trailing,
       type = 'text',
@@ -221,7 +239,10 @@ export const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           value={value}
           defaultValue={defaultValue}
           placeholder={placeholder ? t(placeholder) : undefined}
+          autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
+          autoCorrect={autoCorrect}
+          spellCheck={spellCheck}
           onBlur={onBlur}
           onChange={onChange}
           onFocus={onFocus}
