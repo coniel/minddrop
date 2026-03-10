@@ -42,7 +42,7 @@ export interface QueryPropertySort {
   direction: 'ascending' | 'descending';
 }
 
-interface QueryBasicPropertyFilter {
+export interface QueryBasicPropertyFilter {
   /**
    * The property to filter by.
    */
@@ -54,7 +54,7 @@ interface QueryBasicPropertyFilter {
   operator: 'is-empty' | 'is-not-empty';
 }
 
-interface QueryStringPropertyFilter {
+export interface QueryStringPropertyFilter {
   /**
    * The property to filter by.
    */
@@ -71,7 +71,7 @@ interface QueryStringPropertyFilter {
   operator: 'equals' | 'not-equals' | 'contains' | 'not-contains';
 }
 
-interface QueryNumberPropertyFilter {
+export interface QueryNumberPropertyFilter {
   /**
    * The property to filter by.
    */
@@ -88,7 +88,7 @@ interface QueryNumberPropertyFilter {
   operator: 'equals' | 'not-equals' | 'greater-than' | 'less-than';
 }
 
-interface QueryDatePropertyFilter {
+export interface QueryDatePropertyFilter {
   /**
    * The property to filter by.
    */
@@ -105,7 +105,7 @@ interface QueryDatePropertyFilter {
   operator: 'equals' | 'not-equals' | 'before' | 'after';
 }
 
-interface QueryBooleanPropertyFilter {
+export interface QueryBooleanPropertyFilter {
   /**
    * The property to filter by.
    */
@@ -122,7 +122,7 @@ interface QueryBooleanPropertyFilter {
   operator: 'true' | 'false';
 }
 
-type QueryPropertyFilter =
+export type QueryPropertyFilter =
   | QueryBasicPropertyFilter
   | QueryStringPropertyFilter
   | QueryNumberPropertyFilter
