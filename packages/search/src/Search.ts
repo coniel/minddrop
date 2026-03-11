@@ -3,7 +3,7 @@ import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from './constants';
 export { registerSearchAdapter as registerAdapter } from './SearchAdapter';
 export type { SearchAdapter } from './SearchAdapter';
 export { registerSqliteAdapter } from './SqliteAdapter';
-export { initializeSearchSystem as initialize } from './sendSearchData';
+export { initializeSearch as initialize } from './initializeSearch';
 export { searchFullText as fullText } from './searchFullText';
 export {
   handleSearchInitialize,
