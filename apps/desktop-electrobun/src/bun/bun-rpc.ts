@@ -5,6 +5,7 @@ import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
 import {
   handleSearchDatabaseSync,
   handleSearchFullText,
+  handleSearchInitialize,
   handleSearchReindexDatabase,
   handleSearchRenameProperty,
   handleSearchStructured,
@@ -20,6 +21,7 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
     requests: {
       ...fileSystemRpcHandlers,
       ...backEndUtilsRpcHandlers,
+      searchInitialize: handleSearchInitialize,
       searchFullText: handleSearchFullText,
       searchStructured: handleSearchStructured,
       searchSync: handleSearchSync,

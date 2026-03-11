@@ -1,7 +1,6 @@
 import type {
   DatabaseCreatedEventData,
   DatabaseDeletedEventData,
-  DatabaseEntry,
   DatabaseEntryCreatedEventData,
   DatabaseEntryDeletedEventData,
   DatabaseEntryRenamedEventData,
@@ -12,56 +11,23 @@ import type {
   DatabaseRenamedEventData,
   DatabaseUpdatedEventData,
 } from '@minddrop/databases';
+import type { DatabaseEntry } from '@minddrop/databases';
+import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { PropertyType } from '@minddrop/properties';
-import type { SearchEntryData, SearchEntryProperty } from '@minddrop/search';
 import { Workspaces } from '@minddrop/workspaces';
-
-// Database event names
-const ENTRY_CREATED = 'databases:entry:created';
-const ENTRY_UPDATED = 'databases:entry:updated';
-const ENTRY_DELETED = 'databases:entry:deleted';
-const ENTRY_RENAMED = 'databases:entry:renamed';
-const DATABASE_CREATED = 'databases:database:created';
-const DATABASE_UPDATED = 'databases:database:updated';
-const DATABASE_DELETED = 'databases:database:deleted';
-const DATABASE_RENAMED = 'databases:database:renamed';
-const PROPERTY_ADDED = 'databases:property:added';
-const PROPERTY_REMOVED = 'databases:property:removed';
-const PROPERTY_RENAMED = 'databases:property:renamed';
+import { getSearchAdapter } from './SearchAdapter';
+import type { SearchEntryData } from './types';
+import { convertEntryToSearchData } from './utils';
 
 /**
  * Registers event listeners that forward database entry CRUD events
- * to the Bun process via RPC for incremental search index sync.
+ * to the back-end via the search adapter for incremental search
+ * index sync.
  */
-export function initializeSearchSync(rpc: {
-  request: {
-    searchSync: (params: {
-      workspaceId: string;
-      action: 'upsert' | 'delete';
-      entries?: SearchEntryData[];
-      entryIds?: string[];
-    }) => Promise<void>;
-    searchDatabaseSync: (params: {
-      workspaceId: string;
-      action: 'upsert' | 'delete';
-      database: { id: string; name: string; path: string; icon: string };
-    }) => Promise<void>;
-    searchReindexDatabase: (params: {
-      workspaceId: string;
-      databaseId: string;
-    }) => Promise<void>;
-    searchRenameProperty: (params: {
-      workspaceId: string;
-      databaseId: string;
-      oldName: string;
-      newName: string;
-    }) => Promise<void>;
-  };
-}): void {
+export function initializeSearchSync(): void {
   // Forward entry created events
   Events.on<DatabaseEntryCreatedEventData>(
-    ENTRY_CREATED,
+    DatabaseEntries.events.created,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -70,9 +36,13 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      const entry = convertEntryToSearchData(data);
+      const entry = toSearchEntry(data);
 
-      rpc.request.searchSync({
+      if (!entry) {
+        return;
+      }
+
+      getSearchAdapter().searchSync({
         workspaceId,
         action: 'upsert',
         entries: [entry],
@@ -82,7 +52,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward entry updated events
   Events.on<DatabaseEntryUpdatedEventData>(
-    ENTRY_UPDATED,
+    DatabaseEntries.events.updated,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -91,9 +61,13 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      const entry = convertEntryToSearchData(data.updated);
+      const entry = toSearchEntry(data.updated);
 
-      rpc.request.searchSync({
+      if (!entry) {
+        return;
+      }
+
+      getSearchAdapter().searchSync({
         workspaceId,
         action: 'upsert',
         entries: [entry],
@@ -103,7 +77,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward entry deleted events
   Events.on<DatabaseEntryDeletedEventData>(
-    ENTRY_DELETED,
+    DatabaseEntries.events.deleted,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -112,7 +86,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchSync({
+      getSearchAdapter().searchSync({
         workspaceId,
         action: 'delete',
         entryIds: [data.id],
@@ -122,7 +96,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward entry renamed events
   Events.on<DatabaseEntryRenamedEventData>(
-    ENTRY_RENAMED,
+    DatabaseEntries.events.renamed,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -131,9 +105,13 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      const entry = convertEntryToSearchData(data.updated);
+      const entry = toSearchEntry(data.updated);
 
-      rpc.request.searchSync({
+      if (!entry) {
+        return;
+      }
+
+      getSearchAdapter().searchSync({
         workspaceId,
         action: 'upsert',
         entries: [entry],
@@ -143,7 +121,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward database created events
   Events.on<DatabaseCreatedEventData>(
-    DATABASE_CREATED,
+    Databases.events.created,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -152,7 +130,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchDatabaseSync({
+      getSearchAdapter().searchDatabaseSync({
         workspaceId,
         action: 'upsert',
         database: {
@@ -167,7 +145,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward database updated events (name, icon, etc.)
   Events.on<DatabaseUpdatedEventData>(
-    DATABASE_UPDATED,
+    Databases.events.updated,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -176,7 +154,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchDatabaseSync({
+      getSearchAdapter().searchDatabaseSync({
         workspaceId,
         action: 'upsert',
         database: {
@@ -191,7 +169,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward database deleted events
   Events.on<DatabaseDeletedEventData>(
-    DATABASE_DELETED,
+    Databases.events.deleted,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -200,7 +178,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchDatabaseSync({
+      getSearchAdapter().searchDatabaseSync({
         workspaceId,
         action: 'delete',
         database: {
@@ -215,7 +193,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward database renamed events
   Events.on<DatabaseRenamedEventData>(
-    DATABASE_RENAMED,
+    Databases.events.renamed,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -224,7 +202,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchDatabaseSync({
+      getSearchAdapter().searchDatabaseSync({
         workspaceId,
         action: 'upsert',
         database: {
@@ -239,7 +217,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward property added events (re-index all entries in the database)
   Events.on<DatabasePropertyAddedEventData>(
-    PROPERTY_ADDED,
+    Databases.events.propertyAdded,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -248,7 +226,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchReindexDatabase({
+      getSearchAdapter().searchReindexDatabase({
         workspaceId,
         databaseId: data.database.id,
       });
@@ -257,7 +235,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward property removed events (re-index all entries in the database)
   Events.on<DatabasePropertyRemovedEventData>(
-    PROPERTY_REMOVED,
+    Databases.events.propertyRemoved,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -266,7 +244,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchReindexDatabase({
+      getSearchAdapter().searchReindexDatabase({
         workspaceId,
         databaseId: data.database.id,
       });
@@ -275,7 +253,7 @@ export function initializeSearchSync(rpc: {
 
   // Forward property renamed events (rename in SQLite + re-index MiniSearch)
   Events.on<DatabasePropertyRenamedEventData>(
-    PROPERTY_RENAMED,
+    Databases.events.propertyRenamed,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -284,7 +262,7 @@ export function initializeSearchSync(rpc: {
         return;
       }
 
-      rpc.request.searchRenameProperty({
+      getSearchAdapter().searchRenameProperty({
         workspaceId,
         databaseId: data.database.id,
         oldName: data.oldName,
@@ -294,6 +272,7 @@ export function initializeSearchSync(rpc: {
   );
 }
 
+// TODO: Use Workspaces.getCurrent() instead of getWorkspaceId() once it's available
 /**
  * Returns the current workspace ID. Resolved lazily at
  * event time since workspaces may not be loaded when the
@@ -311,88 +290,16 @@ function getWorkspaceId(): string | null {
 }
 
 /**
- * Converts a DatabaseEntry to a SearchEntryData object for
- * the search sync RPC.
+ * Converts a DatabaseEntry to SearchEntryData by looking up
+ * the database from the store. Returns null if the database
+ * is not found.
  */
-function convertEntryToSearchData(entry: DatabaseEntry): SearchEntryData {
-  const properties: SearchEntryProperty[] = [];
+function toSearchEntry(entry: DatabaseEntry): SearchEntryData | null {
+  const database = Databases.get(entry.database);
 
-  // Convert each property to the search format
-  for (const [name, value] of Object.entries(entry.properties)) {
-    if (value === null || value === undefined) {
-      continue;
-    }
-
-    // Infer the property type from the value
-    const type = inferPropertyType(value);
-
-    properties.push({
-      name,
-      type,
-      value: normalizeValue(type, value),
-    });
-  }
-
-  return {
-    id: entry.id,
-    databaseId: entry.database,
-    path: entry.path,
-    title: entry.title,
-    created: entry.created.getTime(),
-    lastModified: entry.lastModified.getTime(),
-    properties,
-  };
-}
-
-/**
- * Infers the property type from a value for the search entry.
- */
-function inferPropertyType(value: unknown): PropertyType {
-  if (Array.isArray(value)) {
-    return 'collection';
-  }
-
-  if (typeof value === 'boolean') {
-    return 'toggle';
-  }
-
-  if (typeof value === 'number') {
-    return 'number';
-  }
-
-  if (value instanceof Date) {
-    return 'date';
-  }
-
-  return 'text';
-}
-
-/**
- * Normalizes a property value for the search sync format.
- */
-function normalizeValue(
-  type: PropertyType,
-  value: unknown,
-): string | number | boolean | string[] | null {
-  if (value === null || value === undefined) {
+  if (!database) {
     return null;
   }
 
-  if (type === 'collection' && Array.isArray(value)) {
-    return value.map(String);
-  }
-
-  if (type === 'toggle') {
-    return Boolean(value);
-  }
-
-  if (type === 'number') {
-    return Number(value);
-  }
-
-  if (value instanceof Date) {
-    return value.getTime();
-  }
-
-  return String(value);
+  return convertEntryToSearchData(entry, database);
 }

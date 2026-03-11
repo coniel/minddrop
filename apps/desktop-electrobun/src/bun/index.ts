@@ -158,8 +158,6 @@ mainWindow.on('resize', (event: any) => {
 
 // --- Initialize search ---
 
-// Start search indexing in parallel with renderer initialization.
-// Runs autonomously on the Bun side by reading workspace files directly.
-initializeSearch().catch((error) => {
-  console.error('[search] Initialization failed:', error);
-});
+// Register search platform adapters (SQLite, config path).
+// Actual data population is driven by the frontend via RPC.
+initializeSearch();

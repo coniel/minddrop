@@ -1,4 +1,5 @@
 export {
+  handleSearchInitialize,
   handleSearchFullText,
   handleSearchStructured,
   handleSearchSync,
@@ -7,3 +8,5 @@ export {
   handleSearchRenameProperty,
 } from './searchRpc';
 export { initializeSearch } from './initializeSearch';
+export { createBunSqliteAdapter } from './registerSqliteAdapter';
+export { registerBunFileSystemAdapter } from './registerFileSystemAdapter';

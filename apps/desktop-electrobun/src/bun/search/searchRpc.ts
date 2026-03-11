@@ -1,55 +1,39 @@
+import type { Database } from '@minddrop/databases';
 import type { QueryPropertyFilter, QueryPropertySort } from '@minddrop/queries';
-import { compileQuery } from '@minddrop/search';
 import type {
   FullTextSearchResult,
   SearchEntryData,
   StructuredSearchResult,
 } from '@minddrop/search';
-import {
-  deleteDatabase as deleteDbRecord,
-  deleteEntries,
-  getSearchDb,
-  renameProperty,
-  upsertDatabase as upsertDbRecord,
-  upsertEntries,
-} from './searchDb';
-import {
-  reindexDatabaseEntries,
-  removeIndexDatabase,
-  removeIndexEntries,
-  searchFullText as searchFullTextIndex,
-  upsertIndexDatabase,
-  upsertIndexEntries,
-} from './searchIndex';
+import { Search } from '@minddrop/search';
+
+/**
+ * RPC handler for initializing search data from the frontend.
+ * Receives databases; entries are read from disk.
+ */
+export async function handleSearchInitialize(params: {
+  workspaceId: string;
+  databases: Database[];
+}): Promise<void> {
+  await Search.handleSearchInitialize(params);
+}
 
 /**
  * RPC handler for full-text fuzzy search via MiniSearch.
  */
-export async function handleSearchFullText({
-  workspaceId,
-  query,
-  limit,
-  databaseId,
-}: {
+export async function handleSearchFullText(params: {
   workspaceId: string;
   query: string;
   limit?: number;
   databaseId?: string;
 }): Promise<FullTextSearchResult[]> {
-  return searchFullTextIndex(workspaceId, query, limit, databaseId);
+  return Search.handleSearchFullText(params);
 }
 
 /**
  * RPC handler for structured property-based queries via SQLite.
  */
-export async function handleSearchStructured({
-  workspaceId,
-  databaseId,
-  filters,
-  sort,
-  limit,
-  offset,
-}: {
+export async function handleSearchStructured(params: {
   workspaceId: string;
   databaseId?: string;
   filters: QueryPropertyFilter[];
@@ -57,143 +41,50 @@ export async function handleSearchStructured({
   limit?: number;
   offset?: number;
 }): Promise<StructuredSearchResult> {
-  const database = getSearchDb(workspaceId);
-
-  // Compile the query filters and sorts into SQL
-  const compiled = compileQuery(filters, sort, {
-    databaseId,
-    limit,
-    offset,
-  });
-
-  // Execute the main query
-  const rows = database.prepare(compiled.sql).all(...compiled.params) as {
-    id: string;
-    database_id: string;
-    path: string;
-    title: string;
-    created: number;
-    last_modified: number;
-  }[];
-
-  // Execute the count query
-  const countRow = database
-    .prepare(compiled.countSql)
-    .get(...compiled.countParams) as { total: number };
-
-  return {
-    entries: rows.map((row) => ({
-      id: row.id,
-      databaseId: row.database_id,
-      path: row.path,
-      title: row.title,
-      created: row.created,
-      lastModified: row.last_modified,
-    })),
-    total: countRow.total,
-  };
+  return Search.handleSearchStructured(params);
 }
 
 /**
  * RPC handler for incremental sync after entry changes.
- * Updates both SQLite and MiniSearch.
  */
-export async function handleSearchSync({
-  workspaceId,
-  action,
-  entries,
-  entryIds,
-}: {
+export async function handleSearchSync(params: {
   workspaceId: string;
   action: 'upsert' | 'delete';
   entries?: SearchEntryData[];
   entryIds?: string[];
 }): Promise<void> {
-  if (action === 'upsert' && entries?.length) {
-    // Update SQLite
-    upsertEntries(workspaceId, entries);
-
-    // Update MiniSearch
-    upsertIndexEntries(
-      workspaceId,
-      entries.map((entry) => ({
-        id: entry.id,
-        title: entry.title,
-        databaseId: entry.databaseId,
-      })),
-    );
-  }
-
-  if (action === 'delete' && entryIds?.length) {
-    // Update SQLite (CASCADE handles property cleanup)
-    deleteEntries(workspaceId, entryIds);
-
-    // Update MiniSearch
-    removeIndexEntries(workspaceId, entryIds);
-  }
+  Search.handleSearchSync(params);
 }
 
 /**
- * RPC handler for syncing database metadata (create/update/delete).
- * On upsert, also re-indexes all entry documents belonging to the
- * database so their stored databaseName/databaseIcon stay current.
+ * RPC handler for syncing database metadata.
  */
-export async function handleSearchDatabaseSync({
-  workspaceId,
-  action,
-  database,
-}: {
+export async function handleSearchDatabaseSync(params: {
   workspaceId: string;
   action: 'upsert' | 'delete';
   database: { id: string; name: string; path: string; icon: string };
 }): Promise<void> {
-  if (action === 'upsert') {
-    upsertDbRecord(workspaceId, database);
-    upsertIndexDatabase(workspaceId, database);
-
-    // Re-index entry documents so databaseName/databaseIcon
-    // are up to date
-    reindexDatabaseEntries(workspaceId, database.id);
-  }
-
-  if (action === 'delete') {
-    deleteDbRecord(workspaceId, database.id);
-    removeIndexDatabase(workspaceId, database.id);
-  }
+  Search.handleSearchDatabaseSync(params);
 }
 
 /**
  * RPC handler for re-indexing all entries in a database.
- * Used when the property schema changes (add/remove/rename).
  */
-export async function handleSearchReindexDatabase({
-  workspaceId,
-  databaseId,
-}: {
+export async function handleSearchReindexDatabase(params: {
   workspaceId: string;
   databaseId: string;
 }): Promise<void> {
-  reindexDatabaseEntries(workspaceId, databaseId);
+  Search.handleSearchReindexDatabase(params);
 }
 
 /**
- * RPC handler for renaming a property across all entries in
- * a database. Updates SQLite and re-indexes MiniSearch.
+ * RPC handler for renaming a property across all entries.
  */
-export async function handleSearchRenameProperty({
-  workspaceId,
-  databaseId,
-  oldName,
-  newName,
-}: {
+export async function handleSearchRenameProperty(params: {
   workspaceId: string;
   databaseId: string;
   oldName: string;
   newName: string;
 }): Promise<void> {
-  // Rename the property in SQLite
-  renameProperty(workspaceId, databaseId, oldName, newName);
-
-  // Re-index MiniSearch documents with the updated property data
-  reindexDatabaseEntries(workspaceId, databaseId);
+  Search.handleSearchRenameProperty(params);
 }

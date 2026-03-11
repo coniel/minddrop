@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import type { FullTextSearchResult } from '@minddrop/search';
-import { searchFullText } from '@minddrop/search';
+import { type FullTextSearchResult, Search } from '@minddrop/search';
 import { Workspaces } from '@minddrop/workspaces';
 
 export interface UseSearchResult {
@@ -52,7 +51,8 @@ export function useSearch(): UseSearchResult {
     }
 
     try {
-      const searchResults = await searchFullText(workspaceId, value, 20);
+      const searchResults = await Search.fullText(workspaceId, value, 20);
+      console.log('searchResults', searchResults);
       setResults(searchResults);
     } catch (error) {
       console.error('[search]', error);

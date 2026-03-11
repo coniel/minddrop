@@ -1,9 +1,7 @@
-import { Utils } from 'electrobun/bun';
 import MiniSearch, { type Options as MiniSearchOptions } from 'minisearch';
-import fsp from 'node:fs/promises';
-import type { FullTextSearchResult } from '@minddrop/search';
-import type { FullTextMatchedProperty } from '@minddrop/search';
-import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from '@minddrop/search';
+import { Fs } from '@minddrop/file-system';
+import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from './constants';
+import { getSearchConfigPath } from './searchConfig';
 import {
   getAllDatabases,
   getAllEntries,
@@ -13,6 +11,8 @@ import {
   getEntryTextContent,
   getVersion,
 } from './searchDb';
+import type { FullTextSearchResult } from './types';
+import type { FullTextMatchedProperty } from './types';
 
 interface SearchDocument {
   id: string;
@@ -30,7 +30,7 @@ interface SearchDocument {
 const indexes = new Map<string, MiniSearch<SearchDocument>>();
 
 // Per-workspace persist timers for debounced saves
-const persistTimers = new Map<string, Timer>();
+const persistTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
 // Debounce delay for persisting the index to disk (ms)
 const PERSIST_DEBOUNCE_MS = 5000;
@@ -39,7 +39,7 @@ const PERSIST_DEBOUNCE_MS = 5000;
  * Returns the file path for the persisted MiniSearch index.
  */
 function getIndexPath(workspaceId: string): string {
-  return `${Utils.paths.config}/MindDrop/search/${workspaceId}/search-index.json`;
+  return `${getSearchConfigPath()}/${workspaceId}/search-index.json`;
 }
 
 // Shared MiniSearch configuration used for both creating new
@@ -86,7 +86,7 @@ export async function initializeSearchIndex(
 
   // Try loading persisted index
   try {
-    const raw = await Bun.file(indexPath).text();
+    const raw = await Fs.readTextFile(indexPath);
     const persisted = JSON.parse(raw) as {
       version: number;
       index: object;
@@ -181,7 +181,7 @@ export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
 /**
  * Performs a full-text fuzzy search across the workspace index.
  */
-export function searchFullText(
+export function searchFullTextIndex(
   workspaceId: string,
   query: string,
   limit = 20,
@@ -454,15 +454,12 @@ function findMatchedProperties(
   queryTerms: string[],
 ): FullTextMatchedProperty[] {
   const propertyValues = getEntryPropertyValues(workspaceId, entryId);
-  const matched: FullTextMatchedProperty[] = [];
-  const seenNames = new Set<string>();
+
+  // Group matched values by property name so multi-value
+  // properties (select, collection) show all matching values
+  const matchesByName = new Map<string, { type: string; values: string[] }>();
 
   for (const property of propertyValues) {
-    // Skip if we already matched this property name
-    if (seenNames.has(property.name)) {
-      continue;
-    }
-
     const lowerValue = property.value.toLowerCase();
 
     // Find all query terms that match this property value
@@ -470,22 +467,39 @@ function findMatchedProperties(
       lowerValue.includes(term),
     );
 
-    if (matchingTerms.length > 0) {
-      let value: string;
-
-      // For long text properties, extract a snippet around the first match
-      if (
-        LONG_TEXT_TYPES.has(property.type) &&
-        property.value.length > SNIPPET_THRESHOLD
-      ) {
-        value = extractSnippet(property.value, matchingTerms);
-      } else {
-        value = highlightAllMatches(property.value, matchingTerms);
-      }
-
-      matched.push({ name: property.name, type: property.type, value });
-      seenNames.add(property.name);
+    if (matchingTerms.length === 0) {
+      continue;
     }
+
+    let value: string;
+
+    // For long text properties, extract a snippet around the first match
+    if (
+      LONG_TEXT_TYPES.has(property.type) &&
+      property.value.length > SNIPPET_THRESHOLD
+    ) {
+      value = extractSnippet(property.value, matchingTerms);
+    } else {
+      value = highlightAllMatches(property.value, matchingTerms);
+    }
+
+    const existing = matchesByName.get(property.name);
+
+    if (existing) {
+      existing.values.push(value);
+    } else {
+      matchesByName.set(property.name, {
+        type: property.type,
+        values: [value],
+      });
+    }
+  }
+
+  // Build the result, joining multiple values with a comma
+  const matched: FullTextMatchedProperty[] = [];
+
+  for (const [name, { type, values }] of matchesByName) {
+    matched.push({ name, type, value: values.join(', ') });
   }
 
   return matched;
@@ -579,7 +593,7 @@ function highlightAllMatches(text: string, terms: string[]): string {
  * Persists the MiniSearch index to disk along with the current
  * SQLite version for validation on reload.
  */
-async function persistIndex(workspaceId: string): Promise<void> {
+export async function persistIndex(workspaceId: string): Promise<void> {
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
@@ -593,8 +607,13 @@ async function persistIndex(workspaceId: string): Promise<void> {
   });
 
   const indexPath = getIndexPath(workspaceId);
-  await fsp.mkdir(indexPath.replace(/\/[^/]+$/, ''), { recursive: true });
-  await Bun.write(indexPath, data);
+
+  // Ensure the directory exists
+  const dirPath = indexPath.replace(/\/[^/]+$/, '');
+  await Fs.ensureDir(dirPath);
+
+  // Write the index file
+  await Fs.writeTextFile(indexPath, data);
 }
 
 /**

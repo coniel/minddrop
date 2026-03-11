@@ -12,6 +12,7 @@ import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
+import { Search } from '@minddrop/search';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
@@ -75,6 +76,9 @@ export async function initializeDesktopApp(): Promise<void> {
   await Views.initialize();
   await Databases.initialize();
   await DatabaseEntries.initialize();
+
+  // Initialize search indexing and incremental sync
+  Search.initialize();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();

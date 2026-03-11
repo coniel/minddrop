@@ -1,16 +1,17 @@
-import { Database } from 'bun:sqlite';
-import { Utils } from 'electrobun/bun';
-import fsp from 'node:fs/promises';
-import type { SearchEntryData, SearchEntryProperty } from '@minddrop/search';
-import { FUZZY_SEARCH_EXCLUDED_PROPERTY_TYPES } from '@minddrop/search';
+import { Fs } from '@minddrop/file-system';
+import { getSqliteAdapter } from './SqliteAdapter';
+import { EXCLUDED_TYPES_SQL } from './constants';
+import { getSearchConfigPath } from './searchConfig';
+import type { SearchEntryData, SearchEntryProperty } from './types';
+import type { SqliteDatabase, SqliteStatement } from './types';
 
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQLite database is dropped and rebuilt from scratch.
-export const SEARCH_SCHEMA_VERSION = 2;
+export const SEARCH_SCHEMA_VERSION = 3;
 
 // Per-workspace SQLite database instances
-const databases = new Map<string, Database>();
+const databases = new Map<string, SqliteDatabase>();
 
 // SQL schema for creating tables
 const SCHEMA_SQL = `
@@ -51,6 +52,7 @@ const SCHEMA_SQL = `
   CREATE TABLE IF NOT EXISTS entry_property_values (
     entry_id       TEXT NOT NULL,
     property_name  TEXT NOT NULL,
+    property_type  TEXT NOT NULL,
     value_text     TEXT NOT NULL,
     FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE CASCADE
   );
@@ -76,17 +78,19 @@ const SCHEMA_SQL = `
   );
 `;
 
-// Property types that map to value_text
+// Property types that map to value_text in entry_properties
 const TEXT_PROPERTY_TYPES = new Set([
   'text',
   'formatted-text',
-  'select',
   'url',
   'icon',
   'file',
   'image',
   'title',
 ]);
+
+// Property types stored in entry_property_values (multi-value)
+const MULTI_VALUE_PROPERTY_TYPES = new Set(['collection', 'select']);
 
 // Property types that map to value_integer (epoch ms or 0/1)
 const INTEGER_PROPERTY_TYPES = new Set([
@@ -100,7 +104,7 @@ const INTEGER_PROPERTY_TYPES = new Set([
  * Returns the directory path for a workspace's search database.
  */
 function getSearchDbDir(workspaceId: string): string {
-  return `${Utils.paths.config}/MindDrop/search/${workspaceId}`;
+  return `${getSearchConfigPath()}/${workspaceId}`;
 }
 
 /**
@@ -116,7 +120,7 @@ function getSearchDbPath(workspaceId: string): string {
  */
 export async function openSearchDb(
   workspaceId: string,
-): Promise<{ database: Database; schemaChanged: boolean }> {
+): Promise<{ database: SqliteDatabase; schemaChanged: boolean }> {
   // Return existing connection if already open
   const existing = databases.get(workspaceId);
 
@@ -126,14 +130,15 @@ export async function openSearchDb(
 
   // Ensure the directory exists
   const dir = getSearchDbDir(workspaceId);
-  await fsp.mkdir(dir, { recursive: true });
+  await Fs.ensureDir(dir);
 
   const dbPath = getSearchDbPath(workspaceId);
+  const sqliteAdapter = getSqliteAdapter();
   let schemaChanged = false;
 
   // Check if existing database has a matching schema version
   try {
-    const database = new Database(dbPath);
+    const database = sqliteAdapter.open(dbPath);
     database.exec('PRAGMA foreign_keys = ON');
 
     const row = database
@@ -149,11 +154,11 @@ export async function openSearchDb(
 
       // Close and delete the old database
       database.close();
-      await fsp.rm(dbPath, { force: true });
 
-      // Delete the WAL and SHM files if they exist
-      await fsp.rm(`${dbPath}-wal`, { force: true });
-      await fsp.rm(`${dbPath}-shm`, { force: true });
+      // Remove the database file and WAL/SHM files
+      await safeRemoveFile(dbPath);
+      await safeRemoveFile(`${dbPath}-wal`);
+      await safeRemoveFile(`${dbPath}-shm`);
 
       schemaChanged = true;
     } else {
@@ -169,7 +174,7 @@ export async function openSearchDb(
   }
 
   // Create a fresh database
-  const database = new Database(dbPath);
+  const database = sqliteAdapter.open(dbPath);
 
   // Enable WAL mode for better concurrent read/write performance
   database.exec('PRAGMA journal_mode = WAL');
@@ -200,7 +205,7 @@ export async function openSearchDb(
  * Returns an already-opened search database for the workspace.
  * Throws if the database has not been opened yet.
  */
-export function getSearchDb(workspaceId: string): Database {
+export function getSearchDb(workspaceId: string): SqliteDatabase {
   const database = databases.get(workspaceId);
 
   if (!database) {
@@ -344,8 +349,8 @@ export function upsertEntries(
   );
 
   const insertPropValue = database.prepare(
-    `INSERT INTO entry_property_values (entry_id, property_name, value_text)
-     VALUES (?, ?, ?)`,
+    `INSERT INTO entry_property_values (entry_id, property_name, property_type, value_text)
+     VALUES (?, ?, ?, ?)`,
   );
 
   const incrementVersion = database.prepare(
@@ -442,10 +447,7 @@ export function getEntryTextContent(
 ): { textValues: string[]; propertyValues: string[] } {
   const database = getSearchDb(workspaceId);
 
-  // Build a SQL exclusion list from the constant
-  const excludedTypes = [...FUZZY_SEARCH_EXCLUDED_PROPERTY_TYPES]
-    .map((type) => `'${type}'`)
-    .join(', ');
+  const excludedTypes = EXCLUDED_TYPES_SQL;
 
   // Get text properties (for the "content" field)
   const textRows = database
@@ -462,13 +464,22 @@ export function getEntryTextContent(
     )
     .all(entryId) as { value_text: string | null }[];
 
+  // Get multi-value property values (select options, collection
+  // references) for the full-text index
+  const multiValueRows = database
+    .prepare('SELECT value_text FROM entry_property_values WHERE entry_id = ?')
+    .all(entryId) as { value_text: string }[];
+
   const textValues = textRows
     .map((row) => row.value_text)
     .filter((value): value is string => value !== null);
 
-  const propertyValues = propertyRows
-    .map((row) => row.value_text)
-    .filter((value): value is string => value !== null);
+  const propertyValues = [
+    ...propertyRows
+      .map((row) => row.value_text)
+      .filter((value): value is string => value !== null),
+    ...multiValueRows.map((row) => row.value_text),
+  ];
 
   return { textValues, propertyValues };
 }
@@ -521,14 +532,11 @@ export function getEntryPropertyValues(
 ): { name: string; value: string; type: string }[] {
   const database = getSearchDb(workspaceId);
 
-  // Build a SQL exclusion list from the constant
-  const excludedTypes = [...FUZZY_SEARCH_EXCLUDED_PROPERTY_TYPES]
-    .map((type) => `'${type}'`)
-    .join(', ');
+  const excludedTypes = EXCLUDED_TYPES_SQL;
 
   // Get scalar properties (excluded types are not part of
   // the full-text index)
-  const rows = database
+  const scalarRows = database
     .prepare(
       `SELECT property_name, property_type, value_text FROM entry_properties WHERE entry_id = ? AND value_text IS NOT NULL AND property_type NOT IN (${excludedTypes})`,
     )
@@ -538,11 +546,30 @@ export function getEntryPropertyValues(
     value_text: string;
   }[];
 
-  return rows.map((row) => ({
-    name: row.property_name,
-    value: row.value_text,
-    type: row.property_type,
-  }));
+  // Get multi-value properties (select, collection) that are
+  // not excluded from the full-text index
+  const multiValueRows = database
+    .prepare(
+      `SELECT property_name, property_type, value_text FROM entry_property_values WHERE entry_id = ? AND property_type NOT IN (${excludedTypes})`,
+    )
+    .all(entryId) as {
+    property_name: string;
+    property_type: string;
+    value_text: string;
+  }[];
+
+  return [
+    ...scalarRows.map((row) => ({
+      name: row.property_name,
+      value: row.value_text,
+      type: row.property_type,
+    })),
+    ...multiValueRows.map((row) => ({
+      name: row.property_name,
+      value: row.value_text,
+      type: row.property_type,
+    })),
+  ];
 }
 
 /**
@@ -573,8 +600,8 @@ export function closeAllSearchDbs(): void {
  * based on the property type.
  */
 function insertProperty(
-  insertProp: ReturnType<Database['prepare']>,
-  insertPropValue: ReturnType<Database['prepare']>,
+  insertProp: SqliteStatement,
+  insertPropValue: SqliteStatement,
   entryId: string,
   property: SearchEntryProperty,
 ): void {
@@ -583,10 +610,14 @@ function insertProperty(
     return;
   }
 
-  // Collection properties go into the multi-value table
-  if (property.type === 'collection' && Array.isArray(property.value)) {
+  // Multi-value properties (select, collection) go into
+  // the entry_property_values table
+  if (
+    MULTI_VALUE_PROPERTY_TYPES.has(property.type) &&
+    Array.isArray(property.value)
+  ) {
     for (const value of property.value) {
-      insertPropValue.run(entryId, property.name, value);
+      insertPropValue.run(entryId, property.name, property.type, value);
     }
 
     return;
@@ -618,4 +649,18 @@ function insertProperty(
     valueNumber,
     valueInteger,
   );
+}
+
+/**
+ * Removes a file if it exists. Silently ignores errors
+ * (e.g. file does not exist).
+ */
+async function safeRemoveFile(path: string): Promise<void> {
+  try {
+    if (await Fs.exists(path)) {
+      await Fs.removeFile(path);
+    }
+  } catch {
+    // Ignore errors (file may not exist)
+  }
 }

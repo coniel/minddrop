@@ -1,1 +1,0 @@
-export { searchFullText } from './searchFullText';

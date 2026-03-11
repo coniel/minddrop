@@ -1,4 +1,5 @@
 import { RPCSchema } from 'electrobun';
+import type { Database } from '@minddrop/databases';
 import { BaseDirectory } from '@minddrop/file-system';
 import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
 import type { QueryPropertyFilter, QueryPropertySort } from '@minddrop/queries';
@@ -115,6 +116,13 @@ export type WebviewRPC = {
       };
       showItemInFolder: {
         params: { path: string };
+        response: void;
+      };
+      searchInitialize: {
+        params: {
+          workspaceId: string;
+          databases: Database[];
+        };
         response: void;
       };
       searchFullText: {

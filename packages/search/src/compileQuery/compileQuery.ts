@@ -225,66 +225,71 @@ function compileDynamicFilter(
 ): { clause: string; join?: string } {
   const alias = `p${joinIndex}`;
 
-  // Basic operators check for existence of a row
+  // Basic operators check for existence of a row in either table
   if (filter.operator === 'is-empty') {
+    params.push(filter.property, filter.property);
+
     return {
-      clause: `${alias}.entry_id IS NULL`,
-      join: `LEFT JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(NOT EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ?) AND NOT EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ?))`,
     };
   }
 
   if (filter.operator === 'is-not-empty') {
-    params.push(filter.property);
+    params.push(filter.property, filter.property);
 
     return {
-      clause: `${alias}.entry_id IS NOT NULL`,
-      join: `LEFT JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ?) OR EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ?))`,
     };
   }
 
-  // Add the property name param for the JOIN
-  params.push(filter.property);
-
-  // String operators use value_text
+  // String operators check both scalar (entry_properties) and
+  // multi-value (entry_property_values) tables since the property
+  // could be text, select, collection, etc.
   if (filter.operator === 'equals' && typeof filter.value === 'string') {
-    params.push(filter.value);
+    params.push(filter.property, filter.value, filter.property, filter.value);
 
     return {
-      clause: `${alias}.value_text = ?`,
-      join: `JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_text = ?) OR EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ? AND value_text = ?))`,
     };
   }
 
   if (filter.operator === 'not-equals' && typeof filter.value === 'string') {
-    params.push(filter.value);
+    params.push(filter.property, filter.value, filter.property, filter.value);
 
     return {
-      clause: `(${alias}.value_text IS NULL OR ${alias}.value_text != ?)`,
-      join: `LEFT JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(NOT EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_text = ?) AND NOT EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ? AND value_text = ?))`,
     };
   }
 
   if (filter.operator === 'contains') {
-    params.push(`%${filter.value}%`);
+    params.push(
+      filter.property,
+      `%${filter.value}%`,
+      filter.property,
+      `%${filter.value}%`,
+    );
 
     return {
-      clause: `${alias}.value_text LIKE ?`,
-      join: `JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_text LIKE ?) OR EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ? AND value_text LIKE ?))`,
     };
   }
 
   if (filter.operator === 'not-contains') {
-    params.push(`%${filter.value}%`);
+    params.push(
+      filter.property,
+      `%${filter.value}%`,
+      filter.property,
+      `%${filter.value}%`,
+    );
 
     return {
-      clause: `(${alias}.value_text IS NULL OR ${alias}.value_text NOT LIKE ?)`,
-      join: `LEFT JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
+      clause: `(NOT EXISTS (SELECT 1 FROM entry_properties WHERE entry_id = e.id AND property_name = ? AND value_text LIKE ?) AND NOT EXISTS (SELECT 1 FROM entry_property_values WHERE entry_id = e.id AND property_name = ? AND value_text LIKE ?))`,
     };
   }
 
-  // Number operators use value_number
+  // Number operators use value_number (scalar table only)
   if (filter.operator === 'equals' && typeof filter.value === 'number') {
-    params.push(filter.value);
+    params.push(filter.property, filter.value);
 
     return {
       clause: `${alias}.value_number = ?`,
@@ -293,7 +298,7 @@ function compileDynamicFilter(
   }
 
   if (filter.operator === 'not-equals' && typeof filter.value === 'number') {
-    params.push(filter.value);
+    params.push(filter.property, filter.value);
 
     return {
       clause: `(${alias}.value_number IS NULL OR ${alias}.value_number != ?)`,
@@ -302,7 +307,7 @@ function compileDynamicFilter(
   }
 
   if (filter.operator === 'greater-than') {
-    params.push(filter.value as number);
+    params.push(filter.property, filter.value as number);
 
     return {
       clause: `${alias}.value_number > ?`,
@@ -311,7 +316,7 @@ function compileDynamicFilter(
   }
 
   if (filter.operator === 'less-than') {
-    params.push(filter.value as number);
+    params.push(filter.property, filter.value as number);
 
     return {
       clause: `${alias}.value_number < ?`,
@@ -319,9 +324,9 @@ function compileDynamicFilter(
     };
   }
 
-  // Date operators use value_integer (epoch ms)
+  // Date operators use value_integer (epoch ms, scalar table only)
   if (filter.operator === 'before') {
-    params.push((filter.value as Date).getTime());
+    params.push(filter.property, (filter.value as Date).getTime());
 
     return {
       clause: `${alias}.value_integer < ?`,
@@ -330,7 +335,7 @@ function compileDynamicFilter(
   }
 
   if (filter.operator === 'after') {
-    params.push((filter.value as Date).getTime());
+    params.push(filter.property, (filter.value as Date).getTime());
 
     return {
       clause: `${alias}.value_integer > ?`,
@@ -338,8 +343,10 @@ function compileDynamicFilter(
     };
   }
 
-  // Boolean operators use value_integer (0/1)
+  // Boolean operators use value_integer (0/1, scalar table only)
   if (filter.operator === 'true') {
+    params.push(filter.property);
+
     return {
       clause: `${alias}.value_integer = 1`,
       join: `JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,
@@ -347,6 +354,8 @@ function compileDynamicFilter(
   }
 
   if (filter.operator === 'false') {
+    params.push(filter.property);
+
     return {
       clause: `(${alias}.value_integer IS NULL OR ${alias}.value_integer = 0)`,
       join: `LEFT JOIN entry_properties ${alias} ON ${alias}.entry_id = e.id AND ${alias}.property_name = ?`,

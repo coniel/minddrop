@@ -58,11 +58,11 @@ export interface SearchEntryProperty {
 
   /**
    * The property value. Type depends on the property type:
-   * - text, formatted-text, select, url, icon, file, image, title: string
+   * - text, formatted-text, url, icon, file, image, title: string
    * - number: number
    * - toggle: boolean
    * - date, created, last-modified: number (epoch ms)
-   * - collection: string[]
+   * - select, collection: string[]
    */
   value: string | number | boolean | string[] | null;
 }

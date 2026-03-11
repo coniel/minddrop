@@ -1,3 +1,17 @@
+import {
+  DatabaseEntryCreatedEvent,
+  DatabaseEntryDeletedEvent,
+  DatabaseEntryRenamedEvent,
+  DatabaseEntryUpdatedEvent,
+} from './events';
+
+export const events = {
+  created: DatabaseEntryCreatedEvent,
+  updated: DatabaseEntryUpdatedEvent,
+  deleted: DatabaseEntryDeletedEvent,
+  renamed: DatabaseEntryRenamedEvent,
+} as const;
+
 export { createDatabaseEntry as create } from './createDatabaseEntry';
 export { createDatabaseEntryFromFilePath as createFromFilePath } from './createDatabaseEntryFromFilePath';
 export { createDatabaseEntryFromFile as createFromFile } from './createDatabaseEntryFromFile';

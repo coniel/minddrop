@@ -1,5 +1,5 @@
-import { getSearchAdapter } from '../SearchAdapter';
-import type { FullTextSearchResult } from '../types';
+import { getSearchAdapter } from './SearchAdapter';
+import type { FullTextSearchResult } from './types';
 
 /**
  * Performs a full-text fuzzy search across entries in the

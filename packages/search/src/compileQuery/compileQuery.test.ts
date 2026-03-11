@@ -115,9 +115,11 @@ describe('compileQuery', () => {
         [],
       );
 
-      expect(result.sql).toContain('JOIN entry_properties p0');
-      expect(result.sql).toContain('p0.property_name = ?');
-      expect(result.sql).toContain('p0.value_text = ?');
+      // Checks both scalar and multi-value tables via EXISTS
+      expect(result.sql).toContain('entry_properties');
+      expect(result.sql).toContain('entry_property_values');
+      expect(result.sql).toContain('property_name = ?');
+      expect(result.sql).toContain('value_text = ?');
       expect(result.params).toContain('status');
       expect(result.params).toContain('active');
     });
@@ -128,10 +130,12 @@ describe('compileQuery', () => {
         [],
       );
 
-      expect(result.sql).toContain('LEFT JOIN entry_properties p0');
-      expect(result.sql).toContain(
-        '(p0.value_text IS NULL OR p0.value_text != ?)',
-      );
+      // Uses NOT EXISTS on both tables
+      expect(result.sql).toContain('NOT EXISTS');
+      expect(result.sql).toContain('entry_properties');
+      expect(result.sql).toContain('entry_property_values');
+      expect(result.params).toContain('status');
+      expect(result.params).toContain('archived');
     });
 
     it('filters number property with equals', () => {
@@ -189,8 +193,11 @@ describe('compileQuery', () => {
         [],
       );
 
-      expect(result.sql).toContain('LEFT JOIN entry_properties p0');
-      expect(result.sql).toContain('p0.entry_id IS NULL');
+      // Checks both tables via NOT EXISTS
+      expect(result.sql).toContain('NOT EXISTS');
+      expect(result.sql).toContain('entry_properties');
+      expect(result.sql).toContain('entry_property_values');
+      expect(result.params).toContain('notes');
     });
 
     it('filters dynamic property with is-not-empty', () => {
@@ -199,7 +206,11 @@ describe('compileQuery', () => {
         [],
       );
 
-      expect(result.sql).toContain('p0.entry_id IS NOT NULL');
+      // Checks both tables via EXISTS
+      expect(result.sql).toContain('EXISTS');
+      expect(result.sql).toContain('entry_properties');
+      expect(result.sql).toContain('entry_property_values');
+      expect(result.params).toContain('notes');
     });
 
     it('filters date property with before', () => {
@@ -236,19 +247,20 @@ describe('compileQuery', () => {
       );
 
       expect(result.sql).toContain('e.title LIKE ?');
-      expect(result.sql).toContain('p0.value_text = ?');
+      expect(result.sql).toContain('value_text = ?');
       expect(result.sql).toContain(' AND ');
     });
 
     it('uses unique join aliases for each dynamic filter', () => {
       const result = compileQuery(
         [
-          { property: 'status', operator: 'equals', value: 'active' },
           { property: 'priority', operator: 'greater-than', value: 3 },
+          { property: 'rating', operator: 'less-than', value: 10 },
         ],
         [],
       );
 
+      // Number filters still use JOINs with unique aliases
       expect(result.sql).toContain('entry_properties p0');
       expect(result.sql).toContain('entry_properties p1');
     });

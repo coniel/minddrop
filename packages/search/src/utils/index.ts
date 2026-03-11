@@ -1,0 +1,1 @@
+export { convertEntryToSearchData } from './convertEntryToSearchData';

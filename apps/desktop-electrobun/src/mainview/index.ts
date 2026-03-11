@@ -1,6 +1,5 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { WebviewRPC } from '../types';
-import { initializeSearchSync } from './initializeSearchSync';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
 import {
   handleWatchEvent,
@@ -31,4 +30,3 @@ const electrobun = new Electrobun.Electroview({ rpc });
 registerFileSystemAdapter(electrobun.rpc);
 registerBackEndUtilsAdapter(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);
-initializeSearchSync(electrobun.rpc);

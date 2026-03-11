@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FullTextMatchedProperty } from '@minddrop/search';
-import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from '@minddrop/search';
+import { Search } from '@minddrop/search';
 import { ContentIcon } from '@minddrop/ui-primitives';
 import './SearchResultItem.css';
 
@@ -140,7 +140,7 @@ function handleKeyDown(
 
 // Regex to split text on highlight markers
 const highlightPattern = new RegExp(
-  `${MATCH_HIGHLIGHT_START}(.*?)${MATCH_HIGHLIGHT_END}`,
+  `${Search.constants.matchHighlightStart}(.*?)${Search.constants.matchHighlightEnd}`,
   'g',
 );
 
