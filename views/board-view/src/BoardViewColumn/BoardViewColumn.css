@@ -1,0 +1,39 @@
+.board-view-column {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+.board-view-column-content {
+  flex: 1;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+}
+
+.board-view-column-empty .board-view-column-content {
+  background-color: transparent;
+  border-radius: var(--radius-lg);
+  transition: background-color 150ms ease;
+}
+
+.board-view-column-empty:hover .board-view-column-content {
+  background-color: var(--surface-raised);
+}
+
+.board-view-column-delete {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: var(--space-2);
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.board-view-column:hover .board-view-column-delete {
+  opacity: 1;
+}

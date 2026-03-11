@@ -1192,6 +1192,11 @@ declare module 'i18next' {
             view: string;
             new: string;
           };
+          board: {
+            name: string;
+            description: string;
+            removeColumn: string;
+          };
           gallery: {
             name: string;
             description: string;

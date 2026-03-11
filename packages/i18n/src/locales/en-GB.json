@@ -1180,6 +1180,11 @@
       "view": "View",
       "new": "New View"
     },
+    "board": {
+      "name": "Board",
+      "description": "A board view with draggable columns of cards.",
+      "removeColumn": "Remove column"
+    },
     "gallery": {
       "name": "Gallery",
       "description": "A gallery view.",

@@ -1,0 +1,21 @@
+.board-view-skeleton {
+  display: flex;
+  gap: 16px;
+  padding: var(--space-4);
+  pointer-events: none;
+}
+
+.board-view-skeleton-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-subtle);
+}
+
+.board-view-skeleton-card {
+  width: 100%;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-skeleton);
+}

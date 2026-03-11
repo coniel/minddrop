@@ -1,0 +1,16 @@
+.board-view-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.board-view-scroll .scroll-area-viewport > div {
+  min-height: 100%;
+}
+
+.board-view {
+  padding: var(--space-4);
+  min-height: 100%;
+  align-items: stretch;
+}
