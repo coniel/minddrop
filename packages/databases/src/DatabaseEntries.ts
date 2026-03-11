@@ -36,3 +36,4 @@ export { getPropertyFilePath as propertyFilePath } from './utils';
 export { readDatabaseEntryFiles as readFiles } from './readDatabaseEntryFiles';
 export { createEntryVirtualViews as createVirtualViews } from './utils';
 export { entryDisplayPropertyValues as displayPropertyValues } from './utils';
+export { getAllDatabaseEntries as getAll } from './getAllDatabaseEntries';
