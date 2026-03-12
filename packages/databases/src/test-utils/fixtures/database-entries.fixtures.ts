@@ -1,6 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
 import { DatabaseEntry } from '../../types';
-import { entryCorePropertiesFilePath } from '../../utils';
 import {
   collectionDatabase,
   commonStorageDatabase,
@@ -8,6 +7,7 @@ import {
   objectDatabase,
   propertyStorageDatabase,
   rootStorageDatabase,
+  timestampDatabase,
   urlDatabase,
   yamlObjectDatabase,
 } from './databases.fixtures';
@@ -36,11 +36,6 @@ Icon: ${objectEntry1.properties.Icon}
 
 ${objectEntry1.properties.Content}`;
 
-export const objectEntry1CorePropertiesFileContents = `id: ${objectEntry1.id}
-title: ${objectEntry1.title}
-created: ${objectEntry1.created.toISOString()}
-lastModified: ${objectEntry1.lastModified.toISOString()}`;
-
 /******************************************************************************
  * YAML object database entries
  *****************************************************************************/
@@ -61,11 +56,6 @@ export const yamlObjectEntry1: DatabaseEntry = {
 
 export const yamlObjectEntry1FileContents = `Title: Test Entry
 Icon: content-icon:shapes:blue`;
-
-export const yamlObjectEntry1CorePropertiesFileContents = `id: ${yamlObjectEntry1.id}
-title: ${yamlObjectEntry1.title}
-created: ${yamlObjectEntry1.created.toISOString()}
-lastModified: ${yamlObjectEntry1.lastModified.toISOString()}`;
 
 /******************************************************************************
  * URL database entries
@@ -96,11 +86,6 @@ Image: image.png
 Icon: icon.png
 ---`;
 
-export const urlEntry1CorePropertiesFileContents = `id: ${urlEntry1.id}
-title: ${urlEntry1.title}
-created: ${urlEntry1.created.toISOString()}
-lastModified: ${urlEntry1.lastModified.toISOString()}`;
-
 /******************************************************************************
  * Root storage database entries
  *****************************************************************************/
@@ -122,11 +107,6 @@ export const rootStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
-export const rootStorageEntry1CorePropertiesFileContents = `id: ${rootStorageEntry1.id}
-title: ${rootStorageEntry1.title}
-created: ${rootStorageEntry1.created.toISOString()}
-lastModified: ${rootStorageEntry1.lastModified.toISOString()}`;
-
 export const rootStorageEntry_empty_value: DatabaseEntry = {
   id: `${rootStorageDatabase.name}/Root Storage Entry Empty Value.md`,
   title: 'Root Storage Entry Empty Value',
@@ -140,11 +120,6 @@ export const rootStorageEntry_empty_value: DatabaseEntry = {
 
 export const rootStorageEntry_empty_valueFileContents = `---
 ---`;
-
-export const rootStorageEntry_empty_valueCorePropertiesFileContents = `id: ${rootStorageEntry_empty_value.id}
-title: ${rootStorageEntry_empty_value.title}
-created: ${rootStorageEntry_empty_value.created.toISOString()}
-lastModified: ${rootStorageEntry_empty_value.lastModified.toISOString()}`;
 
 /******************************************************************************
  * Common storage database entries
@@ -167,11 +142,6 @@ export const commonStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
-export const commonStorageEntry1CorePropertiesFileContents = `id: ${commonStorageEntry1.id}
-title: ${commonStorageEntry1.title}
-created: ${commonStorageEntry1.created.toISOString()}
-lastModified: ${commonStorageEntry1.lastModified.toISOString()}`;
-
 /******************************************************************************
  * Property storage database entries
  *****************************************************************************/
@@ -192,11 +162,6 @@ export const propertyStorageEntry1: DatabaseEntry = {
 export const propertyStorageEntry1FileContents = `---
 Image: image.png
 ---`;
-
-export const propertyStorageEntry1CorePropertiesFileContents = `id: ${propertyStorageEntry1.id}
-title: ${propertyStorageEntry1.title}
-created: ${propertyStorageEntry1.created.toISOString()}
-lastModified: ${propertyStorageEntry1.lastModified.toISOString()}`;
 
 /******************************************************************************
  * Entry storage database entries
@@ -219,13 +184,31 @@ export const entryStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
-export const entryStorageEntry1CorePropertiesFileContents = `id: ${entryStorageEntry1.id}
-title: ${entryStorageEntry1.title}
-created: ${entryStorageEntry1.created.toISOString()}
-lastModified: ${entryStorageEntry1.lastModified.toISOString()}`;
+/******************************************************************************
+ * Timestamp database entries
+ *****************************************************************************/
+
+export const timestampEntry1: DatabaseEntry = {
+  id: `${timestampDatabase.name}/Timestamp Entry.md`,
+  title: 'Timestamp Entry',
+  database: timestampDatabase.id,
+  path: `${timestampDatabase.path}/Timestamp Entry.md`,
+  created: new Date('2025-06-15T10:00:00.000Z'),
+  lastModified: new Date('2025-06-20T14:00:00.000Z'),
+  properties: {
+    Created: new Date('2025-06-15T10:00:00.000Z'),
+    'Last Modified': new Date('2025-06-20T14:00:00.000Z'),
+  },
+  metadata: {},
+};
+
+export const timestampEntry1FileContents = `---
+Created: ${(timestampEntry1.properties.Created as Date).toISOString()}
+Last Modified: ${(timestampEntry1.properties['Last Modified'] as Date).toISOString()}
+---`;
 
 /******************************************************************************
- * Exports
+ * Collection database entries
  *****************************************************************************/
 
 export const collectionEntry1: DatabaseEntry = {
@@ -252,11 +235,6 @@ References:
   - reference-entry-1
 ---`;
 
-export const collectionEntry1CorePropertiesFileContents = `id: ${collectionEntry1.id}
-title: ${collectionEntry1.title}
-created: ${collectionEntry1.created.toISOString()}
-lastModified: ${collectionEntry1.lastModified.toISOString()}`;
-
 export const databaseEntries = [
   objectEntry1,
   urlEntry1,
@@ -267,6 +245,7 @@ export const databaseEntries = [
   propertyStorageEntry1,
   entryStorageEntry1,
   collectionEntry1,
+  timestampEntry1,
 ];
 
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
@@ -275,72 +254,40 @@ export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
     textContent: objectEntry1FileContents,
   },
   {
-    path: entryCorePropertiesFilePath(objectEntry1.path),
-    textContent: objectEntry1CorePropertiesFileContents,
-  },
-  {
     path: urlEntry1.path,
     textContent: urlEntry1FileContents,
-  },
-  {
-    path: entryCorePropertiesFilePath(urlEntry1.path),
-    textContent: urlEntry1CorePropertiesFileContents,
   },
   {
     path: yamlObjectEntry1.path,
     textContent: yamlObjectEntry1FileContents,
   },
   {
-    path: entryCorePropertiesFilePath(yamlObjectEntry1.path),
-    textContent: yamlObjectEntry1CorePropertiesFileContents,
-  },
-  {
     path: rootStorageEntry1.path,
     textContent: rootStorageEntry1FileContents,
-  },
-  {
-    path: entryCorePropertiesFilePath(rootStorageEntry1.path),
-    textContent: rootStorageEntry1CorePropertiesFileContents,
   },
   {
     path: rootStorageEntry_empty_value.path,
     textContent: rootStorageEntry_empty_valueFileContents,
   },
   {
-    path: entryCorePropertiesFilePath(rootStorageEntry_empty_value.path),
-    textContent: rootStorageEntry_empty_valueCorePropertiesFileContents,
-  },
-  {
     path: commonStorageEntry1.path,
     textContent: commonStorageEntry1FileContents,
-  },
-  {
-    path: entryCorePropertiesFilePath(commonStorageEntry1.path),
-    textContent: commonStorageEntry1CorePropertiesFileContents,
   },
   {
     path: propertyStorageEntry1.path,
     textContent: propertyStorageEntry1FileContents,
   },
   {
-    path: entryCorePropertiesFilePath(propertyStorageEntry1.path),
-    textContent: propertyStorageEntry1CorePropertiesFileContents,
-  },
-  {
     path: entryStorageEntry1.path,
     textContent: entryStorageEntry1FileContents,
-  },
-  {
-    path: entryCorePropertiesFilePath(entryStorageEntry1.path),
-    textContent: entryStorageEntry1CorePropertiesFileContents,
   },
   {
     path: collectionEntry1.path,
     textContent: collectionEntry1FileContents,
   },
   {
-    path: entryCorePropertiesFilePath(collectionEntry1.path),
-    textContent: collectionEntry1CorePropertiesFileContents,
+    path: timestampEntry1.path,
+    textContent: timestampEntry1FileContents,
   },
 ];
 

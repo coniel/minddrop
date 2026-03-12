@@ -9,7 +9,7 @@ import {
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { DatabaseEntry } from '../types';
-import { entryAssetsDirPath, entryCorePropertiesFilePath } from '../utils';
+import { entryAssetsDirPath } from '../utils';
 import { writeDatabaseEntry } from '../writeDatabaseEntry';
 
 /**
@@ -32,7 +32,6 @@ export async function renameDatabaseEntry<
   let finalNewTitle = newTitle;
   const entry = getDatabaseEntry<TDatabaseEntry>(id);
   const parentDir = Fs.parentDirPath(entry.path);
-  const corePropertiesPath = entryCorePropertiesFilePath(entry.path);
   const fileExtension = Fs.getFileExtension(entry.path);
   const entryFileNameWithoutExt = Fs.removeExtension(
     Fs.fileNameFromPath(entry.path),
@@ -77,17 +76,9 @@ export async function renameDatabaseEntry<
 
     // Rename the entry file inside the renamed directory
     await Fs.rename(currentEntryPath, newPath);
-
-    // Rename the entry's core properties file.
-    // The core properties file is outside the entry subdirectory,
-    // so its path is unaffected by the directory rename.
-    await Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
   } else {
     // Rename the primary entry file
     await Fs.rename(entry.path, newPath);
-
-    // Rename the entry's core properties file
-    await Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
 
     // Rename the entry's assets directory if it exists
     const assetsDirPath = entryAssetsDirPath(entry.path);
@@ -115,8 +106,8 @@ export async function renameDatabaseEntry<
   DatabaseEntriesStore.remove(id);
   DatabaseEntriesStore.set(renamedDatabaseEntry);
 
-  // Write the updated core properties to the renamed core properties file
-  writeDatabaseEntry(newId);
+  // Write the updated entry file
+  await writeDatabaseEntry(newId);
 
   // Dispatch an entry rename event
   Events.dispatch<DatabaseEntryRenamedEventData>(DatabaseEntryRenamedEvent, {

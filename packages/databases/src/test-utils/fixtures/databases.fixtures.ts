@@ -200,6 +200,22 @@ export const entryStorageDatabase = generateDatabase({
   ],
 });
 
+export const timestampDatabase = generateDatabase({
+  id: 'Timestamp Database',
+  name: 'Timestamp Database',
+  entryName: 'Timestamp Entry',
+  properties: [
+    {
+      type: 'created',
+      name: 'Created',
+    },
+    {
+      type: 'last-modified',
+      name: 'Last Modified',
+    },
+  ],
+});
+
 export const collectionDatabase = generateDatabase({
   id: 'Collection Database',
   name: 'Collection Database',
@@ -230,6 +246,7 @@ export const databases = [
   propertyStorageDatabase,
   entryStorageDatabase,
   collectionDatabase,
+  timestampDatabase,
 ];
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [

@@ -12,7 +12,6 @@ import {
   setup,
 } from '../test-utils';
 import { DatabaseEntry } from '../types';
-import { entryCorePropertiesFilePath } from '../utils';
 import { createDatabaseEntry } from './createDatabaseEntry';
 
 const title = i18n.t('labels.untitled');
@@ -34,7 +33,6 @@ describe('createDatabaseEntry', () => {
     vi.setSystemTime(objectEntry1.created);
 
     MockFs.removeFile(objectEntry1.path);
-    MockFs.removeFile(entryCorePropertiesFilePath(objectEntry1.path));
   });
 
   afterEach(cleanup);
@@ -47,13 +45,11 @@ describe('createDatabaseEntry', () => {
     expect(storeEntry).toEqual(entry);
   });
 
-  it('writes the entry files to the file system', async () => {
+  it('writes the entry file to the file system', async () => {
     const entry = await createDatabaseEntry(objectDatabase.id);
 
-    // Main file should exist
+    // Entry file should exist
     expect(MockFs.exists(entry.path)).toBeTruthy();
-    // Core properties YAML file should exist
-    expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
   });
 
   it('writes the entry file to a subdirectory if the database uses entry based storage', async () => {
@@ -64,12 +60,10 @@ describe('createDatabaseEntry', () => {
       `${entryStorageDatabase.path}/${title}/${title}.md`,
     );
     expect(MockFs.exists(entry.path)).toBeTruthy();
-    // Core properties should be written to the database's config directory
-    expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
   });
 
   it('increments the entry title and ID if an entry with the same name exists', async () => {
-    // Create two entrys with the same name
+    // Create two entries with the same name
     await createDatabaseEntry(objectDatabase.id);
     const secondEntry = await createDatabaseEntry(objectDatabase.id);
 
@@ -79,7 +73,7 @@ describe('createDatabaseEntry', () => {
   });
 
   it('increments the entry title if an entry with the same name exists in an entry storage database', async () => {
-    // Create two entrys with the same name
+    // Create two entries with the same name
     await createDatabaseEntry(entryStorageDatabase.id);
     const secondEntry = await createDatabaseEntry(entryStorageDatabase.id);
 

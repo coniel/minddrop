@@ -48,11 +48,6 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   metadata: DatabaseEntryMetadata;
 }
 
-export type DatabaseEntryCoreProperties = Pick<
-  DatabaseEntry,
-  'id' | 'title' | 'created' | 'lastModified'
->;
-
 export type DatabaseEntryViewConfig = Pick<View, 'options' | 'data'>;
 
 export interface DatabaseEntryMetadata {

@@ -1,6 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { Fs } from '@minddrop/file-system';
-import { Properties } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import {
@@ -17,7 +15,6 @@ import {
   setup,
   yamlObjectEntry1,
 } from '../test-utils';
-import { entryCoreProperties, entryCorePropertiesFilePath } from '../utils';
 import { writeDatabaseEntry } from './writeDatabaseEntry';
 
 describe('writeDatabaseEntry', () => {
@@ -63,44 +60,16 @@ describe('writeDatabaseEntry', () => {
     );
   });
 
-  it('ensures that the core properties subdirectory exists', async () => {
-    const path = Fs.parentDirPath(
-      entryCorePropertiesFilePath(objectEntry1.path),
-    );
-
-    // Remove the properties directory before writing to ensure it doesn't exist
-    MockFs.removeFile(path);
-
-    await writeDatabaseEntry(objectEntry1.id);
-
-    expect(MockFs.exists(Fs.parentDirPath(path))).toBe(true);
-  });
-
   it('ensures the entry subdirectory exists if the database uses entry based storage', async () => {
-    const path = Fs.parentDirPath(entryStorageEntry1.path);
+    const path = entryStorageEntry1.path;
+    const parentDir = path.substring(0, path.lastIndexOf('/'));
 
     // Remove the entry subdirectory before writing to ensure it doesn't exist
-    MockFs.removeFile(path);
+    MockFs.removeFile(parentDir);
 
     await writeDatabaseEntry(entryStorageEntry1.id);
 
-    expect(MockFs.exists(path)).toBe(true);
-  });
-
-  it('writes the core properties to the properties subdirectory', async () => {
-    const path = entryCorePropertiesFilePath(objectEntry1.path);
-
-    // Remove the file before writing to ensure it doesn't exist
-    MockFs.removeFile(path);
-
-    await writeDatabaseEntry(objectEntry1.id);
-
-    const properties = Properties.fromYaml(
-      objectDatabase.properties,
-      MockFs.readTextFile(path),
-    );
-
-    expect(properties).toEqual(entryCoreProperties(objectEntry1));
+    expect(MockFs.exists(parentDir)).toBe(true);
   });
 
   it('writes the user properties to the entry file', async () => {

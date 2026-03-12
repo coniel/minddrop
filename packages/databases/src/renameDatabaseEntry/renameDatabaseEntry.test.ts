@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { Properties } from '@minddrop/properties';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabaseEntryRenamedEvent } from '../events';
 import {
@@ -11,12 +10,8 @@ import {
   objectEntry1,
   setup,
 } from '../test-utils';
-import { entryAssetsDirPath, entryCorePropertiesFilePath } from '../utils';
+import { entryAssetsDirPath } from '../utils';
 import { renameDatabaseEntry } from './renameDatabaseEntry';
-
-const corePropertiesDirPath = Fs.parentDirPath(
-  entryCorePropertiesFilePath(objectEntry1.path),
-);
 
 describe('renameDatabaseEntry', () => {
   beforeEach(setup);
@@ -55,16 +50,6 @@ describe('renameDatabaseEntry', () => {
     expect(renamedDatabaseEntry.path).toBe(newPath);
     expect(MockFs.exists(newPath)).toBe(true);
     expect(MockFs.exists(objectEntry1.path)).toBe(false);
-  });
-
-  it("renames the entry's core properties file", async () => {
-    await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
-
-    const oldPath = `${corePropertiesDirPath}/${objectEntry1.title}.yaml`;
-    const newPath = `${corePropertiesDirPath}/Renamed DatabaseEntry.yaml`;
-
-    expect(MockFs.exists(newPath)).toBe(true);
-    expect(MockFs.exists(oldPath)).toBe(false);
   });
 
   it("renames the entry's assets directory", async () => {
@@ -116,16 +101,12 @@ describe('renameDatabaseEntry', () => {
     expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
   });
 
-  it('updates the entry core properties file', async () => {
+  it('writes the updated entry file', async () => {
     await renameDatabaseEntry(objectEntry1.id, 'Renamed DatabaseEntry');
 
-    const coreProperties = MockFs.readTextFile(
-      `${corePropertiesDirPath}/Renamed DatabaseEntry.yaml`,
-    );
+    const newPath = `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`;
 
-    expect(
-      Properties.fromYaml(objectDatabase.properties, coreProperties).title,
-    ).toBe('Renamed DatabaseEntry');
+    expect(MockFs.exists(newPath)).toBe(true);
   });
 
   it('dispatches an entry rename event', async () =>
