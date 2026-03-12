@@ -2,7 +2,7 @@ import { Events } from '@minddrop/events';
 import { Fs } from '@minddrop/file-system';
 import { i18n } from '@minddrop/i18n';
 import { Properties, PropertyMap } from '@minddrop/properties';
-import { titleFromPath, uuid } from '@minddrop/utils';
+import { Paths, titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   DatabaseEntryCreatedEvent,
@@ -64,15 +64,16 @@ export async function createDatabaseEntry<
     path = Fs.concatPath(path, `${incrementalPath.name}.${fileExtension}`);
   }
 
-  // Create the new entry
+  // Create the new entry with workspace-relative path as ID
   const entry: DatabaseEntry<TProperties> = {
-    id: uuid(),
+    id: path.replace(`${Paths.workspace}/`, ''),
     database: databaseId,
     title: titleFromPath(path),
     path,
     created: new Date(),
     lastModified: new Date(),
     properties: Properties.defaults(database.properties, properties),
+    metadata: {},
   };
 
   // Add the entry to the store

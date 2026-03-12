@@ -1,13 +1,16 @@
 import { PropertyMap } from '@minddrop/properties';
+import { View } from '@minddrop/views';
 
 export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   /**
-   * A unique identifier for the entry.
+   * The entry's workspace-relative path, used as its unique identifier
+   * (e.g. 'Books/Some Book.md').
    */
   id: string;
 
   /**
-   * The ID of the database the entry belongs to.
+   * The name of the database the entry belongs to (same as the database's
+   * directory name / ID).
    */
   database: string;
 
@@ -17,28 +20,44 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   path: string;
 
   /**
-   * The item title. Also used as the file name of the primary file associated
-   * with the item.
+   * The entry title. Also used as the file name.
    */
   title: string;
 
   /**
-   * The date the item was created.
+   * The date the entry was created. Derived from the entry's 'created' property
+   * if present, otherwise from file stat.
    */
   created: Date;
 
   /**
-   * The date the item was last modified.
+   * The date the entry was last modified. Derived from the entry's
+   * 'last-modified' property if present, otherwise from file stat.
    */
   lastModified: Date;
 
   /**
-   * The item's properties.
+   * The entry's properties.
    */
   properties: TProperties;
+
+  /**
+   * Supplementary data persisted to the database metadata file.
+   * Safe to lose without actual data loss.
+   */
+  metadata: DatabaseEntryMetadata;
 }
 
 export type DatabaseEntryCoreProperties = Pick<
   DatabaseEntry,
   'id' | 'title' | 'created' | 'lastModified'
 >;
+
+export type DatabaseEntryViewConfig = Pick<View, 'options' | 'data'>;
+
+export interface DatabaseEntryMetadata {
+  /**
+   * Saved view state for virtual views, keyed by `designId:propertyName`.
+   */
+  views?: Record<string, DatabaseEntryViewConfig>;
+}

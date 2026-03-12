@@ -17,7 +17,7 @@ import {
  *****************************************************************************/
 
 export const objectEntry1: DatabaseEntry = {
-  id: 'ffc1e0a1-e014-49b2-a0cb-f86f9eef367c',
+  id: `${objectDatabase.name}/Test Entry.md`,
   title: 'Test Entry',
   database: objectDatabase.id,
   path: `${objectDatabase.path}/Test Entry.md`,
@@ -27,6 +27,7 @@ export const objectEntry1: DatabaseEntry = {
     Content: 'Test content',
     Icon: 'content-icon:shapes:blue',
   },
+  metadata: {},
 };
 
 export const objectEntry1FileContents = `---
@@ -45,7 +46,7 @@ lastModified: ${objectEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const yamlObjectEntry1: DatabaseEntry = {
-  id: '01733d4a-acb4-41be-bd99-219b5eb1efd6',
+  id: `${yamlObjectDatabase.name}/Test Entry.yaml`,
   title: 'Test Entry',
   database: yamlObjectDatabase.id,
   path: `${yamlObjectDatabase.path}/Test Entry.yaml`,
@@ -55,6 +56,7 @@ export const yamlObjectEntry1: DatabaseEntry = {
     Title: 'Test Entry',
     Icon: 'content-icon:shapes:blue',
   },
+  metadata: {},
 };
 
 export const yamlObjectEntry1FileContents = `Title: Test Entry
@@ -70,7 +72,7 @@ lastModified: ${yamlObjectEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const urlEntry1: DatabaseEntry = {
-  id: 'fff02a8f-9678-4539-9da4-74dd876ec2e0',
+  id: `${urlDatabase.name}/Test Entry.md`,
   title: 'Test Entry',
   database: urlDatabase.id,
   path: `${urlDatabase.path}/Test Entry.md`,
@@ -83,6 +85,7 @@ export const urlEntry1: DatabaseEntry = {
     Image: 'image.png',
     Icon: 'icon.png',
   },
+  metadata: {},
 };
 
 export const urlEntry1FileContents = `---
@@ -103,7 +106,7 @@ lastModified: ${urlEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const rootStorageEntry1: DatabaseEntry = {
-  id: 'root-storage-entry-1',
+  id: `${rootStorageDatabase.name}/Root Storage Entry 1.md`,
   title: 'Root Storage Entry 1',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry 1.md`,
@@ -112,6 +115,7 @@ export const rootStorageEntry1: DatabaseEntry = {
   properties: {
     Image: 'image.png',
   },
+  metadata: {},
 };
 
 export const rootStorageEntry1FileContents = `---
@@ -124,13 +128,14 @@ created: ${rootStorageEntry1.created.toISOString()}
 lastModified: ${rootStorageEntry1.lastModified.toISOString()}`;
 
 export const rootStorageEntry_empty_value: DatabaseEntry = {
-  id: 'root-storage-entry-empty-value',
+  id: `${rootStorageDatabase.name}/Root Storage Entry Empty Value.md`,
   title: 'Root Storage Entry Empty Value',
   database: rootStorageDatabase.id,
   path: `${rootStorageDatabase.path}/Root Storage Entry Empty Value.md`,
   created: new Date('2024-01-01T00:00:00.000Z'),
   lastModified: new Date('2024-01-01T00:00:00.000Z'),
   properties: {},
+  metadata: {},
 };
 
 export const rootStorageEntry_empty_valueFileContents = `---
@@ -146,7 +151,7 @@ lastModified: ${rootStorageEntry_empty_value.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const commonStorageEntry1: DatabaseEntry = {
-  id: 'common-storage-entry-1',
+  id: `${commonStorageDatabase.name}/Common Storage Entry 1.md`,
   title: 'Common Storage Entry 1',
   database: commonStorageDatabase.id,
   path: `${commonStorageDatabase.path}/Common Storage Entry 1.md`,
@@ -155,6 +160,7 @@ export const commonStorageEntry1: DatabaseEntry = {
   properties: {
     Image: 'image.png',
   },
+  metadata: {},
 };
 
 export const commonStorageEntry1FileContents = `---
@@ -171,7 +177,7 @@ lastModified: ${commonStorageEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const propertyStorageEntry1: DatabaseEntry = {
-  id: 'property-storage-entry-1',
+  id: `${propertyStorageDatabase.name}/Property Storage Entry 1.md`,
   title: 'Property Storage Entry 1',
   database: propertyStorageDatabase.id,
   path: `${propertyStorageDatabase.path}/Property Storage Entry 1.md`,
@@ -180,6 +186,7 @@ export const propertyStorageEntry1: DatabaseEntry = {
   properties: {
     Image: 'image.png',
   },
+  metadata: {},
 };
 
 export const propertyStorageEntry1FileContents = `---
@@ -196,7 +203,7 @@ lastModified: ${propertyStorageEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const entryStorageEntry1: DatabaseEntry = {
-  id: 'entry-storage-entry-1',
+  id: `${entryStorageDatabase.name}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
   title: 'Entry Storage Entry 1',
   database: entryStorageDatabase.id,
   path: `${entryStorageDatabase.path}/Entry Storage Entry 1/Entry Storage Entry 1.md`,
@@ -205,6 +212,7 @@ export const entryStorageEntry1: DatabaseEntry = {
   properties: {
     Image: 'image.png',
   },
+  metadata: {},
 };
 
 export const entryStorageEntry1FileContents = `---
@@ -221,7 +229,7 @@ lastModified: ${entryStorageEntry1.lastModified.toISOString()}`;
  *****************************************************************************/
 
 export const collectionEntry1: DatabaseEntry = {
-  id: 'collection-entry-1',
+  id: `${collectionDatabase.name}/Collection Entry 1.md`,
   title: 'Collection Entry 1',
   database: collectionDatabase.id,
   path: `${collectionDatabase.path}/Collection Entry 1.md`,
@@ -232,6 +240,7 @@ export const collectionEntry1: DatabaseEntry = {
     Related: ['related-entry-1', 'related-entry-2'],
     References: ['reference-entry-1'],
   },
+  metadata: {},
 };
 
 export const collectionEntry1FileContents = `---

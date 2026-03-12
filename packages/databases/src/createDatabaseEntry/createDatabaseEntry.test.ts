@@ -18,7 +18,7 @@ import { createDatabaseEntry } from './createDatabaseEntry';
 const title = i18n.t('labels.untitled');
 const newEntry: DatabaseEntry = {
   ...objectEntry1,
-  id: expect.any(String),
+  id: `${objectDatabase.name}/${title}.md`,
   title: title,
   path: `${objectDatabase.path}/${title}.md`,
   properties: {
@@ -68,12 +68,13 @@ describe('createDatabaseEntry', () => {
     expect(MockFs.exists(entryCorePropertiesFilePath(entry.path))).toBeTruthy();
   });
 
-  it('increments the entry title if an entry with the same name exists', async () => {
+  it('increments the entry title and ID if an entry with the same name exists', async () => {
     // Create two entrys with the same name
     await createDatabaseEntry(objectDatabase.id);
     const secondEntry = await createDatabaseEntry(objectDatabase.id);
 
     expect(secondEntry.title).toBe(`${title} 1`);
+    expect(secondEntry.id).toBe(`${objectDatabase.name}/${title} 1.md`);
     expect(secondEntry.path).toBe(`${objectDatabase.path}/${title} 1.md`);
   });
 

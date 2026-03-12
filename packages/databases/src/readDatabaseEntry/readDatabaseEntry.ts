@@ -1,4 +1,5 @@
 import { Fs } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
 import { readDatabaseEntryCoreProperties } from '../readDatabaseEntryCoreProperties';
 import { Database, DatabaseEntry, DatabaseEntrySerializer } from '../types';
 
@@ -25,12 +26,14 @@ export async function readDatabaseEntry(
       database,
     );
 
-    // Construct the entry object
+    // Construct the entry object with workspace-relative path as ID
     const entry: DatabaseEntry = {
+      ...coreProperties,
+      id: path.replace(`${Paths.workspace}/`, ''),
       path,
       properties: {},
       database: database.id,
-      ...coreProperties,
+      metadata: {},
     };
 
     // Deserialize the entry's properties

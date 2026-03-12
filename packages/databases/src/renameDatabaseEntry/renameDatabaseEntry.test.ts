@@ -83,12 +83,15 @@ describe('renameDatabaseEntry', () => {
     expect(MockFs.exists(assetsDirPath)).toBe(false);
   });
 
-  it('updates the entry title, path, and last modified date', async () => {
+  it('updates the entry id, title, path, and last modified date', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
       objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
+    expect(renamedDatabaseEntry.id).toBe(
+      `${objectDatabase.name}/Renamed DatabaseEntry.md`,
+    );
     expect(renamedDatabaseEntry.title).toBe('Renamed DatabaseEntry');
     expect(renamedDatabaseEntry.path).toBe(
       `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
@@ -98,15 +101,19 @@ describe('renameDatabaseEntry', () => {
     );
   });
 
-  it('updates the entry in the store', async () => {
+  it('updates the entry in the store under the new ID', async () => {
     const renamedDatabaseEntry = await renameDatabaseEntry(
       objectEntry1.id,
       'Renamed DatabaseEntry',
     );
 
+    // New ID should exist in the store
     expect(DatabaseEntriesStore.get(renamedDatabaseEntry.id)).toEqual(
       renamedDatabaseEntry,
     );
+
+    // Old ID should no longer exist
+    expect(DatabaseEntriesStore.get(objectEntry1.id)).toBeNull();
   });
 
   it('updates the entry core properties file', async () => {
@@ -121,14 +128,15 @@ describe('renameDatabaseEntry', () => {
     ).toBe('Renamed DatabaseEntry');
   });
 
-  it('dispatches a entry rename event', async () =>
+  it('dispatches an entry rename event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseEntryRenamedEvent, 'test', (payload) => {
-        // Payload data should be the renamed entry
+        // Payload data should contain the original and updated entry
         expect(payload.data).toEqual({
           original: objectEntry1,
           updated: {
             ...objectEntry1,
+            id: `${objectDatabase.name}/Renamed DatabaseEntry.md`,
             title: 'Renamed DatabaseEntry',
             path: `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
             lastModified: expect.any(Date),

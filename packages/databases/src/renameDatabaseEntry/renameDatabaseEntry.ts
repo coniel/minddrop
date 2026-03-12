@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { Fs, PathConflictError } from '@minddrop/file-system';
-import { titleFromPath } from '@minddrop/utils';
+import { Paths, titleFromPath } from '@minddrop/utils';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import {
   DatabaseEntryRenamedEvent,
@@ -76,18 +76,18 @@ export async function renameDatabaseEntry<
     newPath = Fs.concatPath(newEntryDir, `${finalNewTitle}.${fileExtension}`);
 
     // Rename the entry file inside the renamed directory
-    Fs.rename(currentEntryPath, newPath);
+    await Fs.rename(currentEntryPath, newPath);
 
     // Rename the entry's core properties file.
     // The core properties file is outside the entry subdirectory,
     // so its path is unaffected by the directory rename.
-    Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
+    await Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
   } else {
     // Rename the primary entry file
-    Fs.rename(entry.path, newPath);
+    await Fs.rename(entry.path, newPath);
 
     // Rename the entry's core properties file
-    Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
+    await Fs.rename(corePropertiesPath, entryCorePropertiesFilePath(newPath));
 
     // Rename the entry's assets directory if it exists
     const assetsDirPath = entryAssetsDirPath(entry.path);
@@ -95,23 +95,28 @@ export async function renameDatabaseEntry<
     if (await Fs.exists(assetsDirPath)) {
       const newAssetsDirPath = entryAssetsDirPath(newPath);
 
-      Fs.rename(assetsDirPath, newAssetsDirPath);
+      await Fs.rename(assetsDirPath, newAssetsDirPath);
     }
   }
 
-  // Update the entry's title, path, and last modified date
+  // Derive the new workspace-relative ID from the new path
+  const newId = newPath.replace(`${Paths.workspace}/`, '');
+
+  // Update the entry's ID, title, path, and last modified date
   const renamedDatabaseEntry: TDatabaseEntry = {
     ...entry,
+    id: newId,
     path: newPath,
     title: finalNewTitle,
     lastModified: new Date(),
   };
 
-  // Update the entry in the store
-  DatabaseEntriesStore.update(id, renamedDatabaseEntry);
+  // Update the entry in the store (remove old key, set new one)
+  DatabaseEntriesStore.remove(id);
+  DatabaseEntriesStore.set(renamedDatabaseEntry);
 
   // Write the updated core properties to the renamed core properties file
-  writeDatabaseEntry(id);
+  writeDatabaseEntry(newId);
 
   // Dispatch an entry rename event
   Events.dispatch<DatabaseEntryRenamedEventData>(DatabaseEntryRenamedEvent, {
