@@ -54,36 +54,13 @@ export interface View<
    * View type specific data.
    */
   data?: TViewData;
-
-  /**
-   * A [database id]: [design id] map. Used to specify which design to use when rendering
-   * entries from that database.
-   *
-   * If not provided, the database's default design will be used.
-   */
-  databaseDesignMap?: Record<string, string>;
-
-  /**
-   * A [entry id]: [design id] map. Used to override the design used to render a specific entry.
-   */
-  entryDesignMap?: Record<string, string>;
 }
 
 export type CreateVirtualViewData = Pick<View, 'id' | 'type' | 'dataSource'> &
   Partial<Pick<View, 'name' | 'options' | 'data'>>;
 
-export type UpdateViewData = Partial<
-  Pick<View, 'name' | 'options' | 'databaseDesignMap' | 'entryDesignMap'>
->;
+export type UpdateViewData = Partial<Pick<View, 'name' | 'options'>>;
 
 export type UpdateVirtualViewData = Partial<
-  Pick<
-    View,
-    | 'id'
-    | 'name'
-    | 'options'
-    | 'dataSource'
-    | 'databaseDesignMap'
-    | 'entryDesignMap'
-  >
+  Pick<View, 'id' | 'name' | 'options' | 'dataSource'>
 >;

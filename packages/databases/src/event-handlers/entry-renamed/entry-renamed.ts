@@ -119,23 +119,4 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
       );
     }),
   );
-
-  // Step 10: Update entryDesignMap in all views that reference the old entry ID
-  const allViews = Views.Store.getAll();
-
-  await Promise.all(
-    allViews
-      .filter(
-        (view) => view.entryDesignMap && original.id in view.entryDesignMap,
-      )
-      .map(async (view) => {
-        const { [original.id]: designId, ...rest } = view.entryDesignMap!;
-
-        // Build the updated map with the new entry ID
-        const entryDesignMap = { ...rest, [updated.id]: designId };
-
-        // Use deepMerge=false to fully replace the map (removing old key)
-        await Views.update(view.id, { entryDesignMap }, false);
-      }),
-  );
 }

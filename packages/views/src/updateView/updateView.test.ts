@@ -16,16 +16,11 @@ import { getViewFilePath } from '../utils';
 import { updateView } from './updateView';
 
 const update = {
-  databaseDesignMap: {
-    'database-foo': 'design-foo',
-  },
+  options: { layout: 'grid' },
 };
 const updatedView: View = {
   ...view_gallery_1,
-  databaseDesignMap: {
-    ...view_gallery_1.databaseDesignMap,
-    ...update.databaseDesignMap,
-  },
+  options: update.options,
   lastModified: mockDate,
 };
 
@@ -59,7 +54,7 @@ describe('updateView', () => {
 
     expect(result).toEqual({
       ...updatedView,
-      databaseDesignMap: update.databaseDesignMap,
+      options: update.options,
     });
   });
 

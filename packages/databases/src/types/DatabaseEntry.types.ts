@@ -1,5 +1,4 @@
 import { PropertyMap } from '@minddrop/properties';
-import { View } from '@minddrop/views';
 
 export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   /**
@@ -48,11 +47,20 @@ export interface DatabaseEntry<TProperties extends PropertyMap = PropertyMap> {
   metadata: DatabaseEntryMetadata;
 }
 
-export type DatabaseEntryViewConfig = Pick<View, 'options' | 'data'>;
+export interface DatabaseEntryViewConfig {
+  options?: object;
+  data?: object;
+}
 
 export interface DatabaseEntryMetadata {
   /**
    * Saved view state for virtual views, keyed by `designId:propertyName`.
    */
   views?: Record<string, DatabaseEntryViewConfig>;
+
+  /**
+   * Per-view design overrides for this entry, keyed by
+   * view ID. If set, used instead of the database default.
+   */
+  designOverrides?: Record<string, string>;
 }

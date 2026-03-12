@@ -281,45 +281,6 @@ describe('onRenameEntry', () => {
     });
   });
 
-  it('updates entryDesignMap in views referencing old entry ID', async () => {
-    const designId = design_card_2.id;
-
-    // Create a non-virtual view that has entryDesignMap with the old entry ID
-    // We use a virtual view here for test convenience
-    Views.createVirtual({
-      id: 'test-view-with-design-map',
-      type: 'board',
-      dataSource: { type: 'database', id: collectionDatabase.id },
-      name: 'Test View',
-    });
-
-    // Set the entryDesignMap via update
-    await Views.update('test-view-with-design-map', {
-      entryDesignMap: { [collectionEntry1.id]: designId },
-    });
-
-    const renamedEntry = {
-      ...collectionEntry1,
-      id: `${collectionDatabase.name}/Renamed Entry.md`,
-      title: 'Renamed Entry',
-      path: `${collectionDatabase.path}/Renamed Entry.md`,
-    };
-
-    // Update the store
-    DatabaseEntriesStore.set(renamedEntry);
-
-    await onRenameEntry({
-      original: collectionEntry1,
-      updated: renamedEntry,
-    });
-
-    // The view's entryDesignMap should reference the new entry ID
-    const view = Views.get('test-view-with-design-map');
-
-    expect(view.entryDesignMap?.[renamedEntry.id]).toBe(designId);
-    expect(view.entryDesignMap?.[collectionEntry1.id]).toBeUndefined();
-  });
-
   it('handles entries without collection properties', async () => {
     // objectEntry1 is in objectDatabase which has no collection properties
     await onRenameEntry({

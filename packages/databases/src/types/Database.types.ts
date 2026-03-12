@@ -105,6 +105,12 @@ export interface Database {
   defaultDesigns: Record<string, string>;
 
   /**
+   * A [view ID]: [design ID] map overriding the default
+   * design for specific views.
+   */
+  viewDesigns?: Record<string, string>;
+
+  /**
    * How entries are opened when clicked.
    * - `dialog`: Opens the entry as a dialog overlay.
    * - `main-content`: Opens the entry in the main content area.
