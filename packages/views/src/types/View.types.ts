@@ -1,6 +1,9 @@
 import { ViewDataSource } from './ViewDataSource.types';
 
-export interface View<TViewOptions extends object = object> {
+export interface View<
+  TViewOptions extends object = object,
+  TViewData extends object = object,
+> {
   /**
    * A unique identifier for the view.
    */
@@ -46,6 +49,11 @@ export interface View<TViewOptions extends object = object> {
    * View type specific options.
    */
   options?: TViewOptions;
+
+  /**
+   * View type specific data.
+   */
+  data?: TViewData;
 
   /**
    * A [database id]: [design id] map. Used to specify which design to use when rendering

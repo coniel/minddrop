@@ -2,7 +2,10 @@ import { TranslationKey } from '@minddrop/i18n';
 import { View } from './View.types';
 import { ViewDataSourceType } from './ViewDataSource.types';
 
-export interface ViewType<TViewOptions extends object = object> {
+export interface ViewType<
+  TViewOptions extends object = object,
+  TViewData extends object = object,
+> {
   /**
    * A unique identifier for the view type. Used to reference the view type
    * in view instances.
@@ -40,6 +43,11 @@ export interface ViewType<TViewOptions extends object = object> {
   defaultOptions?: TViewOptions;
 
   /**
+   * The default data for the view type.
+   */
+  defaultData?: TViewData;
+
+  /**
    * An optional component that renders a settings menu specific to this
    * view type. Receives the current view options and a callback to update them.
    */
@@ -55,11 +63,12 @@ export interface ViewType<TViewOptions extends object = object> {
 
 export interface ViewTypeSettingsMenuProps<
   TViewOptions extends object = object,
+  TViewData extends object = object,
 > {
   /**
    * The view instance.
    */
-  view: View<TViewOptions>;
+  view: View<TViewOptions, TViewData>;
 
   /**
    * The current view options.
@@ -73,11 +82,14 @@ export interface ViewTypeSettingsMenuProps<
   onUpdateOptions: (options: Partial<TViewOptions>) => void;
 }
 
-export interface ViewTypeComponentProps<TViewOptions extends object = object> {
+export interface ViewTypeComponentProps<
+  TViewOptions extends object = object,
+  TViewData extends object = object,
+> {
   /**
    * The view instance.
    */
-  view: View<TViewOptions>;
+  view: View<TViewOptions, TViewData>;
 
   /**
    * IDs of the elements to render within the view.
