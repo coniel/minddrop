@@ -122,14 +122,17 @@ describe('renameDatabaseEntry', () => {
   });
 
   it('dispatches a entry rename event', async () =>
-    new Promise<void>(async (done) => {
+    new Promise<void>((done) => {
       Events.addListener(DatabaseEntryRenamedEvent, 'test', (payload) => {
         // Payload data should be the renamed entry
         expect(payload.data).toEqual({
-          ...objectEntry1,
-          title: 'Renamed DatabaseEntry',
-          path: `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
-          lastModified: expect.any(Date),
+          original: objectEntry1,
+          updated: {
+            ...objectEntry1,
+            title: 'Renamed DatabaseEntry',
+            path: `${Fs.parentDirPath(objectEntry1.path)}/Renamed DatabaseEntry.md`,
+            lastModified: expect.any(Date),
+          },
         });
         done();
       });
