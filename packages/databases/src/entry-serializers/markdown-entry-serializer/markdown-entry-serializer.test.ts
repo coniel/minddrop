@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PropertiesSchema } from '@minddrop/properties';
-import { DatabaseEntry } from '../../types';
+import { objectEntry1 } from '../../test-utils';
 import { markdownEntrySerializer } from './markdown-entry-serializer';
 
 const schema1: PropertiesSchema = [
@@ -10,17 +10,11 @@ const schema1: PropertiesSchema = [
   },
 ];
 
-const entry1: DatabaseEntry = {
-  id: 'test-entry-1',
-  title: 'Test Entry',
-  database: 'test-database',
-  path: 'test-database/test-entry',
-  created: new Date(),
-  lastModified: new Date(),
+const entry1 = {
+  ...objectEntry1,
   properties: {
     Content: 'Test content',
   },
-  metadata: {},
 };
 const schema2: PropertiesSchema = [
   ...schema1,
@@ -30,7 +24,7 @@ const schema2: PropertiesSchema = [
   },
 ];
 
-const entry2: DatabaseEntry = {
+const entry2 = {
   ...entry1,
   properties: {
     ...entry1.properties,
@@ -46,7 +40,7 @@ const schema3: PropertiesSchema = [
   },
 ];
 
-const entry3: DatabaseEntry = {
+const entry3 = {
   ...entry1,
   properties: {
     ...entry1.properties,
