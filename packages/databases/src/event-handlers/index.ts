@@ -8,3 +8,4 @@ export * from './entry-renamed';
 export * from './property-added';
 export * from './property-removed';
 export * from './property-renamed';
+export * from './virtual-view-updated';

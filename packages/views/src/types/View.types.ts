@@ -69,6 +69,9 @@ export interface View<
   entryDesignMap?: Record<string, string>;
 }
 
+export type CreateVirtualViewData = Pick<View, 'id' | 'type' | 'dataSource'> &
+  Partial<Pick<View, 'name' | 'options' | 'data'>>;
+
 export type UpdateViewData = Partial<
   Pick<View, 'name' | 'options' | 'databaseDesignMap' | 'entryDesignMap'>
 >;

@@ -20,6 +20,7 @@ const entry1: DatabaseEntry = {
   properties: {
     Content: 'Test content',
   },
+  metadata: {},
 };
 const schema2: PropertiesSchema = [
   ...schema1,

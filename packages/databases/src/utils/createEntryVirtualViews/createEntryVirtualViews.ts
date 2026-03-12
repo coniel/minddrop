@@ -9,6 +9,7 @@ import {
 import { Views } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabasesStore } from '../../DatabasesStore';
+import { viewMetadataKey } from '../viewMetadataKey';
 import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualCollectionName } from '../virtualCollectionName';
 import { virtualViewId } from '../virtualViewId';
@@ -88,17 +89,20 @@ export function createEntryVirtualViews(
       Collections.createVirtual(collId, collName, entries);
     }
 
-    // Create the virtual view if it doesn't exist
+    // Create the virtual view if it doesn't exist, applying any
+    // saved view config from entry metadata
     if (!Views.get(viewId, false)) {
-      Views.createVirtual(
-        viewId,
-        viewType,
-        {
-          type: 'collection',
-          id: collId,
-        },
-        property.name,
-      );
+      const metadataKey = viewMetadataKey(property.name, design.id);
+      const savedConfig = entry.metadata.views?.[metadataKey];
+
+      Views.createVirtual({
+        id: viewId,
+        type: viewType,
+        dataSource: { type: 'collection', id: collId },
+        name: property.name,
+        options: savedConfig?.options,
+        data: savedConfig?.data,
+      });
     }
 
     viewIds[property.name] = viewId;

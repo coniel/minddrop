@@ -7,12 +7,14 @@ import {
   Design,
 } from '@minddrop/designs';
 import { ViewFixtures, Views } from '@minddrop/views';
+import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import {
   cleanup,
   collectionEntry1,
   objectEntry1,
   setup,
 } from '../../test-utils';
+import { viewMetadataKey } from '../viewMetadataKey';
 import { virtualCollectionId } from '../virtualCollectionId';
 import { virtualViewId } from '../virtualViewId';
 import { createEntryVirtualViews } from './createEntryVirtualViews';
@@ -216,6 +218,55 @@ describe('createEntryVirtualViews', () => {
         multiViewDesign.id,
       ),
     });
+  });
+
+  it('applies saved view config from entry metadata', () => {
+    const savedConfig = {
+      options: { columns: [['a', 'b'], ['c']] },
+      data: { sortOrder: 'asc' },
+    };
+
+    // Set metadata on the entry with a saved view config
+    DatabaseEntriesStore.set({
+      ...collectionEntry1,
+      metadata: {
+        views: {
+          [viewMetadataKey('Related', designWithView.id)]: savedConfig,
+        },
+      },
+    });
+
+    createEntryVirtualViews(collectionEntry1.id, designWithView, propertyMap);
+
+    // Verify the saved config was applied to the virtual view
+    const vViewId = virtualViewId(
+      collectionEntry1.id,
+      'Related',
+      designWithView.id,
+    );
+    const view = Views.get(vViewId, false);
+
+    // Saved options are merged over the view type's default options
+    expect(view!.options).toEqual({
+      ...viewType_table.defaultOptions,
+      ...savedConfig.options,
+    });
+    expect(view!.data).toEqual(savedConfig.data);
+  });
+
+  it('does not modify view when no saved config exists in metadata', () => {
+    createEntryVirtualViews(collectionEntry1.id, designWithView, propertyMap);
+
+    // View should have default options from view type (or none)
+    const vViewId = virtualViewId(
+      collectionEntry1.id,
+      'Related',
+      designWithView.id,
+    );
+    const view = Views.get(vViewId, false);
+
+    // Should not have custom data
+    expect(view!.data).toBeUndefined();
   });
 
   it('defaults to empty array when collection property has no value', () => {

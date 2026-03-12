@@ -26,26 +26,55 @@ describe('createVirtualView', () => {
   afterEach(cleanup);
 
   it('returns the new virtual view', () => {
-    const result = createVirtualView(id, viewType_gallery.type, dataSource);
+    const result = createVirtualView({
+      id,
+      type: viewType_gallery.type,
+      dataSource,
+    });
 
     expect(result).toEqual(expectedView);
   });
 
   it('adds the view to the store', () => {
-    createVirtualView(id, viewType_gallery.type, dataSource);
+    createVirtualView({ id, type: viewType_gallery.type, dataSource });
 
     expect(ViewsStore.get(id)).toEqual(expectedView);
   });
 
   it('uses the provided name', () => {
-    const result = createVirtualView(
+    const result = createVirtualView({
       id,
-      viewType_gallery.type,
+      type: viewType_gallery.type,
       dataSource,
-      'Custom Name',
-    );
+      name: 'Custom Name',
+    });
 
     expect(result.name).toBe('Custom Name');
+  });
+
+  it('merges provided options over default options', () => {
+    const result = createVirtualView({
+      id,
+      type: viewType_gallery.type,
+      dataSource,
+      options: { customOption: true },
+    });
+
+    expect(result.options).toEqual({
+      ...viewType_gallery.defaultOptions,
+      customOption: true,
+    });
+  });
+
+  it('sets provided data on the view', () => {
+    const result = createVirtualView({
+      id,
+      type: viewType_gallery.type,
+      dataSource,
+      data: { sortOrder: 'asc' },
+    });
+
+    expect(result.data).toEqual({ sortOrder: 'asc' });
   });
 
   it('dispatches a view created event', () =>
@@ -59,6 +88,6 @@ describe('createVirtualView', () => {
         },
       );
 
-      createVirtualView(id, viewType_gallery.type, dataSource);
+      createVirtualView({ id, type: viewType_gallery.type, dataSource });
     }));
 });

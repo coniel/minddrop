@@ -3,6 +3,7 @@ import {
   CollectionUpdatedEventData,
 } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
+import { ViewUpdatedEvent, ViewUpdatedEventData } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { DatabasesStore } from '../DatabasesStore';
@@ -17,6 +18,7 @@ import {
   onRenameEntry,
   onRenameProperty,
   onUpdateCollection,
+  onUpdateVirtualView,
 } from '../event-handlers';
 import {
   DatabaseCreatedEvent,
@@ -144,4 +146,8 @@ function initializeEventHandlers() {
       onUpdateCollection(data);
     },
   );
+
+  Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {
+    onUpdateVirtualView(data);
+  });
 }
