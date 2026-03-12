@@ -118,6 +118,8 @@ export const registerFileSystemAdapter = (rpc: any) =>
       watchCallbacks.delete(id);
       await rpc.request.fsUnwatch({ id });
     },
+
+    stat: (path) => rpc.request.fsStat({ path }),
   });
 
 const uploadQueue = {

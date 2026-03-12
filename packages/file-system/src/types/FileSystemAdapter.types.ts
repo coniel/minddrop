@@ -1,5 +1,6 @@
 import { BaseDirectory } from './BaseDirectory.types';
-import { FsEntry } from './FileEntry.types';
+import { FsEntry } from './FsEntry.types';
+import { FsFileStats } from './FsFileStats.types';
 import {
   CopyFileOptions,
   DownlodFileOptions,
@@ -221,4 +222,12 @@ export interface FileSystemAdapter {
    * @param id - The watcher ID returned by `watch`.
    */
   unwatch(id: string): Promise<void>;
+
+  /**
+   * Returns file stats including creation and modification timestamps.
+   *
+   * @param path - The file path.
+   * @returns A promise resolving to the file stats.
+   */
+  stat(path: string): Promise<FsFileStats>;
 }

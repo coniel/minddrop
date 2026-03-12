@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FsEntry } from './FileEntry.types';
-import { FsWatchEvent } from './FileSystemAdapter.types';
-import { FileSystemAdapter } from './FileSystemAdapter.types';
+import { FsEntry } from './FsEntry.types';
+import { FileSystemAdapter, FsWatchEvent } from './FileSystemAdapter.types';
+import { FsFileStats } from './FsFileStats.types';
 import {
   FsCreateDirOptions,
   FsExistsOptions,
@@ -55,6 +55,7 @@ export interface MockFileSystem {
   removeDir(path: string, options?: FsRemoveDirOptions): void;
   downloadFile(url: string, path: string, options?: FsFileOptions): void;
   setFilePickerResult(result: string | string[] | null): void;
+  setFileStats(path: string, stats: FsFileStats): void;
   dispatchWatchEvent(kind: FsWatchEvent['kind'], paths: string[]): void;
   printWatchers(): void;
 }
@@ -65,5 +66,6 @@ export type MockFileDescriptor = {
   path: string;
   textContent?: string;
   binaryFile?: any;
+  stats?: FsFileStats;
   options?: FsFileOptions;
 };

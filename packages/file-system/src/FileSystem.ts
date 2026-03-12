@@ -63,6 +63,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
   watch: (...args) => FsAdapter.watch(...args),
   unwatch: (...args) => FsAdapter.unwatch(...args),
+  stat: (...args) => FsAdapter.stat(...args),
 };
 
 async function setBaseDirPaths(): Promise<void> {

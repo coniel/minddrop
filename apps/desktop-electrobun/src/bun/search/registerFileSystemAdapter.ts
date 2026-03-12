@@ -42,6 +42,7 @@ export function registerBunFileSystemAdapter(): void {
         newPathBaseDir: options?.newPathBaseDir,
       }),
     convertFileSrc: (filePath) => filePath,
+    stat: (path) => fs.fsStat({ path }),
     // Stub out methods not needed on the Bun side for search
     copyFile: async () => {},
     removeDir: async () => {},

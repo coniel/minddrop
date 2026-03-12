@@ -10,6 +10,7 @@ import {
   FsDirOptions,
   FsEntry,
   FsFileOptions,
+  FsFileStats,
   FsReadFileOptions,
   FsWatchEvent,
   MockFileDescriptor,
@@ -45,6 +46,8 @@ export function initializeMockFileSystem(
   let textFileContents: Record<string, string> = init.textFileContents;
   // A { path: File } map of binary files
   let binaryFiles: Record<string, any> = init.binaryFiles;
+  // A { path: stats } map of file stats
+  let fileStats: Record<string, FsFileStats> = init.fileStats;
   // Result of the file picker
   let filePickerResult: string | string[] | null = null;
   // Watch callbacks keyed by watcher ID
@@ -200,6 +203,20 @@ export function initializeMockFileSystem(
     unwatch: async (id) => {
       watchCallbacks.delete(id);
     },
+    stat: async (path) => {
+      const fullPath = getFullPath(path);
+
+      // Ensure file entry exists
+      mockGetFileEntry(root, fullPath);
+
+      // Return configured stats or default dates
+      return (
+        fileStats[fullPath] || {
+          created: new Date('2024-01-01T00:00:00.000Z'),
+          lastModified: new Date('2024-01-01T00:00:00.000Z'),
+        }
+      );
+    },
   };
 
   registerFileSystemAdapter(MockFs);
@@ -211,6 +228,7 @@ export function initializeMockFileSystem(
     clear: () => {
       root = { path: 'root', name: 'root', children: [] };
       trash = [];
+      fileStats = {};
       watchCallbacks.clear();
     },
     printFiles: () => {
@@ -233,6 +251,7 @@ export function initializeMockFileSystem(
       textFileContents = init.textFileContents;
       binaryFiles = init.binaryFiles;
       trash = [];
+      fileStats = init.fileStats;
       watchCallbacks.clear();
     },
     clearTrash: () => {
@@ -243,6 +262,7 @@ export function initializeMockFileSystem(
       root = init.root;
       textFileContents = init.textFileContents;
       binaryFiles = init.binaryFiles;
+      fileStats = init.fileStats;
     },
     addFiles: (filesToLoad) => {
       const init = initializeMockFsRoot(filesToLoad);
@@ -259,6 +279,11 @@ export function initializeMockFileSystem(
       binaryFiles = {
         ...binaryFiles,
         ...init.binaryFiles,
+      };
+
+      fileStats = {
+        ...fileStats,
+        ...init.fileStats,
       };
     },
     exists: (path, options) => mockExists(root, getFullPath(path, options)),
@@ -368,6 +393,9 @@ export function initializeMockFileSystem(
     setFilePickerResult: (result) => {
       filePickerResult = result;
     },
+    setFileStats: (path, stats) => {
+      fileStats[getFullPath(path)] = stats;
+    },
     printWatchers: () => {
       console.log('---------- MockFs watchers -----------');
       watchCallbacks.forEach(({ paths }, id) => {
@@ -380,7 +408,8 @@ export function initializeMockFileSystem(
         const matchingPaths = eventPaths.filter((eventPath) =>
           watchedPaths.some(
             (watchedPath) =>
-              eventPath === watchedPath || eventPath.startsWith(watchedPath + '/'),
+              eventPath === watchedPath ||
+              eventPath.startsWith(watchedPath + '/'),
           ),
         );
 
@@ -398,10 +427,12 @@ function initializeMockFsRoot(
   root: FsEntry;
   textFileContents: Record<string, string>;
   binaryFiles: Record<string, any>;
+  fileStats: Record<string, FsFileStats>;
 } {
   const root: FsEntry = { path: 'root', name: 'root', children: [] };
   const textFileContents: Record<string, string> = {};
   const binaryFiles: Record<string, any> = {};
+  const fileStats: Record<string, FsFileStats> = {};
 
   fileDescriptors.forEach((fileDescriptor) => {
     const path =
@@ -435,10 +466,14 @@ function initializeMockFsRoot(
       if (fileDescriptor.binaryFile) {
         binaryFiles[path] = fileDescriptor.binaryFile;
       }
+
+      if (fileDescriptor.stats) {
+        fileStats[path] = fileDescriptor.stats;
+      }
     }
   });
 
-  return { root, textFileContents, binaryFiles };
+  return { root, textFileContents, binaryFiles, fileStats };
 }
 
 function addToFileTree(root: FsEntry, file: FsEntry) {

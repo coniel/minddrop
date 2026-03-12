@@ -3,7 +3,7 @@ import { type FSWatcher, watch as fsWatch } from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'path';
 import { BaseDirectory } from '@minddrop/file-system';
-import type { FsWatchEventKind } from '@minddrop/file-system';
+import type { FsFileStats, FsWatchEventKind } from '@minddrop/file-system';
 import { InvalidParameterError } from '@minddrop/utils';
 
 function getBaseDirPath(dir: BaseDirectory): string {
@@ -315,6 +315,19 @@ export const fileSystemRpcHandlers = {
 
       watchers.delete(id);
     }
+  },
+
+  fsStat: async ({
+    path: filePath,
+  }: {
+    path: string;
+  }): Promise<FsFileStats> => {
+    const stat = await fsp.stat(filePath);
+
+    return {
+      created: stat.birthtime,
+      lastModified: stat.mtime,
+    };
   },
 
   fsOpenFilePicker: async ({
