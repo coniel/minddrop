@@ -35,7 +35,7 @@ export interface ViewType<
   /**
    * The component used to render the view.
    */
-  component: React.ElementType<ViewTypeComponentProps<TViewOptions>>;
+  component: React.ElementType<ViewTypeComponentProps<TViewOptions, TViewData>>;
 
   /**
    * The default options for the view type.

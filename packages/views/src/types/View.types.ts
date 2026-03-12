@@ -59,8 +59,8 @@ export interface View<
 export type CreateVirtualViewData = Pick<View, 'id' | 'type' | 'dataSource'> &
   Partial<Pick<View, 'name' | 'options' | 'data'>>;
 
-export type UpdateViewData = Partial<Pick<View, 'name' | 'options'>>;
+export type UpdateViewData = Partial<Pick<View, 'name' | 'options' | 'data'>>;
 
 export type UpdateVirtualViewData = Partial<
-  Pick<View, 'id' | 'name' | 'options' | 'dataSource'>
+  Pick<View, 'id' | 'name' | 'options' | 'data' | 'dataSource'>
 >;

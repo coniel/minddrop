@@ -38,9 +38,14 @@ export async function createView(
     lastModified: new Date(),
   };
 
-  // If the view type has a default options, merge them into the view
+  // If the view type has default options, merge them into the view
   if (viewType?.defaultOptions) {
     view.options = { ...viewType.defaultOptions, ...view.options };
+  }
+
+  // If the view type has default data, merge it into the view
+  if (viewType?.defaultData) {
+    view.data = { ...viewType.defaultData };
   }
 
   // Add the view to the store
