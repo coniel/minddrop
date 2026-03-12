@@ -56,6 +56,34 @@ export function updateEntryMetadata(
 }
 
 /**
+ * Re-keys a pending metadata entry from one entry ID to another.
+ * Used during rename to ensure queued-but-unflushed metadata
+ * follows the entry to its new ID.
+ *
+ * No-op if the database has no pending updates or the old key
+ * does not exist in the pending map.
+ *
+ * @param databasePath - The absolute path to the database directory.
+ * @param oldEntryId - The entry ID to re-key from.
+ * @param newEntryId - The entry ID to re-key to.
+ */
+export function rekeyPendingMetadata(
+  databasePath: string,
+  oldEntryId: string,
+  newEntryId: string,
+): void {
+  const pending = pendingUpdates.get(databasePath);
+
+  if (!pending || !(oldEntryId in pending)) {
+    return;
+  }
+
+  // Move the value from the old key to the new key
+  pending[newEntryId] = pending[oldEntryId];
+  delete pending[oldEntryId];
+}
+
+/**
  * Immediately flushes any pending metadata updates for a database.
  * Reads the current metadata file, merges all queued updates, and
  * writes the result to disk.

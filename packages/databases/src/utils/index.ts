@@ -16,3 +16,4 @@ export * from './virtualViewId';
 export * from './createEntryVirtualViews';
 export * from './entryDisplayPropertyValues';
 export * from './convertEntryToSqlRecord';
+export * from './rekeyDatabaseMetadata';

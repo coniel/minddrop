@@ -156,7 +156,7 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
 
         {/* Content wrapper */}
         <div className="entry-dialog-content">
-          <EntryDialogContent entryId={entryId} />
+          <DatabaseEntryRenderer entryId={entryId} designType="page" />
         </div>
 
         {/* Previous entry navigation button */}
@@ -204,18 +204,4 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       </div>
     </div>
   );
-};
-
-/**
- * Renders the entry content using the entry's page design.
- */
-const EntryDialogContent: React.FC<{ entryId: string }> = ({ entryId }) => {
-  // Get the entry data
-  const entry = DatabaseEntries.use(entryId);
-
-  if (!entry) {
-    return null;
-  }
-
-  return <DatabaseEntryRenderer entryId={entryId} designType="page" />;
 };

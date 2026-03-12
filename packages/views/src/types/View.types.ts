@@ -77,5 +77,13 @@ export type UpdateViewData = Partial<
 >;
 
 export type UpdateVirtualViewData = Partial<
-  Pick<View, 'id' | 'name' | 'options' | 'databaseDesignMap' | 'entryDesignMap'>
+  Pick<
+    View,
+    | 'id'
+    | 'name'
+    | 'options'
+    | 'dataSource'
+    | 'databaseDesignMap'
+    | 'entryDesignMap'
+  >
 >;

@@ -1,33 +1,60 @@
 import { Collections } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
+import { Views } from '@minddrop/views';
 import {
   DatabaseEntriesSqlSyncedEvent,
   DatabaseEntryRenamedEventData,
 } from '../../events';
 import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { upsertEntries } from '../../sql';
+import { deleteEntries, upsertEntries } from '../../sql';
+import { flushDatabaseMetadata } from '../../updateEntryMetadata';
+import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
 import {
   convertEntryToSqlRecord,
+  rekeyDatabaseMetadata,
   virtualCollectionId,
   virtualCollectionName,
+  virtualViewId,
 } from '../../utils';
 
 /**
- * Called when a database entry is renamed. Syncs to SQL and
- * updates virtual collection names.
+ * Called when a database entry is renamed. Cascades the ID
+ * change through SQL, metadata, and virtual collections/views.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
-  const { updated } = data;
+  const { original, updated } = data;
 
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
 
-  // Sync renamed entry to SQL
+  // Step 1: Flush any pending metadata writes so nothing is lost
+  await flushDatabaseMetadata(database.path);
+
+  // Step 2: Re-key the on-disk metadata file from old to new entry ID
+  await rekeyDatabaseMetadata(database.path, original.id, updated.id);
+
+  // Step 3: Re-key any in-flight pending metadata entries
+  rekeyPendingMetadata(database.path, original.id, updated.id);
+
+  // Step 4: Remove the orphaned SQL record under the old ID
+  deleteEntries([original.id]);
+
+  // Step 5: Insert the new SQL record under the new ID
   const record = convertEntryToSqlRecord(updated, database);
   upsertEntries([record]);
 
-  // Dispatch SQL synced event
+  // Dispatch SQL synced delete event for the old entry
+  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
+    DatabaseEntriesSqlSyncedEvent,
+    {
+      action: 'delete',
+      entryIds: [original.id],
+      databaseId: database.id,
+    },
+  );
+
+  // Dispatch SQL synced upsert event for the new entry
   Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
     DatabaseEntriesSqlSyncedEvent,
     {
@@ -43,29 +70,72 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     (property) => property.type === 'collection',
   );
 
-  // Nothing to do if there are no collection properties
+  // Nothing left to do if there are no collection properties
   if (collectionProperties.length === 0) {
     return;
   }
 
-  // Update the name of each virtual collection
+  // Step 8-9: Re-ID virtual collections and views
   await Promise.all(
     collectionProperties.map(async (property) => {
-      const collectionId = virtualCollectionId(updated.id, property.name);
+      const oldCollectionId = virtualCollectionId(original.id, property.name);
+      const newCollectionId = virtualCollectionId(updated.id, property.name);
 
-      // Only update if the collection exists in the store
-      if (!Collections.Store.get(collectionId)) {
-        return;
+      // Re-ID the virtual collection if it exists
+      if (Collections.Store.get(oldCollectionId)) {
+        const name = virtualCollectionName(
+          database.name,
+          updated.title,
+          property.name,
+        );
+
+        await Collections.update(oldCollectionId, {
+          id: newCollectionId,
+          name,
+        });
       }
 
-      // Update the collection name to reflect the new entry title
-      const name = virtualCollectionName(
-        database.name,
-        updated.title,
-        property.name,
-      );
+      // Re-ID virtual views for each design that has a property map
+      const designIds = Object.keys(database.designPropertyMaps || {});
 
-      await Collections.update(collectionId, { name });
+      await Promise.all(
+        designIds.map(async (designId) => {
+          const oldViewId = virtualViewId(original.id, property.name, designId);
+          const newViewId = virtualViewId(updated.id, property.name, designId);
+
+          // Only update if the view exists
+          const view = Views.Store.get(oldViewId);
+
+          if (!view) {
+            return;
+          }
+
+          // Update the view ID and point dataSource to the new collection
+          await Views.update(oldViewId, {
+            id: newViewId,
+            dataSource: { type: 'collection', id: newCollectionId },
+          });
+        }),
+      );
     }),
+  );
+
+  // Step 10: Update entryDesignMap in all views that reference the old entry ID
+  const allViews = Views.Store.getAll();
+
+  await Promise.all(
+    allViews
+      .filter(
+        (view) => view.entryDesignMap && original.id in view.entryDesignMap,
+      )
+      .map(async (view) => {
+        const { [original.id]: designId, ...rest } = view.entryDesignMap!;
+
+        // Build the updated map with the new entry ID
+        const entryDesignMap = { ...rest, [updated.id]: designId };
+
+        // Use deepMerge=false to fully replace the map (removing old key)
+        await Views.update(view.id, { entryDesignMap }, false);
+      }),
   );
 }

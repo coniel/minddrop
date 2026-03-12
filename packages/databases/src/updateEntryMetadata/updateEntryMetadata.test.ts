@@ -12,6 +12,7 @@ import { DatabaseEntryMetadata } from '../types';
 import { databaseMetadataFilePath } from '../utils';
 import {
   flushDatabaseMetadata,
+  rekeyPendingMetadata,
   updateEntryMetadata,
 } from './updateEntryMetadata';
 
@@ -105,5 +106,45 @@ describe('updateEntryMetadata', () => {
     await flushDatabaseMetadata(objectDatabase.path);
 
     expect(MockFs.exists(metadataFilePath)).toBe(false);
+  });
+
+  describe('rekeyPendingMetadata', () => {
+    it('moves a pending entry from the old key to the new key', async () => {
+      const newEntryId = `${objectDatabase.name}/Renamed Entry.md`;
+
+      // Queue metadata under the original entry ID
+      updateEntryMetadata(objectEntry1.id, entryMetadata);
+
+      // Re-key from old to new
+      rekeyPendingMetadata(objectDatabase.path, objectEntry1.id, newEntryId);
+
+      // Flush and verify the metadata was written under the new key
+      await flushDatabaseMetadata(objectDatabase.path);
+
+      const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
+
+      expect(written[newEntryId]).toEqual(entryMetadata);
+      expect(written[objectEntry1.id]).toBeUndefined();
+    });
+
+    it('is a no-op when there are no pending updates for the database', () => {
+      // Should not throw
+      rekeyPendingMetadata(objectDatabase.path, objectEntry1.id, 'new-id');
+    });
+
+    it('is a no-op when the old key does not exist in pending updates', async () => {
+      // Queue metadata under a different entry ID
+      updateEntryMetadata(objectEntry1.id, entryMetadata);
+
+      // Try to re-key a non-existent entry
+      rekeyPendingMetadata(objectDatabase.path, 'non-existent', 'new-id');
+
+      // Flush and verify the original entry is unchanged
+      await flushDatabaseMetadata(objectDatabase.path);
+
+      const written = JSON.parse(MockFs.readTextFile(metadataFilePath));
+
+      expect(written[objectEntry1.id]).toEqual(entryMetadata);
+    });
   });
 });

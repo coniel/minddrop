@@ -102,18 +102,26 @@ export async function renameDatabaseEntry<
     lastModified: new Date(),
   };
 
-  // Update the entry in the store (remove old key, set new one)
-  DatabaseEntriesStore.remove(id);
+  // Add the renamed entry to the store, keeping the old key
+  // around so that hooks still resolve a valid entry until
+  // the rename event switches them to the new ID
   DatabaseEntriesStore.set(renamedDatabaseEntry);
 
   // Write the updated entry file
   await writeDatabaseEntry(newId);
 
-  // Dispatch an entry rename event
-  Events.dispatch<DatabaseEntryRenamedEventData>(DatabaseEntryRenamedEvent, {
-    original: entry,
-    updated: renamedDatabaseEntry,
-  });
+  // Dispatch the rename event so listeners (e.g.
+  // useRenameAwareEntryId) switch to the new ID
+  await Events.dispatch<DatabaseEntryRenamedEventData>(
+    DatabaseEntryRenamedEvent,
+    {
+      original: entry,
+      updated: renamedDatabaseEntry,
+    },
+  );
+
+  // Now safe to remove the old key from the store
+  DatabaseEntriesStore.remove(id);
 
   // Return the renamed entry
   return renamedDatabaseEntry;
