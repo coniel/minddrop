@@ -1,15 +1,34 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
+import {
+  DatabaseEntriesSqlSyncedEvent,
+  DatabaseEntryDeletedEventData,
+} from '../../events';
+import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { DatabaseEntry } from '../../types';
+import { deleteEntries } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
- * Called when a database entry is deleted. Deletes the virtual
- * collections associated with the entry's collection properties.
+ * Called when a database entry is deleted. Removes from SQL
+ * and deletes virtual collections for collection properties.
  */
-export async function onDeleteEntry(entry: DatabaseEntry) {
+export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
+  // Delete from SQL (CASCADE handles property cleanup)
+  deleteEntries([data.id]);
+
+  // Dispatch SQL synced event
+  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
+    DatabaseEntriesSqlSyncedEvent,
+    {
+      action: 'delete',
+      entryIds: [data.id],
+      databaseId: data.database,
+    },
+  );
+
   // Get the database to access its properties schema
-  const database = getDatabase(entry.database);
+  const database = getDatabase(data.database);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(
@@ -24,7 +43,7 @@ export async function onDeleteEntry(entry: DatabaseEntry) {
   // Delete the virtual collection for each collection property
   await Promise.all(
     collectionProperties.map((property) => {
-      const collectionId = virtualCollectionId(entry.id, property.name);
+      const collectionId = virtualCollectionId(data.id, property.name);
 
       // Only delete if the collection exists in the store
       if (Collections.Store.get(collectionId)) {

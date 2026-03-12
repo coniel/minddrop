@@ -1,5 +1,5 @@
-import type { Database, DatabaseEntry } from '@minddrop/databases';
 import type { PropertyType } from '@minddrop/properties';
+import type { Database, DatabaseEntry } from '../../types';
 import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
 
 /**

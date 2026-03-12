@@ -18,6 +18,8 @@ import {
   onRenameEntry,
   onRenameProperty,
   onUpdateCollection,
+  onUpdateDatabase,
+  onUpdateEntry,
   onUpdateVirtualView,
 } from '../event-handlers';
 import {
@@ -31,6 +33,8 @@ import {
   DatabaseEntryDeletedEventData,
   DatabaseEntryRenamedEvent,
   DatabaseEntryRenamedEventData,
+  DatabaseEntryUpdatedEvent,
+  DatabaseEntryUpdatedEventData,
   DatabasePropertyAddedEvent,
   DatabasePropertyAddedEventData,
   DatabasePropertyRemovedEvent,
@@ -39,6 +43,8 @@ import {
   DatabasePropertyRenamedEventData,
   DatabaseRenamedEvent,
   DatabaseRenamedEventData,
+  DatabaseUpdatedEvent,
+  DatabaseUpdatedEventData,
 } from '../events';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
 
@@ -72,6 +78,14 @@ function initializeEventHandlers() {
     'databases',
     ({ data }) => {
       onCreateDatabase(data);
+    },
+  );
+
+  Events.on<DatabaseUpdatedEventData>(
+    DatabaseUpdatedEvent,
+    'databases',
+    ({ data }) => {
+      onUpdateDatabase(data);
     },
   );
 
@@ -120,6 +134,14 @@ function initializeEventHandlers() {
     'databases',
     ({ data }) => {
       onCreateEntry(data);
+    },
+  );
+
+  Events.on<DatabaseEntryUpdatedEventData>(
+    DatabaseEntryUpdatedEvent,
+    'databases',
+    ({ data }) => {
+      onUpdateEntry(data);
     },
   );
 

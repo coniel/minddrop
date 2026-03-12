@@ -1,19 +1,33 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabasePropertyRemovedEventData } from '../../events';
+import {
+  DatabasePropertyRemovedEventData,
+  DatabaseSqlReindexedEvent,
+} from '../../events';
+import type { DatabaseSqlReindexedEventData } from '../../events';
+import { reindexDatabaseEntries } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
- * Called when a property is removed from a database. Deletes virtual
- * collections for all entries if the removed property was a collection
- * type.
+ * Called when a property is removed from a database. Re-indexes
+ * SQL entries and deletes virtual collections for collection
+ * properties.
  */
 export async function onRemoveProperty(
   data: DatabasePropertyRemovedEventData,
 ): Promise<void> {
   const { database, property } = data;
 
-  // Only handle collection properties
+  // Re-index all entries in SQL without the removed property
+  reindexDatabaseEntries(database);
+
+  // Dispatch SQL reindexed event
+  Events.dispatch<DatabaseSqlReindexedEventData>(DatabaseSqlReindexedEvent, {
+    databaseId: database.id,
+  });
+
+  // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {
     return;
   }

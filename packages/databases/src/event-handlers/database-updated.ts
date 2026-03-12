@@ -1,12 +1,11 @@
-import type { DatabaseUpdatedEventData } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { DatabaseSqlSyncedEvent } from '../events';
+import { DatabaseSqlSyncedEvent, DatabaseUpdatedEventData } from '../events';
 import type { DatabaseSqlSyncedEventData } from '../events';
-import { upsertDatabase } from '../operations';
+import { upsertDatabase } from '../sql';
 
 /**
- * Handles database updated events by syncing the updated
- * metadata to SQL and dispatching a synced event.
+ * Called when a database is updated. Syncs the updated
+ * metadata to SQL and dispatches a synced event.
  */
 export function onUpdateDatabase(data: DatabaseUpdatedEventData): void {
   const databaseRecord = {
@@ -19,7 +18,7 @@ export function onUpdateDatabase(data: DatabaseUpdatedEventData): void {
   // Upsert into SQL
   upsertDatabase(databaseRecord);
 
-  // Dispatch synced event
+  // Dispatch SQL synced event
   Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
     action: 'upsert',
     databaseId: data.updated.id,

@@ -5,8 +5,8 @@ import {
   INTEGER_PROPERTY_TYPES,
   MULTI_VALUE_PROPERTY_TYPES,
   TEXT_PROPERTY_TYPES,
-} from './constants';
-import type { SqlEntryPropertyRecord, SqlEntryRecord } from './types';
+} from '../constants';
+import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../types';
 
 /**
  * Upserts a database record into the databases table.

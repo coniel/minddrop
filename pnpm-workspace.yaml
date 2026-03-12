@@ -4,6 +4,5 @@ packages:
   - 'extensions/*'
   - 'features/*'
   - 'packages/*'
-  - 'sql/*'
   - 'ui/*'
   - 'views/*'

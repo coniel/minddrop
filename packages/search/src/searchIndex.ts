@@ -1,6 +1,6 @@
 import MiniSearch, { type Options as MiniSearchOptions } from 'minisearch';
+import { Databases } from '@minddrop/databases';
 import { Fs } from '@minddrop/file-system';
-import { DatabasesSql } from '@minddrop/sql-databases';
 import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from './constants';
 import { getSearchConfigPath } from './searchIndexConfig';
 import type { FullTextMatchedProperty, FullTextSearchResult } from './types';
@@ -72,7 +72,7 @@ function createMiniSearch(): MiniSearch<SearchDocument> {
 export async function initializeSearchIndex(
   workspaceId: string,
 ): Promise<void> {
-  const currentVersion = DatabasesSql.getVersion();
+  const currentVersion = Databases.sql.getVersion();
   const indexPath = getIndexPath(workspaceId);
 
   // Try loading persisted index
@@ -118,16 +118,16 @@ export async function initializeSearchIndex(
  */
 export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   const miniSearch = createMiniSearch();
-  const entries = DatabasesSql.getAllEntries();
+  const entries = Databases.sql.getAllEntries();
 
   // Build entry documents from SQL data
   const entryDocuments: SearchDocument[] = entries.map((entry) => {
-    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
+    const { textValues, propertyValues } = Databases.sql.getEntryTextContent(
       entry.id,
     );
 
-    const databaseName = DatabasesSql.getDatabaseName(entry.databaseId) ?? '';
-    const databaseIcon = DatabasesSql.getDatabaseIcon(entry.databaseId);
+    const databaseName = Databases.sql.getDatabaseName(entry.databaseId) ?? '';
+    const databaseIcon = Databases.sql.getDatabaseIcon(entry.databaseId);
 
     return {
       id: entry.id,
@@ -143,7 +143,7 @@ export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   });
 
   // Build database documents
-  const databases = DatabasesSql.getAllDatabases();
+  const databases = Databases.sql.getAllDatabases();
   const databaseDocuments: SearchDocument[] = databases.map((database) => ({
     id: `db:${database.id}`,
     type: 'database' as const,
@@ -265,12 +265,12 @@ export function upsertIndexEntries(
     }
 
     // Build the updated document
-    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
+    const { textValues, propertyValues } = Databases.sql.getEntryTextContent(
       entry.id,
     );
 
-    const databaseName = DatabasesSql.getDatabaseName(entry.databaseId) ?? '';
-    const databaseIcon = DatabasesSql.getDatabaseIcon(entry.databaseId);
+    const databaseName = Databases.sql.getDatabaseName(entry.databaseId) ?? '';
+    const databaseIcon = Databases.sql.getDatabaseIcon(entry.databaseId);
 
     miniSearch.add({
       id: entry.id,
@@ -409,13 +409,13 @@ export function reindexDatabaseEntries(databaseId: string): void {
   }
 
   // Get all entries for this database from SQL
-  const entries = DatabasesSql.getAllEntries().filter(
-    (entry) => entry.databaseId === databaseId,
-  );
+  const entries = Databases.sql
+    .getAllEntries()
+    .filter((entry) => entry.databaseId === databaseId);
 
   // Get fresh database metadata
-  const databaseName = DatabasesSql.getDatabaseName(databaseId) ?? '';
-  const databaseIcon = DatabasesSql.getDatabaseIcon(databaseId);
+  const databaseName = Databases.sql.getDatabaseName(databaseId) ?? '';
+  const databaseIcon = Databases.sql.getDatabaseIcon(databaseId);
 
   // Remove and re-add each entry document
   for (const entry of entries) {
@@ -425,7 +425,7 @@ export function reindexDatabaseEntries(databaseId: string): void {
       // Document did not exist
     }
 
-    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
+    const { textValues, propertyValues } = Databases.sql.getEntryTextContent(
       entry.id,
     );
 
@@ -465,7 +465,7 @@ function findMatchedProperties(
   entryId: string,
   queryTerms: string[],
 ): FullTextMatchedProperty[] {
-  const propertyValues = DatabasesSql.getEntryPropertyValues(entryId);
+  const propertyValues = Databases.sql.getEntryPropertyValues(entryId);
 
   // Group matched values by property name so multi-value
   // properties (select, collection) show all matching values
@@ -612,7 +612,7 @@ export async function persistIndex(workspaceId: string): Promise<void> {
     return;
   }
 
-  const version = DatabasesSql.getVersion();
+  const version = Databases.sql.getVersion();
   const data = JSON.stringify({
     version,
     index: miniSearch.toJSON(),

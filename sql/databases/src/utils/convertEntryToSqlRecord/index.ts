@@ -1,1 +1,0 @@
-export { convertEntryToSqlRecord } from './convertEntryToSqlRecord';

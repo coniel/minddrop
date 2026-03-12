@@ -1,7 +1,10 @@
 import type { Database } from '@minddrop/databases';
-import { DatabaseEntries, DatabaseEntrySerializers } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  DatabaseEntrySerializers,
+  Databases,
+} from '@minddrop/databases';
 import { Sql } from '@minddrop/sql';
-import { DatabasesSql } from '@minddrop/sql-databases';
 import { initializeSearchIndex, rebuildSearchIndex } from './searchIndex';
 
 /**
@@ -29,14 +32,14 @@ export async function initializeSearchData(
   // and all data needs to be re-indexed.
   const dbPath = `${Sql.getConfigPath()}/${workspaceId}/data.db`;
   const { schemaChanged } = await Sql.open(dbPath, {
-    schema: DatabasesSql.SCHEMA_SQL,
-    version: DatabasesSql.SCHEMA_VERSION,
+    schema: Databases.sql.SCHEMA_SQL,
+    version: Databases.sql.SCHEMA_VERSION,
   });
 
   // Populate SQL with database and entry data
   for (const database of databases) {
     // Upsert the database record
-    DatabasesSql.upsertDatabase({
+    Databases.sql.upsertDatabase({
       id: database.id,
       name: database.name,
       path: database.path,
@@ -48,13 +51,13 @@ export async function initializeSearchData(
 
     // Convert to SQL entry record format
     const entries = rawEntries.map((entry) =>
-      DatabasesSql.convertEntryToSqlRecord(entry, database),
+      Databases.convertEntryToSqlRecord(entry, database),
     );
 
     if (schemaChanged) {
       // Schema changed, index everything
       if (entries.length > 0) {
-        DatabasesSql.upsertEntries(entries);
+        Databases.sql.upsertEntries(entries);
       }
 
       console.log(
@@ -62,7 +65,7 @@ export async function initializeSearchData(
       );
     } else {
       // Incremental update, skip unchanged entries
-      const existingTimestamps = DatabasesSql.getEntryTimestamps(database.id);
+      const existingTimestamps = Databases.sql.getEntryTimestamps(database.id);
 
       // Find entries that are new or have been modified
       const changedEntries = entries.filter((entry) => {
@@ -82,12 +85,12 @@ export async function initializeSearchData(
 
       // Upsert changed entries
       if (changedEntries.length > 0) {
-        DatabasesSql.upsertEntries(changedEntries);
+        Databases.sql.upsertEntries(changedEntries);
       }
 
       // Remove deleted entries
       if (deletedIds.length > 0) {
-        DatabasesSql.deleteEntries(deletedIds);
+        Databases.sql.deleteEntries(deletedIds);
       }
 
       console.log(

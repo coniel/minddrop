@@ -21,7 +21,6 @@
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
     "@minddrop/sql": "workspace:*",
-    "@minddrop/sql-databases": "workspace:*",
     "@minddrop/workspaces": "workspace:*",
     "minisearch": "^7.1.1"
   }

@@ -1,17 +1,31 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabasePropertyAddedEventData } from '../../events';
+import {
+  DatabasePropertyAddedEventData,
+  DatabaseSqlReindexedEvent,
+} from '../../events';
+import type { DatabaseSqlReindexedEventData } from '../../events';
+import { reindexDatabaseEntries } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
- * Called when a property is added to a database. Creates virtual
- * collections for all existing entries if the new property is a
- * collection type.
+ * Called when a property is added to a database. Re-indexes
+ * SQL entries and creates virtual collections for collection
+ * properties.
  */
 export function onAddProperty(data: DatabasePropertyAddedEventData): void {
   const { database, property } = data;
 
-  // Only handle collection properties
+  // Re-index all entries in SQL for the new property
+  reindexDatabaseEntries(database);
+
+  // Dispatch SQL reindexed event
+  Events.dispatch<DatabaseSqlReindexedEventData>(DatabaseSqlReindexedEvent, {
+    databaseId: database.id,
+  });
+
+  // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {
     return;
   }

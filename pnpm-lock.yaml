@@ -114,9 +114,6 @@ importers:
       '@minddrop/sql':
         specifier: workspace:*
         version: link:../../packages/sql
-      '@minddrop/sql-databases':
-        specifier: workspace:*
-        version: link:../../sql/databases
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
@@ -745,6 +742,9 @@ importers:
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../properties
+      '@minddrop/sql':
+        specifier: workspace:*
+        version: link:../sql
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../stores
@@ -1266,9 +1266,6 @@ importers:
       '@minddrop/sql':
         specifier: workspace:*
         version: link:../sql
-      '@minddrop/sql-databases':
-        specifier: workspace:*
-        version: link:../../sql/databases
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../workspaces
@@ -1521,34 +1518,6 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  sql/databases:
-    dependencies:
-      '@minddrop/databases':
-        specifier: workspace:*
-        version: link:../../packages/databases
-      '@minddrop/events':
-        specifier: workspace:*
-        version: link:../../packages/events
-      '@minddrop/properties':
-        specifier: workspace:*
-        version: link:../../packages/properties
-      '@minddrop/sql':
-        specifier: workspace:*
-        version: link:../../packages/sql
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../../packages/tsconfig
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

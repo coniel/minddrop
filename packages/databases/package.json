@@ -23,6 +23,7 @@
     "@minddrop/markdown": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/i18n": "workspace:*",
+    "@minddrop/sql": "workspace:*",
     "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/views": "workspace:*",

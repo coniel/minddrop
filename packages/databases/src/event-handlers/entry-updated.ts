@@ -1,21 +1,19 @@
-import type { DatabaseEntryUpdatedEventData } from '@minddrop/databases';
-import { Databases } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
-import { DatabaseEntriesSqlSyncedEvent } from '../events';
+import {
+  DatabaseEntriesSqlSyncedEvent,
+  DatabaseEntryUpdatedEventData,
+} from '../events';
 import type { DatabaseEntriesSqlSyncedEventData } from '../events';
-import { upsertEntries } from '../operations';
+import { getDatabase } from '../getDatabase';
+import { upsertEntries } from '../sql';
 import { convertEntryToSqlRecord } from '../utils';
 
 /**
- * Handles entry updated events by syncing the updated entry
- * to SQL and dispatching a synced event.
+ * Called when a database entry is updated. Syncs the updated
+ * entry to SQL and dispatches a synced event.
  */
 export function onUpdateEntry(data: DatabaseEntryUpdatedEventData): void {
-  const database = Databases.get(data.updated.database);
-
-  if (!database) {
-    return;
-  }
+  const database = getDatabase(data.updated.database);
 
   // Convert the updated entry to SQL format
   const record = convertEntryToSqlRecord(data.updated, database);
@@ -23,7 +21,7 @@ export function onUpdateEntry(data: DatabaseEntryUpdatedEventData): void {
   // Upsert into SQL
   upsertEntries([record]);
 
-  // Dispatch synced event
+  // Dispatch SQL synced event
   Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
     DatabaseEntriesSqlSyncedEvent,
     {

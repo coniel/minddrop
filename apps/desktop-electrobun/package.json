@@ -20,7 +20,6 @@
     "@minddrop/properties": "workspace:*",
     "@minddrop/search": "workspace:*",
     "@minddrop/sql": "workspace:*",
-    "@minddrop/sql-databases": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/workspaces": "workspace:*",

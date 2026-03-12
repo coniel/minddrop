@@ -1,15 +1,27 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabaseDeletedEventData } from '../../events';
+import { DatabaseDeletedEventData, DatabaseSqlSyncedEvent } from '../../events';
+import type { DatabaseSqlSyncedEventData } from '../../events';
+import { deleteDatabase } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
- * Called when a database is deleted. Deletes all virtual collections
- * associated with the database's entries' collection properties.
+ * Called when a database is deleted. Removes from SQL and
+ * deletes virtual collections for collection properties.
  */
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
 ): Promise<void> {
+  // Delete from SQL
+  deleteDatabase(data.id);
+
+  // Dispatch SQL synced event
+  Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
+    action: 'delete',
+    databaseId: data.id,
+  });
+
   // Find collection properties in the database schema
   const collectionProperties = data.properties.filter(
     (property) => property.type === 'collection',

@@ -1,7 +1,7 @@
-import type { Database } from '@minddrop/databases';
-import { DatabaseEntries } from '@minddrop/databases';
+import { getAllDatabaseEntries } from '../getAllDatabaseEntries';
+import type { Database } from '../types';
+import { convertEntryToSqlRecord } from '../utils';
 import { upsertEntries } from './operations';
-import { convertEntryToSqlRecord } from './utils';
 
 /**
  * Re-indexes all entries for a database by reading them from
@@ -11,7 +11,7 @@ import { convertEntryToSqlRecord } from './utils';
  */
 export function reindexDatabaseEntries(database: Database): void {
   // Get all entries for this database from the store
-  const entries = DatabaseEntries.getAll(database.id);
+  const entries = getAllDatabaseEntries(database.id);
 
   if (entries.length === 0) {
     return;

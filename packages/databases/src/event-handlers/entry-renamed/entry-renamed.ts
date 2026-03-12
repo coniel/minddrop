@@ -1,18 +1,42 @@
 import { Collections } from '@minddrop/collections';
-import { DatabaseEntryRenamedEventData } from '../../events';
+import { Events } from '@minddrop/events';
+import {
+  DatabaseEntriesSqlSyncedEvent,
+  DatabaseEntryRenamedEventData,
+} from '../../events';
+import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { virtualCollectionId, virtualCollectionName } from '../../utils';
+import { upsertEntries } from '../../sql';
+import {
+  convertEntryToSqlRecord,
+  virtualCollectionId,
+  virtualCollectionName,
+} from '../../utils';
 
 /**
- * Called when a database entry is renamed. Updates the names of
- * virtual collections associated with the entry's collection
- * properties to reflect the new entry title.
+ * Called when a database entry is renamed. Syncs to SQL and
+ * updates virtual collection names.
  */
 export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   const { updated } = data;
 
   // Get the database to access its properties schema
   const database = getDatabase(updated.database);
+
+  // Sync renamed entry to SQL
+  const record = convertEntryToSqlRecord(updated, database);
+  upsertEntries([record]);
+
+  // Dispatch SQL synced event
+  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
+    DatabaseEntriesSqlSyncedEvent,
+    {
+      action: 'upsert',
+      entryIds: [record.id],
+      databaseId: database.id,
+      entries: [record],
+    },
+  );
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(

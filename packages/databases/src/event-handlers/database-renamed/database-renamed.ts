@@ -1,17 +1,36 @@
 import { Collections } from '@minddrop/collections';
+import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabaseRenamedEventData } from '../../events';
+import { DatabaseRenamedEventData, DatabaseSqlSyncedEvent } from '../../events';
+import type { DatabaseSqlSyncedEventData } from '../../events';
+import { upsertDatabase } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
- * Called when a database is renamed. Updates the names of all
- * virtual collections associated with the database's entries'
- * collection properties to reflect the new database name.
+ * Called when a database is renamed. Syncs to SQL and updates
+ * virtual collection names.
  */
 export async function onRenameDatabase(
   data: DatabaseRenamedEventData,
 ): Promise<void> {
   const { updated } = data;
+
+  // Sync renamed database to SQL
+  const databaseRecord = {
+    id: updated.id,
+    name: updated.name,
+    path: updated.path,
+    icon: updated.icon,
+  };
+
+  upsertDatabase(databaseRecord);
+
+  // Dispatch SQL synced event
+  Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
+    action: 'upsert',
+    databaseId: updated.id,
+    database: databaseRecord,
+  });
 
   // Find collection properties in the database schema
   const collectionProperties = updated.properties.filter(

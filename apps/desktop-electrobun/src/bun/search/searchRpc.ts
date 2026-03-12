@@ -27,7 +27,7 @@ export async function handleSearchFullText(params: {
 
 /**
  * RPC handler for incremental MiniSearch sync after entry
- * changes. SQL sync is handled by sql-databases.
+ * changes. SQL sync is handled by the databases package.
  */
 export async function handleSearchSync(params: {
   workspaceId: string;
@@ -40,7 +40,7 @@ export async function handleSearchSync(params: {
 
 /**
  * RPC handler for syncing database metadata to MiniSearch.
- * SQL sync is handled by sql-databases.
+ * SQL sync is handled by the databases package.
  */
 export async function handleSearchDatabaseSync(params: {
   workspaceId: string;

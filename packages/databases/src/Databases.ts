@@ -1,10 +1,14 @@
 import {
   DatabaseCreatedEvent,
   DatabaseDeletedEvent,
+  DatabaseEntriesSqlSyncedEvent,
   DatabasePropertyAddedEvent,
   DatabasePropertyRemovedEvent,
   DatabasePropertyRenamedEvent,
+  DatabasePropertySqlSyncedEvent,
   DatabaseRenamedEvent,
+  DatabaseSqlReindexedEvent,
+  DatabaseSqlSyncedEvent,
   DatabaseUpdatedEvent,
 } from './events';
 import { handleDataTransfer } from './handleDataTransfer';
@@ -17,8 +21,13 @@ export const events = {
   propertyAdded: DatabasePropertyAddedEvent,
   propertyRemoved: DatabasePropertyRemovedEvent,
   propertyRenamed: DatabasePropertyRenamedEvent,
+  entriesSqlSynced: DatabaseEntriesSqlSyncedEvent,
+  databaseSqlSynced: DatabaseSqlSyncedEvent,
+  propertySqlSynced: DatabasePropertySqlSyncedEvent,
+  databaseSqlReindexed: DatabaseSqlReindexedEvent,
 } as const;
 
+export * as sql from './sql';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
@@ -31,7 +40,10 @@ export { updateDatabase as update } from './updateDatabase';
 export { updateDatabaseProperty as updateProperty } from './updateDatabaseProperty';
 export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
-export { filterValidDatabaseFiles as filterFiles } from './utils';
+export {
+  convertEntryToSqlRecord,
+  filterValidDatabaseFiles as filterFiles,
+} from './utils';
 export { readWorkspaceDatabases } from './readWorkspaceDatabases';
 export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDatabaseDesign';
 export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatabaseDesignPropertyMap';

@@ -1,27 +1,27 @@
-import { Events } from '@minddrop/events';
-import { DatabasesSql } from '@minddrop/sql-databases';
+import { Databases } from '@minddrop/databases';
 import type {
   DatabaseEntriesSqlSyncedEventData,
   DatabasePropertySqlSyncedEventData,
   DatabaseSqlReindexedEventData,
   DatabaseSqlSyncedEventData,
-} from '@minddrop/sql-databases';
+} from '@minddrop/databases';
+import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
 import { getSearchAdapter } from './SearchAdapter';
 
 /**
- * Registers event listeners that respond to sql-databases
+ * Registers event listeners that respond to database SQL
  * sync events by forwarding MiniSearch updates to the
  * backend via the search adapter.
  *
- * sql-databases handles all SQL operations; the search
- * adapter only needs to update the MiniSearch full-text
- * index.
+ * The databases package handles all SQL operations; the
+ * search adapter only needs to update the MiniSearch
+ * full-text index.
  */
 export function initializeSearchSync(): void {
   // Handle entry sync (upsert/delete)
   Events.on<DatabaseEntriesSqlSyncedEventData>(
-    DatabasesSql.events.entriesSqlSynced,
+    Databases.events.entriesSqlSynced,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -54,7 +54,7 @@ export function initializeSearchSync(): void {
 
   // Handle database sync (upsert/delete)
   Events.on<DatabaseSqlSyncedEventData>(
-    DatabasesSql.events.databaseSqlSynced,
+    Databases.events.databaseSqlSynced,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -88,7 +88,7 @@ export function initializeSearchSync(): void {
 
   // Handle property rename (re-index MiniSearch)
   Events.on<DatabasePropertySqlSyncedEventData>(
-    DatabasesSql.events.propertySqlSynced,
+    Databases.events.propertySqlSynced,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -97,8 +97,8 @@ export function initializeSearchSync(): void {
         return;
       }
 
-      // SQL rename is already done by sql-databases; just
-      // re-index MiniSearch with updated property data
+      // SQL rename is already done; just re-index MiniSearch
+      // with updated property data
       getSearchAdapter().searchReindexDatabase({
         workspaceId,
         databaseId: data.databaseId,
@@ -108,7 +108,7 @@ export function initializeSearchSync(): void {
 
   // Handle database reindex (property added/removed)
   Events.on<DatabaseSqlReindexedEventData>(
-    DatabasesSql.events.databaseSqlReindexed,
+    Databases.events.databaseSqlReindexed,
     'search:sync',
     ({ data }) => {
       const workspaceId = getWorkspaceId();
@@ -117,8 +117,7 @@ export function initializeSearchSync(): void {
         return;
       }
 
-      // SQL re-index is already done by sql-databases; just
-      // re-index MiniSearch
+      // SQL re-index is already done; just re-index MiniSearch
       getSearchAdapter().searchReindexDatabase({
         workspaceId,
         databaseId: data.databaseId,
