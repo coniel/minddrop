@@ -7,10 +7,17 @@ import {
   handleSearchFullText,
   handleSearchInitialize,
   handleSearchReindexDatabase,
-  handleSearchRenameProperty,
-  handleSearchStructured,
   handleSearchSync,
 } from './search';
+import {
+  handleSqlAll,
+  handleSqlClose,
+  handleSqlExec,
+  handleSqlGet,
+  handleSqlOpen,
+  handleSqlRun,
+  handleSqlTransaction,
+} from './sql';
 
 export type RpcHandler = typeof fileSystemRpcHandlers;
 
@@ -21,13 +28,20 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
     requests: {
       ...fileSystemRpcHandlers,
       ...backEndUtilsRpcHandlers,
+      // SQL RPC handlers
+      sqlOpen: handleSqlOpen,
+      sqlExec: handleSqlExec,
+      sqlRun: handleSqlRun,
+      sqlGet: handleSqlGet,
+      sqlAll: handleSqlAll,
+      sqlTransaction: handleSqlTransaction,
+      sqlClose: handleSqlClose,
+      // Search RPC handlers
       searchInitialize: handleSearchInitialize,
       searchFullText: handleSearchFullText,
-      searchStructured: handleSearchStructured,
       searchSync: handleSearchSync,
       searchDatabaseSync: handleSearchDatabaseSync,
       searchReindexDatabase: handleSearchReindexDatabase,
-      searchRenameProperty: handleSearchRenameProperty,
     },
     // When the browser sends a message we can handle it
     // in the main bun process

@@ -1,19 +1,13 @@
 import type { Database } from '@minddrop/databases';
 import { DatabaseEntries, DatabaseEntrySerializers } from '@minddrop/databases';
-import {
-  deleteEntries,
-  getEntryTimestamps,
-  openSearchDb,
-  upsertDatabase,
-  upsertEntries,
-} from './searchDb';
+import { Sql } from '@minddrop/sql';
+import { DatabasesSql } from '@minddrop/sql-databases';
 import { initializeSearchIndex, rebuildSearchIndex } from './searchIndex';
-import { convertEntryToSearchData } from './utils';
 
 /**
  * Back-end only. Initializes the search system for a
  * workspace. Reads entries from disk using the FS adapter
- * and populates SQLite and MiniSearch.
+ * and populates SQL and MiniSearch.
  *
  * @param workspaceId - The workspace to initialize search for.
  * @param databases - The databases to index.
@@ -30,15 +24,19 @@ export async function initializeSearchData(
   // entry files from disk
   DatabaseEntrySerializers.loadCoreSerializers();
 
-  // Open or create the SQLite database.
+  // Open or create the SQL database.
   // If the schema version changed, the database was recreated
   // and all data needs to be re-indexed.
-  const { schemaChanged } = await openSearchDb(workspaceId);
+  const dbPath = `${Sql.getConfigPath()}/${workspaceId}/data.db`;
+  const { schemaChanged } = await Sql.open(dbPath, {
+    schema: DatabasesSql.SCHEMA_SQL,
+    version: DatabasesSql.SCHEMA_VERSION,
+  });
 
-  // Populate SQLite with database and entry data
+  // Populate SQL with database and entry data
   for (const database of databases) {
     // Upsert the database record
-    upsertDatabase(workspaceId, {
+    DatabasesSql.upsertDatabase({
       id: database.id,
       name: database.name,
       path: database.path,
@@ -48,15 +46,15 @@ export async function initializeSearchData(
     // Read entries from disk
     const rawEntries = await DatabaseEntries.readFiles(database);
 
-    // Convert to search entry format
+    // Convert to SQL entry record format
     const entries = rawEntries.map((entry) =>
-      convertEntryToSearchData(entry, database),
+      DatabasesSql.convertEntryToSqlRecord(entry, database),
     );
 
     if (schemaChanged) {
       // Schema changed, index everything
       if (entries.length > 0) {
-        upsertEntries(workspaceId, entries);
+        DatabasesSql.upsertEntries(entries);
       }
 
       console.log(
@@ -64,7 +62,7 @@ export async function initializeSearchData(
       );
     } else {
       // Incremental update, skip unchanged entries
-      const existingTimestamps = getEntryTimestamps(workspaceId, database.id);
+      const existingTimestamps = DatabasesSql.getEntryTimestamps(database.id);
 
       // Find entries that are new or have been modified
       const changedEntries = entries.filter((entry) => {
@@ -84,12 +82,12 @@ export async function initializeSearchData(
 
       // Upsert changed entries
       if (changedEntries.length > 0) {
-        upsertEntries(workspaceId, changedEntries);
+        DatabasesSql.upsertEntries(changedEntries);
       }
 
       // Remove deleted entries
       if (deletedIds.length > 0) {
-        deleteEntries(workspaceId, deletedIds);
+        DatabasesSql.deleteEntries(deletedIds);
       }
 
       console.log(

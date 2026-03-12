@@ -17,7 +17,5 @@ export function registerSearchAdapterRpc(rpc: any): void {
 
     searchReindexDatabase: (params) =>
       rpc.request.searchReindexDatabase(params),
-
-    searchRenameProperty: (params) => rpc.request.searchRenameProperty(params),
   });
 }

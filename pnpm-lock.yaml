@@ -108,12 +108,15 @@ importers:
       '@minddrop/properties':
         specifier: workspace:*
         version: link:../../packages/properties
-      '@minddrop/queries':
-        specifier: workspace:*
-        version: link:../../packages/queries
       '@minddrop/search':
         specifier: workspace:*
         version: link:../../packages/search
+      '@minddrop/sql':
+        specifier: workspace:*
+        version: link:../../packages/sql
+      '@minddrop/sql-databases':
+        specifier: workspace:*
+        version: link:../../sql/databases
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
@@ -126,9 +129,6 @@ importers:
       electrobun:
         specifier: 1.14.4
         version: 1.14.4
-      minisearch:
-        specifier: ^7.1.1
-        version: 7.2.0
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -1263,12 +1263,12 @@ importers:
       '@minddrop/file-system':
         specifier: workspace:*
         version: link:../file-system
-      '@minddrop/properties':
+      '@minddrop/sql':
         specifier: workspace:*
-        version: link:../properties
-      '@minddrop/queries':
+        version: link:../sql
+      '@minddrop/sql-databases':
         specifier: workspace:*
-        version: link:../queries
+        version: link:../../sql/databases
       '@minddrop/workspaces':
         specifier: workspace:*
         version: link:../workspaces
@@ -1313,6 +1313,25 @@ importers:
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/sql:
+    dependencies:
+      '@minddrop/file-system':
+        specifier: workspace:*
+        version: link:../file-system
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       eslint:
         specifier: ^9.39.3
         version: 9.39.3
@@ -1502,6 +1521,34 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  sql/databases:
+    dependencies:
+      '@minddrop/databases':
+        specifier: workspace:*
+        version: link:../../packages/databases
+      '@minddrop/events':
+        specifier: workspace:*
+        version: link:../../packages/events
+      '@minddrop/properties':
+        specifier: workspace:*
+        version: link:../../packages/properties
+      '@minddrop/sql':
+        specifier: workspace:*
+        version: link:../../packages/sql
+    devDependencies:
+      '@minddrop/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: ^9.39.3
+        version: 9.39.3
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

@@ -1,6 +1,7 @@
 import { BrowserWindow, Screen, Updater, Utils } from 'electrobun/bun';
 import { myWebviewRPC } from './bun-rpc';
 import { initializeSearch } from './search';
+import { initializeSql } from './sql';
 import './server';
 
 type WindowState = {
@@ -156,8 +157,10 @@ mainWindow.on('resize', (event: any) => {
   saveState();
 });
 
-// --- Initialize search ---
+// --- Initialize platform adapters ---
 
-// Register search platform adapters (SQLite, config path).
-// Actual data population is driven by the frontend via RPC.
+// Register the Bun SQL adapter (bun:sqlite)
+initializeSql();
+
+// Register search platform adapters (file system for index I/O)
 initializeSearch();

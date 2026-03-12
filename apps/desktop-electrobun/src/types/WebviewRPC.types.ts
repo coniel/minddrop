@@ -2,12 +2,8 @@ import { RPCSchema } from 'electrobun';
 import type { Database } from '@minddrop/databases';
 import { BaseDirectory } from '@minddrop/file-system';
 import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
-import type { QueryPropertyFilter, QueryPropertySort } from '@minddrop/queries';
-import type {
-  FullTextSearchResult,
-  SearchEntryData,
-  StructuredSearchResult,
-} from '@minddrop/search';
+import type { FullTextSearchResult } from '@minddrop/search';
+import type { SqlOperation, SqlParam } from '@minddrop/sql';
 
 export type WebviewRPC = {
   bun: RPCSchema<{
@@ -118,6 +114,36 @@ export type WebviewRPC = {
         params: { path: string };
         response: void;
       };
+      // SQL RPC
+      sqlOpen: {
+        params: { path: string; schema: string; version: number };
+        response: { schemaChanged: boolean };
+      };
+      sqlExec: {
+        params: { sql: string };
+        response: void;
+      };
+      sqlRun: {
+        params: { sql: string; params: SqlParam[] };
+        response: void;
+      };
+      sqlGet: {
+        params: { sql: string; params: SqlParam[] };
+        response: unknown;
+      };
+      sqlAll: {
+        params: { sql: string; params: SqlParam[] };
+        response: unknown[];
+      };
+      sqlTransaction: {
+        params: { operations: SqlOperation[] };
+        response: void;
+      };
+      sqlClose: {
+        params: Record<string, never>;
+        response: void;
+      };
+      // Search RPC
       searchInitialize: {
         params: {
           workspaceId: string;
@@ -134,22 +160,11 @@ export type WebviewRPC = {
         };
         response: FullTextSearchResult[];
       };
-      searchStructured: {
-        params: {
-          workspaceId: string;
-          databaseId?: string;
-          filters: QueryPropertyFilter[];
-          sort: QueryPropertySort[];
-          limit?: number;
-          offset?: number;
-        };
-        response: StructuredSearchResult;
-      };
       searchSync: {
         params: {
           workspaceId: string;
           action: 'upsert' | 'delete';
-          entries?: SearchEntryData[];
+          entries?: { id: string; title: string; databaseId: string }[];
           entryIds?: string[];
         };
         response: void;
@@ -166,15 +181,6 @@ export type WebviewRPC = {
         params: {
           workspaceId: string;
           databaseId: string;
-        };
-        response: void;
-      };
-      searchRenameProperty: {
-        params: {
-          workspaceId: string;
-          databaseId: string;
-          oldName: string;
-          newName: string;
         };
         response: void;
       };

@@ -1,18 +1,9 @@
 import MiniSearch, { type Options as MiniSearchOptions } from 'minisearch';
 import { Fs } from '@minddrop/file-system';
+import { DatabasesSql } from '@minddrop/sql-databases';
 import { MATCH_HIGHLIGHT_END, MATCH_HIGHLIGHT_START } from './constants';
-import { getSearchConfigPath } from './searchConfig';
-import {
-  getAllDatabases,
-  getAllEntries,
-  getDatabaseIcon,
-  getDatabaseName,
-  getEntryPropertyValues,
-  getEntryTextContent,
-  getVersion,
-} from './searchDb';
-import type { FullTextSearchResult } from './types';
-import type { FullTextMatchedProperty } from './types';
+import { getSearchConfigPath } from './searchIndexConfig';
+import type { FullTextMatchedProperty, FullTextSearchResult } from './types';
 
 interface SearchDocument {
   id: string;
@@ -76,12 +67,12 @@ function createMiniSearch(): MiniSearch<SearchDocument> {
 /**
  * Initializes the MiniSearch index for a workspace. Loads from
  * disk if a persisted index exists and its version matches the
- * SQLite database version. Otherwise, rebuilds from SQLite data.
+ * SQL database version. Otherwise, rebuilds from SQL data.
  */
 export async function initializeSearchIndex(
   workspaceId: string,
 ): Promise<void> {
-  const currentVersion = getVersion(workspaceId);
+  const currentVersion = DatabasesSql.getVersion();
   const indexPath = getIndexPath(workspaceId);
 
   // Try loading persisted index
@@ -117,27 +108,26 @@ export async function initializeSearchIndex(
     );
   }
 
-  // Build from SQLite data
+  // Build from SQL data
   await rebuildSearchIndex(workspaceId);
 }
 
 /**
- * Rebuilds the MiniSearch index from SQLite data for the
+ * Rebuilds the MiniSearch index from SQL data for the
  * specified workspace.
  */
 export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   const miniSearch = createMiniSearch();
-  const entries = getAllEntries(workspaceId);
+  const entries = DatabasesSql.getAllEntries();
 
-  // Build entry documents from SQLite data
+  // Build entry documents from SQL data
   const entryDocuments: SearchDocument[] = entries.map((entry) => {
-    const { textValues, propertyValues } = getEntryTextContent(
-      workspaceId,
+    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
       entry.id,
     );
 
-    const databaseName = getDatabaseName(workspaceId, entry.databaseId) ?? '';
-    const databaseIcon = getDatabaseIcon(workspaceId, entry.databaseId);
+    const databaseName = DatabasesSql.getDatabaseName(entry.databaseId) ?? '';
+    const databaseIcon = DatabasesSql.getDatabaseIcon(entry.databaseId);
 
     return {
       id: entry.id,
@@ -153,7 +143,7 @@ export async function rebuildSearchIndex(workspaceId: string): Promise<void> {
   });
 
   // Build database documents
-  const databases = getAllDatabases(workspaceId);
+  const databases = DatabasesSql.getAllDatabases();
   const databaseDocuments: SearchDocument[] = databases.map((database) => ({
     id: `db:${database.id}`,
     type: 'database' as const,
@@ -217,7 +207,6 @@ export function searchFullTextIndex(
 
     if (type === 'entry') {
       matchedProperties = findMatchedProperties(
-        workspaceId,
         result.id as string,
         queryTerms,
       );
@@ -248,13 +237,19 @@ export function searchFullTextIndex(
  * Removes existing documents and re-adds them with fresh data.
  */
 export function upsertIndexEntries(
-  workspaceId: string,
   entries: {
     id: string;
     title: string;
     databaseId: string;
   }[],
 ): void {
+  // Use the first workspace index
+  const workspaceId = indexes.keys().next().value;
+
+  if (!workspaceId) {
+    return;
+  }
+
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
@@ -270,13 +265,12 @@ export function upsertIndexEntries(
     }
 
     // Build the updated document
-    const { textValues, propertyValues } = getEntryTextContent(
-      workspaceId,
+    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
       entry.id,
     );
 
-    const databaseName = getDatabaseName(workspaceId, entry.databaseId) ?? '';
-    const databaseIcon = getDatabaseIcon(workspaceId, entry.databaseId);
+    const databaseName = DatabasesSql.getDatabaseName(entry.databaseId) ?? '';
+    const databaseIcon = DatabasesSql.getDatabaseIcon(entry.databaseId);
 
     miniSearch.add({
       id: entry.id,
@@ -298,10 +292,18 @@ export function upsertIndexEntries(
 /**
  * Updates or adds a database document in the MiniSearch index.
  */
-export function upsertIndexDatabase(
-  workspaceId: string,
-  database: { id: string; name: string; icon?: string },
-): void {
+export function upsertIndexDatabase(database: {
+  id: string;
+  name: string;
+  icon?: string;
+}): void {
+  // Use the first workspace index
+  const workspaceId = indexes.keys().next().value;
+
+  if (!workspaceId) {
+    return;
+  }
+
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
@@ -335,10 +337,14 @@ export function upsertIndexDatabase(
 /**
  * Removes a database document from the MiniSearch index.
  */
-export function removeIndexDatabase(
-  workspaceId: string,
-  databaseId: string,
-): void {
+export function removeIndexDatabase(databaseId: string): void {
+  // Use the first workspace index
+  const workspaceId = indexes.keys().next().value;
+
+  if (!workspaceId) {
+    return;
+  }
+
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
@@ -357,10 +363,14 @@ export function removeIndexDatabase(
 /**
  * Removes entries from the MiniSearch index.
  */
-export function removeIndexEntries(
-  workspaceId: string,
-  entryIds: string[],
-): void {
+export function removeIndexEntries(entryIds: string[]): void {
+  // Use the first workspace index
+  const workspaceId = indexes.keys().next().value;
+
+  if (!workspaceId) {
+    return;
+  }
+
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
@@ -384,24 +394,28 @@ export function removeIndexEntries(
  * MiniSearch index. Used when database metadata changes
  * (name, icon) or when the property schema changes.
  */
-export function reindexDatabaseEntries(
-  workspaceId: string,
-  databaseId: string,
-): void {
+export function reindexDatabaseEntries(databaseId: string): void {
+  // Use the first workspace index
+  const workspaceId = indexes.keys().next().value;
+
+  if (!workspaceId) {
+    return;
+  }
+
   const miniSearch = indexes.get(workspaceId);
 
   if (!miniSearch) {
     return;
   }
 
-  // Get all entries for this database from SQLite
-  const entries = getAllEntries(workspaceId).filter(
+  // Get all entries for this database from SQL
+  const entries = DatabasesSql.getAllEntries().filter(
     (entry) => entry.databaseId === databaseId,
   );
 
   // Get fresh database metadata
-  const databaseName = getDatabaseName(workspaceId, databaseId) ?? '';
-  const databaseIcon = getDatabaseIcon(workspaceId, databaseId);
+  const databaseName = DatabasesSql.getDatabaseName(databaseId) ?? '';
+  const databaseIcon = DatabasesSql.getDatabaseIcon(databaseId);
 
   // Remove and re-add each entry document
   for (const entry of entries) {
@@ -411,8 +425,7 @@ export function reindexDatabaseEntries(
       // Document did not exist
     }
 
-    const { textValues, propertyValues } = getEntryTextContent(
-      workspaceId,
+    const { textValues, propertyValues } = DatabasesSql.getEntryTextContent(
       entry.id,
     );
 
@@ -449,11 +462,10 @@ const SNIPPET_THRESHOLD = 80;
  * returns a snippet with highlight markers around the match.
  */
 function findMatchedProperties(
-  workspaceId: string,
   entryId: string,
   queryTerms: string[],
 ): FullTextMatchedProperty[] {
-  const propertyValues = getEntryPropertyValues(workspaceId, entryId);
+  const propertyValues = DatabasesSql.getEntryPropertyValues(entryId);
 
   // Group matched values by property name so multi-value
   // properties (select, collection) show all matching values
@@ -591,7 +603,7 @@ function highlightAllMatches(text: string, terms: string[]): string {
 
 /**
  * Persists the MiniSearch index to disk along with the current
- * SQLite version for validation on reload.
+ * SQL version for validation on reload.
  */
 export async function persistIndex(workspaceId: string): Promise<void> {
   const miniSearch = indexes.get(workspaceId);
@@ -600,7 +612,7 @@ export async function persistIndex(workspaceId: string): Promise<void> {
     return;
   }
 
-  const version = getVersion(workspaceId);
+  const version = DatabasesSql.getVersion();
   const data = JSON.stringify({
     version,
     index: miniSearch.toJSON(),

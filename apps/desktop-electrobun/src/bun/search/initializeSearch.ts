@@ -1,6 +1,4 @@
-import { Search } from '@minddrop/search';
 import { registerBunFileSystemAdapter } from './registerFileSystemAdapter';
-import { createBunSqliteAdapter } from './registerSqliteAdapter';
 
 /**
  * Registers platform adapters for the search system.
@@ -14,10 +12,6 @@ export function initializeSearch(): void {
   console.log('[search] Registering search platform adapters');
 
   // Register a Bun-native file system adapter for search
-  // persistence (SQLite directory creation, MiniSearch index I/O)
+  // persistence (MiniSearch index I/O)
   registerBunFileSystemAdapter();
-
-  // Register the Bun SQLite adapter so the search package
-  // can open database connections
-  Search.registerSqliteAdapter(createBunSqliteAdapter());
 }

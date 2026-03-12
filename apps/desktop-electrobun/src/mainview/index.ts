@@ -6,6 +6,7 @@ import {
   registerFileSystemAdapter,
 } from './registerFileSystemAdapter';
 import { registerSearchAdapterRpc } from './registerSearchAdapter';
+import { registerSqlAdapterRpc } from './registerSqlAdapter';
 
 export const rpc = Electroview.defineRPC<WebviewRPC>({
   // Disable RPC timeout to allow for long-running operations
@@ -29,4 +30,5 @@ const electrobun = new Electrobun.Electroview({ rpc });
 
 registerFileSystemAdapter(electrobun.rpc);
 registerBackEndUtilsAdapter(electrobun.rpc);
+registerSqlAdapterRpc(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);

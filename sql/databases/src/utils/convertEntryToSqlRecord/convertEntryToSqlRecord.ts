@@ -1,16 +1,16 @@
 import type { Database, DatabaseEntry } from '@minddrop/databases';
-import { PropertyType } from '@minddrop/properties';
-import type { SearchEntryData, SearchEntryProperty } from '../../types';
+import type { PropertyType } from '@minddrop/properties';
+import type { SqlEntryPropertyRecord, SqlEntryRecord } from '../../types';
 
 /**
- * Converts a DatabaseEntry to a SearchEntryData object
- * using the database schema for property type information.
+ * Converts a DatabaseEntry to a SqlEntryRecord using the
+ * database schema for property type information.
  */
-export function convertEntryToSearchData(
+export function convertEntryToSqlRecord(
   entry: DatabaseEntry,
   database: Database,
-): SearchEntryData {
-  const properties: SearchEntryProperty[] = [];
+): SqlEntryRecord {
+  const properties: SqlEntryPropertyRecord[] = [];
 
   // Convert each property using the database schema for type info
   for (const schema of database.properties) {
@@ -39,7 +39,7 @@ export function convertEntryToSearchData(
 }
 
 /**
- * Normalizes a property value for the search entry format.
+ * Normalizes a property value for the SQL entry record format.
  */
 function normalizePropertyValue(
   type: PropertyType,

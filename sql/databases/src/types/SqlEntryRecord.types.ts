@@ -1,11 +1,11 @@
-import { PropertyType } from '@minddrop/properties';
+import type { PropertyType } from '@minddrop/properties';
 
 /**
- * The data required to index a database entry in the
- * search system. Sent from the renderer to Bun during
- * incremental sync.
+ * The data required to represent a database entry in
+ * the SQL database. Contains the entry's core fields and
+ * its dynamic property values.
  */
-export interface SearchEntryData {
+export interface SqlEntryRecord {
   /**
    * The unique entry ID.
    */
@@ -39,13 +39,13 @@ export interface SearchEntryData {
   /**
    * The entry's dynamic property values.
    */
-  properties: SearchEntryProperty[];
+  properties: SqlEntryPropertyRecord[];
 }
 
 /**
- * A single property value for a search entry.
+ * A single property value for a SQL entry record.
  */
-export interface SearchEntryProperty {
+export interface SqlEntryPropertyRecord {
   /**
    * The property name.
    */

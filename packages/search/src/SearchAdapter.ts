@@ -1,5 +1,5 @@
 import type { Database } from '@minddrop/databases';
-import type { FullTextSearchResult, SearchEntryData } from './types';
+import type { FullTextSearchResult } from './types';
 
 export interface SearchAdapter {
   /**
@@ -23,19 +23,19 @@ export interface SearchAdapter {
   }): Promise<void>;
 
   /**
-   * Incrementally syncs entry changes (upsert or delete)
-   * to the backend search index.
+   * Incrementally syncs entry changes to the MiniSearch
+   * index on the backend.
    */
   searchSync(params: {
     workspaceId: string;
     action: 'upsert' | 'delete';
-    entries?: SearchEntryData[];
+    entries?: { id: string; title: string; databaseId: string }[];
     entryIds?: string[];
   }): Promise<void>;
 
   /**
-   * Syncs database metadata changes (upsert or delete)
-   * to the backend search index.
+   * Syncs database metadata changes to the MiniSearch
+   * index on the backend.
    */
   searchDatabaseSync(params: {
     workspaceId: string;
@@ -44,23 +44,12 @@ export interface SearchAdapter {
   }): Promise<void>;
 
   /**
-   * Triggers a full re-index of all entries in a database.
-   * Used after property schema changes (add/remove).
+   * Triggers a MiniSearch re-index of all entries in a
+   * database. Used after property schema changes.
    */
   searchReindexDatabase(params: {
     workspaceId: string;
     databaseId: string;
-  }): Promise<void>;
-
-  /**
-   * Renames a property column in the search index.
-   * Used when a database property is renamed.
-   */
-  searchRenameProperty(params: {
-    workspaceId: string;
-    databaseId: string;
-    oldName: string;
-    newName: string;
   }): Promise<void>;
 }
 

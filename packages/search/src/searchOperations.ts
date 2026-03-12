@@ -1,15 +1,5 @@
 import type { Database } from '@minddrop/databases';
-import type { QueryPropertyFilter, QueryPropertySort } from '@minddrop/queries';
-import { compileQuery } from './compileQuery';
 import { initializeSearchData } from './initializeSearchData';
-import {
-  deleteDatabase as deleteDbRecord,
-  deleteEntries,
-  getSearchDb,
-  renameProperty,
-  upsertDatabase as upsertDbRecord,
-  upsertEntries,
-} from './searchDb';
 import {
   reindexDatabaseEntries,
   removeIndexDatabase,
@@ -18,12 +8,7 @@ import {
   upsertIndexDatabase,
   upsertIndexEntries,
 } from './searchIndex';
-import type {
-  FullTextSearchResult,
-  SearchEntryData,
-  SqliteDatabase,
-  StructuredSearchResult,
-} from './types';
+import type { FullTextSearchResult } from './types';
 
 /**
  * Back-end only. Initializes the search system for a
@@ -59,108 +44,37 @@ export function handleSearchFullText({
 }
 
 /**
- * Back-end only. Performs a structured property-based query
- * via SQLite.
- */
-export function handleSearchStructured({
-  workspaceId,
-  databaseId,
-  filters,
-  sort,
-  limit,
-  offset,
-}: {
-  workspaceId: string;
-  databaseId?: string;
-  filters: QueryPropertyFilter[];
-  sort: QueryPropertySort[];
-  limit?: number;
-  offset?: number;
-}): StructuredSearchResult {
-  const database: SqliteDatabase = getSearchDb(workspaceId);
-
-  // Compile the query filters and sorts into SQL
-  const compiled = compileQuery(filters, sort, {
-    databaseId,
-    limit,
-    offset,
-  });
-
-  // Execute the main query
-  const rows = database.prepare(compiled.sql).all(...compiled.params) as {
-    id: string;
-    database_id: string;
-    path: string;
-    title: string;
-    created: number;
-    last_modified: number;
-  }[];
-
-  // Execute the count query
-  const countRow = database
-    .prepare(compiled.countSql)
-    .get(...compiled.countParams) as { total: number };
-
-  return {
-    entries: rows.map((row) => ({
-      id: row.id,
-      databaseId: row.database_id,
-      path: row.path,
-      title: row.title,
-      created: row.created,
-      lastModified: row.last_modified,
-    })),
-    total: countRow.total,
-  };
-}
-
-/**
  * Back-end only. Handles incremental sync after entry
- * changes. Updates both SQLite and MiniSearch.
+ * changes. Updates the MiniSearch index only; SQL sync
+ * is handled by sql-databases.
  */
 export function handleSearchSync({
-  workspaceId,
   action,
   entries,
   entryIds,
 }: {
   workspaceId: string;
   action: 'upsert' | 'delete';
-  entries?: SearchEntryData[];
+  entries?: { id: string; title: string; databaseId: string }[];
   entryIds?: string[];
 }): void {
   if (action === 'upsert' && entries?.length) {
-    // Update SQLite
-    upsertEntries(workspaceId, entries);
-
-    // Update MiniSearch
-    upsertIndexEntries(
-      workspaceId,
-      entries.map((entry) => ({
-        id: entry.id,
-        title: entry.title,
-        databaseId: entry.databaseId,
-      })),
-    );
+    upsertIndexEntries(entries);
   }
 
   if (action === 'delete' && entryIds?.length) {
-    // Update SQLite (CASCADE handles property cleanup)
-    deleteEntries(workspaceId, entryIds);
-
-    // Update MiniSearch
-    removeIndexEntries(workspaceId, entryIds);
+    removeIndexEntries(entryIds);
   }
 }
 
 /**
- * Back-end only. Handles syncing database metadata
- * (create/update/delete). On upsert, also re-indexes all
- * entry documents belonging to the database so their stored
- * databaseName/databaseIcon stay current.
+ * Back-end only. Handles syncing database metadata to the
+ * MiniSearch index. On upsert, also re-indexes all entry
+ * documents belonging to the database so their stored
+ * databaseName/databaseIcon stay current. SQL sync is
+ * handled by sql-databases.
  */
 export function handleSearchDatabaseSync({
-  workspaceId,
   action,
   database,
 }: {
@@ -169,52 +83,29 @@ export function handleSearchDatabaseSync({
   database: { id: string; name: string; path: string; icon: string };
 }): void {
   if (action === 'upsert') {
-    upsertDbRecord(workspaceId, database);
-    upsertIndexDatabase(workspaceId, database);
+    upsertIndexDatabase(database);
 
     // Re-index entry documents so databaseName/databaseIcon
     // are up to date
-    reindexDatabaseEntries(workspaceId, database.id);
+    reindexDatabaseEntries(database.id);
   }
 
   if (action === 'delete') {
-    deleteDbRecord(workspaceId, database.id);
-    removeIndexDatabase(workspaceId, database.id);
+    removeIndexDatabase(database.id);
   }
 }
 
 /**
- * Back-end only. Re-indexes all entries in a database.
- * Used when the property schema changes (add/remove/rename).
+ * Back-end only. Re-indexes all entries in a database in
+ * the MiniSearch index. Used when the property schema
+ * changes (add/remove/rename). SQL sync is handled by
+ * sql-databases.
  */
 export function handleSearchReindexDatabase({
-  workspaceId,
   databaseId,
 }: {
   workspaceId: string;
   databaseId: string;
 }): void {
-  reindexDatabaseEntries(workspaceId, databaseId);
-}
-
-/**
- * Back-end only. Renames a property across all entries in a
- * database. Updates SQLite and re-indexes MiniSearch.
- */
-export function handleSearchRenameProperty({
-  workspaceId,
-  databaseId,
-  oldName,
-  newName,
-}: {
-  workspaceId: string;
-  databaseId: string;
-  oldName: string;
-  newName: string;
-}): void {
-  // Rename the property in SQLite
-  renameProperty(workspaceId, databaseId, oldName, newName);
-
-  // Re-index MiniSearch documents with the updated property data
-  reindexDatabaseEntries(workspaceId, databaseId);
+  reindexDatabaseEntries(databaseId);
 }
