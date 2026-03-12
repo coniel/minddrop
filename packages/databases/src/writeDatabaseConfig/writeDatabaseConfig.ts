@@ -12,12 +12,7 @@ import { databaseConfigFilePath } from '../utils';
  */
 export async function writeDatabaseConfig(id: string): Promise<void> {
   // Get the database config
-  const config = { ...getDatabase(id) };
-
-  // Remove the path before serialization
-  const path = config.path;
-  // @ts-expect-error - Remove the path before serialization
-  delete config.path;
+  const { path, id: _id, ...config } = getDatabase(id);
 
   // Ensure the database's hidden .minddrop directory exists
   const hiddenDirPath = Fs.concatPath(path, Paths.hiddenDirName);

@@ -51,14 +51,20 @@ function findDatabasePaths(entries: FsEntry[], inHiddenDir = false): string[] {
  * @param path - The path to the database.json file.
  * @returns The database config, or null if reading fails.
  */
-async function readDatabaseConfig(path: string): Promise<Database | null> {
+async function readDatabaseConfig(
+  configPath: string,
+): Promise<Database | null> {
   try {
-    const config = await Fs.readJsonFile<Database>(path);
+    const config = await Fs.readJsonFile<Database>(configPath);
+
+    // The database directory path (strip .minddrop/database.json)
+    const databasePath = configPath.split('/').slice(0, -2).join('/');
 
     return {
       ...config,
-      // Remove .minddrop/database.json from the path
-      path: path.split('/').slice(0, -2).join('/'),
+      // Derive ID from the directory name
+      id: Fs.fileNameFromPath(databasePath),
+      path: databasePath,
     };
   } catch {
     return null;

@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Events } from '@minddrop/events';
 import { PathConflictError } from '@minddrop/file-system';
 import { PropertySchema } from '@minddrop/properties';
-import { omitPath } from '@minddrop/utils';
 import { DatabasesStore } from '../DatabasesStore';
 import { DatabaseCreatedEvent } from '../events';
 import { MockFs, cleanup, parentDir, setup } from '../test-utils';
@@ -20,7 +19,7 @@ const options: Omit<CreateDatabaseOptions, 'automations'> = {
 
 const newDatabase: Database = {
   ...options,
-  id: expect.any(String),
+  id: options.name,
   created: expect.any(Date),
   lastModified: expect.any(Date),
   path: `${parentDir}/${options.name}`,
@@ -104,9 +103,10 @@ describe('createDatabase', () => {
   it('writes the database config to the file system', async () => {
     const configFilePath = databaseConfigFilePath(newDatabase.path);
 
-    const database = await createDatabase(options);
+    const { id, path, ...expectedConfig } = await createDatabase(options);
 
-    expect(MockFs.readJsonFile(configFilePath)).toEqual(omitPath(database));
+    // Config file should not contain id or path (both are derived)
+    expect(MockFs.readJsonFile(configFilePath)).toEqual(expectedConfig);
   });
 
   it('dispatches a database created event', async () =>

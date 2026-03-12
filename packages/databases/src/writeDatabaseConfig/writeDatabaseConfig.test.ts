@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Fs } from '@minddrop/file-system';
-import { omitPath } from '@minddrop/utils';
 import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
 import { databaseConfigFilePath } from '../utils';
 import { writeDatabaseConfig } from './writeDatabaseConfig';
+
+// Strip id and path from a database config (neither is persisted to disk)
+const { id: _id, path: _path, ...expectedConfig } = objectDatabase;
 
 describe('writeConfig', () => {
   beforeEach(setup);
@@ -18,7 +20,7 @@ describe('writeConfig', () => {
 
     await writeDatabaseConfig(objectDatabase.id);
 
-    expect(MockFs.readJsonFile(path)).toEqual(omitPath(objectDatabase));
+    expect(MockFs.readJsonFile(path)).toEqual(expectedConfig);
   });
 
   it('creates the hidden directory if it does not exist', async () => {

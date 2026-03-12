@@ -54,7 +54,7 @@ function generateDatabase(
 }
 
 export const objectDatabase = generateDatabase({
-  id: 'object-database',
+  id: 'Objects',
   name: 'Objects',
   entryName: 'Object',
   properties: [
@@ -72,7 +72,7 @@ export const objectDatabase = generateDatabase({
 });
 
 export const urlDatabase = generateDatabase({
-  id: 'url-database',
+  id: 'URL Database',
   name: 'URL Database',
   entryName: 'URL',
   defaultProperties: {
@@ -88,13 +88,13 @@ export const urlDatabase = generateDatabase({
 });
 
 export const noPropertiesDatabase = generateDatabase({
-  id: 'no-properties-database',
+  id: 'No Properties',
   name: 'No Properties',
   entryName: 'No Properties',
 });
 
 export const yamlObjectDatabase = generateDatabase({
-  id: 'yaml-database',
+  id: 'YAML Database',
   name: 'YAML Database',
   entryName: 'YAML',
   entrySerializer: 'yaml',
@@ -111,7 +111,7 @@ export const yamlObjectDatabase = generateDatabase({
 });
 
 export const rootStorageDatabase = generateDatabase({
-  id: 'root-storage-database',
+  id: 'Root Storage Database',
   entrySerializer: 'markdown',
   name: 'Root Storage Database',
   entryName: 'Root Storage',
@@ -134,7 +134,7 @@ export const rootStorageDatabase = generateDatabase({
 });
 
 export const commonStorageDatabase = generateDatabase({
-  id: 'common-storage-database',
+  id: 'Common Storage Database',
   entrySerializer: 'markdown',
   name: 'Common Storage Database',
   entryName: 'Common Storage',
@@ -157,7 +157,7 @@ export const commonStorageDatabase = generateDatabase({
 });
 
 export const propertyStorageDatabase = generateDatabase({
-  id: 'property-storage-database',
+  id: 'Property Storage Database',
   entrySerializer: 'markdown',
   name: 'Property Storage Database',
   entryName: 'Property Storage',
@@ -179,7 +179,7 @@ export const propertyStorageDatabase = generateDatabase({
 });
 
 export const entryStorageDatabase = generateDatabase({
-  id: 'entry-storage-database',
+  id: 'Entry Storage Database',
   entrySerializer: 'markdown',
   name: 'Entry Storage Database',
   entryName: 'Entry Storage',
@@ -201,7 +201,7 @@ export const entryStorageDatabase = generateDatabase({
 });
 
 export const collectionDatabase = generateDatabase({
-  id: 'collection-database',
+  id: 'Collection Database',
   name: 'Collection Database',
   entryName: 'Collection Entry',
   properties: [
@@ -234,10 +234,10 @@ export const databases = [
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
-  // Individual database config files
-  ...databases.map((db) => ({
-    path: databaseConfigFilePath(db.path),
-    textContent: JSON.stringify(db, null, 2),
+  // Individual database config files (id and path are not persisted)
+  ...databases.map(({ id, path, ...config }) => ({
+    path: databaseConfigFilePath(path),
+    textContent: JSON.stringify(config, null, 2),
   })),
   // Property file directories
   Fs.concatPath(
