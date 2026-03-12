@@ -2,6 +2,7 @@ import { Collections, VirtualCollectionData } from '@minddrop/collections';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
 import { DatabasesStore } from '../DatabasesStore';
 import { readDatabaseEntryFiles } from '../readDatabaseEntryFiles';
+import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { virtualCollectionId, virtualCollectionName } from '../utils';
 
 /**
@@ -12,13 +13,29 @@ export async function initializeDatabaseEntries(): Promise<void> {
   // Get all databases
   const databases = DatabasesStore.getAllArray();
 
-  // Read all entries from all databases
-  const databaseEntries = await Promise.all(
-    databases.map((database) => readDatabaseEntryFiles(database)),
-  );
+  // Read all entries and metadata from all databases in parallel
+  const [databaseEntries, databaseMetadata] = await Promise.all([
+    Promise.all(databases.map((database) => readDatabaseEntryFiles(database))),
+    Promise.all(
+      databases.map((database) => readDatabaseMetadata(database.path)),
+    ),
+  ]);
 
-  // Load all entries into the store
-  const entries = databaseEntries.flat();
+  // Flatten entries and apply metadata from the metadata files
+  const entries = databaseEntries.flat().map((entry) => {
+    // Find the metadata map for this entry's database
+    const databaseIndex = databases.findIndex(
+      (database) => database.id === entry.database,
+    );
+    const metadataMap = databaseMetadata[databaseIndex];
+    const metadata = metadataMap?.[entry.id];
+
+    if (metadata) {
+      return { ...entry, metadata };
+    }
+
+    return entry;
+  });
   DatabaseEntriesStore.load(entries);
 
   // Hydrate virtual collections from entries with collection properties
