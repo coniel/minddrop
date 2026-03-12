@@ -49,6 +49,8 @@ export { getDefaultDatabaseDesign as getDefaultDesign } from './getDefaultDataba
 export { getDatabaseDesignPropertyMap as getDesignPropertyMap } from './getDatabaseDesignPropertyMap';
 export { removeDatabaseDesignPropertyMap as removeDesignPropertyMap } from './removeDatabaseDesignPropertyMap';
 export { setDatabaseDesignPropertyMap as setDesignPropertyMap } from './setDatabaseDesignPropertyMap';
+export { setDatabaseViewDesign as setViewDesign } from './setDatabaseViewDesign';
+export { clearDatabaseViewDesign as clearViewDesign } from './clearDatabaseViewDesign';
 
 /**
  * Handles a drop event on a database.
