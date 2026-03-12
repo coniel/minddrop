@@ -1,4 +1,5 @@
 export * from './databaseConfigFilePath';
+export * from './databaseMetadataFilePath';
 export * from './entryAssetsDirPath';
 export * from './filterValidDatabaseFiles';
 export * from './filterValidDatabaseUrls';
