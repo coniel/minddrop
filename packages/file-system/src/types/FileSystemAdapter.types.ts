@@ -107,6 +107,20 @@ export interface FileSystemAdapter {
   readTextFile(path: string, options?: FsReadFileOptions): Promise<string>;
 
   /**
+   * Reads multiple files as UTF-8 encoded strings in a single
+   * batch operation. Paths that fail to read are omitted from
+   * the result map.
+   *
+   * @param paths - The file paths to read.
+   * @param options - Read file options.
+   * @returns A promise resolving to a map of path to file contents.
+   */
+  readTextFiles(
+    paths: string[],
+    options?: FsReadFileOptions,
+  ): Promise<Map<string, string>>;
+
+  /**
    * Removes a directory.
    *
    * @param path - The directory path.
@@ -175,6 +189,18 @@ export interface FileSystemAdapter {
   writeTextFile(
     path: string,
     contents: string,
+    options?: FsWriteFileOptions,
+  ): Promise<void>;
+
+  /**
+   * Writes multiple UTF-8 text files in a single batch operation.
+   *
+   * @param entries - The files to write, each with a path and contents.
+   * @param options - Write file options.
+   * @returns A promise indicating the success or failure of the operation.
+   */
+  writeTextFiles(
+    entries: { path: string; contents: string }[],
     options?: FsWriteFileOptions,
   ): Promise<void>;
 

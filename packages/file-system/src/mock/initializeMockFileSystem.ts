@@ -90,6 +90,22 @@ export function initializeMockFileSystem(
 
       return textFileContents[fullPath] || '';
     },
+    readTextFiles: async (paths, options) => {
+      const results = new Map<string, string>();
+
+      for (const path of paths) {
+        const fullPath = getFullPath(path, options);
+
+        try {
+          mockGetFileEntry(root, fullPath);
+          results.set(path, textFileContents[fullPath] || '');
+        } catch {
+          // Skip paths that fail (partial success)
+        }
+      }
+
+      return results;
+    },
     removeDir: async (path, options) =>
       mockRemoveFileEntry(root, getFullPath(path, options)),
     removeFile: async (path, options) => {
@@ -136,6 +152,20 @@ export function initializeMockFileSystem(
       }
 
       textFileContents[fullPath] = textContent;
+    },
+    writeTextFiles: async (entries, options) => {
+      for (const entry of entries) {
+        const fullPath = getFullPath(entry.path, options);
+
+        if (!mockExists(root, fullPath)) {
+          mockAddFileEntry(root, {
+            path: fullPath,
+            name: fileNameFromPath(fullPath),
+          });
+        }
+
+        textFileContents[fullPath] = entry.contents;
+      }
     },
     createDir: async (path, options) => {
       const fullPath = getFullPath(path, options);
@@ -219,7 +249,10 @@ export function initializeMockFileSystem(
     },
   };
 
-  registerFileSystemAdapter(MockFs);
+  // Skip the I/O queue in tests since the mock adapter is
+  // synchronous and the queue's debounce delay would cause
+  // test timeouts
+  registerFileSystemAdapter(MockFs, { skipQueue: true });
 
   return {
     MockFs,

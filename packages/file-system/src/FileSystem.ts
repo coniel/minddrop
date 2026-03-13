@@ -6,6 +6,7 @@ import {
   incrementalPath as incrementalPathFn,
   setPathIncrement,
 } from './incrementalPath';
+import { IoQueue } from './ioQueue';
 import {
   BaseDirectory,
   FileSystem,
@@ -53,6 +54,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   exists: (...args) => FsAdapter.exists(...args),
   readDir: (...args) => FsAdapter.readDir(...args),
   readTextFile: (...args) => FsAdapter.readTextFile(...args),
+  readTextFiles: (...args) => FsAdapter.readTextFiles(...args),
   removeDir: (...args) => FsAdapter.removeDir(...args),
   removeFile: (...args) => FsAdapter.removeFile(...args),
   trashDir: (...args) => FsAdapter.trashDir(...args),
@@ -60,6 +62,7 @@ export const Fs: Omit<FileSystem, 'openFilePicker'> &
   rename: (...args) => FsAdapter.rename(...args),
   writeBinaryFile: (...args) => FsAdapter.writeBinaryFile(...args),
   writeTextFile: (...args) => FsAdapter.writeTextFile(...args),
+  writeTextFiles: (...args) => FsAdapter.writeTextFiles(...args),
   downloadFile: (...args) => FsAdapter.downloadFile(...args),
   watch: (...args) => FsAdapter.watch(...args),
   unwatch: (...args) => FsAdapter.unwatch(...args),
@@ -76,14 +79,48 @@ async function setBaseDirPaths(): Promise<void> {
   });
 }
 
+// The I/O queue instance, created when the adapter is registered
+let ioQueue: IoQueue | null = null;
+
+interface RegisterAdapterOptions {
+  /**
+   * Skip wrapping the adapter with the I/O queue. Used in
+   * tests where the mock adapter is synchronous and the
+   * queue's debounce delay would cause timeouts.
+   */
+  skipQueue?: boolean;
+}
+
 /**
  * Registers a file system adapter responsible for handling
- * file system operations on the OS file system.
+ * file system operations on the OS file system. Text file
+ * reads and writes are wrapped with an I/O queue that batches
+ * concurrent operations into single adapter calls.
  *
- * @param adapter - The file sytsem adapter.
+ * @param adapter - The file system adapter.
+ * @param options - Registration options.
  */
-export const registerFileSystemAdapter = (adapter: FileSystemAdapter) => {
-  FsAdapter = adapter;
+export const registerFileSystemAdapter = (
+  adapter: FileSystemAdapter,
+  options?: RegisterAdapterOptions,
+) => {
+  if (options?.skipQueue) {
+    FsAdapter = adapter;
+  } else {
+    ioQueue = new IoQueue(adapter);
+
+    FsAdapter = {
+      ...adapter,
+      readTextFile: (path, readOptions) => ioQueue!.read(path, readOptions),
+      readTextFiles: (paths, readOptions) =>
+        ioQueue!.readMany(paths, readOptions),
+      writeTextFile: (path, contents, writeOptions) =>
+        ioQueue!.write(path, contents, writeOptions),
+      writeTextFiles: (entries, writeOptions) =>
+        ioQueue!.writeMany(entries, writeOptions),
+    };
+  }
+
   setBaseDirPaths();
 };
 
