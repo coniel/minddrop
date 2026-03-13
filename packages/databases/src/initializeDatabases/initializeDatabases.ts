@@ -1,186 +1,53 @@
-import {
-  CollectionUpdatedEvent,
-  CollectionUpdatedEventData,
-} from '@minddrop/collections';
-import { Events } from '@minddrop/events';
-import { ViewUpdatedEvent, ViewUpdatedEventData } from '@minddrop/views';
+import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
+import { getDatabaseSqlAdapter } from '../DatabaseSqlAdapter';
 import { DatabasesStore } from '../DatabasesStore';
-import {
-  onAddProperty,
-  onCreateDatabase,
-  onCreateEntry,
-  onDeleteDatabase,
-  onDeleteEntry,
-  onRemoveProperty,
-  onRenameDatabase,
-  onRenameEntry,
-  onRenameProperty,
-  onUpdateCollection,
-  onUpdateDatabase,
-  onUpdateEntry,
-  onUpdateEntryMetadata,
-  onUpdateVirtualView,
-} from '../event-handlers';
-import {
-  DatabaseCreatedEvent,
-  DatabaseCreatedEventData,
-  DatabaseDeletedEvent,
-  DatabaseDeletedEventData,
-  DatabaseEntryCreatedEvent,
-  DatabaseEntryCreatedEventData,
-  DatabaseEntryDeletedEvent,
-  DatabaseEntryDeletedEventData,
-  DatabaseEntryMetadataUpdatedEvent,
-  DatabaseEntryMetadataUpdatedEventData,
-  DatabaseEntryRenamedEvent,
-  DatabaseEntryRenamedEventData,
-  DatabaseEntryUpdatedEvent,
-  DatabaseEntryUpdatedEventData,
-  DatabasePropertyAddedEvent,
-  DatabasePropertyAddedEventData,
-  DatabasePropertyRemovedEvent,
-  DatabasePropertyRemovedEventData,
-  DatabasePropertyRenamedEvent,
-  DatabasePropertyRenamedEventData,
-  DatabaseRenamedEvent,
-  DatabaseRenamedEventData,
-  DatabaseUpdatedEvent,
-  DatabaseUpdatedEventData,
-} from '../events';
-import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
+import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
+import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
+import type { Database } from '../types';
+import { convertSqlRecordToEntry } from '../utils';
 
 /**
- * Loads core entry serializers and the user's databases into the store.
+ * Frontend orchestrator for SQL-first initialization.
+ * Makes a single RPC call to the backend to get all
+ * databases and entries, then hydrates frontend stores
+ * and registers event handlers.
  */
-export async function initializeDatabases() {
-  // Load core entry serializers into the store
+export async function initializeDatabases(): Promise<void> {
+  // Load core entry serializers
   loadCoreSerializers();
 
-  // Get all workspaces
   const workspaces = Workspaces.getAll();
 
-  // Read database configs from all workspaces
-  const databaseConfigs = (
-    await Promise.all(
-      workspaces.map((workspace) => readWorkspaceDatabases(workspace.path)),
-    )
-  ).flat();
+  if (workspaces.length === 0) {
+    return;
+  }
+
+  // Use the first workspace
+  const workspace = workspaces[0];
+
+  // Single RPC call to the backend
+  const result = await getDatabaseSqlAdapter().initializeBackend(
+    workspace.id,
+    workspace.path,
+  );
+
+  // Restore dates in database configs (dates arrive as
+  // ISO strings over RPC)
+  const databases = result.databases.map((database) =>
+    restoreDates<Database>(database),
+  );
+
+  // Convert SQL entry records to DatabaseEntry objects
+  const entries = result.entries.map(convertSqlRecordToEntry);
 
   // Load database configs into the store
-  DatabasesStore.load(databaseConfigs);
+  DatabasesStore.load(databases);
 
-  // Initialize event handlers
-  initializeEventHandlers();
-}
+  // Load entries and hydrate virtual collections
+  initializeDatabaseEntries(databases, entries);
 
-function initializeEventHandlers() {
-  Events.on<DatabaseCreatedEventData>(
-    DatabaseCreatedEvent,
-    'databases',
-    ({ data }) => {
-      onCreateDatabase(data);
-    },
-  );
-
-  Events.on<DatabaseUpdatedEventData>(
-    DatabaseUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateDatabase(data);
-    },
-  );
-
-  Events.on<DatabaseDeletedEventData>(
-    DatabaseDeletedEvent,
-    'databases',
-    ({ data }) => {
-      onDeleteDatabase(data);
-    },
-  );
-
-  Events.on<DatabaseRenamedEventData>(
-    DatabaseRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameDatabase(data);
-    },
-  );
-
-  Events.on<DatabasePropertyAddedEventData>(
-    DatabasePropertyAddedEvent,
-    'databases',
-    ({ data }) => {
-      onAddProperty(data);
-    },
-  );
-
-  Events.on<DatabasePropertyRemovedEventData>(
-    DatabasePropertyRemovedEvent,
-    'databases',
-    ({ data }) => {
-      onRemoveProperty(data);
-    },
-  );
-
-  Events.on<DatabasePropertyRenamedEventData>(
-    DatabasePropertyRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameProperty(data);
-    },
-  );
-
-  Events.on<DatabaseEntryCreatedEventData>(
-    DatabaseEntryCreatedEvent,
-    'databases',
-    ({ data }) => {
-      onCreateEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryUpdatedEventData>(
-    DatabaseEntryUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryDeletedEventData>(
-    DatabaseEntryDeletedEvent,
-    'databases',
-    ({ data }) => {
-      onDeleteEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryRenamedEventData>(
-    DatabaseEntryRenamedEvent,
-    'databases',
-    ({ data }) => {
-      onRenameEntry(data);
-    },
-  );
-
-  Events.on<DatabaseEntryMetadataUpdatedEventData>(
-    DatabaseEntryMetadataUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateEntryMetadata(data);
-    },
-  );
-
-  Events.on<CollectionUpdatedEventData>(
-    CollectionUpdatedEvent,
-    'databases',
-    ({ data }) => {
-      onUpdateCollection(data);
-    },
-  );
-
-  Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {
-    onUpdateVirtualView(data);
-  });
+  // Register event handlers
+  initializeDatabaseEventHandlers();
 }

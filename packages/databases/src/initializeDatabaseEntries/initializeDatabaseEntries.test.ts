@@ -6,6 +6,7 @@ import {
   collectionDatabase,
   collectionEntry1,
   databaseEntries,
+  databases,
   setup,
 } from '../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../utils';
@@ -16,17 +17,15 @@ describe('initializeDatabaseEntries', () => {
 
   afterEach(cleanup);
 
-  it('loads database entries into the store from the file system', async () => {
-    // Initialize database entries
-    await initializeDatabaseEntries();
+  it('loads database entries into the store', () => {
+    initializeDatabaseEntries(databases, databaseEntries);
 
     // Should load all entries into the store
     expect(DatabaseEntriesStore.getAllArray()).toEqual(databaseEntries);
   });
 
-  it('hydrates virtual collections from entries with collection properties', async () => {
-    // Initialize database entries
-    await initializeDatabaseEntries();
+  it('hydrates virtual collections from entries with collection properties', () => {
+    initializeDatabaseEntries(databases, databaseEntries);
 
     // Should create virtual collections for each collection property
     const relatedCollection = Collections.Store.get(
@@ -69,9 +68,8 @@ describe('initializeDatabaseEntries', () => {
     );
   });
 
-  it('does not create virtual collections for databases without collection properties', async () => {
-    // Initialize database entries
-    await initializeDatabaseEntries();
+  it('does not create virtual collections for databases without collection properties', () => {
+    initializeDatabaseEntries(databases, databaseEntries);
 
     // Should not create virtual collections for non-collection entries
     const allCollections = Collections.Store.getAllArray();

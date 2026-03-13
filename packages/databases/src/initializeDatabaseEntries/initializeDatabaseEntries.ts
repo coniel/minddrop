@@ -1,41 +1,17 @@
 import { Collections, VirtualCollectionData } from '@minddrop/collections';
 import { DatabaseEntriesStore } from '../DatabaseEntriesStore';
-import { DatabasesStore } from '../DatabasesStore';
-import { readDatabaseEntryFiles } from '../readDatabaseEntryFiles';
-import { readDatabaseMetadata } from '../readDatabaseMetadata';
+import type { Database, DatabaseEntry } from '../types';
 import { virtualCollectionId, virtualCollectionName } from '../utils';
 
 /**
- * Initializes database entries by reading them from the file system
- * and loading them into the store.
+ * Loads database entries into the store and hydrates
+ * virtual collections from collection properties.
  */
-export async function initializeDatabaseEntries(): Promise<void> {
-  // Get all databases
-  const databases = DatabasesStore.getAllArray();
-
-  // Read all entries and metadata from all databases in parallel
-  const [databaseEntries, databaseMetadata] = await Promise.all([
-    Promise.all(databases.map((database) => readDatabaseEntryFiles(database))),
-    Promise.all(
-      databases.map((database) => readDatabaseMetadata(database.path)),
-    ),
-  ]);
-
-  // Flatten entries and apply metadata from the metadata files
-  const entries = databaseEntries.flat().map((entry) => {
-    // Find the metadata map for this entry's database
-    const databaseIndex = databases.findIndex(
-      (database) => database.id === entry.database,
-    );
-    const metadataMap = databaseMetadata[databaseIndex];
-    const metadata = metadataMap?.[entry.id];
-
-    if (metadata) {
-      return { ...entry, metadata };
-    }
-
-    return entry;
-  });
+export function initializeDatabaseEntries(
+  databases: Database[],
+  entries: DatabaseEntry[],
+): void {
+  // Load entries into the store
   DatabaseEntriesStore.load(entries);
 
   // Hydrate virtual collections from entries with collection properties

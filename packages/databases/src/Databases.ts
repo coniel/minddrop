@@ -35,8 +35,6 @@ import {
   sqlUpsertEntries,
 } from './sql';
 
-export type { InitializeBackendResult } from './sql';
-
 export const events = {
   created: DatabaseCreatedEvent,
   updated: DatabaseUpdatedEvent,
