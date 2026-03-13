@@ -28,8 +28,8 @@ export interface Database {
   entrySerializer: string;
 
   /**
-   * The name of the database. Also used as the name for the database directory
-   * on the file system.
+   * The name of the database. Derived from the database
+   * directory name on the file system.
    */
   name: string;
 

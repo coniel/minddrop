@@ -60,10 +60,13 @@ async function readDatabaseConfig(
     // The database directory path (strip .minddrop/database.json)
     const databasePath = configPath.split('/').slice(0, -2).join('/');
 
+    // Derive ID and name from the directory name
+    const dirName = Fs.fileNameFromPath(databasePath);
+
     return {
       ...config,
-      // Derive ID from the directory name
-      id: Fs.fileNameFromPath(databasePath),
+      id: dirName,
+      name: dirName,
       path: databasePath,
     };
   } catch {

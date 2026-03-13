@@ -251,8 +251,8 @@ export const databases = [
 
 export const databaseFiles: (MockFileDescriptor | string)[] = [
   parentDir,
-  // Individual database config files (id and path are not persisted)
-  ...databases.map(({ id, path, ...config }) => ({
+  // Individual database config files (id, path, and name are not persisted)
+  ...databases.map(({ id, path, name, ...config }) => ({
     path: databaseConfigFilePath(path),
     textContent: JSON.stringify(config, null, 2),
   })),

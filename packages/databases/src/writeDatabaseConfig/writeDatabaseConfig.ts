@@ -12,7 +12,9 @@ import { databaseConfigFilePath } from '../utils';
  */
 export async function writeDatabaseConfig(id: string): Promise<void> {
   // Get the database config
-  const { path, id: _id, ...config } = getDatabase(id);
+  // Exclude id, path, and name as they are derived from the
+  // directory name and location
+  const { path, id: _id, name: _name, ...config } = getDatabase(id);
 
   // Ensure the database's hidden .minddrop directory exists
   const hiddenDirPath = Fs.concatPath(path, Paths.hiddenDirName);
