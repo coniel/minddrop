@@ -11,20 +11,6 @@ import { sqlUpdateEntryMetadata } from '../sqlUpdateEntryMetadata';
 import { sqlUpsertDatabase } from '../sqlUpsertDatabase';
 import { sqlUpsertEntries } from '../sqlUpsertEntries';
 
-/**
- * Returns a map of entry ID to serialized metadata JSON for all
- * entries in the given database. Used to detect metadata-only
- * changes during incremental startup sync.
- */
-function sqlGetEntryMetadataMap(databaseId: string): Map<string, string> {
-  const rows = Sql.all<{ id: string; metadata: string }>(
-    'SELECT id, metadata FROM entries WHERE database_id = ?',
-    databaseId,
-  );
-
-  return new Map(rows.map((row) => [row.id, row.metadata]));
-}
-
 export interface SqlInitializeResult {
   /**
    * Whether the SQL schema changed, requiring a full
@@ -187,4 +173,18 @@ export async function sqlInitialize(
     changedEntries: allChangedEntries,
     deletedEntryIds: allDeletedEntryIds,
   };
+}
+
+/**
+ * Returns a map of entry ID to serialized metadata JSON for all
+ * entries in the given database. Used to detect metadata-only
+ * changes during incremental startup sync.
+ */
+function sqlGetEntryMetadataMap(databaseId: string): Map<string, string> {
+  const rows = Sql.all<{ id: string; metadata: string }>(
+    'SELECT id, metadata FROM entries WHERE database_id = ?',
+    databaseId,
+  );
+
+  return new Map(rows.map((row) => [row.id, row.metadata]));
 }

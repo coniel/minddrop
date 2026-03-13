@@ -11,8 +11,9 @@ export function sqlUpdateEntryMetadata(
   entryId: string,
   metadata: DatabaseEntryMetadata,
 ): void {
-  Sql.run('UPDATE entries SET metadata = ? WHERE id = ?', [
+  Sql.run(
+    'UPDATE entries SET metadata = ? WHERE id = ?',
     JSON.stringify(metadata),
     entryId,
-  ]);
+  );
 }

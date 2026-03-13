@@ -21,6 +21,8 @@ export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 // Init
 export { sqlInitialize } from './sqlInitialize';
 export type { SqlInitializeResult } from './sqlInitialize';
+export { initializeDatabasesBackend } from './initializeDatabasesBackend';
+export type { InitializeBackendResult } from './initializeDatabasesBackend';
 
 // Schema
 export { SCHEMA_SQL, SCHEMA_VERSION } from './schema';

@@ -1,3 +1,4 @@
+import type { PropertyMap, PropertyValue } from '@minddrop/properties';
 import { restoreDates } from '@minddrop/utils';
 import type { DatabaseEntry, DatabaseEntryMetadata } from '../../types';
 import type { SqlEntryRecord } from '../../types';
@@ -8,7 +9,7 @@ import type { SqlEntryRecord } from '../../types';
  */
 export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
   // Reconstruct the properties map from the flat property records
-  const properties: Record<string, unknown> = {};
+  const properties: PropertyMap = {};
 
   for (const property of record.properties) {
     properties[property.name] = restorePropertyValue(
@@ -40,7 +41,7 @@ export function convertSqlRecordToEntry(record: SqlEntryRecord): DatabaseEntry {
 function restorePropertyValue(
   type: string,
   value: string | number | boolean | string[] | null,
-): unknown {
+): PropertyValue {
   if (value === null) {
     return null;
   }

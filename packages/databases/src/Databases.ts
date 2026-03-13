@@ -35,6 +35,8 @@ import {
   sqlUpsertEntries,
 } from './sql';
 
+export type { InitializeBackendResult } from './sql';
+
 export const events = {
   created: DatabaseCreatedEvent,
   updated: DatabaseUpdatedEvent,
@@ -74,6 +76,7 @@ export const sql = {
 export { registerDatabaseSqlAdapter as registerSqlAdapter } from './DatabaseSqlAdapter';
 export type { DatabaseSqlAdapter } from './DatabaseSqlAdapter';
 export { initializeDatabasesSql as initializeSql } from './initializeDatabasesSql';
+export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';
