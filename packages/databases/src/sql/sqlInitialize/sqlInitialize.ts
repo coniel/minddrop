@@ -1,6 +1,6 @@
 import { Sql } from '@minddrop/sql';
 import { loadCoreSerializers } from '../../DatabaseEntrySerializers';
-import { readDatabaseEntryFiles } from '../../readDatabaseEntryFiles';
+import { readDatabaseEntries } from '../../readDatabaseEntries';
 import { readDatabaseMetadata } from '../../readDatabaseMetadata';
 import type { Database } from '../../types';
 import { convertEntryToSqlRecord } from '../../utils';
@@ -75,7 +75,7 @@ export async function sqlInitialize(
 
     // Read entries and metadata from disk
     const [rawEntries, metadataMap] = await Promise.all([
-      readDatabaseEntryFiles(database),
+      readDatabaseEntries(database),
       readDatabaseMetadata(database.path),
     ]);
 

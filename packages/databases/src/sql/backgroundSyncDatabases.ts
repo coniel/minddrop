@@ -1,7 +1,7 @@
 import { Sql } from '@minddrop/sql';
 import { Paths } from '@minddrop/utils';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
-import { readDatabaseEntryFiles } from '../readDatabaseEntryFiles';
+import { readDatabaseEntries } from '../readDatabaseEntries';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
 import { readWorkspaceDatabases } from '../readWorkspaceDatabases';
 import type { BackgroundSyncChangeset, Database } from '../types';
@@ -93,7 +93,7 @@ export async function backgroundSyncDatabases(
   for (const database of fileSystemDatabases) {
     // Read entries and metadata from disk in parallel
     const [rawEntries, metadataMap] = await Promise.all([
-      readDatabaseEntryFiles(database),
+      readDatabaseEntries(database),
       readDatabaseMetadata(database.path),
     ]);
 

@@ -10,7 +10,7 @@ import { Database, DatabaseEntry } from '../types';
  * @param database - The database to read entries from.
  * @returns The database entries, with null entries filtered out.
  */
-export async function readDatabaseEntryFiles(
+export async function readDatabaseEntries(
   database: Database,
 ): Promise<DatabaseEntry[]> {
   const hasEntrySubdirs = database.propertyFileStorage === 'entry';
