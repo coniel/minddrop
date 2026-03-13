@@ -15,8 +15,18 @@ export function registerBunFileSystemAdapter(): void {
     getBaseDirPath: (dir) => fs.fsGetBaseDirPath({ dir }),
     readTextFile: (path, options) =>
       fs.fsReadTextFile({ path, baseDir: options?.baseDir }),
+    readTextFiles: async (paths, options) => {
+      const entries = await fs.fsReadTextFiles({
+        paths,
+        baseDir: options?.baseDir,
+      });
+
+      return new Map(entries);
+    },
     writeTextFile: (path, contents, options) =>
       fs.fsWriteTextFile({ path, contents, baseDir: options?.baseDir }),
+    writeTextFiles: (entries, options) =>
+      fs.fsWriteTextFiles({ entries, baseDir: options?.baseDir }),
     createDir: (path, options) =>
       fs.fsCreateDir({
         path,

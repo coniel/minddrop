@@ -52,6 +52,15 @@ export const registerFileSystemAdapter = (rpc: any) =>
     readTextFile: (path, options = {}) =>
       rpc.request.fsReadTextFile({ path, baseDir: options.baseDir }),
 
+    readTextFiles: async (paths, options = {}) => {
+      const entries: [string, string][] = await rpc.request.fsReadTextFiles({
+        paths,
+        baseDir: options.baseDir,
+      });
+
+      return new Map(entries);
+    },
+
     removeDir: (path, options = {}) =>
       rpc.request.fsRemoveDir({
         path,
@@ -91,6 +100,9 @@ export const registerFileSystemAdapter = (rpc: any) =>
 
     writeTextFile: (path, contents, options = {}) =>
       rpc.request.fsWriteTextFile({ path, contents, baseDir: options.baseDir }),
+
+    writeTextFiles: (entries, options = {}) =>
+      rpc.request.fsWriteTextFiles({ entries, baseDir: options.baseDir }),
 
     downloadFile: (url, path, options = {}) =>
       rpc.request.fsDownloadFile({ url, path, baseDir: options.baseDir }),

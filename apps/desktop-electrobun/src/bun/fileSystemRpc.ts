@@ -178,6 +178,31 @@ export const fileSystemRpcHandlers = {
     baseDir?: BaseDirectory;
   }): Promise<string> => Bun.file(resolvePath(filePath, baseDir)).text(),
 
+  fsReadTextFiles: async ({
+    paths,
+    baseDir,
+  }: {
+    paths: string[];
+    baseDir?: BaseDirectory;
+  }): Promise<[string, string][]> => {
+    // Read all files in parallel, collecting results as entries
+    const results = await Promise.allSettled(
+      paths.map(async (filePath) => {
+        const content = await Bun.file(resolvePath(filePath, baseDir)).text();
+
+        return [filePath, content] as [string, string];
+      }),
+    );
+
+    // Return only successful reads (partial success)
+    return results
+      .filter(
+        (result): result is PromiseFulfilledResult<[string, string]> =>
+          result.status === 'fulfilled',
+      )
+      .map((result) => result.value);
+  },
+
   fsRemoveDir: async ({
     path: dirPath,
     baseDir,
@@ -245,6 +270,21 @@ export const fileSystemRpcHandlers = {
     baseDir?: BaseDirectory;
   }): Promise<void> => {
     await Bun.write(resolvePath(filePath, baseDir), contents);
+  },
+
+  fsWriteTextFiles: async ({
+    entries,
+    baseDir,
+  }: {
+    entries: { path: string; contents: string }[];
+    baseDir?: BaseDirectory;
+  }): Promise<void> => {
+    // Write all files in parallel
+    await Promise.all(
+      entries.map((entry) =>
+        Bun.write(resolvePath(entry.path, baseDir), entry.contents),
+      ),
+    );
   },
 
   fsDownloadFile: async ({
