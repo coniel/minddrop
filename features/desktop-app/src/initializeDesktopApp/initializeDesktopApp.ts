@@ -67,10 +67,11 @@ export async function initializeDesktopApp(): Promise<void> {
   await Workspaces.initialize();
   await Designs.initialize();
   await Views.initialize();
-  await Databases.initialize();
+  const { schemaChanged } = await Databases.initialize();
 
-  // Register search event listeners for incremental sync
-  Search.initializeSync();
+  // Initialize the MiniSearch index and register event
+  // listeners for incremental sync
+  await Search.initialize({ schemaChanged });
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();

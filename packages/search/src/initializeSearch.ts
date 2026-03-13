@@ -6,17 +6,16 @@ import { initializeSearchSync } from './initializeSearchSync';
  * Initializes MiniSearch for the current workspace and
  * registers event listeners for incremental sync.
  *
- * Should be called after `Databases.initializeSql()` has
+ * Should be called after `Databases.initialize()` has
  * completed.
  *
- * @param sqlResult - The result from SQL initialization,
- *   including schema change flag and any incrementally
- *   changed or deleted entries.
+ * @param schemaChanged - Whether the SQL schema changed,
+ *   requiring a full index rebuild.
  */
-export async function initializeSearch(sqlResult: {
+export async function initializeSearch({
+  schemaChanged,
+}: {
   schemaChanged: boolean;
-  changedEntries: { id: string; title: string; databaseId: string }[];
-  deletedEntryIds: string[];
 }): Promise<void> {
   const workspaces = Workspaces.getAll();
 
@@ -28,11 +27,10 @@ export async function initializeSearch(sqlResult: {
   // TODO: Support multiple workspaces
   const workspaceId = workspaces[0].id;
 
-  // Initialize MiniSearch on the backend, passing through
-  // the SQL result for incremental sync
+  // Initialize MiniSearch on the backend
   await getSearchAdapter().searchInitialize({
     workspaceId,
-    ...sqlResult,
+    schemaChanged,
   });
 
   // Register event listeners for incremental sync

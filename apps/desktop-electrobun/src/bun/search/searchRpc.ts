@@ -9,8 +9,6 @@ import { Search } from '@minddrop/search';
 export async function handleSearchInitialize(params: {
   workspaceId: string;
   schemaChanged: boolean;
-  changedEntries: { id: string; title: string; databaseId: string }[];
-  deletedEntryIds: string[];
 }): Promise<void> {
   await Search.handleSearchInitialize(params);
 }

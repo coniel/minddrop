@@ -15,13 +15,11 @@ export interface SearchAdapter {
   /**
    * Initializes the MiniSearch index for a workspace.
    * Forces a full rebuild if the SQL schema changed,
-   * otherwise applies incremental updates.
+   * otherwise loads from the persisted index.
    */
   searchInitialize(params: {
     workspaceId: string;
     schemaChanged: boolean;
-    changedEntries: { id: string; title: string; databaseId: string }[];
-    deletedEntryIds: string[];
   }): Promise<void>;
 
   /**

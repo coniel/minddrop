@@ -16,14 +16,16 @@ import { convertSqlRecordToEntry } from '../utils';
  * databases and entries, then hydrates frontend stores
  * and registers event handlers.
  */
-export async function initializeDatabases(): Promise<void> {
+export async function initializeDatabases(): Promise<{
+  schemaChanged: boolean;
+}> {
   // Load core entry serializers
   loadCoreSerializers();
 
   const workspaces = Workspaces.getAll();
 
   if (workspaces.length === 0) {
-    return;
+    return { schemaChanged: false };
   }
 
   // Use the first workspace
@@ -61,4 +63,6 @@ export async function initializeDatabases(): Promise<void> {
   if (!result.schemaChanged) {
     sqlBackgroundSync(workspace.path);
   }
+
+  return { schemaChanged: result.schemaChanged };
 }

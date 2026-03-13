@@ -174,8 +174,6 @@ export type WebviewRPC = {
         params: {
           workspaceId: string;
           schemaChanged: boolean;
-          changedEntries: { id: string; title: string; databaseId: string }[];
-          deletedEntryIds: string[];
         };
         response: void;
       };
