@@ -3,8 +3,10 @@ import { Workspaces } from '@minddrop/workspaces';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { getDatabaseSqlAdapter } from '../DatabaseSqlAdapter';
 import { DatabasesStore } from '../DatabasesStore';
+import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
 import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
+import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import type { Database } from '../types';
 import { convertSqlRecordToEntry } from '../utils';
 
@@ -50,4 +52,8 @@ export async function initializeDatabases(): Promise<void> {
 
   // Register event handlers
   initializeDatabaseEventHandlers();
+
+  // Load database templates and automation configs
+  initializeDatabaseTemplates();
+  initializeDatabaseAutomations();
 }

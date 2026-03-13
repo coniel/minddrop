@@ -1,11 +1,6 @@
 import { Ast } from '@minddrop/ast';
 import { loadConfigs } from '@minddrop/core';
-import {
-  DatabaseAutomations,
-  DatabaseEntries,
-  DatabaseTemplates,
-  Databases,
-} from '@minddrop/databases';
+import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
@@ -68,20 +63,14 @@ export async function initializeDesktopApp(): Promise<void> {
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
   Paths.httpServerHost = 'http://localhost:14567';
 
-  // Initialize databases
+  // Initialize core packages
   await Workspaces.initialize();
-  DatabaseTemplates.initialize();
-  DatabaseAutomations.initialize();
   await Designs.initialize();
   await Views.initialize();
   await Databases.initialize();
-  await DatabaseEntries.initialize();
 
-  // Initialize SQL database with all database and entry data
-  const sqlResult = await Databases.initializeSql();
-
-  // Initialize MiniSearch indexing and incremental sync
-  await Search.initialize(sqlResult);
+  // Register search event listeners for incremental sync
+  Search.initializeSync();
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();
