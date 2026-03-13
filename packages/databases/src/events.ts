@@ -2,6 +2,7 @@ import { PropertySchema } from '@minddrop/properties';
 import {
   Database,
   DatabaseEntry,
+  DatabaseEntryMetadata,
   DatabaseEntryOpenMode,
   SqlEntryRecord,
 } from './types';
@@ -114,6 +115,27 @@ export type DatabaseEntryDeletedEventData = DatabaseEntry;
 export interface DatabaseEntryRenamedEventData {
   original: DatabaseEntry;
   updated: DatabaseEntry;
+}
+
+// Entry metadata event - fired when entry metadata is updated
+export const DatabaseEntryMetadataUpdatedEvent =
+  'database-entries:entry:metadata-updated';
+
+export interface DatabaseEntryMetadataUpdatedEventData {
+  /**
+   * The ID of the entry whose metadata was updated.
+   */
+  entryId: string;
+
+  /**
+   * The ID of the database the entry belongs to.
+   */
+  databaseId: string;
+
+  /**
+   * The updated metadata.
+   */
+  metadata: DatabaseEntryMetadata;
 }
 
 // SQL synced events - fired after SQL operations complete

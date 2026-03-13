@@ -37,6 +37,11 @@ export interface SqlEntryRecord {
   lastModified: number;
 
   /**
+   * JSON-serialized DatabaseEntryMetadata.
+   */
+  metadata: string;
+
+  /**
    * The entry's dynamic property values.
    */
   properties: SqlEntryPropertyRecord[];

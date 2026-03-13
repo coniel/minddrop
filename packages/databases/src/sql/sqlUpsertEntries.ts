@@ -25,8 +25,8 @@ export function sqlUpsertEntries(
   for (const entry of entries) {
     // Upsert the entry row
     operations.push({
-      sql: `INSERT OR REPLACE INTO entries (id, database_id, path, title, created, last_modified)
-     VALUES (?, ?, ?, ?, ?, ?)`,
+      sql: `INSERT OR REPLACE INTO entries (id, database_id, path, title, created, last_modified, metadata)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
       params: [
         entry.id,
         entry.databaseId,
@@ -34,6 +34,7 @@ export function sqlUpsertEntries(
         entry.title,
         entry.created,
         entry.lastModified,
+        entry.metadata,
       ],
     });
 

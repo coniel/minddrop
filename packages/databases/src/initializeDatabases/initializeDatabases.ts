@@ -20,6 +20,7 @@ import {
   onUpdateCollection,
   onUpdateDatabase,
   onUpdateEntry,
+  onUpdateEntryMetadata,
   onUpdateVirtualView,
 } from '../event-handlers';
 import {
@@ -31,6 +32,8 @@ import {
   DatabaseEntryCreatedEventData,
   DatabaseEntryDeletedEvent,
   DatabaseEntryDeletedEventData,
+  DatabaseEntryMetadataUpdatedEvent,
+  DatabaseEntryMetadataUpdatedEventData,
   DatabaseEntryRenamedEvent,
   DatabaseEntryRenamedEventData,
   DatabaseEntryUpdatedEvent,
@@ -158,6 +161,14 @@ function initializeEventHandlers() {
     'databases',
     ({ data }) => {
       onRenameEntry(data);
+    },
+  );
+
+  Events.on<DatabaseEntryMetadataUpdatedEventData>(
+    DatabaseEntryMetadataUpdatedEvent,
+    'databases',
+    ({ data }) => {
+      onUpdateEntryMetadata(data);
     },
   );
 

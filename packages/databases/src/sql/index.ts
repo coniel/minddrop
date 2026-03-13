@@ -5,6 +5,7 @@ export { sqlUpsertEntries } from './sqlUpsertEntries';
 export { sqlDeleteEntries } from './sqlDeleteEntries';
 export { sqlRenameProperty } from './sqlRenameProperty';
 export { sqlReindexDatabaseEntries } from './sqlReindexDatabaseEntries';
+export { sqlUpdateEntryMetadata } from './sqlUpdateEntryMetadata';
 
 // Read operations
 export { sqlGetDatabaseName } from './sqlGetDatabaseName';

@@ -1,3 +1,8 @@
+import { Events } from '@minddrop/events';
+import {
+  DatabaseEntryMetadataUpdatedEvent,
+  DatabaseEntryMetadataUpdatedEventData,
+} from '../events';
 import { getDatabase } from '../getDatabase';
 import { getDatabaseEntry } from '../getDatabaseEntry';
 import { readDatabaseMetadata } from '../readDatabaseMetadata';
@@ -52,6 +57,12 @@ export function updateEntryMetadata(
     setTimeout(() => {
       flushDatabaseMetadata(database.path);
     }, DEBOUNCE_MS),
+  );
+
+  // Dispatch metadata updated event
+  Events.dispatch<DatabaseEntryMetadataUpdatedEventData>(
+    DatabaseEntryMetadataUpdatedEvent,
+    { entryId, databaseId: entry.database, metadata },
   );
 }
 
