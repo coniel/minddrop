@@ -1,12 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import {
-  DatabasePropertyRenamedEventData,
-  DatabasePropertySqlSyncedEvent,
-} from '../../events';
-import type { DatabasePropertySqlSyncedEventData } from '../../events';
-import { renameProperty } from '../../sql';
+import { DatabasePropertyRenamedEventData } from '../../events';
+import { sqlRenameProperty } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
@@ -19,18 +14,7 @@ export async function onRenameProperty(
   const { database, oldName, newName } = data;
 
   // Rename in SQL
-  renameProperty(database.id, oldName, newName);
-
-  // Dispatch SQL synced event
-  Events.dispatch<DatabasePropertySqlSyncedEventData>(
-    DatabasePropertySqlSyncedEvent,
-    {
-      action: 'rename',
-      databaseId: database.id,
-      oldName,
-      newName,
-    },
-  );
+  sqlRenameProperty(database.id, oldName, newName);
 
   // Check if the renamed property is a collection property
   const property = database.properties.find((p) => p.name === newName);

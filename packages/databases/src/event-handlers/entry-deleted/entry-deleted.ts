@@ -1,12 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
-import {
-  DatabaseEntriesSqlSyncedEvent,
-  DatabaseEntryDeletedEventData,
-} from '../../events';
-import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
+import { DatabaseEntryDeletedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { deleteEntries } from '../../sql';
+import { sqlDeleteEntries } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
@@ -14,18 +9,8 @@ import { virtualCollectionId } from '../../utils';
  * and deletes virtual collections for collection properties.
  */
 export async function onDeleteEntry(data: DatabaseEntryDeletedEventData) {
-  // Delete from SQL (CASCADE handles property cleanup)
-  deleteEntries([data.id]);
-
-  // Dispatch SQL synced event
-  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-    DatabaseEntriesSqlSyncedEvent,
-    {
-      action: 'delete',
-      entryIds: [data.id],
-      databaseId: data.database,
-    },
-  );
+  // Delete from SQL
+  sqlDeleteEntries(data.database, [data.id]);
 
   // Get the database to access its properties schema
   const database = getDatabase(data.database);

@@ -1,7 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Views } from '@minddrop/views';
 import { cleanup, objectDatabase, setup } from '../../test-utils';
 import { onCreateDatabase } from './database-created';
+
+vi.mock('../../sql', () => ({
+  sqlUpsertDatabase: vi.fn(),
+}));
 
 describe('onCreateDatabase', () => {
   beforeEach(setup);

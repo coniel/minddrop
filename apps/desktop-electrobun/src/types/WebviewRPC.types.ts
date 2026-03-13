@@ -1,5 +1,5 @@
 import { RPCSchema } from 'electrobun';
-import type { Database } from '@minddrop/databases';
+import type { Database, SqlInitializeResult } from '@minddrop/databases';
 import { BaseDirectory } from '@minddrop/file-system';
 import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
 import type { FullTextSearchResult } from '@minddrop/search';
@@ -143,11 +143,21 @@ export type WebviewRPC = {
         params: Record<string, never>;
         response: void;
       };
+      // Databases RPC
+      databasesSqlInitialize: {
+        params: {
+          workspaceId: string;
+          databases: Database[];
+        };
+        response: SqlInitializeResult;
+      };
       // Search RPC
       searchInitialize: {
         params: {
           workspaceId: string;
-          databases: Database[];
+          schemaChanged: boolean;
+          changedEntries: { id: string; title: string; databaseId: string }[];
+          deletedEntryIds: string[];
         };
         response: void;
       };

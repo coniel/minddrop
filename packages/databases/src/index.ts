@@ -5,6 +5,7 @@ import {
 } from './test-utils/setup-fixtures';
 
 export * from './types';
+export type { SqlInitializeResult } from './sql';
 export * from './errors';
 export * from './events';
 export * from './database-templates';

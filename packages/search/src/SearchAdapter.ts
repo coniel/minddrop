@@ -1,4 +1,3 @@
-import type { Database } from '@minddrop/databases';
 import type { FullTextSearchResult } from './types';
 
 export interface SearchAdapter {
@@ -14,12 +13,15 @@ export interface SearchAdapter {
   ): Promise<FullTextSearchResult[]>;
 
   /**
-   * Sends databases to the backend to initialize the search
-   * index. The backend reads entries from disk.
+   * Initializes the MiniSearch index for a workspace.
+   * Forces a full rebuild if the SQL schema changed,
+   * otherwise applies incremental updates.
    */
   searchInitialize(params: {
     workspaceId: string;
-    databases: Database[];
+    schemaChanged: boolean;
+    changedEntries: { id: string; title: string; databaseId: string }[];
+    deletedEntryIds: string[];
   }): Promise<void>;
 
   /**

@@ -1,4 +1,3 @@
-import type { Database } from '@minddrop/databases';
 import { initializeSearchData } from './initializeSearchData';
 import {
   reindexDatabaseEntries,
@@ -11,18 +10,38 @@ import {
 import type { FullTextSearchResult } from './types';
 
 /**
- * Back-end only. Initializes the search system for a
- * workspace. Receives database metadata from the frontend,
- * reads entries from disk.
+ * Back-end only. Initializes MiniSearch for a workspace.
+ * After loading or rebuilding the index, applies any
+ * incremental entry changes from SQL initialization.
  */
 export async function handleSearchInitialize({
   workspaceId,
-  databases,
+  schemaChanged,
+  changedEntries,
+  deletedEntryIds,
 }: {
   workspaceId: string;
-  databases: Database[];
+  schemaChanged: boolean;
+  changedEntries: { id: string; title: string; databaseId: string }[];
+  deletedEntryIds: string[];
 }): Promise<void> {
-  await initializeSearchData(workspaceId, databases);
+  await initializeSearchData(workspaceId, schemaChanged);
+
+  // If the schema changed, the index was fully rebuilt from
+  // SQL data so incremental sync is unnecessary
+  if (schemaChanged) {
+    return;
+  }
+
+  // Apply incremental entry changes that occurred while
+  // the app was not running
+  if (changedEntries.length > 0) {
+    upsertIndexEntries(changedEntries);
+  }
+
+  if (deletedEntryIds.length > 0) {
+    removeIndexEntries(deletedEntryIds);
+  }
 }
 
 /**

@@ -1,9 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabaseDeletedEventData, DatabaseSqlSyncedEvent } from '../../events';
-import type { DatabaseSqlSyncedEventData } from '../../events';
-import { deleteDatabase } from '../../sql';
+import { DatabaseDeletedEventData } from '../../events';
+import { sqlDeleteDatabase } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
@@ -14,13 +12,7 @@ export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
 ): Promise<void> {
   // Delete from SQL
-  deleteDatabase(data.id);
-
-  // Dispatch SQL synced event
-  Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
-    action: 'delete',
-    databaseId: data.id,
-  });
+  sqlDeleteDatabase(data.id);
 
   // Find collection properties in the database schema
   const collectionProperties = data.properties.filter(

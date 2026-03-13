@@ -1,12 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import {
-  DatabasePropertyRemovedEventData,
-  DatabaseSqlReindexedEvent,
-} from '../../events';
-import type { DatabaseSqlReindexedEventData } from '../../events';
-import { reindexDatabaseEntries } from '../../sql';
+import { DatabasePropertyRemovedEventData } from '../../events';
+import { sqlReindexDatabaseEntries } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
@@ -20,12 +15,7 @@ export async function onRemoveProperty(
   const { database, property } = data;
 
   // Re-index all entries in SQL without the removed property
-  reindexDatabaseEntries(database);
-
-  // Dispatch SQL reindexed event
-  Events.dispatch<DatabaseSqlReindexedEventData>(DatabaseSqlReindexedEvent, {
-    databaseId: database.id,
-  });
+  sqlReindexDatabaseEntries(database);
 
   // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collections } from '@minddrop/collections';
 import {
   cleanup,
@@ -9,6 +9,10 @@ import {
 } from '../../test-utils';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRemoveProperty } from './property-removed';
+
+vi.mock('../../sql', () => ({
+  sqlReindexDatabaseEntries: vi.fn(),
+}));
 
 describe('onRemoveProperty', () => {
   beforeEach(() => {

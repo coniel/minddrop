@@ -1,13 +1,8 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { Views } from '@minddrop/views';
-import {
-  DatabaseEntriesSqlSyncedEvent,
-  DatabaseEntryRenamedEventData,
-} from '../../events';
-import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
+import { DatabaseEntryRenamedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { deleteEntries, upsertEntries } from '../../sql';
+import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
 import { flushDatabaseMetadata } from '../../updateEntryMetadata';
 import { rekeyPendingMetadata } from '../../updateEntryMetadata/updateEntryMetadata';
 import {
@@ -38,32 +33,11 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
   rekeyPendingMetadata(database.path, original.id, updated.id);
 
   // Step 4: Remove the orphaned SQL record under the old ID
-  deleteEntries([original.id]);
+  sqlDeleteEntries(database.id, [original.id]);
 
   // Step 5: Insert the new SQL record under the new ID
   const record = convertEntryToSqlRecord(updated, database);
-  upsertEntries([record]);
-
-  // Dispatch SQL synced delete event for the old entry
-  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-    DatabaseEntriesSqlSyncedEvent,
-    {
-      action: 'delete',
-      entryIds: [original.id],
-      databaseId: database.id,
-    },
-  );
-
-  // Dispatch SQL synced upsert event for the new entry
-  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-    DatabaseEntriesSqlSyncedEvent,
-    {
-      action: 'upsert',
-      entryIds: [record.id],
-      databaseId: database.id,
-      entries: [record],
-    },
-  );
+  sqlUpsertEntries(database.id, [record]);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(
@@ -75,7 +49,7 @@ export async function onRenameEntry(data: DatabaseEntryRenamedEventData) {
     return;
   }
 
-  // Step 8-9: Re-ID virtual collections and views
+  // Re-ID virtual collections and views
   await Promise.all(
     collectionProperties.map(async (property) => {
       const oldCollectionId = virtualCollectionId(original.id, property.name);

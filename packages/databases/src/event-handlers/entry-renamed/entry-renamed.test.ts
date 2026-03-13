@@ -3,7 +3,7 @@ import { Collections } from '@minddrop/collections';
 import { DesignFixtures } from '@minddrop/designs';
 import { Views } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { deleteEntries, upsertEntries } from '../../sql';
+import { sqlDeleteEntries, sqlUpsertEntries } from '../../sql';
 import {
   MockFs,
   cleanup,
@@ -24,8 +24,8 @@ import { onRenameEntry } from './entry-renamed';
 
 // Mock SQL operations since no database connection is available in tests
 vi.mock('../../sql', () => ({
-  deleteEntries: vi.fn(),
-  upsertEntries: vi.fn(),
+  sqlDeleteEntries: vi.fn(),
+  sqlUpsertEntries: vi.fn(),
 }));
 
 const { design_card_2 } = DesignFixtures;
@@ -147,16 +147,18 @@ describe('onRenameEntry', () => {
     expect(written[collectionEntry1.id]).toBeUndefined();
   });
 
-  it('deletes old SQL entry record via deleteEntries', async () => {
+  it('deletes old SQL entry record via sqlDeleteEntries', async () => {
     await onRenameEntry({
       original: objectEntry1,
       updated: { ...objectEntry1, title: 'Renamed' },
     });
 
-    expect(deleteEntries).toHaveBeenCalledWith([objectEntry1.id]);
+    expect(sqlDeleteEntries).toHaveBeenCalledWith(expect.any(String), [
+      objectEntry1.id,
+    ]);
   });
 
-  it('upserts new SQL entry record via upsertEntries', async () => {
+  it('upserts new SQL entry record via sqlUpsertEntries', async () => {
     const renamedEntry = { ...objectEntry1, title: 'Renamed' };
 
     await onRenameEntry({
@@ -164,8 +166,10 @@ describe('onRenameEntry', () => {
       updated: renamedEntry,
     });
 
-    // Should have been called with a record matching the renamed entry
-    expect(upsertEntries).toHaveBeenCalledWith(
+    // Should have been called with databaseId and a record matching
+    // the renamed entry
+    expect(sqlUpsertEntries).toHaveBeenCalledWith(
+      expect.any(String),
       expect.arrayContaining([
         expect.objectContaining({
           id: renamedEntry.id,

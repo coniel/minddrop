@@ -12,6 +12,25 @@ import {
   DatabaseUpdatedEvent,
 } from './events';
 import { handleDataTransfer } from './handleDataTransfer';
+import {
+  SCHEMA_SQL,
+  SCHEMA_VERSION,
+  sqlDeleteDatabase,
+  sqlDeleteEntries,
+  sqlGetAllDatabases,
+  sqlGetAllEntries,
+  sqlGetDatabaseIcon,
+  sqlGetDatabaseName,
+  sqlGetEntryPropertyValues,
+  sqlGetEntryTextContent,
+  sqlGetEntryTimestamps,
+  sqlGetVersion,
+  sqlInitialize,
+  sqlReindexDatabaseEntries,
+  sqlRenameProperty,
+  sqlUpsertDatabase,
+  sqlUpsertEntries,
+} from './sql';
 
 export const events = {
   created: DatabaseCreatedEvent,
@@ -27,7 +46,28 @@ export const events = {
   databaseSqlReindexed: DatabaseSqlReindexedEvent,
 } as const;
 
-export * as sql from './sql';
+export const sql = {
+  upsertDatabase: sqlUpsertDatabase,
+  deleteDatabase: sqlDeleteDatabase,
+  upsertEntries: sqlUpsertEntries,
+  deleteEntries: sqlDeleteEntries,
+  renameProperty: sqlRenameProperty,
+  reindexDatabaseEntries: sqlReindexDatabaseEntries,
+  getDatabaseName: sqlGetDatabaseName,
+  getDatabaseIcon: sqlGetDatabaseIcon,
+  getVersion: sqlGetVersion,
+  getAllEntries: sqlGetAllEntries,
+  getEntryTextContent: sqlGetEntryTextContent,
+  getAllDatabases: sqlGetAllDatabases,
+  getEntryTimestamps: sqlGetEntryTimestamps,
+  getEntryPropertyValues: sqlGetEntryPropertyValues,
+  initialize: sqlInitialize,
+  SCHEMA_SQL,
+  SCHEMA_VERSION,
+} as const;
+export { registerDatabaseSqlAdapter as registerSqlAdapter } from './DatabaseSqlAdapter';
+export type { DatabaseSqlAdapter } from './DatabaseSqlAdapter';
+export { initializeDatabasesSql as initializeSql } from './initializeDatabasesSql';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';

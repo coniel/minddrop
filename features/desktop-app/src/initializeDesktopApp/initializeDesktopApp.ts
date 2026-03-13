@@ -77,8 +77,11 @@ export async function initializeDesktopApp(): Promise<void> {
   await Databases.initialize();
   await DatabaseEntries.initialize();
 
-  // Initialize search indexing and incremental sync
-  Search.initialize();
+  // Initialize SQL database with all database and entry data
+  const sqlResult = await Databases.initializeSql();
+
+  // Initialize MiniSearch indexing and incremental sync
+  await Search.initialize(sqlResult);
 
   // Initialize global selection keyboard shortcuts
   initializeSelection();

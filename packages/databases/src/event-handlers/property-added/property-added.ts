@@ -1,12 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import {
-  DatabasePropertyAddedEventData,
-  DatabaseSqlReindexedEvent,
-} from '../../events';
-import type { DatabaseSqlReindexedEventData } from '../../events';
-import { reindexDatabaseEntries } from '../../sql';
+import { DatabasePropertyAddedEventData } from '../../events';
+import { sqlReindexDatabaseEntries } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
@@ -18,12 +13,7 @@ export function onAddProperty(data: DatabasePropertyAddedEventData): void {
   const { database, property } = data;
 
   // Re-index all entries in SQL for the new property
-  reindexDatabaseEntries(database);
-
-  // Dispatch SQL reindexed event
-  Events.dispatch<DatabaseSqlReindexedEventData>(DatabaseSqlReindexedEvent, {
-    databaseId: database.id,
-  });
+  sqlReindexDatabaseEntries(database);
 
   // Only handle collection properties for virtual collections
   if (property.type !== 'collection') {

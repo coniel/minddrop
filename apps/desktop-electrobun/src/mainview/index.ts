@@ -1,6 +1,7 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
+import { registerDatabasesSqlAdapterRpc } from './registerDatabasesSqlAdapter';
 import {
   handleWatchEvent,
   registerFileSystemAdapter,
@@ -31,4 +32,5 @@ const electrobun = new Electrobun.Electroview({ rpc });
 registerFileSystemAdapter(electrobun.rpc);
 registerBackEndUtilsAdapter(electrobun.rpc);
 registerSqlAdapterRpc(electrobun.rpc);
+registerDatabasesSqlAdapterRpc(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);

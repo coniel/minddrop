@@ -1,9 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
-import { DatabaseRenamedEventData, DatabaseSqlSyncedEvent } from '../../events';
-import type { DatabaseSqlSyncedEventData } from '../../events';
-import { upsertDatabase } from '../../sql';
+import { DatabaseRenamedEventData } from '../../events';
+import { sqlUpsertDatabase } from '../../sql';
 import { virtualCollectionId, virtualCollectionName } from '../../utils';
 
 /**
@@ -16,20 +14,11 @@ export async function onRenameDatabase(
   const { updated } = data;
 
   // Sync renamed database to SQL
-  const databaseRecord = {
+  sqlUpsertDatabase({
     id: updated.id,
     name: updated.name,
     path: updated.path,
     icon: updated.icon,
-  };
-
-  upsertDatabase(databaseRecord);
-
-  // Dispatch SQL synced event
-  Events.dispatch<DatabaseSqlSyncedEventData>(DatabaseSqlSyncedEvent, {
-    action: 'upsert',
-    databaseId: updated.id,
-    database: databaseRecord,
   });
 
   // Find collection properties in the database schema

@@ -1,14 +1,16 @@
-import type { Database } from '@minddrop/databases';
 import type { FullTextSearchResult } from '@minddrop/search';
 import { Search } from '@minddrop/search';
 
 /**
- * RPC handler for initializing search data from the frontend.
- * Receives databases; entries are read from disk.
+ * RPC handler for initializing MiniSearch for a workspace.
+ * SQL initialization is handled separately by the databases
+ * package.
  */
 export async function handleSearchInitialize(params: {
   workspaceId: string;
-  databases: Database[];
+  schemaChanged: boolean;
+  changedEntries: { id: string; title: string; databaseId: string }[];
+  deletedEntryIds: string[];
 }): Promise<void> {
   await Search.handleSearchInitialize(params);
 }

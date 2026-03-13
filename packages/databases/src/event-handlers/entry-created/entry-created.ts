@@ -1,12 +1,7 @@
 import { Collections } from '@minddrop/collections';
-import { Events } from '@minddrop/events';
-import {
-  DatabaseEntriesSqlSyncedEvent,
-  DatabaseEntryCreatedEventData,
-} from '../../events';
-import type { DatabaseEntriesSqlSyncedEventData } from '../../events';
+import { DatabaseEntryCreatedEventData } from '../../events';
 import { getDatabase } from '../../getDatabase';
-import { upsertEntries } from '../../sql';
+import { sqlUpsertEntries } from '../../sql';
 import {
   convertEntryToSqlRecord,
   virtualCollectionId,
@@ -23,18 +18,7 @@ export function onCreateEntry(data: DatabaseEntryCreatedEventData) {
 
   // Sync to SQL
   const record = convertEntryToSqlRecord(data, database);
-  upsertEntries([record]);
-
-  // Dispatch SQL synced event
-  Events.dispatch<DatabaseEntriesSqlSyncedEventData>(
-    DatabaseEntriesSqlSyncedEvent,
-    {
-      action: 'upsert',
-      entryIds: [record.id],
-      databaseId: database.id,
-      entries: [record],
-    },
-  );
+  sqlUpsertEntries(database.id, [record]);
 
   // Find all collection properties in the schema
   const collectionProperties = database.properties.filter(
