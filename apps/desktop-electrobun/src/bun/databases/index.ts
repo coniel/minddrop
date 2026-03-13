@@ -1,1 +1,4 @@
-export { handleDatabasesSqlInitialize } from './databasesRpc';
+export {
+  handleDatabasesSqlInitialize,
+  handleDatabasesInitialize,
+} from './databasesRpc';

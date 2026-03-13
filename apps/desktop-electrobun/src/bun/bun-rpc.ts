@@ -1,7 +1,10 @@
 import { BrowserView } from 'electrobun/bun';
 import { WebviewRPC } from '../types/WebviewRPC.types';
 import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
-import { handleDatabasesSqlInitialize } from './databases';
+import {
+  handleDatabasesInitialize,
+  handleDatabasesSqlInitialize,
+} from './databases';
 import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
 import {
   handleSearchDatabaseSync,
@@ -39,6 +42,7 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       sqlClose: handleSqlClose,
       // Databases RPC handlers
       databasesSqlInitialize: handleDatabasesSqlInitialize,
+      databasesInitialize: handleDatabasesInitialize,
       // Search RPC handlers
       searchInitialize: handleSearchInitialize,
       searchFullText: handleSearchFullText,
