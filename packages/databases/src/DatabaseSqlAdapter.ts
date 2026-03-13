@@ -1,4 +1,4 @@
-import type { SqlInitializeResult } from './sql';
+import type { InitializeBackendResult, SqlInitializeResult } from './sql';
 import type { Database } from './types';
 
 export interface DatabaseSqlAdapter {
@@ -12,6 +12,16 @@ export interface DatabaseSqlAdapter {
     workspaceId: string,
     databases: Database[],
   ): Promise<SqlInitializeResult>;
+
+  /**
+   * Backend-side initialization orchestrator. Opens SQL,
+   * reads database configs, and returns all data needed
+   * to hydrate frontend stores in a single call.
+   */
+  initializeBackend(
+    workspaceId: string,
+    workspacePath: string,
+  ): Promise<InitializeBackendResult>;
 }
 
 let adapter: DatabaseSqlAdapter | null = null;

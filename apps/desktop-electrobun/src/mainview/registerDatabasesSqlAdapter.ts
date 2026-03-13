@@ -8,5 +8,7 @@ export function registerDatabasesSqlAdapterRpc(rpc: any): void {
   Databases.registerSqlAdapter({
     initialize: (workspaceId, databases) =>
       rpc.request.databasesSqlInitialize({ workspaceId, databases }),
+    initializeBackend: (workspaceId, workspacePath) =>
+      rpc.request.databasesInitialize({ workspaceId, workspacePath }),
   });
 }
