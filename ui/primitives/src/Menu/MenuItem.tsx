@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { i18n } from '@minddrop/i18n';
-import { TranslatableNode } from '../types';
 import { createContext } from '@minddrop/utils';
 import { ContentIcon } from '../ContentIcon';
 import { Icon } from '../Icon';
 import { IconProp, IconRenderer } from '../IconRenderer';
 import { KeyboardShortcut } from '../KeyboardShortcut';
+import { TranslatableNode } from '../types';
 import { propsToClass } from '../utils';
 
 export interface MenuItemContext {

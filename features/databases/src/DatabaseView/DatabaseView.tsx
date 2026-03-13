@@ -247,21 +247,25 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   size="sm"
                   label="databases.actions.addView"
                   icon="plus"
+                  color="muted"
                 />
               }
               minWidth={200}
             >
-              <MenuGroup padded>
-                {viewTypes.map((viewType) => (
-                  <DropdownMenuItem
-                    key={viewType.type}
-                    muted
-                    icon={viewType.icon}
-                    label={viewType.name}
-                    tooltip={{ description: viewType.description }}
-                    onClick={() => handleAddView(viewType.type)}
-                  />
-                ))}
+              <MenuGroup>
+                {viewTypes
+                  .filter((viewType) =>
+                    viewType.supportedDataSources.includes('database'),
+                  )
+                  .map((viewType) => (
+                    <DropdownMenuItem
+                      key={viewType.type}
+                      icon={viewType.icon}
+                      label={viewType.name}
+                      tooltip={{ title: viewType.description }}
+                      onClick={() => handleAddView(viewType.type)}
+                    />
+                  ))}
               </MenuGroup>
             </DropdownMenu>
 

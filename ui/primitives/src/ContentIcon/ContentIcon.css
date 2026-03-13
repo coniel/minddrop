@@ -4,7 +4,8 @@
   border-radius: var(--radius-xs);
   width: var(--icon-size-default);
   height: var(--icon-size-default);
-  color: var(--text-muted);
+  color: currentColor;
+  stroke: currentColor;
 }
 
 /* Color */

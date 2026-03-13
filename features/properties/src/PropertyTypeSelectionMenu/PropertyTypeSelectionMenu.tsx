@@ -47,7 +47,7 @@ export const PropertyTypeSelectionMenu: React.FC<
       contentClassName="property-type-selection-menu"
       {...other}
     >
-      <MenuGroup padded>
+      <MenuGroup>
         {basicProperties.map((schema) => (
           <DropdownMenuItem
             key={schema.type}
@@ -59,7 +59,7 @@ export const PropertyTypeSelectionMenu: React.FC<
         ))}
       </MenuGroup>
       {metaProperties.length > 0 && <DropdownMenuSeparator />}
-      <MenuGroup padded>
+      <MenuGroup>
         {metaProperties.map((schema) => (
           <DropdownMenuItem
             key={schema.type}

@@ -74,7 +74,7 @@ export const NewDesignMenu: React.FC<NewDesignMenuProps> = ({
       }
     >
       {databaseId && (
-        <MenuGroup padded>
+        <MenuGroup>
           <DropdownMenuItem
             muted
             icon="search"
@@ -83,7 +83,7 @@ export const NewDesignMenu: React.FC<NewDesignMenuProps> = ({
           />
         </MenuGroup>
       )}
-      <MenuGroup padded>
+      <MenuGroup>
         {databaseId && <MenuLabel label="designs.labels.new" />}
         <DropdownMenuItem
           muted

@@ -3,6 +3,7 @@
  * Dev reference for the IconButton component.
  */
 import { Button } from '../Button';
+import { ContentIcon } from '../ContentIcon';
 import { Select } from '../Select';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { IconButton } from './IconButton';
@@ -176,6 +177,141 @@ export const IconButtonStories = () => (
               label="Align right"
             />
           </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        CONTENT ICONS
+        ContentIcon children inside IconButton. Icons with
+        explicit content colors keep their color. Icons with
+        current-color follow the button's color prop.
+    -------------------------------------------------------- */}
+    <StorySection
+      title="Content icons — button colors"
+      description="Content icons using current-color follow the button's color prop."
+    >
+      <StoryRow>
+        <StoryItem label="neutral">
+          <IconButton color="neutral" stringLabel="home">
+            <ContentIcon
+              icon="content-icon:home:default"
+              color="current-color"
+            />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="muted">
+          <IconButton color="muted" stringLabel="home">
+            <ContentIcon
+              icon="content-icon:home:default"
+              color="current-color"
+            />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="primary">
+          <IconButton color="primary" stringLabel="home">
+            <ContentIcon
+              icon="content-icon:home:default"
+              color="current-color"
+            />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="danger">
+          <IconButton color="danger" stringLabel="home">
+            <ContentIcon
+              icon="content-icon:home:default"
+              color="current-color"
+            />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="contrast">
+          <div
+            style={{
+              background: 'var(--surface-solid-neutral)',
+              padding: 'var(--space-2)',
+              borderRadius: 'var(--radius-md)',
+            }}
+          >
+            <IconButton color="contrast" stringLabel="home">
+              <ContentIcon
+                icon="content-icon:home:default"
+                color="current-color"
+              />
+            </IconButton>
+          </div>
+        </StoryItem>
+        <StoryItem label="inherit">
+          <div style={{ color: 'var(--text-primary)' }}>
+            <IconButton color="inherit" stringLabel="home">
+              <ContentIcon
+                icon="content-icon:home:default"
+                color="current-color"
+              />
+            </IconButton>
+          </div>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    <StorySection
+      title="Content icons — content colors"
+      description="Content icons with explicit content colors keep their own color, unaffected by the button's color prop."
+    >
+      <StoryRow>
+        <StoryItem label="default">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:default" color="default" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="blue">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:blue" color="blue" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="cyan">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:cyan" color="cyan" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="red">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:red" color="red" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="pink">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:pink" color="pink" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="purple">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:purple" color="purple" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="green">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:green" color="green" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="orange">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:orange" color="orange" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="yellow">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:yellow" color="yellow" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="brown">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:brown" color="brown" />
+          </IconButton>
+        </StoryItem>
+        <StoryItem label="gray">
+          <IconButton stringLabel="home">
+            <ContentIcon icon="content-icon:home:gray" color="gray" />
+          </IconButton>
         </StoryItem>
       </StoryRow>
     </StorySection>

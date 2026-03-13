@@ -7,6 +7,7 @@
     user-select: none;
     padding: 0.75rem 1rem;
     outline: none;
+    color: var(--text-muted);
 
     .property-editor-drag-handle {
       cursor: grab;
@@ -18,14 +19,7 @@
     }
 
     &:hover {
-      .text,
-      .content-icon {
-        color: var(--text-color-regular);
-      }
-
-      .property-editor-drag-handle {
-        stroke: var(--text-regular);
-      }
+      color: var(--text-color-regular);
     }
   }
 

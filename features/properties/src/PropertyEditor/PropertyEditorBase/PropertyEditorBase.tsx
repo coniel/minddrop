@@ -237,14 +237,14 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
         <Icon
           size={14}
           name="grip-vertical"
-          color="muted"
+          color="current-color"
           className="property-editor-drag-handle"
           {...resolvedDragHandleProps}
         />
-        <ContentIcon color="muted" icon={property.icon} />
+        <ContentIcon color="current-color" icon={property.icon} />
         <Text
           size="sm"
-          color="muted"
+          color="inherit"
           className="property-editor-label"
           text={property.name}
         />
@@ -252,6 +252,7 @@ export const PropertyEditorBase: React.FC<PropertyEditorBaseProps> = ({
           size={14}
           name="chevron-right"
           className="collapsible-indicator"
+          color="current-color"
         />
       </Group>
       <div

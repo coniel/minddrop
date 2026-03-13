@@ -96,8 +96,6 @@
   /* Button variant — interactive label */
 
   &[role='button'] {
-    cursor: pointer;
-
     &:hover {
       background-color: var(--surface-neutral);
       transition: none;
@@ -112,6 +110,11 @@
     flex: 1;
   }
 
+  /* Tighten right padding when actions are present */
+  &:has(.actions) {
+    padding-right: 0.125rem;
+  }
+
   .actions {
     display: flex;
     align-items: center;
@@ -120,7 +123,7 @@
     transition: opacity var(--duration-fast) var(--ease-out);
 
     .icon {
-      color: var(--text-muted);
+      stroke: currentColor;
     }
   }
 
@@ -198,7 +201,8 @@
     color: var(--text-muted);
     font-weight: var(--weight-medium);
 
-    &.menu-item-active {
+    &.menu-item-active,
+    &:hover {
       color: var(--text-regular);
     }
   }
@@ -244,7 +248,6 @@
     justify-content: center;
     font-size: 0.8rem;
     line-height: 1;
-    color: var(--text-muted);
   }
 
   /* --- Submenu indicator --- */

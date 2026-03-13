@@ -29,10 +29,11 @@
     width: 1em;
     height: 1em;
     flex-shrink: 0;
+    color: inherit;
   }
 
   &:disabled,
-  &[aria-disabled="true"] {
+  &[aria-disabled='true'] {
     pointer-events: none;
     opacity: 0.45;
   }
@@ -47,7 +48,6 @@ a.button {
   text-decoration: none;
 }
 
-
 /* ------------------------------------------------------------
    SIZES
    ------------------------------------------------------------ */
@@ -58,16 +58,24 @@ a.button {
   font-size: var(--text-xs);
   gap: calc(var(--space-1) * 0.75);
 
-  &.button-start-icon { padding-left: calc(var(--space-2) - 2px); }
-  &.button-end-icon   { padding-right: calc(var(--space-2) - 2px); }
+  &.button-start-icon {
+    padding-left: calc(var(--space-2) - 2px);
+  }
+  &.button-end-icon {
+    padding-right: calc(var(--space-2) - 2px);
+  }
 }
 
 .button-size-md {
   height: 1.75rem;
   padding: 0 var(--space-3);
 
-  &.button-start-icon { padding-left: calc(var(--space-3) - 2px); }
-  &.button-end-icon   { padding-right: calc(var(--space-3) - 2px); }
+  &.button-start-icon {
+    padding-left: calc(var(--space-3) - 2px);
+  }
+  &.button-end-icon {
+    padding-right: calc(var(--space-3) - 2px);
+  }
 }
 
 .button-size-lg {
@@ -75,10 +83,13 @@ a.button {
   padding: 0 var(--space-4);
   font-size: var(--text-base);
 
-  &.button-start-icon { padding-left: calc(var(--space-4) - 2px); }
-  &.button-end-icon   { padding-right: calc(var(--space-4) - 2px); }
+  &.button-start-icon {
+    padding-left: calc(var(--space-4) - 2px);
+  }
+  &.button-end-icon {
+    padding-right: calc(var(--space-4) - 2px);
+  }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: GHOST
@@ -93,7 +104,9 @@ a.button {
     transition: none;
   }
 
-  &:active { background-color: var(--surface-neutral-active); }
+  &:active {
+    background-color: var(--surface-neutral-active);
+  }
 
   &.button-color-primary {
     color: var(--text-primary-muted);
@@ -104,7 +117,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-primary-active); }
+    &:active {
+      background-color: var(--surface-primary-active);
+    }
   }
 
   &.button-color-danger,
@@ -116,7 +131,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-danger-active); }
+    &:active {
+      background-color: var(--surface-danger-active);
+    }
   }
 
   &.button-danger-on-hover:hover {
@@ -125,7 +142,6 @@ a.button {
     transition: none;
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: SUBTLE
@@ -151,13 +167,19 @@ a.button {
     color: var(--text-primary-muted);
     background-color: var(--surface-primary);
 
+    .icon {
+      stroke: var(--text-primary-muted);
+    }
+
     &:hover {
       background-color: var(--surface-primary-hover);
       color: var(--text-primary);
       transition: none;
     }
 
-    &:active { background-color: var(--surface-primary-active); }
+    &:active {
+      background-color: var(--surface-primary-active);
+    }
   }
 
   &.button-color-danger,
@@ -165,12 +187,18 @@ a.button {
     color: var(--text-danger);
     background-color: var(--surface-danger);
 
+    .icon {
+      stroke: var(--text-danger);
+    }
+
     &:hover {
       background-color: var(--surface-danger-hover);
       transition: none;
     }
 
-    &:active { background-color: var(--surface-danger-active); }
+    &:active {
+      background-color: var(--surface-danger-active);
+    }
   }
 
   &.button-danger-on-hover:hover {
@@ -179,7 +207,6 @@ a.button {
     transition: none;
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: OUTLINE
@@ -196,7 +223,9 @@ a.button {
     transition: none;
   }
 
-  &:active { background-color: var(--surface-neutral-hover); }
+  &:active {
+    background-color: var(--surface-neutral-hover);
+  }
 
   &.button-color-primary {
     color: var(--text-primary-muted);
@@ -209,7 +238,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-primary-hover); }
+    &:active {
+      background-color: var(--surface-primary-hover);
+    }
   }
 
   &.button-color-danger,
@@ -223,7 +254,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-danger-hover); }
+    &:active {
+      background-color: var(--surface-danger-hover);
+    }
   }
 
   &.button-danger-on-hover:hover {
@@ -233,7 +266,6 @@ a.button {
     transition: none;
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: FILLED
@@ -276,7 +308,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-primary-active); }
+    &:active {
+      background-color: var(--surface-primary-active);
+    }
   }
 
   &.button-color-danger,
@@ -290,7 +324,9 @@ a.button {
       transition: none;
     }
 
-    &:active { background-color: var(--surface-danger-hover); }
+    &:active {
+      background-color: var(--surface-danger-hover);
+    }
   }
 
   &.button-danger-on-hover:hover {
@@ -300,7 +336,6 @@ a.button {
     transition: none;
   }
 }
-
 
 /* ------------------------------------------------------------
    VARIANT: SOLID
@@ -317,7 +352,9 @@ a.button {
     transition: none;
   }
 
-  &:active { opacity: 0.9; }
+  &:active {
+    opacity: 0.9;
+  }
 
   &.button-color-primary {
     background-color: var(--surface-solid-primary);

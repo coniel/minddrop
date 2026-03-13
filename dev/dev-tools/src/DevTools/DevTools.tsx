@@ -1455,17 +1455,13 @@ export const DevTools: React.FC = () => {
     );
 
     if (depth === 0) {
-      return (
-        <MenuGroup key={node.fullPath} padded>
-          {item}
-        </MenuGroup>
-      );
+      return <MenuGroup key={node.fullPath}>{item}</MenuGroup>;
     }
     return <React.Fragment key={node.fullPath}>{item}</React.Fragment>;
   };
 
   const renderListenerNode = (node: EventTreeNode): React.ReactNode => (
-    <MenuGroup key={node.fullPath} padded>
+    <MenuGroup key={node.fullPath}>
       <MenuItem
         size="compact"
         active={
@@ -1605,7 +1601,7 @@ export const DevTools: React.FC = () => {
 
   const issuesSidebar = (
     <>
-      <MenuGroup padded>
+      <MenuGroup>
         <MenuItem
           size="compact"
           label="New Issue"
@@ -1623,7 +1619,7 @@ export const DevTools: React.FC = () => {
         return (
           <React.Fragment key={packageKey}>
             {index > 0 && <Separator margin="small" />}
-            <MenuGroup padded>
+            <MenuGroup>
               <MenuLabel>{label}</MenuLabel>
               {packageIssues.map((issue) => (
                 <MenuItem
@@ -1654,7 +1650,7 @@ export const DevTools: React.FC = () => {
 
   const changelogSidebar = (
     <>
-      <MenuGroup padded>
+      <MenuGroup>
         <MenuItem
           size="compact"
           label="New Changelog"
@@ -1665,7 +1661,7 @@ export const DevTools: React.FC = () => {
       {changelogGroups.map((group, index) => (
         <React.Fragment key={group.date}>
           {index > 0 && <Separator margin="small" />}
-          <MenuGroup padded>
+          <MenuGroup>
             <MenuLabel>{formatDate(group.date)}</MenuLabel>
             {group.items.map((changelog) => (
               <MenuItem
@@ -1882,7 +1878,7 @@ export const DevTools: React.FC = () => {
                     storeGroups.map((group, groupIndex) => (
                       <React.Fragment key={group.label}>
                         {groupIndex > 0 && <Separator margin="small" />}
-                        <MenuGroup padded>
+                        <MenuGroup>
                           <MenuLabel label={group.label} />
                           {group.stores.map((store) => (
                             <StoreMenuItem
@@ -1898,7 +1894,7 @@ export const DevTools: React.FC = () => {
 
                   {activeSection === 'events' && (
                     <>
-                      <MenuGroup padded>
+                      <MenuGroup>
                         <MenuItem
                           size="compact"
                           active={
@@ -1919,7 +1915,7 @@ export const DevTools: React.FC = () => {
                       </MenuGroup>
                       {eventTree.map((node) => renderEventNode(node, 0))}
                       <Separator margin="small" />
-                      <MenuGroup padded>
+                      <MenuGroup>
                         <MenuItem
                           size="compact"
                           active={
@@ -1945,7 +1941,7 @@ export const DevTools: React.FC = () => {
 
                   {activeSection === 'logs' && (
                     <>
-                      <MenuGroup padded>
+                      <MenuGroup>
                         <MenuItem
                           label="Console"
                           icon="terminal"
@@ -1958,7 +1954,7 @@ export const DevTools: React.FC = () => {
                       {savedFiles.length > 0 && (
                         <>
                           <Separator margin="small" />
-                          <MenuGroup padded>
+                          <MenuGroup>
                             <MenuLabel label="Saved" />
                             {savedFiles.map((file) => (
                               <MenuItem
@@ -1984,7 +1980,7 @@ export const DevTools: React.FC = () => {
                   )}
 
                   {activeSection === 'notes' && (
-                    <MenuGroup padded>
+                    <MenuGroup>
                       <MenuItem
                         size="compact"
                         label="New Note"
@@ -2095,7 +2091,7 @@ export const DevTools: React.FC = () => {
             <nav className="dev-tools-nav">
               {activeSection === 'logs' && (
                 <>
-                  <MenuGroup padded>
+                  <MenuGroup>
                     <MenuItem
                       label="Console"
                       icon="terminal"
@@ -2108,7 +2104,7 @@ export const DevTools: React.FC = () => {
                   {savedFiles.length > 0 && (
                     <>
                       <Separator margin="small" />
-                      <MenuGroup padded>
+                      <MenuGroup>
                         <MenuLabel label="Saved" />
                         {savedFiles.map((file) => (
                           <MenuItem
@@ -2137,7 +2133,7 @@ export const DevTools: React.FC = () => {
                 storeGroups.map((group, groupIndex) => (
                   <React.Fragment key={group.label}>
                     {groupIndex > 0 && <Separator margin="small" />}
-                    <MenuGroup padded>
+                    <MenuGroup>
                       <MenuLabel label={group.label} />
                       {group.stores.map((store) => (
                         <StoreMenuItem
@@ -2153,7 +2149,7 @@ export const DevTools: React.FC = () => {
 
               {activeSection === 'events' && (
                 <>
-                  <MenuGroup padded>
+                  <MenuGroup>
                     <MenuItem
                       size="compact"
                       active={
@@ -2174,7 +2170,7 @@ export const DevTools: React.FC = () => {
                   </MenuGroup>
                   {eventTree.map((node) => renderEventNode(node, 0))}
                   <Separator margin="small" />
-                  <MenuGroup padded>
+                  <MenuGroup>
                     <MenuItem
                       size="compact"
                       active={
@@ -2199,7 +2195,7 @@ export const DevTools: React.FC = () => {
               )}
 
               {activeSection === 'notes' && (
-                <MenuGroup padded>
+                <MenuGroup>
                   <MenuItem
                     size="compact"
                     label="New Note"
@@ -2231,7 +2227,7 @@ export const DevTools: React.FC = () => {
               {activeSection === 'stories' && (
                 <>
                   {stories.map((group, groupIndex) => (
-                    <MenuGroup key={group.group} padded>
+                    <MenuGroup key={group.group}>
                       <MenuLabel label={group.group} />
                       {group.items.map((item, itemIndex) => (
                         <MenuItem

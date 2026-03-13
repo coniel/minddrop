@@ -32,7 +32,12 @@ export interface ContentIconProps {
    * 'inherit' to inherit the color of the surrounding text, or
    * 'content-icon' to use the color of the icon itself.
    */
-  color?: ContentColor | TextColor | 'inherit' | 'content-icon';
+  color?:
+    | ContentColor
+    | TextColor
+    | 'inherit'
+    | 'current-color'
+    | 'content-icon';
 }
 
 export const ContentIcon: React.FC<ContentIconProps> = ({

@@ -88,7 +88,7 @@ export const DatabaseDesignMenuItem: React.FC<DatabaseDesignMenuItemProps> = ({
                 minWidth={300}
                 className="property-type-selection-menu"
               >
-                <MenuGroup padded>
+                <MenuGroup>
                   <MenuItem
                     icon="edit"
                     label="actions.edit"

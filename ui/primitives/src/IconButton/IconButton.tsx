@@ -10,7 +10,6 @@ export type IconButtonVariant = 'ghost' | 'subtle' | 'outline' | 'filled';
 export type IconButtonColor =
   | 'neutral'
   | 'muted'
-  | 'regular'
   | 'contrast'
   | 'primary'
   | 'danger'

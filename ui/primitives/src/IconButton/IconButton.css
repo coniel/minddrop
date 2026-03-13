@@ -19,14 +19,15 @@
   user-select: none;
   cursor: default;
 
+  color: var(--text-regular);
   border-radius: var(--radius-md);
   transition: var(--transition-colors);
 
-  .icon {
+  .icon,
+  .content-icon {
     width: 1.125rem;
     height: 1.125rem;
     flex-shrink: 0;
-    color: var(--text-muted);
   }
 
   &:disabled,
@@ -62,31 +63,27 @@
 
 /* ------------------------------------------------------------
    COLORS
+   Sets color on the button element itself. UI icons (.icon)
+   are targeted explicitly. Content icons using current-color
+   inherit via CSS currentColor automatically.
    ------------------------------------------------------------ */
 
-.icon-button-color-neutral .icon {
-  color: var(--text-muted);
-}
-.icon-button-color-muted .icon {
-  color: var(--text-subtle);
-}
-.icon-button-color-regular .icon {
+.icon-button-color-neutral {
   color: var(--text-regular);
 }
-.icon-button-color-contrast .icon {
+.icon-button-color-muted {
+  color: var(--text-muted);
+}
+.icon-button-color-contrast {
   color: var(--text-on-solid);
 }
-.icon-button-color-primary .icon {
+.icon-button-color-primary {
   color: var(--text-primary);
 }
-.icon-button-color-danger .icon {
+.icon-button-color-danger {
   color: var(--text-danger);
 }
-.icon-button.icon-button-color-inherit {
-  color: inherit;
-}
-
-.icon-button.icon-button-color-inherit .icon {
+.icon-button-color-inherit {
   color: inherit;
 }
 
@@ -97,47 +94,43 @@
 .icon-button-variant-ghost {
   &:hover {
     background-color: var(--surface-neutral-hover);
+    color: var(--text-regular);
     transition: none;
-
-    .icon {
-      color: var(--text-regular);
-    }
   }
 
   &:active,
   &.icon-button-active {
     background-color: var(--surface-neutral-active);
-
-    .icon {
-      color: var(--text-regular);
-    }
+    color: var(--text-regular);
   }
 
-  &.icon-button-color-inherit:hover .icon,
-  &.icon-button-color-inherit:active .icon {
+  &.icon-button-color-inherit:hover,
+  &.icon-button-color-inherit:active {
     color: inherit;
   }
 
   &.icon-button-color-danger,
   &.icon-button-danger-always {
-    .icon { color: var(--text-danger); }
+    color: var(--text-danger);
 
     &:hover {
       background-color: var(--surface-danger-hover);
-      .icon { color: var(--text-danger); }
+      color: var(--text-danger);
     }
 
-    &:active { background-color: var(--surface-danger-active); }
+    &:active {
+      background-color: var(--surface-danger-active);
+    }
   }
 
   &.icon-button-danger-on-hover:hover {
     background-color: var(--surface-danger-hover);
-    .icon { color: var(--text-danger); }
+    color: var(--text-danger);
   }
 
   &.icon-button-color-contrast {
-    &:hover .icon,
-    &:active .icon {
+    &:hover,
+    &:active {
       color: var(--text-regular);
     }
   }
@@ -152,20 +145,14 @@
 
   &:hover {
     background-color: var(--surface-neutral);
+    color: var(--text-regular);
     transition: none;
-
-    .icon {
-      color: var(--text-regular);
-    }
   }
 
   &:active,
   &.icon-button-active {
     background-color: var(--surface-neutral-active);
-
-    .icon {
-      color: var(--text-regular);
-    }
+    color: var(--text-regular);
   }
 }
 
@@ -179,11 +166,8 @@
   &:hover {
     background-color: var(--surface-neutral);
     border-color: var(--border-strong);
+    color: var(--text-regular);
     transition: none;
-
-    .icon {
-      color: var(--text-regular);
-    }
   }
 
   &:active {
@@ -203,11 +187,8 @@
   &:hover {
     background-color: var(--surface-neutral);
     border-color: var(--border-strong);
+    color: var(--text-regular);
     transition: none;
-
-    .icon {
-      color: var(--text-regular);
-    }
   }
 
   &:active,

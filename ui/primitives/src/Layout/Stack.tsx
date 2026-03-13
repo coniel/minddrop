@@ -4,7 +4,13 @@ import './layout.css';
 
 export type StackGap = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+export type StackJustify =
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'between'
+  | 'around'
+  | 'evenly';
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /*

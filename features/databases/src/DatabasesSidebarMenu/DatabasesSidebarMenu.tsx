@@ -8,6 +8,7 @@ import {
   MenuGroup,
   MenuItem,
   MenuLabel,
+  Stack,
 } from '@minddrop/ui-primitives';
 import { useActiveDatabaseId } from '../DatabasesFeatureState';
 import {
@@ -42,11 +43,13 @@ export const DatabasesSidebarMenu: React.FC = () => {
               <MenuLabel
                 button
                 label="databases.labels.databases"
+                style={{ marginBottom: 1 }}
                 actions={
                   <Button
                     size="sm"
                     label="databases.actions.new"
                     variant="subtle"
+                    color="primary"
                     startIcon="plus"
                     onClick={handleAddDatabase}
                   />
@@ -55,17 +58,19 @@ export const DatabasesSidebarMenu: React.FC = () => {
             }
           />
           <CollapsibleContent>
-            {databases.map((database) => (
-              <MenuItem
-                muted
-                active={database.id === activeDatabaseId}
-                contentIcon={database.icon || 'content-icon:shapes:inherit'}
-                key={database.id}
-                onClick={() => handleOpenDatabaseView(database.id)}
-              >
-                {database.name}
-              </MenuItem>
-            ))}
+            <MenuGroup>
+              {databases.map((database) => (
+                <MenuItem
+                  muted
+                  active={database.id === activeDatabaseId}
+                  contentIcon={database.icon || 'content-icon:shapes:inherit'}
+                  key={database.id}
+                  onClick={() => handleOpenDatabaseView(database.id)}
+                >
+                  {database.name}
+                </MenuItem>
+              ))}
+            </MenuGroup>
           </CollapsibleContent>
         </Collapsible>
       </MenuGroup>

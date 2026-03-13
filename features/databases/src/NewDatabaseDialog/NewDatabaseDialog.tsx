@@ -207,6 +207,7 @@ export const NewDatabaseDialog: React.FC<NewDatabaseDialogProps> = ({
                       label="databases.form.icon.label"
                       size="lg"
                       variant="filled"
+                      color="neutral"
                     >
                       <ContentIcon icon={icon} />
                     </IconButton>

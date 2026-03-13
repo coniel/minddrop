@@ -312,7 +312,7 @@ const IconSelectButton = memo<{
       stringLabel={icon.name}
       onClick={handleSelect}
     >
-      <ContentIcon icon={`content-icon:${icon.name}`} color={color} />
+      <ContentIcon icon={`content-icon:${icon.name}:${color}`} color={color} />
     </IconButton>
   );
 });
@@ -349,3 +349,5 @@ const ColorSelectButton: React.FC<{
     </IconButton>
   );
 };
+
+IconSelectButton.displayName = 'IconSelectButton';
