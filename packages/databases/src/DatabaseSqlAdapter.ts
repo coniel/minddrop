@@ -22,6 +22,13 @@ export interface DatabaseSqlAdapter {
     workspaceId: string,
     workspacePath: string,
   ): Promise<InitializeBackendResult>;
+
+  /**
+   * Triggers a background filesystem scan to detect
+   * changes that occurred while the app was not running.
+   * Results are delivered via a message callback.
+   */
+  backgroundSync(workspacePath: string): Promise<void>;
 }
 
 let adapter: DatabaseSqlAdapter | null = null;

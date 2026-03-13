@@ -210,6 +210,36 @@ export interface DatabasePropertySqlSyncedEventData {
   newName: string;
 }
 
+// Background sync event - fired after a background sync
+// changeset is applied to frontend stores
+export const DatabasesBackgroundSyncedEvent = 'databases:sql-background-synced';
+
+export interface DatabasesBackgroundSyncedEventData {
+  /**
+   * Database configs that were added or changed on disk
+   * since the last sync.
+   */
+  upsertedDatabases: { id: string; name: string; path: string; icon: string }[];
+
+  /**
+   * IDs of databases that were removed from disk since
+   * the last sync.
+   */
+  deletedDatabaseIds: string[];
+
+  /**
+   * Entries that were added or modified on disk since
+   * the last sync, as SQL records.
+   */
+  upsertedEntries: SqlEntryRecord[];
+
+  /**
+   * IDs of entries that were removed from disk since
+   * the last sync.
+   */
+  deletedEntryIds: string[];
+}
+
 // Database reindexed event - fired after a full re-index
 export const DatabaseSqlReindexedEvent = 'databases:database:sql-reindexed';
 

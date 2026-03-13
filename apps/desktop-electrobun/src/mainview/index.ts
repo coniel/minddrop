@@ -1,4 +1,5 @@
 import Electrobun, { Electroview } from 'electrobun/view';
+import { Databases } from '@minddrop/databases';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
 import { registerDatabasesSqlAdapterRpc } from './registerDatabasesSqlAdapter';
@@ -21,6 +22,9 @@ export const rpc = Electroview.defineRPC<WebviewRPC>({
       },
       fsWatchEvent: (event) => {
         handleWatchEvent(event);
+      },
+      databasesSyncChangeset: (changeset) => {
+        Databases.handleBackgroundSyncResult(changeset);
       },
     },
   },

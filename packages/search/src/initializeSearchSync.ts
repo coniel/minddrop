@@ -4,6 +4,7 @@ import type {
   DatabasePropertySqlSyncedEventData,
   DatabaseSqlReindexedEventData,
   DatabaseSqlSyncedEventData,
+  DatabasesBackgroundSyncedEventData,
 } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { Workspaces } from '@minddrop/workspaces';
@@ -103,6 +104,59 @@ export function initializeSearchSync(): void {
         workspaceId,
         databaseId: data.databaseId,
       });
+    },
+  );
+
+  // Handle background sync changeset
+  Events.on<DatabasesBackgroundSyncedEventData>(
+    Databases.events.backgroundSynced,
+    'search:sync',
+    ({ data }) => {
+      const workspaceId = getWorkspaceId();
+
+      if (!workspaceId) {
+        return;
+      }
+
+      // Sync upserted databases
+      for (const database of data.upsertedDatabases) {
+        getSearchAdapter().searchDatabaseSync({
+          workspaceId,
+          action: 'upsert',
+          database,
+        });
+      }
+
+      // Sync deleted databases
+      for (const id of data.deletedDatabaseIds) {
+        getSearchAdapter().searchDatabaseSync({
+          workspaceId,
+          action: 'delete',
+          database: { id, name: '', path: '', icon: '' },
+        });
+      }
+
+      // Sync upserted entries
+      if (data.upsertedEntries.length > 0) {
+        getSearchAdapter().searchSync({
+          workspaceId,
+          action: 'upsert',
+          entries: data.upsertedEntries.map((entry) => ({
+            id: entry.id,
+            title: entry.title,
+            databaseId: entry.databaseId,
+          })),
+        });
+      }
+
+      // Sync deleted entries
+      if (data.deletedEntryIds.length > 0) {
+        getSearchAdapter().searchSync({
+          workspaceId,
+          action: 'delete',
+          entryIds: data.deletedEntryIds,
+        });
+      }
     },
   );
 

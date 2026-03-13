@@ -11,6 +11,7 @@ import {
   DatabaseSqlReindexedEvent,
   DatabaseSqlSyncedEvent,
   DatabaseUpdatedEvent,
+  DatabasesBackgroundSyncedEvent,
 } from './events';
 import { handleDataTransfer } from './handleDataTransfer';
 import {
@@ -48,6 +49,7 @@ export const events = {
   databaseSqlSynced: DatabaseSqlSyncedEvent,
   propertySqlSynced: DatabasePropertySqlSyncedEvent,
   databaseSqlReindexed: DatabaseSqlReindexedEvent,
+  backgroundSynced: DatabasesBackgroundSyncedEvent,
 } as const;
 
 export const sql = {
@@ -75,6 +77,8 @@ export { registerDatabaseSqlAdapter as registerSqlAdapter } from './DatabaseSqlA
 export type { DatabaseSqlAdapter } from './DatabaseSqlAdapter';
 export { initializeDatabasesSql as initializeSql } from './initializeDatabasesSql';
 export { initializeDatabasesBackend as initializeBackend } from './sql';
+export { backgroundSyncDatabases as backgroundSync } from './sql';
+export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
 export { DatabasesStore as Store } from './DatabasesStore';
 export { getAllDatabases as getAll } from './getAllDatabases';
 export { addDatabaseProperty as addProperty } from './addDatabaseProperty';

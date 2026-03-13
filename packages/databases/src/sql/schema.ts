@@ -1,7 +1,7 @@
 // Increment this when the schema or indexing logic changes.
 // On startup, if the stored schema version does not match,
 // the SQL database is dropped and rebuilt from scratch.
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 // SQL schema for creating tables
 export const SCHEMA_SQL = `
@@ -19,7 +19,8 @@ export const SCHEMA_SQL = `
     title         TEXT NOT NULL,
     created       INTEGER NOT NULL,
     last_modified INTEGER NOT NULL,
-    metadata      TEXT NOT NULL DEFAULT '{}'
+    metadata      TEXT NOT NULL DEFAULT '{}',
+    FOREIGN KEY (database_id) REFERENCES databases(id) ON DELETE CASCADE
   );
 
   CREATE INDEX IF NOT EXISTS idx_entries_database ON entries(database_id);

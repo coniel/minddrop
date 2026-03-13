@@ -2,8 +2,10 @@ import { BrowserView } from 'electrobun/bun';
 import { WebviewRPC } from '../types/WebviewRPC.types';
 import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
 import {
+  handleDatabasesBackgroundSync,
   handleDatabasesInitialize,
   handleDatabasesSqlInitialize,
+  setSyncChangesetSender,
 } from './databases';
 import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
 import {
@@ -43,6 +45,7 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       // Databases RPC handlers
       databasesSqlInitialize: handleDatabasesSqlInitialize,
       databasesInitialize: handleDatabasesInitialize,
+      databasesBackgroundSync: handleDatabasesBackgroundSync,
       // Search RPC handlers
       searchInitialize: handleSearchInitialize,
       searchFullText: handleSearchFullText,
@@ -62,4 +65,8 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
 
 setWatchEventSender((event) => {
   myWebviewRPC.send.fsWatchEvent(event);
+});
+
+setSyncChangesetSender((changeset) => {
+  myWebviewRPC.send.databasesSyncChangeset(changeset);
 });

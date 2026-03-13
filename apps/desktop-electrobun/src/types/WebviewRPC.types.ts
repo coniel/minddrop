@@ -1,5 +1,6 @@
 import { RPCSchema } from 'electrobun';
 import type {
+  BackgroundSyncChangeset,
   Database,
   InitializeBackendResult,
   SqlInitializeResult,
@@ -162,6 +163,12 @@ export type WebviewRPC = {
         };
         response: InitializeBackendResult;
       };
+      databasesBackgroundSync: {
+        params: {
+          workspacePath: string;
+        };
+        response: void;
+      };
       // Search RPC
       searchInitialize: {
         params: {
@@ -217,6 +224,7 @@ export type WebviewRPC = {
         kind: FsWatchEventKind;
         paths: string[];
       };
+      databasesSyncChangeset: BackgroundSyncChangeset;
     };
   }>;
 };

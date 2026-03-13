@@ -6,6 +6,7 @@ import {
 
 export * from './types';
 export type { SqlInitializeResult, InitializeBackendResult } from './sql';
+export type { BackgroundSyncChangeset } from './types';
 export * from './errors';
 export * from './events';
 export * from './database-templates';
