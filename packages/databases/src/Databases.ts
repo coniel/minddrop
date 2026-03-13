@@ -88,6 +88,7 @@ export { useDatabase as use, useDatabases as useAll } from './DatabasesStore';
 export { writeDatabaseConfig as writeConfig } from './writeDatabaseConfig';
 export {
   convertEntryToSqlRecord,
+  convertSqlRecordToEntry,
   filterValidDatabaseFiles as filterFiles,
 } from './utils';
 export { readWorkspaceDatabases } from './readWorkspaceDatabases';

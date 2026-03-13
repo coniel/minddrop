@@ -1,5 +1,5 @@
 import { MockFileDescriptor } from '@minddrop/file-system';
-import { DatabaseEntry } from '../../types';
+import { DatabaseEntry, SqlEntryRecord } from '../../types';
 import {
   collectionDatabase,
   commonStorageDatabase,
@@ -36,6 +36,20 @@ Icon: ${objectEntry1.properties.Icon}
 
 ${objectEntry1.properties.Content}`;
 
+export const objectEntry1SqlRecord: SqlEntryRecord = {
+  id: objectEntry1.id,
+  databaseId: objectDatabase.id,
+  path: objectEntry1.path,
+  title: 'Test Entry',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'Content', type: 'formatted-text', value: 'Test content' },
+    { name: 'Icon', type: 'icon', value: 'content-icon:shapes:blue' },
+  ],
+};
+
 /******************************************************************************
  * YAML object database entries
  *****************************************************************************/
@@ -56,6 +70,20 @@ export const yamlObjectEntry1: DatabaseEntry = {
 
 export const yamlObjectEntry1FileContents = `Title: Test Entry
 Icon: content-icon:shapes:blue`;
+
+export const yamlObjectEntry1SqlRecord: SqlEntryRecord = {
+  id: yamlObjectEntry1.id,
+  databaseId: yamlObjectDatabase.id,
+  path: yamlObjectEntry1.path,
+  title: 'Test Entry',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'Title', type: 'text', value: 'Test Entry' },
+    { name: 'Icon', type: 'icon', value: 'content-icon:shapes:blue' },
+  ],
+};
 
 /******************************************************************************
  * URL database entries
@@ -86,6 +114,19 @@ Image: image.png
 Icon: icon.png
 ---`;
 
+export const urlEntry1SqlRecord: SqlEntryRecord = {
+  id: urlEntry1.id,
+  databaseId: urlDatabase.id,
+  path: urlEntry1.path,
+  title: 'Test Entry',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'URL', type: 'url', value: 'https://example.com/some-page' },
+  ],
+};
+
 /******************************************************************************
  * Root storage database entries
  *****************************************************************************/
@@ -107,6 +148,17 @@ export const rootStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
+export const rootStorageEntry1SqlRecord: SqlEntryRecord = {
+  id: rootStorageEntry1.id,
+  databaseId: rootStorageDatabase.id,
+  path: rootStorageEntry1.path,
+  title: 'Root Storage Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
+};
+
 export const rootStorageEntry_empty_value: DatabaseEntry = {
   id: `${rootStorageDatabase.name}/Root Storage Entry Empty Value.md`,
   title: 'Root Storage Entry Empty Value',
@@ -120,6 +172,17 @@ export const rootStorageEntry_empty_value: DatabaseEntry = {
 
 export const rootStorageEntry_empty_valueFileContents = `---
 ---`;
+
+export const rootStorageEntrySqlRecord_empty_value: SqlEntryRecord = {
+  id: rootStorageEntry_empty_value.id,
+  databaseId: rootStorageDatabase.id,
+  path: rootStorageEntry_empty_value.path,
+  title: 'Root Storage Entry Empty Value',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [],
+};
 
 /******************************************************************************
  * Common storage database entries
@@ -142,6 +205,17 @@ export const commonStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
+export const commonStorageEntry1SqlRecord: SqlEntryRecord = {
+  id: commonStorageEntry1.id,
+  databaseId: commonStorageDatabase.id,
+  path: commonStorageEntry1.path,
+  title: 'Common Storage Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
+};
+
 /******************************************************************************
  * Property storage database entries
  *****************************************************************************/
@@ -163,6 +237,17 @@ export const propertyStorageEntry1FileContents = `---
 Image: image.png
 ---`;
 
+export const propertyStorageEntry1SqlRecord: SqlEntryRecord = {
+  id: propertyStorageEntry1.id,
+  databaseId: propertyStorageDatabase.id,
+  path: propertyStorageEntry1.path,
+  title: 'Property Storage Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
+};
+
 /******************************************************************************
  * Entry storage database entries
  *****************************************************************************/
@@ -183,6 +268,17 @@ export const entryStorageEntry1: DatabaseEntry = {
 export const entryStorageEntry1FileContents = `---
 Image: image.png
 ---`;
+
+export const entryStorageEntry1SqlRecord: SqlEntryRecord = {
+  id: entryStorageEntry1.id,
+  databaseId: entryStorageDatabase.id,
+  path: entryStorageEntry1.path,
+  title: 'Entry Storage Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [{ name: 'Image', type: 'image', value: 'image.png' }],
+};
 
 /******************************************************************************
  * Timestamp database entries
@@ -206,6 +302,20 @@ export const timestampEntry1FileContents = `---
 Created: ${(timestampEntry1.properties.Created as Date).toISOString()}
 Last Modified: ${(timestampEntry1.properties['Last Modified'] as Date).toISOString()}
 ---`;
+
+export const timestampEntry1SqlRecord: SqlEntryRecord = {
+  id: timestampEntry1.id,
+  databaseId: timestampDatabase.id,
+  path: timestampEntry1.path,
+  title: 'Timestamp Entry',
+  created: 1749981600000,
+  lastModified: 1750428000000,
+  metadata: '{}',
+  properties: [
+    { name: 'Created', type: 'created', value: 1749981600000 },
+    { name: 'Last Modified', type: 'last-modified', value: 1750428000000 },
+  ],
+};
 
 /******************************************************************************
  * Collection database entries
@@ -235,6 +345,29 @@ References:
   - reference-entry-1
 ---`;
 
+export const collectionEntry1SqlRecord: SqlEntryRecord = {
+  id: collectionEntry1.id,
+  databaseId: collectionDatabase.id,
+  path: collectionEntry1.path,
+  title: 'Collection Entry 1',
+  created: 1704067200000,
+  lastModified: 1704067200000,
+  metadata: '{}',
+  properties: [
+    { name: 'Title', type: 'text', value: 'Collection Entry 1' },
+    {
+      name: 'Related',
+      type: 'collection',
+      value: ['related-entry-1', 'related-entry-2'],
+    },
+    { name: 'References', type: 'collection', value: ['reference-entry-1'] },
+  ],
+};
+
+/******************************************************************************
+ * Aggregate arrays
+ *****************************************************************************/
+
 export const databaseEntries = [
   objectEntry1,
   urlEntry1,
@@ -246,6 +379,19 @@ export const databaseEntries = [
   entryStorageEntry1,
   collectionEntry1,
   timestampEntry1,
+];
+
+export const databaseEntrySqlRecords: SqlEntryRecord[] = [
+  objectEntry1SqlRecord,
+  urlEntry1SqlRecord,
+  yamlObjectEntry1SqlRecord,
+  rootStorageEntry1SqlRecord,
+  rootStorageEntrySqlRecord_empty_value,
+  commonStorageEntry1SqlRecord,
+  propertyStorageEntry1SqlRecord,
+  entryStorageEntry1SqlRecord,
+  collectionEntry1SqlRecord,
+  timestampEntry1SqlRecord,
 ];
 
 export const databaseEntryFiles: (MockFileDescriptor | string)[] = [
