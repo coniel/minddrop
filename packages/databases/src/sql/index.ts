@@ -16,6 +16,7 @@ export { sqlGetEntryTextContent } from './sqlGetEntryTextContent';
 export { sqlGetAllDatabases } from './sqlGetAllDatabases';
 export { sqlGetEntryTimestamps } from './sqlGetEntryTimestamps';
 export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
+export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 
 // Init
 export { sqlInitialize } from './sqlInitialize';
