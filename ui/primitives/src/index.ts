@@ -6,6 +6,7 @@ export * from './RadioToggleGroup';
 export * from './Collapsible';
 export * from './ConfirmationDialog';
 export * from './ContentIcon';
+export * from './ContextMenu';
 export * from './Dialog';
 export * from './DropdownMenu';
 export * from './fields';

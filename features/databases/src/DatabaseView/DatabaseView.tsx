@@ -1,10 +1,15 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { ViewRenderer } from '@minddrop/feature-views';
 import { useTranslation } from '@minddrop/i18n';
 import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
+  ContextMenuContent,
+  ContextMenuPortal,
+  ContextMenuPositioner,
+  ContextMenuRoot,
+  ContextMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -176,7 +181,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   );
 
   // Rename the active view
-  const handleRenameView = useCallback(
+  const handleRenameActiveView = useCallback(
     (name: string) => {
       if (view) {
         Views.update(view.id, { name });
@@ -186,7 +191,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   );
 
   // Change the active view's icon
-  const handleSelectViewIcon = useCallback(
+  const handleSelectActiveViewIcon = useCallback(
     (icon: string) => {
       if (view) {
         Views.update(view.id, { icon });
@@ -194,6 +199,22 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     },
     [view],
   );
+
+  // Rename a view by ID
+  const handleRenameView = useCallback((viewId: string, name: string) => {
+    Views.update(viewId, { name });
+  }, []);
+
+  // Change a view's icon by ID
+  const handleSelectViewIcon = useCallback((viewId: string, icon: string) => {
+    Views.update(viewId, { icon });
+  }, []);
+
+  // Track which view's dropdown menu is open and anchor element
+  const [dropdownMenuViewId, setDropdownMenuViewId] = useState<string | null>(
+    null,
+  );
+  const [dropdownAnchor, setDropdownAnchor] = useState<Element | null>(null);
 
   async function handleClickNewEntry() {
     if (!database) {
@@ -214,6 +235,48 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     });
 
     setActiveViewId(newView.id);
+  }
+
+  // Render the view options menu content for a given view
+  function renderViewMenuContent(targetViewId: string) {
+    const targetView = databaseViews.find(
+      (databaseView) => databaseView.id === targetViewId,
+    );
+
+    if (!targetView) {
+      return null;
+    }
+
+    const targetViewType = viewTypes.find(
+      (viewType) => viewType.type === targetView.type,
+    );
+    const targetViewOptions = {
+      ...targetViewType?.defaultOptions,
+      ...(targetView.options ?? {}),
+    };
+
+    return (
+      <>
+        <MenuRenameItem
+          value={targetView.name}
+          contentIcon={targetView.icon}
+          onValueChange={() => {}}
+          onRename={(name) => handleRenameView(targetViewId, name)}
+          onSelectIcon={(icon) => handleSelectViewIcon(targetViewId, icon)}
+        />
+        {targetViewType?.settingsMenu && (
+          <>
+            <MenuSeparator />
+            {React.createElement(targetViewType.settingsMenu, {
+              view: targetView,
+              options: targetViewOptions,
+              onUpdateOptions: (options: Record<string, unknown>) =>
+                Views.update(targetViewId, { options }),
+            })}
+          </>
+        )}
+      </>
+    );
   }
 
   function handleDrop(event: React.DragEvent<HTMLDivElement>) {
@@ -285,27 +348,71 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                     return null;
                   }
 
+                  const isActive = databaseView.id === activeViewId;
+
                   return (
-                    <TabsTab
-                      ref={ref}
-                      value={databaseView.id}
-                      startIcon={
-                        databaseView.icon.includes(':') ? (
-                          <ContentIcon icon={databaseView.icon} />
-                        ) : (
-                          (databaseView.icon as UiIconName)
-                        )
-                      }
-                      className={className}
-                      style={style}
-                      {...handleProps}
-                    >
-                      {databaseView.name}
-                    </TabsTab>
+                    <ContextMenuRoot key={databaseView.id}>
+                      <ContextMenuTrigger>
+                        <TabsTab
+                          ref={ref}
+                          value={databaseView.id}
+                          startIcon={
+                            databaseView.icon.includes(':') ? (
+                              <ContentIcon icon={databaseView.icon} />
+                            ) : (
+                              (databaseView.icon as UiIconName)
+                            )
+                          }
+                          className={className}
+                          style={style}
+                          onClick={(event) => {
+                            if (isActive) {
+                              setDropdownAnchor(event.currentTarget);
+                              setDropdownMenuViewId(databaseView.id);
+                            }
+                          }}
+                          {...handleProps}
+                        >
+                          {databaseView.name}
+                        </TabsTab>
+                      </ContextMenuTrigger>
+                      <ContextMenuPortal>
+                        <ContextMenuPositioner>
+                          <ContextMenuContent>
+                            {renderViewMenuContent(databaseView.id)}
+                          </ContextMenuContent>
+                        </ContextMenuPositioner>
+                      </ContextMenuPortal>
+                    </ContextMenuRoot>
                   );
                 }}
               />
             </Tabs>
+
+            {/* View options menu - opens when clicking the active tab */}
+            <ContextMenuRoot
+              open={dropdownMenuViewId !== null}
+              onOpenChange={(open) => {
+                if (!open) {
+                  setDropdownMenuViewId(null);
+                  setDropdownAnchor(null);
+                }
+              }}
+            >
+              <ContextMenuPortal>
+                <ContextMenuPositioner
+                  anchor={dropdownAnchor}
+                  side="bottom"
+                  align="start"
+                  sideOffset={4}
+                >
+                  <ContextMenuContent>
+                    {dropdownMenuViewId &&
+                      renderViewMenuContent(dropdownMenuViewId)}
+                  </ContextMenuContent>
+                </ContextMenuPositioner>
+              </ContextMenuPortal>
+            </ContextMenuRoot>
 
             {/* Add view dropdown */}
             <DropdownMenu
@@ -354,8 +461,8 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                       value={view?.name ?? ''}
                       contentIcon={view?.icon}
                       onValueChange={() => {}}
-                      onRename={handleRenameView}
-                      onSelectIcon={handleSelectViewIcon}
+                      onRename={handleRenameActiveView}
+                      onSelectIcon={handleSelectActiveViewIcon}
                     />
                     {activeViewType?.settingsMenu && (
                       <>
