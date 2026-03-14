@@ -6,7 +6,7 @@ export const OpenConfirmationDialogEvent = 'app:confirmation-dialog:open';
 export const OpenAppSidebarEvent = 'app:sidebar:open';
 export const CloseAppSidebarEvent = 'app:sidebar:close';
 
-export type OpenMainContentViewEventData<P = any> = {
+export type OpenMainContentViewEventData<TProps = any> = {
   /**
    * Identifier for the view being opened, following the
    * convention `[package]:view:[name]`.
@@ -16,12 +16,12 @@ export type OpenMainContentViewEventData<P = any> = {
   /**
    * The component to render in the main content area.
    */
-  component: React.ComponentType<P>;
+  component: React.ComponentType<TProps>;
 
   /**
    * Props passed to the component.
    */
-  props?: P;
+  props?: TProps;
 };
 
 export type OpenConfirmationDialogEventData = {
