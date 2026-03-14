@@ -53,8 +53,11 @@ describe('updateDatabase', () => {
   it('dispatches a database updated event', async () =>
     new Promise<void>((done) => {
       Events.addListener(DatabaseUpdatedEvent, 'test', (payload) => {
-        // Payload data should be the updated database config
-        expect(payload.data).toEqual(updatedConfig);
+        // Payload data should contain original and updated configs
+        expect(payload.data).toEqual({
+          original: objectDatabase,
+          updated: updatedConfig,
+        });
         done();
       });
 

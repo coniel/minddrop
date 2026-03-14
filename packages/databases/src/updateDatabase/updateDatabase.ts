@@ -1,6 +1,6 @@
 import { Events } from '@minddrop/events';
 import { DatabasesStore } from '../DatabasesStore';
-import { DatabaseUpdatedEvent } from '../events';
+import { DatabaseUpdatedEvent, DatabaseUpdatedEventData } from '../events';
 import { getDatabase } from '../getDatabase';
 import { Database } from '../types';
 import { writeDatabaseConfig } from '../writeDatabaseConfig';
@@ -37,7 +37,10 @@ export async function updateDatabase(
   await writeDatabaseConfig(id);
 
   // Dispatch a database updated event
-  Events.dispatch(DatabaseUpdatedEvent, updatedConfig);
+  Events.dispatch<DatabaseUpdatedEventData>(DatabaseUpdatedEvent, {
+    original: config,
+    updated: updatedConfig,
+  });
 
   return updatedConfig;
 }
