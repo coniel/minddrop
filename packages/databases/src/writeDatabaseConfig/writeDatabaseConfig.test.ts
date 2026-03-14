@@ -4,8 +4,8 @@ import { MockFs, cleanup, objectDatabase, setup } from '../test-utils';
 import { databaseConfigFilePath } from '../utils';
 import { writeDatabaseConfig } from './writeDatabaseConfig';
 
-// Strip id and path from a database config (neither is persisted to disk)
-const { id: _id, path: _path, ...expectedConfig } = objectDatabase;
+// Strip id, name, and path from a database config (they are derived at load time)
+const { id: _id, path: _path, name: _name, ...expectedConfig } = objectDatabase;
 
 describe('writeConfig', () => {
   beforeEach(setup);
