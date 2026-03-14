@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { DesignElementStyle } from '@minddrop/designs';
 import { IconButton, NumberField } from '@minddrop/ui-primitives';
 import {
@@ -52,7 +52,10 @@ export const SpacingFields = ({
 
   // Read all 4 values from the store (stored as rem, displayed as px)
   const values = useDesignStudioStore((state) => {
-    const style = state.elements[elementId].style as unknown as Record<string, number>;
+    const style = state.elements[elementId].style as unknown as Record<
+      string,
+      number
+    >;
 
     return {
       [top]: Math.round((style[top] ?? 0) * 16),
@@ -71,13 +74,6 @@ export const SpacingFields = ({
 
   // Start synced if all values are equal and non-zero
   const [synced, setSynced] = useState(() => allEqual && values[top] !== 0);
-
-  // Auto-enable sync when all values become equal and non-zero
-  useEffect(() => {
-    if (allEqual && values[top] !== 0) {
-      setSynced(true);
-    }
-  }, [allEqual, values, top]);
 
   // Handles a value change, converting px to rem and syncing all sides if linked
   const handleChange = useCallback(
