@@ -3,7 +3,7 @@ import { Databases } from '@minddrop/databases';
 import { NewDesignMenu } from '@minddrop/feature-designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
 import { i18n } from '@minddrop/i18n';
-import { PropertySchema } from '@minddrop/properties';
+import { PropertySchema, PropertySchemaTemplate } from '@minddrop/properties';
 import {
   IconButton,
   IconButtonSpacer,
@@ -27,7 +27,8 @@ export interface DatabaseConfigurationPanelProps {
   databaseId: string;
 }
 
-type DraftProperty = PropertySchema & {
+type DraftProperty = Omit<PropertySchema, 'name'> & {
+  name: string;
   id: number;
 };
 
@@ -46,7 +47,7 @@ export const DatabaseConfigurationPanel: React.FC<
   const databaseConfig = Databases.use(databaseId);
 
   // Add a new draft property from the type selection menu
-  function handleAddProperty(propertySchema: PropertySchema) {
+  function handleAddProperty(propertySchema: PropertySchemaTemplate) {
     const draftProperty: DraftProperty = {
       ...propertySchema,
       name: i18n.t(propertySchema.name),

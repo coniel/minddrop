@@ -1,5 +1,9 @@
 import { ReactElement } from 'react';
-import { PropertySchema, PropertySchemas } from '@minddrop/properties';
+import {
+  PropertySchema,
+  PropertySchemaTemplate,
+  PropertySchemas,
+} from '@minddrop/properties';
 import {
   DropdownMenu,
   DropdownMenuItem,
@@ -18,7 +22,7 @@ export interface PropertyTypeSelectionMenuProps
   /**
    * Callback fired when a property type is selected.
    */
-  onSelect: (property: PropertySchema) => void;
+  onSelect: (property: PropertySchemaTemplate) => void;
 
   /**
    * An array of existing property types against which to check

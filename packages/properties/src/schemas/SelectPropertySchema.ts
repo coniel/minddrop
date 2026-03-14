@@ -1,5 +1,5 @@
 import { ContentColor } from '@minddrop/ui-theme';
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface SelectPropertyOption {
   value: string;
@@ -13,10 +13,11 @@ export interface SelectPropertySchema extends PropertySchemaBase {
   multiselect?: boolean;
 }
 
-export const SelectPropertySchema: SelectPropertySchema = {
-  type: 'select',
-  icon: 'content-icon:chevron-down-circle:default',
-  name: 'properties.select.name',
-  description: 'properties.select.description',
-  options: [],
-};
+export const SelectPropertySchema: PropertySchemaTemplate<SelectPropertySchema> =
+  {
+    type: 'select',
+    icon: 'content-icon:chevron-down-circle:default',
+    name: 'properties.select.name',
+    description: 'properties.select.description',
+    options: [],
+  };

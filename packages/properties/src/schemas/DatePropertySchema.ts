@@ -1,4 +1,4 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface DatePropertySchema extends PropertySchemaBase {
   type: 'date';
@@ -7,7 +7,7 @@ export interface DatePropertySchema extends PropertySchemaBase {
   defaultValue?: Date | 'now';
 }
 
-export const DatePropertySchema: DatePropertySchema = {
+export const DatePropertySchema: PropertySchemaTemplate<DatePropertySchema> = {
   type: 'date',
   icon: 'content-icon:calendar:default',
   name: 'properties.date.name',

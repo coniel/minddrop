@@ -1,11 +1,11 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface TextPropertySchema extends PropertySchemaBase {
   type: 'text';
   defaultValue?: string;
 }
 
-export const TextPropertySchema: TextPropertySchema = {
+export const TextPropertySchema: PropertySchemaTemplate<TextPropertySchema> = {
   type: 'text',
   icon: 'content-icon:text:default',
   name: 'properties.text.name',

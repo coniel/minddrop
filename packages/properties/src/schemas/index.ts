@@ -1,4 +1,4 @@
-import { PropertySchema, PropertyType } from '../types';
+import { PropertySchemaTemplate, PropertyType } from '../types';
 import { CollectionPropertySchema } from './CollectionPropertySchema';
 import { CreatedPropertySchema } from './CreatedPropertySchema';
 import { DatePropertySchema } from './DatePropertySchema';
@@ -29,7 +29,7 @@ export * from './TitlePropertySchema';
 export * from './TogglePropertySchema';
 export * from './UrlPropertySchema';
 
-export const PropertySchemas: Record<PropertyType, PropertySchema> = {
+export const PropertySchemas: Record<PropertyType, PropertySchemaTemplate> = {
   title: TitlePropertySchema,
   text: TextPropertySchema,
   'formatted-text': FormattedTextPropertySchema,

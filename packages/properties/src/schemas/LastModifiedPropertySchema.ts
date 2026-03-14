@@ -1,13 +1,14 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface LastModifiedPropertySchema extends PropertySchemaBase {
   type: 'last-modified';
 }
 
-export const LastModifiedPropertySchema: LastModifiedPropertySchema = {
-  type: 'last-modified',
-  icon: 'content-icon:clock:default',
-  name: 'properties.lastModified.name',
-  description: 'properties.lastModified.description',
-  meta: true,
-};
+export const LastModifiedPropertySchema: PropertySchemaTemplate<LastModifiedPropertySchema> =
+  {
+    type: 'last-modified',
+    icon: 'content-icon:clock:default',
+    name: 'properties.lastModified.name',
+    description: 'properties.lastModified.description',
+    meta: true,
+  };

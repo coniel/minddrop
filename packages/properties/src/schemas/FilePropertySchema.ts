@@ -1,9 +1,9 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface FilePropertySchema extends PropertySchemaBase {
   type: 'file';
 }
-export const FilePropertySchema: FilePropertySchema = {
+export const FilePropertySchema: PropertySchemaTemplate<FilePropertySchema> = {
   type: 'file',
   icon: 'content-icon:file:default',
   name: 'properties.file.name',

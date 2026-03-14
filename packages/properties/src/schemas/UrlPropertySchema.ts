@@ -1,11 +1,11 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface UrlPropertySchema extends PropertySchemaBase {
   type: 'url';
   defaultValue?: string;
 }
 
-export const UrlPropertySchema: UrlPropertySchema = {
+export const UrlPropertySchema: PropertySchemaTemplate<UrlPropertySchema> = {
   type: 'url',
   icon: 'content-icon:link:default',
   name: 'properties.url.name',

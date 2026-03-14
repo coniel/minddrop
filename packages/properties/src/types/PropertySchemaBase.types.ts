@@ -1,3 +1,4 @@
+import { TranslationKey } from '@minddrop/i18n';
 import { PropertyType } from './Properties.types';
 
 export interface PropertySchemaBase {
@@ -41,3 +42,11 @@ export interface PropertySchemaBase {
    */
   protected?: boolean;
 }
+
+/**
+ * A property schema template with an i18n translation key as the name.
+ * Used for the built-in property schema definitions.
+ */
+export type PropertySchemaTemplate<
+  T extends PropertySchemaBase = PropertySchemaBase,
+> = Omit<T, 'name'> & { name: TranslationKey };

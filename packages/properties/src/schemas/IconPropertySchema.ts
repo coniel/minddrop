@@ -1,9 +1,9 @@
-import { PropertySchemaBase } from '../types';
+import { PropertySchemaBase, PropertySchemaTemplate } from '../types';
 
 export interface IconPropertySchema extends PropertySchemaBase {
   type: 'icon';
 }
-export const IconPropertySchema: IconPropertySchema = {
+export const IconPropertySchema: PropertySchemaTemplate<IconPropertySchema> = {
   type: 'icon',
   icon: 'content-icon:smile:default',
   name: 'properties.icon.name',
