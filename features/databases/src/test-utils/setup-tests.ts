@@ -11,7 +11,7 @@ import { cleanup as cleanupRender } from '@minddrop/test-utils';
 import { Paths } from '@minddrop/utils';
 import { ViewFixtures, ViewTypes } from '@minddrop/views';
 
-const { wallViewType } = ViewFixtures;
+const { viewType_table } = ViewFixtures;
 
 interface SetupOptions {
   loadDatabases?: boolean;
@@ -42,7 +42,7 @@ export function setup(
   }
 
   // Load view types into the store
-  ViewTypes.register(wallViewType);
+  ViewTypes.register(viewType_table);
 }
 
 export function cleanup() {
