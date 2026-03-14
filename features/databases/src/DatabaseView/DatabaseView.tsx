@@ -6,6 +6,7 @@ import { SortableList } from '@minddrop/ui-drag-and-drop';
 import {
   ContentIcon,
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuPositioner,
@@ -15,6 +16,8 @@ import {
   Icon,
   IconButton,
   MenuGroup,
+  MenuRenameItem,
+  MenuSeparator,
   Panel,
   Stack,
   Tabs,
@@ -31,6 +34,7 @@ import {
   useDatabaseViewState,
 } from '../DatabaseViewStateStore';
 import './DatabaseView.css';
+import { UiIconName } from '@minddrop/ui-icons';
 
 export interface DatabaseViewProps {
   /**
@@ -125,6 +129,11 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 
   // Sync activeViewId when views change (e.g. active view deleted)
   useEffect(() => {
+    // Nothing to sync when there are no views
+    if (databaseViews.length === 0) {
+      return;
+    }
+
     if (
       activeViewId &&
       databaseViews.some((view) => view.id === activeViewId)
@@ -161,6 +170,26 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
     (options: Record<string, unknown>) => {
       if (view) {
         Views.update(view.id, { options });
+      }
+    },
+    [view],
+  );
+
+  // Rename the active view
+  const handleRenameView = useCallback(
+    (name: string) => {
+      if (view) {
+        Views.update(view.id, { name });
+      }
+    },
+    [view],
+  );
+
+  // Change the active view's icon
+  const handleSelectViewIcon = useCallback(
+    (icon: string) => {
+      if (view) {
+        Views.update(view.id, { icon });
       }
     },
     [view],
@@ -247,10 +276,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   // Persist the sort order to the database
                   Databases.update(databaseId, { viewOrder: newOrder });
                 }}
-                renderItem={(
-                  id,
-                  { ref, handleProps, isDragging, style, className },
-                ) => {
+                renderItem={(id, { ref, handleProps, style, className }) => {
                   const databaseView = databaseViews.find(
                     (view) => view.id === id,
                   );
@@ -263,7 +289,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                     <TabsTab
                       ref={ref}
                       value={databaseView.id}
-                      startIcon={databaseView.icon}
+                      startIcon={
+                        databaseView.icon.includes(':') ? (
+                          <ContentIcon icon={databaseView.icon} />
+                        ) : (
+                          (databaseView.icon as UiIconName)
+                        )
+                      }
                       className={className}
                       style={style}
                       {...handleProps}
@@ -304,29 +336,41 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
               </MenuGroup>
             </DropdownMenu>
 
-            {/* View settings dropdown, shown only when the view type has a settings menu */}
-            {activeViewType?.settingsMenu && (
-              <DropdownMenuRoot>
-                <DropdownMenuTrigger>
-                  <IconButton
-                    className="view-settings-button"
-                    size="sm"
-                    label="databases.actions.viewSettings"
-                    tooltip={{ title: 'databases.actions.viewSettings' }}
-                    icon="settings-2"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuPositioner side="bottom" align="end">
-                    {React.createElement(activeViewType.settingsMenu, {
-                      view,
-                      options: viewOptions,
-                      onUpdateOptions: handleUpdateViewOptions,
-                    })}
-                  </DropdownMenuPositioner>
-                </DropdownMenuPortal>
-              </DropdownMenuRoot>
-            )}
+            {/* View settings dropdown */}
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton
+                  className="view-settings-button"
+                  size="sm"
+                  label="databases.actions.viewSettings"
+                  tooltip={{ title: 'databases.actions.viewSettings' }}
+                  icon="settings-2"
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuPositioner side="bottom" align="end">
+                  <DropdownMenuContent>
+                    <MenuRenameItem
+                      value={view?.name ?? ''}
+                      contentIcon={view?.icon}
+                      onValueChange={() => {}}
+                      onRename={handleRenameView}
+                      onSelectIcon={handleSelectViewIcon}
+                    />
+                    {activeViewType?.settingsMenu && (
+                      <>
+                        <MenuSeparator />
+                        {React.createElement(activeViewType.settingsMenu, {
+                          view,
+                          options: viewOptions,
+                          onUpdateOptions: handleUpdateViewOptions,
+                        })}
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenuPositioner>
+              </DropdownMenuPortal>
+            </DropdownMenuRoot>
           </div>
         )}
 

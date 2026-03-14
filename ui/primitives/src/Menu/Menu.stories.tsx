@@ -13,6 +13,7 @@ import { MenuItem } from './MenuItem';
 import { MenuLabel } from './MenuLabel';
 import { MenuRadioGroup } from './MenuRadioGroup';
 import { MenuRadioItem } from './MenuRadioItem';
+import { MenuRenameItem } from './MenuRenameItem';
 import { MenuSeparator } from './MenuSeparator';
 import { SwitchMenuItem } from './SwitchMenuItem';
 
@@ -333,6 +334,46 @@ export const MenuStories = () => (
               size="compact"
               defaultChecked
             />
+          </Menu>
+        </StoryItem>
+      </StoryRow>
+    </StorySection>
+
+    {/* --------------------------------------------------------
+        MENU RENAME ITEM
+        Inline rename input at the top of a menu, outside
+        keyboard navigation. Optionally includes an icon
+        selection button.
+    -------------------------------------------------------- */}
+    <StorySection
+      title="MenuRenameItem"
+      description="Inline rename input at the top of a menu, outside keyboard navigation. Icon button only appears when contentIcon is provided."
+    >
+      <StoryRow>
+        <StoryItem label="without icon">
+          <Menu>
+            <MenuRenameItem
+              value="My View"
+              onValueChange={() => {}}
+              onRename={() => {}}
+            />
+            <MenuSeparator />
+            <MenuItem label="Duplicate" icon="copy" />
+            <MenuItem label="Delete" icon="trash" danger />
+          </Menu>
+        </StoryItem>
+        <StoryItem label="with icon picker">
+          <Menu>
+            <MenuRenameItem
+              value="My View"
+              contentIcon="content-icon:shapes:circle:blue"
+              onValueChange={() => {}}
+              onRename={() => {}}
+              onSelectIcon={() => {}}
+            />
+            <MenuSeparator />
+            <MenuItem label="Duplicate" icon="copy" />
+            <MenuItem label="Delete" icon="trash" danger />
           </Menu>
         </StoryItem>
       </StoryRow>

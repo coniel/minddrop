@@ -8,5 +8,6 @@ export * from './MenuRadioGroup';
 export * from './MenuCheckItem';
 export * from './MenuRadioItem';
 export * from './ColorSelectionMenuItem';
+export * from './MenuRenameItem';
 export * from './SwitchMenuItem';
 export * from './Menu.stories';

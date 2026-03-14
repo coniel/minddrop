@@ -417,3 +417,33 @@
 .switch-menu-item .switch {
   pointer-events: none;
 }
+
+/* ------------------------------------------------------------
+   MENU RENAME ITEM
+   Inline rename input rendered at the top of a menu,
+   outside keyboard navigation. Optionally includes an
+   icon selection button.
+   ------------------------------------------------------------ */
+
+.menu-rename-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1);
+  padding-bottom: 0;
+}
+
+.menu-rename-item-icon-button {
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------
+   MENU SEPARATOR
+   Horizontal separator rendered between menu items.
+   ------------------------------------------------------------ */
+.menu-separator {
+  margin-left: calc(var(--space-1) * -1);
+
+  &.separator[data-orientation='horizontal'] {
+    width: calc(100% + var(--space-1) * 2);
+  }
+}

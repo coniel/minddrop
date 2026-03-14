@@ -1,8 +1,8 @@
 import React from 'react';
-import { Separator } from '../Separator';
+import { Separator, SeparatorProps } from '../Separator';
 import { propsToClass } from '../utils';
 
-export type MenuSeparatorProps = React.HTMLAttributes<HTMLDivElement>;
+export type MenuSeparatorProps = SeparatorProps;
 
 export const MenuSeparator = React.forwardRef<
   HTMLDivElement,
