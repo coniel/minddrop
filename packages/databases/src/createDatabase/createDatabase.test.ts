@@ -25,6 +25,7 @@ const newDatabase: Database = {
   path: `${parentDir}/${options.name}`,
   entrySerializer: 'markdown',
   propertyFileStorage: 'property',
+  entryOpenMode: 'dialog',
   properties: [],
   defaultDesigns: {},
   designPropertyMaps: {},
@@ -103,9 +104,9 @@ describe('createDatabase', () => {
   it('writes the database config to the file system', async () => {
     const configFilePath = databaseConfigFilePath(newDatabase.path);
 
-    const { id, path, ...expectedConfig } = await createDatabase(options);
+    const { id, path, name, ...expectedConfig } = await createDatabase(options);
 
-    // Config file should not contain id or path (both are derived)
+    // Config file should not contain id, name, or path (they are derived)
     expect(MockFs.readJsonFile(configFilePath)).toEqual(expectedConfig);
   });
 

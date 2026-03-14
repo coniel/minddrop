@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { DatabaseEntries, Databases } from '@minddrop/databases';
+import {
+  DatabaseEntries,
+  Databases,
+  OpenDatabaseEntryViewEvent,
+  OpenDatabaseEntryViewEventData,
+} from '@minddrop/databases';
 import { DropdownMenu, FloatingActionButton } from '@minddrop/ui-primitives';
 import { DatabaseEntryOptionsMenu } from '../DatabaseEntryOptionsMenu';
 import { DatabaseEntryRenderer } from '../DatabaseEntryRenderer';
@@ -7,6 +12,7 @@ import { CornerHandle } from './CornerHandle';
 import { useDialogResize } from './useDialogResize';
 import { useDialogSize } from './useDialogSize';
 import './DatabaseEntryDialog.css';
+import { Events } from '@minddrop/events';
 
 export interface DatabaseEntryDialogProps {
   /**
@@ -68,21 +74,6 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     baseSizeRef,
   );
 
-  // Close the dialog when clicking the backdrop or a hover zone
-  const handleBackdropClick = useCallback(
-    (event: React.MouseEvent) => {
-      const target = event.target as HTMLElement;
-
-      if (
-        target === backdropRef.current ||
-        target.classList.contains('entry-dialog-hover-zone')
-      ) {
-        onOpenChange(false);
-      }
-    },
-    [onOpenChange],
-  );
-
   // Close the dialog when pressing Escape
   useEffect(() => {
     if (!open) {
@@ -113,6 +104,36 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [open, onOpenChange]);
+
+  const handleClose = useCallback(() => {
+    onOpenChange(false);
+  }, [onOpenChange]);
+
+  const handleOpenFull = useCallback(() => {
+    onOpenChange(false);
+    Events.dispatch<OpenDatabaseEntryViewEventData>(
+      OpenDatabaseEntryViewEvent,
+      {
+        entryId,
+        openMode: 'full',
+      },
+    );
+  }, [entryId, onOpenChange]);
+
+  // Close the dialog when clicking the backdrop or a hover zone
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      const target = event.target as HTMLElement;
+
+      if (
+        target === backdropRef.current ||
+        target.classList.contains('entry-dialog-hover-zone')
+      ) {
+        handleClose();
+      }
+    },
+    [handleClose],
+  );
 
   if (!open) {
     return null;
@@ -182,11 +203,12 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
           <FloatingActionButton
             icon="x"
             label="actions.close"
-            onClick={() => onOpenChange(false)}
+            onClick={handleClose}
           />
           <FloatingActionButton
             icon="maximize-2"
             label="databases.entries.actions.openAsPage"
+            onClick={handleOpenFull}
           />
           <DropdownMenu
             trigger={

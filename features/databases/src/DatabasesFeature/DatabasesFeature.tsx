@@ -5,6 +5,10 @@ import {
   OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
+import {
+  DatabaseEntryRenderer,
+  DatabaseEntryRendererProps,
+} from '../DatabaseEntryRenderer';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
@@ -75,16 +79,15 @@ export const DatabasesFeature: React.FC = () => {
         // Resolve the open mode, falling back to the database default
         const openMode = resolveOpenMode(data.entryId, data.openMode);
 
-        if (openMode === 'main-content') {
+        if (openMode === 'full') {
           // Open the entry in the main content area
-          Events.dispatch<OpenMainContentViewEventData>(
-            OpenMainContentViewEvent,
-            {
-              view: MainDatabaseEntryViewName,
-              component: MainContentEntryPage,
-              props: { entryId: data.entryId },
-            },
-          );
+          Events.dispatch<
+            OpenMainContentViewEventData<DatabaseEntryRendererProps>
+          >(OpenMainContentViewEvent, {
+            view: MainDatabaseEntryViewName,
+            component: DatabaseEntryRenderer,
+            props: { entryId: data.entryId, designType: 'page' },
+          });
         } else {
           // Open the entry as a dialog overlay
           setDialogEntryId(data.entryId);
@@ -118,12 +121,4 @@ export const DatabasesFeature: React.FC = () => {
       )}
     </>
   );
-};
-
-/**
- * Placeholder component rendered when an entry is opened
- * in the main content area.
- */
-const MainContentEntryPage: React.FC<{ entryId: string }> = ({ entryId }) => {
-  return <div>{entryId}</div>;
 };

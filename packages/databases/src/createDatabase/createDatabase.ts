@@ -45,6 +45,7 @@ export async function createDatabase(
   const databaseConfig: Database = {
     entrySerializer: 'markdown',
     propertyFileStorage: 'property',
+    entryOpenMode: 'dialog',
     properties: [],
     defaultDesigns: {},
     designPropertyMaps: {},
