@@ -1,4 +1,5 @@
 import { Events } from '@minddrop/events';
+import { i18n } from '@minddrop/i18n';
 import { ViewsStore } from '../ViewsStore';
 import { ViewCreatedEvent, ViewCreatedEventData } from '../events';
 import { getViewType } from '../getViewType';
@@ -25,7 +26,7 @@ export function createVirtualView(viewData: CreateVirtualViewData): View {
     virtual: true,
     dataSource: viewData.dataSource,
     type: viewData.type,
-    name: viewData.name || viewType.type,
+    name: viewData.name || i18n.t(viewType.name),
     icon: viewType.icon,
     created: new Date(),
     lastModified: new Date(),
