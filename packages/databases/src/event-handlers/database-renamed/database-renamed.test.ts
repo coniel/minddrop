@@ -12,7 +12,9 @@ import { virtualCollectionId, virtualCollectionName } from '../../utils';
 import { onRenameDatabase } from './database-renamed';
 
 vi.mock('../../sql', () => ({
+  sqlDeleteDatabase: vi.fn(),
   sqlUpsertDatabase: vi.fn(),
+  sqlUpsertEntries: vi.fn(),
 }));
 
 describe('onRenameDatabase', () => {
