@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Design,
   DesignElement,
@@ -65,6 +58,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
 
   // Read UI state from the store
   const view = useDesignPropertyMappingStore((state) => state.view);
+
   const selectedDesignId = useDesignPropertyMappingStore(
     (state) => state.designId,
   );
@@ -184,8 +178,13 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     };
   }, []);
 
-  // Auto-select the first non-default design on mount
+  // Auto-select the first non-default design on mount if
+  // no design is already selected (e.g. opened via mapper event)
   useEffect(() => {
+    if (selectedDesignId) {
+      return;
+    }
+
     const designs = Designs.Store.getAll();
     const firstDesign = designs.find(
       (design) => !defaultDesignIds.includes(design.id),
@@ -194,7 +193,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
     if (firstDesign) {
       selectDesign(firstDesign.id);
     }
-  }, [selectDesign]);
+  }, [selectDesign, selectedDesignId]);
 
   // Handle selecting a design in the list
   const handleSelectDesign = useCallback(
@@ -270,9 +269,9 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
   // map-properties view. Measures the canvas position within the area,
   // computes the largest scale (capped at 1.5) that fits when centered,
   // and translates the canvas to the workspace center.
-  // Uses useLayoutEffect so the measurement happens after DOM updates
-  // but before the browser paints, avoiding a visible jump.
-  useLayoutEffect(() => {
+  // Defers measurement by one frame so the canvas has final layout
+  // dimensions when opened directly in mapping mode.
+  useEffect(() => {
     // Deactivate scaling when not in mapping view or zoom is off
     if (view !== 'map-properties' || !zoomEnabled) {
       setCanvasScale((previous) => ({ ...previous, active: false }));
@@ -280,54 +279,59 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
       return;
     }
 
-    const area = canvasAreaRef.current;
+    const frameId = requestAnimationFrame(() => {
+      const area = canvasAreaRef.current;
 
-    if (!area) {
-      return;
-    }
+      if (!area) {
+        return;
+      }
 
-    const canvas = area.querySelector('.design-canvas') as HTMLElement;
+      const canvas = area.querySelector('.design-canvas') as HTMLElement;
 
-    if (!canvas) {
-      return;
-    }
+      if (!canvas) {
+        return;
+      }
 
-    const areaRect = area.getBoundingClientRect();
-    const canvasRect = canvas.getBoundingClientRect();
+      const areaRect = area.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
 
-    // Canvas size
-    const canvasWidth = canvasRect.width;
-    const canvasHeight = canvasRect.height;
+      // Canvas size
+      const canvasWidth = canvasRect.width;
+      const canvasHeight = canvasRect.height;
 
-    // Canvas center relative to the area
-    const centerX = canvasRect.left - areaRect.left + canvasWidth / 2;
-    const centerY = canvasRect.top - areaRect.top + canvasHeight / 2;
+      // Canvas center relative to the area
+      const centerX = canvasRect.left - areaRect.left + canvasWidth / 2;
+      const centerY = canvasRect.top - areaRect.top + canvasHeight / 2;
 
-    // Workspace center
-    const areaCenterX = areaRect.width / 2;
-    const areaCenterY = areaRect.height / 2;
+      // Workspace center
+      const areaCenterX = areaRect.width / 2;
+      const areaCenterY = areaRect.height / 2;
 
-    // Max scale that fits when centered: the scaled canvas must
-    // not exceed the area bounds in either dimension
-    const maxScaleX = canvasWidth > 0 ? areaRect.width / canvasWidth : Infinity;
-    const maxScaleY =
-      canvasHeight > 0 ? areaRect.height / canvasHeight : Infinity;
-    const scale = Math.max(1, Math.min(1.5, maxScaleX, maxScaleY));
+      // Max scale that fits when centered: the scaled canvas must
+      // not exceed the area bounds in either dimension
+      const maxScaleX =
+        canvasWidth > 0 ? areaRect.width / canvasWidth : Infinity;
+      const maxScaleY =
+        canvasHeight > 0 ? areaRect.height / canvasHeight : Infinity;
+      const scale = Math.max(1, Math.min(1.5, maxScaleX, maxScaleY));
 
-    // Translate offset to move canvas center to workspace center.
-    // Applied after the scale (which is anchored at the canvas center),
-    // so a simple difference is sufficient.
-    const translateX = areaCenterX - centerX;
-    const translateY = areaCenterY - centerY;
+      // Translate offset to move canvas center to workspace center.
+      // Applied after the scale (which is anchored at the canvas center),
+      // so a simple difference is sufficient.
+      const translateX = areaCenterX - centerX;
+      const translateY = areaCenterY - centerY;
 
-    setCanvasScale({
-      active: true,
-      scale,
-      originX: centerX,
-      originY: centerY,
-      translateX,
-      translateY,
+      setCanvasScale({
+        active: true,
+        scale,
+        originX: centerX,
+        originY: centerY,
+        translateX,
+        translateY,
+      });
     });
+
+    return () => cancelAnimationFrame(frameId);
   }, [view, zoomEnabled]);
 
   // Toggle a CSS class on unmapped element DOM nodes so users
@@ -581,9 +585,7 @@ export const DesignBrowser: React.FC<DesignBrowserProps> = ({
               ref={canvasAreaRef}
               className="design-browser-canvas-area"
               style={{
-                transform: canvasScale.active
-                  ? `translate(${canvasScale.translateX}px, ${canvasScale.translateY}px) scale(${canvasScale.scale})`
-                  : 'translate(0, 0) scale(1)',
+                transform: `translate(${canvasScale.translateX}px, ${canvasScale.translateY}px) scale(${canvasScale.active ? canvasScale.scale : 1})`,
                 transformOrigin: `${canvasScale.originX}px ${canvasScale.originY}px`,
               }}
             >

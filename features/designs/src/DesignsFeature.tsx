@@ -99,12 +99,32 @@ export const DesignsFeature: React.FC = () => {
       },
     );
 
-    // Listen for mapper open events
+    // Listen for mapper open events and open the design browser
+    // directly in property mapping mode with the design selected
     Events.addListener<OpenPropertyMapperEventData>(
       OpenPropertyMapperEvent,
       `${DesignPropertyMappingEventListenerId}:mapper`,
-      () => {
-        // TODO: open property mapper as main content view
+      (event) => {
+        // Initialize the store with the database ID
+        const store = DesignPropertyMappingStore.getState();
+        store.initialize(event.data.databaseId);
+
+        // Select the design and switch to mapping view
+        store.selectDesign(event.data.designId);
+        store.setView('map-properties');
+
+        Events.dispatch<OpenMainContentViewEventData<DesignBrowserProps>>(
+          OpenMainContentViewEvent,
+          {
+            view: DesignBrowserViewName,
+            component: DesignBrowser,
+            props: {
+              databaseId: event.data.databaseId,
+              backEvent: currentView ? OpenMainContentViewEvent : undefined,
+              backEventData: currentView || undefined,
+            },
+          },
+        );
       },
     );
 

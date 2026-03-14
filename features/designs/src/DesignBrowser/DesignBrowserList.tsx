@@ -9,6 +9,7 @@ import { Events } from '@minddrop/events';
 import { UiIconName } from '@minddrop/ui-icons';
 import {
   Icon,
+  IconButton,
   MenuGroup,
   MenuItem,
   MenuLabel,
@@ -90,8 +91,14 @@ export const DesignBrowserList: React.FC<DesignBrowserListProps> = ({
 
   return (
     <div className="design-browser-list">
-      {/* Header with search and new design button */}
+      {/* Header with back button, search, and new design button */}
       <div className="design-browser-header">
+        <IconButton
+          icon="chevron-left"
+          label="actions.back"
+          color="neutral"
+          onClick={onClose}
+        />
         <TextInput
           variant="subtle"
           size="md"
