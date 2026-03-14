@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Databases } from '@minddrop/databases';
 import { NewDesignMenu } from '@minddrop/feature-designs';
 import { PropertyTypeSelectionMenu } from '@minddrop/feature-properties';
@@ -17,6 +17,11 @@ import {
 } from '@minddrop/ui-primitives';
 import { DatabaseDesignsMenu } from '../DatabaseDesignsMenu';
 import { DatabasePropertiesEditor } from '../DatabasePropertiesEditor';
+import {
+  ConfigPanelTab,
+  setDatabaseViewState,
+  useDatabaseViewState,
+} from '../DatabaseViewStateStore';
 import { OpenDatabaseViewEvent } from '../events';
 import './DatabaseConfigurationPanel.css';
 
@@ -32,8 +37,6 @@ type DraftProperty = Omit<PropertySchema, 'name'> & {
   id: number;
 };
 
-type ActiveTab = 'queries' | 'collections' | 'properties' | 'designs';
-
 /**
  * Renders the database configuration panel with tabbed
  * Properties, Designs, and Settings sections.
@@ -41,10 +44,21 @@ type ActiveTab = 'queries' | 'collections' | 'properties' | 'designs';
 export const DatabaseConfigurationPanel: React.FC<
   DatabaseConfigurationPanelProps
 > = ({ databaseId }) => {
-  const [activeTab, setActiveTab] = useState<ActiveTab>('queries');
+  const viewState = useDatabaseViewState(databaseId);
   const [showSettings, setShowSettings] = useState(false);
   const [draftProperties, setDraftProperties] = useState<DraftProperty[]>([]);
   const databaseConfig = Databases.use(databaseId);
+
+  // Read the active tab from persisted state
+  const activeTab = viewState.configPanelTab;
+
+  // Persist the active tab when it changes
+  const setActiveTab = useCallback(
+    (tab: ConfigPanelTab) => {
+      setDatabaseViewState(databaseId, { configPanelTab: tab });
+    },
+    [databaseId],
+  );
 
   // Add a new draft property from the type selection menu
   function handleAddProperty(propertySchema: PropertySchemaTemplate) {
@@ -72,7 +86,7 @@ export const DatabaseConfigurationPanel: React.FC<
         className="database-configuration-panel-tabs-container"
         value={showSettings ? '' : activeTab}
         onValueChange={(value) => {
-          setActiveTab(value as ActiveTab);
+          setActiveTab(value as ConfigPanelTab);
           setShowSettings(false);
         }}
       >
@@ -86,21 +100,21 @@ export const DatabaseConfigurationPanel: React.FC<
           />
           <Spacer />
           <TabsList>
-            <TabsTab value="queries" size="sm">
-              {i18n.t('labels.queries')}
-            </TabsTab>
-            <TabsTab value="collections" size="sm">
-              {i18n.t('labels.collections')}
-            </TabsTab>
             <TabsTab value="properties" size="sm">
               {i18n.t('labels.properties')}
             </TabsTab>
             <TabsTab value="designs" size="sm">
               {i18n.t('labels.designs')}
             </TabsTab>
+            <TabsTab value="collections" size="sm">
+              {i18n.t('labels.collections')}
+            </TabsTab>
+            <TabsTab value="queries" size="sm">
+              {i18n.t('labels.queries')}
+            </TabsTab>
           </TabsList>
           <Spacer />
-          {activeTab === 'properties' && (
+          {!showSettings && activeTab === 'properties' && (
             <PropertyTypeSelectionMenu
               existingProperties={[
                 ...databaseConfig.properties,
@@ -115,14 +129,15 @@ export const DatabaseConfigurationPanel: React.FC<
               />
             </PropertyTypeSelectionMenu>
           )}
-          {activeTab === 'designs' && (
+          {!showSettings && activeTab === 'designs' && (
             <NewDesignMenu
               databaseId={databaseId}
               backEvent={OpenDatabaseViewEvent}
               backEventData={{ databaseId, configurationPanelOpen: true }}
             />
           )}
-          {activeTab !== 'properties' && activeTab !== 'designs' && (
+          {(showSettings ||
+            (activeTab !== 'properties' && activeTab !== 'designs')) && (
             <IconButtonSpacer size="sm" />
           )}
         </div>

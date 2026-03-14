@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { DatabaseEntries, Databases } from '@minddrop/databases';
 import { ViewRenderer } from '@minddrop/feature-views';
 import { useTranslation } from '@minddrop/i18n';
@@ -22,11 +22,14 @@ import {
   TabsTab,
   Text,
   Toolbar,
-  useToggle,
 } from '@minddrop/ui-primitives';
 import { uuid } from '@minddrop/utils';
 import { ViewTypes, Views } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
+import {
+  setDatabaseViewState,
+  useDatabaseViewState,
+} from '../DatabaseViewStateStore';
 import './DatabaseView.css';
 
 export interface DatabaseViewProps {
@@ -45,12 +48,13 @@ export interface DatabaseViewProps {
 
 export const DatabaseView: React.FC<DatabaseViewProps> = ({
   databaseId,
-  configurationPanelOpen: configPanelOpen = false,
+  configurationPanelOpen: configPanelOpenProp,
 }) => {
   const database = Databases.use(databaseId);
   const entryIds = DatabaseEntries.useIds(databaseId);
   const unsortedViews = Views.useDataSourceViews('database', databaseId);
   const viewTypes = ViewTypes.useAll();
+  const viewState = useDatabaseViewState(databaseId);
 
   // Sort views according to the persisted view order
   const databaseViews = useMemo(() => {
@@ -84,11 +88,40 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
       return indexA - indexB;
     });
   }, [unsortedViews, database?.viewOrder]);
-  const [activeViewId, setActiveViewId] = useState<string | undefined>(
-    databaseViews[0]?.id,
+
+  // Resolve the active view ID from persisted state,
+  // falling back to the first view
+  const activeViewId = viewState.activeViewId ?? databaseViews[0]?.id;
+
+  // Config panel open state: prop override takes precedence,
+  // otherwise use persisted state
+  const configurationPanelOpen =
+    configPanelOpenProp ?? viewState.configPanelOpen;
+
+  // Persist the active view ID and apply the prop override
+  // when the database view first mounts
+  useEffect(() => {
+    if (configPanelOpenProp !== undefined) {
+      setDatabaseViewState(databaseId, {
+        configPanelOpen: configPanelOpenProp,
+      });
+    }
+  }, [databaseId, configPanelOpenProp]);
+
+  // Update the active view ID
+  const setActiveViewId = useCallback(
+    (viewId: string | undefined) => {
+      setDatabaseViewState(databaseId, { activeViewId: viewId ?? null });
+    },
+    [databaseId],
   );
-  const [configurationPanelOpen, toggleConfigurationPanel] =
-    useToggle(configPanelOpen);
+
+  // Toggle the configuration panel
+  const toggleConfigurationPanel = useCallback(() => {
+    setDatabaseViewState(databaseId, {
+      configPanelOpen: !configurationPanelOpen,
+    });
+  }, [databaseId, configurationPanelOpen]);
 
   // Sync activeViewId when views change (e.g. active view deleted)
   useEffect(() => {
@@ -101,7 +134,7 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
 
     // Fall back to first view if active view no longer exists
     setActiveViewId(databaseViews[0]?.id);
-  }, [databaseViews, activeViewId]);
+  }, [databaseViews, activeViewId, setActiveViewId]);
 
   // Derive the active view from the tracked ID
   const view =

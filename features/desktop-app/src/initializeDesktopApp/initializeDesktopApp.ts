@@ -5,6 +5,7 @@ import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
+import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
@@ -44,6 +45,9 @@ export async function initializeDesktopApp(): Promise<void> {
 
   // Hydrate app UI state from persisted config
   await AppUiState.hydrate();
+
+  // Hydrate per-database view state
+  await DatabaseViewStateStore.hydrate();
 
   // Watch for theme variant changes
   Events.addListener(
