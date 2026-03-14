@@ -216,6 +216,13 @@ declare module 'i18next' {
             newEntry: string;
             configuration: string;
           };
+          designs: {
+            actions: {
+              manage: string;
+              setAsDefault: string;
+              remove: string;
+            };
+          };
           entries: {
             actions: {
               previousEntry: string;
