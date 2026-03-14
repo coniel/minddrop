@@ -1,8 +1,10 @@
 import { Events } from '@minddrop/events';
 import { restoreDates } from '@minddrop/utils';
+import { Views } from '@minddrop/views';
 import { DatabaseEntriesStore } from './DatabaseEntriesStore';
 import { DatabasesStore } from './DatabasesStore';
 import { DatabasesBackgroundSyncedEvent } from './events';
+import { loadDatabaseViews } from './loadDatabaseViews';
 import type { BackgroundSyncChangeset, Database } from './types';
 import { convertSqlRecordToEntry } from './utils';
 
@@ -18,8 +20,27 @@ export function handleBackgroundSyncResult(
   changeset: BackgroundSyncChangeset,
 ): void {
   // Upsert new or updated databases
+  const upsertedDatabases: Database[] = [];
+
   for (const database of changeset.upsertedDatabases) {
-    DatabasesStore.set(restoreDates<Database>(database));
+    const restored = restoreDates<Database>(database);
+
+    DatabasesStore.set(restored);
+    upsertedDatabases.push(restored);
+  }
+
+  // Load views for newly upserted databases
+  if (upsertedDatabases.length > 0) {
+    loadDatabaseViews(upsertedDatabases);
+  }
+
+  // Delete views belonging to deleted databases
+  for (const id of changeset.deletedDatabaseIds) {
+    const databaseViews = Views.getByDataSource('database', id);
+
+    for (const view of databaseViews) {
+      Views.delete(view.id);
+    }
   }
 
   // Remove deleted databases
