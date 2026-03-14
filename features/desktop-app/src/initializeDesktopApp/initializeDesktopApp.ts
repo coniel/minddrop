@@ -61,8 +61,6 @@ export async function initializeDesktopApp(): Promise<void> {
   await loadConfigs();
   Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
-  Paths.httpServerHost = 'http://localhost:14567';
-
   // Initialize core packages
   await Workspaces.initialize();
   await Designs.initialize();

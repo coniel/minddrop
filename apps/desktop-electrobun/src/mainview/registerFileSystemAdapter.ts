@@ -1,5 +1,6 @@
 import { registerFileSystemAdapter as register } from '@minddrop/file-system';
 import type { FsWatchEvent } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
 
 const watchCallbacks = new Map<string, (event: FsWatchEvent) => void>();
 
@@ -86,7 +87,7 @@ export const registerFileSystemAdapter = (rpc: any) =>
     writeBinaryFile: async (path, file, options = {}) => {
       return uploadQueue.add(async () => {
         const response = await fetch(
-          `http://localhost:14567/upload?path=${encodeURIComponent(path)}`,
+          `${Paths.httpServerHost}/upload?path=${encodeURIComponent(path)}`,
           {
             method: 'POST',
             body: file,

@@ -15,6 +15,7 @@ import {
   handleSearchReindexDatabase,
   handleSearchSync,
 } from './search';
+import { httpServer } from './server';
 import {
   handleSqlAll,
   handleSqlClose,
@@ -34,6 +35,8 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
     requests: {
       ...fileSystemRpcHandlers,
       ...backEndUtilsRpcHandlers,
+      // HTTP server port
+      getHttpServerPort: () => httpServer.port,
       // SQL RPC handlers
       sqlOpen: handleSqlOpen,
       sqlExec: handleSqlExec,

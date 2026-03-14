@@ -1,5 +1,6 @@
 import Electrobun, { Electroview } from 'electrobun/view';
 import { Databases } from '@minddrop/databases';
+import { Paths } from '@minddrop/utils';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
 import { registerDatabasesSqlAdapterRpc } from './registerDatabasesSqlAdapter';
@@ -38,3 +39,8 @@ registerBackEndUtilsAdapter(electrobun.rpc);
 registerSqlAdapterRpc(electrobun.rpc);
 registerDatabasesSqlAdapterRpc(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);
+
+// Fetch the HTTP server port and store it for use by
+// file system operations (image loading, binary uploads)
+const httpServerPort = await electrobun.rpc.request.getHttpServerPort({});
+Paths.httpServerHost = `http://localhost:${httpServerPort}`;

@@ -30,8 +30,10 @@ function withCors(res: Response) {
   return new Response(res.body, { ...res, headers });
 }
 
-serve({
-  port: 14567,
+// Start the HTTP server on an available port.
+// Port 0 tells the OS to assign a free port.
+export const httpServer = serve({
+  port: 0,
   maxRequestBodySize: 100 * 1024 * 1024 * 1024, // 100 GB
   async fetch(req) {
     const url = new URL(req.url);

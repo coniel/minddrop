@@ -103,6 +103,10 @@ export type WebviewRPC = {
         };
         response: string | string[] | null;
       };
+      getHttpServerPort: {
+        params: Record<string, never>;
+        response: number;
+      };
       openUrl: {
         params: { url: string };
         response: void;
