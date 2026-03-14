@@ -3,11 +3,21 @@ import {
   CollectionUpdatedEventData,
 } from '@minddrop/collections';
 import { Events } from '@minddrop/events';
-import { ViewUpdatedEvent, ViewUpdatedEventData } from '@minddrop/views';
+import {
+  ViewCreatedEvent,
+  ViewCreatedEventData,
+  ViewDeletedEvent,
+  ViewDeletedEventData,
+  ViewUpdatedEvent,
+  ViewUpdatedEventData,
+} from '@minddrop/views';
 import {
   onAddProperty,
   onCreateDatabase,
   onCreateEntry,
+  onDatabaseViewCreated,
+  onDatabaseViewDeleted,
+  onDatabaseViewUpdated,
   onDeleteDatabase,
   onDeleteEntry,
   onRemoveProperty,
@@ -159,4 +169,28 @@ export function initializeDatabaseEventHandlers() {
   Events.on<ViewUpdatedEventData>(ViewUpdatedEvent, 'databases', ({ data }) => {
     onUpdateVirtualView(data);
   });
+
+  Events.on<ViewCreatedEventData>(
+    ViewCreatedEvent,
+    'databases:database-views',
+    ({ data }) => {
+      onDatabaseViewCreated(data);
+    },
+  );
+
+  Events.on<ViewUpdatedEventData>(
+    ViewUpdatedEvent,
+    'databases:database-views',
+    ({ data }) => {
+      onDatabaseViewUpdated(data);
+    },
+  );
+
+  Events.on<ViewDeletedEventData>(
+    ViewDeletedEvent,
+    'databases:database-views',
+    ({ data }) => {
+      onDatabaseViewDeleted(data);
+    },
+  );
 }

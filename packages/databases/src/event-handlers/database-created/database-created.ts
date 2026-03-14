@@ -1,10 +1,11 @@
+import { uuid } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
 import { DatabaseCreatedEventData } from '../../events';
 import { sqlUpsertDatabase } from '../../sql';
 
 /**
  * Called when a database is created. Syncs to SQL and
- * creates a default table view.
+ * creates a default virtual table view.
  */
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
   // Sync to SQL
@@ -15,9 +16,10 @@ export function onCreateDatabase(data: DatabaseCreatedEventData) {
     icon: data.icon,
   });
 
-  // Create a new view for the database
-  Views.create('table', {
-    type: 'database',
-    id: data.id,
+  // Create a virtual view for the database
+  Views.createVirtual({
+    id: uuid(),
+    type: 'table',
+    dataSource: { type: 'database', id: data.id },
   });
 }

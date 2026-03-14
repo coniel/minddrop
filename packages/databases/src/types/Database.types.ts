@@ -1,9 +1,10 @@
 import { PropertiesSchema, PropertyType } from '@minddrop/properties';
+import { View } from '@minddrop/views';
 import { DatabaseAutomation } from './DatabaseAutomation.types';
 
 export type DatabaseDesignType = 'page' | 'card' | 'list';
 
-export type DatabaseEntryOpenMode = 'dialog' | 'main-content';
+export type DatabaseEntryOpenMode = 'dialog' | 'full' | 'split';
 
 /**
  * A [design element ID]: [database property name] map.
@@ -113,7 +114,8 @@ export interface Database {
   /**
    * How entries are opened when clicked.
    * - `dialog`: Opens the entry as a dialog overlay.
-   * - `main-content`: Opens the entry in the main content area.
+   * - `full`: Opens the entry as the main content.
+   * - `split`: Opens the entry in split view next to the current main content.
    * @default 'dialog'
    */
   entryOpenMode: DatabaseEntryOpenMode;
@@ -128,4 +130,10 @@ export interface Database {
    * The database's automations if it has any.
    */
   automations?: DatabaseAutomation[];
+
+  /**
+   * The database's views, stored without `dataSource` and `virtual`
+   * which are derived at load time.
+   */
+  views?: Omit<View, 'dataSource' | 'virtual'>[];
 }

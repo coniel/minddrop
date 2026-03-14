@@ -6,6 +6,7 @@ import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations'
 import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
+import { loadDatabaseViews } from '../loadDatabaseViews';
 import { sqlBackgroundSync, sqlInitializeBackend } from '../sql';
 import type { Database } from '../types';
 import { convertSqlRecordToEntry } from '../utils';
@@ -48,6 +49,10 @@ export async function initializeDatabases(): Promise<{
 
   // Load entries and hydrate virtual collections
   initializeDatabaseEntries(databases, entries);
+
+  // Load database views into the ViewsStore (before event
+  // handlers so the initial load does not trigger write-back)
+  loadDatabaseViews(databases);
 
   // Register event handlers
   initializeDatabaseEventHandlers();

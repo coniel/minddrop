@@ -1,18 +1,24 @@
 import { Collections } from '@minddrop/collections';
+import { Views } from '@minddrop/views';
 import { DatabaseEntriesStore } from '../../DatabaseEntriesStore';
 import { DatabaseDeletedEventData } from '../../events';
 import { sqlDeleteDatabase } from '../../sql';
 import { virtualCollectionId } from '../../utils';
 
 /**
- * Called when a database is deleted. Removes from SQL and
- * deletes virtual collections for collection properties.
+ * Called when a database is deleted. Removes from SQL, deletes
+ * all database views, and cleans up virtual collections.
  */
 export async function onDeleteDatabase(
   data: DatabaseDeletedEventData,
 ): Promise<void> {
   // Delete from SQL
   sqlDeleteDatabase(data.id);
+
+  // Delete all views belonging to this database
+  const databaseViews = Views.getByDataSource('database', data.id);
+
+  await Promise.all(databaseViews.map((view) => Views.delete(view.id)));
 
   // Find collection properties in the database schema
   const collectionProperties = data.properties.filter(

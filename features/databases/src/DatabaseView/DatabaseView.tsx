@@ -24,6 +24,7 @@ import {
   Toolbar,
   useToggle,
 } from '@minddrop/ui-primitives';
+import { uuid } from '@minddrop/utils';
 import { ViewTypes, Views } from '@minddrop/views';
 import { DatabaseConfigurationPanel } from '../DatabaseConfigurationPanel';
 import './DatabaseView.css';
@@ -141,12 +142,13 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
   }
 
   /**
-   * Creates a new view of the specified type and sets it as active.
+   * Creates a new virtual view of the specified type and sets it as active.
    */
-  async function handleAddView(type: string) {
-    const newView = await Views.create(type, {
-      type: 'database',
-      id: databaseId,
+  function handleAddView(type: string) {
+    const newView = Views.createVirtual({
+      id: uuid(),
+      type,
+      dataSource: { type: 'database', id: databaseId },
     });
 
     setActiveViewId(newView.id);
