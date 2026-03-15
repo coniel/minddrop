@@ -1,5 +1,5 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { IconProp } from '../IconRenderer';
 import { MenuItem } from '../Menu/MenuItem';
 import { TranslatableNode } from '../types';
@@ -15,17 +15,25 @@ export interface ContextSubmenuTriggerItemProps
   label?: TranslatableNode;
   icon?: IconProp;
   disabled?: boolean;
+  trailingIcon?: React.ReactNode;
 }
 
 export const ContextSubmenuTriggerItem: FC<ContextSubmenuTriggerItemProps> = ({
   label,
   icon,
   disabled,
+  trailingIcon,
   ...other
 }) => (
   <ContextMenuPrimitive.SubmenuTrigger
     render={
-      <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
+      <MenuItem
+        hasSubmenu
+        label={label}
+        icon={icon}
+        disabled={disabled}
+        trailingIcon={trailingIcon}
+      />
     }
     disabled={disabled}
     {...other}

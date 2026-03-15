@@ -48,3 +48,9 @@ export type { DropdownSubmenuTriggerItemProps } from './DropdownSubmenuTriggerIt
 
 export { DropdownSubmenuContent } from './DropdownSubmenuContent';
 export type { DropdownSubmenuContentProps } from './DropdownSubmenuContent';
+
+export { DropdownRadioSubmenu } from './DropdownRadioSubmenu';
+export type {
+  DropdownRadioSubmenuProps,
+  DropdownRadioSubmenuItem,
+} from './DropdownRadioSubmenu';

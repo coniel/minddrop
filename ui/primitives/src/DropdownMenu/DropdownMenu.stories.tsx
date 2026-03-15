@@ -18,6 +18,7 @@ import { DropdownMenuRadioGroup } from './DropdownMenuRadioGroup';
 import { DropdownMenuRoot } from './DropdownMenuRoot';
 import { DropdownMenuSeparator } from './DropdownMenuSeparator';
 import { DropdownMenuTrigger } from './DropdownMenuTrigger';
+import { DropdownRadioSubmenu } from './DropdownRadioSubmenu';
 import { DropdownSubmenu } from './DropdownSubmenu';
 import { DropdownSubmenuContent } from './DropdownSubmenuContent';
 import { DropdownSubmenuTriggerItem } from './DropdownSubmenuTriggerItem';
@@ -291,7 +292,7 @@ export const DropdownMenuStories = () => {
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — submenu"
-        description="DropdownSubmenu nests a full menu inside a trigger item. Requires the compositional API."
+        description="DropdownSubmenu nests a full menu inside a trigger item. Requires the compositional API. DropdownRadioSubmenu is a convenience wrapper for radio selection submenus."
       >
         <StoryRow>
           <StoryItem label="with submenu">
@@ -344,6 +345,33 @@ export const DropdownMenuStories = () => {
                 </DropdownMenuPositioner>
               </DropdownMenuPortal>
             </DropdownMenuRoot>
+          </StoryItem>
+          <StoryItem label="radio submenu">
+            <DropdownMenu trigger={<Button variant="outline">Options</Button>}>
+              <DropdownRadioSubmenu
+                label="Layout"
+                defaultValue="grid"
+                items={[
+                  { value: 'list', label: 'List' },
+                  { value: 'grid', label: 'Grid' },
+                  { value: 'columns', label: 'Columns' },
+                ]}
+              />
+              <DropdownRadioSubmenu
+                label="Padding"
+                icon="rows-3"
+                defaultValue="comfortable"
+                items={[
+                  { value: 'compact', label: 'Compact', icon: 'rows-4' },
+                  {
+                    value: 'comfortable',
+                    label: 'Comfortable',
+                    icon: 'rows-3',
+                  },
+                  { value: 'spacious', label: 'Spacious', icon: 'rows-2' },
+                ]}
+              />
+            </DropdownMenu>
           </StoryItem>
         </StoryRow>
       </StorySection>

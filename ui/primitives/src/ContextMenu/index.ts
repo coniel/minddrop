@@ -48,3 +48,9 @@ export type { ContextSubmenuTriggerItemProps } from './ContextSubmenuTriggerItem
 
 export { ContextSubmenuContent } from './ContextSubmenuContent';
 export type { ContextSubmenuContentProps } from './ContextSubmenuContent';
+
+export { ContextRadioSubmenu } from './ContextRadioSubmenu';
+export type {
+  ContextRadioSubmenuProps,
+  ContextRadioSubmenuItem,
+} from './ContextRadioSubmenu';

@@ -1,5 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import { IconProp } from '../IconRenderer';
 import { MenuItem } from '../Menu/MenuItem';
 import { TranslatableNode } from '../types';
@@ -12,14 +12,21 @@ export interface DropdownSubmenuTriggerItemProps
   label?: TranslatableNode;
   icon?: IconProp;
   disabled?: boolean;
+  trailingIcon?: React.ReactNode;
 }
 
 export const DropdownSubmenuTriggerItem: FC<
   DropdownSubmenuTriggerItemProps
-> = ({ label, icon, disabled, ...other }) => (
+> = ({ label, icon, disabled, trailingIcon, ...other }) => (
   <MenuPrimitive.SubmenuTrigger
     render={
-      <MenuItem hasSubmenu label={label} icon={icon} disabled={disabled} />
+      <MenuItem
+        hasSubmenu
+        label={label}
+        icon={icon}
+        disabled={disabled}
+        trailingIcon={trailingIcon}
+      />
     }
     disabled={disabled}
     {...other}

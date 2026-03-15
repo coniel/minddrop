@@ -16,6 +16,7 @@ import { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
 import { ContextMenuRoot } from './ContextMenuRoot';
 import { ContextMenuSeparator } from './ContextMenuSeparator';
 import { ContextMenuTrigger } from './ContextMenuTrigger';
+import { ContextRadioSubmenu } from './ContextRadioSubmenu';
 import { ContextSubmenu } from './ContextSubmenu';
 import { ContextSubmenuContent } from './ContextSubmenuContent';
 import { ContextSubmenuTriggerItem } from './ContextSubmenuTriggerItem';
@@ -189,7 +190,7 @@ export const ContextMenuStories = () => {
       -------------------------------------------------------- */}
       <StorySection
         title="Compositional — submenu"
-        description="ContextSubmenu nests a full menu inside a trigger item. Requires the compositional API."
+        description="ContextSubmenu nests a full menu inside a trigger item. ContextRadioSubmenu is a convenience wrapper for radio selection submenus."
       >
         <StoryRow>
           <StoryItem label="with submenu">
@@ -235,6 +236,33 @@ export const ContextMenuStories = () => {
                 </ContextMenuPositioner>
               </ContextMenuPortal>
             </ContextMenuRoot>
+          </StoryItem>
+          <StoryItem label="radio submenu">
+            <ContextMenu trigger={<TriggerArea />} minWidth={200}>
+              <ContextRadioSubmenu
+                label="Layout"
+                defaultValue="grid"
+                items={[
+                  { value: 'list', label: 'List' },
+                  { value: 'grid', label: 'Grid' },
+                  { value: 'columns', label: 'Columns' },
+                ]}
+              />
+              <ContextRadioSubmenu
+                label="Padding"
+                icon="rows-3"
+                defaultValue="comfortable"
+                items={[
+                  { value: 'compact', label: 'Compact', icon: 'rows-4' },
+                  {
+                    value: 'comfortable',
+                    label: 'Comfortable',
+                    icon: 'rows-3',
+                  },
+                  { value: 'spacious', label: 'Spacious', icon: 'rows-2' },
+                ]}
+              />
+            </ContextMenu>
           </StoryItem>
         </StoryRow>
       </StorySection>

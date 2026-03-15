@@ -437,6 +437,15 @@
 }
 
 /* ------------------------------------------------------------
+   MENU SUBMENU POSITIONER
+   Z-index for submenu positioners rendered via portal.
+   ------------------------------------------------------------ */
+
+.menu-submenu-positioner {
+  z-index: var(--level-popover);
+}
+
+/* ------------------------------------------------------------
    MENU SEPARATOR
    Horizontal separator rendered between menu items.
    ------------------------------------------------------------ */
