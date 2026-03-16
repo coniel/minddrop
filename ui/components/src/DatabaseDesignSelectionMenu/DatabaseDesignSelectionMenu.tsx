@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Database, Databases } from '@minddrop/databases';
 import { Design, DesignType, Designs } from '@minddrop/designs';
-import { createI18nKeyBuilder } from '@minddrop/i18n';
+import { TranslationKey, createI18nKeyBuilder } from '@minddrop/i18n';
 import {
   DropdownRadioSubmenu,
   DropdownRadioSubmenuItem,
@@ -63,7 +63,7 @@ export const DatabaseDesignSelectionMenu: React.FC<
   const allDesigns = Designs.useAll();
 
   const databaseIds = Array.isArray(databaseId) ? databaseId : [databaseId];
-  const isMulti = Array.isArray(databaseId) && databaseId.length > 1;
+  const isMulti = Array.isArray(databaseId);
 
   // Collect databases and their mapped designs of the requested type
   const databaseDesigns = useMemo(() => {
@@ -98,20 +98,21 @@ export const DatabaseDesignSelectionMenu: React.FC<
   // Resolve the active value, falling back to 'default'
   const activeValue = value || DATABASE_DEFAULT_DESIGN;
 
-  // Multiple databases: render a submenu per database
+  // Multiple databases: render a labeled group with a submenu per database
   if (isMulti) {
     return (
-      <>
+      <MenuGroup>
+        <MenuLabel label={designTypeI18nKey(designType, 'design')} />
         {databaseDesigns.map(({ database, designs }) => (
           <SubmenuMode
             key={database.id}
-            label={(<>{database.name}</>) as React.ReactElement}
+            stringLabel={database.name}
             designs={designs}
             value={activeValue}
             onValueChange={onValueChange}
           />
         ))}
-      </>
+      </MenuGroup>
     );
   }
 
@@ -137,9 +138,11 @@ export const DatabaseDesignSelectionMenu: React.FC<
           label="databases.designs.databaseDefault"
         />
         {databaseDesigns[0].designs.map((design) => (
-          <MenuRadioItem key={design.id} value={design.id}>
-            {design.name}
-          </MenuRadioItem>
+          <MenuRadioItem
+            key={design.id}
+            value={design.id}
+            stringLabel={design.name}
+          />
         ))}
       </MenuRadioGroup>
     </MenuGroup>
@@ -147,7 +150,8 @@ export const DatabaseDesignSelectionMenu: React.FC<
 };
 
 interface SubmenuModeProps {
-  label: React.ReactElement | string;
+  label?: TranslationKey;
+  stringLabel?: string;
   designs: Design[];
   value: string;
   onValueChange?: (designId: string) => void;
@@ -158,6 +162,7 @@ interface SubmenuModeProps {
  */
 function SubmenuMode({
   label,
+  stringLabel,
   designs,
   value,
   onValueChange,
@@ -171,7 +176,7 @@ function SubmenuMode({
       },
       ...designs.map((design) => ({
         value: design.id,
-        label: (<>{design.name}</>) as React.ReactElement,
+        stringLabel: design.name,
       })),
     ],
     [designs],
@@ -179,7 +184,7 @@ function SubmenuMode({
 
   return (
     <DropdownRadioSubmenu
-      label={label}
+      {...(stringLabel ? { stringLabel } : { label })}
       items={items}
       value={value}
       onValueChange={onValueChange}

@@ -1527,6 +1527,9 @@ importers:
       '@minddrop/databases':
         specifier: workspace:*
         version: link:../../packages/databases
+      '@minddrop/designs':
+        specifier: workspace:*
+        version: link:../../packages/designs
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
@@ -1755,6 +1758,9 @@ importers:
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils
+      '@minddrop/ui-components':
+        specifier: workspace:*
+        version: link:../../ui/components
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives

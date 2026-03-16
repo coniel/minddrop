@@ -217,6 +217,7 @@ declare module 'i18next' {
             configuration: string;
           };
           designs: {
+            databaseDefault: string;
             actions: {
               manage: string;
               setAsDefault: string;
@@ -808,16 +809,19 @@ declare module 'i18next' {
           };
           page: {
             name: string;
+            design: string;
             new: string;
             description: string;
           };
           card: {
             name: string;
+            design: string;
             new: string;
             description: string;
           };
           list: {
             name: string;
+            design: string;
             new: string;
             description: string;
           };
@@ -1208,12 +1212,9 @@ declare module 'i18next' {
             name: string;
             description: string;
             options: {
-              maxColumns: string;
-              cardSize: string;
-              small: string;
-              medium: string;
-              large: string;
+              cardWidth: string;
               gap: string;
+              none: string;
               compact: string;
               comfortable: string;
               spacious: string;

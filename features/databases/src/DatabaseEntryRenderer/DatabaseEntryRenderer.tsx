@@ -67,14 +67,21 @@ const Entry: React.FC<EntryProps> = ({
 }) => {
   const database = Databases.use(entry.database);
 
-  // Use the specified design if provided, otherwise fall back
-  // to the database's default design for the given type.
-  const design = useMemo(
-    () =>
-      (designId ? Designs.get(designId, false) : null) ||
-      Databases.getDefaultDesign(entry.database, designType),
-    [designId, entry.database, designType],
-  );
+  // Resolve the design to render with, falling back to the
+  // database default when no override is specified
+  const design = useMemo(() => {
+    // Look up the explicit design if a real ID was provided
+    if (designId && designId !== 'default') {
+      const explicit = Designs.get(designId, false);
+
+      if (explicit) {
+        return explicit;
+      }
+    }
+
+    // Fall back to the database's default design for this type
+    return Databases.getDefaultDesign(entry.database, designType);
+  }, [designId, entry.database, designType]);
 
   // Get the property map for this design (element ID -> property name)
   const propertyMap = useMemo(

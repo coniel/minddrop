@@ -205,6 +205,7 @@
       "configuration": "Configuration"
     },
     "designs": {
+      "databaseDefault": "Database default",
       "actions": {
         "manage": "Manage design",
         "setAsDefault": "Set as default",
@@ -796,16 +797,19 @@
     },
     "page": {
       "name": "Page",
+      "design": "Page design",
       "new": "New page design",
       "description": "The design of an entry when displayed as a page."
     },
     "card": {
       "name": "Card",
+      "design": "Card design",
       "new": "New card design",
       "description": "The design of an entry when displayed as a card."
     },
     "list": {
       "name": "List",
+      "design": "List design",
       "new": "New list design",
       "description": "The design of an entry when displayed in a list."
     },
@@ -1196,12 +1200,9 @@
       "name": "Gallery",
       "description": "A gallery view.",
       "options": {
-        "maxColumns": "Max columns",
-        "cardSize": "Card size",
-        "small": "Small",
-        "medium": "Medium",
-        "large": "Large",
+        "cardWidth": "Card min width",
         "gap": "Gap",
+        "none": "None",
         "compact": "Compact",
         "comfortable": "Comfortable",
         "spacious": "Spacious"
