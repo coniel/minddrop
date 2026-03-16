@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { i18n } from '@minddrop/i18n';
 import { createContext } from '@minddrop/utils';
 import { ContentIcon } from '../ContentIcon';
@@ -26,6 +26,12 @@ export interface MenuItemProps {
    * Falls back to children if not provided.
    */
   label?: TranslatableNode;
+
+  /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label` and `children`.
+   */
+  stringLabel?: string;
 
   /*
    * Label content. Used when `label` i18n key is not provided.
@@ -145,6 +151,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
       muted,
       role = 'menuitem',
       size,
+      stringLabel,
       trailingIcon,
       ...other
     },
@@ -153,6 +160,23 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     const [forceActionsVisible, setForceActionsVisible] = useState(
       forceActionsVisibleProp,
     );
+
+    // Resolve the display label from the available label sources
+    const resolvedLabel = useMemo(() => {
+      if (stringLabel) {
+        return stringLabel;
+      }
+
+      if (label) {
+        if (typeof label === 'string') {
+          return i18n.t(label);
+        }
+
+        return label;
+      }
+
+      return children;
+    }, [stringLabel, label, children]);
 
     return (
       <Provider value={{ setForceActionsVisible }}>
@@ -175,13 +199,7 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
           {contentIcon && (
             <ContentIcon className="item-icon" icon={contentIcon} />
           )}
-          <span className="label">
-            {label
-              ? typeof label === 'string'
-                ? i18n.t(label)
-                : label
-              : children}
-          </span>
+          <span className="label">{resolvedLabel}</span>
           {trailingIcon}
           {keyboardShortcut && (
             <KeyboardShortcut

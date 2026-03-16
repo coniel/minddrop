@@ -1,6 +1,6 @@
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react/context-menu';
 import React, { FC } from 'react';
-import { TranslationKey, useTranslation } from '@minddrop/i18n';
+import { TranslationKey } from '@minddrop/i18n';
 import { MenuLabel } from '../Menu/MenuLabel';
 
 /* --- ContextMenuLabel ---
@@ -9,24 +9,39 @@ import { MenuLabel } from '../Menu/MenuLabel';
 
 export interface ContextMenuLabelProps
   extends Omit<ContextMenuPrimitive.GroupLabel.Props, 'children'> {
-  children?: React.ReactNode;
   /*
-   * Label string. Can be an i18n key. Translated internally.
+   * Arbitrary content rendered when neither `stringLabel`
+   * nor `label` is provided.
+   */
+  children?: React.ReactNode;
+
+  /*
+   * i18n key for the label text. Translated internally.
    * Use children for non-string content.
    */
   label?: TranslationKey;
+
+  /*
+   * Plain string label rendered without i18n translation.
+   * Takes priority over `label` and `children`.
+   */
+  stringLabel?: string;
 }
 
 export const ContextMenuLabel: FC<ContextMenuLabelProps> = ({
   children,
   label,
+  stringLabel,
   ...other
 }) => {
-  const { t } = useTranslation();
-
   return (
-    <ContextMenuPrimitive.GroupLabel {...other}>
-      <MenuLabel>{label ? t(label) : children}</MenuLabel>
-    </ContextMenuPrimitive.GroupLabel>
+    <ContextMenuPrimitive.GroupLabel
+      {...other}
+      render={
+        <MenuLabel label={label} stringLabel={stringLabel}>
+          {children}
+        </MenuLabel>
+      }
+    />
   );
 };

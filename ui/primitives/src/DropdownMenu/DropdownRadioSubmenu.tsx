@@ -1,5 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { i18n } from '@minddrop/i18n';
 import { IconProp } from '../IconRenderer';
 import { MenuRadioGroup } from '../Menu/MenuRadioGroup';
@@ -25,7 +25,13 @@ export interface DropdownRadioSubmenuItem {
   /**
    * Label text. Strings are treated as i18n keys.
    */
-  label: TranslatableNode;
+  label?: TranslatableNode;
+
+  /**
+   * Plain string label rendered without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
 
   /**
    * Icon for the item.
@@ -38,7 +44,13 @@ export interface DropdownRadioSubmenuProps {
    * Label for the trigger menu item. Strings are treated
    * as i18n keys and translated.
    */
-  label: TranslatableNode;
+  label?: TranslatableNode;
+
+  /**
+   * Plain string label for the trigger, rendered without
+   * i18n translation. Takes priority over `label`.
+   */
+  stringLabel?: string;
 
   /**
    * Icon for the trigger menu item.
@@ -90,6 +102,7 @@ export interface DropdownRadioSubmenuProps {
 /** Renders a dropdown submenu containing a radio group. */
 export const DropdownRadioSubmenu: React.FC<DropdownRadioSubmenuProps> = ({
   label,
+  stringLabel,
   icon,
   value: valueProp,
   defaultValue = '',
@@ -101,8 +114,26 @@ export const DropdownRadioSubmenu: React.FC<DropdownRadioSubmenuProps> = ({
   // Track internal state for uncontrolled usage
   const [valueInternal, setValueInternal] = useState(defaultValue);
 
-  // Use controlled value when provided, otherwise internal state
+  // Resolve the selected item's label for display on the trigger
   const value = valueProp !== undefined ? valueProp : valueInternal;
+
+  const selectedLabel = useMemo(() => {
+    const selectedItem = items.find((item) => item.value === value);
+
+    if (!selectedItem) {
+      return null;
+    }
+
+    if (selectedItem.stringLabel) {
+      return selectedItem.stringLabel;
+    }
+
+    if (typeof selectedItem.label === 'string') {
+      return i18n.t(selectedItem.label);
+    }
+
+    return selectedItem.label;
+  }, [items, value]);
 
   // Change handler - updates internal state and notifies parent
   const handleValueChange = (nextValue: string) => {
@@ -113,19 +144,12 @@ export const DropdownRadioSubmenu: React.FC<DropdownRadioSubmenuProps> = ({
     onValueChange?.(nextValue);
   };
 
-  // Resolve the selected item's label for display on the trigger
-  const selectedItem = items.find((item) => item.value === value);
-  const selectedLabel = selectedItem
-    ? typeof selectedItem.label === 'string'
-      ? i18n.t(selectedItem.label)
-      : selectedItem.label
-    : null;
-
   return (
     <DropdownSubmenu>
       {/* Trigger item showing the label and selected value */}
       <DropdownSubmenuTriggerItem
         label={label}
+        stringLabel={stringLabel}
         icon={icon}
         disabled={disabled}
         trailingIcon={
@@ -150,6 +174,7 @@ export const DropdownRadioSubmenu: React.FC<DropdownRadioSubmenuProps> = ({
                     <MenuRadioItem
                       value={item.value}
                       label={item.label}
+                      stringLabel={item.stringLabel}
                       icon={item.icon}
                     />
                   }

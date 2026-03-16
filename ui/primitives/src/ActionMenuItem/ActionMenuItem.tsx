@@ -108,6 +108,7 @@ export interface ActionMenuItemProps extends Omit<MenuItemProps, 'onClick'> {
 export const ActionMenuItem: FC<ActionMenuItemProps> = ({
   component: Component = MenuPrimitive.Item,
   label,
+  stringLabel,
   secondaryLabel,
   icon,
   secondaryIcon,
@@ -130,8 +131,9 @@ export const ActionMenuItem: FC<ActionMenuItemProps> = ({
         icon: secondaryIcon ?? icon,
         keyboardShortcut: secondaryKeyboardShortcut,
         contentIcon,
+        stringLabel: secondaryLabel ? undefined : stringLabel,
       }
-    : { label, icon, keyboardShortcut, contentIcon };
+    : { label, stringLabel, icon, keyboardShortcut, contentIcon };
 
   const item = (
     <Component

@@ -1,14 +1,15 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import React, { FC } from 'react';
+import { MenuItemProps } from '../Menu/MenuItem';
 import { MenuRadioItem } from '../Menu/MenuRadioItem';
-import { Tooltip } from '../Tooltip';
-import { ActionMenuItemProps, useShiftState } from './ActionMenuItem';
+import { Tooltip, TooltipProps } from '../Tooltip';
 
 /* ============================================================
    TYPES
    ============================================================ */
 
-export interface ActionMenuRadioItemProps extends ActionMenuItemProps {
+export interface ActionMenuRadioItemProps
+  extends Omit<MenuItemProps, 'active' | 'trailingIcon' | 'onClick'> {
   /**
    * The value this radio item represents within a RadioGroup.
    */
@@ -19,6 +20,27 @@ export interface ActionMenuRadioItemProps extends ActionMenuItemProps {
    * Typically a RadioItemIndicator with a check icon.
    */
   itemIndicator?: React.ReactNode;
+
+  /**
+   * Click handler.
+   */
+  onClick?: MenuPrimitive.RadioItem.Props['onClick'];
+
+  /**
+   * Tooltip configuration. When provided, wraps the item
+   * in a Tooltip with the given props.
+   */
+  tooltip?: Omit<TooltipProps, 'children'>;
+
+  /**
+   * Prevents interaction.
+   */
+  disabled?: boolean;
+
+  /**
+   * Text used for typeahead when content is non-textual.
+   */
+  textValue?: string;
 }
 
 /* ============================================================
@@ -27,16 +49,13 @@ export interface ActionMenuRadioItemProps extends ActionMenuItemProps {
    Uses a primary-colored dot inside a circle as the indicator.
    ============================================================ */
 
-/** Renders a Base UI Menu.RadioItem with styled MenuRadioItem and optional shift-key secondary state. */
+/** Renders a Base UI Menu.RadioItem with styled MenuRadioItem. */
 export const ActionMenuRadioItem: FC<ActionMenuRadioItemProps> = ({
   label,
-  secondaryLabel,
+  stringLabel,
   icon,
-  secondaryIcon,
   onClick,
-  secondaryOnClick,
   keyboardShortcut,
-  secondaryKeyboardShortcut,
   tooltip,
   disabled,
   textValue,
@@ -44,37 +63,29 @@ export const ActionMenuRadioItem: FC<ActionMenuRadioItemProps> = ({
   itemIndicator,
   ...other
 }) => {
-  const shiftKeyDown = useShiftState(!!secondaryOnClick);
-
-  // Pass labels through to MenuRadioItem which handles translation
-  const itemProps = shiftKeyDown
-    ? {
-        label: secondaryLabel ?? label,
-        icon: secondaryIcon ?? icon,
-        keyboardShortcut: secondaryKeyboardShortcut,
-      }
-    : { label, icon, keyboardShortcut };
-
   const item = (
     <MenuPrimitive.RadioItem
       value={value}
       disabled={disabled}
-      onClick={shiftKeyDown && secondaryOnClick ? secondaryOnClick : onClick}
+      onClick={onClick}
       render={
         <MenuRadioItem
           value={value}
           disabled={disabled}
+          label={label}
+          stringLabel={stringLabel}
+          icon={icon}
+          keyboardShortcut={keyboardShortcut}
           indicator={
             <MenuPrimitive.RadioItemIndicator
               render={<span className="menu-item-radio-dot" />}
             />
           }
-          {...itemProps}
+          {...other}
         >
           {itemIndicator}
         </MenuRadioItem>
       }
-      {...other}
     />
   );
 

@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { TranslationKey, i18n } from '@minddrop/i18n';
 import { Text } from '../Text';
 import { propsToClass } from '../utils';
@@ -8,6 +8,12 @@ export interface MenuLabelProps extends React.HTMLProps<HTMLDivElement> {
    * i18n key for the label text. Falls back to children if not provided.
    */
   label?: TranslationKey;
+
+  /*
+   * Plain string label rendered as-is without i18n translation.
+   * Takes priority over `label` and `children`.
+   */
+  stringLabel?: string;
 
   /*
    * Label content. Used when no i18n key is provided.
@@ -45,30 +51,46 @@ export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
       children,
       className,
       label,
+      stringLabel,
       ...other
     },
     ref,
-  ) => (
-    <div
-      ref={ref}
-      className={propsToClass('menu-label', {
-        actionsAlwaysVisible,
-        className,
-      })}
-      role={button ? 'button' : undefined}
-      {...other}
-    >
-      <Text
-        className="menu-label-text"
-        color="subtle"
-        weight="semibold"
-        size="xs"
+  ) => {
+    // Resolve the display label from the available label sources
+    const resolvedLabel = useMemo(() => {
+      if (stringLabel) {
+        return stringLabel;
+      }
+
+      if (label) {
+        return i18n.t(label);
+      }
+
+      return children;
+    }, [stringLabel, label, children]);
+
+    return (
+      <div
+        ref={ref}
+        className={propsToClass('menu-label', {
+          actionsAlwaysVisible,
+          className,
+        })}
+        role={button ? 'button' : undefined}
+        {...other}
       >
-        {label ? i18n.t(label) : children}
-      </Text>
-      {actions && <div className="actions">{actions}</div>}
-    </div>
-  ),
+        <Text
+          className="menu-label-text"
+          color="subtle"
+          weight="semibold"
+          size="xs"
+        >
+          {resolvedLabel}
+        </Text>
+        {actions && <div className="actions">{actions}</div>}
+      </div>
+    );
+  },
 );
 
 MenuLabel.displayName = 'MenuLabel';

@@ -50,7 +50,12 @@ export function generateMenu(
 
     // Generate Label
     if (type === 'menu-label') {
-      return [...items, <Label key={index}>{item.label}</Label>];
+      return [
+        ...items,
+        <Label key={index} stringLabel={item.stringLabel}>
+          {item.label}
+        </Label>,
+      ];
     }
 
     // Generate Item

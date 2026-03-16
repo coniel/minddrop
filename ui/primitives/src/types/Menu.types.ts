@@ -11,9 +11,15 @@ export interface MenuLabelConfig {
   type: 'menu-label';
 
   /**
-   * The menu label text.
+   * The menu label text as an i18n key.
    */
-  label: TranslationKey;
+  label?: TranslationKey;
+
+  /**
+   * Plain string label rendered without i18n translation.
+   * Takes priority over `label`.
+   */
+  stringLabel?: string;
 }
 
 export interface MenuSeparatorConfig {
@@ -23,7 +29,7 @@ export interface MenuSeparatorConfig {
 export interface SubmenuTriggerItemProps
   extends Pick<
     ActionMenuItemProps,
-    'label' | 'icon' | 'disabled' | 'textValue'
+    'label' | 'stringLabel' | 'icon' | 'disabled' | 'textValue'
   > {
   /**
    * Class name applied to the submenu's MenuContent component.

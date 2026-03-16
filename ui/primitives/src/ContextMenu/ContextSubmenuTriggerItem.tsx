@@ -13,6 +13,7 @@ export interface ContextSubmenuTriggerItemProps
     'children' | 'label'
   > {
   label?: TranslatableNode;
+  stringLabel?: string;
   icon?: IconProp;
   disabled?: boolean;
   trailingIcon?: React.ReactNode;
@@ -20,6 +21,7 @@ export interface ContextSubmenuTriggerItemProps
 
 export const ContextSubmenuTriggerItem: FC<ContextSubmenuTriggerItemProps> = ({
   label,
+  stringLabel,
   icon,
   disabled,
   trailingIcon,
@@ -30,6 +32,7 @@ export const ContextSubmenuTriggerItem: FC<ContextSubmenuTriggerItemProps> = ({
       <MenuItem
         hasSubmenu
         label={label}
+        stringLabel={stringLabel}
         icon={icon}
         disabled={disabled}
         trailingIcon={trailingIcon}
