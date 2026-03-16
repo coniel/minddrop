@@ -9,7 +9,6 @@ import {
   ContextMenuPortal,
   ContextMenuPositioner,
   ContextMenuRoot,
-  ContextMenuTrigger,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -325,9 +324,9 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
         </div>
 
         {/* View switcher bar — hidden when the database has no entries */}
-        {!isEmpty && (
+        {!isEmpty && view && (
           <div className="view-switcher">
-            <Tabs value={view?.id} onValueChange={setActiveViewId}>
+            <Tabs value={view.id} onValueChange={setActiveViewId}>
               <SortableList
                 as={TabsList}
                 items={databaseViews.map((databaseView) => databaseView.id)}
@@ -351,39 +350,34 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                   const isActive = databaseView.id === activeViewId;
 
                   return (
-                    <ContextMenuRoot key={databaseView.id}>
-                      <ContextMenuTrigger>
-                        <TabsTab
-                          ref={ref}
-                          value={databaseView.id}
-                          startIcon={
-                            databaseView.icon.includes(':') ? (
-                              <ContentIcon icon={databaseView.icon} />
-                            ) : (
-                              (databaseView.icon as UiIconName)
-                            )
-                          }
-                          className={className}
-                          style={style}
-                          onClick={(event) => {
-                            if (isActive) {
-                              setDropdownAnchor(event.currentTarget);
-                              setDropdownMenuViewId(databaseView.id);
-                            }
-                          }}
-                          {...handleProps}
-                        >
-                          {databaseView.name}
-                        </TabsTab>
-                      </ContextMenuTrigger>
-                      <ContextMenuPortal>
-                        <ContextMenuPositioner>
-                          <ContextMenuContent>
-                            {renderViewMenuContent(databaseView.id)}
-                          </ContextMenuContent>
-                        </ContextMenuPositioner>
-                      </ContextMenuPortal>
-                    </ContextMenuRoot>
+                    <TabsTab
+                      key={databaseView.id}
+                      ref={ref}
+                      value={databaseView.id}
+                      startIcon={
+                        databaseView.icon.includes(':') ? (
+                          <ContentIcon icon={databaseView.icon} />
+                        ) : (
+                          (databaseView.icon as UiIconName)
+                        )
+                      }
+                      className={className}
+                      style={style}
+                      onClick={(event) => {
+                        if (isActive) {
+                          setDropdownAnchor(event.currentTarget);
+                          setDropdownMenuViewId(databaseView.id);
+                        }
+                      }}
+                      onContextMenu={(event) => {
+                        event.preventDefault();
+                        setDropdownAnchor(event.currentTarget);
+                        setDropdownMenuViewId(databaseView.id);
+                      }}
+                      {...handleProps}
+                    >
+                      {databaseView.name}
+                    </TabsTab>
                   );
                 }}
               />
