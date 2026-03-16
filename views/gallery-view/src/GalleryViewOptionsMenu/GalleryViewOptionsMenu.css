@@ -6,3 +6,7 @@
 .gallery-view-options-menu {
   min-width: 16rem;
 }
+
+.gallery-view-options-slider {
+  padding: var(--space-2);
+}

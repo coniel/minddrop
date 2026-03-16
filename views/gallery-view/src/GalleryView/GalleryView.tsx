@@ -10,13 +10,17 @@ import './GalleryView.css';
 // Number of entries to render per batch
 const BATCH_SIZE = 30;
 
+// Maps gap option values to pixel sizes for column calculation
+const GAP_PX: Record<GalleryGap, number> = {
+  none: 0,
+  compact: 8,
+  comfortable: 16,
+  spacious: 24,
+};
+
 export const GalleryViewComponent: React.FC<
   ViewTypeComponentProps<GalleryViewOptions>
 > = ({ view, entries }) => {
-  const maxColumns = useMemo(
-    () => view.options?.maxColumns || defaultGalleryViewOptions.maxColumns,
-    [view.options],
-  );
   const minColumnWidth = useMemo(
     () =>
       view.options?.minColumnWidth || defaultGalleryViewOptions.minColumnWidth,
@@ -38,10 +42,10 @@ export const GalleryViewComponent: React.FC<
     setRenderCount(BATCH_SIZE);
   }, [entries]);
 
-  // Calculate how many columns fit
+  // Calculate how many columns fit based on min width and gap
   const columnCount = useMemo(
-    () => calculateColumnCount(maxColumns, viewWidth, minColumnWidth),
-    [maxColumns, viewWidth, minColumnWidth],
+    () => calculateColumnCount(viewWidth, minColumnWidth, GAP_PX[gap]),
+    [viewWidth, minColumnWidth, gap],
   );
 
   // Slice entries to the current render count
@@ -130,6 +134,7 @@ export const GalleryViewComponent: React.FC<
                 key={entryId}
                 entryId={entryId}
                 designType="card"
+                designId={view.options?.cardDesignId}
               />
             ))}
           </div>
@@ -139,13 +144,22 @@ export const GalleryViewComponent: React.FC<
   );
 };
 
+/**
+ * Calculates the maximum number of columns that fit within
+ * the available width without any column going below minWidth.
+ */
 function calculateColumnCount(
-  maxColumns: number,
   viewWidth: number,
-  minColumnWidth: number,
+  minWidth: number,
+  gapPx: number,
 ) {
-  return Math.max(
-    1,
-    Math.min(maxColumns, Math.floor(viewWidth / minColumnWidth)),
-  );
+  if (viewWidth <= 0 || minWidth <= 0) {
+    return 1;
+  }
+
+  // Solve: columns * minWidth + (columns - 1) * gap <= viewWidth
+  // columns <= (viewWidth + gap) / (minWidth + gap)
+  const columns = Math.floor((viewWidth + gapPx) / (minWidth + gapPx));
+
+  return Math.max(1, columns);
 }

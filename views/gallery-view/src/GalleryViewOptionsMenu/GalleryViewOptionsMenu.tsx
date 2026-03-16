@@ -1,51 +1,59 @@
-import React from 'react';
-import { useTranslation } from '@minddrop/i18n';
+import { createI18nKeyBuilder, i18n } from '@minddrop/i18n';
+import { DatabaseDesignSelectionMenu } from '@minddrop/ui-components';
 import {
-  DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   MenuLabel,
+  Slider,
+  Text,
 } from '@minddrop/ui-primitives';
 import { ViewTypeSettingsMenuProps } from '@minddrop/views';
 import { GalleryGap, GalleryViewOptions } from '../types';
 import './GalleryViewOptionsMenu.css';
 
+const t = createI18nKeyBuilder('views.gallery.options.');
+
 export const GalleryViewOptionsMenu: React.FC<
   ViewTypeSettingsMenuProps<GalleryViewOptions>
-> = ({ options, onUpdateOptions }) => {
-  const { t } = useTranslation({ keyPrefix: 'views.gallery.options' });
-
+> = ({ view, options, onUpdateOptions }) => {
   return (
-    <DropdownMenuContent className="gallery-view-options-menu">
-      {/* Max columns radio group */}
-      <DropdownMenuRadioGroup
-        value={String(options.maxColumns)}
-        onValueChange={(value) =>
-          onUpdateOptions({ maxColumns: Number(value) })
+    <div className="gallery-view-options-menu">
+      {/* Card width slider */}
+      <MenuLabel
+        label={t('cardWidth')}
+        actionsAlwaysVisible
+        actions={
+          <Text size="xs" color="subtle">
+            {options.minColumnWidth}px
+          </Text>
         }
-      >
-        <MenuLabel label={t('maxColumns')} />
-        <DropdownMenuRadioItem label="3" value="3" />
-        <DropdownMenuRadioItem label="4" value="4" />
-        <DropdownMenuRadioItem label="5" value="5" />
-        <DropdownMenuRadioItem label="6" value="6" />
-      </DropdownMenuRadioGroup>
+      />
+      <div className="gallery-view-options-slider">
+        <Slider
+          size="lg"
+          value={options.minColumnWidth}
+          onValueChange={(value) =>
+            onUpdateOptions({ minColumnWidth: value as number })
+          }
+          min={100}
+          max={1000}
+          step={10}
+          ariaLabel={i18n.t(t('cardWidth'))}
+        />
+      </div>
 
       <DropdownMenuSeparator />
 
-      {/* Card size radio group */}
-      <DropdownMenuRadioGroup
-        value={String(options.minColumnWidth)}
-        onValueChange={(value) =>
-          onUpdateOptions({ minColumnWidth: Number(value) })
+      {/* Card design selection */}
+      <DatabaseDesignSelectionMenu
+        databaseId={view.dataSource.id}
+        designType="card"
+        value={options.cardDesignId}
+        onValueChange={(designId) =>
+          onUpdateOptions({ cardDesignId: designId })
         }
-      >
-        <MenuLabel label={t('cardSize')} />
-        <DropdownMenuRadioItem label={t('small')} value="200" />
-        <DropdownMenuRadioItem label={t('medium')} value="300" />
-        <DropdownMenuRadioItem label={t('large')} value="400" />
-      </DropdownMenuRadioGroup>
+      />
 
       <DropdownMenuSeparator />
 
@@ -55,10 +63,11 @@ export const GalleryViewOptionsMenu: React.FC<
         onValueChange={(value) => onUpdateOptions({ gap: value as GalleryGap })}
       >
         <MenuLabel label={t('gap')} />
+        <DropdownMenuRadioItem label={t('none')} value="none" />
         <DropdownMenuRadioItem label={t('compact')} value="compact" />
         <DropdownMenuRadioItem label={t('comfortable')} value="comfortable" />
         <DropdownMenuRadioItem label={t('spacious')} value="spacious" />
       </DropdownMenuRadioGroup>
-    </DropdownMenuContent>
+    </div>
   );
 };
