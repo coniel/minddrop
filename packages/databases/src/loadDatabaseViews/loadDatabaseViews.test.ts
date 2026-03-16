@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { View, ViewFixtures, Views } from '@minddrop/views';
+import { ViewFixtures, Views } from '@minddrop/views';
 import { cleanup, setup } from '../test-utils';
 import { objectDatabase } from '../test-utils/fixtures';
 import type { Database } from '../types';
