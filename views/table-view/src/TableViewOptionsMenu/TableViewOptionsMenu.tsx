@@ -1,9 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Databases } from '@minddrop/databases';
-import { useTranslation } from '@minddrop/i18n';
+import { createI18nKeyBuilder } from '@minddrop/i18n';
 import { useSortableDrag } from '@minddrop/ui-drag-and-drop';
 import {
-  DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuPositioner,
   DropdownMenuRadioGroup,
@@ -20,6 +19,8 @@ import { ViewTypeSettingsMenuProps } from '@minddrop/views';
 import { TablePadding, TableViewOptions } from '../types';
 import './TableViewOptionsMenu.css';
 
+const t = createI18nKeyBuilder('views.table.options.');
+
 const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
 
 /**
@@ -28,8 +29,6 @@ const SUPPORTED_TYPES = new Set(['text', 'title', 'number', 'select', 'date']);
 export const TableViewOptionsMenu: React.FC<
   ViewTypeSettingsMenuProps<TableViewOptions>
 > = ({ view, options, onUpdateOptions }) => {
-  const { t } = useTranslation({ keyPrefix: 'views.table.options' });
-
   // Get the database to list available columns
   const databaseId =
     view.dataSource.type === 'database' ? view.dataSource.id : '';
@@ -123,7 +122,7 @@ export const TableViewOptionsMenu: React.FC<
   });
 
   return (
-    <DropdownMenuContent className="table-view-options-menu">
+    <div className="table-view-options-menu">
       {/* Column visibility and order submenu */}
       <DropdownSubmenu>
         <DropdownSubmenuTriggerItem label={t('columns')} icon="columns-3" />
@@ -150,12 +149,13 @@ export const TableViewOptionsMenu: React.FC<
 
                     {/* Switch item for toggling visibility */}
                     <DropdownMenuSwitchItem
-                      label={property.name}
                       checked={!hiddenColumns.has(property.name)}
                       onCheckedChange={(checked) =>
                         handleToggleColumn(property.name, checked)
                       }
-                    />
+                    >
+                      {property.name}
+                    </DropdownMenuSwitchItem>
                   </div>
                 );
               })}
@@ -226,6 +226,6 @@ export const TableViewOptionsMenu: React.FC<
           icon="rows-2"
         />
       </DropdownMenuRadioGroup>
-    </DropdownMenuContent>
+    </div>
   );
 };
