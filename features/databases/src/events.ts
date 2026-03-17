@@ -13,3 +13,4 @@ export const MainDatabaseEntryViewName = 'databases:view:entry';
 // -- Database Entries events --
 
 export const DatabaseEntriesEventListenerId = 'database-entries-feature';
+export const CloseDatabaseEntryDialogEvent = 'databases:entry-dialog:close';

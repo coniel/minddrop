@@ -26,7 +26,8 @@
     "manage": "Manage",
     "close": "Close",
     "search": "Search...",
-    "pickDate": "Pick a date..."
+    "pickDate": "Pick a date...",
+    "swapSplitPosition": "Swap split position"
   },
   "error": {
     "unknown": "An unknown error occurred.",
@@ -217,6 +218,7 @@
         "previousEntry": "Previous entry",
         "nextEntry": "Next entry",
         "openAsPage": "Open as full page",
+        "openInSplitView": "Open in split view",
         "entryOptions": "Entry options",
         "goToDatabase": "Go to database",
         "create": "Create entry"

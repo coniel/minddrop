@@ -5,14 +5,13 @@ import {
   OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
-import {
-  DatabaseEntryRenderer,
-  DatabaseEntryRendererProps,
-} from '../DatabaseEntryRenderer';
+import { DatabaseEntryPage } from '../DatabaseEntryPage/DatabaseEntryPage';
+import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
 import { NewDatabaseDialog } from '../NewDatabaseDialog';
 import {
+  CloseDatabaseEntryDialogEvent,
   DatabaseEntriesEventListenerId,
   EventListenerId,
   MainDatabaseEntryViewName,
@@ -83,20 +82,30 @@ export const DatabasesFeature: React.FC = () => {
         // Resolve the open mode, falling back to the database default
         const openMode = resolveOpenMode(data.entryId, data.openMode);
 
-        if (openMode === 'full') {
-          // Open the entry in the main content area
+        if (openMode === 'full' || openMode === 'split') {
+          // Open the entry in the main content area (or split view)
           Events.dispatch<
             OpenMainContentViewEventData<DatabaseEntryRendererProps>
           >(OpenMainContentViewEvent, {
             view: MainDatabaseEntryViewName,
-            component: DatabaseEntryRenderer,
+            component: DatabaseEntryPage,
             props: { entryId: data.entryId, designType: 'page' },
+            split: openMode === 'split',
           });
         } else {
           // Open the entry as a dialog overlay
           setDialogEntryId(data.entryId);
           setDialogOpen(true);
         }
+      },
+    );
+
+    // Close the entry dialog when requested
+    Events.addListener(
+      CloseDatabaseEntryDialogEvent,
+      DatabaseEntriesEventListenerId,
+      () => {
+        setDialogOpen(false);
       },
     );
 
@@ -111,6 +120,10 @@ export const DatabasesFeature: React.FC = () => {
       Events.removeListener(OpenDatabaseViewEvent, EventListenerId);
       Events.removeListener(
         OpenDatabaseEntryViewEvent,
+        DatabaseEntriesEventListenerId,
+      );
+      Events.removeListener(
+        CloseDatabaseEntryDialogEvent,
         DatabaseEntriesEventListenerId,
       );
       cleanupDatabasesFeatureEventHandlers();

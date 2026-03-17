@@ -19,6 +19,53 @@
   flex: 1;
 }
 
+.main-content-split {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-content-pane {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.main-content-pane > :last-child {
+  flex: 1;
+  overflow: hidden;
+}
+
+.split-view-resize-handle {
+  position: relative;
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+}
+
+.split-view-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 5%;
+  height: 90%;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  background-color: transparent;
+  transition: background-color 0.15s 0.3s;
+}
+
+.split-view-resize-handle:hover::after {
+  background-color: var(--border-primary);
+}
+
+.main-content-pane-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-1);
+  flex-shrink: 0;
+}
+
 .right-panel {
   width: 400px;
 }

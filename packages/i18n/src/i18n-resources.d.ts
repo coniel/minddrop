@@ -39,6 +39,7 @@ declare module 'i18next' {
           close: string;
           search: string;
           pickDate: string;
+          swapSplitPosition: string;
         };
         error: {
           unknown: string;
@@ -229,6 +230,7 @@ declare module 'i18next' {
               previousEntry: string;
               nextEntry: string;
               openAsPage: string;
+              openInSplitView: string;
               entryOptions: string;
               goToDatabase: string;
               create: string;

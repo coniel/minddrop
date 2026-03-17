@@ -120,6 +120,17 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
     );
   }, [entryId, onOpenChange]);
 
+  const handleOpenSplit = useCallback(() => {
+    onOpenChange(false);
+    Events.dispatch<OpenDatabaseEntryViewEventData>(
+      OpenDatabaseEntryViewEvent,
+      {
+        entryId,
+        openMode: 'split',
+      },
+    );
+  }, [entryId, onOpenChange]);
+
   // Close the dialog when clicking the backdrop or a hover zone
   const handleBackdropClick = useCallback(
     (event: React.MouseEvent) => {
@@ -203,18 +214,27 @@ export const DatabaseEntryDialog: React.FC<DatabaseEntryDialogProps> = ({
           <FloatingActionButton
             icon="x"
             label="actions.close"
+            tooltip={{ title: 'actions.close' }}
             onClick={handleClose}
           />
           <FloatingActionButton
             icon="maximize-2"
             label="databases.entries.actions.openAsPage"
+            tooltip={{ title: 'databases.entries.actions.openAsPage' }}
             onClick={handleOpenFull}
+          />
+          <FloatingActionButton
+            tooltip={{ title: 'databases.entries.actions.openInSplitView' }}
+            icon="split-square-horizontal"
+            label="databases.entries.actions.openInSplitView"
+            onClick={handleOpenSplit}
           />
           <DropdownMenu
             trigger={
               <FloatingActionButton
                 icon="ellipsis-vertical"
                 label="databases.entries.actions.entryOptions"
+                tooltip={{ title: 'databases.entries.actions.entryOptions' }}
               />
             }
             side="right"

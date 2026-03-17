@@ -22,6 +22,12 @@ export type OpenMainContentViewEventData<TProps = any> = {
    * Props passed to the component.
    */
   props?: TProps;
+
+  /**
+   * When true, renders in the split view panel instead
+   * of replacing the main content.
+   */
+  split?: boolean;
 };
 
 export type OpenConfirmationDialogEventData = {

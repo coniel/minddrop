@@ -2,7 +2,11 @@ import React, { useCallback } from 'react';
 import { DatabaseEntries } from '@minddrop/databases';
 import { Events } from '@minddrop/events';
 import { ActionMenuItem } from '@minddrop/ui-primitives';
-import { OpenDatabaseViewEvent, OpenDatabaseViewEventData } from '../events';
+import {
+  CloseDatabaseEntryDialogEvent,
+  OpenDatabaseViewEvent,
+  OpenDatabaseViewEventData,
+} from '../events';
 
 export interface DatabaseEntryOptionsMenuProps {
   /**
@@ -25,6 +29,9 @@ export const DatabaseEntryOptionsMenu: React.FC<
     if (!entry) {
       return;
     }
+
+    // Close the entry dialog if open
+    Events.dispatch(CloseDatabaseEntryDialogEvent, {});
 
     Events.dispatch<OpenDatabaseViewEventData>(OpenDatabaseViewEvent, {
       databaseId: entry.database,
