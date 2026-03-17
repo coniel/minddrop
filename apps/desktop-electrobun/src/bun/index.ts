@@ -1,4 +1,10 @@
-import { BrowserWindow, Screen, Updater, Utils } from 'electrobun/bun';
+import {
+  ApplicationMenu,
+  BrowserWindow,
+  Screen,
+  Updater,
+  Utils,
+} from 'electrobun/bun';
 import { myWebviewRPC } from './bun-rpc';
 import { initializeSearch } from './search';
 import { initializeSql } from './sql';
@@ -75,6 +81,46 @@ try {
   const primary = Screen.getPrimaryDisplay();
   state.displayId = String(primary.id);
 }
+
+// --- Application menu ---
+
+// Set up a standard macOS application menu so that keyboard shortcuts
+// like Cmd+C/V/X/Z/A/Q/W are handled by the native responder chain
+ApplicationMenu.setApplicationMenu([
+  {
+    label: 'MindDrop',
+    submenu: [
+      { role: 'about' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideOthers' },
+      { role: 'showAll' },
+      { type: 'separator' },
+      { role: 'quit' },
+    ],
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo', accelerator: 'CmdOrCtrl+Z' },
+      { role: 'redo', accelerator: 'CmdOrCtrl+Shift+Z' },
+      { type: 'separator' },
+      { role: 'cut', accelerator: 'CmdOrCtrl+X' },
+      { role: 'copy', accelerator: 'CmdOrCtrl+C' },
+      { role: 'paste', accelerator: 'CmdOrCtrl+V' },
+      { role: 'selectAll', accelerator: 'CmdOrCtrl+A' },
+    ],
+  },
+  {
+    label: 'Window',
+    submenu: [
+      { role: 'minimize', accelerator: 'CmdOrCtrl+M' },
+      { role: 'close', accelerator: 'CmdOrCtrl+W' },
+      { type: 'separator' },
+      { role: 'toggleFullScreen', accelerator: 'Ctrl+CmdOrCtrl+F' },
+    ],
+  },
+]);
 
 // --- Create window ---
 

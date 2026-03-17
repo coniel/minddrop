@@ -1,4 +1,9 @@
-import { BrowserView, BrowserWindow, Updater } from 'electrobun/bun';
+import {
+  ApplicationMenu,
+  BrowserView,
+  BrowserWindow,
+  Updater,
+} from 'electrobun/bun';
 import { watch } from 'node:fs';
 import { DevReviewRPC } from '../types';
 import { rpcHandlers } from './rpc';
@@ -26,6 +31,44 @@ const rpc = BrowserView.defineRPC<DevReviewRPC>({
     },
   },
 });
+
+// Set up a standard macOS application menu so that keyboard shortcuts
+// like Cmd+C/V/X/Z/A/Q/W are handled by the native responder chain
+ApplicationMenu.setApplicationMenu([
+  {
+    label: 'Dev Review',
+    submenu: [
+      { role: 'about' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideOthers' },
+      { role: 'showAll' },
+      { type: 'separator' },
+      { role: 'quit' },
+    ],
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo', accelerator: 'CmdOrCtrl+Z' },
+      { role: 'redo', accelerator: 'CmdOrCtrl+Shift+Z' },
+      { type: 'separator' },
+      { role: 'cut', accelerator: 'CmdOrCtrl+X' },
+      { role: 'copy', accelerator: 'CmdOrCtrl+C' },
+      { role: 'paste', accelerator: 'CmdOrCtrl+V' },
+      { role: 'selectAll', accelerator: 'CmdOrCtrl+A' },
+    ],
+  },
+  {
+    label: 'Window',
+    submenu: [
+      { role: 'minimize', accelerator: 'CmdOrCtrl+M' },
+      { role: 'close', accelerator: 'CmdOrCtrl+W' },
+      { type: 'separator' },
+      { role: 'toggleFullScreen', accelerator: 'Ctrl+CmdOrCtrl+F' },
+    ],
+  },
+]);
 
 // Check if Vite dev server is running for HMR
 async function getViewUrl(): Promise<string> {
