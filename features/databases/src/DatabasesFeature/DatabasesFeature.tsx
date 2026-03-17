@@ -5,7 +5,7 @@ import {
   OpenMainContentViewEventData,
 } from '@minddrop/events';
 import { DatabaseEntryDialog } from '../DatabaseEntryDialog';
-import { DatabaseEntryPage } from '../DatabaseEntryPage/DatabaseEntryPage';
+import { DatabaseEntryPage } from '../DatabaseEntryPage';
 import { DatabaseEntryRendererProps } from '../DatabaseEntryRenderer';
 import { DatabaseView, DatabaseViewProps } from '../DatabaseView';
 import { DatabasesFeatureState } from '../DatabasesFeatureState';
