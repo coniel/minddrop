@@ -35,14 +35,20 @@ export interface DatabaseDesignSelectionMenuProps {
   /**
    * The currently selected design ID. When not set or set to
    * 'default', the "Database default" option is shown as active.
+   *
+   * When multiple database IDs are provided, a Record keyed by
+   * database ID can be used to track per-database selections.
    */
-  value?: string;
+  value?: string | Record<string, string>;
 
   /**
    * Callback fired when a design is selected. Called with
    * 'default' when the "Database default" option is selected.
+   *
+   * When multiple database IDs are provided, the second argument
+   * contains the database ID that the selection belongs to.
    */
-  onValueChange?: (designId: string) => void;
+  onValueChange?: (designId: string, databaseId?: string) => void;
 
   /**
    * When true, renders as a submenu trigger with the "[Type]
@@ -83,9 +89,7 @@ export const DatabaseDesignSelectionMenu: React.FC<
           design.type === designType && mappedDesignIds.includes(design.id),
       );
 
-      if (designs.length) {
-        result.push({ database, designs });
-      }
+      result.push({ database, designs });
     }
 
     return result;
@@ -95,26 +99,37 @@ export const DatabaseDesignSelectionMenu: React.FC<
     return null;
   }
 
-  // Resolve the active value, falling back to 'default'
-  const activeValue = value || DATABASE_DEFAULT_DESIGN;
-
   // Multiple databases: render a labeled group with a submenu per database
   if (isMulti) {
     return (
       <MenuGroup>
         <MenuLabel label={designTypeI18nKey(designType, 'design')} />
-        {databaseDesigns.map(({ database, designs }) => (
-          <SubmenuMode
-            key={database.id}
-            stringLabel={database.name}
-            designs={designs}
-            value={activeValue}
-            onValueChange={onValueChange}
-          />
-        ))}
+        {databaseDesigns.map(({ database, designs }) => {
+          // Resolve the per-database value from the value map or string
+          const databaseValue =
+            typeof value === 'object'
+              ? value[database.id] || DATABASE_DEFAULT_DESIGN
+              : value || DATABASE_DEFAULT_DESIGN;
+
+          return (
+            <SubmenuMode
+              key={database.id}
+              stringLabel={database.name}
+              designs={designs}
+              value={databaseValue}
+              onValueChange={(designId) =>
+                onValueChange?.(designId, database.id)
+              }
+            />
+          );
+        })}
       </MenuGroup>
     );
   }
+
+  // Resolve the active value for single-database modes
+  const resolvedValue =
+    (typeof value === 'string' ? value : undefined) || DATABASE_DEFAULT_DESIGN;
 
   // Single database, submenu mode
   if (submenu) {
@@ -122,7 +137,7 @@ export const DatabaseDesignSelectionMenu: React.FC<
       <SubmenuMode
         label={designTypeI18nKey(designType, 'design')}
         designs={databaseDesigns[0].designs}
-        value={activeValue}
+        value={resolvedValue}
         onValueChange={onValueChange}
       />
     );
@@ -132,7 +147,7 @@ export const DatabaseDesignSelectionMenu: React.FC<
   return (
     <MenuGroup>
       <MenuLabel label={designTypeI18nKey(designType, 'design')} />
-      <MenuRadioGroup value={activeValue} onValueChange={onValueChange}>
+      <MenuRadioGroup value={resolvedValue} onValueChange={onValueChange}>
         <MenuRadioItem
           value={DATABASE_DEFAULT_DESIGN}
           label="databases.designs.databaseDefault"
