@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Descendant } from 'slate';
+import { HistoryEditor } from 'slate-history';
 import { Editable, ReactEditor, Slate } from 'slate-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { Element } from '@minddrop/ast';
@@ -144,6 +145,40 @@ export const RichTextEditor: React.FC<EditorProps> = ({
       ReactEditor.focus(editorRef.current);
     }
   }, [autoFocus]);
+
+  // Handle native undo/redo beforeinput events. On macOS with
+  // Electrobun, the application menu's undo/redo roles intercept
+  // Cmd+Z before it reaches the webview as a keydown. Instead,
+  // WKWebView fires a beforeinput with inputType 'historyUndo'/
+  // 'historyRedo', but slate-react has no case for these in its
+  // beforeinput handler. Intercept them here and route to Slate's
+  // history plugin.
+  useEffect(() => {
+    const editorElement = ReactEditor.toDOMNode(
+      editorRef.current,
+      editorRef.current,
+    );
+
+    function handleBeforeInput(event: Event) {
+      const inputEvent = event as InputEvent;
+
+      if (inputEvent.inputType === 'historyUndo') {
+        inputEvent.preventDefault();
+        inputEvent.stopImmediatePropagation();
+        HistoryEditor.undo(editorRef.current as unknown as HistoryEditor);
+      } else if (inputEvent.inputType === 'historyRedo') {
+        inputEvent.preventDefault();
+        inputEvent.stopImmediatePropagation();
+        HistoryEditor.redo(editorRef.current as unknown as HistoryEditor);
+      }
+    }
+
+    editorElement.addEventListener('beforeinput', handleBeforeInput, true);
+
+    return () => {
+      editorElement.removeEventListener('beforeinput', handleBeforeInput, true);
+    };
+  }, []);
 
   return (
     <Slate
