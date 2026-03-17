@@ -56,7 +56,11 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> =
       );
 
       if (tooltip) {
-        return <Tooltip {...tooltip}>{button}</Tooltip>;
+        return (
+          <Tooltip side="right" {...tooltip}>
+            {button}
+          </Tooltip>
+        );
       }
 
       return button;
