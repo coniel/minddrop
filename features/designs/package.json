@@ -27,6 +27,7 @@
     "@minddrop/ui-icons": "workspace:*",
     "@minddrop/properties": "workspace:*",
     "@minddrop/selection": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/test-utils": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/ui-components": "workspace:*",

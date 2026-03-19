@@ -11,13 +11,8 @@ import {
   PropertyMap,
   PropertySchema,
 } from '@minddrop/properties';
-import {
-  createStore,
-  deepMerge,
-  reorderArray,
-  useShallow,
-  uuid,
-} from '@minddrop/utils';
+import { createStore, useShallow } from '@minddrop/stores';
+import { deepMerge, reorderArray, uuid } from '@minddrop/utils';
 import {
   FlatChildDesignElement,
   FlatDesignElement,

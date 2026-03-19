@@ -358,6 +358,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@minddrop/test-utils':
         specifier: workspace:*
         version: link:../../packages/test-utils

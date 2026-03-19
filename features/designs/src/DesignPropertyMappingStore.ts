@@ -1,6 +1,6 @@
 import { Databases, DesignPropertyMap } from '@minddrop/databases';
 import { PropertyType } from '@minddrop/properties';
-import { createStore } from '@minddrop/utils';
+import { createStore } from '@minddrop/stores';
 
 export interface DesignPropertyMappingStore {
   /**
