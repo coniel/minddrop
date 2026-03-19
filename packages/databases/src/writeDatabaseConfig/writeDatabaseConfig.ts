@@ -24,5 +24,5 @@ export async function writeDatabaseConfig(id: string): Promise<void> {
   }
 
   // Write the config to the file system
-  Fs.writeJsonFile(databaseConfigFilePath(path), config);
+  await Fs.writeJsonFile(databaseConfigFilePath(path), config);
 }

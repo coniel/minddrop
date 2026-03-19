@@ -8,18 +8,18 @@ import { sqlUpsertDatabase } from '../../sql';
  * creates a default virtual table view.
  */
 export function onCreateDatabase(data: DatabaseCreatedEventData) {
+  // Create a virtual view for the database
+  Views.createVirtual({
+    id: uuid(),
+    type: 'table',
+    dataSource: { type: 'database', id: data.id },
+  });
+
   // Sync to SQL
   sqlUpsertDatabase({
     id: data.id,
     name: data.name,
     path: data.path,
     icon: data.icon,
-  });
-
-  // Create a virtual view for the database
-  Views.createVirtual({
-    id: uuid(),
-    type: 'table',
-    dataSource: { type: 'database', id: data.id },
   });
 }
