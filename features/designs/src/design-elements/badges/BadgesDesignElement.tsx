@@ -161,7 +161,7 @@ function createBadgeItemStyle(style: BadgesElementStyle): CSSProperties {
       : undefined,
     paddingLeft: style.paddingLeft ? `${style.paddingLeft}rem` : undefined,
     borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
+    borderWidth: `${style.borderTopWidth}px ${style.borderRightWidth}px ${style.borderBottomWidth}px ${style.borderLeftWidth}px`,
     borderColor: 'currentColor',
     borderRadius: style.round
       ? '9999px'

@@ -29,6 +29,11 @@ export interface CollapsibleSectionProps {
   defaultStyles: Partial<Record<keyof DesignElementStyle, unknown>>;
 
   /**
+   * Called when the section is manually opened by the user.
+   */
+  onOpen?: () => void;
+
+  /**
    * The section controls.
    */
   children: React.ReactNode;
@@ -44,6 +49,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   elementId,
   label,
   defaultStyles,
+  onOpen,
   children,
 }) => {
   const element = useElement(elementId);
@@ -73,19 +79,37 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
 
   const isOpen = hasNonDefault || manuallyOpen;
 
+  // Toggles the section open/closed, calling onOpen when opening
+  const handleToggle = useCallback(() => {
+    if (!isOpen && onOpen) {
+      onOpen();
+    }
+
+    setManuallyOpen(!isOpen);
+  }, [isOpen, onOpen]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        handleToggle();
+      }
+    },
+    [handleToggle],
+  );
+
   return (
-    <Collapsible open={isOpen} className="collapsible-section" data-open={isOpen}>
+    <Collapsible
+      open={isOpen}
+      className="collapsible-section"
+      data-open={isOpen}
+    >
       {/* Header row: label and toggle icon */}
       <div
         role="button"
         tabIndex={0}
         className="collapsible-section-trigger"
-        onClick={() => setManuallyOpen(!isOpen)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            setManuallyOpen(!isOpen);
-          }
-        }}
+        onClick={handleToggle}
+        onKeyDown={handleKeyDown}
       >
         <Text
           className="element-style-editor-section-label"
@@ -101,8 +125,16 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           color="inherit"
           size="sm"
           danger={hasNonDefault ? 'on-hover' : undefined}
-          tooltip={hasNonDefault ? { title: 'designs.clear-custom-styling', delay: 0, side: 'left' } : undefined}
-          onClick={hasNonDefault ? clearCustomStyles : () => setManuallyOpen(!isOpen)}
+          tooltip={
+            hasNonDefault
+              ? {
+                  title: 'designs.clear-custom-styling',
+                  delay: 0,
+                  side: 'left',
+                }
+              : undefined
+          }
+          onClick={hasNonDefault ? clearCustomStyles : handleToggle}
         />
       </div>
 
@@ -111,6 +143,5 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
         <Stack gap={3}>{children}</Stack>
       </CollapsibleContent>
     </Collapsible>
-
   );
 };

@@ -19,7 +19,10 @@ export interface WebviewElementStyleEditorProps {
 const borderDefaults = {
   borderStyle: DefaultWebviewElementStyle.borderStyle,
   borderColor: DefaultWebviewElementStyle.borderColor,
-  borderWidth: DefaultWebviewElementStyle.borderWidth,
+  borderTopWidth: DefaultWebviewElementStyle.borderTopWidth,
+  borderRightWidth: DefaultWebviewElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultWebviewElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultWebviewElementStyle.borderLeftWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -57,13 +60,7 @@ export const WebviewElementStyleEditor: React.FC<
         <SizingFields elementId={elementId} />
       </Stack>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

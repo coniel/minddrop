@@ -1107,6 +1107,7 @@ declare module 'i18next' {
             };
             width: {
               label: string;
+              sync: string;
             };
             radius: {
               label: string;

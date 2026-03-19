@@ -63,7 +63,10 @@ const backgroundDefaults = {
 const borderDefaults = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -205,13 +208,7 @@ export const ContainerElementStyleEditor: React.FC<
         )}
       </CollapsibleSection>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

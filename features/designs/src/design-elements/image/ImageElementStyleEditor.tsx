@@ -30,7 +30,10 @@ export interface ImageElementStyleEditorProps {
 const borderDefaults = {
   borderStyle: DefaultImageElementStyle.borderStyle,
   borderColor: DefaultImageElementStyle.borderColor,
-  borderWidth: DefaultImageElementStyle.borderWidth,
+  borderTopWidth: DefaultImageElementStyle.borderTopWidth,
+  borderRightWidth: DefaultImageElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultImageElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultImageElementStyle.borderLeftWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -147,13 +150,7 @@ export const ImageElementStyleEditor: React.FC<
         />
       </Stack>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

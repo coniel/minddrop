@@ -46,7 +46,10 @@ export interface ContainerStyles {
   gap: number;
   borderStyle: BorderStyle;
   borderColor: string;
-  borderWidth: number;
+  borderTopWidth: number;
+  borderRightWidth: number;
+  borderBottomWidth: number;
+  borderLeftWidth: number;
   borderRadiusTopLeft: number;
   borderRadiusTopRight: number;
   borderRadiusBottomRight: number;
@@ -86,7 +89,10 @@ export const DefaultContainerStyles: ContainerStyles = {
   borderRadiusBottomLeft: 0,
   borderStyle: 'none',
   borderColor: 'default',
-  borderWidth: 1,
+  borderTopWidth: 1,
+  borderRightWidth: 1,
+  borderBottomWidth: 1,
+  borderLeftWidth: 1,
   paddingTop: 0,
   paddingRight: 0,
   paddingBottom: 0,

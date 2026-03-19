@@ -1,4 +1,4 @@
-import { SpacingFields } from './SpacingFields';
+import { CardinalFields } from './CardinalFields';
 
 export interface PaddingFieldsProps {
   /**
@@ -19,7 +19,7 @@ const sides = [
  */
 export const PaddingFields = ({ elementId }: PaddingFieldsProps) => {
   return (
-    <SpacingFields
+    <CardinalFields
       elementId={elementId}
       sides={sides}
       syncLabel="designs.padding.sync"

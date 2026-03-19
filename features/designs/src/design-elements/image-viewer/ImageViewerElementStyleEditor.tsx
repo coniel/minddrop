@@ -25,7 +25,10 @@ export interface ImageViewerElementStyleEditorProps {
 const borderDefaults = {
   borderStyle: DefaultImageViewerElementStyle.borderStyle,
   borderColor: DefaultImageViewerElementStyle.borderColor,
-  borderWidth: DefaultImageViewerElementStyle.borderWidth,
+  borderTopWidth: DefaultImageViewerElementStyle.borderTopWidth,
+  borderRightWidth: DefaultImageViewerElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultImageViewerElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultImageViewerElementStyle.borderLeftWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -89,13 +92,7 @@ export const ImageViewerElementStyleEditor: React.FC<
         <SizingFields elementId={elementId} />
       </Stack>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

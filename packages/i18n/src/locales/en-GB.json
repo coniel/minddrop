@@ -1094,7 +1094,8 @@
         "dotted": "Dotted"
       },
       "width": {
-        "label": "Width"
+        "label": "Width",
+        "sync": "Sync border width"
       },
       "radius": {
         "label": "Radius",

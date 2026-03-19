@@ -94,7 +94,10 @@ function resolveMarginCss(style: {
 function resolveBorderCss(style: {
   borderStyle: string;
   borderColor: string;
-  borderWidth: number;
+  borderTopWidth: number;
+  borderRightWidth: number;
+  borderBottomWidth: number;
+  borderLeftWidth: number;
   borderRadiusTopLeft: number;
   borderRadiusTopRight: number;
   borderRadiusBottomRight: number;
@@ -102,7 +105,7 @@ function resolveBorderCss(style: {
 }): CSSProperties {
   return {
     borderStyle: style.borderStyle,
-    borderWidth: `${style.borderWidth}px`,
+    borderWidth: `${style.borderTopWidth}px ${style.borderRightWidth}px ${style.borderBottomWidth}px ${style.borderLeftWidth}px`,
     borderColor: getBorderColorCss(style.borderColor),
     borderRadius: `${style.borderRadiusTopLeft}px ${style.borderRadiusTopRight}px ${style.borderRadiusBottomRight}px ${style.borderRadiusBottomLeft}px`,
   };

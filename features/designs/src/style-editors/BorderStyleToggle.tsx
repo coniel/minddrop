@@ -1,7 +1,12 @@
 import { useCallback } from 'react';
 import { BorderStyle, borderStyles } from '@minddrop/designs';
 import { useTranslation } from '@minddrop/i18n';
-import { RadioToggleGroup, Toggle } from '@minddrop/ui-primitives';
+import {
+  InputLabel,
+  RadioToggleGroup,
+  Stack,
+  Toggle,
+} from '@minddrop/ui-primitives';
 import { updateElementStyle, useElementStyle } from '../DesignStudioStore';
 
 export interface BorderStyleToggleProps {
@@ -39,6 +44,10 @@ const borderStyleIcons: Record<BorderStyle, React.ReactNode> = {
   ),
 };
 
+// Border styles without the "none" option (resetting to none
+// is handled by the CollapsibleSection)
+const selectableStyles = borderStyles.filter((style) => style.value !== 'none');
+
 /**
  * Renders a toggle group for selecting an element's border style.
  */
@@ -54,16 +63,19 @@ export const BorderStyleToggle = ({ elementId }: BorderStyleToggleProps) => {
   );
 
   return (
-    <RadioToggleGroup
-      size="md"
-      value={borderStyle}
-      onValueChange={handleSelect}
-    >
-      {borderStyles.map((style) => (
-        <Toggle key={style.value} value={style.value} label={t(style.label)}>
-          {borderStyleIcons[style.value]}
-        </Toggle>
-      ))}
-    </RadioToggleGroup>
+    <Stack gap={1}>
+      <InputLabel size="xs" label="designs.border.style.label" />
+      <RadioToggleGroup
+        size="md"
+        value={borderStyle}
+        onValueChange={handleSelect}
+      >
+        {selectableStyles.map((style) => (
+          <Toggle key={style.value} value={style.value} label={t(style.label)}>
+            {borderStyleIcons[style.value]}
+          </Toggle>
+        ))}
+      </RadioToggleGroup>
+    </Stack>
   );
 };

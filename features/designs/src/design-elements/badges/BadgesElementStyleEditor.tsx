@@ -38,7 +38,10 @@ const radiusDefaults = {
 // Default values for the border collapsible section
 const borderDefaults = {
   borderStyle: DefaultBadgesElementStyle.borderStyle,
-  borderWidth: DefaultBadgesElementStyle.borderWidth,
+  borderTopWidth: DefaultBadgesElementStyle.borderTopWidth,
+  borderRightWidth: DefaultBadgesElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultBadgesElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultBadgesElementStyle.borderLeftWidth,
 } as const;
 
 // Default values for the typography collapsible section
@@ -123,13 +126,7 @@ export const BadgesElementStyleEditor: React.FC<
         />
       </CollapsibleSection>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} hideColor />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} hideColor />
 
       <CollapsibleSection
         elementId={elementId}

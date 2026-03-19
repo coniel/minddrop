@@ -25,19 +25,22 @@ const backgroundDefaults = {
   backgroundColor: DefaultViewElementStyle.backgroundColor,
 } as const;
 
+// Default values for the border collapsible section
+const borderDefaults = {
+  borderStyle: DefaultViewElementStyle.borderStyle,
+  borderColor: DefaultViewElementStyle.borderColor,
+  borderTopWidth: DefaultViewElementStyle.borderTopWidth,
+  borderRightWidth: DefaultViewElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultViewElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultViewElementStyle.borderLeftWidth,
+} as const;
+
 // Default values for the sizing collapsible section
 const sizingDefaults = {
   width: DefaultViewElementStyle.width,
   height: DefaultViewElementStyle.height,
   maxWidth: DefaultViewElementStyle.maxWidth,
   maxHeight: DefaultViewElementStyle.maxHeight,
-} as const;
-
-// Default values for the border collapsible section
-const borderDefaults = {
-  borderStyle: DefaultViewElementStyle.borderStyle,
-  borderColor: DefaultViewElementStyle.borderColor,
-  borderWidth: DefaultViewElementStyle.borderWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -113,13 +116,7 @@ export const ViewElementStyleEditor: React.FC<ViewElementStyleEditorProps> = ({
         <SizingFields elementId={elementId} />
       </CollapsibleSection>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

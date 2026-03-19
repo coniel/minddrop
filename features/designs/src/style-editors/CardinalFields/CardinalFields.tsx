@@ -8,7 +8,7 @@ import {
 
 type StyleKey = keyof DesignElementStyle;
 
-export interface SpacingFieldsProps {
+export interface CardinalFieldsProps {
   /**
    * The ID of the element to edit.
    */
@@ -25,6 +25,15 @@ export interface SpacingFieldsProps {
   syncLabel: string;
 
   /**
+   * Whether values are stored as rem and displayed as px.
+   * When true, values are multiplied by 16 for display and
+   * divided by 16 for storage. When false, values are used
+   * as-is (px to px).
+   * @default true
+   */
+  remValues?: boolean;
+
+  /**
    * Minimum allowed value in px.
    * @default undefined (no minimum)
    */
@@ -38,30 +47,39 @@ export interface SpacingFieldsProps {
 }
 
 /**
- * Renders four spacing fields arranged in a cross layout with a sync toggle.
- * Values are stored as rem and displayed as px.
+ * Renders four number fields arranged in a cross layout with a sync toggle.
  */
-export const SpacingFields = ({
+export const CardinalFields = ({
   elementId,
   sides,
   syncLabel,
+  remValues = true,
   min,
   max,
-}: SpacingFieldsProps) => {
+}: CardinalFieldsProps) => {
   const [top, right, bottom, left] = sides;
 
-  // Read all 4 values from the store (stored as rem, displayed as px)
+  // Read all 4 values from the store
   const values = useDesignStudioStore((state) => {
     const style = state.elements[elementId].style as unknown as Record<
       string,
       number
     >;
 
+    if (remValues) {
+      return {
+        [top]: Math.round((style[top] ?? 0) * 16),
+        [right]: Math.round((style[right] ?? 0) * 16),
+        [bottom]: Math.round((style[bottom] ?? 0) * 16),
+        [left]: Math.round((style[left] ?? 0) * 16),
+      };
+    }
+
     return {
-      [top]: Math.round((style[top] ?? 0) * 16),
-      [right]: Math.round((style[right] ?? 0) * 16),
-      [bottom]: Math.round((style[bottom] ?? 0) * 16),
-      [left]: Math.round((style[left] ?? 0) * 16),
+      [top]: style[top] ?? 0,
+      [right]: style[right] ?? 0,
+      [bottom]: style[bottom] ?? 0,
+      [left]: style[left] ?? 0,
     };
   });
 
@@ -75,32 +93,32 @@ export const SpacingFields = ({
   // Start synced if all values are equal and non-zero
   const [synced, setSynced] = useState(() => allEqual && values[top] !== 0);
 
-  // Handles a value change, converting px to rem and syncing all sides if linked
+  // Handles a value change, syncing all sides if linked
   const handleChange = useCallback(
     (side: StyleKey, value: number | null) => {
       if (value === null) {
         return;
       }
 
-      const remValue = value / 16;
+      const storeValue = remValues ? value / 16 : value;
 
       if (synced) {
         sides.forEach((key) => {
           updateElementStyle(
             elementId,
             key,
-            remValue as DesignElementStyle[typeof key],
+            storeValue as DesignElementStyle[typeof key],
           );
         });
       } else {
         updateElementStyle(
           elementId,
           side,
-          remValue as DesignElementStyle[typeof side],
+          storeValue as DesignElementStyle[typeof side],
         );
       }
     },
-    [elementId, synced, sides],
+    [elementId, synced, sides, remValues],
   );
 
   // Toggles sync mode, equalising all sides when enabling
@@ -108,18 +126,18 @@ export const SpacingFields = ({
     if (synced) {
       setSynced(false);
     } else {
-      const remValue = values[top] / 16;
+      const storeValue = remValues ? values[top] / 16 : values[top];
 
       sides.forEach((key) => {
         updateElementStyle(
           elementId,
           key,
-          remValue as DesignElementStyle[typeof key],
+          storeValue as DesignElementStyle[typeof key],
         );
       });
       setSynced(true);
     }
-  }, [elementId, synced, values, top, sides]);
+  }, [elementId, synced, values, top, sides, remValues]);
 
   const fieldStyle = { width: 80 };
 

@@ -51,7 +51,10 @@ export interface ImageElementStyle
       ContainerStyles,
       | 'borderStyle'
       | 'borderColor'
-      | 'borderWidth'
+      | 'borderTopWidth'
+      | 'borderRightWidth'
+      | 'borderBottomWidth'
+      | 'borderLeftWidth'
       | 'borderRadiusTopLeft'
       | 'borderRadiusTopRight'
       | 'borderRadiusBottomRight'
@@ -82,7 +85,10 @@ export interface BadgesElementStyle extends TypographyStyles {
   paddingBottom: number;
   paddingLeft: number;
   borderStyle: ContainerStyles['borderStyle'];
-  borderWidth: number;
+  borderTopWidth: number;
+  borderRightWidth: number;
+  borderBottomWidth: number;
+  borderLeftWidth: number;
   borderRadiusTopLeft: number;
   borderRadiusTopRight: number;
   borderRadiusBottomRight: number;
@@ -98,7 +104,10 @@ export const DefaultBadgesElementStyle: BadgesElementStyle = {
   paddingBottom: 0.3125,
   paddingLeft: 0.5,
   borderStyle: DefaultContainerStyles.borderStyle,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 4,
   borderRadiusTopRight: 4,
   borderRadiusBottomRight: 4,
@@ -147,7 +156,10 @@ export interface WebviewElementStyle
       ContainerStyles,
       | 'borderStyle'
       | 'borderColor'
-      | 'borderWidth'
+      | 'borderTopWidth'
+      | 'borderRightWidth'
+      | 'borderBottomWidth'
+      | 'borderLeftWidth'
       | 'borderRadiusTopLeft'
       | 'borderRadiusTopRight'
       | 'borderRadiusBottomRight'
@@ -169,7 +181,10 @@ export interface WebviewElementStyle
 export const DefaultWebviewElementStyle: WebviewElementStyle = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 0,
   borderRadiusTopRight: 0,
   borderRadiusBottomRight: 0,
@@ -192,7 +207,10 @@ export interface ViewElementStyle
     ContainerStyles,
     | 'borderStyle'
     | 'borderColor'
-    | 'borderWidth'
+    | 'borderTopWidth'
+    | 'borderRightWidth'
+    | 'borderBottomWidth'
+    | 'borderLeftWidth'
     | 'borderRadiusTopLeft'
     | 'borderRadiusTopRight'
     | 'borderRadiusBottomRight'
@@ -214,7 +232,10 @@ export interface ViewElementStyle
 export const DefaultViewElementStyle: ViewElementStyle = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 0,
   borderRadiusTopRight: 0,
   borderRadiusBottomRight: 0,
@@ -237,7 +258,10 @@ export interface ImageViewerElementStyle
       ContainerStyles,
       | 'borderStyle'
       | 'borderColor'
-      | 'borderWidth'
+      | 'borderTopWidth'
+      | 'borderRightWidth'
+      | 'borderBottomWidth'
+      | 'borderLeftWidth'
       | 'borderRadiusTopLeft'
       | 'borderRadiusTopRight'
       | 'borderRadiusBottomRight'
@@ -259,7 +283,10 @@ export interface ImageViewerElementStyle
 export const DefaultImageViewerElementStyle: ImageViewerElementStyle = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 0,
   borderRadiusTopRight: 0,
   borderRadiusBottomRight: 0,
@@ -286,7 +313,10 @@ export interface EditorElementStyle
       | 'paddingLeft'
       | 'borderStyle'
       | 'borderColor'
-      | 'borderWidth'
+      | 'borderTopWidth'
+      | 'borderRightWidth'
+      | 'borderBottomWidth'
+      | 'borderLeftWidth'
       | 'borderRadiusTopLeft'
       | 'borderRadiusTopRight'
       | 'borderRadiusBottomRight'
@@ -315,7 +345,10 @@ export const DefaultEditorElementStyle: EditorElementStyle = {
   paddingLeft: 1,
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 0,
   borderRadiusTopRight: 0,
   borderRadiusBottomRight: 0,
@@ -339,7 +372,10 @@ export const DefaultEditorElementStyle: EditorElementStyle = {
 export const DefaultImageElementStyle: ImageElementStyle = {
   borderStyle: DefaultContainerStyles.borderStyle,
   borderColor: DefaultContainerStyles.borderColor,
-  borderWidth: DefaultContainerStyles.borderWidth,
+  borderTopWidth: DefaultContainerStyles.borderTopWidth,
+  borderRightWidth: DefaultContainerStyles.borderRightWidth,
+  borderBottomWidth: DefaultContainerStyles.borderBottomWidth,
+  borderLeftWidth: DefaultContainerStyles.borderLeftWidth,
   borderRadiusTopLeft: 0,
   borderRadiusTopRight: 0,
   borderRadiusBottomRight: 0,

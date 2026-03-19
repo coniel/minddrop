@@ -20,7 +20,10 @@ export interface EditorElementStyleEditorProps {
 const borderDefaults = {
   borderStyle: DefaultEditorElementStyle.borderStyle,
   borderColor: DefaultEditorElementStyle.borderColor,
-  borderWidth: DefaultEditorElementStyle.borderWidth,
+  borderTopWidth: DefaultEditorElementStyle.borderTopWidth,
+  borderRightWidth: DefaultEditorElementStyle.borderRightWidth,
+  borderBottomWidth: DefaultEditorElementStyle.borderBottomWidth,
+  borderLeftWidth: DefaultEditorElementStyle.borderLeftWidth,
 } as const;
 
 // Default values for the radius collapsible section
@@ -66,13 +69,7 @@ export const EditorElementStyleEditor: React.FC<
         <PaddingFields elementId={elementId} />
       </Stack>
 
-      <CollapsibleSection
-        elementId={elementId}
-        label="designs.border.label"
-        defaultStyles={borderDefaults}
-      >
-        <Border elementId={elementId} />
-      </CollapsibleSection>
+      <Border elementId={elementId} defaultStyles={borderDefaults} />
 
       <CollapsibleSection
         elementId={elementId}

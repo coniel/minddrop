@@ -1,4 +1,4 @@
-import { SpacingFields } from './SpacingFields';
+import { CardinalFields } from './CardinalFields';
 
 export interface MarginFieldsProps {
   /**
@@ -19,7 +19,7 @@ const sides = [
  */
 export const MarginFields = ({ elementId }: MarginFieldsProps) => {
   return (
-    <SpacingFields
+    <CardinalFields
       elementId={elementId}
       sides={sides}
       syncLabel="designs.typography.margin.sync"
