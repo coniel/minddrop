@@ -95,7 +95,7 @@ describe('initializeDatabaseAutomations', () => {
   it('loads core automation action configs into the store', () => {
     initializeDatabaseAutomations();
 
-    expect(DatabaseAutomationActionConfigsStore.getAll()).toEqual(
+    expect(DatabaseAutomationActionConfigsStore.getAllArray()).toEqual(
       coreDatabaseAutomationActionConfigs,
     );
   });
@@ -112,7 +112,7 @@ describe('initializeDatabaseAutomations', () => {
 
       initializeDatabaseAutomations();
 
-      DatabaseAutomationActionConfigsStore.add(createActionConfig);
+      DatabaseAutomationActionConfigsStore.set(createActionConfig);
 
       Events.dispatch(DatabaseEntryCreatedEvent, entry);
     }));
@@ -131,7 +131,7 @@ describe('initializeDatabaseAutomations', () => {
 
       initializeDatabaseAutomations();
 
-      DatabaseAutomationActionConfigsStore.add(updateActionConfig);
+      DatabaseAutomationActionConfigsStore.set(updateActionConfig);
 
       Events.dispatch(DatabaseEntryCreatedEvent, entry);
     }));
@@ -150,7 +150,7 @@ describe('initializeDatabaseAutomations', () => {
 
       initializeDatabaseAutomations();
 
-      DatabaseAutomationActionConfigsStore.add(updateActionConfig);
+      DatabaseAutomationActionConfigsStore.set(updateActionConfig);
 
       DatabaseEntriesStore.update(entry.id, updatedEntry);
       Events.dispatch(DatabaseEntryUpdatedEvent, {

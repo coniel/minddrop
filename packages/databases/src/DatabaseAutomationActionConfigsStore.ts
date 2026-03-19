@@ -1,12 +1,12 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createObjectStore } from '@minddrop/stores';
 import {
   DatabaseAutomationActionConfig,
   DatabaseAutomationUpdatePropertyActionConfig,
 } from './types';
 
-export const DatabaseAutomationActionConfigsStore = createArrayStore<
+export const DatabaseAutomationActionConfigsStore = createObjectStore<
   DatabaseAutomationActionConfig | DatabaseAutomationUpdatePropertyActionConfig
->('type');
+>('Databases:AutomationActionConfigs', 'type');
 
 /**
  * Retrieves an automation action config by type or null if it doesn't exist.
@@ -20,11 +20,7 @@ export const useDatabaseAutomation = (
   | DatabaseAutomationActionConfig
   | DatabaseAutomationUpdatePropertyActionConfig
   | null => {
-  return (
-    DatabaseAutomationActionConfigsStore.useAllItems().find(
-      (config) => config.type === type,
-    ) || null
-  );
+  return DatabaseAutomationActionConfigsStore.useItem(type);
 };
 
 /**
@@ -36,5 +32,5 @@ export const useDatabaseAutomations = (): (
   | DatabaseAutomationActionConfig
   | DatabaseAutomationUpdatePropertyActionConfig
 )[] => {
-  return DatabaseAutomationActionConfigsStore.useAllItems();
+  return DatabaseAutomationActionConfigsStore.useAllItemsArray();
 };

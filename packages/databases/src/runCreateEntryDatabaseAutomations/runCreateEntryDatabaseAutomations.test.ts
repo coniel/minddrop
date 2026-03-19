@@ -43,7 +43,7 @@ describe('runCreateEntryDatabaseAutomations', () => {
   beforeEach(() => {
     setup();
 
-    DatabaseAutomationActionConfigsStore.add(actionConfig);
+    DatabaseAutomationActionConfigsStore.set(actionConfig);
 
     DatabaseEntriesStore.set(entry);
   });

@@ -61,7 +61,7 @@ describe('runUpdatePropertyDatabaseAutomations', () => {
   beforeEach(() => {
     setup();
 
-    DatabaseAutomationActionConfigsStore.add(actionConfig);
+    DatabaseAutomationActionConfigsStore.set(actionConfig);
     DatabaseEntriesStore.set(entry);
     DatabasesStore.set(database);
   });

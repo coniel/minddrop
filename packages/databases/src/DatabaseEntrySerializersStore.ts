@@ -1,8 +1,11 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createObjectStore } from '@minddrop/stores';
 import { DatabaseEntrySerializer } from './types';
 
 export const DatabaseEntrySerializersStore =
-  createArrayStore<DatabaseEntrySerializer>('id');
+  createObjectStore<DatabaseEntrySerializer>(
+    'Databases:EntrySerializers',
+    'id',
+  );
 
 /**
  * Retrieves a serializer by ID or null if it doesn't exist.
@@ -13,11 +16,7 @@ export const DatabaseEntrySerializersStore =
 export const useDatabaseEntrySerializer = (
   id: string,
 ): DatabaseEntrySerializer | null => {
-  return (
-    DatabaseEntrySerializersStore.useAllItems().find(
-      (config) => config.id === id,
-    ) || null
-  );
+  return DatabaseEntrySerializersStore.useItem(id);
 };
 
 /**
@@ -27,5 +26,5 @@ export const useDatabaseEntrySerializer = (
  */
 export const useDatabaseEntrySerializerSerializers =
   (): DatabaseEntrySerializer[] => {
-    return DatabaseEntrySerializersStore.useAllItems();
+    return DatabaseEntrySerializersStore.useAllItemsArray();
   };

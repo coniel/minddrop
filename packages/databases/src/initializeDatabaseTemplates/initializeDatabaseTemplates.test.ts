@@ -10,7 +10,7 @@ describe('initializeDatabaseTemplates', () => {
   it('loads database templates into the store', async () => {
     initializeDatabaseTemplates();
 
-    expect(DatabaseTemplatesStore.getAll().length).toEqual(
+    expect(DatabaseTemplatesStore.getAllArray().length).toEqual(
       coreDatabaseTemplates.length,
     );
   });
