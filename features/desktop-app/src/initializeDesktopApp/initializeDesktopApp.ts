@@ -18,6 +18,7 @@ import { Views } from '@minddrop/views';
 import { Workspaces } from '@minddrop/workspaces';
 import { AppUiState } from '../AppUiState';
 import { registerAppDataStoreListeners } from '../registerAppDataStoreListeners';
+import { registerWorkspaceStoreListeners } from '../registerWorkspaceStoreListeners';
 import { initializeSelection } from './initializeSelection';
 import { initializeViewTypes } from './initializeViewTypes';
 
@@ -64,11 +65,16 @@ export async function initializeDesktopApp(): Promise<void> {
   Ast.registerDefaultConfigs();
   initializeViewTypes();
 
-  // Hydrate entry dialog sizes from persisted config
-  await EntryDialogSizesStore.hydrate();
-
   Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
+
+  // Register listeners that persist and hydrate workspace-config
+  // stores to JSON files in the workspace config directory
+  registerWorkspaceStoreListeners();
+
+  // Hydrate entry dialog sizes from workspace config
+  await EntryDialogSizesStore.hydrate();
+
   // Initialize core packages
   await Workspaces.initialize();
   await Designs.initialize();
