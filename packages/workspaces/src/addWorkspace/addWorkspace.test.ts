@@ -56,11 +56,11 @@ describe('addWorkspace', () => {
   });
 
   it('does nothing if the workspace is already in the store', async () => {
-    WorkspacesStore.add(workspace_1);
+    WorkspacesStore.set(workspace_1);
 
     await addWorkspace(workspace_1.path);
 
-    expect(WorkspacesStore.getAll()).toEqual([workspace_1]);
+    expect(WorkspacesStore.getAllArray()).toEqual([workspace_1]);
   });
 
   it('adds the workspace to the store if it is an existing workspace', async () => {

@@ -34,7 +34,7 @@ export async function addWorkspace(path: string): Promise<Workspace> {
 
   // Check if the workspace is already in the store. If so, return it
   // without adding it again.
-  const existingWorkspace = WorkspacesStore.getAll().find(
+  const existingWorkspace = WorkspacesStore.getAllArray().find(
     (workspace) => workspace.path === path,
   );
 
@@ -54,13 +54,13 @@ export async function addWorkspace(path: string): Promise<Workspace> {
     });
 
     // Add the workspace to the store
-    WorkspacesStore.add(workspace);
+    WorkspacesStore.set(workspace);
 
     // Write the workspace config
     await writeWorkspaceConfig(workspace.id);
   } else {
     // If the workspace exists, add it to the store
-    WorkspacesStore.add(workspace);
+    WorkspacesStore.set(workspace);
   }
 
   // Write the workspaces config to add the new workspace path to it

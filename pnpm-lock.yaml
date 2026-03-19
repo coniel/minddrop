@@ -1511,6 +1511,10 @@ importers:
         version: 5.9.3
 
   packages/workspaces:
+    dependencies:
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*

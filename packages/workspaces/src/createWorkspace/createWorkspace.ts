@@ -37,7 +37,7 @@ export async function createWorkspace(
   });
 
   // Add the workspace to the store
-  WorkspacesStore.add(workspace);
+  WorkspacesStore.set(workspace);
 
   // Create the workspace directory
   await Fs.createDir(path);

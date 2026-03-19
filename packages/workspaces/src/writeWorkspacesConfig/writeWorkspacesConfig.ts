@@ -12,7 +12,7 @@ export async function writeWorkspacesConfig(): Promise<void> {
 
   // Generate the workspaces config
   const workspacesConfig: WorkspacesConfig = {
-    paths: WorkspacesStore.getAll().map((workspace) => workspace.path),
+    paths: WorkspacesStore.getAllArray().map((workspace) => workspace.path),
   };
 
   // Write the workspaces config to the file system

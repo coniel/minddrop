@@ -1,7 +1,10 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createObjectStore } from '@minddrop/stores';
 import { Workspace } from './types';
 
-export const WorkspacesStore = createArrayStore<Workspace>('id');
+export const WorkspacesStore = createObjectStore<Workspace>(
+  'Workspaces:Workspaces',
+  'id',
+);
 
 /**
  * Retrieves a workspace by its ID.
@@ -10,17 +13,14 @@ export const WorkspacesStore = createArrayStore<Workspace>('id');
  * @returns The workspace or null if it doesn't exist.
  */
 export const useWorkspace = (id: string): Workspace | null => {
-  return (
-    WorkspacesStore.useAllItems().find((workspace) => workspace.id === id) ||
-    null
-  );
+  return WorkspacesStore.useItem(id);
 };
 
 /**
  * Retrieves all workspaces.
  *
- * @returns And array of all workspaces.
+ * @returns An array of all workspaces.
  */
 export const useWorkspaces = (): Workspace[] => {
-  return WorkspacesStore.useAllItems();
+  return WorkspacesStore.useAllItemsArray();
 };

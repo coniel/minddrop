@@ -16,4 +16,4 @@ export {
 export { writeWorkspaceConfig as writeConfig } from './writeWorkspaceConfig';
 export { WorkspacesStore as Store } from './WorkspacesStore';
 
-export const getAll = WorkspacesStore.getAll;
+export const getAll = WorkspacesStore.getAllArray;

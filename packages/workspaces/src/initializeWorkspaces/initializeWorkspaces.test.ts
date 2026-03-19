@@ -23,7 +23,7 @@ describe('initializeWorkspaces', () => {
   it('loads workspaces into the store', async () => {
     await initializeWorkspaces();
 
-    expect(WorkspacesStore.getAll()).toEqual(workspaces);
+    expect(WorkspacesStore.getAllArray()).toEqual(workspaces);
   });
 
   it('dispatches a workspaces loaded event', async () =>
