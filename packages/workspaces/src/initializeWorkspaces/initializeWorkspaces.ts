@@ -1,5 +1,6 @@
 import { Events } from '@minddrop/events';
 import { BaseDirectory, Fs } from '@minddrop/file-system';
+import { Paths } from '@minddrop/utils';
 import { WorkspacesStore } from '../WorkspacesStore';
 import { WorkspacesConfigFileName } from '../constants';
 import { WorkspacesLoadedEvent, WorkspacesLoadedEventData } from '../events';
@@ -9,7 +10,8 @@ import { getWorkspacesConfigFilePath } from '../utils';
 
 /**
  * Initializes workspaces by reading the workspaces config file
- * and loading workspaces from the file system.
+ * and loading workspaces from the file system. Sets global
+ * workspace paths from the first loaded workspace.
  *
  * @dispatches workspaces:loaded
  */
@@ -41,6 +43,15 @@ export async function initializeWorkspaces(): Promise<void> {
 
   // Load workspaces into the store
   WorkspacesStore.load(workspaces);
+
+  // Set global workspace paths from the first workspace
+  if (workspaces.length > 0) {
+    Paths.workspace = workspaces[0].path;
+    Paths.workspaceConfigs = Fs.concatPath(
+      workspaces[0].path,
+      Paths.hiddenDirName,
+    );
+  }
 
   // Dispatch a workspaces loaded event
   Events.dispatch<WorkspacesLoadedEventData>(WorkspacesLoadedEvent, workspaces);
