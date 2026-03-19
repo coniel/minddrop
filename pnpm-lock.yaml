@@ -849,9 +849,6 @@ importers:
       use-debounce:
         specifier: ^9.0.4
         version: 9.0.4(react@19.2.4)
-      zustand:
-        specifier: ^4.3.8
-        version: 4.5.6(@types/react@19.2.14)(react@19.2.4)
     devDependencies:
       '@minddrop/eslint-config':
         specifier: workspace:*
