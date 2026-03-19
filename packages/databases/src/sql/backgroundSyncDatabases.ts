@@ -80,14 +80,18 @@ export async function backgroundSyncDatabases(
     (id) => !fileSystemDatabaseIds.has(id),
   );
 
-  // Delete removed databases from SQL
-  for (const id of deletedDatabaseIds) {
-    sqlDeleteDatabase(id, { silent: true });
-  }
-
   // Track all upserted/deleted entry IDs across databases
   const allUpsertedEntryIds = new Set<string>();
   const allDeletedEntryIds: string[] = [];
+
+  // Collect entry IDs before CASCADE delete removes them,
+  // then delete the databases from SQL
+  for (const id of deletedDatabaseIds) {
+    const entryIds = [...sqlGetEntryTimestamps(id).keys()];
+
+    allDeletedEntryIds.push(...entryIds);
+    sqlDeleteDatabase(id, { silent: true });
+  }
 
   // Sync entries for each filesystem database
   for (const database of fileSystemDatabases) {
