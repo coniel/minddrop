@@ -52,7 +52,6 @@ export function useSearch(): UseSearchResult {
 
     try {
       const searchResults = await Search.fullText(workspaceId, value, 20);
-      console.log('searchResults', searchResults);
       setResults(searchResults);
     } catch (error) {
       console.error('[search]', error);
