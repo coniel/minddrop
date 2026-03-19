@@ -27,7 +27,7 @@ export async function createQuery(name?: string): Promise<Query> {
   };
 
   // Add the query to the store
-  QueriesStore.add(query);
+  QueriesStore.set(query);
 
   // Write the query config to the file system
   await writeQuery(query.id);

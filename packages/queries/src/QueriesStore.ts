@@ -1,7 +1,7 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createObjectStore } from '@minddrop/stores';
 import { Query } from './types';
 
-export const QueriesStore = createArrayStore<Query>('id');
+export const QueriesStore = createObjectStore<Query>('Queries:Queries', 'id');
 
 /**
  * Retrieves a Query by ID or null if it doesn't exist.
@@ -10,14 +10,14 @@ export const QueriesStore = createArrayStore<Query>('id');
  * @returns The query or null if it doesn't exist.
  */
 export const useQuery = (id: string): Query | null => {
-  return QueriesStore.useAllItems().find((query) => query.id === id) || null;
+  return QueriesStore.useItem(id);
 };
 
 /**
  * Retrieves all queries.
  *
- * @returns And array of all queries.
+ * @returns An array of all queries.
  */
 export const useQueries = (): Query[] => {
-  return QueriesStore.useAllItems();
+  return QueriesStore.useAllItemsArray();
 };

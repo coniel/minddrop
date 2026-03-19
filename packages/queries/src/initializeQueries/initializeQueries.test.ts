@@ -23,7 +23,7 @@ describe('initializeQueries', () => {
   it('loads queries from the queries directory into the store', async () => {
     await initializeQueries();
 
-    expect(QueriesStore.getAll()).toEqual(queries);
+    expect(QueriesStore.getAllArray()).toEqual(queries);
   });
 
   it('filters out null queries', async () => {
@@ -32,7 +32,7 @@ describe('initializeQueries', () => {
 
     await initializeQueries();
 
-    expect(QueriesStore.getAll()).toEqual(queries);
+    expect(QueriesStore.getAllArray()).toEqual(queries);
   });
 
   it('dispatches a queries loaded event', async () =>
