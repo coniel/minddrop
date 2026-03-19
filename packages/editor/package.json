@@ -25,8 +25,8 @@
   "dependencies": {
     "@minddrop/ast": "workspace:*",
     "@minddrop/events": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/ui-primitives": "workspace:*",
-    "@minddrop/utils": "workspace:*",
     "is-hotkey": "^0.2.0",
     "slate": "^0.110.2",
     "slate-history": "^0.110.3",

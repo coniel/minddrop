@@ -816,12 +816,12 @@ importers:
       '@minddrop/events':
         specifier: workspace:*
         version: link:../events
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
       '@minddrop/ui-primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
-      '@minddrop/utils':
-        specifier: workspace:*
-        version: link:../utils
       is-hotkey:
         specifier: ^0.2.0
         version: 0.2.0
