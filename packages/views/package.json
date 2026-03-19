@@ -18,6 +18,7 @@
   "dependencies": {
     "@minddrop/events": "workspace:*",
     "@minddrop/file-system": "workspace:*",
+    "@minddrop/stores": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/workspaces": "workspace:*"

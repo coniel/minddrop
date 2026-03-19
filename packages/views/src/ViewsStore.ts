@@ -1,7 +1,7 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createArrayStore } from '@minddrop/stores';
 import { View, ViewDataSource } from './types';
 
-export const ViewsStore = createArrayStore<View>('id');
+export const ViewsStore = createArrayStore<View>('Views:Views', 'id');
 
 /**
  * Retrieves a view by ID.

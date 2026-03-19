@@ -1478,6 +1478,9 @@ importers:
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
       '@minddrop/utils':
         specifier: workspace:*
         version: link:../utils
