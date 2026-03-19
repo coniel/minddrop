@@ -13,9 +13,7 @@ describe('initializeDesigns', () => {
   it('loads default designs into the store', async () => {
     await initializeDesigns();
 
-    expect(
-      DesignsStore.getAll().find((design) => design.id === 'card'),
-    ).toEqual(DefaultCardDesign);
+    expect(DesignsStore.get('card')).toEqual(DefaultCardDesign);
   });
 
   it('loads designs from the file system and loads them into the store', async () => {
@@ -31,7 +29,7 @@ describe('initializeDesigns', () => {
     await initializeDesigns();
 
     expect(
-      DesignsStore.getAll().find((design) => !Boolean(design)),
+      DesignsStore.getAllArray().find((design) => !Boolean(design)),
     ).toBeUndefined();
   });
 });

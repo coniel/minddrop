@@ -1,7 +1,7 @@
-import { createArrayStore } from '@minddrop/utils';
+import { createObjectStore } from '@minddrop/stores';
 import { Design } from './types';
 
-export const DesignsStore = createArrayStore<Design>('id');
+export const DesignsStore = createObjectStore<Design>('Designs:Designs', 'id');
 
 /**
  * Retrieves a design by its ID.
@@ -10,16 +10,16 @@ export const DesignsStore = createArrayStore<Design>('id');
  * @returns The design or null if it doesn't exist.
  */
 export const useDesign = (id: string): Design | null => {
-  return DesignsStore.useAllItems().find((design) => design.id === id) || null;
+  return DesignsStore.useItem(id);
 };
 
 /**
  * Retrieves all designs.
  *
- * @returns And array of all designs.
+ * @returns An array of all designs.
  */
 export const useDesigns = (): Design[] => {
-  return DesignsStore.useAllItems();
+  return DesignsStore.useAllItemsArray();
 };
 
 /**
@@ -29,5 +29,7 @@ export const useDesigns = (): Design[] => {
  * @returns An array of designs of the specified type.
  */
 export const useDesignsOfType = (type: string): Design[] => {
-  return DesignsStore.useAllItems().filter((design) => design.type === type);
+  return DesignsStore.useAllItemsArray().filter(
+    (design) => design.type === type,
+  );
 };

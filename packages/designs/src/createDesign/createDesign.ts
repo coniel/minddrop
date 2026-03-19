@@ -53,7 +53,7 @@ export async function createDesign(
   };
 
   // Add the design to the store
-  DesignsStore.add(design);
+  DesignsStore.set(design);
 
   // Write the design to the file system
   await writeDesign(design.id);

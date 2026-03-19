@@ -776,6 +776,9 @@ importers:
 
   packages/designs:
     dependencies:
+      '@minddrop/stores':
+        specifier: workspace:*
+        version: link:../stores
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../../ui/theme
