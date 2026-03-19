@@ -1,7 +1,10 @@
-import { createArrayStore } from '@minddrop/stores';
+import { createObjectStore } from '@minddrop/stores';
 import { ViewType } from './types';
 
-export const ViewTypesStore = createArrayStore<ViewType>('Views:Types', 'type');
+export const ViewTypesStore = createObjectStore<ViewType>(
+  'Views:Types',
+  'type',
+);
 
 /**
  * Retrieves a view type by its type.
@@ -10,16 +13,14 @@ export const ViewTypesStore = createArrayStore<ViewType>('Views:Types', 'type');
  * @returns The view type or null if it doesn't exist.
  */
 export const useViewType = (type: string): ViewType | null => {
-  return (
-    ViewTypesStore.useAllItems().find((view) => view.type === type) || null
-  );
+  return ViewTypesStore.useItem(type);
 };
 
 /**
  * Retrieves all view types.
  *
- * @returns And array of all view types.
+ * @returns An array of all view types.
  */
 export const useViewTypes = (): ViewType[] => {
-  return ViewTypesStore.useAllItems();
+  return ViewTypesStore.useAllItemsArray();
 };

@@ -49,7 +49,7 @@ export async function createView(
   }
 
   // Add the view to the store
-  ViewsStore.add(view);
+  ViewsStore.set(view);
 
   // Write the view to the file system
   await writeView(view.id);

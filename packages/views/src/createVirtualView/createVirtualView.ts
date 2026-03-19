@@ -43,7 +43,7 @@ export function createVirtualView(viewData: CreateVirtualViewData): View {
   }
 
   // Add the view to the store
-  ViewsStore.add(view);
+  ViewsStore.set(view);
 
   // Dispatch a view created event
   Events.dispatch<ViewCreatedEventData>(ViewCreatedEvent, view);

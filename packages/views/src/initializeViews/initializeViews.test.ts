@@ -13,7 +13,7 @@ describe('initializeViews', () => {
   it('loads views into the store', async () => {
     await initializeViews();
 
-    expect(ViewsStore.getAll()).toEqual(views);
+    expect(ViewsStore.getAllArray()).toEqual(views);
   });
 
   it('dispatches a views loaded event', async () =>

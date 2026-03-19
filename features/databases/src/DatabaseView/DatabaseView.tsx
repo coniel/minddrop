@@ -333,8 +333,6 @@ export const DatabaseView: React.FC<DatabaseViewProps> = ({
                 direction="horizontal"
                 gap={1}
                 onSort={(newOrder) => {
-                  // Reorder views in the views store
-                  Views.reorderDataSourceViews(newOrder);
                   // Persist the sort order to the database
                   Databases.update(databaseId, { viewOrder: newOrder });
                 }}

@@ -12,7 +12,7 @@ export function getDataSourceViews(
   type: ViewDataSource['type'],
   id: string,
 ): View[] {
-  return ViewsStore.getAll().filter(
+  return ViewsStore.getAllArray().filter(
     (view) => view.dataSource.type === type && view.dataSource.id === id,
   );
 }

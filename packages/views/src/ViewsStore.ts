@@ -1,7 +1,7 @@
-import { createArrayStore } from '@minddrop/stores';
+import { createObjectStore } from '@minddrop/stores';
 import { View, ViewDataSource } from './types';
 
-export const ViewsStore = createArrayStore<View>('Views:Views', 'id');
+export const ViewsStore = createObjectStore<View>('Views:Views', 'id');
 
 /**
  * Retrieves a view by ID.
@@ -10,16 +10,16 @@ export const ViewsStore = createArrayStore<View>('Views:Views', 'id');
  * @returns The view or null if it doesn't exist.
  */
 export const useView = (id: string): View | null => {
-  return ViewsStore.useAllItems().find((view) => view.id === id) || null;
+  return ViewsStore.useItem(id);
 };
 
 /**
  * Retrieves all views.
  *
- * @returns And array of all views.
+ * @returns An array of all views.
  */
 export const useViews = (): View[] => {
-  return ViewsStore.useAllItems();
+  return ViewsStore.useAllItemsArray();
 };
 
 /**
@@ -46,13 +46,4 @@ export const useDataSourceViews = (
   return useViews().filter(
     (view) => view.dataSource.type === type && view.dataSource.id === id,
   );
-};
-
-/**
- * Reorders the views for a specific data source by their IDs.
- *
- * @param viewIds - The view IDs in the desired order.
- */
-export const reorderDataSourceViews = (viewIds: string[]): void => {
-  ViewsStore.reorder(viewIds);
 };

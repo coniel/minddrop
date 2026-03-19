@@ -46,7 +46,7 @@ export async function updateView(
     }
 
     ViewsStore.remove(id);
-    ViewsStore.add(updatedView);
+    ViewsStore.set(updatedView);
   } else {
     // Update the view in the store
     ViewsStore.update(id, deepMerge ? deepMergeFn(view, update) : update);

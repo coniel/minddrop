@@ -12,7 +12,7 @@ import { ViewType } from '../types';
  */
 export function registerViewType(viewType: ViewType<any>) {
   // Add the view type to the store
-  ViewTypesStore.add(viewType);
+  ViewTypesStore.set(viewType);
 
   // Dispatch the view type registered event
   Events.dispatch(ViewTypeRegisteredEvent, viewType);

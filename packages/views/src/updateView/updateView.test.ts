@@ -60,7 +60,7 @@ describe('updateView', () => {
 
   it('does not write to the file system for virtual views', async () => {
     // Add a virtual view to the store
-    ViewsStore.add(view_virtual_1);
+    ViewsStore.set(view_virtual_1);
 
     await updateView(view_virtual_1.id, { name: 'Updated' });
 
@@ -70,7 +70,7 @@ describe('updateView', () => {
 
   it('allows changing the ID of a virtual view', async () => {
     // Add a virtual view to the store
-    ViewsStore.add(view_virtual_1);
+    ViewsStore.set(view_virtual_1);
 
     const result = await updateView(view_virtual_1.id, {
       id: 'new-virtual-id',
@@ -92,8 +92,6 @@ describe('updateView', () => {
 
   it('dispatches a view updated event', async () =>
     new Promise<void>((done) => {
-      ViewsStore.add(updatedView);
-
       Events.addListener<ViewUpdatedEventData>(
         ViewUpdatedEvent,
         'test',

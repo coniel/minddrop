@@ -31,7 +31,7 @@ describe('deleteView', () => {
 
   it('does not delete a file for virtual views', async () => {
     // Add a virtual view to the store
-    ViewsStore.add(view_virtual_1);
+    ViewsStore.set(view_virtual_1);
 
     await deleteView(view_virtual_1.id);
 
