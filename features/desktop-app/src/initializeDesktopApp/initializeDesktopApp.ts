@@ -1,11 +1,13 @@
 import { Ast } from '@minddrop/ast';
-import { loadConfigs } from '@minddrop/core';
 import { Databases } from '@minddrop/databases';
 import { Designs } from '@minddrop/designs';
 import { EditorElements, EditorMarks } from '@minddrop/editor';
 import { Events } from '@minddrop/events';
 import { initializeExtensions } from '@minddrop/extensions';
-import { DatabaseViewStateStore } from '@minddrop/feature-databases';
+import {
+  DatabaseViewStateStore,
+  EntryDialogSizesStore,
+} from '@minddrop/feature-databases';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
@@ -62,8 +64,9 @@ export async function initializeDesktopApp(): Promise<void> {
   Ast.registerDefaultConfigs();
   initializeViewTypes();
 
-  // Load persisted config values
-  await loadConfigs();
+  // Hydrate entry dialog sizes from persisted config
+  await EntryDialogSizesStore.hydrate();
+
   Paths.workspace = '/Users/oscar/Documents/MindDrop 2';
   Paths.workspaceConfigs = '/Users/oscar/Documents/MindDrop 2/.minddrop';
   // Initialize core packages

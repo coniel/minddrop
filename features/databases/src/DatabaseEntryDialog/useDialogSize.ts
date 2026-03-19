@@ -2,9 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { WindowSizeSlot, getWindowSizeSlot } from '@minddrop/utils';
 import {
   DialogSize,
-  EntryDialogSizeConfig,
+  EntryDialogSizesStore,
   dialogSizeKey,
-} from './EntryDialogSizeConfig';
+} from './EntryDialogSizesStore';
 
 // Manages the entry dialog's size state. Restores a persisted size
 // (or falls back to a default) when the dialog opens, and adapts the
@@ -84,7 +84,7 @@ export function useDialogSize(
 
     // Attempt to restore a persisted size, fall back to defaults
     const saved = designId
-      ? (EntryDialogSizeConfig.get(dialogSizeKey(designId, slot)) as
+      ? (EntryDialogSizesStore.get(dialogSizeKey(designId, slot)) as
           | DialogSize
           | undefined)
       : undefined;
@@ -126,7 +126,7 @@ export function useDialogSize(
 
         // Try to load a saved size for the new slot, fall back to defaults
         const saved = designId
-          ? (EntryDialogSizeConfig.get(dialogSizeKey(designId, newSlot)) as
+          ? (EntryDialogSizesStore.get(dialogSizeKey(designId, newSlot)) as
               | DialogSize
               | undefined)
           : undefined;

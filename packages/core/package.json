@@ -6,21 +6,14 @@
   "types": "src/index",
   "scripts": {
     "lint": "eslint .  --max-warnings 0",
-    "typecheck": "tsc --noEmit --jsx react-jsx",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.1.0",
-    "@types/react": "^19.2.14",
     "eslint": "^9.39.3",
     "@minddrop/eslint-config": "workspace:*",
     "tsconfig": "workspace:*",
     "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@minddrop/file-system": "workspace:*",
-    "react": "^19.2.4",
-    "zustand": "^4.3.8"
   }
 }

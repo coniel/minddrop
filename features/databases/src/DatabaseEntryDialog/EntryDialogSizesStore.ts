@@ -1,4 +1,4 @@
-import { createPersistentConfig } from '@minddrop/core';
+import { createKeyValueStore } from '@minddrop/stores';
 import { WindowSizeSlot } from '@minddrop/utils';
 
 export interface DialogSize {
@@ -22,9 +22,16 @@ export function dialogSizeKey(designId: string, slot: WindowSizeSlot): string {
 }
 
 /**
- * Persistent config that stores entry dialog sizes keyed by
+ * Persistent store that stores entry dialog sizes keyed by
  * `designId:windowSizeSlot`.
  */
-export const EntryDialogSizeConfig = createPersistentConfig<
+export const EntryDialogSizesStore = createKeyValueStore<
   Record<string, DialogSize>
->('entry-dialog-sizes', {});
+>(
+  'Databases:EntryDialogSizes',
+  {},
+  {
+    persistTo: 'workspace-config',
+    namespace: 'entry-dialog-sizes',
+  },
+);

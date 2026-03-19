@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "@minddrop/ast": "workspace:*",
-    "@minddrop/core": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/dev-tools": "workspace:*",
     "@minddrop/editor": "workspace:*",

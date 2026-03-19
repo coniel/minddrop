@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@minddrop/collections": "workspace:*",
-    "@minddrop/core": "workspace:*",
     "@minddrop/databases": "workspace:*",
     "@minddrop/ui-drag-and-drop": "workspace:*",
     "@minddrop/designs": "workspace:*",

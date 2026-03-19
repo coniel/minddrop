@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getWindowSizeSlot } from '@minddrop/utils';
 import {
   DialogSize,
-  EntryDialogSizeConfig,
+  EntryDialogSizesStore,
   dialogSizeKey,
-} from './EntryDialogSizeConfig';
+} from './EntryDialogSizesStore';
 import { EDGE_PADDING_X, EDGE_PADDING_Y } from './useDialogSize';
 
 // Handles interactive corner-drag resizing of the entry dialog canvas.
@@ -160,7 +160,7 @@ export function useDialogResize(
     if (designId) {
       const key = dialogSizeKey(designId, getWindowSizeSlot());
 
-      EntryDialogSizeConfig.set(key, sizeRef.current);
+      EntryDialogSizesStore.set(key, sizeRef.current);
 
       // Update the base size to reflect the user's new intent
       baseSizeRef.current = {
