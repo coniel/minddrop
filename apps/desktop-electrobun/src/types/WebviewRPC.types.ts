@@ -1,9 +1,7 @@
 import { RPCSchema } from 'electrobun';
 import type {
   BackgroundSyncChangeset,
-  Database,
   InitializeBackendResult,
-  SqlInitializeResult,
 } from '@minddrop/databases';
 import { BaseDirectory } from '@minddrop/file-system';
 import type { FsEntry, FsWatchEventKind } from '@minddrop/file-system';
@@ -153,13 +151,6 @@ export type WebviewRPC = {
         response: void;
       };
       // Databases RPC
-      databasesSqlInitialize: {
-        params: {
-          workspaceId: string;
-          databases: Database[];
-        };
-        response: SqlInitializeResult;
-      };
       databasesInitialize: {
         params: {
           workspaceId: string;

@@ -151,6 +151,17 @@ export function transaction(operations: SqlOperation[]): void {
 }
 
 /**
+ * Initializes the SQL connection via the registered adapter.
+ * Call after the adapter has been registered and the database
+ * has been opened by the backend.
+ */
+export function initialize(): void {
+  const adapter = getSqlAdapter();
+
+  connection = adapter.open('');
+}
+
+/**
  * Closes the active database connection.
  */
 export function close(): void {

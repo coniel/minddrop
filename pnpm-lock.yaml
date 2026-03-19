@@ -446,6 +446,9 @@ importers:
       '@minddrop/selection':
         specifier: workspace:*
         version: link:../../packages/selection
+      '@minddrop/sql':
+        specifier: workspace:*
+        version: link:../../packages/sql
       '@minddrop/stores':
         specifier: workspace:*
         version: link:../../packages/stores

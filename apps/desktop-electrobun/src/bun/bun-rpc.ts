@@ -4,7 +4,6 @@ import { backEndUtilsRpcHandlers } from './backEndUtilsRpc';
 import {
   handleDatabasesBackgroundSync,
   handleDatabasesInitialize,
-  handleDatabasesSqlInitialize,
   setSyncChangesetSender,
 } from './databases';
 import { fileSystemRpcHandlers, setWatchEventSender } from './fileSystemRpc';
@@ -46,7 +45,6 @@ export const myWebviewRPC = BrowserView.defineRPC<WebviewRPC>({
       sqlTransaction: handleSqlTransaction,
       sqlClose: handleSqlClose,
       // Databases RPC handlers
-      databasesSqlInitialize: handleDatabasesSqlInitialize,
       databasesInitialize: handleDatabasesInitialize,
       databasesBackgroundSync: handleDatabasesBackgroundSync,
       // Search RPC handlers

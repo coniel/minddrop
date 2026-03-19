@@ -9,6 +9,7 @@ import { DatabaseViewStateStore } from '@minddrop/feature-databases';
 import { initializeSearch } from '@minddrop/feature-search';
 import { initializeI18n } from '@minddrop/i18n';
 import { Search } from '@minddrop/search';
+import { Sql } from '@minddrop/sql';
 import { Theme, VariantChangedEventData } from '@minddrop/ui-theme';
 import { Paths } from '@minddrop/utils';
 import { Views } from '@minddrop/views';
@@ -69,6 +70,7 @@ export async function initializeDesktopApp(): Promise<void> {
   await Workspaces.initialize();
   await Designs.initialize();
   await Views.initialize();
+  Sql.initialize();
   const { schemaChanged } = await Databases.initialize();
 
   // Initialize the MiniSearch index and register event

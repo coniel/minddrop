@@ -1,5 +1,6 @@
 import { restoreDates } from '@minddrop/utils';
 import { Workspaces } from '@minddrop/workspaces';
+import { getDatabaseBackendAdapter } from '../DatabaseBackendAdapter';
 import { loadCoreSerializers } from '../DatabaseEntrySerializers';
 import { DatabasesStore } from '../DatabasesStore';
 import { initializeDatabaseAutomations } from '../initializeDatabaseAutomations';
@@ -7,7 +8,6 @@ import { initializeDatabaseEntries } from '../initializeDatabaseEntries';
 import { initializeDatabaseEventHandlers } from '../initializeDatabaseEventHandlers';
 import { initializeDatabaseTemplates } from '../initializeDatabaseTemplates';
 import { loadDatabaseViews } from '../loadDatabaseViews';
-import { sqlBackgroundSync, sqlInitializeBackend } from '../sql';
 import type { Database } from '../types';
 import { convertSqlRecordToEntry } from '../utils';
 
@@ -32,8 +32,9 @@ export async function initializeDatabases(): Promise<{
   // Use the first workspace
   const workspace = workspaces[0];
 
-  // Load all databases and entries from SQL
-  const result = await sqlInitializeBackend(workspace.id, workspace.path);
+  // Load all databases and entries from the backend
+  const backend = getDatabaseBackendAdapter();
+  const result = await backend.initializeBackend(workspace.id, workspace.path);
 
   // Restore dates in database configs (dates arrive as
   // ISO strings over RPC)
@@ -66,7 +67,7 @@ export async function initializeDatabases(): Promise<{
   // Skip if schema changed (full rebuild already scanned
   // the filesystem).
   if (!result.schemaChanged) {
-    sqlBackgroundSync(workspace.path);
+    backend.backgroundSync(workspace.path);
   }
 
   return { schemaChanged: result.schemaChanged };

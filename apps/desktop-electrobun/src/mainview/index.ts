@@ -3,7 +3,7 @@ import { Databases } from '@minddrop/databases';
 import { Paths } from '@minddrop/utils';
 import { WebviewRPC } from '../types';
 import { registerBackEndUtilsAdapter } from './registerBackEndUtilsAdapter';
-import { registerDatabasesSqlAdapterRpc } from './registerDatabasesSqlAdapter';
+import { registerDatabasesBackendAdapterRpc } from './registerDatabasesBackendAdapter';
 import {
   handleWatchEvent,
   registerFileSystemAdapter,
@@ -37,7 +37,7 @@ const electrobun = new Electrobun.Electroview({ rpc });
 registerFileSystemAdapter(electrobun.rpc);
 registerBackEndUtilsAdapter(electrobun.rpc);
 registerSqlAdapterRpc(electrobun.rpc);
-registerDatabasesSqlAdapterRpc(electrobun.rpc);
+registerDatabasesBackendAdapterRpc(electrobun.rpc);
 registerSearchAdapterRpc(electrobun.rpc);
 
 // Fetch the HTTP server port and store it for use by

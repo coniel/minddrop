@@ -5,7 +5,7 @@ import {
 } from './test-utils/setup-fixtures';
 
 export * from './types';
-export type { SqlInitializeResult, InitializeBackendResult } from './sql';
+export type { InitializeBackendResult } from './sql';
 export type { BackgroundSyncChangeset } from './types';
 export * from './errors';
 export * from './events';

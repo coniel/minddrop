@@ -19,13 +19,8 @@ export { sqlGetEntryPropertyValues } from './sqlGetEntryPropertyValues';
 export { sqlGetAllEntriesFull } from './sqlGetAllEntriesFull';
 
 // Init
-export { sqlInitialize } from './sqlInitialize';
-export type { SqlInitializeResult } from './sqlInitialize';
 export { initializeDatabasesBackend } from './initializeDatabasesBackend';
 export type { InitializeBackendResult } from './initializeDatabasesBackend';
 export { backgroundSyncDatabases } from './backgroundSyncDatabases';
-export { sqlInitializeBackend } from './sqlInitializeBackend';
-export { sqlBackgroundSync } from './sqlBackgroundSync';
-
 // Schema
 export { SCHEMA_SQL, SCHEMA_VERSION } from './schema';

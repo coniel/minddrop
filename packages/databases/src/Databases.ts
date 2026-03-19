@@ -28,7 +28,6 @@ import {
   sqlGetEntryTextContent,
   sqlGetEntryTimestamps,
   sqlGetVersion,
-  sqlInitialize,
   sqlReindexDatabaseEntries,
   sqlRenameProperty,
   sqlUpdateEntryMetadata,
@@ -69,13 +68,11 @@ export const sql = {
   getAllDatabases: sqlGetAllDatabases,
   getEntryTimestamps: sqlGetEntryTimestamps,
   getEntryPropertyValues: sqlGetEntryPropertyValues,
-  initialize: sqlInitialize,
   SCHEMA_SQL,
   SCHEMA_VERSION,
 } as const;
-export { registerDatabaseSqlAdapter as registerSqlAdapter } from './DatabaseSqlAdapter';
-export type { DatabaseSqlAdapter } from './DatabaseSqlAdapter';
-export { initializeDatabasesSql as initializeSql } from './initializeDatabasesSql';
+export { registerDatabaseBackendAdapter as registerBackendAdapter } from './DatabaseBackendAdapter';
+export type { DatabaseBackendAdapter } from './DatabaseBackendAdapter';
 export { initializeDatabasesBackend as initializeBackend } from './sql';
 export { backgroundSyncDatabases as backgroundSync } from './sql';
 export { handleBackgroundSyncResult } from './handleBackgroundSyncResult';
