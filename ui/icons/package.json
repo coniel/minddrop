@@ -18,7 +18,6 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
     "@minddrop/ui-theme": "workspace:*",
     "@minddrop/utils": "workspace:*",
     "lucide-react": "^0.487.0",

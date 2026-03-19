@@ -688,21 +688,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/core:
-    devDependencies:
-      '@minddrop/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      eslint:
-        specifier: ^9.39.3
-        version: 9.39.3
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
   packages/databases:
     dependencies:
       '@minddrop/collections':
@@ -1170,9 +1155,6 @@ importers:
 
   packages/properties:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
@@ -1356,9 +1338,6 @@ importers:
 
   packages/test-utils:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../core
       '@minddrop/i18n':
         specifier: workspace:*
         version: link:../i18n
@@ -1580,9 +1559,6 @@ importers:
 
   ui/icons:
     dependencies:
-      '@minddrop/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@minddrop/ui-theme':
         specifier: workspace:*
         version: link:../theme

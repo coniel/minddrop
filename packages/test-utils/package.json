@@ -9,7 +9,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@minddrop/core": "workspace:*",
     "@minddrop/i18n": "workspace:*",
     "@minddrop/ui-icons": "workspace:*",
     "mockdate": "^3.0.5",
