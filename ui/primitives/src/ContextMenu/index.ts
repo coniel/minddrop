@@ -28,6 +28,9 @@ export type { ContextMenuGroupProps } from './ContextMenuGroup';
 export { ActionMenuItem as ContextMenuItem } from '../ActionMenuItem';
 export type { ActionMenuItemProps as ContextMenuItemProps } from '../ActionMenuItem';
 
+export { SearchableMenuItem as ContextSearchableMenuItem } from '../SearchableMenu';
+export type { SearchableMenuItemProps as ContextSearchableMenuItemProps } from '../SearchableMenu';
+
 export { ContextMenuRadioGroup } from './ContextMenuRadioGroup';
 export type { ContextMenuRadioGroupProps } from './ContextMenuRadioGroup';
 

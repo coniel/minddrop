@@ -158,21 +158,17 @@
   font-weight: var(--weight-normal);
   line-height: 1;
 
-  transition: background-color var(--duration-fast) var(--ease-out);
-
   /* --- Size --- */
 
   &.menu-item-size-compact {
     height: 1.75rem;
   }
 
-  /* --- Hover / force-visible --- */
+  /* --- Highlighted / force-visible --- */
 
-  &:hover,
   &[data-highlighted],
   &.menu-item-force-actions-visible {
     background-color: var(--surface-neutral);
-    transition: none;
   }
 
   &:not(:has(button:hover)):active {
@@ -184,7 +180,6 @@
   &.menu-item-active {
     background-color: var(--surface-neutral);
 
-    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       background-color: var(--surface-neutral-hover);
@@ -202,7 +197,7 @@
     font-weight: var(--weight-medium);
 
     &.menu-item-active,
-    &:hover {
+    &[data-highlighted] {
       color: var(--text-regular);
     }
   }
@@ -210,7 +205,6 @@
   /* --- Danger --- */
 
   &.menu-item-danger {
-    &:hover,
     &[data-highlighted],
     &.menu-item-force-actions-visible {
       color: var(--text-danger);

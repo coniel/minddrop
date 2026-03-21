@@ -1,0 +1,45 @@
+/* ============================================================
+   SEARCHABLE MENU
+   A menu variant with a search field that filters items.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   SEARCH INPUT
+   ------------------------------------------------------------ */
+
+.searchable-menu-search-input {
+  margin-bottom: var(--space-1);
+
+  /* Suppress the focus outline inside the menu */
+  .text-input:focus-within {
+    outline: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   VIRTUALIZED LIST
+   ------------------------------------------------------------ */
+
+/* Pull the list into the menu's right padding so the
+   scrollbar sits flush against the menu edge */
+.searchable-menu:has(.searchable-menu-virtualized-list) {
+  padding-right: 0;
+
+  .searchable-menu-search-input {
+    margin-right: var(--space-1);
+  }
+}
+
+.searchable-menu-virtualized-list {
+  max-height: 320px;
+  padding-right: var(--space-1);
+}
+
+.searchable-menu-virtualized-list .scroll-area-viewport {
+  max-height: inherit;
+}
+
+.searchable-menu-virtualized-placeholder {
+  position: relative;
+  width: 100%;
+}

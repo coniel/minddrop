@@ -28,6 +28,9 @@ export type { DropdownMenuGroupProps } from './DropdownMenuGroup';
 export { ActionMenuItem as DropdownMenuItem } from '../ActionMenuItem';
 export type { ActionMenuItemProps as DropdownMenuItemProps } from '../ActionMenuItem';
 
+export { SearchableMenuItem as DropdownSearchableMenuItem } from '../SearchableMenu';
+export type { SearchableMenuItemProps as DropdownSearchableMenuItemProps } from '../SearchableMenu';
+
 export { DropdownMenuRadioGroup } from './DropdownMenuRadioGroup';
 export type { DropdownMenuRadioGroupProps } from './DropdownMenuRadioGroup';
 

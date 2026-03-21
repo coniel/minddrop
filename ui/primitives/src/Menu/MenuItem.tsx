@@ -128,6 +128,11 @@ export interface MenuItemProps {
   'aria-checked'?: boolean | 'true' | 'false' | 'mixed';
 
   /*
+   * Mouse move handler.
+   */
+  onMouseMove?: React.MouseEventHandler<HTMLDivElement>;
+
+  /*
    * Click handler.
    */
   onClick?: React.MouseEventHandler<HTMLDivElement>;

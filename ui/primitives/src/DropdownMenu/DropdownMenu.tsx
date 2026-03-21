@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { MenuContents } from '../types';
 import { DropdownMenuContent } from './DropdownMenuContent';
 import { DropdownMenuPortal } from './DropdownMenuPortal';
@@ -52,6 +53,17 @@ export interface DropdownMenuProps extends DropdownMenuRootProps {
   content?: MenuContents;
 
   /**
+   * Enables a search field at the top of the menu that
+   * filters items by their label text.
+   */
+  searchable?: boolean;
+
+  /**
+   * Placeholder text for the search input. Can be an i18n key.
+   */
+  searchPlaceholder?: TranslationKey;
+
+  /**
    * Menu items rendered inside the content panel.
    */
   children?: React.ReactNode;
@@ -65,6 +77,8 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   minWidth,
   contentClassName,
   content,
+  searchable,
+  searchPlaceholder,
   children,
   ...rootProps
 }) => (
@@ -76,6 +90,8 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
           minWidth={minWidth}
           className={contentClassName}
           content={content}
+          searchable={searchable}
+          searchPlaceholder={searchPlaceholder}
         >
           {children}
         </DropdownMenuContent>

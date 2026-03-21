@@ -24,6 +24,13 @@ export interface UseNavigableListOptions {
    * @default true
    */
   enabled?: boolean;
+
+  /**
+   * Initial highlighted index. Use -1 for no initial highlight.
+   * Also used as the reset value when item count changes.
+   * @default 0
+   */
+  initialIndex?: number;
 }
 
 export interface NavigableListInputProps {
@@ -53,6 +60,11 @@ export interface NavigableListItemProps {
    * index on hover.
    */
   onMouseMove: () => void;
+
+  /**
+   * Mouse leave handler that clears the highlight.
+   */
+  onMouseLeave: () => void;
 
   /**
    * Click handler that activates the item.
@@ -103,8 +115,9 @@ export function useNavigableList({
   onSelect,
   onEscape,
   enabled = true,
+  initialIndex = 0,
 }: UseNavigableListOptions): UseNavigableListReturn {
-  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [highlightedIndex, setHighlightedIndex] = useState(initialIndex);
 
   // Flag to ignore mouse events triggered by keyboard
   // scroll-into-view shifting items under the cursor
@@ -113,8 +126,8 @@ export function useNavigableList({
 
   // Reset highlighted index when item count changes
   useEffect(() => {
-    setHighlightedIndex(0);
-  }, [itemCount]);
+    setHighlightedIndex(initialIndex);
+  }, [itemCount, initialIndex]);
 
   // Scroll the highlighted item into view
   const scrollIntoViewRef = useCallback((node: HTMLElement | null) => {
@@ -156,6 +169,10 @@ export function useNavigableList({
         isKeyboardNavRef.current = true;
         setHighlightedIndex((index) => (index > 0 ? index - 1 : itemCount - 1));
       } else if (event.key === 'Enter') {
+        if (highlightedIndex === -1) {
+          return;
+        }
+
         event.preventDefault();
         onSelect(highlightedIndex);
       }
@@ -199,6 +216,11 @@ export function useNavigableList({
 
         if (highlightedIndex !== index) {
           setHighlightedIndex(index);
+        }
+      },
+      onMouseLeave: () => {
+        if (!isKeyboardNavRef.current) {
+          setHighlightedIndex(-1);
         }
       },
       onClick: () => onSelect(index),

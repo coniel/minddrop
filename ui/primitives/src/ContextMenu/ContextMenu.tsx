@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { TranslationKey } from '@minddrop/i18n';
 import { MenuContents } from '../types';
 import { ContextMenuContent } from './ContextMenuContent';
 import { ContextMenuPortal } from './ContextMenuPortal';
@@ -37,6 +38,17 @@ export interface ContextMenuProps extends ContextMenuRootProps {
   content?: MenuContents;
 
   /**
+   * Enables a search field at the top of the menu that
+   * filters items by their label text.
+   */
+  searchable?: boolean;
+
+  /**
+   * Placeholder text for the search input. Can be an i18n key.
+   */
+  searchPlaceholder?: TranslationKey;
+
+  /**
    * Menu items rendered inside the content panel.
    */
   children?: React.ReactNode;
@@ -48,6 +60,8 @@ export const ContextMenu: FC<ContextMenuProps> = ({
   triggerClassName,
   contentClassName,
   content,
+  searchable,
+  searchPlaceholder,
   children,
   ...rootProps
 }) => (
@@ -61,6 +75,8 @@ export const ContextMenu: FC<ContextMenuProps> = ({
           minWidth={minWidth}
           className={contentClassName}
           content={content}
+          searchable={searchable}
+          searchPlaceholder={searchPlaceholder}
         >
           {children}
         </ContextMenuContent>

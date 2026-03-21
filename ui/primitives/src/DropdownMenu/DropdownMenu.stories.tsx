@@ -7,6 +7,7 @@ import { ActionMenuItem as DropdownMenuItem } from '../ActionMenuItem';
 import { ActionMenuRadioItem as DropdownMenuRadioItem } from '../ActionMenuItem';
 import { Button } from '../Button';
 import { IconButton } from '../IconButton';
+import { SearchableMenuItem as DropdownSearchableMenuItem } from '../SearchableMenu';
 import { Story, StoryItem, StoryRow, StorySection } from '../dev/Story';
 import { DropdownMenu } from './DropdownMenu';
 import { DropdownMenuContent } from './DropdownMenuContent';
@@ -160,6 +161,141 @@ export const DropdownMenuStories = () => {
                   <DropdownMenuRadioItem value="columns" label="Columns" />
                 </DropdownMenuRadioGroup>
               </DropdownMenuGroup>
+            </DropdownMenu>
+          </StoryItem>
+        </StoryRow>
+      </StorySection>
+
+      {/* --------------------------------------------------------
+          SEARCHABLE
+          Menus with a search field that filters items by label.
+      -------------------------------------------------------- */}
+      <StorySection
+        title="Searchable"
+        description="Pass searchable to enable a search field that filters items by label. Lists exceeding 50 items are automatically virtualized."
+      >
+        <StoryRow>
+          <StoryItem label="databases">
+            <DropdownMenu
+              trigger={<Button variant="outline">Select database</Button>}
+              searchable
+              searchPlaceholder="Search databases..."
+              minWidth={220}
+            >
+              <DropdownSearchableMenuItem
+                label="Tasks"
+                icon="check-square"
+                onSelect={action('Tasks')}
+              />
+              <DropdownSearchableMenuItem
+                label="Projects"
+                icon="folder"
+                onSelect={action('Projects')}
+              />
+              <DropdownSearchableMenuItem
+                label="Notes"
+                icon="file-text"
+                onSelect={action('Notes')}
+              />
+              <DropdownSearchableMenuItem
+                label="Bookmarks"
+                icon="bookmark"
+                onSelect={action('Bookmarks')}
+              />
+              <DropdownSearchableMenuItem
+                label="Contacts"
+                icon="users"
+                onSelect={action('Contacts')}
+              />
+              <DropdownSearchableMenuItem
+                label="Meetings"
+                icon="calendar"
+                onSelect={action('Meetings')}
+              />
+              <DropdownSearchableMenuItem
+                label="Recipes"
+                icon="chef-hat"
+                onSelect={action('Recipes')}
+              />
+              <DropdownSearchableMenuItem
+                label="Reading list"
+                icon="book-open"
+                onSelect={action('Reading list')}
+              />
+            </DropdownMenu>
+          </StoryItem>
+          <StoryItem label="grouped settings">
+            <DropdownMenu
+              trigger={<Button variant="outline">Settings</Button>}
+              searchable
+              searchPlaceholder="Search settings..."
+              minWidth={220}
+            >
+              <DropdownMenuGroup label="Appearance">
+                <DropdownSearchableMenuItem
+                  label="Theme"
+                  icon="palette"
+                  onSelect={action('Theme')}
+                />
+                <DropdownSearchableMenuItem
+                  label="Font size"
+                  icon="type"
+                  onSelect={action('Font size')}
+                />
+                <DropdownSearchableMenuItem
+                  label="Layout"
+                  icon="layout"
+                  onSelect={action('Layout')}
+                />
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup label="Privacy">
+                <DropdownSearchableMenuItem
+                  label="Cookies"
+                  icon="cookie"
+                  onSelect={action('Cookies')}
+                />
+                <DropdownSearchableMenuItem
+                  label="Tracking"
+                  icon="eye-off"
+                  onSelect={action('Tracking')}
+                />
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup label="Advanced">
+                <DropdownSearchableMenuItem
+                  label="Developer tools"
+                  icon="terminal"
+                  onSelect={action('Developer tools')}
+                />
+                <DropdownSearchableMenuItem
+                  label="Keyboard shortcuts"
+                  icon="keyboard"
+                  onSelect={action('Keyboard shortcuts')}
+                />
+                <DropdownSearchableMenuItem
+                  label="Notifications"
+                  icon="bell"
+                  onSelect={action('Notifications')}
+                />
+              </DropdownMenuGroup>
+            </DropdownMenu>
+          </StoryItem>
+          <StoryItem label="virtualized (100 items)">
+            <DropdownMenu
+              trigger={<Button variant="outline">Select entry</Button>}
+              searchable
+              searchPlaceholder="Search entries..."
+              minWidth={240}
+            >
+              {Array.from({ length: 100 }, (_, index) => (
+                <DropdownSearchableMenuItem
+                  key={index}
+                  label={`Entry ${index + 1}`}
+                  icon="file"
+                  onSelect={action(`Entry ${index + 1}`)}
+                />
+              ))}
             </DropdownMenu>
           </StoryItem>
         </StoryRow>

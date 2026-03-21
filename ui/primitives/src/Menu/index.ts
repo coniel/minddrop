@@ -1,4 +1,5 @@
 export * from './Menu';
+export * from './MenuSearchContext';
 export * from './MenuGroup';
 export * from './MenuLabel';
 export * from './MenuSeparator';
